@@ -1,0 +1,31 @@
+{
+  "name": "@kusinta/iot-schema",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "exports": {
+    ".":           "./src/index.js",
+    "./common":    "./src/common/types.js",
+    "./identity":  "./src/identity/identity.js",
+    "./device":    "./src/device/device.js",
+    "./space":     "./src/space/space.js",
+    "./access":    "./src/access/acl.js",
+    "./connector": "./src/connector/connector_service.js",
+    "./webrtc":    "./src/webrtc/envelope.js"
+  },
+  "peerDependencies": {
+    "@grpc/grpc-js": "^1.14.4"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.12.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0",
+    "@grpc/grpc-js": "^1.14.4",
+    "vitest": "^3.0.0"
+  }
+}

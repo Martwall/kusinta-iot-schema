@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package kusinta.iot.v1.webrtc;
+
+import "google/protobuf/timestamp.proto";
+import "device/device.proto";
+import "device/property_update.proto";
+import "access/acl.proto";
+
+option optimize_for = SPEED;
+
+// Full device state sent to the Flutter app on initial WebRTC connection.
+message DeviceStateSnapshot {
+  repeated kusinta.iot.v1.device.Device devices        = 1;
+  kusinta.iot.v1.access.EffectivePermissions permissions = 2;
+  google.protobuf.Timestamp              snapshotted_at = 3;
+}
+
+// Single property change event streamed to the Flutter app in real time.
+message DevicePropertyEvent {
+  kusinta.iot.v1.device.PropertyUpdate update               = 1;
+  google.protobuf.Timestamp            gateway_processed_at = 2;
+}

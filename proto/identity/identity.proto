@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package kusinta.iot.v1.identity;
+
+option optimize_for = SPEED;
+
+// Wrapper types prevent accidental cross-type ID assignment at compile time.
+
+message TenantId {
+  string value = 1;
+}
+
+message GatewayId {
+  string value = 1;
+}
+
+message DeviceId {
+  string value = 1;
+}
+
+message UserId {
+  string value = 1;
+}
+
+message SpaceId {
+  string value = 1;
+}
+
+message ConnectorId {
+  string value = 1;
+}

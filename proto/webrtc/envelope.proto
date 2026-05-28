@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package kusinta.iot.v1.webrtc;
+
+import "google/protobuf/timestamp.proto";
+import "identity/identity.proto";
+import "webrtc/command.proto";
+import "webrtc/device_state.proto";
+import "webrtc/permission_push.proto";
+
+option optimize_for = SPEED;
+
+message Ping {}
+message Pong {}
+
+// AppHandshake must be the first message sent by the Flutter app on the data channel.
+// The gateway validates the JWT locally using the mykusinta-api-server public key,
+// checks that gateway_id in the JWT matches this gateway, then extracts the role.
+message AppHandshake {
+  string                                    jwt                  = 1;
+  repeated kusinta.iot.v1.identity.DeviceId subscribe_device_ids = 2;
+}
+
+message PropertyReadRequest {
+  kusinta.iot.v1.identity.DeviceId device_id      = 1;
+  string                           attribute_name = 2;
+  string                           cluster_id_hex = 3;
+}
+
+// GatewayMessage: gateway → Flutter app
+message GatewayMessage {
+  string                    message_id = 1;
+  google.protobuf.Timestamp sent_at    = 2;
+
+  oneof payload {
+    DeviceStateSnapshot   state_snapshot    = 3;
+    DevicePropertyEvent   property_event    = 4;
+    LivePermissionUpdate  permission_update = 5;
+    CommandResult         command_result    = 6;
+    string                error             = 7; // error description string
+    Pong                  pong              = 8;
+  }
+}
+
+// AppMessage: Flutter app → gateway
+message AppMessage {
+  string                    message_id = 1;
+  google.protobuf.Timestamp sent_at    = 2;
+
+  oneof payload {
+    AppHandshake        handshake    = 3;
+    DeviceCommand       command      = 4;
+    PropertyReadRequest read_request = 5;
+    Ping                ping         = 6;
+  }
+}

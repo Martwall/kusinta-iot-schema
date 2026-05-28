@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package kusinta.iot.v1.connector;
+
+import "google/protobuf/timestamp.proto";
+import "common/types.proto";
+import "identity/identity.proto";
+import "device/descriptor.proto";
+import "device/property_update.proto";
+
+option optimize_for = SPEED;
+
+message ConnectorInfo {
+  kusinta.iot.v1.identity.ConnectorId connector_id            = 1;
+  string                              display_name            = 2;
+  string                              version                 = 3;
+  kusinta.iot.v1.common.ConnectorTransport transport          = 4;
+  string                              endpoint                = 5; // unix socket path or host:port
+  repeated uint32                     supported_device_type_ids = 6;
+}
+
+message ConnectorHandshake {
+  ConnectorInfo                              info          = 1;
+  repeated kusinta.iot.v1.device.DeviceDescriptor known_devices = 2;
+}
+
+message HandshakeAck {
+  bool                              accepted   = 1;
+  string                            reason     = 2;
+  kusinta.iot.v1.identity.GatewayId gateway_id = 3;
+}
+
+message DeviceAnnouncement {
+  kusinta.iot.v1.device.DeviceDescriptor descriptor = 1;
+}
+
+message DeviceRemoval {
+  kusinta.iot.v1.identity.DeviceId device_id = 1;
+  string                           reason    = 2;
+}
+
+message HeartBeat {}
+
+message SubscribeDevice {
+  kusinta.iot.v1.identity.DeviceId device_id = 1;
+}
+
+message UnsubscribeDevice {
+  kusinta.iot.v1.identity.DeviceId device_id = 1;
+}
+
+message GatewayError {
+  string                   code    = 1;
+  string                   message = 2;
+  string                   command_id = 3; // non-empty if the error is in response to a command
+}
+
+message CommandResult {
+  string                    command_id    = 1;
+  bool                      success       = 2;
+  GatewayError              error         = 3;
+  google.protobuf.Timestamp completed_at  = 4;
+}
+
+message ConnectorToGatewayMessage {
+  string                    message_id = 1;
+  google.protobuf.Timestamp sent_at    = 2;
+
+  oneof payload {
+    ConnectorHandshake                        handshake       = 3;
+    kusinta.iot.v1.device.PropertyUpdateBatch property_update = 4;
+    DeviceAnnouncement                        device_announced = 5;
+    DeviceRemoval                             device_removed  = 6;
+    CommandResult                             command_result  = 7;
+    HeartBeat                                 heartbeat       = 8;
+  }
+}
+
+message GatewayToConnectorMessage {
+  string                    message_id = 1;
+  google.protobuf.Timestamp sent_at    = 2;
+
+  oneof payload {
+    HandshakeAck      handshake_ack = 3;
+    SubscribeDevice   subscribe     = 5;
+    UnsubscribeDevice unsubscribe   = 6;
+    GatewayError      error         = 7;
+  }
+}

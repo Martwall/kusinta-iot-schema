@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package kusinta.iot.v1.webrtc;
+
+import "google/protobuf/timestamp.proto";
+import "identity/identity.proto";
+
+option optimize_for = SPEED;
+
+// Maps to Matter SetpointRaiseLower command (Thermostat cluster 0x0201).
+message ThermostatSetpointParams {
+  uint32 mode   = 1; // SetpointAdjustMode: Heat=1, Cool=2, Both=3
+  sint32 amount = 2; // centidegrees delta
+}
+
+// Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
+message LevelControlParams {
+  uint32 level           = 1; // 0–254
+  uint32 transition_time = 2; // 100ms units
+}
+
+// Maps to Matter On and Off commands (On/Off cluster 0x0006).
+message OnOffParams {
+  bool on     = 1;
+  bool toggle = 2;
+}
+
+// Maps to Matter GoToLiftPercentage command (Window Covering cluster 0x0102).
+message WindowCoveringLiftParams {
+  uint32 lift_percent100ths = 1; // 0–10000
+}
+
+// Maps to Matter LockDoor/UnlockDoor commands (Door Lock cluster 0x0101).
+message DoorLockParams {
+  uint32 lock_state = 1; // Locked=1, Unlocked=2
+  string pin_code   = 2; // optional PIN
+}
+
+message DeviceCommand {
+  string                           command_id     = 1; // UUID, matched in CommandResult
+  kusinta.iot.v1.identity.DeviceId device_id      = 2;
+  string                           cluster_id_hex = 3;
+  string                           command_name   = 4; // PascalCase Matter command name
+
+  oneof parameters {
+    ThermostatSetpointParams  thermostat_setpoint  = 5;
+    LevelControlParams        level_control        = 6;
+    OnOffParams               on_off               = 7;
+    WindowCoveringLiftParams  window_covering_lift = 8;
+    DoorLockParams            door_lock            = 9;
+    bytes                     raw_tlv              = 99; // escape hatch for unsupported commands
+  }
+}
+
+message CommandError {
+  string code    = 1;
+  string message = 2;
+}
+
+// CommandResult travels gateway → Flutter app (GatewayMessage) and
+// connector → gateway (ConnectorToGatewayMessage via connector.proto import).
+message CommandResult {
+  string                    command_id   = 1;
+  bool                      success      = 2;
+  CommandError              error        = 3;
+  google.protobuf.Timestamp completed_at = 4;
+}

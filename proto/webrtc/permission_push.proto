@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package kusinta.iot.v1.webrtc;
+
+import "identity/identity.proto";
+import "access/acl.proto";
+
+option optimize_for = SPEED;
+
+// Pushed to the Flutter app whenever the user's effective permissions change.
+// change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED", "CONSTRAINT_UPDATED"
+message LivePermissionUpdate {
+  kusinta.iot.v1.access.EffectivePermissions new_permissions  = 1;
+  repeated kusinta.iot.v1.identity.DeviceId  added_devices    = 2;
+  repeated kusinta.iot.v1.identity.DeviceId  removed_devices  = 3;
+  string                                     change_reason    = 4;
+}
