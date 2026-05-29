@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package kusinta.iot.connector.v1;
+
+import "kusinta/iot/connector/v1/connector.proto";
+
+option optimize_for = SPEED;
+
+// ConnectorGatewayService: connector dials the gateway on startup.
+// A single persistent bidirectional stream carries all traffic for the connector's lifetime.
+service ConnectorGatewayService {
+  rpc Connect(stream ConnectRequest) returns (stream ConnectResponse);
+}

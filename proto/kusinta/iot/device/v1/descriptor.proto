@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package kusinta.iot.device.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/common/v1/types.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// DeviceDescriptor holds identity and Matter BasicInformation cluster fields.
+// Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
+message DeviceDescriptor {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+
+  // Matter 1.5.1 device type ID (e.g. 0x0301 = Thermostat, 0x0302 = TemperatureSensor)
+  uint32 matter_device_type_id = 2;
+
+  // Matter BasicInformation cluster attributes
+  string vendor_name = 3;
+  string product_name = 4;
+  string serial_number = 5;
+  string node_label = 6;
+  uint32 vendor_id = 7;
+  uint32 product_id = 8;
+  string hardware_version_string = 9;
+  string software_version_string = 10;
+
+  kusinta.iot.identity.v1.ConnectorId connector_id = 11;
+  kusinta.iot.identity.v1.SpaceId space_id = 12;
+
+  kusinta.iot.common.v1.DeviceOwnershipType ownership = 13;
+  kusinta.iot.common.v1.DeviceLifecycleState lifecycle = 14;
+
+  // Populated when ownership == RESIDENT
+  kusinta.iot.identity.v1.UserId owner_user_id = 15;
+  google.protobuf.Timestamp claimed_at = 16;
+}

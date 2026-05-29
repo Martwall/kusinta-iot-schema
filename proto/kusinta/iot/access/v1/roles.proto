@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package kusinta.iot.access.v1;
+
+option optimize_for = SPEED;
+
+enum Role {
+  ROLE_UNSPECIFIED = 0;
+  ROLE_RESIDENT = 1;
+  ROLE_PROPERTY_OWNER = 2;
+  ROLE_TECHNICIAN = 3;
+  ROLE_GATEWAY_ADMIN = 4;
+}
+
+enum PermissionAction {
+  PERMISSION_ACTION_UNSPECIFIED = 0;
+  PERMISSION_ACTION_READ = 1;
+  PERMISSION_ACTION_WRITE = 2;
+  PERMISSION_ACTION_OBSERVE = 3;
+  PERMISSION_ACTION_INVOKE = 4;
+}

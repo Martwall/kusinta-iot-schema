@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package kusinta.iot.common.v1;
+
+option optimize_for = SPEED;
+
+enum SpaceType {
+  SPACE_TYPE_UNSPECIFIED = 0;
+  SPACE_TYPE_BUILDING = 1;
+  SPACE_TYPE_FLOOR = 2;
+  SPACE_TYPE_APARTMENT = 3;
+  SPACE_TYPE_ROOM = 4;
+  SPACE_TYPE_COMMON_AREA = 5;
+}
+
+enum DeviceOwnershipType {
+  DEVICE_OWNERSHIP_TYPE_UNSPECIFIED = 0;
+  DEVICE_OWNERSHIP_TYPE_COMPANY = 1;
+  DEVICE_OWNERSHIP_TYPE_RESIDENT = 2;
+}
+
+enum DeviceLifecycleState {
+  DEVICE_LIFECYCLE_STATE_UNSPECIFIED = 0;
+  DEVICE_LIFECYCLE_STATE_PENDING_CLAIM = 1;
+  DEVICE_LIFECYCLE_STATE_OWNED = 2;
+  DEVICE_LIFECYCLE_STATE_PENDING_TRANSFER = 3;
+  DEVICE_LIFECYCLE_STATE_BUILDING_POOL = 4;
+}
+
+enum ConnectorTransport {
+  CONNECTOR_TRANSPORT_UNSPECIFIED = 0;
+  CONNECTOR_TRANSPORT_UNIX_SOCKET = 1;
+  CONNECTOR_TRANSPORT_MTLS_TCP = 2;
+}
+
+message ErrorDetail {
+  string code = 1;
+  string message = 2;
+  map<string, string> metadata = 3;
+}

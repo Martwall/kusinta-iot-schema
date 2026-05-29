@@ -6,24 +6,6 @@ modules:
 lint:
   use:
     - STANDARD
-  except:
-    # Proto package names include v1 suffix via the package name itself, not the directory name
-    - PACKAGE_VERSION_SUFFIX
-    # Directory layout uses short names (device/, webrtc/) not the full package path hierarchy
-    - PACKAGE_DIRECTORY_MATCH
-    # Enum values use clean short names (BUILDING, RESIDENT) not SPACE_TYPE_BUILDING style
-    # — these are Matter-aligned names used directly in generated TypeScript/Python/Dart
-    - ENUM_VALUE_PREFIX
-    # ConnectorToGatewayMessage / GatewayToConnectorMessage are descriptive bidirectional names;
-    # the standard Connect(Request) → (Response) convention doesn't fit streaming RPCs
-    - RPC_REQUEST_STANDARD_NAME
-    - RPC_RESPONSE_STANDARD_NAME
-  ignore:
-    # Vendor protos evolve independently and may not follow all standard naming rules
-    - vendor/
 breaking:
   use:
     - FILE
-  ignore:
-    # Vendor extensions can evolve without breaking-change enforcement
-    - vendor/

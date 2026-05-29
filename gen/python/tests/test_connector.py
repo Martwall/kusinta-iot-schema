@@ -1,7 +1,7 @@
-from kusinta_iot_schema.connector import connector_pb2
-from kusinta_iot_schema.common import types_pb2
-from kusinta_iot_schema.identity import identity_pb2
-from kusinta_iot_schema.device import descriptor_pb2, property_update_pb2
+from kusinta.iot.connector.v1 import connector_pb2
+from kusinta.iot.common.v1 import types_pb2
+from kusinta.iot.identity.v1 import identity_pb2
+from kusinta.iot.device.v1 import descriptor_pb2, property_update_pb2
 
 
 def test_connector_handshake_round_trip():
@@ -9,7 +9,7 @@ def test_connector_handshake_round_trip():
         connector_id=identity_pb2.ConnectorId(value="homematic-ccu3"),
         display_name="HomeMatic CCU3",
         version="1.0.0",
-        transport=types_pb2.UNIX_SOCKET,
+        transport=types_pb2.CONNECTOR_TRANSPORT_UNIX_SOCKET,
         endpoint="/run/kusinta/connectors/homematic.sock",
         supported_device_type_ids=[0x0301, 0x0302],
     )
@@ -25,7 +25,7 @@ def test_connector_handshake_round_trip():
     decoded = connector_pb2.ConnectorHandshake()
     decoded.ParseFromString(handshake.SerializeToString())
     assert decoded.info.connector_id.value == "homematic-ccu3"
-    assert decoded.info.transport == types_pb2.UNIX_SOCKET
+    assert decoded.info.transport == types_pb2.CONNECTOR_TRANSPORT_UNIX_SOCKET
     assert len(decoded.known_devices) == 1
     assert decoded.known_devices[0].device_id.value == "dev-1"
 
@@ -50,19 +50,19 @@ def test_handshake_ack_rejected():
 
 
 def test_connector_to_gateway_handshake_payload():
-    msg = connector_pb2.ConnectorToGatewayMessage(
+    msg = connector_pb2.ConnectRequest(
         message_id="msg-001",
         handshake=connector_pb2.ConnectorHandshake(
             info=connector_pb2.ConnectorInfo(
                 connector_id=identity_pb2.ConnectorId(value="conn-1"),
                 display_name="Test Connector",
                 version="0.1.0",
-                transport=types_pb2.UNIX_SOCKET,
+                transport=types_pb2.CONNECTOR_TRANSPORT_UNIX_SOCKET,
                 endpoint="/run/test.sock",
             ),
         ),
     )
-    decoded = connector_pb2.ConnectorToGatewayMessage()
+    decoded = connector_pb2.ConnectRequest()
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.message_id == "msg-001"
     assert decoded.WhichOneof("payload") == "handshake"
@@ -80,11 +80,11 @@ def test_connector_to_gateway_property_update_payload():
             )
         ]
     )
-    msg = connector_pb2.ConnectorToGatewayMessage(
+    msg = connector_pb2.ConnectRequest(
         message_id="msg-002",
         property_update=batch,
     )
-    decoded = connector_pb2.ConnectorToGatewayMessage()
+    decoded = connector_pb2.ConnectRequest()
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.WhichOneof("payload") == "property_update"
     assert len(decoded.property_update.updates) == 1
@@ -92,14 +92,14 @@ def test_connector_to_gateway_property_update_payload():
 
 
 def test_gateway_to_connector_handshake_ack():
-    msg = connector_pb2.GatewayToConnectorMessage(
+    msg = connector_pb2.ConnectResponse(
         message_id="gw-001",
         handshake_ack=connector_pb2.HandshakeAck(
             accepted=True,
             gateway_id=identity_pb2.GatewayId(value="gw-1"),
         ),
     )
-    decoded = connector_pb2.GatewayToConnectorMessage()
+    decoded = connector_pb2.ConnectResponse()
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.WhichOneof("payload") == "handshake_ack"
     assert decoded.handshake_ack.accepted is True

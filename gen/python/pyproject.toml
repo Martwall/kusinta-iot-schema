@@ -9,12 +9,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "grpcio-tools>=1.80.0",
   "pytest>=8.0.0",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["kusinta_iot_schema"]
+packages = ["kusinta"]
 
 [build-system]
 requires = ["hatchling"]

@@ -1,0 +1,7 @@
+# JavaScript dependencies
+gen/js/node_modules/
+gen/ts/node_modules/
+
+# Python bytecode and test cache
+**/__pycache__/
+**/.pytest_cache/

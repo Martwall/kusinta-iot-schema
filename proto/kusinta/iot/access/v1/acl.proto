@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package kusinta.iot.access.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/access/v1/roles.proto";
+
+option optimize_for = SPEED;
+
+// PropertyConstraint bounds a single Matter cluster attribute.
+// attribute_name uses PascalCase Matter attribute naming (e.g. "MaxHeatSetpointLimit").
+// MaxHeatSetpointLimit and MinHeatSetpointLimit are actual Matter Thermostat cluster
+// attributes (0x0016, 0x0015) — the gateway writes them directly via the connector.
+message PropertyConstraint {
+  string attribute_name = 1;
+
+  oneof constraint {
+    sint32 int_max  = 2;
+    sint32 int_min  = 3;
+    uint32 uint_max = 4;
+    uint32 uint_min = 5;
+  }
+
+  string cluster_id_hex = 6;
+}
+
+message DeviceAcl {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  kusinta.iot.identity.v1.UserId   user_id   = 2;
+  Role                             role      = 3;
+  repeated PermissionAction        allowed_actions     = 4;
+  repeated string                  allowed_attributes  = 5; // empty = all attributes allowed
+  repeated PropertyConstraint      property_constraints = 6;
+}
+
+message EffectivePermissions {
+  kusinta.iot.identity.v1.UserId    user_id    = 1;
+  kusinta.iot.identity.v1.GatewayId gateway_id = 2;
+  repeated DeviceAcl                device_acls = 3;
+  google.protobuf.Timestamp         valid_at   = 4;
+}

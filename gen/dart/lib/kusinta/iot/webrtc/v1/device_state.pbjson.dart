@@ -1,0 +1,84 @@
+// This is a generated file - do not edit.
+//
+// Generated from kusinta/iot/webrtc/v1/device_state.proto.
+
+// @dart = 3.3
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: unused_import
+
+import 'dart:convert' as $convert;
+import 'dart:core' as $core;
+import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use deviceStateSnapshotDescriptor instead')
+const DeviceStateSnapshot$json = {
+  '1': 'DeviceStateSnapshot',
+  '2': [
+    {
+      '1': 'devices',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.Device',
+      '10': 'devices'
+    },
+    {
+      '1': 'permissions',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.EffectivePermissions',
+      '10': 'permissions'
+    },
+    {
+      '1': 'snapshotted_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'snapshottedAt'
+    },
+  ],
+};
+
+/// Descriptor for `DeviceStateSnapshot`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deviceStateSnapshotDescriptor = $convert.base64Decode(
+    'ChNEZXZpY2VTdGF0ZVNuYXBzaG90EjcKB2RldmljZXMYASADKAsyHS5rdXNpbnRhLmlvdC5kZX'
+    'ZpY2UudjEuRGV2aWNlUgdkZXZpY2VzEk0KC3Blcm1pc3Npb25zGAIgASgLMisua3VzaW50YS5p'
+    'b3QuYWNjZXNzLnYxLkVmZmVjdGl2ZVBlcm1pc3Npb25zUgtwZXJtaXNzaW9ucxJBCg5zbmFwc2'
+    'hvdHRlZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSDXNuYXBzaG90dGVk'
+    'QXQ=');
+
+@$core.Deprecated('Use devicePropertyEventDescriptor instead')
+const DevicePropertyEvent$json = {
+  '1': 'DevicePropertyEvent',
+  '2': [
+    {
+      '1': 'update',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.PropertyUpdate',
+      '10': 'update'
+    },
+    {
+      '1': 'gateway_processed_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'gatewayProcessedAt'
+    },
+  ],
+};
+
+/// Descriptor for `DevicePropertyEvent`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List devicePropertyEventDescriptor = $convert.base64Decode(
+    'ChNEZXZpY2VQcm9wZXJ0eUV2ZW50Ej0KBnVwZGF0ZRgBIAEoCzIlLmt1c2ludGEuaW90LmRldm'
+    'ljZS52MS5Qcm9wZXJ0eVVwZGF0ZVIGdXBkYXRlEkwKFGdhdGV3YXlfcHJvY2Vzc2VkX2F0GAIg'
+    'ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFISZ2F0ZXdheVByb2Nlc3NlZEF0');

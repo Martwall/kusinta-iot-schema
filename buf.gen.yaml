@@ -1,0 +1,23 @@
+version: v2
+plugins:
+  # JavaScript + TypeScript declarations — messages and service descriptors
+  # Service descriptors are included in *_pb.js, usable with @connectrpc/connect v2
+  - remote: buf.build/bufbuild/es:v2.12.0
+    out: gen/js/src
+    opt: target=js+dts
+
+  # Python — gRPC stubs (depends on protocolbuffers/python)
+  - remote: buf.build/grpc/python:v1.80.0
+    out: gen/python
+
+  # Python — message types (depends on protocolbuffers/pyi)
+  - remote: buf.build/protocolbuffers/python:v34.1
+    out: gen/python
+
+  # Python — type stubs
+  - remote: buf.build/protocolbuffers/pyi:v34.1
+    out: gen/python
+
+  # Dart — message types only (protobuf over WebRTC, no gRPC needed)
+  - remote: buf.build/protocolbuffers/dart:v25.0.0
+    out: gen/dart/lib

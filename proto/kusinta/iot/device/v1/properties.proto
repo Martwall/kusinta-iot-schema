@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package kusinta.iot.device.v1;
+
+option optimize_for = SPEED;
+
+// Temperatures use sint32 in centidegrees (°C × 100), matching Matter's int16 × 0.01°C encoding.
+// Field names follow Matter 1.5.1 cluster attribute PascalCase.
+// Fields 1-99 are commonly-used attributes; 100+ are optional/rarely-used.
+
+// Matter Thermostat cluster (0x0201) — device type 0x0301
+message ThermostatProperties {
+  sint32 local_temperature = 1;           // LocalTemperature
+  sint32 occupied_heating_setpoint = 2;   // OccupiedHeatingSetpoint
+  sint32 occupied_cooling_setpoint = 3;   // OccupiedCoolingSetpoint
+  sint32 min_heat_setpoint_limit = 4;     // MinHeatSetpointLimit — property-owner constraint
+  sint32 max_heat_setpoint_limit = 5;     // MaxHeatSetpointLimit — property-owner constraint
+  sint32 min_cool_setpoint_limit = 6;     // MinCoolSetpointLimit
+  sint32 max_cool_setpoint_limit = 7;     // MaxCoolSetpointLimit
+  uint32 control_sequence_of_operation = 8; // ControlSequenceOfOperation enum
+  uint32 system_mode = 9;                // SystemMode: Off=0,Auto=1,Cool=3,Heat=4,EmHeat=5
+  uint32 thermostat_running_mode = 10;   // ThermostatRunningMode
+}
+
+// Matter Temperature Measurement cluster (0x0402) — device type 0x0302
+message TemperatureSensorProperties {
+  sint32 measured_value = 1;     // MeasuredValue
+  sint32 min_measured_value = 2; // MinMeasuredValue
+  sint32 max_measured_value = 3; // MaxMeasuredValue
+  uint32 tolerance = 4;          // Tolerance
+}
+
+// Matter Relative Humidity Measurement cluster (0x0405) — device type 0x0307
+message HumiditySensorProperties {
+  uint32 measured_value = 1;     // MeasuredValue (% × 100, 0–10000)
+  uint32 min_measured_value = 2;
+  uint32 max_measured_value = 3;
+  uint32 tolerance = 4;
+}
+
+// Matter Occupancy Sensing cluster (0x0406) — device type 0x0107
+message OccupancySensorProperties {
+  uint32 occupancy = 1;                  // Occupancy bitmask: bit 0 = occupied
+  uint32 occupancy_sensor_type = 2;      // OccupancySensorType: PIR=0,Ultrasonic=1,PIRandUS=2,PhysicalContact=3
+  uint32 occupancy_sensor_type_bitmap = 3;
+  uint32 pir_occ_to_unocc_delay = 4;
+  uint32 pir_unocc_to_occ_delay = 5;
+}
+
+// Matter Boolean State cluster (0x0045) — device type 0x0015 (Contact Sensor)
+message ContactSensorProperties {
+  // StateValue: false = contact open (alarm), true = contact closed (normal)
+  bool state_value = 1;
+}
+
+// Matter Window Covering cluster (0x0102) — device type 0x0202
+message WindowCoveringProperties {
+  uint32 covering_type = 1;
+  // current_position_lift_percent100ths is the primary attribute in Matter 1.5.1 (0–10000)
+  uint32 current_position_lift_percent100ths = 2;
+  uint32 current_position_tilt_percent100ths = 3;
+  uint32 target_position_lift_percent100ths = 4;
+  uint32 target_position_tilt_percent100ths = 5;
+  uint32 operational_status = 6; // bitmask: global, lift, tilt
+  uint32 end_product_type = 7;
+  uint32 mode = 8;
+}
+
+// Matter Door Lock cluster (0x0101) — device type 0x000A
+message DoorLockProperties {
+  uint32 lock_state = 1;       // LockState: NotFullyLocked=0,Locked=1,Unlocked=2,Unlatched=3
+  uint32 lock_type = 2;        // LockType enum
+  bool actuator_enabled = 3;   // ActuatorEnabled
+  uint32 door_state = 4;       // DoorState (requires door sensor hardware)
+  uint32 operating_mode = 5;   // OperatingMode
+}
+
+// Matter On/Off cluster (0x0006) — device type 0x0100 (On/Off Light)
+message OnOffLightProperties {
+  bool on_off = 1;               // OnOff
+  bool global_scene_control = 2; // GlobalSceneControl
+  uint32 on_time = 3;            // OnTime
+  uint32 off_wait_time = 4;      // OffWaitTime
+  uint32 start_up_on_off = 5;   // StartUpOnOff
+}
+
+// Matter On/Off + Level Control cluster (0x0008) — device type 0x010B (Dimmable Light)
+message DimmableLightProperties {
+  bool on_off = 1;
+  uint32 current_level = 2;          // CurrentLevel (0–254)
+  uint32 min_level = 3;              // MinLevel
+  uint32 max_level = 4;              // MaxLevel
+  uint32 on_level = 5;               // OnLevel
+  uint32 start_up_current_level = 6; // StartUpCurrentLevel
+  uint32 remaining_time = 7;         // RemainingTime
+}
+
+// Matter On/Off + Level + Color Control cluster (0x0300) — device type 0x010C
+message ColorTemperatureLightProperties {
+  bool on_off = 1;
+  uint32 current_level = 2;
+  uint32 color_temperature_mireds = 3;           // ColorTemperatureMireds
+  uint32 color_temp_physical_min_mireds = 4;     // ColorTempPhysicalMinMireds
+  uint32 color_temp_physical_max_mireds = 5;     // ColorTempPhysicalMaxMireds
+  uint32 startup_color_temperature_mireds = 6;   // StartUpColorTemperatureMireds
+  uint32 color_mode = 7;                         // ColorMode
+}
+
+// Matter Electrical Measurement cluster (0x0B04) — device type 0x0510
+message EnergySensorProperties {
+  int32 active_power = 1;             // ActivePower (watts)
+  uint32 rms_voltage = 2;             // RmsVoltage (volts × 10)
+  uint32 rms_current = 3;             // RmsCurrent (amps × 1000)
+  uint32 ac_frequency = 4;            // AcFrequency (Hz × 100)
+}
+
+// Matter Pressure Measurement cluster (0x0403) — device type 0x0305
+message PressureSensorProperties {
+  sint32 measured_value = 1;  // MeasuredValue (kPa × 10)
+  sint32 min_measured_value = 2;
+  sint32 max_measured_value = 3;
+  uint32 tolerance = 4;
+}

@@ -1,6 +1,6 @@
-from kusinta_iot_schema.device import properties_pb2, descriptor_pb2, device_pb2, property_update_pb2
-from kusinta_iot_schema.common import types_pb2
-from kusinta_iot_schema.identity import identity_pb2
+from kusinta.iot.device.v1 import properties_pb2, descriptor_pb2, property_update_pb2
+from kusinta.iot.common.v1 import types_pb2
+from kusinta.iot.identity.v1 import identity_pb2
 
 
 def test_thermostat_round_trip():
@@ -41,15 +41,15 @@ def test_device_descriptor_round_trip():
         matter_device_type_id=0x0301,
         vendor_name="eQ-3",
         product_name="HmIP-eTRV-2",
-        ownership=types_pb2.COMPANY,
-        lifecycle=types_pb2.OWNED,
+        ownership=types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY,
+        lifecycle=types_pb2.DEVICE_LIFECYCLE_STATE_OWNED,
     )
     decoded = descriptor_pb2.DeviceDescriptor()
     decoded.ParseFromString(original.SerializeToString())
     assert decoded.device_id.value == "dev-001"
     assert decoded.matter_device_type_id == 0x0301
     assert decoded.vendor_name == "eQ-3"
-    assert decoded.ownership == types_pb2.COMPANY
+    assert decoded.ownership == types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY
 
 
 def test_property_update_int_value():
