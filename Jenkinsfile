@@ -27,8 +27,7 @@ pipeline {
     stage('Setup') {
       steps {
         sh '''
-          #!/bin/bash
-          set -euo pipefail
+          set -eu
 
           # Install buf CLI if not present on the agent
           if ! command -v buf &>/dev/null; then
