@@ -2,7 +2,6 @@ pipeline {
   agent { label 'nodejs' }
 
   options {
-    timestamps()
     timeout(time: 20, unit: 'MINUTES')
     disableConcurrentBuilds()
   }
