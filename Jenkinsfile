@@ -27,14 +27,6 @@ pipeline {
     stage('Setup') {
       steps {
         sh '''
-          set -eu
-
-          # Install buf CLI if not present on the agent
-          if ! command -v buf &>/dev/null; then
-            curl -fsSL https://github.com/bufbuild/buf/releases/latest/download/buf-Linux-$(uname -m) -o "$HOME/.local/bin/buf"
-            chmod +x "$HOME/.local/bin/buf"
-          fi
-
           . "$NVM_DIR/nvm.sh"
           nvm use 24
           cd gen/js && npm ci
