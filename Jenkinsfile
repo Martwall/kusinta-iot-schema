@@ -67,7 +67,9 @@ pipeline {
       steps {
         sh '''
           cd gen/python
-          pip3 install --quiet -e ".[dev]"
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install --quiet -e ".[dev]"
           python3 -m pytest tests/ -v
         '''
       }
