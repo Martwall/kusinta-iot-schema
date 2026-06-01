@@ -18,8 +18,8 @@ pipeline {
           $class: 'GitSCM',
           branches: [[name: env.BRANCH_NAME ?: env.TAG_NAME]],
           userRemoteConfigs: [[
-            url: 'git@github.com:Martwall/kusinta-iot-schema.git',
-            credentialsId: 'schema-deploy-key'
+            url: 'https://github.com/Martwall/kusinta-iot-schema.git',
+            credentialsId: 'iot-schema-github-pat'
           ]]
         ])
       }
@@ -82,30 +82,12 @@ pipeline {
       }
     }
 
-    stage('Commit Generated') {
-      when { branch 'main' }
-      steps {
-        sshagent(['schema-deploy-key']) {
-          sh '''
-            git config user.email "jenkins@kusinta.com"
-            git config user.name "Jenkins"
-            git add gen/
-            if git diff --cached --quiet; then
-              echo "No generated file changes to commit."
-            else
-              git commit -m "chore: regenerate [skip ci]"
-              git push origin main
-            fi
-          '''
-        }
-      }
-    }
-
     stage('Tag Release') {
       when { branch 'main' }
       steps {
-        sshagent(['schema-deploy-key']) {
+        withCredentials([usernamePassword(credentialsId: 'iot-schema-github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
           sh '''
+            git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/Martwall/kusinta-iot-schema.git
             VERSION=$(cat VERSION)
             TAG="v${VERSION}"
             if git rev-parse "$TAG" >/dev/null 2>&1; then
