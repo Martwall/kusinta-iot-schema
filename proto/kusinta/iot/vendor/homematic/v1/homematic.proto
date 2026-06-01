@@ -14,41 +14,13 @@ message HmThermostatProps {
   float current_profile_period = 5;
 }
 
-// HomeMatic wall thermostat (HmIP-WTH series).
-message HmWallThermostatProps {
-  uint32 display_mode = 1; // 0=setpoint, 1=actual temp
-}
-
-// HomeMatic window actuator (HmIP-FROLL/BROLL).
-message HmWindowActuatorProps {
-  uint32 drive_state           = 1;
-  bool   error_efuse           = 2;
-  bool   error_motor_coils_temp = 3;
-}
-
-// HomeMatic door/window sensor (HmIP-SWDO/SWDM).
-message HmDoorSensorProps {
-  bool sabotage    = 1;
-  bool low_battery = 2;
-}
-
-// HomeMatic smoke detector (HmIP-SWSD).
-message HmSmokeDetectorProps {
-  bool alarm_triggered = 1;
-  bool low_battery     = 2;
-}
-
 // Top-level vendor extension attached to Device.properties field 50.
 // Carries the CCU3 device address + aiohomematic type string + device-type-specific props.
 message HomematicVendorExtension {
   string homematic_address = 1; // e.g. "MEQ1234567" (CCU3 device address)
-  string homematic_type    = 2; // aiohomematic device type string e.g. "HmIP-eTRV-2"
+  string homematic_type    = 2; // aiohomematic device type string e.g. "HmIP-eTRV-C"
 
   oneof homematic_props {
-    HmThermostatProps     hm_thermostat      = 10;
-    HmWallThermostatProps hm_wall_thermostat = 11;
-    HmWindowActuatorProps hm_window_actuator = 12;
-    HmDoorSensorProps     hm_door_sensor     = 13;
-    HmSmokeDetectorProps  hm_smoke_detector  = 14;
+    HmThermostatProps hm_thermostat = 10;
   }
 }

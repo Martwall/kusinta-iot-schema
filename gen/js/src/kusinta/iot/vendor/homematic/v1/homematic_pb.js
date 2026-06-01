@@ -8,7 +8,7 @@ import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
  * Describes the file kusinta/iot/vendor/homematic/v1/homematic.proto.
  */
 export const file_kusinta_iot_vendor_homematic_v1_homematic = /*@__PURE__*/
-  fileDesc("Ci9rdXNpbnRhL2lvdC92ZW5kb3IvaG9tZW1hdGljL3YxL2hvbWVtYXRpYy5wcm90bxIfa3VzaW50YS5pb3QudmVuZG9yLmhvbWVtYXRpYy52MSKSAQoRSG1UaGVybW9zdGF0UHJvcHMSEgoKYm9vc3RfbW9kZRgBIAEoCBIZChFib29zdF90aW1lX3BlcmlvZBgCIAEoAhIUCgxjb250cm9sX21vZGUYAyABKA0SGAoQZnJvc3RfcHJvdGVjdGlvbhgEIAEoCBIeChZjdXJyZW50X3Byb2ZpbGVfcGVyaW9kGAUgASgCIi0KFUhtV2FsbFRoZXJtb3N0YXRQcm9wcxIUCgxkaXNwbGF5X21vZGUYASABKA0iYQoVSG1XaW5kb3dBY3R1YXRvclByb3BzEhMKC2RyaXZlX3N0YXRlGAEgASgNEhMKC2Vycm9yX2VmdXNlGAIgASgIEh4KFmVycm9yX21vdG9yX2NvaWxzX3RlbXAYAyABKAgiOgoRSG1Eb29yU2Vuc29yUHJvcHMSEAoIc2Fib3RhZ2UYASABKAgSEwoLbG93X2JhdHRlcnkYAiABKAgiRAoUSG1TbW9rZURldGVjdG9yUHJvcHMSFwoPYWxhcm1fdHJpZ2dlcmVkGAEgASgIEhMKC2xvd19iYXR0ZXJ5GAIgASgIIvsDChhIb21lbWF0aWNWZW5kb3JFeHRlbnNpb24SGQoRaG9tZW1hdGljX2FkZHJlc3MYASABKAkSFgoOaG9tZW1hdGljX3R5cGUYAiABKAkSSwoNaG1fdGhlcm1vc3RhdBgKIAEoCzIyLmt1c2ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIABJUChJobV93YWxsX3RoZXJtb3N0YXQYCyABKAsyNi5rdXNpbnRhLmlvdC52ZW5kb3IuaG9tZW1hdGljLnYxLkhtV2FsbFRoZXJtb3N0YXRQcm9wc0gAElQKEmhtX3dpbmRvd19hY3R1YXRvchgMIAEoCzI2Lmt1c2ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1XaW5kb3dBY3R1YXRvclByb3BzSAASTAoOaG1fZG9vcl9zZW5zb3IYDSABKAsyMi5rdXNpbnRhLmlvdC52ZW5kb3IuaG9tZW1hdGljLnYxLkhtRG9vclNlbnNvclByb3BzSAASUgoRaG1fc21va2VfZGV0ZWN0b3IYDiABKAsyNS5rdXNpbnRhLmlvdC52ZW5kb3IuaG9tZW1hdGljLnYxLkhtU21va2VEZXRlY3RvclByb3BzSABCEQoPaG9tZW1hdGljX3Byb3BzQgJIAWIGcHJvdG8z");
+  fileDesc("Ci9rdXNpbnRhL2lvdC92ZW5kb3IvaG9tZW1hdGljL3YxL2hvbWVtYXRpYy5wcm90bxIfa3VzaW50YS5pb3QudmVuZG9yLmhvbWVtYXRpYy52MSKSAQoRSG1UaGVybW9zdGF0UHJvcHMSEgoKYm9vc3RfbW9kZRgBIAEoCBIZChFib29zdF90aW1lX3BlcmlvZBgCIAEoAhIUCgxjb250cm9sX21vZGUYAyABKA0SGAoQZnJvc3RfcHJvdGVjdGlvbhgEIAEoCBIeChZjdXJyZW50X3Byb2ZpbGVfcGVyaW9kGAUgASgCIq0BChhIb21lbWF0aWNWZW5kb3JFeHRlbnNpb24SGQoRaG9tZW1hdGljX2FkZHJlc3MYASABKAkSFgoOaG9tZW1hdGljX3R5cGUYAiABKAkSSwoNaG1fdGhlcm1vc3RhdBgKIAEoCzIyLmt1c2ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAEIRCg9ob21lbWF0aWNfcHJvcHNCAkgBYgZwcm90bzM");
 
 /**
  * Describes the message kusinta.iot.vendor.homematic.v1.HmThermostatProps.
@@ -18,37 +18,9 @@ export const HmThermostatPropsSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 0);
 
 /**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmWallThermostatProps.
- * Use `create(HmWallThermostatPropsSchema)` to create a new message.
- */
-export const HmWallThermostatPropsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 1);
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmWindowActuatorProps.
- * Use `create(HmWindowActuatorPropsSchema)` to create a new message.
- */
-export const HmWindowActuatorPropsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 2);
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmDoorSensorProps.
- * Use `create(HmDoorSensorPropsSchema)` to create a new message.
- */
-export const HmDoorSensorPropsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 3);
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmSmokeDetectorProps.
- * Use `create(HmSmokeDetectorPropsSchema)` to create a new message.
- */
-export const HmSmokeDetectorPropsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 4);
-
-/**
  * Describes the message kusinta.iot.vendor.homematic.v1.HomematicVendorExtension.
  * Use `create(HomematicVendorExtensionSchema)` to create a new message.
  */
 export const HomematicVendorExtensionSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 5);
+  messageDesc(file_kusinta_iot_vendor_homematic_v1_homematic, 1);
 

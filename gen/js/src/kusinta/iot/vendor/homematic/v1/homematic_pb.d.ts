@@ -54,100 +54,6 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
 export declare const HmThermostatPropsSchema: GenMessage<HmThermostatProps>;
 
 /**
- * HomeMatic wall thermostat (HmIP-WTH series).
- *
- * @generated from message kusinta.iot.vendor.homematic.v1.HmWallThermostatProps
- */
-export declare type HmWallThermostatProps = Message<"kusinta.iot.vendor.homematic.v1.HmWallThermostatProps"> & {
-  /**
-   * 0=setpoint, 1=actual temp
-   *
-   * @generated from field: uint32 display_mode = 1;
-   */
-  displayMode: number;
-};
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmWallThermostatProps.
- * Use `create(HmWallThermostatPropsSchema)` to create a new message.
- */
-export declare const HmWallThermostatPropsSchema: GenMessage<HmWallThermostatProps>;
-
-/**
- * HomeMatic window actuator (HmIP-FROLL/BROLL).
- *
- * @generated from message kusinta.iot.vendor.homematic.v1.HmWindowActuatorProps
- */
-export declare type HmWindowActuatorProps = Message<"kusinta.iot.vendor.homematic.v1.HmWindowActuatorProps"> & {
-  /**
-   * @generated from field: uint32 drive_state = 1;
-   */
-  driveState: number;
-
-  /**
-   * @generated from field: bool error_efuse = 2;
-   */
-  errorEfuse: boolean;
-
-  /**
-   * @generated from field: bool error_motor_coils_temp = 3;
-   */
-  errorMotorCoilsTemp: boolean;
-};
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmWindowActuatorProps.
- * Use `create(HmWindowActuatorPropsSchema)` to create a new message.
- */
-export declare const HmWindowActuatorPropsSchema: GenMessage<HmWindowActuatorProps>;
-
-/**
- * HomeMatic door/window sensor (HmIP-SWDO/SWDM).
- *
- * @generated from message kusinta.iot.vendor.homematic.v1.HmDoorSensorProps
- */
-export declare type HmDoorSensorProps = Message<"kusinta.iot.vendor.homematic.v1.HmDoorSensorProps"> & {
-  /**
-   * @generated from field: bool sabotage = 1;
-   */
-  sabotage: boolean;
-
-  /**
-   * @generated from field: bool low_battery = 2;
-   */
-  lowBattery: boolean;
-};
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmDoorSensorProps.
- * Use `create(HmDoorSensorPropsSchema)` to create a new message.
- */
-export declare const HmDoorSensorPropsSchema: GenMessage<HmDoorSensorProps>;
-
-/**
- * HomeMatic smoke detector (HmIP-SWSD).
- *
- * @generated from message kusinta.iot.vendor.homematic.v1.HmSmokeDetectorProps
- */
-export declare type HmSmokeDetectorProps = Message<"kusinta.iot.vendor.homematic.v1.HmSmokeDetectorProps"> & {
-  /**
-   * @generated from field: bool alarm_triggered = 1;
-   */
-  alarmTriggered: boolean;
-
-  /**
-   * @generated from field: bool low_battery = 2;
-   */
-  lowBattery: boolean;
-};
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HmSmokeDetectorProps.
- * Use `create(HmSmokeDetectorPropsSchema)` to create a new message.
- */
-export declare const HmSmokeDetectorPropsSchema: GenMessage<HmSmokeDetectorProps>;
-
-/**
  * Top-level vendor extension attached to Device.properties field 50.
  * Carries the CCU3 device address + aiohomematic type string + device-type-specific props.
  *
@@ -162,7 +68,7 @@ export declare type HomematicVendorExtension = Message<"kusinta.iot.vendor.homem
   homematicAddress: string;
 
   /**
-   * aiohomematic device type string e.g. "HmIP-eTRV-2"
+   * aiohomematic device type string e.g. "HmIP-eTRV-C"
    *
    * @generated from field: string homematic_type = 2;
    */
@@ -177,30 +83,6 @@ export declare type HomematicVendorExtension = Message<"kusinta.iot.vendor.homem
      */
     value: HmThermostatProps;
     case: "hmThermostat";
-  } | {
-    /**
-     * @generated from field: kusinta.iot.vendor.homematic.v1.HmWallThermostatProps hm_wall_thermostat = 11;
-     */
-    value: HmWallThermostatProps;
-    case: "hmWallThermostat";
-  } | {
-    /**
-     * @generated from field: kusinta.iot.vendor.homematic.v1.HmWindowActuatorProps hm_window_actuator = 12;
-     */
-    value: HmWindowActuatorProps;
-    case: "hmWindowActuator";
-  } | {
-    /**
-     * @generated from field: kusinta.iot.vendor.homematic.v1.HmDoorSensorProps hm_door_sensor = 13;
-     */
-    value: HmDoorSensorProps;
-    case: "hmDoorSensor";
-  } | {
-    /**
-     * @generated from field: kusinta.iot.vendor.homematic.v1.HmSmokeDetectorProps hm_smoke_detector = 14;
-     */
-    value: HmSmokeDetectorProps;
-    case: "hmSmokeDetector";
   } | { case: undefined; value?: undefined };
 };
 
