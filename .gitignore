@@ -5,3 +5,9 @@ gen/ts/node_modules/
 # Python bytecode and test cache
 **/__pycache__/
 **/.pytest_cache/
+
+# Python virtual environments
+.venv/
+
+# Claude Code AI tooling (local only)
+.claude/

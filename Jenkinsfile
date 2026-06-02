@@ -17,8 +17,7 @@ pipeline {
           $class: 'GitSCM',
           branches: [[name: env.BRANCH_NAME ?: env.TAG_NAME]],
           userRemoteConfigs: [[
-            url: 'https://github.com/Martwall/kusinta-iot-schema.git',
-            credentialsId: 'iot-schema-github-pat'
+            url: 'https://github.com/Martwall/kusinta-iot-schema.git'
           ]]
         ])
       }
