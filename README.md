@@ -26,10 +26,10 @@ gen/
   python/          # kusinta-iot-schema Python package (generated, committed)
   dart/            # kusinta_iot_schema Dart package (generated, committed)
 
+package.json       # JS package — version here drives the git tag (Jenkins reads it)
 buf.gen.yaml       # buf generate config (remote plugins for JS, Python, Dart)
 buf.yaml           # buf lint + breaking-change config
-VERSION            # semver string consumed by Jenkinsfile for tagging
-Jenkinsfile        # lint → generate → test → commit generated → tag
+Jenkinsfile        # lint → generate → test → tag
 ```
 
 ## Device types
@@ -128,9 +128,18 @@ reserved "control_mode";
 
 ## Versioning
 
-`VERSION` contains the current semver string. Jenkins creates a git tag `v<VERSION>` on `main`
-when the file changes. Consumers pin to a tag for example:
+Bump `version` in `package.json` only. A pre-commit hook syncs it automatically to `gen/python/pyproject.toml` and `gen/dart/pubspec.yaml`. Jenkins verifies all three match before tagging.
+
+Activate the hook on a fresh clone:
+
+```bash
+npm install
+```
+
+Jenkins creates a git tag `v<version>` on `main`. Consumers pin to a tag:
 
 ```
 github:Martwall/kusinta-iot-schema#<TAG>
 ```
+
+When adding a new proto package, add an `exports` entry to **both** root `package.json` and `gen/js/package.json` (same key, paths differ by prefix).

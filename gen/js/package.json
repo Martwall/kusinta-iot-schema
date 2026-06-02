@@ -1,6 +1,5 @@
 {
   "name": "@kusinta/iot-schema",
-  "version": "0.1.0",
   "type": "module",
   "files": ["src"],
   "scripts": {

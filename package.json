@@ -1,0 +1,26 @@
+{
+  "name": "@kusinta/iot-schema",
+  "version": "0.1.0-beta.1",
+  "type": "module",
+  "files": ["gen/js/src"],
+  "exports": {
+    "./common":                 "./gen/js/src/kusinta/iot/common/v1/types_pb.js",
+    "./identity":               "./gen/js/src/kusinta/iot/identity/v1/identity_pb.js",
+    "./device":                 "./gen/js/src/kusinta/iot/device/v1/device_pb.js",
+    "./device/descriptor":      "./gen/js/src/kusinta/iot/device/v1/descriptor_pb.js",
+    "./device/properties":      "./gen/js/src/kusinta/iot/device/v1/properties_pb.js",
+    "./device/property-update": "./gen/js/src/kusinta/iot/device/v1/property_update_pb.js",
+    "./space":                  "./gen/js/src/kusinta/iot/space/v1/space_pb.js",
+    "./access":                 "./gen/js/src/kusinta/iot/access/v1/acl_pb.js",
+    "./access/roles":           "./gen/js/src/kusinta/iot/access/v1/roles_pb.js",
+    "./connector":              "./gen/js/src/kusinta/iot/connector/v1/connector_pb.js",
+    "./connector/service":      "./gen/js/src/kusinta/iot/connector/v1/connector_service_pb.js",
+    "./webrtc":                 "./gen/js/src/kusinta/iot/webrtc/v1/envelope_pb.js"
+  },
+  "scripts": {
+    "prepare": "git config core.hooksPath .githooks"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.12.0"
+  }
+}

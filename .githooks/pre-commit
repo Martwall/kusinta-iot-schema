@@ -1,0 +1,7 @@
+#!/bin/sh
+VERSION=$(node -p "require('./package.json').version" 2>/dev/null) || exit 0
+
+sed -i "s/^version = \".*\"/version = \"$VERSION\"/" gen/python/pyproject.toml
+sed -i "s/^version: .*/version: $VERSION/" gen/dart/pubspec.yaml
+
+git add gen/python/pyproject.toml gen/dart/pubspec.yaml

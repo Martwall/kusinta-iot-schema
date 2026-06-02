@@ -33,6 +33,17 @@ pipeline {
       }
     }
 
+    stage('Version check') {
+      steps {
+        sh '''
+          VERSION=$(node -p "require('./package.json').version")
+          grep -q "^version = \\"$VERSION\\"" gen/python/pyproject.toml || { echo "pyproject.toml version does not match package.json ($VERSION)"; exit 1; }
+          grep -q "^version: $VERSION" gen/dart/pubspec.yaml            || { echo "pubspec.yaml version does not match package.json ($VERSION)"; exit 1; }
+          echo "All versions match: $VERSION"
+        '''
+      }
+    }
+
     stage('Lint') {
       steps {
         sh 'buf lint'
@@ -80,7 +91,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'iot-schema-github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
           sh '''
             git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/Martwall/kusinta-iot-schema.git
-            VERSION=$(cat VERSION)
+            VERSION=$(node -p "require('./package.json').version")
             TAG="v${VERSION}"
             if git rev-parse "$TAG" >/dev/null 2>&1; then
               echo "Tag $TAG already exists — skipping."
