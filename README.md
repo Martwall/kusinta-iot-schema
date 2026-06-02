@@ -85,7 +85,7 @@ switch (decoded.payload?.case) {
 ```toml
 # connector pyproject.toml
 dependencies = [
-  "kusinta-iot-schema @ git+https://github.com/Martwall/kusinta-iot-schema.git@v0.1.0#subdirectory=gen/python",
+  "kusinta-iot-schema @ git+https://github.com/Martwall/kusinta-iot-schema.git@<TAG>#subdirectory=gen/python",
   "grpcio>=1.80.0",
 ]
 ```
@@ -132,5 +132,5 @@ reserved "control_mode";
 when the file changes. Consumers pin to a tag for example:
 
 ```
-github:Martwall/kusinta-iot-schema#v0.1.0
+github:Martwall/kusinta-iot-schema#<TAG>
 ```
