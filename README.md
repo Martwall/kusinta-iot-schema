@@ -57,38 +57,11 @@ Vendor extensions occupy `Device.properties` fields 50–99. `HomematicVendorExt
 
 ## Consuming the packages
 
-### Javsript/TypeScript (decl) (gateway server / connector snap)
-
-```javascript
-// @ts-check
-import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
-import { ConnectorGatewayService } from '@kusinta/iot-schema/connector/service'
-import { ConnectRequestSchema, ConnectResponseSchema } from '@kusinta/iot-schema/connector'
-import { GatewayMessageSchema, AppMessageSchema } from '@kusinta/iot-schema/webrtc'
-import { DeviceSchema } from '@kusinta/iot-schema/device'
-
-// Encode
-const msg = create(GatewayMessageSchema, { messageId: 'gw-1', payload: { case: 'pong', value: {} } })
-const bytes = toBinary(GatewayMessageSchema, msg)
-dataChannel.send(bytes)
-
-// Decode
-const decoded = fromBinary(AppMessageSchema, new Uint8Array(data))
-switch (decoded.payload?.case) {
-  case 'handshake': /* validate JWT */ break
-  case 'command':   /* forward to connector */ break
-}
-```
-
-### Python
-
-```toml
-# pyproject.toml
-dependencies = [
-  "kusinta-iot-schema @ git+https://github.com/Martwall/kusinta-iot-schema.git@<TAG>#subdirectory=gen/python",
-  "grpcio>=1.80.0",
-]
-```
+| Language | Package | README |
+|---|---|---|
+| JavaScript / TypeScript | `@kusinta/iot-schema` | [gen/js/README.md](gen/js/README.md) |
+| Python | `kusinta-iot-schema` | [gen/python/README.md](gen/python/README.md) |
+| Dart | `kusinta_iot_schema` | [gen/dart/README.md](gen/dart/README.md) |
 
 ## Regenerating code
 
