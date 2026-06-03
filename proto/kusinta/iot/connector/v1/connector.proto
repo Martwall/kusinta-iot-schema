@@ -7,6 +7,7 @@ import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/device/v1/descriptor.proto";
 import "kusinta/iot/device/v1/property_update.proto";
+import "kusinta/iot/webrtc/v1/command.proto";
 
 option optimize_for = SPEED;
 
@@ -80,10 +81,13 @@ message ConnectResponse {
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;
 
+  reserved 4;
+
   oneof payload {
-    HandshakeAck      handshake_ack = 3;
-    SubscribeDevice   subscribe     = 5;
-    UnsubscribeDevice unsubscribe   = 6;
-    GatewayError      error         = 7;
+    HandshakeAck                        handshake_ack   = 3;
+    SubscribeDevice                     subscribe       = 5;
+    UnsubscribeDevice                   unsubscribe     = 6;
+    GatewayError                        error           = 7;
+    kusinta.iot.webrtc.v1.DeviceCommand execute_command = 8;
   }
 }

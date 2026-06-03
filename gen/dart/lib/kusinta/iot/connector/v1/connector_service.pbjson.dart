@@ -21,6 +21,7 @@ import 'package:protobuf/well_known_types/google/protobuf/timestamp.pbjson.dart'
 import '../../device/v1/descriptor.pbjson.dart' as $3;
 import '../../device/v1/property_update.pbjson.dart' as $4;
 import '../../identity/v1/identity.pbjson.dart' as $2;
+import '../../webrtc/v1/command.pbjson.dart' as $5;
 import 'connector.pbjson.dart' as $0;
 
 const $core.Map<$core.String, $core.dynamic> ConnectorGatewayServiceBase$json =
@@ -61,6 +62,14 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.identity.v1.GatewayId': $2.GatewayId$json,
   '.kusinta.iot.connector.v1.SubscribeDevice': $0.SubscribeDevice$json,
   '.kusinta.iot.connector.v1.UnsubscribeDevice': $0.UnsubscribeDevice$json,
+  '.kusinta.iot.webrtc.v1.DeviceCommand': $5.DeviceCommand$json,
+  '.kusinta.iot.webrtc.v1.ThermostatSetpointParams':
+      $5.ThermostatSetpointParams$json,
+  '.kusinta.iot.webrtc.v1.LevelControlParams': $5.LevelControlParams$json,
+  '.kusinta.iot.webrtc.v1.OnOffParams': $5.OnOffParams$json,
+  '.kusinta.iot.webrtc.v1.WindowCoveringLiftParams':
+      $5.WindowCoveringLiftParams$json,
+  '.kusinta.iot.webrtc.v1.DoorLockParams': $5.DoorLockParams$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

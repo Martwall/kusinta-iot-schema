@@ -5,6 +5,7 @@ import {
   GatewayMessageSchema,
   AppMessageSchema,
   AppHandshakeSchema,
+  HandshakeRejectedSchema,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
 import { DeviceCommandSchema, CommandResultSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import { DeviceStateSnapshotSchema, DevicePropertyEventSchema } from '../kusinta/iot/webrtc/v1/device_state_pb.js'
@@ -219,6 +220,18 @@ describe('GatewayMessage oneof payload', () => {
     })
     const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
     expect(decoded.payload?.case).toBe('pong')
+  })
+
+  it('round-trips handshake_rejected payload', () => {
+    const msg = create(GatewayMessageSchema, {
+      messageId: 'gw-msg-reject-1',
+      payload: { case: 'handshakeRejected', value: { reason: 'JWT signature invalid' } },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('handshakeRejected')
+    if (decoded.payload?.case === 'handshakeRejected') {
+      expect(decoded.payload.value.reason).toBe('JWT signature invalid')
+    }
   })
 })
 

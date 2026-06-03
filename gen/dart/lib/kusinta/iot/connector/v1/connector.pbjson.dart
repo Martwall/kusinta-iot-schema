@@ -382,9 +382,21 @@ const ConnectResponse$json = {
       '9': 0,
       '10': 'error'
     },
+    {
+      '1': 'execute_command',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.DeviceCommand',
+      '9': 0,
+      '10': 'executeCommand'
+    },
   ],
   '8': [
     {'1': 'payload'},
+  ],
+  '9': [
+    {'1': 4, '2': 5},
   ],
 };
 
@@ -397,4 +409,5 @@ final $typed_data.Uint8List connectResponseDescriptor = $convert.base64Decode(
     'ci52MS5TdWJzY3JpYmVEZXZpY2VIAFIJc3Vic2NyaWJlEk8KC3Vuc3Vic2NyaWJlGAYgASgLMi'
     'sua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlVuc3Vic2NyaWJlRGV2aWNlSABSC3Vuc3Vic2Ny'
     'aWJlEj4KBWVycm9yGAcgASgLMiYua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkdhdGV3YXlFcn'
-    'JvckgAUgVlcnJvckIJCgdwYXlsb2Fk');
+    'JvckgAUgVlcnJvchJPCg9leGVjdXRlX2NvbW1hbmQYCCABKAsyJC5rdXNpbnRhLmlvdC53ZWJy'
+    'dGMudjEuRGV2aWNlQ29tbWFuZEgAUg5leGVjdXRlQ29tbWFuZEIJCgdwYXlsb2FkSgQIBBAF');

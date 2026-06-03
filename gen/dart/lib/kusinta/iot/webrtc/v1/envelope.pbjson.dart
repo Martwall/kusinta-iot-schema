@@ -31,6 +31,18 @@ const Pong$json = {
 /// Descriptor for `Pong`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pongDescriptor = $convert.base64Decode('CgRQb25n');
 
+@$core.Deprecated('Use handshakeRejectedDescriptor instead')
+const HandshakeRejected$json = {
+  '1': 'HandshakeRejected',
+  '2': [
+    {'1': 'reason', '3': 1, '4': 1, '5': 9, '10': 'reason'},
+  ],
+};
+
+/// Descriptor for `HandshakeRejected`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List handshakeRejectedDescriptor = $convert.base64Decode(
+    'ChFIYW5kc2hha2VSZWplY3RlZBIWCgZyZWFzb24YASABKAlSBnJlYXNvbg==');
+
 @$core.Deprecated('Use appHandshakeDescriptor instead')
 const AppHandshake$json = {
   '1': 'AppHandshake',
@@ -135,6 +147,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'pong'
     },
+    {
+      '1': 'handshake_rejected',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.HandshakeRejected',
+      '9': 0,
+      '10': 'handshakeRejected'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -152,7 +173,9 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'aW9uVXBkYXRlSABSEHBlcm1pc3Npb25VcGRhdGUSTQoOY29tbWFuZF9yZXN1bHQYBiABKAsyJC'
     '5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZFJlc3VsdEgAUg1jb21tYW5kUmVzdWx0EhYK'
     'BWVycm9yGAcgASgJSABSBWVycm9yEjEKBHBvbmcYCCABKAsyGy5rdXNpbnRhLmlvdC53ZWJydG'
-    'MudjEuUG9uZ0gAUgRwb25nQgkKB3BheWxvYWQ=');
+    'MudjEuUG9uZ0gAUgRwb25nElkKEmhhbmRzaGFrZV9yZWplY3RlZBgJIAEoCzIoLmt1c2ludGEu'
+    'aW90LndlYnJ0Yy52MS5IYW5kc2hha2VSZWplY3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZEIJCg'
+    'dwYXlsb2Fk');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

@@ -99,6 +99,61 @@ class Pong extends $pb.GeneratedMessage {
   static Pong? _defaultInstance;
 }
 
+class HandshakeRejected extends $pb.GeneratedMessage {
+  factory HandshakeRejected({
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  HandshakeRejected._();
+
+  factory HandshakeRejected.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HandshakeRejected.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HandshakeRejected',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HandshakeRejected clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HandshakeRejected copyWith(void Function(HandshakeRejected) updates) =>
+      super.copyWith((message) => updates(message as HandshakeRejected))
+          as HandshakeRejected;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HandshakeRejected create() => HandshakeRejected._();
+  @$core.override
+  HandshakeRejected createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static HandshakeRejected getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HandshakeRejected>(create);
+  static HandshakeRejected? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get reason => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set reason($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasReason() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReason() => $_clearField(1);
+}
+
 /// AppHandshake must be the first message sent by the Flutter app on the data channel.
 /// The gateway validates the JWT locally using the mykusinta-api-server public key,
 /// checks that gateway_id in the JWT matches this gateway, then extracts the role.
@@ -254,6 +309,7 @@ enum GatewayMessage_Payload {
   commandResult,
   error,
   pong,
+  handshakeRejected,
   notSet
 }
 
@@ -268,6 +324,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     $4.CommandResult? commandResult,
     $core.String? error,
     Pong? pong,
+    HandshakeRejected? handshakeRejected,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -278,6 +335,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (commandResult != null) result.commandResult = commandResult;
     if (error != null) result.error = error;
     if (pong != null) result.pong = pong;
+    if (handshakeRejected != null) result.handshakeRejected = handshakeRejected;
     return result;
   }
 
@@ -298,6 +356,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     6: GatewayMessage_Payload.commandResult,
     7: GatewayMessage_Payload.error,
     8: GatewayMessage_Payload.pong,
+    9: GatewayMessage_Payload.handshakeRejected,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -305,7 +364,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8])
+    ..oo(0, [3, 4, 5, 6, 7, 8, 9])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $1.Timestamp.create)
@@ -319,6 +378,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: $4.CommandResult.create)
     ..aOS(7, _omitFieldNames ? '' : 'error')
     ..aOM<Pong>(8, _omitFieldNames ? '' : 'pong', subBuilder: Pong.create)
+    ..aOM<HandshakeRejected>(9, _omitFieldNames ? '' : 'handshakeRejected',
+        subBuilder: HandshakeRejected.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -346,6 +407,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
   GatewayMessage_Payload whichPayload() =>
       _GatewayMessage_PayloadByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(3)
@@ -354,6 +416,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
   @$pb.TagNumber(8)
+  @$pb.TagNumber(9)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -439,6 +502,17 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearPong() => $_clearField(8);
   @$pb.TagNumber(8)
   Pong ensurePong() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  HandshakeRejected get handshakeRejected => $_getN(8);
+  @$pb.TagNumber(9)
+  set handshakeRejected(HandshakeRejected value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasHandshakeRejected() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearHandshakeRejected() => $_clearField(9);
+  @$pb.TagNumber(9)
+  HandshakeRejected ensureHandshakeRejected() => $_ensure(8);
 }
 
 enum AppMessage_Payload { handshake, command, readRequest, ping, notSet }

@@ -4,7 +4,9 @@ plugins:
   # Service descriptors are included in *_pb.js, usable with @connectrpc/connect v2
   - remote: buf.build/bufbuild/es:v2.12.0
     out: gen/js/src
-    opt: target=js+dts
+    opt:
+      - target=js+dts
+      - import_extension=js
 
   # Python — gRPC stubs (depends on protocolbuffers/python)
   - remote: buf.build/grpc/python:v1.80.0

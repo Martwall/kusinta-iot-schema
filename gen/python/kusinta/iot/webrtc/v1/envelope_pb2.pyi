@@ -21,6 +21,12 @@ class Pong(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
+class HandshakeRejected(_message.Message):
+    __slots__ = ("reason",)
+    REASON_FIELD_NUMBER: _ClassVar[int]
+    reason: str
+    def __init__(self, reason: _Optional[str] = ...) -> None: ...
+
 class AppHandshake(_message.Message):
     __slots__ = ("jwt", "subscribe_device_ids")
     JWT_FIELD_NUMBER: _ClassVar[int]
@@ -40,7 +46,7 @@ class PropertyReadRequest(_message.Message):
     def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., cluster_id_hex: _Optional[str] = ...) -> None: ...
 
 class GatewayMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "error", "pong")
+    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "error", "pong", "handshake_rejected")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
@@ -49,6 +55,7 @@ class GatewayMessage(_message.Message):
     COMMAND_RESULT_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     PONG_FIELD_NUMBER: _ClassVar[int]
+    HANDSHAKE_REJECTED_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     state_snapshot: _device_state_pb2.DeviceStateSnapshot
@@ -57,7 +64,8 @@ class GatewayMessage(_message.Message):
     command_result: _command_pb2.CommandResult
     error: str
     pong: Pong
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., error: _Optional[str] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ...) -> None: ...
+    handshake_rejected: HandshakeRejected
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., error: _Optional[str] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ...) -> None: ...
 
 class AppMessage(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping")

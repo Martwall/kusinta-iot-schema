@@ -10,6 +10,7 @@ import {
   DeviceRemovalSchema,
 } from '../kusinta/iot/connector/v1/connector_pb.js'
 import { ConnectorTransport } from '../kusinta/iot/common/v1/types_pb.js'
+import { DeviceCommandSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
 
 describe('ConnectorHandshake', () => {
   it('round-trips with known_devices', () => {
@@ -139,6 +140,28 @@ describe('ConnectResponse oneof payload', () => {
     expect(decoded.payload?.case).toBe('handshakeAck')
     if (decoded.payload?.case === 'handshakeAck') {
       expect(decoded.payload.value.accepted).toBe(true)
+    }
+  })
+
+  it('round-trips execute_command payload', () => {
+    const msg = create(ConnectResponseSchema, {
+      messageId: 'gw-cmd-001',
+      payload: {
+        case: 'executeCommand',
+        value: {
+          commandId: 'cmd-uuid-1',
+          deviceId: { value: 'light-1' },
+          clusterIdHex: '0006',
+          commandName: 'Toggle',
+          parameters: { case: 'onOff', value: { toggle: true } },
+        },
+      },
+    })
+    const decoded = fromBinary(ConnectResponseSchema, toBinary(ConnectResponseSchema, msg))
+    expect(decoded.payload?.case).toBe('executeCommand')
+    if (decoded.payload?.case === 'executeCommand') {
+      expect(decoded.payload.value.commandId).toBe('cmd-uuid-1')
+      expect(decoded.payload.value.deviceId?.value).toBe('light-1')
     }
   })
 })

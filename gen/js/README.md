@@ -10,6 +10,13 @@ npm install @kusinta/iot-schema
 
 Requires `@bufbuild/protobuf` as a peer dependency (installed automatically).
 
+## Requirements
+
+- Node.js 18+ (ESM — `"type": "module"`)
+- `@bufbuild/protobuf` ^2.x (installed automatically as a peer dependency)
+
+Works in raw Node.js ESM projects without a bundler.
+
 ## Usage
 
 ```javascript

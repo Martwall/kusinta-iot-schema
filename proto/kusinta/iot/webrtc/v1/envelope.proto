@@ -13,6 +13,10 @@ option optimize_for = SPEED;
 message Ping {}
 message Pong {}
 
+message HandshakeRejected {
+  string reason = 1;
+}
+
 // AppHandshake must be the first message sent by the Flutter app on the data channel.
 // The gateway validates the JWT locally using the mykusinta-api-server public key,
 // checks that gateway_id in the JWT matches this gateway, then extracts the role.
@@ -33,12 +37,13 @@ message GatewayMessage {
   google.protobuf.Timestamp sent_at    = 2;
 
   oneof payload {
-    DeviceStateSnapshot   state_snapshot    = 3;
-    DevicePropertyEvent   property_event    = 4;
-    LivePermissionUpdate  permission_update = 5;
-    CommandResult         command_result    = 6;
-    string                error             = 7; // error description string
-    Pong                  pong              = 8;
+    DeviceStateSnapshot   state_snapshot     = 3;
+    DevicePropertyEvent   property_event     = 4;
+    LivePermissionUpdate  permission_update  = 5;
+    CommandResult         command_result     = 6;
+    string                error              = 7; // error description string
+    Pong                  pong               = 8;
+    HandshakeRejected     handshake_rejected = 9;
   }
 }
 

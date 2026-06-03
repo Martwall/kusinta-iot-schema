@@ -42,3 +42,13 @@ Jenkins checks all three match and fails the build if they don't.
 ### Adding a new proto package
 Add an `exports` entry to `gen/js/package.json`:
 - `"./new-pkg": "./src/kusinta/iot/new-pkg/v1/new_pkg_pb.js"`
+
+## Proto guidelines
+
+### Reserved fields
+Always mark removed or skipped field numbers with `reserved` so they are never accidentally reused:
+```proto
+reserved 4;           // field number gap
+reserved "old_name";  // field name (prevents reuse after a rename)
+```
+A gap without a `reserved` statement is a bug waiting to happen.

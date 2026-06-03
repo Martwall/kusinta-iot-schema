@@ -16,10 +16,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
     as $2;
 
-import '../../common/v1/types.pbenum.dart' as $4;
+import '../../common/v1/types.pbenum.dart' as $5;
 import '../../device/v1/descriptor.pb.dart' as $1;
 import '../../device/v1/property_update.pb.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
+import '../../webrtc/v1/command.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -28,7 +29,7 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     $0.ConnectorId? connectorId,
     $core.String? displayName,
     $core.String? version,
-    $4.ConnectorTransport? transport,
+    $5.ConnectorTransport? transport,
     $core.String? endpoint,
     $core.Iterable<$core.int>? supportedDeviceTypeIds,
   }) {
@@ -61,8 +62,8 @@ class ConnectorInfo extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..aOS(3, _omitFieldNames ? '' : 'version')
-    ..aE<$4.ConnectorTransport>(4, _omitFieldNames ? '' : 'transport',
-        enumValues: $4.ConnectorTransport.values)
+    ..aE<$5.ConnectorTransport>(4, _omitFieldNames ? '' : 'transport',
+        enumValues: $5.ConnectorTransport.values)
     ..aOS(5, _omitFieldNames ? '' : 'endpoint')
     ..p<$core.int>(
         6, _omitFieldNames ? '' : 'supportedDeviceTypeIds', $pb.PbFieldType.KU3)
@@ -117,9 +118,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $4.ConnectorTransport get transport => $_getN(3);
+  $5.ConnectorTransport get transport => $_getN(3);
   @$pb.TagNumber(4)
-  set transport($4.ConnectorTransport value) => $_setField(4, value);
+  set transport($5.ConnectorTransport value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTransport() => $_has(3);
   @$pb.TagNumber(4)
@@ -945,6 +946,7 @@ enum ConnectResponse_Payload {
   subscribe,
   unsubscribe,
   error,
+  executeCommand,
   notSet
 }
 
@@ -956,6 +958,7 @@ class ConnectResponse extends $pb.GeneratedMessage {
     SubscribeDevice? subscribe,
     UnsubscribeDevice? unsubscribe,
     GatewayError? error,
+    $4.DeviceCommand? executeCommand,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -964,6 +967,7 @@ class ConnectResponse extends $pb.GeneratedMessage {
     if (subscribe != null) result.subscribe = subscribe;
     if (unsubscribe != null) result.unsubscribe = unsubscribe;
     if (error != null) result.error = error;
+    if (executeCommand != null) result.executeCommand = executeCommand;
     return result;
   }
 
@@ -982,6 +986,7 @@ class ConnectResponse extends $pb.GeneratedMessage {
     5: ConnectResponse_Payload.subscribe,
     6: ConnectResponse_Payload.unsubscribe,
     7: ConnectResponse_Payload.error,
+    8: ConnectResponse_Payload.executeCommand,
     0: ConnectResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -989,7 +994,7 @@ class ConnectResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 5, 6, 7])
+    ..oo(0, [3, 5, 6, 7, 8])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $2.Timestamp.create)
@@ -1001,6 +1006,8 @@ class ConnectResponse extends $pb.GeneratedMessage {
         subBuilder: UnsubscribeDevice.create)
     ..aOM<GatewayError>(7, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
+    ..aOM<$4.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
+        subBuilder: $4.DeviceCommand.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1026,12 +1033,14 @@ class ConnectResponse extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   ConnectResponse_Payload whichPayload() =>
       _ConnectResponse_PayloadByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(3)
   @$pb.TagNumber(5)
   @$pb.TagNumber(6)
   @$pb.TagNumber(7)
+  @$pb.TagNumber(8)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -1097,6 +1106,17 @@ class ConnectResponse extends $pb.GeneratedMessage {
   void clearError() => $_clearField(7);
   @$pb.TagNumber(7)
   GatewayError ensureError() => $_ensure(5);
+
+  @$pb.TagNumber(8)
+  $4.DeviceCommand get executeCommand => $_getN(6);
+  @$pb.TagNumber(8)
+  set executeCommand($4.DeviceCommand value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasExecuteCommand() => $_has(6);
+  @$pb.TagNumber(8)
+  void clearExecuteCommand() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $4.DeviceCommand ensureExecuteCommand() => $_ensure(6);
 }
 
 const $core.bool _omitFieldNames =
