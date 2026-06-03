@@ -33,11 +33,12 @@
 ## Release & maintenance
 
 ### Versioning
-Bump `version` in `package.json` only. A pre-commit hook (`.githooks/pre-commit`) automatically syncs it to `gen/python/pyproject.toml` and `gen/dart/pubspec.yaml` before the commit is created. Jenkins also checks all three match and fails the build if they don't.
-
-On a fresh clone, run `npm install` at the repo root to activate the hook via the `prepare` script.
+Use `set-version.sh` to bump the version — it updates `gen/js/package.json`, `gen/python/pyproject.toml`, and `gen/dart/pubspec.yaml` in one step:
+```bash
+./set-version.sh 0.2.0
+```
+Jenkins checks all three match and fails the build if they don't.
 
 ### Adding a new proto package
-Add an `exports` entry to **both**:
-- root `package.json` — `"./new-pkg": "./gen/js/src/kusinta/iot/new-pkg/v1/new_pkg_pb.js"`
-- `gen/js/package.json` — same entry with `./src/...` paths (used for local dev/test)
+Add an `exports` entry to `gen/js/package.json`:
+- `"./new-pkg": "./src/kusinta/iot/new-pkg/v1/new_pkg_pb.js"`

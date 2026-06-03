@@ -1,5 +1,6 @@
 name: kusinta_iot_schema
 description: Generated protobuf message types for the Kusinta IoT platform.
+# Set via ./set-version.sh <version>
 version: 0.1.0-beta.2
 publish_to: none
 

@@ -26,10 +26,10 @@ gen/
   python/          # kusinta-iot-schema Python package (generated, committed)
   dart/            # kusinta_iot_schema Dart package (generated, committed)
 
-package.json       # JS package — version here drives the git tag (Jenkins reads it)
+set-version.sh     # bumps version in all three package manifests at once
 buf.gen.yaml       # buf generate config (remote plugins for JS, Python, Dart)
 buf.yaml           # buf lint + breaking-change config
-Jenkinsfile        # lint → generate → test → tag
+Jenkinsfile        # lint → generate → test → tag → npm publish
 ```
 
 ## Device types
@@ -128,18 +128,16 @@ reserved "control_mode";
 
 ## Versioning
 
-Bump `version` in `package.json` only. A pre-commit hook syncs it automatically to `gen/python/pyproject.toml` and `gen/dart/pubspec.yaml`. Jenkins verifies all three match before tagging.
-
-Activate the hook on a fresh clone:
+Use `set-version.sh` to bump the version — it updates all three package manifests in one step:
 
 ```bash
-npm install
+./set-version.sh 0.2.0
 ```
 
-Jenkins creates a git tag `v<version>` on `main`. Consumers pin to a tag:
+Jenkins verifies all three manifests match before tagging and publishing to npm. Consumers install by version:
 
-```
-github:Martwall/kusinta-iot-schema#<TAG>
+```bash
+npm install @kusinta/iot-schema@<version>
 ```
 
-When adding a new proto package, add an `exports` entry to **both** root `package.json` and `gen/js/package.json` (same key, paths differ by prefix).
+When adding a new proto package, add an `exports` entry to `gen/js/package.json`.
