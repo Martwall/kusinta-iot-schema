@@ -116,10 +116,9 @@ pipeline {
             if npm view "@kusinta/iot-schema@${VERSION}" version >/dev/null 2>&1; then
               echo "@kusinta/iot-schema@${VERSION} already published — skipping."
             else
-              DIST_TAG=$(echo "$VERSION" | grep -o -- '-[a-zA-Z]*' | tr -d '-' || echo 'latest')
               echo '//registry.npmjs.org/:_authToken=${NPM_KUSINTA_IOT_SCHEMA_TOKEN}' > gen/js/.npmrc
-              cd gen/js && npm publish --access public --tag "${DIST_TAG}"
-              echo "Published @kusinta/iot-schema@${VERSION} with tag ${DIST_TAG}"
+              cd gen/js && npm publish --access public
+              echo "Published @kusinta/iot-schema@${VERSION}"
             fi
           '''
         }
