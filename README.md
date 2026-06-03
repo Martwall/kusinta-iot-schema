@@ -67,7 +67,7 @@ import { ConnectRequestSchema, ConnectResponseSchema } from '@kusinta/iot-schema
 import { GatewayMessageSchema, AppMessageSchema } from '@kusinta/iot-schema/webrtc'
 import { DeviceSchema } from '@kusinta/iot-schema/device'
 
-// Encode for WebRTC data channel
+// Encode
 const msg = create(GatewayMessageSchema, { messageId: 'gw-1', payload: { case: 'pong', value: {} } })
 const bytes = toBinary(GatewayMessageSchema, msg)
 dataChannel.send(bytes)
@@ -80,10 +80,10 @@ switch (decoded.payload?.case) {
 }
 ```
 
-### Python (connector snap)
+### Python
 
 ```toml
-# connector pyproject.toml
+# pyproject.toml
 dependencies = [
   "kusinta-iot-schema @ git+https://github.com/Martwall/kusinta-iot-schema.git@<TAG>#subdirectory=gen/python",
   "grpcio>=1.80.0",

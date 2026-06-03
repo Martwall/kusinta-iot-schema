@@ -108,7 +108,7 @@ pipeline {
     stage('Publish npm') {
       when { branch 'main' }
       steps {
-        withCredentials([string(credentialsId: 'NPM_KUSINTA_IOT_SCHEMA_TOKEN', variable: 'NPM_KUSINTA_IOT_SCHEMA_TOKEN')]) {
+        withCredentials([string(credentialsId: 'npm-kusinta-iot-schema-token', variable: 'NPM_KUSINTA_IOT_SCHEMA_TOKEN')]) {
           sh '''
             . "$NVM_DIR/nvm.sh"
             nvm use 24
