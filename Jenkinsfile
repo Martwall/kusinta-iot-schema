@@ -117,7 +117,7 @@ pipeline {
               echo "@kusinta/iot-schema@${VERSION} already published — skipping."
             else
               echo '//registry.npmjs.org/:_authToken=${NPM_KUSINTA_IOT_SCHEMA_TOKEN}' > gen/js/.npmrc
-              cd gen/js && npm publish --access public
+              cd gen/js && npm publish --access public --tag latest
               echo "Published @kusinta/iot-schema@${VERSION}"
             fi
           '''
