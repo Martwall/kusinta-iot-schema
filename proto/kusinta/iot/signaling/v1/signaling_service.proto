@@ -1,0 +1,9 @@
+syntax = "proto3";
+package kusinta.iot.signaling.v1;
+import "kusinta/iot/signaling/v1/signaling.proto";
+option optimize_for = SPEED;
+
+service GatewaySignalingService {
+  rpc GatewayConnect(stream GatewayConnectRequest) returns (stream GatewayConnectResponse);
+  rpc UserConnect(stream UserConnectRequest) returns (stream UserConnectResponse);
+}

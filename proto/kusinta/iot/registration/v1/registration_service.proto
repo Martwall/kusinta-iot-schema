@@ -1,0 +1,9 @@
+syntax = "proto3";
+package kusinta.iot.registration.v1;
+import "kusinta/iot/registration/v1/registration.proto";
+option optimize_for = SPEED;
+
+service GatewayRegistrationService {
+  rpc Registration(RegistrationRequest) returns (stream RegistrationResponse);
+  rpc CertRenewal(CertRenewalRequest) returns (CertRenewalResponse);
+}

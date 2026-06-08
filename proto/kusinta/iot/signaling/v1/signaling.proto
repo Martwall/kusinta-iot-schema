@@ -1,0 +1,51 @@
+syntax = "proto3";
+package kusinta.iot.signaling.v1;
+import "kusinta/iot/identity/v1/identity.proto";
+option optimize_for = SPEED;
+
+message SdpOffer     { string sdp = 1; }
+message SdpAnswer    { string sdp = 1; }
+message IceCandidate { string candidate = 1; }
+
+// JWT for user auth is sent in the Authorization: Bearer metadata header, not here.
+// First message carries only the target gateway for stream-specific routing.
+message UserHandshake    { kusinta.iot.identity.v1.GatewayId target_gateway_id = 1; }
+message UserHandshakeAck { bool accepted = 1; string reason = 2; }
+
+// Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
+// Auth: x-client-cert-fingerprint metadata header (set by HAProxy from mTLS).
+message GatewayConnectRequest {
+  kusinta.iot.identity.v1.UserId target_user_id = 1;
+  oneof payload {
+    SdpAnswer    answer        = 2;
+    IceCandidate ice_candidate = 3;
+  }
+}
+
+// Messages sent by the api-server to the building-server gateway.
+message GatewayConnectResponse {
+  kusinta.iot.identity.v1.UserId from_user_id = 1;
+  oneof payload {
+    SdpOffer     offer         = 2;
+    IceCandidate ice_candidate = 3;
+  }
+}
+
+// Messages sent by the Flutter app (GatewaySignalingService.UserConnect stream).
+// Auth: Authorization: Bearer <jwt> in gRPC request metadata (validated by interceptor).
+message UserConnectRequest {
+  oneof payload {
+    UserHandshake handshake     = 1;
+    SdpOffer      offer         = 2;
+    IceCandidate  ice_candidate = 3;
+  }
+}
+
+// Messages sent by the api-server to the Flutter app.
+message UserConnectResponse {
+  oneof payload {
+    UserHandshakeAck handshake_ack = 1;
+    SdpAnswer        answer        = 2;
+    IceCandidate     ice_candidate = 3;
+  }
+}

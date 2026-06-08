@@ -1,0 +1,42 @@
+syntax = "proto3";
+package kusinta.iot.registration.v1;
+option optimize_for = SPEED;
+
+message RegistrationRequest {
+  string registration_token = 1;
+  string external_ip = 2;
+  string csr_pem = 3;
+}
+
+message RegistrationProgress {
+  string step = 1;
+}
+
+message RegistrationComplete {
+  string certificate_pem = 1;
+  string ca_bundle_pem = 2;
+}
+
+message RegistrationError {
+  string code = 1;
+  string message = 2;
+}
+
+// Streamed response: server sends zero or more RegistrationProgress messages,
+// then exactly one RegistrationComplete or RegistrationError, then closes.
+message RegistrationResponse {
+  oneof event {
+    RegistrationProgress progress = 1;
+    RegistrationComplete complete = 2;
+    RegistrationError    error    = 3;
+  }
+}
+
+message CertRenewalRequest {
+  string csr_pem = 1;
+}
+
+message CertRenewalResponse {
+  string certificate_pem = 1;
+  string ca_bundle_pem = 2;
+}

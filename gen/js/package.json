@@ -1,6 +1,6 @@
 {
   "name": "@kusinta/iot-schema",
-  "version": "0.1.0-beta.9",
+  "version": "0.1.0-beta.10",
   "type": "module",
   "license": "MIT",
   "files": ["src"],
@@ -20,7 +20,11 @@
     "./access/roles":           "./src/kusinta/iot/access/v1/roles_pb.js",
     "./connector":              "./src/kusinta/iot/connector/v1/connector_pb.js",
     "./connector/service":      "./src/kusinta/iot/connector/v1/connector_service_pb.js",
-    "./webrtc":                 "./src/kusinta/iot/webrtc/v1/envelope_pb.js"
+    "./webrtc":                 "./src/kusinta/iot/webrtc/v1/envelope_pb.js",
+    "./registration":           "./src/kusinta/iot/registration/v1/registration_pb.js",
+    "./registration/service":   "./src/kusinta/iot/registration/v1/registration_service_pb.js",
+    "./signaling":              "./src/kusinta/iot/signaling/v1/signaling_pb.js",
+    "./signaling/service":      "./src/kusinta/iot/signaling/v1/signaling_service_pb.js"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.12.0"
