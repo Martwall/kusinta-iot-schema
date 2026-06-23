@@ -12,7 +12,7 @@ describe('AppTokenClaims', () => {
       sub: 'user-1',
       iat: { seconds: 1750000000n },
       exp: { seconds: 1750003600n },
-      role: Role.PROPERTY_OWNER,
+      roles: [Role.RESIDENT, Role.GATEWAY_ADMIN],
     })
     const decoded = fromBinary(AppTokenClaimsSchema, toBinary(AppTokenClaimsSchema, claims))
     expect(decoded.iss).toBe('mykusinta-api-server')
@@ -20,6 +20,6 @@ describe('AppTokenClaims', () => {
     expect(decoded.sub).toBe('user-1')
     expect(decoded.iat?.seconds).toBe(1750000000n)
     expect(decoded.exp?.seconds).toBe(1750003600n)
-    expect(decoded.role).toBe(Role.PROPERTY_OWNER)
+    expect(decoded.roles).toEqual([Role.RESIDENT, Role.GATEWAY_ADMIN])
   })
 })

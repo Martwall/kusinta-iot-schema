@@ -39,12 +39,12 @@ const AppTokenClaims$json = {
       '10': 'exp'
     },
     {
-      '1': 'role',
+      '1': 'roles',
       '3': 6,
-      '4': 1,
+      '4': 3,
       '5': 14,
       '6': '.kusinta.iot.access.v1.Role',
-      '10': 'role'
+      '10': 'roles'
     },
   ],
 };
@@ -53,5 +53,5 @@ const AppTokenClaims$json = {
 final $typed_data.Uint8List appTokenClaimsDescriptor = $convert.base64Decode(
     'Cg5BcHBUb2tlbkNsYWltcxIQCgNpc3MYASABKAlSA2lzcxIQCgNhdWQYAiABKAlSA2F1ZBIQCg'
     'NzdWIYAyABKAlSA3N1YhIsCgNpYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w'
-    'UgNpYXQSLAoDZXhwGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIDZXhwEi8KBH'
-    'JvbGUYBiABKA4yGy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuUm9sZVIEcm9sZQ==');
+    'UgNpYXQSLAoDZXhwGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIDZXhwEjEKBX'
+    'JvbGVzGAYgAygOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGVSBXJvbGVz');

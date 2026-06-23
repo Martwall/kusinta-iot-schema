@@ -67,14 +67,16 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
 
   /**
    * Custom claims.
-   * Carried in the JWT as the enum NAME string (e.g. "ROLE_PROPERTY_OWNER"),
-   * matching proto3 canonical JSON enum encoding — not the integer value.
-   * This keeps the claim self-describing and aligns with text-typed role
-   * storage in mykusinta-api-server.
+   * A user may hold several roles at once (e.g. resident + gateway admin), so
+   * this is a list. Carried in the JWT as an array of enum NAME strings
+   * (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]), matching proto3 canonical
+   * JSON enum encoding — not integer values. This keeps the claim
+   * self-describing and aligns with text-typed role storage in
+   * mykusinta-api-server.
    *
-   * @generated from field: kusinta.iot.access.v1.Role role = 6;
+   * @generated from field: repeated kusinta.iot.access.v1.Role roles = 6;
    */
-  role: Role;
+  roles: Role[];
 };
 
 /**

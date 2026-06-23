@@ -38,7 +38,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     $core.String? sub,
     $0.Timestamp? iat,
     $0.Timestamp? exp,
-    $1.Role? role,
+    $core.Iterable<$1.Role>? roles,
   }) {
     final result = create();
     if (iss != null) result.iss = iss;
@@ -46,7 +46,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     if (sub != null) result.sub = sub;
     if (iat != null) result.iat = iat;
     if (exp != null) result.exp = exp;
-    if (role != null) result.role = role;
+    if (roles != null) result.roles.addAll(roles);
     return result;
   }
 
@@ -71,7 +71,10 @@ class AppTokenClaims extends $pb.GeneratedMessage {
         subBuilder: $0.Timestamp.create)
     ..aOM<$0.Timestamp>(5, _omitFieldNames ? '' : 'exp',
         subBuilder: $0.Timestamp.create)
-    ..aE<$1.Role>(6, _omitFieldNames ? '' : 'role', enumValues: $1.Role.values)
+    ..pc<$1.Role>(6, _omitFieldNames ? '' : 'roles', $pb.PbFieldType.KE,
+        valueOf: $1.Role.valueOf,
+        enumValues: $1.Role.values,
+        defaultEnumValue: $1.Role.ROLE_UNSPECIFIED)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -144,18 +147,14 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   $0.Timestamp ensureExp() => $_ensure(4);
 
   /// Custom claims.
-  /// Carried in the JWT as the enum NAME string (e.g. "ROLE_PROPERTY_OWNER"),
-  /// matching proto3 canonical JSON enum encoding — not the integer value.
-  /// This keeps the claim self-describing and aligns with text-typed role
-  /// storage in mykusinta-api-server.
+  /// A user may hold several roles at once (e.g. resident + gateway admin), so
+  /// this is a list. Carried in the JWT as an array of enum NAME strings
+  /// (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]), matching proto3 canonical
+  /// JSON enum encoding — not integer values. This keeps the claim
+  /// self-describing and aligns with text-typed role storage in
+  /// mykusinta-api-server.
   @$pb.TagNumber(6)
-  $1.Role get role => $_getN(5);
-  @$pb.TagNumber(6)
-  set role($1.Role value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasRole() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearRole() => $_clearField(6);
+  $pb.PbList<$1.Role> get roles => $_getList(5);
 }
 
 const $core.bool _omitFieldNames =
