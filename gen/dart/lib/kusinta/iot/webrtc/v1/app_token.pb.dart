@@ -144,6 +144,10 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   $0.Timestamp ensureExp() => $_ensure(4);
 
   /// Custom claims.
+  /// Carried in the JWT as the enum NAME string (e.g. "ROLE_PROPERTY_OWNER"),
+  /// matching proto3 canonical JSON enum encoding — not the integer value.
+  /// This keeps the claim self-describing and aligns with text-typed role
+  /// storage in mykusinta-api-server.
   @$pb.TagNumber(6)
   $1.Role get role => $_getN(5);
   @$pb.TagNumber(6)
