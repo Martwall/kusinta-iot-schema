@@ -64,6 +64,10 @@ export declare const HandshakeRejectedSchema: GenMessage<HandshakeRejected>;
  */
 export declare type AppHandshake = Message<"kusinta.iot.webrtc.v1.AppHandshake"> & {
   /**
+   * Signed compact JWS. Its payload claims are documented by AppTokenClaims
+   * in app_token.proto — the shared contract between mykusinta-api-server
+   * (issuer) and the gateway (validator).
+   *
    * @generated from field: string jwt = 1;
    */
   jwt: string;

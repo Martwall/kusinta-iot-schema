@@ -21,6 +21,7 @@
     "./connector":              "./src/kusinta/iot/connector/v1/connector_pb.js",
     "./connector/service":      "./src/kusinta/iot/connector/v1/connector_service_pb.js",
     "./webrtc":                 "./src/kusinta/iot/webrtc/v1/envelope_pb.js",
+    "./webrtc/app-token":       "./src/kusinta/iot/webrtc/v1/app_token_pb.js",
     "./registration":           "./src/kusinta/iot/registration/v1/registration_pb.js",
     "./registration/service":   "./src/kusinta/iot/registration/v1/registration_service_pb.js",
     "./signaling":              "./src/kusinta/iot/signaling/v1/signaling_pb.js",

@@ -207,6 +207,9 @@ class AppHandshake extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<AppHandshake>(create);
   static AppHandshake? _defaultInstance;
 
+  /// Signed compact JWS. Its payload claims are documented by AppTokenClaims
+  /// in app_token.proto — the shared contract between mykusinta-api-server
+  /// (issuer) and the gateway (validator).
   @$pb.TagNumber(1)
   $core.String get jwt => $_getSZ(0);
   @$pb.TagNumber(1)

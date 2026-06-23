@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package kusinta.iot.webrtc.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/roles.proto";
+
+option optimize_for = SPEED;
+
+// AppTokenClaims is the contract for the payload of the JWT carried in
+// AppHandshake.jwt. It is the single source of truth shared between
+// mykusinta-api-server (which mints the token) and the gateway (which validates
+// it locally against the mykusinta-api-server public key).
+//
+// This message is NOT sent on the wire — the wire value stays the signed,
+// compact JWS string in AppHandshake.jwt. The fields here document the claim
+// names and types each side must agree on. JWT libraries emit registered
+// claims (iss/aud/sub) as flat strings and timestamps as NumericDate
+// (seconds since the Unix epoch), so map to/from your native JWT library
+// rather than serializing this message directly into the token.
+message AppTokenClaims {
+  // Registered claims (RFC 7519).
+  string                    iss = 1;  // issuer: "mykusinta-api-server"
+  string                    aud = 2;  // audience: the target GatewayId value
+  string                    sub = 3;  // subject: the UserId value
+  google.protobuf.Timestamp iat = 4;  // issued-at  (JWT NumericDate on the wire)
+  google.protobuf.Timestamp exp = 5;  // expiry     (JWT NumericDate on the wire)
+
+  // Custom claims.
+  kusinta.iot.access.v1.Role role = 6;
+
+  // Field numbers 7+ reserved for future custom claims.
+}

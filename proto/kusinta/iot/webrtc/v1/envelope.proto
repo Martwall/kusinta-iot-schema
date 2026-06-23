@@ -21,6 +21,9 @@ message HandshakeRejected {
 // The gateway validates the JWT locally using the mykusinta-api-server public key,
 // checks that gateway_id in the JWT matches this gateway, then extracts the role.
 message AppHandshake {
+  // Signed compact JWS. Its payload claims are documented by AppTokenClaims
+  // in app_token.proto — the shared contract between mykusinta-api-server
+  // (issuer) and the gateway (validator).
   string                                    jwt                  = 1;
   repeated kusinta.iot.identity.v1.DeviceId subscribe_device_ids = 2;
 }
