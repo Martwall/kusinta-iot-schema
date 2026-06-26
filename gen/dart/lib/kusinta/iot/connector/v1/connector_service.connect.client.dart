@@ -10,15 +10,15 @@ import "connector_service.connect.spec.dart" as specs;
 /// ConnectorGatewayService: connector dials the gateway on startup.
 /// A single persistent bidirectional stream carries all traffic for the connector's lifetime.
 extension type ConnectorGatewayServiceClient (connect.Transport _transport) {
-  Stream<kusintaiotconnectorv1connector.ConnectResponse> connect(
-    Stream<kusintaiotconnectorv1connector.ConnectRequest> input, {
+  Stream<kusintaiotconnectorv1connector.SessionResponse> session(
+    Stream<kusintaiotconnectorv1connector.SessionRequest> input, {
     connect.Headers? headers,
     connect.AbortSignal? signal,
     Function(connect.Headers)? onHeader,
     Function(connect.Headers)? onTrailer,
   }) {
     return connect.Client(_transport).bidi(
-      specs.ConnectorGatewayService.connect,
+      specs.ConnectorGatewayService.session,
       input,
       signal: signal,
       headers: headers,

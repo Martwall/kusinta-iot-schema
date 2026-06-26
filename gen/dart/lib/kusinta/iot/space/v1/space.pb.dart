@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -64,16 +64,19 @@ class Space extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..aE<$1.SpaceType>(2, _omitFieldNames ? '' : 'spaceType',
+    ..e<$1.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $1.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $1.SpaceType.valueOf,
         enumValues: $1.SpaceType.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'description')
-    ..aI(5, _omitFieldNames ? '' : 'floor')
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
     ..aOM<$0.SpaceId>(6, _omitFieldNames ? '' : 'parentSpaceId',
         subBuilder: $0.SpaceId.create)
-    ..pPM<$0.SpaceId>(7, _omitFieldNames ? '' : 'subSpaceIds',
+    ..pc<$0.SpaceId>(
+        7, _omitFieldNames ? '' : 'subSpaceIds', $pb.PbFieldType.PM,
         subBuilder: $0.SpaceId.create)
-    ..pPM<$0.DeviceId>(8, _omitFieldNames ? '' : 'deviceIds',
+    ..pc<$0.DeviceId>(8, _omitFieldNames ? '' : 'deviceIds', $pb.PbFieldType.PM,
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.UserId>(9, _omitFieldNames ? '' : 'residentUserId',
         subBuilder: $0.UserId.create)
@@ -84,7 +87,7 @@ class Space extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Space clone() => deepCopy();
+  Space clone() => Space()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Space copyWith(void Function(Space) updates) =>
       super.copyWith((message) => updates(message as Space)) as Space;
@@ -96,6 +99,7 @@ class Space extends $pb.GeneratedMessage {
   static Space create() => Space._();
   @$core.override
   Space createEmptyInstance() => create();
+  static $pb.PbList<Space> createRepeated() => $pb.PbList<Space>();
   @$core.pragma('dart2js:noInline')
   static Space getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Space>(create);

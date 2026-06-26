@@ -2,8 +2,8 @@
 import { describe, it, expect } from 'vitest'
 import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
 import {
-  ConnectRequestSchema,
-  ConnectResponseSchema,
+  SessionRequestSchema,
+  SessionResponseSchema,
   ConnectorHandshakeSchema,
   HandshakeAckSchema,
   DeviceAnnouncementSchema,
@@ -71,9 +71,9 @@ describe('DeviceRemoval', () => {
   })
 })
 
-describe('ConnectRequest oneof payload', () => {
+describe('SessionRequest oneof payload', () => {
   it('round-trips handshake payload', () => {
-    const msg = create(ConnectRequestSchema, {
+    const msg = create(SessionRequestSchema, {
       messageId: 'msg-001',
       payload: {
         case: 'handshake',
@@ -89,7 +89,7 @@ describe('ConnectRequest oneof payload', () => {
         },
       },
     })
-    const decoded = fromBinary(ConnectRequestSchema, toBinary(ConnectRequestSchema, msg))
+    const decoded = fromBinary(SessionRequestSchema, toBinary(SessionRequestSchema, msg))
     expect(decoded.messageId).toBe('msg-001')
     expect(decoded.payload?.case).toBe('handshake')
     if (decoded.payload?.case === 'handshake') {
@@ -98,7 +98,7 @@ describe('ConnectRequest oneof payload', () => {
   })
 
   it('round-trips property_update payload', () => {
-    const msg = create(ConnectRequestSchema, {
+    const msg = create(SessionRequestSchema, {
       messageId: 'msg-002',
       payload: {
         case: 'propertyUpdate',
@@ -112,7 +112,7 @@ describe('ConnectRequest oneof payload', () => {
         },
       },
     })
-    const decoded = fromBinary(ConnectRequestSchema, toBinary(ConnectRequestSchema, msg))
+    const decoded = fromBinary(SessionRequestSchema, toBinary(SessionRequestSchema, msg))
     expect(decoded.payload?.case).toBe('propertyUpdate')
     if (decoded.payload?.case === 'propertyUpdate') {
       expect(decoded.payload.value.updates).toHaveLength(1)
@@ -121,22 +121,22 @@ describe('ConnectRequest oneof payload', () => {
   })
 
   it('round-trips heartbeat payload', () => {
-    const msg = create(ConnectRequestSchema, {
+    const msg = create(SessionRequestSchema, {
       messageId: 'msg-hb-1',
       payload: { case: 'heartbeat', value: {} },
     })
-    const decoded = fromBinary(ConnectRequestSchema, toBinary(ConnectRequestSchema, msg))
+    const decoded = fromBinary(SessionRequestSchema, toBinary(SessionRequestSchema, msg))
     expect(decoded.payload?.case).toBe('heartbeat')
   })
 })
 
-describe('ConnectResponse oneof payload', () => {
+describe('SessionResponse oneof payload', () => {
   it('round-trips handshake_ack payload', () => {
-    const msg = create(ConnectResponseSchema, {
+    const msg = create(SessionResponseSchema, {
       messageId: 'gw-msg-001',
       payload: { case: 'handshakeAck', value: { accepted: true, gatewayId: { value: 'gw-1' } } },
     })
-    const decoded = fromBinary(ConnectResponseSchema, toBinary(ConnectResponseSchema, msg))
+    const decoded = fromBinary(SessionResponseSchema, toBinary(SessionResponseSchema, msg))
     expect(decoded.payload?.case).toBe('handshakeAck')
     if (decoded.payload?.case === 'handshakeAck') {
       expect(decoded.payload.value.accepted).toBe(true)
@@ -144,7 +144,7 @@ describe('ConnectResponse oneof payload', () => {
   })
 
   it('round-trips execute_command payload', () => {
-    const msg = create(ConnectResponseSchema, {
+    const msg = create(SessionResponseSchema, {
       messageId: 'gw-cmd-001',
       payload: {
         case: 'executeCommand',
@@ -157,7 +157,7 @@ describe('ConnectResponse oneof payload', () => {
         },
       },
     })
-    const decoded = fromBinary(ConnectResponseSchema, toBinary(ConnectResponseSchema, msg))
+    const decoded = fromBinary(SessionResponseSchema, toBinary(SessionResponseSchema, msg))
     expect(decoded.payload?.case).toBe('executeCommand')
     if (decoded.payload?.case === 'executeCommand') {
       expect(decoded.payload.value.commandId).toBe('cmd-uuid-1')

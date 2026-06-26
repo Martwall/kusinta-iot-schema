@@ -216,9 +216,9 @@ export declare type GatewayError = Message<"kusinta.iot.connector.v1.GatewayErro
 export declare const GatewayErrorSchema: GenMessage<GatewayError>;
 
 /**
- * @generated from message kusinta.iot.connector.v1.CommandResult
+ * @generated from message kusinta.iot.connector.v1.ConnectorCommandResult
  */
-export declare type CommandResult = Message<"kusinta.iot.connector.v1.CommandResult"> & {
+export declare type ConnectorCommandResult = Message<"kusinta.iot.connector.v1.ConnectorCommandResult"> & {
   /**
    * @generated from field: string command_id = 1;
    */
@@ -241,15 +241,15 @@ export declare type CommandResult = Message<"kusinta.iot.connector.v1.CommandRes
 };
 
 /**
- * Describes the message kusinta.iot.connector.v1.CommandResult.
- * Use `create(CommandResultSchema)` to create a new message.
+ * Describes the message kusinta.iot.connector.v1.ConnectorCommandResult.
+ * Use `create(ConnectorCommandResultSchema)` to create a new message.
  */
-export declare const CommandResultSchema: GenMessage<CommandResult>;
+export declare const ConnectorCommandResultSchema: GenMessage<ConnectorCommandResult>;
 
 /**
- * @generated from message kusinta.iot.connector.v1.ConnectRequest
+ * @generated from message kusinta.iot.connector.v1.SessionRequest
  */
-export declare type ConnectRequest = Message<"kusinta.iot.connector.v1.ConnectRequest"> & {
+export declare type SessionRequest = Message<"kusinta.iot.connector.v1.SessionRequest"> & {
   /**
    * @generated from field: string message_id = 1;
    */
@@ -261,7 +261,7 @@ export declare type ConnectRequest = Message<"kusinta.iot.connector.v1.ConnectRe
   sentAt?: Timestamp | undefined;
 
   /**
-   * @generated from oneof kusinta.iot.connector.v1.ConnectRequest.payload
+   * @generated from oneof kusinta.iot.connector.v1.SessionRequest.payload
    */
   payload: {
     /**
@@ -289,9 +289,9 @@ export declare type ConnectRequest = Message<"kusinta.iot.connector.v1.ConnectRe
     case: "deviceRemoved";
   } | {
     /**
-     * @generated from field: kusinta.iot.connector.v1.CommandResult command_result = 7;
+     * @generated from field: kusinta.iot.connector.v1.ConnectorCommandResult command_result = 7;
      */
-    value: CommandResult;
+    value: ConnectorCommandResult;
     case: "commandResult";
   } | {
     /**
@@ -303,15 +303,15 @@ export declare type ConnectRequest = Message<"kusinta.iot.connector.v1.ConnectRe
 };
 
 /**
- * Describes the message kusinta.iot.connector.v1.ConnectRequest.
- * Use `create(ConnectRequestSchema)` to create a new message.
+ * Describes the message kusinta.iot.connector.v1.SessionRequest.
+ * Use `create(SessionRequestSchema)` to create a new message.
  */
-export declare const ConnectRequestSchema: GenMessage<ConnectRequest>;
+export declare const SessionRequestSchema: GenMessage<SessionRequest>;
 
 /**
- * @generated from message kusinta.iot.connector.v1.ConnectResponse
+ * @generated from message kusinta.iot.connector.v1.SessionResponse
  */
-export declare type ConnectResponse = Message<"kusinta.iot.connector.v1.ConnectResponse"> & {
+export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionResponse"> & {
   /**
    * @generated from field: string message_id = 1;
    */
@@ -323,7 +323,7 @@ export declare type ConnectResponse = Message<"kusinta.iot.connector.v1.ConnectR
   sentAt?: Timestamp | undefined;
 
   /**
-   * @generated from oneof kusinta.iot.connector.v1.ConnectResponse.payload
+   * @generated from oneof kusinta.iot.connector.v1.SessionResponse.payload
    */
   payload: {
     /**
@@ -359,8 +359,8 @@ export declare type ConnectResponse = Message<"kusinta.iot.connector.v1.ConnectR
 };
 
 /**
- * Describes the message kusinta.iot.connector.v1.ConnectResponse.
- * Use `create(ConnectResponseSchema)` to create a new message.
+ * Describes the message kusinta.iot.connector.v1.SessionResponse.
+ * Use `create(SessionResponseSchema)` to create a new message.
  */
-export declare const ConnectResponseSchema: GenMessage<ConnectResponse>;
+export declare const SessionResponseSchema: GenMessage<SessionResponse>;
 

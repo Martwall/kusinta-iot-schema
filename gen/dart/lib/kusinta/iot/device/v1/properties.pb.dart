@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -66,29 +66,30 @@ class ThermostatProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'localTemperature',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(2, _omitFieldNames ? '' : 'occupiedHeatingSetpoint',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(3, _omitFieldNames ? '' : 'occupiedCoolingSetpoint',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(4, _omitFieldNames ? '' : 'minHeatSetpointLimit',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(5, _omitFieldNames ? '' : 'maxHeatSetpointLimit',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(6, _omitFieldNames ? '' : 'minCoolSetpointLimit',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(7, _omitFieldNames ? '' : 'maxCoolSetpointLimit',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(8, _omitFieldNames ? '' : 'controlSequenceOfOperation',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(9, _omitFieldNames ? '' : 'systemMode', fieldType: $pb.PbFieldType.OU3)
-    ..aI(10, _omitFieldNames ? '' : 'thermostatRunningMode',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'localTemperature', $pb.PbFieldType.OS3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'occupiedHeatingSetpoint',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'occupiedCoolingSetpoint',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'minHeatSetpointLimit', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'maxHeatSetpointLimit', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'minCoolSetpointLimit', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'maxCoolSetpointLimit', $pb.PbFieldType.OS3)
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'controlSequenceOfOperation',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(9, _omitFieldNames ? '' : 'systemMode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        10, _omitFieldNames ? '' : 'thermostatRunningMode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ThermostatProperties clone() => deepCopy();
+  ThermostatProperties clone() =>
+      ThermostatProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ThermostatProperties copyWith(void Function(ThermostatProperties) updates) =>
       super.copyWith((message) => updates(message as ThermostatProperties))
@@ -101,6 +102,8 @@ class ThermostatProperties extends $pb.GeneratedMessage {
   static ThermostatProperties create() => ThermostatProperties._();
   @$core.override
   ThermostatProperties createEmptyInstance() => create();
+  static $pb.PbList<ThermostatProperties> createRepeated() =>
+      $pb.PbList<ThermostatProperties>();
   @$core.pragma('dart2js:noInline')
   static ThermostatProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ThermostatProperties>(create);
@@ -228,17 +231,18 @@ class TemperatureSensorProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'measuredValue',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(2, _omitFieldNames ? '' : 'minMeasuredValue',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(3, _omitFieldNames ? '' : 'maxMeasuredValue',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(4, _omitFieldNames ? '' : 'tolerance', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'measuredValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'minMeasuredValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'maxMeasuredValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'tolerance', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TemperatureSensorProperties clone() => deepCopy();
+  TemperatureSensorProperties clone() =>
+      TemperatureSensorProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   TemperatureSensorProperties copyWith(
           void Function(TemperatureSensorProperties) updates) =>
@@ -254,6 +258,8 @@ class TemperatureSensorProperties extends $pb.GeneratedMessage {
       TemperatureSensorProperties._();
   @$core.override
   TemperatureSensorProperties createEmptyInstance() => create();
+  static $pb.PbList<TemperatureSensorProperties> createRepeated() =>
+      $pb.PbList<TemperatureSensorProperties>();
   @$core.pragma('dart2js:noInline')
   static TemperatureSensorProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<TemperatureSensorProperties>(create);
@@ -326,17 +332,18 @@ class HumiditySensorProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'measuredValue',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(2, _omitFieldNames ? '' : 'minMeasuredValue',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(3, _omitFieldNames ? '' : 'maxMeasuredValue',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'tolerance', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'measuredValue', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'minMeasuredValue', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'maxMeasuredValue', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'tolerance', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HumiditySensorProperties clone() => deepCopy();
+  HumiditySensorProperties clone() =>
+      HumiditySensorProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   HumiditySensorProperties copyWith(
           void Function(HumiditySensorProperties) updates) =>
@@ -350,6 +357,8 @@ class HumiditySensorProperties extends $pb.GeneratedMessage {
   static HumiditySensorProperties create() => HumiditySensorProperties._();
   @$core.override
   HumiditySensorProperties createEmptyInstance() => create();
+  static $pb.PbList<HumiditySensorProperties> createRepeated() =>
+      $pb.PbList<HumiditySensorProperties>();
   @$core.pragma('dart2js:noInline')
   static HumiditySensorProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<HumiditySensorProperties>(create);
@@ -428,19 +437,20 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'occupancy', fieldType: $pb.PbFieldType.OU3)
-    ..aI(2, _omitFieldNames ? '' : 'occupancySensorType',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(3, _omitFieldNames ? '' : 'occupancySensorTypeBitmap',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'pirOccToUnoccDelay',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'pirUnoccToOccDelay',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'occupancy', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'occupancySensorType', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'occupancySensorTypeBitmap',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'pirOccToUnoccDelay', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'pirUnoccToOccDelay', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  OccupancySensorProperties clone() => deepCopy();
+  OccupancySensorProperties clone() =>
+      OccupancySensorProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   OccupancySensorProperties copyWith(
           void Function(OccupancySensorProperties) updates) =>
@@ -454,6 +464,8 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
   static OccupancySensorProperties create() => OccupancySensorProperties._();
   @$core.override
   OccupancySensorProperties createEmptyInstance() => create();
+  static $pb.PbList<OccupancySensorProperties> createRepeated() =>
+      $pb.PbList<OccupancySensorProperties>();
   @$core.pragma('dart2js:noInline')
   static OccupancySensorProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<OccupancySensorProperties>(create);
@@ -534,7 +546,8 @@ class ContactSensorProperties extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ContactSensorProperties clone() => deepCopy();
+  ContactSensorProperties clone() =>
+      ContactSensorProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ContactSensorProperties copyWith(
           void Function(ContactSensorProperties) updates) =>
@@ -548,6 +561,8 @@ class ContactSensorProperties extends $pb.GeneratedMessage {
   static ContactSensorProperties create() => ContactSensorProperties._();
   @$core.override
   ContactSensorProperties createEmptyInstance() => create();
+  static $pb.PbList<ContactSensorProperties> createRepeated() =>
+      $pb.PbList<ContactSensorProperties>();
   @$core.pragma('dart2js:noInline')
   static ContactSensorProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ContactSensorProperties>(create);
@@ -608,25 +623,26 @@ class WindowCoveringProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'coveringType',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(2, _omitFieldNames ? '' : 'currentPositionLiftPercent100ths',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(3, _omitFieldNames ? '' : 'currentPositionTiltPercent100ths',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'targetPositionLiftPercent100ths',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'targetPositionTiltPercent100ths',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(6, _omitFieldNames ? '' : 'operationalStatus',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(7, _omitFieldNames ? '' : 'endProductType',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(8, _omitFieldNames ? '' : 'mode', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'coveringType', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'currentPositionLiftPercent100ths',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'currentPositionTiltPercent100ths',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'targetPositionLiftPercent100ths',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'targetPositionTiltPercent100ths',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'operationalStatus', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'endProductType', $pb.PbFieldType.OU3)
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  WindowCoveringProperties clone() => deepCopy();
+  WindowCoveringProperties clone() =>
+      WindowCoveringProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   WindowCoveringProperties copyWith(
           void Function(WindowCoveringProperties) updates) =>
@@ -640,6 +656,8 @@ class WindowCoveringProperties extends $pb.GeneratedMessage {
   static WindowCoveringProperties create() => WindowCoveringProperties._();
   @$core.override
   WindowCoveringProperties createEmptyInstance() => create();
+  static $pb.PbList<WindowCoveringProperties> createRepeated() =>
+      $pb.PbList<WindowCoveringProperties>();
   @$core.pragma('dart2js:noInline')
   static WindowCoveringProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<WindowCoveringProperties>(create);
@@ -755,16 +773,16 @@ class DoorLockProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'lockState', fieldType: $pb.PbFieldType.OU3)
-    ..aI(2, _omitFieldNames ? '' : 'lockType', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'lockState', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'lockType', $pb.PbFieldType.OU3)
     ..aOB(3, _omitFieldNames ? '' : 'actuatorEnabled')
-    ..aI(4, _omitFieldNames ? '' : 'doorState', fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'operatingMode',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'doorState', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'operatingMode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DoorLockProperties clone() => deepCopy();
+  DoorLockProperties clone() => DoorLockProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DoorLockProperties copyWith(void Function(DoorLockProperties) updates) =>
       super.copyWith((message) => updates(message as DoorLockProperties))
@@ -777,6 +795,8 @@ class DoorLockProperties extends $pb.GeneratedMessage {
   static DoorLockProperties create() => DoorLockProperties._();
   @$core.override
   DoorLockProperties createEmptyInstance() => create();
+  static $pb.PbList<DoorLockProperties> createRepeated() =>
+      $pb.PbList<DoorLockProperties>();
   @$core.pragma('dart2js:noInline')
   static DoorLockProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DoorLockProperties>(create);
@@ -863,15 +883,15 @@ class OnOffLightProperties extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'onOff')
     ..aOB(2, _omitFieldNames ? '' : 'globalSceneControl')
-    ..aI(3, _omitFieldNames ? '' : 'onTime', fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'offWaitTime',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'startUpOnOff',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'onTime', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'offWaitTime', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'startUpOnOff', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  OnOffLightProperties clone() => deepCopy();
+  OnOffLightProperties clone() =>
+      OnOffLightProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   OnOffLightProperties copyWith(void Function(OnOffLightProperties) updates) =>
       super.copyWith((message) => updates(message as OnOffLightProperties))
@@ -884,6 +904,8 @@ class OnOffLightProperties extends $pb.GeneratedMessage {
   static OnOffLightProperties create() => OnOffLightProperties._();
   @$core.override
   OnOffLightProperties createEmptyInstance() => create();
+  static $pb.PbList<OnOffLightProperties> createRepeated() =>
+      $pb.PbList<OnOffLightProperties>();
   @$core.pragma('dart2js:noInline')
   static OnOffLightProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<OnOffLightProperties>(create);
@@ -973,19 +995,20 @@ class DimmableLightProperties extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'onOff')
-    ..aI(2, _omitFieldNames ? '' : 'currentLevel',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(3, _omitFieldNames ? '' : 'minLevel', fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'maxLevel', fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'onLevel', fieldType: $pb.PbFieldType.OU3)
-    ..aI(6, _omitFieldNames ? '' : 'startUpCurrentLevel',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(7, _omitFieldNames ? '' : 'remainingTime',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'currentLevel', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'minLevel', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'maxLevel', $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'onLevel', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'startUpCurrentLevel', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'remainingTime', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DimmableLightProperties clone() => deepCopy();
+  DimmableLightProperties clone() =>
+      DimmableLightProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DimmableLightProperties copyWith(
           void Function(DimmableLightProperties) updates) =>
@@ -999,6 +1022,8 @@ class DimmableLightProperties extends $pb.GeneratedMessage {
   static DimmableLightProperties create() => DimmableLightProperties._();
   @$core.override
   DimmableLightProperties createEmptyInstance() => create();
+  static $pb.PbList<DimmableLightProperties> createRepeated() =>
+      $pb.PbList<DimmableLightProperties>();
   @$core.pragma('dart2js:noInline')
   static DimmableLightProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DimmableLightProperties>(create);
@@ -1109,21 +1134,22 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'onOff')
-    ..aI(2, _omitFieldNames ? '' : 'currentLevel',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(3, _omitFieldNames ? '' : 'colorTemperatureMireds',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'colorTempPhysicalMinMireds',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'colorTempPhysicalMaxMireds',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(6, _omitFieldNames ? '' : 'startupColorTemperatureMireds',
-        fieldType: $pb.PbFieldType.OU3)
-    ..aI(7, _omitFieldNames ? '' : 'colorMode', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'currentLevel', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'colorTemperatureMireds', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'colorTempPhysicalMinMireds',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'colorTempPhysicalMaxMireds',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'startupColorTemperatureMireds',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'colorMode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ColorTemperatureLightProperties clone() => deepCopy();
+  ColorTemperatureLightProperties clone() =>
+      ColorTemperatureLightProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ColorTemperatureLightProperties copyWith(
           void Function(ColorTemperatureLightProperties) updates) =>
@@ -1139,6 +1165,8 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
       ColorTemperatureLightProperties._();
   @$core.override
   ColorTemperatureLightProperties createEmptyInstance() => create();
+  static $pb.PbList<ColorTemperatureLightProperties> createRepeated() =>
+      $pb.PbList<ColorTemperatureLightProperties>();
   @$core.pragma('dart2js:noInline')
   static ColorTemperatureLightProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ColorTemperatureLightProperties>(
@@ -1242,15 +1270,15 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'activePower')
-    ..aI(2, _omitFieldNames ? '' : 'rmsVoltage', fieldType: $pb.PbFieldType.OU3)
-    ..aI(3, _omitFieldNames ? '' : 'rmsCurrent', fieldType: $pb.PbFieldType.OU3)
-    ..aI(4, _omitFieldNames ? '' : 'acFrequency',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'activePower', $pb.PbFieldType.O3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'rmsVoltage', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'rmsCurrent', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'acFrequency', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  EnergySensorProperties clone() => deepCopy();
+  EnergySensorProperties clone() =>
+      EnergySensorProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EnergySensorProperties copyWith(
           void Function(EnergySensorProperties) updates) =>
@@ -1264,6 +1292,8 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
   static EnergySensorProperties create() => EnergySensorProperties._();
   @$core.override
   EnergySensorProperties createEmptyInstance() => create();
+  static $pb.PbList<EnergySensorProperties> createRepeated() =>
+      $pb.PbList<EnergySensorProperties>();
   @$core.pragma('dart2js:noInline')
   static EnergySensorProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EnergySensorProperties>(create);
@@ -1336,17 +1366,18 @@ class PressureSensorProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'measuredValue',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(2, _omitFieldNames ? '' : 'minMeasuredValue',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(3, _omitFieldNames ? '' : 'maxMeasuredValue',
-        fieldType: $pb.PbFieldType.OS3)
-    ..aI(4, _omitFieldNames ? '' : 'tolerance', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'measuredValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'minMeasuredValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'maxMeasuredValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'tolerance', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PressureSensorProperties clone() => deepCopy();
+  PressureSensorProperties clone() =>
+      PressureSensorProperties()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PressureSensorProperties copyWith(
           void Function(PressureSensorProperties) updates) =>
@@ -1360,6 +1391,8 @@ class PressureSensorProperties extends $pb.GeneratedMessage {
   static PressureSensorProperties create() => PressureSensorProperties._();
   @$core.override
   PressureSensorProperties createEmptyInstance() => create();
+  static $pb.PbList<PressureSensorProperties> createRepeated() =>
+      $pb.PbList<PressureSensorProperties>();
   @$core.pragma('dart2js:noInline')
   static PressureSensorProperties getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PressureSensorProperties>(create);

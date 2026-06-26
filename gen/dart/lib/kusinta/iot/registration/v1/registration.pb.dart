@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -49,7 +49,7 @@ class RegistrationRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RegistrationRequest clone() => deepCopy();
+  RegistrationRequest clone() => RegistrationRequest()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RegistrationRequest copyWith(void Function(RegistrationRequest) updates) =>
       super.copyWith((message) => updates(message as RegistrationRequest))
@@ -62,6 +62,8 @@ class RegistrationRequest extends $pb.GeneratedMessage {
   static RegistrationRequest create() => RegistrationRequest._();
   @$core.override
   RegistrationRequest createEmptyInstance() => create();
+  static $pb.PbList<RegistrationRequest> createRepeated() =>
+      $pb.PbList<RegistrationRequest>();
   @$core.pragma('dart2js:noInline')
   static RegistrationRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<RegistrationRequest>(create);
@@ -122,7 +124,8 @@ class RegistrationProgress extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RegistrationProgress clone() => deepCopy();
+  RegistrationProgress clone() =>
+      RegistrationProgress()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RegistrationProgress copyWith(void Function(RegistrationProgress) updates) =>
       super.copyWith((message) => updates(message as RegistrationProgress))
@@ -135,6 +138,8 @@ class RegistrationProgress extends $pb.GeneratedMessage {
   static RegistrationProgress create() => RegistrationProgress._();
   @$core.override
   RegistrationProgress createEmptyInstance() => create();
+  static $pb.PbList<RegistrationProgress> createRepeated() =>
+      $pb.PbList<RegistrationProgress>();
   @$core.pragma('dart2js:noInline')
   static RegistrationProgress getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<RegistrationProgress>(create);
@@ -180,7 +185,8 @@ class RegistrationComplete extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RegistrationComplete clone() => deepCopy();
+  RegistrationComplete clone() =>
+      RegistrationComplete()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RegistrationComplete copyWith(void Function(RegistrationComplete) updates) =>
       super.copyWith((message) => updates(message as RegistrationComplete))
@@ -193,6 +199,8 @@ class RegistrationComplete extends $pb.GeneratedMessage {
   static RegistrationComplete create() => RegistrationComplete._();
   @$core.override
   RegistrationComplete createEmptyInstance() => create();
+  static $pb.PbList<RegistrationComplete> createRepeated() =>
+      $pb.PbList<RegistrationComplete>();
   @$core.pragma('dart2js:noInline')
   static RegistrationComplete getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<RegistrationComplete>(create);
@@ -247,7 +255,7 @@ class RegistrationError extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RegistrationError clone() => deepCopy();
+  RegistrationError clone() => RegistrationError()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RegistrationError copyWith(void Function(RegistrationError) updates) =>
       super.copyWith((message) => updates(message as RegistrationError))
@@ -260,6 +268,8 @@ class RegistrationError extends $pb.GeneratedMessage {
   static RegistrationError create() => RegistrationError._();
   @$core.override
   RegistrationError createEmptyInstance() => create();
+  static $pb.PbList<RegistrationError> createRepeated() =>
+      $pb.PbList<RegistrationError>();
   @$core.pragma('dart2js:noInline')
   static RegistrationError getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<RegistrationError>(create);
@@ -332,7 +342,8 @@ class RegistrationResponse extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RegistrationResponse clone() => deepCopy();
+  RegistrationResponse clone() =>
+      RegistrationResponse()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   RegistrationResponse copyWith(void Function(RegistrationResponse) updates) =>
       super.copyWith((message) => updates(message as RegistrationResponse))
@@ -345,19 +356,15 @@ class RegistrationResponse extends $pb.GeneratedMessage {
   static RegistrationResponse create() => RegistrationResponse._();
   @$core.override
   RegistrationResponse createEmptyInstance() => create();
+  static $pb.PbList<RegistrationResponse> createRepeated() =>
+      $pb.PbList<RegistrationResponse>();
   @$core.pragma('dart2js:noInline')
   static RegistrationResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<RegistrationResponse>(create);
   static RegistrationResponse? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   RegistrationResponse_Event whichEvent() =>
       _RegistrationResponse_EventByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   void clearEvent() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -421,7 +428,7 @@ class CertRenewalRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CertRenewalRequest clone() => deepCopy();
+  CertRenewalRequest clone() => CertRenewalRequest()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CertRenewalRequest copyWith(void Function(CertRenewalRequest) updates) =>
       super.copyWith((message) => updates(message as CertRenewalRequest))
@@ -434,6 +441,8 @@ class CertRenewalRequest extends $pb.GeneratedMessage {
   static CertRenewalRequest create() => CertRenewalRequest._();
   @$core.override
   CertRenewalRequest createEmptyInstance() => create();
+  static $pb.PbList<CertRenewalRequest> createRepeated() =>
+      $pb.PbList<CertRenewalRequest>();
   @$core.pragma('dart2js:noInline')
   static CertRenewalRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<CertRenewalRequest>(create);
@@ -479,7 +488,7 @@ class CertRenewalResponse extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CertRenewalResponse clone() => deepCopy();
+  CertRenewalResponse clone() => CertRenewalResponse()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CertRenewalResponse copyWith(void Function(CertRenewalResponse) updates) =>
       super.copyWith((message) => updates(message as CertRenewalResponse))
@@ -492,6 +501,8 @@ class CertRenewalResponse extends $pb.GeneratedMessage {
   static CertRenewalResponse create() => CertRenewalResponse._();
   @$core.override
   CertRenewalResponse createEmptyInstance() => create();
+  static $pb.PbList<CertRenewalResponse> createRepeated() =>
+      $pb.PbList<CertRenewalResponse>();
   @$core.pragma('dart2js:noInline')
   static CertRenewalResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<CertRenewalResponse>(create);

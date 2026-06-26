@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $1;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'command.pb.dart' as $4;
 import 'device_state.pb.dart' as $2;
@@ -43,7 +42,7 @@ class Ping extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Ping clone() => deepCopy();
+  Ping clone() => Ping()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Ping copyWith(void Function(Ping) updates) =>
       super.copyWith((message) => updates(message as Ping)) as Ping;
@@ -55,6 +54,7 @@ class Ping extends $pb.GeneratedMessage {
   static Ping create() => Ping._();
   @$core.override
   Ping createEmptyInstance() => create();
+  static $pb.PbList<Ping> createRepeated() => $pb.PbList<Ping>();
   @$core.pragma('dart2js:noInline')
   static Ping getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Ping>(create);
@@ -81,7 +81,7 @@ class Pong extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Pong clone() => deepCopy();
+  Pong clone() => Pong()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Pong copyWith(void Function(Pong) updates) =>
       super.copyWith((message) => updates(message as Pong)) as Pong;
@@ -93,6 +93,7 @@ class Pong extends $pb.GeneratedMessage {
   static Pong create() => Pong._();
   @$core.override
   Pong createEmptyInstance() => create();
+  static $pb.PbList<Pong> createRepeated() => $pb.PbList<Pong>();
   @$core.pragma('dart2js:noInline')
   static Pong getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Pong>(create);
@@ -126,7 +127,7 @@ class HandshakeRejected extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HandshakeRejected clone() => deepCopy();
+  HandshakeRejected clone() => HandshakeRejected()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   HandshakeRejected copyWith(void Function(HandshakeRejected) updates) =>
       super.copyWith((message) => updates(message as HandshakeRejected))
@@ -139,6 +140,8 @@ class HandshakeRejected extends $pb.GeneratedMessage {
   static HandshakeRejected create() => HandshakeRejected._();
   @$core.override
   HandshakeRejected createEmptyInstance() => create();
+  static $pb.PbList<HandshakeRejected> createRepeated() =>
+      $pb.PbList<HandshakeRejected>();
   @$core.pragma('dart2js:noInline')
   static HandshakeRejected getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<HandshakeRejected>(create);
@@ -184,12 +187,13 @@ class AppHandshake extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'jwt')
-    ..pPM<$0.DeviceId>(2, _omitFieldNames ? '' : 'subscribeDeviceIds',
+    ..pc<$0.DeviceId>(
+        2, _omitFieldNames ? '' : 'subscribeDeviceIds', $pb.PbFieldType.PM,
         subBuilder: $0.DeviceId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AppHandshake clone() => deepCopy();
+  AppHandshake clone() => AppHandshake()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   AppHandshake copyWith(void Function(AppHandshake) updates) =>
       super.copyWith((message) => updates(message as AppHandshake))
@@ -202,6 +206,8 @@ class AppHandshake extends $pb.GeneratedMessage {
   static AppHandshake create() => AppHandshake._();
   @$core.override
   AppHandshake createEmptyInstance() => create();
+  static $pb.PbList<AppHandshake> createRepeated() =>
+      $pb.PbList<AppHandshake>();
   @$core.pragma('dart2js:noInline')
   static AppHandshake getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<AppHandshake>(create);
@@ -257,7 +263,7 @@ class PropertyReadRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PropertyReadRequest clone() => deepCopy();
+  PropertyReadRequest clone() => PropertyReadRequest()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PropertyReadRequest copyWith(void Function(PropertyReadRequest) updates) =>
       super.copyWith((message) => updates(message as PropertyReadRequest))
@@ -270,6 +276,8 @@ class PropertyReadRequest extends $pb.GeneratedMessage {
   static PropertyReadRequest create() => PropertyReadRequest._();
   @$core.override
   PropertyReadRequest createEmptyInstance() => create();
+  static $pb.PbList<PropertyReadRequest> createRepeated() =>
+      $pb.PbList<PropertyReadRequest>();
   @$core.pragma('dart2js:noInline')
   static PropertyReadRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PropertyReadRequest>(create);
@@ -386,7 +394,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GatewayMessage clone() => deepCopy();
+  GatewayMessage clone() => GatewayMessage()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GatewayMessage copyWith(void Function(GatewayMessage) updates) =>
       super.copyWith((message) => updates(message as GatewayMessage))
@@ -399,27 +407,15 @@ class GatewayMessage extends $pb.GeneratedMessage {
   static GatewayMessage create() => GatewayMessage._();
   @$core.override
   GatewayMessage createEmptyInstance() => create();
+  static $pb.PbList<GatewayMessage> createRepeated() =>
+      $pb.PbList<GatewayMessage>();
   @$core.pragma('dart2js:noInline')
   static GatewayMessage getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<GatewayMessage>(create);
   static GatewayMessage? _defaultInstance;
 
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
   GatewayMessage_Payload whichPayload() =>
       _GatewayMessage_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -576,7 +572,7 @@ class AppMessage extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AppMessage clone() => deepCopy();
+  AppMessage clone() => AppMessage()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   AppMessage copyWith(void Function(AppMessage) updates) =>
       super.copyWith((message) => updates(message as AppMessage)) as AppMessage;
@@ -588,21 +584,14 @@ class AppMessage extends $pb.GeneratedMessage {
   static AppMessage create() => AppMessage._();
   @$core.override
   AppMessage createEmptyInstance() => create();
+  static $pb.PbList<AppMessage> createRepeated() => $pb.PbList<AppMessage>();
   @$core.pragma('dart2js:noInline')
   static AppMessage getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<AppMessage>(create);
   static AppMessage? _defaultInstance;
 
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
   AppMessage_Payload whichPayload() =>
       _AppMessage_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)

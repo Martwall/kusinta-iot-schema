@@ -237,7 +237,7 @@ export declare const CommandErrorSchema: GenMessage<CommandError>;
 
 /**
  * CommandResult travels gateway → Flutter app (GatewayMessage) and
- * connector → gateway (ConnectRequest via connector.proto import).
+ * connector → gateway (SessionRequest via connector.proto import).
  *
  * @generated from message kusinta.iot.webrtc.v1.CommandResult
  */

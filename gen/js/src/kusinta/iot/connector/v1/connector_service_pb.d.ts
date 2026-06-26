@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import type { GenFile, GenService } from "@bufbuild/protobuf/codegenv2";
-import type { ConnectRequestSchema, ConnectResponseSchema } from "./connector_pb.js";
+import type { SessionRequestSchema, SessionResponseSchema } from "./connector_pb.js";
 
 /**
  * Describes the file kusinta/iot/connector/v1/connector_service.proto.
@@ -18,12 +18,12 @@ export declare const file_kusinta_iot_connector_v1_connector_service: GenFile;
  */
 export declare const ConnectorGatewayService: GenService<{
   /**
-   * @generated from rpc kusinta.iot.connector.v1.ConnectorGatewayService.Connect
+   * @generated from rpc kusinta.iot.connector.v1.ConnectorGatewayService.Session
    */
-  connect: {
+  session: {
     methodKind: "bidi_streaming";
-    input: typeof ConnectRequestSchema;
-    output: typeof ConnectResponseSchema;
+    input: typeof SessionRequestSchema;
+    output: typeof SessionResponseSchema;
   },
 }>;
 

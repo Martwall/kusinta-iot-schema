@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -55,7 +55,7 @@ class ErrorDetail extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ErrorDetail clone() => deepCopy();
+  ErrorDetail clone() => ErrorDetail()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ErrorDetail copyWith(void Function(ErrorDetail) updates) =>
       super.copyWith((message) => updates(message as ErrorDetail))
@@ -68,6 +68,7 @@ class ErrorDetail extends $pb.GeneratedMessage {
   static ErrorDetail create() => ErrorDetail._();
   @$core.override
   ErrorDetail createEmptyInstance() => create();
+  static $pb.PbList<ErrorDetail> createRepeated() => $pb.PbList<ErrorDetail>();
   @$core.pragma('dart2js:noInline')
   static ErrorDetail getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ErrorDetail>(create);

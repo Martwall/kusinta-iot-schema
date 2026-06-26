@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -45,7 +45,7 @@ class SdpOffer extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SdpOffer clone() => deepCopy();
+  SdpOffer clone() => SdpOffer()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   SdpOffer copyWith(void Function(SdpOffer) updates) =>
       super.copyWith((message) => updates(message as SdpOffer)) as SdpOffer;
@@ -57,6 +57,7 @@ class SdpOffer extends $pb.GeneratedMessage {
   static SdpOffer create() => SdpOffer._();
   @$core.override
   SdpOffer createEmptyInstance() => create();
+  static $pb.PbList<SdpOffer> createRepeated() => $pb.PbList<SdpOffer>();
   @$core.pragma('dart2js:noInline')
   static SdpOffer getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SdpOffer>(create);
@@ -99,7 +100,7 @@ class SdpAnswer extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SdpAnswer clone() => deepCopy();
+  SdpAnswer clone() => SdpAnswer()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   SdpAnswer copyWith(void Function(SdpAnswer) updates) =>
       super.copyWith((message) => updates(message as SdpAnswer)) as SdpAnswer;
@@ -111,6 +112,7 @@ class SdpAnswer extends $pb.GeneratedMessage {
   static SdpAnswer create() => SdpAnswer._();
   @$core.override
   SdpAnswer createEmptyInstance() => create();
+  static $pb.PbList<SdpAnswer> createRepeated() => $pb.PbList<SdpAnswer>();
   @$core.pragma('dart2js:noInline')
   static SdpAnswer getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SdpAnswer>(create);
@@ -153,7 +155,7 @@ class IceCandidate extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  IceCandidate clone() => deepCopy();
+  IceCandidate clone() => IceCandidate()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   IceCandidate copyWith(void Function(IceCandidate) updates) =>
       super.copyWith((message) => updates(message as IceCandidate))
@@ -166,6 +168,8 @@ class IceCandidate extends $pb.GeneratedMessage {
   static IceCandidate create() => IceCandidate._();
   @$core.override
   IceCandidate createEmptyInstance() => create();
+  static $pb.PbList<IceCandidate> createRepeated() =>
+      $pb.PbList<IceCandidate>();
   @$core.pragma('dart2js:noInline')
   static IceCandidate getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<IceCandidate>(create);
@@ -211,7 +215,7 @@ class UserHandshake extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserHandshake clone() => deepCopy();
+  UserHandshake clone() => UserHandshake()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UserHandshake copyWith(void Function(UserHandshake) updates) =>
       super.copyWith((message) => updates(message as UserHandshake))
@@ -224,6 +228,8 @@ class UserHandshake extends $pb.GeneratedMessage {
   static UserHandshake create() => UserHandshake._();
   @$core.override
   UserHandshake createEmptyInstance() => create();
+  static $pb.PbList<UserHandshake> createRepeated() =>
+      $pb.PbList<UserHandshake>();
   @$core.pragma('dart2js:noInline')
   static UserHandshake getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<UserHandshake>(create);
@@ -271,7 +277,7 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserHandshakeAck clone() => deepCopy();
+  UserHandshakeAck clone() => UserHandshakeAck()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UserHandshakeAck copyWith(void Function(UserHandshakeAck) updates) =>
       super.copyWith((message) => updates(message as UserHandshakeAck))
@@ -284,6 +290,8 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
   static UserHandshakeAck create() => UserHandshakeAck._();
   @$core.override
   UserHandshakeAck createEmptyInstance() => create();
+  static $pb.PbList<UserHandshakeAck> createRepeated() =>
+      $pb.PbList<UserHandshakeAck>();
   @$core.pragma('dart2js:noInline')
   static UserHandshakeAck getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<UserHandshakeAck>(create);
@@ -355,7 +363,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GatewayConnectRequest clone() => deepCopy();
+  GatewayConnectRequest clone() =>
+      GatewayConnectRequest()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GatewayConnectRequest copyWith(
           void Function(GatewayConnectRequest) updates) =>
@@ -369,17 +378,15 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   static GatewayConnectRequest create() => GatewayConnectRequest._();
   @$core.override
   GatewayConnectRequest createEmptyInstance() => create();
+  static $pb.PbList<GatewayConnectRequest> createRepeated() =>
+      $pb.PbList<GatewayConnectRequest>();
   @$core.pragma('dart2js:noInline')
   static GatewayConnectRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<GatewayConnectRequest>(create);
   static GatewayConnectRequest? _defaultInstance;
 
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   GatewayConnectRequest_Payload whichPayload() =>
       _GatewayConnectRequest_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -462,7 +469,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GatewayConnectResponse clone() => deepCopy();
+  GatewayConnectResponse clone() =>
+      GatewayConnectResponse()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GatewayConnectResponse copyWith(
           void Function(GatewayConnectResponse) updates) =>
@@ -476,17 +484,15 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   static GatewayConnectResponse create() => GatewayConnectResponse._();
   @$core.override
   GatewayConnectResponse createEmptyInstance() => create();
+  static $pb.PbList<GatewayConnectResponse> createRepeated() =>
+      $pb.PbList<GatewayConnectResponse>();
   @$core.pragma('dart2js:noInline')
   static GatewayConnectResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<GatewayConnectResponse>(create);
   static GatewayConnectResponse? _defaultInstance;
 
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   GatewayConnectResponse_Payload whichPayload() =>
       _GatewayConnectResponse_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -571,7 +577,7 @@ class UserConnectRequest extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserConnectRequest clone() => deepCopy();
+  UserConnectRequest clone() => UserConnectRequest()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UserConnectRequest copyWith(void Function(UserConnectRequest) updates) =>
       super.copyWith((message) => updates(message as UserConnectRequest))
@@ -584,19 +590,15 @@ class UserConnectRequest extends $pb.GeneratedMessage {
   static UserConnectRequest create() => UserConnectRequest._();
   @$core.override
   UserConnectRequest createEmptyInstance() => create();
+  static $pb.PbList<UserConnectRequest> createRepeated() =>
+      $pb.PbList<UserConnectRequest>();
   @$core.pragma('dart2js:noInline')
   static UserConnectRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<UserConnectRequest>(create);
   static UserConnectRequest? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   UserConnectRequest_Payload whichPayload() =>
       _UserConnectRequest_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -680,7 +682,7 @@ class UserConnectResponse extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserConnectResponse clone() => deepCopy();
+  UserConnectResponse clone() => UserConnectResponse()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UserConnectResponse copyWith(void Function(UserConnectResponse) updates) =>
       super.copyWith((message) => updates(message as UserConnectResponse))
@@ -693,19 +695,15 @@ class UserConnectResponse extends $pb.GeneratedMessage {
   static UserConnectResponse create() => UserConnectResponse._();
   @$core.override
   UserConnectResponse createEmptyInstance() => create();
+  static $pb.PbList<UserConnectResponse> createRepeated() =>
+      $pb.PbList<UserConnectResponse>();
   @$core.pragma('dart2js:noInline')
   static UserConnectResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<UserConnectResponse>(create);
   static UserConnectResponse? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   UserConnectResponse_Payload whichPayload() =>
       _UserConnectResponse_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(1)
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)

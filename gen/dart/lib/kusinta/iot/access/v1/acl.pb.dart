@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $1;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'roles.pbenum.dart' as $2;
 
@@ -70,15 +69,15 @@ class PropertyConstraint extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..oo(0, [2, 3, 4, 5])
     ..aOS(1, _omitFieldNames ? '' : 'attributeName')
-    ..aI(2, _omitFieldNames ? '' : 'intMax', fieldType: $pb.PbFieldType.OS3)
-    ..aI(3, _omitFieldNames ? '' : 'intMin', fieldType: $pb.PbFieldType.OS3)
-    ..aI(4, _omitFieldNames ? '' : 'uintMax', fieldType: $pb.PbFieldType.OU3)
-    ..aI(5, _omitFieldNames ? '' : 'uintMin', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'intMax', $pb.PbFieldType.OS3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'intMin', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'uintMax', $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'uintMin', $pb.PbFieldType.OU3)
     ..aOS(6, _omitFieldNames ? '' : 'clusterIdHex')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PropertyConstraint clone() => deepCopy();
+  PropertyConstraint clone() => PropertyConstraint()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PropertyConstraint copyWith(void Function(PropertyConstraint) updates) =>
       super.copyWith((message) => updates(message as PropertyConstraint))
@@ -91,21 +90,15 @@ class PropertyConstraint extends $pb.GeneratedMessage {
   static PropertyConstraint create() => PropertyConstraint._();
   @$core.override
   PropertyConstraint createEmptyInstance() => create();
+  static $pb.PbList<PropertyConstraint> createRepeated() =>
+      $pb.PbList<PropertyConstraint>();
   @$core.pragma('dart2js:noInline')
   static PropertyConstraint getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PropertyConstraint>(create);
   static PropertyConstraint? _defaultInstance;
 
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
   PropertyConstraint_Constraint whichConstraint() =>
       _PropertyConstraint_ConstraintByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
   void clearConstraint() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -202,19 +195,23 @@ class DeviceAcl extends $pb.GeneratedMessage {
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.UserId>(2, _omitFieldNames ? '' : 'userId',
         subBuilder: $0.UserId.create)
-    ..aE<$2.Role>(3, _omitFieldNames ? '' : 'role', enumValues: $2.Role.values)
+    ..e<$2.Role>(3, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.Role.ROLE_UNSPECIFIED,
+        valueOf: $2.Role.valueOf,
+        enumValues: $2.Role.values)
     ..pc<$2.PermissionAction>(
         4, _omitFieldNames ? '' : 'allowedActions', $pb.PbFieldType.KE,
         valueOf: $2.PermissionAction.valueOf,
         enumValues: $2.PermissionAction.values,
         defaultEnumValue: $2.PermissionAction.PERMISSION_ACTION_UNSPECIFIED)
     ..pPS(5, _omitFieldNames ? '' : 'allowedAttributes')
-    ..pPM<PropertyConstraint>(6, _omitFieldNames ? '' : 'propertyConstraints',
+    ..pc<PropertyConstraint>(
+        6, _omitFieldNames ? '' : 'propertyConstraints', $pb.PbFieldType.PM,
         subBuilder: PropertyConstraint.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceAcl clone() => deepCopy();
+  DeviceAcl clone() => DeviceAcl()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceAcl copyWith(void Function(DeviceAcl) updates) =>
       super.copyWith((message) => updates(message as DeviceAcl)) as DeviceAcl;
@@ -226,6 +223,7 @@ class DeviceAcl extends $pb.GeneratedMessage {
   static DeviceAcl create() => DeviceAcl._();
   @$core.override
   DeviceAcl createEmptyInstance() => create();
+  static $pb.PbList<DeviceAcl> createRepeated() => $pb.PbList<DeviceAcl>();
   @$core.pragma('dart2js:noInline')
   static DeviceAcl getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DeviceAcl>(create);
@@ -305,14 +303,15 @@ class EffectivePermissions extends $pb.GeneratedMessage {
         subBuilder: $0.UserId.create)
     ..aOM<$0.GatewayId>(2, _omitFieldNames ? '' : 'gatewayId',
         subBuilder: $0.GatewayId.create)
-    ..pPM<DeviceAcl>(3, _omitFieldNames ? '' : 'deviceAcls',
+    ..pc<DeviceAcl>(3, _omitFieldNames ? '' : 'deviceAcls', $pb.PbFieldType.PM,
         subBuilder: DeviceAcl.create)
     ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'validAt',
         subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  EffectivePermissions clone() => deepCopy();
+  EffectivePermissions clone() =>
+      EffectivePermissions()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   EffectivePermissions copyWith(void Function(EffectivePermissions) updates) =>
       super.copyWith((message) => updates(message as EffectivePermissions))
@@ -325,6 +324,8 @@ class EffectivePermissions extends $pb.GeneratedMessage {
   static EffectivePermissions create() => EffectivePermissions._();
   @$core.override
   EffectivePermissions createEmptyInstance() => create();
+  static $pb.PbList<EffectivePermissions> createRepeated() =>
+      $pb.PbList<EffectivePermissions>();
   @$core.pragma('dart2js:noInline')
   static EffectivePermissions getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EffectivePermissions>(create);

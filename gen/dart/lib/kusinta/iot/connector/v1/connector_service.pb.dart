@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:async' as $async;
 import 'dart:core' as $core;
@@ -26,8 +26,8 @@ class ConnectorGatewayServiceApi {
 
   ConnectorGatewayServiceApi(this._client);
 
-  $async.Future<$0.ConnectResponse> connect(
-          $pb.ClientContext? ctx, $0.ConnectRequest request) =>
-      _client.invoke<$0.ConnectResponse>(ctx, 'ConnectorGatewayService',
-          'Connect', request, $0.ConnectResponse());
+  $async.Future<$0.SessionResponse> session(
+          $pb.ClientContext? ctx, $0.SessionRequest request) =>
+      _client.invoke<$0.SessionResponse>(ctx, 'ConnectorGatewayService',
+          'Session', request, $0.SessionResponse());
 }

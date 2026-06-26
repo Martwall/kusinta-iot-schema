@@ -9,5 +9,5 @@ option optimize_for = SPEED;
 // ConnectorGatewayService: connector dials the gateway on startup.
 // A single persistent bidirectional stream carries all traffic for the connector's lifetime.
 service ConnectorGatewayService {
-  rpc Connect(stream ConnectRequest) returns (stream ConnectResponse);
+  rpc Session(stream SessionRequest) returns (stream SessionResponse);
 }

@@ -50,7 +50,7 @@ def test_handshake_ack_rejected():
 
 
 def test_connector_to_gateway_handshake_payload():
-    msg = connector_pb2.ConnectRequest(
+    msg = connector_pb2.SessionRequest(
         message_id="msg-001",
         handshake=connector_pb2.ConnectorHandshake(
             info=connector_pb2.ConnectorInfo(
@@ -62,7 +62,7 @@ def test_connector_to_gateway_handshake_payload():
             ),
         ),
     )
-    decoded = connector_pb2.ConnectRequest()
+    decoded = connector_pb2.SessionRequest()
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.message_id == "msg-001"
     assert decoded.WhichOneof("payload") == "handshake"
@@ -80,11 +80,11 @@ def test_connector_to_gateway_property_update_payload():
             )
         ]
     )
-    msg = connector_pb2.ConnectRequest(
+    msg = connector_pb2.SessionRequest(
         message_id="msg-002",
         property_update=batch,
     )
-    decoded = connector_pb2.ConnectRequest()
+    decoded = connector_pb2.SessionRequest()
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.WhichOneof("payload") == "property_update"
     assert len(decoded.property_update.updates) == 1
@@ -92,14 +92,14 @@ def test_connector_to_gateway_property_update_payload():
 
 
 def test_gateway_to_connector_handshake_ack():
-    msg = connector_pb2.ConnectResponse(
+    msg = connector_pb2.SessionResponse(
         message_id="gw-001",
         handshake_ack=connector_pb2.HandshakeAck(
             accepted=True,
             gateway_id=identity_pb2.GatewayId(value="gw-1"),
         ),
     )
-    decoded = connector_pb2.ConnectResponse()
+    decoded = connector_pb2.SessionResponse()
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.WhichOneof("payload") == "handshake_ack"
     assert decoded.handshake_ack.accepted is True

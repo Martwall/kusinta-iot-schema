@@ -60,6 +60,9 @@ pipeline {
     stage('Generate') {
       steps {
         sh 'buf generate'
+        // Dart is generated separately: it needs --include-imports --include-wkt
+        // to emit well-known types locally (protobuf ^4.x doesn't bundle them).
+        sh 'buf generate --template buf.gen.dart.yaml --include-imports --include-wkt'
       }
     }
 

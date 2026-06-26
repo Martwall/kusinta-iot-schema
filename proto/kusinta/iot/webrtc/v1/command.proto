@@ -58,7 +58,7 @@ message CommandError {
 }
 
 // CommandResult travels gateway → Flutter app (GatewayMessage) and
-// connector → gateway (ConnectRequest via connector.proto import).
+// connector → gateway (SessionRequest via connector.proto import).
 message CommandResult {
   string                    command_id   = 1;
   bool                      success      = 2;

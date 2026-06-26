@@ -16,10 +16,10 @@ class ConnectorGatewayServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Connect = channel.stream_stream(
-                '/kusinta.iot.connector.v1.ConnectorGatewayService/Connect',
-                request_serializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest.SerializeToString,
-                response_deserializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse.FromString,
+        self.Session = channel.stream_stream(
+                '/kusinta.iot.connector.v1.ConnectorGatewayService/Session',
+                request_serializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest.SerializeToString,
+                response_deserializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse.FromString,
                 _registered_method=True)
 
 
@@ -28,7 +28,7 @@ class ConnectorGatewayServiceServicer(object):
     A single persistent bidirectional stream carries all traffic for the connector's lifetime.
     """
 
-    def Connect(self, request_iterator, context):
+    def Session(self, request_iterator, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -37,10 +37,10 @@ class ConnectorGatewayServiceServicer(object):
 
 def add_ConnectorGatewayServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Connect': grpc.stream_stream_rpc_method_handler(
-                    servicer.Connect,
-                    request_deserializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest.FromString,
-                    response_serializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse.SerializeToString,
+            'Session': grpc.stream_stream_rpc_method_handler(
+                    servicer.Session,
+                    request_deserializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest.FromString,
+                    response_serializer=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -56,7 +56,7 @@ class ConnectorGatewayService(object):
     """
 
     @staticmethod
-    def Connect(request_iterator,
+    def Session(request_iterator,
             target,
             options=(),
             channel_credentials=None,
@@ -69,9 +69,9 @@ class ConnectorGatewayService(object):
         return grpc.experimental.stream_stream(
             request_iterator,
             target,
-            '/kusinta.iot.connector.v1.ConnectorGatewayService/Connect',
-            kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest.SerializeToString,
-            kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse.FromString,
+            '/kusinta.iot.connector.v1.ConnectorGatewayService/Session',
+            kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest.SerializeToString,
+            kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse.FromString,
             options,
             channel_credentials,
             insecure,

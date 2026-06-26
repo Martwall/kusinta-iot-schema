@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $2;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../vendor/homematic/v1/homematic.pb.dart' as $3;
 import 'descriptor.pb.dart' as $0;
 import 'properties.pb.dart' as $1;
@@ -155,7 +154,7 @@ class Device extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  Device clone() => deepCopy();
+  Device clone() => Device()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   Device copyWith(void Function(Device) updates) =>
       super.copyWith((message) => updates(message as Device)) as Device;
@@ -167,39 +166,14 @@ class Device extends $pb.GeneratedMessage {
   static Device create() => Device._();
   @$core.override
   Device createEmptyInstance() => create();
+  static $pb.PbList<Device> createRepeated() => $pb.PbList<Device>();
   @$core.pragma('dart2js:noInline')
   static Device getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Device>(create);
   static Device? _defaultInstance;
 
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
-  @$pb.TagNumber(10)
-  @$pb.TagNumber(11)
-  @$pb.TagNumber(12)
-  @$pb.TagNumber(13)
-  @$pb.TagNumber(50)
   Device_Properties whichProperties() =>
       _Device_PropertiesByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(2)
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
-  @$pb.TagNumber(10)
-  @$pb.TagNumber(11)
-  @$pb.TagNumber(12)
-  @$pb.TagNumber(13)
-  @$pb.TagNumber(50)
   void clearProperties() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)

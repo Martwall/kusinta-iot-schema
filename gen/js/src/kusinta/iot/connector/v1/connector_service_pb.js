@@ -9,7 +9,7 @@ import { file_kusinta_iot_connector_v1_connector } from "./connector_pb.js";
  * Describes the file kusinta/iot/connector/v1/connector_service.proto.
  */
 export const file_kusinta_iot_connector_v1_connector_service = /*@__PURE__*/
-  fileDesc("CjBrdXNpbnRhL2lvdC9jb25uZWN0b3IvdjEvY29ubmVjdG9yX3NlcnZpY2UucHJvdG8SGGt1c2ludGEuaW90LmNvbm5lY3Rvci52MTJ9ChdDb25uZWN0b3JHYXRld2F5U2VydmljZRJiCgdDb25uZWN0Eigua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNvbm5lY3RSZXF1ZXN0Gikua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNvbm5lY3RSZXNwb25zZSgBMAFCAkgBYgZwcm90bzM", [file_kusinta_iot_connector_v1_connector]);
+  fileDesc("CjBrdXNpbnRhL2lvdC9jb25uZWN0b3IvdjEvY29ubmVjdG9yX3NlcnZpY2UucHJvdG8SGGt1c2ludGEuaW90LmNvbm5lY3Rvci52MTJ9ChdDb25uZWN0b3JHYXRld2F5U2VydmljZRJiCgdTZXNzaW9uEigua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlNlc3Npb25SZXF1ZXN0Gikua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlNlc3Npb25SZXNwb25zZSgBMAFCAkgBYgZwcm90bzM", [file_kusinta_iot_connector_v1_connector]);
 
 /**
  * ConnectorGatewayService: connector dials the gateway on startup.

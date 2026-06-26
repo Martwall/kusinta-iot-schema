@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $2;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../common/v1/types.pbenum.dart' as $5;
 import '../../device/v1/descriptor.pb.dart' as $1;
 import '../../device/v1/property_update.pb.dart' as $3;
@@ -62,7 +61,10 @@ class ConnectorInfo extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..aOS(3, _omitFieldNames ? '' : 'version')
-    ..aE<$5.ConnectorTransport>(4, _omitFieldNames ? '' : 'transport',
+    ..e<$5.ConnectorTransport>(
+        4, _omitFieldNames ? '' : 'transport', $pb.PbFieldType.OE,
+        defaultOrMaker: $5.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
+        valueOf: $5.ConnectorTransport.valueOf,
         enumValues: $5.ConnectorTransport.values)
     ..aOS(5, _omitFieldNames ? '' : 'endpoint')
     ..p<$core.int>(
@@ -70,7 +72,7 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectorInfo clone() => deepCopy();
+  ConnectorInfo clone() => ConnectorInfo()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ConnectorInfo copyWith(void Function(ConnectorInfo) updates) =>
       super.copyWith((message) => updates(message as ConnectorInfo))
@@ -83,6 +85,8 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   static ConnectorInfo create() => ConnectorInfo._();
   @$core.override
   ConnectorInfo createEmptyInstance() => create();
+  static $pb.PbList<ConnectorInfo> createRepeated() =>
+      $pb.PbList<ConnectorInfo>();
   @$core.pragma('dart2js:noInline')
   static ConnectorInfo getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ConnectorInfo>(create);
@@ -166,12 +170,13 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<ConnectorInfo>(1, _omitFieldNames ? '' : 'info',
         subBuilder: ConnectorInfo.create)
-    ..pPM<$1.DeviceDescriptor>(2, _omitFieldNames ? '' : 'knownDevices',
+    ..pc<$1.DeviceDescriptor>(
+        2, _omitFieldNames ? '' : 'knownDevices', $pb.PbFieldType.PM,
         subBuilder: $1.DeviceDescriptor.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectorHandshake clone() => deepCopy();
+  ConnectorHandshake clone() => ConnectorHandshake()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ConnectorHandshake copyWith(void Function(ConnectorHandshake) updates) =>
       super.copyWith((message) => updates(message as ConnectorHandshake))
@@ -184,6 +189,8 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   static ConnectorHandshake create() => ConnectorHandshake._();
   @$core.override
   ConnectorHandshake createEmptyInstance() => create();
+  static $pb.PbList<ConnectorHandshake> createRepeated() =>
+      $pb.PbList<ConnectorHandshake>();
   @$core.pragma('dart2js:noInline')
   static ConnectorHandshake getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ConnectorHandshake>(create);
@@ -238,7 +245,7 @@ class HandshakeAck extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HandshakeAck clone() => deepCopy();
+  HandshakeAck clone() => HandshakeAck()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   HandshakeAck copyWith(void Function(HandshakeAck) updates) =>
       super.copyWith((message) => updates(message as HandshakeAck))
@@ -251,6 +258,8 @@ class HandshakeAck extends $pb.GeneratedMessage {
   static HandshakeAck create() => HandshakeAck._();
   @$core.override
   HandshakeAck createEmptyInstance() => create();
+  static $pb.PbList<HandshakeAck> createRepeated() =>
+      $pb.PbList<HandshakeAck>();
   @$core.pragma('dart2js:noInline')
   static HandshakeAck getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<HandshakeAck>(create);
@@ -314,7 +323,7 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceAnnouncement clone() => deepCopy();
+  DeviceAnnouncement clone() => DeviceAnnouncement()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceAnnouncement copyWith(void Function(DeviceAnnouncement) updates) =>
       super.copyWith((message) => updates(message as DeviceAnnouncement))
@@ -327,6 +336,8 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
   static DeviceAnnouncement create() => DeviceAnnouncement._();
   @$core.override
   DeviceAnnouncement createEmptyInstance() => create();
+  static $pb.PbList<DeviceAnnouncement> createRepeated() =>
+      $pb.PbList<DeviceAnnouncement>();
   @$core.pragma('dart2js:noInline')
   static DeviceAnnouncement getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DeviceAnnouncement>(create);
@@ -375,7 +386,7 @@ class DeviceRemoval extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceRemoval clone() => deepCopy();
+  DeviceRemoval clone() => DeviceRemoval()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceRemoval copyWith(void Function(DeviceRemoval) updates) =>
       super.copyWith((message) => updates(message as DeviceRemoval))
@@ -388,6 +399,8 @@ class DeviceRemoval extends $pb.GeneratedMessage {
   static DeviceRemoval create() => DeviceRemoval._();
   @$core.override
   DeviceRemoval createEmptyInstance() => create();
+  static $pb.PbList<DeviceRemoval> createRepeated() =>
+      $pb.PbList<DeviceRemoval>();
   @$core.pragma('dart2js:noInline')
   static DeviceRemoval getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DeviceRemoval>(create);
@@ -434,7 +447,7 @@ class HeartBeat extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HeartBeat clone() => deepCopy();
+  HeartBeat clone() => HeartBeat()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   HeartBeat copyWith(void Function(HeartBeat) updates) =>
       super.copyWith((message) => updates(message as HeartBeat)) as HeartBeat;
@@ -446,6 +459,7 @@ class HeartBeat extends $pb.GeneratedMessage {
   static HeartBeat create() => HeartBeat._();
   @$core.override
   HeartBeat createEmptyInstance() => create();
+  static $pb.PbList<HeartBeat> createRepeated() => $pb.PbList<HeartBeat>();
   @$core.pragma('dart2js:noInline')
   static HeartBeat getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<HeartBeat>(create);
@@ -480,7 +494,7 @@ class SubscribeDevice extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SubscribeDevice clone() => deepCopy();
+  SubscribeDevice clone() => SubscribeDevice()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   SubscribeDevice copyWith(void Function(SubscribeDevice) updates) =>
       super.copyWith((message) => updates(message as SubscribeDevice))
@@ -493,6 +507,8 @@ class SubscribeDevice extends $pb.GeneratedMessage {
   static SubscribeDevice create() => SubscribeDevice._();
   @$core.override
   SubscribeDevice createEmptyInstance() => create();
+  static $pb.PbList<SubscribeDevice> createRepeated() =>
+      $pb.PbList<SubscribeDevice>();
   @$core.pragma('dart2js:noInline')
   static SubscribeDevice getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<SubscribeDevice>(create);
@@ -538,7 +554,7 @@ class UnsubscribeDevice extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UnsubscribeDevice clone() => deepCopy();
+  UnsubscribeDevice clone() => UnsubscribeDevice()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UnsubscribeDevice copyWith(void Function(UnsubscribeDevice) updates) =>
       super.copyWith((message) => updates(message as UnsubscribeDevice))
@@ -551,6 +567,8 @@ class UnsubscribeDevice extends $pb.GeneratedMessage {
   static UnsubscribeDevice create() => UnsubscribeDevice._();
   @$core.override
   UnsubscribeDevice createEmptyInstance() => create();
+  static $pb.PbList<UnsubscribeDevice> createRepeated() =>
+      $pb.PbList<UnsubscribeDevice>();
   @$core.pragma('dart2js:noInline')
   static UnsubscribeDevice getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<UnsubscribeDevice>(create);
@@ -601,7 +619,7 @@ class GatewayError extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GatewayError clone() => deepCopy();
+  GatewayError clone() => GatewayError()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GatewayError copyWith(void Function(GatewayError) updates) =>
       super.copyWith((message) => updates(message as GatewayError))
@@ -614,6 +632,8 @@ class GatewayError extends $pb.GeneratedMessage {
   static GatewayError create() => GatewayError._();
   @$core.override
   GatewayError createEmptyInstance() => create();
+  static $pb.PbList<GatewayError> createRepeated() =>
+      $pb.PbList<GatewayError>();
   @$core.pragma('dart2js:noInline')
   static GatewayError getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<GatewayError>(create);
@@ -647,8 +667,8 @@ class GatewayError extends $pb.GeneratedMessage {
   void clearCommandId() => $_clearField(3);
 }
 
-class CommandResult extends $pb.GeneratedMessage {
-  factory CommandResult({
+class ConnectorCommandResult extends $pb.GeneratedMessage {
+  factory ConnectorCommandResult({
     $core.String? commandId,
     $core.bool? success,
     GatewayError? error,
@@ -662,17 +682,17 @@ class CommandResult extends $pb.GeneratedMessage {
     return result;
   }
 
-  CommandResult._();
+  ConnectorCommandResult._();
 
-  factory CommandResult.fromBuffer($core.List<$core.int> data,
+  factory ConnectorCommandResult.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory CommandResult.fromJson($core.String json,
+  factory ConnectorCommandResult.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'CommandResult',
+      _omitMessageNames ? '' : 'ConnectorCommandResult',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
@@ -685,23 +705,27 @@ class CommandResult extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CommandResult clone() => deepCopy();
+  ConnectorCommandResult clone() =>
+      ConnectorCommandResult()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CommandResult copyWith(void Function(CommandResult) updates) =>
-      super.copyWith((message) => updates(message as CommandResult))
-          as CommandResult;
+  ConnectorCommandResult copyWith(
+          void Function(ConnectorCommandResult) updates) =>
+      super.copyWith((message) => updates(message as ConnectorCommandResult))
+          as ConnectorCommandResult;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static CommandResult create() => CommandResult._();
+  static ConnectorCommandResult create() => ConnectorCommandResult._();
   @$core.override
-  CommandResult createEmptyInstance() => create();
+  ConnectorCommandResult createEmptyInstance() => create();
+  static $pb.PbList<ConnectorCommandResult> createRepeated() =>
+      $pb.PbList<ConnectorCommandResult>();
   @$core.pragma('dart2js:noInline')
-  static CommandResult getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CommandResult>(create);
-  static CommandResult? _defaultInstance;
+  static ConnectorCommandResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ConnectorCommandResult>(create);
+  static ConnectorCommandResult? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get commandId => $_getSZ(0);
@@ -744,7 +768,7 @@ class CommandResult extends $pb.GeneratedMessage {
   $2.Timestamp ensureCompletedAt() => $_ensure(3);
 }
 
-enum ConnectRequest_Payload {
+enum SessionRequest_Payload {
   handshake,
   propertyUpdate,
   deviceAnnounced,
@@ -754,15 +778,15 @@ enum ConnectRequest_Payload {
   notSet
 }
 
-class ConnectRequest extends $pb.GeneratedMessage {
-  factory ConnectRequest({
+class SessionRequest extends $pb.GeneratedMessage {
+  factory SessionRequest({
     $core.String? messageId,
     $2.Timestamp? sentAt,
     ConnectorHandshake? handshake,
     $3.PropertyUpdateBatch? propertyUpdate,
     DeviceAnnouncement? deviceAnnounced,
     DeviceRemoval? deviceRemoved,
-    CommandResult? commandResult,
+    ConnectorCommandResult? commandResult,
     HeartBeat? heartbeat,
   }) {
     final result = create();
@@ -777,27 +801,27 @@ class ConnectRequest extends $pb.GeneratedMessage {
     return result;
   }
 
-  ConnectRequest._();
+  SessionRequest._();
 
-  factory ConnectRequest.fromBuffer($core.List<$core.int> data,
+  factory SessionRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ConnectRequest.fromJson($core.String json,
+  factory SessionRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, ConnectRequest_Payload>
-      _ConnectRequest_PayloadByTag = {
-    3: ConnectRequest_Payload.handshake,
-    4: ConnectRequest_Payload.propertyUpdate,
-    5: ConnectRequest_Payload.deviceAnnounced,
-    6: ConnectRequest_Payload.deviceRemoved,
-    7: ConnectRequest_Payload.commandResult,
-    8: ConnectRequest_Payload.heartbeat,
-    0: ConnectRequest_Payload.notSet
+  static const $core.Map<$core.int, SessionRequest_Payload>
+      _SessionRequest_PayloadByTag = {
+    3: SessionRequest_Payload.handshake,
+    4: SessionRequest_Payload.propertyUpdate,
+    5: SessionRequest_Payload.deviceAnnounced,
+    6: SessionRequest_Payload.deviceRemoved,
+    7: SessionRequest_Payload.commandResult,
+    8: SessionRequest_Payload.heartbeat,
+    0: SessionRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ConnectRequest',
+      _omitMessageNames ? '' : 'SessionRequest',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
@@ -813,45 +837,35 @@ class ConnectRequest extends $pb.GeneratedMessage {
         subBuilder: DeviceAnnouncement.create)
     ..aOM<DeviceRemoval>(6, _omitFieldNames ? '' : 'deviceRemoved',
         subBuilder: DeviceRemoval.create)
-    ..aOM<CommandResult>(7, _omitFieldNames ? '' : 'commandResult',
-        subBuilder: CommandResult.create)
+    ..aOM<ConnectorCommandResult>(7, _omitFieldNames ? '' : 'commandResult',
+        subBuilder: ConnectorCommandResult.create)
     ..aOM<HeartBeat>(8, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectRequest clone() => deepCopy();
+  SessionRequest clone() => SessionRequest()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectRequest copyWith(void Function(ConnectRequest) updates) =>
-      super.copyWith((message) => updates(message as ConnectRequest))
-          as ConnectRequest;
+  SessionRequest copyWith(void Function(SessionRequest) updates) =>
+      super.copyWith((message) => updates(message as SessionRequest))
+          as SessionRequest;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ConnectRequest create() => ConnectRequest._();
+  static SessionRequest create() => SessionRequest._();
   @$core.override
-  ConnectRequest createEmptyInstance() => create();
+  SessionRequest createEmptyInstance() => create();
+  static $pb.PbList<SessionRequest> createRepeated() =>
+      $pb.PbList<SessionRequest>();
   @$core.pragma('dart2js:noInline')
-  static ConnectRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ConnectRequest>(create);
-  static ConnectRequest? _defaultInstance;
+  static SessionRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SessionRequest>(create);
+  static SessionRequest? _defaultInstance;
 
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  ConnectRequest_Payload whichPayload() =>
-      _ConnectRequest_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
+  SessionRequest_Payload whichPayload() =>
+      _SessionRequest_PayloadByTag[$_whichOneof(0)]!;
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -919,15 +933,15 @@ class ConnectRequest extends $pb.GeneratedMessage {
   DeviceRemoval ensureDeviceRemoved() => $_ensure(5);
 
   @$pb.TagNumber(7)
-  CommandResult get commandResult => $_getN(6);
+  ConnectorCommandResult get commandResult => $_getN(6);
   @$pb.TagNumber(7)
-  set commandResult(CommandResult value) => $_setField(7, value);
+  set commandResult(ConnectorCommandResult value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasCommandResult() => $_has(6);
   @$pb.TagNumber(7)
   void clearCommandResult() => $_clearField(7);
   @$pb.TagNumber(7)
-  CommandResult ensureCommandResult() => $_ensure(6);
+  ConnectorCommandResult ensureCommandResult() => $_ensure(6);
 
   @$pb.TagNumber(8)
   HeartBeat get heartbeat => $_getN(7);
@@ -941,7 +955,7 @@ class ConnectRequest extends $pb.GeneratedMessage {
   HeartBeat ensureHeartbeat() => $_ensure(7);
 }
 
-enum ConnectResponse_Payload {
+enum SessionResponse_Payload {
   handshakeAck,
   subscribe,
   unsubscribe,
@@ -950,8 +964,8 @@ enum ConnectResponse_Payload {
   notSet
 }
 
-class ConnectResponse extends $pb.GeneratedMessage {
-  factory ConnectResponse({
+class SessionResponse extends $pb.GeneratedMessage {
+  factory SessionResponse({
     $core.String? messageId,
     $2.Timestamp? sentAt,
     HandshakeAck? handshakeAck,
@@ -971,26 +985,26 @@ class ConnectResponse extends $pb.GeneratedMessage {
     return result;
   }
 
-  ConnectResponse._();
+  SessionResponse._();
 
-  factory ConnectResponse.fromBuffer($core.List<$core.int> data,
+  factory SessionResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory ConnectResponse.fromJson($core.String json,
+  factory SessionResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, ConnectResponse_Payload>
-      _ConnectResponse_PayloadByTag = {
-    3: ConnectResponse_Payload.handshakeAck,
-    5: ConnectResponse_Payload.subscribe,
-    6: ConnectResponse_Payload.unsubscribe,
-    7: ConnectResponse_Payload.error,
-    8: ConnectResponse_Payload.executeCommand,
-    0: ConnectResponse_Payload.notSet
+  static const $core.Map<$core.int, SessionResponse_Payload>
+      _SessionResponse_PayloadByTag = {
+    3: SessionResponse_Payload.handshakeAck,
+    5: SessionResponse_Payload.subscribe,
+    6: SessionResponse_Payload.unsubscribe,
+    7: SessionResponse_Payload.error,
+    8: SessionResponse_Payload.executeCommand,
+    0: SessionResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ConnectResponse',
+      _omitMessageNames ? '' : 'SessionResponse',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
@@ -1011,36 +1025,28 @@ class ConnectResponse extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectResponse clone() => deepCopy();
+  SessionResponse clone() => SessionResponse()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectResponse copyWith(void Function(ConnectResponse) updates) =>
-      super.copyWith((message) => updates(message as ConnectResponse))
-          as ConnectResponse;
+  SessionResponse copyWith(void Function(SessionResponse) updates) =>
+      super.copyWith((message) => updates(message as SessionResponse))
+          as SessionResponse;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static ConnectResponse create() => ConnectResponse._();
+  static SessionResponse create() => SessionResponse._();
   @$core.override
-  ConnectResponse createEmptyInstance() => create();
+  SessionResponse createEmptyInstance() => create();
+  static $pb.PbList<SessionResponse> createRepeated() =>
+      $pb.PbList<SessionResponse>();
   @$core.pragma('dart2js:noInline')
-  static ConnectResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ConnectResponse>(create);
-  static ConnectResponse? _defaultInstance;
+  static SessionResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SessionResponse>(create);
+  static SessionResponse? _defaultInstance;
 
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  ConnectResponse_Payload whichPayload() =>
-      _ConnectResponse_PayloadByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
+  SessionResponse_Payload whichPayload() =>
+      _SessionResponse_PayloadByTag[$_whichOneof(0)]!;
   void clearPayload() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)

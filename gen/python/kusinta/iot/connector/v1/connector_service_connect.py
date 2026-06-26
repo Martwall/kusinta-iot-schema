@@ -18,7 +18,7 @@ import kusinta.iot.connector.v1.connector_pb2 as kusinta_dot_iot_dot_connector_d
 
 
 class ConnectorGatewayService(Protocol):
-    def connect(self, request: AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest], ctx: RequestContext) -> AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse]:
+    def session(self, request: AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest], ctx: RequestContext) -> AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse]:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
 
@@ -27,15 +27,15 @@ class ConnectorGatewayServiceASGIApplication(ConnectASGIApplication[ConnectorGat
         super().__init__(
             service=service,
             endpoints=lambda svc: {
-                "/kusinta.iot.connector.v1.ConnectorGatewayService/Connect": Endpoint.bidi_stream(
+                "/kusinta.iot.connector.v1.ConnectorGatewayService/Session": Endpoint.bidi_stream(
                     method=MethodInfo(
-                        name="Connect",
+                        name="Session",
                         service_name="kusinta.iot.connector.v1.ConnectorGatewayService",
-                        input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest,
-                        output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse,
+                        input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest,
+                        output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
-                    function=svc.connect,
+                    function=svc.session,
                 ),
             },
             interceptors=interceptors,
@@ -51,20 +51,20 @@ class ConnectorGatewayServiceASGIApplication(ConnectASGIApplication[ConnectorGat
 
 
 class ConnectorGatewayServiceClient(ConnectClient):
-    def connect(
+    def session(
         self,
-        request: AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest],
+        request: AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest],
         *,
         headers: Headers | Mapping[str, str] | None = None,
         timeout_ms: int | None = None,
-    ) -> AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse]:
+    ) -> AsyncIterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse]:
         return self.execute_bidi_stream(
             request=request,
             method=MethodInfo(
-                name="Connect",
+                name="Session",
                 service_name="kusinta.iot.connector.v1.ConnectorGatewayService",
-                input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest,
-                output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse,
+                input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest,
+                output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
             ),
             headers=headers,
@@ -76,7 +76,7 @@ class ConnectorGatewayServiceClient(ConnectClient):
 
 
 class ConnectorGatewayServiceSync(Protocol):
-    def connect(self, request: Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest], ctx: RequestContext) -> Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse]:
+    def session(self, request: Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest], ctx: RequestContext) -> Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse]:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
 
@@ -84,15 +84,15 @@ class ConnectorGatewayServiceWSGIApplication(ConnectWSGIApplication):
     def __init__(self, service: ConnectorGatewayServiceSync, interceptors: Iterable[InterceptorSync]=(), read_max_bytes: int | None = None, compressions: Iterable[Compression] | None = None, codecs: Iterable[Codec] | None = None) -> None:
         super().__init__(
             endpoints={
-                "/kusinta.iot.connector.v1.ConnectorGatewayService/Connect": EndpointSync.bidi_stream(
+                "/kusinta.iot.connector.v1.ConnectorGatewayService/Session": EndpointSync.bidi_stream(
                     method=MethodInfo(
-                        name="Connect",
+                        name="Session",
                         service_name="kusinta.iot.connector.v1.ConnectorGatewayService",
-                        input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest,
-                        output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse,
+                        input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest,
+                        output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse,
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
-                    function=service.connect,
+                    function=service.session,
                 ),
             },
             interceptors=interceptors,
@@ -108,20 +108,20 @@ class ConnectorGatewayServiceWSGIApplication(ConnectWSGIApplication):
 
 
 class ConnectorGatewayServiceClientSync(ConnectClientSync):
-    def connect(
+    def session(
         self,
-        request: Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest],
+        request: Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest],
         *,
         headers: Headers | Mapping[str, str] | None = None,
         timeout_ms: int | None = None,
-    ) -> Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse]:
+    ) -> Iterator[kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse]:
         return self.execute_bidi_stream(
             request=request,
             method=MethodInfo(
-                name="Connect",
+                name="Session",
                 service_name="kusinta.iot.connector.v1.ConnectorGatewayService",
-                input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectRequest,
-                output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.ConnectResponse,
+                input=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionRequest,
+                output=kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2.SessionResponse,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
             ),
             headers=headers,

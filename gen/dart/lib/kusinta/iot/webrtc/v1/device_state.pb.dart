@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $2;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../access/v1/acl.pb.dart' as $1;
 import '../../device/v1/device.pb.dart' as $0;
 import '../../device/v1/property_update.pb.dart' as $3;
@@ -50,7 +49,7 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..pPM<$0.Device>(1, _omitFieldNames ? '' : 'devices',
+    ..pc<$0.Device>(1, _omitFieldNames ? '' : 'devices', $pb.PbFieldType.PM,
         subBuilder: $0.Device.create)
     ..aOM<$1.EffectivePermissions>(2, _omitFieldNames ? '' : 'permissions',
         subBuilder: $1.EffectivePermissions.create)
@@ -59,7 +58,7 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceStateSnapshot clone() => deepCopy();
+  DeviceStateSnapshot clone() => DeviceStateSnapshot()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceStateSnapshot copyWith(void Function(DeviceStateSnapshot) updates) =>
       super.copyWith((message) => updates(message as DeviceStateSnapshot))
@@ -72,6 +71,8 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
   static DeviceStateSnapshot create() => DeviceStateSnapshot._();
   @$core.override
   DeviceStateSnapshot createEmptyInstance() => create();
+  static $pb.PbList<DeviceStateSnapshot> createRepeated() =>
+      $pb.PbList<DeviceStateSnapshot>();
   @$core.pragma('dart2js:noInline')
   static DeviceStateSnapshot getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DeviceStateSnapshot>(create);
@@ -137,7 +138,7 @@ class DevicePropertyEvent extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DevicePropertyEvent clone() => deepCopy();
+  DevicePropertyEvent clone() => DevicePropertyEvent()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DevicePropertyEvent copyWith(void Function(DevicePropertyEvent) updates) =>
       super.copyWith((message) => updates(message as DevicePropertyEvent))
@@ -150,6 +151,8 @@ class DevicePropertyEvent extends $pb.GeneratedMessage {
   static DevicePropertyEvent create() => DevicePropertyEvent._();
   @$core.override
   DevicePropertyEvent createEmptyInstance() => create();
+  static $pb.PbList<DevicePropertyEvent> createRepeated() =>
+      $pb.PbList<DevicePropertyEvent>();
   @$core.pragma('dart2js:noInline')
   static DevicePropertyEvent getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DevicePropertyEvent>(create);

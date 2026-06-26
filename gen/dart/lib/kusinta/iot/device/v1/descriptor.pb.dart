@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $1;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../common/v1/types.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
 
@@ -81,23 +80,31 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
-    ..aI(2, _omitFieldNames ? '' : 'matterDeviceTypeId',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'matterDeviceTypeId', $pb.PbFieldType.OU3)
     ..aOS(3, _omitFieldNames ? '' : 'vendorName')
     ..aOS(4, _omitFieldNames ? '' : 'productName')
     ..aOS(5, _omitFieldNames ? '' : 'serialNumber')
     ..aOS(6, _omitFieldNames ? '' : 'nodeLabel')
-    ..aI(7, _omitFieldNames ? '' : 'vendorId', fieldType: $pb.PbFieldType.OU3)
-    ..aI(8, _omitFieldNames ? '' : 'productId', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'vendorId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'productId', $pb.PbFieldType.OU3)
     ..aOS(9, _omitFieldNames ? '' : 'hardwareVersionString')
     ..aOS(10, _omitFieldNames ? '' : 'softwareVersionString')
     ..aOM<$0.ConnectorId>(11, _omitFieldNames ? '' : 'connectorId',
         subBuilder: $0.ConnectorId.create)
     ..aOM<$0.SpaceId>(12, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..aE<$2.DeviceOwnershipType>(13, _omitFieldNames ? '' : 'ownership',
+    ..e<$2.DeviceOwnershipType>(
+        13, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $2.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $2.DeviceOwnershipType.valueOf,
         enumValues: $2.DeviceOwnershipType.values)
-    ..aE<$2.DeviceLifecycleState>(14, _omitFieldNames ? '' : 'lifecycle',
+    ..e<$2.DeviceLifecycleState>(
+        14, _omitFieldNames ? '' : 'lifecycle', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $2.DeviceLifecycleState.DEVICE_LIFECYCLE_STATE_UNSPECIFIED,
+        valueOf: $2.DeviceLifecycleState.valueOf,
         enumValues: $2.DeviceLifecycleState.values)
     ..aOM<$0.UserId>(15, _omitFieldNames ? '' : 'ownerUserId',
         subBuilder: $0.UserId.create)
@@ -106,7 +113,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceDescriptor clone() => deepCopy();
+  DeviceDescriptor clone() => DeviceDescriptor()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceDescriptor copyWith(void Function(DeviceDescriptor) updates) =>
       super.copyWith((message) => updates(message as DeviceDescriptor))
@@ -119,6 +126,8 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   static DeviceDescriptor create() => DeviceDescriptor._();
   @$core.override
   DeviceDescriptor createEmptyInstance() => create();
+  static $pb.PbList<DeviceDescriptor> createRepeated() =>
+      $pb.PbList<DeviceDescriptor>();
   @$core.pragma('dart2js:noInline')
   static DeviceDescriptor getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DeviceDescriptor>(create);

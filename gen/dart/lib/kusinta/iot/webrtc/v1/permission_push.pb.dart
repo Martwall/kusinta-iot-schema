@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -52,15 +52,18 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.EffectivePermissions>(1, _omitFieldNames ? '' : 'newPermissions',
         subBuilder: $0.EffectivePermissions.create)
-    ..pPM<$1.DeviceId>(2, _omitFieldNames ? '' : 'addedDevices',
+    ..pc<$1.DeviceId>(
+        2, _omitFieldNames ? '' : 'addedDevices', $pb.PbFieldType.PM,
         subBuilder: $1.DeviceId.create)
-    ..pPM<$1.DeviceId>(3, _omitFieldNames ? '' : 'removedDevices',
+    ..pc<$1.DeviceId>(
+        3, _omitFieldNames ? '' : 'removedDevices', $pb.PbFieldType.PM,
         subBuilder: $1.DeviceId.create)
     ..aOS(4, _omitFieldNames ? '' : 'changeReason')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LivePermissionUpdate clone() => deepCopy();
+  LivePermissionUpdate clone() =>
+      LivePermissionUpdate()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   LivePermissionUpdate copyWith(void Function(LivePermissionUpdate) updates) =>
       super.copyWith((message) => updates(message as LivePermissionUpdate))
@@ -73,6 +76,8 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
   static LivePermissionUpdate create() => LivePermissionUpdate._();
   @$core.override
   LivePermissionUpdate createEmptyInstance() => create();
+  static $pb.PbList<LivePermissionUpdate> createRepeated() =>
+      $pb.PbList<LivePermissionUpdate>();
   @$core.pragma('dart2js:noInline')
   static LivePermissionUpdate getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<LivePermissionUpdate>(create);

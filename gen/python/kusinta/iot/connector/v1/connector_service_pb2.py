@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from kusinta.iot.connector.v1 import connector_pb2 as kusinta_dot_iot_dot_connector_dot_v1_dot_connector__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0kusinta/iot/connector/v1/connector_service.proto\x12\x18kusinta.iot.connector.v1\x1a(kusinta/iot/connector/v1/connector.proto2}\n\x17\x43onnectorGatewayService\x12\x62\n\x07\x43onnect\x12(.kusinta.iot.connector.v1.ConnectRequest\x1a).kusinta.iot.connector.v1.ConnectResponse(\x01\x30\x01\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0kusinta/iot/connector/v1/connector_service.proto\x12\x18kusinta.iot.connector.v1\x1a(kusinta/iot/connector/v1/connector.proto2}\n\x17\x43onnectorGatewayService\x12\x62\n\x07Session\x12(.kusinta.iot.connector.v1.SessionRequest\x1a).kusinta.iot.connector.v1.SessionResponse(\x01\x30\x01\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)

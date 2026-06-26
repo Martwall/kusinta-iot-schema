@@ -56,14 +56,14 @@ message GatewayError {
   string                   command_id = 3; // non-empty if the error is in response to a command
 }
 
-message CommandResult {
+message ConnectorCommandResult {
   string                    command_id    = 1;
   bool                      success       = 2;
   GatewayError              error         = 3;
   google.protobuf.Timestamp completed_at  = 4;
 }
 
-message ConnectRequest {
+message SessionRequest {
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;
 
@@ -72,12 +72,12 @@ message ConnectRequest {
     kusinta.iot.device.v1.PropertyUpdateBatch property_update = 4;
     DeviceAnnouncement                        device_announced = 5;
     DeviceRemoval                             device_removed  = 6;
-    CommandResult                             command_result  = 7;
+    ConnectorCommandResult                    command_result  = 7;
     HeartBeat                                 heartbeat       = 8;
   }
 }
 
-message ConnectResponse {
+message SessionResponse {
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;
 

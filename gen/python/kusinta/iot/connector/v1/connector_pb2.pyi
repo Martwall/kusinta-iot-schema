@@ -88,7 +88,7 @@ class GatewayError(_message.Message):
     command_id: str
     def __init__(self, code: _Optional[str] = ..., message: _Optional[str] = ..., command_id: _Optional[str] = ...) -> None: ...
 
-class CommandResult(_message.Message):
+class ConnectorCommandResult(_message.Message):
     __slots__ = ("command_id", "success", "error", "completed_at")
     COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
@@ -100,7 +100,7 @@ class CommandResult(_message.Message):
     completed_at: _timestamp_pb2.Timestamp
     def __init__(self, command_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
-class ConnectRequest(_message.Message):
+class SessionRequest(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake", "property_update", "device_announced", "device_removed", "command_result", "heartbeat")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
@@ -116,11 +116,11 @@ class ConnectRequest(_message.Message):
     property_update: _property_update_pb2.PropertyUpdateBatch
     device_announced: DeviceAnnouncement
     device_removed: DeviceRemoval
-    command_result: CommandResult
+    command_result: ConnectorCommandResult
     heartbeat: HeartBeat
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[CommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ...) -> None: ...
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[ConnectorCommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ...) -> None: ...
 
-class ConnectResponse(_message.Message):
+class SessionResponse(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]

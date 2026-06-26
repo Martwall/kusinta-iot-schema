@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -43,7 +43,7 @@ class TenantId extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  TenantId clone() => deepCopy();
+  TenantId clone() => TenantId()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   TenantId copyWith(void Function(TenantId) updates) =>
       super.copyWith((message) => updates(message as TenantId)) as TenantId;
@@ -55,6 +55,7 @@ class TenantId extends $pb.GeneratedMessage {
   static TenantId create() => TenantId._();
   @$core.override
   TenantId createEmptyInstance() => create();
+  static $pb.PbList<TenantId> createRepeated() => $pb.PbList<TenantId>();
   @$core.pragma('dart2js:noInline')
   static TenantId getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<TenantId>(create);
@@ -97,7 +98,7 @@ class GatewayId extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  GatewayId clone() => deepCopy();
+  GatewayId clone() => GatewayId()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   GatewayId copyWith(void Function(GatewayId) updates) =>
       super.copyWith((message) => updates(message as GatewayId)) as GatewayId;
@@ -109,6 +110,7 @@ class GatewayId extends $pb.GeneratedMessage {
   static GatewayId create() => GatewayId._();
   @$core.override
   GatewayId createEmptyInstance() => create();
+  static $pb.PbList<GatewayId> createRepeated() => $pb.PbList<GatewayId>();
   @$core.pragma('dart2js:noInline')
   static GatewayId getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GatewayId>(create);
@@ -151,7 +153,7 @@ class DeviceId extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceId clone() => deepCopy();
+  DeviceId clone() => DeviceId()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceId copyWith(void Function(DeviceId) updates) =>
       super.copyWith((message) => updates(message as DeviceId)) as DeviceId;
@@ -163,6 +165,7 @@ class DeviceId extends $pb.GeneratedMessage {
   static DeviceId create() => DeviceId._();
   @$core.override
   DeviceId createEmptyInstance() => create();
+  static $pb.PbList<DeviceId> createRepeated() => $pb.PbList<DeviceId>();
   @$core.pragma('dart2js:noInline')
   static DeviceId getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DeviceId>(create);
@@ -205,7 +208,7 @@ class UserId extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  UserId clone() => deepCopy();
+  UserId clone() => UserId()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   UserId copyWith(void Function(UserId) updates) =>
       super.copyWith((message) => updates(message as UserId)) as UserId;
@@ -217,6 +220,7 @@ class UserId extends $pb.GeneratedMessage {
   static UserId create() => UserId._();
   @$core.override
   UserId createEmptyInstance() => create();
+  static $pb.PbList<UserId> createRepeated() => $pb.PbList<UserId>();
   @$core.pragma('dart2js:noInline')
   static UserId getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<UserId>(create);
@@ -259,7 +263,7 @@ class SpaceId extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  SpaceId clone() => deepCopy();
+  SpaceId clone() => SpaceId()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   SpaceId copyWith(void Function(SpaceId) updates) =>
       super.copyWith((message) => updates(message as SpaceId)) as SpaceId;
@@ -271,6 +275,7 @@ class SpaceId extends $pb.GeneratedMessage {
   static SpaceId create() => SpaceId._();
   @$core.override
   SpaceId createEmptyInstance() => create();
+  static $pb.PbList<SpaceId> createRepeated() => $pb.PbList<SpaceId>();
   @$core.pragma('dart2js:noInline')
   static SpaceId getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SpaceId>(create);
@@ -313,7 +318,7 @@ class ConnectorId extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ConnectorId clone() => deepCopy();
+  ConnectorId clone() => ConnectorId()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ConnectorId copyWith(void Function(ConnectorId) updates) =>
       super.copyWith((message) => updates(message as ConnectorId))
@@ -326,6 +331,7 @@ class ConnectorId extends $pb.GeneratedMessage {
   static ConnectorId create() => ConnectorId._();
   @$core.override
   ConnectorId createEmptyInstance() => create();
+  static $pb.PbList<ConnectorId> createRepeated() => $pb.PbList<ConnectorId>();
   @$core.pragma('dart2js:noInline')
   static ConnectorId getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ConnectorId>(create);

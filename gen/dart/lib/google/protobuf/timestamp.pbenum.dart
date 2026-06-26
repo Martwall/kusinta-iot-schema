@@ -1,6 +1,6 @@
 // This is a generated file - do not edit.
 //
-// Generated from kusinta/iot/webrtc/v1/permission_push.proto.
+// Generated from google/protobuf/timestamp.proto.
 
 // @dart = 3.3
 

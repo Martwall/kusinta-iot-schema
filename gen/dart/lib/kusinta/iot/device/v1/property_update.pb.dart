@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $1;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -89,10 +88,11 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
     ..aOS(2, _omitFieldNames ? '' : 'attributeName')
-    ..aI(3, _omitFieldNames ? '' : 'intValue', fieldType: $pb.PbFieldType.OS3)
-    ..aI(4, _omitFieldNames ? '' : 'uintValue', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'intValue', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'uintValue', $pb.PbFieldType.OU3)
     ..aOB(5, _omitFieldNames ? '' : 'boolValue')
-    ..aD(6, _omitFieldNames ? '' : 'floatValue', fieldType: $pb.PbFieldType.OF)
+    ..a<$core.double>(
+        6, _omitFieldNames ? '' : 'floatValue', $pb.PbFieldType.OF)
     ..aOS(7, _omitFieldNames ? '' : 'stringValue')
     ..a<$core.List<$core.int>>(
         8, _omitFieldNames ? '' : 'bytesValue', $pb.PbFieldType.OY)
@@ -102,7 +102,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PropertyUpdate clone() => deepCopy();
+  PropertyUpdate clone() => PropertyUpdate()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PropertyUpdate copyWith(void Function(PropertyUpdate) updates) =>
       super.copyWith((message) => updates(message as PropertyUpdate))
@@ -115,25 +115,15 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   static PropertyUpdate create() => PropertyUpdate._();
   @$core.override
   PropertyUpdate createEmptyInstance() => create();
+  static $pb.PbList<PropertyUpdate> createRepeated() =>
+      $pb.PbList<PropertyUpdate>();
   @$core.pragma('dart2js:noInline')
   static PropertyUpdate getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PropertyUpdate>(create);
   static PropertyUpdate? _defaultInstance;
 
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
   PropertyUpdate_Value whichValue() =>
       _PropertyUpdate_ValueByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(3)
-  @$pb.TagNumber(4)
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
   void clearValue() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -256,14 +246,15 @@ class PropertyUpdateBatch extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..pPM<PropertyUpdate>(1, _omitFieldNames ? '' : 'updates',
+    ..pc<PropertyUpdate>(
+        1, _omitFieldNames ? '' : 'updates', $pb.PbFieldType.PM,
         subBuilder: PropertyUpdate.create)
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'batchTimestamp',
         subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  PropertyUpdateBatch clone() => deepCopy();
+  PropertyUpdateBatch clone() => PropertyUpdateBatch()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   PropertyUpdateBatch copyWith(void Function(PropertyUpdateBatch) updates) =>
       super.copyWith((message) => updates(message as PropertyUpdateBatch))
@@ -276,6 +267,8 @@ class PropertyUpdateBatch extends $pb.GeneratedMessage {
   static PropertyUpdateBatch create() => PropertyUpdateBatch._();
   @$core.override
   PropertyUpdateBatch createEmptyInstance() => create();
+  static $pb.PbList<PropertyUpdateBatch> createRepeated() =>
+      $pb.PbList<PropertyUpdateBatch>();
   @$core.pragma('dart2js:noInline')
   static PropertyUpdateBatch getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PropertyUpdateBatch>(create);

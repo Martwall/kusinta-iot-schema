@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $1;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -46,12 +45,13 @@ class ThermostatSetpointParams extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'mode', fieldType: $pb.PbFieldType.OU3)
-    ..aI(2, _omitFieldNames ? '' : 'amount', fieldType: $pb.PbFieldType.OS3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'amount', $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ThermostatSetpointParams clone() => deepCopy();
+  ThermostatSetpointParams clone() =>
+      ThermostatSetpointParams()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   ThermostatSetpointParams copyWith(
           void Function(ThermostatSetpointParams) updates) =>
@@ -65,6 +65,8 @@ class ThermostatSetpointParams extends $pb.GeneratedMessage {
   static ThermostatSetpointParams create() => ThermostatSetpointParams._();
   @$core.override
   ThermostatSetpointParams createEmptyInstance() => create();
+  static $pb.PbList<ThermostatSetpointParams> createRepeated() =>
+      $pb.PbList<ThermostatSetpointParams>();
   @$core.pragma('dart2js:noInline')
   static ThermostatSetpointParams getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ThermostatSetpointParams>(create);
@@ -115,13 +117,13 @@ class LevelControlParams extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'level', fieldType: $pb.PbFieldType.OU3)
-    ..aI(2, _omitFieldNames ? '' : 'transitionTime',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'level', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'transitionTime', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  LevelControlParams clone() => deepCopy();
+  LevelControlParams clone() => LevelControlParams()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   LevelControlParams copyWith(void Function(LevelControlParams) updates) =>
       super.copyWith((message) => updates(message as LevelControlParams))
@@ -134,6 +136,8 @@ class LevelControlParams extends $pb.GeneratedMessage {
   static LevelControlParams create() => LevelControlParams._();
   @$core.override
   LevelControlParams createEmptyInstance() => create();
+  static $pb.PbList<LevelControlParams> createRepeated() =>
+      $pb.PbList<LevelControlParams>();
   @$core.pragma('dart2js:noInline')
   static LevelControlParams getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<LevelControlParams>(create);
@@ -189,7 +193,7 @@ class OnOffParams extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  OnOffParams clone() => deepCopy();
+  OnOffParams clone() => OnOffParams()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   OnOffParams copyWith(void Function(OnOffParams) updates) =>
       super.copyWith((message) => updates(message as OnOffParams))
@@ -202,6 +206,7 @@ class OnOffParams extends $pb.GeneratedMessage {
   static OnOffParams create() => OnOffParams._();
   @$core.override
   OnOffParams createEmptyInstance() => create();
+  static $pb.PbList<OnOffParams> createRepeated() => $pb.PbList<OnOffParams>();
   @$core.pragma('dart2js:noInline')
   static OnOffParams getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<OnOffParams>(create);
@@ -250,12 +255,13 @@ class WindowCoveringLiftParams extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'liftPercent100ths',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'liftPercent100ths', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  WindowCoveringLiftParams clone() => deepCopy();
+  WindowCoveringLiftParams clone() =>
+      WindowCoveringLiftParams()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   WindowCoveringLiftParams copyWith(
           void Function(WindowCoveringLiftParams) updates) =>
@@ -269,6 +275,8 @@ class WindowCoveringLiftParams extends $pb.GeneratedMessage {
   static WindowCoveringLiftParams create() => WindowCoveringLiftParams._();
   @$core.override
   WindowCoveringLiftParams createEmptyInstance() => create();
+  static $pb.PbList<WindowCoveringLiftParams> createRepeated() =>
+      $pb.PbList<WindowCoveringLiftParams>();
   @$core.pragma('dart2js:noInline')
   static WindowCoveringLiftParams getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<WindowCoveringLiftParams>(create);
@@ -310,12 +318,12 @@ class DoorLockParams extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aI(1, _omitFieldNames ? '' : 'lockState', fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'lockState', $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'pinCode')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DoorLockParams clone() => deepCopy();
+  DoorLockParams clone() => DoorLockParams()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DoorLockParams copyWith(void Function(DoorLockParams) updates) =>
       super.copyWith((message) => updates(message as DoorLockParams))
@@ -328,6 +336,8 @@ class DoorLockParams extends $pb.GeneratedMessage {
   static DoorLockParams create() => DoorLockParams._();
   @$core.override
   DoorLockParams createEmptyInstance() => create();
+  static $pb.PbList<DoorLockParams> createRepeated() =>
+      $pb.PbList<DoorLockParams>();
   @$core.pragma('dart2js:noInline')
   static DoorLockParams getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DoorLockParams>(create);
@@ -438,7 +448,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DeviceCommand clone() => deepCopy();
+  DeviceCommand clone() => DeviceCommand()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   DeviceCommand copyWith(void Function(DeviceCommand) updates) =>
       super.copyWith((message) => updates(message as DeviceCommand))
@@ -451,25 +461,15 @@ class DeviceCommand extends $pb.GeneratedMessage {
   static DeviceCommand create() => DeviceCommand._();
   @$core.override
   DeviceCommand createEmptyInstance() => create();
+  static $pb.PbList<DeviceCommand> createRepeated() =>
+      $pb.PbList<DeviceCommand>();
   @$core.pragma('dart2js:noInline')
   static DeviceCommand getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DeviceCommand>(create);
   static DeviceCommand? _defaultInstance;
 
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
-  @$pb.TagNumber(99)
   DeviceCommand_Parameters whichParameters() =>
       _DeviceCommand_ParametersByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(5)
-  @$pb.TagNumber(6)
-  @$pb.TagNumber(7)
-  @$pb.TagNumber(8)
-  @$pb.TagNumber(9)
-  @$pb.TagNumber(99)
   void clearParameters() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
@@ -607,7 +607,7 @@ class CommandError extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CommandError clone() => deepCopy();
+  CommandError clone() => CommandError()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CommandError copyWith(void Function(CommandError) updates) =>
       super.copyWith((message) => updates(message as CommandError))
@@ -620,6 +620,8 @@ class CommandError extends $pb.GeneratedMessage {
   static CommandError create() => CommandError._();
   @$core.override
   CommandError createEmptyInstance() => create();
+  static $pb.PbList<CommandError> createRepeated() =>
+      $pb.PbList<CommandError>();
   @$core.pragma('dart2js:noInline')
   static CommandError getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<CommandError>(create);
@@ -645,7 +647,7 @@ class CommandError extends $pb.GeneratedMessage {
 }
 
 /// CommandResult travels gateway → Flutter app (GatewayMessage) and
-/// connector → gateway (ConnectRequest via connector.proto import).
+/// connector → gateway (SessionRequest via connector.proto import).
 class CommandResult extends $pb.GeneratedMessage {
   factory CommandResult({
     $core.String? commandId,
@@ -684,7 +686,7 @@ class CommandResult extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  CommandResult clone() => deepCopy();
+  CommandResult clone() => CommandResult()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   CommandResult copyWith(void Function(CommandResult) updates) =>
       super.copyWith((message) => updates(message as CommandResult))
@@ -697,6 +699,8 @@ class CommandResult extends $pb.GeneratedMessage {
   static CommandResult create() => CommandResult._();
   @$core.override
   CommandResult createEmptyInstance() => create();
+  static $pb.PbList<CommandResult> createRepeated() =>
+      $pb.PbList<CommandResult>();
   @$core.pragma('dart2js:noInline')
   static CommandResult getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<CommandResult>(create);

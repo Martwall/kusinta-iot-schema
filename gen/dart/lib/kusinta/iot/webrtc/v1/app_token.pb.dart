@@ -8,14 +8,13 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart'
-    as $0;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $0;
 import '../../access/v1/roles.pbenum.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -78,7 +77,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  AppTokenClaims clone() => deepCopy();
+  AppTokenClaims clone() => AppTokenClaims()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   AppTokenClaims copyWith(void Function(AppTokenClaims) updates) =>
       super.copyWith((message) => updates(message as AppTokenClaims))
@@ -91,6 +90,8 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   static AppTokenClaims create() => AppTokenClaims._();
   @$core.override
   AppTokenClaims createEmptyInstance() => create();
+  static $pb.PbList<AppTokenClaims> createRepeated() =>
+      $pb.PbList<AppTokenClaims>();
   @$core.pragma('dart2js:noInline')
   static AppTokenClaims getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<AppTokenClaims>(create);

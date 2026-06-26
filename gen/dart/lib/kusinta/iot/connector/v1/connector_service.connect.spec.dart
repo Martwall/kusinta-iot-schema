@@ -12,10 +12,10 @@ abstract final class ConnectorGatewayService {
   /// Fully-qualified name of the ConnectorGatewayService service.
   static const name = 'kusinta.iot.connector.v1.ConnectorGatewayService';
 
-  static const connect = connect.Spec(
-    '/$name/Connect',
+  static const session = connect.Spec(
+    '/$name/Session',
     connect.StreamType.bidi,
-    kusintaiotconnectorv1connector.ConnectRequest.new,
-    kusintaiotconnectorv1connector.ConnectResponse.new,
+    kusintaiotconnectorv1connector.SessionRequest.new,
+    kusintaiotconnectorv1connector.SessionResponse.new,
   );
 }

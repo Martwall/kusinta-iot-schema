@@ -1,0 +1,7 @@
+# Dart build artifacts — not part of the generated, published package.
+.dart_tool/
+.packages
+build/
+
+# Library package: lockfile is not committed (resolved by consumers).
+pubspec.lock

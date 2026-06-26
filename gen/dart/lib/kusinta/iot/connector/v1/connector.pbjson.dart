@@ -8,8 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
-// ignore_for_file: unused_import
+// ignore_for_file: non_constant_identifier_names, unused_import
 
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
@@ -214,9 +213,9 @@ final $typed_data.Uint8List gatewayErrorDescriptor = $convert.base64Decode(
     'CgxHYXRld2F5RXJyb3ISEgoEY29kZRgBIAEoCVIEY29kZRIYCgdtZXNzYWdlGAIgASgJUgdtZX'
     'NzYWdlEh0KCmNvbW1hbmRfaWQYAyABKAlSCWNvbW1hbmRJZA==');
 
-@$core.Deprecated('Use commandResultDescriptor instead')
-const CommandResult$json = {
-  '1': 'CommandResult',
+@$core.Deprecated('Use connectorCommandResultDescriptor instead')
+const ConnectorCommandResult$json = {
+  '1': 'ConnectorCommandResult',
   '2': [
     {'1': 'command_id', '3': 1, '4': 1, '5': 9, '10': 'commandId'},
     {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
@@ -239,16 +238,16 @@ const CommandResult$json = {
   ],
 };
 
-/// Descriptor for `CommandResult`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List commandResultDescriptor = $convert.base64Decode(
-    'Cg1Db21tYW5kUmVzdWx0Eh0KCmNvbW1hbmRfaWQYASABKAlSCWNvbW1hbmRJZBIYCgdzdWNjZX'
-    'NzGAIgASgIUgdzdWNjZXNzEjwKBWVycm9yGAMgASgLMiYua3VzaW50YS5pb3QuY29ubmVjdG9y'
-    'LnYxLkdhdGV3YXlFcnJvclIFZXJyb3ISPQoMY29tcGxldGVkX2F0GAQgASgLMhouZ29vZ2xlLn'
-    'Byb3RvYnVmLlRpbWVzdGFtcFILY29tcGxldGVkQXQ=');
+/// Descriptor for `ConnectorCommandResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List connectorCommandResultDescriptor = $convert.base64Decode(
+    'ChZDb25uZWN0b3JDb21tYW5kUmVzdWx0Eh0KCmNvbW1hbmRfaWQYASABKAlSCWNvbW1hbmRJZB'
+    'IYCgdzdWNjZXNzGAIgASgIUgdzdWNjZXNzEjwKBWVycm9yGAMgASgLMiYua3VzaW50YS5pb3Qu'
+    'Y29ubmVjdG9yLnYxLkdhdGV3YXlFcnJvclIFZXJyb3ISPQoMY29tcGxldGVkX2F0GAQgASgLMh'
+    'ouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFILY29tcGxldGVkQXQ=');
 
-@$core.Deprecated('Use connectRequestDescriptor instead')
-const ConnectRequest$json = {
-  '1': 'ConnectRequest',
+@$core.Deprecated('Use sessionRequestDescriptor instead')
+const SessionRequest$json = {
+  '1': 'SessionRequest',
   '2': [
     {'1': 'message_id', '3': 1, '4': 1, '5': 9, '10': 'messageId'},
     {
@@ -300,7 +299,7 @@ const ConnectRequest$json = {
       '3': 7,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.connector.v1.CommandResult',
+      '6': '.kusinta.iot.connector.v1.ConnectorCommandResult',
       '9': 0,
       '10': 'commandResult'
     },
@@ -319,23 +318,23 @@ const ConnectRequest$json = {
   ],
 };
 
-/// Descriptor for `ConnectRequest`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List connectRequestDescriptor = $convert.base64Decode(
-    'Cg5Db25uZWN0UmVxdWVzdBIdCgptZXNzYWdlX2lkGAEgASgJUgltZXNzYWdlSWQSMwoHc2VudF'
+/// Descriptor for `SessionRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sessionRequestDescriptor = $convert.base64Decode(
+    'Cg5TZXNzaW9uUmVxdWVzdBIdCgptZXNzYWdlX2lkGAEgASgJUgltZXNzYWdlSWQSMwoHc2VudF'
     '9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBnNlbnRBdBJMCgloYW5kc2hh'
     'a2UYAyABKAsyLC5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuQ29ubmVjdG9ySGFuZHNoYWtlSA'
     'BSCWhhbmRzaGFrZRJVCg9wcm9wZXJ0eV91cGRhdGUYBCABKAsyKi5rdXNpbnRhLmlvdC5kZXZp'
     'Y2UudjEuUHJvcGVydHlVcGRhdGVCYXRjaEgAUg5wcm9wZXJ0eVVwZGF0ZRJZChBkZXZpY2VfYW'
     '5ub3VuY2VkGAUgASgLMiwua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkRldmljZUFubm91bmNl'
     'bWVudEgAUg9kZXZpY2VBbm5vdW5jZWQSUAoOZGV2aWNlX3JlbW92ZWQYBiABKAsyJy5rdXNpbn'
-    'RhLmlvdC5jb25uZWN0b3IudjEuRGV2aWNlUmVtb3ZhbEgAUg1kZXZpY2VSZW1vdmVkElAKDmNv'
-    'bW1hbmRfcmVzdWx0GAcgASgLMicua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNvbW1hbmRSZX'
-    'N1bHRIAFINY29tbWFuZFJlc3VsdBJDCgloZWFydGJlYXQYCCABKAsyIy5rdXNpbnRhLmlvdC5j'
-    'b25uZWN0b3IudjEuSGVhcnRCZWF0SABSCWhlYXJ0YmVhdEIJCgdwYXlsb2Fk');
+    'RhLmlvdC5jb25uZWN0b3IudjEuRGV2aWNlUmVtb3ZhbEgAUg1kZXZpY2VSZW1vdmVkElkKDmNv'
+    'bW1hbmRfcmVzdWx0GAcgASgLMjAua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNvbm5lY3Rvck'
+    'NvbW1hbmRSZXN1bHRIAFINY29tbWFuZFJlc3VsdBJDCgloZWFydGJlYXQYCCABKAsyIy5rdXNp'
+    'bnRhLmlvdC5jb25uZWN0b3IudjEuSGVhcnRCZWF0SABSCWhlYXJ0YmVhdEIJCgdwYXlsb2Fk');
 
-@$core.Deprecated('Use connectResponseDescriptor instead')
-const ConnectResponse$json = {
-  '1': 'ConnectResponse',
+@$core.Deprecated('Use sessionResponseDescriptor instead')
+const SessionResponse$json = {
+  '1': 'SessionResponse',
   '2': [
     {'1': 'message_id', '3': 1, '4': 1, '5': 9, '10': 'messageId'},
     {
@@ -400,9 +399,9 @@ const ConnectResponse$json = {
   ],
 };
 
-/// Descriptor for `ConnectResponse`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List connectResponseDescriptor = $convert.base64Decode(
-    'Cg9Db25uZWN0UmVzcG9uc2USHQoKbWVzc2FnZV9pZBgBIAEoCVIJbWVzc2FnZUlkEjMKB3Nlbn'
+/// Descriptor for `SessionResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
+    'Cg9TZXNzaW9uUmVzcG9uc2USHQoKbWVzc2FnZV9pZBgBIAEoCVIJbWVzc2FnZUlkEjMKB3Nlbn'
     'RfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgZzZW50QXQSTQoNaGFuZHNo'
     'YWtlX2FjaxgDIAEoCzImLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5IYW5kc2hha2VBY2tIAF'
     'IMaGFuZHNoYWtlQWNrEkkKCXN1YnNjcmliZRgFIAEoCzIpLmt1c2ludGEuaW90LmNvbm5lY3Rv'

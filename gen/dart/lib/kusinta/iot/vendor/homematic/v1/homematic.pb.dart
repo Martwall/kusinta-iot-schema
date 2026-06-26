@@ -8,7 +8,7 @@
 // ignore_for_file: constant_identifier_names
 // ignore_for_file: curly_braces_in_flow_control_structures
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
-// ignore_for_file: non_constant_identifier_names, prefer_relative_imports
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:core' as $core;
 
@@ -51,17 +51,16 @@ class HmThermostatProps extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.vendor.homematic.v1'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'boostMode')
-    ..aD(2, _omitFieldNames ? '' : 'boostTimePeriod',
-        fieldType: $pb.PbFieldType.OF)
-    ..aI(3, _omitFieldNames ? '' : 'controlMode',
-        fieldType: $pb.PbFieldType.OU3)
+    ..a<$core.double>(
+        2, _omitFieldNames ? '' : 'boostTimePeriod', $pb.PbFieldType.OF)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'controlMode', $pb.PbFieldType.OU3)
     ..aOB(4, _omitFieldNames ? '' : 'frostProtection')
-    ..aD(5, _omitFieldNames ? '' : 'currentProfilePeriod',
-        fieldType: $pb.PbFieldType.OF)
+    ..a<$core.double>(
+        5, _omitFieldNames ? '' : 'currentProfilePeriod', $pb.PbFieldType.OF)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HmThermostatProps clone() => deepCopy();
+  HmThermostatProps clone() => HmThermostatProps()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   HmThermostatProps copyWith(void Function(HmThermostatProps) updates) =>
       super.copyWith((message) => updates(message as HmThermostatProps))
@@ -74,6 +73,8 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   static HmThermostatProps create() => HmThermostatProps._();
   @$core.override
   HmThermostatProps createEmptyInstance() => create();
+  static $pb.PbList<HmThermostatProps> createRepeated() =>
+      $pb.PbList<HmThermostatProps>();
   @$core.pragma('dart2js:noInline')
   static HmThermostatProps getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<HmThermostatProps>(create);
@@ -169,7 +170,8 @@ class HomematicVendorExtension extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HomematicVendorExtension clone() => deepCopy();
+  HomematicVendorExtension clone() =>
+      HomematicVendorExtension()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
   HomematicVendorExtension copyWith(
           void Function(HomematicVendorExtension) updates) =>
@@ -183,15 +185,15 @@ class HomematicVendorExtension extends $pb.GeneratedMessage {
   static HomematicVendorExtension create() => HomematicVendorExtension._();
   @$core.override
   HomematicVendorExtension createEmptyInstance() => create();
+  static $pb.PbList<HomematicVendorExtension> createRepeated() =>
+      $pb.PbList<HomematicVendorExtension>();
   @$core.pragma('dart2js:noInline')
   static HomematicVendorExtension getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<HomematicVendorExtension>(create);
   static HomematicVendorExtension? _defaultInstance;
 
-  @$pb.TagNumber(10)
   HomematicVendorExtension_HomematicProps whichHomematicProps() =>
       _HomematicVendorExtension_HomematicPropsByTag[$_whichOneof(0)]!;
-  @$pb.TagNumber(10)
   void clearHomematicProps() => $_clearField($_whichOneof(0));
 
   @$pb.TagNumber(1)
