@@ -4,14 +4,20 @@ Generated protobuf types for the Kusinta building automation platform.
 
 ## Install
 
-Add to your `pyproject.toml`, pinned to a release tag:
+From PyPI:
 
 ```toml
 dependencies = [
-  "kusinta-iot-schema @ git+https://github.com/Martwall/kusinta-iot-schema.git@<TAG>#subdirectory=gen/python",
-  "grpcio>=1.80.0",
+  "kusinta-iot-schema>=<VERSION>",
+  # ConnectRPC clients (*_connect.py):
+  # "kusinta-iot-schema[connect]>=<VERSION>",
+  # gRPC stubs (*_pb2_grpc.py):
+  # "kusinta-iot-schema[grpc]>=<VERSION>",
 ]
 ```
+
+The base install ships only the protobuf message types. Install the `connect` or
+`grpc` extra if you use the corresponding service stubs.
 
 ## Usage
 

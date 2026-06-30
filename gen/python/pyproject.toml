@@ -1,21 +1,37 @@
 [project]
 name = "kusinta-iot-schema"
 # Set via ./set-version.sh <version>
-version = "0.1.0-beta.14"
+version = "0.1.0-beta.15"
 license = "MIT"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-  "grpcio>=1.80.0",
   "protobuf>=7.35.0",
 ]
 
 [project.optional-dependencies]
+# gRPC stubs (*_pb2_grpc.py) — only needed if you use the gRPC service stubs.
+grpc = [
+  "grpcio>=1.80.0",
+]
+# ConnectRPC clients/servers (*_connect.py) — runtime for the connect stubs.
+# Pinned to match the connectrpc/python codegen plugin in buf.gen.yaml (v0.10.1).
+# 0.11.0 is a breaking release that switches to the protobuf-py runtime; bump this
+# cap together with the plugin version, not before.
+connect = [
+  "connectrpc>=0.10.1,<0.11.0",
+]
 dev = [
   "pytest>=8.0.0",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["kusinta"]
+
+# Keep the sdist deterministic: ship only the package + metadata, never stray local
+# dirs (.venv*, caches, tests) that .gitignore's exact `.venv/` pattern lets slip in.
+[tool.hatch.build.targets.sdist]
+only-include = ["kusinta", "README.md", "LICENSE"]
 
 [build-system]
 requires = ["hatchling"]

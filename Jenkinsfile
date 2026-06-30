@@ -127,11 +127,30 @@ pipeline {
         }
       }
     }
+
+    stage('Publish PyPI') {
+      when { branch 'main' }
+      steps {
+        withCredentials([string(credentialsId: 'pypi-kusinta-iot-schema-token', variable: 'PYPI_TOKEN')]) {
+          sh '''
+            cd gen/python
+            python3 -m venv .venv-publish
+            . .venv-publish/bin/activate
+            pip install --quiet build twine
+            rm -rf dist
+            python3 -m build
+            TWINE_USERNAME=__token__ TWINE_PASSWORD="$PYPI_TOKEN" \
+              twine upload --skip-existing dist/*
+          '''
+        }
+      }
+    }
   }
 
   post {
     always {
       sh 'rm -f gen/js/.npmrc'
+      sh 'rm -rf gen/python/dist gen/python/.venv-publish'
     }
     failure {
       echo 'Pipeline failed — check buf generate output and test results above.'
