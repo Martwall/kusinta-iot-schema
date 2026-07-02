@@ -128,12 +128,21 @@ class SdpAnswer extends $pb.GeneratedMessage {
   void clearSdp() => $_clearField(1);
 }
 
+/// candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
+/// bind it to a media section: WebRTC's addIceCandidate requires a non-null
+/// sdpMid (passing null NPEs in the Android JNI layer). Under BUNDLE both are
+/// constant ("0" / 0) for a single-m-line session, but they must be carried so
+/// candidates stay correct once additional m-lines (e.g. camera video) exist.
 class IceCandidate extends $pb.GeneratedMessage {
   factory IceCandidate({
     $core.String? candidate,
+    $core.String? sdpMid,
+    $core.int? sdpMlineIndex,
   }) {
     final result = create();
     if (candidate != null) result.candidate = candidate;
+    if (sdpMid != null) result.sdpMid = sdpMid;
+    if (sdpMlineIndex != null) result.sdpMlineIndex = sdpMlineIndex;
     return result;
   }
 
@@ -152,6 +161,9 @@ class IceCandidate extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'candidate')
+    ..aOS(2, _omitFieldNames ? '' : 'sdpMid')
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'sdpMlineIndex', $pb.PbFieldType.O3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -183,6 +195,24 @@ class IceCandidate extends $pb.GeneratedMessage {
   $core.bool hasCandidate() => $_has(0);
   @$pb.TagNumber(1)
   void clearCandidate() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get sdpMid => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set sdpMid($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSdpMid() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSdpMid() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get sdpMlineIndex => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set sdpMlineIndex($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSdpMlineIndex() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSdpMlineIndex() => $_clearField(3);
 }
 
 /// Empty keepalive. The gateway sends this periodically on the GatewayConnect

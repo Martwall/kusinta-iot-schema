@@ -19,10 +19,14 @@ class SdpAnswer(_message.Message):
     def __init__(self, sdp: _Optional[str] = ...) -> None: ...
 
 class IceCandidate(_message.Message):
-    __slots__ = ("candidate",)
+    __slots__ = ("candidate", "sdp_mid", "sdp_mline_index")
     CANDIDATE_FIELD_NUMBER: _ClassVar[int]
+    SDP_MID_FIELD_NUMBER: _ClassVar[int]
+    SDP_MLINE_INDEX_FIELD_NUMBER: _ClassVar[int]
     candidate: str
-    def __init__(self, candidate: _Optional[str] = ...) -> None: ...
+    sdp_mid: str
+    sdp_mline_index: int
+    def __init__(self, candidate: _Optional[str] = ..., sdp_mid: _Optional[str] = ..., sdp_mline_index: _Optional[int] = ...) -> None: ...
 
 class HeartBeat(_message.Message):
     __slots__ = ()

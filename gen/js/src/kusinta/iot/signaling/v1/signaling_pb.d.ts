@@ -44,6 +44,12 @@ export declare type SdpAnswer = Message<"kusinta.iot.signaling.v1.SdpAnswer"> & 
 export declare const SdpAnswerSchema: GenMessage<SdpAnswer>;
 
 /**
+ * candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
+ * bind it to a media section: WebRTC's addIceCandidate requires a non-null
+ * sdpMid (passing null NPEs in the Android JNI layer). Under BUNDLE both are
+ * constant ("0" / 0) for a single-m-line session, but they must be carried so
+ * candidates stay correct once additional m-lines (e.g. camera video) exist.
+ *
  * @generated from message kusinta.iot.signaling.v1.IceCandidate
  */
 export declare type IceCandidate = Message<"kusinta.iot.signaling.v1.IceCandidate"> & {
@@ -51,6 +57,16 @@ export declare type IceCandidate = Message<"kusinta.iot.signaling.v1.IceCandidat
    * @generated from field: string candidate = 1;
    */
   candidate: string;
+
+  /**
+   * @generated from field: string sdp_mid = 2;
+   */
+  sdpMid: string;
+
+  /**
+   * @generated from field: int32 sdp_mline_index = 3;
+   */
+  sdpMlineIndex: number;
 };
 
 /**

@@ -5,7 +5,16 @@ option optimize_for = SPEED;
 
 message SdpOffer     { string sdp = 1; }
 message SdpAnswer    { string sdp = 1; }
-message IceCandidate { string candidate = 1; }
+// candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
+// bind it to a media section: WebRTC's addIceCandidate requires a non-null
+// sdpMid (passing null NPEs in the Android JNI layer). Under BUNDLE both are
+// constant ("0" / 0) for a single-m-line session, but they must be carried so
+// candidates stay correct once additional m-lines (e.g. camera video) exist.
+message IceCandidate {
+  string candidate = 1;
+  string sdp_mid = 2;
+  int32 sdp_mline_index = 3;
+}
 
 // Empty keepalive. The gateway sends this periodically on the GatewayConnect
 // stream so the otherwise-idle bidi request keeps producing DATA frames, which

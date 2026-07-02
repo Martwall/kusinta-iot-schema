@@ -43,12 +43,15 @@ const IceCandidate$json = {
   '1': 'IceCandidate',
   '2': [
     {'1': 'candidate', '3': 1, '4': 1, '5': 9, '10': 'candidate'},
+    {'1': 'sdp_mid', '3': 2, '4': 1, '5': 9, '10': 'sdpMid'},
+    {'1': 'sdp_mline_index', '3': 3, '4': 1, '5': 5, '10': 'sdpMlineIndex'},
   ],
 };
 
 /// Descriptor for `IceCandidate`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List iceCandidateDescriptor = $convert.base64Decode(
-    'CgxJY2VDYW5kaWRhdGUSHAoJY2FuZGlkYXRlGAEgASgJUgljYW5kaWRhdGU=');
+    'CgxJY2VDYW5kaWRhdGUSHAoJY2FuZGlkYXRlGAEgASgJUgljYW5kaWRhdGUSFwoHc2RwX21pZB'
+    'gCIAEoCVIGc2RwTWlkEiYKD3NkcF9tbGluZV9pbmRleBgDIAEoBVINc2RwTWxpbmVJbmRleA==');
 
 @$core.Deprecated('Use heartBeatDescriptor instead')
 const HeartBeat$json = {
