@@ -74,6 +74,13 @@ def test_gateway_connect_request_ice_candidate_payload():
     assert "typ host" in decoded.ice_candidate.candidate
 
 
+def test_gateway_connect_request_heartbeat_payload():
+    req = signaling_pb2.GatewayConnectRequest(heartbeat=signaling_pb2.HeartBeat())
+    decoded = signaling_pb2.GatewayConnectRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.WhichOneof("payload") == "heartbeat"
+
+
 def test_gateway_connect_response_offer_payload():
     resp = signaling_pb2.GatewayConnectResponse(
         from_user_id=identity_pb2.UserId(value="user-1"),

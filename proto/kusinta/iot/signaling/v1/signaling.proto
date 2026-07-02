@@ -7,6 +7,12 @@ message SdpOffer     { string sdp = 1; }
 message SdpAnswer    { string sdp = 1; }
 message IceCandidate { string candidate = 1; }
 
+// Empty keepalive. The gateway sends this periodically on the GatewayConnect
+// stream so the otherwise-idle bidi request keeps producing DATA frames, which
+// resets HAProxy's inactivity timers (timeout client/server) and stops the relay
+// from tearing the stream down. Carries no routing target and is dropped on receipt.
+message HeartBeat {}
+
 // JWT for user auth is sent in the Authorization: Bearer metadata header, not here.
 // First message carries only the target gateway for stream-specific routing.
 message UserHandshake    { kusinta.iot.identity.v1.GatewayId target_gateway_id = 1; }
@@ -19,6 +25,7 @@ message GatewayConnectRequest {
   oneof payload {
     SdpAnswer    answer        = 2;
     IceCandidate ice_candidate = 3;
+    HeartBeat    heartbeat     = 4;
   }
 }
 

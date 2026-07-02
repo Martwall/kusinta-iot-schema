@@ -185,6 +185,49 @@ class IceCandidate extends $pb.GeneratedMessage {
   void clearCandidate() => $_clearField(1);
 }
 
+/// Empty keepalive. The gateway sends this periodically on the GatewayConnect
+/// stream so the otherwise-idle bidi request keeps producing DATA frames, which
+/// resets HAProxy's inactivity timers (timeout client/server) and stops the relay
+/// from tearing the stream down. Carries no routing target and is dropped on receipt.
+class HeartBeat extends $pb.GeneratedMessage {
+  factory HeartBeat() => create();
+
+  HeartBeat._();
+
+  factory HeartBeat.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeartBeat.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeartBeat',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeartBeat clone() => HeartBeat()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeartBeat copyWith(void Function(HeartBeat) updates) =>
+      super.copyWith((message) => updates(message as HeartBeat)) as HeartBeat;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeartBeat create() => HeartBeat._();
+  @$core.override
+  HeartBeat createEmptyInstance() => create();
+  static $pb.PbList<HeartBeat> createRepeated() => $pb.PbList<HeartBeat>();
+  @$core.pragma('dart2js:noInline')
+  static HeartBeat getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<HeartBeat>(create);
+  static HeartBeat? _defaultInstance;
+}
+
 /// JWT for user auth is sent in the Authorization: Bearer metadata header, not here.
 /// First message carries only the target gateway for stream-specific routing.
 class UserHandshake extends $pb.GeneratedMessage {
@@ -316,7 +359,7 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(2);
 }
 
-enum GatewayConnectRequest_Payload { answer, iceCandidate, notSet }
+enum GatewayConnectRequest_Payload { answer, iceCandidate, heartbeat, notSet }
 
 /// Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
 /// Auth: x-client-cert-fingerprint metadata header (set by HAProxy from mTLS).
@@ -325,11 +368,13 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     $0.UserId? targetUserId,
     SdpAnswer? answer,
     IceCandidate? iceCandidate,
+    HeartBeat? heartbeat,
   }) {
     final result = create();
     if (targetUserId != null) result.targetUserId = targetUserId;
     if (answer != null) result.answer = answer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
+    if (heartbeat != null) result.heartbeat = heartbeat;
     return result;
   }
 
@@ -346,6 +391,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       _GatewayConnectRequest_PayloadByTag = {
     2: GatewayConnectRequest_Payload.answer,
     3: GatewayConnectRequest_Payload.iceCandidate,
+    4: GatewayConnectRequest_Payload.heartbeat,
     0: GatewayConnectRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -353,13 +399,15 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3])
+    ..oo(0, [2, 3, 4])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'targetUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpAnswer>(2, _omitFieldNames ? '' : 'answer',
         subBuilder: SdpAnswer.create)
     ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
         subBuilder: IceCandidate.create)
+    ..aOM<HeartBeat>(4, _omitFieldNames ? '' : 'heartbeat',
+        subBuilder: HeartBeat.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -421,6 +469,17 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   void clearIceCandidate() => $_clearField(3);
   @$pb.TagNumber(3)
   IceCandidate ensureIceCandidate() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  HeartBeat get heartbeat => $_getN(3);
+  @$pb.TagNumber(4)
+  set heartbeat(HeartBeat value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasHeartbeat() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHeartbeat() => $_clearField(4);
+  @$pb.TagNumber(4)
+  HeartBeat ensureHeartbeat() => $_ensure(3);
 }
 
 enum GatewayConnectResponse_Payload { offer, iceCandidate, notSet }

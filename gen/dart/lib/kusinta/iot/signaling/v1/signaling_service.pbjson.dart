@@ -46,6 +46,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.identity.v1.UserId': $1.UserId$json,
   '.kusinta.iot.signaling.v1.SdpAnswer': $0.SdpAnswer$json,
   '.kusinta.iot.signaling.v1.IceCandidate': $0.IceCandidate$json,
+  '.kusinta.iot.signaling.v1.HeartBeat': $0.HeartBeat$json,
   '.kusinta.iot.signaling.v1.GatewayConnectResponse':
       $0.GatewayConnectResponse$json,
   '.kusinta.iot.signaling.v1.SdpOffer': $0.SdpOffer$json,

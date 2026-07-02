@@ -60,6 +60,23 @@ export declare type IceCandidate = Message<"kusinta.iot.signaling.v1.IceCandidat
 export declare const IceCandidateSchema: GenMessage<IceCandidate>;
 
 /**
+ * Empty keepalive. The gateway sends this periodically on the GatewayConnect
+ * stream so the otherwise-idle bidi request keeps producing DATA frames, which
+ * resets HAProxy's inactivity timers (timeout client/server) and stops the relay
+ * from tearing the stream down. Carries no routing target and is dropped on receipt.
+ *
+ * @generated from message kusinta.iot.signaling.v1.HeartBeat
+ */
+export declare type HeartBeat = Message<"kusinta.iot.signaling.v1.HeartBeat"> & {
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.HeartBeat.
+ * Use `create(HeartBeatSchema)` to create a new message.
+ */
+export declare const HeartBeatSchema: GenMessage<HeartBeat>;
+
+/**
  * JWT for user auth is sent in the Authorization: Bearer metadata header, not here.
  * First message carries only the target gateway for stream-specific routing.
  *
@@ -126,6 +143,12 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
      */
     value: IceCandidate;
     case: "iceCandidate";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.HeartBeat heartbeat = 4;
+     */
+    value: HeartBeat;
+    case: "heartbeat";
   } | { case: undefined; value?: undefined };
 };
 

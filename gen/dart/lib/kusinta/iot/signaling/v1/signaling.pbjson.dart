@@ -50,6 +50,15 @@ const IceCandidate$json = {
 final $typed_data.Uint8List iceCandidateDescriptor = $convert.base64Decode(
     'CgxJY2VDYW5kaWRhdGUSHAoJY2FuZGlkYXRlGAEgASgJUgljYW5kaWRhdGU=');
 
+@$core.Deprecated('Use heartBeatDescriptor instead')
+const HeartBeat$json = {
+  '1': 'HeartBeat',
+};
+
+/// Descriptor for `HeartBeat`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heartBeatDescriptor =
+    $convert.base64Decode('CglIZWFydEJlYXQ=');
+
 @$core.Deprecated('Use userHandshakeDescriptor instead')
 const UserHandshake$json = {
   '1': 'UserHandshake',
@@ -114,6 +123,15 @@ const GatewayConnectRequest$json = {
       '9': 0,
       '10': 'iceCandidate'
     },
+    {
+      '1': 'heartbeat',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.HeartBeat',
+      '9': 0,
+      '10': 'heartbeat'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -126,7 +144,8 @@ final $typed_data.Uint8List gatewayConnectRequestDescriptor = $convert.base64Dec
     'RhLmlvdC5pZGVudGl0eS52MS5Vc2VySWRSDHRhcmdldFVzZXJJZBI9CgZhbnN3ZXIYAiABKAsy'
     'Iy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwQW5zd2VySABSBmFuc3dlchJNCg1pY2VfY2'
     'FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgA'
-    'UgxpY2VDYW5kaWRhdGVCCQoHcGF5bG9hZA==');
+    'UgxpY2VDYW5kaWRhdGUSQwoJaGVhcnRiZWF0GAQgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW'
+    '5nLnYxLkhlYXJ0QmVhdEgAUgloZWFydGJlYXRCCQoHcGF5bG9hZA==');
 
 @$core.Deprecated('Use gatewayConnectResponseDescriptor instead')
 const GatewayConnectResponse$json = {

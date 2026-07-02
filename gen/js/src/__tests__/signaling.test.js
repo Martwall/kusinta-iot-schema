@@ -5,6 +5,7 @@ import {
   SdpOfferSchema,
   SdpAnswerSchema,
   IceCandidateSchema,
+  HeartBeatSchema,
   UserHandshakeSchema,
   UserHandshakeAckSchema,
   GatewayConnectRequestSchema,
@@ -78,6 +79,14 @@ describe('GatewayConnectRequest oneof payload', () => {
     if (decoded.payload?.case === 'iceCandidate') {
       expect(decoded.payload.value.candidate).toContain('typ host')
     }
+  })
+
+  it('round-trips heartbeat payload (keepalive, no target user)', () => {
+    const req = create(GatewayConnectRequestSchema, {
+      payload: { case: 'heartbeat', value: create(HeartBeatSchema, {}) },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, req))
+    expect(decoded.payload?.case).toBe('heartbeat')
   })
 })
 

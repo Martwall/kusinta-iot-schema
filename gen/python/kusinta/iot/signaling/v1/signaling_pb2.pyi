@@ -24,6 +24,10 @@ class IceCandidate(_message.Message):
     candidate: str
     def __init__(self, candidate: _Optional[str] = ...) -> None: ...
 
+class HeartBeat(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
 class UserHandshake(_message.Message):
     __slots__ = ("target_gateway_id",)
     TARGET_GATEWAY_ID_FIELD_NUMBER: _ClassVar[int]
@@ -39,14 +43,16 @@ class UserHandshakeAck(_message.Message):
     def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ...) -> None: ...
 
 class GatewayConnectRequest(_message.Message):
-    __slots__ = ("target_user_id", "answer", "ice_candidate")
+    __slots__ = ("target_user_id", "answer", "ice_candidate", "heartbeat")
     TARGET_USER_ID_FIELD_NUMBER: _ClassVar[int]
     ANSWER_FIELD_NUMBER: _ClassVar[int]
     ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
+    HEARTBEAT_FIELD_NUMBER: _ClassVar[int]
     target_user_id: _identity_pb2.UserId
     answer: SdpAnswer
     ice_candidate: IceCandidate
-    def __init__(self, target_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+    heartbeat: HeartBeat
+    def __init__(self, target_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ...) -> None: ...
 
 class GatewayConnectResponse(_message.Message):
     __slots__ = ("from_user_id", "offer", "ice_candidate")

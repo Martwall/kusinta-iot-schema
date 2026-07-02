@@ -9,7 +9,7 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/signaling/v1/signaling.proto.
  */
 export const file_kusinta_iot_signaling_v1_signaling = /*@__PURE__*/
-  fileDesc("CihrdXNpbnRhL2lvdC9zaWduYWxpbmcvdjEvc2lnbmFsaW5nLnByb3RvEhhrdXNpbnRhLmlvdC5zaWduYWxpbmcudjEiFwoIU2RwT2ZmZXISCwoDc2RwGAEgASgJIhgKCVNkcEFuc3dlchILCgNzZHAYASABKAkiIQoMSWNlQ2FuZGlkYXRlEhEKCWNhbmRpZGF0ZRgBIAEoCSJOCg1Vc2VySGFuZHNoYWtlEj0KEXRhcmdldF9nYXRld2F5X2lkGAEgASgLMiIua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuR2F0ZXdheUlkIjQKEFVzZXJIYW5kc2hha2VBY2sSEAoIYWNjZXB0ZWQYASABKAgSDgoGcmVhc29uGAIgASgJItMBChVHYXRld2F5Q29ubmVjdFJlcXVlc3QSNwoOdGFyZ2V0X3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSNQoGYW5zd2VyGAIgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcEFuc3dlckgAEj8KDWljZV9jYW5kaWRhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABCCQoHcGF5bG9hZCLQAQoWR2F0ZXdheUNvbm5lY3RSZXNwb25zZRI1Cgxmcm9tX3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSMwoFb2ZmZXIYAiABKAsyIi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwT2ZmZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAQgkKB3BheWxvYWQi0wEKElVzZXJDb25uZWN0UmVxdWVzdBI8CgloYW5kc2hha2UYASABKAsyJy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckhhbmRzaGFrZUgAEjMKBW9mZmVyGAIgASgLMiIua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcE9mZmVySAASPwoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIAEIJCgdwYXlsb2FkIt0BChNVc2VyQ29ubmVjdFJlc3BvbnNlEkMKDWhhbmRzaGFrZV9hY2sYASABKAsyKi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckhhbmRzaGFrZUFja0gAEjUKBmFuc3dlchgCIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBBbnN3ZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAQgkKB3BheWxvYWRCAkgBYgZwcm90bzM", [file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CihrdXNpbnRhL2lvdC9zaWduYWxpbmcvdjEvc2lnbmFsaW5nLnByb3RvEhhrdXNpbnRhLmlvdC5zaWduYWxpbmcudjEiFwoIU2RwT2ZmZXISCwoDc2RwGAEgASgJIhgKCVNkcEFuc3dlchILCgNzZHAYASABKAkiIQoMSWNlQ2FuZGlkYXRlEhEKCWNhbmRpZGF0ZRgBIAEoCSILCglIZWFydEJlYXQiTgoNVXNlckhhbmRzaGFrZRI9ChF0YXJnZXRfZ2F0ZXdheV9pZBgBIAEoCzIiLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkdhdGV3YXlJZCI0ChBVc2VySGFuZHNoYWtlQWNrEhAKCGFjY2VwdGVkGAEgASgIEg4KBnJlYXNvbhgCIAEoCSKNAgoVR2F0ZXdheUNvbm5lY3RSZXF1ZXN0EjcKDnRhcmdldF91c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkEjUKBmFuc3dlchgCIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBBbnN3ZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAEjgKCWhlYXJ0YmVhdBgEIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5IZWFydEJlYXRIAEIJCgdwYXlsb2FkItABChZHYXRld2F5Q29ubmVjdFJlc3BvbnNlEjUKDGZyb21fdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBIzCgVvZmZlchgCIAEoCzIiLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBPZmZlckgAEj8KDWljZV9jYW5kaWRhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABCCQoHcGF5bG9hZCLTAQoSVXNlckNvbm5lY3RSZXF1ZXN0EjwKCWhhbmRzaGFrZRgBIAEoCzInLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5Vc2VySGFuZHNoYWtlSAASMwoFb2ZmZXIYAiABKAsyIi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwT2ZmZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAQgkKB3BheWxvYWQi3QEKE1VzZXJDb25uZWN0UmVzcG9uc2USQwoNaGFuZHNoYWtlX2FjaxgBIAEoCzIqLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5Vc2VySGFuZHNoYWtlQWNrSAASNQoGYW5zd2VyGAIgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcEFuc3dlckgAEj8KDWljZV9jYW5kaWRhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABCCQoHcGF5bG9hZEICSAFiBnByb3RvMw", [file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.SdpOffer.
@@ -33,44 +33,51 @@ export const IceCandidateSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_signaling_v1_signaling, 2);
 
 /**
+ * Describes the message kusinta.iot.signaling.v1.HeartBeat.
+ * Use `create(HeartBeatSchema)` to create a new message.
+ */
+export const HeartBeatSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 3);
+
+/**
  * Describes the message kusinta.iot.signaling.v1.UserHandshake.
  * Use `create(UserHandshakeSchema)` to create a new message.
  */
 export const UserHandshakeSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 3);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 4);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserHandshakeAck.
  * Use `create(UserHandshakeAckSchema)` to create a new message.
  */
 export const UserHandshakeAckSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 4);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 5);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.GatewayConnectRequest.
  * Use `create(GatewayConnectRequestSchema)` to create a new message.
  */
 export const GatewayConnectRequestSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 5);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 6);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.GatewayConnectResponse.
  * Use `create(GatewayConnectResponseSchema)` to create a new message.
  */
 export const GatewayConnectResponseSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 6);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 7);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserConnectRequest.
  * Use `create(UserConnectRequestSchema)` to create a new message.
  */
 export const UserConnectRequestSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 7);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 8);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserConnectResponse.
  * Use `create(UserConnectResponseSchema)` to create a new message.
  */
 export const UserConnectResponseSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 8);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 9);
 
