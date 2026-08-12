@@ -11,63 +11,51 @@ import type { Message } from "@bufbuild/protobuf";
 export declare const file_kusinta_iot_device_v1_properties: GenFile;
 
 /**
- * Matter Thermostat cluster (0x0201) — device type 0x0301
+ * Matter Thermostat cluster (0x0201)
  *
  * @generated from message kusinta.iot.device.v1.ThermostatProperties
  */
 export declare type ThermostatProperties = Message<"kusinta.iot.device.v1.ThermostatProperties"> & {
   /**
-   * LocalTemperature
-   *
    * @generated from field: sint32 local_temperature = 1;
    */
   localTemperature: number;
 
   /**
-   * OccupiedHeatingSetpoint
-   *
    * @generated from field: sint32 occupied_heating_setpoint = 2;
    */
   occupiedHeatingSetpoint: number;
 
   /**
-   * OccupiedCoolingSetpoint
-   *
    * @generated from field: sint32 occupied_cooling_setpoint = 3;
    */
   occupiedCoolingSetpoint: number;
 
   /**
-   * MinHeatSetpointLimit — property-owner constraint
+   * Property-owner constraint
    *
    * @generated from field: sint32 min_heat_setpoint_limit = 4;
    */
   minHeatSetpointLimit: number;
 
   /**
-   * MaxHeatSetpointLimit — property-owner constraint
+   * Property-owner constraint
    *
    * @generated from field: sint32 max_heat_setpoint_limit = 5;
    */
   maxHeatSetpointLimit: number;
 
   /**
-   * MinCoolSetpointLimit
-   *
    * @generated from field: sint32 min_cool_setpoint_limit = 6;
    */
   minCoolSetpointLimit: number;
 
   /**
-   * MaxCoolSetpointLimit
-   *
    * @generated from field: sint32 max_cool_setpoint_limit = 7;
    */
   maxCoolSetpointLimit: number;
 
   /**
-   * ControlSequenceOfOperation enum
-   *
    * @generated from field: uint32 control_sequence_of_operation = 8;
    */
   controlSequenceOfOperation: number;
@@ -80,8 +68,6 @@ export declare type ThermostatProperties = Message<"kusinta.iot.device.v1.Thermo
   systemMode: number;
 
   /**
-   * ThermostatRunningMode
-   *
    * @generated from field: uint32 thermostat_running_mode = 10;
    */
   thermostatRunningMode: number;
@@ -94,35 +80,27 @@ export declare type ThermostatProperties = Message<"kusinta.iot.device.v1.Thermo
 export declare const ThermostatPropertiesSchema: GenMessage<ThermostatProperties>;
 
 /**
- * Matter Temperature Measurement cluster (0x0402) — device type 0x0302
+ * Matter Temperature Measurement cluster (0x0402)
  *
  * @generated from message kusinta.iot.device.v1.TemperatureSensorProperties
  */
 export declare type TemperatureSensorProperties = Message<"kusinta.iot.device.v1.TemperatureSensorProperties"> & {
   /**
-   * MeasuredValue
-   *
    * @generated from field: sint32 measured_value = 1;
    */
   measuredValue: number;
 
   /**
-   * MinMeasuredValue
-   *
    * @generated from field: sint32 min_measured_value = 2;
    */
   minMeasuredValue: number;
 
   /**
-   * MaxMeasuredValue
-   *
    * @generated from field: sint32 max_measured_value = 3;
    */
   maxMeasuredValue: number;
 
   /**
-   * Tolerance
-   *
    * @generated from field: uint32 tolerance = 4;
    */
   tolerance: number;
@@ -135,13 +113,13 @@ export declare type TemperatureSensorProperties = Message<"kusinta.iot.device.v1
 export declare const TemperatureSensorPropertiesSchema: GenMessage<TemperatureSensorProperties>;
 
 /**
- * Matter Relative Humidity Measurement cluster (0x0405) — device type 0x0307
+ * Matter Relative Humidity Measurement cluster (0x0405)
  *
  * @generated from message kusinta.iot.device.v1.HumiditySensorProperties
  */
 export declare type HumiditySensorProperties = Message<"kusinta.iot.device.v1.HumiditySensorProperties"> & {
   /**
-   * MeasuredValue (% × 100, 0–10000)
+   * % × 100, 0–10000
    *
    * @generated from field: uint32 measured_value = 1;
    */
@@ -170,7 +148,7 @@ export declare type HumiditySensorProperties = Message<"kusinta.iot.device.v1.Hu
 export declare const HumiditySensorPropertiesSchema: GenMessage<HumiditySensorProperties>;
 
 /**
- * Matter Occupancy Sensing cluster (0x0406) — device type 0x0107
+ * Matter Occupancy Sensing cluster (0x0406)
  *
  * @generated from message kusinta.iot.device.v1.OccupancySensorProperties
  */
@@ -195,14 +173,14 @@ export declare type OccupancySensorProperties = Message<"kusinta.iot.device.v1.O
   occupancySensorTypeBitmap: number;
 
   /**
-   * @generated from field: uint32 pir_occ_to_unocc_delay = 4;
+   * @generated from field: uint32 pir_occupied_to_unoccupied_delay = 4;
    */
-  pirOccToUnoccDelay: number;
+  pirOccupiedToUnoccupiedDelay: number;
 
   /**
-   * @generated from field: uint32 pir_unocc_to_occ_delay = 5;
+   * @generated from field: uint32 pir_unoccupied_to_occupied_delay = 5;
    */
-  pirUnoccToOccDelay: number;
+  pirUnoccupiedToOccupiedDelay: number;
 };
 
 /**
@@ -212,7 +190,7 @@ export declare type OccupancySensorProperties = Message<"kusinta.iot.device.v1.O
 export declare const OccupancySensorPropertiesSchema: GenMessage<OccupancySensorProperties>;
 
 /**
- * Matter Boolean State cluster (0x0045) — device type 0x0015 (Contact Sensor)
+ * Matter Boolean State cluster (0x0045)
  *
  * @generated from message kusinta.iot.device.v1.ContactSensorProperties
  */
@@ -232,12 +210,16 @@ export declare type ContactSensorProperties = Message<"kusinta.iot.device.v1.Con
 export declare const ContactSensorPropertiesSchema: GenMessage<ContactSensorProperties>;
 
 /**
- * Matter Window Covering cluster (0x0102) — device type 0x0202
+ * Matter Window Covering cluster (0x0102)
  *
  * @generated from message kusinta.iot.device.v1.WindowCoveringProperties
  */
 export declare type WindowCoveringProperties = Message<"kusinta.iot.device.v1.WindowCoveringProperties"> & {
   /**
+   * The Matter attribute is the bare "Type"; the field keeps a qualified name because
+   * `type` is a poor field name and keyword-adjacent in several target languages. The
+   * mapping is in (matter_attribute), so the divergence costs consumers nothing.
+   *
    * @generated from field: uint32 covering_type = 1;
    */
   coveringType: number;
@@ -289,7 +271,7 @@ export declare type WindowCoveringProperties = Message<"kusinta.iot.device.v1.Wi
 export declare const WindowCoveringPropertiesSchema: GenMessage<WindowCoveringProperties>;
 
 /**
- * Matter Door Lock cluster (0x0101) — device type 0x000A
+ * Matter Door Lock cluster (0x0101 — a cluster ID, not the 0x0101 Dimmable Light device type)
  *
  * @generated from message kusinta.iot.device.v1.DoorLockProperties
  */
@@ -302,29 +284,23 @@ export declare type DoorLockProperties = Message<"kusinta.iot.device.v1.DoorLock
   lockState: number;
 
   /**
-   * LockType enum
-   *
    * @generated from field: uint32 lock_type = 2;
    */
   lockType: number;
 
   /**
-   * ActuatorEnabled
-   *
    * @generated from field: bool actuator_enabled = 3;
    */
   actuatorEnabled: boolean;
 
   /**
-   * DoorState (requires door sensor hardware)
+   * Requires door sensor hardware
    *
    * @generated from field: uint32 door_state = 4;
    */
   doorState: number;
 
   /**
-   * OperatingMode
-   *
    * @generated from field: uint32 operating_mode = 5;
    */
   operatingMode: number;
@@ -337,42 +313,32 @@ export declare type DoorLockProperties = Message<"kusinta.iot.device.v1.DoorLock
 export declare const DoorLockPropertiesSchema: GenMessage<DoorLockProperties>;
 
 /**
- * Matter On/Off cluster (0x0006) — device type 0x0100 (On/Off Light)
+ * Matter On/Off cluster (0x0006)
  *
  * @generated from message kusinta.iot.device.v1.OnOffLightProperties
  */
 export declare type OnOffLightProperties = Message<"kusinta.iot.device.v1.OnOffLightProperties"> & {
   /**
-   * OnOff
-   *
    * @generated from field: bool on_off = 1;
    */
   onOff: boolean;
 
   /**
-   * GlobalSceneControl
-   *
    * @generated from field: bool global_scene_control = 2;
    */
   globalSceneControl: boolean;
 
   /**
-   * OnTime
-   *
    * @generated from field: uint32 on_time = 3;
    */
   onTime: number;
 
   /**
-   * OffWaitTime
-   *
    * @generated from field: uint32 off_wait_time = 4;
    */
   offWaitTime: number;
 
   /**
-   * StartUpOnOff
-   *
    * @generated from field: uint32 start_up_on_off = 5;
    */
   startUpOnOff: number;
@@ -385,7 +351,7 @@ export declare type OnOffLightProperties = Message<"kusinta.iot.device.v1.OnOffL
 export declare const OnOffLightPropertiesSchema: GenMessage<OnOffLightProperties>;
 
 /**
- * Matter On/Off + Level Control cluster (0x0008) — device type 0x010B (Dimmable Light)
+ * Matter On/Off (0x0006) + Level Control (0x0008) clusters
  *
  * @generated from message kusinta.iot.device.v1.DimmableLightProperties
  */
@@ -403,36 +369,26 @@ export declare type DimmableLightProperties = Message<"kusinta.iot.device.v1.Dim
   currentLevel: number;
 
   /**
-   * MinLevel
-   *
    * @generated from field: uint32 min_level = 3;
    */
   minLevel: number;
 
   /**
-   * MaxLevel
-   *
    * @generated from field: uint32 max_level = 4;
    */
   maxLevel: number;
 
   /**
-   * OnLevel
-   *
    * @generated from field: uint32 on_level = 5;
    */
   onLevel: number;
 
   /**
-   * StartUpCurrentLevel
-   *
    * @generated from field: uint32 start_up_current_level = 6;
    */
   startUpCurrentLevel: number;
 
   /**
-   * RemainingTime
-   *
    * @generated from field: uint32 remaining_time = 7;
    */
   remainingTime: number;
@@ -445,7 +401,7 @@ export declare type DimmableLightProperties = Message<"kusinta.iot.device.v1.Dim
 export declare const DimmableLightPropertiesSchema: GenMessage<DimmableLightProperties>;
 
 /**
- * Matter On/Off + Level + Color Control cluster (0x0300) — device type 0x010C
+ * Matter On/Off (0x0006) + Level Control (0x0008) + Color Control (0x0300) clusters
  *
  * @generated from message kusinta.iot.device.v1.ColorTemperatureLightProperties
  */
@@ -461,36 +417,26 @@ export declare type ColorTemperatureLightProperties = Message<"kusinta.iot.devic
   currentLevel: number;
 
   /**
-   * ColorTemperatureMireds
-   *
    * @generated from field: uint32 color_temperature_mireds = 3;
    */
   colorTemperatureMireds: number;
 
   /**
-   * ColorTempPhysicalMinMireds
-   *
    * @generated from field: uint32 color_temp_physical_min_mireds = 4;
    */
   colorTempPhysicalMinMireds: number;
 
   /**
-   * ColorTempPhysicalMaxMireds
-   *
    * @generated from field: uint32 color_temp_physical_max_mireds = 5;
    */
   colorTempPhysicalMaxMireds: number;
 
   /**
-   * StartUpColorTemperatureMireds
-   *
    * @generated from field: uint32 startup_color_temperature_mireds = 6;
    */
   startupColorTemperatureMireds: number;
 
   /**
-   * ColorMode
-   *
    * @generated from field: uint32 color_mode = 7;
    */
   colorMode: number;
@@ -503,38 +449,47 @@ export declare type ColorTemperatureLightProperties = Message<"kusinta.iot.devic
 export declare const ColorTemperatureLightPropertiesSchema: GenMessage<ColorTemperatureLightProperties>;
 
 /**
- * Matter Electrical Measurement cluster (0x0B04) — device type 0x0510
+ * Matter Electrical Power Measurement cluster (0x0090)
+ *
+ * Was Zigbee ElectricalMeasurement (0x0B04) with that cluster's RMS* attribute names;
+ * 0x0B04 does not exist in Matter, so a Matter connector could never have produced a
+ * PropertyUpdate that resolved here. Field numbers are unchanged.
+ *
+ * Scale note: Matter 0x0090 encodes these as nullable int64 in mV / mA / mW / mHz. The
+ * types and units below are this schema's narrower encoding, deliberately left alone here
+ * because changing them is a wire change, unlike the rename. active_power in particular
+ * cannot represent loads above ~2.1 kW, so this still needs a decision.
  *
  * @generated from message kusinta.iot.device.v1.EnergySensorProperties
  */
 export declare type EnergySensorProperties = Message<"kusinta.iot.device.v1.EnergySensorProperties"> & {
   /**
-   * ActivePower (watts)
+   * Watts
    *
    * @generated from field: int32 active_power = 1;
    */
   activePower: number;
 
   /**
-   * RmsVoltage (volts × 10)
+   * Volts × 10
    *
-   * @generated from field: uint32 rms_voltage = 2;
+   * @generated from field: uint32 voltage = 2;
    */
-  rmsVoltage: number;
+  voltage: number;
 
   /**
-   * RmsCurrent (amps × 1000)
+   * Amps × 1000
    *
-   * @generated from field: uint32 rms_current = 3;
+   * @generated from field: uint32 active_current = 3;
    */
-  rmsCurrent: number;
+  activeCurrent: number;
 
   /**
-   * AcFrequency (Hz × 100)
+   * Hz × 100
    *
-   * @generated from field: uint32 ac_frequency = 4;
+   * @generated from field: uint32 frequency = 4;
    */
-  acFrequency: number;
+  frequency: number;
 };
 
 /**
@@ -544,13 +499,13 @@ export declare type EnergySensorProperties = Message<"kusinta.iot.device.v1.Ener
 export declare const EnergySensorPropertiesSchema: GenMessage<EnergySensorProperties>;
 
 /**
- * Matter Pressure Measurement cluster (0x0403) — device type 0x0305
+ * Matter Pressure Measurement cluster (0x0403)
  *
  * @generated from message kusinta.iot.device.v1.PressureSensorProperties
  */
 export declare type PressureSensorProperties = Message<"kusinta.iot.device.v1.PressureSensorProperties"> & {
   /**
-   * MeasuredValue (kPa × 10)
+   * kPa × 10
    *
    * @generated from field: sint32 measured_value = 1;
    */

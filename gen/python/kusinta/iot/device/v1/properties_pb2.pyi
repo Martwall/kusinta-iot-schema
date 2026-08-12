@@ -1,3 +1,4 @@
+from kusinta.iot.device.v1 import matter_options_pb2 as _matter_options_pb2
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from typing import ClassVar as _ClassVar, Optional as _Optional
@@ -53,18 +54,18 @@ class HumiditySensorProperties(_message.Message):
     def __init__(self, measured_value: _Optional[int] = ..., min_measured_value: _Optional[int] = ..., max_measured_value: _Optional[int] = ..., tolerance: _Optional[int] = ...) -> None: ...
 
 class OccupancySensorProperties(_message.Message):
-    __slots__ = ("occupancy", "occupancy_sensor_type", "occupancy_sensor_type_bitmap", "pir_occ_to_unocc_delay", "pir_unocc_to_occ_delay")
+    __slots__ = ("occupancy", "occupancy_sensor_type", "occupancy_sensor_type_bitmap", "pir_occupied_to_unoccupied_delay", "pir_unoccupied_to_occupied_delay")
     OCCUPANCY_FIELD_NUMBER: _ClassVar[int]
     OCCUPANCY_SENSOR_TYPE_FIELD_NUMBER: _ClassVar[int]
     OCCUPANCY_SENSOR_TYPE_BITMAP_FIELD_NUMBER: _ClassVar[int]
-    PIR_OCC_TO_UNOCC_DELAY_FIELD_NUMBER: _ClassVar[int]
-    PIR_UNOCC_TO_OCC_DELAY_FIELD_NUMBER: _ClassVar[int]
+    PIR_OCCUPIED_TO_UNOCCUPIED_DELAY_FIELD_NUMBER: _ClassVar[int]
+    PIR_UNOCCUPIED_TO_OCCUPIED_DELAY_FIELD_NUMBER: _ClassVar[int]
     occupancy: int
     occupancy_sensor_type: int
     occupancy_sensor_type_bitmap: int
-    pir_occ_to_unocc_delay: int
-    pir_unocc_to_occ_delay: int
-    def __init__(self, occupancy: _Optional[int] = ..., occupancy_sensor_type: _Optional[int] = ..., occupancy_sensor_type_bitmap: _Optional[int] = ..., pir_occ_to_unocc_delay: _Optional[int] = ..., pir_unocc_to_occ_delay: _Optional[int] = ...) -> None: ...
+    pir_occupied_to_unoccupied_delay: int
+    pir_unoccupied_to_occupied_delay: int
+    def __init__(self, occupancy: _Optional[int] = ..., occupancy_sensor_type: _Optional[int] = ..., occupancy_sensor_type_bitmap: _Optional[int] = ..., pir_occupied_to_unoccupied_delay: _Optional[int] = ..., pir_unoccupied_to_occupied_delay: _Optional[int] = ...) -> None: ...
 
 class ContactSensorProperties(_message.Message):
     __slots__ = ("state_value",)
@@ -157,16 +158,16 @@ class ColorTemperatureLightProperties(_message.Message):
     def __init__(self, on_off: _Optional[bool] = ..., current_level: _Optional[int] = ..., color_temperature_mireds: _Optional[int] = ..., color_temp_physical_min_mireds: _Optional[int] = ..., color_temp_physical_max_mireds: _Optional[int] = ..., startup_color_temperature_mireds: _Optional[int] = ..., color_mode: _Optional[int] = ...) -> None: ...
 
 class EnergySensorProperties(_message.Message):
-    __slots__ = ("active_power", "rms_voltage", "rms_current", "ac_frequency")
+    __slots__ = ("active_power", "voltage", "active_current", "frequency")
     ACTIVE_POWER_FIELD_NUMBER: _ClassVar[int]
-    RMS_VOLTAGE_FIELD_NUMBER: _ClassVar[int]
-    RMS_CURRENT_FIELD_NUMBER: _ClassVar[int]
-    AC_FREQUENCY_FIELD_NUMBER: _ClassVar[int]
+    VOLTAGE_FIELD_NUMBER: _ClassVar[int]
+    ACTIVE_CURRENT_FIELD_NUMBER: _ClassVar[int]
+    FREQUENCY_FIELD_NUMBER: _ClassVar[int]
     active_power: int
-    rms_voltage: int
-    rms_current: int
-    ac_frequency: int
-    def __init__(self, active_power: _Optional[int] = ..., rms_voltage: _Optional[int] = ..., rms_current: _Optional[int] = ..., ac_frequency: _Optional[int] = ...) -> None: ...
+    voltage: int
+    active_current: int
+    frequency: int
+    def __init__(self, active_power: _Optional[int] = ..., voltage: _Optional[int] = ..., active_current: _Optional[int] = ..., frequency: _Optional[int] = ...) -> None: ...
 
 class PressureSensorProperties(_message.Message):
     __slots__ = ("measured_value", "min_measured_value", "max_measured_value", "tolerance")

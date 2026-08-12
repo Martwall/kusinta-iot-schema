@@ -31,8 +31,37 @@ enum PropertyUpdate_Value {
 
 /// PropertyUpdate carries a single attribute change from connector to gateway,
 /// or from gateway to Flutter app.
-/// attribute_name uses PascalCase Matter attribute naming (e.g. "OccupiedHeatingSetpoint").
-/// cluster_id_hex is the Matter cluster ID as a 4-char hex string (e.g. "0201" for Thermostat).
+///
+/// Resolution rule (normative)
+///
+/// A consumer storing an update into device.v1.Device.properties resolves it in two
+/// steps, both by reading options off the descriptor. Neither step involves
+/// transforming a name.
+///
+///  1. Pick the properties message: the Device.properties case whose message type
+///     declares (matter_device_type) == DeviceDescriptor.matter_device_type_id.
+///  2. Pick the field: the one field of that message whose (matter_cluster_id) equals
+///     cluster_id_hex parsed as a hex integer AND whose (matter_attribute) equals
+///     attribute_name.
+///
+/// Both comparisons are exact. attribute_name is byte-for-byte equal to the Matter
+/// attribute's spec spelling; it is NOT derived from the proto field name and case- or
+/// separator-insensitive matching against field names is not a valid fallback —
+/// OccupancySensorProperties and WindowCoveringProperties both have fields that no such
+/// transformation reaches. See matter_options.proto.
+///
+/// When either step resolves to nothing the update is not storable. A consumer MUST NOT
+/// silently drop it: log it at warning with device_id, cluster_id_hex and attribute_name,
+/// and count it. A miss means one of three things, all of which need to be visible —
+/// the device reports an attribute this schema does not model, the device type is not
+/// modelled at all (see device.proto), or a connector is sending a non-Matter name.
+/// Advancing Device.last_seen on a miss is correct; the update is still evidence of life.
+///
+/// Producers: attribute_name uses the Matter attribute's own PascalCase, acronyms
+/// included (e.g. "OccupiedHeatingSetpoint", "PIROccupiedToUnoccupiedDelay").
+/// cluster_id_hex is the Matter cluster ID as a 4-char lowercase-or-uppercase hex string
+/// with no 0x prefix (e.g. "0201" for Thermostat). Both are required for resolution;
+/// an update carrying only one of them cannot be stored.
 class PropertyUpdate extends $pb.GeneratedMessage {
   factory PropertyUpdate({
     $0.DeviceId? deviceId,

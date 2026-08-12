@@ -46,14 +46,49 @@ All device type IDs are Matter 1.5.1 `uint32` values stored in `DeviceDescriptor
 | `WindowCoveringProperties` | `0x0202` | Window Covering `0x0102` |
 | `DoorLockProperties` | `0x000A` | Door Lock `0x0101` |
 | `OnOffLightProperties` | `0x0100` | On/Off `0x0006` |
-| `DimmableLightProperties` | `0x010B` | On/Off + Level Control `0x0008` |
+| `DimmableLightProperties` | `0x0101` | On/Off `0x0006` + Level Control `0x0008` |
 | `ColorTemperatureLightProperties` | `0x010C` | On/Off + Level + Color Control `0x0300` |
-| `EnergySensorProperties` | `0x0510` | Electrical Measurement `0x0B04` |
+| `EnergySensorProperties` | `0x0510` | Electrical Power Measurement `0x0090` |
 | `PressureSensorProperties` | `0x0305` | Pressure Measurement `0x0403` |
 
 Temperatures are `sint32` centidegrees (°C × 100), matching Matter's `int16 × 0.01°C` encoding.
 
 Vendor extensions occupy `Device.properties` fields 50–99. `HomematicVendorExtension` sits at field 50.
+
+This table is documentation only. The mapping itself lives in the schema as custom options
+(see below), so consumers never transcribe it.
+
+## Matter annotations
+
+`proto/kusinta/iot/device/v1/matter_options.proto` defines three custom options that make the
+Matter mapping machine-readable:
+
+| Option | Applies to | Meaning |
+|---|---|---|
+| `(matter_cluster_id)` | properties field | Matter cluster ID, e.g. `0x0201` |
+| `(matter_attribute)` | properties field | Matter attribute name, e.g. `"PIROccupiedToUnoccupiedDelay"` |
+| `(matter_device_type)` | properties message | Matter device type IDs modelled, repeated |
+
+Two resolutions a consumer needs, both read from the descriptor:
+
+- **`PropertyUpdate` → field**: exact match on `(matter_cluster_id, matter_attribute)` against
+  `(cluster_id_hex, attribute_name)`. Proto field names are *not* derived from Matter attribute
+  names — `covering_type` carries the bare `Type` attribute, and no case transformation reaches
+  `PIROccupiedToUnoccupiedDelay` — so name-based matching is wrong, not merely fragile.
+- **`matter_device_type_id` → `Device.properties` case**: find the oneof case whose message type
+  declares that device type. A device type the schema does not model leaves the oneof unset and
+  the `Device` intact; it is not an error.
+
+`property_update.proto` states the rule normatively, including what to do with an update that
+resolves to nothing (log and count — never drop silently). Reading options at runtime:
+`getOption(field, matter_attribute)` in JS, `field.GetOptions().Extensions[matter_attribute]` in
+Python, and in Dart by parsing the generated `*Descriptor` bytes from `*.pbjson.dart` with the
+`Matter_options` extension registry (the `$json` maps drop custom options; the binary descriptors
+keep them).
+
+**When adding a properties message or field, annotate it.** Nothing in `buf lint` enforces this;
+the completeness tests in `gen/js/src/__tests__/matter_options.test.js` and
+`gen/python/tests/test_matter_options.py` do.
 
 ## Consuming the packages
 

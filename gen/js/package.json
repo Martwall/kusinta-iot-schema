@@ -14,6 +14,7 @@
     "./device":                 "./src/kusinta/iot/device/v1/device_pb.js",
     "./device/descriptor":      "./src/kusinta/iot/device/v1/descriptor_pb.js",
     "./device/properties":      "./src/kusinta/iot/device/v1/properties_pb.js",
+    "./device/matter-options":   "./src/kusinta/iot/device/v1/matter_options_pb.js",
     "./device/property-update": "./src/kusinta/iot/device/v1/property_update_pb.js",
     "./space":                  "./src/kusinta/iot/space/v1/space_pb.js",
     "./access":                 "./src/kusinta/iot/access/v1/acl_pb.js",

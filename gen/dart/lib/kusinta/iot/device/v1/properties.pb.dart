@@ -16,7 +16,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Matter Thermostat cluster (0x0201) — device type 0x0301
+/// Matter Thermostat cluster (0x0201)
 class ThermostatProperties extends $pb.GeneratedMessage {
   factory ThermostatProperties({
     $core.int? localTemperature,
@@ -136,6 +136,7 @@ class ThermostatProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearOccupiedCoolingSetpoint() => $_clearField(3);
 
+  /// Property-owner constraint
   @$pb.TagNumber(4)
   $core.int get minHeatSetpointLimit => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -145,6 +146,7 @@ class ThermostatProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearMinHeatSetpointLimit() => $_clearField(4);
 
+  /// Property-owner constraint
   @$pb.TagNumber(5)
   $core.int get maxHeatSetpointLimit => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -182,6 +184,7 @@ class ThermostatProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearControlSequenceOfOperation() => $_clearField(8);
 
+  /// SystemMode: Off=0,Auto=1,Cool=3,Heat=4,EmHeat=5
   @$pb.TagNumber(9)
   $core.int get systemMode => $_getIZ(8);
   @$pb.TagNumber(9)
@@ -201,7 +204,7 @@ class ThermostatProperties extends $pb.GeneratedMessage {
   void clearThermostatRunningMode() => $_clearField(10);
 }
 
-/// Matter Temperature Measurement cluster (0x0402) — device type 0x0302
+/// Matter Temperature Measurement cluster (0x0402)
 class TemperatureSensorProperties extends $pb.GeneratedMessage {
   factory TemperatureSensorProperties({
     $core.int? measuredValue,
@@ -302,7 +305,7 @@ class TemperatureSensorProperties extends $pb.GeneratedMessage {
   void clearTolerance() => $_clearField(4);
 }
 
-/// Matter Relative Humidity Measurement cluster (0x0405) — device type 0x0307
+/// Matter Relative Humidity Measurement cluster (0x0405)
 class HumiditySensorProperties extends $pb.GeneratedMessage {
   factory HumiditySensorProperties({
     $core.int? measuredValue,
@@ -364,6 +367,7 @@ class HumiditySensorProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<HumiditySensorProperties>(create);
   static HumiditySensorProperties? _defaultInstance;
 
+  /// % × 100, 0–10000
   @$pb.TagNumber(1)
   $core.int get measuredValue => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -401,14 +405,14 @@ class HumiditySensorProperties extends $pb.GeneratedMessage {
   void clearTolerance() => $_clearField(4);
 }
 
-/// Matter Occupancy Sensing cluster (0x0406) — device type 0x0107
+/// Matter Occupancy Sensing cluster (0x0406)
 class OccupancySensorProperties extends $pb.GeneratedMessage {
   factory OccupancySensorProperties({
     $core.int? occupancy,
     $core.int? occupancySensorType,
     $core.int? occupancySensorTypeBitmap,
-    $core.int? pirOccToUnoccDelay,
-    $core.int? pirUnoccToOccDelay,
+    $core.int? pirOccupiedToUnoccupiedDelay,
+    $core.int? pirUnoccupiedToOccupiedDelay,
   }) {
     final result = create();
     if (occupancy != null) result.occupancy = occupancy;
@@ -416,10 +420,10 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
       result.occupancySensorType = occupancySensorType;
     if (occupancySensorTypeBitmap != null)
       result.occupancySensorTypeBitmap = occupancySensorTypeBitmap;
-    if (pirOccToUnoccDelay != null)
-      result.pirOccToUnoccDelay = pirOccToUnoccDelay;
-    if (pirUnoccToOccDelay != null)
-      result.pirUnoccToOccDelay = pirUnoccToOccDelay;
+    if (pirOccupiedToUnoccupiedDelay != null)
+      result.pirOccupiedToUnoccupiedDelay = pirOccupiedToUnoccupiedDelay;
+    if (pirUnoccupiedToOccupiedDelay != null)
+      result.pirUnoccupiedToOccupiedDelay = pirUnoccupiedToOccupiedDelay;
     return result;
   }
 
@@ -442,10 +446,10 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
         2, _omitFieldNames ? '' : 'occupancySensorType', $pb.PbFieldType.OU3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'occupancySensorTypeBitmap',
         $pb.PbFieldType.OU3)
-    ..a<$core.int>(
-        4, _omitFieldNames ? '' : 'pirOccToUnoccDelay', $pb.PbFieldType.OU3)
-    ..a<$core.int>(
-        5, _omitFieldNames ? '' : 'pirUnoccToOccDelay', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'pirOccupiedToUnoccupiedDelay',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'pirUnoccupiedToOccupiedDelay',
+        $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -471,6 +475,7 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<OccupancySensorProperties>(create);
   static OccupancySensorProperties? _defaultInstance;
 
+  /// Occupancy bitmask: bit 0 = occupied
   @$pb.TagNumber(1)
   $core.int get occupancy => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -480,6 +485,7 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearOccupancy() => $_clearField(1);
 
+  /// OccupancySensorType: PIR=0,Ultrasonic=1,PIRandUS=2,PhysicalContact=3
   @$pb.TagNumber(2)
   $core.int get occupancySensorType => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -500,25 +506,27 @@ class OccupancySensorProperties extends $pb.GeneratedMessage {
   void clearOccupancySensorTypeBitmap() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $core.int get pirOccToUnoccDelay => $_getIZ(3);
+  $core.int get pirOccupiedToUnoccupiedDelay => $_getIZ(3);
   @$pb.TagNumber(4)
-  set pirOccToUnoccDelay($core.int value) => $_setUnsignedInt32(3, value);
+  set pirOccupiedToUnoccupiedDelay($core.int value) =>
+      $_setUnsignedInt32(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasPirOccToUnoccDelay() => $_has(3);
+  $core.bool hasPirOccupiedToUnoccupiedDelay() => $_has(3);
   @$pb.TagNumber(4)
-  void clearPirOccToUnoccDelay() => $_clearField(4);
+  void clearPirOccupiedToUnoccupiedDelay() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.int get pirUnoccToOccDelay => $_getIZ(4);
+  $core.int get pirUnoccupiedToOccupiedDelay => $_getIZ(4);
   @$pb.TagNumber(5)
-  set pirUnoccToOccDelay($core.int value) => $_setUnsignedInt32(4, value);
+  set pirUnoccupiedToOccupiedDelay($core.int value) =>
+      $_setUnsignedInt32(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasPirUnoccToOccDelay() => $_has(4);
+  $core.bool hasPirUnoccupiedToOccupiedDelay() => $_has(4);
   @$pb.TagNumber(5)
-  void clearPirUnoccToOccDelay() => $_clearField(5);
+  void clearPirUnoccupiedToOccupiedDelay() => $_clearField(5);
 }
 
-/// Matter Boolean State cluster (0x0045) — device type 0x0015 (Contact Sensor)
+/// Matter Boolean State cluster (0x0045)
 class ContactSensorProperties extends $pb.GeneratedMessage {
   factory ContactSensorProperties({
     $core.bool? stateValue,
@@ -579,7 +587,7 @@ class ContactSensorProperties extends $pb.GeneratedMessage {
   void clearStateValue() => $_clearField(1);
 }
 
-/// Matter Window Covering cluster (0x0102) — device type 0x0202
+/// Matter Window Covering cluster (0x0102)
 class WindowCoveringProperties extends $pb.GeneratedMessage {
   factory WindowCoveringProperties({
     $core.int? coveringType,
@@ -663,6 +671,9 @@ class WindowCoveringProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<WindowCoveringProperties>(create);
   static WindowCoveringProperties? _defaultInstance;
 
+  /// The Matter attribute is the bare "Type"; the field keeps a qualified name because
+  /// `type` is a poor field name and keyword-adjacent in several target languages. The
+  /// mapping is in (matter_attribute), so the divergence costs consumers nothing.
   @$pb.TagNumber(1)
   $core.int get coveringType => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -713,6 +724,7 @@ class WindowCoveringProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearTargetPositionTiltPercent100ths() => $_clearField(5);
 
+  /// bitmask: global, lift, tilt
   @$pb.TagNumber(6)
   $core.int get operationalStatus => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -741,7 +753,7 @@ class WindowCoveringProperties extends $pb.GeneratedMessage {
   void clearMode() => $_clearField(8);
 }
 
-/// Matter Door Lock cluster (0x0101) — device type 0x000A
+/// Matter Door Lock cluster (0x0101 — a cluster ID, not the 0x0101 Dimmable Light device type)
 class DoorLockProperties extends $pb.GeneratedMessage {
   factory DoorLockProperties({
     $core.int? lockState,
@@ -802,6 +814,7 @@ class DoorLockProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<DoorLockProperties>(create);
   static DoorLockProperties? _defaultInstance;
 
+  /// LockState: NotFullyLocked=0,Locked=1,Unlocked=2,Unlatched=3
   @$pb.TagNumber(1)
   $core.int get lockState => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -829,6 +842,7 @@ class DoorLockProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearActuatorEnabled() => $_clearField(3);
 
+  /// Requires door sensor hardware
   @$pb.TagNumber(4)
   $core.int get doorState => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -848,7 +862,7 @@ class DoorLockProperties extends $pb.GeneratedMessage {
   void clearOperatingMode() => $_clearField(5);
 }
 
-/// Matter On/Off cluster (0x0006) — device type 0x0100 (On/Off Light)
+/// Matter On/Off cluster (0x0006)
 class OnOffLightProperties extends $pb.GeneratedMessage {
   factory OnOffLightProperties({
     $core.bool? onOff,
@@ -957,7 +971,7 @@ class OnOffLightProperties extends $pb.GeneratedMessage {
   void clearStartUpOnOff() => $_clearField(5);
 }
 
-/// Matter On/Off + Level Control cluster (0x0008) — device type 0x010B (Dimmable Light)
+/// Matter On/Off (0x0006) + Level Control (0x0008) clusters
 class DimmableLightProperties extends $pb.GeneratedMessage {
   factory DimmableLightProperties({
     $core.bool? onOff,
@@ -1038,6 +1052,7 @@ class DimmableLightProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearOnOff() => $_clearField(1);
 
+  /// CurrentLevel (0–254)
   @$pb.TagNumber(2)
   $core.int get currentLevel => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -1093,7 +1108,7 @@ class DimmableLightProperties extends $pb.GeneratedMessage {
   void clearRemainingTime() => $_clearField(7);
 }
 
-/// Matter On/Off + Level + Color Control cluster (0x0300) — device type 0x010C
+/// Matter On/Off (0x0006) + Level Control (0x0008) + Color Control (0x0300) clusters
 class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
   factory ColorTemperatureLightProperties({
     $core.bool? onOff,
@@ -1240,19 +1255,28 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
   void clearColorMode() => $_clearField(7);
 }
 
-/// Matter Electrical Measurement cluster (0x0B04) — device type 0x0510
+/// Matter Electrical Power Measurement cluster (0x0090)
+///
+/// Was Zigbee ElectricalMeasurement (0x0B04) with that cluster's RMS* attribute names;
+/// 0x0B04 does not exist in Matter, so a Matter connector could never have produced a
+/// PropertyUpdate that resolved here. Field numbers are unchanged.
+///
+/// Scale note: Matter 0x0090 encodes these as nullable int64 in mV / mA / mW / mHz. The
+/// types and units below are this schema's narrower encoding, deliberately left alone here
+/// because changing them is a wire change, unlike the rename. active_power in particular
+/// cannot represent loads above ~2.1 kW, so this still needs a decision.
 class EnergySensorProperties extends $pb.GeneratedMessage {
   factory EnergySensorProperties({
     $core.int? activePower,
-    $core.int? rmsVoltage,
-    $core.int? rmsCurrent,
-    $core.int? acFrequency,
+    $core.int? voltage,
+    $core.int? activeCurrent,
+    $core.int? frequency,
   }) {
     final result = create();
     if (activePower != null) result.activePower = activePower;
-    if (rmsVoltage != null) result.rmsVoltage = rmsVoltage;
-    if (rmsCurrent != null) result.rmsCurrent = rmsCurrent;
-    if (acFrequency != null) result.acFrequency = acFrequency;
+    if (voltage != null) result.voltage = voltage;
+    if (activeCurrent != null) result.activeCurrent = activeCurrent;
+    if (frequency != null) result.frequency = frequency;
     return result;
   }
 
@@ -1271,9 +1295,10 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
     ..a<$core.int>(1, _omitFieldNames ? '' : 'activePower', $pb.PbFieldType.O3)
-    ..a<$core.int>(2, _omitFieldNames ? '' : 'rmsVoltage', $pb.PbFieldType.OU3)
-    ..a<$core.int>(3, _omitFieldNames ? '' : 'rmsCurrent', $pb.PbFieldType.OU3)
-    ..a<$core.int>(4, _omitFieldNames ? '' : 'acFrequency', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'voltage', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'activeCurrent', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'frequency', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1299,6 +1324,7 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<EnergySensorProperties>(create);
   static EnergySensorProperties? _defaultInstance;
 
+  /// Watts
   @$pb.TagNumber(1)
   $core.int get activePower => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -1308,35 +1334,38 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearActivePower() => $_clearField(1);
 
+  /// Volts × 10
   @$pb.TagNumber(2)
-  $core.int get rmsVoltage => $_getIZ(1);
+  $core.int get voltage => $_getIZ(1);
   @$pb.TagNumber(2)
-  set rmsVoltage($core.int value) => $_setUnsignedInt32(1, value);
+  set voltage($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasRmsVoltage() => $_has(1);
+  $core.bool hasVoltage() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRmsVoltage() => $_clearField(2);
+  void clearVoltage() => $_clearField(2);
 
+  /// Amps × 1000
   @$pb.TagNumber(3)
-  $core.int get rmsCurrent => $_getIZ(2);
+  $core.int get activeCurrent => $_getIZ(2);
   @$pb.TagNumber(3)
-  set rmsCurrent($core.int value) => $_setUnsignedInt32(2, value);
+  set activeCurrent($core.int value) => $_setUnsignedInt32(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasRmsCurrent() => $_has(2);
+  $core.bool hasActiveCurrent() => $_has(2);
   @$pb.TagNumber(3)
-  void clearRmsCurrent() => $_clearField(3);
+  void clearActiveCurrent() => $_clearField(3);
 
+  /// Hz × 100
   @$pb.TagNumber(4)
-  $core.int get acFrequency => $_getIZ(3);
+  $core.int get frequency => $_getIZ(3);
   @$pb.TagNumber(4)
-  set acFrequency($core.int value) => $_setUnsignedInt32(3, value);
+  set frequency($core.int value) => $_setUnsignedInt32(3, value);
   @$pb.TagNumber(4)
-  $core.bool hasAcFrequency() => $_has(3);
+  $core.bool hasFrequency() => $_has(3);
   @$pb.TagNumber(4)
-  void clearAcFrequency() => $_clearField(4);
+  void clearFrequency() => $_clearField(4);
 }
 
-/// Matter Pressure Measurement cluster (0x0403) — device type 0x0305
+/// Matter Pressure Measurement cluster (0x0403)
 class PressureSensorProperties extends $pb.GeneratedMessage {
   factory PressureSensorProperties({
     $core.int? measuredValue,
@@ -1398,6 +1427,7 @@ class PressureSensorProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<PressureSensorProperties>(create);
   static PressureSensorProperties? _defaultInstance;
 
+  /// kPa × 10
   @$pb.TagNumber(1)
   $core.int get measuredValue => $_getIZ(0);
   @$pb.TagNumber(1)

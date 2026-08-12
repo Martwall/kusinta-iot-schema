@@ -19,6 +19,24 @@ export declare const file_kusinta_iot_device_v1_device: GenFile;
  * Field number convention: 1 = descriptor, 2-49 = standard Matter device types,
  * 50-99 = vendor extensions, 20+ = timestamps.
  *
+ * Selecting the properties case
+ *
+ * Each non-vendor case's message type declares the Matter device type it models in
+ * (matter_device_type), so the mapping from DeviceDescriptor.matter_device_type_id to a
+ * case is read from the descriptor rather than hard-coded. See matter_options.proto, and
+ * property_update.proto for the full resolution rule.
+ *
+ * matter_device_type_id stays a bare uint32: a connector must be able to report a device
+ * type this schema does not model. Such a device is legitimate — it exists, it belongs in
+ * a device list, it simply carries no typed properties. A consumer that cannot match the
+ * device type leaves the properties oneof unset and keeps the Device; it MUST NOT drop the
+ * device or substitute a nearby case. An unset oneof therefore means either "not modelled"
+ * or "modelled but nothing reported yet", which are indistinguishable here on purpose;
+ * distinguish them by re-resolving matter_device_type_id if you need to.
+ *
+ * Adding a case: annotate the new *Properties message with its (matter_device_type). A case
+ * without one resolves for nobody.
+ *
  * @generated from message kusinta.iot.device.v1.Device
  */
 export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {

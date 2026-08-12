@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package kusinta.iot.device.v1;
+
+import "google/protobuf/descriptor.proto";
+
+option optimize_for = SPEED;
+
+// Custom options that make this schema's Matter mapping machine-readable.
+//
+// Without them a consumer has to infer two mappings from naming convention: which
+// *Properties field a PropertyUpdate belongs to, and which Device.properties case a
+// DeviceDescriptor.matter_device_type_id selects. Both inferences fail silently — a
+// dropped attribute or an unset oneof looks identical to a device that never reported.
+// These options move both mappings into the descriptor, so consumers read them.
+//
+// Extension numbers 50001-50999 are reserved in this schema for Matter annotations.
+// They are not registered with Buf's global extension registry; they are only ever
+// applied to kusinta.iot.* files, so no collision is possible.
+extend google.protobuf.FieldOptions {
+  // The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat.
+  //
+  // Required alongside matter_attribute because a properties message may span
+  // clusters: DimmableLightProperties.on_off is On/Off (0x0006) while its
+  // current_level is Level Control (0x0008). Matches PropertyUpdate.cluster_id_hex
+  // parsed as a hex integer.
+  uint32 matter_cluster_id = 50001;
+
+  // The Matter attribute name in the spec's own PascalCase, e.g.
+  // "PIROccupiedToUnoccupiedDelay". This is the authoritative spelling; the proto
+  // field name is not derived from it and must not be assumed to be. Matches
+  // PropertyUpdate.attribute_name byte for byte.
+  string matter_attribute = 50002;
+}
+
+extend google.protobuf.MessageOptions {
+  // The Matter device type IDs this properties message models, e.g. 0x0301 for
+  // Thermostat. Repeated because one shape of properties can serve several device
+  // types; empty on vendor extension messages, which have no Matter device type.
+  //
+  // A device type appears on at most one properties message, so the mapping from
+  // DeviceDescriptor.matter_device_type_id to a Device.properties case is a function.
+  repeated uint32 matter_device_type = 50003;
+}

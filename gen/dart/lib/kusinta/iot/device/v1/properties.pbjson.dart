@@ -23,6 +23,7 @@ const ThermostatProperties$json = {
       '3': 1,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'localTemperature'
     },
     {
@@ -30,6 +31,7 @@ const ThermostatProperties$json = {
       '3': 2,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'occupiedHeatingSetpoint'
     },
     {
@@ -37,6 +39,7 @@ const ThermostatProperties$json = {
       '3': 3,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'occupiedCoolingSetpoint'
     },
     {
@@ -44,6 +47,7 @@ const ThermostatProperties$json = {
       '3': 4,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'minHeatSetpointLimit'
     },
     {
@@ -51,6 +55,7 @@ const ThermostatProperties$json = {
       '3': 5,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'maxHeatSetpointLimit'
     },
     {
@@ -58,6 +63,7 @@ const ThermostatProperties$json = {
       '3': 6,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'minCoolSetpointLimit'
     },
     {
@@ -65,6 +71,7 @@ const ThermostatProperties$json = {
       '3': 7,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'maxCoolSetpointLimit'
     },
     {
@@ -72,43 +79,59 @@ const ThermostatProperties$json = {
       '3': 8,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'controlSequenceOfOperation'
     },
-    {'1': 'system_mode', '3': 9, '4': 1, '5': 13, '10': 'systemMode'},
+    {'1': 'system_mode', '3': 9, '4': 1, '5': 13, '8': {}, '10': 'systemMode'},
     {
       '1': 'thermostat_running_mode',
       '3': 10,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'thermostatRunningMode'
     },
   ],
+  '7': {},
 };
 
 /// Descriptor for `ThermostatProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List thermostatPropertiesDescriptor = $convert.base64Decode(
-    'ChRUaGVybW9zdGF0UHJvcGVydGllcxIrChFsb2NhbF90ZW1wZXJhdHVyZRgBIAEoEVIQbG9jYW'
-    'xUZW1wZXJhdHVyZRI6ChlvY2N1cGllZF9oZWF0aW5nX3NldHBvaW50GAIgASgRUhdvY2N1cGll'
-    'ZEhlYXRpbmdTZXRwb2ludBI6ChlvY2N1cGllZF9jb29saW5nX3NldHBvaW50GAMgASgRUhdvY2'
-    'N1cGllZENvb2xpbmdTZXRwb2ludBI1ChdtaW5faGVhdF9zZXRwb2ludF9saW1pdBgEIAEoEVIU'
-    'bWluSGVhdFNldHBvaW50TGltaXQSNQoXbWF4X2hlYXRfc2V0cG9pbnRfbGltaXQYBSABKBFSFG'
-    '1heEhlYXRTZXRwb2ludExpbWl0EjUKF21pbl9jb29sX3NldHBvaW50X2xpbWl0GAYgASgRUhRt'
-    'aW5Db29sU2V0cG9pbnRMaW1pdBI1ChdtYXhfY29vbF9zZXRwb2ludF9saW1pdBgHIAEoEVIUbW'
-    'F4Q29vbFNldHBvaW50TGltaXQSQQodY29udHJvbF9zZXF1ZW5jZV9vZl9vcGVyYXRpb24YCCAB'
-    'KA1SGmNvbnRyb2xTZXF1ZW5jZU9mT3BlcmF0aW9uEh8KC3N5c3RlbV9tb2RlGAkgASgNUgpzeX'
-    'N0ZW1Nb2RlEjYKF3RoZXJtb3N0YXRfcnVubmluZ19tb2RlGAogASgNUhV0aGVybW9zdGF0UnVu'
-    'bmluZ01vZGU=');
+    'ChRUaGVybW9zdGF0UHJvcGVydGllcxJGChFsb2NhbF90ZW1wZXJhdHVyZRgBIAEoEUIZiLUYgQ'
+    'SStRgQTG9jYWxUZW1wZXJhdHVyZVIQbG9jYWxUZW1wZXJhdHVyZRJcChlvY2N1cGllZF9oZWF0'
+    'aW5nX3NldHBvaW50GAIgASgRQiCItRiBBJK1GBdPY2N1cGllZEhlYXRpbmdTZXRwb2ludFIXb2'
+    'NjdXBpZWRIZWF0aW5nU2V0cG9pbnQSXAoZb2NjdXBpZWRfY29vbGluZ19zZXRwb2ludBgDIAEo'
+    'EUIgiLUYgQSStRgXT2NjdXBpZWRDb29saW5nU2V0cG9pbnRSF29jY3VwaWVkQ29vbGluZ1NldH'
+    'BvaW50ElQKF21pbl9oZWF0X3NldHBvaW50X2xpbWl0GAQgASgRQh2ItRiBBJK1GBRNaW5IZWF0'
+    'U2V0cG9pbnRMaW1pdFIUbWluSGVhdFNldHBvaW50TGltaXQSVAoXbWF4X2hlYXRfc2V0cG9pbn'
+    'RfbGltaXQYBSABKBFCHYi1GIEEkrUYFE1heEhlYXRTZXRwb2ludExpbWl0UhRtYXhIZWF0U2V0'
+    'cG9pbnRMaW1pdBJUChdtaW5fY29vbF9zZXRwb2ludF9saW1pdBgGIAEoEUIdiLUYgQSStRgUTW'
+    'luQ29vbFNldHBvaW50TGltaXRSFG1pbkNvb2xTZXRwb2ludExpbWl0ElQKF21heF9jb29sX3Nl'
+    'dHBvaW50X2xpbWl0GAcgASgRQh2ItRiBBJK1GBRNYXhDb29sU2V0cG9pbnRMaW1pdFIUbWF4Q2'
+    '9vbFNldHBvaW50TGltaXQSZgodY29udHJvbF9zZXF1ZW5jZV9vZl9vcGVyYXRpb24YCCABKA1C'
+    'I4i1GIEEkrUYGkNvbnRyb2xTZXF1ZW5jZU9mT3BlcmF0aW9uUhpjb250cm9sU2VxdWVuY2VPZk'
+    '9wZXJhdGlvbhI0CgtzeXN0ZW1fbW9kZRgJIAEoDUITiLUYgQSStRgKU3lzdGVtTW9kZVIKc3lz'
+    'dGVtTW9kZRJWChd0aGVybW9zdGF0X3J1bm5pbmdfbW9kZRgKIAEoDUIeiLUYgQSStRgVVGhlcm'
+    '1vc3RhdFJ1bm5pbmdNb2RlUhV0aGVybW9zdGF0UnVubmluZ01vZGU6Bpq1GAKBBg==');
 
 @$core.Deprecated('Use temperatureSensorPropertiesDescriptor instead')
 const TemperatureSensorProperties$json = {
   '1': 'TemperatureSensorProperties',
   '2': [
-    {'1': 'measured_value', '3': 1, '4': 1, '5': 17, '10': 'measuredValue'},
+    {
+      '1': 'measured_value',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '10': 'measuredValue'
+    },
     {
       '1': 'min_measured_value',
       '3': 2,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'minMeasuredValue'
     },
     {
@@ -116,29 +139,41 @@ const TemperatureSensorProperties$json = {
       '3': 3,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'maxMeasuredValue'
     },
-    {'1': 'tolerance', '3': 4, '4': 1, '5': 13, '10': 'tolerance'},
+    {'1': 'tolerance', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'tolerance'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `TemperatureSensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List temperatureSensorPropertiesDescriptor = $convert.base64Decode(
-    'ChtUZW1wZXJhdHVyZVNlbnNvclByb3BlcnRpZXMSJQoObWVhc3VyZWRfdmFsdWUYASABKBFSDW'
-    '1lYXN1cmVkVmFsdWUSLAoSbWluX21lYXN1cmVkX3ZhbHVlGAIgASgRUhBtaW5NZWFzdXJlZFZh'
-    'bHVlEiwKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoEVIQbWF4TWVhc3VyZWRWYWx1ZRIcCgl0b2'
-    'xlcmFuY2UYBCABKA1SCXRvbGVyYW5jZQ==');
+    'ChtUZW1wZXJhdHVyZVNlbnNvclByb3BlcnRpZXMSPQoObWVhc3VyZWRfdmFsdWUYASABKBFCFo'
+    'i1GIIIkrUYDU1lYXN1cmVkVmFsdWVSDW1lYXN1cmVkVmFsdWUSRwoSbWluX21lYXN1cmVkX3Zh'
+    'bHVlGAIgASgRQhmItRiCCJK1GBBNaW5NZWFzdXJlZFZhbHVlUhBtaW5NZWFzdXJlZFZhbHVlEk'
+    'cKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoEUIZiLUYggiStRgQTWF4TWVhc3VyZWRWYWx1ZVIQ'
+    'bWF4TWVhc3VyZWRWYWx1ZRIwCgl0b2xlcmFuY2UYBCABKA1CEoi1GIIIkrUYCVRvbGVyYW5jZV'
+    'IJdG9sZXJhbmNlOgaatRgCggY=');
 
 @$core.Deprecated('Use humiditySensorPropertiesDescriptor instead')
 const HumiditySensorProperties$json = {
   '1': 'HumiditySensorProperties',
   '2': [
-    {'1': 'measured_value', '3': 1, '4': 1, '5': 13, '10': 'measuredValue'},
+    {
+      '1': 'measured_value',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'measuredValue'
+    },
     {
       '1': 'min_measured_value',
       '3': 2,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'minMeasuredValue'
     },
     {
@@ -146,29 +181,34 @@ const HumiditySensorProperties$json = {
       '3': 3,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'maxMeasuredValue'
     },
-    {'1': 'tolerance', '3': 4, '4': 1, '5': 13, '10': 'tolerance'},
+    {'1': 'tolerance', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'tolerance'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `HumiditySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List humiditySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChhIdW1pZGl0eVNlbnNvclByb3BlcnRpZXMSJQoObWVhc3VyZWRfdmFsdWUYASABKA1SDW1lYX'
-    'N1cmVkVmFsdWUSLAoSbWluX21lYXN1cmVkX3ZhbHVlGAIgASgNUhBtaW5NZWFzdXJlZFZhbHVl'
-    'EiwKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoDVIQbWF4TWVhc3VyZWRWYWx1ZRIcCgl0b2xlcm'
-    'FuY2UYBCABKA1SCXRvbGVyYW5jZQ==');
+    'ChhIdW1pZGl0eVNlbnNvclByb3BlcnRpZXMSPQoObWVhc3VyZWRfdmFsdWUYASABKA1CFoi1GI'
+    'UIkrUYDU1lYXN1cmVkVmFsdWVSDW1lYXN1cmVkVmFsdWUSRwoSbWluX21lYXN1cmVkX3ZhbHVl'
+    'GAIgASgNQhmItRiFCJK1GBBNaW5NZWFzdXJlZFZhbHVlUhBtaW5NZWFzdXJlZFZhbHVlEkcKEm'
+    '1heF9tZWFzdXJlZF92YWx1ZRgDIAEoDUIZiLUYhQiStRgQTWF4TWVhc3VyZWRWYWx1ZVIQbWF4'
+    'TWVhc3VyZWRWYWx1ZRIwCgl0b2xlcmFuY2UYBCABKA1CEoi1GIUIkrUYCVRvbGVyYW5jZVIJdG'
+    '9sZXJhbmNlOgaatRgChwY=');
 
 @$core.Deprecated('Use occupancySensorPropertiesDescriptor instead')
 const OccupancySensorProperties$json = {
   '1': 'OccupancySensorProperties',
   '2': [
-    {'1': 'occupancy', '3': 1, '4': 1, '5': 13, '10': 'occupancy'},
+    {'1': 'occupancy', '3': 1, '4': 1, '5': 13, '8': {}, '10': 'occupancy'},
     {
       '1': 'occupancy_sensor_type',
       '3': 2,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'occupancySensorType'
     },
     {
@@ -176,58 +216,76 @@ const OccupancySensorProperties$json = {
       '3': 3,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'occupancySensorTypeBitmap'
     },
     {
-      '1': 'pir_occ_to_unocc_delay',
+      '1': 'pir_occupied_to_unoccupied_delay',
       '3': 4,
       '4': 1,
       '5': 13,
-      '10': 'pirOccToUnoccDelay'
+      '8': {},
+      '10': 'pirOccupiedToUnoccupiedDelay'
     },
     {
-      '1': 'pir_unocc_to_occ_delay',
+      '1': 'pir_unoccupied_to_occupied_delay',
       '3': 5,
       '4': 1,
       '5': 13,
-      '10': 'pirUnoccToOccDelay'
+      '8': {},
+      '10': 'pirUnoccupiedToOccupiedDelay'
     },
   ],
+  '7': {},
+  '10': ['pir_occ_to_unocc_delay', 'pir_unocc_to_occ_delay'],
 };
 
 /// Descriptor for `OccupancySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List occupancySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChlPY2N1cGFuY3lTZW5zb3JQcm9wZXJ0aWVzEhwKCW9jY3VwYW5jeRgBIAEoDVIJb2NjdXBhbm'
-    'N5EjIKFW9jY3VwYW5jeV9zZW5zb3JfdHlwZRgCIAEoDVITb2NjdXBhbmN5U2Vuc29yVHlwZRI/'
-    'ChxvY2N1cGFuY3lfc2Vuc29yX3R5cGVfYml0bWFwGAMgASgNUhlvY2N1cGFuY3lTZW5zb3JUeX'
-    'BlQml0bWFwEjIKFnBpcl9vY2NfdG9fdW5vY2NfZGVsYXkYBCABKA1SEnBpck9jY1RvVW5vY2NE'
-    'ZWxheRIyChZwaXJfdW5vY2NfdG9fb2NjX2RlbGF5GAUgASgNUhJwaXJVbm9jY1RvT2NjRGVsYX'
-    'k=');
+    'ChlPY2N1cGFuY3lTZW5zb3JQcm9wZXJ0aWVzEjAKCW9jY3VwYW5jeRgBIAEoDUISiLUYhgiStR'
+    'gJT2NjdXBhbmN5UglvY2N1cGFuY3kSUAoVb2NjdXBhbmN5X3NlbnNvcl90eXBlGAIgASgNQhyI'
+    'tRiGCJK1GBNPY2N1cGFuY3lTZW5zb3JUeXBlUhNvY2N1cGFuY3lTZW5zb3JUeXBlEmMKHG9jY3'
+    'VwYW5jeV9zZW5zb3JfdHlwZV9iaXRtYXAYAyABKA1CIoi1GIYIkrUYGU9jY3VwYW5jeVNlbnNv'
+    'clR5cGVCaXRtYXBSGW9jY3VwYW5jeVNlbnNvclR5cGVCaXRtYXASbQogcGlyX29jY3VwaWVkX3'
+    'RvX3Vub2NjdXBpZWRfZGVsYXkYBCABKA1CJYi1GIYIkrUYHFBJUk9jY3VwaWVkVG9Vbm9jY3Vw'
+    'aWVkRGVsYXlSHHBpck9jY3VwaWVkVG9Vbm9jY3VwaWVkRGVsYXkSbQogcGlyX3Vub2NjdXBpZW'
+    'RfdG9fb2NjdXBpZWRfZGVsYXkYBSABKA1CJYi1GIYIkrUYHFBJUlVub2NjdXBpZWRUb09jY3Vw'
+    'aWVkRGVsYXlSHHBpclVub2NjdXBpZWRUb09jY3VwaWVkRGVsYXk6Bpq1GAKHAlIWcGlyX29jY1'
+    '90b191bm9jY19kZWxheVIWcGlyX3Vub2NjX3RvX29jY19kZWxheQ==');
 
 @$core.Deprecated('Use contactSensorPropertiesDescriptor instead')
 const ContactSensorProperties$json = {
   '1': 'ContactSensorProperties',
   '2': [
-    {'1': 'state_value', '3': 1, '4': 1, '5': 8, '10': 'stateValue'},
+    {'1': 'state_value', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'stateValue'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ContactSensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contactSensorPropertiesDescriptor =
     $convert.base64Decode(
-        'ChdDb250YWN0U2Vuc29yUHJvcGVydGllcxIfCgtzdGF0ZV92YWx1ZRgBIAEoCFIKc3RhdGVWYW'
-        'x1ZQ==');
+        'ChdDb250YWN0U2Vuc29yUHJvcGVydGllcxIzCgtzdGF0ZV92YWx1ZRgBIAEoCEISiLUYRZK1GA'
+        'pTdGF0ZVZhbHVlUgpzdGF0ZVZhbHVlOgWatRgBFQ==');
 
 @$core.Deprecated('Use windowCoveringPropertiesDescriptor instead')
 const WindowCoveringProperties$json = {
   '1': 'WindowCoveringProperties',
   '2': [
-    {'1': 'covering_type', '3': 1, '4': 1, '5': 13, '10': 'coveringType'},
+    {
+      '1': 'covering_type',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'coveringType'
+    },
     {
       '1': 'current_position_lift_percent100ths',
       '3': 2,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'currentPositionLiftPercent100ths'
     },
     {
@@ -235,6 +293,7 @@ const WindowCoveringProperties$json = {
       '3': 3,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'currentPositionTiltPercent100ths'
     },
     {
@@ -242,6 +301,7 @@ const WindowCoveringProperties$json = {
       '3': 4,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'targetPositionLiftPercent100ths'
     },
     {
@@ -249,6 +309,7 @@ const WindowCoveringProperties$json = {
       '3': 5,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'targetPositionTiltPercent100ths'
     },
     {
@@ -256,108 +317,184 @@ const WindowCoveringProperties$json = {
       '3': 6,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'operationalStatus'
     },
-    {'1': 'end_product_type', '3': 7, '4': 1, '5': 13, '10': 'endProductType'},
-    {'1': 'mode', '3': 8, '4': 1, '5': 13, '10': 'mode'},
+    {
+      '1': 'end_product_type',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'endProductType'
+    },
+    {'1': 'mode', '3': 8, '4': 1, '5': 13, '8': {}, '10': 'mode'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `WindowCoveringProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List windowCoveringPropertiesDescriptor = $convert.base64Decode(
-    'ChhXaW5kb3dDb3ZlcmluZ1Byb3BlcnRpZXMSIwoNY292ZXJpbmdfdHlwZRgBIAEoDVIMY292ZX'
-    'JpbmdUeXBlEk0KI2N1cnJlbnRfcG9zaXRpb25fbGlmdF9wZXJjZW50MTAwdGhzGAIgASgNUiBj'
-    'dXJyZW50UG9zaXRpb25MaWZ0UGVyY2VudDEwMHRocxJNCiNjdXJyZW50X3Bvc2l0aW9uX3RpbH'
-    'RfcGVyY2VudDEwMHRocxgDIAEoDVIgY3VycmVudFBvc2l0aW9uVGlsdFBlcmNlbnQxMDB0aHMS'
-    'SwoidGFyZ2V0X3Bvc2l0aW9uX2xpZnRfcGVyY2VudDEwMHRocxgEIAEoDVIfdGFyZ2V0UG9zaX'
-    'Rpb25MaWZ0UGVyY2VudDEwMHRocxJLCiJ0YXJnZXRfcG9zaXRpb25fdGlsdF9wZXJjZW50MTAw'
-    'dGhzGAUgASgNUh90YXJnZXRQb3NpdGlvblRpbHRQZXJjZW50MTAwdGhzEi0KEm9wZXJhdGlvbm'
-    'FsX3N0YXR1cxgGIAEoDVIRb3BlcmF0aW9uYWxTdGF0dXMSKAoQZW5kX3Byb2R1Y3RfdHlwZRgH'
-    'IAEoDVIOZW5kUHJvZHVjdFR5cGUSEgoEbW9kZRgIIAEoDVIEbW9kZQ==');
+    'ChhXaW5kb3dDb3ZlcmluZ1Byb3BlcnRpZXMSMgoNY292ZXJpbmdfdHlwZRgBIAEoDUINiLUYgg'
+    'KStRgEVHlwZVIMY292ZXJpbmdUeXBlEngKI2N1cnJlbnRfcG9zaXRpb25fbGlmdF9wZXJjZW50'
+    'MTAwdGhzGAIgASgNQimItRiCApK1GCBDdXJyZW50UG9zaXRpb25MaWZ0UGVyY2VudDEwMHRoc1'
+    'IgY3VycmVudFBvc2l0aW9uTGlmdFBlcmNlbnQxMDB0aHMSeAojY3VycmVudF9wb3NpdGlvbl90'
+    'aWx0X3BlcmNlbnQxMDB0aHMYAyABKA1CKYi1GIICkrUYIEN1cnJlbnRQb3NpdGlvblRpbHRQZX'
+    'JjZW50MTAwdGhzUiBjdXJyZW50UG9zaXRpb25UaWx0UGVyY2VudDEwMHRocxJ1CiJ0YXJnZXRf'
+    'cG9zaXRpb25fbGlmdF9wZXJjZW50MTAwdGhzGAQgASgNQiiItRiCApK1GB9UYXJnZXRQb3NpdG'
+    'lvbkxpZnRQZXJjZW50MTAwdGhzUh90YXJnZXRQb3NpdGlvbkxpZnRQZXJjZW50MTAwdGhzEnUK'
+    'InRhcmdldF9wb3NpdGlvbl90aWx0X3BlcmNlbnQxMDB0aHMYBSABKA1CKIi1GIICkrUYH1Rhcm'
+    'dldFBvc2l0aW9uVGlsdFBlcmNlbnQxMDB0aHNSH3RhcmdldFBvc2l0aW9uVGlsdFBlcmNlbnQx'
+    'MDB0aHMSSQoSb3BlcmF0aW9uYWxfc3RhdHVzGAYgASgNQhqItRiCApK1GBFPcGVyYXRpb25hbF'
+    'N0YXR1c1IRb3BlcmF0aW9uYWxTdGF0dXMSQQoQZW5kX3Byb2R1Y3RfdHlwZRgHIAEoDUIXiLUY'
+    'ggKStRgORW5kUHJvZHVjdFR5cGVSDmVuZFByb2R1Y3RUeXBlEiEKBG1vZGUYCCABKA1CDYi1GI'
+    'ICkrUYBE1vZGVSBG1vZGU6Bpq1GAKCBA==');
 
 @$core.Deprecated('Use doorLockPropertiesDescriptor instead')
 const DoorLockProperties$json = {
   '1': 'DoorLockProperties',
   '2': [
-    {'1': 'lock_state', '3': 1, '4': 1, '5': 13, '10': 'lockState'},
-    {'1': 'lock_type', '3': 2, '4': 1, '5': 13, '10': 'lockType'},
-    {'1': 'actuator_enabled', '3': 3, '4': 1, '5': 8, '10': 'actuatorEnabled'},
-    {'1': 'door_state', '3': 4, '4': 1, '5': 13, '10': 'doorState'},
-    {'1': 'operating_mode', '3': 5, '4': 1, '5': 13, '10': 'operatingMode'},
+    {'1': 'lock_state', '3': 1, '4': 1, '5': 13, '8': {}, '10': 'lockState'},
+    {'1': 'lock_type', '3': 2, '4': 1, '5': 13, '8': {}, '10': 'lockType'},
+    {
+      '1': 'actuator_enabled',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '10': 'actuatorEnabled'
+    },
+    {'1': 'door_state', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'doorState'},
+    {
+      '1': 'operating_mode',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'operatingMode'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `DoorLockProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List doorLockPropertiesDescriptor = $convert.base64Decode(
-    'ChJEb29yTG9ja1Byb3BlcnRpZXMSHQoKbG9ja19zdGF0ZRgBIAEoDVIJbG9ja1N0YXRlEhsKCW'
-    'xvY2tfdHlwZRgCIAEoDVIIbG9ja1R5cGUSKQoQYWN0dWF0b3JfZW5hYmxlZBgDIAEoCFIPYWN0'
-    'dWF0b3JFbmFibGVkEh0KCmRvb3Jfc3RhdGUYBCABKA1SCWRvb3JTdGF0ZRIlCg5vcGVyYXRpbm'
-    'dfbW9kZRgFIAEoDVINb3BlcmF0aW5nTW9kZQ==');
+    'ChJEb29yTG9ja1Byb3BlcnRpZXMSMQoKbG9ja19zdGF0ZRgBIAEoDUISiLUYgQKStRgJTG9ja1'
+    'N0YXRlUglsb2NrU3RhdGUSLgoJbG9ja190eXBlGAIgASgNQhGItRiBApK1GAhMb2NrVHlwZVII'
+    'bG9ja1R5cGUSQwoQYWN0dWF0b3JfZW5hYmxlZBgDIAEoCEIYiLUYgQKStRgPQWN0dWF0b3JFbm'
+    'FibGVkUg9hY3R1YXRvckVuYWJsZWQSMQoKZG9vcl9zdGF0ZRgEIAEoDUISiLUYgQKStRgJRG9v'
+    'clN0YXRlUglkb29yU3RhdGUSPQoOb3BlcmF0aW5nX21vZGUYBSABKA1CFoi1GIECkrUYDU9wZX'
+    'JhdGluZ01vZGVSDW9wZXJhdGluZ01vZGU6BZq1GAEK');
 
 @$core.Deprecated('Use onOffLightPropertiesDescriptor instead')
 const OnOffLightProperties$json = {
   '1': 'OnOffLightProperties',
   '2': [
-    {'1': 'on_off', '3': 1, '4': 1, '5': 8, '10': 'onOff'},
+    {'1': 'on_off', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'onOff'},
     {
       '1': 'global_scene_control',
       '3': 2,
       '4': 1,
       '5': 8,
+      '8': {},
       '10': 'globalSceneControl'
     },
-    {'1': 'on_time', '3': 3, '4': 1, '5': 13, '10': 'onTime'},
-    {'1': 'off_wait_time', '3': 4, '4': 1, '5': 13, '10': 'offWaitTime'},
-    {'1': 'start_up_on_off', '3': 5, '4': 1, '5': 13, '10': 'startUpOnOff'},
+    {'1': 'on_time', '3': 3, '4': 1, '5': 13, '8': {}, '10': 'onTime'},
+    {
+      '1': 'off_wait_time',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'offWaitTime'
+    },
+    {
+      '1': 'start_up_on_off',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'startUpOnOff'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `OnOffLightProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List onOffLightPropertiesDescriptor = $convert.base64Decode(
-    'ChRPbk9mZkxpZ2h0UHJvcGVydGllcxIVCgZvbl9vZmYYASABKAhSBW9uT2ZmEjAKFGdsb2JhbF'
-    '9zY2VuZV9jb250cm9sGAIgASgIUhJnbG9iYWxTY2VuZUNvbnRyb2wSFwoHb25fdGltZRgDIAEo'
-    'DVIGb25UaW1lEiIKDW9mZl93YWl0X3RpbWUYBCABKA1SC29mZldhaXRUaW1lEiUKD3N0YXJ0X3'
-    'VwX29uX29mZhgFIAEoDVIMc3RhcnRVcE9uT2Zm');
+    'ChRPbk9mZkxpZ2h0UHJvcGVydGllcxIkCgZvbl9vZmYYASABKAhCDYi1GAaStRgFT25PZmZSBW'
+    '9uT2ZmEkwKFGdsb2JhbF9zY2VuZV9jb250cm9sGAIgASgIQhqItRgGkrUYEkdsb2JhbFNjZW5l'
+    'Q29udHJvbFISZ2xvYmFsU2NlbmVDb250cm9sEicKB29uX3RpbWUYAyABKA1CDoi1GAaStRgGT2'
+    '5UaW1lUgZvblRpbWUSNwoNb2ZmX3dhaXRfdGltZRgEIAEoDUITiLUYBpK1GAtPZmZXYWl0VGlt'
+    'ZVILb2ZmV2FpdFRpbWUSOwoPc3RhcnRfdXBfb25fb2ZmGAUgASgNQhSItRgGkrUYDFN0YXJ0VX'
+    'BPbk9mZlIMc3RhcnRVcE9uT2ZmOgaatRgCgAI=');
 
 @$core.Deprecated('Use dimmableLightPropertiesDescriptor instead')
 const DimmableLightProperties$json = {
   '1': 'DimmableLightProperties',
   '2': [
-    {'1': 'on_off', '3': 1, '4': 1, '5': 8, '10': 'onOff'},
-    {'1': 'current_level', '3': 2, '4': 1, '5': 13, '10': 'currentLevel'},
-    {'1': 'min_level', '3': 3, '4': 1, '5': 13, '10': 'minLevel'},
-    {'1': 'max_level', '3': 4, '4': 1, '5': 13, '10': 'maxLevel'},
-    {'1': 'on_level', '3': 5, '4': 1, '5': 13, '10': 'onLevel'},
+    {'1': 'on_off', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'onOff'},
+    {
+      '1': 'current_level',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'currentLevel'
+    },
+    {'1': 'min_level', '3': 3, '4': 1, '5': 13, '8': {}, '10': 'minLevel'},
+    {'1': 'max_level', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'maxLevel'},
+    {'1': 'on_level', '3': 5, '4': 1, '5': 13, '8': {}, '10': 'onLevel'},
     {
       '1': 'start_up_current_level',
       '3': 6,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'startUpCurrentLevel'
     },
-    {'1': 'remaining_time', '3': 7, '4': 1, '5': 13, '10': 'remainingTime'},
+    {
+      '1': 'remaining_time',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'remainingTime'
+    },
   ],
+  '7': {},
 };
 
 /// Descriptor for `DimmableLightProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List dimmableLightPropertiesDescriptor = $convert.base64Decode(
-    'ChdEaW1tYWJsZUxpZ2h0UHJvcGVydGllcxIVCgZvbl9vZmYYASABKAhSBW9uT2ZmEiMKDWN1cn'
-    'JlbnRfbGV2ZWwYAiABKA1SDGN1cnJlbnRMZXZlbBIbCgltaW5fbGV2ZWwYAyABKA1SCG1pbkxl'
-    'dmVsEhsKCW1heF9sZXZlbBgEIAEoDVIIbWF4TGV2ZWwSGQoIb25fbGV2ZWwYBSABKA1SB29uTG'
-    'V2ZWwSMwoWc3RhcnRfdXBfY3VycmVudF9sZXZlbBgGIAEoDVITc3RhcnRVcEN1cnJlbnRMZXZl'
-    'bBIlCg5yZW1haW5pbmdfdGltZRgHIAEoDVINcmVtYWluaW5nVGltZQ==');
+    'ChdEaW1tYWJsZUxpZ2h0UHJvcGVydGllcxIkCgZvbl9vZmYYASABKAhCDYi1GAaStRgFT25PZm'
+    'ZSBW9uT2ZmEjkKDWN1cnJlbnRfbGV2ZWwYAiABKA1CFIi1GAiStRgMQ3VycmVudExldmVsUgxj'
+    'dXJyZW50TGV2ZWwSLQoJbWluX2xldmVsGAMgASgNQhCItRgIkrUYCE1pbkxldmVsUghtaW5MZX'
+    'ZlbBItCgltYXhfbGV2ZWwYBCABKA1CEIi1GAiStRgITWF4TGV2ZWxSCG1heExldmVsEioKCG9u'
+    'X2xldmVsGAUgASgNQg+ItRgIkrUYB09uTGV2ZWxSB29uTGV2ZWwSUAoWc3RhcnRfdXBfY3Vycm'
+    'VudF9sZXZlbBgGIAEoDUIbiLUYCJK1GBNTdGFydFVwQ3VycmVudExldmVsUhNzdGFydFVwQ3Vy'
+    'cmVudExldmVsEjwKDnJlbWFpbmluZ190aW1lGAcgASgNQhWItRgIkrUYDVJlbWFpbmluZ1RpbW'
+    'VSDXJlbWFpbmluZ1RpbWU6Bpq1GAKBAg==');
 
 @$core.Deprecated('Use colorTemperatureLightPropertiesDescriptor instead')
 const ColorTemperatureLightProperties$json = {
   '1': 'ColorTemperatureLightProperties',
   '2': [
-    {'1': 'on_off', '3': 1, '4': 1, '5': 8, '10': 'onOff'},
-    {'1': 'current_level', '3': 2, '4': 1, '5': 13, '10': 'currentLevel'},
+    {'1': 'on_off', '3': 1, '4': 1, '5': 8, '8': {}, '10': 'onOff'},
+    {
+      '1': 'current_level',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'currentLevel'
+    },
     {
       '1': 'color_temperature_mireds',
       '3': 3,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'colorTemperatureMireds'
     },
     {
@@ -365,6 +502,7 @@ const ColorTemperatureLightProperties$json = {
       '3': 4,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'colorTempPhysicalMinMireds'
     },
     {
@@ -372,6 +510,7 @@ const ColorTemperatureLightProperties$json = {
       '3': 5,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'colorTempPhysicalMaxMireds'
     },
     {
@@ -379,50 +518,75 @@ const ColorTemperatureLightProperties$json = {
       '3': 6,
       '4': 1,
       '5': 13,
+      '8': {},
       '10': 'startupColorTemperatureMireds'
     },
-    {'1': 'color_mode', '3': 7, '4': 1, '5': 13, '10': 'colorMode'},
+    {'1': 'color_mode', '3': 7, '4': 1, '5': 13, '8': {}, '10': 'colorMode'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `ColorTemperatureLightProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List colorTemperatureLightPropertiesDescriptor = $convert.base64Decode(
-    'Ch9Db2xvclRlbXBlcmF0dXJlTGlnaHRQcm9wZXJ0aWVzEhUKBm9uX29mZhgBIAEoCFIFb25PZm'
-    'YSIwoNY3VycmVudF9sZXZlbBgCIAEoDVIMY3VycmVudExldmVsEjgKGGNvbG9yX3RlbXBlcmF0'
-    'dXJlX21pcmVkcxgDIAEoDVIWY29sb3JUZW1wZXJhdHVyZU1pcmVkcxJCCh5jb2xvcl90ZW1wX3'
-    'BoeXNpY2FsX21pbl9taXJlZHMYBCABKA1SGmNvbG9yVGVtcFBoeXNpY2FsTWluTWlyZWRzEkIK'
-    'HmNvbG9yX3RlbXBfcGh5c2ljYWxfbWF4X21pcmVkcxgFIAEoDVIaY29sb3JUZW1wUGh5c2ljYW'
-    'xNYXhNaXJlZHMSRwogc3RhcnR1cF9jb2xvcl90ZW1wZXJhdHVyZV9taXJlZHMYBiABKA1SHXN0'
-    'YXJ0dXBDb2xvclRlbXBlcmF0dXJlTWlyZWRzEh0KCmNvbG9yX21vZGUYByABKA1SCWNvbG9yTW'
-    '9kZQ==');
+    'Ch9Db2xvclRlbXBlcmF0dXJlTGlnaHRQcm9wZXJ0aWVzEiQKBm9uX29mZhgBIAEoCEINiLUYBp'
+    'K1GAVPbk9mZlIFb25PZmYSOQoNY3VycmVudF9sZXZlbBgCIAEoDUIUiLUYCJK1GAxDdXJyZW50'
+    'TGV2ZWxSDGN1cnJlbnRMZXZlbBJZChhjb2xvcl90ZW1wZXJhdHVyZV9taXJlZHMYAyABKA1CH4'
+    'i1GIAGkrUYFkNvbG9yVGVtcGVyYXR1cmVNaXJlZHNSFmNvbG9yVGVtcGVyYXR1cmVNaXJlZHMS'
+    'ZwoeY29sb3JfdGVtcF9waHlzaWNhbF9taW5fbWlyZWRzGAQgASgNQiOItRiABpK1GBpDb2xvcl'
+    'RlbXBQaHlzaWNhbE1pbk1pcmVkc1IaY29sb3JUZW1wUGh5c2ljYWxNaW5NaXJlZHMSZwoeY29s'
+    'b3JfdGVtcF9waHlzaWNhbF9tYXhfbWlyZWRzGAUgASgNQiOItRiABpK1GBpDb2xvclRlbXBQaH'
+    'lzaWNhbE1heE1pcmVkc1IaY29sb3JUZW1wUGh5c2ljYWxNYXhNaXJlZHMSbwogc3RhcnR1cF9j'
+    'b2xvcl90ZW1wZXJhdHVyZV9taXJlZHMYBiABKA1CJoi1GIAGkrUYHVN0YXJ0VXBDb2xvclRlbX'
+    'BlcmF0dXJlTWlyZWRzUh1zdGFydHVwQ29sb3JUZW1wZXJhdHVyZU1pcmVkcxIxCgpjb2xvcl9t'
+    'b2RlGAcgASgNQhKItRiABpK1GAlDb2xvck1vZGVSCWNvbG9yTW9kZToGmrUYAowC');
 
 @$core.Deprecated('Use energySensorPropertiesDescriptor instead')
 const EnergySensorProperties$json = {
   '1': 'EnergySensorProperties',
   '2': [
-    {'1': 'active_power', '3': 1, '4': 1, '5': 5, '10': 'activePower'},
-    {'1': 'rms_voltage', '3': 2, '4': 1, '5': 13, '10': 'rmsVoltage'},
-    {'1': 'rms_current', '3': 3, '4': 1, '5': 13, '10': 'rmsCurrent'},
-    {'1': 'ac_frequency', '3': 4, '4': 1, '5': 13, '10': 'acFrequency'},
+    {'1': 'active_power', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'activePower'},
+    {'1': 'voltage', '3': 2, '4': 1, '5': 13, '8': {}, '10': 'voltage'},
+    {
+      '1': 'active_current',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '10': 'activeCurrent'
+    },
+    {'1': 'frequency', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'frequency'},
   ],
+  '7': {},
+  '10': ['rms_voltage', 'rms_current', 'ac_frequency'],
 };
 
 /// Descriptor for `EnergySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List energySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChZFbmVyZ3lTZW5zb3JQcm9wZXJ0aWVzEiEKDGFjdGl2ZV9wb3dlchgBIAEoBVILYWN0aXZlUG'
-    '93ZXISHwoLcm1zX3ZvbHRhZ2UYAiABKA1SCnJtc1ZvbHRhZ2USHwoLcm1zX2N1cnJlbnQYAyAB'
-    'KA1SCnJtc0N1cnJlbnQSIQoMYWNfZnJlcXVlbmN5GAQgASgNUgthY0ZyZXF1ZW5jeQ==');
+    'ChZFbmVyZ3lTZW5zb3JQcm9wZXJ0aWVzEjcKDGFjdGl2ZV9wb3dlchgBIAEoBUIUiLUYkAGStR'
+    'gLQWN0aXZlUG93ZXJSC2FjdGl2ZVBvd2VyEioKB3ZvbHRhZ2UYAiABKA1CEIi1GJABkrUYB1Zv'
+    'bHRhZ2VSB3ZvbHRhZ2USPQoOYWN0aXZlX2N1cnJlbnQYAyABKA1CFoi1GJABkrUYDUFjdGl2ZU'
+    'N1cnJlbnRSDWFjdGl2ZUN1cnJlbnQSMAoJZnJlcXVlbmN5GAQgASgNQhKItRiQAZK1GAlGcmVx'
+    'dWVuY3lSCWZyZXF1ZW5jeToGmrUYApAKUgtybXNfdm9sdGFnZVILcm1zX2N1cnJlbnRSDGFjX2'
+    'ZyZXF1ZW5jeQ==');
 
 @$core.Deprecated('Use pressureSensorPropertiesDescriptor instead')
 const PressureSensorProperties$json = {
   '1': 'PressureSensorProperties',
   '2': [
-    {'1': 'measured_value', '3': 1, '4': 1, '5': 17, '10': 'measuredValue'},
+    {
+      '1': 'measured_value',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '10': 'measuredValue'
+    },
     {
       '1': 'min_measured_value',
       '3': 2,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'minMeasuredValue'
     },
     {
@@ -430,15 +594,19 @@ const PressureSensorProperties$json = {
       '3': 3,
       '4': 1,
       '5': 17,
+      '8': {},
       '10': 'maxMeasuredValue'
     },
-    {'1': 'tolerance', '3': 4, '4': 1, '5': 13, '10': 'tolerance'},
+    {'1': 'tolerance', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'tolerance'},
   ],
+  '7': {},
 };
 
 /// Descriptor for `PressureSensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pressureSensorPropertiesDescriptor = $convert.base64Decode(
-    'ChhQcmVzc3VyZVNlbnNvclByb3BlcnRpZXMSJQoObWVhc3VyZWRfdmFsdWUYASABKBFSDW1lYX'
-    'N1cmVkVmFsdWUSLAoSbWluX21lYXN1cmVkX3ZhbHVlGAIgASgRUhBtaW5NZWFzdXJlZFZhbHVl'
-    'EiwKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoEVIQbWF4TWVhc3VyZWRWYWx1ZRIcCgl0b2xlcm'
-    'FuY2UYBCABKA1SCXRvbGVyYW5jZQ==');
+    'ChhQcmVzc3VyZVNlbnNvclByb3BlcnRpZXMSPQoObWVhc3VyZWRfdmFsdWUYASABKBFCFoi1GI'
+    'MIkrUYDU1lYXN1cmVkVmFsdWVSDW1lYXN1cmVkVmFsdWUSRwoSbWluX21lYXN1cmVkX3ZhbHVl'
+    'GAIgASgRQhmItRiDCJK1GBBNaW5NZWFzdXJlZFZhbHVlUhBtaW5NZWFzdXJlZFZhbHVlEkcKEm'
+    '1heF9tZWFzdXJlZF92YWx1ZRgDIAEoEUIZiLUYgwiStRgQTWF4TWVhc3VyZWRWYWx1ZVIQbWF4'
+    'TWVhc3VyZWRWYWx1ZRIwCgl0b2xlcmFuY2UYBCABKA1CEoi1GIMIkrUYCVRvbGVyYW5jZVIJdG'
+    '9sZXJhbmNlOgaatRgChQY=');
