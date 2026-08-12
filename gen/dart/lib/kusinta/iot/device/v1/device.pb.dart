@@ -323,6 +323,17 @@ class Device extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   $1.PressureSensorProperties ensurePressureSensor() => $_ensure(12);
 
+  /// When the gateway last had evidence this device exists and is reachable — the
+  /// most recent PropertyUpdate, announcement, or command result concerning it.
+  /// Gateway-observed, not connector-reported: no message on either leg carries a
+  /// per-device liveness timestamp, so this is as precise as the device's own report
+  /// interval. A device that reports every 15 minutes looks stale for 15 minutes.
+  ///
+  /// Survives a connector reconnect. Losing the route to a device is not evidence the
+  /// device is gone, so last_seen keeps its value; only fresh evidence advances it.
+  ///
+  /// Advisory, for showing staleness in a UI. It is not a removal signal — that is
+  /// webrtc.v1.DeviceRemoved, sent only when a connector reports the device gone.
   @$pb.TagNumber(20)
   $2.Timestamp get lastSeen => $_getN(13);
   @$pb.TagNumber(20)
@@ -334,6 +345,7 @@ class Device extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $2.Timestamp ensureLastSeen() => $_ensure(13);
 
+  /// When any field of this Device last changed value.
   @$pb.TagNumber(21)
   $2.Timestamp get lastUpdated => $_getN(14);
   @$pb.TagNumber(21)

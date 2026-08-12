@@ -113,11 +113,25 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
   } | { case: undefined; value?: undefined };
 
   /**
+   * When the gateway last had evidence this device exists and is reachable — the
+   * most recent PropertyUpdate, announcement, or command result concerning it.
+   * Gateway-observed, not connector-reported: no message on either leg carries a
+   * per-device liveness timestamp, so this is as precise as the device's own report
+   * interval. A device that reports every 15 minutes looks stale for 15 minutes.
+   *
+   * Survives a connector reconnect. Losing the route to a device is not evidence the
+   * device is gone, so last_seen keeps its value; only fresh evidence advances it.
+   *
+   * Advisory, for showing staleness in a UI. It is not a removal signal — that is
+   * webrtc.v1.DeviceRemoved, sent only when a connector reports the device gone.
+   *
    * @generated from field: google.protobuf.Timestamp last_seen = 20;
    */
   lastSeen?: Timestamp | undefined;
 
   /**
+   * When any field of this Device last changed value.
+   *
    * @generated from field: google.protobuf.Timestamp last_updated = 21;
    */
   lastUpdated?: Timestamp | undefined;
