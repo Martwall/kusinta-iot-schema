@@ -25,7 +25,44 @@ message AppHandshake {
   // in app_token.proto — the shared contract between mykusinta-api-server
   // (issuer) and the gateway (validator).
   string                                    jwt                  = 1;
+  // Initial interest set — an optimisation that saves one round trip, equivalent to
+  // sending SubscribeDevices immediately after the handshake. Interest only: naming
+  // an id here does not entitle the app to it, and ids the user may not see are
+  // refused in the SubscriptionAck that follows. Not the only mechanism — the set is
+  // revisable mid-session via AppMessage.subscribe / .unsubscribe.
   repeated kusinta.iot.identity.v1.DeviceId subscribe_device_ids = 2;
+}
+
+// Adds device_ids to what the app wants streamed. Interest, never entitlement:
+// the gateway intersects the request with what the user is permitted to see and
+// reports what it declined in SubscriptionAck.refused. Additive — ids already in
+// the set are a no-op, so a retry after a dropped ack is safe.
+message SubscribeDevices {
+  repeated kusinta.iot.identity.v1.DeviceId device_ids = 1;
+}
+
+// Removes device_ids from what the app wants streamed. Removing an id the app is
+// not subscribed to is a no-op, not an error.
+message UnsubscribeDevices {
+  repeated kusinta.iot.identity.v1.DeviceId device_ids = 1;
+}
+
+// A device the gateway declined to add to the interest set. Ids the gateway does
+// not know are refused as NOT_ENTITLED rather than a distinct not-found code, so
+// the ack cannot be used to enumerate devices the user may not see.
+message RefusedSubscription {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  GatewayErrorCode                 code      = 2;
+  string                           message   = 3; // human-readable, for logs
+}
+
+// Answer to SubscribeDevices / UnsubscribeDevices, gateway → Flutter app.
+// `subscribed` is the effective set after the change, not a delta: an app that
+// missed an ack or raced two requests re-syncs from it without reconnecting.
+message SubscriptionAck {
+  string                                    in_reply_to = 1; // AppMessage.message_id of the request
+  repeated kusinta.iot.identity.v1.DeviceId subscribed  = 2;
+  repeated RefusedSubscription              refused     = 3;
 }
 
 message PropertyReadRequest {
@@ -75,6 +112,7 @@ message GatewayMessage {
     Pong                  pong               = 8;
     HandshakeRejected     handshake_rejected = 9;
     GatewayError          error              = 10;
+    SubscriptionAck       subscription_ack   = 11;
   }
 }
 
@@ -88,5 +126,7 @@ message AppMessage {
     DeviceCommand       command      = 4;
     PropertyReadRequest read_request = 5;
     Ping                ping         = 6;
+    SubscribeDevices    subscribe    = 7;
+    UnsubscribeDevices  unsubscribe  = 8;
   }
 }

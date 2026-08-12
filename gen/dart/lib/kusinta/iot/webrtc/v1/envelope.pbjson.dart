@@ -83,6 +83,108 @@ final $typed_data.Uint8List appHandshakeDescriptor = $convert.base64Decode(
     'MYAiADKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFISc3Vic2NyaWJlRGV2'
     'aWNlSWRz');
 
+@$core.Deprecated('Use subscribeDevicesDescriptor instead')
+const SubscribeDevices$json = {
+  '1': 'SubscribeDevices',
+  '2': [
+    {
+      '1': 'device_ids',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceIds'
+    },
+  ],
+};
+
+/// Descriptor for `SubscribeDevices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List subscribeDevicesDescriptor = $convert.base64Decode(
+    'ChBTdWJzY3JpYmVEZXZpY2VzEkAKCmRldmljZV9pZHMYASADKAsyIS5rdXNpbnRhLmlvdC5pZG'
+    'VudGl0eS52MS5EZXZpY2VJZFIJZGV2aWNlSWRz');
+
+@$core.Deprecated('Use unsubscribeDevicesDescriptor instead')
+const UnsubscribeDevices$json = {
+  '1': 'UnsubscribeDevices',
+  '2': [
+    {
+      '1': 'device_ids',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceIds'
+    },
+  ],
+};
+
+/// Descriptor for `UnsubscribeDevices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List unsubscribeDevicesDescriptor = $convert.base64Decode(
+    'ChJVbnN1YnNjcmliZURldmljZXMSQAoKZGV2aWNlX2lkcxgBIAMoCzIhLmt1c2ludGEuaW90Lm'
+    'lkZW50aXR5LnYxLkRldmljZUlkUglkZXZpY2VJZHM=');
+
+@$core.Deprecated('Use refusedSubscriptionDescriptor instead')
+const RefusedSubscription$json = {
+  '1': 'RefusedSubscription',
+  '2': [
+    {
+      '1': 'device_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceId'
+    },
+    {
+      '1': 'code',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.GatewayErrorCode',
+      '10': 'code'
+    },
+    {'1': 'message', '3': 3, '4': 1, '5': 9, '10': 'message'},
+  ],
+};
+
+/// Descriptor for `RefusedSubscription`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List refusedSubscriptionDescriptor = $convert.base64Decode(
+    'ChNSZWZ1c2VkU3Vic2NyaXB0aW9uEj4KCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90Lm'
+    'lkZW50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBI7CgRjb2RlGAIgASgOMicua3VzaW50YS5p'
+    'b3Qud2VicnRjLnYxLkdhdGV3YXlFcnJvckNvZGVSBGNvZGUSGAoHbWVzc2FnZRgDIAEoCVIHbW'
+    'Vzc2FnZQ==');
+
+@$core.Deprecated('Use subscriptionAckDescriptor instead')
+const SubscriptionAck$json = {
+  '1': 'SubscriptionAck',
+  '2': [
+    {'1': 'in_reply_to', '3': 1, '4': 1, '5': 9, '10': 'inReplyTo'},
+    {
+      '1': 'subscribed',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'subscribed'
+    },
+    {
+      '1': 'refused',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RefusedSubscription',
+      '10': 'refused'
+    },
+  ],
+};
+
+/// Descriptor for `SubscriptionAck`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List subscriptionAckDescriptor = $convert.base64Decode(
+    'Cg9TdWJzY3JpcHRpb25BY2sSHgoLaW5fcmVwbHlfdG8YASABKAlSCWluUmVwbHlUbxJBCgpzdW'
+    'JzY3JpYmVkGAIgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCnN1YnNj'
+    'cmliZWQSRAoHcmVmdXNlZBgDIAMoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5SZWZ1c2VkU3'
+    'Vic2NyaXB0aW9uUgdyZWZ1c2Vk');
+
 @$core.Deprecated('Use propertyReadRequestDescriptor instead')
 const PropertyReadRequest$json = {
   '1': 'PropertyReadRequest',
@@ -225,6 +327,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'error'
     },
+    {
+      '1': 'subscription_ack',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SubscriptionAck',
+      '9': 0,
+      '10': 'subscriptionAck'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -247,7 +358,9 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'BHBvbmcYCCABKAsyGy5rdXNpbnRhLmlvdC53ZWJydGMudjEuUG9uZ0gAUgRwb25nElkKEmhhbm'
     'RzaGFrZV9yZWplY3RlZBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5IYW5kc2hha2VS'
     'ZWplY3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZBI7CgVlcnJvchgKIAEoCzIjLmt1c2ludGEuaW'
-    '90LndlYnJ0Yy52MS5HYXRld2F5RXJyb3JIAFIFZXJyb3JCCQoHcGF5bG9hZEoECAcQCA==');
+    '90LndlYnJ0Yy52MS5HYXRld2F5RXJyb3JIAFIFZXJyb3ISUwoQc3Vic2NyaXB0aW9uX2FjaxgL'
+    'IAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpcHRpb25BY2tIAFIPc3Vic2NyaX'
+    'B0aW9uQWNrQgkKB3BheWxvYWRKBAgHEAg=');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {
@@ -298,6 +411,24 @@ const AppMessage$json = {
       '9': 0,
       '10': 'ping'
     },
+    {
+      '1': 'subscribe',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SubscribeDevices',
+      '9': 0,
+      '10': 'subscribe'
+    },
+    {
+      '1': 'unsubscribe',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.UnsubscribeDevices',
+      '9': 0,
+      '10': 'unsubscribe'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -312,4 +443,7 @@ final $typed_data.Uint8List appMessageDescriptor = $convert.base64Decode(
     'AKB2NvbW1hbmQYBCABKAsyJC5rdXNpbnRhLmlvdC53ZWJydGMudjEuRGV2aWNlQ29tbWFuZEgA'
     'Ugdjb21tYW5kEk8KDHJlYWRfcmVxdWVzdBgFIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS'
     '5Qcm9wZXJ0eVJlYWRSZXF1ZXN0SABSC3JlYWRSZXF1ZXN0EjEKBHBpbmcYBiABKAsyGy5rdXNp'
-    'bnRhLmlvdC53ZWJydGMudjEuUGluZ0gAUgRwaW5nQgkKB3BheWxvYWQ=');
+    'bnRhLmlvdC53ZWJydGMudjEuUGluZ0gAUgRwaW5nEkcKCXN1YnNjcmliZRgHIAEoCzInLmt1c2'
+    'ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpYmVEZXZpY2VzSABSCXN1YnNjcmliZRJNCgt1bnN1'
+    'YnNjcmliZRgIIAEoCzIpLmt1c2ludGEuaW90LndlYnJ0Yy52MS5VbnN1YnNjcmliZURldmljZX'
+    'NIAFILdW5zdWJzY3JpYmVCCQoHcGF5bG9hZA==');

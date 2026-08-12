@@ -73,6 +73,12 @@ export declare type AppHandshake = Message<"kusinta.iot.webrtc.v1.AppHandshake">
   jwt: string;
 
   /**
+   * Initial interest set — an optimisation that saves one round trip, equivalent to
+   * sending SubscribeDevices immediately after the handshake. Interest only: naming
+   * an id here does not entitle the app to it, and ids the user may not see are
+   * refused in the SubscriptionAck that follows. Not the only mechanism — the set is
+   * revisable mid-session via AppMessage.subscribe / .unsubscribe.
+   *
    * @generated from field: repeated kusinta.iot.identity.v1.DeviceId subscribe_device_ids = 2;
    */
   subscribeDeviceIds: DeviceId[];
@@ -83,6 +89,110 @@ export declare type AppHandshake = Message<"kusinta.iot.webrtc.v1.AppHandshake">
  * Use `create(AppHandshakeSchema)` to create a new message.
  */
 export declare const AppHandshakeSchema: GenMessage<AppHandshake>;
+
+/**
+ * Adds device_ids to what the app wants streamed. Interest, never entitlement:
+ * the gateway intersects the request with what the user is permitted to see and
+ * reports what it declined in SubscriptionAck.refused. Additive — ids already in
+ * the set are a no-op, so a retry after a dropped ack is safe.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SubscribeDevices
+ */
+export declare type SubscribeDevices = Message<"kusinta.iot.webrtc.v1.SubscribeDevices"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.identity.v1.DeviceId device_ids = 1;
+   */
+  deviceIds: DeviceId[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SubscribeDevices.
+ * Use `create(SubscribeDevicesSchema)` to create a new message.
+ */
+export declare const SubscribeDevicesSchema: GenMessage<SubscribeDevices>;
+
+/**
+ * Removes device_ids from what the app wants streamed. Removing an id the app is
+ * not subscribed to is a no-op, not an error.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.UnsubscribeDevices
+ */
+export declare type UnsubscribeDevices = Message<"kusinta.iot.webrtc.v1.UnsubscribeDevices"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.identity.v1.DeviceId device_ids = 1;
+   */
+  deviceIds: DeviceId[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.UnsubscribeDevices.
+ * Use `create(UnsubscribeDevicesSchema)` to create a new message.
+ */
+export declare const UnsubscribeDevicesSchema: GenMessage<UnsubscribeDevices>;
+
+/**
+ * A device the gateway declined to add to the interest set. Ids the gateway does
+ * not know are refused as NOT_ENTITLED rather than a distinct not-found code, so
+ * the ack cannot be used to enumerate devices the user may not see.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RefusedSubscription
+ */
+export declare type RefusedSubscription = Message<"kusinta.iot.webrtc.v1.RefusedSubscription"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.webrtc.v1.GatewayErrorCode code = 2;
+   */
+  code: GatewayErrorCode;
+
+  /**
+   * human-readable, for logs
+   *
+   * @generated from field: string message = 3;
+   */
+  message: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RefusedSubscription.
+ * Use `create(RefusedSubscriptionSchema)` to create a new message.
+ */
+export declare const RefusedSubscriptionSchema: GenMessage<RefusedSubscription>;
+
+/**
+ * Answer to SubscribeDevices / UnsubscribeDevices, gateway → Flutter app.
+ * `subscribed` is the effective set after the change, not a delta: an app that
+ * missed an ack or raced two requests re-syncs from it without reconnecting.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SubscriptionAck
+ */
+export declare type SubscriptionAck = Message<"kusinta.iot.webrtc.v1.SubscriptionAck"> & {
+  /**
+   * AppMessage.message_id of the request
+   *
+   * @generated from field: string in_reply_to = 1;
+   */
+  inReplyTo: string;
+
+  /**
+   * @generated from field: repeated kusinta.iot.identity.v1.DeviceId subscribed = 2;
+   */
+  subscribed: DeviceId[];
+
+  /**
+   * @generated from field: repeated kusinta.iot.webrtc.v1.RefusedSubscription refused = 3;
+   */
+  refused: RefusedSubscription[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SubscriptionAck.
+ * Use `create(SubscriptionAckSchema)` to create a new message.
+ */
+export declare const SubscriptionAckSchema: GenMessage<SubscriptionAck>;
 
 /**
  * @generated from message kusinta.iot.webrtc.v1.PropertyReadRequest
@@ -205,6 +315,12 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: GatewayError;
     case: "error";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SubscriptionAck subscription_ack = 11;
+     */
+    value: SubscriptionAck;
+    case: "subscriptionAck";
   } | { case: undefined; value?: undefined };
 };
 
@@ -257,6 +373,18 @@ export declare type AppMessage = Message<"kusinta.iot.webrtc.v1.AppMessage"> & {
      */
     value: Ping;
     case: "ping";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SubscribeDevices subscribe = 7;
+     */
+    value: SubscribeDevices;
+    case: "subscribe";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.UnsubscribeDevices unsubscribe = 8;
+     */
+    value: UnsubscribeDevices;
+    case: "unsubscribe";
   } | { case: undefined; value?: undefined };
 };
 

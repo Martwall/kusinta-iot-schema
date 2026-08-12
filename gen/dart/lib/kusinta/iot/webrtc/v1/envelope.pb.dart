@@ -228,8 +228,289 @@ class AppHandshake extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearJwt() => $_clearField(1);
 
+  /// Initial interest set — an optimisation that saves one round trip, equivalent to
+  /// sending SubscribeDevices immediately after the handshake. Interest only: naming
+  /// an id here does not entitle the app to it, and ids the user may not see are
+  /// refused in the SubscriptionAck that follows. Not the only mechanism — the set is
+  /// revisable mid-session via AppMessage.subscribe / .unsubscribe.
   @$pb.TagNumber(2)
   $pb.PbList<$0.DeviceId> get subscribeDeviceIds => $_getList(1);
+}
+
+/// Adds device_ids to what the app wants streamed. Interest, never entitlement:
+/// the gateway intersects the request with what the user is permitted to see and
+/// reports what it declined in SubscriptionAck.refused. Additive — ids already in
+/// the set are a no-op, so a retry after a dropped ack is safe.
+class SubscribeDevices extends $pb.GeneratedMessage {
+  factory SubscribeDevices({
+    $core.Iterable<$0.DeviceId>? deviceIds,
+  }) {
+    final result = create();
+    if (deviceIds != null) result.deviceIds.addAll(deviceIds);
+    return result;
+  }
+
+  SubscribeDevices._();
+
+  factory SubscribeDevices.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SubscribeDevices.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SubscribeDevices',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceIds', $pb.PbFieldType.PM,
+        subBuilder: $0.DeviceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SubscribeDevices clone() => SubscribeDevices()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SubscribeDevices copyWith(void Function(SubscribeDevices) updates) =>
+      super.copyWith((message) => updates(message as SubscribeDevices))
+          as SubscribeDevices;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SubscribeDevices create() => SubscribeDevices._();
+  @$core.override
+  SubscribeDevices createEmptyInstance() => create();
+  static $pb.PbList<SubscribeDevices> createRepeated() =>
+      $pb.PbList<SubscribeDevices>();
+  @$core.pragma('dart2js:noInline')
+  static SubscribeDevices getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SubscribeDevices>(create);
+  static SubscribeDevices? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$0.DeviceId> get deviceIds => $_getList(0);
+}
+
+/// Removes device_ids from what the app wants streamed. Removing an id the app is
+/// not subscribed to is a no-op, not an error.
+class UnsubscribeDevices extends $pb.GeneratedMessage {
+  factory UnsubscribeDevices({
+    $core.Iterable<$0.DeviceId>? deviceIds,
+  }) {
+    final result = create();
+    if (deviceIds != null) result.deviceIds.addAll(deviceIds);
+    return result;
+  }
+
+  UnsubscribeDevices._();
+
+  factory UnsubscribeDevices.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UnsubscribeDevices.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UnsubscribeDevices',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceIds', $pb.PbFieldType.PM,
+        subBuilder: $0.DeviceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UnsubscribeDevices clone() => UnsubscribeDevices()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UnsubscribeDevices copyWith(void Function(UnsubscribeDevices) updates) =>
+      super.copyWith((message) => updates(message as UnsubscribeDevices))
+          as UnsubscribeDevices;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UnsubscribeDevices create() => UnsubscribeDevices._();
+  @$core.override
+  UnsubscribeDevices createEmptyInstance() => create();
+  static $pb.PbList<UnsubscribeDevices> createRepeated() =>
+      $pb.PbList<UnsubscribeDevices>();
+  @$core.pragma('dart2js:noInline')
+  static UnsubscribeDevices getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UnsubscribeDevices>(create);
+  static UnsubscribeDevices? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$0.DeviceId> get deviceIds => $_getList(0);
+}
+
+/// A device the gateway declined to add to the interest set. Ids the gateway does
+/// not know are refused as NOT_ENTITLED rather than a distinct not-found code, so
+/// the ack cannot be used to enumerate devices the user may not see.
+class RefusedSubscription extends $pb.GeneratedMessage {
+  factory RefusedSubscription({
+    $0.DeviceId? deviceId,
+    GatewayErrorCode? code,
+    $core.String? message,
+  }) {
+    final result = create();
+    if (deviceId != null) result.deviceId = deviceId;
+    if (code != null) result.code = code;
+    if (message != null) result.message = message;
+    return result;
+  }
+
+  RefusedSubscription._();
+
+  factory RefusedSubscription.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RefusedSubscription.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RefusedSubscription',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $0.DeviceId.create)
+    ..e<GatewayErrorCode>(2, _omitFieldNames ? '' : 'code', $pb.PbFieldType.OE,
+        defaultOrMaker: GatewayErrorCode.GATEWAY_ERROR_CODE_UNSPECIFIED,
+        valueOf: GatewayErrorCode.valueOf,
+        enumValues: GatewayErrorCode.values)
+    ..aOS(3, _omitFieldNames ? '' : 'message')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RefusedSubscription clone() => RefusedSubscription()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RefusedSubscription copyWith(void Function(RefusedSubscription) updates) =>
+      super.copyWith((message) => updates(message as RefusedSubscription))
+          as RefusedSubscription;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RefusedSubscription create() => RefusedSubscription._();
+  @$core.override
+  RefusedSubscription createEmptyInstance() => create();
+  static $pb.PbList<RefusedSubscription> createRepeated() =>
+      $pb.PbList<RefusedSubscription>();
+  @$core.pragma('dart2js:noInline')
+  static RefusedSubscription getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RefusedSubscription>(create);
+  static RefusedSubscription? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.DeviceId get deviceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set deviceId($0.DeviceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.DeviceId ensureDeviceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  GatewayErrorCode get code => $_getN(1);
+  @$pb.TagNumber(2)
+  set code(GatewayErrorCode value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCode() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get message => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set message($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMessage() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMessage() => $_clearField(3);
+}
+
+/// Answer to SubscribeDevices / UnsubscribeDevices, gateway → Flutter app.
+/// `subscribed` is the effective set after the change, not a delta: an app that
+/// missed an ack or raced two requests re-syncs from it without reconnecting.
+class SubscriptionAck extends $pb.GeneratedMessage {
+  factory SubscriptionAck({
+    $core.String? inReplyTo,
+    $core.Iterable<$0.DeviceId>? subscribed,
+    $core.Iterable<RefusedSubscription>? refused,
+  }) {
+    final result = create();
+    if (inReplyTo != null) result.inReplyTo = inReplyTo;
+    if (subscribed != null) result.subscribed.addAll(subscribed);
+    if (refused != null) result.refused.addAll(refused);
+    return result;
+  }
+
+  SubscriptionAck._();
+
+  factory SubscriptionAck.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SubscriptionAck.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SubscriptionAck',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
+    ..pc<$0.DeviceId>(
+        2, _omitFieldNames ? '' : 'subscribed', $pb.PbFieldType.PM,
+        subBuilder: $0.DeviceId.create)
+    ..pc<RefusedSubscription>(
+        3, _omitFieldNames ? '' : 'refused', $pb.PbFieldType.PM,
+        subBuilder: RefusedSubscription.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SubscriptionAck clone() => SubscriptionAck()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SubscriptionAck copyWith(void Function(SubscriptionAck) updates) =>
+      super.copyWith((message) => updates(message as SubscriptionAck))
+          as SubscriptionAck;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SubscriptionAck create() => SubscriptionAck._();
+  @$core.override
+  SubscriptionAck createEmptyInstance() => create();
+  static $pb.PbList<SubscriptionAck> createRepeated() =>
+      $pb.PbList<SubscriptionAck>();
+  @$core.pragma('dart2js:noInline')
+  static SubscriptionAck getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SubscriptionAck>(create);
+  static SubscriptionAck? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get inReplyTo => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set inReplyTo($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInReplyTo() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInReplyTo() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$0.DeviceId> get subscribed => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<RefusedSubscription> get refused => $_getList(2);
 }
 
 class PropertyReadRequest extends $pb.GeneratedMessage {
@@ -409,6 +690,7 @@ enum GatewayMessage_Payload {
   pong,
   handshakeRejected,
   error,
+  subscriptionAck,
   notSet
 }
 
@@ -424,6 +706,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     Pong? pong,
     HandshakeRejected? handshakeRejected,
     GatewayError? error,
+    SubscriptionAck? subscriptionAck,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -435,6 +718,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (pong != null) result.pong = pong;
     if (handshakeRejected != null) result.handshakeRejected = handshakeRejected;
     if (error != null) result.error = error;
+    if (subscriptionAck != null) result.subscriptionAck = subscriptionAck;
     return result;
   }
 
@@ -456,6 +740,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     8: GatewayMessage_Payload.pong,
     9: GatewayMessage_Payload.handshakeRejected,
     10: GatewayMessage_Payload.error,
+    11: GatewayMessage_Payload.subscriptionAck,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -463,7 +748,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 8, 9, 10])
+    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $1.Timestamp.create)
@@ -480,6 +765,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: HandshakeRejected.create)
     ..aOM<GatewayError>(10, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
+    ..aOM<SubscriptionAck>(11, _omitFieldNames ? '' : 'subscriptionAck',
+        subBuilder: SubscriptionAck.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -603,9 +890,28 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearError() => $_clearField(10);
   @$pb.TagNumber(10)
   GatewayError ensureError() => $_ensure(8);
+
+  @$pb.TagNumber(11)
+  SubscriptionAck get subscriptionAck => $_getN(9);
+  @$pb.TagNumber(11)
+  set subscriptionAck(SubscriptionAck value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasSubscriptionAck() => $_has(9);
+  @$pb.TagNumber(11)
+  void clearSubscriptionAck() => $_clearField(11);
+  @$pb.TagNumber(11)
+  SubscriptionAck ensureSubscriptionAck() => $_ensure(9);
 }
 
-enum AppMessage_Payload { handshake, command, readRequest, ping, notSet }
+enum AppMessage_Payload {
+  handshake,
+  command,
+  readRequest,
+  ping,
+  subscribe,
+  unsubscribe,
+  notSet
+}
 
 /// AppMessage: Flutter app → gateway
 class AppMessage extends $pb.GeneratedMessage {
@@ -616,6 +922,8 @@ class AppMessage extends $pb.GeneratedMessage {
     $4.DeviceCommand? command,
     PropertyReadRequest? readRequest,
     Ping? ping,
+    SubscribeDevices? subscribe,
+    UnsubscribeDevices? unsubscribe,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -624,6 +932,8 @@ class AppMessage extends $pb.GeneratedMessage {
     if (command != null) result.command = command;
     if (readRequest != null) result.readRequest = readRequest;
     if (ping != null) result.ping = ping;
+    if (subscribe != null) result.subscribe = subscribe;
+    if (unsubscribe != null) result.unsubscribe = unsubscribe;
     return result;
   }
 
@@ -642,6 +952,8 @@ class AppMessage extends $pb.GeneratedMessage {
     4: AppMessage_Payload.command,
     5: AppMessage_Payload.readRequest,
     6: AppMessage_Payload.ping,
+    7: AppMessage_Payload.subscribe,
+    8: AppMessage_Payload.unsubscribe,
     0: AppMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -649,7 +961,7 @@ class AppMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6])
+    ..oo(0, [3, 4, 5, 6, 7, 8])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $1.Timestamp.create)
@@ -660,6 +972,10 @@ class AppMessage extends $pb.GeneratedMessage {
     ..aOM<PropertyReadRequest>(5, _omitFieldNames ? '' : 'readRequest',
         subBuilder: PropertyReadRequest.create)
     ..aOM<Ping>(6, _omitFieldNames ? '' : 'ping', subBuilder: Ping.create)
+    ..aOM<SubscribeDevices>(7, _omitFieldNames ? '' : 'subscribe',
+        subBuilder: SubscribeDevices.create)
+    ..aOM<UnsubscribeDevices>(8, _omitFieldNames ? '' : 'unsubscribe',
+        subBuilder: UnsubscribeDevices.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -748,6 +1064,28 @@ class AppMessage extends $pb.GeneratedMessage {
   void clearPing() => $_clearField(6);
   @$pb.TagNumber(6)
   Ping ensurePing() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  SubscribeDevices get subscribe => $_getN(6);
+  @$pb.TagNumber(7)
+  set subscribe(SubscribeDevices value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSubscribe() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSubscribe() => $_clearField(7);
+  @$pb.TagNumber(7)
+  SubscribeDevices ensureSubscribe() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  UnsubscribeDevices get unsubscribe => $_getN(7);
+  @$pb.TagNumber(8)
+  set unsubscribe(UnsubscribeDevices value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasUnsubscribe() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearUnsubscribe() => $_clearField(8);
+  @$pb.TagNumber(8)
+  UnsubscribeDevices ensureUnsubscribe() => $_ensure(7);
 }
 
 const $core.bool _omitFieldNames =

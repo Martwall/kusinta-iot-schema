@@ -94,9 +94,13 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.EffectivePermissions ensureNewPermissions() => $_ensure(0);
 
+  /// Newly entitled devices. Entitlement is not interest: the app is not subscribed
+  /// to these until it asks via AppMessage.subscribe.
   @$pb.TagNumber(2)
   $pb.PbList<$1.DeviceId> get addedDevices => $_getList(1);
 
+  /// Devices the user may no longer see. The gateway has already dropped these from
+  /// the app's interest set — no property events follow, and no unsubscribe is needed.
   @$pb.TagNumber(3)
   $pb.PbList<$1.DeviceId> get removedDevices => $_getList(2);
 

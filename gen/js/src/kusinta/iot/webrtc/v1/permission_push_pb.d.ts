@@ -25,11 +25,17 @@ export declare type LivePermissionUpdate = Message<"kusinta.iot.webrtc.v1.LivePe
   newPermissions?: EffectivePermissions | undefined;
 
   /**
+   * Newly entitled devices. Entitlement is not interest: the app is not subscribed
+   * to these until it asks via AppMessage.subscribe.
+   *
    * @generated from field: repeated kusinta.iot.identity.v1.DeviceId added_devices = 2;
    */
   addedDevices: DeviceId[];
 
   /**
+   * Devices the user may no longer see. The gateway has already dropped these from
+   * the app's interest set — no property events follow, and no unsubscribe is needed.
+   *
    * @generated from field: repeated kusinta.iot.identity.v1.DeviceId removed_devices = 3;
    */
   removedDevices: DeviceId[];

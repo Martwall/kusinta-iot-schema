@@ -8,6 +8,9 @@ import {
   HandshakeRejectedSchema,
   GatewayErrorSchema,
   GatewayErrorCode,
+  SubscribeDevicesSchema,
+  UnsubscribeDevicesSchema,
+  SubscriptionAckSchema,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
 import { DeviceCommandSchema, CommandResultSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import { DeviceStateSnapshotSchema, DevicePropertyEventSchema } from '../kusinta/iot/webrtc/v1/device_state_pb.js'
@@ -235,6 +238,21 @@ describe('GatewayMessage oneof payload', () => {
       expect(decoded.payload.value.reason).toBe('JWT signature invalid')
     }
   })
+
+  it('round-trips subscription_ack payload', () => {
+    const msg = create(GatewayMessageSchema, {
+      messageId: 'gw-msg-ack-1',
+      payload: {
+        case: 'subscriptionAck',
+        value: { inReplyTo: 'app-msg-sub-1', subscribed: [{ value: 'therm-1' }] },
+      },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('subscriptionAck')
+    if (decoded.payload?.case === 'subscriptionAck') {
+      expect(decoded.payload.value.inReplyTo).toBe('app-msg-sub-1')
+    }
+  })
 })
 
 describe('GatewayError', () => {
@@ -289,6 +307,69 @@ describe('GatewayMessage error payload', () => {
   })
 })
 
+describe('SubscribeDevices', () => {
+  it('round-trips an empty device_ids list as a no-op request', () => {
+    const sub = create(SubscribeDevicesSchema, {})
+    const decoded = fromBinary(SubscribeDevicesSchema, toBinary(SubscribeDevicesSchema, sub))
+    expect(decoded.deviceIds).toHaveLength(0)
+  })
+
+  it('round-trips a batch of device ids', () => {
+    const sub = create(SubscribeDevicesSchema, {
+      deviceIds: [{ value: 'therm-1' }, { value: 'light-1' }],
+    })
+    const decoded = fromBinary(SubscribeDevicesSchema, toBinary(SubscribeDevicesSchema, sub))
+    expect(decoded.deviceIds).toHaveLength(2)
+    expect(decoded.deviceIds[1].value).toBe('light-1')
+  })
+})
+
+describe('UnsubscribeDevices', () => {
+  it('round-trips a batch of device ids', () => {
+    const unsub = create(UnsubscribeDevicesSchema, { deviceIds: [{ value: 'therm-1' }] })
+    const decoded = fromBinary(UnsubscribeDevicesSchema, toBinary(UnsubscribeDevicesSchema, unsub))
+    expect(decoded.deviceIds).toHaveLength(1)
+    expect(decoded.deviceIds[0].value).toBe('therm-1')
+  })
+})
+
+describe('SubscriptionAck', () => {
+  it('reports a refused device with its id and code', () => {
+    const ack = create(SubscriptionAckSchema, {
+      inReplyTo: 'app-msg-sub-1',
+      subscribed: [{ value: 'therm-1' }],
+      refused: [{
+        deviceId: { value: 'therm-99' },
+        code: GatewayErrorCode.NOT_ENTITLED,
+        message: 'user has no access to device therm-99',
+      }],
+    })
+    const decoded = fromBinary(SubscriptionAckSchema, toBinary(SubscriptionAckSchema, ack))
+    expect(decoded.refused).toHaveLength(1)
+    expect(decoded.refused[0].deviceId?.value).toBe('therm-99')
+    expect(decoded.refused[0].code).toBe(GatewayErrorCode.NOT_ENTITLED)
+  })
+
+  it('carries the effective subscription set after the change', () => {
+    const ack = create(SubscriptionAckSchema, {
+      inReplyTo: 'app-msg-sub-2',
+      subscribed: [{ value: 'therm-1' }, { value: 'light-1' }],
+    })
+    const decoded = fromBinary(SubscriptionAckSchema, toBinary(SubscriptionAckSchema, ack))
+    expect(decoded.inReplyTo).toBe('app-msg-sub-2')
+    expect(decoded.subscribed.map((d) => d.value)).toEqual(['therm-1', 'light-1'])
+  })
+
+  it('leaves refused empty when every id was accepted', () => {
+    const ack = create(SubscriptionAckSchema, {
+      inReplyTo: 'app-msg-sub-3',
+      subscribed: [{ value: 'therm-1' }],
+    })
+    const decoded = fromBinary(SubscriptionAckSchema, toBinary(SubscriptionAckSchema, ack))
+    expect(decoded.refused).toHaveLength(0)
+  })
+})
+
 describe('AppMessage oneof payload', () => {
   it('round-trips handshake payload', () => {
     const msg = create(AppMessageSchema, {
@@ -331,5 +412,29 @@ describe('AppMessage oneof payload', () => {
     })
     const decoded = fromBinary(AppMessageSchema, toBinary(AppMessageSchema, msg))
     expect(decoded.payload?.case).toBe('ping')
+  })
+
+  it('round-trips subscribe payload', () => {
+    const msg = create(AppMessageSchema, {
+      messageId: 'app-msg-sub-1',
+      payload: { case: 'subscribe', value: { deviceIds: [{ value: 'therm-1' }] } },
+    })
+    const decoded = fromBinary(AppMessageSchema, toBinary(AppMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('subscribe')
+    if (decoded.payload?.case === 'subscribe') {
+      expect(decoded.payload.value.deviceIds[0].value).toBe('therm-1')
+    }
+  })
+
+  it('round-trips unsubscribe payload', () => {
+    const msg = create(AppMessageSchema, {
+      messageId: 'app-msg-unsub-1',
+      payload: { case: 'unsubscribe', value: { deviceIds: [{ value: 'therm-1' }] } },
+    })
+    const decoded = fromBinary(AppMessageSchema, toBinary(AppMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('unsubscribe')
+    if (decoded.payload?.case === 'unsubscribe') {
+      expect(decoded.payload.value.deviceIds[0].value).toBe('therm-1')
+    }
   })
 })

@@ -49,6 +49,38 @@ class AppHandshake(_message.Message):
     subscribe_device_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.DeviceId]
     def __init__(self, jwt: _Optional[str] = ..., subscribe_device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ...) -> None: ...
 
+class SubscribeDevices(_message.Message):
+    __slots__ = ("device_ids",)
+    DEVICE_IDS_FIELD_NUMBER: _ClassVar[int]
+    device_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.DeviceId]
+    def __init__(self, device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ...) -> None: ...
+
+class UnsubscribeDevices(_message.Message):
+    __slots__ = ("device_ids",)
+    DEVICE_IDS_FIELD_NUMBER: _ClassVar[int]
+    device_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.DeviceId]
+    def __init__(self, device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ...) -> None: ...
+
+class RefusedSubscription(_message.Message):
+    __slots__ = ("device_id", "code", "message")
+    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
+    CODE_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    device_id: _identity_pb2.DeviceId
+    code: GatewayErrorCode
+    message: str
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ...) -> None: ...
+
+class SubscriptionAck(_message.Message):
+    __slots__ = ("in_reply_to", "subscribed", "refused")
+    IN_REPLY_TO_FIELD_NUMBER: _ClassVar[int]
+    SUBSCRIBED_FIELD_NUMBER: _ClassVar[int]
+    REFUSED_FIELD_NUMBER: _ClassVar[int]
+    in_reply_to: str
+    subscribed: _containers.RepeatedCompositeFieldContainer[_identity_pb2.DeviceId]
+    refused: _containers.RepeatedCompositeFieldContainer[RefusedSubscription]
+    def __init__(self, in_reply_to: _Optional[str] = ..., subscribed: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., refused: _Optional[_Iterable[_Union[RefusedSubscription, _Mapping]]] = ...) -> None: ...
+
 class PropertyReadRequest(_message.Message):
     __slots__ = ("device_id", "attribute_name", "cluster_id_hex")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
@@ -77,7 +109,7 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class GatewayMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "pong", "handshake_rejected", "error")
+    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
@@ -87,6 +119,7 @@ class GatewayMessage(_message.Message):
     PONG_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_REJECTED_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
+    SUBSCRIPTION_ACK_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     state_snapshot: _device_state_pb2.DeviceStateSnapshot
@@ -96,20 +129,25 @@ class GatewayMessage(_message.Message):
     pong: Pong
     handshake_rejected: HandshakeRejected
     error: GatewayError
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ...) -> None: ...
+    subscription_ack: SubscriptionAck
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ...) -> None: ...
 
 class AppMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping")
+    __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping", "subscribe", "unsubscribe")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_FIELD_NUMBER: _ClassVar[int]
     COMMAND_FIELD_NUMBER: _ClassVar[int]
     READ_REQUEST_FIELD_NUMBER: _ClassVar[int]
     PING_FIELD_NUMBER: _ClassVar[int]
+    SUBSCRIBE_FIELD_NUMBER: _ClassVar[int]
+    UNSUBSCRIBE_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake: AppHandshake
     command: _command_pb2.DeviceCommand
     read_request: PropertyReadRequest
     ping: Ping
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[AppHandshake, _Mapping]] = ..., command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., read_request: _Optional[_Union[PropertyReadRequest, _Mapping]] = ..., ping: _Optional[_Union[Ping, _Mapping]] = ...) -> None: ...
+    subscribe: SubscribeDevices
+    unsubscribe: UnsubscribeDevices
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[AppHandshake, _Mapping]] = ..., command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., read_request: _Optional[_Union[PropertyReadRequest, _Mapping]] = ..., ping: _Optional[_Union[Ping, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevices, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevices, _Mapping]] = ...) -> None: ...
