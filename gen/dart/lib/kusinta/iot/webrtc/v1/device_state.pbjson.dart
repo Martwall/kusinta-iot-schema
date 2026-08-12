@@ -81,3 +81,44 @@ final $typed_data.Uint8List devicePropertyEventDescriptor = $convert.base64Decod
     'ChNEZXZpY2VQcm9wZXJ0eUV2ZW50Ej0KBnVwZGF0ZRgBIAEoCzIlLmt1c2ludGEuaW90LmRldm'
     'ljZS52MS5Qcm9wZXJ0eVVwZGF0ZVIGdXBkYXRlEkwKFGdhdGV3YXlfcHJvY2Vzc2VkX2F0GAIg'
     'ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFISZ2F0ZXdheVByb2Nlc3NlZEF0');
+
+@$core.Deprecated('Use deviceAddedDescriptor instead')
+const DeviceAdded$json = {
+  '1': 'DeviceAdded',
+  '2': [
+    {
+      '1': 'device',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.Device',
+      '10': 'device'
+    },
+  ],
+};
+
+/// Descriptor for `DeviceAdded`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deviceAddedDescriptor = $convert.base64Decode(
+    'CgtEZXZpY2VBZGRlZBI1CgZkZXZpY2UYASABKAsyHS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuRG'
+    'V2aWNlUgZkZXZpY2U=');
+
+@$core.Deprecated('Use deviceRemovedDescriptor instead')
+const DeviceRemoved$json = {
+  '1': 'DeviceRemoved',
+  '2': [
+    {
+      '1': 'device_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceId'
+    },
+    {'1': 'reason', '3': 2, '4': 1, '5': 9, '10': 'reason'},
+  ],
+};
+
+/// Descriptor for `DeviceRemoved`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deviceRemovedDescriptor = $convert.base64Decode(
+    'Cg1EZXZpY2VSZW1vdmVkEj4KCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aX'
+    'R5LnYxLkRldmljZUlkUghkZXZpY2VJZBIWCgZyZWFzb24YAiABKAlSBnJlYXNvbg==');

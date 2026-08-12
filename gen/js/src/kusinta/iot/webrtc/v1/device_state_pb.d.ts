@@ -8,6 +8,7 @@ import type { Device } from "../../device/v1/device_pb.js";
 import type { EffectivePermissions } from "../../access/v1/acl_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { PropertyUpdate } from "../../device/v1/property_update_pb.js";
+import type { DeviceId } from "../../identity/v1/identity_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/device_state.proto.
@@ -64,4 +65,66 @@ export declare type DevicePropertyEvent = Message<"kusinta.iot.webrtc.v1.DeviceP
  * Use `create(DevicePropertyEventSchema)` to create a new message.
  */
 export declare const DevicePropertyEventSchema: GenMessage<DevicePropertyEvent>;
+
+/**
+ * A device appeared while the app was connected — the app leg's counterpart to
+ * connector.v1.DeviceAnnouncement, which the gateway can currently only drop.
+ *
+ * Carries the full Device, descriptor plus current typed properties, so the app can
+ * render it without a follow-up read — the same payload DeviceStateSnapshot gives
+ * per device.
+ *
+ * Apply as an upsert keyed on descriptor.device_id, never as an insert: a device can
+ * be in the snapshot and then announced, or announced twice across a connector
+ * reconnect.
+ *
+ * Discovery, not interest. Being told a device exists does not subscribe the app to
+ * it — that still takes AppMessage.subscribe. The gateway sends this only for devices
+ * the user is entitled to see; an unfiltered announcement would be a device
+ * enumeration channel.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.DeviceAdded
+ */
+export declare type DeviceAdded = Message<"kusinta.iot.webrtc.v1.DeviceAdded"> & {
+  /**
+   * @generated from field: kusinta.iot.device.v1.Device device = 1;
+   */
+  device?: Device | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.DeviceAdded.
+ * Use `create(DeviceAddedSchema)` to create a new message.
+ */
+export declare const DeviceAddedSchema: GenMessage<DeviceAdded>;
+
+/**
+ * A device is gone, because its connector said so via connector.v1.DeviceRemoval.
+ *
+ * A connector disconnecting is NOT a removal: an ordinary reconnect wipes the
+ * device→connector route while every device still exists, and treating that as a
+ * removal makes the whole UI flap. Unreachability is a separate signal — read
+ * device.v1.Device.last_seen for that.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.DeviceRemoved
+ */
+export declare type DeviceRemoved = Message<"kusinta.iot.webrtc.v1.DeviceRemoved"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+
+  /**
+   * passed through from the connector, for logs
+   *
+   * @generated from field: string reason = 2;
+   */
+  reason: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.DeviceRemoved.
+ * Use `create(DeviceRemovedSchema)` to create a new message.
+ */
+export declare const DeviceRemovedSchema: GenMessage<DeviceRemoved>;
 

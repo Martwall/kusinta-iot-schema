@@ -691,6 +691,8 @@ enum GatewayMessage_Payload {
   handshakeRejected,
   error,
   subscriptionAck,
+  deviceAdded,
+  deviceRemoved,
   notSet
 }
 
@@ -707,6 +709,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
     HandshakeRejected? handshakeRejected,
     GatewayError? error,
     SubscriptionAck? subscriptionAck,
+    $2.DeviceAdded? deviceAdded,
+    $2.DeviceRemoved? deviceRemoved,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -719,6 +723,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (handshakeRejected != null) result.handshakeRejected = handshakeRejected;
     if (error != null) result.error = error;
     if (subscriptionAck != null) result.subscriptionAck = subscriptionAck;
+    if (deviceAdded != null) result.deviceAdded = deviceAdded;
+    if (deviceRemoved != null) result.deviceRemoved = deviceRemoved;
     return result;
   }
 
@@ -741,6 +747,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
     9: GatewayMessage_Payload.handshakeRejected,
     10: GatewayMessage_Payload.error,
     11: GatewayMessage_Payload.subscriptionAck,
+    12: GatewayMessage_Payload.deviceAdded,
+    13: GatewayMessage_Payload.deviceRemoved,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -748,7 +756,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11])
+    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $1.Timestamp.create)
@@ -767,6 +775,10 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: GatewayError.create)
     ..aOM<SubscriptionAck>(11, _omitFieldNames ? '' : 'subscriptionAck',
         subBuilder: SubscriptionAck.create)
+    ..aOM<$2.DeviceAdded>(12, _omitFieldNames ? '' : 'deviceAdded',
+        subBuilder: $2.DeviceAdded.create)
+    ..aOM<$2.DeviceRemoved>(13, _omitFieldNames ? '' : 'deviceRemoved',
+        subBuilder: $2.DeviceRemoved.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -901,6 +913,28 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearSubscriptionAck() => $_clearField(11);
   @$pb.TagNumber(11)
   SubscriptionAck ensureSubscriptionAck() => $_ensure(9);
+
+  @$pb.TagNumber(12)
+  $2.DeviceAdded get deviceAdded => $_getN(10);
+  @$pb.TagNumber(12)
+  set deviceAdded($2.DeviceAdded value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasDeviceAdded() => $_has(10);
+  @$pb.TagNumber(12)
+  void clearDeviceAdded() => $_clearField(12);
+  @$pb.TagNumber(12)
+  $2.DeviceAdded ensureDeviceAdded() => $_ensure(10);
+
+  @$pb.TagNumber(13)
+  $2.DeviceRemoved get deviceRemoved => $_getN(11);
+  @$pb.TagNumber(13)
+  set deviceRemoved($2.DeviceRemoved value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasDeviceRemoved() => $_has(11);
+  @$pb.TagNumber(13)
+  void clearDeviceRemoved() => $_clearField(13);
+  @$pb.TagNumber(13)
+  $2.DeviceRemoved ensureDeviceRemoved() => $_ensure(11);
 }
 
 enum AppMessage_Payload {

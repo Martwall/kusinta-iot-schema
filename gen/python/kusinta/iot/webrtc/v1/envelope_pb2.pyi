@@ -109,7 +109,7 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class GatewayMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack")
+    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
@@ -120,6 +120,8 @@ class GatewayMessage(_message.Message):
     HANDSHAKE_REJECTED_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     SUBSCRIPTION_ACK_FIELD_NUMBER: _ClassVar[int]
+    DEVICE_ADDED_FIELD_NUMBER: _ClassVar[int]
+    DEVICE_REMOVED_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     state_snapshot: _device_state_pb2.DeviceStateSnapshot
@@ -130,7 +132,9 @@ class GatewayMessage(_message.Message):
     handshake_rejected: HandshakeRejected
     error: GatewayError
     subscription_ack: SubscriptionAck
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ...) -> None: ...
+    device_added: _device_state_pb2.DeviceAdded
+    device_removed: _device_state_pb2.DeviceRemoved
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ...) -> None: ...
 
 class AppMessage(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping", "subscribe", "unsubscribe")

@@ -113,6 +113,8 @@ message GatewayMessage {
     HandshakeRejected     handshake_rejected = 9;
     GatewayError          error              = 10;
     SubscriptionAck       subscription_ack   = 11;
+    DeviceAdded           device_added       = 12;
+    DeviceRemoved         device_removed     = 13;
   }
 }
 

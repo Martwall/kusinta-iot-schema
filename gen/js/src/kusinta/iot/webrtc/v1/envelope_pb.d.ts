@@ -6,7 +6,7 @@ import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2"
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { DevicePropertyEvent, DeviceStateSnapshot } from "./device_state_pb.js";
+import type { DeviceAdded, DevicePropertyEvent, DeviceRemoved, DeviceStateSnapshot } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
 import type { CommandResult, DeviceCommand } from "./command_pb.js";
 
@@ -321,6 +321,18 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: SubscriptionAck;
     case: "subscriptionAck";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.DeviceAdded device_added = 12;
+     */
+    value: DeviceAdded;
+    case: "deviceAdded";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.DeviceRemoved device_removed = 13;
+     */
+    value: DeviceRemoved;
+    case: "deviceRemoved";
   } | { case: undefined; value?: undefined };
 };
 

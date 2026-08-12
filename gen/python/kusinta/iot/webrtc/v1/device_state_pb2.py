@@ -26,9 +26,10 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from kusinta.iot.device.v1 import device_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_device__pb2
 from kusinta.iot.device.v1 import property_update_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_property__update__pb2
 from kusinta.iot.access.v1 import acl_pb2 as kusinta_dot_iot_dot_access_dot_v1_dot_acl__pb2
+from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/webrtc/v1/device_state.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"kusinta/iot/device/v1/device.proto\x1a+kusinta/iot/device/v1/property_update.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\"\xe0\x01\n\x13\x44\x65viceStateSnapshot\x12\x37\n\x07\x64\x65vices\x18\x01 \x03(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x07\x64\x65vices\x12M\n\x0bpermissions\x18\x02 \x01(\x0b\x32+.kusinta.iot.access.v1.EffectivePermissionsR\x0bpermissions\x12\x41\n\x0esnapshotted_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\rsnapshottedAt\"\xa2\x01\n\x13\x44\x65vicePropertyEvent\x12=\n\x06update\x18\x01 \x01(\x0b\x32%.kusinta.iot.device.v1.PropertyUpdateR\x06update\x12L\n\x14gateway_processed_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x12gatewayProcessedAtB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/webrtc/v1/device_state.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\"kusinta/iot/device/v1/device.proto\x1a+kusinta/iot/device/v1/property_update.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xe0\x01\n\x13\x44\x65viceStateSnapshot\x12\x37\n\x07\x64\x65vices\x18\x01 \x03(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x07\x64\x65vices\x12M\n\x0bpermissions\x18\x02 \x01(\x0b\x32+.kusinta.iot.access.v1.EffectivePermissionsR\x0bpermissions\x12\x41\n\x0esnapshotted_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\rsnapshottedAt\"\xa2\x01\n\x13\x44\x65vicePropertyEvent\x12=\n\x06update\x18\x01 \x01(\x0b\x32%.kusinta.iot.device.v1.PropertyUpdateR\x06update\x12L\n\x14gateway_processed_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x12gatewayProcessedAt\"D\n\x0b\x44\x65viceAdded\x12\x35\n\x06\x64\x65vice\x18\x01 \x01(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x06\x64\x65vice\"g\n\rDeviceRemoved\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reasonB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,8 +37,12 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.webrtc.v1.devic
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_DEVICESTATESNAPSHOT']._serialized_start=215
-  _globals['_DEVICESTATESNAPSHOT']._serialized_end=439
-  _globals['_DEVICEPROPERTYEVENT']._serialized_start=442
-  _globals['_DEVICEPROPERTYEVENT']._serialized_end=604
+  _globals['_DEVICESTATESNAPSHOT']._serialized_start=255
+  _globals['_DEVICESTATESNAPSHOT']._serialized_end=479
+  _globals['_DEVICEPROPERTYEVENT']._serialized_start=482
+  _globals['_DEVICEPROPERTYEVENT']._serialized_end=644
+  _globals['_DEVICEADDED']._serialized_start=646
+  _globals['_DEVICEADDED']._serialized_end=714
+  _globals['_DEVICEREMOVED']._serialized_start=716
+  _globals['_DEVICEREMOVED']._serialized_end=819
 # @@protoc_insertion_point(module_scope)

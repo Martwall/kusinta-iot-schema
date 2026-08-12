@@ -18,6 +18,7 @@ import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../access/v1/acl.pb.dart' as $1;
 import '../../device/v1/device.pb.dart' as $0;
 import '../../device/v1/property_update.pb.dart' as $3;
+import '../../identity/v1/identity.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -179,6 +180,158 @@ class DevicePropertyEvent extends $pb.GeneratedMessage {
   void clearGatewayProcessedAt() => $_clearField(2);
   @$pb.TagNumber(2)
   $2.Timestamp ensureGatewayProcessedAt() => $_ensure(1);
+}
+
+/// A device appeared while the app was connected — the app leg's counterpart to
+/// connector.v1.DeviceAnnouncement, which the gateway can currently only drop.
+///
+/// Carries the full Device, descriptor plus current typed properties, so the app can
+/// render it without a follow-up read — the same payload DeviceStateSnapshot gives
+/// per device.
+///
+/// Apply as an upsert keyed on descriptor.device_id, never as an insert: a device can
+/// be in the snapshot and then announced, or announced twice across a connector
+/// reconnect.
+///
+/// Discovery, not interest. Being told a device exists does not subscribe the app to
+/// it — that still takes AppMessage.subscribe. The gateway sends this only for devices
+/// the user is entitled to see; an unfiltered announcement would be a device
+/// enumeration channel.
+class DeviceAdded extends $pb.GeneratedMessage {
+  factory DeviceAdded({
+    $0.Device? device,
+  }) {
+    final result = create();
+    if (device != null) result.device = device;
+    return result;
+  }
+
+  DeviceAdded._();
+
+  factory DeviceAdded.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeviceAdded.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeviceAdded',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.Device>(1, _omitFieldNames ? '' : 'device',
+        subBuilder: $0.Device.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceAdded clone() => DeviceAdded()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceAdded copyWith(void Function(DeviceAdded) updates) =>
+      super.copyWith((message) => updates(message as DeviceAdded))
+          as DeviceAdded;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeviceAdded create() => DeviceAdded._();
+  @$core.override
+  DeviceAdded createEmptyInstance() => create();
+  static $pb.PbList<DeviceAdded> createRepeated() => $pb.PbList<DeviceAdded>();
+  @$core.pragma('dart2js:noInline')
+  static DeviceAdded getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeviceAdded>(create);
+  static DeviceAdded? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.Device get device => $_getN(0);
+  @$pb.TagNumber(1)
+  set device($0.Device value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDevice() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDevice() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Device ensureDevice() => $_ensure(0);
+}
+
+/// A device is gone, because its connector said so via connector.v1.DeviceRemoval.
+///
+/// A connector disconnecting is NOT a removal: an ordinary reconnect wipes the
+/// device→connector route while every device still exists, and treating that as a
+/// removal makes the whole UI flap. Unreachability is a separate signal — read
+/// device.v1.Device.last_seen for that.
+class DeviceRemoved extends $pb.GeneratedMessage {
+  factory DeviceRemoved({
+    $4.DeviceId? deviceId,
+    $core.String? reason,
+  }) {
+    final result = create();
+    if (deviceId != null) result.deviceId = deviceId;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  DeviceRemoved._();
+
+  factory DeviceRemoved.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeviceRemoved.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeviceRemoved',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$4.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $4.DeviceId.create)
+    ..aOS(2, _omitFieldNames ? '' : 'reason')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceRemoved clone() => DeviceRemoved()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceRemoved copyWith(void Function(DeviceRemoved) updates) =>
+      super.copyWith((message) => updates(message as DeviceRemoved))
+          as DeviceRemoved;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeviceRemoved create() => DeviceRemoved._();
+  @$core.override
+  DeviceRemoved createEmptyInstance() => create();
+  static $pb.PbList<DeviceRemoved> createRepeated() =>
+      $pb.PbList<DeviceRemoved>();
+  @$core.pragma('dart2js:noInline')
+  static DeviceRemoved getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeviceRemoved>(create);
+  static DeviceRemoved? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $4.DeviceId get deviceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set deviceId($4.DeviceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $4.DeviceId ensureDeviceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get reason => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set reason($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReason() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReason() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

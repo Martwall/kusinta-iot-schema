@@ -336,6 +336,24 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'subscriptionAck'
     },
+    {
+      '1': 'device_added',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.DeviceAdded',
+      '9': 0,
+      '10': 'deviceAdded'
+    },
+    {
+      '1': 'device_removed',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.DeviceRemoved',
+      '9': 0,
+      '10': 'deviceRemoved'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -360,7 +378,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'ZWplY3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZBI7CgVlcnJvchgKIAEoCzIjLmt1c2ludGEuaW'
     '90LndlYnJ0Yy52MS5HYXRld2F5RXJyb3JIAFIFZXJyb3ISUwoQc3Vic2NyaXB0aW9uX2FjaxgL'
     'IAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpcHRpb25BY2tIAFIPc3Vic2NyaX'
-    'B0aW9uQWNrQgkKB3BheWxvYWRKBAgHEAg=');
+    'B0aW9uQWNrEkcKDGRldmljZV9hZGRlZBgMIAEoCzIiLmt1c2ludGEuaW90LndlYnJ0Yy52MS5E'
+    'ZXZpY2VBZGRlZEgAUgtkZXZpY2VBZGRlZBJNCg5kZXZpY2VfcmVtb3ZlZBgNIAEoCzIkLmt1c2'
+    'ludGEuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWRCCQoHcGF5'
+    'bG9hZEoECAcQCA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

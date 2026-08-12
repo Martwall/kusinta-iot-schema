@@ -13,7 +13,12 @@ import {
   SubscriptionAckSchema,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
 import { DeviceCommandSchema, CommandResultSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
-import { DeviceStateSnapshotSchema, DevicePropertyEventSchema } from '../kusinta/iot/webrtc/v1/device_state_pb.js'
+import {
+  DeviceStateSnapshotSchema,
+  DevicePropertyEventSchema,
+  DeviceAddedSchema,
+  DeviceRemovedSchema,
+} from '../kusinta/iot/webrtc/v1/device_state_pb.js'
 import { LivePermissionUpdateSchema } from '../kusinta/iot/webrtc/v1/permission_push_pb.js'
 
 describe('AppHandshake', () => {
@@ -239,6 +244,40 @@ describe('GatewayMessage oneof payload', () => {
     }
   })
 
+  it('round-trips device_added payload', () => {
+    const msg = create(GatewayMessageSchema, {
+      messageId: 'gw-msg-added-1',
+      payload: {
+        case: 'deviceAdded',
+        value: {
+          device: {
+            descriptor: { deviceId: { value: 'hm:ABC123' }, matterDeviceTypeId: 0x0301 },
+          },
+        },
+      },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('deviceAdded')
+    if (decoded.payload?.case === 'deviceAdded') {
+      expect(decoded.payload.value.device?.descriptor?.deviceId?.value).toBe('hm:ABC123')
+    }
+  })
+
+  it('round-trips device_removed payload', () => {
+    const msg = create(GatewayMessageSchema, {
+      messageId: 'gw-msg-removed-1',
+      payload: {
+        case: 'deviceRemoved',
+        value: { deviceId: { value: 'hm:ABC123' }, reason: 'unpaired at the CCU' },
+      },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('deviceRemoved')
+    if (decoded.payload?.case === 'deviceRemoved') {
+      expect(decoded.payload.value.deviceId?.value).toBe('hm:ABC123')
+    }
+  })
+
   it('round-trips subscription_ack payload', () => {
     const msg = create(GatewayMessageSchema, {
       messageId: 'gw-msg-ack-1',
@@ -304,6 +343,41 @@ describe('GatewayMessage error payload', () => {
     const legacy = new Uint8Array([0x3a, 0x04, 0x62, 0x6f, 0x6f, 0x6d])
     const decoded = fromBinary(GatewayMessageSchema, legacy)
     expect(decoded.payload?.case).toBeUndefined()
+  })
+})
+
+describe('DeviceRemoved', () => {
+  it('round-trips a device_id with no reason given', () => {
+    const removed = create(DeviceRemovedSchema, { deviceId: { value: 'therm-1' } })
+    const decoded = fromBinary(DeviceRemovedSchema, toBinary(DeviceRemovedSchema, removed))
+    expect(decoded.deviceId?.value).toBe('therm-1')
+    expect(decoded.reason).toBe('')
+  })
+
+  it('round-trips the reason passed through from the connector', () => {
+    const removed = create(DeviceRemovedSchema, {
+      deviceId: { value: 'therm-1' },
+      reason: 'unpaired at the CCU',
+    })
+    const decoded = fromBinary(DeviceRemovedSchema, toBinary(DeviceRemovedSchema, removed))
+    expect(decoded.reason).toBe('unpaired at the CCU')
+  })
+})
+
+describe('DeviceAdded', () => {
+  it('round-trips a full device with typed properties', () => {
+    const added = create(DeviceAddedSchema, {
+      device: {
+        descriptor: { deviceId: { value: 'hm:ABC123' }, matterDeviceTypeId: 0x0301 },
+        properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } },
+      },
+    })
+    const decoded = fromBinary(DeviceAddedSchema, toBinary(DeviceAddedSchema, added))
+    expect(decoded.device?.descriptor?.deviceId?.value).toBe('hm:ABC123')
+    expect(decoded.device?.properties?.case).toBe('thermostat')
+    if (decoded.device?.properties?.case === 'thermostat') {
+      expect(decoded.device.properties.value.occupiedHeatingSetpoint).toBe(2100)
+    }
   })
 })
 

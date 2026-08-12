@@ -4,6 +4,7 @@ from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.device.v1 import property_update_pb2 as _property_update_pb2
 from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
+from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -29,3 +30,17 @@ class DevicePropertyEvent(_message.Message):
     update: _property_update_pb2.PropertyUpdate
     gateway_processed_at: _timestamp_pb2.Timestamp
     def __init__(self, update: _Optional[_Union[_property_update_pb2.PropertyUpdate, _Mapping]] = ..., gateway_processed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class DeviceAdded(_message.Message):
+    __slots__ = ("device",)
+    DEVICE_FIELD_NUMBER: _ClassVar[int]
+    device: _device_pb2.Device
+    def __init__(self, device: _Optional[_Union[_device_pb2.Device, _Mapping]] = ...) -> None: ...
+
+class DeviceRemoved(_message.Message):
+    __slots__ = ("device_id", "reason")
+    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
+    REASON_FIELD_NUMBER: _ClassVar[int]
+    device_id: _identity_pb2.DeviceId
+    reason: str
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., reason: _Optional[str] = ...) -> None: ...

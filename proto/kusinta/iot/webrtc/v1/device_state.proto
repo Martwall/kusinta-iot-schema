@@ -6,6 +6,7 @@ import "google/protobuf/timestamp.proto";
 import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/device/v1/property_update.proto";
 import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
@@ -20,4 +21,34 @@ message DeviceStateSnapshot {
 message DevicePropertyEvent {
   kusinta.iot.device.v1.PropertyUpdate update               = 1;
   google.protobuf.Timestamp            gateway_processed_at = 2;
+}
+
+// A device appeared while the app was connected — the app leg's counterpart to
+// connector.v1.DeviceAnnouncement, which the gateway can currently only drop.
+//
+// Carries the full Device, descriptor plus current typed properties, so the app can
+// render it without a follow-up read — the same payload DeviceStateSnapshot gives
+// per device.
+//
+// Apply as an upsert keyed on descriptor.device_id, never as an insert: a device can
+// be in the snapshot and then announced, or announced twice across a connector
+// reconnect.
+//
+// Discovery, not interest. Being told a device exists does not subscribe the app to
+// it — that still takes AppMessage.subscribe. The gateway sends this only for devices
+// the user is entitled to see; an unfiltered announcement would be a device
+// enumeration channel.
+message DeviceAdded {
+  kusinta.iot.device.v1.Device device = 1;
+}
+
+// A device is gone, because its connector said so via connector.v1.DeviceRemoval.
+//
+// A connector disconnecting is NOT a removal: an ordinary reconnect wipes the
+// device→connector route while every device still exists, and treating that as a
+// removal makes the whole UI flap. Unreachability is a separate signal — read
+// device.v1.Device.last_seen for that.
+message DeviceRemoved {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  string                           reason    = 2; // passed through from the connector, for logs
 }

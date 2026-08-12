@@ -7,12 +7,13 @@ import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import { file_kusinta_iot_device_v1_device } from "../../device/v1/device_pb.js";
 import { file_kusinta_iot_device_v1_property_update } from "../../device/v1/property_update_pb.js";
 import { file_kusinta_iot_access_v1_acl } from "../../access/v1/acl_pb.js";
+import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/device_state.proto.
  */
 export const file_kusinta_iot_webrtc_v1_device_state = /*@__PURE__*/
-  fileDesc("CihrdXNpbnRhL2lvdC93ZWJydGMvdjEvZGV2aWNlX3N0YXRlLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEiuwEKE0RldmljZVN0YXRlU25hcHNob3QSLgoHZGV2aWNlcxgBIAMoCzIdLmt1c2ludGEuaW90LmRldmljZS52MS5EZXZpY2USQAoLcGVybWlzc2lvbnMYAiABKAsyKy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuRWZmZWN0aXZlUGVybWlzc2lvbnMSMgoOc25hcHNob3R0ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIoYBChNEZXZpY2VQcm9wZXJ0eUV2ZW50EjUKBnVwZGF0ZRgBIAEoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5Qcm9wZXJ0eVVwZGF0ZRI4ChRnYXRld2F5X3Byb2Nlc3NlZF9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCAkgBYgZwcm90bzM", [file_google_protobuf_timestamp, file_kusinta_iot_device_v1_device, file_kusinta_iot_device_v1_property_update, file_kusinta_iot_access_v1_acl]);
+  fileDesc("CihrdXNpbnRhL2lvdC93ZWJydGMvdjEvZGV2aWNlX3N0YXRlLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEiuwEKE0RldmljZVN0YXRlU25hcHNob3QSLgoHZGV2aWNlcxgBIAMoCzIdLmt1c2ludGEuaW90LmRldmljZS52MS5EZXZpY2USQAoLcGVybWlzc2lvbnMYAiABKAsyKy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuRWZmZWN0aXZlUGVybWlzc2lvbnMSMgoOc25hcHNob3R0ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIoYBChNEZXZpY2VQcm9wZXJ0eUV2ZW50EjUKBnVwZGF0ZRgBIAEoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5Qcm9wZXJ0eVVwZGF0ZRI4ChRnYXRld2F5X3Byb2Nlc3NlZF9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiPAoLRGV2aWNlQWRkZWQSLQoGZGV2aWNlGAEgASgLMh0ua3VzaW50YS5pb3QuZGV2aWNlLnYxLkRldmljZSJVCg1EZXZpY2VSZW1vdmVkEjQKCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEg4KBnJlYXNvbhgCIAEoCUICSAFiBnByb3RvMw", [file_google_protobuf_timestamp, file_kusinta_iot_device_v1_device, file_kusinta_iot_device_v1_property_update, file_kusinta_iot_access_v1_acl, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DeviceStateSnapshot.
@@ -27,4 +28,18 @@ export const DeviceStateSnapshotSchema = /*@__PURE__*/
  */
 export const DevicePropertyEventSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_device_state, 1);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.DeviceAdded.
+ * Use `create(DeviceAddedSchema)` to create a new message.
+ */
+export const DeviceAddedSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 2);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.DeviceRemoved.
+ * Use `create(DeviceRemovedSchema)` to create a new message.
+ */
+export const DeviceRemovedSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 3);
 
