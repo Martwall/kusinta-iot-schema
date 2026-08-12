@@ -6,6 +6,8 @@ import {
   AppMessageSchema,
   AppHandshakeSchema,
   HandshakeRejectedSchema,
+  GatewayErrorSchema,
+  GatewayErrorCode,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
 import { DeviceCommandSchema, CommandResultSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import { DeviceStateSnapshotSchema, DevicePropertyEventSchema } from '../kusinta/iot/webrtc/v1/device_state_pb.js'
@@ -232,6 +234,58 @@ describe('GatewayMessage oneof payload', () => {
     if (decoded.payload?.case === 'handshakeRejected') {
       expect(decoded.payload.value.reason).toBe('JWT signature invalid')
     }
+  })
+})
+
+describe('GatewayError', () => {
+  it('defaults code to UNSPECIFIED when the sender omits it', () => {
+    const err = create(GatewayErrorSchema, { message: 'something went wrong' })
+    const decoded = fromBinary(GatewayErrorSchema, toBinary(GatewayErrorSchema, err))
+    expect(decoded.code).toBe(GatewayErrorCode.UNSPECIFIED)
+  })
+
+  it('round-trips a permanent refusal code', () => {
+    const err = create(GatewayErrorSchema, {
+      code: GatewayErrorCode.NOT_ENTITLED,
+      message: 'user has no access to device therm-1',
+    })
+    const decoded = fromBinary(GatewayErrorSchema, toBinary(GatewayErrorSchema, err))
+    expect(decoded.code).toBe(GatewayErrorCode.NOT_ENTITLED)
+    expect(decoded.message).toBe('user has no access to device therm-1')
+  })
+
+  it('round-trips metadata entries', () => {
+    const err = create(GatewayErrorSchema, {
+      code: GatewayErrorCode.NOT_ENTITLED,
+      metadata: { device_id: 'therm-1' },
+    })
+    const decoded = fromBinary(GatewayErrorSchema, toBinary(GatewayErrorSchema, err))
+    expect(decoded.metadata.device_id).toBe('therm-1')
+  })
+})
+
+describe('GatewayMessage error payload', () => {
+  it('round-trips error payload with a machine-readable code', () => {
+    const msg = create(GatewayMessageSchema, {
+      messageId: 'gw-msg-err-1',
+      payload: {
+        case: 'error',
+        value: { code: GatewayErrorCode.INVALID_REQUEST, message: 'unknown cluster_id_hex' },
+      },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('error')
+    if (decoded.payload?.case === 'error') {
+      expect(decoded.payload.value.code).toBe(GatewayErrorCode.INVALID_REQUEST)
+      expect(decoded.payload.value.message).toBe('unknown cluster_id_hex')
+    }
+  })
+
+  it('ignores the legacy string error on reserved field 7', () => {
+    // field 7, wire type 2, "boom" — what a pre-GatewayError gateway sent
+    const legacy = new Uint8Array([0x3a, 0x04, 0x62, 0x6f, 0x6f, 0x6d])
+    const decoded = fromBinary(GatewayMessageSchema, legacy)
+    expect(decoded.payload?.case).toBeUndefined()
   })
 })
 

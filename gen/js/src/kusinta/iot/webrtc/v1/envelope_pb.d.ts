@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/webrtc/v1/envelope.proto (package kusinta.iot.webrtc.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -111,6 +111,40 @@ export declare type PropertyReadRequest = Message<"kusinta.iot.webrtc.v1.Propert
 export declare const PropertyReadRequestSchema: GenMessage<PropertyReadRequest>;
 
 /**
+ * Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError
+ * on the connector leg; kept separate because the two legs have different
+ * authorization semantics and this one has a closed code vocabulary.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GatewayError
+ */
+export declare type GatewayError = Message<"kusinta.iot.webrtc.v1.GatewayError"> & {
+  /**
+   * @generated from field: kusinta.iot.webrtc.v1.GatewayErrorCode code = 1;
+   */
+  code: GatewayErrorCode;
+
+  /**
+   * human-readable, for logs — never rendered to a user
+   *
+   * @generated from field: string message = 2;
+   */
+  message: string;
+
+  /**
+   * structured detail, e.g. {"device_id": "therm-1"}
+   *
+   * @generated from field: map<string, string> metadata = 3;
+   */
+  metadata: { [key: string]: string };
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GatewayError.
+ * Use `create(GatewayErrorSchema)` to create a new message.
+ */
+export declare const GatewayErrorSchema: GenMessage<GatewayError>;
+
+/**
  * GatewayMessage: gateway → Flutter app
  *
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
@@ -155,14 +189,6 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
     case: "commandResult";
   } | {
     /**
-     * error description string
-     *
-     * @generated from field: string error = 7;
-     */
-    value: string;
-    case: "error";
-  } | {
-    /**
      * @generated from field: kusinta.iot.webrtc.v1.Pong pong = 8;
      */
     value: Pong;
@@ -173,6 +199,12 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: HandshakeRejected;
     case: "handshakeRejected";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GatewayError error = 10;
+     */
+    value: GatewayError;
+    case: "error";
   } | { case: undefined; value?: undefined };
 };
 
@@ -233,4 +265,54 @@ export declare type AppMessage = Message<"kusinta.iot.webrtc.v1.AppMessage"> & {
  * Use `create(AppMessageSchema)` to create a new message.
  */
 export declare const AppMessageSchema: GenMessage<AppMessage>;
+
+/**
+ * Machine-readable classification of a session-level gateway error, so the app
+ * can branch without string-matching a human sentence. Deliberately an enum here,
+ * unlike the free-form code on connector.v1.GatewayError: the app leg is versioned
+ * together with the gateway, and clients need an exhaustive switch.
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.GatewayErrorCode
+ */
+export enum GatewayErrorCode {
+  /**
+   * Sender did not set a code, or sent one this client's schema does not know.
+   *
+   * @generated from enum value: GATEWAY_ERROR_CODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Permanent refusal — the user may not see or act on this. Stop asking, tell the user.
+   *
+   * @generated from enum value: GATEWAY_ERROR_CODE_NOT_ENTITLED = 1;
+   */
+  NOT_ENTITLED = 1,
+
+  /**
+   * The app sent something malformed. A client bug: log it, do not retry.
+   *
+   * @generated from enum value: GATEWAY_ERROR_CODE_INVALID_REQUEST = 2;
+   */
+  INVALID_REQUEST = 2,
+
+  /**
+   * Transient failure. Retrying is reasonable.
+   *
+   * @generated from enum value: GATEWAY_ERROR_CODE_UNAVAILABLE = 3;
+   */
+  UNAVAILABLE = 3,
+
+  /**
+   * Gateway-side fault. Not the app's doing; retry cautiously.
+   *
+   * @generated from enum value: GATEWAY_ERROR_CODE_INTERNAL = 4;
+   */
+  INTERNAL = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.GatewayErrorCode.
+ */
+export declare const GatewayErrorCodeSchema: GenEnum<GatewayErrorCode>;
 

@@ -18,9 +18,12 @@ import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'command.pb.dart' as $4;
 import 'device_state.pb.dart' as $2;
+import 'envelope.pbenum.dart';
 import 'permission_push.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'envelope.pbenum.dart';
 
 class Ping extends $pb.GeneratedMessage {
   factory Ping() => create();
@@ -313,14 +316,99 @@ class PropertyReadRequest extends $pb.GeneratedMessage {
   void clearClusterIdHex() => $_clearField(3);
 }
 
+/// Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError
+/// on the connector leg; kept separate because the two legs have different
+/// authorization semantics and this one has a closed code vocabulary.
+class GatewayError extends $pb.GeneratedMessage {
+  factory GatewayError({
+    GatewayErrorCode? code,
+    $core.String? message,
+    $core.Iterable<$core.MapEntry<$core.String, $core.String>>? metadata,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (message != null) result.message = message;
+    if (metadata != null) result.metadata.addEntries(metadata);
+    return result;
+  }
+
+  GatewayError._();
+
+  factory GatewayError.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GatewayError.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GatewayError',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..e<GatewayErrorCode>(1, _omitFieldNames ? '' : 'code', $pb.PbFieldType.OE,
+        defaultOrMaker: GatewayErrorCode.GATEWAY_ERROR_CODE_UNSPECIFIED,
+        valueOf: GatewayErrorCode.valueOf,
+        enumValues: GatewayErrorCode.values)
+    ..aOS(2, _omitFieldNames ? '' : 'message')
+    ..m<$core.String, $core.String>(3, _omitFieldNames ? '' : 'metadata',
+        entryClassName: 'GatewayError.MetadataEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('kusinta.iot.webrtc.v1'))
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayError clone() => GatewayError()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayError copyWith(void Function(GatewayError) updates) =>
+      super.copyWith((message) => updates(message as GatewayError))
+          as GatewayError;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GatewayError create() => GatewayError._();
+  @$core.override
+  GatewayError createEmptyInstance() => create();
+  static $pb.PbList<GatewayError> createRepeated() =>
+      $pb.PbList<GatewayError>();
+  @$core.pragma('dart2js:noInline')
+  static GatewayError getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GatewayError>(create);
+  static GatewayError? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  GatewayErrorCode get code => $_getN(0);
+  @$pb.TagNumber(1)
+  set code(GatewayErrorCode value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get message => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set message($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMessage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMessage() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbMap<$core.String, $core.String> get metadata => $_getMap(2);
+}
+
 enum GatewayMessage_Payload {
   stateSnapshot,
   propertyEvent,
   permissionUpdate,
   commandResult,
-  error,
   pong,
   handshakeRejected,
+  error,
   notSet
 }
 
@@ -333,9 +421,9 @@ class GatewayMessage extends $pb.GeneratedMessage {
     $2.DevicePropertyEvent? propertyEvent,
     $3.LivePermissionUpdate? permissionUpdate,
     $4.CommandResult? commandResult,
-    $core.String? error,
     Pong? pong,
     HandshakeRejected? handshakeRejected,
+    GatewayError? error,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -344,9 +432,9 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (propertyEvent != null) result.propertyEvent = propertyEvent;
     if (permissionUpdate != null) result.permissionUpdate = permissionUpdate;
     if (commandResult != null) result.commandResult = commandResult;
-    if (error != null) result.error = error;
     if (pong != null) result.pong = pong;
     if (handshakeRejected != null) result.handshakeRejected = handshakeRejected;
+    if (error != null) result.error = error;
     return result;
   }
 
@@ -365,9 +453,9 @@ class GatewayMessage extends $pb.GeneratedMessage {
     4: GatewayMessage_Payload.propertyEvent,
     5: GatewayMessage_Payload.permissionUpdate,
     6: GatewayMessage_Payload.commandResult,
-    7: GatewayMessage_Payload.error,
     8: GatewayMessage_Payload.pong,
     9: GatewayMessage_Payload.handshakeRejected,
+    10: GatewayMessage_Payload.error,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -375,7 +463,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8, 9])
+    ..oo(0, [3, 4, 5, 6, 8, 9, 10])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $1.Timestamp.create)
@@ -387,10 +475,11 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: $3.LivePermissionUpdate.create)
     ..aOM<$4.CommandResult>(6, _omitFieldNames ? '' : 'commandResult',
         subBuilder: $4.CommandResult.create)
-    ..aOS(7, _omitFieldNames ? '' : 'error')
     ..aOM<Pong>(8, _omitFieldNames ? '' : 'pong', subBuilder: Pong.create)
     ..aOM<HandshakeRejected>(9, _omitFieldNames ? '' : 'handshakeRejected',
         subBuilder: HandshakeRejected.create)
+    ..aOM<GatewayError>(10, _omitFieldNames ? '' : 'error',
+        subBuilder: GatewayError.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -482,36 +571,38 @@ class GatewayMessage extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $4.CommandResult ensureCommandResult() => $_ensure(5);
 
-  @$pb.TagNumber(7)
-  $core.String get error => $_getSZ(6);
-  @$pb.TagNumber(7)
-  set error($core.String value) => $_setString(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasError() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearError() => $_clearField(7);
-
   @$pb.TagNumber(8)
-  Pong get pong => $_getN(7);
+  Pong get pong => $_getN(6);
   @$pb.TagNumber(8)
   set pong(Pong value) => $_setField(8, value);
   @$pb.TagNumber(8)
-  $core.bool hasPong() => $_has(7);
+  $core.bool hasPong() => $_has(6);
   @$pb.TagNumber(8)
   void clearPong() => $_clearField(8);
   @$pb.TagNumber(8)
-  Pong ensurePong() => $_ensure(7);
+  Pong ensurePong() => $_ensure(6);
 
   @$pb.TagNumber(9)
-  HandshakeRejected get handshakeRejected => $_getN(8);
+  HandshakeRejected get handshakeRejected => $_getN(7);
   @$pb.TagNumber(9)
   set handshakeRejected(HandshakeRejected value) => $_setField(9, value);
   @$pb.TagNumber(9)
-  $core.bool hasHandshakeRejected() => $_has(8);
+  $core.bool hasHandshakeRejected() => $_has(7);
   @$pb.TagNumber(9)
   void clearHandshakeRejected() => $_clearField(9);
   @$pb.TagNumber(9)
-  HandshakeRejected ensureHandshakeRejected() => $_ensure(8);
+  HandshakeRejected ensureHandshakeRejected() => $_ensure(7);
+
+  @$pb.TagNumber(10)
+  GatewayError get error => $_getN(8);
+  @$pb.TagNumber(10)
+  set error(GatewayError value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasError() => $_has(8);
+  @$pb.TagNumber(10)
+  void clearError() => $_clearField(10);
+  @$pb.TagNumber(10)
+  GatewayError ensureError() => $_ensure(8);
 }
 
 enum AppMessage_Payload { handshake, command, readRequest, ping, notSet }

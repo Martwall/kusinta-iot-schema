@@ -34,19 +34,47 @@ message PropertyReadRequest {
   string                           cluster_id_hex = 3;
 }
 
+// Machine-readable classification of a session-level gateway error, so the app
+// can branch without string-matching a human sentence. Deliberately an enum here,
+// unlike the free-form code on connector.v1.GatewayError: the app leg is versioned
+// together with the gateway, and clients need an exhaustive switch.
+enum GatewayErrorCode {
+  // Sender did not set a code, or sent one this client's schema does not know.
+  GATEWAY_ERROR_CODE_UNSPECIFIED = 0;
+  // Permanent refusal — the user may not see or act on this. Stop asking, tell the user.
+  GATEWAY_ERROR_CODE_NOT_ENTITLED = 1;
+  // The app sent something malformed. A client bug: log it, do not retry.
+  GATEWAY_ERROR_CODE_INVALID_REQUEST = 2;
+  // Transient failure. Retrying is reasonable.
+  GATEWAY_ERROR_CODE_UNAVAILABLE = 3;
+  // Gateway-side fault. Not the app's doing; retry cautiously.
+  GATEWAY_ERROR_CODE_INTERNAL = 4;
+}
+
+// Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError
+// on the connector leg; kept separate because the two legs have different
+// authorization semantics and this one has a closed code vocabulary.
+message GatewayError {
+  GatewayErrorCode    code     = 1;
+  string              message  = 2; // human-readable, for logs — never rendered to a user
+  map<string, string> metadata = 3; // structured detail, e.g. {"device_id": "therm-1"}
+}
+
 // GatewayMessage: gateway → Flutter app
 message GatewayMessage {
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;
+
+  reserved 7; // was: string error — replaced by GatewayError on field 10
 
   oneof payload {
     DeviceStateSnapshot   state_snapshot     = 3;
     DevicePropertyEvent   property_event     = 4;
     LivePermissionUpdate  permission_update  = 5;
     CommandResult         command_result     = 6;
-    string                error              = 7; // error description string
     Pong                  pong               = 8;
     HandshakeRejected     handshake_rejected = 9;
+    GatewayError          error              = 10;
   }
 }
 

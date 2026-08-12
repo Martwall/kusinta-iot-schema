@@ -14,6 +14,25 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use gatewayErrorCodeDescriptor instead')
+const GatewayErrorCode$json = {
+  '1': 'GatewayErrorCode',
+  '2': [
+    {'1': 'GATEWAY_ERROR_CODE_UNSPECIFIED', '2': 0},
+    {'1': 'GATEWAY_ERROR_CODE_NOT_ENTITLED', '2': 1},
+    {'1': 'GATEWAY_ERROR_CODE_INVALID_REQUEST', '2': 2},
+    {'1': 'GATEWAY_ERROR_CODE_UNAVAILABLE', '2': 3},
+    {'1': 'GATEWAY_ERROR_CODE_INTERNAL', '2': 4},
+  ],
+};
+
+/// Descriptor for `GatewayErrorCode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List gatewayErrorCodeDescriptor = $convert.base64Decode(
+    'ChBHYXRld2F5RXJyb3JDb2RlEiIKHkdBVEVXQVlfRVJST1JfQ09ERV9VTlNQRUNJRklFRBAAEi'
+    'MKH0dBVEVXQVlfRVJST1JfQ09ERV9OT1RfRU5USVRMRUQQARImCiJHQVRFV0FZX0VSUk9SX0NP'
+    'REVfSU5WQUxJRF9SRVFVRVNUEAISIgoeR0FURVdBWV9FUlJPUl9DT0RFX1VOQVZBSUxBQkxFEA'
+    'MSHwobR0FURVdBWV9FUlJPUl9DT0RFX0lOVEVSTkFMEAQ=');
+
 @$core.Deprecated('Use pingDescriptor instead')
 const Ping$json = {
   '1': 'Ping',
@@ -87,6 +106,49 @@ final $typed_data.Uint8List propertyReadRequestDescriptor = $convert.base64Decod
     'lkZW50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBIlCg5hdHRyaWJ1dGVfbmFtZRgCIAEoCVIN'
     'YXR0cmlidXRlTmFtZRIkCg5jbHVzdGVyX2lkX2hleBgDIAEoCVIMY2x1c3RlcklkSGV4');
 
+@$core.Deprecated('Use gatewayErrorDescriptor instead')
+const GatewayError$json = {
+  '1': 'GatewayError',
+  '2': [
+    {
+      '1': 'code',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.GatewayErrorCode',
+      '10': 'code'
+    },
+    {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
+    {
+      '1': 'metadata',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GatewayError.MetadataEntry',
+      '10': 'metadata'
+    },
+  ],
+  '3': [GatewayError_MetadataEntry$json],
+};
+
+@$core.Deprecated('Use gatewayErrorDescriptor instead')
+const GatewayError_MetadataEntry$json = {
+  '1': 'MetadataEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': {'7': true},
+};
+
+/// Descriptor for `GatewayError`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List gatewayErrorDescriptor = $convert.base64Decode(
+    'CgxHYXRld2F5RXJyb3ISOwoEY29kZRgBIAEoDjInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5HYX'
+    'Rld2F5RXJyb3JDb2RlUgRjb2RlEhgKB21lc3NhZ2UYAiABKAlSB21lc3NhZ2USTQoIbWV0YWRh'
+    'dGEYAyADKAsyMS5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2F0ZXdheUVycm9yLk1ldGFkYXRhRW'
+    '50cnlSCG1ldGFkYXRhGjsKDU1ldGFkYXRhRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFs'
+    'dWUYAiABKAlSBXZhbHVlOgI4AQ==');
+
 @$core.Deprecated('Use gatewayMessageDescriptor instead')
 const GatewayMessage$json = {
   '1': 'GatewayMessage',
@@ -136,7 +198,6 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'commandResult'
     },
-    {'1': 'error', '3': 7, '4': 1, '5': 9, '9': 0, '10': 'error'},
     {
       '1': 'pong',
       '3': 8,
@@ -155,9 +216,21 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'handshakeRejected'
     },
+    {
+      '1': 'error',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GatewayError',
+      '9': 0,
+      '10': 'error'
+    },
   ],
   '8': [
     {'1': 'payload'},
+  ],
+  '9': [
+    {'1': 7, '2': 8},
   ],
 };
 
@@ -170,11 +243,11 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'dC53ZWJydGMudjEuRGV2aWNlUHJvcGVydHlFdmVudEgAUg1wcm9wZXJ0eUV2ZW50EloKEXBlcm'
     '1pc3Npb25fdXBkYXRlGAUgASgLMisua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpdmVQZXJtaXNz'
     'aW9uVXBkYXRlSABSEHBlcm1pc3Npb25VcGRhdGUSTQoOY29tbWFuZF9yZXN1bHQYBiABKAsyJC'
-    '5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZFJlc3VsdEgAUg1jb21tYW5kUmVzdWx0EhYK'
-    'BWVycm9yGAcgASgJSABSBWVycm9yEjEKBHBvbmcYCCABKAsyGy5rdXNpbnRhLmlvdC53ZWJydG'
-    'MudjEuUG9uZ0gAUgRwb25nElkKEmhhbmRzaGFrZV9yZWplY3RlZBgJIAEoCzIoLmt1c2ludGEu'
-    'aW90LndlYnJ0Yy52MS5IYW5kc2hha2VSZWplY3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZEIJCg'
-    'dwYXlsb2Fk');
+    '5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZFJlc3VsdEgAUg1jb21tYW5kUmVzdWx0EjEK'
+    'BHBvbmcYCCABKAsyGy5rdXNpbnRhLmlvdC53ZWJydGMudjEuUG9uZ0gAUgRwb25nElkKEmhhbm'
+    'RzaGFrZV9yZWplY3RlZBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5IYW5kc2hha2VS'
+    'ZWplY3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZBI7CgVlcnJvchgKIAEoCzIjLmt1c2ludGEuaW'
+    '90LndlYnJ0Yy52MS5HYXRld2F5RXJyb3JIAFIFZXJyb3JCCQoHcGF5bG9hZEoECAcQCA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {
