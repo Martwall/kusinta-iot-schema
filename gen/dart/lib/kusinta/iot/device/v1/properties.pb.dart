@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -1259,18 +1260,30 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
 ///
 /// Was Zigbee ElectricalMeasurement (0x0B04) with that cluster's RMS* attribute names;
 /// 0x0B04 does not exist in Matter, so a Matter connector could never have produced a
-/// PropertyUpdate that resolved here. Field numbers are unchanged.
+/// PropertyUpdate that resolved here.
 ///
-/// Scale note: Matter 0x0090 encodes these as nullable int64 in mV / mA / mW / mHz. The
-/// types and units below are this schema's narrower encoding, deliberately left alone here
-/// because changing them is a wire change, unlike the rename. active_power in particular
-/// cannot represent loads above ~2.1 kW, so this still needs a decision.
+/// Values are Matter's own units and width: sint64 in mW / mV / mA / mHz. A connector
+/// forwards what the cluster reports without rescaling, which is the point — the earlier
+/// int32/uint32 fields used this schema's own scaling (whole watts, volts × 10, amps × 1000,
+/// Hz × 100) while their (matter_attribute) claimed to carry the Matter attribute, so every
+/// connector had to divide, every consumer trusting the annotation was wrong by 10× to 1000×,
+/// and sub-watt resolution was gone before the value reached the wire. In Matter's mW an
+/// int32 caps at ~2.1 kW, so the unit and the width had to move together.
+///
+/// Signed throughout, matching the cluster: active_power and active_current go negative on
+/// export. sint64 rather than int64 because zigzag keeps negatives at 1-5 bytes instead of
+/// the fixed 10 that int64 spends on any negative value.
+///
+/// Matter types these as nullable. This schema has no presence anywhere in properties, so 0
+/// still means "not reported" rather than "measured zero" — unchanged, and untidy for a
+/// quantity that can legitimately read zero. Treat 0 as absent for these four; introducing
+/// presence is a schema-wide decision, not a per-message one.
 class EnergySensorProperties extends $pb.GeneratedMessage {
   factory EnergySensorProperties({
-    $core.int? activePower,
-    $core.int? voltage,
-    $core.int? activeCurrent,
-    $core.int? frequency,
+    $fixnum.Int64? activePower,
+    $fixnum.Int64? voltage,
+    $fixnum.Int64? activeCurrent,
+    $fixnum.Int64? frequency,
   }) {
     final result = create();
     if (activePower != null) result.activePower = activePower;
@@ -1294,11 +1307,17 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'activePower', $pb.PbFieldType.O3)
-    ..a<$core.int>(2, _omitFieldNames ? '' : 'voltage', $pb.PbFieldType.OU3)
-    ..a<$core.int>(
-        3, _omitFieldNames ? '' : 'activeCurrent', $pb.PbFieldType.OU3)
-    ..a<$core.int>(4, _omitFieldNames ? '' : 'frequency', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(
+        5, _omitFieldNames ? '' : 'activePower', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(6, _omitFieldNames ? '' : 'voltage', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        7, _omitFieldNames ? '' : 'activeCurrent', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        8, _omitFieldNames ? '' : 'frequency', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1324,45 +1343,45 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<EnergySensorProperties>(create);
   static EnergySensorProperties? _defaultInstance;
 
-  /// Watts
-  @$pb.TagNumber(1)
-  $core.int get activePower => $_getIZ(0);
-  @$pb.TagNumber(1)
-  set activePower($core.int value) => $_setSignedInt32(0, value);
-  @$pb.TagNumber(1)
+  /// Milliwatts, negative on export
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get activePower => $_getI64(0);
+  @$pb.TagNumber(5)
+  set activePower($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(5)
   $core.bool hasActivePower() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearActivePower() => $_clearField(1);
+  @$pb.TagNumber(5)
+  void clearActivePower() => $_clearField(5);
 
-  /// Volts × 10
-  @$pb.TagNumber(2)
-  $core.int get voltage => $_getIZ(1);
-  @$pb.TagNumber(2)
-  set voltage($core.int value) => $_setUnsignedInt32(1, value);
-  @$pb.TagNumber(2)
+  /// Millivolts
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get voltage => $_getI64(1);
+  @$pb.TagNumber(6)
+  set voltage($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(6)
   $core.bool hasVoltage() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearVoltage() => $_clearField(2);
+  @$pb.TagNumber(6)
+  void clearVoltage() => $_clearField(6);
 
-  /// Amps × 1000
-  @$pb.TagNumber(3)
-  $core.int get activeCurrent => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set activeCurrent($core.int value) => $_setUnsignedInt32(2, value);
-  @$pb.TagNumber(3)
+  /// Milliamps, negative on export
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get activeCurrent => $_getI64(2);
+  @$pb.TagNumber(7)
+  set activeCurrent($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(7)
   $core.bool hasActiveCurrent() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearActiveCurrent() => $_clearField(3);
+  @$pb.TagNumber(7)
+  void clearActiveCurrent() => $_clearField(7);
 
-  /// Hz × 100
-  @$pb.TagNumber(4)
-  $core.int get frequency => $_getIZ(3);
-  @$pb.TagNumber(4)
-  set frequency($core.int value) => $_setUnsignedInt32(3, value);
-  @$pb.TagNumber(4)
+  /// Millihertz
+  @$pb.TagNumber(8)
+  $fixnum.Int64 get frequency => $_getI64(3);
+  @$pb.TagNumber(8)
+  set frequency($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(8)
   $core.bool hasFrequency() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearFrequency() => $_clearField(4);
+  @$pb.TagNumber(8)
+  void clearFrequency() => $_clearField(8);
 }
 
 /// Matter Pressure Measurement cluster (0x0403)

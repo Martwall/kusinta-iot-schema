@@ -98,3 +98,50 @@ def test_property_update_batch():
     decoded.ParseFromString(batch.SerializeToString())
     assert len(decoded.updates) == 2
     assert decoded.updates[0].attribute_name == "LocalTemperature"
+
+
+def test_energy_sensor_rejects_no_longer_used_field_numbers():
+    numbers = {f.number for f in properties_pb2.EnergySensorProperties.DESCRIPTOR.fields}
+    assert numbers == {5, 6, 7, 8}
+
+
+def test_active_power_carries_milliwatts_above_the_int32_ceiling():
+    original = properties_pb2.EnergySensorProperties(active_power=3_500_000_000)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.active_power == 3_500_000_000
+
+
+def test_active_power_carries_export_as_negative_milliwatts():
+    original = properties_pb2.EnergySensorProperties(active_power=-1_500_000)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.active_power == -1_500_000
+
+
+def test_active_power_keeps_sub_watt_resolution():
+    original = properties_pb2.EnergySensorProperties(active_power=1)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.active_power == 1
+
+
+def test_voltage_carries_millivolts():
+    original = properties_pb2.EnergySensorProperties(voltage=230_500)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.voltage == 230_500
+
+
+def test_active_current_carries_milliamps_and_direction():
+    original = properties_pb2.EnergySensorProperties(active_current=-16_250)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.active_current == -16_250
+
+
+def test_frequency_carries_millihertz():
+    original = properties_pb2.EnergySensorProperties(frequency=49_985)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.frequency == 49_985

@@ -52,6 +52,9 @@ All device type IDs are Matter 1.5.1 `uint32` values stored in `DeviceDescriptor
 | `PressureSensorProperties` | `0x0305` | Pressure Measurement `0x0403` |
 
 Temperatures are `sint32` centidegrees (°C × 100), matching Matter's `int16 × 0.01°C` encoding.
+`EnergySensorProperties` values are `sint64` in Matter's own mW / mV / mA / mHz, so a connector
+forwards what the cluster reports without rescaling; `active_power` and `active_current` go
+negative on export.
 
 Vendor extensions occupy `Device.properties` fields 50–99. `HomematicVendorExtension` sits at field 50.
 

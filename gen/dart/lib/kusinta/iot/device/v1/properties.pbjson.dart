@@ -544,30 +544,43 @@ final $typed_data.Uint8List colorTemperatureLightPropertiesDescriptor = $convert
 const EnergySensorProperties$json = {
   '1': 'EnergySensorProperties',
   '2': [
-    {'1': 'active_power', '3': 1, '4': 1, '5': 5, '8': {}, '10': 'activePower'},
-    {'1': 'voltage', '3': 2, '4': 1, '5': 13, '8': {}, '10': 'voltage'},
+    {
+      '1': 'active_power',
+      '3': 5,
+      '4': 1,
+      '5': 18,
+      '8': {},
+      '10': 'activePower'
+    },
+    {'1': 'voltage', '3': 6, '4': 1, '5': 18, '8': {}, '10': 'voltage'},
     {
       '1': 'active_current',
-      '3': 3,
+      '3': 7,
       '4': 1,
-      '5': 13,
+      '5': 18,
       '8': {},
       '10': 'activeCurrent'
     },
-    {'1': 'frequency', '3': 4, '4': 1, '5': 13, '8': {}, '10': 'frequency'},
+    {'1': 'frequency', '3': 8, '4': 1, '5': 18, '8': {}, '10': 'frequency'},
   ],
   '7': {},
+  '9': [
+    {'1': 1, '2': 2},
+    {'1': 2, '2': 3},
+    {'1': 3, '2': 4},
+    {'1': 4, '2': 5},
+  ],
   '10': ['rms_voltage', 'rms_current', 'ac_frequency'],
 };
 
 /// Descriptor for `EnergySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List energySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChZFbmVyZ3lTZW5zb3JQcm9wZXJ0aWVzEjcKDGFjdGl2ZV9wb3dlchgBIAEoBUIUiLUYkAGStR'
-    'gLQWN0aXZlUG93ZXJSC2FjdGl2ZVBvd2VyEioKB3ZvbHRhZ2UYAiABKA1CEIi1GJABkrUYB1Zv'
-    'bHRhZ2VSB3ZvbHRhZ2USPQoOYWN0aXZlX2N1cnJlbnQYAyABKA1CFoi1GJABkrUYDUFjdGl2ZU'
-    'N1cnJlbnRSDWFjdGl2ZUN1cnJlbnQSMAoJZnJlcXVlbmN5GAQgASgNQhKItRiQAZK1GAlGcmVx'
-    'dWVuY3lSCWZyZXF1ZW5jeToGmrUYApAKUgtybXNfdm9sdGFnZVILcm1zX2N1cnJlbnRSDGFjX2'
-    'ZyZXF1ZW5jeQ==');
+    'ChZFbmVyZ3lTZW5zb3JQcm9wZXJ0aWVzEjcKDGFjdGl2ZV9wb3dlchgFIAEoEkIUiLUYkAGStR'
+    'gLQWN0aXZlUG93ZXJSC2FjdGl2ZVBvd2VyEioKB3ZvbHRhZ2UYBiABKBJCEIi1GJABkrUYB1Zv'
+    'bHRhZ2VSB3ZvbHRhZ2USPQoOYWN0aXZlX2N1cnJlbnQYByABKBJCFoi1GJABkrUYDUFjdGl2ZU'
+    'N1cnJlbnRSDWFjdGl2ZUN1cnJlbnQSMAoJZnJlcXVlbmN5GAggASgSQhKItRiQAZK1GAlGcmVx'
+    'dWVuY3lSCWZyZXF1ZW5jeToGmrUYApAKSgQIARACSgQIAhADSgQIAxAESgQIBBAFUgtybXNfdm'
+    '9sdGFnZVILcm1zX2N1cnJlbnRSDGFjX2ZyZXF1ZW5jeQ==');
 
 @$core.Deprecated('Use pressureSensorPropertiesDescriptor instead')
 const PressureSensorProperties$json = {

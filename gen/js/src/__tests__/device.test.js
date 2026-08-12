@@ -11,6 +11,7 @@ import {
   ContactSensorPropertiesSchema,
   OnOffLightPropertiesSchema,
   DimmableLightPropertiesSchema,
+  EnergySensorPropertiesSchema,
 } from '../kusinta/iot/device/v1/properties_pb.js'
 import { DeviceSchema } from '../kusinta/iot/device/v1/device_pb.js'
 import { PropertyUpdateSchema, PropertyUpdateBatchSchema } from '../kusinta/iot/device/v1/property_update_pb.js'
@@ -190,5 +191,48 @@ describe('PropertyUpdateBatch', () => {
     const decoded = fromBinary(PropertyUpdateBatchSchema, toBinary(PropertyUpdateBatchSchema, batch))
     expect(decoded.updates.length).toBe(2)
     expect(decoded.updates[0].attributeName).toBe('LocalTemperature')
+  })
+})
+
+describe('EnergySensorProperties', () => {
+  it('no longer uses the field numbers that carried the old scaling', () => {
+    const numbers = EnergySensorPropertiesSchema.fields.map((f) => f.number).sort()
+    expect(numbers).toEqual([5, 6, 7, 8])
+  })
+
+  it('round-trips active_power in milliwatts above the int32 ceiling', () => {
+    const p = create(EnergySensorPropertiesSchema, { activePower: 3_500_000_000n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.activePower).toBe(3_500_000_000n)
+  })
+
+  it('round-trips export as negative active_power', () => {
+    const p = create(EnergySensorPropertiesSchema, { activePower: -1_500_000n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.activePower).toBe(-1_500_000n)
+  })
+
+  it('keeps sub-watt resolution in active_power', () => {
+    const p = create(EnergySensorPropertiesSchema, { activePower: 1n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.activePower).toBe(1n)
+  })
+
+  it('round-trips voltage in millivolts', () => {
+    const p = create(EnergySensorPropertiesSchema, { voltage: 230_500n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.voltage).toBe(230_500n)
+  })
+
+  it('round-trips active_current in milliamps with direction', () => {
+    const p = create(EnergySensorPropertiesSchema, { activeCurrent: -16_250n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.activeCurrent).toBe(-16_250n)
+  })
+
+  it('round-trips frequency in millihertz', () => {
+    const p = create(EnergySensorPropertiesSchema, { frequency: 49_985n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.frequency).toBe(49_985n)
   })
 })

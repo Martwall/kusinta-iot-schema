@@ -158,26 +158,44 @@ message ColorTemperatureLightProperties {
 //
 // Was Zigbee ElectricalMeasurement (0x0B04) with that cluster's RMS* attribute names;
 // 0x0B04 does not exist in Matter, so a Matter connector could never have produced a
-// PropertyUpdate that resolved here. Field numbers are unchanged.
+// PropertyUpdate that resolved here.
 //
-// Scale note: Matter 0x0090 encodes these as nullable int64 in mV / mA / mW / mHz. The
-// types and units below are this schema's narrower encoding, deliberately left alone here
-// because changing them is a wire change, unlike the rename. active_power in particular
-// cannot represent loads above ~2.1 kW, so this still needs a decision.
+// Values are Matter's own units and width: sint64 in mW / mV / mA / mHz. A connector
+// forwards what the cluster reports without rescaling, which is the point — the earlier
+// int32/uint32 fields used this schema's own scaling (whole watts, volts × 10, amps × 1000,
+// Hz × 100) while their (matter_attribute) claimed to carry the Matter attribute, so every
+// connector had to divide, every consumer trusting the annotation was wrong by 10× to 1000×,
+// and sub-watt resolution was gone before the value reached the wire. In Matter's mW an
+// int32 caps at ~2.1 kW, so the unit and the width had to move together.
+//
+// Signed throughout, matching the cluster: active_power and active_current go negative on
+// export. sint64 rather than int64 because zigzag keeps negatives at 1-5 bytes instead of
+// the fixed 10 that int64 spends on any negative value.
+//
+// Matter types these as nullable. This schema has no presence anywhere in properties, so 0
+// still means "not reported" rather than "measured zero" — unchanged, and untidy for a
+// quantity that can legitimately read zero. Treat 0 as absent for these four; introducing
+// presence is a schema-wide decision, not a per-message one.
 message EnergySensorProperties {
-  option (matter_device_type) = 0x0510; // Electrical Sensor
-
   // Renamed from the Zigbee attribute names when the cluster was corrected to 0x0090.
   reserved "rms_voltage", "rms_current", "ac_frequency";
 
-  // Watts
-  int32 active_power = 1 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActivePower"];
-  // Volts × 10
-  uint32 voltage = 2 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Voltage"];
-  // Amps × 1000
-  uint32 active_current = 3 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActiveCurrent"];
-  // Hz × 100
-  uint32 frequency = 4 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Frequency"];
+  // Fields 1-4 carried these same four attributes in this schema's own units as
+  // int32/uint32. Burned rather than reused: the unit changed by 10-1000× along with the
+  // type, so a stale encoding reinterpreted under the new numbers would decode to a
+  // plausible, silently wrong value. Landing in unknown fields is the safer failure.
+  reserved 1, 2, 3, 4;
+
+  option (matter_device_type) = 0x0510; // Electrical Sensor
+
+  // Milliwatts, negative on export
+  sint64 active_power = 5 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActivePower"];
+  // Millivolts
+  sint64 voltage = 6 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Voltage"];
+  // Milliamps, negative on export
+  sint64 active_current = 7 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActiveCurrent"];
+  // Millihertz
+  sint64 frequency = 8 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Frequency"];
 }
 
 // Matter Pressure Measurement cluster (0x0403)

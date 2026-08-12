@@ -453,43 +453,55 @@ export declare const ColorTemperatureLightPropertiesSchema: GenMessage<ColorTemp
  *
  * Was Zigbee ElectricalMeasurement (0x0B04) with that cluster's RMS* attribute names;
  * 0x0B04 does not exist in Matter, so a Matter connector could never have produced a
- * PropertyUpdate that resolved here. Field numbers are unchanged.
+ * PropertyUpdate that resolved here.
  *
- * Scale note: Matter 0x0090 encodes these as nullable int64 in mV / mA / mW / mHz. The
- * types and units below are this schema's narrower encoding, deliberately left alone here
- * because changing them is a wire change, unlike the rename. active_power in particular
- * cannot represent loads above ~2.1 kW, so this still needs a decision.
+ * Values are Matter's own units and width: sint64 in mW / mV / mA / mHz. A connector
+ * forwards what the cluster reports without rescaling, which is the point — the earlier
+ * int32/uint32 fields used this schema's own scaling (whole watts, volts × 10, amps × 1000,
+ * Hz × 100) while their (matter_attribute) claimed to carry the Matter attribute, so every
+ * connector had to divide, every consumer trusting the annotation was wrong by 10× to 1000×,
+ * and sub-watt resolution was gone before the value reached the wire. In Matter's mW an
+ * int32 caps at ~2.1 kW, so the unit and the width had to move together.
+ *
+ * Signed throughout, matching the cluster: active_power and active_current go negative on
+ * export. sint64 rather than int64 because zigzag keeps negatives at 1-5 bytes instead of
+ * the fixed 10 that int64 spends on any negative value.
+ *
+ * Matter types these as nullable. This schema has no presence anywhere in properties, so 0
+ * still means "not reported" rather than "measured zero" — unchanged, and untidy for a
+ * quantity that can legitimately read zero. Treat 0 as absent for these four; introducing
+ * presence is a schema-wide decision, not a per-message one.
  *
  * @generated from message kusinta.iot.device.v1.EnergySensorProperties
  */
 export declare type EnergySensorProperties = Message<"kusinta.iot.device.v1.EnergySensorProperties"> & {
   /**
-   * Watts
+   * Milliwatts, negative on export
    *
-   * @generated from field: int32 active_power = 1;
+   * @generated from field: sint64 active_power = 5;
    */
-  activePower: number;
+  activePower: bigint;
 
   /**
-   * Volts × 10
+   * Millivolts
    *
-   * @generated from field: uint32 voltage = 2;
+   * @generated from field: sint64 voltage = 6;
    */
-  voltage: number;
+  voltage: bigint;
 
   /**
-   * Amps × 1000
+   * Milliamps, negative on export
    *
-   * @generated from field: uint32 active_current = 3;
+   * @generated from field: sint64 active_current = 7;
    */
-  activeCurrent: number;
+  activeCurrent: bigint;
 
   /**
-   * Hz × 100
+   * Millihertz
    *
-   * @generated from field: uint32 frequency = 4;
+   * @generated from field: sint64 frequency = 8;
    */
-  frequency: number;
+  frequency: bigint;
 };
 
 /**
