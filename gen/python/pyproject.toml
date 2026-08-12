@@ -1,7 +1,7 @@
 [project]
 name = "kusinta-iot-schema"
 # Set via ./set-version.sh <version>
-version = "0.1.0-beta.18"
+version = "0.1.0-beta.19"
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12"
