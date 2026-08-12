@@ -18,27 +18,70 @@ import 'dart:typed_data' as $typed_data;
 const HmThermostatProps$json = {
   '1': 'HmThermostatProps',
   '2': [
-    {'1': 'boost_mode', '3': 1, '4': 1, '5': 8, '10': 'boostMode'},
-    {'1': 'boost_time_period', '3': 2, '4': 1, '5': 2, '10': 'boostTimePeriod'},
-    {'1': 'control_mode', '3': 3, '4': 1, '5': 13, '10': 'controlMode'},
-    {'1': 'frost_protection', '3': 4, '4': 1, '5': 8, '10': 'frostProtection'},
+    {
+      '1': 'boost_mode',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '9': 0,
+      '10': 'boostMode',
+      '17': true
+    },
+    {
+      '1': 'boost_time_period',
+      '3': 2,
+      '4': 1,
+      '5': 2,
+      '9': 1,
+      '10': 'boostTimePeriod',
+      '17': true
+    },
+    {
+      '1': 'control_mode',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 2,
+      '10': 'controlMode',
+      '17': true
+    },
+    {
+      '1': 'frost_protection',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 3,
+      '10': 'frostProtection',
+      '17': true
+    },
     {
       '1': 'current_profile_period',
       '3': 5,
       '4': 1,
       '5': 2,
-      '10': 'currentProfilePeriod'
+      '9': 4,
+      '10': 'currentProfilePeriod',
+      '17': true
     },
+  ],
+  '8': [
+    {'1': '_boost_mode'},
+    {'1': '_boost_time_period'},
+    {'1': '_control_mode'},
+    {'1': '_frost_protection'},
+    {'1': '_current_profile_period'},
   ],
 };
 
 /// Descriptor for `HmThermostatProps`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List hmThermostatPropsDescriptor = $convert.base64Decode(
-    'ChFIbVRoZXJtb3N0YXRQcm9wcxIdCgpib29zdF9tb2RlGAEgASgIUglib29zdE1vZGUSKgoRYm'
-    '9vc3RfdGltZV9wZXJpb2QYAiABKAJSD2Jvb3N0VGltZVBlcmlvZBIhCgxjb250cm9sX21vZGUY'
-    'AyABKA1SC2NvbnRyb2xNb2RlEikKEGZyb3N0X3Byb3RlY3Rpb24YBCABKAhSD2Zyb3N0UHJvdG'
-    'VjdGlvbhI0ChZjdXJyZW50X3Byb2ZpbGVfcGVyaW9kGAUgASgCUhRjdXJyZW50UHJvZmlsZVBl'
-    'cmlvZA==');
+    'ChFIbVRoZXJtb3N0YXRQcm9wcxIiCgpib29zdF9tb2RlGAEgASgISABSCWJvb3N0TW9kZYgBAR'
+    'IvChFib29zdF90aW1lX3BlcmlvZBgCIAEoAkgBUg9ib29zdFRpbWVQZXJpb2SIAQESJgoMY29u'
+    'dHJvbF9tb2RlGAMgASgNSAJSC2NvbnRyb2xNb2RliAEBEi4KEGZyb3N0X3Byb3RlY3Rpb24YBC'
+    'ABKAhIA1IPZnJvc3RQcm90ZWN0aW9uiAEBEjkKFmN1cnJlbnRfcHJvZmlsZV9wZXJpb2QYBSAB'
+    'KAJIBFIUY3VycmVudFByb2ZpbGVQZXJpb2SIAQFCDQoLX2Jvb3N0X21vZGVCFAoSX2Jvb3N0X3'
+    'RpbWVfcGVyaW9kQg8KDV9jb250cm9sX21vZGVCEwoRX2Zyb3N0X3Byb3RlY3Rpb25CGQoXX2N1'
+    'cnJlbnRfcHJvZmlsZV9wZXJpb2Q=');
 
 @$core.Deprecated('Use homematicVendorExtensionDescriptor instead')
 const HomematicVendorExtension$json = {

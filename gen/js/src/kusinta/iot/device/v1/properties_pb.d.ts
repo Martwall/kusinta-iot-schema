@@ -17,60 +17,60 @@ export declare const file_kusinta_iot_device_v1_properties: GenFile;
  */
 export declare type ThermostatProperties = Message<"kusinta.iot.device.v1.ThermostatProperties"> & {
   /**
-   * @generated from field: sint32 local_temperature = 1;
+   * @generated from field: optional sint32 local_temperature = 1;
    */
-  localTemperature: number;
+  localTemperature?: number | undefined;
 
   /**
-   * @generated from field: sint32 occupied_heating_setpoint = 2;
+   * @generated from field: optional sint32 occupied_heating_setpoint = 2;
    */
-  occupiedHeatingSetpoint: number;
+  occupiedHeatingSetpoint?: number | undefined;
 
   /**
-   * @generated from field: sint32 occupied_cooling_setpoint = 3;
+   * @generated from field: optional sint32 occupied_cooling_setpoint = 3;
    */
-  occupiedCoolingSetpoint: number;
-
-  /**
-   * Property-owner constraint
-   *
-   * @generated from field: sint32 min_heat_setpoint_limit = 4;
-   */
-  minHeatSetpointLimit: number;
+  occupiedCoolingSetpoint?: number | undefined;
 
   /**
    * Property-owner constraint
    *
-   * @generated from field: sint32 max_heat_setpoint_limit = 5;
+   * @generated from field: optional sint32 min_heat_setpoint_limit = 4;
    */
-  maxHeatSetpointLimit: number;
+  minHeatSetpointLimit?: number | undefined;
 
   /**
-   * @generated from field: sint32 min_cool_setpoint_limit = 6;
+   * Property-owner constraint
+   *
+   * @generated from field: optional sint32 max_heat_setpoint_limit = 5;
    */
-  minCoolSetpointLimit: number;
+  maxHeatSetpointLimit?: number | undefined;
 
   /**
-   * @generated from field: sint32 max_cool_setpoint_limit = 7;
+   * @generated from field: optional sint32 min_cool_setpoint_limit = 6;
    */
-  maxCoolSetpointLimit: number;
+  minCoolSetpointLimit?: number | undefined;
 
   /**
-   * @generated from field: uint32 control_sequence_of_operation = 8;
+   * @generated from field: optional sint32 max_cool_setpoint_limit = 7;
    */
-  controlSequenceOfOperation: number;
+  maxCoolSetpointLimit?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 control_sequence_of_operation = 8;
+   */
+  controlSequenceOfOperation?: number | undefined;
 
   /**
    * SystemMode: Off=0,Auto=1,Cool=3,Heat=4,EmHeat=5
    *
-   * @generated from field: uint32 system_mode = 9;
+   * @generated from field: optional uint32 system_mode = 9;
    */
-  systemMode: number;
+  systemMode?: number | undefined;
 
   /**
-   * @generated from field: uint32 thermostat_running_mode = 10;
+   * @generated from field: optional uint32 thermostat_running_mode = 10;
    */
-  thermostatRunningMode: number;
+  thermostatRunningMode?: number | undefined;
 };
 
 /**
@@ -86,24 +86,24 @@ export declare const ThermostatPropertiesSchema: GenMessage<ThermostatProperties
  */
 export declare type TemperatureSensorProperties = Message<"kusinta.iot.device.v1.TemperatureSensorProperties"> & {
   /**
-   * @generated from field: sint32 measured_value = 1;
+   * @generated from field: optional sint32 measured_value = 1;
    */
-  measuredValue: number;
+  measuredValue?: number | undefined;
 
   /**
-   * @generated from field: sint32 min_measured_value = 2;
+   * @generated from field: optional sint32 min_measured_value = 2;
    */
-  minMeasuredValue: number;
+  minMeasuredValue?: number | undefined;
 
   /**
-   * @generated from field: sint32 max_measured_value = 3;
+   * @generated from field: optional sint32 max_measured_value = 3;
    */
-  maxMeasuredValue: number;
+  maxMeasuredValue?: number | undefined;
 
   /**
-   * @generated from field: uint32 tolerance = 4;
+   * @generated from field: optional uint32 tolerance = 4;
    */
-  tolerance: number;
+  tolerance?: number | undefined;
 };
 
 /**
@@ -121,24 +121,24 @@ export declare type HumiditySensorProperties = Message<"kusinta.iot.device.v1.Hu
   /**
    * % × 100, 0–10000
    *
-   * @generated from field: uint32 measured_value = 1;
+   * @generated from field: optional uint32 measured_value = 1;
    */
-  measuredValue: number;
+  measuredValue?: number | undefined;
 
   /**
-   * @generated from field: uint32 min_measured_value = 2;
+   * @generated from field: optional uint32 min_measured_value = 2;
    */
-  minMeasuredValue: number;
+  minMeasuredValue?: number | undefined;
 
   /**
-   * @generated from field: uint32 max_measured_value = 3;
+   * @generated from field: optional uint32 max_measured_value = 3;
    */
-  maxMeasuredValue: number;
+  maxMeasuredValue?: number | undefined;
 
   /**
-   * @generated from field: uint32 tolerance = 4;
+   * @generated from field: optional uint32 tolerance = 4;
    */
-  tolerance: number;
+  tolerance?: number | undefined;
 };
 
 /**
@@ -156,31 +156,31 @@ export declare type OccupancySensorProperties = Message<"kusinta.iot.device.v1.O
   /**
    * Occupancy bitmask: bit 0 = occupied
    *
-   * @generated from field: uint32 occupancy = 1;
+   * @generated from field: optional uint32 occupancy = 1;
    */
-  occupancy: number;
+  occupancy?: number | undefined;
 
   /**
    * OccupancySensorType: PIR=0,Ultrasonic=1,PIRandUS=2,PhysicalContact=3
    *
-   * @generated from field: uint32 occupancy_sensor_type = 2;
+   * @generated from field: optional uint32 occupancy_sensor_type = 2;
    */
-  occupancySensorType: number;
+  occupancySensorType?: number | undefined;
 
   /**
-   * @generated from field: uint32 occupancy_sensor_type_bitmap = 3;
+   * @generated from field: optional uint32 occupancy_sensor_type_bitmap = 3;
    */
-  occupancySensorTypeBitmap: number;
+  occupancySensorTypeBitmap?: number | undefined;
 
   /**
-   * @generated from field: uint32 pir_occupied_to_unoccupied_delay = 4;
+   * @generated from field: optional uint32 pir_occupied_to_unoccupied_delay = 4;
    */
-  pirOccupiedToUnoccupiedDelay: number;
+  pirOccupiedToUnoccupiedDelay?: number | undefined;
 
   /**
-   * @generated from field: uint32 pir_unoccupied_to_occupied_delay = 5;
+   * @generated from field: optional uint32 pir_unoccupied_to_occupied_delay = 5;
    */
-  pirUnoccupiedToOccupiedDelay: number;
+  pirUnoccupiedToOccupiedDelay?: number | undefined;
 };
 
 /**
@@ -198,9 +198,9 @@ export declare type ContactSensorProperties = Message<"kusinta.iot.device.v1.Con
   /**
    * StateValue: false = contact open (alarm), true = contact closed (normal)
    *
-   * @generated from field: bool state_value = 1;
+   * @generated from field: optional bool state_value = 1;
    */
-  stateValue: boolean;
+  stateValue?: boolean | undefined;
 };
 
 /**
@@ -220,48 +220,48 @@ export declare type WindowCoveringProperties = Message<"kusinta.iot.device.v1.Wi
    * `type` is a poor field name and keyword-adjacent in several target languages. The
    * mapping is in (matter_attribute), so the divergence costs consumers nothing.
    *
-   * @generated from field: uint32 covering_type = 1;
+   * @generated from field: optional uint32 covering_type = 1;
    */
-  coveringType: number;
+  coveringType?: number | undefined;
 
   /**
    * current_position_lift_percent100ths is the primary attribute in Matter 1.5.1 (0–10000)
    *
-   * @generated from field: uint32 current_position_lift_percent100ths = 2;
+   * @generated from field: optional uint32 current_position_lift_percent100ths = 2;
    */
-  currentPositionLiftPercent100ths: number;
+  currentPositionLiftPercent100ths?: number | undefined;
 
   /**
-   * @generated from field: uint32 current_position_tilt_percent100ths = 3;
+   * @generated from field: optional uint32 current_position_tilt_percent100ths = 3;
    */
-  currentPositionTiltPercent100ths: number;
+  currentPositionTiltPercent100ths?: number | undefined;
 
   /**
-   * @generated from field: uint32 target_position_lift_percent100ths = 4;
+   * @generated from field: optional uint32 target_position_lift_percent100ths = 4;
    */
-  targetPositionLiftPercent100ths: number;
+  targetPositionLiftPercent100ths?: number | undefined;
 
   /**
-   * @generated from field: uint32 target_position_tilt_percent100ths = 5;
+   * @generated from field: optional uint32 target_position_tilt_percent100ths = 5;
    */
-  targetPositionTiltPercent100ths: number;
+  targetPositionTiltPercent100ths?: number | undefined;
 
   /**
    * bitmask: global, lift, tilt
    *
-   * @generated from field: uint32 operational_status = 6;
+   * @generated from field: optional uint32 operational_status = 6;
    */
-  operationalStatus: number;
+  operationalStatus?: number | undefined;
 
   /**
-   * @generated from field: uint32 end_product_type = 7;
+   * @generated from field: optional uint32 end_product_type = 7;
    */
-  endProductType: number;
+  endProductType?: number | undefined;
 
   /**
-   * @generated from field: uint32 mode = 8;
+   * @generated from field: optional uint32 mode = 8;
    */
-  mode: number;
+  mode?: number | undefined;
 };
 
 /**
@@ -279,31 +279,31 @@ export declare type DoorLockProperties = Message<"kusinta.iot.device.v1.DoorLock
   /**
    * LockState: NotFullyLocked=0,Locked=1,Unlocked=2,Unlatched=3
    *
-   * @generated from field: uint32 lock_state = 1;
+   * @generated from field: optional uint32 lock_state = 1;
    */
-  lockState: number;
+  lockState?: number | undefined;
 
   /**
-   * @generated from field: uint32 lock_type = 2;
+   * @generated from field: optional uint32 lock_type = 2;
    */
-  lockType: number;
+  lockType?: number | undefined;
 
   /**
-   * @generated from field: bool actuator_enabled = 3;
+   * @generated from field: optional bool actuator_enabled = 3;
    */
-  actuatorEnabled: boolean;
+  actuatorEnabled?: boolean | undefined;
 
   /**
    * Requires door sensor hardware
    *
-   * @generated from field: uint32 door_state = 4;
+   * @generated from field: optional uint32 door_state = 4;
    */
-  doorState: number;
+  doorState?: number | undefined;
 
   /**
-   * @generated from field: uint32 operating_mode = 5;
+   * @generated from field: optional uint32 operating_mode = 5;
    */
-  operatingMode: number;
+  operatingMode?: number | undefined;
 };
 
 /**
@@ -319,29 +319,29 @@ export declare const DoorLockPropertiesSchema: GenMessage<DoorLockProperties>;
  */
 export declare type OnOffLightProperties = Message<"kusinta.iot.device.v1.OnOffLightProperties"> & {
   /**
-   * @generated from field: bool on_off = 1;
+   * @generated from field: optional bool on_off = 1;
    */
-  onOff: boolean;
+  onOff?: boolean | undefined;
 
   /**
-   * @generated from field: bool global_scene_control = 2;
+   * @generated from field: optional bool global_scene_control = 2;
    */
-  globalSceneControl: boolean;
+  globalSceneControl?: boolean | undefined;
 
   /**
-   * @generated from field: uint32 on_time = 3;
+   * @generated from field: optional uint32 on_time = 3;
    */
-  onTime: number;
+  onTime?: number | undefined;
 
   /**
-   * @generated from field: uint32 off_wait_time = 4;
+   * @generated from field: optional uint32 off_wait_time = 4;
    */
-  offWaitTime: number;
+  offWaitTime?: number | undefined;
 
   /**
-   * @generated from field: uint32 start_up_on_off = 5;
+   * @generated from field: optional uint32 start_up_on_off = 5;
    */
-  startUpOnOff: number;
+  startUpOnOff?: number | undefined;
 };
 
 /**
@@ -357,41 +357,41 @@ export declare const OnOffLightPropertiesSchema: GenMessage<OnOffLightProperties
  */
 export declare type DimmableLightProperties = Message<"kusinta.iot.device.v1.DimmableLightProperties"> & {
   /**
-   * @generated from field: bool on_off = 1;
+   * @generated from field: optional bool on_off = 1;
    */
-  onOff: boolean;
+  onOff?: boolean | undefined;
 
   /**
    * CurrentLevel (0–254)
    *
-   * @generated from field: uint32 current_level = 2;
+   * @generated from field: optional uint32 current_level = 2;
    */
-  currentLevel: number;
+  currentLevel?: number | undefined;
 
   /**
-   * @generated from field: uint32 min_level = 3;
+   * @generated from field: optional uint32 min_level = 3;
    */
-  minLevel: number;
+  minLevel?: number | undefined;
 
   /**
-   * @generated from field: uint32 max_level = 4;
+   * @generated from field: optional uint32 max_level = 4;
    */
-  maxLevel: number;
+  maxLevel?: number | undefined;
 
   /**
-   * @generated from field: uint32 on_level = 5;
+   * @generated from field: optional uint32 on_level = 5;
    */
-  onLevel: number;
+  onLevel?: number | undefined;
 
   /**
-   * @generated from field: uint32 start_up_current_level = 6;
+   * @generated from field: optional uint32 start_up_current_level = 6;
    */
-  startUpCurrentLevel: number;
+  startUpCurrentLevel?: number | undefined;
 
   /**
-   * @generated from field: uint32 remaining_time = 7;
+   * @generated from field: optional uint32 remaining_time = 7;
    */
-  remainingTime: number;
+  remainingTime?: number | undefined;
 };
 
 /**
@@ -407,39 +407,39 @@ export declare const DimmableLightPropertiesSchema: GenMessage<DimmableLightProp
  */
 export declare type ColorTemperatureLightProperties = Message<"kusinta.iot.device.v1.ColorTemperatureLightProperties"> & {
   /**
-   * @generated from field: bool on_off = 1;
+   * @generated from field: optional bool on_off = 1;
    */
-  onOff: boolean;
+  onOff?: boolean | undefined;
 
   /**
-   * @generated from field: uint32 current_level = 2;
+   * @generated from field: optional uint32 current_level = 2;
    */
-  currentLevel: number;
+  currentLevel?: number | undefined;
 
   /**
-   * @generated from field: uint32 color_temperature_mireds = 3;
+   * @generated from field: optional uint32 color_temperature_mireds = 3;
    */
-  colorTemperatureMireds: number;
+  colorTemperatureMireds?: number | undefined;
 
   /**
-   * @generated from field: uint32 color_temp_physical_min_mireds = 4;
+   * @generated from field: optional uint32 color_temp_physical_min_mireds = 4;
    */
-  colorTempPhysicalMinMireds: number;
+  colorTempPhysicalMinMireds?: number | undefined;
 
   /**
-   * @generated from field: uint32 color_temp_physical_max_mireds = 5;
+   * @generated from field: optional uint32 color_temp_physical_max_mireds = 5;
    */
-  colorTempPhysicalMaxMireds: number;
+  colorTempPhysicalMaxMireds?: number | undefined;
 
   /**
-   * @generated from field: uint32 startup_color_temperature_mireds = 6;
+   * @generated from field: optional uint32 startup_color_temperature_mireds = 6;
    */
-  startupColorTemperatureMireds: number;
+  startupColorTemperatureMireds?: number | undefined;
 
   /**
-   * @generated from field: uint32 color_mode = 7;
+   * @generated from field: optional uint32 color_mode = 7;
    */
-  colorMode: number;
+  colorMode?: number | undefined;
 };
 
 /**
@@ -478,30 +478,30 @@ export declare type EnergySensorProperties = Message<"kusinta.iot.device.v1.Ener
   /**
    * Milliwatts, negative on export
    *
-   * @generated from field: sint64 active_power = 5;
+   * @generated from field: optional sint64 active_power = 5;
    */
-  activePower: bigint;
+  activePower?: bigint | undefined;
 
   /**
    * Millivolts
    *
-   * @generated from field: sint64 voltage = 6;
+   * @generated from field: optional sint64 voltage = 6;
    */
-  voltage: bigint;
+  voltage?: bigint | undefined;
 
   /**
    * Milliamps, negative on export
    *
-   * @generated from field: sint64 active_current = 7;
+   * @generated from field: optional sint64 active_current = 7;
    */
-  activeCurrent: bigint;
+  activeCurrent?: bigint | undefined;
 
   /**
    * Millihertz
    *
-   * @generated from field: sint64 frequency = 8;
+   * @generated from field: optional sint64 frequency = 8;
    */
-  frequency: bigint;
+  frequency?: bigint | undefined;
 };
 
 /**
@@ -519,24 +519,24 @@ export declare type PressureSensorProperties = Message<"kusinta.iot.device.v1.Pr
   /**
    * kPa × 10
    *
-   * @generated from field: sint32 measured_value = 1;
+   * @generated from field: optional sint32 measured_value = 1;
    */
-  measuredValue: number;
+  measuredValue?: number | undefined;
 
   /**
-   * @generated from field: sint32 min_measured_value = 2;
+   * @generated from field: optional sint32 min_measured_value = 2;
    */
-  minMeasuredValue: number;
+  minMeasuredValue?: number | undefined;
 
   /**
-   * @generated from field: sint32 max_measured_value = 3;
+   * @generated from field: optional sint32 max_measured_value = 3;
    */
-  maxMeasuredValue: number;
+  maxMeasuredValue?: number | undefined;
 
   /**
-   * @generated from field: uint32 tolerance = 4;
+   * @generated from field: optional uint32 tolerance = 4;
    */
-  tolerance: number;
+  tolerance?: number | undefined;
 };
 
 /**

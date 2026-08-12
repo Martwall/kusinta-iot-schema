@@ -9,6 +9,19 @@ option optimize_for = SPEED;
 // Temperatures use sint32 in centidegrees (°C × 100), matching Matter's int16 × 0.01°C encoding.
 // Fields 1-99 are commonly-used attributes; 100+ are optional/rarely-used.
 //
+// Every field is `optional` — explicit presence, not a statement about how important the
+// attribute is. These messages are assembled incrementally from a PropertyUpdate stream, so
+// "never reported" has to be distinguishable from a reported value, and Matter gives zero a
+// meaning nearly everywhere: SystemMode Off=0, LockState NotFullyLocked=0, OccupancySensorType
+// PIR=0, Type Rollershade=0, a dimmer at level 0, 0.00 °C, 0 W. StateValue is the sharpest —
+// false means contact open, which is the alarm, so under implicit presence a contact sensor that
+// had never reported was byte-identical to one reporting an alarm.
+//
+// So: field absent = the device has never reported this attribute. Field present = a reading,
+// including zero. Consumers MUST check presence rather than treating zero as "no data", and
+// MUST NOT populate a field to mean "default" — leave it absent. Adding a field to any message
+// here means adding it as `optional`; the presence tests enforce that.
+//
 // Every field carries (matter_cluster_id) and (matter_attribute); every non-vendor
 // message carries (matter_device_type). Those options are the mapping — resolve a
 // PropertyUpdate or a device type from them, never from the field name. Field names
@@ -24,29 +37,29 @@ option optimize_for = SPEED;
 message ThermostatProperties {
   option (matter_device_type) = 0x0301; // Thermostat
 
-  sint32 local_temperature = 1 [(matter_cluster_id) = 0x0201, (matter_attribute) = "LocalTemperature"];
-  sint32 occupied_heating_setpoint = 2 [(matter_cluster_id) = 0x0201, (matter_attribute) = "OccupiedHeatingSetpoint"];
-  sint32 occupied_cooling_setpoint = 3 [(matter_cluster_id) = 0x0201, (matter_attribute) = "OccupiedCoolingSetpoint"];
+  optional sint32 local_temperature = 1 [(matter_cluster_id) = 0x0201, (matter_attribute) = "LocalTemperature"];
+  optional sint32 occupied_heating_setpoint = 2 [(matter_cluster_id) = 0x0201, (matter_attribute) = "OccupiedHeatingSetpoint"];
+  optional sint32 occupied_cooling_setpoint = 3 [(matter_cluster_id) = 0x0201, (matter_attribute) = "OccupiedCoolingSetpoint"];
   // Property-owner constraint
-  sint32 min_heat_setpoint_limit = 4 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MinHeatSetpointLimit"];
+  optional sint32 min_heat_setpoint_limit = 4 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MinHeatSetpointLimit"];
   // Property-owner constraint
-  sint32 max_heat_setpoint_limit = 5 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MaxHeatSetpointLimit"];
-  sint32 min_cool_setpoint_limit = 6 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MinCoolSetpointLimit"];
-  sint32 max_cool_setpoint_limit = 7 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MaxCoolSetpointLimit"];
-  uint32 control_sequence_of_operation = 8 [(matter_cluster_id) = 0x0201, (matter_attribute) = "ControlSequenceOfOperation"];
+  optional sint32 max_heat_setpoint_limit = 5 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MaxHeatSetpointLimit"];
+  optional sint32 min_cool_setpoint_limit = 6 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MinCoolSetpointLimit"];
+  optional sint32 max_cool_setpoint_limit = 7 [(matter_cluster_id) = 0x0201, (matter_attribute) = "MaxCoolSetpointLimit"];
+  optional uint32 control_sequence_of_operation = 8 [(matter_cluster_id) = 0x0201, (matter_attribute) = "ControlSequenceOfOperation"];
   // SystemMode: Off=0,Auto=1,Cool=3,Heat=4,EmHeat=5
-  uint32 system_mode = 9 [(matter_cluster_id) = 0x0201, (matter_attribute) = "SystemMode"];
-  uint32 thermostat_running_mode = 10 [(matter_cluster_id) = 0x0201, (matter_attribute) = "ThermostatRunningMode"];
+  optional uint32 system_mode = 9 [(matter_cluster_id) = 0x0201, (matter_attribute) = "SystemMode"];
+  optional uint32 thermostat_running_mode = 10 [(matter_cluster_id) = 0x0201, (matter_attribute) = "ThermostatRunningMode"];
 }
 
 // Matter Temperature Measurement cluster (0x0402)
 message TemperatureSensorProperties {
   option (matter_device_type) = 0x0302; // Temperature Sensor
 
-  sint32 measured_value = 1 [(matter_cluster_id) = 0x0402, (matter_attribute) = "MeasuredValue"];
-  sint32 min_measured_value = 2 [(matter_cluster_id) = 0x0402, (matter_attribute) = "MinMeasuredValue"];
-  sint32 max_measured_value = 3 [(matter_cluster_id) = 0x0402, (matter_attribute) = "MaxMeasuredValue"];
-  uint32 tolerance = 4 [(matter_cluster_id) = 0x0402, (matter_attribute) = "Tolerance"];
+  optional sint32 measured_value = 1 [(matter_cluster_id) = 0x0402, (matter_attribute) = "MeasuredValue"];
+  optional sint32 min_measured_value = 2 [(matter_cluster_id) = 0x0402, (matter_attribute) = "MinMeasuredValue"];
+  optional sint32 max_measured_value = 3 [(matter_cluster_id) = 0x0402, (matter_attribute) = "MaxMeasuredValue"];
+  optional uint32 tolerance = 4 [(matter_cluster_id) = 0x0402, (matter_attribute) = "Tolerance"];
 }
 
 // Matter Relative Humidity Measurement cluster (0x0405)
@@ -54,10 +67,10 @@ message HumiditySensorProperties {
   option (matter_device_type) = 0x0307; // Humidity Sensor
 
   // % × 100, 0–10000
-  uint32 measured_value = 1 [(matter_cluster_id) = 0x0405, (matter_attribute) = "MeasuredValue"];
-  uint32 min_measured_value = 2 [(matter_cluster_id) = 0x0405, (matter_attribute) = "MinMeasuredValue"];
-  uint32 max_measured_value = 3 [(matter_cluster_id) = 0x0405, (matter_attribute) = "MaxMeasuredValue"];
-  uint32 tolerance = 4 [(matter_cluster_id) = 0x0405, (matter_attribute) = "Tolerance"];
+  optional uint32 measured_value = 1 [(matter_cluster_id) = 0x0405, (matter_attribute) = "MeasuredValue"];
+  optional uint32 min_measured_value = 2 [(matter_cluster_id) = 0x0405, (matter_attribute) = "MinMeasuredValue"];
+  optional uint32 max_measured_value = 3 [(matter_cluster_id) = 0x0405, (matter_attribute) = "MaxMeasuredValue"];
+  optional uint32 tolerance = 4 [(matter_cluster_id) = 0x0405, (matter_attribute) = "Tolerance"];
 }
 
 // Matter Occupancy Sensing cluster (0x0406)
@@ -68,12 +81,12 @@ message OccupancySensorProperties {
   reserved "pir_occ_to_unocc_delay", "pir_unocc_to_occ_delay";
 
   // Occupancy bitmask: bit 0 = occupied
-  uint32 occupancy = 1 [(matter_cluster_id) = 0x0406, (matter_attribute) = "Occupancy"];
+  optional uint32 occupancy = 1 [(matter_cluster_id) = 0x0406, (matter_attribute) = "Occupancy"];
   // OccupancySensorType: PIR=0,Ultrasonic=1,PIRandUS=2,PhysicalContact=3
-  uint32 occupancy_sensor_type = 2 [(matter_cluster_id) = 0x0406, (matter_attribute) = "OccupancySensorType"];
-  uint32 occupancy_sensor_type_bitmap = 3 [(matter_cluster_id) = 0x0406, (matter_attribute) = "OccupancySensorTypeBitmap"];
-  uint32 pir_occupied_to_unoccupied_delay = 4 [(matter_cluster_id) = 0x0406, (matter_attribute) = "PIROccupiedToUnoccupiedDelay"];
-  uint32 pir_unoccupied_to_occupied_delay = 5 [(matter_cluster_id) = 0x0406, (matter_attribute) = "PIRUnoccupiedToOccupiedDelay"];
+  optional uint32 occupancy_sensor_type = 2 [(matter_cluster_id) = 0x0406, (matter_attribute) = "OccupancySensorType"];
+  optional uint32 occupancy_sensor_type_bitmap = 3 [(matter_cluster_id) = 0x0406, (matter_attribute) = "OccupancySensorTypeBitmap"];
+  optional uint32 pir_occupied_to_unoccupied_delay = 4 [(matter_cluster_id) = 0x0406, (matter_attribute) = "PIROccupiedToUnoccupiedDelay"];
+  optional uint32 pir_unoccupied_to_occupied_delay = 5 [(matter_cluster_id) = 0x0406, (matter_attribute) = "PIRUnoccupiedToOccupiedDelay"];
 }
 
 // Matter Boolean State cluster (0x0045)
@@ -81,7 +94,7 @@ message ContactSensorProperties {
   option (matter_device_type) = 0x0015; // Contact Sensor
 
   // StateValue: false = contact open (alarm), true = contact closed (normal)
-  bool state_value = 1 [(matter_cluster_id) = 0x0045, (matter_attribute) = "StateValue"];
+  optional bool state_value = 1 [(matter_cluster_id) = 0x0045, (matter_attribute) = "StateValue"];
 }
 
 // Matter Window Covering cluster (0x0102)
@@ -91,16 +104,16 @@ message WindowCoveringProperties {
   // The Matter attribute is the bare "Type"; the field keeps a qualified name because
   // `type` is a poor field name and keyword-adjacent in several target languages. The
   // mapping is in (matter_attribute), so the divergence costs consumers nothing.
-  uint32 covering_type = 1 [(matter_cluster_id) = 0x0102, (matter_attribute) = "Type"];
+  optional uint32 covering_type = 1 [(matter_cluster_id) = 0x0102, (matter_attribute) = "Type"];
   // current_position_lift_percent100ths is the primary attribute in Matter 1.5.1 (0–10000)
-  uint32 current_position_lift_percent100ths = 2 [(matter_cluster_id) = 0x0102, (matter_attribute) = "CurrentPositionLiftPercent100ths"];
-  uint32 current_position_tilt_percent100ths = 3 [(matter_cluster_id) = 0x0102, (matter_attribute) = "CurrentPositionTiltPercent100ths"];
-  uint32 target_position_lift_percent100ths = 4 [(matter_cluster_id) = 0x0102, (matter_attribute) = "TargetPositionLiftPercent100ths"];
-  uint32 target_position_tilt_percent100ths = 5 [(matter_cluster_id) = 0x0102, (matter_attribute) = "TargetPositionTiltPercent100ths"];
+  optional uint32 current_position_lift_percent100ths = 2 [(matter_cluster_id) = 0x0102, (matter_attribute) = "CurrentPositionLiftPercent100ths"];
+  optional uint32 current_position_tilt_percent100ths = 3 [(matter_cluster_id) = 0x0102, (matter_attribute) = "CurrentPositionTiltPercent100ths"];
+  optional uint32 target_position_lift_percent100ths = 4 [(matter_cluster_id) = 0x0102, (matter_attribute) = "TargetPositionLiftPercent100ths"];
+  optional uint32 target_position_tilt_percent100ths = 5 [(matter_cluster_id) = 0x0102, (matter_attribute) = "TargetPositionTiltPercent100ths"];
   // bitmask: global, lift, tilt
-  uint32 operational_status = 6 [(matter_cluster_id) = 0x0102, (matter_attribute) = "OperationalStatus"];
-  uint32 end_product_type = 7 [(matter_cluster_id) = 0x0102, (matter_attribute) = "EndProductType"];
-  uint32 mode = 8 [(matter_cluster_id) = 0x0102, (matter_attribute) = "Mode"];
+  optional uint32 operational_status = 6 [(matter_cluster_id) = 0x0102, (matter_attribute) = "OperationalStatus"];
+  optional uint32 end_product_type = 7 [(matter_cluster_id) = 0x0102, (matter_attribute) = "EndProductType"];
+  optional uint32 mode = 8 [(matter_cluster_id) = 0x0102, (matter_attribute) = "Mode"];
 }
 
 // Matter Door Lock cluster (0x0101 — a cluster ID, not the 0x0101 Dimmable Light device type)
@@ -108,50 +121,50 @@ message DoorLockProperties {
   option (matter_device_type) = 0x000A; // Door Lock
 
   // LockState: NotFullyLocked=0,Locked=1,Unlocked=2,Unlatched=3
-  uint32 lock_state = 1 [(matter_cluster_id) = 0x0101, (matter_attribute) = "LockState"];
-  uint32 lock_type = 2 [(matter_cluster_id) = 0x0101, (matter_attribute) = "LockType"];
-  bool actuator_enabled = 3 [(matter_cluster_id) = 0x0101, (matter_attribute) = "ActuatorEnabled"];
+  optional uint32 lock_state = 1 [(matter_cluster_id) = 0x0101, (matter_attribute) = "LockState"];
+  optional uint32 lock_type = 2 [(matter_cluster_id) = 0x0101, (matter_attribute) = "LockType"];
+  optional bool actuator_enabled = 3 [(matter_cluster_id) = 0x0101, (matter_attribute) = "ActuatorEnabled"];
   // Requires door sensor hardware
-  uint32 door_state = 4 [(matter_cluster_id) = 0x0101, (matter_attribute) = "DoorState"];
-  uint32 operating_mode = 5 [(matter_cluster_id) = 0x0101, (matter_attribute) = "OperatingMode"];
+  optional uint32 door_state = 4 [(matter_cluster_id) = 0x0101, (matter_attribute) = "DoorState"];
+  optional uint32 operating_mode = 5 [(matter_cluster_id) = 0x0101, (matter_attribute) = "OperatingMode"];
 }
 
 // Matter On/Off cluster (0x0006)
 message OnOffLightProperties {
   option (matter_device_type) = 0x0100; // On/Off Light
 
-  bool on_off = 1 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnOff"];
-  bool global_scene_control = 2 [(matter_cluster_id) = 0x0006, (matter_attribute) = "GlobalSceneControl"];
-  uint32 on_time = 3 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnTime"];
-  uint32 off_wait_time = 4 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OffWaitTime"];
-  uint32 start_up_on_off = 5 [(matter_cluster_id) = 0x0006, (matter_attribute) = "StartUpOnOff"];
+  optional bool on_off = 1 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnOff"];
+  optional bool global_scene_control = 2 [(matter_cluster_id) = 0x0006, (matter_attribute) = "GlobalSceneControl"];
+  optional uint32 on_time = 3 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnTime"];
+  optional uint32 off_wait_time = 4 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OffWaitTime"];
+  optional uint32 start_up_on_off = 5 [(matter_cluster_id) = 0x0006, (matter_attribute) = "StartUpOnOff"];
 }
 
 // Matter On/Off (0x0006) + Level Control (0x0008) clusters
 message DimmableLightProperties {
   option (matter_device_type) = 0x0101; // Dimmable Light
 
-  bool on_off = 1 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnOff"];
+  optional bool on_off = 1 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnOff"];
   // CurrentLevel (0–254)
-  uint32 current_level = 2 [(matter_cluster_id) = 0x0008, (matter_attribute) = "CurrentLevel"];
-  uint32 min_level = 3 [(matter_cluster_id) = 0x0008, (matter_attribute) = "MinLevel"];
-  uint32 max_level = 4 [(matter_cluster_id) = 0x0008, (matter_attribute) = "MaxLevel"];
-  uint32 on_level = 5 [(matter_cluster_id) = 0x0008, (matter_attribute) = "OnLevel"];
-  uint32 start_up_current_level = 6 [(matter_cluster_id) = 0x0008, (matter_attribute) = "StartUpCurrentLevel"];
-  uint32 remaining_time = 7 [(matter_cluster_id) = 0x0008, (matter_attribute) = "RemainingTime"];
+  optional uint32 current_level = 2 [(matter_cluster_id) = 0x0008, (matter_attribute) = "CurrentLevel"];
+  optional uint32 min_level = 3 [(matter_cluster_id) = 0x0008, (matter_attribute) = "MinLevel"];
+  optional uint32 max_level = 4 [(matter_cluster_id) = 0x0008, (matter_attribute) = "MaxLevel"];
+  optional uint32 on_level = 5 [(matter_cluster_id) = 0x0008, (matter_attribute) = "OnLevel"];
+  optional uint32 start_up_current_level = 6 [(matter_cluster_id) = 0x0008, (matter_attribute) = "StartUpCurrentLevel"];
+  optional uint32 remaining_time = 7 [(matter_cluster_id) = 0x0008, (matter_attribute) = "RemainingTime"];
 }
 
 // Matter On/Off (0x0006) + Level Control (0x0008) + Color Control (0x0300) clusters
 message ColorTemperatureLightProperties {
   option (matter_device_type) = 0x010C; // Color Temperature Light
 
-  bool on_off = 1 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnOff"];
-  uint32 current_level = 2 [(matter_cluster_id) = 0x0008, (matter_attribute) = "CurrentLevel"];
-  uint32 color_temperature_mireds = 3 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorTemperatureMireds"];
-  uint32 color_temp_physical_min_mireds = 4 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorTempPhysicalMinMireds"];
-  uint32 color_temp_physical_max_mireds = 5 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorTempPhysicalMaxMireds"];
-  uint32 startup_color_temperature_mireds = 6 [(matter_cluster_id) = 0x0300, (matter_attribute) = "StartUpColorTemperatureMireds"];
-  uint32 color_mode = 7 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorMode"];
+  optional bool on_off = 1 [(matter_cluster_id) = 0x0006, (matter_attribute) = "OnOff"];
+  optional uint32 current_level = 2 [(matter_cluster_id) = 0x0008, (matter_attribute) = "CurrentLevel"];
+  optional uint32 color_temperature_mireds = 3 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorTemperatureMireds"];
+  optional uint32 color_temp_physical_min_mireds = 4 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorTempPhysicalMinMireds"];
+  optional uint32 color_temp_physical_max_mireds = 5 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorTempPhysicalMaxMireds"];
+  optional uint32 startup_color_temperature_mireds = 6 [(matter_cluster_id) = 0x0300, (matter_attribute) = "StartUpColorTemperatureMireds"];
+  optional uint32 color_mode = 7 [(matter_cluster_id) = 0x0300, (matter_attribute) = "ColorMode"];
 }
 
 // Matter Electrical Power Measurement cluster (0x0090)
@@ -189,13 +202,13 @@ message EnergySensorProperties {
   option (matter_device_type) = 0x0510; // Electrical Sensor
 
   // Milliwatts, negative on export
-  sint64 active_power = 5 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActivePower"];
+  optional sint64 active_power = 5 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActivePower"];
   // Millivolts
-  sint64 voltage = 6 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Voltage"];
+  optional sint64 voltage = 6 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Voltage"];
   // Milliamps, negative on export
-  sint64 active_current = 7 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActiveCurrent"];
+  optional sint64 active_current = 7 [(matter_cluster_id) = 0x0090, (matter_attribute) = "ActiveCurrent"];
   // Millihertz
-  sint64 frequency = 8 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Frequency"];
+  optional sint64 frequency = 8 [(matter_cluster_id) = 0x0090, (matter_attribute) = "Frequency"];
 }
 
 // Matter Pressure Measurement cluster (0x0403)
@@ -203,8 +216,8 @@ message PressureSensorProperties {
   option (matter_device_type) = 0x0305; // Pressure Sensor
 
   // kPa × 10
-  sint32 measured_value = 1 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MeasuredValue"];
-  sint32 min_measured_value = 2 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MinMeasuredValue"];
-  sint32 max_measured_value = 3 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MaxMeasuredValue"];
-  uint32 tolerance = 4 [(matter_cluster_id) = 0x0403, (matter_attribute) = "Tolerance"];
+  optional sint32 measured_value = 1 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MeasuredValue"];
+  optional sint32 min_measured_value = 2 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MinMeasuredValue"];
+  optional sint32 max_measured_value = 3 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MaxMeasuredValue"];
+  optional uint32 tolerance = 4 [(matter_cluster_id) = 0x0403, (matter_attribute) = "Tolerance"];
 }

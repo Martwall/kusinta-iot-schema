@@ -28,6 +28,10 @@ export declare const file_kusinta_iot_device_v1_property_update: GenFile;
  *     cluster_id_hex parsed as a hex integer AND whose (matter_attribute) equals
  *     attribute_name.
  *
+ * Writing the resolved field marks it present, which is how a snapshot distinguishes a
+ * reported zero from an attribute the device has never sent. A consumer assembling a
+ * snapshot MUST NOT pre-populate fields with defaults — see properties.proto.
+ *
  * Both comparisons are exact. attribute_name is byte-for-byte equal to the Matter
  * attribute's spec spelling; it is NOT derived from the proto field name and case- or
  * separator-insensitive matching against field names is not a valid fallback —

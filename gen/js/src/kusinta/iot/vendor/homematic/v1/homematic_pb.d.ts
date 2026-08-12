@@ -14,37 +14,42 @@ export declare const file_kusinta_iot_vendor_homematic_v1_homematic: GenFile;
  * HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
  * Add new fields at the next available field number — never reuse a removed number.
  *
+ * Every field is `optional`, for the same reason as device/v1/properties.proto: these are
+ * assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
+ * false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
+ * reported; present means a reading, including zero.
+ *
  * @generated from message kusinta.iot.vendor.homematic.v1.HmThermostatProps
  */
 export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1.HmThermostatProps"> & {
   /**
-   * @generated from field: bool boost_mode = 1;
+   * @generated from field: optional bool boost_mode = 1;
    */
-  boostMode: boolean;
+  boostMode?: boolean | undefined;
 
   /**
    * minutes remaining in boost
    *
-   * @generated from field: float boost_time_period = 2;
+   * @generated from field: optional float boost_time_period = 2;
    */
-  boostTimePeriod: number;
+  boostTimePeriod?: number | undefined;
 
   /**
    * HmIP ControlMode enum
    *
-   * @generated from field: uint32 control_mode = 3;
+   * @generated from field: optional uint32 control_mode = 3;
    */
-  controlMode: number;
+  controlMode?: number | undefined;
 
   /**
-   * @generated from field: bool frost_protection = 4;
+   * @generated from field: optional bool frost_protection = 4;
    */
-  frostProtection: boolean;
+  frostProtection?: boolean | undefined;
 
   /**
-   * @generated from field: float current_profile_period = 5;
+   * @generated from field: optional float current_profile_period = 5;
    */
-  currentProfilePeriod: number;
+  currentProfilePeriod?: number | undefined;
 };
 
 /**

@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/kusinta/iot/vendor/homematic/v1/homematic.proto\x12\x1fkusinta.iot.vendor.homematic.v1\"\xe2\x01\n\x11HmThermostatProps\x12\x1d\n\nboost_mode\x18\x01 \x01(\x08R\tboostMode\x12*\n\x11\x62oost_time_period\x18\x02 \x01(\x02R\x0f\x62oostTimePeriod\x12!\n\x0c\x63ontrol_mode\x18\x03 \x01(\rR\x0b\x63ontrolMode\x12)\n\x10\x66rost_protection\x18\x04 \x01(\x08R\x0f\x66rostProtection\x12\x34\n\x16\x63urrent_profile_period\x18\x05 \x01(\x02R\x14\x63urrentProfilePeriod\"\xdc\x01\n\x18HomematicVendorExtension\x12+\n\x11homematic_address\x18\x01 \x01(\tR\x10homematicAddress\x12%\n\x0ehomematic_type\x18\x02 \x01(\tR\rhomematicType\x12Y\n\rhm_thermostat\x18\n \x01(\x0b\x32\x32.kusinta.iot.vendor.homematic.v1.HmThermostatPropsH\x00R\x0chmThermostatB\x11\n\x0fhomematic_propsB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/kusinta/iot/vendor/homematic/v1/homematic.proto\x12\x1fkusinta.iot.vendor.homematic.v1\"\xe1\x02\n\x11HmThermostatProps\x12\"\n\nboost_mode\x18\x01 \x01(\x08H\x00R\tboostMode\x88\x01\x01\x12/\n\x11\x62oost_time_period\x18\x02 \x01(\x02H\x01R\x0f\x62oostTimePeriod\x88\x01\x01\x12&\n\x0c\x63ontrol_mode\x18\x03 \x01(\rH\x02R\x0b\x63ontrolMode\x88\x01\x01\x12.\n\x10\x66rost_protection\x18\x04 \x01(\x08H\x03R\x0f\x66rostProtection\x88\x01\x01\x12\x39\n\x16\x63urrent_profile_period\x18\x05 \x01(\x02H\x04R\x14\x63urrentProfilePeriod\x88\x01\x01\x42\r\n\x0b_boost_modeB\x14\n\x12_boost_time_periodB\x0f\n\r_control_modeB\x13\n\x11_frost_protectionB\x19\n\x17_current_profile_period\"\xdc\x01\n\x18HomematicVendorExtension\x12+\n\x11homematic_address\x18\x01 \x01(\tR\x10homematicAddress\x12%\n\x0ehomematic_type\x18\x02 \x01(\tR\rhomematicType\x12Y\n\rhm_thermostat\x18\n \x01(\x0b\x32\x32.kusinta.iot.vendor.homematic.v1.HmThermostatPropsH\x00R\x0chmThermostatB\x11\n\x0fhomematic_propsB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,7 +33,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_HMTHERMOSTATPROPS']._serialized_start=85
-  _globals['_HMTHERMOSTATPROPS']._serialized_end=311
-  _globals['_HOMEMATICVENDOREXTENSION']._serialized_start=314
-  _globals['_HOMEMATICVENDOREXTENSION']._serialized_end=534
+  _globals['_HMTHERMOSTATPROPS']._serialized_end=438
+  _globals['_HOMEMATICVENDOREXTENSION']._serialized_start=441
+  _globals['_HOMEMATICVENDOREXTENSION']._serialized_end=661
 # @@protoc_insertion_point(module_scope)

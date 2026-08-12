@@ -93,6 +93,23 @@ keep them).
 the completeness tests in `gen/js/src/__tests__/matter_options.test.js` and
 `gen/python/tests/test_matter_options.py` do.
 
+## Field presence in properties
+
+Every field in `properties.proto` and in `HmThermostatProps` is `optional` — explicit presence.
+These messages are assembled incrementally from a `PropertyUpdate` stream, and Matter gives zero
+a meaning nearly everywhere: `SystemMode` `Off=0`, `LockState` `NotFullyLocked=0`, `Type`
+`Rollershade=0`, a dimmer at level `0`, `0.00 °C`, `0 W`. `StateValue` is the sharpest — `false`
+means contact open, which is the alarm.
+
+- **absent** — the device has never reported this attribute
+- **present** — a reading, including zero
+
+Check presence (`HasField` / `hasX()` / `!== undefined`), never treat zero as "no data", and never
+populate a field to mean "default" — leave it absent. New fields go in as `optional`; the presence
+tests in `gen/python/tests/test_presence.py` and `gen/js/src/__tests__/presence.test.js` enforce it.
+
+`DeviceDescriptor` is deliberately excluded: it is set once at announcement, not stream-assembled.
+
 ## Consuming the packages
 
 | Language | Package | README |

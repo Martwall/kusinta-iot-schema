@@ -6,12 +6,17 @@ option optimize_for = SPEED;
 
 // HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
 // Add new fields at the next available field number — never reuse a removed number.
+//
+// Every field is `optional`, for the same reason as device/v1/properties.proto: these are
+// assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
+// false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
+// reported; present means a reading, including zero.
 message HmThermostatProps {
-  bool  boost_mode            = 1;
-  float boost_time_period     = 2; // minutes remaining in boost
-  uint32 control_mode         = 3; // HmIP ControlMode enum
-  bool  frost_protection      = 4;
-  float current_profile_period = 5;
+  optional bool  boost_mode            = 1;
+  optional float boost_time_period     = 2; // minutes remaining in boost
+  optional uint32 control_mode         = 3; // HmIP ControlMode enum
+  optional bool  frost_protection      = 4;
+  optional float current_profile_period = 5;
 }
 
 // Top-level vendor extension attached to Device.properties field 50.

@@ -18,6 +18,11 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
 /// Add new fields at the next available field number — never reuse a removed number.
+///
+/// Every field is `optional`, for the same reason as device/v1/properties.proto: these are
+/// assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
+/// false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
+/// reported; present means a reading, including zero.
 class HmThermostatProps extends $pb.GeneratedMessage {
   factory HmThermostatProps({
     $core.bool? boostMode,
