@@ -1,0 +1,22 @@
+# Analysis settings for the generated Dart tree.
+#
+# Everything under lib/ except the two leg barrels is emitted by buf and is not
+# editable here — the only fix for a complaint about it is a different plugin
+# version. So this file deliberately enables no lint rules: style feedback on
+# code nobody can edit is noise that would eventually be ignored wholesale.
+#
+# Its other job is to exist. The analyzer searches ancestor directories for an
+# analysis_options.yaml, so without one here, a file added at the repo root
+# later would silently start applying its rules to the generated tree and could
+# fail the CI Analyze Dart stage for reasons unrelated to the schema.
+#
+# The CI gate runs `dart analyze --no-fatal-warnings`, so it fails on errors
+# only. See the Analyze Dart stage in the Jenkinsfile for why.
+
+analyzer:
+  errors:
+    # An ambiguous export is the specific defect this tree is analyzed for: two
+    # legs each declare a GatewayError, and Dart cannot alias an export, so a
+    # barrel spanning both cannot compile. It is already an error, and this
+    # states that it must stay one.
+    ambiguous_export: error

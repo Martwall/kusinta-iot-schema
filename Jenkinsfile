@@ -96,12 +96,20 @@ pipeline {
     // catches a generated tree that does not build — an ambiguous export across
     // the leg barrels, most of all, which is invisible to buf and to the JS and
     // Python suites.
+    //
+    // --no-fatal-warnings: warnings are fatal by default, and almost every
+    // warning this tree can produce is about generated code that cannot be
+    // edited here — a deprecated member after a protobuf runtime bump, say. The
+    // only fix would be a different plugin version, so failing the release on
+    // one blocks a schema change for a reason unrelated to the schema. Warnings
+    // still print; errors, which mean the tree does not compile, still fail.
+    // Infos are not fatal by default, so there is nothing to pass for them.
     stage('Analyze Dart') {
       steps {
         sh '''
           cd gen/dart
           dart pub get
-          dart analyze
+          dart analyze --no-fatal-warnings
         '''
       }
     }
