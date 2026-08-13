@@ -14,7 +14,7 @@ export declare const file_kusinta_iot_device_v1_property_update: GenFile;
 
 /**
  * PropertyUpdate carries a single attribute change from connector to gateway,
- * or from gateway to Flutter app.
+ * or from gateway to app.
  *
  * Resolution rule (normative)
  *

@@ -20,9 +20,9 @@ import '../../access/v1/roles.pbenum.dart' as $1;
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// AppTokenClaims is the contract for the payload of the JWT carried in
-/// AppHandshake.jwt. It is the single source of truth shared between
-/// mykusinta-api-server (which mints the token) and the gateway (which validates
-/// it locally against the mykusinta-api-server public key).
+/// AppHandshake.jwt. It is the single source of truth shared between the
+/// api-server (which mints the token) and the gateway (which validates it
+/// locally against the api-server's public key).
 ///
 /// This message is NOT sent on the wire — the wire value stays the signed,
 /// compact JWS string in AppHandshake.jwt. The fields here document the claim
@@ -102,6 +102,8 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   static AppTokenClaims? _defaultInstance;
 
   /// Registered claims (RFC 7519).
+  /// Issuer: the api-server's issuer identifier, agreed out of band. A fixed
+  /// string both sides compare exactly — not derived from anything here.
   @$pb.TagNumber(1)
   $core.String get iss => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -156,8 +158,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   /// this is a list. Carried in the JWT as an array of enum NAME strings
   /// (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]), matching proto3 canonical
   /// JSON enum encoding — not integer values. This keeps the claim
-  /// self-describing and aligns with text-typed role storage in
-  /// mykusinta-api-server.
+  /// self-describing and aligns with text-typed role storage on the api-server.
   @$pb.TagNumber(6)
   $pb.PbList<$1.Role> get roles => $_getList(5);
 
@@ -180,10 +181,10 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   /// stripping it.
   ///
   /// Rollout order, since a mandatory claim cannot appear on both sides at once:
-  /// mykusinta-api-server must be issuing cnf on every token BEFORE the gateway
-  /// begins rejecting tokens that lack it. Reverse that order and every live
-  /// session is refused. Tokens are short-TTL, so the gap between the two
-  /// deployments need only exceed one token lifetime.
+  /// the api-server must be issuing cnf on every token BEFORE the gateway begins
+  /// rejecting tokens that lack it. Reverse that order and every live session is
+  /// refused. Tokens are short-TTL, so the gap between the two deployments need
+  /// only exceed one token lifetime.
   @$pb.TagNumber(7)
   Confirmation get cnf => $_getN(6);
   @$pb.TagNumber(7)

@@ -8,7 +8,7 @@ import "kusinta/iot/identity/v1/identity.proto";
 option optimize_for = SPEED;
 
 // PropertyUpdate carries a single attribute change from connector to gateway,
-// or from gateway to Flutter app.
+// or from gateway to app.
 //
 // Resolution rule (normative)
 //

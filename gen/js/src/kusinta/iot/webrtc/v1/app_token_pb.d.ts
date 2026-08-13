@@ -14,9 +14,9 @@ export declare const file_kusinta_iot_webrtc_v1_app_token: GenFile;
 
 /**
  * AppTokenClaims is the contract for the payload of the JWT carried in
- * AppHandshake.jwt. It is the single source of truth shared between
- * mykusinta-api-server (which mints the token) and the gateway (which validates
- * it locally against the mykusinta-api-server public key).
+ * AppHandshake.jwt. It is the single source of truth shared between the
+ * api-server (which mints the token) and the gateway (which validates it
+ * locally against the api-server's public key).
  *
  * This message is NOT sent on the wire — the wire value stays the signed,
  * compact JWS string in AppHandshake.jwt. The fields here document the claim
@@ -30,8 +30,8 @@ export declare const file_kusinta_iot_webrtc_v1_app_token: GenFile;
 export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClaims"> & {
   /**
    * Registered claims (RFC 7519).
-   *
-   * issuer: "mykusinta-api-server"
+   * Issuer: the api-server's issuer identifier, agreed out of band. A fixed
+   * string both sides compare exactly — not derived from anything here.
    *
    * @generated from field: string iss = 1;
    */
@@ -71,8 +71,7 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
    * this is a list. Carried in the JWT as an array of enum NAME strings
    * (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]), matching proto3 canonical
    * JSON enum encoding — not integer values. This keeps the claim
-   * self-describing and aligns with text-typed role storage in
-   * mykusinta-api-server.
+   * self-describing and aligns with text-typed role storage on the api-server.
    *
    * @generated from field: repeated kusinta.iot.access.v1.Role roles = 6;
    */
@@ -98,10 +97,10 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
    * stripping it.
    *
    * Rollout order, since a mandatory claim cannot appear on both sides at once:
-   * mykusinta-api-server must be issuing cnf on every token BEFORE the gateway
-   * begins rejecting tokens that lack it. Reverse that order and every live
-   * session is refused. Tokens are short-TTL, so the gap between the two
-   * deployments need only exceed one token lifetime.
+   * the api-server must be issuing cnf on every token BEFORE the gateway begins
+   * rejecting tokens that lack it. Reverse that order and every live session is
+   * refused. Tokens are short-TTL, so the gap between the two deployments need
+   * only exceed one token lifetime.
    *
    * @generated from field: kusinta.iot.webrtc.v1.Confirmation cnf = 7;
    */

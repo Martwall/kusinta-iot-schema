@@ -236,7 +236,7 @@ export declare type CommandError = Message<"kusinta.iot.webrtc.v1.CommandError">
 export declare const CommandErrorSchema: GenMessage<CommandError>;
 
 /**
- * CommandResult travels gateway → Flutter app (GatewayMessage) and
+ * CommandResult travels gateway → app (GatewayMessage) and
  * connector → gateway (SessionRequest via connector.proto import).
  *
  * @generated from message kusinta.iot.webrtc.v1.CommandResult

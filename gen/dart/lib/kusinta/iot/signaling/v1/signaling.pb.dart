@@ -130,7 +130,7 @@ class SdpAnswer extends $pb.GeneratedMessage {
 
 /// candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
 /// bind it to a media section: WebRTC's addIceCandidate requires a non-null
-/// sdpMid (passing null NPEs in the Android JNI layer). Under BUNDLE both are
+/// sdpMid (some native WebRTC bindings crash on a null). Under BUNDLE both are
 /// constant ("0" / 0) for a single-m-line session, but they must be carried so
 /// candidates stay correct once additional m-lines (e.g. camera video) exist.
 class IceCandidate extends $pb.GeneratedMessage {
@@ -217,7 +217,7 @@ class IceCandidate extends $pb.GeneratedMessage {
 
 /// Empty keepalive. The gateway sends this periodically on the GatewayConnect
 /// stream so the otherwise-idle bidi request keeps producing DATA frames, which
-/// resets HAProxy's inactivity timers (timeout client/server) and stops the relay
+/// resets the inactivity timers on any proxy between the two ends and stops it
 /// from tearing the stream down. Carries no routing target and is dropped on receipt.
 class HeartBeat extends $pb.GeneratedMessage {
   factory HeartBeat() => create();
@@ -392,7 +392,8 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
 enum GatewayConnectRequest_Payload { answer, iceCandidate, heartbeat, notSet }
 
 /// Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
-/// Auth: x-client-cert-fingerprint metadata header (set by HAProxy from mTLS).
+/// Auth: x-client-cert-fingerprint metadata header, set from the client
+/// certificate by the mTLS-terminating proxy in front of this service.
 class GatewayConnectRequest extends $pb.GeneratedMessage {
   factory GatewayConnectRequest({
     $0.UserId? targetUserId,
@@ -649,7 +650,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
 
 enum UserConnectRequest_Payload { handshake, offer, iceCandidate, notSet }
 
-/// Messages sent by the Flutter app (GatewaySignalingService.UserConnect stream).
+/// Messages sent by the app (GatewaySignalingService.UserConnect stream).
 /// Auth: Authorization: Bearer <jwt> in gRPC request metadata (validated by interceptor).
 class UserConnectRequest extends $pb.GeneratedMessage {
   factory UserConnectRequest({
@@ -770,7 +771,7 @@ class UserConnectRequest extends $pb.GeneratedMessage {
 
 enum UserConnectResponse_Payload { handshakeAck, answer, iceCandidate, notSet }
 
-/// Messages sent by the api-server to the Flutter app.
+/// Messages sent by the api-server to the app.
 class UserConnectResponse extends $pb.GeneratedMessage {
   factory UserConnectResponse({
     UserHandshakeAck? handshakeAck,

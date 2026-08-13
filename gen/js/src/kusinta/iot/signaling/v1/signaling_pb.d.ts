@@ -46,7 +46,7 @@ export declare const SdpAnswerSchema: GenMessage<SdpAnswer>;
 /**
  * candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
  * bind it to a media section: WebRTC's addIceCandidate requires a non-null
- * sdpMid (passing null NPEs in the Android JNI layer). Under BUNDLE both are
+ * sdpMid (some native WebRTC bindings crash on a null). Under BUNDLE both are
  * constant ("0" / 0) for a single-m-line session, but they must be carried so
  * candidates stay correct once additional m-lines (e.g. camera video) exist.
  *
@@ -78,7 +78,7 @@ export declare const IceCandidateSchema: GenMessage<IceCandidate>;
 /**
  * Empty keepalive. The gateway sends this periodically on the GatewayConnect
  * stream so the otherwise-idle bidi request keeps producing DATA frames, which
- * resets HAProxy's inactivity timers (timeout client/server) and stops the relay
+ * resets the inactivity timers on any proxy between the two ends and stops it
  * from tearing the stream down. Carries no routing target and is dropped on receipt.
  *
  * @generated from message kusinta.iot.signaling.v1.HeartBeat
@@ -134,7 +134,8 @@ export declare const UserHandshakeAckSchema: GenMessage<UserHandshakeAck>;
 
 /**
  * Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
- * Auth: x-client-cert-fingerprint metadata header (set by HAProxy from mTLS).
+ * Auth: x-client-cert-fingerprint metadata header, set from the client
+ * certificate by the mTLS-terminating proxy in front of this service.
  *
  * @generated from message kusinta.iot.signaling.v1.GatewayConnectRequest
  */
@@ -227,7 +228,7 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
 export declare const GatewayConnectResponseSchema: GenMessage<GatewayConnectResponse>;
 
 /**
- * Messages sent by the Flutter app (GatewaySignalingService.UserConnect stream).
+ * Messages sent by the app (GatewaySignalingService.UserConnect stream).
  * Auth: Authorization: Bearer <jwt> in gRPC request metadata (validated by interceptor).
  *
  * @generated from message kusinta.iot.signaling.v1.UserConnectRequest
@@ -273,7 +274,7 @@ export declare type UserConnectRequest = Message<"kusinta.iot.signaling.v1.UserC
 export declare const UserConnectRequestSchema: GenMessage<UserConnectRequest>;
 
 /**
- * Messages sent by the api-server to the Flutter app.
+ * Messages sent by the api-server to the app.
  *
  * @generated from message kusinta.iot.signaling.v1.UserConnectResponse
  */

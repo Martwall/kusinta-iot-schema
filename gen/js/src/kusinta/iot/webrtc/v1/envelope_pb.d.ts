@@ -56,8 +56,8 @@ export declare type HandshakeRejected = Message<"kusinta.iot.webrtc.v1.Handshake
 export declare const HandshakeRejectedSchema: GenMessage<HandshakeRejected>;
 
 /**
- * AppHandshake must be the first message sent by the Flutter app on the data channel.
- * The gateway validates the JWT locally using the mykusinta-api-server public key,
+ * AppHandshake must be the first message sent by the app on the data channel.
+ * The gateway validates the JWT locally using the api-server's public key,
  * checks that gateway_id in the JWT matches this gateway, then extracts the role.
  *
  * @generated from message kusinta.iot.webrtc.v1.AppHandshake
@@ -65,8 +65,8 @@ export declare const HandshakeRejectedSchema: GenMessage<HandshakeRejected>;
 export declare type AppHandshake = Message<"kusinta.iot.webrtc.v1.AppHandshake"> & {
   /**
    * Signed compact JWS. Its payload claims are documented by AppTokenClaims
-   * in app_token.proto — the shared contract between mykusinta-api-server
-   * (issuer) and the gateway (validator).
+   * in app_token.proto — the shared contract between the api-server (issuer)
+   * and the gateway (validator).
    *
    * @generated from field: string jwt = 1;
    */
@@ -163,7 +163,7 @@ export declare type RefusedSubscription = Message<"kusinta.iot.webrtc.v1.Refused
 export declare const RefusedSubscriptionSchema: GenMessage<RefusedSubscription>;
 
 /**
- * Answer to SubscribeDevices / UnsubscribeDevices, gateway → Flutter app.
+ * Answer to SubscribeDevices / UnsubscribeDevices, gateway → app.
  * `subscribed` is the effective set after the change, not a delta: an app that
  * missed an ack or raced two requests re-syncs from it without reconnecting.
  *
@@ -221,7 +221,7 @@ export declare type PropertyReadRequest = Message<"kusinta.iot.webrtc.v1.Propert
 export declare const PropertyReadRequestSchema: GenMessage<PropertyReadRequest>;
 
 /**
- * Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError
+ * Session-level error, gateway → app. Mirrors connector.v1.GatewayError
  * on the connector leg; kept separate because the two legs have different
  * authorization semantics and this one has a closed code vocabulary.
  *
@@ -255,7 +255,7 @@ export declare type GatewayError = Message<"kusinta.iot.webrtc.v1.GatewayError">
 export declare const GatewayErrorSchema: GenMessage<GatewayError>;
 
 /**
- * GatewayMessage: gateway → Flutter app
+ * GatewayMessage: gateway → app
  *
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
  */
@@ -343,7 +343,7 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
 export declare const GatewayMessageSchema: GenMessage<GatewayMessage>;
 
 /**
- * AppMessage: Flutter app → gateway
+ * AppMessage: app → gateway
  *
  * @generated from message kusinta.iot.webrtc.v1.AppMessage
  */

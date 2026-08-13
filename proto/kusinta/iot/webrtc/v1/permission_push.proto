@@ -7,7 +7,7 @@ import "kusinta/iot/access/v1/acl.proto";
 
 option optimize_for = SPEED;
 
-// Pushed to the Flutter app whenever the user's effective permissions change.
+// Pushed to the app whenever the user's effective permissions change.
 // change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED", "CONSTRAINT_UPDATED"
 message LivePermissionUpdate {
   kusinta.iot.access.v1.EffectivePermissions new_permissions  = 1;

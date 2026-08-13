@@ -17,13 +17,13 @@ message HandshakeRejected {
   string reason = 1;
 }
 
-// AppHandshake must be the first message sent by the Flutter app on the data channel.
-// The gateway validates the JWT locally using the mykusinta-api-server public key,
+// AppHandshake must be the first message sent by the app on the data channel.
+// The gateway validates the JWT locally using the api-server's public key,
 // checks that gateway_id in the JWT matches this gateway, then extracts the role.
 message AppHandshake {
   // Signed compact JWS. Its payload claims are documented by AppTokenClaims
-  // in app_token.proto — the shared contract between mykusinta-api-server
-  // (issuer) and the gateway (validator).
+  // in app_token.proto — the shared contract between the api-server (issuer)
+  // and the gateway (validator).
   string                                    jwt                  = 1;
   // Initial interest set — an optimisation that saves one round trip, equivalent to
   // sending SubscribeDevices immediately after the handshake. Interest only: naming
@@ -56,7 +56,7 @@ message RefusedSubscription {
   string                           message   = 3; // human-readable, for logs
 }
 
-// Answer to SubscribeDevices / UnsubscribeDevices, gateway → Flutter app.
+// Answer to SubscribeDevices / UnsubscribeDevices, gateway → app.
 // `subscribed` is the effective set after the change, not a delta: an app that
 // missed an ack or raced two requests re-syncs from it without reconnecting.
 message SubscriptionAck {
@@ -104,7 +104,7 @@ enum GatewayErrorCode {
   GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED = 5;
 }
 
-// Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError
+// Session-level error, gateway → app. Mirrors connector.v1.GatewayError
 // on the connector leg; kept separate because the two legs have different
 // authorization semantics and this one has a closed code vocabulary.
 message GatewayError {
@@ -113,7 +113,7 @@ message GatewayError {
   map<string, string> metadata = 3; // structured detail, e.g. {"device_id": "therm-1"}
 }
 
-// GatewayMessage: gateway → Flutter app
+// GatewayMessage: gateway → app
 message GatewayMessage {
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;
@@ -134,7 +134,7 @@ message GatewayMessage {
   }
 }
 
-// AppMessage: Flutter app → gateway
+// AppMessage: app → gateway
 message AppMessage {
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;

@@ -16,7 +16,7 @@ import type { DeviceId } from "../../identity/v1/identity_pb.js";
 export declare const file_kusinta_iot_webrtc_v1_device_state: GenFile;
 
 /**
- * Full device state sent to the Flutter app on initial WebRTC connection.
+ * Full device state sent to the app on initial WebRTC connection.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeviceStateSnapshot
  */
@@ -44,7 +44,7 @@ export declare type DeviceStateSnapshot = Message<"kusinta.iot.webrtc.v1.DeviceS
 export declare const DeviceStateSnapshotSchema: GenMessage<DeviceStateSnapshot>;
 
 /**
- * Single property change event streamed to the Flutter app in real time.
+ * Single property change event streamed to the app in real time.
  *
  * @generated from message kusinta.iot.webrtc.v1.DevicePropertyEvent
  */

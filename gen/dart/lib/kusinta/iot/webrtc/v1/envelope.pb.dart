@@ -160,8 +160,8 @@ class HandshakeRejected extends $pb.GeneratedMessage {
   void clearReason() => $_clearField(1);
 }
 
-/// AppHandshake must be the first message sent by the Flutter app on the data channel.
-/// The gateway validates the JWT locally using the mykusinta-api-server public key,
+/// AppHandshake must be the first message sent by the app on the data channel.
+/// The gateway validates the JWT locally using the api-server's public key,
 /// checks that gateway_id in the JWT matches this gateway, then extracts the role.
 class AppHandshake extends $pb.GeneratedMessage {
   factory AppHandshake({
@@ -217,8 +217,8 @@ class AppHandshake extends $pb.GeneratedMessage {
   static AppHandshake? _defaultInstance;
 
   /// Signed compact JWS. Its payload claims are documented by AppTokenClaims
-  /// in app_token.proto — the shared contract between mykusinta-api-server
-  /// (issuer) and the gateway (validator).
+  /// in app_token.proto — the shared contract between the api-server (issuer)
+  /// and the gateway (validator).
   @$pb.TagNumber(1)
   $core.String get jwt => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -437,7 +437,7 @@ class RefusedSubscription extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(3);
 }
 
-/// Answer to SubscribeDevices / UnsubscribeDevices, gateway → Flutter app.
+/// Answer to SubscribeDevices / UnsubscribeDevices, gateway → app.
 /// `subscribed` is the effective set after the change, not a delta: an app that
 /// missed an ack or raced two requests re-syncs from it without reconnecting.
 class SubscriptionAck extends $pb.GeneratedMessage {
@@ -597,7 +597,7 @@ class PropertyReadRequest extends $pb.GeneratedMessage {
   void clearClusterIdHex() => $_clearField(3);
 }
 
-/// Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError
+/// Session-level error, gateway → app. Mirrors connector.v1.GatewayError
 /// on the connector leg; kept separate because the two legs have different
 /// authorization semantics and this one has a closed code vocabulary.
 class GatewayError extends $pb.GeneratedMessage {
@@ -696,7 +696,7 @@ enum GatewayMessage_Payload {
   notSet
 }
 
-/// GatewayMessage: gateway → Flutter app
+/// GatewayMessage: gateway → app
 class GatewayMessage extends $pb.GeneratedMessage {
   factory GatewayMessage({
     $core.String? messageId,
@@ -947,7 +947,7 @@ enum AppMessage_Payload {
   notSet
 }
 
-/// AppMessage: Flutter app → gateway
+/// AppMessage: app → gateway
 class AppMessage extends $pb.GeneratedMessage {
   factory AppMessage({
     $core.String? messageId,

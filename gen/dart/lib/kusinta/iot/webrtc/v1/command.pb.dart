@@ -646,7 +646,7 @@ class CommandError extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(2);
 }
 
-/// CommandResult travels gateway → Flutter app (GatewayMessage) and
+/// CommandResult travels gateway → app (GatewayMessage) and
 /// connector → gateway (SessionRequest via connector.proto import).
 class CommandResult extends $pb.GeneratedMessage {
   factory CommandResult({

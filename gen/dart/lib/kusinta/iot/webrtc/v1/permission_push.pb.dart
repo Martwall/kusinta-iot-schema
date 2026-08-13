@@ -19,7 +19,7 @@ import '../../identity/v1/identity.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Pushed to the Flutter app whenever the user's effective permissions change.
+/// Pushed to the app whenever the user's effective permissions change.
 /// change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED", "CONSTRAINT_UPDATED"
 class LivePermissionUpdate extends $pb.GeneratedMessage {
   factory LivePermissionUpdate({

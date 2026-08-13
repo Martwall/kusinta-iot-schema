@@ -13,7 +13,7 @@ import type { DeviceId } from "../../identity/v1/identity_pb.js";
 export declare const file_kusinta_iot_webrtc_v1_permission_push: GenFile;
 
 /**
- * Pushed to the Flutter app whenever the user's effective permissions change.
+ * Pushed to the app whenever the user's effective permissions change.
  * change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED", "CONSTRAINT_UPDATED"
  *
  * @generated from message kusinta.iot.webrtc.v1.LivePermissionUpdate

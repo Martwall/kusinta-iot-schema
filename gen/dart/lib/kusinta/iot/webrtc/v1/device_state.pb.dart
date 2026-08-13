@@ -22,7 +22,7 @@ import '../../identity/v1/identity.pb.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Full device state sent to the Flutter app on initial WebRTC connection.
+/// Full device state sent to the app on initial WebRTC connection.
 class DeviceStateSnapshot extends $pb.GeneratedMessage {
   factory DeviceStateSnapshot({
     $core.Iterable<$0.Device>? devices,
@@ -105,7 +105,7 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
   $2.Timestamp ensureSnapshottedAt() => $_ensure(2);
 }
 
-/// Single property change event streamed to the Flutter app in real time.
+/// Single property change event streamed to the app in real time.
 class DevicePropertyEvent extends $pb.GeneratedMessage {
   factory DevicePropertyEvent({
     $3.PropertyUpdate? update,

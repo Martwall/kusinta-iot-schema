@@ -10,14 +10,14 @@ import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
-// Full device state sent to the Flutter app on initial WebRTC connection.
+// Full device state sent to the app on initial WebRTC connection.
 message DeviceStateSnapshot {
   repeated kusinta.iot.device.v1.Device devices        = 1;
   kusinta.iot.access.v1.EffectivePermissions permissions = 2;
   google.protobuf.Timestamp              snapshotted_at = 3;
 }
 
-// Single property change event streamed to the Flutter app in real time.
+// Single property change event streamed to the app in real time.
 message DevicePropertyEvent {
   kusinta.iot.device.v1.PropertyUpdate update               = 1;
   google.protobuf.Timestamp            gateway_processed_at = 2;
