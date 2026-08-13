@@ -10,7 +10,7 @@ import { file_kusinta_iot_access_v1_roles } from "../../access/v1/roles_pb.js";
  * Describes the file kusinta/iot/webrtc/v1/app_token.proto.
  */
 export const file_kusinta_iot_webrtc_v1_app_token = /*@__PURE__*/
-  fileDesc("CiVrdXNpbnRhL2lvdC93ZWJydGMvdjEvYXBwX3Rva2VuLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEitQEKDkFwcFRva2VuQ2xhaW1zEgsKA2lzcxgBIAEoCRILCgNhdWQYAiABKAkSCwoDc3ViGAMgASgJEicKA2lhdBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZXhwGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIqCgVyb2xlcxgGIAMoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2xlQgJIAWIGcHJvdG8z", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_roles]);
+  fileDesc("CiVrdXNpbnRhL2lvdC93ZWJydGMvdjEvYXBwX3Rva2VuLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEi5wEKDkFwcFRva2VuQ2xhaW1zEgsKA2lzcxgBIAEoCRILCgNhdWQYAiABKAkSCwoDc3ViGAMgASgJEicKA2lhdBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASJwoDZXhwGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIqCgVyb2xlcxgGIAMoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2xlEjAKA2NuZhgHIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db25maXJtYXRpb24iIAoMQ29uZmlybWF0aW9uEhAKCHg1dF9zMjU2GAEgASgJQgJIAWIGcHJvdG8z", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_roles]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.AppTokenClaims.
@@ -18,4 +18,11 @@ export const file_kusinta_iot_webrtc_v1_app_token = /*@__PURE__*/
  */
 export const AppTokenClaimsSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_app_token, 0);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.Confirmation.
+ * Use `create(ConfirmationSchema)` to create a new message.
+ */
+export const ConfirmationSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_app_token, 1);
 

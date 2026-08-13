@@ -77,6 +77,35 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
    * @generated from field: repeated kusinta.iot.access.v1.Role roles = 6;
    */
   roles: Role[];
+
+  /**
+   * RFC 7800 confirmation claim. Binds the token to the DTLS certificate of the
+   * connection it may be presented on: the validator compares this against the
+   * fingerprint of the live peer and rejects on mismatch, so a token replayed on
+   * a different connection is not usable. Without it the token is a pure bearer
+   * credential — possession alone is the whole proof.
+   *
+   * Carried in the JWT as the nested object RFC 7800 specifies:
+   *   "cnf": { "x5t#S256": "<base64url SHA-256 thumbprint of the peer's DER certificate>" }
+   *
+   * MANDATORY. The issuer MUST set it on every token, and the validator MUST
+   * reject a token that arrives without one. proto3 cannot express that, and
+   * the claim is a JSON object in a JWT rather than a field on this message on
+   * the wire, so nothing mechanical enforces it — it is a contract both sides
+   * implement or the binding is worthless. A validator that treats an absent
+   * cnf as "fall back to bearer" reopens the exact replay this claim closes,
+   * and gives any holder of a stolen token a way to opt out of the check by
+   * stripping it.
+   *
+   * Rollout order, since a mandatory claim cannot appear on both sides at once:
+   * mykusinta-api-server must be issuing cnf on every token BEFORE the gateway
+   * begins rejecting tokens that lack it. Reverse that order and every live
+   * session is refused. Tokens are short-TTL, so the gap between the two
+   * deployments need only exceed one token lifetime.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.Confirmation cnf = 7;
+   */
+  cnf?: Confirmation | undefined;
 };
 
 /**
@@ -84,4 +113,41 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
  * Use `create(AppTokenClaimsSchema)` to create a new message.
  */
 export declare const AppTokenClaimsSchema: GenMessage<AppTokenClaims>;
+
+/**
+ * RFC 7800 confirmation, the value of the "cnf" claim. A separate message
+ * because the claim is a nested JSON object in the token, not a flat string.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.Confirmation
+ */
+export declare type Confirmation = Message<"kusinta.iot.webrtc.v1.Confirmation"> & {
+  /**
+   * JWT claim name "x5t#S256" — the proto field cannot carry the "#", so the
+   * mapping to and from the JWT is by hand on both sides.
+   *
+   * ENCODING, pinned deliberately: base64url (unpadded) of the SHA-256 digest
+   * over the peer's DER-encoded certificate. WebRTC stacks hand you the same
+   * digest in the SDP `a=fingerprint:sha-256` attribute in a DIFFERENT form —
+   * uppercase, colon-separated hex — and the two will never compare equal.
+   * Issuer and validator must both normalise to the base64url form here; left
+   * unstated, each side can derive a correct value and never match.
+   *
+   * A DTLS fingerprint names a CERTIFICATE, not a connection: WebRTC permits
+   * reusing one certificate across several peer connections, and a new
+   * connection normally brings a new certificate. It is therefore neither
+   * unique per connection nor stable across reconnects, and must not be used as
+   * a session or connection key. It is a credential — it proves the peer holds
+   * the private key for the certificate the token was issued against, which is
+   * exactly and only what a confirmation claim needs.
+   *
+   * @generated from field: string x5t_s256 = 1;
+   */
+  x5tS256: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.Confirmation.
+ * Use `create(ConfirmationSchema)` to create a new message.
+ */
+export declare const ConfirmationSchema: GenMessage<Confirmation>;
 

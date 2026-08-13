@@ -38,6 +38,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     $0.Timestamp? iat,
     $0.Timestamp? exp,
     $core.Iterable<$1.Role>? roles,
+    Confirmation? cnf,
   }) {
     final result = create();
     if (iss != null) result.iss = iss;
@@ -46,6 +47,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     if (iat != null) result.iat = iat;
     if (exp != null) result.exp = exp;
     if (roles != null) result.roles.addAll(roles);
+    if (cnf != null) result.cnf = cnf;
     return result;
   }
 
@@ -74,6 +76,8 @@ class AppTokenClaims extends $pb.GeneratedMessage {
         valueOf: $1.Role.valueOf,
         enumValues: $1.Role.values,
         defaultEnumValue: $1.Role.ROLE_UNSPECIFIED)
+    ..aOM<Confirmation>(7, _omitFieldNames ? '' : 'cnf',
+        subBuilder: Confirmation.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -156,6 +160,116 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   /// mykusinta-api-server.
   @$pb.TagNumber(6)
   $pb.PbList<$1.Role> get roles => $_getList(5);
+
+  /// RFC 7800 confirmation claim. Binds the token to the DTLS certificate of the
+  /// connection it may be presented on: the validator compares this against the
+  /// fingerprint of the live peer and rejects on mismatch, so a token replayed on
+  /// a different connection is not usable. Without it the token is a pure bearer
+  /// credential — possession alone is the whole proof.
+  ///
+  /// Carried in the JWT as the nested object RFC 7800 specifies:
+  ///   "cnf": { "x5t#S256": "<base64url SHA-256 thumbprint of the peer's DER certificate>" }
+  ///
+  /// MANDATORY. The issuer MUST set it on every token, and the validator MUST
+  /// reject a token that arrives without one. proto3 cannot express that, and
+  /// the claim is a JSON object in a JWT rather than a field on this message on
+  /// the wire, so nothing mechanical enforces it — it is a contract both sides
+  /// implement or the binding is worthless. A validator that treats an absent
+  /// cnf as "fall back to bearer" reopens the exact replay this claim closes,
+  /// and gives any holder of a stolen token a way to opt out of the check by
+  /// stripping it.
+  ///
+  /// Rollout order, since a mandatory claim cannot appear on both sides at once:
+  /// mykusinta-api-server must be issuing cnf on every token BEFORE the gateway
+  /// begins rejecting tokens that lack it. Reverse that order and every live
+  /// session is refused. Tokens are short-TTL, so the gap between the two
+  /// deployments need only exceed one token lifetime.
+  @$pb.TagNumber(7)
+  Confirmation get cnf => $_getN(6);
+  @$pb.TagNumber(7)
+  set cnf(Confirmation value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasCnf() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearCnf() => $_clearField(7);
+  @$pb.TagNumber(7)
+  Confirmation ensureCnf() => $_ensure(6);
+}
+
+/// RFC 7800 confirmation, the value of the "cnf" claim. A separate message
+/// because the claim is a nested JSON object in the token, not a flat string.
+class Confirmation extends $pb.GeneratedMessage {
+  factory Confirmation({
+    $core.String? x5tS256,
+  }) {
+    final result = create();
+    if (x5tS256 != null) result.x5tS256 = x5tS256;
+    return result;
+  }
+
+  Confirmation._();
+
+  factory Confirmation.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Confirmation.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Confirmation',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'x5tS256')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Confirmation clone() => Confirmation()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Confirmation copyWith(void Function(Confirmation) updates) =>
+      super.copyWith((message) => updates(message as Confirmation))
+          as Confirmation;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Confirmation create() => Confirmation._();
+  @$core.override
+  Confirmation createEmptyInstance() => create();
+  static $pb.PbList<Confirmation> createRepeated() =>
+      $pb.PbList<Confirmation>();
+  @$core.pragma('dart2js:noInline')
+  static Confirmation getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Confirmation>(create);
+  static Confirmation? _defaultInstance;
+
+  /// JWT claim name "x5t#S256" — the proto field cannot carry the "#", so the
+  /// mapping to and from the JWT is by hand on both sides.
+  ///
+  /// ENCODING, pinned deliberately: base64url (unpadded) of the SHA-256 digest
+  /// over the peer's DER-encoded certificate. WebRTC stacks hand you the same
+  /// digest in the SDP `a=fingerprint:sha-256` attribute in a DIFFERENT form —
+  /// uppercase, colon-separated hex — and the two will never compare equal.
+  /// Issuer and validator must both normalise to the base64url form here; left
+  /// unstated, each side can derive a correct value and never match.
+  ///
+  /// A DTLS fingerprint names a CERTIFICATE, not a connection: WebRTC permits
+  /// reusing one certificate across several peer connections, and a new
+  /// connection normally brings a new certificate. It is therefore neither
+  /// unique per connection nor stable across reconnects, and must not be used as
+  /// a session or connection key. It is a credential — it proves the peer holds
+  /// the private key for the certificate the token was issued against, which is
+  /// exactly and only what a confirmation claim needs.
+  @$pb.TagNumber(1)
+  $core.String get x5tS256 => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set x5tS256($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasX5tS256() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearX5tS256() => $_clearField(1);
 }
 
 const $core.bool _omitFieldNames =
