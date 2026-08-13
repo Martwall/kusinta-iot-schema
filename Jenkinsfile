@@ -63,6 +63,9 @@ pipeline {
         // Dart is generated separately: it needs --include-imports --include-wkt
         // to emit well-known types locally (protobuf ^4.x doesn't bundle them).
         sh 'buf generate --template buf.gen.dart.yaml --include-imports --include-wkt'
+        // The Dart leg barrels are derived from what buf just emitted, so a new
+        // proto reaches them without anyone remembering to edit a list.
+        sh 'python3 gen-dart-barrels.py'
       }
     }
 
@@ -84,6 +87,21 @@ pipeline {
           . .venv/bin/activate
           pip install --quiet -e ".[dev]"
           python3 -m pytest tests/ -v
+        '''
+      }
+    }
+
+    // The Dart package is consumed by git tag rather than a registry, so nothing
+    // downstream compiles it before a release goes out. `dart analyze` is what
+    // catches a generated tree that does not build — an ambiguous export across
+    // the leg barrels, most of all, which is invisible to buf and to the JS and
+    // Python suites.
+    stage('Analyze Dart') {
+      steps {
+        sh '''
+          cd gen/dart
+          dart pub get
+          dart analyze
         '''
       }
     }

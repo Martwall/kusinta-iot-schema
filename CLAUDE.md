@@ -43,6 +43,15 @@ Jenkins checks all three match and fails the build if they don't.
 Add an `exports` entry to `gen/js/package.json`:
 - `"./new-pkg": "./src/kusinta/iot/new-pkg/v1/new_pkg_pb.js"`
 
+Dart needs nothing — `gen-dart-barrels.py` derives `gen/dart/lib/app.dart` and
+`connector.dart` from whatever `buf generate` emitted, and CI runs it in the Generate
+stage. If the new package belongs to one leg only, add its directory to `APP_ONLY` or
+`CONNECTOR_ONLY` in that script; otherwise it is leg-neutral and lands in both.
+
+Never hand-write a Dart barrel. Dart export directives cannot alias a name, so a barrel
+spanning both legs cannot compile — `GatewayError` exists on each with different
+semantics. `dart analyze` in CI catches it as `ambiguous_export`.
+
 ## Proto guidelines
 
 ### Public repo — name parties by role
