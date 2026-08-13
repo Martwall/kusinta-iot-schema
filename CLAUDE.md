@@ -45,6 +45,18 @@ Add an `exports` entry to `gen/js/package.json`:
 
 ## Proto guidelines
 
+### Public repo — name parties by role
+This repo is public; its schemas are consumed by private ones. Never name a private repo, or a toolchain a private repo happens to be built on, in proto comments, docs, or commit messages. Name each party by its **role in the protocol** instead — "the app", "the api-server", "the building-server gateway", "the mTLS-terminating proxy". The party must stay unambiguous; it just must not be identified by repo, or by the client framework or edge proxy it runs on.
+
+This reaches further than the source tree: proto comments are carried into the generated `.d.ts` and `.pb.dart` as doc strings, and those are published to npm, PyPI and pub.dev. A comment naming a private service ships to three public registries.
+
+Two traps:
+
+- **A commit message describing a scrub must not restate the names it removes.** The message is in the repo too.
+- **When a comment documents a literal wire value that is itself a private service name** (e.g. a JWT `iss` claim), describe the field's role and note the value is agreed out of band. Do not change the constant — that is a coordinated breaking change across services, not a docs fix.
+
+Public device vendors and OSS libraries are fine, and appear in package and message names as well as comments. They name an ecosystem, not an internal repo.
+
 ### Reserved fields
 Always mark removed or skipped field numbers with `reserved` so they are never accidentally reused:
 ```proto
