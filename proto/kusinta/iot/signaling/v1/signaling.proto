@@ -27,10 +27,37 @@ message HeartBeat {}
 message UserHandshake    { kusinta.iot.identity.v1.GatewayId target_gateway_id = 1; }
 message UserHandshakeAck { bool accepted = 1; string reason = 2; }
 
+// Identifies one of a user's concurrent signaling sessions. Addressing by user
+// alone would allow a user only one live session, because two streams opened
+// with the same authenticated `sub` would be indistinguishable and an SdpAnswer
+// could not be routed back to the stream whose offer it answers. A user running
+// a phone and a desktop client at once is an ordinary setup, so the id appears
+// on every message of both legs; fewer than all four and the return path stays
+// ambiguous.
+//
+// Contract for the value:
+//   - Opaque. Nothing above the relay parses it. A UUIDv4 is the expected form.
+//   - Client-minted. A server-assigned id would force a lookup round trip before
+//     a client could reattach after a stream drop.
+//   - Stable across reconnects. This is what makes a reconnect a reconnect
+//     rather than a new session: a client that reconnects with the same value is
+//     resuming, and one that mints a fresh value is starting over.
+//   - NOT a credential, and never authenticated. Identity remains the `sub` on
+//     the stream — the Bearer token on the app leg, the client certificate on
+//     the gateway leg. The id is scoped within that user, so a forged value can
+//     only collide with the forger's own sessions. Never derive identity,
+//     entitlement or trust from it.
+//   - Required. An empty value is not a legacy "single session" — it makes two
+//     clients indistinguishable again on exactly the path this field exists to
+//     fix. An endpoint should refuse a message that omits it.
+
 // Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
 // Auth: x-client-cert-fingerprint metadata header (set by HAProxy from mTLS).
 message GatewayConnectRequest {
   kusinta.iot.identity.v1.UserId target_user_id = 1;
+  // The session of target_user_id this message answers. See the contract above.
+  // Ignored on a heartbeat, which carries no routing target at all.
+  string                         session_id     = 5;
   oneof payload {
     SdpAnswer    answer        = 2;
     IceCandidate ice_candidate = 3;
@@ -41,6 +68,10 @@ message GatewayConnectRequest {
 // Messages sent by the api-server to the building-server gateway.
 message GatewayConnectResponse {
   kusinta.iot.identity.v1.UserId from_user_id = 1;
+  // The session of from_user_id this message originates from — the value the
+  // gateway must echo on the GatewayConnectRequest that answers it. See the
+  // contract above.
+  string                         session_id   = 4;
   oneof payload {
     SdpOffer     offer         = 2;
     IceCandidate ice_candidate = 3;
@@ -50,6 +81,10 @@ message GatewayConnectResponse {
 // Messages sent by the Flutter app (GatewaySignalingService.UserConnect stream).
 // Auth: Authorization: Bearer <jwt> in gRPC request metadata (validated by interceptor).
 message UserConnectRequest {
+  // This client's session, minted by the client. See the contract above. Sent on
+  // every message including the handshake, so the relay can key the stream on it
+  // from the first frame.
+  string session_id = 4;
   oneof payload {
     UserHandshake handshake     = 1;
     SdpOffer      offer         = 2;
@@ -59,6 +94,10 @@ message UserConnectRequest {
 
 // Messages sent by the api-server to the Flutter app.
 message UserConnectResponse {
+  // Echoes the session_id of the stream this message is delivered on, so a
+  // client can assert the relay routed to the session it thinks it is. See the
+  // contract above.
+  string session_id = 4;
   oneof payload {
     UserHandshakeAck handshake_ack = 1;
     SdpAnswer        answer        = 2;

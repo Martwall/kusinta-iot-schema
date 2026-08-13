@@ -399,12 +399,14 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     SdpAnswer? answer,
     IceCandidate? iceCandidate,
     HeartBeat? heartbeat,
+    $core.String? sessionId,
   }) {
     final result = create();
     if (targetUserId != null) result.targetUserId = targetUserId;
     if (answer != null) result.answer = answer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
     if (heartbeat != null) result.heartbeat = heartbeat;
+    if (sessionId != null) result.sessionId = sessionId;
     return result;
   }
 
@@ -438,6 +440,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
         subBuilder: IceCandidate.create)
     ..aOM<HeartBeat>(4, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
+    ..aOS(5, _omitFieldNames ? '' : 'sessionId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -510,6 +513,17 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   void clearHeartbeat() => $_clearField(4);
   @$pb.TagNumber(4)
   HeartBeat ensureHeartbeat() => $_ensure(3);
+
+  /// The session of target_user_id this message answers. See the contract above.
+  /// Ignored on a heartbeat, which carries no routing target at all.
+  @$pb.TagNumber(5)
+  $core.String get sessionId => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set sessionId($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSessionId() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSessionId() => $_clearField(5);
 }
 
 enum GatewayConnectResponse_Payload { offer, iceCandidate, notSet }
@@ -520,11 +534,13 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     $0.UserId? fromUserId,
     SdpOffer? offer,
     IceCandidate? iceCandidate,
+    $core.String? sessionId,
   }) {
     final result = create();
     if (fromUserId != null) result.fromUserId = fromUserId;
     if (offer != null) result.offer = offer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
+    if (sessionId != null) result.sessionId = sessionId;
     return result;
   }
 
@@ -555,6 +571,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
         subBuilder: SdpOffer.create)
     ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
         subBuilder: IceCandidate.create)
+    ..aOS(4, _omitFieldNames ? '' : 'sessionId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -616,6 +633,18 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   void clearIceCandidate() => $_clearField(3);
   @$pb.TagNumber(3)
   IceCandidate ensureIceCandidate() => $_ensure(2);
+
+  /// The session of from_user_id this message originates from — the value the
+  /// gateway must echo on the GatewayConnectRequest that answers it. See the
+  /// contract above.
+  @$pb.TagNumber(4)
+  $core.String get sessionId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sessionId($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSessionId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSessionId() => $_clearField(4);
 }
 
 enum UserConnectRequest_Payload { handshake, offer, iceCandidate, notSet }
@@ -627,11 +656,13 @@ class UserConnectRequest extends $pb.GeneratedMessage {
     UserHandshake? handshake,
     SdpOffer? offer,
     IceCandidate? iceCandidate,
+    $core.String? sessionId,
   }) {
     final result = create();
     if (handshake != null) result.handshake = handshake;
     if (offer != null) result.offer = offer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
+    if (sessionId != null) result.sessionId = sessionId;
     return result;
   }
 
@@ -663,6 +694,7 @@ class UserConnectRequest extends $pb.GeneratedMessage {
         subBuilder: SdpOffer.create)
     ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
         subBuilder: IceCandidate.create)
+    ..aOS(4, _omitFieldNames ? '' : 'sessionId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -722,6 +754,18 @@ class UserConnectRequest extends $pb.GeneratedMessage {
   void clearIceCandidate() => $_clearField(3);
   @$pb.TagNumber(3)
   IceCandidate ensureIceCandidate() => $_ensure(2);
+
+  /// This client's session, minted by the client. See the contract above. Sent on
+  /// every message including the handshake, so the relay can key the stream on it
+  /// from the first frame.
+  @$pb.TagNumber(4)
+  $core.String get sessionId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sessionId($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSessionId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSessionId() => $_clearField(4);
 }
 
 enum UserConnectResponse_Payload { handshakeAck, answer, iceCandidate, notSet }
@@ -732,11 +776,13 @@ class UserConnectResponse extends $pb.GeneratedMessage {
     UserHandshakeAck? handshakeAck,
     SdpAnswer? answer,
     IceCandidate? iceCandidate,
+    $core.String? sessionId,
   }) {
     final result = create();
     if (handshakeAck != null) result.handshakeAck = handshakeAck;
     if (answer != null) result.answer = answer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
+    if (sessionId != null) result.sessionId = sessionId;
     return result;
   }
 
@@ -768,6 +814,7 @@ class UserConnectResponse extends $pb.GeneratedMessage {
         subBuilder: SdpAnswer.create)
     ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
         subBuilder: IceCandidate.create)
+    ..aOS(4, _omitFieldNames ? '' : 'sessionId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -827,6 +874,18 @@ class UserConnectResponse extends $pb.GeneratedMessage {
   void clearIceCandidate() => $_clearField(3);
   @$pb.TagNumber(3)
   IceCandidate ensureIceCandidate() => $_ensure(2);
+
+  /// Echoes the session_id of the stream this message is delivered on, so a
+  /// client can assert the relay routed to the session it thinks it is. See the
+  /// contract above.
+  @$pb.TagNumber(4)
+  $core.String get sessionId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sessionId($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSessionId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSessionId() => $_clearField(4);
 }
 
 const $core.bool _omitFieldNames =

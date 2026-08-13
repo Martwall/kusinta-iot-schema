@@ -44,16 +44,36 @@ class GatewayErrorCode extends $pb.ProtobufEnum {
       GatewayErrorCode._(
           4, _omitEnumNames ? '' : 'GATEWAY_ERROR_CODE_INTERNAL');
 
+  /// The user already holds the maximum number of concurrent sessions this
+  /// gateway will keep, and this attempt is refused. Permanent for this attempt:
+  /// the limit does not clear on its own, so retrying is exactly the wrong
+  /// response — the user must end another session first. Distinct from
+  /// NOT_ENTITLED, which is a statement about what the user may see; this user
+  /// may, they are simply already connected enough times.
+  ///
+  /// The limit itself is gateway configuration and deliberately not modelled
+  /// here. GatewayError.message carries the specifics so a client can render
+  /// something actionable.
+  ///
+  /// Rollout note: a client whose schema predates this value decodes it as
+  /// UNSPECIFIED, which is retryable by design. Client handling must therefore
+  /// ship before or with the gateway that emits it, and the gateway must close
+  /// the session itself rather than rely on the client standing down.
+  static const GatewayErrorCode GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED =
+      GatewayErrorCode._(
+          5, _omitEnumNames ? '' : 'GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED');
+
   static const $core.List<GatewayErrorCode> values = <GatewayErrorCode>[
     GATEWAY_ERROR_CODE_UNSPECIFIED,
     GATEWAY_ERROR_CODE_NOT_ENTITLED,
     GATEWAY_ERROR_CODE_INVALID_REQUEST,
     GATEWAY_ERROR_CODE_UNAVAILABLE,
     GATEWAY_ERROR_CODE_INTERNAL,
+    GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED,
   ];
 
   static final $core.List<GatewayErrorCode?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static GatewayErrorCode? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

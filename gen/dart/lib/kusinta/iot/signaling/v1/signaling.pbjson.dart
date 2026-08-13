@@ -108,6 +108,7 @@ const GatewayConnectRequest$json = {
       '6': '.kusinta.iot.identity.v1.UserId',
       '10': 'targetUserId'
     },
+    {'1': 'session_id', '3': 5, '4': 1, '5': 9, '10': 'sessionId'},
     {
       '1': 'answer',
       '3': 2,
@@ -144,11 +145,12 @@ const GatewayConnectRequest$json = {
 /// Descriptor for `GatewayConnectRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayConnectRequestDescriptor = $convert.base64Decode(
     'ChVHYXRld2F5Q29ubmVjdFJlcXVlc3QSRQoOdGFyZ2V0X3VzZXJfaWQYASABKAsyHy5rdXNpbn'
-    'RhLmlvdC5pZGVudGl0eS52MS5Vc2VySWRSDHRhcmdldFVzZXJJZBI9CgZhbnN3ZXIYAiABKAsy'
-    'Iy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwQW5zd2VySABSBmFuc3dlchJNCg1pY2VfY2'
-    'FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgA'
-    'UgxpY2VDYW5kaWRhdGUSQwoJaGVhcnRiZWF0GAQgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW'
-    '5nLnYxLkhlYXJ0QmVhdEgAUgloZWFydGJlYXRCCQoHcGF5bG9hZA==');
+    'RhLmlvdC5pZGVudGl0eS52MS5Vc2VySWRSDHRhcmdldFVzZXJJZBIdCgpzZXNzaW9uX2lkGAUg'
+    'ASgJUglzZXNzaW9uSWQSPQoGYW5zd2VyGAIgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLn'
+    'YxLlNkcEFuc3dlckgAUgZhbnN3ZXISTQoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEu'
+    'aW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlEkMKCWhlYXJ0Ym'
+    'VhdBgEIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5IZWFydEJlYXRIAFIJaGVhcnRi'
+    'ZWF0QgkKB3BheWxvYWQ=');
 
 @$core.Deprecated('Use gatewayConnectResponseDescriptor instead')
 const GatewayConnectResponse$json = {
@@ -162,6 +164,7 @@ const GatewayConnectResponse$json = {
       '6': '.kusinta.iot.identity.v1.UserId',
       '10': 'fromUserId'
     },
+    {'1': 'session_id', '3': 4, '4': 1, '5': 9, '10': 'sessionId'},
     {
       '1': 'offer',
       '3': 2,
@@ -189,15 +192,16 @@ const GatewayConnectResponse$json = {
 /// Descriptor for `GatewayConnectResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayConnectResponseDescriptor = $convert.base64Decode(
     'ChZHYXRld2F5Q29ubmVjdFJlc3BvbnNlEkEKDGZyb21fdXNlcl9pZBgBIAEoCzIfLmt1c2ludG'
-    'EuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIKZnJvbVVzZXJJZBI6CgVvZmZlchgCIAEoCzIiLmt1'
-    'c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBPZmZlckgAUgVvZmZlchJNCg1pY2VfY2FuZGlkYX'
-    'RlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAUgxpY2VD'
-    'YW5kaWRhdGVCCQoHcGF5bG9hZA==');
+    'EuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIKZnJvbVVzZXJJZBIdCgpzZXNzaW9uX2lkGAQgASgJ'
+    'UglzZXNzaW9uSWQSOgoFb2ZmZXIYAiABKAsyIi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2'
+    'RwT2ZmZXJIAFIFb2ZmZXISTQoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNp'
+    'Z25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlQgkKB3BheWxvYWQ=');
 
 @$core.Deprecated('Use userConnectRequestDescriptor instead')
 const UserConnectRequest$json = {
   '1': 'UserConnectRequest',
   '2': [
+    {'1': 'session_id', '3': 4, '4': 1, '5': 9, '10': 'sessionId'},
     {
       '1': 'handshake',
       '3': 1,
@@ -233,16 +237,17 @@ const UserConnectRequest$json = {
 
 /// Descriptor for `UserConnectRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userConnectRequestDescriptor = $convert.base64Decode(
-    'ChJVc2VyQ29ubmVjdFJlcXVlc3QSRwoJaGFuZHNoYWtlGAEgASgLMicua3VzaW50YS5pb3Quc2'
-    'lnbmFsaW5nLnYxLlVzZXJIYW5kc2hha2VIAFIJaGFuZHNoYWtlEjoKBW9mZmVyGAIgASgLMiIu'
-    'a3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcE9mZmVySABSBW9mZmVyEk0KDWljZV9jYW5kaW'
-    'RhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABSDGlj'
-    'ZUNhbmRpZGF0ZUIJCgdwYXlsb2Fk');
+    'ChJVc2VyQ29ubmVjdFJlcXVlc3QSHQoKc2Vzc2lvbl9pZBgEIAEoCVIJc2Vzc2lvbklkEkcKCW'
+    'hhbmRzaGFrZRgBIAEoCzInLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5Vc2VySGFuZHNoYWtl'
+    'SABSCWhhbmRzaGFrZRI6CgVvZmZlchgCIAEoCzIiLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS'
+    '5TZHBPZmZlckgAUgVvZmZlchJNCg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Qu'
+    'c2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAUgxpY2VDYW5kaWRhdGVCCQoHcGF5bG9hZA==');
 
 @$core.Deprecated('Use userConnectResponseDescriptor instead')
 const UserConnectResponse$json = {
   '1': 'UserConnectResponse',
   '2': [
+    {'1': 'session_id', '3': 4, '4': 1, '5': 9, '10': 'sessionId'},
     {
       '1': 'handshake_ack',
       '3': 1,
@@ -278,8 +283,9 @@ const UserConnectResponse$json = {
 
 /// Descriptor for `UserConnectResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userConnectResponseDescriptor = $convert.base64Decode(
-    'ChNVc2VyQ29ubmVjdFJlc3BvbnNlElEKDWhhbmRzaGFrZV9hY2sYASABKAsyKi5rdXNpbnRhLm'
-    'lvdC5zaWduYWxpbmcudjEuVXNlckhhbmRzaGFrZUFja0gAUgxoYW5kc2hha2VBY2sSPQoGYW5z'
-    'd2VyGAIgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcEFuc3dlckgAUgZhbnN3ZX'
-    'ISTQoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5JY2VD'
-    'YW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlQgkKB3BheWxvYWQ=');
+    'ChNVc2VyQ29ubmVjdFJlc3BvbnNlEh0KCnNlc3Npb25faWQYBCABKAlSCXNlc3Npb25JZBJRCg'
+    '1oYW5kc2hha2VfYWNrGAEgASgLMioua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlVzZXJIYW5k'
+    'c2hha2VBY2tIAFIMaGFuZHNoYWtlQWNrEj0KBmFuc3dlchgCIAEoCzIjLmt1c2ludGEuaW90Ln'
+    'NpZ25hbGluZy52MS5TZHBBbnN3ZXJIAFIGYW5zd2VyEk0KDWljZV9jYW5kaWRhdGUYAyABKAsy'
+    'Ji5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABSDGljZUNhbmRpZGF0ZU'
+    'IJCgdwYXlsb2Fk');

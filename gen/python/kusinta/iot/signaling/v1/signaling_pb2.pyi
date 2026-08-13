@@ -47,43 +47,51 @@ class UserHandshakeAck(_message.Message):
     def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ...) -> None: ...
 
 class GatewayConnectRequest(_message.Message):
-    __slots__ = ("target_user_id", "answer", "ice_candidate", "heartbeat")
+    __slots__ = ("target_user_id", "session_id", "answer", "ice_candidate", "heartbeat")
     TARGET_USER_ID_FIELD_NUMBER: _ClassVar[int]
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     ANSWER_FIELD_NUMBER: _ClassVar[int]
     ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
     HEARTBEAT_FIELD_NUMBER: _ClassVar[int]
     target_user_id: _identity_pb2.UserId
+    session_id: str
     answer: SdpAnswer
     ice_candidate: IceCandidate
     heartbeat: HeartBeat
-    def __init__(self, target_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ...) -> None: ...
+    def __init__(self, target_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., session_id: _Optional[str] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ...) -> None: ...
 
 class GatewayConnectResponse(_message.Message):
-    __slots__ = ("from_user_id", "offer", "ice_candidate")
+    __slots__ = ("from_user_id", "session_id", "offer", "ice_candidate")
     FROM_USER_ID_FIELD_NUMBER: _ClassVar[int]
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     OFFER_FIELD_NUMBER: _ClassVar[int]
     ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
     from_user_id: _identity_pb2.UserId
+    session_id: str
     offer: SdpOffer
     ice_candidate: IceCandidate
-    def __init__(self, from_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+    def __init__(self, from_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., session_id: _Optional[str] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
 
 class UserConnectRequest(_message.Message):
-    __slots__ = ("handshake", "offer", "ice_candidate")
+    __slots__ = ("session_id", "handshake", "offer", "ice_candidate")
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_FIELD_NUMBER: _ClassVar[int]
     OFFER_FIELD_NUMBER: _ClassVar[int]
     ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
+    session_id: str
     handshake: UserHandshake
     offer: SdpOffer
     ice_candidate: IceCandidate
-    def __init__(self, handshake: _Optional[_Union[UserHandshake, _Mapping]] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+    def __init__(self, session_id: _Optional[str] = ..., handshake: _Optional[_Union[UserHandshake, _Mapping]] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
 
 class UserConnectResponse(_message.Message):
-    __slots__ = ("handshake_ack", "answer", "ice_candidate")
+    __slots__ = ("session_id", "handshake_ack", "answer", "ice_candidate")
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_ACK_FIELD_NUMBER: _ClassVar[int]
     ANSWER_FIELD_NUMBER: _ClassVar[int]
     ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
+    session_id: str
     handshake_ack: UserHandshakeAck
     answer: SdpAnswer
     ice_candidate: IceCandidate
-    def __init__(self, handshake_ack: _Optional[_Union[UserHandshakeAck, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+    def __init__(self, session_id: _Optional[str] = ..., handshake_ack: _Optional[_Union[UserHandshakeAck, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...

@@ -173,3 +173,69 @@ def test_user_connect_response_ice_candidate_payload():
     decoded.ParseFromString(resp.SerializeToString())
     assert decoded.WhichOneof("payload") == "ice_candidate"
     assert "typ relay" in decoded.ice_candidate.candidate
+
+
+def test_user_connect_request_session_id_defaults_to_empty():
+    req = signaling_pb2.UserConnectRequest(offer=signaling_pb2.SdpOffer(sdp="v=0\r\n"))
+    decoded = signaling_pb2.UserConnectRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.session_id == ""
+
+
+def test_user_connect_request_session_id_round_trip():
+    req = signaling_pb2.UserConnectRequest(
+        session_id="2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd",
+        offer=signaling_pb2.SdpOffer(sdp="v=0\r\n"),
+    )
+    decoded = signaling_pb2.UserConnectRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.session_id == "2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd"
+
+
+def test_user_connect_response_session_id_round_trip():
+    resp = signaling_pb2.UserConnectResponse(
+        session_id="2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd",
+        answer=signaling_pb2.SdpAnswer(sdp="v=0\r\n"),
+    )
+    decoded = signaling_pb2.UserConnectResponse()
+    decoded.ParseFromString(resp.SerializeToString())
+    assert decoded.session_id == "2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd"
+
+
+def test_gateway_connect_request_session_id_round_trip():
+    req = signaling_pb2.GatewayConnectRequest(
+        target_user_id=identity_pb2.UserId(value="user-42"),
+        session_id="a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88",
+        answer=signaling_pb2.SdpAnswer(sdp="v=0\r\n"),
+    )
+    decoded = signaling_pb2.GatewayConnectRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.target_user_id.value == "user-42"
+    assert decoded.session_id == "a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88"
+
+
+def test_gateway_connect_response_session_id_round_trip():
+    resp = signaling_pb2.GatewayConnectResponse(
+        from_user_id=identity_pb2.UserId(value="user-42"),
+        session_id="a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88",
+        offer=signaling_pb2.SdpOffer(sdp="v=0\r\n"),
+    )
+    decoded = signaling_pb2.GatewayConnectResponse()
+    decoded.ParseFromString(resp.SerializeToString())
+    assert decoded.from_user_id.value == "user-42"
+    assert decoded.session_id == "a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88"
+
+
+def test_two_sessions_of_the_same_user_are_distinguishable():
+    phone = signaling_pb2.GatewayConnectResponse(
+        from_user_id=identity_pb2.UserId(value="user-42"),
+        session_id="session-phone",
+        offer=signaling_pb2.SdpOffer(sdp="v=0\r\n"),
+    )
+    desktop = signaling_pb2.GatewayConnectResponse(
+        from_user_id=identity_pb2.UserId(value="user-42"),
+        session_id="session-desktop",
+        offer=signaling_pb2.SdpOffer(sdp="v=0\r\n"),
+    )
+    assert phone.from_user_id.value == desktop.from_user_id.value
+    assert phone.session_id != desktop.session_id

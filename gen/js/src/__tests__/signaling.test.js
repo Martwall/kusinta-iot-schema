@@ -186,3 +186,79 @@ describe('UserConnectResponse oneof payload', () => {
     }
   })
 })
+
+describe('session_id on the signaling messages', () => {
+  it('defaults to the empty string on UserConnectRequest when the client omits it', () => {
+    const req = create(UserConnectRequestSchema, {
+      payload: { case: 'offer', value: { sdp: 'v=0\r\n' } },
+    })
+    const decoded = fromBinary(UserConnectRequestSchema, toBinary(UserConnectRequestSchema, req))
+    expect(decoded.sessionId).toBe('')
+  })
+
+  it('round-trips session_id on UserConnectRequest', () => {
+    const req = create(UserConnectRequestSchema, {
+      sessionId: '2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd',
+      payload: { case: 'offer', value: { sdp: 'v=0\r\n' } },
+    })
+    const decoded = fromBinary(UserConnectRequestSchema, toBinary(UserConnectRequestSchema, req))
+    expect(decoded.sessionId).toBe('2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd')
+    expect(decoded.payload?.case).toBe('offer')
+  })
+
+  it('round-trips session_id on UserConnectResponse', () => {
+    const resp = create(UserConnectResponseSchema, {
+      sessionId: '2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd',
+      payload: { case: 'answer', value: { sdp: 'v=0\r\n' } },
+    })
+    const decoded = fromBinary(UserConnectResponseSchema, toBinary(UserConnectResponseSchema, resp))
+    expect(decoded.sessionId).toBe('2f1a6c5e-7b4d-4f2a-9c11-6d0a3e8b47cd')
+    expect(decoded.payload?.case).toBe('answer')
+  })
+
+  it('round-trips session_id alongside target_user_id on GatewayConnectRequest', () => {
+    const req = create(GatewayConnectRequestSchema, {
+      targetUserId: { value: 'user-42' },
+      sessionId: 'a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88',
+      payload: { case: 'answer', value: { sdp: 'v=0\r\n' } },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, req))
+    expect(decoded.targetUserId?.value).toBe('user-42')
+    expect(decoded.sessionId).toBe('a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88')
+  })
+
+  it('round-trips session_id alongside from_user_id on GatewayConnectResponse', () => {
+    const resp = create(GatewayConnectResponseSchema, {
+      fromUserId: { value: 'user-42' },
+      sessionId: 'a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88',
+      payload: { case: 'offer', value: { sdp: 'v=0\r\n' } },
+    })
+    const decoded = fromBinary(GatewayConnectResponseSchema, toBinary(GatewayConnectResponseSchema, resp))
+    expect(decoded.fromUserId?.value).toBe('user-42')
+    expect(decoded.sessionId).toBe('a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88')
+  })
+
+  it('distinguishes two concurrent sessions of the same user', () => {
+    const phone = create(GatewayConnectResponseSchema, {
+      fromUserId: { value: 'user-42' },
+      sessionId: 'session-phone',
+      payload: { case: 'offer', value: { sdp: 'v=0\r\n' } },
+    })
+    const desktop = create(GatewayConnectResponseSchema, {
+      fromUserId: { value: 'user-42' },
+      sessionId: 'session-desktop',
+      payload: { case: 'offer', value: { sdp: 'v=0\r\n' } },
+    })
+    expect(phone.fromUserId?.value).toBe(desktop.fromUserId?.value)
+    expect(phone.sessionId).not.toBe(desktop.sessionId)
+  })
+
+  it('carries session_id on a heartbeat, which has no routing target', () => {
+    const req = create(GatewayConnectRequestSchema, {
+      sessionId: 'a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88',
+      payload: { case: 'heartbeat', value: create(HeartBeatSchema, {}) },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, req))
+    expect(decoded.sessionId).toBe('a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88')
+  })
+})

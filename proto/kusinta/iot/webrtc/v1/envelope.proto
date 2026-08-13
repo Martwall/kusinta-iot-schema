@@ -86,6 +86,22 @@ enum GatewayErrorCode {
   GATEWAY_ERROR_CODE_UNAVAILABLE = 3;
   // Gateway-side fault. Not the app's doing; retry cautiously.
   GATEWAY_ERROR_CODE_INTERNAL = 4;
+  // The user already holds the maximum number of concurrent sessions this
+  // gateway will keep, and this attempt is refused. Permanent for this attempt:
+  // the limit does not clear on its own, so retrying is exactly the wrong
+  // response — the user must end another session first. Distinct from
+  // NOT_ENTITLED, which is a statement about what the user may see; this user
+  // may, they are simply already connected enough times.
+  //
+  // The limit itself is gateway configuration and deliberately not modelled
+  // here. GatewayError.message carries the specifics so a client can render
+  // something actionable.
+  //
+  // Rollout note: a client whose schema predates this value decodes it as
+  // UNSPECIFIED, which is retryable by design. Client handling must therefore
+  // ship before or with the gateway that emits it, and the gateway must close
+  // the session itself rather than rely on the client standing down.
+  GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED = 5;
 }
 
 // Session-level error, gateway → Flutter app. Mirrors connector.v1.GatewayError

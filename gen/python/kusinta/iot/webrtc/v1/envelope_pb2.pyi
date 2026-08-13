@@ -21,11 +21,13 @@ class GatewayErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     GATEWAY_ERROR_CODE_INVALID_REQUEST: _ClassVar[GatewayErrorCode]
     GATEWAY_ERROR_CODE_UNAVAILABLE: _ClassVar[GatewayErrorCode]
     GATEWAY_ERROR_CODE_INTERNAL: _ClassVar[GatewayErrorCode]
+    GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED: _ClassVar[GatewayErrorCode]
 GATEWAY_ERROR_CODE_UNSPECIFIED: GatewayErrorCode
 GATEWAY_ERROR_CODE_NOT_ENTITLED: GatewayErrorCode
 GATEWAY_ERROR_CODE_INVALID_REQUEST: GatewayErrorCode
 GATEWAY_ERROR_CODE_UNAVAILABLE: GatewayErrorCode
 GATEWAY_ERROR_CODE_INTERNAL: GatewayErrorCode
+GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED: GatewayErrorCode
 
 class Ping(_message.Message):
     __slots__ = ()

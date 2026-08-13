@@ -319,6 +319,16 @@ describe('GatewayError', () => {
     const decoded = fromBinary(GatewayErrorSchema, toBinary(GatewayErrorSchema, err))
     expect(decoded.metadata.device_id).toBe('therm-1')
   })
+
+  it('round-trips a session limit refusal distinct from the other permanent codes', () => {
+    const err = create(GatewayErrorSchema, {
+      code: GatewayErrorCode.SESSION_LIMIT_REACHED,
+      message: 'user holds 3 of 3 permitted sessions',
+    })
+    const decoded = fromBinary(GatewayErrorSchema, toBinary(GatewayErrorSchema, err))
+    expect(decoded.code).toBe(GatewayErrorCode.SESSION_LIMIT_REACHED)
+    expect(decoded.code).not.toBe(GatewayErrorCode.NOT_ENTITLED)
+  })
 })
 
 describe('GatewayMessage error payload', () => {

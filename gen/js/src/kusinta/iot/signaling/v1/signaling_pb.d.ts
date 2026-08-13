@@ -145,6 +145,14 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
   targetUserId?: UserId | undefined;
 
   /**
+   * The session of target_user_id this message answers. See the contract above.
+   * Ignored on a heartbeat, which carries no routing target at all.
+   *
+   * @generated from field: string session_id = 5;
+   */
+  sessionId: string;
+
+  /**
    * @generated from oneof kusinta.iot.signaling.v1.GatewayConnectRequest.payload
    */
   payload: {
@@ -186,6 +194,15 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
   fromUserId?: UserId | undefined;
 
   /**
+   * The session of from_user_id this message originates from — the value the
+   * gateway must echo on the GatewayConnectRequest that answers it. See the
+   * contract above.
+   *
+   * @generated from field: string session_id = 4;
+   */
+  sessionId: string;
+
+  /**
    * @generated from oneof kusinta.iot.signaling.v1.GatewayConnectResponse.payload
    */
   payload: {
@@ -216,6 +233,15 @@ export declare const GatewayConnectResponseSchema: GenMessage<GatewayConnectResp
  * @generated from message kusinta.iot.signaling.v1.UserConnectRequest
  */
 export declare type UserConnectRequest = Message<"kusinta.iot.signaling.v1.UserConnectRequest"> & {
+  /**
+   * This client's session, minted by the client. See the contract above. Sent on
+   * every message including the handshake, so the relay can key the stream on it
+   * from the first frame.
+   *
+   * @generated from field: string session_id = 4;
+   */
+  sessionId: string;
+
   /**
    * @generated from oneof kusinta.iot.signaling.v1.UserConnectRequest.payload
    */
@@ -252,6 +278,15 @@ export declare const UserConnectRequestSchema: GenMessage<UserConnectRequest>;
  * @generated from message kusinta.iot.signaling.v1.UserConnectResponse
  */
 export declare type UserConnectResponse = Message<"kusinta.iot.signaling.v1.UserConnectResponse"> & {
+  /**
+   * Echoes the session_id of the stream this message is delivered on, so a
+   * client can assert the relay routed to the session it thinks it is. See the
+   * contract above.
+   *
+   * @generated from field: string session_id = 4;
+   */
+  sessionId: string;
+
   /**
    * @generated from oneof kusinta.iot.signaling.v1.UserConnectResponse.payload
    */
