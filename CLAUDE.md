@@ -55,6 +55,8 @@ Two traps:
 - **A commit message describing a scrub must not restate the names it removes.** The message is in the repo too.
 - **When a comment documents a literal wire value that is itself a private service name** (e.g. a JWT `iss` claim), describe the field's role and note the value is agreed out of band. Do not change the constant — that is a coordinated breaking change across services, not a docs fix.
 
+The same applies to **issues and pull requests**. Never cross-link one to a private repo: a `owner/private-repo#123` reference leaks the repo's name, the fact that the issue exists, and often its subject via the surrounding sentence — and renders as an unresolvable link for everyone without access, which is most readers of a public repo. Describe the dependency by role instead ("blocked on a gateway-side decision about entitlement"), and keep the tracking link on the private side. Direction is what matters: a private repo may freely reference a public one, never the reverse.
+
 Public device vendors and OSS libraries are fine, and appear in package and message names as well as comments. They name an ecosystem, not an internal repo.
 
 ### Reserved fields
