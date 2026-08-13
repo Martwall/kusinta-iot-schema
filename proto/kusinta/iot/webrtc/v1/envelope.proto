@@ -4,8 +4,10 @@ package kusinta.iot.webrtc.v1;
 
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 import "kusinta/iot/webrtc/v1/device_state.proto";
+import "kusinta/iot/webrtc/v1/management.proto";
 import "kusinta/iot/webrtc/v1/permission_push.proto";
 
 option optimize_for = SPEED;
@@ -113,6 +115,26 @@ message GatewayError {
   map<string, string> metadata = 3; // structured detail, e.g. {"device_id": "therm-1"}
 }
 
+// Answer to a ManagementRequest, gateway → app. Lives here rather than beside the
+// requests in management.proto because it carries GatewayError, which is declared
+// in this file; the other direction would be an import cycle.
+//
+// Exactly one result arrives per request, correlated by in_reply_to. A refusal is
+// an ordinary result, not a session-level error: a filing operation the caller may
+// not perform says so and the session continues. Targets the caller cannot reach
+// are refused as NOT_ENTITLED whether or not they exist, so no result here reveals
+// which spaces or devices are out there.
+message ManagementResult {
+  string in_reply_to = 1; // AppMessage.message_id of the request
+
+  oneof result {
+    GatewayError               error      = 2; // refused, or the request was malformed
+    kusinta.iot.space.v1.Space space      = 3; // create_space, update_space
+    SpaceTree                  space_tree = 4; // list_spaces
+    ManagementAck              ack        = 5; // everything else
+  }
+}
+
 // GatewayMessage: gateway → app
 message GatewayMessage {
   string                    message_id = 1;
@@ -131,6 +153,7 @@ message GatewayMessage {
     SubscriptionAck       subscription_ack   = 11;
     DeviceAdded           device_added       = 12;
     DeviceRemoved         device_removed     = 13;
+    ManagementResult      management_result  = 14;
   }
 }
 
@@ -146,5 +169,6 @@ message AppMessage {
     Ping                ping         = 6;
     SubscribeDevices    subscribe    = 7;
     UnsubscribeDevices  unsubscribe  = 8;
+    ManagementRequest   management   = 9;
   }
 }

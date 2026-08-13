@@ -14,12 +14,14 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $1;
+import '../../../../google/protobuf/timestamp.pb.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
-import 'command.pb.dart' as $4;
-import 'device_state.pb.dart' as $2;
+import '../../space/v1/space.pb.dart' as $1;
+import 'command.pb.dart' as $6;
+import 'device_state.pb.dart' as $4;
 import 'envelope.pbenum.dart';
-import 'permission_push.pb.dart' as $3;
+import 'management.pb.dart' as $2;
+import 'permission_push.pb.dart' as $5;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -682,6 +684,147 @@ class GatewayError extends $pb.GeneratedMessage {
   $pb.PbMap<$core.String, $core.String> get metadata => $_getMap(2);
 }
 
+enum ManagementResult_Result { error, space, spaceTree, ack, notSet }
+
+/// Answer to a ManagementRequest, gateway → app. Lives here rather than beside the
+/// requests in management.proto because it carries GatewayError, which is declared
+/// in this file; the other direction would be an import cycle.
+///
+/// Exactly one result arrives per request, correlated by in_reply_to. A refusal is
+/// an ordinary result, not a session-level error: a filing operation the caller may
+/// not perform says so and the session continues. Targets the caller cannot reach
+/// are refused as NOT_ENTITLED whether or not they exist, so no result here reveals
+/// which spaces or devices are out there.
+class ManagementResult extends $pb.GeneratedMessage {
+  factory ManagementResult({
+    $core.String? inReplyTo,
+    GatewayError? error,
+    $1.Space? space,
+    $2.SpaceTree? spaceTree,
+    $2.ManagementAck? ack,
+  }) {
+    final result = create();
+    if (inReplyTo != null) result.inReplyTo = inReplyTo;
+    if (error != null) result.error = error;
+    if (space != null) result.space = space;
+    if (spaceTree != null) result.spaceTree = spaceTree;
+    if (ack != null) result.ack = ack;
+    return result;
+  }
+
+  ManagementResult._();
+
+  factory ManagementResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ManagementResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ManagementResult_Result>
+      _ManagementResult_ResultByTag = {
+    2: ManagementResult_Result.error,
+    3: ManagementResult_Result.space,
+    4: ManagementResult_Result.spaceTree,
+    5: ManagementResult_Result.ack,
+    0: ManagementResult_Result.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ManagementResult',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2, 3, 4, 5])
+    ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
+    ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
+        subBuilder: GatewayError.create)
+    ..aOM<$1.Space>(3, _omitFieldNames ? '' : 'space',
+        subBuilder: $1.Space.create)
+    ..aOM<$2.SpaceTree>(4, _omitFieldNames ? '' : 'spaceTree',
+        subBuilder: $2.SpaceTree.create)
+    ..aOM<$2.ManagementAck>(5, _omitFieldNames ? '' : 'ack',
+        subBuilder: $2.ManagementAck.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ManagementResult clone() => ManagementResult()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ManagementResult copyWith(void Function(ManagementResult) updates) =>
+      super.copyWith((message) => updates(message as ManagementResult))
+          as ManagementResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ManagementResult create() => ManagementResult._();
+  @$core.override
+  ManagementResult createEmptyInstance() => create();
+  static $pb.PbList<ManagementResult> createRepeated() =>
+      $pb.PbList<ManagementResult>();
+  @$core.pragma('dart2js:noInline')
+  static ManagementResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ManagementResult>(create);
+  static ManagementResult? _defaultInstance;
+
+  ManagementResult_Result whichResult() =>
+      _ManagementResult_ResultByTag[$_whichOneof(0)]!;
+  void clearResult() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get inReplyTo => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set inReplyTo($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInReplyTo() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInReplyTo() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  GatewayError get error => $_getN(1);
+  @$pb.TagNumber(2)
+  set error(GatewayError value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasError() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearError() => $_clearField(2);
+  @$pb.TagNumber(2)
+  GatewayError ensureError() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $1.Space get space => $_getN(2);
+  @$pb.TagNumber(3)
+  set space($1.Space value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSpace() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSpace() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.Space ensureSpace() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $2.SpaceTree get spaceTree => $_getN(3);
+  @$pb.TagNumber(4)
+  set spaceTree($2.SpaceTree value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSpaceTree() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSpaceTree() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.SpaceTree ensureSpaceTree() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $2.ManagementAck get ack => $_getN(4);
+  @$pb.TagNumber(5)
+  set ack($2.ManagementAck value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasAck() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAck() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $2.ManagementAck ensureAck() => $_ensure(4);
+}
+
 enum GatewayMessage_Payload {
   stateSnapshot,
   propertyEvent,
@@ -693,6 +836,7 @@ enum GatewayMessage_Payload {
   subscriptionAck,
   deviceAdded,
   deviceRemoved,
+  managementResult,
   notSet
 }
 
@@ -700,17 +844,18 @@ enum GatewayMessage_Payload {
 class GatewayMessage extends $pb.GeneratedMessage {
   factory GatewayMessage({
     $core.String? messageId,
-    $1.Timestamp? sentAt,
-    $2.DeviceStateSnapshot? stateSnapshot,
-    $2.DevicePropertyEvent? propertyEvent,
-    $3.LivePermissionUpdate? permissionUpdate,
-    $4.CommandResult? commandResult,
+    $3.Timestamp? sentAt,
+    $4.DeviceStateSnapshot? stateSnapshot,
+    $4.DevicePropertyEvent? propertyEvent,
+    $5.LivePermissionUpdate? permissionUpdate,
+    $6.CommandResult? commandResult,
     Pong? pong,
     HandshakeRejected? handshakeRejected,
     GatewayError? error,
     SubscriptionAck? subscriptionAck,
-    $2.DeviceAdded? deviceAdded,
-    $2.DeviceRemoved? deviceRemoved,
+    $4.DeviceAdded? deviceAdded,
+    $4.DeviceRemoved? deviceRemoved,
+    ManagementResult? managementResult,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -725,6 +870,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (subscriptionAck != null) result.subscriptionAck = subscriptionAck;
     if (deviceAdded != null) result.deviceAdded = deviceAdded;
     if (deviceRemoved != null) result.deviceRemoved = deviceRemoved;
+    if (managementResult != null) result.managementResult = managementResult;
     return result;
   }
 
@@ -749,6 +895,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     11: GatewayMessage_Payload.subscriptionAck,
     12: GatewayMessage_Payload.deviceAdded,
     13: GatewayMessage_Payload.deviceRemoved,
+    14: GatewayMessage_Payload.managementResult,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -756,18 +903,18 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13])
+    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $1.Timestamp.create)
-    ..aOM<$2.DeviceStateSnapshot>(3, _omitFieldNames ? '' : 'stateSnapshot',
-        subBuilder: $2.DeviceStateSnapshot.create)
-    ..aOM<$2.DevicePropertyEvent>(4, _omitFieldNames ? '' : 'propertyEvent',
-        subBuilder: $2.DevicePropertyEvent.create)
-    ..aOM<$3.LivePermissionUpdate>(5, _omitFieldNames ? '' : 'permissionUpdate',
-        subBuilder: $3.LivePermissionUpdate.create)
-    ..aOM<$4.CommandResult>(6, _omitFieldNames ? '' : 'commandResult',
-        subBuilder: $4.CommandResult.create)
+    ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $3.Timestamp.create)
+    ..aOM<$4.DeviceStateSnapshot>(3, _omitFieldNames ? '' : 'stateSnapshot',
+        subBuilder: $4.DeviceStateSnapshot.create)
+    ..aOM<$4.DevicePropertyEvent>(4, _omitFieldNames ? '' : 'propertyEvent',
+        subBuilder: $4.DevicePropertyEvent.create)
+    ..aOM<$5.LivePermissionUpdate>(5, _omitFieldNames ? '' : 'permissionUpdate',
+        subBuilder: $5.LivePermissionUpdate.create)
+    ..aOM<$6.CommandResult>(6, _omitFieldNames ? '' : 'commandResult',
+        subBuilder: $6.CommandResult.create)
     ..aOM<Pong>(8, _omitFieldNames ? '' : 'pong', subBuilder: Pong.create)
     ..aOM<HandshakeRejected>(9, _omitFieldNames ? '' : 'handshakeRejected',
         subBuilder: HandshakeRejected.create)
@@ -775,10 +922,12 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: GatewayError.create)
     ..aOM<SubscriptionAck>(11, _omitFieldNames ? '' : 'subscriptionAck',
         subBuilder: SubscriptionAck.create)
-    ..aOM<$2.DeviceAdded>(12, _omitFieldNames ? '' : 'deviceAdded',
-        subBuilder: $2.DeviceAdded.create)
-    ..aOM<$2.DeviceRemoved>(13, _omitFieldNames ? '' : 'deviceRemoved',
-        subBuilder: $2.DeviceRemoved.create)
+    ..aOM<$4.DeviceAdded>(12, _omitFieldNames ? '' : 'deviceAdded',
+        subBuilder: $4.DeviceAdded.create)
+    ..aOM<$4.DeviceRemoved>(13, _omitFieldNames ? '' : 'deviceRemoved',
+        subBuilder: $4.DeviceRemoved.create)
+    ..aOM<ManagementResult>(14, _omitFieldNames ? '' : 'managementResult',
+        subBuilder: ManagementResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -816,59 +965,59 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $1.Timestamp get sentAt => $_getN(1);
+  $3.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($1.Timestamp value) => $_setField(2, value);
+  set sentAt($3.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $1.Timestamp ensureSentAt() => $_ensure(1);
+  $3.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.DeviceStateSnapshot get stateSnapshot => $_getN(2);
+  $4.DeviceStateSnapshot get stateSnapshot => $_getN(2);
   @$pb.TagNumber(3)
-  set stateSnapshot($2.DeviceStateSnapshot value) => $_setField(3, value);
+  set stateSnapshot($4.DeviceStateSnapshot value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasStateSnapshot() => $_has(2);
   @$pb.TagNumber(3)
   void clearStateSnapshot() => $_clearField(3);
   @$pb.TagNumber(3)
-  $2.DeviceStateSnapshot ensureStateSnapshot() => $_ensure(2);
+  $4.DeviceStateSnapshot ensureStateSnapshot() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $2.DevicePropertyEvent get propertyEvent => $_getN(3);
+  $4.DevicePropertyEvent get propertyEvent => $_getN(3);
   @$pb.TagNumber(4)
-  set propertyEvent($2.DevicePropertyEvent value) => $_setField(4, value);
+  set propertyEvent($4.DevicePropertyEvent value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasPropertyEvent() => $_has(3);
   @$pb.TagNumber(4)
   void clearPropertyEvent() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.DevicePropertyEvent ensurePropertyEvent() => $_ensure(3);
+  $4.DevicePropertyEvent ensurePropertyEvent() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $3.LivePermissionUpdate get permissionUpdate => $_getN(4);
+  $5.LivePermissionUpdate get permissionUpdate => $_getN(4);
   @$pb.TagNumber(5)
-  set permissionUpdate($3.LivePermissionUpdate value) => $_setField(5, value);
+  set permissionUpdate($5.LivePermissionUpdate value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasPermissionUpdate() => $_has(4);
   @$pb.TagNumber(5)
   void clearPermissionUpdate() => $_clearField(5);
   @$pb.TagNumber(5)
-  $3.LivePermissionUpdate ensurePermissionUpdate() => $_ensure(4);
+  $5.LivePermissionUpdate ensurePermissionUpdate() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  $4.CommandResult get commandResult => $_getN(5);
+  $6.CommandResult get commandResult => $_getN(5);
   @$pb.TagNumber(6)
-  set commandResult($4.CommandResult value) => $_setField(6, value);
+  set commandResult($6.CommandResult value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasCommandResult() => $_has(5);
   @$pb.TagNumber(6)
   void clearCommandResult() => $_clearField(6);
   @$pb.TagNumber(6)
-  $4.CommandResult ensureCommandResult() => $_ensure(5);
+  $6.CommandResult ensureCommandResult() => $_ensure(5);
 
   @$pb.TagNumber(8)
   Pong get pong => $_getN(6);
@@ -915,26 +1064,37 @@ class GatewayMessage extends $pb.GeneratedMessage {
   SubscriptionAck ensureSubscriptionAck() => $_ensure(9);
 
   @$pb.TagNumber(12)
-  $2.DeviceAdded get deviceAdded => $_getN(10);
+  $4.DeviceAdded get deviceAdded => $_getN(10);
   @$pb.TagNumber(12)
-  set deviceAdded($2.DeviceAdded value) => $_setField(12, value);
+  set deviceAdded($4.DeviceAdded value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasDeviceAdded() => $_has(10);
   @$pb.TagNumber(12)
   void clearDeviceAdded() => $_clearField(12);
   @$pb.TagNumber(12)
-  $2.DeviceAdded ensureDeviceAdded() => $_ensure(10);
+  $4.DeviceAdded ensureDeviceAdded() => $_ensure(10);
 
   @$pb.TagNumber(13)
-  $2.DeviceRemoved get deviceRemoved => $_getN(11);
+  $4.DeviceRemoved get deviceRemoved => $_getN(11);
   @$pb.TagNumber(13)
-  set deviceRemoved($2.DeviceRemoved value) => $_setField(13, value);
+  set deviceRemoved($4.DeviceRemoved value) => $_setField(13, value);
   @$pb.TagNumber(13)
   $core.bool hasDeviceRemoved() => $_has(11);
   @$pb.TagNumber(13)
   void clearDeviceRemoved() => $_clearField(13);
   @$pb.TagNumber(13)
-  $2.DeviceRemoved ensureDeviceRemoved() => $_ensure(11);
+  $4.DeviceRemoved ensureDeviceRemoved() => $_ensure(11);
+
+  @$pb.TagNumber(14)
+  ManagementResult get managementResult => $_getN(12);
+  @$pb.TagNumber(14)
+  set managementResult(ManagementResult value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasManagementResult() => $_has(12);
+  @$pb.TagNumber(14)
+  void clearManagementResult() => $_clearField(14);
+  @$pb.TagNumber(14)
+  ManagementResult ensureManagementResult() => $_ensure(12);
 }
 
 enum AppMessage_Payload {
@@ -944,6 +1104,7 @@ enum AppMessage_Payload {
   ping,
   subscribe,
   unsubscribe,
+  management,
   notSet
 }
 
@@ -951,13 +1112,14 @@ enum AppMessage_Payload {
 class AppMessage extends $pb.GeneratedMessage {
   factory AppMessage({
     $core.String? messageId,
-    $1.Timestamp? sentAt,
+    $3.Timestamp? sentAt,
     AppHandshake? handshake,
-    $4.DeviceCommand? command,
+    $6.DeviceCommand? command,
     PropertyReadRequest? readRequest,
     Ping? ping,
     SubscribeDevices? subscribe,
     UnsubscribeDevices? unsubscribe,
+    $2.ManagementRequest? management,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -968,6 +1130,7 @@ class AppMessage extends $pb.GeneratedMessage {
     if (ping != null) result.ping = ping;
     if (subscribe != null) result.subscribe = subscribe;
     if (unsubscribe != null) result.unsubscribe = unsubscribe;
+    if (management != null) result.management = management;
     return result;
   }
 
@@ -988,6 +1151,7 @@ class AppMessage extends $pb.GeneratedMessage {
     6: AppMessage_Payload.ping,
     7: AppMessage_Payload.subscribe,
     8: AppMessage_Payload.unsubscribe,
+    9: AppMessage_Payload.management,
     0: AppMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -995,14 +1159,14 @@ class AppMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8])
+    ..oo(0, [3, 4, 5, 6, 7, 8, 9])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $3.Timestamp.create)
     ..aOM<AppHandshake>(3, _omitFieldNames ? '' : 'handshake',
         subBuilder: AppHandshake.create)
-    ..aOM<$4.DeviceCommand>(4, _omitFieldNames ? '' : 'command',
-        subBuilder: $4.DeviceCommand.create)
+    ..aOM<$6.DeviceCommand>(4, _omitFieldNames ? '' : 'command',
+        subBuilder: $6.DeviceCommand.create)
     ..aOM<PropertyReadRequest>(5, _omitFieldNames ? '' : 'readRequest',
         subBuilder: PropertyReadRequest.create)
     ..aOM<Ping>(6, _omitFieldNames ? '' : 'ping', subBuilder: Ping.create)
@@ -1010,6 +1174,8 @@ class AppMessage extends $pb.GeneratedMessage {
         subBuilder: SubscribeDevices.create)
     ..aOM<UnsubscribeDevices>(8, _omitFieldNames ? '' : 'unsubscribe',
         subBuilder: UnsubscribeDevices.create)
+    ..aOM<$2.ManagementRequest>(9, _omitFieldNames ? '' : 'management',
+        subBuilder: $2.ManagementRequest.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1045,15 +1211,15 @@ class AppMessage extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $1.Timestamp get sentAt => $_getN(1);
+  $3.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($1.Timestamp value) => $_setField(2, value);
+  set sentAt($3.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $1.Timestamp ensureSentAt() => $_ensure(1);
+  $3.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
   AppHandshake get handshake => $_getN(2);
@@ -1067,15 +1233,15 @@ class AppMessage extends $pb.GeneratedMessage {
   AppHandshake ensureHandshake() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $4.DeviceCommand get command => $_getN(3);
+  $6.DeviceCommand get command => $_getN(3);
   @$pb.TagNumber(4)
-  set command($4.DeviceCommand value) => $_setField(4, value);
+  set command($6.DeviceCommand value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCommand() => $_has(3);
   @$pb.TagNumber(4)
   void clearCommand() => $_clearField(4);
   @$pb.TagNumber(4)
-  $4.DeviceCommand ensureCommand() => $_ensure(3);
+  $6.DeviceCommand ensureCommand() => $_ensure(3);
 
   @$pb.TagNumber(5)
   PropertyReadRequest get readRequest => $_getN(4);
@@ -1120,6 +1286,17 @@ class AppMessage extends $pb.GeneratedMessage {
   void clearUnsubscribe() => $_clearField(8);
   @$pb.TagNumber(8)
   UnsubscribeDevices ensureUnsubscribe() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  $2.ManagementRequest get management => $_getN(8);
+  @$pb.TagNumber(9)
+  set management($2.ManagementRequest value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasManagement() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearManagement() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $2.ManagementRequest ensureManagement() => $_ensure(8);
 }
 
 const $core.bool _omitFieldNames =

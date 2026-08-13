@@ -1,0 +1,165 @@
+syntax = "proto3";
+
+package kusinta.iot.webrtc.v1;
+
+import "kusinta/iot/common/v1/types.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/space/v1/space.proto";
+
+option optimize_for = SPEED;
+
+// Filing: the operations that decide which devices a user may see.
+//
+// The device-streaming half of this leg answers "what is there and what is it
+// doing". This half answers "whose is it" — spaces, who belongs to them, which
+// devices sit in them, and who owns a device outright. The gateway's own records
+// are authoritative for all of it; DeviceDescriptor.space_id and .ownership are
+// downstream copies the gateway populates and never reads back as authority.
+//
+// Every operation is authorized against the caller's reach, not against a
+// gateway-wide role alone: reaching a space is what lets you act on it. A target
+// the caller cannot reach is refused as NOT_ENTITLED whether or not it exists,
+// so no operation here can be used to enumerate ids the caller may not see.
+// Results come back as ManagementResult on the gateway envelope, correlated by
+// AppMessage.message_id.
+
+// Creates a space. A space with no parent_space_id is top level, which is a
+// stronger request than it looks: there is no parent whose reach could authorize
+// it, so it is reserved to the gateway's administrator.
+message CreateSpace {
+  kusinta.iot.common.v1.SpaceType space_type      = 1;
+  string                          name            = 2;
+  string                          description     = 3;
+  int32                           floor           = 4; // meaningful for FLOOR type
+  kusinta.iot.identity.v1.SpaceId parent_space_id = 5; // unset = top level
+}
+
+// Changes a space in place. Every descriptive field carries explicit presence:
+// absent means leave it alone, present means set it to this — including to the
+// empty string, which is how a description is cleared.
+message UpdateSpace {
+  kusinta.iot.identity.v1.SpaceId          space_id    = 1;
+  optional kusinta.iot.common.v1.SpaceType space_type  = 2;
+  optional string                          name        = 3;
+  optional string                          description = 4;
+  optional int32                           floor       = 5;
+
+  // Reparenting needs three states, not two: leave the parent alone, move to a
+  // new one, or become top level. A bare optional parent_space_id can only
+  // express the first two, so detaching gets its own case rather than being
+  // spelled as an empty id.
+  oneof parent_change {
+    kusinta.iot.identity.v1.SpaceId parent_space_id = 6;
+    bool                            detach          = 7;
+  }
+}
+
+// Deletes a space. Refused if the space still holds devices or sub-spaces unless
+// cascade is set, so that emptying a building is always something the caller
+// asked for rather than something a stale client did by accident.
+message DeleteSpace {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  bool                            cascade  = 2;
+}
+
+// Adds a user to a space, granting them reach of it and everything beneath it.
+// The user need not be known to the gateway beforehand — identities are minted by
+// the token issuer, and this records that one of them belongs here.
+message AssignUserToSpace {
+  reserved 3; // held for a per-space Role, should roles stop being gateway-wide
+
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.identity.v1.UserId  user_id  = 2;
+}
+
+// Removes a user's membership of a space. Losing reach also drops whatever the
+// user was streaming from it, announced by LivePermissionUpdate.
+message RemoveUserFromSpace {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.identity.v1.UserId  user_id  = 2;
+}
+
+// Files a device into a space. A device may sit in several spaces at once; this
+// is additive, and filing a device where it already sits is a no-op.
+message PlaceDeviceInSpace {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  kusinta.iot.identity.v1.SpaceId  space_id  = 2;
+}
+
+// Takes a device out of one space, leaving any others intact. A device in no
+// space and with no owner is unfiled, and visible only to the administrator.
+message RemoveDeviceFromSpace {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  kusinta.iot.identity.v1.SpaceId  space_id  = 2;
+}
+
+// Takes ownership of a device. Ownership is reach in its own right: an owner may
+// see and control their device whatever their gateway-wide role permits, and may
+// file it into spaces they belong to.
+message ClaimDevice {
+  kusinta.iot.identity.v1.DeviceId          device_id        = 1;
+  kusinta.iot.common.v1.DeviceOwnershipType ownership        = 2;
+  kusinta.iot.identity.v1.SpaceId           initial_space_id = 3;
+
+  // Evidence the claimant is standing at the device: the serial printed on it,
+  // matched against DeviceDescriptor.serial_number. Required precisely when the
+  // caller cannot already reach the device, which is the ordinary case for a
+  // resident claiming something they just bought — an unfiled device is invisible
+  // to them, so possession is the only thing left that can distinguish them from
+  // someone guessing ids. The administrator, who can already reach it, needs no
+  // proof. A device whose connector reports no serial can only be claimed by the
+  // administrator.
+  string                                    possession_proof = 4;
+}
+
+// Gives up ownership. The device keeps whatever space filing it has; if it has
+// none it becomes unfiled.
+message ReleaseDevice {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+}
+
+// Asks for the spaces the caller can reach. Unset root_space_id means all of
+// them, which for most users is one apartment and for an administrator is the
+// building.
+message ListSpaces {
+  kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+}
+
+// The spaces themselves, flat: each Space carries its own parent_space_id, so the
+// structure travels with the elements and a client rebuilds the tree from them.
+// A flat list also degrades honestly when it is truncated — a partial tree with
+// dangling parents is still readable, where a nested one would lose whole
+// subtrees.
+//
+// device_ids on each Space are filtered to what the caller may see. An
+// unfiltered tree would list every device on the gateway by id, which is the
+// enumeration channel the snapshot filter exists to close.
+message SpaceTree {
+  repeated kusinta.iot.space.v1.Space spaces = 1;
+}
+
+// The answer to an operation that changes something and has nothing to return.
+// Deliberately empty: ManagementResult.in_reply_to says which request succeeded,
+// and what the change did to the caller's reach arrives on LivePermissionUpdate
+// rather than here.
+message ManagementAck {}
+
+// A single filing operation, app → gateway. One wrapper rather than ten payload
+// cases on AppMessage: authorization for filing depends on the target, not on the
+// message kind, so these can never be gated by a table keyed on the envelope case
+// the way device messages are. Keeping them behind one case means one place that
+// must authorize, and one refusal path that must not leak whether a target exists.
+message ManagementRequest {
+  oneof request {
+    CreateSpace           create_space             = 1;
+    UpdateSpace           update_space             = 2;
+    DeleteSpace           delete_space             = 3;
+    AssignUserToSpace     assign_user_to_space     = 4;
+    RemoveUserFromSpace   remove_user_from_space   = 5;
+    PlaceDeviceInSpace    place_device_in_space    = 6;
+    RemoveDeviceFromSpace remove_device_from_space = 7;
+    ClaimDevice           claim_device             = 8;
+    ReleaseDevice         release_device           = 9;
+    ListSpaces            list_spaces              = 10;
+  }
+}

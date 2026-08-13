@@ -24,12 +24,14 @@ _sym_db = _symbol_database.Default()
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
+from kusinta.iot.space.v1 import space_pb2 as kusinta_dot_iot_dot_space_dot_v1_dot_space__pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as kusinta_dot_iot_dot_webrtc_dot_v1_dot_command__pb2
 from kusinta.iot.webrtc.v1 import device_state_pb2 as kusinta_dot_iot_dot_webrtc_dot_v1_dot_device__state__pb2
+from kusinta.iot.webrtc.v1 import management_pb2 as kusinta_dot_iot_dot_webrtc_dot_v1_dot_management__pb2
 from kusinta.iot.webrtc.v1 import permission_push_pb2 as kusinta_dot_iot_dot_webrtc_dot_v1_dot_permission__push__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n$kusinta/iot/webrtc/v1/envelope.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a#kusinta/iot/webrtc/v1/command.proto\x1a(kusinta/iot/webrtc/v1/device_state.proto\x1a+kusinta/iot/webrtc/v1/permission_push.proto\"\x06\n\x04Ping\"\x06\n\x04Pong\"+\n\x11HandshakeRejected\x12\x16\n\x06reason\x18\x01 \x01(\tR\x06reason\"u\n\x0c\x41ppHandshake\x12\x10\n\x03jwt\x18\x01 \x01(\tR\x03jwt\x12S\n\x14subscribe_device_ids\x18\x02 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x12subscribeDeviceIds\"T\n\x10SubscribeDevices\x12@\n\ndevice_ids\x18\x01 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\tdeviceIds\"V\n\x12UnsubscribeDevices\x12@\n\ndevice_ids\x18\x01 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\tdeviceIds\"\xac\x01\n\x13RefusedSubscription\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x04\x63ode\x18\x02 \x01(\x0e\x32\'.kusinta.iot.webrtc.v1.GatewayErrorCodeR\x04\x63ode\x12\x18\n\x07message\x18\x03 \x01(\tR\x07message\"\xba\x01\n\x0fSubscriptionAck\x12\x1e\n\x0bin_reply_to\x18\x01 \x01(\tR\tinReplyTo\x12\x41\n\nsubscribed\x18\x02 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\nsubscribed\x12\x44\n\x07refused\x18\x03 \x03(\x0b\x32*.kusinta.iot.webrtc.v1.RefusedSubscriptionR\x07refused\"\xa2\x01\n\x13PropertyReadRequest\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12%\n\x0e\x61ttribute_name\x18\x02 \x01(\tR\rattributeName\x12$\n\x0e\x63luster_id_hex\x18\x03 \x01(\tR\x0c\x63lusterIdHex\"\xf1\x01\n\x0cGatewayError\x12;\n\x04\x63ode\x18\x01 \x01(\x0e\x32\'.kusinta.iot.webrtc.v1.GatewayErrorCodeR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12M\n\x08metadata\x18\x03 \x03(\x0b\x32\x31.kusinta.iot.webrtc.v1.GatewayError.MetadataEntryR\x08metadata\x1a;\n\rMetadataEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"\x82\x07\n\x0eGatewayMessage\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12S\n\x0estate_snapshot\x18\x03 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.DeviceStateSnapshotH\x00R\rstateSnapshot\x12S\n\x0eproperty_event\x18\x04 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.DevicePropertyEventH\x00R\rpropertyEvent\x12Z\n\x11permission_update\x18\x05 \x01(\x0b\x32+.kusinta.iot.webrtc.v1.LivePermissionUpdateH\x00R\x10permissionUpdate\x12M\n\x0e\x63ommand_result\x18\x06 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.CommandResultH\x00R\rcommandResult\x12\x31\n\x04pong\x18\x08 \x01(\x0b\x32\x1b.kusinta.iot.webrtc.v1.PongH\x00R\x04pong\x12Y\n\x12handshake_rejected\x18\t \x01(\x0b\x32(.kusinta.iot.webrtc.v1.HandshakeRejectedH\x00R\x11handshakeRejected\x12;\n\x05\x65rror\x18\n \x01(\x0b\x32#.kusinta.iot.webrtc.v1.GatewayErrorH\x00R\x05\x65rror\x12S\n\x10subscription_ack\x18\x0b \x01(\x0b\x32&.kusinta.iot.webrtc.v1.SubscriptionAckH\x00R\x0fsubscriptionAck\x12G\n\x0c\x64\x65vice_added\x18\x0c \x01(\x0b\x32\".kusinta.iot.webrtc.v1.DeviceAddedH\x00R\x0b\x64\x65viceAdded\x12M\n\x0e\x64\x65vice_removed\x18\r \x01(\x0b\x32$.kusinta.iot.webrtc.v1.DeviceRemovedH\x00R\rdeviceRemovedB\t\n\x07payloadJ\x04\x08\x07\x10\x08\"\x8e\x04\n\nAppMessage\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12\x43\n\thandshake\x18\x03 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.AppHandshakeH\x00R\thandshake\x12@\n\x07\x63ommand\x18\x04 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.DeviceCommandH\x00R\x07\x63ommand\x12O\n\x0cread_request\x18\x05 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.PropertyReadRequestH\x00R\x0breadRequest\x12\x31\n\x04ping\x18\x06 \x01(\x0b\x32\x1b.kusinta.iot.webrtc.v1.PingH\x00R\x04ping\x12G\n\tsubscribe\x18\x07 \x01(\x0b\x32\'.kusinta.iot.webrtc.v1.SubscribeDevicesH\x00R\tsubscribe\x12M\n\x0bunsubscribe\x18\x08 \x01(\x0b\x32).kusinta.iot.webrtc.v1.UnsubscribeDevicesH\x00R\x0bunsubscribeB\t\n\x07payload*\xf6\x01\n\x10GatewayErrorCode\x12\"\n\x1eGATEWAY_ERROR_CODE_UNSPECIFIED\x10\x00\x12#\n\x1fGATEWAY_ERROR_CODE_NOT_ENTITLED\x10\x01\x12&\n\"GATEWAY_ERROR_CODE_INVALID_REQUEST\x10\x02\x12\"\n\x1eGATEWAY_ERROR_CODE_UNAVAILABLE\x10\x03\x12\x1f\n\x1bGATEWAY_ERROR_CODE_INTERNAL\x10\x04\x12,\n(GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED\x10\x05\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n$kusinta/iot/webrtc/v1/envelope.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a kusinta/iot/space/v1/space.proto\x1a#kusinta/iot/webrtc/v1/command.proto\x1a(kusinta/iot/webrtc/v1/device_state.proto\x1a&kusinta/iot/webrtc/v1/management.proto\x1a+kusinta/iot/webrtc/v1/permission_push.proto\"\x06\n\x04Ping\"\x06\n\x04Pong\"+\n\x11HandshakeRejected\x12\x16\n\x06reason\x18\x01 \x01(\tR\x06reason\"u\n\x0c\x41ppHandshake\x12\x10\n\x03jwt\x18\x01 \x01(\tR\x03jwt\x12S\n\x14subscribe_device_ids\x18\x02 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x12subscribeDeviceIds\"T\n\x10SubscribeDevices\x12@\n\ndevice_ids\x18\x01 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\tdeviceIds\"V\n\x12UnsubscribeDevices\x12@\n\ndevice_ids\x18\x01 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\tdeviceIds\"\xac\x01\n\x13RefusedSubscription\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x04\x63ode\x18\x02 \x01(\x0e\x32\'.kusinta.iot.webrtc.v1.GatewayErrorCodeR\x04\x63ode\x12\x18\n\x07message\x18\x03 \x01(\tR\x07message\"\xba\x01\n\x0fSubscriptionAck\x12\x1e\n\x0bin_reply_to\x18\x01 \x01(\tR\tinReplyTo\x12\x41\n\nsubscribed\x18\x02 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\nsubscribed\x12\x44\n\x07refused\x18\x03 \x03(\x0b\x32*.kusinta.iot.webrtc.v1.RefusedSubscriptionR\x07refused\"\xa2\x01\n\x13PropertyReadRequest\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12%\n\x0e\x61ttribute_name\x18\x02 \x01(\tR\rattributeName\x12$\n\x0e\x63luster_id_hex\x18\x03 \x01(\tR\x0c\x63lusterIdHex\"\xf1\x01\n\x0cGatewayError\x12;\n\x04\x63ode\x18\x01 \x01(\x0e\x32\'.kusinta.iot.webrtc.v1.GatewayErrorCodeR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12M\n\x08metadata\x18\x03 \x03(\x0b\x32\x31.kusinta.iot.webrtc.v1.GatewayError.MetadataEntryR\x08metadata\x1a;\n\rMetadataEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"\xab\x02\n\x10ManagementResult\x12\x1e\n\x0bin_reply_to\x18\x01 \x01(\tR\tinReplyTo\x12;\n\x05\x65rror\x18\x02 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.GatewayErrorH\x00R\x05\x65rror\x12\x33\n\x05space\x18\x03 \x01(\x0b\x32\x1b.kusinta.iot.space.v1.SpaceH\x00R\x05space\x12\x41\n\nspace_tree\x18\x04 \x01(\x0b\x32 .kusinta.iot.webrtc.v1.SpaceTreeH\x00R\tspaceTree\x12\x38\n\x03\x61\x63k\x18\x05 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.ManagementAckH\x00R\x03\x61\x63kB\x08\n\x06result\"\xda\x07\n\x0eGatewayMessage\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12S\n\x0estate_snapshot\x18\x03 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.DeviceStateSnapshotH\x00R\rstateSnapshot\x12S\n\x0eproperty_event\x18\x04 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.DevicePropertyEventH\x00R\rpropertyEvent\x12Z\n\x11permission_update\x18\x05 \x01(\x0b\x32+.kusinta.iot.webrtc.v1.LivePermissionUpdateH\x00R\x10permissionUpdate\x12M\n\x0e\x63ommand_result\x18\x06 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.CommandResultH\x00R\rcommandResult\x12\x31\n\x04pong\x18\x08 \x01(\x0b\x32\x1b.kusinta.iot.webrtc.v1.PongH\x00R\x04pong\x12Y\n\x12handshake_rejected\x18\t \x01(\x0b\x32(.kusinta.iot.webrtc.v1.HandshakeRejectedH\x00R\x11handshakeRejected\x12;\n\x05\x65rror\x18\n \x01(\x0b\x32#.kusinta.iot.webrtc.v1.GatewayErrorH\x00R\x05\x65rror\x12S\n\x10subscription_ack\x18\x0b \x01(\x0b\x32&.kusinta.iot.webrtc.v1.SubscriptionAckH\x00R\x0fsubscriptionAck\x12G\n\x0c\x64\x65vice_added\x18\x0c \x01(\x0b\x32\".kusinta.iot.webrtc.v1.DeviceAddedH\x00R\x0b\x64\x65viceAdded\x12M\n\x0e\x64\x65vice_removed\x18\r \x01(\x0b\x32$.kusinta.iot.webrtc.v1.DeviceRemovedH\x00R\rdeviceRemoved\x12V\n\x11management_result\x18\x0e \x01(\x0b\x32\'.kusinta.iot.webrtc.v1.ManagementResultH\x00R\x10managementResultB\t\n\x07payloadJ\x04\x08\x07\x10\x08\"\xda\x04\n\nAppMessage\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12\x43\n\thandshake\x18\x03 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.AppHandshakeH\x00R\thandshake\x12@\n\x07\x63ommand\x18\x04 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.DeviceCommandH\x00R\x07\x63ommand\x12O\n\x0cread_request\x18\x05 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.PropertyReadRequestH\x00R\x0breadRequest\x12\x31\n\x04ping\x18\x06 \x01(\x0b\x32\x1b.kusinta.iot.webrtc.v1.PingH\x00R\x04ping\x12G\n\tsubscribe\x18\x07 \x01(\x0b\x32\'.kusinta.iot.webrtc.v1.SubscribeDevicesH\x00R\tsubscribe\x12M\n\x0bunsubscribe\x18\x08 \x01(\x0b\x32).kusinta.iot.webrtc.v1.UnsubscribeDevicesH\x00R\x0bunsubscribe\x12J\n\nmanagement\x18\t \x01(\x0b\x32(.kusinta.iot.webrtc.v1.ManagementRequestH\x00R\nmanagementB\t\n\x07payload*\xf6\x01\n\x10GatewayErrorCode\x12\"\n\x1eGATEWAY_ERROR_CODE_UNSPECIFIED\x10\x00\x12#\n\x1fGATEWAY_ERROR_CODE_NOT_ENTITLED\x10\x01\x12&\n\"GATEWAY_ERROR_CODE_INVALID_REQUEST\x10\x02\x12\"\n\x1eGATEWAY_ERROR_CODE_UNAVAILABLE\x10\x03\x12\x1f\n\x1bGATEWAY_ERROR_CODE_INTERNAL\x10\x04\x12,\n(GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED\x10\x05\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -39,32 +41,34 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_GATEWAYERROR_METADATAENTRY']._loaded_options = None
   _globals['_GATEWAYERROR_METADATAENTRY']._serialized_options = b'8\001'
-  _globals['_GATEWAYERRORCODE']._serialized_start=2818
-  _globals['_GATEWAYERRORCODE']._serialized_end=3064
-  _globals['_PING']._serialized_start=260
-  _globals['_PING']._serialized_end=266
-  _globals['_PONG']._serialized_start=268
-  _globals['_PONG']._serialized_end=274
-  _globals['_HANDSHAKEREJECTED']._serialized_start=276
-  _globals['_HANDSHAKEREJECTED']._serialized_end=319
-  _globals['_APPHANDSHAKE']._serialized_start=321
-  _globals['_APPHANDSHAKE']._serialized_end=438
-  _globals['_SUBSCRIBEDEVICES']._serialized_start=440
-  _globals['_SUBSCRIBEDEVICES']._serialized_end=524
-  _globals['_UNSUBSCRIBEDEVICES']._serialized_start=526
-  _globals['_UNSUBSCRIBEDEVICES']._serialized_end=612
-  _globals['_REFUSEDSUBSCRIPTION']._serialized_start=615
-  _globals['_REFUSEDSUBSCRIPTION']._serialized_end=787
-  _globals['_SUBSCRIPTIONACK']._serialized_start=790
-  _globals['_SUBSCRIPTIONACK']._serialized_end=976
-  _globals['_PROPERTYREADREQUEST']._serialized_start=979
-  _globals['_PROPERTYREADREQUEST']._serialized_end=1141
-  _globals['_GATEWAYERROR']._serialized_start=1144
-  _globals['_GATEWAYERROR']._serialized_end=1385
-  _globals['_GATEWAYERROR_METADATAENTRY']._serialized_start=1326
-  _globals['_GATEWAYERROR_METADATAENTRY']._serialized_end=1385
-  _globals['_GATEWAYMESSAGE']._serialized_start=1388
-  _globals['_GATEWAYMESSAGE']._serialized_end=2286
-  _globals['_APPMESSAGE']._serialized_start=2289
-  _globals['_APPMESSAGE']._serialized_end=2815
+  _globals['_GATEWAYERRORCODE']._serialized_start=3358
+  _globals['_GATEWAYERRORCODE']._serialized_end=3604
+  _globals['_PING']._serialized_start=334
+  _globals['_PING']._serialized_end=340
+  _globals['_PONG']._serialized_start=342
+  _globals['_PONG']._serialized_end=348
+  _globals['_HANDSHAKEREJECTED']._serialized_start=350
+  _globals['_HANDSHAKEREJECTED']._serialized_end=393
+  _globals['_APPHANDSHAKE']._serialized_start=395
+  _globals['_APPHANDSHAKE']._serialized_end=512
+  _globals['_SUBSCRIBEDEVICES']._serialized_start=514
+  _globals['_SUBSCRIBEDEVICES']._serialized_end=598
+  _globals['_UNSUBSCRIBEDEVICES']._serialized_start=600
+  _globals['_UNSUBSCRIBEDEVICES']._serialized_end=686
+  _globals['_REFUSEDSUBSCRIPTION']._serialized_start=689
+  _globals['_REFUSEDSUBSCRIPTION']._serialized_end=861
+  _globals['_SUBSCRIPTIONACK']._serialized_start=864
+  _globals['_SUBSCRIPTIONACK']._serialized_end=1050
+  _globals['_PROPERTYREADREQUEST']._serialized_start=1053
+  _globals['_PROPERTYREADREQUEST']._serialized_end=1215
+  _globals['_GATEWAYERROR']._serialized_start=1218
+  _globals['_GATEWAYERROR']._serialized_end=1459
+  _globals['_GATEWAYERROR_METADATAENTRY']._serialized_start=1400
+  _globals['_GATEWAYERROR_METADATAENTRY']._serialized_end=1459
+  _globals['_MANAGEMENTRESULT']._serialized_start=1462
+  _globals['_MANAGEMENTRESULT']._serialized_end=1761
+  _globals['_GATEWAYMESSAGE']._serialized_start=1764
+  _globals['_GATEWAYMESSAGE']._serialized_end=2750
+  _globals['_APPMESSAGE']._serialized_start=2753
+  _globals['_APPMESSAGE']._serialized_end=3355
 # @@protoc_insertion_point(module_scope)

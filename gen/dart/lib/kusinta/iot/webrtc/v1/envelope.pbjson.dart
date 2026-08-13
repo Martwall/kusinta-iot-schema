@@ -253,6 +253,62 @@ final $typed_data.Uint8List gatewayErrorDescriptor = $convert.base64Decode(
     '50cnlSCG1ldGFkYXRhGjsKDU1ldGFkYXRhRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFs'
     'dWUYAiABKAlSBXZhbHVlOgI4AQ==');
 
+@$core.Deprecated('Use managementResultDescriptor instead')
+const ManagementResult$json = {
+  '1': 'ManagementResult',
+  '2': [
+    {'1': 'in_reply_to', '3': 1, '4': 1, '5': 9, '10': 'inReplyTo'},
+    {
+      '1': 'error',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GatewayError',
+      '9': 0,
+      '10': 'error'
+    },
+    {
+      '1': 'space',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.space.v1.Space',
+      '9': 0,
+      '10': 'space'
+    },
+    {
+      '1': 'space_tree',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SpaceTree',
+      '9': 0,
+      '10': 'spaceTree'
+    },
+    {
+      '1': 'ack',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ManagementAck',
+      '9': 0,
+      '10': 'ack'
+    },
+  ],
+  '8': [
+    {'1': 'result'},
+  ],
+};
+
+/// Descriptor for `ManagementResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
+    'ChBNYW5hZ2VtZW50UmVzdWx0Eh4KC2luX3JlcGx5X3RvGAEgASgJUglpblJlcGx5VG8SOwoFZX'
+    'Jyb3IYAiABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2F0ZXdheUVycm9ySABSBWVycm9y'
+    'EjMKBXNwYWNlGAMgASgLMhsua3VzaW50YS5pb3Quc3BhY2UudjEuU3BhY2VIAFIFc3BhY2USQQ'
+    'oKc3BhY2VfdHJlZRgEIAEoCzIgLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TcGFjZVRyZWVIAFIJ'
+    'c3BhY2VUcmVlEjgKA2FjaxgFIAEoCzIkLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NYW5hZ2VtZW'
+    '50QWNrSABSA2Fja0IICgZyZXN1bHQ=');
+
 @$core.Deprecated('Use gatewayMessageDescriptor instead')
 const GatewayMessage$json = {
   '1': 'GatewayMessage',
@@ -356,6 +412,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'deviceRemoved'
     },
+    {
+      '1': 'management_result',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ManagementResult',
+      '9': 0,
+      '10': 'managementResult'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -382,8 +447,9 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'IAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpcHRpb25BY2tIAFIPc3Vic2NyaX'
     'B0aW9uQWNrEkcKDGRldmljZV9hZGRlZBgMIAEoCzIiLmt1c2ludGEuaW90LndlYnJ0Yy52MS5E'
     'ZXZpY2VBZGRlZEgAUgtkZXZpY2VBZGRlZBJNCg5kZXZpY2VfcmVtb3ZlZBgNIAEoCzIkLmt1c2'
-    'ludGEuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWRCCQoHcGF5'
-    'bG9hZEoECAcQCA==');
+    'ludGEuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWQSVgoRbWFu'
+    'YWdlbWVudF9yZXN1bHQYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWFuYWdlbWVudF'
+    'Jlc3VsdEgAUhBtYW5hZ2VtZW50UmVzdWx0QgkKB3BheWxvYWRKBAgHEAg=');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {
@@ -452,6 +518,15 @@ const AppMessage$json = {
       '9': 0,
       '10': 'unsubscribe'
     },
+    {
+      '1': 'management',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ManagementRequest',
+      '9': 0,
+      '10': 'management'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -469,4 +544,5 @@ final $typed_data.Uint8List appMessageDescriptor = $convert.base64Decode(
     'bnRhLmlvdC53ZWJydGMudjEuUGluZ0gAUgRwaW5nEkcKCXN1YnNjcmliZRgHIAEoCzInLmt1c2'
     'ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpYmVEZXZpY2VzSABSCXN1YnNjcmliZRJNCgt1bnN1'
     'YnNjcmliZRgIIAEoCzIpLmt1c2ludGEuaW90LndlYnJ0Yy52MS5VbnN1YnNjcmliZURldmljZX'
-    'NIAFILdW5zdWJzY3JpYmVCCQoHcGF5bG9hZA==');
+    'NIAFILdW5zdWJzY3JpYmUSSgoKbWFuYWdlbWVudBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0'
+    'Yy52MS5NYW5hZ2VtZW50UmVxdWVzdEgAUgptYW5hZ2VtZW50QgkKB3BheWxvYWQ=');

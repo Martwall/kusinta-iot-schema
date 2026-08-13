@@ -5,6 +5,8 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
+import type { Space } from "../../space/v1/space_pb.js";
+import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceAdded, DevicePropertyEvent, DeviceRemoved, DeviceStateSnapshot } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
@@ -255,6 +257,71 @@ export declare type GatewayError = Message<"kusinta.iot.webrtc.v1.GatewayError">
 export declare const GatewayErrorSchema: GenMessage<GatewayError>;
 
 /**
+ * Answer to a ManagementRequest, gateway → app. Lives here rather than beside the
+ * requests in management.proto because it carries GatewayError, which is declared
+ * in this file; the other direction would be an import cycle.
+ *
+ * Exactly one result arrives per request, correlated by in_reply_to. A refusal is
+ * an ordinary result, not a session-level error: a filing operation the caller may
+ * not perform says so and the session continues. Targets the caller cannot reach
+ * are refused as NOT_ENTITLED whether or not they exist, so no result here reveals
+ * which spaces or devices are out there.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ManagementResult
+ */
+export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.ManagementResult"> & {
+  /**
+   * AppMessage.message_id of the request
+   *
+   * @generated from field: string in_reply_to = 1;
+   */
+  inReplyTo: string;
+
+  /**
+   * @generated from oneof kusinta.iot.webrtc.v1.ManagementResult.result
+   */
+  result: {
+    /**
+     * refused, or the request was malformed
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.GatewayError error = 2;
+     */
+    value: GatewayError;
+    case: "error";
+  } | {
+    /**
+     * create_space, update_space
+     *
+     * @generated from field: kusinta.iot.space.v1.Space space = 3;
+     */
+    value: Space;
+    case: "space";
+  } | {
+    /**
+     * list_spaces
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SpaceTree space_tree = 4;
+     */
+    value: SpaceTree;
+    case: "spaceTree";
+  } | {
+    /**
+     * everything else
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.ManagementAck ack = 5;
+     */
+    value: ManagementAck;
+    case: "ack";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ManagementResult.
+ * Use `create(ManagementResultSchema)` to create a new message.
+ */
+export declare const ManagementResultSchema: GenMessage<ManagementResult>;
+
+/**
  * GatewayMessage: gateway → app
  *
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
@@ -333,6 +400,12 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: DeviceRemoved;
     case: "deviceRemoved";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ManagementResult management_result = 14;
+     */
+    value: ManagementResult;
+    case: "managementResult";
   } | { case: undefined; value?: undefined };
 };
 
@@ -397,6 +470,12 @@ export declare type AppMessage = Message<"kusinta.iot.webrtc.v1.AppMessage"> & {
      */
     value: UnsubscribeDevices;
     case: "unsubscribe";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ManagementRequest management = 9;
+     */
+    value: ManagementRequest;
+    case: "management";
   } | { case: undefined; value?: undefined };
 };
 
