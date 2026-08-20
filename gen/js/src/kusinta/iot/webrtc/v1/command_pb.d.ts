@@ -13,17 +13,24 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_webrtc_v1_command: GenFile;
 
 /**
- * Maps to Matter SetpointRaiseLower command (Thermostat cluster 0x0201).
+ * Adjusts a setpoint by a delta. Maps to the Matter SetpointRaiseLower command
+ * (Thermostat cluster 0x0201).
+ *
+ * A delta needs a base, and only the producer holds one. On a battery-powered device
+ * that wakes on a multi-minute cycle the producer often has no current base and MUST
+ * refuse the command rather than guess at one — guessing moves a real radiator to a
+ * temperature nobody asked for. Prefer ThermostatSetpointWriteParams where the caller
+ * already knows the absolute value it wants; it has no such failure mode.
  *
  * @generated from message kusinta.iot.webrtc.v1.ThermostatSetpointParams
  */
 export declare type ThermostatSetpointParams = Message<"kusinta.iot.webrtc.v1.ThermostatSetpointParams"> & {
   /**
-   * SetpointAdjustMode: Heat=1, Cool=2, Both=3
+   * SetpointAdjustMode, see above
    *
-   * @generated from field: uint32 mode = 1;
+   * @generated from field: optional uint32 mode = 1;
    */
-  mode: number;
+  mode?: number | undefined;
 
   /**
    * centidegrees delta
@@ -38,6 +45,43 @@ export declare type ThermostatSetpointParams = Message<"kusinta.iot.webrtc.v1.Th
  * Use `create(ThermostatSetpointParamsSchema)` to create a new message.
  */
 export declare const ThermostatSetpointParamsSchema: GenMessage<ThermostatSetpointParams>;
+
+/**
+ * Writes a setpoint to an absolute value. Maps to a Matter write of Thermostat (0x0201)
+ * OccupiedHeatingSetpoint / OccupiedCoolingSetpoint, NOT to SetpointRaiseLower.
+ *
+ * Deliberately a separate message from ThermostatSetpointParams rather than an optional
+ * field on it: a delta and an absolute are different commands with different failure
+ * modes, and one message carrying both would let a producer read the wrong meaning out
+ * of bytes that parse cleanly.
+ *
+ * This is the form battery-powered devices are designed to be driven with. An upstream
+ * system accepts an absolute value whether or not the device is awake and queues it for
+ * the next wake-up, so the command does not depend on a base nobody holds.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams
+ */
+export declare type ThermostatSetpointWriteParams = Message<"kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams"> & {
+  /**
+   * SetpointAdjustMode, see above
+   *
+   * @generated from field: optional uint32 mode = 1;
+   */
+  mode?: number | undefined;
+
+  /**
+   * absolute target
+   *
+   * @generated from field: sint32 setpoint_centidegrees = 2;
+   */
+  setpointCentidegrees: number;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams.
+ * Use `create(ThermostatSetpointWriteParamsSchema)` to create a new message.
+ */
+export declare const ThermostatSetpointWriteParamsSchema: GenMessage<ThermostatSetpointWriteParams>;
 
 /**
  * Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
@@ -197,6 +241,12 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
      */
     value: DoorLockParams;
     case: "doorLock";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams thermostat_setpoint_write = 10;
+     */
+    value: ThermostatSetpointWriteParams;
+    case: "thermostatSetpointWrite";
   } | {
     /**
      * escape hatch for unsupported commands

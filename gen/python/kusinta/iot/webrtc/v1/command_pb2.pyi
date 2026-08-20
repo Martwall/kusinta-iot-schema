@@ -17,6 +17,14 @@ class ThermostatSetpointParams(_message.Message):
     amount: int
     def __init__(self, mode: _Optional[int] = ..., amount: _Optional[int] = ...) -> None: ...
 
+class ThermostatSetpointWriteParams(_message.Message):
+    __slots__ = ("mode", "setpoint_centidegrees")
+    MODE_FIELD_NUMBER: _ClassVar[int]
+    SETPOINT_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    mode: int
+    setpoint_centidegrees: int
+    def __init__(self, mode: _Optional[int] = ..., setpoint_centidegrees: _Optional[int] = ...) -> None: ...
+
 class LevelControlParams(_message.Message):
     __slots__ = ("level", "transition_time")
     LEVEL_FIELD_NUMBER: _ClassVar[int]
@@ -48,7 +56,7 @@ class DoorLockParams(_message.Message):
     def __init__(self, lock_state: _Optional[int] = ..., pin_code: _Optional[str] = ...) -> None: ...
 
 class DeviceCommand(_message.Message):
-    __slots__ = ("command_id", "device_id", "cluster_id_hex", "command_name", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "raw_tlv")
+    __slots__ = ("command_id", "device_id", "cluster_id_hex", "command_name", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "thermostat_setpoint_write", "raw_tlv")
     COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_ID_HEX_FIELD_NUMBER: _ClassVar[int]
@@ -58,6 +66,7 @@ class DeviceCommand(_message.Message):
     ON_OFF_FIELD_NUMBER: _ClassVar[int]
     WINDOW_COVERING_LIFT_FIELD_NUMBER: _ClassVar[int]
     DOOR_LOCK_FIELD_NUMBER: _ClassVar[int]
+    THERMOSTAT_SETPOINT_WRITE_FIELD_NUMBER: _ClassVar[int]
     RAW_TLV_FIELD_NUMBER: _ClassVar[int]
     command_id: str
     device_id: _identity_pb2.DeviceId
@@ -68,8 +77,9 @@ class DeviceCommand(_message.Message):
     on_off: OnOffParams
     window_covering_lift: WindowCoveringLiftParams
     door_lock: DoorLockParams
+    thermostat_setpoint_write: ThermostatSetpointWriteParams
     raw_tlv: bytes
-    def __init__(self, command_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., cluster_id_hex: _Optional[str] = ..., command_name: _Optional[str] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
+    def __init__(self, command_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., cluster_id_hex: _Optional[str] = ..., command_name: _Optional[str] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., thermostat_setpoint_write: _Optional[_Union[ThermostatSetpointWriteParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
 
 class CommandError(_message.Message):
     __slots__ = ("code", "message")

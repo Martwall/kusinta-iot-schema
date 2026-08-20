@@ -68,6 +68,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.webrtc.v1.WindowCoveringLiftParams':
       $5.WindowCoveringLiftParams$json,
   '.kusinta.iot.webrtc.v1.DoorLockParams': $5.DoorLockParams$json,
+  '.kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams':
+      $5.ThermostatSetpointWriteParams$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

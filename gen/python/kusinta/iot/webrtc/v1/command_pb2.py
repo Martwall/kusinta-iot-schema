@@ -26,7 +26,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/webrtc/v1/command.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\"F\n\x18ThermostatSetpointParams\x12\x12\n\x04mode\x18\x01 \x01(\rR\x04mode\x12\x16\n\x06\x61mount\x18\x02 \x01(\x11R\x06\x61mount\"S\n\x12LevelControlParams\x12\x14\n\x05level\x18\x01 \x01(\rR\x05level\x12\'\n\x0ftransition_time\x18\x02 \x01(\rR\x0etransitionTime\"5\n\x0bOnOffParams\x12\x0e\n\x02on\x18\x01 \x01(\x08R\x02on\x12\x16\n\x06toggle\x18\x02 \x01(\x08R\x06toggle\"I\n\x18WindowCoveringLiftParams\x12-\n\x12lift_percent100ths\x18\x01 \x01(\rR\x11liftPercent100ths\"J\n\x0e\x44oorLockParams\x12\x1d\n\nlock_state\x18\x01 \x01(\rR\tlockState\x12\x19\n\x08pin_code\x18\x02 \x01(\tR\x07pinCode\"\xfe\x04\n\rDeviceCommand\x12\x1d\n\ncommand_id\x18\x01 \x01(\tR\tcommandId\x12>\n\tdevice_id\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12$\n\x0e\x63luster_id_hex\x18\x03 \x01(\tR\x0c\x63lusterIdHex\x12!\n\x0c\x63ommand_name\x18\x04 \x01(\tR\x0b\x63ommandName\x12\x62\n\x13thermostat_setpoint\x18\x05 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.ThermostatSetpointParamsH\x00R\x12thermostatSetpoint\x12P\n\rlevel_control\x18\x06 \x01(\x0b\x32).kusinta.iot.webrtc.v1.LevelControlParamsH\x00R\x0clevelControl\x12;\n\x06on_off\x18\x07 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.OnOffParamsH\x00R\x05onOff\x12\x63\n\x14window_covering_lift\x18\x08 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.WindowCoveringLiftParamsH\x00R\x12windowCoveringLift\x12\x44\n\tdoor_lock\x18\t \x01(\x0b\x32%.kusinta.iot.webrtc.v1.DoorLockParamsH\x00R\x08\x64oorLock\x12\x19\n\x07raw_tlv\x18\x63 \x01(\x0cH\x00R\x06rawTlvB\x0c\n\nparameters\"<\n\x0c\x43ommandError\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\"\xc2\x01\n\rCommandResult\x12\x1d\n\ncommand_id\x18\x01 \x01(\tR\tcommandId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12\x39\n\x05\x65rror\x18\x03 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.CommandErrorR\x05\x65rror\x12=\n\x0c\x63ompleted_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63ompletedAtB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/webrtc/v1/command.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\"T\n\x18ThermostatSetpointParams\x12\x17\n\x04mode\x18\x01 \x01(\rH\x00R\x04mode\x88\x01\x01\x12\x16\n\x06\x61mount\x18\x02 \x01(\x11R\x06\x61mountB\x07\n\x05_mode\"v\n\x1dThermostatSetpointWriteParams\x12\x17\n\x04mode\x18\x01 \x01(\rH\x00R\x04mode\x88\x01\x01\x12\x33\n\x15setpoint_centidegrees\x18\x02 \x01(\x11R\x14setpointCentidegreesB\x07\n\x05_mode\"S\n\x12LevelControlParams\x12\x14\n\x05level\x18\x01 \x01(\rR\x05level\x12\'\n\x0ftransition_time\x18\x02 \x01(\rR\x0etransitionTime\"5\n\x0bOnOffParams\x12\x0e\n\x02on\x18\x01 \x01(\x08R\x02on\x12\x16\n\x06toggle\x18\x02 \x01(\x08R\x06toggle\"I\n\x18WindowCoveringLiftParams\x12-\n\x12lift_percent100ths\x18\x01 \x01(\rR\x11liftPercent100ths\"J\n\x0e\x44oorLockParams\x12\x1d\n\nlock_state\x18\x01 \x01(\rR\tlockState\x12\x19\n\x08pin_code\x18\x02 \x01(\tR\x07pinCode\"\xf2\x05\n\rDeviceCommand\x12\x1d\n\ncommand_id\x18\x01 \x01(\tR\tcommandId\x12>\n\tdevice_id\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12$\n\x0e\x63luster_id_hex\x18\x03 \x01(\tR\x0c\x63lusterIdHex\x12!\n\x0c\x63ommand_name\x18\x04 \x01(\tR\x0b\x63ommandName\x12\x62\n\x13thermostat_setpoint\x18\x05 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.ThermostatSetpointParamsH\x00R\x12thermostatSetpoint\x12P\n\rlevel_control\x18\x06 \x01(\x0b\x32).kusinta.iot.webrtc.v1.LevelControlParamsH\x00R\x0clevelControl\x12;\n\x06on_off\x18\x07 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.OnOffParamsH\x00R\x05onOff\x12\x63\n\x14window_covering_lift\x18\x08 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.WindowCoveringLiftParamsH\x00R\x12windowCoveringLift\x12\x44\n\tdoor_lock\x18\t \x01(\x0b\x32%.kusinta.iot.webrtc.v1.DoorLockParamsH\x00R\x08\x64oorLock\x12r\n\x19thermostat_setpoint_write\x18\n \x01(\x0b\x32\x34.kusinta.iot.webrtc.v1.ThermostatSetpointWriteParamsH\x00R\x17thermostatSetpointWrite\x12\x19\n\x07raw_tlv\x18\x63 \x01(\x0cH\x00R\x06rawTlvB\x0c\n\nparameters\"<\n\x0c\x43ommandError\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\"\xc2\x01\n\rCommandResult\x12\x1d\n\ncommand_id\x18\x01 \x01(\tR\tcommandId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12\x39\n\x05\x65rror\x18\x03 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.CommandErrorR\x05\x65rror\x12=\n\x0c\x63ompleted_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63ompletedAtB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,19 +35,21 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_THERMOSTATSETPOINTPARAMS']._serialized_start=135
-  _globals['_THERMOSTATSETPOINTPARAMS']._serialized_end=205
-  _globals['_LEVELCONTROLPARAMS']._serialized_start=207
-  _globals['_LEVELCONTROLPARAMS']._serialized_end=290
-  _globals['_ONOFFPARAMS']._serialized_start=292
-  _globals['_ONOFFPARAMS']._serialized_end=345
-  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_start=347
-  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_end=420
-  _globals['_DOORLOCKPARAMS']._serialized_start=422
-  _globals['_DOORLOCKPARAMS']._serialized_end=496
-  _globals['_DEVICECOMMAND']._serialized_start=499
-  _globals['_DEVICECOMMAND']._serialized_end=1137
-  _globals['_COMMANDERROR']._serialized_start=1139
-  _globals['_COMMANDERROR']._serialized_end=1199
-  _globals['_COMMANDRESULT']._serialized_start=1202
-  _globals['_COMMANDRESULT']._serialized_end=1396
+  _globals['_THERMOSTATSETPOINTPARAMS']._serialized_end=219
+  _globals['_THERMOSTATSETPOINTWRITEPARAMS']._serialized_start=221
+  _globals['_THERMOSTATSETPOINTWRITEPARAMS']._serialized_end=339
+  _globals['_LEVELCONTROLPARAMS']._serialized_start=341
+  _globals['_LEVELCONTROLPARAMS']._serialized_end=424
+  _globals['_ONOFFPARAMS']._serialized_start=426
+  _globals['_ONOFFPARAMS']._serialized_end=479
+  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_start=481
+  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_end=554
+  _globals['_DOORLOCKPARAMS']._serialized_start=556
+  _globals['_DOORLOCKPARAMS']._serialized_end=630
+  _globals['_DEVICECOMMAND']._serialized_start=633
+  _globals['_DEVICECOMMAND']._serialized_end=1387
+  _globals['_COMMANDERROR']._serialized_start=1389
+  _globals['_COMMANDERROR']._serialized_end=1449
+  _globals['_COMMANDRESULT']._serialized_start=1452
+  _globals['_COMMANDRESULT']._serialized_end=1646
 # @@protoc_insertion_point(module_scope)

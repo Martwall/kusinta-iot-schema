@@ -10,7 +10,7 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/webrtc/v1/command.proto.
  */
 export const file_kusinta_iot_webrtc_v1_command = /*@__PURE__*/
-  fileDesc("CiNrdXNpbnRhL2lvdC93ZWJydGMvdjEvY29tbWFuZC5wcm90bxIVa3VzaW50YS5pb3Qud2VicnRjLnYxIjgKGFRoZXJtb3N0YXRTZXRwb2ludFBhcmFtcxIMCgRtb2RlGAEgASgNEg4KBmFtb3VudBgCIAEoESI8ChJMZXZlbENvbnRyb2xQYXJhbXMSDQoFbGV2ZWwYASABKA0SFwoPdHJhbnNpdGlvbl90aW1lGAIgASgNIikKC09uT2ZmUGFyYW1zEgoKAm9uGAEgASgIEg4KBnRvZ2dsZRgCIAEoCCI2ChhXaW5kb3dDb3ZlcmluZ0xpZnRQYXJhbXMSGgoSbGlmdF9wZXJjZW50MTAwdGhzGAEgASgNIjYKDkRvb3JMb2NrUGFyYW1zEhIKCmxvY2tfc3RhdGUYASABKA0SEAoIcGluX2NvZGUYAiABKAki/wMKDURldmljZUNvbW1hbmQSEgoKY29tbWFuZF9pZBgBIAEoCRI0CglkZXZpY2VfaWQYAiABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZBIWCg5jbHVzdGVyX2lkX2hleBgDIAEoCRIUCgxjb21tYW5kX25hbWUYBCABKAkSTgoTdGhlcm1vc3RhdF9zZXRwb2ludBgFIAEoCzIvLmt1c2ludGEuaW90LndlYnJ0Yy52MS5UaGVybW9zdGF0U2V0cG9pbnRQYXJhbXNIABJCCg1sZXZlbF9jb250cm9sGAYgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLkxldmVsQ29udHJvbFBhcmFtc0gAEjQKBm9uX29mZhgHIAEoCzIiLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Pbk9mZlBhcmFtc0gAEk8KFHdpbmRvd19jb3ZlcmluZ19saWZ0GAggASgLMi8ua3VzaW50YS5pb3Qud2VicnRjLnYxLldpbmRvd0NvdmVyaW5nTGlmdFBhcmFtc0gAEjoKCWRvb3JfbG9jaxgJIAEoCzIlLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Eb29yTG9ja1BhcmFtc0gAEhEKB3Jhd190bHYYYyABKAxIAEIMCgpwYXJhbWV0ZXJzIi0KDENvbW1hbmRFcnJvchIMCgRjb2RlGAEgASgJEg8KB21lc3NhZ2UYAiABKAkimgEKDUNvbW1hbmRSZXN1bHQSEgoKY29tbWFuZF9pZBgBIAEoCRIPCgdzdWNjZXNzGAIgASgIEjIKBWVycm9yGAMgASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLkNvbW1hbmRFcnJvchIwCgxjb21wbGV0ZWRfYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgJIAWIGcHJvdG8z", [file_google_protobuf_timestamp, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CiNrdXNpbnRhL2lvdC93ZWJydGMvdjEvY29tbWFuZC5wcm90bxIVa3VzaW50YS5pb3Qud2VicnRjLnYxIkYKGFRoZXJtb3N0YXRTZXRwb2ludFBhcmFtcxIRCgRtb2RlGAEgASgNSACIAQESDgoGYW1vdW50GAIgASgRQgcKBV9tb2RlIloKHVRoZXJtb3N0YXRTZXRwb2ludFdyaXRlUGFyYW1zEhEKBG1vZGUYASABKA1IAIgBARIdChVzZXRwb2ludF9jZW50aWRlZ3JlZXMYAiABKBFCBwoFX21vZGUiPAoSTGV2ZWxDb250cm9sUGFyYW1zEg0KBWxldmVsGAEgASgNEhcKD3RyYW5zaXRpb25fdGltZRgCIAEoDSIpCgtPbk9mZlBhcmFtcxIKCgJvbhgBIAEoCBIOCgZ0b2dnbGUYAiABKAgiNgoYV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zEhoKEmxpZnRfcGVyY2VudDEwMHRocxgBIAEoDSI2Cg5Eb29yTG9ja1BhcmFtcxISCgpsb2NrX3N0YXRlGAEgASgNEhAKCHBpbl9jb2RlGAIgASgJItoECg1EZXZpY2VDb21tYW5kEhIKCmNvbW1hbmRfaWQYASABKAkSNAoJZGV2aWNlX2lkGAIgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSFgoOY2x1c3Rlcl9pZF9oZXgYAyABKAkSFAoMY29tbWFuZF9uYW1lGAQgASgJEk4KE3RoZXJtb3N0YXRfc2V0cG9pbnQYBSABKAsyLy5rdXNpbnRhLmlvdC53ZWJydGMudjEuVGhlcm1vc3RhdFNldHBvaW50UGFyYW1zSAASQgoNbGV2ZWxfY29udHJvbBgGIAEoCzIpLmt1c2ludGEuaW90LndlYnJ0Yy52MS5MZXZlbENvbnRyb2xQYXJhbXNIABI0CgZvbl9vZmYYByABKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEuT25PZmZQYXJhbXNIABJPChR3aW5kb3dfY292ZXJpbmdfbGlmdBgIIAEoCzIvLmt1c2ludGEuaW90LndlYnJ0Yy52MS5XaW5kb3dDb3ZlcmluZ0xpZnRQYXJhbXNIABI6Cglkb29yX2xvY2sYCSABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuRG9vckxvY2tQYXJhbXNIABJZChl0aGVybW9zdGF0X3NldHBvaW50X3dyaXRlGAogASgLMjQua3VzaW50YS5pb3Qud2VicnRjLnYxLlRoZXJtb3N0YXRTZXRwb2ludFdyaXRlUGFyYW1zSAASEQoHcmF3X3RsdhhjIAEoDEgAQgwKCnBhcmFtZXRlcnMiLQoMQ29tbWFuZEVycm9yEgwKBGNvZGUYASABKAkSDwoHbWVzc2FnZRgCIAEoCSKaAQoNQ29tbWFuZFJlc3VsdBISCgpjb21tYW5kX2lkGAEgASgJEg8KB3N1Y2Nlc3MYAiABKAgSMgoFZXJyb3IYAyABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZEVycm9yEjAKDGNvbXBsZXRlZF9hdBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCAkgBYgZwcm90bzM", [file_google_protobuf_timestamp, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.ThermostatSetpointParams.
@@ -20,51 +20,58 @@ export const ThermostatSetpointParamsSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_command, 0);
 
 /**
+ * Describes the message kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams.
+ * Use `create(ThermostatSetpointWriteParamsSchema)` to create a new message.
+ */
+export const ThermostatSetpointWriteParamsSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 1);
+
+/**
  * Describes the message kusinta.iot.webrtc.v1.LevelControlParams.
  * Use `create(LevelControlParamsSchema)` to create a new message.
  */
 export const LevelControlParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 1);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 2);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.OnOffParams.
  * Use `create(OnOffParamsSchema)` to create a new message.
  */
 export const OnOffParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 2);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 3);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.WindowCoveringLiftParams.
  * Use `create(WindowCoveringLiftParamsSchema)` to create a new message.
  */
 export const WindowCoveringLiftParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 3);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 4);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DoorLockParams.
  * Use `create(DoorLockParamsSchema)` to create a new message.
  */
 export const DoorLockParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 4);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 5);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DeviceCommand.
  * Use `create(DeviceCommandSchema)` to create a new message.
  */
 export const DeviceCommandSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 5);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 6);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.CommandError.
  * Use `create(CommandErrorSchema)` to create a new message.
  */
 export const CommandErrorSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 6);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 7);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.CommandResult.
  * Use `create(CommandResultSchema)` to create a new message.
  */
 export const CommandResultSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 7);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 8);
 

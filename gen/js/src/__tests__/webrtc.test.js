@@ -12,7 +12,12 @@ import {
   UnsubscribeDevicesSchema,
   SubscriptionAckSchema,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
-import { DeviceCommandSchema, CommandResultSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
+import {
+  DeviceCommandSchema,
+  CommandResultSchema,
+  ThermostatSetpointParamsSchema,
+  ThermostatSetpointWriteParamsSchema,
+} from '../kusinta/iot/webrtc/v1/command_pb.js'
 import {
   DeviceStateSnapshotSchema,
   DevicePropertyEventSchema,
@@ -41,7 +46,7 @@ describe('DeviceCommand', () => {
       deviceId: { value: 'therm-1' },
       clusterIdHex: '0201',
       commandName: 'SetpointRaiseLower',
-      parameters: { case: 'thermostatSetpoint', value: { mode: 4, amount: 50 } },
+      parameters: { case: 'thermostatSetpoint', value: { mode: 0, amount: 50 } },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.commandId).toBe('cmd-uuid-1')
@@ -49,9 +54,41 @@ describe('DeviceCommand', () => {
     expect(decoded.commandName).toBe('SetpointRaiseLower')
     expect(decoded.parameters?.case).toBe('thermostatSetpoint')
     if (decoded.parameters?.case === 'thermostatSetpoint') {
-      expect(decoded.parameters.value.mode).toBe(4)
+      expect(decoded.parameters.value.mode).toBe(0)
       expect(decoded.parameters.value.amount).toBe(50)
     }
+  })
+
+  it('keeps Heat distinguishable from an unset mode', () => {
+    const heat = create(ThermostatSetpointParamsSchema, { mode: 0, amount: 50 })
+    const unset = create(ThermostatSetpointParamsSchema, { amount: 50 })
+    expect(fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, heat)).mode).toBe(0)
+    expect(fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, unset)).mode).toBeUndefined()
+  })
+
+  it('round-trips an absolute thermostat setpoint write', () => {
+    const cmd = create(DeviceCommandSchema, {
+      commandId: 'cmd-uuid-6',
+      deviceId: { value: 'therm-1' },
+      clusterIdHex: '0201',
+      commandName: 'WriteAttribute',
+      parameters: {
+        case: 'thermostatSetpointWrite',
+        value: { mode: 0, setpointCentidegrees: 2150 },
+      },
+    })
+    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
+    expect(decoded.parameters?.case).toBe('thermostatSetpointWrite')
+    if (decoded.parameters?.case === 'thermostatSetpointWrite') {
+      expect(decoded.parameters.value.mode).toBe(0)
+      expect(decoded.parameters.value.setpointCentidegrees).toBe(2150)
+    }
+  })
+
+  it('round-trips a negative absolute setpoint', () => {
+    const p = create(ThermostatSetpointWriteParamsSchema, { mode: 1, setpointCentidegrees: -500 })
+    const decoded = fromBinary(ThermostatSetpointWriteParamsSchema, toBinary(ThermostatSetpointWriteParamsSchema, p))
+    expect(decoded.setpointCentidegrees).toBe(-500)
   })
 
   it('round-trips on/off command', () => {
@@ -134,6 +171,7 @@ describe('CommandResult', () => {
     expect(decoded.success).toBe(false)
     expect(decoded.error?.code).toBe('PERMISSION_DENIED')
   })
+
 })
 
 describe('DeviceStateSnapshot', () => {

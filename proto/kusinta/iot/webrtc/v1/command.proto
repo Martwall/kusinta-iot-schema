@@ -7,10 +7,52 @@ import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
-// Maps to Matter SetpointRaiseLower command (Thermostat cluster 0x0201).
+// SetpointAdjustMode selects which setpoint a thermostat command targets. It is
+// Matter's SetpointRaiseLowerModeEnum (Thermostat cluster 0x0201) and carries Matter's
+// own numbering:
+//
+//   0 = Heat  — targets ThermostatProperties.occupied_heating_setpoint
+//   1 = Cool  — targets ThermostatProperties.occupied_cooling_setpoint
+//   2 = Both  — targets both
+//
+// Zero is a real mode, not a "not set" sentinel, so every field carrying this value has
+// explicit presence: absent = the producer stated no mode, present = the mode it named,
+// Heat included. This is the same rule properties.proto applies to readings, for the
+// same reason — a bare proto3 scalar makes "meant Heat" and "never set it" identical on
+// the wire.
+//
+// SetpointAdjustMode is NOT ThermostatProperties.system_mode. system_mode is Matter's
+// SystemModeEnum (Off=0, Auto=1, Cool=3, Heat=4), a different enum over a different set
+// of concepts. Cool is 1 here and 3 there; the two must never be substituted for each
+// other or read through the same mapping table.
+
+// Adjusts a setpoint by a delta. Maps to the Matter SetpointRaiseLower command
+// (Thermostat cluster 0x0201).
+//
+// A delta needs a base, and only the producer holds one. On a battery-powered device
+// that wakes on a multi-minute cycle the producer often has no current base and MUST
+// refuse the command rather than guess at one — guessing moves a real radiator to a
+// temperature nobody asked for. Prefer ThermostatSetpointWriteParams where the caller
+// already knows the absolute value it wants; it has no such failure mode.
 message ThermostatSetpointParams {
-  uint32 mode   = 1; // SetpointAdjustMode: Heat=1, Cool=2, Both=3
-  sint32 amount = 2; // centidegrees delta
+  optional uint32 mode = 1; // SetpointAdjustMode, see above
+  sint32 amount        = 2; // centidegrees delta
+}
+
+// Writes a setpoint to an absolute value. Maps to a Matter write of Thermostat (0x0201)
+// OccupiedHeatingSetpoint / OccupiedCoolingSetpoint, NOT to SetpointRaiseLower.
+//
+// Deliberately a separate message from ThermostatSetpointParams rather than an optional
+// field on it: a delta and an absolute are different commands with different failure
+// modes, and one message carrying both would let a producer read the wrong meaning out
+// of bytes that parse cleanly.
+//
+// This is the form battery-powered devices are designed to be driven with. An upstream
+// system accepts an absolute value whether or not the device is awake and queues it for
+// the next wake-up, so the command does not depend on a base nobody holds.
+message ThermostatSetpointWriteParams {
+  optional uint32 mode         = 1; // SetpointAdjustMode, see above
+  sint32 setpoint_centidegrees = 2; // absolute target
 }
 
 // Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
@@ -48,6 +90,7 @@ message DeviceCommand {
     OnOffParams               on_off               = 7;
     WindowCoveringLiftParams  window_covering_lift = 8;
     DoorLockParams            door_lock            = 9;
+    ThermostatSetpointWriteParams thermostat_setpoint_write = 10;
     bytes                     raw_tlv              = 99; // escape hatch for unsupported commands
   }
 }

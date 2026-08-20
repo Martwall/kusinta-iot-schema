@@ -19,7 +19,14 @@ import '../../identity/v1/identity.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Maps to Matter SetpointRaiseLower command (Thermostat cluster 0x0201).
+/// Adjusts a setpoint by a delta. Maps to the Matter SetpointRaiseLower command
+/// (Thermostat cluster 0x0201).
+///
+/// A delta needs a base, and only the producer holds one. On a battery-powered device
+/// that wakes on a multi-minute cycle the producer often has no current base and MUST
+/// refuse the command rather than guess at one — guessing moves a real radiator to a
+/// temperature nobody asked for. Prefer ThermostatSetpointWriteParams where the caller
+/// already knows the absolute value it wants; it has no such failure mode.
 class ThermostatSetpointParams extends $pb.GeneratedMessage {
   factory ThermostatSetpointParams({
     $core.int? mode,
@@ -89,6 +96,92 @@ class ThermostatSetpointParams extends $pb.GeneratedMessage {
   $core.bool hasAmount() => $_has(1);
   @$pb.TagNumber(2)
   void clearAmount() => $_clearField(2);
+}
+
+/// Writes a setpoint to an absolute value. Maps to a Matter write of Thermostat (0x0201)
+/// OccupiedHeatingSetpoint / OccupiedCoolingSetpoint, NOT to SetpointRaiseLower.
+///
+/// Deliberately a separate message from ThermostatSetpointParams rather than an optional
+/// field on it: a delta and an absolute are different commands with different failure
+/// modes, and one message carrying both would let a producer read the wrong meaning out
+/// of bytes that parse cleanly.
+///
+/// This is the form battery-powered devices are designed to be driven with. An upstream
+/// system accepts an absolute value whether or not the device is awake and queues it for
+/// the next wake-up, so the command does not depend on a base nobody holds.
+class ThermostatSetpointWriteParams extends $pb.GeneratedMessage {
+  factory ThermostatSetpointWriteParams({
+    $core.int? mode,
+    $core.int? setpointCentidegrees,
+  }) {
+    final result = create();
+    if (mode != null) result.mode = mode;
+    if (setpointCentidegrees != null)
+      result.setpointCentidegrees = setpointCentidegrees;
+    return result;
+  }
+
+  ThermostatSetpointWriteParams._();
+
+  factory ThermostatSetpointWriteParams.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ThermostatSetpointWriteParams.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ThermostatSetpointWriteParams',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'setpointCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ThermostatSetpointWriteParams clone() =>
+      ThermostatSetpointWriteParams()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ThermostatSetpointWriteParams copyWith(
+          void Function(ThermostatSetpointWriteParams) updates) =>
+      super.copyWith(
+              (message) => updates(message as ThermostatSetpointWriteParams))
+          as ThermostatSetpointWriteParams;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ThermostatSetpointWriteParams create() =>
+      ThermostatSetpointWriteParams._();
+  @$core.override
+  ThermostatSetpointWriteParams createEmptyInstance() => create();
+  static $pb.PbList<ThermostatSetpointWriteParams> createRepeated() =>
+      $pb.PbList<ThermostatSetpointWriteParams>();
+  @$core.pragma('dart2js:noInline')
+  static ThermostatSetpointWriteParams getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ThermostatSetpointWriteParams>(create);
+  static ThermostatSetpointWriteParams? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get mode => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set mode($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get setpointCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set setpointCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSetpointCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSetpointCentidegrees() => $_clearField(2);
 }
 
 /// Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
@@ -368,6 +461,7 @@ enum DeviceCommand_Parameters {
   onOff,
   windowCoveringLift,
   doorLock,
+  thermostatSetpointWrite,
   rawTlv,
   notSet
 }
@@ -383,6 +477,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     OnOffParams? onOff,
     WindowCoveringLiftParams? windowCoveringLift,
     DoorLockParams? doorLock,
+    ThermostatSetpointWriteParams? thermostatSetpointWrite,
     $core.List<$core.int>? rawTlv,
   }) {
     final result = create();
@@ -397,6 +492,8 @@ class DeviceCommand extends $pb.GeneratedMessage {
     if (windowCoveringLift != null)
       result.windowCoveringLift = windowCoveringLift;
     if (doorLock != null) result.doorLock = doorLock;
+    if (thermostatSetpointWrite != null)
+      result.thermostatSetpointWrite = thermostatSetpointWrite;
     if (rawTlv != null) result.rawTlv = rawTlv;
     return result;
   }
@@ -417,6 +514,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     7: DeviceCommand_Parameters.onOff,
     8: DeviceCommand_Parameters.windowCoveringLift,
     9: DeviceCommand_Parameters.doorLock,
+    10: DeviceCommand_Parameters.thermostatSetpointWrite,
     99: DeviceCommand_Parameters.rawTlv,
     0: DeviceCommand_Parameters.notSet
   };
@@ -425,7 +523,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [5, 6, 7, 8, 9, 99])
+    ..oo(0, [5, 6, 7, 8, 9, 10, 99])
     ..aOS(1, _omitFieldNames ? '' : 'commandId')
     ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
@@ -443,6 +541,9 @@ class DeviceCommand extends $pb.GeneratedMessage {
         subBuilder: WindowCoveringLiftParams.create)
     ..aOM<DoorLockParams>(9, _omitFieldNames ? '' : 'doorLock',
         subBuilder: DoorLockParams.create)
+    ..aOM<ThermostatSetpointWriteParams>(
+        10, _omitFieldNames ? '' : 'thermostatSetpointWrite',
+        subBuilder: ThermostatSetpointWriteParams.create)
     ..a<$core.List<$core.int>>(
         99, _omitFieldNames ? '' : 'rawTlv', $pb.PbFieldType.OY)
     ..hasRequiredFields = false;
@@ -567,12 +668,24 @@ class DeviceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   DoorLockParams ensureDoorLock() => $_ensure(8);
 
+  @$pb.TagNumber(10)
+  ThermostatSetpointWriteParams get thermostatSetpointWrite => $_getN(9);
+  @$pb.TagNumber(10)
+  set thermostatSetpointWrite(ThermostatSetpointWriteParams value) =>
+      $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasThermostatSetpointWrite() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearThermostatSetpointWrite() => $_clearField(10);
+  @$pb.TagNumber(10)
+  ThermostatSetpointWriteParams ensureThermostatSetpointWrite() => $_ensure(9);
+
   @$pb.TagNumber(99)
-  $core.List<$core.int> get rawTlv => $_getN(9);
+  $core.List<$core.int> get rawTlv => $_getN(10);
   @$pb.TagNumber(99)
-  set rawTlv($core.List<$core.int> value) => $_setBytes(9, value);
+  set rawTlv($core.List<$core.int> value) => $_setBytes(10, value);
   @$pb.TagNumber(99)
-  $core.bool hasRawTlv() => $_has(9);
+  $core.bool hasRawTlv() => $_has(10);
   @$pb.TagNumber(99)
   void clearRawTlv() => $_clearField(99);
 }

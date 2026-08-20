@@ -18,16 +18,44 @@ import 'dart:typed_data' as $typed_data;
 const ThermostatSetpointParams$json = {
   '1': 'ThermostatSetpointParams',
   '2': [
-    {'1': 'mode', '3': 1, '4': 1, '5': 13, '10': 'mode'},
+    {'1': 'mode', '3': 1, '4': 1, '5': 13, '9': 0, '10': 'mode', '17': true},
     {'1': 'amount', '3': 2, '4': 1, '5': 17, '10': 'amount'},
+  ],
+  '8': [
+    {'1': '_mode'},
   ],
 };
 
 /// Descriptor for `ThermostatSetpointParams`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List thermostatSetpointParamsDescriptor =
     $convert.base64Decode(
-        'ChhUaGVybW9zdGF0U2V0cG9pbnRQYXJhbXMSEgoEbW9kZRgBIAEoDVIEbW9kZRIWCgZhbW91bn'
-        'QYAiABKBFSBmFtb3VudA==');
+        'ChhUaGVybW9zdGF0U2V0cG9pbnRQYXJhbXMSFwoEbW9kZRgBIAEoDUgAUgRtb2RliAEBEhYKBm'
+        'Ftb3VudBgCIAEoEVIGYW1vdW50QgcKBV9tb2Rl');
+
+@$core.Deprecated('Use thermostatSetpointWriteParamsDescriptor instead')
+const ThermostatSetpointWriteParams$json = {
+  '1': 'ThermostatSetpointWriteParams',
+  '2': [
+    {'1': 'mode', '3': 1, '4': 1, '5': 13, '9': 0, '10': 'mode', '17': true},
+    {
+      '1': 'setpoint_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '10': 'setpointCentidegrees'
+    },
+  ],
+  '8': [
+    {'1': '_mode'},
+  ],
+};
+
+/// Descriptor for `ThermostatSetpointWriteParams`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List thermostatSetpointWriteParamsDescriptor =
+    $convert.base64Decode(
+        'Ch1UaGVybW9zdGF0U2V0cG9pbnRXcml0ZVBhcmFtcxIXCgRtb2RlGAEgASgNSABSBG1vZGWIAQ'
+        'ESMwoVc2V0cG9pbnRfY2VudGlkZWdyZWVzGAIgASgRUhRzZXRwb2ludENlbnRpZGVncmVlc0IH'
+        'CgVfbW9kZQ==');
 
 @$core.Deprecated('Use levelControlParamsDescriptor instead')
 const LevelControlParams$json = {
@@ -150,6 +178,15 @@ const DeviceCommand$json = {
       '9': 0,
       '10': 'doorLock'
     },
+    {
+      '1': 'thermostat_setpoint_write',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams',
+      '9': 0,
+      '10': 'thermostatSetpointWrite'
+    },
     {'1': 'raw_tlv', '3': 99, '4': 1, '5': 12, '9': 0, '10': 'rawTlv'},
   ],
   '8': [
@@ -169,8 +206,10 @@ final $typed_data.Uint8List deviceCommandDescriptor = $convert.base64Decode(
     '50YS5pb3Qud2VicnRjLnYxLk9uT2ZmUGFyYW1zSABSBW9uT2ZmEmMKFHdpbmRvd19jb3Zlcmlu'
     'Z19saWZ0GAggASgLMi8ua3VzaW50YS5pb3Qud2VicnRjLnYxLldpbmRvd0NvdmVyaW5nTGlmdF'
     'BhcmFtc0gAUhJ3aW5kb3dDb3ZlcmluZ0xpZnQSRAoJZG9vcl9sb2NrGAkgASgLMiUua3VzaW50'
-    'YS5pb3Qud2VicnRjLnYxLkRvb3JMb2NrUGFyYW1zSABSCGRvb3JMb2NrEhkKB3Jhd190bHYYYy'
-    'ABKAxIAFIGcmF3VGx2QgwKCnBhcmFtZXRlcnM=');
+    'YS5pb3Qud2VicnRjLnYxLkRvb3JMb2NrUGFyYW1zSABSCGRvb3JMb2NrEnIKGXRoZXJtb3N0YX'
+    'Rfc2V0cG9pbnRfd3JpdGUYCiABKAsyNC5rdXNpbnRhLmlvdC53ZWJydGMudjEuVGhlcm1vc3Rh'
+    'dFNldHBvaW50V3JpdGVQYXJhbXNIAFIXdGhlcm1vc3RhdFNldHBvaW50V3JpdGUSGQoHcmF3X3'
+    'RsdhhjIAEoDEgAUgZyYXdUbHZCDAoKcGFyYW1ldGVycw==');
 
 @$core.Deprecated('Use commandErrorDescriptor instead')
 const CommandError$json = {
