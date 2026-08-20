@@ -14,6 +14,23 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use valueProvenanceDescriptor instead')
+const ValueProvenance$json = {
+  '1': 'ValueProvenance',
+  '2': [
+    {'1': 'VALUE_PROVENANCE_UNSPECIFIED', '2': 0},
+    {'1': 'VALUE_PROVENANCE_CONFIRMED', '2': 1},
+    {'1': 'VALUE_PROVENANCE_OPTIMISTIC', '2': 2},
+    {'1': 'VALUE_PROVENANCE_CORRECTED', '2': 3},
+  ],
+};
+
+/// Descriptor for `ValueProvenance`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List valueProvenanceDescriptor = $convert.base64Decode(
+    'Cg9WYWx1ZVByb3ZlbmFuY2USIAocVkFMVUVfUFJPVkVOQU5DRV9VTlNQRUNJRklFRBAAEh4KGl'
+    'ZBTFVFX1BST1ZFTkFOQ0VfQ09ORklSTUVEEAESHwobVkFMVUVfUFJPVkVOQU5DRV9PUFRJTUlT'
+    'VElDEAISHgoaVkFMVUVfUFJPVkVOQU5DRV9DT1JSRUNURUQQAw==');
+
 @$core.Deprecated('Use propertyUpdateDescriptor instead')
 const PropertyUpdate$json = {
   '1': 'PropertyUpdate',
@@ -42,6 +59,14 @@ const PropertyUpdate$json = {
       '10': 'timestamp'
     },
     {'1': 'cluster_id_hex', '3': 10, '4': 1, '5': 9, '10': 'clusterIdHex'},
+    {
+      '1': 'provenance',
+      '3': 11,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.device.v1.ValueProvenance',
+      '10': 'provenance'
+    },
   ],
   '8': [
     {'1': 'value'},
@@ -57,7 +82,9 @@ final $typed_data.Uint8List propertyUpdateDescriptor = $convert.base64Decode(
     'b2F0X3ZhbHVlGAYgASgCSABSCmZsb2F0VmFsdWUSIwoMc3RyaW5nX3ZhbHVlGAcgASgJSABSC3'
     'N0cmluZ1ZhbHVlEiEKC2J5dGVzX3ZhbHVlGAggASgMSABSCmJ5dGVzVmFsdWUSOAoJdGltZXN0'
     'YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEiQKDmNsdX'
-    'N0ZXJfaWRfaGV4GAogASgJUgxjbHVzdGVySWRIZXhCBwoFdmFsdWU=');
+    'N0ZXJfaWRfaGV4GAogASgJUgxjbHVzdGVySWRIZXgSRgoKcHJvdmVuYW5jZRgLIAEoDjImLmt1'
+    'c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFuY2VSCnByb3ZlbmFuY2VCBwoFdmFsdW'
+    'U=');
 
 @$core.Deprecated('Use propertyUpdateBatchDescriptor instead')
 const PropertyUpdateBatch$json = {

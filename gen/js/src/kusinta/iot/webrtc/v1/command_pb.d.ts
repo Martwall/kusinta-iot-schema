@@ -289,6 +289,11 @@ export declare const CommandErrorSchema: GenMessage<CommandError>;
  * CommandResult travels gateway → app (GatewayMessage) and
  * connector → gateway (SessionRequest via connector.proto import).
  *
+ * success = true means the command was ACCEPTED, not that the device confirmed it. For
+ * a battery-powered device that wakes on a multi-minute cycle, acceptance without
+ * confirmation is the normal path, not an edge case: waiting for the device would fail
+ * every write to a sleeping one.
+ *
  * @generated from message kusinta.iot.webrtc.v1.CommandResult
  */
 export declare type CommandResult = Message<"kusinta.iot.webrtc.v1.CommandResult"> & {
@@ -311,6 +316,25 @@ export declare type CommandResult = Message<"kusinta.iot.webrtc.v1.CommandResult
    * @generated from field: google.protobuf.Timestamp completed_at = 4;
    */
   completedAt?: Timestamp | undefined;
+
+  /**
+   * When the producer's own optimistic window closes: by this time the value has either
+   * been confirmed by the device or restored to what it was, and either way the producer
+   * will have published a PropertyUpdate saying so.
+   *
+   * Set it when the producer applied the value optimistically and runs a rollback timer.
+   * It exists so a consumer can bound its wait without hardcoding a constant chasing a
+   * timer that lives in someone else's codebase and changes without notice.
+   *
+   * Absent means no claim — either the producer confirms synchronously, or it cannot
+   * state a bound. Absent is NOT "settles immediately".
+   *
+   * This bounds the wait; it does not label the values that arrive. Which update was the
+   * optimistic one is device.v1.PropertyUpdate.provenance.
+   *
+   * @generated from field: optional google.protobuf.Timestamp settles_by = 5;
+   */
+  settlesBy?: Timestamp | undefined;
 };
 
 /**

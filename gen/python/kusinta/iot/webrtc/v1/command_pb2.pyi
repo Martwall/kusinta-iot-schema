@@ -90,13 +90,15 @@ class CommandError(_message.Message):
     def __init__(self, code: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
 
 class CommandResult(_message.Message):
-    __slots__ = ("command_id", "success", "error", "completed_at")
+    __slots__ = ("command_id", "success", "error", "completed_at", "settles_by")
     COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     COMPLETED_AT_FIELD_NUMBER: _ClassVar[int]
+    SETTLES_BY_FIELD_NUMBER: _ClassVar[int]
     command_id: str
     success: bool
     error: CommandError
     completed_at: _timestamp_pb2.Timestamp
-    def __init__(self, command_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[CommandError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    settles_by: _timestamp_pb2.Timestamp
+    def __init__(self, command_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[CommandError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...

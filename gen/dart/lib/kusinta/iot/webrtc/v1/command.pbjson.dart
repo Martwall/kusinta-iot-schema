@@ -247,6 +247,19 @@ const CommandResult$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'completedAt'
     },
+    {
+      '1': 'settles_by',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'settlesBy',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_settles_by'},
   ],
 };
 
@@ -255,4 +268,5 @@ final $typed_data.Uint8List commandResultDescriptor = $convert.base64Decode(
     'Cg1Db21tYW5kUmVzdWx0Eh0KCmNvbW1hbmRfaWQYASABKAlSCWNvbW1hbmRJZBIYCgdzdWNjZX'
     'NzGAIgASgIUgdzdWNjZXNzEjkKBWVycm9yGAMgASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYx'
     'LkNvbW1hbmRFcnJvclIFZXJyb3ISPQoMY29tcGxldGVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3'
-    'RvYnVmLlRpbWVzdGFtcFILY29tcGxldGVkQXQ=');
+    'RvYnVmLlRpbWVzdGFtcFILY29tcGxldGVkQXQSPgoKc2V0dGxlc19ieRgFIAEoCzIaLmdvb2ds'
+    'ZS5wcm90b2J1Zi5UaW1lc3RhbXBIAFIJc2V0dGxlc0J5iAEBQg0KC19zZXR0bGVzX2J5');

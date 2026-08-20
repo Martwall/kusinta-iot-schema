@@ -16,8 +16,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
+import 'property_update.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'property_update.pbenum.dart';
 
 enum PropertyUpdate_Value {
   intValue,
@@ -78,6 +81,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     $core.List<$core.int>? bytesValue,
     $1.Timestamp? timestamp,
     $core.String? clusterIdHex,
+    ValueProvenance? provenance,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -90,6 +94,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     if (bytesValue != null) result.bytesValue = bytesValue;
     if (timestamp != null) result.timestamp = timestamp;
     if (clusterIdHex != null) result.clusterIdHex = clusterIdHex;
+    if (provenance != null) result.provenance = provenance;
     return result;
   }
 
@@ -132,6 +137,11 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     ..aOM<$1.Timestamp>(9, _omitFieldNames ? '' : 'timestamp',
         subBuilder: $1.Timestamp.create)
     ..aOS(10, _omitFieldNames ? '' : 'clusterIdHex')
+    ..e<ValueProvenance>(
+        11, _omitFieldNames ? '' : 'provenance', $pb.PbFieldType.OE,
+        defaultOrMaker: ValueProvenance.VALUE_PROVENANCE_UNSPECIFIED,
+        valueOf: ValueProvenance.valueOf,
+        enumValues: ValueProvenance.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -252,6 +262,25 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   $core.bool hasClusterIdHex() => $_has(9);
   @$pb.TagNumber(10)
   void clearClusterIdHex() => $_clearField(10);
+
+  /// How much the producer believes this value. Unset means no claim, which is how every
+  /// producer written before this field behaved, so a consumer that ignores it and a
+  /// producer that never sets it both behave exactly as they did.
+  ///
+  /// Snapshots carry no provenance. Device.properties is a typed message whose fields
+  /// hold a value and nothing else, so a gateway MUST NOT store an OPTIMISTIC value into
+  /// its registry: an app reconnecting mid-window would receive it restated as plain
+  /// fact. A snapshot is a statement of what has been confirmed. A reconnect during an
+  /// optimistic window therefore shows the last confirmed value, and the correction or
+  /// confirmation arrives on the live path as it would have anyway.
+  @$pb.TagNumber(11)
+  ValueProvenance get provenance => $_getN(10);
+  @$pb.TagNumber(11)
+  set provenance(ValueProvenance value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasProvenance() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearProvenance() => $_clearField(11);
 }
 
 class PropertyUpdateBatch extends $pb.GeneratedMessage {

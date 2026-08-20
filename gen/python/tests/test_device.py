@@ -145,3 +145,64 @@ def test_frequency_carries_millihertz():
     decoded = properties_pb2.EnergySensorProperties()
     decoded.ParseFromString(original.SerializeToString())
     assert decoded.frequency == 49_985
+
+
+def test_property_update_provenance_defaults_to_unspecified():
+    update = property_update_pb2.PropertyUpdate(
+        device_id=identity_pb2.DeviceId(value="therm-1"),
+        attribute_name="OccupiedHeatingSetpoint",
+        int_value=2150,
+        cluster_id_hex="0201",
+    )
+    assert update.provenance == property_update_pb2.VALUE_PROVENANCE_UNSPECIFIED
+
+
+def test_property_update_provenance_optimistic_round_trips():
+    original = property_update_pb2.PropertyUpdate(
+        device_id=identity_pb2.DeviceId(value="therm-1"),
+        attribute_name="OccupiedHeatingSetpoint",
+        int_value=2250,
+        cluster_id_hex="0201",
+        provenance=property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC,
+    )
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.provenance == property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC
+    assert decoded.int_value == 2250
+
+
+def test_property_update_provenance_corrected_is_distinct_from_confirmed():
+    assert (
+        property_update_pb2.VALUE_PROVENANCE_CORRECTED
+        != property_update_pb2.VALUE_PROVENANCE_CONFIRMED
+    )
+
+
+def test_property_update_provenance_enum_values():
+    assert property_update_pb2.VALUE_PROVENANCE_UNSPECIFIED == 0
+    assert property_update_pb2.VALUE_PROVENANCE_CONFIRMED == 1
+    assert property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC == 2
+    assert property_update_pb2.VALUE_PROVENANCE_CORRECTED == 3
+
+
+def test_property_update_provenance_survives_a_batch():
+    batch = property_update_pb2.PropertyUpdateBatch(
+        updates=[
+            property_update_pb2.PropertyUpdate(
+                attribute_name="OccupiedHeatingSetpoint",
+                int_value=2250,
+                cluster_id_hex="0201",
+                provenance=property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC,
+            ),
+            property_update_pb2.PropertyUpdate(
+                attribute_name="OccupiedHeatingSetpoint",
+                int_value=2150,
+                cluster_id_hex="0201",
+                provenance=property_update_pb2.VALUE_PROVENANCE_CORRECTED,
+            ),
+        ]
+    )
+    decoded = property_update_pb2.PropertyUpdateBatch()
+    decoded.ParseFromString(batch.SerializeToString())
+    assert decoded.updates[0].provenance == property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC
+    assert decoded.updates[1].provenance == property_update_pb2.VALUE_PROVENANCE_CORRECTED

@@ -14,7 +14,7 @@ import {
   EnergySensorPropertiesSchema,
 } from '../kusinta/iot/device/v1/properties_pb.js'
 import { DeviceSchema } from '../kusinta/iot/device/v1/device_pb.js'
-import { PropertyUpdateSchema, PropertyUpdateBatchSchema } from '../kusinta/iot/device/v1/property_update_pb.js'
+import { PropertyUpdateSchema, PropertyUpdateBatchSchema, ValueProvenance } from '../kusinta/iot/device/v1/property_update_pb.js'
 
 describe('DeviceDescriptor', () => {
   it('round-trips matter_device_type_id for thermostat (0x0301 = 769)', () => {
@@ -177,6 +177,42 @@ describe('PropertyUpdate', () => {
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.value?.case).toBe('boolValue')
     if (decoded.value?.case === 'boolValue') expect(decoded.value.value).toBe(true)
+  })
+
+  it('defaults provenance to unspecified', () => {
+    const u = create(PropertyUpdateSchema, {
+      deviceId: { value: 'therm-1' },
+      attributeName: 'OccupiedHeatingSetpoint',
+      value: { case: 'intValue', value: 2150 },
+      clusterIdHex: '0201',
+    })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.provenance).toBe(ValueProvenance.UNSPECIFIED)
+  })
+
+  it('round-trips an optimistic provenance', () => {
+    const u = create(PropertyUpdateSchema, {
+      deviceId: { value: 'therm-1' },
+      attributeName: 'OccupiedHeatingSetpoint',
+      value: { case: 'intValue', value: 2250 },
+      clusterIdHex: '0201',
+      provenance: ValueProvenance.OPTIMISTIC,
+    })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.provenance).toBe(ValueProvenance.OPTIMISTIC)
+  })
+
+  it('round-trips a corrected provenance distinctly from confirmed', () => {
+    const u = create(PropertyUpdateSchema, {
+      deviceId: { value: 'therm-1' },
+      attributeName: 'OccupiedHeatingSetpoint',
+      value: { case: 'intValue', value: 2150 },
+      clusterIdHex: '0201',
+      provenance: ValueProvenance.CORRECTED,
+    })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.provenance).toBe(ValueProvenance.CORRECTED)
+    expect(decoded.provenance).not.toBe(ValueProvenance.CONFIRMED)
   })
 })
 

@@ -118,3 +118,19 @@ def test_delta_and_absolute_write_are_distinct_oneof_cases():
     assert cmd.WhichOneof("parameters") == "thermostat_setpoint_write"
     assert not cmd.HasField("thermostat_setpoint")
 
+
+# --- CommandResult.settles_by -----------------------------------------------------
+
+
+def test_command_result_settles_by_absent_by_default():
+    result = command_pb2.CommandResult(command_id="cmd-1", success=True)
+    assert not result.HasField("settles_by")
+
+
+def test_command_result_settles_by_round_trips():
+    result = command_pb2.CommandResult(command_id="cmd-1", success=True)
+    result.settles_by.FromSeconds(1_700_000_000)
+    decoded = command_pb2.CommandResult()
+    decoded.ParseFromString(result.SerializeToString())
+    assert decoded.HasField("settles_by")
+    assert decoded.settles_by.ToSeconds() == 1_700_000_000

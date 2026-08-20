@@ -761,18 +761,25 @@ class CommandError extends $pb.GeneratedMessage {
 
 /// CommandResult travels gateway → app (GatewayMessage) and
 /// connector → gateway (SessionRequest via connector.proto import).
+///
+/// success = true means the command was ACCEPTED, not that the device confirmed it. For
+/// a battery-powered device that wakes on a multi-minute cycle, acceptance without
+/// confirmation is the normal path, not an edge case: waiting for the device would fail
+/// every write to a sleeping one.
 class CommandResult extends $pb.GeneratedMessage {
   factory CommandResult({
     $core.String? commandId,
     $core.bool? success,
     CommandError? error,
     $1.Timestamp? completedAt,
+    $1.Timestamp? settlesBy,
   }) {
     final result = create();
     if (commandId != null) result.commandId = commandId;
     if (success != null) result.success = success;
     if (error != null) result.error = error;
     if (completedAt != null) result.completedAt = completedAt;
+    if (settlesBy != null) result.settlesBy = settlesBy;
     return result;
   }
 
@@ -795,6 +802,8 @@ class CommandResult extends $pb.GeneratedMessage {
     ..aOM<CommandError>(3, _omitFieldNames ? '' : 'error',
         subBuilder: CommandError.create)
     ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'completedAt',
+        subBuilder: $1.Timestamp.create)
+    ..aOM<$1.Timestamp>(5, _omitFieldNames ? '' : 'settlesBy',
         subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
@@ -858,6 +867,30 @@ class CommandResult extends $pb.GeneratedMessage {
   void clearCompletedAt() => $_clearField(4);
   @$pb.TagNumber(4)
   $1.Timestamp ensureCompletedAt() => $_ensure(3);
+
+  /// When the producer's own optimistic window closes: by this time the value has either
+  /// been confirmed by the device or restored to what it was, and either way the producer
+  /// will have published a PropertyUpdate saying so.
+  ///
+  /// Set it when the producer applied the value optimistically and runs a rollback timer.
+  /// It exists so a consumer can bound its wait without hardcoding a constant chasing a
+  /// timer that lives in someone else's codebase and changes without notice.
+  ///
+  /// Absent means no claim — either the producer confirms synchronously, or it cannot
+  /// state a bound. Absent is NOT "settles immediately".
+  ///
+  /// This bounds the wait; it does not label the values that arrive. Which update was the
+  /// optimistic one is device.v1.PropertyUpdate.provenance.
+  @$pb.TagNumber(5)
+  $1.Timestamp get settlesBy => $_getN(4);
+  @$pb.TagNumber(5)
+  set settlesBy($1.Timestamp value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSettlesBy() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSettlesBy() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $1.Timestamp ensureSettlesBy() => $_ensure(4);
 }
 
 const $core.bool _omitFieldNames =

@@ -172,6 +172,21 @@ describe('CommandResult', () => {
     expect(decoded.error?.code).toBe('PERMISSION_DENIED')
   })
 
+  it('leaves settles_by unset when the producer states no optimistic window', () => {
+    const result = create(CommandResultSchema, { commandId: 'cmd-uuid-3', success: true })
+    const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
+    expect(decoded.settlesBy).toBeUndefined()
+  })
+
+  it('round-trips settles_by', () => {
+    const result = create(CommandResultSchema, {
+      commandId: 'cmd-uuid-4',
+      success: true,
+      settlesBy: { seconds: 1700000000n, nanos: 0 },
+    })
+    const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
+    expect(decoded.settlesBy?.seconds).toBe(1700000000n)
+  })
 })
 
 describe('DeviceStateSnapshot', () => {

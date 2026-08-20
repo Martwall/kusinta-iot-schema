@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/device/v1/property_update.proto (package kusinta.iot.device.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -114,6 +114,22 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
    * @generated from field: string cluster_id_hex = 10;
    */
   clusterIdHex: string;
+
+  /**
+   * How much the producer believes this value. Unset means no claim, which is how every
+   * producer written before this field behaved, so a consumer that ignores it and a
+   * producer that never sets it both behave exactly as they did.
+   *
+   * Snapshots carry no provenance. Device.properties is a typed message whose fields
+   * hold a value and nothing else, so a gateway MUST NOT store an OPTIMISTIC value into
+   * its registry: an app reconnecting mid-window would receive it restated as plain
+   * fact. A snapshot is a statement of what has been confirmed. A reconnect during an
+   * optimistic window therefore shows the last confirmed value, and the correction or
+   * confirmation arrives on the live path as it would have anyway.
+   *
+   * @generated from field: kusinta.iot.device.v1.ValueProvenance provenance = 11;
+   */
+  provenance: ValueProvenance;
 };
 
 /**
@@ -142,4 +158,57 @@ export declare type PropertyUpdateBatch = Message<"kusinta.iot.device.v1.Propert
  * Use `create(PropertyUpdateBatchSchema)` to create a new message.
  */
 export declare const PropertyUpdateBatchSchema: GenMessage<PropertyUpdateBatch>;
+
+/**
+ * ValueProvenance says where a reported value came from and how much its producer
+ * believes it. Without it an optimistically-applied value and a genuine device reading
+ * are indistinguishable, and a consumer's only options are to present an unconfirmed
+ * value as settled or to hardcode a settle window chasing a rollback timer in someone
+ * else's codebase.
+ *
+ * @generated from enum kusinta.iot.device.v1.ValueProvenance
+ */
+export enum ValueProvenance {
+  /**
+   * No claim. This is what a producer that says nothing means, and it is the meaning
+   * every update carried before this field existed — treat it as "unknown", not as
+   * "confirmed".
+   *
+   * @generated from enum value: VALUE_PROVENANCE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The device itself reported this value. The default for any connector whose upstream
+   * only publishes what it has actually read.
+   *
+   * @generated from enum value: VALUE_PROVENANCE_CONFIRMED = 1;
+   */
+  CONFIRMED = 1,
+
+  /**
+   * Written and accepted, not yet confirmed by the device. An upstream system applied
+   * the value optimistically and started its own rollback timer; the device may be
+   * asleep and may never take it. A consumer SHOULD render this as provisional.
+   *
+   * @generated from enum value: VALUE_PROVENANCE_OPTIMISTIC = 2;
+   */
+  OPTIMISTIC = 2,
+
+  /**
+   * An optimistic value that did not hold: the device never confirmed and the upstream
+   * system restored the previous value. Deliberately distinct from CONFIRMED — a
+   * restored value is the producer's belief, not a fresh device reading, and conflating
+   * the two rebuilds the same ambiguity one level down. It is what lets a consumer show
+   * a rollback as a rollback rather than as a value that inexplicably moved.
+   *
+   * @generated from enum value: VALUE_PROVENANCE_CORRECTED = 3;
+   */
+  CORRECTED = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.ValueProvenance.
+ */
+export declare const ValueProvenanceSchema: GenEnum<ValueProvenance>;
 

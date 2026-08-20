@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/device/v1/property_update.proto (package kusinta.iot.device.v1, syntax proto3)
 /* eslint-disable */
 
-import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 
@@ -10,7 +10,7 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/device/v1/property_update.proto.
  */
 export const file_kusinta_iot_device_v1_property_update = /*@__PURE__*/
-  fileDesc("CitrdXNpbnRhL2lvdC9kZXZpY2UvdjEvcHJvcGVydHlfdXBkYXRlLnByb3RvEhVrdXNpbnRhLmlvdC5kZXZpY2UudjEitQIKDlByb3BlcnR5VXBkYXRlEjQKCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEhYKDmF0dHJpYnV0ZV9uYW1lGAIgASgJEhMKCWludF92YWx1ZRgDIAEoEUgAEhQKCnVpbnRfdmFsdWUYBCABKA1IABIUCgpib29sX3ZhbHVlGAUgASgISAASFQoLZmxvYXRfdmFsdWUYBiABKAJIABIWCgxzdHJpbmdfdmFsdWUYByABKAlIABIVCgtieXRlc192YWx1ZRgIIAEoDEgAEi0KCXRpbWVzdGFtcBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFgoOY2x1c3Rlcl9pZF9oZXgYCiABKAlCBwoFdmFsdWUiggEKE1Byb3BlcnR5VXBkYXRlQmF0Y2gSNgoHdXBkYXRlcxgBIAMoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5Qcm9wZXJ0eVVwZGF0ZRIzCg9iYXRjaF90aW1lc3RhbXAYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wQgJIAWIGcHJvdG8z", [file_google_protobuf_timestamp, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CitrdXNpbnRhL2lvdC9kZXZpY2UvdjEvcHJvcGVydHlfdXBkYXRlLnByb3RvEhVrdXNpbnRhLmlvdC5kZXZpY2UudjEi8QIKDlByb3BlcnR5VXBkYXRlEjQKCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEhYKDmF0dHJpYnV0ZV9uYW1lGAIgASgJEhMKCWludF92YWx1ZRgDIAEoEUgAEhQKCnVpbnRfdmFsdWUYBCABKA1IABIUCgpib29sX3ZhbHVlGAUgASgISAASFQoLZmxvYXRfdmFsdWUYBiABKAJIABIWCgxzdHJpbmdfdmFsdWUYByABKAlIABIVCgtieXRlc192YWx1ZRgIIAEoDEgAEi0KCXRpbWVzdGFtcBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFgoOY2x1c3Rlcl9pZF9oZXgYCiABKAkSOgoKcHJvdmVuYW5jZRgLIAEoDjImLmt1c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFuY2VCBwoFdmFsdWUiggEKE1Byb3BlcnR5VXBkYXRlQmF0Y2gSNgoHdXBkYXRlcxgBIAMoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5Qcm9wZXJ0eVVwZGF0ZRIzCg9iYXRjaF90aW1lc3RhbXAYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wKpQBCg9WYWx1ZVByb3ZlbmFuY2USIAocVkFMVUVfUFJPVkVOQU5DRV9VTlNQRUNJRklFRBAAEh4KGlZBTFVFX1BST1ZFTkFOQ0VfQ09ORklSTUVEEAESHwobVkFMVUVfUFJPVkVOQU5DRV9PUFRJTUlTVElDEAISHgoaVkFMVUVfUFJPVkVOQU5DRV9DT1JSRUNURUQQA0ICSAFiBnByb3RvMw", [file_google_protobuf_timestamp, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.device.v1.PropertyUpdate.
@@ -25,4 +25,22 @@ export const PropertyUpdateSchema = /*@__PURE__*/
  */
 export const PropertyUpdateBatchSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_device_v1_property_update, 1);
+
+/**
+ * Describes the enum kusinta.iot.device.v1.ValueProvenance.
+ */
+export const ValueProvenanceSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_device_v1_property_update, 0);
+
+/**
+ * ValueProvenance says where a reported value came from and how much its producer
+ * believes it. Without it an optimistically-applied value and a genuine device reading
+ * are indistinguishable, and a consumer's only options are to present an unconfirmed
+ * value as settled or to hardcode a settle window chasing a rollback timer in someone
+ * else's codebase.
+ *
+ * @generated from enum kusinta.iot.device.v1.ValueProvenance
+ */
+export const ValueProvenance = /*@__PURE__*/
+  tsEnum(ValueProvenanceSchema);
 
