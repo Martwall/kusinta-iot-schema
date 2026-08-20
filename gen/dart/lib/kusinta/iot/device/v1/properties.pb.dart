@@ -1484,6 +1484,130 @@ class PressureSensorProperties extends $pb.GeneratedMessage {
   void clearTolerance() => $_clearField(4);
 }
 
+/// Matter Power Source cluster (0x002F)
+///
+/// Its own device type, carried on its own endpoint — which is where Matter puts it, and
+/// why battery has no home on a single-device-type model: a battery valve is already a
+/// Thermostat. Almost any battery device is also a Power Source.
+///
+/// Values are Matter's own units and width, following EnergySensorProperties: a connector
+/// forwards what the cluster reports without rescaling.
+class PowerSourceProperties extends $pb.GeneratedMessage {
+  factory PowerSourceProperties({
+    $core.int? batPercentRemaining,
+    $core.int? batChargeLevel,
+    $core.bool? batReplacementNeeded,
+    $core.int? batVoltage,
+    $core.int? status,
+  }) {
+    final result = create();
+    if (batPercentRemaining != null)
+      result.batPercentRemaining = batPercentRemaining;
+    if (batChargeLevel != null) result.batChargeLevel = batChargeLevel;
+    if (batReplacementNeeded != null)
+      result.batReplacementNeeded = batReplacementNeeded;
+    if (batVoltage != null) result.batVoltage = batVoltage;
+    if (status != null) result.status = status;
+    return result;
+  }
+
+  PowerSourceProperties._();
+
+  factory PowerSourceProperties.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PowerSourceProperties.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PowerSourceProperties',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'batPercentRemaining', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'batChargeLevel', $pb.PbFieldType.OU3)
+    ..aOB(3, _omitFieldNames ? '' : 'batReplacementNeeded')
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'batVoltage', $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'status', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PowerSourceProperties clone() =>
+      PowerSourceProperties()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PowerSourceProperties copyWith(
+          void Function(PowerSourceProperties) updates) =>
+      super.copyWith((message) => updates(message as PowerSourceProperties))
+          as PowerSourceProperties;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PowerSourceProperties create() => PowerSourceProperties._();
+  @$core.override
+  PowerSourceProperties createEmptyInstance() => create();
+  static $pb.PbList<PowerSourceProperties> createRepeated() =>
+      $pb.PbList<PowerSourceProperties>();
+  @$core.pragma('dart2js:noInline')
+  static PowerSourceProperties getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PowerSourceProperties>(create);
+  static PowerSourceProperties? _defaultInstance;
+
+  /// HALF-percent, 0-200 — Matter reports twice the percentage, so 200 is a full battery
+  /// and 150 is 75%. Divide by two for display; do not rescale on the wire.
+  @$pb.TagNumber(1)
+  $core.int get batPercentRemaining => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set batPercentRemaining($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBatPercentRemaining() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBatPercentRemaining() => $_clearField(1);
+
+  /// BatChargeLevelEnum: OK=0, Warning=1, Critical=2
+  @$pb.TagNumber(2)
+  $core.int get batChargeLevel => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set batChargeLevel($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBatChargeLevel() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBatChargeLevel() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get batReplacementNeeded => $_getBF(2);
+  @$pb.TagNumber(3)
+  set batReplacementNeeded($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBatReplacementNeeded() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBatReplacementNeeded() => $_clearField(3);
+
+  /// Millivolts
+  @$pb.TagNumber(4)
+  $core.int get batVoltage => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set batVoltage($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBatVoltage() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBatVoltage() => $_clearField(4);
+
+  /// PowerSourceStatusEnum: Unspec=0, Active=1, Standby=2, Unavailable=3
+  @$pb.TagNumber(5)
+  $core.int get status => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set status($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasStatus() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearStatus() => $_clearField(5);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

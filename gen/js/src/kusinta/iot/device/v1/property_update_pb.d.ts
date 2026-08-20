@@ -18,38 +18,56 @@ export declare const file_kusinta_iot_device_v1_property_update: GenFile;
  *
  * Resolution rule (normative)
  *
- * A consumer storing an update into device.v1.Device.properties resolves it in two
- * steps, both by reading options off the descriptor. Neither step involves
- * transforming a name.
+ * A consumer storing an update into a device.v1.Device resolves it in three steps, all
+ * by reading options off the descriptor. No step involves transforming a name.
  *
- *  1. Pick the properties message: the Device.properties case whose message type
- *     declares (matter_device_type) == DeviceDescriptor.matter_device_type_id.
- *  2. Pick the field: the one field of that message whose (matter_cluster_id) equals
- *     cluster_id_hex parsed as a hex integer AND whose (matter_attribute) equals
- *     attribute_name.
+ *  1. Pick the endpoint: the Device.endpoints entry whose endpoint_id equals the
+ *     update's endpoint_id, and the DeviceDescriptor.endpoints entry with the same id,
+ *     which is where that endpoint's Matter device type lives.
+ *  2. Pick the message. Two branches, chosen by whether vendor_extension is set:
+ *       - absent (Matter): the Endpoint.properties case whose message type declares
+ *         (matter_device_type) == EndpointDescriptor.matter_device_type_id.
+ *       - present (vendor): the Endpoint.vendor case whose message type declares
+ *         (vendor_extension) == the update's vendor_extension.
+ *  3. Pick the field:
+ *       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id_hex
+ *         parsed as a hex integer AND whose (matter_attribute) equals attribute_name.
+ *       - Vendor branch: the one field whose (vendor_attribute) equals attribute_name,
+ *         searching the whole extension message including its nested props messages.
+ *         cluster_id_hex plays no part; a vendor parameter has no Matter cluster.
+ *
+ * Steps 2 and 3 depend only on the schema, never on the update: both maps are fixed at
+ * compile time. Build them ONCE at startup — a device-type-to-case map, and a
+ * (cluster, attribute) map per properties message — and resolve with lookups. Walking
+ * the descriptor per update costs ~30 option reads on the highest-volume message in this
+ * schema, and the vendor branch's nested search costs more. Only step 1 reads per-device
+ * data.
  *
  * Writing the resolved field marks it present, which is how a snapshot distinguishes a
  * reported zero from an attribute the device has never sent. A consumer assembling a
  * snapshot MUST NOT pre-populate fields with defaults — see properties.proto.
  *
- * Both comparisons are exact. attribute_name is byte-for-byte equal to the Matter
- * attribute's spec spelling; it is NOT derived from the proto field name and case- or
+ * Every comparison is exact. attribute_name is byte-for-byte equal to the attribute's
+ * own spelling — Matter's PascalCase on the Matter branch, the vendor's own spelling on
+ * the vendor branch. It is NOT derived from the proto field name, and case- or
  * separator-insensitive matching against field names is not a valid fallback —
  * OccupancySensorProperties and WindowCoveringProperties both have fields that no such
  * transformation reaches. See matter_options.proto.
  *
- * When either step resolves to nothing the update is not storable. A consumer MUST NOT
- * silently drop it: log it at warning with device_id, cluster_id_hex and attribute_name,
- * and count it. A miss means one of three things, all of which need to be visible —
- * the device reports an attribute this schema does not model, the device type is not
- * modelled at all (see device.proto), or a connector is sending a non-Matter name.
- * Advancing Device.last_seen on a miss is correct; the update is still evidence of life.
+ * When any step resolves to nothing the update is not storable. A consumer MUST NOT
+ * silently drop it: log it at warning with device_id, endpoint_id, cluster_id_hex and
+ * attribute_name, and count it. A miss means the device reports an attribute this schema
+ * does not model, the device type is not modelled at all (see device.proto), the endpoint
+ * is unknown, or a producer is sending a name from neither spelling — all of which need
+ * to be visible. Advancing Device.last_seen on a miss is correct; the update is still
+ * evidence of life.
  *
- * Producers: attribute_name uses the Matter attribute's own PascalCase, acronyms
- * included (e.g. "OccupiedHeatingSetpoint", "PIROccupiedToUnoccupiedDelay").
- * cluster_id_hex is the Matter cluster ID as a 4-char lowercase-or-uppercase hex string
- * with no 0x prefix (e.g. "0201" for Thermostat). Both are required for resolution;
- * an update carrying only one of them cannot be stored.
+ * Producers: on the Matter branch, attribute_name uses the Matter attribute's own
+ * PascalCase, acronyms included (e.g. "OccupiedHeatingSetpoint",
+ * "PIROccupiedToUnoccupiedDelay"), and cluster_id_hex is the Matter cluster ID as a
+ * 4-char hex string with no 0x prefix (e.g. "0201" for Thermostat). Both are required
+ * there. On the vendor branch, set vendor_extension and attribute_name and leave
+ * cluster_id_hex empty. endpoint_id is required on both.
  *
  * @generated from message kusinta.iot.device.v1.PropertyUpdate
  */
@@ -120,7 +138,7 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
    * producer written before this field behaved, so a consumer that ignores it and a
    * producer that never sets it both behave exactly as they did.
    *
-   * Snapshots carry no provenance. Device.properties is a typed message whose fields
+   * Snapshots carry no provenance. Endpoint.properties is a typed message whose fields
    * hold a value and nothing else, so a gateway MUST NOT store an OPTIMISTIC value into
    * its registry: an app reconnecting mid-window would receive it restated as plain
    * fact. A snapshot is a statement of what has been confirmed. A reconnect during an
@@ -130,6 +148,31 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
    * @generated from field: kusinta.iot.device.v1.ValueProvenance provenance = 11;
    */
   provenance: ValueProvenance;
+
+  /**
+   * Which endpoint of the device this attribute belongs to. Required — an update that
+   * does not name one is a miss, logged like any other unresolvable update.
+   *
+   * Not defaulted to the primary endpoint. That fallback passes every test on a
+   * single-endpoint device and misroutes on the day one grows a second, which is
+   * precisely the class of silent failure this rule exists to prevent. Explicit presence
+   * rather than treating 0 as "unset": 0 is the Matter root node, and a reserved-zero
+   * sentinel is the pattern this schema has been removing, not adding.
+   *
+   * @generated from field: optional uint32 endpoint_id = 12;
+   */
+  endpointId?: number | undefined;
+
+  /**
+   * Set to route this update down the vendor branch of step 2, naming the extension by
+   * its (vendor_extension) key — e.g. "homematic". Absent means the Matter branch, which
+   * is what every update carried before this field existed.
+   *
+   * A vendor parameter has no Matter cluster, so cluster_id_hex stays empty here.
+   *
+   * @generated from field: optional string vendor_extension = 13;
+   */
+  vendorExtension?: string | undefined;
 };
 
 /**

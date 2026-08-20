@@ -194,7 +194,9 @@ describe('DeviceStateSnapshot', () => {
     const snap = create(DeviceStateSnapshotSchema, {
       devices: [{
         descriptor: { deviceId: { value: 'therm-1' }, matterDeviceTypeId: 0x0301 },
-        properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } },
+        endpoints: [
+          { endpointId: 1, properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } } },
+        ],
       }],
       permissions: { userId: { value: 'user-1' }, gatewayId: { value: 'gw-1' }, deviceAcls: [] },
     })
@@ -432,14 +434,16 @@ describe('DeviceAdded', () => {
     const added = create(DeviceAddedSchema, {
       device: {
         descriptor: { deviceId: { value: 'hm:ABC123' }, matterDeviceTypeId: 0x0301 },
-        properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } },
+        endpoints: [
+          { endpointId: 1, properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } } },
+        ],
       },
     })
     const decoded = fromBinary(DeviceAddedSchema, toBinary(DeviceAddedSchema, added))
     expect(decoded.device?.descriptor?.deviceId?.value).toBe('hm:ABC123')
-    expect(decoded.device?.properties?.case).toBe('thermostat')
-    if (decoded.device?.properties?.case === 'thermostat') {
-      expect(decoded.device.properties.value.occupiedHeatingSetpoint).toBe(2100)
+    expect(decoded.device?.endpoints[0].properties?.case).toBe('thermostat')
+    if (decoded.device?.endpoints[0].properties?.case === 'thermostat') {
+      expect(decoded.device.endpoints[0].properties.value.occupiedHeatingSetpoint).toBe(2100)
     }
   })
 })
@@ -573,5 +577,30 @@ describe('AppMessage oneof payload', () => {
     if (decoded.payload?.case === 'unsubscribe') {
       expect(decoded.payload.value.deviceIds[0].value).toBe('therm-1')
     }
+  })
+})
+
+describe('DeviceCommand — endpoint routing', () => {
+  it('addresses one channel of a multi-channel actuator', () => {
+    const cmd = create(DeviceCommandSchema, {
+      commandId: 'cmd-uuid-7',
+      deviceId: { value: 'actuator-1' },
+      endpointId: 3,
+      clusterIdHex: '0006',
+      commandName: 'Toggle',
+      parameters: { case: 'onOff', value: { toggle: true } },
+    })
+    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
+    expect(decoded.endpointId).toBe(3)
+  })
+
+  it('leaves endpoint_id undefined when unaddressed, so a consumer can refuse it', () => {
+    const cmd = create(DeviceCommandSchema, {
+      commandId: 'cmd-uuid-8',
+      deviceId: { value: 'actuator-1' },
+      parameters: { case: 'onOff', value: { toggle: true } },
+    })
+    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
+    expect(decoded.endpointId).toBeUndefined()
   })
 })

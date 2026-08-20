@@ -4,9 +4,9 @@
 
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { DeviceDescriptor } from "./descriptor_pb.js";
-import type { ColorTemperatureLightProperties, ContactSensorProperties, DimmableLightProperties, DoorLockProperties, EnergySensorProperties, HumiditySensorProperties, OccupancySensorProperties, OnOffLightProperties, PressureSensorProperties, TemperatureSensorProperties, ThermostatProperties, WindowCoveringProperties } from "./properties_pb.js";
+import type { ColorTemperatureLightProperties, ContactSensorProperties, DimmableLightProperties, DoorLockProperties, EnergySensorProperties, HumiditySensorProperties, OccupancySensorProperties, OnOffLightProperties, PowerSourceProperties, PressureSensorProperties, TemperatureSensorProperties, ThermostatProperties, WindowCoveringProperties } from "./properties_pb.js";
 import type { HomematicVendorExtension } from "../../vendor/homematic/v1/homematic_pb.js";
+import type { DeviceDescriptor } from "./descriptor_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
@@ -15,38 +15,44 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_device_v1_device: GenFile;
 
 /**
- * Device combines a DeviceDescriptor with a strongly-typed oneof for its current state.
- * Field number convention: 1 = descriptor, 2-49 = standard Matter device types,
- * 50-99 = vendor extensions, 20+ = timestamps.
+ * The state one Matter endpoint reports.
  *
- * Selecting the properties case
+ * Matter nodes present several endpoints, each with its own device type, and real
+ * devices need it — a wall thermostat is a Thermostat AND a Humidity Sensor, a
+ * 4-channel actuator is four On/Off Lights, almost any battery device is also a Power
+ * Source. Endpoints are the only thing that buys; filing, ownership and DeviceId stay
+ * per physical device, so a device is still one row, one claim, one placement.
  *
- * Each non-vendor case's message type declares the Matter device type it models in
- * (matter_device_type), so the mapping from DeviceDescriptor.matter_device_type_id to a
- * case is read from the descriptor rather than hard-coded. See matter_options.proto, and
- * property_update.proto for the full resolution rule.
+ * Which device type this endpoint presents is NOT here — it is
+ * DeviceDescriptor.endpoints, the message both legs carry. One source of truth, so a
+ * device's shape cannot disagree with its state.
  *
- * matter_device_type_id stays a bare uint32: a connector must be able to report a device
- * type this schema does not model. Such a device is legitimate — it exists, it belongs in
- * a device list, it simply carries no typed properties. A consumer that cannot match the
- * device type leaves the properties oneof unset and keeps the Device; it MUST NOT drop the
- * device or substitute a nearby case. An unset oneof therefore means either "not modelled"
- * or "modelled but nothing reported yet", which are indistinguishable here on purpose;
- * distinguish them by re-resolving matter_device_type_id if you need to.
+ * Field numbers: 1 identity, 2-49 standard Matter device types, 50-99 vendor extensions.
  *
- * Adding a case: annotate the new *Properties message with its (matter_device_type). A case
- * without one resolves for nobody.
+ * endpoint_id is Matter's own endpoint number, matching an EndpointDescriptor. Endpoint 0 is the Matter root node and
+ * carries BasicInformation, which DeviceDescriptor already holds — so 0 never appears
+ * here and a producer emitting it is wrong. Device endpoints are 1..n.
  *
- * @generated from message kusinta.iot.device.v1.Device
+ * It MUST be stable for the life of the device. Access grants and property constraints
+ * reference it (see access/v1/acl.proto), so a connector that renumbers endpoints across
+ * a restart silently retargets permissions — a grant on channel 1 lands on channel 3.
+ * Derive it from something the upstream system holds stable, typically its own channel
+ * number, never from enumeration order.
+ *
+ * properties and vendor are separate oneofs on purpose. An endpoint carries its typed
+ * Matter properties AND its vendor extension — one oneof spanning both would make them
+ * mutually exclusive, which left every vendor field unreachable in practice.
+ *
+ * @generated from message kusinta.iot.device.v1.Endpoint
  */
-export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
+export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   /**
-   * @generated from field: kusinta.iot.device.v1.DeviceDescriptor descriptor = 1;
+   * @generated from field: uint32 endpoint_id = 1;
    */
-  descriptor?: DeviceDescriptor | undefined;
+  endpointId: number;
 
   /**
-   * @generated from oneof kusinta.iot.device.v1.Device.properties
+   * @generated from oneof kusinta.iot.device.v1.Endpoint.properties
    */
   properties: {
     /**
@@ -122,13 +128,57 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
     case: "pressureSensor";
   } | {
     /**
-     * Vendor extensions (fields 50-99)
-     *
+     * @generated from field: kusinta.iot.device.v1.PowerSourceProperties power_source = 14;
+     */
+    value: PowerSourceProperties;
+    case: "powerSource";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * @generated from oneof kusinta.iot.device.v1.Endpoint.vendor
+   */
+  vendor: {
+    /**
      * @generated from field: kusinta.iot.vendor.homematic.v1.HomematicVendorExtension homematic = 50;
      */
     value: HomematicVendorExtension;
     case: "homematic";
   } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.Endpoint.
+ * Use `create(EndpointSchema)` to create a new message.
+ */
+export declare const EndpointSchema: GenMessage<Endpoint>;
+
+/**
+ * Device is a DeviceDescriptor plus the state its endpoints report.
+ *
+ * The descriptor says which endpoints exist and what device type each presents; the
+ * endpoints list here says what each has reported. They are keyed by the same
+ * endpoint_id, and an endpoint may appear in the descriptor with no state yet.
+ *
+ * Resolving an endpoint's device type to a properties case is read from the descriptor
+ * via (matter_device_type), never hard-coded. property_update.proto states the rule
+ * normatively; matter_options.proto defines the annotations.
+ *
+ * An empty endpoints list means nothing typed has been reported yet. Keep the Device.
+ *
+ * @generated from message kusinta.iot.device.v1.Device
+ */
+export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
+  /**
+   * @generated from field: kusinta.iot.device.v1.DeviceDescriptor descriptor = 1;
+   */
+  descriptor?: DeviceDescriptor | undefined;
+
+  /**
+   * 14-19 are free; 20+ is the timestamp band.
+   *
+   * @generated from field: repeated kusinta.iot.device.v1.Endpoint endpoints = 14;
+   */
+  endpoints: Endpoint[];
 
   /**
    * When the gateway last had evidence this device exists and is reachable — the

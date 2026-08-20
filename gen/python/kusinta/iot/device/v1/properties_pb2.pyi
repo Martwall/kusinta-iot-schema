@@ -180,3 +180,17 @@ class PressureSensorProperties(_message.Message):
     max_measured_value: int
     tolerance: int
     def __init__(self, measured_value: _Optional[int] = ..., min_measured_value: _Optional[int] = ..., max_measured_value: _Optional[int] = ..., tolerance: _Optional[int] = ...) -> None: ...
+
+class PowerSourceProperties(_message.Message):
+    __slots__ = ("bat_percent_remaining", "bat_charge_level", "bat_replacement_needed", "bat_voltage", "status")
+    BAT_PERCENT_REMAINING_FIELD_NUMBER: _ClassVar[int]
+    BAT_CHARGE_LEVEL_FIELD_NUMBER: _ClassVar[int]
+    BAT_REPLACEMENT_NEEDED_FIELD_NUMBER: _ClassVar[int]
+    BAT_VOLTAGE_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    bat_percent_remaining: int
+    bat_charge_level: int
+    bat_replacement_needed: bool
+    bat_voltage: int
+    status: int
+    def __init__(self, bat_percent_remaining: _Optional[int] = ..., bat_charge_level: _Optional[int] = ..., bat_replacement_needed: _Optional[bool] = ..., bat_voltage: _Optional[int] = ..., status: _Optional[int] = ...) -> None: ...

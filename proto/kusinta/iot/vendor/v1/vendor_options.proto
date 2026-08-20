@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package kusinta.iot.vendor.v1;
+
+import "google/protobuf/descriptor.proto";
+
+// Custom options that make the vendor-extension side of the mapping machine-readable,
+// the way device/v1/matter_options.proto does for Matter.
+//
+// A separate package, not part of matter_options.proto, because vendor extension files
+// must be able to import these while device/v1 imports the extension files — putting
+// them together makes a package import cycle.
+//
+// Extension numbers 50004-50005 come out of the 50001-50999 range this schema reserves
+// for its own annotations; device/v1/matter_options.proto records what is taken.
+
+extend google.protobuf.FieldOptions {
+  // The vendor parameter this field carries, in the vendor's own spelling — e.g.
+  // "LEVEL", not "level". Matches device.v1.PropertyUpdate.attribute_name byte for byte
+  // when that update names a vendor extension.
+  //
+  // This and the Matter annotations are mutually exclusive: a field is either a Matter
+  // attribute or a vendor parameter. Which branch a PropertyUpdate takes is decided by
+  // whether it names a vendor extension, never by inspecting both.
+  //
+  // Must be unique within the vendor extension message it appears in, nested props
+  // messages included — the vendor branch searches the whole extension, so a repeat
+  // would make resolution ambiguous.
+  string vendor_attribute = 50004;
+}
+
+extend google.protobuf.MessageOptions {
+  // The stable key identifying a vendor extension message, e.g. "homematic". Matches
+  // device.v1.PropertyUpdate.vendor_extension byte for byte, and is what selects the
+  // Endpoint.vendor case. Declared on the top-level extension message only, not on its
+  // nested props messages.
+  //
+  // Not derived from the package or message name — this is the authoritative spelling,
+  // exactly as matter_attribute is on the Matter side.
+  string vendor_extension = 50005;
+}

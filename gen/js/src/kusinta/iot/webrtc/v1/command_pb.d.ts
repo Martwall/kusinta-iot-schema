@@ -209,6 +209,20 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
   commandName: string;
 
   /**
+   * Which endpoint of the device to command. Required: a device presents several
+   * endpoints and a command with no destination has no correct one — on a 4-channel
+   * actuator, picking any of them moves real hardware. Refuse an unaddressed command
+   * rather than guessing.
+   *
+   * No exemption for single-endpoint devices. A rule where the same message is valid or
+   * invalid depending on the shape of its target is a rule that works until a device
+   * grows an endpoint.
+   *
+   * @generated from field: optional uint32 endpoint_id = 11;
+   */
+  endpointId?: number | undefined;
+
+  /**
    * @generated from oneof kusinta.iot.webrtc.v1.DeviceCommand.parameters
    */
   parameters: {

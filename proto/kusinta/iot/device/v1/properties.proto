@@ -221,3 +221,26 @@ message PressureSensorProperties {
   optional sint32 max_measured_value = 3 [(matter_cluster_id) = 0x0403, (matter_attribute) = "MaxMeasuredValue"];
   optional uint32 tolerance = 4 [(matter_cluster_id) = 0x0403, (matter_attribute) = "Tolerance"];
 }
+
+// Matter Power Source cluster (0x002F)
+//
+// Its own device type, carried on its own endpoint — which is where Matter puts it, and
+// why battery has no home on a single-device-type model: a battery valve is already a
+// Thermostat. Almost any battery device is also a Power Source.
+//
+// Values are Matter's own units and width, following EnergySensorProperties: a connector
+// forwards what the cluster reports without rescaling.
+message PowerSourceProperties {
+  option (matter_device_type) = 0x0011; // Power Source
+
+  // HALF-percent, 0-200 — Matter reports twice the percentage, so 200 is a full battery
+  // and 150 is 75%. Divide by two for display; do not rescale on the wire.
+  optional uint32 bat_percent_remaining = 1 [(matter_cluster_id) = 0x002F, (matter_attribute) = "BatPercentRemaining"];
+  // BatChargeLevelEnum: OK=0, Warning=1, Critical=2
+  optional uint32 bat_charge_level = 2 [(matter_cluster_id) = 0x002F, (matter_attribute) = "BatChargeLevel"];
+  optional bool bat_replacement_needed = 3 [(matter_cluster_id) = 0x002F, (matter_attribute) = "BatReplacementNeeded"];
+  // Millivolts
+  optional uint32 bat_voltage = 4 [(matter_cluster_id) = 0x002F, (matter_attribute) = "BatVoltage"];
+  // PowerSourceStatusEnum: Unspec=0, Active=1, Standby=2, Unavailable=3
+  optional uint32 status = 5 [(matter_cluster_id) = 0x002F, (matter_attribute) = "Status"];
+}

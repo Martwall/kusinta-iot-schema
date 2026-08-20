@@ -68,7 +68,10 @@ describe('DeviceAcl', () => {
       userId: { value: 'user-resident-1' },
       role: Role.RESIDENT,
       allowedActions: [PermissionAction.READ, PermissionAction.WRITE],
-      allowedAttributes: ['OccupiedHeatingSetpoint', 'LocalTemperature'],
+      allowedAttributeRefs: [
+        { attributeName: 'OccupiedHeatingSetpoint', clusterIdHex: '0201', endpointId: 1 },
+        { attributeName: 'LocalTemperature', clusterIdHex: '0201', endpointId: 1 },
+      ],
       propertyConstraints: [
         {
           attributeName: 'OccupiedHeatingSetpoint',
@@ -87,7 +90,11 @@ describe('DeviceAcl', () => {
     expect(decoded.userId?.value).toBe('user-resident-1')
     expect(decoded.role).toBe(Role.RESIDENT)
     expect(decoded.allowedActions).toEqual([PermissionAction.READ, PermissionAction.WRITE])
-    expect(decoded.allowedAttributes).toEqual(['OccupiedHeatingSetpoint', 'LocalTemperature'])
+    expect(decoded.allowedAttributeRefs.map((r) => r.attributeName)).toEqual([
+      'OccupiedHeatingSetpoint',
+      'LocalTemperature',
+    ])
+    expect(decoded.allowedAttributeRefs[0].endpointId).toBe(1)
     expect(decoded.propertyConstraints).toHaveLength(2)
     expect(decoded.propertyConstraints[0].constraint?.case).toBe('intMax')
   })
@@ -130,5 +137,45 @@ describe('EffectivePermissions', () => {
     expect(decoded.deviceAcls).toHaveLength(2)
     expect(decoded.deviceAcls[0].deviceId?.value).toBe('therm-1')
     expect(decoded.deviceAcls[1].deviceId?.value).toBe('light-1')
+  })
+})
+
+describe('AttributeRef — per-endpoint grants', () => {
+  it('distinguishes MeasuredValue on a temperature endpoint from a humidity one', () => {
+    const acl = create(DeviceAclSchema, {
+      deviceId: { value: 'wall-therm-1' },
+      userId: { value: 'user-1' },
+      role: Role.RESIDENT,
+      allowedAttributeRefs: [
+        { attributeName: 'MeasuredValue', clusterIdHex: '0402', endpointId: 2 },
+        { attributeName: 'MeasuredValue', clusterIdHex: '0405', endpointId: 3 },
+      ],
+    })
+    const decoded = fromBinary(DeviceAclSchema, toBinary(DeviceAclSchema, acl))
+    expect(decoded.allowedAttributeRefs.map((r) => r.clusterIdHex)).toEqual(['0402', '0405'])
+    expect(decoded.allowedAttributeRefs.map((r) => r.endpointId)).toEqual([2, 3])
+  })
+})
+
+describe('PropertyConstraint — endpoint scope', () => {
+  it('leaves endpoint_id absent to bound every endpoint', () => {
+    const c = create(PropertyConstraintSchema, {
+      attributeName: 'OccupiedHeatingSetpoint',
+      clusterIdHex: '0201',
+      constraint: { case: 'intMax', value: 2200 },
+    })
+    const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
+    expect(decoded.endpointId).toBeUndefined()
+  })
+
+  it('bounds a single endpoint when one is named', () => {
+    const c = create(PropertyConstraintSchema, {
+      attributeName: 'OccupiedHeatingSetpoint',
+      clusterIdHex: '0201',
+      endpointId: 1,
+      constraint: { case: 'intMax', value: 2200 },
+    })
+    const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
+    expect(decoded.endpointId).toBe(1)
   })
 })

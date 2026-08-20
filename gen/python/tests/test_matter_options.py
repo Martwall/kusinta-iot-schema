@@ -3,25 +3,18 @@
 These assert the machine-readable mapping a consumer relies on:
   - (matter_cluster_id, matter_attribute) on every properties field, so a
     PropertyUpdate resolves to a field without any name normalisation;
-  - matter_device_type on every non-vendor properties message, so a
-    DeviceDescriptor.matter_device_type_id resolves to a Device.properties case.
+  - matter_device_type on every non-vendor properties message, so an
+    Endpoint.matter_device_type_id resolves to an Endpoint.properties case.
 """
 
 from kusinta.iot.device.v1 import device_pb2, matter_options_pb2, properties_pb2
 
+# Derived from the Endpoint.properties oneof rather than hand-listed: a properties
+# message added to the schema and forgotten here would silently drop out of every sweep
+# below without a single test failing.
 PROPERTIES_MESSAGES = [
-    properties_pb2.ThermostatProperties,
-    properties_pb2.TemperatureSensorProperties,
-    properties_pb2.HumiditySensorProperties,
-    properties_pb2.OccupancySensorProperties,
-    properties_pb2.ContactSensorProperties,
-    properties_pb2.WindowCoveringProperties,
-    properties_pb2.DoorLockProperties,
-    properties_pb2.OnOffLightProperties,
-    properties_pb2.DimmableLightProperties,
-    properties_pb2.ColorTemperatureLightProperties,
-    properties_pb2.EnergySensorProperties,
-    properties_pb2.PressureSensorProperties,
+    field.message_type._concrete_class
+    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
 ]
 
 
@@ -38,11 +31,11 @@ def resolve_field(message_class, cluster_id, attribute_name):
 
 
 def properties_case_for_device_type(device_type_id):
-    """Resolve a Device.properties oneof case from a Matter device type ID.
+    """Resolve an Endpoint.properties oneof case from a Matter device type ID.
     Returns None for a device type the schema does not model."""
     matches = [
         field.name
-        for field in device_pb2.Device.DESCRIPTOR.oneofs_by_name["properties"].fields
+        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
         if device_type_id
         in field.message_type.GetOptions().Extensions[matter_options_pb2.matter_device_type]
     ]
@@ -180,24 +173,25 @@ def test_contact_sensor_device_type_resolves_to_the_contact_sensor_case():
 def test_every_non_vendor_properties_case_declares_a_device_type():
     unannotated = [
         field.name
-        for field in device_pb2.Device.DESCRIPTOR.oneofs_by_name["properties"].fields
+        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
         if field.message_type.file.package.startswith("kusinta.iot.device.")
         and not field.message_type.GetOptions().Extensions[matter_options_pb2.matter_device_type]
     ]
     assert unannotated == []
 
 
-def test_vendor_properties_case_declares_no_device_type():
-    device_types = device_pb2.Device.DESCRIPTOR.fields_by_name[
+def test_vendor_extension_declares_no_device_type():
+    device_types = device_pb2.Endpoint.DESCRIPTOR.fields_by_name[
         "homematic"
     ].message_type.GetOptions().Extensions[matter_options_pb2.matter_device_type]
     assert list(device_types) == []
 
 
+
 def test_no_device_type_maps_to_more_than_one_properties_case():
     device_types = [
         device_type
-        for field in device_pb2.Device.DESCRIPTOR.oneofs_by_name["properties"].fields
+        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
         for device_type in field.message_type.GetOptions().Extensions[
             matter_options_pb2.matter_device_type
         ]

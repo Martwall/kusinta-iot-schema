@@ -134,6 +134,15 @@ const DeviceCommand$json = {
     {'1': 'cluster_id_hex', '3': 3, '4': 1, '5': 9, '10': 'clusterIdHex'},
     {'1': 'command_name', '3': 4, '4': 1, '5': 9, '10': 'commandName'},
     {
+      '1': 'endpoint_id',
+      '3': 11,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'endpointId',
+      '17': true
+    },
+    {
       '1': 'thermostat_setpoint',
       '3': 5,
       '4': 1,
@@ -191,6 +200,7 @@ const DeviceCommand$json = {
   ],
   '8': [
     {'1': 'parameters'},
+    {'1': '_endpoint_id'},
   ],
 };
 
@@ -199,17 +209,18 @@ final $typed_data.Uint8List deviceCommandDescriptor = $convert.base64Decode(
     'Cg1EZXZpY2VDb21tYW5kEh0KCmNvbW1hbmRfaWQYASABKAlSCWNvbW1hbmRJZBI+CglkZXZpY2'
     'VfaWQYAiABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIIZGV2aWNlSWQS'
     'JAoOY2x1c3Rlcl9pZF9oZXgYAyABKAlSDGNsdXN0ZXJJZEhleBIhCgxjb21tYW5kX25hbWUYBC'
-    'ABKAlSC2NvbW1hbmROYW1lEmIKE3RoZXJtb3N0YXRfc2V0cG9pbnQYBSABKAsyLy5rdXNpbnRh'
-    'LmlvdC53ZWJydGMudjEuVGhlcm1vc3RhdFNldHBvaW50UGFyYW1zSABSEnRoZXJtb3N0YXRTZX'
-    'Rwb2ludBJQCg1sZXZlbF9jb250cm9sGAYgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLkxl'
-    'dmVsQ29udHJvbFBhcmFtc0gAUgxsZXZlbENvbnRyb2wSOwoGb25fb2ZmGAcgASgLMiIua3VzaW'
-    '50YS5pb3Qud2VicnRjLnYxLk9uT2ZmUGFyYW1zSABSBW9uT2ZmEmMKFHdpbmRvd19jb3Zlcmlu'
-    'Z19saWZ0GAggASgLMi8ua3VzaW50YS5pb3Qud2VicnRjLnYxLldpbmRvd0NvdmVyaW5nTGlmdF'
-    'BhcmFtc0gAUhJ3aW5kb3dDb3ZlcmluZ0xpZnQSRAoJZG9vcl9sb2NrGAkgASgLMiUua3VzaW50'
-    'YS5pb3Qud2VicnRjLnYxLkRvb3JMb2NrUGFyYW1zSABSCGRvb3JMb2NrEnIKGXRoZXJtb3N0YX'
-    'Rfc2V0cG9pbnRfd3JpdGUYCiABKAsyNC5rdXNpbnRhLmlvdC53ZWJydGMudjEuVGhlcm1vc3Rh'
-    'dFNldHBvaW50V3JpdGVQYXJhbXNIAFIXdGhlcm1vc3RhdFNldHBvaW50V3JpdGUSGQoHcmF3X3'
-    'RsdhhjIAEoDEgAUgZyYXdUbHZCDAoKcGFyYW1ldGVycw==');
+    'ABKAlSC2NvbW1hbmROYW1lEiQKC2VuZHBvaW50X2lkGAsgASgNSAFSCmVuZHBvaW50SWSIAQES'
+    'YgoTdGhlcm1vc3RhdF9zZXRwb2ludBgFIAEoCzIvLmt1c2ludGEuaW90LndlYnJ0Yy52MS5UaG'
+    'VybW9zdGF0U2V0cG9pbnRQYXJhbXNIAFISdGhlcm1vc3RhdFNldHBvaW50ElAKDWxldmVsX2Nv'
+    'bnRyb2wYBiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGV2ZWxDb250cm9sUGFyYW1zSA'
+    'BSDGxldmVsQ29udHJvbBI7CgZvbl9vZmYYByABKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEu'
+    'T25PZmZQYXJhbXNIAFIFb25PZmYSYwoUd2luZG93X2NvdmVyaW5nX2xpZnQYCCABKAsyLy5rdX'
+    'NpbnRhLmlvdC53ZWJydGMudjEuV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zSABSEndpbmRvd0Nv'
+    'dmVyaW5nTGlmdBJECglkb29yX2xvY2sYCSABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuRG'
+    '9vckxvY2tQYXJhbXNIAFIIZG9vckxvY2sScgoZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZRgK'
+    'IAEoCzI0Lmt1c2ludGEuaW90LndlYnJ0Yy52MS5UaGVybW9zdGF0U2V0cG9pbnRXcml0ZVBhcm'
+    'Ftc0gAUhd0aGVybW9zdGF0U2V0cG9pbnRXcml0ZRIZCgdyYXdfdGx2GGMgASgMSABSBnJhd1Rs'
+    'dkIMCgpwYXJhbWV0ZXJzQg4KDF9lbmRwb2ludF9pZA==');
 
 @$core.Deprecated('Use commandErrorDescriptor instead')
 const CommandError$json = {

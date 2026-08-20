@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package kusinta.iot.vendor.homematic.v1;
 
+import "kusinta/iot/vendor/v1/vendor_options.proto";
+
 option optimize_for = SPEED;
 
 // HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
@@ -12,18 +14,32 @@ option optimize_for = SPEED;
 // false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
 // reported; present means a reading, including zero.
 message HmThermostatProps {
-  optional bool  boost_mode            = 1;
-  optional float boost_time_period     = 2; // minutes remaining in boost
-  optional uint32 control_mode         = 3; // HmIP ControlMode enum
-  optional bool  frost_protection      = 4;
-  optional float current_profile_period = 5;
+  optional bool  boost_mode            = 1 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_MODE"];
+  optional float boost_time_period     = 2 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_TIME"]; // minutes remaining
+  optional uint32 control_mode         = 3 [(kusinta.iot.vendor.v1.vendor_attribute) = "CONTROL_MODE"];
+  optional bool  frost_protection      = 4 [(kusinta.iot.vendor.v1.vendor_attribute) = "FROST_PROTECTION"];
+  optional float current_profile_period = 5 [(kusinta.iot.vendor.v1.vendor_attribute) = "PARTY_MODE"];
+
+  // Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
+  // this extension exists for: it has no Matter equivalent, and it is what an automatic
+  // or learned control strategy needs.
+  optional float level                 = 6 [(kusinta.iot.vendor.v1.vendor_attribute) = "LEVEL"];
+  optional uint32 window_state         = 7 [(kusinta.iot.vendor.v1.vendor_attribute) = "WINDOW_STATE"];
+  optional uint32 valve_state          = 8 [(kusinta.iot.vendor.v1.vendor_attribute) = "VALVE_STATE"];
 }
 
-// Top-level vendor extension attached to Device.properties field 50.
-// Carries the CCU3 device address + aiohomematic type string + device-type-specific props.
+// Top-level vendor extension, carried on Endpoint.vendor beside the endpoint's typed
+// Matter properties rather than instead of them.
+//
+// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
+// PowerSource cluster, which every battery device from every technology needs — they
+// belong on a Power Source endpoint, not in a vendor message. See
+// device/v1/properties.proto.
 message HomematicVendorExtension {
-  string homematic_address = 1; // e.g. "MEQ1234567" (CCU3 device address)
-  string homematic_type    = 2; // aiohomematic device type string e.g. "HmIP-eTRV-C"
+  option (kusinta.iot.vendor.v1.vendor_extension) = "homematic";
+
+  string homematic_address = 1; // upstream device address, e.g. "MEQ1234567"
+  string homematic_type    = 2; // aiohomematic device type string, e.g. "HmIP-eTRV-C"
 
   oneof homematic_props {
     HmThermostatProps hm_thermostat = 10;

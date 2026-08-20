@@ -9,14 +9,16 @@ option optimize_for = SPEED;
 // Custom options that make this schema's Matter mapping machine-readable.
 //
 // Without them a consumer has to infer two mappings from naming convention: which
-// *Properties field a PropertyUpdate belongs to, and which Device.properties case a
-// DeviceDescriptor.matter_device_type_id selects. Both inferences fail silently — a
+// *Properties field a PropertyUpdate belongs to, and which Endpoint.properties case an
+// Endpoint.matter_device_type_id selects. Both inferences fail silently — a
 // dropped attribute or an unset oneof looks identical to a device that never reported.
 // These options move both mappings into the descriptor, so consumers read them.
 //
-// Extension numbers 50001-50999 are reserved in this schema for Matter annotations.
-// They are not registered with Buf's global extension registry; they are only ever
-// applied to kusinta.iot.* files, so no collision is possible.
+// Extension numbers 50001-50999 are reserved for this schema's own annotations, Matter
+// and vendor alike. Taken so far: 50001-50003 here, 50004-50005 in
+// vendor/v1/vendor_options.proto. Allocate the next from that range and record it in
+// both files. They are not registered with Buf's global extension registry; they are
+// only ever applied to kusinta.iot.* files, so no collision is possible.
 extend google.protobuf.FieldOptions {
   // The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat.
   //
@@ -39,6 +41,7 @@ extend google.protobuf.MessageOptions {
   // types; empty on vendor extension messages, which have no Matter device type.
   //
   // A device type appears on at most one properties message, so the mapping from
-  // DeviceDescriptor.matter_device_type_id to a Device.properties case is a function.
+  // EndpointDescriptor.matter_device_type_id to an Endpoint.properties case is a
+  // function.
   repeated uint32 matter_device_type = 50003;
 }

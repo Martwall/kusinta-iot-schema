@@ -545,3 +545,57 @@ export declare type PressureSensorProperties = Message<"kusinta.iot.device.v1.Pr
  */
 export declare const PressureSensorPropertiesSchema: GenMessage<PressureSensorProperties>;
 
+/**
+ * Matter Power Source cluster (0x002F)
+ *
+ * Its own device type, carried on its own endpoint — which is where Matter puts it, and
+ * why battery has no home on a single-device-type model: a battery valve is already a
+ * Thermostat. Almost any battery device is also a Power Source.
+ *
+ * Values are Matter's own units and width, following EnergySensorProperties: a connector
+ * forwards what the cluster reports without rescaling.
+ *
+ * @generated from message kusinta.iot.device.v1.PowerSourceProperties
+ */
+export declare type PowerSourceProperties = Message<"kusinta.iot.device.v1.PowerSourceProperties"> & {
+  /**
+   * HALF-percent, 0-200 — Matter reports twice the percentage, so 200 is a full battery
+   * and 150 is 75%. Divide by two for display; do not rescale on the wire.
+   *
+   * @generated from field: optional uint32 bat_percent_remaining = 1;
+   */
+  batPercentRemaining?: number | undefined;
+
+  /**
+   * BatChargeLevelEnum: OK=0, Warning=1, Critical=2
+   *
+   * @generated from field: optional uint32 bat_charge_level = 2;
+   */
+  batChargeLevel?: number | undefined;
+
+  /**
+   * @generated from field: optional bool bat_replacement_needed = 3;
+   */
+  batReplacementNeeded?: boolean | undefined;
+
+  /**
+   * Millivolts
+   *
+   * @generated from field: optional uint32 bat_voltage = 4;
+   */
+  batVoltage?: number | undefined;
+
+  /**
+   * PowerSourceStatusEnum: Unspec=0, Active=1, Standby=2, Unavailable=3
+   *
+   * @generated from field: optional uint32 status = 5;
+   */
+  status?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.PowerSourceProperties.
+ * Use `create(PowerSourcePropertiesSchema)` to create a new message.
+ */
+export declare const PowerSourcePropertiesSchema: GenMessage<PowerSourceProperties>;
+

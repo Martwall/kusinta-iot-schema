@@ -14,6 +14,36 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_device_v1_descriptor: GenFile;
 
 /**
+ * One endpoint's shape: which Matter device type it presents. The state that endpoint
+ * reports lives in device.v1.Endpoint, keyed by the same endpoint_id.
+ *
+ * Shape belongs on the descriptor because the descriptor is what both legs carry. A
+ * connector announces a device with connector.v1.DeviceAnnouncement, which is a bare
+ * DeviceDescriptor — so without this, a connector could never say that endpoint 2 is a
+ * Humidity Sensor, and nothing could populate the device type the PropertyUpdate
+ * resolution rule reads.
+ *
+ * @generated from message kusinta.iot.device.v1.EndpointDescriptor
+ */
+export declare type EndpointDescriptor = Message<"kusinta.iot.device.v1.EndpointDescriptor"> & {
+  /**
+   * @generated from field: uint32 endpoint_id = 1;
+   */
+  endpointId: number;
+
+  /**
+   * @generated from field: uint32 matter_device_type_id = 2;
+   */
+  matterDeviceTypeId: number;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.EndpointDescriptor.
+ * Use `create(EndpointDescriptorSchema)` to create a new message.
+ */
+export declare const EndpointDescriptorSchema: GenMessage<EndpointDescriptor>;
+
+/**
  * DeviceDescriptor holds identity and Matter BasicInformation cluster fields.
  * Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
  *
@@ -26,7 +56,12 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
   deviceId?: DeviceId | undefined;
 
   /**
-   * Matter 1.5.1 device type ID (e.g. 0x0301 = Thermostat, 0x0302 = TemperatureSensor)
+   * The device's PRIMARY Matter device type (e.g. 0x0301 = Thermostat) — convenience
+   * over the endpoints list below, defined as the device type of the lowest-numbered
+   * entry in it. An app picks an icon and a card layout from this without walking the
+   * list; it is not the only device type the device presents.
+   *
+   * Producers MUST number the device's main function lowest so this lands on it.
    *
    * @generated from field: uint32 matter_device_type_id = 2;
    */
@@ -105,6 +140,20 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
    * @generated from field: google.protobuf.Timestamp claimed_at = 16;
    */
   claimedAt?: Timestamp | undefined;
+
+  /**
+   * Every endpoint this device presents, and the Matter device type of each. Both legs
+   * carry it: a connector states it at announcement, and it is what lets a consumer
+   * resolve a PropertyUpdate's endpoint_id to a device type and thence to a properties
+   * case. See device/v1/property_update.proto for the normative rule.
+   *
+   * Empty means the device presents no endpoint this schema can describe — legitimate,
+   * and the device still belongs in a list. Endpoint 0 is the Matter root node, whose
+   * BasicInformation this message already carries, so it never appears here.
+   *
+   * @generated from field: repeated kusinta.iot.device.v1.EndpointDescriptor endpoints = 17;
+   */
+  endpoints: EndpointDescriptor[];
 };
 
 /**

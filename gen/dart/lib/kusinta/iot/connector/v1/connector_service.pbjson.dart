@@ -47,6 +47,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.identity.v1.DeviceId': $2.DeviceId$json,
   '.kusinta.iot.identity.v1.SpaceId': $2.SpaceId$json,
   '.kusinta.iot.identity.v1.UserId': $2.UserId$json,
+  '.kusinta.iot.device.v1.EndpointDescriptor': $3.EndpointDescriptor$json,
   '.kusinta.iot.device.v1.PropertyUpdateBatch': $4.PropertyUpdateBatch$json,
   '.kusinta.iot.device.v1.PropertyUpdate': $4.PropertyUpdate$json,
   '.kusinta.iot.connector.v1.DeviceAnnouncement': $0.DeviceAnnouncement$json,

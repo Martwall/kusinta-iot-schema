@@ -20,6 +20,85 @@ import '../../identity/v1/identity.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+/// One endpoint's shape: which Matter device type it presents. The state that endpoint
+/// reports lives in device.v1.Endpoint, keyed by the same endpoint_id.
+///
+/// Shape belongs on the descriptor because the descriptor is what both legs carry. A
+/// connector announces a device with connector.v1.DeviceAnnouncement, which is a bare
+/// DeviceDescriptor — so without this, a connector could never say that endpoint 2 is a
+/// Humidity Sensor, and nothing could populate the device type the PropertyUpdate
+/// resolution rule reads.
+class EndpointDescriptor extends $pb.GeneratedMessage {
+  factory EndpointDescriptor({
+    $core.int? endpointId,
+    $core.int? matterDeviceTypeId,
+  }) {
+    final result = create();
+    if (endpointId != null) result.endpointId = endpointId;
+    if (matterDeviceTypeId != null)
+      result.matterDeviceTypeId = matterDeviceTypeId;
+    return result;
+  }
+
+  EndpointDescriptor._();
+
+  factory EndpointDescriptor.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EndpointDescriptor.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EndpointDescriptor',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'matterDeviceTypeId', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EndpointDescriptor clone() => EndpointDescriptor()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EndpointDescriptor copyWith(void Function(EndpointDescriptor) updates) =>
+      super.copyWith((message) => updates(message as EndpointDescriptor))
+          as EndpointDescriptor;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static EndpointDescriptor create() => EndpointDescriptor._();
+  @$core.override
+  EndpointDescriptor createEmptyInstance() => create();
+  static $pb.PbList<EndpointDescriptor> createRepeated() =>
+      $pb.PbList<EndpointDescriptor>();
+  @$core.pragma('dart2js:noInline')
+  static EndpointDescriptor getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<EndpointDescriptor>(create);
+  static EndpointDescriptor? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get endpointId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set endpointId($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasEndpointId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEndpointId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get matterDeviceTypeId => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set matterDeviceTypeId($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMatterDeviceTypeId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMatterDeviceTypeId() => $_clearField(2);
+}
+
 /// DeviceDescriptor holds identity and Matter BasicInformation cluster fields.
 /// Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
 class DeviceDescriptor extends $pb.GeneratedMessage {
@@ -40,6 +119,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     $2.DeviceLifecycleState? lifecycle,
     $0.UserId? ownerUserId,
     $1.Timestamp? claimedAt,
+    $core.Iterable<EndpointDescriptor>? endpoints,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -61,6 +141,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     if (lifecycle != null) result.lifecycle = lifecycle;
     if (ownerUserId != null) result.ownerUserId = ownerUserId;
     if (claimedAt != null) result.claimedAt = claimedAt;
+    if (endpoints != null) result.endpoints.addAll(endpoints);
     return result;
   }
 
@@ -110,6 +191,9 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
         subBuilder: $0.UserId.create)
     ..aOM<$1.Timestamp>(16, _omitFieldNames ? '' : 'claimedAt',
         subBuilder: $1.Timestamp.create)
+    ..pc<EndpointDescriptor>(
+        17, _omitFieldNames ? '' : 'endpoints', $pb.PbFieldType.PM,
+        subBuilder: EndpointDescriptor.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -144,7 +228,12 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 
-  /// Matter 1.5.1 device type ID (e.g. 0x0301 = Thermostat, 0x0302 = TemperatureSensor)
+  /// The device's PRIMARY Matter device type (e.g. 0x0301 = Thermostat) — convenience
+  /// over the endpoints list below, defined as the device type of the lowest-numbered
+  /// entry in it. An app picks an icon and a card layout from this without walking the
+  /// list; it is not the only device type the device presents.
+  ///
+  /// Producers MUST number the device's main function lowest so this lands on it.
   @$pb.TagNumber(2)
   $core.int get matterDeviceTypeId => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -289,6 +378,17 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   void clearClaimedAt() => $_clearField(16);
   @$pb.TagNumber(16)
   $1.Timestamp ensureClaimedAt() => $_ensure(15);
+
+  /// Every endpoint this device presents, and the Matter device type of each. Both legs
+  /// carry it: a connector states it at announcement, and it is what lets a consumer
+  /// resolve a PropertyUpdate's endpoint_id to a device type and thence to a properties
+  /// case. See device/v1/property_update.proto for the normative rule.
+  ///
+  /// Empty means the device presents no endpoint this schema can describe — legitimate,
+  /// and the device still belongs in a list. Endpoint 0 is the Matter root node, whose
+  /// BasicInformation this message already carries, so it never appears here.
+  @$pb.TagNumber(17)
+  $pb.PbList<EndpointDescriptor> get endpoints => $_getList(16);
 }
 
 const $core.bool _omitFieldNames =

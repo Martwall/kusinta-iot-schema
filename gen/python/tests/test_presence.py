@@ -1,29 +1,21 @@
 """Presence tests for stream-assembled property fields.
 
-Device.properties is assembled incrementally from PropertyUpdate messages, so a field
+Endpoint.properties is assembled incrementally from PropertyUpdate messages, so a field
 that has never been reported must be distinguishable from one reporting zero. Matter
 gives zero a meaning almost everywhere — SystemMode Off=0, LockState NotFullyLocked=0,
 StateValue false = contact open (alarm), a dimmer at level 0 — so implicit presence made
 "never reported" and a real reading byte-identical.
 """
 
-from kusinta.iot.device.v1 import properties_pb2
+from kusinta.iot.device.v1 import device_pb2, properties_pb2
 from kusinta.iot.vendor.homematic.v1 import homematic_pb2
 
+# Derived from the Endpoint.properties oneof rather than hand-listed: a properties
+# message added to the schema and forgotten here would silently drop out of every sweep
+# below without a single test failing.
 PROPERTIES_MESSAGES = [
-    properties_pb2.ThermostatProperties,
-    properties_pb2.TemperatureSensorProperties,
-    properties_pb2.HumiditySensorProperties,
-    properties_pb2.OccupancySensorProperties,
-    properties_pb2.ContactSensorProperties,
-    properties_pb2.WindowCoveringProperties,
-    properties_pb2.DoorLockProperties,
-    properties_pb2.OnOffLightProperties,
-    properties_pb2.DimmableLightProperties,
-    properties_pb2.ColorTemperatureLightProperties,
-    properties_pb2.EnergySensorProperties,
-    properties_pb2.PressureSensorProperties,
-    homematic_pb2.HmThermostatProps,
+    field.message_type._concrete_class
+    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
 ]
 
 

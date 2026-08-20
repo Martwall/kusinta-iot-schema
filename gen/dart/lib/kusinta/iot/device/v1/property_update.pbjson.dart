@@ -67,9 +67,29 @@ const PropertyUpdate$json = {
       '6': '.kusinta.iot.device.v1.ValueProvenance',
       '10': 'provenance'
     },
+    {
+      '1': 'endpoint_id',
+      '3': 12,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'endpointId',
+      '17': true
+    },
+    {
+      '1': 'vendor_extension',
+      '3': 13,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'vendorExtension',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'value'},
+    {'1': '_endpoint_id'},
+    {'1': '_vendor_extension'},
   ],
 };
 
@@ -83,8 +103,10 @@ final $typed_data.Uint8List propertyUpdateDescriptor = $convert.base64Decode(
     'N0cmluZ1ZhbHVlEiEKC2J5dGVzX3ZhbHVlGAggASgMSABSCmJ5dGVzVmFsdWUSOAoJdGltZXN0'
     'YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEiQKDmNsdX'
     'N0ZXJfaWRfaGV4GAogASgJUgxjbHVzdGVySWRIZXgSRgoKcHJvdmVuYW5jZRgLIAEoDjImLmt1'
-    'c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFuY2VSCnByb3ZlbmFuY2VCBwoFdmFsdW'
-    'U=');
+    'c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFuY2VSCnByb3ZlbmFuY2USJAoLZW5kcG'
+    '9pbnRfaWQYDCABKA1IAVIKZW5kcG9pbnRJZIgBARIuChB2ZW5kb3JfZXh0ZW5zaW9uGA0gASgJ'
+    'SAJSD3ZlbmRvckV4dGVuc2lvbogBAUIHCgV2YWx1ZUIOCgxfZW5kcG9pbnRfaWRCEwoRX3Zlbm'
+    'Rvcl9leHRlbnNpb24=');
 
 @$core.Deprecated('Use propertyUpdateBatchDescriptor instead')
 const PropertyUpdateBatch$json = {

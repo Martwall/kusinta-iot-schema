@@ -16,26 +16,19 @@ import {
   OccupancySensorPropertiesSchema,
   OnOffLightPropertiesSchema,
   PressureSensorPropertiesSchema,
+  PowerSourcePropertiesSchema,
   TemperatureSensorPropertiesSchema,
   ThermostatPropertiesSchema,
   WindowCoveringPropertiesSchema,
 } from '../kusinta/iot/device/v1/properties_pb.js'
-import { DeviceSchema } from '../kusinta/iot/device/v1/device_pb.js'
+import { EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
 
-const PROPERTIES_MESSAGES = [
-  ThermostatPropertiesSchema,
-  TemperatureSensorPropertiesSchema,
-  HumiditySensorPropertiesSchema,
-  OccupancySensorPropertiesSchema,
-  ContactSensorPropertiesSchema,
-  WindowCoveringPropertiesSchema,
-  DoorLockPropertiesSchema,
-  OnOffLightPropertiesSchema,
-  DimmableLightPropertiesSchema,
-  ColorTemperatureLightPropertiesSchema,
-  EnergySensorPropertiesSchema,
-  PressureSensorPropertiesSchema,
-]
+// Derived from the Endpoint.properties oneof rather than hand-listed: a properties
+// message added to the schema and forgotten here would silently drop out of every sweep
+// below without a single test failing.
+const PROPERTIES_MESSAGES = EndpointSchema.oneofs
+  .find((o) => o.name === 'properties')
+  .fields.map((f) => f.message)
 
 /**
  * Resolve a PropertyUpdate to a field the way a consumer must: exact match on the
@@ -54,12 +47,12 @@ function resolveField(schema, clusterId, attributeName) {
 }
 
 /**
- * Resolve a Device.properties oneof case from a Matter device type ID.
+ * Resolve an Endpoint.properties oneof case from a Matter device type ID.
  * Returns null for a device type the schema does not model.
  * @param {number} deviceTypeId
  */
 function propertiesCaseForDeviceType(deviceTypeId) {
-  const oneof = DeviceSchema.oneofs.find((o) => o.name === 'properties')
+  const oneof = EndpointSchema.oneofs.find((o) => o.name === 'properties')
   const matches = (oneof?.fields ?? []).filter(
     (f) =>
       f.fieldKind === 'message' && getOption(f.message, matter_device_type).includes(deviceTypeId),
@@ -171,7 +164,7 @@ describe('device type resolution', () => {
   })
 
   it('annotates every non-vendor properties case with a device type', () => {
-    const oneof = DeviceSchema.oneofs.find((o) => o.name === 'properties')
+    const oneof = EndpointSchema.oneofs.find((o) => o.name === 'properties')
     const unannotated = (oneof?.fields ?? [])
       .filter(
         (f) =>
@@ -184,12 +177,12 @@ describe('device type resolution', () => {
   })
 
   it('annotates no device type on the vendor extension case', () => {
-    const homematic = DeviceSchema.fields.find((f) => f.name === 'homematic')
+    const homematic = EndpointSchema.fields.find((f) => f.name === 'homematic')
     expect(getOption(homematic.message, matter_device_type)).toEqual([])
   })
 
   it('never maps one device type to more than one properties case', () => {
-    const oneof = DeviceSchema.oneofs.find((o) => o.name === 'properties')
+    const oneof = EndpointSchema.oneofs.find((o) => o.name === 'properties')
     const deviceTypes = (oneof?.fields ?? []).flatMap((f) =>
       f.fieldKind === 'message' ? getOption(f.message, matter_device_type) : [],
     )

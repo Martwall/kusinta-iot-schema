@@ -27,7 +27,7 @@ from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity
 from kusinta.iot.access.v1 import roles_pb2 as kusinta_dot_iot_dot_access_dot_v1_dot_roles__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1fkusinta/iot/access/v1/acl.proto\x12\x15kusinta.iot.access.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a!kusinta/iot/access/v1/roles.proto\"\xdf\x01\n\x12PropertyConstraint\x12%\n\x0e\x61ttribute_name\x18\x01 \x01(\tR\rattributeName\x12\x19\n\x07int_max\x18\x02 \x01(\x11H\x00R\x06intMax\x12\x19\n\x07int_min\x18\x03 \x01(\x11H\x00R\x06intMin\x12\x1b\n\x08uint_max\x18\x04 \x01(\rH\x00R\x07uintMax\x12\x1b\n\x08uint_min\x18\x05 \x01(\rH\x00R\x07uintMin\x12$\n\x0e\x63luster_id_hex\x18\x06 \x01(\tR\x0c\x63lusterIdHexB\x0c\n\nconstraint\"\x95\x03\n\tDeviceAcl\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12/\n\x04role\x18\x03 \x01(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x04role\x12P\n\x0f\x61llowed_actions\x18\x04 \x03(\x0e\x32\'.kusinta.iot.access.v1.PermissionActionR\x0e\x61llowedActions\x12-\n\x12\x61llowed_attributes\x18\x05 \x03(\tR\x11\x61llowedAttributes\x12\\\n\x14property_constraints\x18\x06 \x03(\x0b\x32).kusinta.iot.access.v1.PropertyConstraintR\x13propertyConstraints\"\x8d\x02\n\x14\x45\x66\x66\x65\x63tivePermissions\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12\x41\n\ngateway_id\x18\x02 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\tgatewayId\x12\x41\n\x0b\x64\x65vice_acls\x18\x03 \x03(\x0b\x32 .kusinta.iot.access.v1.DeviceAclR\ndeviceAcls\x12\x35\n\x08valid_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x07validAtB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1fkusinta/iot/access/v1/acl.proto\x12\x15kusinta.iot.access.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a!kusinta/iot/access/v1/roles.proto\"\x91\x01\n\x0c\x41ttributeRef\x12%\n\x0e\x61ttribute_name\x18\x01 \x01(\tR\rattributeName\x12$\n\x0e\x63luster_id_hex\x18\x02 \x01(\tR\x0c\x63lusterIdHex\x12$\n\x0b\x65ndpoint_id\x18\x03 \x01(\rH\x00R\nendpointId\x88\x01\x01\x42\x0e\n\x0c_endpoint_id\"\x95\x02\n\x12PropertyConstraint\x12%\n\x0e\x61ttribute_name\x18\x01 \x01(\tR\rattributeName\x12\x19\n\x07int_max\x18\x02 \x01(\x11H\x00R\x06intMax\x12\x19\n\x07int_min\x18\x03 \x01(\x11H\x00R\x06intMin\x12\x1b\n\x08uint_max\x18\x04 \x01(\rH\x00R\x07uintMax\x12\x1b\n\x08uint_min\x18\x05 \x01(\rH\x00R\x07uintMin\x12$\n\x0e\x63luster_id_hex\x18\x06 \x01(\tR\x0c\x63lusterIdHex\x12$\n\x0b\x65ndpoint_id\x18\x07 \x01(\rH\x01R\nendpointId\x88\x01\x01\x42\x0c\n\nconstraintB\x0e\n\x0c_endpoint_id\"\xdb\x03\n\tDeviceAcl\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12/\n\x04role\x18\x03 \x01(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x04role\x12P\n\x0f\x61llowed_actions\x18\x04 \x03(\x0e\x32\'.kusinta.iot.access.v1.PermissionActionR\x0e\x61llowedActions\x12Y\n\x16\x61llowed_attribute_refs\x18\x07 \x03(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\x14\x61llowedAttributeRefs\x12\\\n\x14property_constraints\x18\x06 \x03(\x0b\x32).kusinta.iot.access.v1.PropertyConstraintR\x13propertyConstraintsJ\x04\x08\x05\x10\x06R\x12\x61llowed_attributes\"\x8d\x02\n\x14\x45\x66\x66\x65\x63tivePermissions\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12\x41\n\ngateway_id\x18\x02 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\tgatewayId\x12\x41\n\x0b\x64\x65vice_acls\x18\x03 \x03(\x0b\x32 .kusinta.iot.access.v1.DeviceAclR\ndeviceAcls\x12\x35\n\x08valid_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x07validAtB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,10 +35,12 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.access.v1.acl_p
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_PROPERTYCONSTRAINT']._serialized_start=167
-  _globals['_PROPERTYCONSTRAINT']._serialized_end=390
-  _globals['_DEVICEACL']._serialized_start=393
-  _globals['_DEVICEACL']._serialized_end=798
-  _globals['_EFFECTIVEPERMISSIONS']._serialized_start=801
-  _globals['_EFFECTIVEPERMISSIONS']._serialized_end=1070
+  _globals['_ATTRIBUTEREF']._serialized_start=167
+  _globals['_ATTRIBUTEREF']._serialized_end=312
+  _globals['_PROPERTYCONSTRAINT']._serialized_start=315
+  _globals['_PROPERTYCONSTRAINT']._serialized_end=592
+  _globals['_DEVICEACL']._serialized_start=595
+  _globals['_DEVICEACL']._serialized_end=1070
+  _globals['_EFFECTIVEPERMISSIONS']._serialized_start=1073
+  _globals['_EFFECTIVEPERMISSIONS']._serialized_end=1342
 # @@protoc_insertion_point(module_scope)

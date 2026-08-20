@@ -14,6 +14,50 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_access_v1_acl: GenFile;
 
 /**
+ * AttributeRef names one attribute on one endpoint. Both parts are load-bearing.
+ *
+ * The cluster is required because attribute names repeat across clusters — MeasuredValue
+ * is Temperature (0x0402), Relative Humidity (0x0405) and Pressure (0x0403), so a bare
+ * name is ambiguous on any device carrying two of them.
+ *
+ * The endpoint is required on a GRANT. A device presents several endpoints, often of the
+ * same device type: all four channels of a 4-channel actuator are OnOff on cluster 0006,
+ * so a grant without an endpoint reaches all four and channel 1 cannot be granted alone.
+ * Required rather than "absent = every endpoint" because omission must never be the thing
+ * that widens access.
+ *
+ * @generated from message kusinta.iot.access.v1.AttributeRef
+ */
+export declare type AttributeRef = Message<"kusinta.iot.access.v1.AttributeRef"> & {
+  /**
+   * @generated from field: string attribute_name = 1;
+   */
+  attributeName: string;
+
+  /**
+   * @generated from field: string cluster_id_hex = 2;
+   */
+  clusterIdHex: string;
+
+  /**
+   * Optional on the wire so that "not stated" is representable and a consumer can REJECT
+   * it, rather than a bare uint32 decoding an omission to endpoint 0 — indistinguishable
+   * from a producer that meant 0, and the reserved-zero sentinel this schema removes
+   * rather than adds. Required by rule: a grant that names no endpoint is invalid, not a
+   * grant over all of them.
+   *
+   * @generated from field: optional uint32 endpoint_id = 3;
+   */
+  endpointId?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.access.v1.AttributeRef.
+ * Use `create(AttributeRefSchema)` to create a new message.
+ */
+export declare const AttributeRefSchema: GenMessage<AttributeRef>;
+
+/**
  * PropertyConstraint bounds a single Matter cluster attribute.
  * attribute_name uses PascalCase Matter attribute naming (e.g. "MaxHeatSetpointLimit").
  * MaxHeatSetpointLimit and MinHeatSetpointLimit are actual Matter Thermostat cluster
@@ -60,6 +104,16 @@ export declare type PropertyConstraint = Message<"kusinta.iot.access.v1.Property
    * @generated from field: string cluster_id_hex = 6;
    */
   clusterIdHex: string;
+
+  /**
+   * Which endpoint this bound applies to. Optional, and absent means EVERY endpoint of
+   * the device — the opposite default to AttributeRef.endpoint_id, deliberately. A
+   * constraint is a restriction, so omission broadens what is restricted; a grant is
+   * permission, so omission there would broaden access. Both defaults fail safe.
+   *
+   * @generated from field: optional uint32 endpoint_id = 7;
+   */
+  endpointId?: number | undefined;
 };
 
 /**
@@ -93,11 +147,12 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
   allowedActions: PermissionAction[];
 
   /**
-   * empty = all attributes allowed
+   * Empty = all attributes on all endpoints allowed. Unchanged in meaning from the field
+   * it replaces.
    *
-   * @generated from field: repeated string allowed_attributes = 5;
+   * @generated from field: repeated kusinta.iot.access.v1.AttributeRef allowed_attribute_refs = 7;
    */
-  allowedAttributes: string[];
+  allowedAttributeRefs: AttributeRef[];
 
   /**
    * @generated from field: repeated kusinta.iot.access.v1.PropertyConstraint property_constraints = 6;

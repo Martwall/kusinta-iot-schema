@@ -14,6 +14,33 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use attributeRefDescriptor instead')
+const AttributeRef$json = {
+  '1': 'AttributeRef',
+  '2': [
+    {'1': 'attribute_name', '3': 1, '4': 1, '5': 9, '10': 'attributeName'},
+    {'1': 'cluster_id_hex', '3': 2, '4': 1, '5': 9, '10': 'clusterIdHex'},
+    {
+      '1': 'endpoint_id',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'endpointId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_endpoint_id'},
+  ],
+};
+
+/// Descriptor for `AttributeRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List attributeRefDescriptor = $convert.base64Decode(
+    'CgxBdHRyaWJ1dGVSZWYSJQoOYXR0cmlidXRlX25hbWUYASABKAlSDWF0dHJpYnV0ZU5hbWUSJA'
+    'oOY2x1c3Rlcl9pZF9oZXgYAiABKAlSDGNsdXN0ZXJJZEhleBIkCgtlbmRwb2ludF9pZBgDIAEo'
+    'DUgAUgplbmRwb2ludElkiAEBQg4KDF9lbmRwb2ludF9pZA==');
+
 @$core.Deprecated('Use propertyConstraintDescriptor instead')
 const PropertyConstraint$json = {
   '1': 'PropertyConstraint',
@@ -24,9 +51,19 @@ const PropertyConstraint$json = {
     {'1': 'uint_max', '3': 4, '4': 1, '5': 13, '9': 0, '10': 'uintMax'},
     {'1': 'uint_min', '3': 5, '4': 1, '5': 13, '9': 0, '10': 'uintMin'},
     {'1': 'cluster_id_hex', '3': 6, '4': 1, '5': 9, '10': 'clusterIdHex'},
+    {
+      '1': 'endpoint_id',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'endpointId',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'constraint'},
+    {'1': '_endpoint_id'},
   ],
 };
 
@@ -35,8 +72,9 @@ final $typed_data.Uint8List propertyConstraintDescriptor = $convert.base64Decode
     'ChJQcm9wZXJ0eUNvbnN0cmFpbnQSJQoOYXR0cmlidXRlX25hbWUYASABKAlSDWF0dHJpYnV0ZU'
     '5hbWUSGQoHaW50X21heBgCIAEoEUgAUgZpbnRNYXgSGQoHaW50X21pbhgDIAEoEUgAUgZpbnRN'
     'aW4SGwoIdWludF9tYXgYBCABKA1IAFIHdWludE1heBIbCgh1aW50X21pbhgFIAEoDUgAUgd1aW'
-    '50TWluEiQKDmNsdXN0ZXJfaWRfaGV4GAYgASgJUgxjbHVzdGVySWRIZXhCDAoKY29uc3RyYWlu'
-    'dA==');
+    '50TWluEiQKDmNsdXN0ZXJfaWRfaGV4GAYgASgJUgxjbHVzdGVySWRIZXgSJAoLZW5kcG9pbnRf'
+    'aWQYByABKA1IAVIKZW5kcG9pbnRJZIgBAUIMCgpjb25zdHJhaW50Qg4KDF9lbmRwb2ludF9pZA'
+    '==');
 
 @$core.Deprecated('Use deviceAclDescriptor instead')
 const DeviceAcl$json = {
@@ -75,11 +113,12 @@ const DeviceAcl$json = {
       '10': 'allowedActions'
     },
     {
-      '1': 'allowed_attributes',
-      '3': 5,
+      '1': 'allowed_attribute_refs',
+      '3': 7,
       '4': 3,
-      '5': 9,
-      '10': 'allowedAttributes'
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.AttributeRef',
+      '10': 'allowedAttributeRefs'
     },
     {
       '1': 'property_constraints',
@@ -90,6 +129,10 @@ const DeviceAcl$json = {
       '10': 'propertyConstraints'
     },
   ],
+  '9': [
+    {'1': 5, '2': 6},
+  ],
+  '10': ['allowed_attributes'],
 };
 
 /// Descriptor for `DeviceAcl`. Decode as a `google.protobuf.DescriptorProto`.
@@ -98,10 +141,11 @@ final $typed_data.Uint8List deviceAclDescriptor = $convert.base64Decode(
     'EuRGV2aWNlSWRSCGRldmljZUlkEjgKB3VzZXJfaWQYAiABKAsyHy5rdXNpbnRhLmlvdC5pZGVu'
     'dGl0eS52MS5Vc2VySWRSBnVzZXJJZBIvCgRyb2xlGAMgASgOMhsua3VzaW50YS5pb3QuYWNjZX'
     'NzLnYxLlJvbGVSBHJvbGUSUAoPYWxsb3dlZF9hY3Rpb25zGAQgAygOMicua3VzaW50YS5pb3Qu'
-    'YWNjZXNzLnYxLlBlcm1pc3Npb25BY3Rpb25SDmFsbG93ZWRBY3Rpb25zEi0KEmFsbG93ZWRfYX'
-    'R0cmlidXRlcxgFIAMoCVIRYWxsb3dlZEF0dHJpYnV0ZXMSXAoUcHJvcGVydHlfY29uc3RyYWlu'
-    'dHMYBiADKAsyKS5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuUHJvcGVydHlDb25zdHJhaW50UhNwcm'
-    '9wZXJ0eUNvbnN0cmFpbnRz');
+    'YWNjZXNzLnYxLlBlcm1pc3Npb25BY3Rpb25SDmFsbG93ZWRBY3Rpb25zElkKFmFsbG93ZWRfYX'
+    'R0cmlidXRlX3JlZnMYByADKAsyIy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuQXR0cmlidXRlUmVm'
+    'UhRhbGxvd2VkQXR0cmlidXRlUmVmcxJcChRwcm9wZXJ0eV9jb25zdHJhaW50cxgGIAMoCzIpLm'
+    't1c2ludGEuaW90LmFjY2Vzcy52MS5Qcm9wZXJ0eUNvbnN0cmFpbnRSE3Byb3BlcnR5Q29uc3Ry'
+    'YWludHNKBAgFEAZSEmFsbG93ZWRfYXR0cmlidXRlcw==');
 
 @$core.Deprecated('Use effectivePermissionsDescriptor instead')
 const EffectivePermissions$json = {

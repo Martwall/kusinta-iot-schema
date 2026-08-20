@@ -1,6 +1,7 @@
 // @ts-check
 import { describe, it, expect } from 'vitest'
 import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
+import { EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
 import {
   ColorTemperatureLightPropertiesSchema,
   ContactSensorPropertiesSchema,
@@ -11,6 +12,7 @@ import {
   OccupancySensorPropertiesSchema,
   OnOffLightPropertiesSchema,
   PressureSensorPropertiesSchema,
+  PowerSourcePropertiesSchema,
   TemperatureSensorPropertiesSchema,
   ThermostatPropertiesSchema,
   WindowCoveringPropertiesSchema,
@@ -20,21 +22,12 @@ import { HmThermostatPropsSchema } from '../kusinta/iot/vendor/homematic/v1/home
 // FeatureSet_FieldPresence.EXPLICIT
 const EXPLICIT = 1
 
-const PROPERTIES_MESSAGES = [
-  ThermostatPropertiesSchema,
-  TemperatureSensorPropertiesSchema,
-  HumiditySensorPropertiesSchema,
-  OccupancySensorPropertiesSchema,
-  ContactSensorPropertiesSchema,
-  WindowCoveringPropertiesSchema,
-  DoorLockPropertiesSchema,
-  OnOffLightPropertiesSchema,
-  DimmableLightPropertiesSchema,
-  ColorTemperatureLightPropertiesSchema,
-  EnergySensorPropertiesSchema,
-  PressureSensorPropertiesSchema,
-  HmThermostatPropsSchema,
-]
+// Derived from the Endpoint.properties oneof rather than hand-listed: a properties
+// message added to the schema and forgotten here would silently drop out of every sweep
+// below without a single test failing.
+const PROPERTIES_MESSAGES = EndpointSchema.oneofs
+  .find((o) => o.name === 'properties')
+  .fields.map((f) => f.message)
 
 describe('contact state, where false is the alarm reading', () => {
   it('leaves an unreported contact state undefined', () => {

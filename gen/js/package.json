@@ -16,6 +16,8 @@
     "./device/properties":      "./src/kusinta/iot/device/v1/properties_pb.js",
     "./device/matter-options":   "./src/kusinta/iot/device/v1/matter_options_pb.js",
     "./device/property-update": "./src/kusinta/iot/device/v1/property_update_pb.js",
+    "./vendor/options":         "./src/kusinta/iot/vendor/v1/vendor_options_pb.js",
+    "./vendor/homematic":       "./src/kusinta/iot/vendor/homematic/v1/homematic_pb.js",
     "./space":                  "./src/kusinta/iot/space/v1/space_pb.js",
     "./access":                 "./src/kusinta/iot/access/v1/acl_pb.js",
     "./access/roles":           "./src/kusinta/iot/access/v1/roles_pb.js",

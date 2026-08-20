@@ -14,6 +14,26 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use endpointDescriptorDescriptor instead')
+const EndpointDescriptor$json = {
+  '1': 'EndpointDescriptor',
+  '2': [
+    {'1': 'endpoint_id', '3': 1, '4': 1, '5': 13, '10': 'endpointId'},
+    {
+      '1': 'matter_device_type_id',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '10': 'matterDeviceTypeId'
+    },
+  ],
+};
+
+/// Descriptor for `EndpointDescriptor`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List endpointDescriptorDescriptor = $convert.base64Decode(
+    'ChJFbmRwb2ludERlc2NyaXB0b3ISHwoLZW5kcG9pbnRfaWQYASABKA1SCmVuZHBvaW50SWQSMQ'
+    'oVbWF0dGVyX2RldmljZV90eXBlX2lkGAIgASgNUhJtYXR0ZXJEZXZpY2VUeXBlSWQ=');
+
 @$core.Deprecated('Use deviceDescriptorDescriptor instead')
 const DeviceDescriptor$json = {
   '1': 'DeviceDescriptor',
@@ -101,6 +121,14 @@ const DeviceDescriptor$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'claimedAt'
     },
+    {
+      '1': 'endpoints',
+      '3': 17,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.EndpointDescriptor',
+      '10': 'endpoints'
+    },
   ],
 };
 
@@ -121,4 +149,5 @@ final $typed_data.Uint8List deviceDescriptorDescriptor = $convert.base64Decode(
     'KA4yKy5rdXNpbnRhLmlvdC5jb21tb24udjEuRGV2aWNlTGlmZWN5Y2xlU3RhdGVSCWxpZmVjeW'
     'NsZRJDCg1vd25lcl91c2VyX2lkGA8gASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNl'
     'cklkUgtvd25lclVzZXJJZBI5CgpjbGFpbWVkX2F0GBAgASgLMhouZ29vZ2xlLnByb3RvYnVmLl'
-    'RpbWVzdGFtcFIJY2xhaW1lZEF0');
+    'RpbWVzdGFtcFIJY2xhaW1lZEF0EkcKCWVuZHBvaW50cxgRIAMoCzIpLmt1c2ludGEuaW90LmRl'
+    'dmljZS52MS5FbmRwb2ludERlc2NyaXB0b3JSCWVuZHBvaW50cw==');

@@ -30,6 +30,9 @@ class HmThermostatProps extends $pb.GeneratedMessage {
     $core.int? controlMode,
     $core.bool? frostProtection,
     $core.double? currentProfilePeriod,
+    $core.double? level,
+    $core.int? windowState,
+    $core.int? valveState,
   }) {
     final result = create();
     if (boostMode != null) result.boostMode = boostMode;
@@ -38,6 +41,9 @@ class HmThermostatProps extends $pb.GeneratedMessage {
     if (frostProtection != null) result.frostProtection = frostProtection;
     if (currentProfilePeriod != null)
       result.currentProfilePeriod = currentProfilePeriod;
+    if (level != null) result.level = level;
+    if (windowState != null) result.windowState = windowState;
+    if (valveState != null) result.valveState = valveState;
     return result;
   }
 
@@ -62,6 +68,9 @@ class HmThermostatProps extends $pb.GeneratedMessage {
     ..aOB(4, _omitFieldNames ? '' : 'frostProtection')
     ..a<$core.double>(
         5, _omitFieldNames ? '' : 'currentProfilePeriod', $pb.PbFieldType.OF)
+    ..a<$core.double>(6, _omitFieldNames ? '' : 'level', $pb.PbFieldType.OF)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'windowState', $pb.PbFieldType.OU3)
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'valveState', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -129,12 +138,47 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   $core.bool hasCurrentProfilePeriod() => $_has(4);
   @$pb.TagNumber(5)
   void clearCurrentProfilePeriod() => $_clearField(5);
+
+  /// Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
+  /// this extension exists for: it has no Matter equivalent, and it is what an automatic
+  /// or learned control strategy needs.
+  @$pb.TagNumber(6)
+  $core.double get level => $_getN(5);
+  @$pb.TagNumber(6)
+  set level($core.double value) => $_setFloat(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasLevel() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearLevel() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get windowState => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set windowState($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasWindowState() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearWindowState() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.int get valveState => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set valveState($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasValveState() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearValveState() => $_clearField(8);
 }
 
 enum HomematicVendorExtension_HomematicProps { hmThermostat, notSet }
 
-/// Top-level vendor extension attached to Device.properties field 50.
-/// Carries the CCU3 device address + aiohomematic type string + device-type-specific props.
+/// Top-level vendor extension, carried on Endpoint.vendor beside the endpoint's typed
+/// Matter properties rather than instead of them.
+///
+/// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
+/// PowerSource cluster, which every battery device from every technology needs — they
+/// belong on a Power Source endpoint, not in a vendor message. See
+/// device/v1/properties.proto.
 class HomematicVendorExtension extends $pb.GeneratedMessage {
   factory HomematicVendorExtension({
     $core.String? homematicAddress,

@@ -1011,3 +1011,80 @@ final $typed_data.Uint8List pressureSensorPropertiesDescriptor = $convert.base64
     'UYCVRvbGVyYW5jZUgDUgl0b2xlcmFuY2WIAQE6Bpq1GAKFBkIRCg9fbWVhc3VyZWRfdmFsdWVC'
     'FQoTX21pbl9tZWFzdXJlZF92YWx1ZUIVChNfbWF4X21lYXN1cmVkX3ZhbHVlQgwKCl90b2xlcm'
     'FuY2U=');
+
+@$core.Deprecated('Use powerSourcePropertiesDescriptor instead')
+const PowerSourceProperties$json = {
+  '1': 'PowerSourceProperties',
+  '2': [
+    {
+      '1': 'bat_percent_remaining',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'batPercentRemaining',
+      '17': true
+    },
+    {
+      '1': 'bat_charge_level',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 1,
+      '10': 'batChargeLevel',
+      '17': true
+    },
+    {
+      '1': 'bat_replacement_needed',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 2,
+      '10': 'batReplacementNeeded',
+      '17': true
+    },
+    {
+      '1': 'bat_voltage',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 3,
+      '10': 'batVoltage',
+      '17': true
+    },
+    {
+      '1': 'status',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 4,
+      '10': 'status',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_bat_percent_remaining'},
+    {'1': '_bat_charge_level'},
+    {'1': '_bat_replacement_needed'},
+    {'1': '_bat_voltage'},
+    {'1': '_status'},
+  ],
+};
+
+/// Descriptor for `PowerSourceProperties`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List powerSourcePropertiesDescriptor = $convert.base64Decode(
+    'ChVQb3dlclNvdXJjZVByb3BlcnRpZXMSVAoVYmF0X3BlcmNlbnRfcmVtYWluaW5nGAEgASgNQh'
+    'uItRgvkrUYE0JhdFBlcmNlbnRSZW1haW5pbmdIAFITYmF0UGVyY2VudFJlbWFpbmluZ4gBARJF'
+    'ChBiYXRfY2hhcmdlX2xldmVsGAIgASgNQhaItRgvkrUYDkJhdENoYXJnZUxldmVsSAFSDmJhdE'
+    'NoYXJnZUxldmVsiAEBElcKFmJhdF9yZXBsYWNlbWVudF9uZWVkZWQYAyABKAhCHIi1GC+StRgU'
+    'QmF0UmVwbGFjZW1lbnROZWVkZWRIAlIUYmF0UmVwbGFjZW1lbnROZWVkZWSIAQESOAoLYmF0X3'
+    'ZvbHRhZ2UYBCABKA1CEoi1GC+StRgKQmF0Vm9sdGFnZUgDUgpiYXRWb2x0YWdliAEBEisKBnN0'
+    'YXR1cxgFIAEoDUIOiLUYL5K1GAZTdGF0dXNIBFIGc3RhdHVziAEBOgWatRgBEUIYChZfYmF0X3'
+    'BlcmNlbnRfcmVtYWluaW5nQhMKEV9iYXRfY2hhcmdlX2xldmVsQhkKF19iYXRfcmVwbGFjZW1l'
+    'bnRfbmVlZGVkQg4KDF9iYXRfdm9sdGFnZUIJCgdfc3RhdHVz');

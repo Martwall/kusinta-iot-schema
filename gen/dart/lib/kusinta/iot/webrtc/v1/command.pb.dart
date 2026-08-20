@@ -478,6 +478,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     WindowCoveringLiftParams? windowCoveringLift,
     DoorLockParams? doorLock,
     ThermostatSetpointWriteParams? thermostatSetpointWrite,
+    $core.int? endpointId,
     $core.List<$core.int>? rawTlv,
   }) {
     final result = create();
@@ -494,6 +495,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     if (doorLock != null) result.doorLock = doorLock;
     if (thermostatSetpointWrite != null)
       result.thermostatSetpointWrite = thermostatSetpointWrite;
+    if (endpointId != null) result.endpointId = endpointId;
     if (rawTlv != null) result.rawTlv = rawTlv;
     return result;
   }
@@ -544,6 +546,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     ..aOM<ThermostatSetpointWriteParams>(
         10, _omitFieldNames ? '' : 'thermostatSetpointWrite',
         subBuilder: ThermostatSetpointWriteParams.create)
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
     ..a<$core.List<$core.int>>(
         99, _omitFieldNames ? '' : 'rawTlv', $pb.PbFieldType.OY)
     ..hasRequiredFields = false;
@@ -680,12 +683,29 @@ class DeviceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   ThermostatSetpointWriteParams ensureThermostatSetpointWrite() => $_ensure(9);
 
+  /// Which endpoint of the device to command. Required: a device presents several
+  /// endpoints and a command with no destination has no correct one — on a 4-channel
+  /// actuator, picking any of them moves real hardware. Refuse an unaddressed command
+  /// rather than guessing.
+  ///
+  /// No exemption for single-endpoint devices. A rule where the same message is valid or
+  /// invalid depending on the shape of its target is a rule that works until a device
+  /// grows an endpoint.
+  @$pb.TagNumber(11)
+  $core.int get endpointId => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set endpointId($core.int value) => $_setUnsignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasEndpointId() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearEndpointId() => $_clearField(11);
+
   @$pb.TagNumber(99)
-  $core.List<$core.int> get rawTlv => $_getN(10);
+  $core.List<$core.int> get rawTlv => $_getN(11);
   @$pb.TagNumber(99)
-  set rawTlv($core.List<$core.int> value) => $_setBytes(10, value);
+  set rawTlv($core.List<$core.int> value) => $_setBytes(11, value);
   @$pb.TagNumber(99)
-  $core.bool hasRawTlv() => $_has(10);
+  $core.bool hasRawTlv() => $_has(11);
   @$pb.TagNumber(99)
   void clearRawTlv() => $_clearField(99);
 }

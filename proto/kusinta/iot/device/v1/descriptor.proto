@@ -8,12 +8,30 @@ import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
+// One endpoint's shape: which Matter device type it presents. The state that endpoint
+// reports lives in device.v1.Endpoint, keyed by the same endpoint_id.
+//
+// Shape belongs on the descriptor because the descriptor is what both legs carry. A
+// connector announces a device with connector.v1.DeviceAnnouncement, which is a bare
+// DeviceDescriptor — so without this, a connector could never say that endpoint 2 is a
+// Humidity Sensor, and nothing could populate the device type the PropertyUpdate
+// resolution rule reads.
+message EndpointDescriptor {
+  uint32 endpoint_id           = 1;
+  uint32 matter_device_type_id = 2;
+}
+
 // DeviceDescriptor holds identity and Matter BasicInformation cluster fields.
 // Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
 message DeviceDescriptor {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
 
-  // Matter 1.5.1 device type ID (e.g. 0x0301 = Thermostat, 0x0302 = TemperatureSensor)
+  // The device's PRIMARY Matter device type (e.g. 0x0301 = Thermostat) — convenience
+  // over the endpoints list below, defined as the device type of the lowest-numbered
+  // entry in it. An app picks an icon and a card layout from this without walking the
+  // list; it is not the only device type the device presents.
+  //
+  // Producers MUST number the device's main function lowest so this lands on it.
   uint32 matter_device_type_id = 2;
 
   // Matter BasicInformation cluster attributes
@@ -35,4 +53,14 @@ message DeviceDescriptor {
   // Populated when ownership == RESIDENT
   kusinta.iot.identity.v1.UserId owner_user_id = 15;
   google.protobuf.Timestamp claimed_at = 16;
+
+  // Every endpoint this device presents, and the Matter device type of each. Both legs
+  // carry it: a connector states it at announcement, and it is what lets a consumer
+  // resolve a PropertyUpdate's endpoint_id to a device type and thence to a properties
+  // case. See device/v1/property_update.proto for the normative rule.
+  //
+  // Empty means the device presents no endpoint this schema can describe — legitimate,
+  // and the device still belongs in a list. Endpoint 0 is the Matter root node, whose
+  // BasicInformation this message already carries, so it never appears here.
+  repeated EndpointDescriptor endpoints = 17;
 }

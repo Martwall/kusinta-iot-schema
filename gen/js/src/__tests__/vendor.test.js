@@ -5,7 +5,7 @@ import {
   HomematicVendorExtensionSchema,
   HmThermostatPropsSchema,
 } from '../kusinta/iot/vendor/homematic/v1/homematic_pb.js'
-import { DeviceSchema } from '../kusinta/iot/device/v1/device_pb.js'
+import { EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
 
 describe('HmThermostatProps', () => {
   it('round-trips boost_mode and control_mode', () => {
@@ -38,23 +38,29 @@ describe('HomematicVendorExtension', () => {
 
 })
 
-describe('Device with HomematicVendorExtension (field 50)', () => {
-  it('stores homematic extension in the oneof', () => {
-    const d = create(DeviceSchema, {
-      descriptor: { deviceId: { value: 'hm-therm-1' }, matterDeviceTypeId: 0x0301 },
-      properties: {
+describe('Endpoint with HomematicVendorExtension (field 50)', () => {
+  it('carries the vendor extension alongside typed Matter properties', () => {
+    const e = create(EndpointSchema, {
+      endpointId: 1,
+      properties: { case: 'thermostat', value: { localTemperature: 2150 } },
+      vendor: {
         case: 'homematic',
         value: {
           homematicAddress: 'MEQ1234567',
           homematicType: 'HmIP-eTRV-2',
-          homematicProps: { case: 'hmThermostat', value: { controlMode: 2 } },
+          homematicProps: { case: 'hmThermostat', value: { controlMode: 2, level: 0.5 } },
         },
       },
     })
-    const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
-    expect(decoded.properties?.case).toBe('homematic')
-    if (decoded.properties?.case === 'homematic') {
-      expect(decoded.properties.value.homematicAddress).toBe('MEQ1234567')
+    const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
+    expect(decoded.properties?.case).toBe('thermostat')
+    expect(decoded.vendor?.case).toBe('homematic')
+    if (decoded.vendor?.case === 'homematic') {
+      expect(decoded.vendor.value.homematicAddress).toBe('MEQ1234567')
+      if (decoded.vendor.value.homematicProps?.case === 'hmThermostat') {
+        expect(decoded.vendor.value.homematicProps.value.level).toBe(0.5)
+      }
     }
   })
+
 })

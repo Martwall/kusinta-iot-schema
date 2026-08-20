@@ -28,15 +28,13 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
   boostMode?: boolean | undefined;
 
   /**
-   * minutes remaining in boost
+   * minutes remaining
    *
    * @generated from field: optional float boost_time_period = 2;
    */
   boostTimePeriod?: number | undefined;
 
   /**
-   * HmIP ControlMode enum
-   *
    * @generated from field: optional uint32 control_mode = 3;
    */
   controlMode?: number | undefined;
@@ -50,6 +48,25 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
    * @generated from field: optional float current_profile_period = 5;
    */
   currentProfilePeriod?: number | undefined;
+
+  /**
+   * Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
+   * this extension exists for: it has no Matter equivalent, and it is what an automatic
+   * or learned control strategy needs.
+   *
+   * @generated from field: optional float level = 6;
+   */
+  level?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 window_state = 7;
+   */
+  windowState?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 valve_state = 8;
+   */
+  valveState?: number | undefined;
 };
 
 /**
@@ -59,21 +76,26 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
 export declare const HmThermostatPropsSchema: GenMessage<HmThermostatProps>;
 
 /**
- * Top-level vendor extension attached to Device.properties field 50.
- * Carries the CCU3 device address + aiohomematic type string + device-type-specific props.
+ * Top-level vendor extension, carried on Endpoint.vendor beside the endpoint's typed
+ * Matter properties rather than instead of them.
+ *
+ * Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
+ * PowerSource cluster, which every battery device from every technology needs — they
+ * belong on a Power Source endpoint, not in a vendor message. See
+ * device/v1/properties.proto.
  *
  * @generated from message kusinta.iot.vendor.homematic.v1.HomematicVendorExtension
  */
 export declare type HomematicVendorExtension = Message<"kusinta.iot.vendor.homematic.v1.HomematicVendorExtension"> & {
   /**
-   * e.g. "MEQ1234567" (CCU3 device address)
+   * upstream device address, e.g. "MEQ1234567"
    *
    * @generated from field: string homematic_address = 1;
    */
   homematicAddress: string;
 
   /**
-   * aiohomematic device type string e.g. "HmIP-eTRV-C"
+   * aiohomematic device type string, e.g. "HmIP-eTRV-C"
    *
    * @generated from field: string homematic_type = 2;
    */

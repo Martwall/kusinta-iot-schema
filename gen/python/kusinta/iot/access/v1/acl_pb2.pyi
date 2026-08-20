@@ -11,37 +11,49 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class AttributeRef(_message.Message):
+    __slots__ = ("attribute_name", "cluster_id_hex", "endpoint_id")
+    ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
+    CLUSTER_ID_HEX_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
+    attribute_name: str
+    cluster_id_hex: str
+    endpoint_id: int
+    def __init__(self, attribute_name: _Optional[str] = ..., cluster_id_hex: _Optional[str] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
+
 class PropertyConstraint(_message.Message):
-    __slots__ = ("attribute_name", "int_max", "int_min", "uint_max", "uint_min", "cluster_id_hex")
+    __slots__ = ("attribute_name", "int_max", "int_min", "uint_max", "uint_min", "cluster_id_hex", "endpoint_id")
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
     INT_MAX_FIELD_NUMBER: _ClassVar[int]
     INT_MIN_FIELD_NUMBER: _ClassVar[int]
     UINT_MAX_FIELD_NUMBER: _ClassVar[int]
     UINT_MIN_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_ID_HEX_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
     attribute_name: str
     int_max: int
     int_min: int
     uint_max: int
     uint_min: int
     cluster_id_hex: str
-    def __init__(self, attribute_name: _Optional[str] = ..., int_max: _Optional[int] = ..., int_min: _Optional[int] = ..., uint_max: _Optional[int] = ..., uint_min: _Optional[int] = ..., cluster_id_hex: _Optional[str] = ...) -> None: ...
+    endpoint_id: int
+    def __init__(self, attribute_name: _Optional[str] = ..., int_max: _Optional[int] = ..., int_min: _Optional[int] = ..., uint_max: _Optional[int] = ..., uint_min: _Optional[int] = ..., cluster_id_hex: _Optional[str] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
 
 class DeviceAcl(_message.Message):
-    __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attributes", "property_constraints")
+    __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attribute_refs", "property_constraints")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     ALLOWED_ACTIONS_FIELD_NUMBER: _ClassVar[int]
-    ALLOWED_ATTRIBUTES_FIELD_NUMBER: _ClassVar[int]
+    ALLOWED_ATTRIBUTE_REFS_FIELD_NUMBER: _ClassVar[int]
     PROPERTY_CONSTRAINTS_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     user_id: _identity_pb2.UserId
     role: _roles_pb2.Role
     allowed_actions: _containers.RepeatedScalarFieldContainer[_roles_pb2.PermissionAction]
-    allowed_attributes: _containers.RepeatedScalarFieldContainer[str]
+    allowed_attribute_refs: _containers.RepeatedCompositeFieldContainer[AttributeRef]
     property_constraints: _containers.RepeatedCompositeFieldContainer[PropertyConstraint]
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., allowed_actions: _Optional[_Iterable[_Union[_roles_pb2.PermissionAction, str]]] = ..., allowed_attributes: _Optional[_Iterable[str]] = ..., property_constraints: _Optional[_Iterable[_Union[PropertyConstraint, _Mapping]]] = ...) -> None: ...
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., allowed_actions: _Optional[_Iterable[_Union[_roles_pb2.PermissionAction, str]]] = ..., allowed_attribute_refs: _Optional[_Iterable[_Union[AttributeRef, _Mapping]]] = ..., property_constraints: _Optional[_Iterable[_Union[PropertyConstraint, _Mapping]]] = ...) -> None: ...
 
 class EffectivePermissions(_message.Message):
     __slots__ = ("user_id", "gateway_id", "device_acls", "valid_at")

@@ -41,7 +41,8 @@ export const matter_attribute = /*@__PURE__*/
  * types; empty on vendor extension messages, which have no Matter device type.
  *
  * A device type appears on at most one properties message, so the mapping from
- * DeviceDescriptor.matter_device_type_id to a Device.properties case is a function.
+ * EndpointDescriptor.matter_device_type_id to an Endpoint.properties case is a
+ * function.
  *
  * @generated from extension: repeated uint32 matter_device_type = 50003;
  */
