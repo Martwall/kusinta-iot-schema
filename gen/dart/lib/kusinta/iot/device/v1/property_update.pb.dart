@@ -316,7 +316,8 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   void clearEndpointId() => $_clearField(12);
 
   /// Set to route this update down the vendor branch of step 2, naming the extension by
-  /// its (vendor_extension) key — e.g. "homematic". Absent means the Matter branch, which
+  /// its (vendor_extension) key — e.g. "homematic.thermostat". Absent means the Matter
+  /// branch, which
   /// is what every update carried before this field existed.
   ///
   /// A vendor parameter has no Matter cluster, so cluster_id stays unset here.

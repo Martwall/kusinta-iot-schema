@@ -96,7 +96,7 @@ files — together they would form a package import cycle.
 | `(matter_attribute)` | properties field | Matter attribute name, e.g. `"PIROccupiedToUnoccupiedDelay"` |
 | `(matter_device_type)` | properties message | Matter device type IDs modelled, repeated |
 | `(vendor_attribute)` | vendor field | Vendor parameter in the vendor's own spelling, e.g. `"LEVEL"` |
-| `(vendor_extension)` | vendor message | Stable key selecting the extension, e.g. `"homematic"` |
+| `(vendor_extension)` | vendor message | Stable key selecting the extension, e.g. `"homematic.thermostat"` |
 
 A `PropertyUpdate` resolves in three steps, all read from the descriptor:
 

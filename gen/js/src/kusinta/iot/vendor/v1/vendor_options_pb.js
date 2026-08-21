@@ -37,6 +37,12 @@ export const vendor_attribute = /*@__PURE__*/
  * resolution rule is the same shape as the Matter branch: pick a message by a message
  * option, then one field by a field option. Nothing nests.
  *
+ * Form: "<vendor>.<what the message models>", lower_snake_case on both sides —
+ * "homematic.thermostat", and a humidity one would be "homematic.humidity_sensor". The
+ * vendor half alone is NOT a key: a vendor has one message per device type it extends,
+ * and two sharing a key would make the branch non-deterministic. A test asserts they
+ * are distinct, but it cannot tell you which of two is wrong, so keep to the form.
+ *
  * Not derived from the package or message name — this is the authoritative spelling,
  * exactly as matter_attribute is on the Matter side.
  *
