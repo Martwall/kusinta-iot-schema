@@ -39,6 +39,11 @@ properties belonging to it — a wall thermostat is a Thermostat *and* a Humidit
 4-channel actuator is four On/Off Lights, a battery valve is also a Power Source. Filing and
 ownership stay per physical device: `DeviceId`, claiming and placement are unaffected.
 
+`endpoint_id` is scoped to one device — an endpoint is identified by the pair
+`(DeviceId, endpoint_id)`, and nothing coordinates numbering between devices. Producers must
+keep it unique within the device and **stable for the device's life**: access grants reference
+the pair, so renumbering on restart silently retargets permissions rather than failing.
+
 `Device.endpoints` is the single endpoint list: each entry carries an `endpoint_id`, the Matter
 device type it presents, and what it has reported. `Device` travels on **both** legs — a
 connector announces one with `DeviceAnnouncement` — so there is one shape everywhere and no

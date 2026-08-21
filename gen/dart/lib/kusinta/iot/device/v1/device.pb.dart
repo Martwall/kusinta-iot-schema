@@ -51,15 +51,32 @@ enum Endpoint_Vendor { hmThermostat, notSet }
 /// Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
 /// extensions.
 ///
-/// endpoint_id is Matter's own endpoint number. Endpoint 0 is the Matter root node and
-/// carries BasicInformation, which DeviceDescriptor already holds — so 0 never appears
-/// here and a producer emitting it is wrong. Device endpoints are 1..n.
+/// endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
+/// global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
+/// endpoint 1 on another are unrelated; what identifies an endpoint is the pair
+/// (DeviceId, endpoint_id). PropertyUpdate carries device_id for exactly that reason.
 ///
-/// It MUST be stable for the life of the device. Access grants and property constraints
-/// reference it (see access/v1/acl.proto), so a connector that renumbers endpoints across
-/// a restart silently retargets permissions — a grant on channel 1 lands on channel 3.
-/// Derive it from something the upstream system holds stable, typically its own channel
-/// number, never from enumeration order.
+/// Endpoint 0 is the Matter root node and carries BasicInformation, which DeviceDescriptor
+/// already holds — so 0 never appears here and a producer emitting it is wrong. Device
+/// endpoints are 1..n.
+///
+/// Two producer obligations, neither enforceable by the schema:
+///
+///  1. UNIQUE within the device. Two entries sharing an endpoint_id make step 1 of the
+///     resolution rule ambiguous, and nothing rejects it.
+///  2. STABLE for the life of the device. This is the one that bites. Access grants and
+///     property constraints reference (DeviceId, endpoint_id) — see access/v1/acl.proto —
+///     so a connector that renumbers across a restart does not fail loudly, it silently
+///     retargets permissions: a grant on channel 1 starts applying to channel 3. A
+///     duplicate id produces visible nonsense quickly; renumbering produces a working
+///     system with the wrong permissions.
+///
+/// Where the number comes from depends on what is behind the connector. A Matter device
+/// declares its own: endpoint 0's Descriptor cluster carries a PartsList, and each
+/// endpoint's Descriptor a DeviceTypeList. A bridged non-Matter device has no Matter
+/// endpoints at all, so the connector must synthesise them — derive from something the
+/// upstream system holds stable, typically its own channel number, never from enumeration
+/// order.
 ///
 /// properties and vendor are separate oneofs on purpose. An endpoint carries its typed
 /// Matter properties AND its vendor extension — one oneof spanning both would make them
