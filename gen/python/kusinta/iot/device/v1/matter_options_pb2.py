@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*kusinta/iot/device/v1/matter_options.proto\x12\x15kusinta.iot.device.v1\x1a google/protobuf/descriptor.proto:K\n\x11matter_cluster_id\x12\x1d.google.protobuf.FieldOptions\x18\xd1\x86\x03 \x01(\rR\x0fmatterClusterId:J\n\x10matter_attribute\x12\x1d.google.protobuf.FieldOptions\x18\xd2\x86\x03 \x01(\tR\x0fmatterAttribute:O\n\x12matter_device_type\x12\x1f.google.protobuf.MessageOptions\x18\xd3\x86\x03 \x03(\rR\x10matterDeviceTypeB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*kusinta/iot/device/v1/matter_options.proto\x12\x15kusinta.iot.device.v1\x1a google/protobuf/descriptor.proto:K\n\x11matter_cluster_id\x12\x1d.google.protobuf.FieldOptions\x18\xd1\x86\x03 \x01(\rR\x0fmatterClusterId:J\n\x10matter_attribute\x12\x1d.google.protobuf.FieldOptions\x18\xd2\x86\x03 \x01(\tR\x0fmatterAttribute:O\n\x13matter_attribute_id\x12\x1d.google.protobuf.FieldOptions\x18\xd6\x86\x03 \x01(\rR\x11matterAttributeId:O\n\x12matter_device_type\x12\x1f.google.protobuf.MessageOptions\x18\xd3\x86\x03 \x03(\rR\x10matterDeviceTypeB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)

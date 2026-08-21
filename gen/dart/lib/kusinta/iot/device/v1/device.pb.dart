@@ -14,9 +14,10 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $3;
-import '../../vendor/homematic/v1/homematic.pb.dart' as $1;
-import 'descriptor.pb.dart' as $2;
+import '../../../../google/protobuf/timestamp.pb.dart' as $4;
+import '../../vendor/homematic/v1/homematic.pb.dart' as $2;
+import 'cluster_state.pb.dart' as $1;
+import 'descriptor.pb.dart' as $3;
 import 'properties.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -78,6 +79,10 @@ enum Endpoint_VendorProperties { hmThermostat, notSet }
 /// upstream system holds stable, typically its own channel number, never from enumeration
 /// order.
 ///
+/// A typed case and the generic clusters list are not alternatives. An endpoint uses its
+/// typed case for the attributes this schema models and clusters for everything else,
+/// including cluster metadata for the modelled ones. See cluster_state.proto.
+///
 /// matter_properties and vendor_properties are separate oneofs on purpose. An endpoint
 /// carries its typed Matter properties AND its vendor extension — one oneof spanning both
 /// would make them mutually exclusive, which left every vendor field unreachable in
@@ -101,7 +106,8 @@ class Endpoint extends $pb.GeneratedMessage {
     $0.EnergySensorProperties? energySensor,
     $0.PressureSensorProperties? pressureSensor,
     $0.PowerSourceProperties? powerSource,
-    $1.HmThermostatProps? hmThermostat,
+    $core.Iterable<$1.ClusterState>? clusters,
+    $2.HmThermostatProps? hmThermostat,
   }) {
     final result = create();
     if (endpointId != null) result.endpointId = endpointId;
@@ -120,6 +126,7 @@ class Endpoint extends $pb.GeneratedMessage {
     if (energySensor != null) result.energySensor = energySensor;
     if (pressureSensor != null) result.pressureSensor = pressureSensor;
     if (powerSource != null) result.powerSource = powerSource;
+    if (clusters != null) result.clusters.addAll(clusters);
     if (hmThermostat != null) result.hmThermostat = hmThermostat;
     return result;
   }
@@ -198,8 +205,11 @@ class Endpoint extends $pb.GeneratedMessage {
         subBuilder: $0.PressureSensorProperties.create)
     ..aOM<$0.PowerSourceProperties>(15, _omitFieldNames ? '' : 'powerSource',
         subBuilder: $0.PowerSourceProperties.create)
-    ..aOM<$1.HmThermostatProps>(50, _omitFieldNames ? '' : 'hmThermostat',
-        subBuilder: $1.HmThermostatProps.create)
+    ..pc<$1.ClusterState>(
+        16, _omitFieldNames ? '' : 'clusters', $pb.PbFieldType.PM,
+        subBuilder: $1.ClusterState.create)
+    ..aOM<$2.HmThermostatProps>(50, _omitFieldNames ? '' : 'hmThermostat',
+        subBuilder: $2.HmThermostatProps.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -394,16 +404,26 @@ class Endpoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $0.PowerSourceProperties ensurePowerSource() => $_ensure(14);
 
+  /// Every cluster this endpoint hosts: what it supports, and any attribute value that has
+  /// no typed field above. This is what makes a device the schema does not model usable
+  /// rather than silent — and what carries the optional clusters the Matter specification
+  /// lets an endpoint add beyond its device type's set.
+  ///
+  /// Field 16 rather than a one-byte number: 1-15 are spent on identity and the typed
+  /// cases, and a ClusterState's tag is amortised over the attributes it carries.
+  @$pb.TagNumber(16)
+  $pb.PbList<$1.ClusterState> get clusters => $_getList(15);
+
   @$pb.TagNumber(50)
-  $1.HmThermostatProps get hmThermostat => $_getN(15);
+  $2.HmThermostatProps get hmThermostat => $_getN(16);
   @$pb.TagNumber(50)
-  set hmThermostat($1.HmThermostatProps value) => $_setField(50, value);
+  set hmThermostat($2.HmThermostatProps value) => $_setField(50, value);
   @$pb.TagNumber(50)
-  $core.bool hasHmThermostat() => $_has(15);
+  $core.bool hasHmThermostat() => $_has(16);
   @$pb.TagNumber(50)
   void clearHmThermostat() => $_clearField(50);
   @$pb.TagNumber(50)
-  $1.HmThermostatProps ensureHmThermostat() => $_ensure(15);
+  $2.HmThermostatProps ensureHmThermostat() => $_ensure(16);
 }
 
 /// Device is a DeviceDescriptor plus the endpoints it presents.
@@ -420,10 +440,10 @@ class Endpoint extends $pb.GeneratedMessage {
 /// reported nothing yet. Keep the Device either way — it exists and belongs in a list.
 class Device extends $pb.GeneratedMessage {
   factory Device({
-    $2.DeviceDescriptor? descriptor,
+    $3.DeviceDescriptor? descriptor,
     $core.Iterable<Endpoint>? endpoints,
-    $3.Timestamp? lastSeen,
-    $3.Timestamp? lastUpdated,
+    $4.Timestamp? lastSeen,
+    $4.Timestamp? lastUpdated,
   }) {
     final result = create();
     if (descriptor != null) result.descriptor = descriptor;
@@ -447,14 +467,14 @@ class Device extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..aOM<$2.DeviceDescriptor>(1, _omitFieldNames ? '' : 'descriptor',
-        subBuilder: $2.DeviceDescriptor.create)
+    ..aOM<$3.DeviceDescriptor>(1, _omitFieldNames ? '' : 'descriptor',
+        subBuilder: $3.DeviceDescriptor.create)
     ..pc<Endpoint>(14, _omitFieldNames ? '' : 'endpoints', $pb.PbFieldType.PM,
         subBuilder: Endpoint.create)
-    ..aOM<$3.Timestamp>(20, _omitFieldNames ? '' : 'lastSeen',
-        subBuilder: $3.Timestamp.create)
-    ..aOM<$3.Timestamp>(21, _omitFieldNames ? '' : 'lastUpdated',
-        subBuilder: $3.Timestamp.create)
+    ..aOM<$4.Timestamp>(20, _omitFieldNames ? '' : 'lastSeen',
+        subBuilder: $4.Timestamp.create)
+    ..aOM<$4.Timestamp>(21, _omitFieldNames ? '' : 'lastUpdated',
+        subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -477,15 +497,15 @@ class Device extends $pb.GeneratedMessage {
   static Device? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.DeviceDescriptor get descriptor => $_getN(0);
+  $3.DeviceDescriptor get descriptor => $_getN(0);
   @$pb.TagNumber(1)
-  set descriptor($2.DeviceDescriptor value) => $_setField(1, value);
+  set descriptor($3.DeviceDescriptor value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDescriptor() => $_has(0);
   @$pb.TagNumber(1)
   void clearDescriptor() => $_clearField(1);
   @$pb.TagNumber(1)
-  $2.DeviceDescriptor ensureDescriptor() => $_ensure(0);
+  $3.DeviceDescriptor ensureDescriptor() => $_ensure(0);
 
   /// 15-19 are free; 20+ is the timestamp band.
   @$pb.TagNumber(14)
@@ -503,27 +523,27 @@ class Device extends $pb.GeneratedMessage {
   /// Advisory, for showing staleness in a UI. It is not a removal signal — that is
   /// webrtc.v1.DeviceRemoved, sent only when a connector reports the device gone.
   @$pb.TagNumber(20)
-  $3.Timestamp get lastSeen => $_getN(2);
+  $4.Timestamp get lastSeen => $_getN(2);
   @$pb.TagNumber(20)
-  set lastSeen($3.Timestamp value) => $_setField(20, value);
+  set lastSeen($4.Timestamp value) => $_setField(20, value);
   @$pb.TagNumber(20)
   $core.bool hasLastSeen() => $_has(2);
   @$pb.TagNumber(20)
   void clearLastSeen() => $_clearField(20);
   @$pb.TagNumber(20)
-  $3.Timestamp ensureLastSeen() => $_ensure(2);
+  $4.Timestamp ensureLastSeen() => $_ensure(2);
 
   /// When any field of this Device last changed value.
   @$pb.TagNumber(21)
-  $3.Timestamp get lastUpdated => $_getN(3);
+  $4.Timestamp get lastUpdated => $_getN(3);
   @$pb.TagNumber(21)
-  set lastUpdated($3.Timestamp value) => $_setField(21, value);
+  set lastUpdated($4.Timestamp value) => $_setField(21, value);
   @$pb.TagNumber(21)
   $core.bool hasLastUpdated() => $_has(3);
   @$pb.TagNumber(21)
   void clearLastUpdated() => $_clearField(21);
   @$pb.TagNumber(21)
-  $3.Timestamp ensureLastUpdated() => $_ensure(3);
+  $4.Timestamp ensureLastUpdated() => $_ensure(3);
 }
 
 const $core.bool _omitFieldNames =

@@ -136,28 +136,29 @@ const ThermostatProperties$json = {
 
 /// Descriptor for `ThermostatProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List thermostatPropertiesDescriptor = $convert.base64Decode(
-    'ChRUaGVybW9zdGF0UHJvcGVydGllcxJLChFsb2NhbF90ZW1wZXJhdHVyZRgBIAEoEUIZiLUYgQ'
-    'SStRgQTG9jYWxUZW1wZXJhdHVyZUgAUhBsb2NhbFRlbXBlcmF0dXJliAEBEmEKGW9jY3VwaWVk'
-    'X2hlYXRpbmdfc2V0cG9pbnQYAiABKBFCIIi1GIEEkrUYF09jY3VwaWVkSGVhdGluZ1NldHBvaW'
-    '50SAFSF29jY3VwaWVkSGVhdGluZ1NldHBvaW50iAEBEmEKGW9jY3VwaWVkX2Nvb2xpbmdfc2V0'
-    'cG9pbnQYAyABKBFCIIi1GIEEkrUYF09jY3VwaWVkQ29vbGluZ1NldHBvaW50SAJSF29jY3VwaW'
-    'VkQ29vbGluZ1NldHBvaW50iAEBElkKF21pbl9oZWF0X3NldHBvaW50X2xpbWl0GAQgASgRQh2I'
-    'tRiBBJK1GBRNaW5IZWF0U2V0cG9pbnRMaW1pdEgDUhRtaW5IZWF0U2V0cG9pbnRMaW1pdIgBAR'
-    'JZChdtYXhfaGVhdF9zZXRwb2ludF9saW1pdBgFIAEoEUIdiLUYgQSStRgUTWF4SGVhdFNldHBv'
-    'aW50TGltaXRIBFIUbWF4SGVhdFNldHBvaW50TGltaXSIAQESWQoXbWluX2Nvb2xfc2V0cG9pbn'
-    'RfbGltaXQYBiABKBFCHYi1GIEEkrUYFE1pbkNvb2xTZXRwb2ludExpbWl0SAVSFG1pbkNvb2xT'
-    'ZXRwb2ludExpbWl0iAEBElkKF21heF9jb29sX3NldHBvaW50X2xpbWl0GAcgASgRQh2ItRiBBJ'
-    'K1GBRNYXhDb29sU2V0cG9pbnRMaW1pdEgGUhRtYXhDb29sU2V0cG9pbnRMaW1pdIgBARJrCh1j'
-    'b250cm9sX3NlcXVlbmNlX29mX29wZXJhdGlvbhgIIAEoDUIjiLUYgQSStRgaQ29udHJvbFNlcX'
-    'VlbmNlT2ZPcGVyYXRpb25IB1IaY29udHJvbFNlcXVlbmNlT2ZPcGVyYXRpb26IAQESOQoLc3lz'
-    'dGVtX21vZGUYCSABKA1CE4i1GIEEkrUYClN5c3RlbU1vZGVICFIKc3lzdGVtTW9kZYgBARJbCh'
-    'd0aGVybW9zdGF0X3J1bm5pbmdfbW9kZRgKIAEoDUIeiLUYgQSStRgVVGhlcm1vc3RhdFJ1bm5p'
-    'bmdNb2RlSAlSFXRoZXJtb3N0YXRSdW5uaW5nTW9kZYgBAToGmrUYAoEGQhQKEl9sb2NhbF90ZW'
-    '1wZXJhdHVyZUIcChpfb2NjdXBpZWRfaGVhdGluZ19zZXRwb2ludEIcChpfb2NjdXBpZWRfY29v'
-    'bGluZ19zZXRwb2ludEIaChhfbWluX2hlYXRfc2V0cG9pbnRfbGltaXRCGgoYX21heF9oZWF0X3'
-    'NldHBvaW50X2xpbWl0QhoKGF9taW5fY29vbF9zZXRwb2ludF9saW1pdEIaChhfbWF4X2Nvb2xf'
-    'c2V0cG9pbnRfbGltaXRCIAoeX2NvbnRyb2xfc2VxdWVuY2Vfb2Zfb3BlcmF0aW9uQg4KDF9zeX'
-    'N0ZW1fbW9kZUIaChhfdGhlcm1vc3RhdF9ydW5uaW5nX21vZGU=');
+    'ChRUaGVybW9zdGF0UHJvcGVydGllcxJPChFsb2NhbF90ZW1wZXJhdHVyZRgBIAEoEUIdiLUYgQ'
+    'SStRgQTG9jYWxUZW1wZXJhdHVyZbC1GABIAFIQbG9jYWxUZW1wZXJhdHVyZYgBARJlChlvY2N1'
+    'cGllZF9oZWF0aW5nX3NldHBvaW50GAIgASgRQiSItRiBBJK1GBdPY2N1cGllZEhlYXRpbmdTZX'
+    'Rwb2ludLC1GBJIAVIXb2NjdXBpZWRIZWF0aW5nU2V0cG9pbnSIAQESZQoZb2NjdXBpZWRfY29v'
+    'bGluZ19zZXRwb2ludBgDIAEoEUIkiLUYgQSStRgXT2NjdXBpZWRDb29saW5nU2V0cG9pbnSwtR'
+    'gRSAJSF29jY3VwaWVkQ29vbGluZ1NldHBvaW50iAEBEl0KF21pbl9oZWF0X3NldHBvaW50X2xp'
+    'bWl0GAQgASgRQiGItRiBBJK1GBRNaW5IZWF0U2V0cG9pbnRMaW1pdLC1GBVIA1IUbWluSGVhdF'
+    'NldHBvaW50TGltaXSIAQESXQoXbWF4X2hlYXRfc2V0cG9pbnRfbGltaXQYBSABKBFCIYi1GIEE'
+    'krUYFE1heEhlYXRTZXRwb2ludExpbWl0sLUYFkgEUhRtYXhIZWF0U2V0cG9pbnRMaW1pdIgBAR'
+    'JdChdtaW5fY29vbF9zZXRwb2ludF9saW1pdBgGIAEoEUIhiLUYgQSStRgUTWluQ29vbFNldHBv'
+    'aW50TGltaXSwtRgXSAVSFG1pbkNvb2xTZXRwb2ludExpbWl0iAEBEl0KF21heF9jb29sX3NldH'
+    'BvaW50X2xpbWl0GAcgASgRQiGItRiBBJK1GBRNYXhDb29sU2V0cG9pbnRMaW1pdLC1GBhIBlIU'
+    'bWF4Q29vbFNldHBvaW50TGltaXSIAQESbwodY29udHJvbF9zZXF1ZW5jZV9vZl9vcGVyYXRpb2'
+    '4YCCABKA1CJ4i1GIEEkrUYGkNvbnRyb2xTZXF1ZW5jZU9mT3BlcmF0aW9usLUYG0gHUhpjb250'
+    'cm9sU2VxdWVuY2VPZk9wZXJhdGlvbogBARI9CgtzeXN0ZW1fbW9kZRgJIAEoDUIXiLUYgQSStR'
+    'gKU3lzdGVtTW9kZbC1GBxICFIKc3lzdGVtTW9kZYgBARJfChd0aGVybW9zdGF0X3J1bm5pbmdf'
+    'bW9kZRgKIAEoDUIiiLUYgQSStRgVVGhlcm1vc3RhdFJ1bm5pbmdNb2RlsLUYHkgJUhV0aGVybW'
+    '9zdGF0UnVubmluZ01vZGWIAQE6Bpq1GAKBBkIUChJfbG9jYWxfdGVtcGVyYXR1cmVCHAoaX29j'
+    'Y3VwaWVkX2hlYXRpbmdfc2V0cG9pbnRCHAoaX29jY3VwaWVkX2Nvb2xpbmdfc2V0cG9pbnRCGg'
+    'oYX21pbl9oZWF0X3NldHBvaW50X2xpbWl0QhoKGF9tYXhfaGVhdF9zZXRwb2ludF9saW1pdEIa'
+    'ChhfbWluX2Nvb2xfc2V0cG9pbnRfbGltaXRCGgoYX21heF9jb29sX3NldHBvaW50X2xpbWl0Qi'
+    'AKHl9jb250cm9sX3NlcXVlbmNlX29mX29wZXJhdGlvbkIOCgxfc3lzdGVtX21vZGVCGgoYX3Ro'
+    'ZXJtb3N0YXRfcnVubmluZ19tb2Rl');
 
 @$core.Deprecated('Use temperatureSensorPropertiesDescriptor instead')
 const TemperatureSensorProperties$json = {
@@ -215,14 +216,14 @@ const TemperatureSensorProperties$json = {
 
 /// Descriptor for `TemperatureSensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List temperatureSensorPropertiesDescriptor = $convert.base64Decode(
-    'ChtUZW1wZXJhdHVyZVNlbnNvclByb3BlcnRpZXMSQgoObWVhc3VyZWRfdmFsdWUYASABKBFCFo'
-    'i1GIIIkrUYDU1lYXN1cmVkVmFsdWVIAFINbWVhc3VyZWRWYWx1ZYgBARJMChJtaW5fbWVhc3Vy'
-    'ZWRfdmFsdWUYAiABKBFCGYi1GIIIkrUYEE1pbk1lYXN1cmVkVmFsdWVIAVIQbWluTWVhc3VyZW'
-    'RWYWx1ZYgBARJMChJtYXhfbWVhc3VyZWRfdmFsdWUYAyABKBFCGYi1GIIIkrUYEE1heE1lYXN1'
-    'cmVkVmFsdWVIAlIQbWF4TWVhc3VyZWRWYWx1ZYgBARI1Cgl0b2xlcmFuY2UYBCABKA1CEoi1GI'
-    'IIkrUYCVRvbGVyYW5jZUgDUgl0b2xlcmFuY2WIAQE6Bpq1GAKCBkIRCg9fbWVhc3VyZWRfdmFs'
-    'dWVCFQoTX21pbl9tZWFzdXJlZF92YWx1ZUIVChNfbWF4X21lYXN1cmVkX3ZhbHVlQgwKCl90b2'
-    'xlcmFuY2U=');
+    'ChtUZW1wZXJhdHVyZVNlbnNvclByb3BlcnRpZXMSRgoObWVhc3VyZWRfdmFsdWUYASABKBFCGo'
+    'i1GIIIkrUYDU1lYXN1cmVkVmFsdWWwtRgASABSDW1lYXN1cmVkVmFsdWWIAQESUAoSbWluX21l'
+    'YXN1cmVkX3ZhbHVlGAIgASgRQh2ItRiCCJK1GBBNaW5NZWFzdXJlZFZhbHVlsLUYAUgBUhBtaW'
+    '5NZWFzdXJlZFZhbHVliAEBElAKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoEUIdiLUYggiStRgQ'
+    'TWF4TWVhc3VyZWRWYWx1ZbC1GAJIAlIQbWF4TWVhc3VyZWRWYWx1ZYgBARI5Cgl0b2xlcmFuY2'
+    'UYBCABKA1CFoi1GIIIkrUYCVRvbGVyYW5jZbC1GANIA1IJdG9sZXJhbmNliAEBOgaatRgCggZC'
+    'EQoPX21lYXN1cmVkX3ZhbHVlQhUKE19taW5fbWVhc3VyZWRfdmFsdWVCFQoTX21heF9tZWFzdX'
+    'JlZF92YWx1ZUIMCgpfdG9sZXJhbmNl');
 
 @$core.Deprecated('Use humiditySensorPropertiesDescriptor instead')
 const HumiditySensorProperties$json = {
@@ -280,14 +281,14 @@ const HumiditySensorProperties$json = {
 
 /// Descriptor for `HumiditySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List humiditySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChhIdW1pZGl0eVNlbnNvclByb3BlcnRpZXMSQgoObWVhc3VyZWRfdmFsdWUYASABKA1CFoi1GI'
-    'UIkrUYDU1lYXN1cmVkVmFsdWVIAFINbWVhc3VyZWRWYWx1ZYgBARJMChJtaW5fbWVhc3VyZWRf'
-    'dmFsdWUYAiABKA1CGYi1GIUIkrUYEE1pbk1lYXN1cmVkVmFsdWVIAVIQbWluTWVhc3VyZWRWYW'
-    'x1ZYgBARJMChJtYXhfbWVhc3VyZWRfdmFsdWUYAyABKA1CGYi1GIUIkrUYEE1heE1lYXN1cmVk'
-    'VmFsdWVIAlIQbWF4TWVhc3VyZWRWYWx1ZYgBARI1Cgl0b2xlcmFuY2UYBCABKA1CEoi1GIUIkr'
-    'UYCVRvbGVyYW5jZUgDUgl0b2xlcmFuY2WIAQE6Bpq1GAKHBkIRCg9fbWVhc3VyZWRfdmFsdWVC'
-    'FQoTX21pbl9tZWFzdXJlZF92YWx1ZUIVChNfbWF4X21lYXN1cmVkX3ZhbHVlQgwKCl90b2xlcm'
-    'FuY2U=');
+    'ChhIdW1pZGl0eVNlbnNvclByb3BlcnRpZXMSRgoObWVhc3VyZWRfdmFsdWUYASABKA1CGoi1GI'
+    'UIkrUYDU1lYXN1cmVkVmFsdWWwtRgASABSDW1lYXN1cmVkVmFsdWWIAQESUAoSbWluX21lYXN1'
+    'cmVkX3ZhbHVlGAIgASgNQh2ItRiFCJK1GBBNaW5NZWFzdXJlZFZhbHVlsLUYAUgBUhBtaW5NZW'
+    'FzdXJlZFZhbHVliAEBElAKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoDUIdiLUYhQiStRgQTWF4'
+    'TWVhc3VyZWRWYWx1ZbC1GAJIAlIQbWF4TWVhc3VyZWRWYWx1ZYgBARI5Cgl0b2xlcmFuY2UYBC'
+    'ABKA1CFoi1GIUIkrUYCVRvbGVyYW5jZbC1GANIA1IJdG9sZXJhbmNliAEBOgaatRgChwZCEQoP'
+    'X21lYXN1cmVkX3ZhbHVlQhUKE19taW5fbWVhc3VyZWRfdmFsdWVCFQoTX21heF9tZWFzdXJlZF'
+    '92YWx1ZUIMCgpfdG9sZXJhbmNl');
 
 @$core.Deprecated('Use occupancySensorPropertiesDescriptor instead')
 const OccupancySensorProperties$json = {
@@ -357,19 +358,20 @@ const OccupancySensorProperties$json = {
 
 /// Descriptor for `OccupancySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List occupancySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChlPY2N1cGFuY3lTZW5zb3JQcm9wZXJ0aWVzEjUKCW9jY3VwYW5jeRgBIAEoDUISiLUYhgiStR'
-    'gJT2NjdXBhbmN5SABSCW9jY3VwYW5jeYgBARJVChVvY2N1cGFuY3lfc2Vuc29yX3R5cGUYAiAB'
-    'KA1CHIi1GIYIkrUYE09jY3VwYW5jeVNlbnNvclR5cGVIAVITb2NjdXBhbmN5U2Vuc29yVHlwZY'
-    'gBARJoChxvY2N1cGFuY3lfc2Vuc29yX3R5cGVfYml0bWFwGAMgASgNQiKItRiGCJK1GBlPY2N1'
-    'cGFuY3lTZW5zb3JUeXBlQml0bWFwSAJSGW9jY3VwYW5jeVNlbnNvclR5cGVCaXRtYXCIAQEScg'
-    'ogcGlyX29jY3VwaWVkX3RvX3Vub2NjdXBpZWRfZGVsYXkYBCABKA1CJYi1GIYIkrUYHFBJUk9j'
-    'Y3VwaWVkVG9Vbm9jY3VwaWVkRGVsYXlIA1IccGlyT2NjdXBpZWRUb1Vub2NjdXBpZWREZWxheY'
-    'gBARJyCiBwaXJfdW5vY2N1cGllZF90b19vY2N1cGllZF9kZWxheRgFIAEoDUIliLUYhgiStRgc'
-    'UElSVW5vY2N1cGllZFRvT2NjdXBpZWREZWxheUgEUhxwaXJVbm9jY3VwaWVkVG9PY2N1cGllZE'
-    'RlbGF5iAEBOgaatRgChwJCDAoKX29jY3VwYW5jeUIYChZfb2NjdXBhbmN5X3NlbnNvcl90eXBl'
-    'Qh8KHV9vY2N1cGFuY3lfc2Vuc29yX3R5cGVfYml0bWFwQiMKIV9waXJfb2NjdXBpZWRfdG9fdW'
-    '5vY2N1cGllZF9kZWxheUIjCiFfcGlyX3Vub2NjdXBpZWRfdG9fb2NjdXBpZWRfZGVsYXlSFnBp'
-    'cl9vY2NfdG9fdW5vY2NfZGVsYXlSFnBpcl91bm9jY190b19vY2NfZGVsYXk=');
+    'ChlPY2N1cGFuY3lTZW5zb3JQcm9wZXJ0aWVzEjkKCW9jY3VwYW5jeRgBIAEoDUIWiLUYhgiStR'
+    'gJT2NjdXBhbmN5sLUYAEgAUglvY2N1cGFuY3mIAQESWQoVb2NjdXBhbmN5X3NlbnNvcl90eXBl'
+    'GAIgASgNQiCItRiGCJK1GBNPY2N1cGFuY3lTZW5zb3JUeXBlsLUYAUgBUhNvY2N1cGFuY3lTZW'
+    '5zb3JUeXBliAEBEmwKHG9jY3VwYW5jeV9zZW5zb3JfdHlwZV9iaXRtYXAYAyABKA1CJoi1GIYI'
+    'krUYGU9jY3VwYW5jeVNlbnNvclR5cGVCaXRtYXCwtRgCSAJSGW9jY3VwYW5jeVNlbnNvclR5cG'
+    'VCaXRtYXCIAQESdgogcGlyX29jY3VwaWVkX3RvX3Vub2NjdXBpZWRfZGVsYXkYBCABKA1CKYi1'
+    'GIYIkrUYHFBJUk9jY3VwaWVkVG9Vbm9jY3VwaWVkRGVsYXmwtRgQSANSHHBpck9jY3VwaWVkVG'
+    '9Vbm9jY3VwaWVkRGVsYXmIAQESdgogcGlyX3Vub2NjdXBpZWRfdG9fb2NjdXBpZWRfZGVsYXkY'
+    'BSABKA1CKYi1GIYIkrUYHFBJUlVub2NjdXBpZWRUb09jY3VwaWVkRGVsYXmwtRgRSARSHHBpcl'
+    'Vub2NjdXBpZWRUb09jY3VwaWVkRGVsYXmIAQE6Bpq1GAKHAkIMCgpfb2NjdXBhbmN5QhgKFl9v'
+    'Y2N1cGFuY3lfc2Vuc29yX3R5cGVCHwodX29jY3VwYW5jeV9zZW5zb3JfdHlwZV9iaXRtYXBCIw'
+    'ohX3Bpcl9vY2N1cGllZF90b191bm9jY3VwaWVkX2RlbGF5QiMKIV9waXJfdW5vY2N1cGllZF90'
+    'b19vY2N1cGllZF9kZWxheVIWcGlyX29jY190b191bm9jY19kZWxheVIWcGlyX3Vub2NjX3RvX2'
+    '9jY19kZWxheQ==');
 
 @$core.Deprecated('Use contactSensorPropertiesDescriptor instead')
 const ContactSensorProperties$json = {
@@ -394,8 +396,8 @@ const ContactSensorProperties$json = {
 
 /// Descriptor for `ContactSensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contactSensorPropertiesDescriptor = $convert.base64Decode(
-    'ChdDb250YWN0U2Vuc29yUHJvcGVydGllcxI4CgtzdGF0ZV92YWx1ZRgBIAEoCEISiLUYRZK1GA'
-    'pTdGF0ZVZhbHVlSABSCnN0YXRlVmFsdWWIAQE6BZq1GAEVQg4KDF9zdGF0ZV92YWx1ZQ==');
+    'ChdDb250YWN0U2Vuc29yUHJvcGVydGllcxI8CgtzdGF0ZV92YWx1ZRgBIAEoCEIWiLUYRZK1GA'
+    'pTdGF0ZVZhbHVlsLUYAEgAUgpzdGF0ZVZhbHVliAEBOgWatRgBFUIOCgxfc3RhdGVfdmFsdWU=');
 
 @$core.Deprecated('Use windowCoveringPropertiesDescriptor instead')
 const WindowCoveringProperties$json = {
@@ -497,25 +499,25 @@ const WindowCoveringProperties$json = {
 
 /// Descriptor for `WindowCoveringProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List windowCoveringPropertiesDescriptor = $convert.base64Decode(
-    'ChhXaW5kb3dDb3ZlcmluZ1Byb3BlcnRpZXMSNwoNY292ZXJpbmdfdHlwZRgBIAEoDUINiLUYgg'
-    'KStRgEVHlwZUgAUgxjb3ZlcmluZ1R5cGWIAQESfQojY3VycmVudF9wb3NpdGlvbl9saWZ0X3Bl'
-    'cmNlbnQxMDB0aHMYAiABKA1CKYi1GIICkrUYIEN1cnJlbnRQb3NpdGlvbkxpZnRQZXJjZW50MT'
-    'AwdGhzSAFSIGN1cnJlbnRQb3NpdGlvbkxpZnRQZXJjZW50MTAwdGhziAEBEn0KI2N1cnJlbnRf'
-    'cG9zaXRpb25fdGlsdF9wZXJjZW50MTAwdGhzGAMgASgNQimItRiCApK1GCBDdXJyZW50UG9zaX'
-    'Rpb25UaWx0UGVyY2VudDEwMHRoc0gCUiBjdXJyZW50UG9zaXRpb25UaWx0UGVyY2VudDEwMHRo'
-    'c4gBARJ6CiJ0YXJnZXRfcG9zaXRpb25fbGlmdF9wZXJjZW50MTAwdGhzGAQgASgNQiiItRiCAp'
-    'K1GB9UYXJnZXRQb3NpdGlvbkxpZnRQZXJjZW50MTAwdGhzSANSH3RhcmdldFBvc2l0aW9uTGlm'
-    'dFBlcmNlbnQxMDB0aHOIAQESegoidGFyZ2V0X3Bvc2l0aW9uX3RpbHRfcGVyY2VudDEwMHRocx'
-    'gFIAEoDUIoiLUYggKStRgfVGFyZ2V0UG9zaXRpb25UaWx0UGVyY2VudDEwMHRoc0gEUh90YXJn'
-    'ZXRQb3NpdGlvblRpbHRQZXJjZW50MTAwdGhziAEBEk4KEm9wZXJhdGlvbmFsX3N0YXR1cxgGIA'
-    'EoDUIaiLUYggKStRgRT3BlcmF0aW9uYWxTdGF0dXNIBVIRb3BlcmF0aW9uYWxTdGF0dXOIAQES'
-    'RgoQZW5kX3Byb2R1Y3RfdHlwZRgHIAEoDUIXiLUYggKStRgORW5kUHJvZHVjdFR5cGVIBlIOZW'
-    '5kUHJvZHVjdFR5cGWIAQESJgoEbW9kZRgIIAEoDUINiLUYggKStRgETW9kZUgHUgRtb2RliAEB'
-    'OgaatRgCggRCEAoOX2NvdmVyaW5nX3R5cGVCJgokX2N1cnJlbnRfcG9zaXRpb25fbGlmdF9wZX'
-    'JjZW50MTAwdGhzQiYKJF9jdXJyZW50X3Bvc2l0aW9uX3RpbHRfcGVyY2VudDEwMHRoc0IlCiNf'
-    'dGFyZ2V0X3Bvc2l0aW9uX2xpZnRfcGVyY2VudDEwMHRoc0IlCiNfdGFyZ2V0X3Bvc2l0aW9uX3'
-    'RpbHRfcGVyY2VudDEwMHRoc0IVChNfb3BlcmF0aW9uYWxfc3RhdHVzQhMKEV9lbmRfcHJvZHVj'
-    'dF90eXBlQgcKBV9tb2Rl');
+    'ChhXaW5kb3dDb3ZlcmluZ1Byb3BlcnRpZXMSOwoNY292ZXJpbmdfdHlwZRgBIAEoDUIRiLUYgg'
+    'KStRgEVHlwZbC1GABIAFIMY292ZXJpbmdUeXBliAEBEoEBCiNjdXJyZW50X3Bvc2l0aW9uX2xp'
+    'ZnRfcGVyY2VudDEwMHRocxgCIAEoDUItiLUYggKStRggQ3VycmVudFBvc2l0aW9uTGlmdFBlcm'
+    'NlbnQxMDB0aHOwtRgOSAFSIGN1cnJlbnRQb3NpdGlvbkxpZnRQZXJjZW50MTAwdGhziAEBEoEB'
+    'CiNjdXJyZW50X3Bvc2l0aW9uX3RpbHRfcGVyY2VudDEwMHRocxgDIAEoDUItiLUYggKStRggQ3'
+    'VycmVudFBvc2l0aW9uVGlsdFBlcmNlbnQxMDB0aHOwtRgPSAJSIGN1cnJlbnRQb3NpdGlvblRp'
+    'bHRQZXJjZW50MTAwdGhziAEBEn4KInRhcmdldF9wb3NpdGlvbl9saWZ0X3BlcmNlbnQxMDB0aH'
+    'MYBCABKA1CLIi1GIICkrUYH1RhcmdldFBvc2l0aW9uTGlmdFBlcmNlbnQxMDB0aHOwtRgLSANS'
+    'H3RhcmdldFBvc2l0aW9uTGlmdFBlcmNlbnQxMDB0aHOIAQESfgoidGFyZ2V0X3Bvc2l0aW9uX3'
+    'RpbHRfcGVyY2VudDEwMHRocxgFIAEoDUIsiLUYggKStRgfVGFyZ2V0UG9zaXRpb25UaWx0UGVy'
+    'Y2VudDEwMHRoc7C1GAxIBFIfdGFyZ2V0UG9zaXRpb25UaWx0UGVyY2VudDEwMHRoc4gBARJSCh'
+    'JvcGVyYXRpb25hbF9zdGF0dXMYBiABKA1CHoi1GIICkrUYEU9wZXJhdGlvbmFsU3RhdHVzsLUY'
+    'CkgFUhFvcGVyYXRpb25hbFN0YXR1c4gBARJKChBlbmRfcHJvZHVjdF90eXBlGAcgASgNQhuItR'
+    'iCApK1GA5FbmRQcm9kdWN0VHlwZbC1GA1IBlIOZW5kUHJvZHVjdFR5cGWIAQESKgoEbW9kZRgI'
+    'IAEoDUIRiLUYggKStRgETW9kZbC1GBdIB1IEbW9kZYgBAToGmrUYAoIEQhAKDl9jb3ZlcmluZ1'
+    '90eXBlQiYKJF9jdXJyZW50X3Bvc2l0aW9uX2xpZnRfcGVyY2VudDEwMHRoc0ImCiRfY3VycmVu'
+    'dF9wb3NpdGlvbl90aWx0X3BlcmNlbnQxMDB0aHNCJQojX3RhcmdldF9wb3NpdGlvbl9saWZ0X3'
+    'BlcmNlbnQxMDB0aHNCJQojX3RhcmdldF9wb3NpdGlvbl90aWx0X3BlcmNlbnQxMDB0aHNCFQoT'
+    'X29wZXJhdGlvbmFsX3N0YXR1c0ITChFfZW5kX3Byb2R1Y3RfdHlwZUIHCgVfbW9kZQ==');
 
 @$core.Deprecated('Use doorLockPropertiesDescriptor instead')
 const DoorLockProperties$json = {
@@ -584,14 +586,14 @@ const DoorLockProperties$json = {
 
 /// Descriptor for `DoorLockProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List doorLockPropertiesDescriptor = $convert.base64Decode(
-    'ChJEb29yTG9ja1Byb3BlcnRpZXMSNgoKbG9ja19zdGF0ZRgBIAEoDUISiLUYgQKStRgJTG9ja1'
-    'N0YXRlSABSCWxvY2tTdGF0ZYgBARIzCglsb2NrX3R5cGUYAiABKA1CEYi1GIECkrUYCExvY2tU'
-    'eXBlSAFSCGxvY2tUeXBliAEBEkgKEGFjdHVhdG9yX2VuYWJsZWQYAyABKAhCGIi1GIECkrUYD0'
-    'FjdHVhdG9yRW5hYmxlZEgCUg9hY3R1YXRvckVuYWJsZWSIAQESNgoKZG9vcl9zdGF0ZRgEIAEo'
-    'DUISiLUYgQKStRgJRG9vclN0YXRlSANSCWRvb3JTdGF0ZYgBARJCCg5vcGVyYXRpbmdfbW9kZR'
-    'gFIAEoDUIWiLUYgQKStRgNT3BlcmF0aW5nTW9kZUgEUg1vcGVyYXRpbmdNb2RliAEBOgWatRgB'
-    'CkINCgtfbG9ja19zdGF0ZUIMCgpfbG9ja190eXBlQhMKEV9hY3R1YXRvcl9lbmFibGVkQg0KC1'
-    '9kb29yX3N0YXRlQhEKD19vcGVyYXRpbmdfbW9kZQ==');
+    'ChJEb29yTG9ja1Byb3BlcnRpZXMSOgoKbG9ja19zdGF0ZRgBIAEoDUIWiLUYgQKStRgJTG9ja1'
+    'N0YXRlsLUYAEgAUglsb2NrU3RhdGWIAQESNwoJbG9ja190eXBlGAIgASgNQhWItRiBApK1GAhM'
+    'b2NrVHlwZbC1GAFIAVIIbG9ja1R5cGWIAQESTAoQYWN0dWF0b3JfZW5hYmxlZBgDIAEoCEIciL'
+    'UYgQKStRgPQWN0dWF0b3JFbmFibGVksLUYAkgCUg9hY3R1YXRvckVuYWJsZWSIAQESOgoKZG9v'
+    'cl9zdGF0ZRgEIAEoDUIWiLUYgQKStRgJRG9vclN0YXRlsLUYA0gDUglkb29yU3RhdGWIAQESRg'
+    'oOb3BlcmF0aW5nX21vZGUYBSABKA1CGoi1GIECkrUYDU9wZXJhdGluZ01vZGWwtRglSARSDW9w'
+    'ZXJhdGluZ01vZGWIAQE6BZq1GAEKQg0KC19sb2NrX3N0YXRlQgwKCl9sb2NrX3R5cGVCEwoRX2'
+    'FjdHVhdG9yX2VuYWJsZWRCDQoLX2Rvb3Jfc3RhdGVCEQoPX29wZXJhdGluZ19tb2Rl');
 
 @$core.Deprecated('Use onOffLightPropertiesDescriptor instead')
 const OnOffLightProperties$json = {
@@ -660,14 +662,14 @@ const OnOffLightProperties$json = {
 
 /// Descriptor for `OnOffLightProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List onOffLightPropertiesDescriptor = $convert.base64Decode(
-    'ChRPbk9mZkxpZ2h0UHJvcGVydGllcxIpCgZvbl9vZmYYASABKAhCDYi1GAaStRgFT25PZmZIAF'
-    'IFb25PZmaIAQESUQoUZ2xvYmFsX3NjZW5lX2NvbnRyb2wYAiABKAhCGoi1GAaStRgSR2xvYmFs'
-    'U2NlbmVDb250cm9sSAFSEmdsb2JhbFNjZW5lQ29udHJvbIgBARIsCgdvbl90aW1lGAMgASgNQg'
-    '6ItRgGkrUYBk9uVGltZUgCUgZvblRpbWWIAQESPAoNb2ZmX3dhaXRfdGltZRgEIAEoDUITiLUY'
-    'BpK1GAtPZmZXYWl0VGltZUgDUgtvZmZXYWl0VGltZYgBARJACg9zdGFydF91cF9vbl9vZmYYBS'
-    'ABKA1CFIi1GAaStRgMU3RhcnRVcE9uT2ZmSARSDHN0YXJ0VXBPbk9mZogBAToGmrUYAoACQgkK'
-    'B19vbl9vZmZCFwoVX2dsb2JhbF9zY2VuZV9jb250cm9sQgoKCF9vbl90aW1lQhAKDl9vZmZfd2'
-    'FpdF90aW1lQhIKEF9zdGFydF91cF9vbl9vZmY=');
+    'ChRPbk9mZkxpZ2h0UHJvcGVydGllcxItCgZvbl9vZmYYASABKAhCEYi1GAaStRgFT25PZmawtR'
+    'gASABSBW9uT2ZmiAEBElcKFGdsb2JhbF9zY2VuZV9jb250cm9sGAIgASgIQiCItRgGkrUYEkds'
+    'b2JhbFNjZW5lQ29udHJvbLC1GICAAUgBUhJnbG9iYWxTY2VuZUNvbnRyb2yIAQESMgoHb25fdG'
+    'ltZRgDIAEoDUIUiLUYBpK1GAZPblRpbWWwtRiBgAFIAlIGb25UaW1liAEBEkIKDW9mZl93YWl0'
+    'X3RpbWUYBCABKA1CGYi1GAaStRgLT2ZmV2FpdFRpbWWwtRiCgAFIA1ILb2ZmV2FpdFRpbWWIAQ'
+    'ESRgoPc3RhcnRfdXBfb25fb2ZmGAUgASgNQhqItRgGkrUYDFN0YXJ0VXBPbk9mZrC1GIOAAUgE'
+    'UgxzdGFydFVwT25PZmaIAQE6Bpq1GAKAAkIJCgdfb25fb2ZmQhcKFV9nbG9iYWxfc2NlbmVfY2'
+    '9udHJvbEIKCghfb25fdGltZUIQCg5fb2ZmX3dhaXRfdGltZUISChBfc3RhcnRfdXBfb25fb2Zm');
 
 @$core.Deprecated('Use dimmableLightPropertiesDescriptor instead')
 const DimmableLightProperties$json = {
@@ -758,17 +760,17 @@ const DimmableLightProperties$json = {
 
 /// Descriptor for `DimmableLightProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List dimmableLightPropertiesDescriptor = $convert.base64Decode(
-    'ChdEaW1tYWJsZUxpZ2h0UHJvcGVydGllcxIpCgZvbl9vZmYYASABKAhCDYi1GAaStRgFT25PZm'
-    'ZIAFIFb25PZmaIAQESPgoNY3VycmVudF9sZXZlbBgCIAEoDUIUiLUYCJK1GAxDdXJyZW50TGV2'
-    'ZWxIAVIMY3VycmVudExldmVsiAEBEjIKCW1pbl9sZXZlbBgDIAEoDUIQiLUYCJK1GAhNaW5MZX'
-    'ZlbEgCUghtaW5MZXZlbIgBARIyCgltYXhfbGV2ZWwYBCABKA1CEIi1GAiStRgITWF4TGV2ZWxI'
-    'A1IIbWF4TGV2ZWyIAQESLwoIb25fbGV2ZWwYBSABKA1CD4i1GAiStRgHT25MZXZlbEgEUgdvbk'
-    'xldmVsiAEBElUKFnN0YXJ0X3VwX2N1cnJlbnRfbGV2ZWwYBiABKA1CG4i1GAiStRgTU3RhcnRV'
-    'cEN1cnJlbnRMZXZlbEgFUhNzdGFydFVwQ3VycmVudExldmVsiAEBEkEKDnJlbWFpbmluZ190aW'
-    '1lGAcgASgNQhWItRgIkrUYDVJlbWFpbmluZ1RpbWVIBlINcmVtYWluaW5nVGltZYgBAToGmrUY'
-    'AoECQgkKB19vbl9vZmZCEAoOX2N1cnJlbnRfbGV2ZWxCDAoKX21pbl9sZXZlbEIMCgpfbWF4X2'
-    'xldmVsQgsKCV9vbl9sZXZlbEIZChdfc3RhcnRfdXBfY3VycmVudF9sZXZlbEIRCg9fcmVtYWlu'
-    'aW5nX3RpbWU=');
+    'ChdEaW1tYWJsZUxpZ2h0UHJvcGVydGllcxItCgZvbl9vZmYYASABKAhCEYi1GAaStRgFT25PZm'
+    'awtRgASABSBW9uT2ZmiAEBEkIKDWN1cnJlbnRfbGV2ZWwYAiABKA1CGIi1GAiStRgMQ3VycmVu'
+    'dExldmVssLUYAEgBUgxjdXJyZW50TGV2ZWyIAQESNgoJbWluX2xldmVsGAMgASgNQhSItRgIkr'
+    'UYCE1pbkxldmVssLUYAkgCUghtaW5MZXZlbIgBARI2CgltYXhfbGV2ZWwYBCABKA1CFIi1GAiS'
+    'tRgITWF4TGV2ZWywtRgDSANSCG1heExldmVsiAEBEjMKCG9uX2xldmVsGAUgASgNQhOItRgIkr'
+    'UYB09uTGV2ZWywtRgRSARSB29uTGV2ZWyIAQESWwoWc3RhcnRfdXBfY3VycmVudF9sZXZlbBgG'
+    'IAEoDUIhiLUYCJK1GBNTdGFydFVwQ3VycmVudExldmVssLUYgIABSAVSE3N0YXJ0VXBDdXJyZW'
+    '50TGV2ZWyIAQESRQoOcmVtYWluaW5nX3RpbWUYByABKA1CGYi1GAiStRgNUmVtYWluaW5nVGlt'
+    'ZbC1GAFIBlINcmVtYWluaW5nVGltZYgBAToGmrUYAoECQgkKB19vbl9vZmZCEAoOX2N1cnJlbn'
+    'RfbGV2ZWxCDAoKX21pbl9sZXZlbEIMCgpfbWF4X2xldmVsQgsKCV9vbl9sZXZlbEIZChdfc3Rh'
+    'cnRfdXBfY3VycmVudF9sZXZlbEIRCg9fcmVtYWluaW5nX3RpbWU=');
 
 @$core.Deprecated('Use colorTemperatureLightPropertiesDescriptor instead')
 const ColorTemperatureLightProperties$json = {
@@ -859,21 +861,22 @@ const ColorTemperatureLightProperties$json = {
 
 /// Descriptor for `ColorTemperatureLightProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List colorTemperatureLightPropertiesDescriptor = $convert.base64Decode(
-    'Ch9Db2xvclRlbXBlcmF0dXJlTGlnaHRQcm9wZXJ0aWVzEikKBm9uX29mZhgBIAEoCEINiLUYBp'
-    'K1GAVPbk9mZkgAUgVvbk9mZogBARI+Cg1jdXJyZW50X2xldmVsGAIgASgNQhSItRgIkrUYDEN1'
-    'cnJlbnRMZXZlbEgBUgxjdXJyZW50TGV2ZWyIAQESXgoYY29sb3JfdGVtcGVyYXR1cmVfbWlyZW'
-    'RzGAMgASgNQh+ItRiABpK1GBZDb2xvclRlbXBlcmF0dXJlTWlyZWRzSAJSFmNvbG9yVGVtcGVy'
-    'YXR1cmVNaXJlZHOIAQESbAoeY29sb3JfdGVtcF9waHlzaWNhbF9taW5fbWlyZWRzGAQgASgNQi'
-    'OItRiABpK1GBpDb2xvclRlbXBQaHlzaWNhbE1pbk1pcmVkc0gDUhpjb2xvclRlbXBQaHlzaWNh'
-    'bE1pbk1pcmVkc4gBARJsCh5jb2xvcl90ZW1wX3BoeXNpY2FsX21heF9taXJlZHMYBSABKA1CI4'
-    'i1GIAGkrUYGkNvbG9yVGVtcFBoeXNpY2FsTWF4TWlyZWRzSARSGmNvbG9yVGVtcFBoeXNpY2Fs'
-    'TWF4TWlyZWRziAEBEnQKIHN0YXJ0dXBfY29sb3JfdGVtcGVyYXR1cmVfbWlyZWRzGAYgASgNQi'
-    'aItRiABpK1GB1TdGFydFVwQ29sb3JUZW1wZXJhdHVyZU1pcmVkc0gFUh1zdGFydHVwQ29sb3JU'
-    'ZW1wZXJhdHVyZU1pcmVkc4gBARI2Cgpjb2xvcl9tb2RlGAcgASgNQhKItRiABpK1GAlDb2xvck'
-    '1vZGVIBlIJY29sb3JNb2RliAEBOgaatRgCjAJCCQoHX29uX29mZkIQCg5fY3VycmVudF9sZXZl'
-    'bEIbChlfY29sb3JfdGVtcGVyYXR1cmVfbWlyZWRzQiEKH19jb2xvcl90ZW1wX3BoeXNpY2FsX2'
-    '1pbl9taXJlZHNCIQofX2NvbG9yX3RlbXBfcGh5c2ljYWxfbWF4X21pcmVkc0IjCiFfc3RhcnR1'
-    'cF9jb2xvcl90ZW1wZXJhdHVyZV9taXJlZHNCDQoLX2NvbG9yX21vZGU=');
+    'Ch9Db2xvclRlbXBlcmF0dXJlTGlnaHRQcm9wZXJ0aWVzEi0KBm9uX29mZhgBIAEoCEIRiLUYBp'
+    'K1GAVPbk9mZrC1GABIAFIFb25PZmaIAQESQgoNY3VycmVudF9sZXZlbBgCIAEoDUIYiLUYCJK1'
+    'GAxDdXJyZW50TGV2ZWywtRgASAFSDGN1cnJlbnRMZXZlbIgBARJiChhjb2xvcl90ZW1wZXJhdH'
+    'VyZV9taXJlZHMYAyABKA1CI4i1GIAGkrUYFkNvbG9yVGVtcGVyYXR1cmVNaXJlZHOwtRgHSAJS'
+    'FmNvbG9yVGVtcGVyYXR1cmVNaXJlZHOIAQEScgoeY29sb3JfdGVtcF9waHlzaWNhbF9taW5fbW'
+    'lyZWRzGAQgASgNQimItRiABpK1GBpDb2xvclRlbXBQaHlzaWNhbE1pbk1pcmVkc7C1GIuAAUgD'
+    'Uhpjb2xvclRlbXBQaHlzaWNhbE1pbk1pcmVkc4gBARJyCh5jb2xvcl90ZW1wX3BoeXNpY2FsX2'
+    '1heF9taXJlZHMYBSABKA1CKYi1GIAGkrUYGkNvbG9yVGVtcFBoeXNpY2FsTWF4TWlyZWRzsLUY'
+    'jIABSARSGmNvbG9yVGVtcFBoeXNpY2FsTWF4TWlyZWRziAEBEnoKIHN0YXJ0dXBfY29sb3JfdG'
+    'VtcGVyYXR1cmVfbWlyZWRzGAYgASgNQiyItRiABpK1GB1TdGFydFVwQ29sb3JUZW1wZXJhdHVy'
+    'ZU1pcmVkc7C1GJCAAUgFUh1zdGFydHVwQ29sb3JUZW1wZXJhdHVyZU1pcmVkc4gBARI6Cgpjb2'
+    'xvcl9tb2RlGAcgASgNQhaItRiABpK1GAlDb2xvck1vZGWwtRgISAZSCWNvbG9yTW9kZYgBAToG'
+    'mrUYAowCQgkKB19vbl9vZmZCEAoOX2N1cnJlbnRfbGV2ZWxCGwoZX2NvbG9yX3RlbXBlcmF0dX'
+    'JlX21pcmVkc0IhCh9fY29sb3JfdGVtcF9waHlzaWNhbF9taW5fbWlyZWRzQiEKH19jb2xvcl90'
+    'ZW1wX3BoeXNpY2FsX21heF9taXJlZHNCIwohX3N0YXJ0dXBfY29sb3JfdGVtcGVyYXR1cmVfbW'
+    'lyZWRzQg0KC19jb2xvcl9tb2Rl');
 
 @$core.Deprecated('Use energySensorPropertiesDescriptor instead')
 const EnergySensorProperties$json = {
@@ -938,14 +941,14 @@ const EnergySensorProperties$json = {
 
 /// Descriptor for `EnergySensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List energySensorPropertiesDescriptor = $convert.base64Decode(
-    'ChZFbmVyZ3lTZW5zb3JQcm9wZXJ0aWVzEjwKDGFjdGl2ZV9wb3dlchgFIAEoEkIUiLUYkAGStR'
-    'gLQWN0aXZlUG93ZXJIAFILYWN0aXZlUG93ZXKIAQESLwoHdm9sdGFnZRgGIAEoEkIQiLUYkAGS'
-    'tRgHVm9sdGFnZUgBUgd2b2x0YWdliAEBEkIKDmFjdGl2ZV9jdXJyZW50GAcgASgSQhaItRiQAZ'
-    'K1GA1BY3RpdmVDdXJyZW50SAJSDWFjdGl2ZUN1cnJlbnSIAQESNQoJZnJlcXVlbmN5GAggASgS'
-    'QhKItRiQAZK1GAlGcmVxdWVuY3lIA1IJZnJlcXVlbmN5iAEBOgaatRgCkApCDwoNX2FjdGl2ZV'
-    '9wb3dlckIKCghfdm9sdGFnZUIRCg9fYWN0aXZlX2N1cnJlbnRCDAoKX2ZyZXF1ZW5jeUoECAEQ'
-    'AkoECAIQA0oECAMQBEoECAQQBVILcm1zX3ZvbHRhZ2VSC3Jtc19jdXJyZW50UgxhY19mcmVxdW'
-    'VuY3k=');
+    'ChZFbmVyZ3lTZW5zb3JQcm9wZXJ0aWVzEkAKDGFjdGl2ZV9wb3dlchgFIAEoEkIYiLUYkAGStR'
+    'gLQWN0aXZlUG93ZXKwtRgISABSC2FjdGl2ZVBvd2VyiAEBEjMKB3ZvbHRhZ2UYBiABKBJCFIi1'
+    'GJABkrUYB1ZvbHRhZ2WwtRgESAFSB3ZvbHRhZ2WIAQESRgoOYWN0aXZlX2N1cnJlbnQYByABKB'
+    'JCGoi1GJABkrUYDUFjdGl2ZUN1cnJlbnSwtRgFSAJSDWFjdGl2ZUN1cnJlbnSIAQESOQoJZnJl'
+    'cXVlbmN5GAggASgSQhaItRiQAZK1GAlGcmVxdWVuY3mwtRgOSANSCWZyZXF1ZW5jeYgBAToGmr'
+    'UYApAKQg8KDV9hY3RpdmVfcG93ZXJCCgoIX3ZvbHRhZ2VCEQoPX2FjdGl2ZV9jdXJyZW50QgwK'
+    'Cl9mcmVxdWVuY3lKBAgBEAJKBAgCEANKBAgDEARKBAgEEAVSC3Jtc192b2x0YWdlUgtybXNfY3'
+    'VycmVudFIMYWNfZnJlcXVlbmN5');
 
 @$core.Deprecated('Use pressureSensorPropertiesDescriptor instead')
 const PressureSensorProperties$json = {
@@ -1003,14 +1006,14 @@ const PressureSensorProperties$json = {
 
 /// Descriptor for `PressureSensorProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List pressureSensorPropertiesDescriptor = $convert.base64Decode(
-    'ChhQcmVzc3VyZVNlbnNvclByb3BlcnRpZXMSQgoObWVhc3VyZWRfdmFsdWUYASABKBFCFoi1GI'
-    'MIkrUYDU1lYXN1cmVkVmFsdWVIAFINbWVhc3VyZWRWYWx1ZYgBARJMChJtaW5fbWVhc3VyZWRf'
-    'dmFsdWUYAiABKBFCGYi1GIMIkrUYEE1pbk1lYXN1cmVkVmFsdWVIAVIQbWluTWVhc3VyZWRWYW'
-    'x1ZYgBARJMChJtYXhfbWVhc3VyZWRfdmFsdWUYAyABKBFCGYi1GIMIkrUYEE1heE1lYXN1cmVk'
-    'VmFsdWVIAlIQbWF4TWVhc3VyZWRWYWx1ZYgBARI1Cgl0b2xlcmFuY2UYBCABKA1CEoi1GIMIkr'
-    'UYCVRvbGVyYW5jZUgDUgl0b2xlcmFuY2WIAQE6Bpq1GAKFBkIRCg9fbWVhc3VyZWRfdmFsdWVC'
-    'FQoTX21pbl9tZWFzdXJlZF92YWx1ZUIVChNfbWF4X21lYXN1cmVkX3ZhbHVlQgwKCl90b2xlcm'
-    'FuY2U=');
+    'ChhQcmVzc3VyZVNlbnNvclByb3BlcnRpZXMSRgoObWVhc3VyZWRfdmFsdWUYASABKBFCGoi1GI'
+    'MIkrUYDU1lYXN1cmVkVmFsdWWwtRgASABSDW1lYXN1cmVkVmFsdWWIAQESUAoSbWluX21lYXN1'
+    'cmVkX3ZhbHVlGAIgASgRQh2ItRiDCJK1GBBNaW5NZWFzdXJlZFZhbHVlsLUYAUgBUhBtaW5NZW'
+    'FzdXJlZFZhbHVliAEBElAKEm1heF9tZWFzdXJlZF92YWx1ZRgDIAEoEUIdiLUYgwiStRgQTWF4'
+    'TWVhc3VyZWRWYWx1ZbC1GAJIAlIQbWF4TWVhc3VyZWRWYWx1ZYgBARI5Cgl0b2xlcmFuY2UYBC'
+    'ABKA1CFoi1GIMIkrUYCVRvbGVyYW5jZbC1GANIA1IJdG9sZXJhbmNliAEBOgaatRgChQZCEQoP'
+    'X21lYXN1cmVkX3ZhbHVlQhUKE19taW5fbWVhc3VyZWRfdmFsdWVCFQoTX21heF9tZWFzdXJlZF'
+    '92YWx1ZUIMCgpfdG9sZXJhbmNl');
 
 @$core.Deprecated('Use powerSourcePropertiesDescriptor instead')
 const PowerSourceProperties$json = {
@@ -1079,12 +1082,13 @@ const PowerSourceProperties$json = {
 
 /// Descriptor for `PowerSourceProperties`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List powerSourcePropertiesDescriptor = $convert.base64Decode(
-    'ChVQb3dlclNvdXJjZVByb3BlcnRpZXMSVAoVYmF0X3BlcmNlbnRfcmVtYWluaW5nGAEgASgNQh'
-    'uItRgvkrUYE0JhdFBlcmNlbnRSZW1haW5pbmdIAFITYmF0UGVyY2VudFJlbWFpbmluZ4gBARJF'
-    'ChBiYXRfY2hhcmdlX2xldmVsGAIgASgNQhaItRgvkrUYDkJhdENoYXJnZUxldmVsSAFSDmJhdE'
-    'NoYXJnZUxldmVsiAEBElcKFmJhdF9yZXBsYWNlbWVudF9uZWVkZWQYAyABKAhCHIi1GC+StRgU'
-    'QmF0UmVwbGFjZW1lbnROZWVkZWRIAlIUYmF0UmVwbGFjZW1lbnROZWVkZWSIAQESOAoLYmF0X3'
-    'ZvbHRhZ2UYBCABKA1CEoi1GC+StRgKQmF0Vm9sdGFnZUgDUgpiYXRWb2x0YWdliAEBEisKBnN0'
-    'YXR1cxgFIAEoDUIOiLUYL5K1GAZTdGF0dXNIBFIGc3RhdHVziAEBOgWatRgBEUIYChZfYmF0X3'
-    'BlcmNlbnRfcmVtYWluaW5nQhMKEV9iYXRfY2hhcmdlX2xldmVsQhkKF19iYXRfcmVwbGFjZW1l'
-    'bnRfbmVlZGVkQg4KDF9iYXRfdm9sdGFnZUIJCgdfc3RhdHVz');
+    'ChVQb3dlclNvdXJjZVByb3BlcnRpZXMSWAoVYmF0X3BlcmNlbnRfcmVtYWluaW5nGAEgASgNQh'
+    '+ItRgvkrUYE0JhdFBlcmNlbnRSZW1haW5pbmewtRgMSABSE2JhdFBlcmNlbnRSZW1haW5pbmeI'
+    'AQESSQoQYmF0X2NoYXJnZV9sZXZlbBgCIAEoDUIaiLUYL5K1GA5CYXRDaGFyZ2VMZXZlbLC1GA'
+    '5IAVIOYmF0Q2hhcmdlTGV2ZWyIAQESWwoWYmF0X3JlcGxhY2VtZW50X25lZWRlZBgDIAEoCEIg'
+    'iLUYL5K1GBRCYXRSZXBsYWNlbWVudE5lZWRlZLC1GA9IAlIUYmF0UmVwbGFjZW1lbnROZWVkZW'
+    'SIAQESPAoLYmF0X3ZvbHRhZ2UYBCABKA1CFoi1GC+StRgKQmF0Vm9sdGFnZbC1GAtIA1IKYmF0'
+    'Vm9sdGFnZYgBARIvCgZzdGF0dXMYBSABKA1CEoi1GC+StRgGU3RhdHVzsLUYAEgEUgZzdGF0dX'
+    'OIAQE6BZq1GAERQhgKFl9iYXRfcGVyY2VudF9yZW1haW5pbmdCEwoRX2JhdF9jaGFyZ2VfbGV2'
+    'ZWxCGQoXX2JhdF9yZXBsYWNlbWVudF9uZWVkZWRCDgoMX2JhdF92b2x0YWdlQgkKB19zdGF0dX'
+    'M=');

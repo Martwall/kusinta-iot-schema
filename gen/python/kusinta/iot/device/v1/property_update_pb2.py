@@ -26,7 +26,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+kusinta/iot/device/v1/property_update.proto\x12\x15kusinta.iot.device.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x92\x05\n\x0ePropertyUpdate\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12%\n\x0e\x61ttribute_name\x18\x02 \x01(\tR\rattributeName\x12\x1d\n\tint_value\x18\x03 \x01(\x11H\x00R\x08intValue\x12\x1f\n\nuint_value\x18\x04 \x01(\rH\x00R\tuintValue\x12\x1f\n\nbool_value\x18\x05 \x01(\x08H\x00R\tboolValue\x12!\n\x0b\x66loat_value\x18\x06 \x01(\x02H\x00R\nfloatValue\x12#\n\x0cstring_value\x18\x07 \x01(\tH\x00R\x0bstringValue\x12!\n\x0b\x62ytes_value\x18\x08 \x01(\x0cH\x00R\nbytesValue\x12\x38\n\ttimestamp\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampR\ttimestamp\x12\x46\n\nprovenance\x18\x0b \x01(\x0e\x32&.kusinta.iot.device.v1.ValueProvenanceR\nprovenance\x12$\n\x0b\x65ndpoint_id\x18\x0c \x01(\rH\x01R\nendpointId\x88\x01\x01\x12.\n\x10vendor_extension\x18\r \x01(\tH\x02R\x0fvendorExtension\x88\x01\x01\x12\"\n\ncluster_id\x18\x0e \x01(\rH\x03R\tclusterId\x88\x01\x01\x42\x07\n\x05valueB\x0e\n\x0c_endpoint_idB\x13\n\x11_vendor_extensionB\r\n\x0b_cluster_idJ\x04\x08\n\x10\x0bR\x0e\x63luster_id_hex\"\x9b\x01\n\x13PropertyUpdateBatch\x12?\n\x07updates\x18\x01 \x03(\x0b\x32%.kusinta.iot.device.v1.PropertyUpdateR\x07updates\x12\x43\n\x0f\x62\x61tch_timestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0e\x62\x61tchTimestamp*\x94\x01\n\x0fValueProvenance\x12 \n\x1cVALUE_PROVENANCE_UNSPECIFIED\x10\x00\x12\x1e\n\x1aVALUE_PROVENANCE_CONFIRMED\x10\x01\x12\x1f\n\x1bVALUE_PROVENANCE_OPTIMISTIC\x10\x02\x12\x1e\n\x1aVALUE_PROVENANCE_CORRECTED\x10\x03\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+kusinta/iot/device/v1/property_update.proto\x12\x15kusinta.iot.device.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xe3\x05\n\x0ePropertyUpdate\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12*\n\x0e\x61ttribute_name\x18\x02 \x01(\tH\x01R\rattributeName\x88\x01\x01\x12\x1d\n\tint_value\x18\x03 \x01(\x11H\x00R\x08intValue\x12\x1f\n\nuint_value\x18\x04 \x01(\rH\x00R\tuintValue\x12\x1f\n\nbool_value\x18\x05 \x01(\x08H\x00R\tboolValue\x12!\n\x0b\x66loat_value\x18\x06 \x01(\x02H\x00R\nfloatValue\x12#\n\x0cstring_value\x18\x07 \x01(\tH\x00R\x0bstringValue\x12!\n\x0b\x62ytes_value\x18\x08 \x01(\x0cH\x00R\nbytesValue\x12\x38\n\ttimestamp\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampR\ttimestamp\x12\x46\n\nprovenance\x18\x0b \x01(\x0e\x32&.kusinta.iot.device.v1.ValueProvenanceR\nprovenance\x12$\n\x0b\x65ndpoint_id\x18\x0c \x01(\rH\x02R\nendpointId\x88\x01\x01\x12.\n\x10vendor_extension\x18\r \x01(\tH\x03R\x0fvendorExtension\x88\x01\x01\x12\"\n\ncluster_id\x18\x0e \x01(\rH\x04R\tclusterId\x88\x01\x01\x12&\n\x0c\x61ttribute_id\x18\x0f \x01(\rH\x05R\x0b\x61ttributeId\x88\x01\x01\x42\x07\n\x05valueB\x11\n\x0f_attribute_nameB\x0e\n\x0c_endpoint_idB\x13\n\x11_vendor_extensionB\r\n\x0b_cluster_idB\x0f\n\r_attribute_idJ\x04\x08\n\x10\x0bR\x0e\x63luster_id_hex\"\x9b\x01\n\x13PropertyUpdateBatch\x12?\n\x07updates\x18\x01 \x03(\x0b\x32%.kusinta.iot.device.v1.PropertyUpdateR\x07updates\x12\x43\n\x0f\x62\x61tch_timestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0e\x62\x61tchTimestamp*\x94\x01\n\x0fValueProvenance\x12 \n\x1cVALUE_PROVENANCE_UNSPECIFIED\x10\x00\x12\x1e\n\x1aVALUE_PROVENANCE_CONFIRMED\x10\x01\x12\x1f\n\x1bVALUE_PROVENANCE_OPTIMISTIC\x10\x02\x12\x1e\n\x1aVALUE_PROVENANCE_CORRECTED\x10\x03\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,10 +34,10 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.device.v1.prope
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_VALUEPROVENANCE']._serialized_start=963
-  _globals['_VALUEPROVENANCE']._serialized_end=1111
+  _globals['_VALUEPROVENANCE']._serialized_start=1044
+  _globals['_VALUEPROVENANCE']._serialized_end=1192
   _globals['_PROPERTYUPDATE']._serialized_start=144
-  _globals['_PROPERTYUPDATE']._serialized_end=802
-  _globals['_PROPERTYUPDATEBATCH']._serialized_start=805
-  _globals['_PROPERTYUPDATEBATCH']._serialized_end=960
+  _globals['_PROPERTYUPDATE']._serialized_end=883
+  _globals['_PROPERTYUPDATEBATCH']._serialized_start=886
+  _globals['_PROPERTYUPDATEBATCH']._serialized_end=1041
 # @@protoc_insertion_point(module_scope)

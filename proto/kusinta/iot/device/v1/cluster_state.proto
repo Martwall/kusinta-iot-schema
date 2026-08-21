@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package kusinta.iot.device.v1;
+
+option optimize_for = SPEED;
+
+// Matter null. Distinct from a field being absent: Matter types many attributes as
+// nullable, where null is a reported value meaning "not currently known" — a thermostat
+// that cannot read its local temperature reports null, which is not the same as never
+// having reported at all.
+message NullValue {}
+
+// A Matter attribute value of any shape, including the ones a scalar cannot carry.
+//
+// Self-describing rather than Matter's own TLV as opaque bytes: an app that cannot decode
+// a value cannot show it, and TLV would make the generic path useful only to the gateway.
+// The cost is a recursive message; the benefit is that an attribute this schema has never
+// heard of is still renderable.
+//
+// Widths are deliberately wider than most attributes need — sint64 covers every signed
+// Matter integer type and uint64 every unsigned one, so a generic carrier never has to
+// know an attribute's declared width to carry its value.
+message AttributeValue {
+  oneof value {
+    bool                 bool_value   = 1;
+    sint64               int_value    = 2;
+    uint64               uint_value   = 3;
+    double               double_value = 4;
+    string               string_value = 5;
+    bytes                bytes_value  = 6;
+    AttributeValueList   list_value   = 7;
+    AttributeValueStruct struct_value = 8;
+    NullValue            null_value   = 9;
+  }
+}
+
+message AttributeValueList {
+  repeated AttributeValue values = 1;
+}
+
+// Matter struct fields are addressed by numeric context tag, not by name, so the map is
+// keyed by tag. A consumer that knows the struct's definition reads the tags it wants; one
+// that does not can still carry and re-emit the whole thing.
+message AttributeValueStruct {
+  map<uint32, AttributeValue> fields = 1;
+}
+
+message AttributeState {
+  uint32         attribute_id = 1;
+  AttributeValue value        = 2;
+}
+
+// One cluster hosted by an endpoint: what it is, what it supports, and any attribute value
+// that has no typed home.
+//
+// An entry exists for EVERY cluster the endpoint hosts, including clusters this schema
+// models with a typed properties message. That is not a contradiction of the
+// one-value-one-place rule below — cluster_revision, feature_map and
+// accepted_command_ids describe the cluster itself and have nowhere else to live.
+//
+// attributes is where the rule applies: it holds ONLY the attribute values that no typed
+// field covers. An attribute the schema models is carried in its typed field and MUST NOT
+// be repeated here — a value that exists in two places is a value that can disagree with
+// itself.
+//
+// This is what lets an endpoint report something useful when its device type is not
+// modelled, or when it carries a cluster beyond its device type's set, which the Matter
+// specification explicitly permits.
+message ClusterState {
+  uint32 cluster_id = 1;
+
+  // Matter's ClusterRevision. Which revision of the cluster definition the device
+  // implements.
+  optional uint32 cluster_revision = 2;
+
+  // Matter's FeatureMap: a bitmap of the optional features this cluster supports on this
+  // endpoint.
+  //
+  // Worth carrying even for fully-modelled clusters, because it resolves an ambiguity the
+  // presence rule cannot. properties.proto says an absent field means "never reported" —
+  // but without a FeatureMap, absent is also what an attribute the device does not
+  // implement looks like. With it, a consumer can tell "not supported" from "not yet
+  // seen".
+  optional uint32 feature_map = 3;
+
+  // Attribute values with no typed field. See the message comment.
+  repeated AttributeState attributes = 4;
+
+  // Matter's AcceptedCommandList: which commands this cluster accepts on this endpoint.
+  // Without it a consumer must infer a device's capabilities from its device type and
+  // discover the truth by sending a command and watching it fail.
+  repeated uint32 accepted_command_ids = 5;
+}

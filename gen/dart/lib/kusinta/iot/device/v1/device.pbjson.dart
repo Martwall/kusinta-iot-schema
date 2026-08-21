@@ -152,6 +152,14 @@ const Endpoint$json = {
       '9': 1,
       '10': 'hmThermostat'
     },
+    {
+      '1': 'clusters',
+      '3': 16,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.ClusterState',
+      '10': 'clusters'
+    },
   ],
   '8': [
     {'1': 'matter_properties'},
@@ -185,7 +193,9 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'EKDHBvd2VyX3NvdXJjZRgPIAEoCzIsLmt1c2ludGEuaW90LmRldmljZS52MS5Qb3dlclNvdXJj'
     'ZVByb3BlcnRpZXNIAFILcG93ZXJTb3VyY2USWQoNaG1fdGhlcm1vc3RhdBgyIAEoCzIyLmt1c2'
     'ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAVIMaG1UaGVy'
-    'bW9zdGF0QhMKEW1hdHRlcl9wcm9wZXJ0aWVzQhMKEXZlbmRvcl9wcm9wZXJ0aWVz');
+    'bW9zdGF0Ej8KCGNsdXN0ZXJzGBAgAygLMiMua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNsdXN0ZX'
+    'JTdGF0ZVIIY2x1c3RlcnNCEwoRbWF0dGVyX3Byb3BlcnRpZXNCEwoRdmVuZG9yX3Byb3BlcnRp'
+    'ZXM=');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {

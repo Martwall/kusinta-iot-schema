@@ -12,6 +12,7 @@ could express:
 import pytest
 
 from kusinta.iot.device.v1 import (
+    cluster_state_pb2,
     descriptor_pb2,
     device_pb2,
     matter_options_pb2,
@@ -296,3 +297,171 @@ def test_endpoint_oneofs_are_named_for_their_annotation_namespaces():
     names = set(device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name)
     assert "matter_properties" in names
     assert "vendor_properties" in names
+
+
+# --- the generic cluster carrier ----------------------------------------------------
+
+
+def test_unmodelled_cluster_reports_through_the_generic_carrier():
+    """The point of the hybrid model: an endpoint whose attribute the schema does not
+    model is no longer silent."""
+    endpoint = device_pb2.Endpoint(
+        endpoint_id=1,
+        matter_device_type_id=0x0301,
+        thermostat=properties_pb2.ThermostatProperties(local_temperature=2150),
+        clusters=[
+            cluster_state_pb2.ClusterState(
+                cluster_id=0x0204,  # Thermostat User Interface Configuration — not modelled
+                attributes=[
+                    cluster_state_pb2.AttributeState(
+                        attribute_id=0x0000,
+                        value=cluster_state_pb2.AttributeValue(uint_value=1),
+                    )
+                ],
+            )
+        ],
+    )
+    decoded = device_pb2.Endpoint()
+    decoded.ParseFromString(endpoint.SerializeToString())
+    assert decoded.thermostat.local_temperature == 2150
+    assert decoded.clusters[0].cluster_id == 0x0204
+    assert decoded.clusters[0].attributes[0].value.uint_value == 1
+
+
+def test_cluster_metadata_rides_alongside_a_modelled_cluster():
+    """Cluster entries exist for modelled clusters too — revision and feature map have
+    nowhere else to live — but carry no attribute values."""
+    endpoint = device_pb2.Endpoint(
+        endpoint_id=1,
+        matter_device_type_id=0x0301,
+        thermostat=properties_pb2.ThermostatProperties(local_temperature=2150),
+        clusters=[
+            cluster_state_pb2.ClusterState(
+                cluster_id=0x0201, cluster_revision=6, feature_map=0b0011
+            )
+        ],
+    )
+    decoded = device_pb2.Endpoint()
+    decoded.ParseFromString(endpoint.SerializeToString())
+    assert decoded.clusters[0].feature_map == 0b0011
+    assert list(decoded.clusters[0].attributes) == []
+
+
+def test_accepted_commands_are_reportable():
+    state = cluster_state_pb2.ClusterState(
+        cluster_id=0x0201, accepted_command_ids=[0x00, 0x01]
+    )
+    decoded = cluster_state_pb2.ClusterState()
+    decoded.ParseFromString(state.SerializeToString())
+    assert list(decoded.accepted_command_ids) == [0x00, 0x01]
+
+
+# --- AttributeValue carries every Matter shape --------------------------------------
+
+
+def test_attribute_value_carries_a_list():
+    value = cluster_state_pb2.AttributeValue(
+        list_value=cluster_state_pb2.AttributeValueList(
+            values=[
+                cluster_state_pb2.AttributeValue(uint_value=6),
+                cluster_state_pb2.AttributeValue(uint_value=8),
+            ]
+        )
+    )
+    decoded = cluster_state_pb2.AttributeValue()
+    decoded.ParseFromString(value.SerializeToString())
+    assert [v.uint_value for v in decoded.list_value.values] == [6, 8]
+
+
+def test_attribute_value_carries_a_struct_keyed_by_context_tag():
+    value = cluster_state_pb2.AttributeValue(
+        struct_value=cluster_state_pb2.AttributeValueStruct(
+            fields={
+                0: cluster_state_pb2.AttributeValue(uint_value=0x0301),
+                1: cluster_state_pb2.AttributeValue(uint_value=2),
+            }
+        )
+    )
+    decoded = cluster_state_pb2.AttributeValue()
+    decoded.ParseFromString(value.SerializeToString())
+    assert decoded.struct_value.fields[0].uint_value == 0x0301
+
+
+def test_matter_null_is_distinct_from_an_absent_value():
+    """Matter types many attributes nullable: null is a reported value meaning 'not
+    currently known', which is not the same as never having reported."""
+    null = cluster_state_pb2.AttributeValue(null_value=cluster_state_pb2.NullValue())
+    absent = cluster_state_pb2.AttributeValue()
+    assert null.WhichOneof("value") == "null_value"
+    assert absent.WhichOneof("value") is None
+    assert null.SerializeToString() != absent.SerializeToString()
+
+
+def test_attribute_value_nests_a_list_of_structs():
+    """DeviceTypeList is exactly this shape."""
+    value = cluster_state_pb2.AttributeValue(
+        list_value=cluster_state_pb2.AttributeValueList(
+            values=[
+                cluster_state_pb2.AttributeValue(
+                    struct_value=cluster_state_pb2.AttributeValueStruct(
+                        fields={0: cluster_state_pb2.AttributeValue(uint_value=0x0301)}
+                    )
+                )
+            ]
+        )
+    )
+    decoded = cluster_state_pb2.AttributeValue()
+    decoded.ParseFromString(value.SerializeToString())
+    assert decoded.list_value.values[0].struct_value.fields[0].uint_value == 0x0301
+
+
+# --- PropertyUpdate addresses numerically -------------------------------------------
+
+
+def test_matter_update_addresses_by_cluster_and_attribute_id():
+    update = property_update_pb2.PropertyUpdate(
+        device_id=identity_pb2.DeviceId(value="therm-1"),
+        endpoint_id=1,
+        cluster_id=0x0201,
+        attribute_id=0x0012,
+        int_value=2150,
+    )
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(update.SerializeToString())
+    assert decoded.cluster_id == 0x0201
+    assert decoded.attribute_id == 0x0012
+
+
+def test_attribute_name_is_optional_on_the_matter_branch():
+    update = property_update_pb2.PropertyUpdate(
+        endpoint_id=1, cluster_id=0x0201, attribute_id=0x0012
+    )
+    assert not update.HasField("attribute_name")
+
+
+def test_vendor_update_carries_no_attribute_id():
+    update = property_update_pb2.PropertyUpdate(
+        endpoint_id=1, vendor_extension="homematic.thermostat", attribute_name="LEVEL"
+    )
+    assert not update.HasField("attribute_id")
+    assert not update.HasField("cluster_id")
+
+
+# --- bridged devices ----------------------------------------------------------------
+
+
+def test_a_bridged_device_names_its_bridge():
+    descriptor = descriptor_pb2.DeviceDescriptor(
+        device_id=identity_pb2.DeviceId(value="bridge-1:ep3"),
+        bridged_by=identity_pb2.DeviceId(value="bridge-1"),
+    )
+    decoded = descriptor_pb2.DeviceDescriptor()
+    decoded.ParseFromString(descriptor.SerializeToString())
+    assert decoded.bridged_by.value == "bridge-1"
+
+
+def test_a_directly_reached_device_has_no_bridge():
+    descriptor = descriptor_pb2.DeviceDescriptor(
+        device_id=identity_pb2.DeviceId(value="valve-1")
+    )
+    assert not descriptor.HasField("bridged_by")

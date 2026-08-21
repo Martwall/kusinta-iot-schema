@@ -13,7 +13,8 @@ import {
   DimmableLightPropertiesSchema,
   EnergySensorPropertiesSchema,
 } from '../kusinta/iot/device/v1/properties_pb.js'
-import { DeviceSchema } from '../kusinta/iot/device/v1/device_pb.js'
+import { DeviceSchema, EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
+import { AttributeValueSchema } from '../kusinta/iot/device/v1/cluster_state_pb.js'
 import { PropertyUpdateSchema, PropertyUpdateBatchSchema, ValueProvenance } from '../kusinta/iot/device/v1/property_update_pb.js'
 
 describe('DeviceDescriptor', () => {
@@ -320,5 +321,77 @@ describe('PropertyUpdate — endpoint and vendor addressing', () => {
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.vendorExtension).toBeUndefined()
+  })
+})
+
+describe('ClusterState — the generic carrier', () => {
+  it('reports an unmodelled cluster alongside typed properties', () => {
+    const e = create(EndpointSchema, {
+      endpointId: 1,
+      matterDeviceTypeId: 0x0301,
+      matterProperties: { case: 'thermostat', value: { localTemperature: 2150 } },
+      clusters: [
+        {
+          clusterId: 0x0204,
+          attributes: [{ attributeId: 0x0000, value: { value: { case: 'uintValue', value: 1n } } }],
+        },
+      ],
+    })
+    const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
+    expect(decoded.matterProperties?.case).toBe('thermostat')
+    expect(decoded.clusters[0].clusterId).toBe(0x0204)
+    expect(decoded.clusters[0].attributes[0].value?.value?.case).toBe('uintValue')
+  })
+
+  it('carries cluster metadata for a modelled cluster without duplicating its values', () => {
+    const e = create(EndpointSchema, {
+      endpointId: 1,
+      matterDeviceTypeId: 0x0301,
+      matterProperties: { case: 'thermostat', value: { localTemperature: 2150 } },
+      clusters: [{ clusterId: 0x0201, clusterRevision: 6, featureMap: 0b0011 }],
+    })
+    const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
+    expect(decoded.clusters[0].featureMap).toBe(0b0011)
+    expect(decoded.clusters[0].attributes).toHaveLength(0)
+  })
+
+  it('distinguishes a Matter null from an absent value', () => {
+    const nul = create(AttributeValueSchema, { value: { case: 'nullValue', value: {} } })
+    const absent = create(AttributeValueSchema, {})
+    expect(nul.value?.case).toBe('nullValue')
+    expect(absent.value?.case).toBeUndefined()
+    expect(toBinary(AttributeValueSchema, nul)).not.toEqual(toBinary(AttributeValueSchema, absent))
+  })
+
+  it('nests a list of structs, the shape DeviceTypeList has', () => {
+    const v = create(AttributeValueSchema, {
+      value: {
+        case: 'listValue',
+        value: {
+          values: [
+            { value: { case: 'structValue', value: { fields: { 0: { value: { case: 'uintValue', value: 0x0301n } } } } } },
+          ],
+        },
+      },
+    })
+    const decoded = fromBinary(AttributeValueSchema, toBinary(AttributeValueSchema, v))
+    expect(decoded.value?.case).toBe('listValue')
+  })
+})
+
+describe('bridged devices', () => {
+  it('names the bridge a device sits behind', () => {
+    const d = create(DeviceDescriptorSchema, {
+      deviceId: { value: 'bridge-1:ep3' },
+      bridgedBy: { value: 'bridge-1' },
+    })
+    const decoded = fromBinary(DeviceDescriptorSchema, toBinary(DeviceDescriptorSchema, d))
+    expect(decoded.bridgedBy?.value).toBe('bridge-1')
+  })
+
+  it('leaves bridged_by unset for a directly reached device', () => {
+    const d = create(DeviceDescriptorSchema, { deviceId: { value: 'valve-1' } })
+    const decoded = fromBinary(DeviceDescriptorSchema, toBinary(DeviceDescriptorSchema, d))
+    expect(decoded.bridgedBy).toBeUndefined()
   })
 })

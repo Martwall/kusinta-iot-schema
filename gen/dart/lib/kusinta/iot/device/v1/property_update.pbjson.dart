@@ -43,7 +43,15 @@ const PropertyUpdate$json = {
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'deviceId'
     },
-    {'1': 'attribute_name', '3': 2, '4': 1, '5': 9, '10': 'attributeName'},
+    {
+      '1': 'attribute_name',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'attributeName',
+      '17': true
+    },
     {'1': 'int_value', '3': 3, '4': 1, '5': 17, '9': 0, '10': 'intValue'},
     {'1': 'uint_value', '3': 4, '4': 1, '5': 13, '9': 0, '10': 'uintValue'},
     {'1': 'bool_value', '3': 5, '4': 1, '5': 8, '9': 0, '10': 'boolValue'},
@@ -71,7 +79,7 @@ const PropertyUpdate$json = {
       '3': 12,
       '4': 1,
       '5': 13,
-      '9': 1,
+      '9': 2,
       '10': 'endpointId',
       '17': true
     },
@@ -80,7 +88,7 @@ const PropertyUpdate$json = {
       '3': 13,
       '4': 1,
       '5': 9,
-      '9': 2,
+      '9': 3,
       '10': 'vendorExtension',
       '17': true
     },
@@ -89,16 +97,27 @@ const PropertyUpdate$json = {
       '3': 14,
       '4': 1,
       '5': 13,
-      '9': 3,
+      '9': 4,
       '10': 'clusterId',
+      '17': true
+    },
+    {
+      '1': 'attribute_id',
+      '3': 15,
+      '4': 1,
+      '5': 13,
+      '9': 5,
+      '10': 'attributeId',
       '17': true
     },
   ],
   '8': [
     {'1': 'value'},
+    {'1': '_attribute_name'},
     {'1': '_endpoint_id'},
     {'1': '_vendor_extension'},
     {'1': '_cluster_id'},
+    {'1': '_attribute_id'},
   ],
   '9': [
     {'1': 10, '2': 11},
@@ -109,17 +128,19 @@ const PropertyUpdate$json = {
 /// Descriptor for `PropertyUpdate`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List propertyUpdateDescriptor = $convert.base64Decode(
     'Cg5Qcm9wZXJ0eVVwZGF0ZRI+CglkZXZpY2VfaWQYASABKAsyIS5rdXNpbnRhLmlvdC5pZGVudG'
-    'l0eS52MS5EZXZpY2VJZFIIZGV2aWNlSWQSJQoOYXR0cmlidXRlX25hbWUYAiABKAlSDWF0dHJp'
-    'YnV0ZU5hbWUSHQoJaW50X3ZhbHVlGAMgASgRSABSCGludFZhbHVlEh8KCnVpbnRfdmFsdWUYBC'
-    'ABKA1IAFIJdWludFZhbHVlEh8KCmJvb2xfdmFsdWUYBSABKAhIAFIJYm9vbFZhbHVlEiEKC2Zs'
-    'b2F0X3ZhbHVlGAYgASgCSABSCmZsb2F0VmFsdWUSIwoMc3RyaW5nX3ZhbHVlGAcgASgJSABSC3'
-    'N0cmluZ1ZhbHVlEiEKC2J5dGVzX3ZhbHVlGAggASgMSABSCmJ5dGVzVmFsdWUSOAoJdGltZXN0'
-    'YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEkYKCnByb3'
-    'ZlbmFuY2UYCyABKA4yJi5rdXNpbnRhLmlvdC5kZXZpY2UudjEuVmFsdWVQcm92ZW5hbmNlUgpw'
-    'cm92ZW5hbmNlEiQKC2VuZHBvaW50X2lkGAwgASgNSAFSCmVuZHBvaW50SWSIAQESLgoQdmVuZG'
-    '9yX2V4dGVuc2lvbhgNIAEoCUgCUg92ZW5kb3JFeHRlbnNpb26IAQESIgoKY2x1c3Rlcl9pZBgO'
-    'IAEoDUgDUgljbHVzdGVySWSIAQFCBwoFdmFsdWVCDgoMX2VuZHBvaW50X2lkQhMKEV92ZW5kb3'
-    'JfZXh0ZW5zaW9uQg0KC19jbHVzdGVyX2lkSgQIChALUg5jbHVzdGVyX2lkX2hleA==');
+    'l0eS52MS5EZXZpY2VJZFIIZGV2aWNlSWQSKgoOYXR0cmlidXRlX25hbWUYAiABKAlIAVINYXR0'
+    'cmlidXRlTmFtZYgBARIdCglpbnRfdmFsdWUYAyABKBFIAFIIaW50VmFsdWUSHwoKdWludF92YW'
+    'x1ZRgEIAEoDUgAUgl1aW50VmFsdWUSHwoKYm9vbF92YWx1ZRgFIAEoCEgAUglib29sVmFsdWUS'
+    'IQoLZmxvYXRfdmFsdWUYBiABKAJIAFIKZmxvYXRWYWx1ZRIjCgxzdHJpbmdfdmFsdWUYByABKA'
+    'lIAFILc3RyaW5nVmFsdWUSIQoLYnl0ZXNfdmFsdWUYCCABKAxIAFIKYnl0ZXNWYWx1ZRI4Cgl0'
+    'aW1lc3RhbXAYCSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgl0aW1lc3RhbXASRg'
+    'oKcHJvdmVuYW5jZRgLIAEoDjImLmt1c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFu'
+    'Y2VSCnByb3ZlbmFuY2USJAoLZW5kcG9pbnRfaWQYDCABKA1IAlIKZW5kcG9pbnRJZIgBARIuCh'
+    'B2ZW5kb3JfZXh0ZW5zaW9uGA0gASgJSANSD3ZlbmRvckV4dGVuc2lvbogBARIiCgpjbHVzdGVy'
+    'X2lkGA4gASgNSARSCWNsdXN0ZXJJZIgBARImCgxhdHRyaWJ1dGVfaWQYDyABKA1IBVILYXR0cm'
+    'lidXRlSWSIAQFCBwoFdmFsdWVCEQoPX2F0dHJpYnV0ZV9uYW1lQg4KDF9lbmRwb2ludF9pZEIT'
+    'ChFfdmVuZG9yX2V4dGVuc2lvbkINCgtfY2x1c3Rlcl9pZEIPCg1fYXR0cmlidXRlX2lkSgQICh'
+    'ALUg5jbHVzdGVyX2lkX2hleA==');
 
 @$core.Deprecated('Use propertyUpdateBatchDescriptor instead')
 const PropertyUpdateBatch$json = {

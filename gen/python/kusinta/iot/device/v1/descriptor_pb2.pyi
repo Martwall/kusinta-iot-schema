@@ -12,7 +12,7 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class DeviceDescriptor(_message.Message):
-    __slots__ = ("device_id", "vendor_name", "product_name", "serial_number", "node_label", "vendor_id", "product_id", "hardware_version_string", "software_version_string", "connector_id", "space_id", "ownership", "lifecycle", "owner_user_id", "claimed_at", "homematic")
+    __slots__ = ("device_id", "vendor_name", "product_name", "serial_number", "node_label", "vendor_id", "product_id", "hardware_version_string", "software_version_string", "connector_id", "space_id", "ownership", "lifecycle", "owner_user_id", "claimed_at", "bridged_by", "homematic")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     VENDOR_NAME_FIELD_NUMBER: _ClassVar[int]
     PRODUCT_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -28,6 +28,7 @@ class DeviceDescriptor(_message.Message):
     LIFECYCLE_FIELD_NUMBER: _ClassVar[int]
     OWNER_USER_ID_FIELD_NUMBER: _ClassVar[int]
     CLAIMED_AT_FIELD_NUMBER: _ClassVar[int]
+    BRIDGED_BY_FIELD_NUMBER: _ClassVar[int]
     HOMEMATIC_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     vendor_name: str
@@ -44,5 +45,6 @@ class DeviceDescriptor(_message.Message):
     lifecycle: _types_pb2.DeviceLifecycleState
     owner_user_id: _identity_pb2.UserId
     claimed_at: _timestamp_pb2.Timestamp
+    bridged_by: _identity_pb2.DeviceId
     homematic: _homematic_pb2.HomematicDeviceIdentity
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., vendor_name: _Optional[str] = ..., product_name: _Optional[str] = ..., serial_number: _Optional[str] = ..., node_label: _Optional[str] = ..., vendor_id: _Optional[int] = ..., product_id: _Optional[int] = ..., hardware_version_string: _Optional[str] = ..., software_version_string: _Optional[str] = ..., connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., ownership: _Optional[_Union[_types_pb2.DeviceOwnershipType, str]] = ..., lifecycle: _Optional[_Union[_types_pb2.DeviceLifecycleState, str]] = ..., owner_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., claimed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., homematic: _Optional[_Union[_homematic_pb2.HomematicDeviceIdentity, _Mapping]] = ...) -> None: ...
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., vendor_name: _Optional[str] = ..., product_name: _Optional[str] = ..., serial_number: _Optional[str] = ..., node_label: _Optional[str] = ..., vendor_id: _Optional[int] = ..., product_id: _Optional[int] = ..., hardware_version_string: _Optional[str] = ..., software_version_string: _Optional[str] = ..., connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., ownership: _Optional[_Union[_types_pb2.DeviceOwnershipType, str]] = ..., lifecycle: _Optional[_Union[_types_pb2.DeviceLifecycleState, str]] = ..., owner_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., claimed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bridged_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., homematic: _Optional[_Union[_homematic_pb2.HomematicDeviceIdentity, _Mapping]] = ...) -> None: ...

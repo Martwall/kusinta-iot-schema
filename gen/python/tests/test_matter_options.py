@@ -197,3 +197,76 @@ def test_no_device_type_maps_to_more_than_one_properties_case():
         ]
     ]
     assert len(device_types) == len(set(device_types))
+
+
+def test_every_properties_field_declares_a_matter_attribute_id():
+    """Resolution matches on (cluster_id, attribute_id), so an unannotated field is
+    unreachable from any PropertyUpdate."""
+    unannotated = [
+        f"{m.DESCRIPTOR.name}.{field.name}"
+        for m in PROPERTIES_MESSAGES
+        for field in m.DESCRIPTOR.fields
+        if not field.GetOptions().HasExtension(matter_options_pb2.matter_attribute_id)
+    ]
+    assert unannotated == []
+
+
+def test_no_properties_message_annotates_two_fields_with_the_same_cluster_and_id():
+    """A repeat would make step 3 ambiguous."""
+    for m in PROPERTIES_MESSAGES:
+        pairs = [
+            (
+                field.GetOptions().Extensions[matter_options_pb2.matter_cluster_id],
+                field.GetOptions().Extensions[matter_options_pb2.matter_attribute_id],
+            )
+            for field in m.DESCRIPTOR.fields
+        ]
+        assert len(pairs) == len(set(pairs)), m.DESCRIPTOR.name
+
+
+def test_attribute_id_and_attribute_name_agree_across_messages():
+    """The same Matter attribute appears in several properties messages — OnOff is in three.
+    Every occurrence must give the same (cluster, id) for the same name, or one of them is
+    a transcription error."""
+    seen = {}
+    for m in PROPERTIES_MESSAGES:
+        for field in m.DESCRIPTOR.fields:
+            o = field.GetOptions().Extensions
+            key = (
+                o[matter_options_pb2.matter_cluster_id],
+                o[matter_options_pb2.matter_attribute],
+            )
+            attr_id = o[matter_options_pb2.matter_attribute_id]
+            if key in seen:
+                assert seen[key] == attr_id, f"{key} annotated as {seen[key]} and {attr_id}"
+            seen[key] = attr_id
+
+
+def test_known_matter_attribute_ids_are_correct():
+    """Spot-check against the Matter cluster definitions. A wrong ID resolves silently to
+    the wrong field, and no structural test can catch it — only comparing with the spec can."""
+    expected = {
+        (0x0201, "LocalTemperature"): 0x0000,
+        (0x0201, "OccupiedHeatingSetpoint"): 0x0012,
+        (0x0201, "SystemMode"): 0x001C,
+        (0x0006, "OnOff"): 0x0000,
+        (0x0006, "StartUpOnOff"): 0x4003,
+        (0x0008, "CurrentLevel"): 0x0000,
+        (0x002F, "BatPercentRemaining"): 0x000C,
+        (0x002F, "BatChargeLevel"): 0x000E,
+        (0x0045, "StateValue"): 0x0000,
+        (0x0101, "OperatingMode"): 0x0025,
+        (0x0102, "CurrentPositionLiftPercent100ths"): 0x000E,
+        (0x0300, "ColorTempPhysicalMinMireds"): 0x400B,
+        (0x0406, "PIROccupiedToUnoccupiedDelay"): 0x0010,
+        (0x0090, "ActivePower"): 0x0008,
+    }
+    actual = {}
+    for m in PROPERTIES_MESSAGES:
+        for field in m.DESCRIPTOR.fields:
+            o = field.GetOptions().Extensions
+            actual[
+                (o[matter_options_pb2.matter_cluster_id], o[matter_options_pb2.matter_attribute])
+            ] = o[matter_options_pb2.matter_attribute_id]
+    for key, want in expected.items():
+        assert actual[key] == want, f"{key}: got 0x{actual[key]:04X}, spec says 0x{want:04X}"

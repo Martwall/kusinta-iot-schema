@@ -23,7 +23,7 @@ VALUE_PROVENANCE_OPTIMISTIC: ValueProvenance
 VALUE_PROVENANCE_CORRECTED: ValueProvenance
 
 class PropertyUpdate(_message.Message):
-    __slots__ = ("device_id", "attribute_name", "int_value", "uint_value", "bool_value", "float_value", "string_value", "bytes_value", "timestamp", "provenance", "endpoint_id", "vendor_extension", "cluster_id")
+    __slots__ = ("device_id", "attribute_name", "int_value", "uint_value", "bool_value", "float_value", "string_value", "bytes_value", "timestamp", "provenance", "endpoint_id", "vendor_extension", "cluster_id", "attribute_id")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
     INT_VALUE_FIELD_NUMBER: _ClassVar[int]
@@ -37,6 +37,7 @@ class PropertyUpdate(_message.Message):
     ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
     VENDOR_EXTENSION_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
+    ATTRIBUTE_ID_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     attribute_name: str
     int_value: int
@@ -50,7 +51,8 @@ class PropertyUpdate(_message.Message):
     endpoint_id: int
     vendor_extension: str
     cluster_id: int
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., int_value: _Optional[int] = ..., uint_value: _Optional[int] = ..., bool_value: _Optional[bool] = ..., float_value: _Optional[float] = ..., string_value: _Optional[str] = ..., bytes_value: _Optional[bytes] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[ValueProvenance, str]] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ..., cluster_id: _Optional[int] = ...) -> None: ...
+    attribute_id: int
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., int_value: _Optional[int] = ..., uint_value: _Optional[int] = ..., bool_value: _Optional[bool] = ..., float_value: _Optional[float] = ..., string_value: _Optional[str] = ..., bytes_value: _Optional[bytes] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[ValueProvenance, str]] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ..., cluster_id: _Optional[int] = ..., attribute_id: _Optional[int] = ...) -> None: ...
 
 class PropertyUpdateBatch(_message.Message):
     __slots__ = ("updates", "batch_timestamp")

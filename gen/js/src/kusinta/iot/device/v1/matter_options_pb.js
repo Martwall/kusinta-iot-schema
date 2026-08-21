@@ -9,7 +9,7 @@ import { file_google_protobuf_descriptor } from "@bufbuild/protobuf/wkt";
  * Describes the file kusinta/iot/device/v1/matter_options.proto.
  */
 export const file_kusinta_iot_device_v1_matter_options = /*@__PURE__*/
-  fileDesc("CiprdXNpbnRhL2lvdC9kZXZpY2UvdjEvbWF0dGVyX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LmRldmljZS52MTpLChFtYXR0ZXJfY2x1c3Rlcl9pZBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY0YYDIAEoDVIPbWF0dGVyQ2x1c3RlcklkOkoKEG1hdHRlcl9hdHRyaWJ1dGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNKGAyABKAlSD21hdHRlckF0dHJpYnV0ZTpPChJtYXR0ZXJfZGV2aWNlX3R5cGUSHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY04YDIAMoDVIQbWF0dGVyRGV2aWNlVHlwZUICSAFiBnByb3RvMw", [file_google_protobuf_descriptor]);
+  fileDesc("CiprdXNpbnRhL2lvdC9kZXZpY2UvdjEvbWF0dGVyX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LmRldmljZS52MTpLChFtYXR0ZXJfY2x1c3Rlcl9pZBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY0YYDIAEoDVIPbWF0dGVyQ2x1c3RlcklkOkoKEG1hdHRlcl9hdHRyaWJ1dGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNKGAyABKAlSD21hdHRlckF0dHJpYnV0ZTpPChNtYXR0ZXJfYXR0cmlidXRlX2lkEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjWhgMgASgNUhFtYXR0ZXJBdHRyaWJ1dGVJZDpPChJtYXR0ZXJfZGV2aWNlX3R5cGUSHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY04YDIAMoDVIQbWF0dGVyRGV2aWNlVHlwZUICSAFiBnByb3RvMw", [file_google_protobuf_descriptor]);
 
 /**
  * The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat.
@@ -36,6 +36,21 @@ export const matter_attribute = /*@__PURE__*/
   extDesc(file_kusinta_iot_device_v1_matter_options, 1);
 
 /**
+ * The Matter attribute ID within that cluster, e.g. 0x0012 for OccupiedHeatingSetpoint.
+ * This is what a PropertyUpdate resolves on — Matter addresses attributes numerically and
+ * so does this schema, because the generic cluster carrier must address attributes of
+ * clusters this schema does not model, and a vendor-defined cluster has no spec name to
+ * address it by. One scheme rather than two.
+ *
+ * matter_attribute above stays as the authoritative spelling for logs and for anything
+ * rendering an attribute to a human; it is not what resolution matches on.
+ *
+ * @generated from extension: uint32 matter_attribute_id = 50006;
+ */
+export const matter_attribute_id = /*@__PURE__*/
+  extDesc(file_kusinta_iot_device_v1_matter_options, 2);
+
+/**
  * The Matter device type IDs this properties message models, e.g. 0x0301 for
  * Thermostat. Repeated because one shape of properties can serve several device
  * types; empty on vendor extension messages, which have no Matter device type.
@@ -47,5 +62,5 @@ export const matter_attribute = /*@__PURE__*/
  * @generated from extension: repeated uint32 matter_device_type = 50003;
  */
 export const matter_device_type = /*@__PURE__*/
-  extDesc(file_kusinta_iot_device_v1_matter_options, 2);
+  extDesc(file_kusinta_iot_device_v1_matter_options, 3);
 

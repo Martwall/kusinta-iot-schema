@@ -27,6 +27,11 @@ class Matter_options {
       _omitFieldNames ? '' : 'matterAttribute',
       50002,
       $pb.PbFieldType.OS);
+  static final matterAttributeId = $pb.Extension<$core.int>(
+      _omitMessageNames ? '' : 'google.protobuf.FieldOptions',
+      _omitFieldNames ? '' : 'matterAttributeId',
+      50006,
+      $pb.PbFieldType.OU3);
   static final matterDeviceType = $pb.Extension<$core.int>.repeated(
       _omitMessageNames ? '' : 'google.protobuf.MessageOptions',
       _omitFieldNames ? '' : 'matterDeviceType',
@@ -36,6 +41,7 @@ class Matter_options {
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
     registry.add(matterClusterId);
     registry.add(matterAttribute);
+    registry.add(matterAttributeId);
     registry.add(matterDeviceType);
   }
 }

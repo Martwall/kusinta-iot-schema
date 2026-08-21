@@ -46,6 +46,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     $0.UserId? ownerUserId,
     $1.Timestamp? claimedAt,
     $2.HomematicDeviceIdentity? homematic,
+    $0.DeviceId? bridgedBy,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -66,6 +67,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     if (ownerUserId != null) result.ownerUserId = ownerUserId;
     if (claimedAt != null) result.claimedAt = claimedAt;
     if (homematic != null) result.homematic = homematic;
+    if (bridgedBy != null) result.bridgedBy = bridgedBy;
     return result;
   }
 
@@ -121,6 +123,8 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
         subBuilder: $1.Timestamp.create)
     ..aOM<$2.HomematicDeviceIdentity>(18, _omitFieldNames ? '' : 'homematic',
         subBuilder: $2.HomematicDeviceIdentity.create)
+    ..aOM<$0.DeviceId>(19, _omitFieldNames ? '' : 'bridgedBy',
+        subBuilder: $0.DeviceId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -305,6 +309,32 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   void clearHomematic() => $_clearField(18);
   @$pb.TagNumber(18)
   $2.HomematicDeviceIdentity ensureHomematic() => $_ensure(15);
+
+  /// Who the device is in its vendor's own terms — an address and a model string that
+  /// identify the PHYSICAL device, not one of its endpoints. It belongs here rather than
+  /// beside the per-endpoint vendor readings, which would duplicate it onto every
+  /// endpoint with no rule saying whether a producer should.
+  ///
+  /// Absent for a device with no vendor extension, which is most of them.
+  /// Set when this device sits behind a Matter bridge, naming the bridge's own Device.
+  ///
+  /// A bridge is one Matter node exposing many devices, and each gets its own DeviceId here
+  /// rather than becoming an endpoint of the bridge: a user perceives twelve bridged bulbs
+  /// as twelve things, and one row that cannot be placed in twelve rooms is not usable.
+  ///
+  /// So a Device is a Matter node OR one device behind one — the equivalence is deliberately
+  /// not exact, and this field is how a consumer tells which. Absent means the device is
+  /// reached directly.
+  @$pb.TagNumber(19)
+  $0.DeviceId get bridgedBy => $_getN(16);
+  @$pb.TagNumber(19)
+  set bridgedBy($0.DeviceId value) => $_setField(19, value);
+  @$pb.TagNumber(19)
+  $core.bool hasBridgedBy() => $_has(16);
+  @$pb.TagNumber(19)
+  void clearBridgedBy() => $_clearField(19);
+  @$pb.TagNumber(19)
+  $0.DeviceId ensureBridgedBy() => $_ensure(16);
 }
 
 const $core.bool _omitFieldNames =

@@ -6,6 +6,7 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ColorTemperatureLightProperties, ContactSensorProperties, DimmableLightProperties, DoorLockProperties, EnergySensorProperties, HumiditySensorProperties, OccupancySensorProperties, OnOffLightProperties, PowerSourceProperties, PressureSensorProperties, TemperatureSensorProperties, ThermostatProperties, WindowCoveringProperties } from "./properties_pb.js";
 import type { HmThermostatProps } from "../../vendor/homematic/v1/homematic_pb.js";
+import type { ClusterState } from "./cluster_state_pb.js";
 import type { DeviceDescriptor } from "./descriptor_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
@@ -52,6 +53,10 @@ export declare const file_kusinta_iot_device_v1_device: GenFile;
  * endpoints at all, so the connector must synthesise them — derive from something the
  * upstream system holds stable, typically its own channel number, never from enumeration
  * order.
+ *
+ * A typed case and the generic clusters list are not alternatives. An endpoint uses its
+ * typed case for the attributes this schema models and clusters for everything else,
+ * including cluster metadata for the modelled ones. See cluster_state.proto.
  *
  * matter_properties and vendor_properties are separate oneofs on purpose. An endpoint
  * carries its typed Matter properties AND its vendor extension — one oneof spanning both
@@ -169,6 +174,19 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
     value: HmThermostatProps;
     case: "hmThermostat";
   } | { case: undefined; value?: undefined };
+
+  /**
+   * Every cluster this endpoint hosts: what it supports, and any attribute value that has
+   * no typed field above. This is what makes a device the schema does not model usable
+   * rather than silent — and what carries the optional clusters the Matter specification
+   * lets an endpoint add beyond its device type's set.
+   *
+   * Field 16 rather than a one-byte number: 1-15 are spent on identity and the typed
+   * cases, and a ClusterState's tag is amortised over the attributes it carries.
+   *
+   * @generated from field: repeated kusinta.iot.device.v1.ClusterState clusters = 16;
+   */
+  clusters: ClusterState[];
 };
 
 /**

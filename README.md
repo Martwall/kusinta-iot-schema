@@ -34,6 +34,21 @@ Jenkinsfile        # lint → generate → test → tag → npm publish
 
 ## Device types
 
+The schema is **hybrid**: thirteen device types have typed properties messages, and everything
+else is carried generically by cluster. An endpoint whose device type is unmodelled — or which
+hosts an optional cluster beyond its device type's set, which Matter permits — reports through
+`Endpoint.clusters` rather than going silent. `ClusterState` also carries `ClusterRevision`,
+`FeatureMap` and the accepted-command list, so a consumer can tell "not supported" from "not
+yet reported" and know what a device accepts without guessing from its device type.
+
+**One value, one place.** An attribute with a typed field lives there and never in
+`ClusterState.attributes`; one without lives only in `ClusterState`. Cluster *metadata* is the
+exception — it may accompany a fully modelled cluster, because it has nowhere else to live.
+
+A `Device` is a Matter node, **or** one device behind a bridge: a bridge exposes many devices
+and each gets its own `DeviceId`, naming its bridge in `DeviceDescriptor.bridged_by`. Twelve
+bridged bulbs are twelve rows, because that is what a user sees.
+
 A device presents one or more **endpoints**, each carrying a single Matter device type and the
 properties belonging to it — a wall thermostat is a Thermostat *and* a Humidity Sensor, a
 4-channel actuator is four On/Off Lights, a battery valve is also a Power Source. Filing and
@@ -115,6 +130,7 @@ files — together they would form a package import cycle.
 |---|---|---|
 | `(matter_cluster_id)` | properties field | Matter cluster ID, e.g. `0x0201` |
 | `(matter_attribute)` | properties field | Matter attribute name, e.g. `"PIROccupiedToUnoccupiedDelay"` |
+| `(matter_attribute_id)` | properties field | Matter attribute ID, e.g. `0x0012` — **what resolution matches on** |
 | `(matter_device_type)` | properties message | Matter device type IDs modelled, repeated |
 | `(vendor_attribute)` | vendor field | Vendor parameter in the vendor's own spelling, e.g. `"LEVEL"` |
 | `(vendor_extension)` | vendor message | Stable key selecting the extension, e.g. `"homematic.thermostat"` |
@@ -126,9 +142,19 @@ A `PropertyUpdate` resolves in three steps, all read from the descriptor:
 2. **Message** — Matter branch (no `vendor_extension` set): the `Endpoint.matter_properties` case whose
    message declares `(matter_device_type) == Endpoint.matter_device_type_id`. Vendor branch: the
    `Endpoint.vendor_properties` case whose message declares the named `(vendor_extension)`.
-3. **Field** — Matter branch: exact match on `(matter_cluster_id, matter_attribute)` against
-   `(cluster_id, attribute_name)`. Vendor branch: exact match on `(vendor_attribute)` against
+3. **Field** — Matter branch: exact match on `(matter_cluster_id, matter_attribute_id)` against
+   `(cluster_id, attribute_id)`. Vendor branch: exact match on `(vendor_attribute)` against
    `attribute_name`; no cluster is involved.
+
+**Failing step 2 or 3 on the Matter branch is not a miss.** It means the schema does not model
+this device type, or models it without this attribute — both legitimate. The value is stored
+in the endpoint's `ClusterState` for that cluster instead. A miss now means only an unknown
+endpoint, or a vendor reference that resolves to nothing.
+
+Addressing is numeric because the generic carrier must reach attributes of clusters this
+schema does not model, and a vendor-defined cluster has no specification name.
+`attribute_name` is carried for logs and for rendering, and is what the *vendor* branch
+matches on — there is no numeric ID for a vendor parameter.
 
 Both branches are the same shape — pick a message by a message option, then one field by a
 field option. Nothing nests and nothing is searched recursively. Cluster IDs are `uint32` on

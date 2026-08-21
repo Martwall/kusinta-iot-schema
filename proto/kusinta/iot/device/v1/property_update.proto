@@ -40,12 +40,11 @@ enum ValueProvenance {
 //
 // Resolution rule (normative)
 //
-// A consumer storing an update into a device.v1.Device resolves it in three steps, all
-// by reading options off the descriptor. No step involves transforming a name.
+// A consumer storing an update into a device.v1.Device resolves it in three steps, all by
+// reading options off the descriptor. No step involves transforming a name.
 //
-//  1. Pick the endpoint: the Device.endpoints entry whose endpoint_id equals the
-//     update's endpoint_id, and the DeviceDescriptor.endpoints entry with the same id,
-//     which is where that endpoint's Matter device type lives.
+//  1. Pick the endpoint: the Device.endpoints entry whose endpoint_id equals the update's
+//     endpoint_id.
 //  2. Pick the message. Two branches, chosen by whether vendor_extension is set:
 //       - absent (Matter): the Endpoint.matter_properties case whose message type declares
 //         (matter_device_type) == Endpoint.matter_device_type_id.
@@ -53,47 +52,68 @@ enum ValueProvenance {
 //         (vendor_extension) == the update's vendor_extension.
 //  3. Pick the field:
 //       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id AND
-//         whose (matter_attribute) equals attribute_name.
+//         whose (matter_attribute_id) equals attribute_id.
 //       - Vendor branch: the one field whose (vendor_attribute) equals attribute_name.
-//         cluster_id plays no part; a vendor parameter has no Matter cluster.
+//         cluster_id and attribute_id play no part; a vendor parameter has no Matter
+//         cluster.
 //
 // Both branches are the same shape: pick a message by a message option, then one field by
 // a field option. Nothing nests, and nothing is searched recursively.
 //
 // Steps 2 and 3 depend only on the schema, never on the update: both maps are fixed at
-// compile time. Build them ONCE at startup — a device-type-to-case map and a vendor-key-to-
-// case map, plus a (cluster, attribute) map per message — and resolve with lookups. Walking
-// the descriptor per update costs ~30 option reads on the highest-volume message in this
-// schema. Only step 1 reads per-device data.
+// compile time. Build them ONCE at startup — a device-type-to-case map and a
+// vendor-key-to-case map, plus a (cluster_id, attribute_id) map per message — and resolve
+// with lookups. Only step 1 reads per-device data.
 //
-// Writing the resolved field marks it present, which is how a snapshot distinguishes a
-// reported zero from an attribute the device has never sent. A consumer assembling a
-// snapshot MUST NOT pre-populate fields with defaults — see properties.proto.
+// Falling through to the generic carrier
 //
-// Every comparison is exact. attribute_name is byte-for-byte equal to the attribute's
-// own spelling — Matter's PascalCase on the Matter branch, the vendor's own spelling on
-// the vendor branch. It is NOT derived from the proto field name, and case- or
-// separator-insensitive matching against field names is not a valid fallback —
-// OccupancySensorProperties and WindowCoveringProperties both have fields that no such
-// transformation reaches. See matter_options.proto.
+// On the MATTER branch, failing step 2 or 3 is NOT a miss. It means the schema does not
+// model this device type, or models it without this attribute — both legitimate, and both
+// have a home: store the value into the endpoint's ClusterState for cluster_id, as an
+// AttributeState with this attribute_id. See cluster_state.proto.
 //
-// When any step resolves to nothing the update is not storable. A consumer MUST NOT
-// silently drop it: log it at warning with device_id, endpoint_id, cluster_id and
-// attribute_name, and count it. A miss means the device reports an attribute this schema
-// does not model, the device type is not modelled at all (see device.proto), the endpoint
-// is unknown, or a producer is sending a name from neither spelling — all of which need
-// to be visible. Advancing Device.last_seen on a miss is correct; the update is still
-// evidence of life.
+// This is the one-value-one-place rule in force. An attribute with a typed field is
+// stored there and MUST NOT also appear in ClusterState.attributes; an attribute without
+// one is stored generically and appears nowhere else. A consumer reading a value looks in
+// the typed field first and the cluster carrier second, and never has to reconcile two
+// answers.
 //
-// Producers: on the Matter branch, attribute_name uses the Matter attribute's own
-// PascalCase, acronyms included (e.g. "OccupiedHeatingSetpoint",
-// "PIROccupiedToUnoccupiedDelay"), and cluster_id is the Matter cluster ID as a number
-// (0x0201 for Thermostat). Both are required there. On the vendor branch, set
-// vendor_extension and attribute_name and leave cluster_id unset. endpoint_id is
-// required on both.
+// Cluster metadata is not subject to that rule: a ClusterState entry may exist for a fully
+// modelled cluster in order to carry its cluster_revision, feature_map and
+// accepted_command_ids.
+//
+// What remains a miss
+//
+// An update naming an endpoint the device does not have, or a vendor extension or vendor
+// attribute that resolves to nothing. Those are not storable and MUST NOT be dropped
+// silently: log at warning with device_id, endpoint_id, cluster_id and attribute_id, and
+// count it. A miss now means a real disagreement about the device's shape, rather than
+// merely an attribute this schema has not got around to modelling.
+//
+// Advancing Device.last_seen on a miss is correct; the update is still evidence of life.
+//
+// Addressing
+//
+// Matter addresses attributes numerically and so does this schema: cluster_id and
+// attribute_id are what resolution matches on, and both are required on the Matter branch.
+// Numeric because the generic carrier must address attributes of clusters this schema does
+// not model, and a vendor-defined cluster has no specification name to address it by — two
+// addressing schemes would be worse than one.
+//
+// attribute_name is the attribute's own spelling, carried for logs and for anything
+// rendering to a human. On the Matter branch it is optional and plays no part in
+// resolution. On the VENDOR branch it is required and is what resolution matches, because
+// a vendor parameter has no numeric ID in any specification — there, it is the vendor's own
+// spelling exactly ("LEVEL", not "level").
+//
 message PropertyUpdate {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
-  string attribute_name = 2;
+
+  // The attribute's own spelling. Required on the vendor branch, where it is what
+  // resolution matches. Optional on the Matter branch, where attribute_id resolves and this
+  // is for logs — but send it there too when it is known: it is what makes an unresolvable
+  // update legible to whoever reads the warning.
+  optional string attribute_name = 2;
 
   oneof value {
     sint32 int_value    = 3;
@@ -152,6 +172,13 @@ message PropertyUpdate {
   // Required on the Matter branch, unset on the vendor branch: a vendor parameter has no
   // Matter cluster.
   optional uint32 cluster_id = 14;
+
+  // The Matter attribute ID within that cluster, e.g. 0x0012 for OccupiedHeatingSetpoint.
+  // What step 3 matches against (matter_attribute_id) on the Matter branch, and what
+  // addresses an attribute of a cluster this schema does not model.
+  //
+  // Required on the Matter branch, unset on the vendor branch.
+  optional uint32 attribute_id = 15;
 }
 
 message PropertyUpdateBatch {

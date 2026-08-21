@@ -18,6 +18,8 @@ export 'kusinta/iot/connector/v1/connector.pbenum.dart';
 export 'kusinta/iot/connector/v1/connector_service.connect.client.dart';
 export 'kusinta/iot/connector/v1/connector_service.pb.dart';
 export 'kusinta/iot/connector/v1/connector_service.pbenum.dart';
+export 'kusinta/iot/device/v1/cluster_state.pb.dart';
+export 'kusinta/iot/device/v1/cluster_state.pbenum.dart';
 export 'kusinta/iot/device/v1/descriptor.pb.dart';
 export 'kusinta/iot/device/v1/descriptor.pbenum.dart';
 export 'kusinta/iot/device/v1/device.pb.dart';

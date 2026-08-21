@@ -3,6 +3,7 @@ syntax = "proto3";
 package kusinta.iot.device.v1;
 
 import "google/protobuf/timestamp.proto";
+import "kusinta/iot/device/v1/cluster_state.proto";
 import "kusinta/iot/device/v1/descriptor.proto";
 import "kusinta/iot/device/v1/properties.proto";
 import "kusinta/iot/vendor/homematic/v1/homematic.proto";
@@ -47,6 +48,10 @@ option optimize_for = SPEED;
 // upstream system holds stable, typically its own channel number, never from enumeration
 // order.
 //
+// A typed case and the generic clusters list are not alternatives. An endpoint uses its
+// typed case for the attributes this schema models and clusters for everything else,
+// including cluster metadata for the modelled ones. See cluster_state.proto.
+//
 // matter_properties and vendor_properties are separate oneofs on purpose. An endpoint
 // carries its typed Matter properties AND its vendor extension — one oneof spanning both
 // would make them mutually exclusive, which left every vendor field unreachable in
@@ -78,6 +83,15 @@ message Endpoint {
   oneof vendor_properties {
     kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 50;
   }
+
+  // Every cluster this endpoint hosts: what it supports, and any attribute value that has
+  // no typed field above. This is what makes a device the schema does not model usable
+  // rather than silent — and what carries the optional clusters the Matter specification
+  // lets an endpoint add beyond its device type's set.
+  //
+  // Field 16 rather than a one-byte number: 1-15 are spent on identity and the typed
+  // cases, and a ClusterState's tag is amortised over the attributes it carries.
+  repeated ClusterState clusters = 16;
 }
 
 // Device is a DeviceDescriptor plus the endpoints it presents.

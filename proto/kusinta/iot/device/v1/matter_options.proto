@@ -33,6 +33,16 @@ extend google.protobuf.FieldOptions {
   // field name is not derived from it and must not be assumed to be. Matches
   // PropertyUpdate.attribute_name byte for byte.
   string matter_attribute = 50002;
+
+  // The Matter attribute ID within that cluster, e.g. 0x0012 for OccupiedHeatingSetpoint.
+  // This is what a PropertyUpdate resolves on — Matter addresses attributes numerically and
+  // so does this schema, because the generic cluster carrier must address attributes of
+  // clusters this schema does not model, and a vendor-defined cluster has no spec name to
+  // address it by. One scheme rather than two.
+  //
+  // matter_attribute above stays as the authoritative spelling for logs and for anything
+  // rendering an attribute to a human; it is not what resolution matches on.
+  uint32 matter_attribute_id = 50006;
 }
 
 extend google.protobuf.MessageOptions {

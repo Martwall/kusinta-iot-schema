@@ -33,6 +33,20 @@ export declare const matter_cluster_id: GenExtension<FieldOptions, number>;
 export declare const matter_attribute: GenExtension<FieldOptions, string>;
 
 /**
+ * The Matter attribute ID within that cluster, e.g. 0x0012 for OccupiedHeatingSetpoint.
+ * This is what a PropertyUpdate resolves on — Matter addresses attributes numerically and
+ * so does this schema, because the generic cluster carrier must address attributes of
+ * clusters this schema does not model, and a vendor-defined cluster has no spec name to
+ * address it by. One scheme rather than two.
+ *
+ * matter_attribute above stays as the authoritative spelling for logs and for anything
+ * rendering an attribute to a human; it is not what resolution matches on.
+ *
+ * @generated from extension: uint32 matter_attribute_id = 50006;
+ */
+export declare const matter_attribute_id: GenExtension<FieldOptions, number>;
+
+/**
  * The Matter device type IDs this properties message models, e.g. 0x0301 for
  * Thermostat. Repeated because one shape of properties can serve several device
  * types; empty on vendor extension messages, which have no Matter device type.

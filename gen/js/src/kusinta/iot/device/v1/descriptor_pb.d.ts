@@ -110,7 +110,21 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
    * endpoint with no rule saying whether a producer should.
    *
    * Absent for a device with no vendor extension, which is most of them.
+   * Set when this device sits behind a Matter bridge, naming the bridge's own Device.
    *
+   * A bridge is one Matter node exposing many devices, and each gets its own DeviceId here
+   * rather than becoming an endpoint of the bridge: a user perceives twelve bridged bulbs
+   * as twelve things, and one row that cannot be placed in twelve rooms is not usable.
+   *
+   * So a Device is a Matter node OR one device behind one — the equivalence is deliberately
+   * not exact, and this field is how a consumer tells which. Absent means the device is
+   * reached directly.
+   *
+   * @generated from field: optional kusinta.iot.identity.v1.DeviceId bridged_by = 19;
+   */
+  bridgedBy?: DeviceId | undefined;
+
+  /**
    * @generated from oneof kusinta.iot.device.v1.DeviceDescriptor.vendor_identity
    */
   vendorIdentity: {
