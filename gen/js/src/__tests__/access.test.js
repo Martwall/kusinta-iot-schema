@@ -171,3 +171,37 @@ describe('PropertyConstraint — endpoint scope', () => {
     expect(decoded.attribute?.endpointId).toBe(1)
   })
 })
+
+describe('allowed_actions — an empty grant grants nothing', () => {
+  it('round-trips an acl with no actions, which permits nothing', () => {
+    const acl = create(DeviceAclSchema, {
+      deviceId: { value: 'therm-1' },
+      userId: { value: 'user-1' },
+      role: Role.RESIDENT,
+    })
+    const decoded = fromBinary(DeviceAclSchema, toBinary(DeviceAclSchema, acl))
+    expect(decoded.allowedActions).toEqual([])
+    expect(decoded.allowedAttributeRefs).toEqual([])
+  })
+
+  it('distinguishes an empty action list from one naming UNSPECIFIED', () => {
+    const empty = create(DeviceAclSchema, { deviceId: { value: 'd1' } })
+    const unspecified = create(DeviceAclSchema, {
+      deviceId: { value: 'd1' },
+      allowedActions: [PermissionAction.UNSPECIFIED],
+    })
+    expect(empty.allowedActions).toHaveLength(0)
+    expect(unspecified.allowedActions).toHaveLength(1)
+    expect(toBinary(DeviceAclSchema, empty)).not.toEqual(toBinary(DeviceAclSchema, unspecified))
+  })
+
+  it('carries INVOKE separately from OBSERVE', () => {
+    const acl = create(DeviceAclSchema, {
+      deviceId: { value: 'therm-1' },
+      allowedActions: [PermissionAction.OBSERVE],
+    })
+    const decoded = fromBinary(DeviceAclSchema, toBinary(DeviceAclSchema, acl))
+    expect(decoded.allowedActions).toContain(PermissionAction.OBSERVE)
+    expect(decoded.allowedActions).not.toContain(PermissionAction.INVOKE)
+  })
+})

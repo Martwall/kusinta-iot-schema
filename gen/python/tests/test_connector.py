@@ -147,4 +147,4 @@ def test_announced_endpoints_may_carry_no_readings_yet():
     )
     decoded = connector_pb2.DeviceAnnouncement()
     decoded.ParseFromString(announcement.SerializeToString())
-    assert decoded.device.endpoints[0].WhichOneof("properties") is None
+    assert decoded.device.endpoints[0].WhichOneof("matter_properties") is None

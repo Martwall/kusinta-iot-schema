@@ -21,7 +21,7 @@ import 'properties.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-enum Endpoint_Properties {
+enum Endpoint_MatterProperties {
   thermostat,
   temperatureSensor,
   humiditySensor,
@@ -38,7 +38,7 @@ enum Endpoint_Properties {
   notSet
 }
 
-enum Endpoint_Vendor { hmThermostat, notSet }
+enum Endpoint_VendorProperties { hmThermostat, notSet }
 
 /// The state one Matter endpoint reports.
 ///
@@ -78,9 +78,12 @@ enum Endpoint_Vendor { hmThermostat, notSet }
 /// upstream system holds stable, typically its own channel number, never from enumeration
 /// order.
 ///
-/// properties and vendor are separate oneofs on purpose. An endpoint carries its typed
-/// Matter properties AND its vendor extension — one oneof spanning both would make them
-/// mutually exclusive, which left every vendor field unreachable in practice.
+/// matter_properties and vendor_properties are separate oneofs on purpose. An endpoint
+/// carries its typed Matter properties AND its vendor extension — one oneof spanning both
+/// would make them mutually exclusive, which left every vendor field unreachable in
+/// practice. Named in parallel because they are the same kind of thing addressed through
+/// two annotation namespaces: (matter_attribute) resolves one, (vendor_attribute) the
+/// other. See property_update.proto for the two branches.
 class Endpoint extends $pb.GeneratedMessage {
   factory Endpoint({
     $core.int? endpointId,
@@ -130,26 +133,27 @@ class Endpoint extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
-  static const $core.Map<$core.int, Endpoint_Properties>
-      _Endpoint_PropertiesByTag = {
-    3: Endpoint_Properties.thermostat,
-    4: Endpoint_Properties.temperatureSensor,
-    5: Endpoint_Properties.humiditySensor,
-    6: Endpoint_Properties.occupancySensor,
-    7: Endpoint_Properties.contactSensor,
-    8: Endpoint_Properties.windowCovering,
-    9: Endpoint_Properties.doorLock,
-    10: Endpoint_Properties.onOffLight,
-    11: Endpoint_Properties.dimmableLight,
-    12: Endpoint_Properties.colorTempLight,
-    13: Endpoint_Properties.energySensor,
-    14: Endpoint_Properties.pressureSensor,
-    15: Endpoint_Properties.powerSource,
-    0: Endpoint_Properties.notSet
+  static const $core.Map<$core.int, Endpoint_MatterProperties>
+      _Endpoint_MatterPropertiesByTag = {
+    3: Endpoint_MatterProperties.thermostat,
+    4: Endpoint_MatterProperties.temperatureSensor,
+    5: Endpoint_MatterProperties.humiditySensor,
+    6: Endpoint_MatterProperties.occupancySensor,
+    7: Endpoint_MatterProperties.contactSensor,
+    8: Endpoint_MatterProperties.windowCovering,
+    9: Endpoint_MatterProperties.doorLock,
+    10: Endpoint_MatterProperties.onOffLight,
+    11: Endpoint_MatterProperties.dimmableLight,
+    12: Endpoint_MatterProperties.colorTempLight,
+    13: Endpoint_MatterProperties.energySensor,
+    14: Endpoint_MatterProperties.pressureSensor,
+    15: Endpoint_MatterProperties.powerSource,
+    0: Endpoint_MatterProperties.notSet
   };
-  static const $core.Map<$core.int, Endpoint_Vendor> _Endpoint_VendorByTag = {
-    50: Endpoint_Vendor.hmThermostat,
-    0: Endpoint_Vendor.notSet
+  static const $core.Map<$core.int, Endpoint_VendorProperties>
+      _Endpoint_VendorPropertiesByTag = {
+    50: Endpoint_VendorProperties.hmThermostat,
+    0: Endpoint_VendorProperties.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Endpoint',
@@ -217,12 +221,13 @@ class Endpoint extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Endpoint>(create);
   static Endpoint? _defaultInstance;
 
-  Endpoint_Properties whichProperties() =>
-      _Endpoint_PropertiesByTag[$_whichOneof(0)]!;
-  void clearProperties() => $_clearField($_whichOneof(0));
+  Endpoint_MatterProperties whichMatterProperties() =>
+      _Endpoint_MatterPropertiesByTag[$_whichOneof(0)]!;
+  void clearMatterProperties() => $_clearField($_whichOneof(0));
 
-  Endpoint_Vendor whichVendor() => _Endpoint_VendorByTag[$_whichOneof(1)]!;
-  void clearVendor() => $_clearField($_whichOneof(1));
+  Endpoint_VendorProperties whichVendorProperties() =>
+      _Endpoint_VendorPropertiesByTag[$_whichOneof(1)]!;
+  void clearVendorProperties() => $_clearField($_whichOneof(1));
 
   @$pb.TagNumber(1)
   $core.int get endpointId => $_getIZ(0);

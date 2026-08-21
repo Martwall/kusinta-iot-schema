@@ -14,6 +14,30 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use commandErrorCodeDescriptor instead')
+const CommandErrorCode$json = {
+  '1': 'CommandErrorCode',
+  '2': [
+    {'1': 'COMMAND_ERROR_CODE_UNSPECIFIED', '2': 0},
+    {'1': 'COMMAND_ERROR_CODE_NOT_ENTITLED', '2': 1},
+    {'1': 'COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED', '2': 2},
+    {'1': 'COMMAND_ERROR_CODE_INVALID_COMMAND', '2': 3},
+    {'1': 'COMMAND_ERROR_CODE_UNREACHABLE', '2': 4},
+    {'1': 'COMMAND_ERROR_CODE_TIMEOUT', '2': 5},
+    {'1': 'COMMAND_ERROR_CODE_REJECTED_BY_DEVICE', '2': 6},
+    {'1': 'COMMAND_ERROR_CODE_INTERNAL', '2': 7},
+  ],
+};
+
+/// Descriptor for `CommandErrorCode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List commandErrorCodeDescriptor = $convert.base64Decode(
+    'ChBDb21tYW5kRXJyb3JDb2RlEiIKHkNPTU1BTkRfRVJST1JfQ09ERV9VTlNQRUNJRklFRBAAEi'
+    'MKH0NPTU1BTkRfRVJST1JfQ09ERV9OT1RfRU5USVRMRUQQARIqCiZDT01NQU5EX0VSUk9SX0NP'
+    'REVfQ09OU1RSQUlOVF9WSU9MQVRFRBACEiYKIkNPTU1BTkRfRVJST1JfQ09ERV9JTlZBTElEX0'
+    'NPTU1BTkQQAxIiCh5DT01NQU5EX0VSUk9SX0NPREVfVU5SRUFDSEFCTEUQBBIeChpDT01NQU5E'
+    'X0VSUk9SX0NPREVfVElNRU9VVBAFEikKJUNPTU1BTkRfRVJST1JfQ09ERV9SRUpFQ1RFRF9CWV'
+    '9ERVZJQ0UQBhIfChtDT01NQU5EX0VSUk9SX0NPREVfSU5URVJOQUwQBw==');
+
 @$core.Deprecated('Use thermostatSetpointParamsDescriptor instead')
 const ThermostatSetpointParams$json = {
   '1': 'ThermostatSetpointParams',
@@ -230,15 +254,25 @@ final $typed_data.Uint8List deviceCommandDescriptor = $convert.base64Decode(
 const CommandError$json = {
   '1': 'CommandError',
   '2': [
-    {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
+    {
+      '1': 'code',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.CommandErrorCode',
+      '10': 'code'
+    },
+  ],
+  '9': [
+    {'1': 1, '2': 2},
   ],
 };
 
 /// Descriptor for `CommandError`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List commandErrorDescriptor = $convert.base64Decode(
-    'CgxDb21tYW5kRXJyb3ISEgoEY29kZRgBIAEoCVIEY29kZRIYCgdtZXNzYWdlGAIgASgJUgdtZX'
-    'NzYWdl');
+    'CgxDb21tYW5kRXJyb3ISGAoHbWVzc2FnZRgCIAEoCVIHbWVzc2FnZRI7CgRjb2RlGAMgASgOMi'
+    'cua3VzaW50YS5pb3Qud2VicnRjLnYxLkNvbW1hbmRFcnJvckNvZGVSBGNvZGVKBAgBEAI=');
 
 @$core.Deprecated('Use commandResultDescriptor instead')
 const CommandResult$json = {

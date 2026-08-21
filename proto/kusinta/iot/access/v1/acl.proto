@@ -60,6 +60,16 @@ message DeviceAcl {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
   kusinta.iot.identity.v1.UserId   user_id   = 2;
   Role                             role      = 3;
+  // What this user may do to this device. EMPTY GRANTS NOTHING — an ACL with no actions
+  // permits no operation at all.
+  //
+  // Deliberately the opposite default to allowed_attribute_refs below, which is empty for
+  // "every attribute". The two are not the same kind of list: this one IS the grant, so an
+  // empty grant is empty, while that one is a FILTER narrowing the grant, so an empty
+  // filter narrows nothing. Reading either as the other fails open.
+  //
+  // PERMISSION_ACTION_UNSPECIFIED in this list is invalid and MUST be rejected; it is not
+  // a wildcard. See roles.proto for what each action authorizes.
   repeated PermissionAction        allowed_actions     = 4;
 
   // Was a repeated bare attribute name, with no cluster and no endpoint. Burned rather
@@ -68,9 +78,13 @@ message DeviceAcl {
   reserved 5;
   reserved "allowed_attributes";
 
-  // Empty = all attributes on all endpoints allowed, unchanged in meaning from the field
-  // it replaces. A ref present with no endpoint_id is INVALID and MUST be rejected, not
-  // read as a grant over every endpoint: omission must never be what widens access.
+  // Narrows allowed_actions to particular attributes. Empty = every attribute on every
+  // endpoint, unchanged in meaning from the field it replaces — an empty filter narrows
+  // nothing. It does NOT grant anything on its own: with allowed_actions empty, this
+  // being empty still permits no operation.
+  //
+  // A ref present with no endpoint_id is INVALID and MUST be rejected, not read as a grant
+  // over every endpoint: omission must never be what widens access.
   repeated AttributeRef            allowed_attribute_refs = 7;
   repeated PropertyConstraint      property_constraints = 6;
 }

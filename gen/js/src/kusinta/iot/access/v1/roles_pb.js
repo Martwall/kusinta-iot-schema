@@ -29,6 +29,10 @@ export const PermissionActionSchema = /*@__PURE__*/
   enumDesc(file_kusinta_iot_access_v1_roles, 1);
 
 /**
+ * What a user may do to a device, as listed in DeviceAcl.allowed_actions. Each value
+ * names an operation that exists on the app leg, so a grant can be checked against the
+ * message that arrived.
+ *
  * @generated from enum kusinta.iot.access.v1.PermissionAction
  */
 export const PermissionAction = /*@__PURE__*/

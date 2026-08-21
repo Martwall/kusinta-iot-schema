@@ -132,14 +132,29 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
   role: Role;
 
   /**
+   * What this user may do to this device. EMPTY GRANTS NOTHING — an ACL with no actions
+   * permits no operation at all.
+   *
+   * Deliberately the opposite default to allowed_attribute_refs below, which is empty for
+   * "every attribute". The two are not the same kind of list: this one IS the grant, so an
+   * empty grant is empty, while that one is a FILTER narrowing the grant, so an empty
+   * filter narrows nothing. Reading either as the other fails open.
+   *
+   * PERMISSION_ACTION_UNSPECIFIED in this list is invalid and MUST be rejected; it is not
+   * a wildcard. See roles.proto for what each action authorizes.
+   *
    * @generated from field: repeated kusinta.iot.access.v1.PermissionAction allowed_actions = 4;
    */
   allowedActions: PermissionAction[];
 
   /**
-   * Empty = all attributes on all endpoints allowed, unchanged in meaning from the field
-   * it replaces. A ref present with no endpoint_id is INVALID and MUST be rejected, not
-   * read as a grant over every endpoint: omission must never be what widens access.
+   * Narrows allowed_actions to particular attributes. Empty = every attribute on every
+   * endpoint, unchanged in meaning from the field it replaces — an empty filter narrows
+   * nothing. It does NOT grant anything on its own: with allowed_actions empty, this
+   * being empty still permits no operation.
+   *
+   * A ref present with no endpoint_id is INVALID and MUST be rejected, not read as a grant
+   * over every endpoint: omission must never be what widens access.
    *
    * @generated from field: repeated kusinta.iot.access.v1.AttributeRef allowed_attribute_refs = 7;
    */

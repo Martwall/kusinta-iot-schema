@@ -15,7 +15,7 @@ from kusinta.iot.vendor.homematic.v1 import homematic_pb2
 # below without a single test failing.
 PROPERTIES_MESSAGES = [
     field.message_type._concrete_class
-    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
+    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["matter_properties"].fields
 ]
 
 

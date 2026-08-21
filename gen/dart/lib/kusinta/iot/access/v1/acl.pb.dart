@@ -355,15 +355,29 @@ class DeviceAcl extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearRole() => $_clearField(3);
 
+  /// What this user may do to this device. EMPTY GRANTS NOTHING — an ACL with no actions
+  /// permits no operation at all.
+  ///
+  /// Deliberately the opposite default to allowed_attribute_refs below, which is empty for
+  /// "every attribute". The two are not the same kind of list: this one IS the grant, so an
+  /// empty grant is empty, while that one is a FILTER narrowing the grant, so an empty
+  /// filter narrows nothing. Reading either as the other fails open.
+  ///
+  /// PERMISSION_ACTION_UNSPECIFIED in this list is invalid and MUST be rejected; it is not
+  /// a wildcard. See roles.proto for what each action authorizes.
   @$pb.TagNumber(4)
   $pb.PbList<$2.PermissionAction> get allowedActions => $_getList(3);
 
   @$pb.TagNumber(6)
   $pb.PbList<PropertyConstraint> get propertyConstraints => $_getList(4);
 
-  /// Empty = all attributes on all endpoints allowed, unchanged in meaning from the field
-  /// it replaces. A ref present with no endpoint_id is INVALID and MUST be rejected, not
-  /// read as a grant over every endpoint: omission must never be what widens access.
+  /// Narrows allowed_actions to particular attributes. Empty = every attribute on every
+  /// endpoint, unchanged in meaning from the field it replaces — an empty filter narrows
+  /// nothing. It does NOT grant anything on its own: with allowed_actions empty, this
+  /// being empty still permits no operation.
+  ///
+  /// A ref present with no endpoint_id is INVALID and MUST be rejected, not read as a grant
+  /// over every endpoint: omission must never be what widens access.
   @$pb.TagNumber(7)
   $pb.PbList<AttributeRef> get allowedAttributeRefs => $_getList(5);
 }

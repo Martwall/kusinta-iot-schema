@@ -136,13 +136,13 @@ def test_endpoint_carries_matter_properties_and_a_vendor_extension_at_once():
 
 
 def test_properties_and_vendor_are_separate_oneofs():
-    assert "properties" in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name
-    assert "vendor" in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name
+    assert "matter_properties" in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name
+    assert "vendor_properties" in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name
     properties_fields = {
-        f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
+        f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["matter_properties"].fields
     }
     vendor_fields = {
-        f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor"].fields
+        f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
     }
     assert properties_fields.isdisjoint(vendor_fields)
     assert "hm_thermostat" in vendor_fields
@@ -179,7 +179,7 @@ def test_property_update_endpoint_zero_is_still_expressible_as_present():
 
 VENDOR_EXTENSIONS = [
     field.message_type
-    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor"].fields
+    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
 ]
 
 
@@ -287,3 +287,12 @@ def test_matter_update_has_no_vendor_extension_set():
         endpoint_id=1, attribute_name="LocalTemperature", cluster_id=0x0201
     )
     assert not update.HasField("vendor_extension")
+
+
+# --- the two oneofs are named in parallel and stay independent ----------------------
+
+
+def test_endpoint_oneofs_are_named_for_their_annotation_namespaces():
+    names = set(device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name)
+    assert "matter_properties" in names
+    assert "vendor_properties" in names

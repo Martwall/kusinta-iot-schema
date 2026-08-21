@@ -80,13 +80,29 @@ negative on export.
 `PowerSourceProperties.bat_percent_remaining` is Matter's **half-percent, 0–200** — 200 is a full
 battery. Divide by two for display; do not rescale on the wire.
 
-Vendor extensions sit in `Endpoint.vendor`, a oneof separate from `Endpoint.properties` and
+Vendor extensions sit in `Endpoint.vendor_properties`, a oneof separate from
+`Endpoint.matter_properties` and
 occupying fields 50–99. `HomematicVendorExtension` is at field 50. Separate oneofs so an endpoint
 carries typed Matter properties *and* its vendor extension — one oneof spanning both made every
 vendor field unreachable in practice.
 
 This table is documentation only. The mapping itself lives in the schema as custom options
 (see below), so consumers never transcribe it.
+
+## Property or attribute?
+
+The same datum, named from two sides, and both names are load-bearing:
+
+- **Attribute** is Matter's word, used wherever the schema names a spec identity —
+  `PropertyUpdate.attribute_name`, the `(matter_attribute)` annotation, `AttributeRef` in the
+  ACL. It is the authoritative spelling, owned by the Matter specification.
+- **Properties** is this schema's typed container — `ThermostatProperties`,
+  `Endpoint.matter_properties`. A *field* of a Properties message **is** a Matter attribute;
+  the annotations on it are what say which one.
+
+So "grant the resident this attribute" and "the thermostat's properties" describe the same
+values at different granularity. Vendor parameters work identically one namespace over:
+`(vendor_attribute)` names them, `Endpoint.vendor_properties` holds them.
 
 ## Matter annotations
 
@@ -107,9 +123,9 @@ A `PropertyUpdate` resolves in three steps, all read from the descriptor:
 
 1. **Endpoint** — the `Device.endpoints` entry whose `endpoint_id` matches. Required; an
    unaddressed update is a miss, never defaulted to the primary endpoint.
-2. **Message** — Matter branch (no `vendor_extension` set): the `Endpoint.properties` case whose
+2. **Message** — Matter branch (no `vendor_extension` set): the `Endpoint.matter_properties` case whose
    message declares `(matter_device_type) == Endpoint.matter_device_type_id`. Vendor branch: the
-   `Endpoint.vendor` case whose message declares the named `(vendor_extension)`.
+   `Endpoint.vendor_properties` case whose message declares the named `(vendor_extension)`.
 3. **Field** — Matter branch: exact match on `(matter_cluster_id, matter_attribute)` against
    `(cluster_id, attribute_name)`. Vendor branch: exact match on `(vendor_attribute)` against
    `attribute_name`; no cluster is involved.

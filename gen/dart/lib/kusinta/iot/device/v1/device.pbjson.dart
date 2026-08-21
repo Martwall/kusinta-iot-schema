@@ -154,8 +154,8 @@ const Endpoint$json = {
     },
   ],
   '8': [
-    {'1': 'properties'},
-    {'1': 'vendor'},
+    {'1': 'matter_properties'},
+    {'1': 'vendor_properties'},
   ],
 };
 
@@ -185,7 +185,7 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'EKDHBvd2VyX3NvdXJjZRgPIAEoCzIsLmt1c2ludGEuaW90LmRldmljZS52MS5Qb3dlclNvdXJj'
     'ZVByb3BlcnRpZXNIAFILcG93ZXJTb3VyY2USWQoNaG1fdGhlcm1vc3RhdBgyIAEoCzIyLmt1c2'
     'ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAVIMaG1UaGVy'
-    'bW9zdGF0QgwKCnByb3BlcnRpZXNCCAoGdmVuZG9y');
+    'bW9zdGF0QhMKEW1hdHRlcl9wcm9wZXJ0aWVzQhMKEXZlbmRvcl9wcm9wZXJ0aWVz');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {

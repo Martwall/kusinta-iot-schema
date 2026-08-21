@@ -14,7 +14,7 @@ from kusinta.iot.device.v1 import device_pb2, matter_options_pb2, properties_pb2
 # below without a single test failing.
 PROPERTIES_MESSAGES = [
     field.message_type._concrete_class
-    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
+    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["matter_properties"].fields
 ]
 
 
@@ -35,7 +35,7 @@ def properties_case_for_device_type(device_type_id):
     Returns None for a device type the schema does not model."""
     matches = [
         field.name
-        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
+        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["matter_properties"].fields
         if device_type_id
         in field.message_type.GetOptions().Extensions[matter_options_pb2.matter_device_type]
     ]
@@ -173,7 +173,7 @@ def test_contact_sensor_device_type_resolves_to_the_contact_sensor_case():
 def test_every_non_vendor_properties_case_declares_a_device_type():
     unannotated = [
         field.name
-        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
+        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["matter_properties"].fields
         if field.message_type.file.package.startswith("kusinta.iot.device.")
         and not field.message_type.GetOptions().Extensions[matter_options_pb2.matter_device_type]
     ]
@@ -191,7 +191,7 @@ def test_vendor_extension_declares_no_device_type():
 def test_no_device_type_maps_to_more_than_one_properties_case():
     device_types = [
         device_type
-        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["properties"].fields
+        for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["matter_properties"].fields
         for device_type in field.message_type.GetOptions().Extensions[
             matter_options_pb2.matter_device_type
         ]

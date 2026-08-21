@@ -233,13 +233,13 @@ describe('Endpoints — several device types on one device', () => {
     const d = create(DeviceSchema, {
       descriptor: { deviceId: { value: 'wall-therm-1' } },
       endpoints: [
-        { endpointId: 1, matterDeviceTypeId: 0x0301, properties: { case: 'thermostat', value: { localTemperature: 2150 } } },
-        { endpointId: 2, matterDeviceTypeId: 0x0307, properties: { case: 'humiditySensor', value: { measuredValue: 4500 } } },
+        { endpointId: 1, matterDeviceTypeId: 0x0301, matterProperties: { case: 'thermostat', value: { localTemperature: 2150 } } },
+        { endpointId: 2, matterDeviceTypeId: 0x0307, matterProperties: { case: 'humiditySensor', value: { measuredValue: 4500 } } },
       ],
     })
     const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
     expect(decoded.endpoints.map((e) => e.matterDeviceTypeId)).toEqual([0x0301, 0x0307])
-    expect(decoded.endpoints[1].properties?.case).toBe('humiditySensor')
+    expect(decoded.endpoints[1].matterProperties?.case).toBe('humiditySensor')
   })
 
   it('keeps four endpoints of the same device type distinguishable', () => {
@@ -248,7 +248,7 @@ describe('Endpoints — several device types on one device', () => {
       endpoints: [1, 2, 3, 4].map((n) => ({
         endpointId: n,
         matterDeviceTypeId: 0x0100,
-        properties: { case: 'onOffLight', value: { onOff: n % 2 === 1 } },
+        matterProperties: { case: 'onOffLight', value: { onOff: n % 2 === 1 } },
       })),
     })
     const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
@@ -259,14 +259,14 @@ describe('Endpoints — several device types on one device', () => {
     const d = create(DeviceSchema, {
       descriptor: { deviceId: { value: 'valve-1' }, matterDeviceTypeId: 0x0301 },
       endpoints: [
-        { endpointId: 1, matterDeviceTypeId: 0x0301, properties: { case: 'thermostat', value: { localTemperature: 2150 } } },
-        { endpointId: 2, matterDeviceTypeId: 0x0011, properties: { case: 'powerSource', value: { batPercentRemaining: 150, batChargeLevel: 1 } } },
+        { endpointId: 1, matterDeviceTypeId: 0x0301, matterProperties: { case: 'thermostat', value: { localTemperature: 2150 } } },
+        { endpointId: 2, matterDeviceTypeId: 0x0011, matterProperties: { case: 'powerSource', value: { batPercentRemaining: 150, batChargeLevel: 1 } } },
       ],
     })
     const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
-    expect(decoded.endpoints[1].properties?.case).toBe('powerSource')
-    if (decoded.endpoints[1].properties?.case === 'powerSource') {
-      expect(decoded.endpoints[1].properties.value.batPercentRemaining).toBe(150)
+    expect(decoded.endpoints[1].matterProperties?.case).toBe('powerSource')
+    if (decoded.endpoints[1].matterProperties?.case === 'powerSource') {
+      expect(decoded.endpoints[1].matterProperties.value.batPercentRemaining).toBe(150)
     }
   })
 

@@ -9,7 +9,7 @@ option optimize_for = SPEED;
 // Custom options that make this schema's Matter mapping machine-readable.
 //
 // Without them a consumer has to infer two mappings from naming convention: which
-// *Properties field a PropertyUpdate belongs to, and which Endpoint.properties case an
+// *Properties field a PropertyUpdate belongs to, and which Endpoint.matter_properties case an
 // Endpoint.matter_device_type_id selects. Both inferences fail silently — a
 // dropped attribute or an unset oneof looks identical to a device that never reported.
 // These options move both mappings into the descriptor, so consumers read them.
@@ -41,7 +41,7 @@ extend google.protobuf.MessageOptions {
   // types; empty on vendor extension messages, which have no Matter device type.
   //
   // A device type appears on at most one properties message, so the mapping from
-  // EndpointDescriptor.matter_device_type_id to an Endpoint.properties case is a
+  // Endpoint.matter_device_type_id to an Endpoint.matter_properties case is a
   // function.
   repeated uint32 matter_device_type = 50003;
 }

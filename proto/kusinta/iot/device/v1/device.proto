@@ -47,14 +47,17 @@ option optimize_for = SPEED;
 // upstream system holds stable, typically its own channel number, never from enumeration
 // order.
 //
-// properties and vendor are separate oneofs on purpose. An endpoint carries its typed
-// Matter properties AND its vendor extension — one oneof spanning both would make them
-// mutually exclusive, which left every vendor field unreachable in practice.
+// matter_properties and vendor_properties are separate oneofs on purpose. An endpoint
+// carries its typed Matter properties AND its vendor extension — one oneof spanning both
+// would make them mutually exclusive, which left every vendor field unreachable in
+// practice. Named in parallel because they are the same kind of thing addressed through
+// two annotation namespaces: (matter_attribute) resolves one, (vendor_attribute) the
+// other. See property_update.proto for the two branches.
 message Endpoint {
   uint32 endpoint_id           = 1;
   uint32 matter_device_type_id = 2;
 
-  oneof properties {
+  oneof matter_properties {
     ThermostatProperties            thermostat         = 3;
     TemperatureSensorProperties     temperature_sensor = 4;
     HumiditySensorProperties        humidity_sensor    = 5;
@@ -72,7 +75,7 @@ message Endpoint {
 
   // Vendor readings for this endpoint, beside its Matter properties rather than instead
   // of them. Vendor IDENTITY — who the physical device is — is on DeviceDescriptor.
-  oneof vendor {
+  oneof vendor_properties {
     kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 50;
   }
 }

@@ -31,9 +31,9 @@ export const vendor_attribute = /*@__PURE__*/
 /**
  * The stable key identifying a vendor extension message, e.g. "homematic.thermostat".
  * Matches device.v1.PropertyUpdate.vendor_extension byte for byte, and is what selects
- * the Endpoint.vendor case.
+ * the Endpoint.vendor_properties case.
  *
- * One key per message carried in Endpoint.vendor, so the vendor branch of the
+ * One key per message carried in Endpoint.vendor_properties, so the vendor branch of the
  * resolution rule is the same shape as the Matter branch: pick a message by a message
  * option, then one field by a field option. Nothing nests.
  *

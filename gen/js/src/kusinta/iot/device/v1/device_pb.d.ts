@@ -53,9 +53,12 @@ export declare const file_kusinta_iot_device_v1_device: GenFile;
  * upstream system holds stable, typically its own channel number, never from enumeration
  * order.
  *
- * properties and vendor are separate oneofs on purpose. An endpoint carries its typed
- * Matter properties AND its vendor extension — one oneof spanning both would make them
- * mutually exclusive, which left every vendor field unreachable in practice.
+ * matter_properties and vendor_properties are separate oneofs on purpose. An endpoint
+ * carries its typed Matter properties AND its vendor extension — one oneof spanning both
+ * would make them mutually exclusive, which left every vendor field unreachable in
+ * practice. Named in parallel because they are the same kind of thing addressed through
+ * two annotation namespaces: (matter_attribute) resolves one, (vendor_attribute) the
+ * other. See property_update.proto for the two branches.
  *
  * @generated from message kusinta.iot.device.v1.Endpoint
  */
@@ -71,9 +74,9 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   matterDeviceTypeId: number;
 
   /**
-   * @generated from oneof kusinta.iot.device.v1.Endpoint.properties
+   * @generated from oneof kusinta.iot.device.v1.Endpoint.matter_properties
    */
-  properties: {
+  matterProperties: {
     /**
      * @generated from field: kusinta.iot.device.v1.ThermostatProperties thermostat = 3;
      */
@@ -157,9 +160,9 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
    * Vendor readings for this endpoint, beside its Matter properties rather than instead
    * of them. Vendor IDENTITY — who the physical device is — is on DeviceDescriptor.
    *
-   * @generated from oneof kusinta.iot.device.v1.Endpoint.vendor
+   * @generated from oneof kusinta.iot.device.v1.Endpoint.vendor_properties
    */
-  vendor: {
+  vendorProperties: {
     /**
      * @generated from field: kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 50;
      */

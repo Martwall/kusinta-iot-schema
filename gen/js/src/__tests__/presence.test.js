@@ -26,7 +26,7 @@ const EXPLICIT = 1
 // message added to the schema and forgotten here would silently drop out of every sweep
 // below without a single test failing.
 const PROPERTIES_MESSAGES = EndpointSchema.oneofs
-  .find((o) => o.name === 'properties')
+  .find((o) => o.name === 'matter_properties')
   .fields.map((f) => f.message)
 
 describe('contact state, where false is the alarm reading', () => {

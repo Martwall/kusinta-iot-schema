@@ -2,12 +2,32 @@ import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from collections.abc import Mapping as _Mapping
 from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
+
+class CommandErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    COMMAND_ERROR_CODE_UNSPECIFIED: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_NOT_ENTITLED: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_INVALID_COMMAND: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_UNREACHABLE: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_TIMEOUT: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_REJECTED_BY_DEVICE: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_INTERNAL: _ClassVar[CommandErrorCode]
+COMMAND_ERROR_CODE_UNSPECIFIED: CommandErrorCode
+COMMAND_ERROR_CODE_NOT_ENTITLED: CommandErrorCode
+COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED: CommandErrorCode
+COMMAND_ERROR_CODE_INVALID_COMMAND: CommandErrorCode
+COMMAND_ERROR_CODE_UNREACHABLE: CommandErrorCode
+COMMAND_ERROR_CODE_TIMEOUT: CommandErrorCode
+COMMAND_ERROR_CODE_REJECTED_BY_DEVICE: CommandErrorCode
+COMMAND_ERROR_CODE_INTERNAL: CommandErrorCode
 
 class ThermostatSetpointParams(_message.Message):
     __slots__ = ("mode", "amount")
@@ -84,12 +104,12 @@ class DeviceCommand(_message.Message):
     def __init__(self, command_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., thermostat_setpoint_write: _Optional[_Union[ThermostatSetpointWriteParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
 
 class CommandError(_message.Message):
-    __slots__ = ("code", "message")
-    CODE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("message", "code")
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
-    code: str
+    CODE_FIELD_NUMBER: _ClassVar[int]
     message: str
-    def __init__(self, code: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+    code: CommandErrorCode
+    def __init__(self, message: _Optional[str] = ..., code: _Optional[_Union[CommandErrorCode, str]] = ...) -> None: ...
 
 class CommandResult(_message.Message):
     __slots__ = ("command_id", "success", "error", "completed_at", "settles_by")

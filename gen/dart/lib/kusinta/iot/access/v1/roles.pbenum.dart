@@ -42,16 +42,41 @@ class Role extends $pb.ProtobufEnum {
   const Role._(super.value, super.name);
 }
 
+/// What a user may do to a device, as listed in DeviceAcl.allowed_actions. Each value
+/// names an operation that exists on the app leg, so a grant can be checked against the
+/// message that arrived.
 class PermissionAction extends $pb.ProtobufEnum {
+  /// Names no action. Present only because buf's ENUM_ZERO_VALUE_SUFFIX requires a zero
+  /// value; it is not a wildcard and carries no permission.
+  ///
+  /// In allowed_actions it is INVALID and MUST be rejected — never read as "any action".
+  /// Omission must never be what widens access.
   static const PermissionAction PERMISSION_ACTION_UNSPECIFIED =
       PermissionAction._(
           0, _omitEnumNames ? '' : 'PERMISSION_ACTION_UNSPECIFIED');
+
+  /// Read an attribute once, on demand: webrtc.v1.PropertyReadRequest.
   static const PermissionAction PERMISSION_ACTION_READ =
       PermissionAction._(1, _omitEnumNames ? '' : 'PERMISSION_ACTION_READ');
+
+  /// Write an attribute directly.
+  ///
+  /// NOTE: no message on the app leg does this. AppMessage carries handshake, command,
+  /// read_request, ping, subscribe, unsubscribe and management — nothing that writes an
+  /// attribute, so the only thing that changes a device is a DeviceCommand, which is
+  /// INVOKE. This value therefore authorizes an operation that does not yet exist. It is
+  /// kept rather than reserved because a direct attribute write is a plausible addition
+  /// and burning the number would gain nothing; until then, granting it grants nothing.
   static const PermissionAction PERMISSION_ACTION_WRITE =
       PermissionAction._(2, _omitEnumNames ? '' : 'PERMISSION_ACTION_WRITE');
+
+  /// Receive attribute changes as they happen: webrtc.v1.AppMessage.subscribe and the
+  /// DevicePropertyEvent stream that follows. Distinct from READ — observing is a standing
+  /// interest in a device, not a single question about it.
   static const PermissionAction PERMISSION_ACTION_OBSERVE =
       PermissionAction._(3, _omitEnumNames ? '' : 'PERMISSION_ACTION_OBSERVE');
+
+  /// Send a webrtc.v1.DeviceCommand. This is the action that moves hardware.
   static const PermissionAction PERMISSION_ACTION_INVOKE =
       PermissionAction._(4, _omitEnumNames ? '' : 'PERMISSION_ACTION_INVOKE');
 

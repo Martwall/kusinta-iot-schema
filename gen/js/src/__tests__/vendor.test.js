@@ -46,15 +46,15 @@ describe('Endpoint vendor props', () => {
     const e = create(EndpointSchema, {
       endpointId: 1,
       matterDeviceTypeId: 0x0301,
-      properties: { case: 'thermostat', value: { localTemperature: 2150 } },
-      vendor: { case: 'hmThermostat', value: { controlMode: 2, level: 0.5 } },
+      matterProperties: { case: 'thermostat', value: { localTemperature: 2150 } },
+      vendorProperties: { case: 'hmThermostat', value: { controlMode: 2, level: 0.5 } },
     })
     const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
-    expect(decoded.properties?.case).toBe('thermostat')
-    expect(decoded.vendor?.case).toBe('hmThermostat')
-    if (decoded.vendor?.case === 'hmThermostat') {
-      expect(decoded.vendor.value.level).toBe(0.5)
-      expect(decoded.vendor.value.controlMode).toBe(2)
+    expect(decoded.matterProperties?.case).toBe('thermostat')
+    expect(decoded.vendorProperties?.case).toBe('hmThermostat')
+    if (decoded.vendorProperties?.case === 'hmThermostat') {
+      expect(decoded.vendorProperties.value.level).toBe(0.5)
+      expect(decoded.vendorProperties.value.controlMode).toBe(2)
     }
   })
 })

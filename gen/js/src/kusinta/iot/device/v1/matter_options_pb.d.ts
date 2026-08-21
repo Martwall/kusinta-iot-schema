@@ -38,7 +38,7 @@ export declare const matter_attribute: GenExtension<FieldOptions, string>;
  * types; empty on vendor extension messages, which have no Matter device type.
  *
  * A device type appears on at most one properties message, so the mapping from
- * EndpointDescriptor.matter_device_type_id to an Endpoint.properties case is a
+ * Endpoint.matter_device_type_id to an Endpoint.matter_properties case is a
  * function.
  *
  * @generated from extension: repeated uint32 matter_device_type = 50003;

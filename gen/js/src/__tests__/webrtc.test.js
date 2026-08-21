@@ -15,6 +15,7 @@ import {
 import {
   DeviceCommandSchema,
   CommandResultSchema,
+  CommandErrorCode,
   ThermostatSetpointParamsSchema,
   ThermostatSetpointWriteParamsSchema,
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
@@ -165,11 +166,14 @@ describe('CommandResult', () => {
     const result = create(CommandResultSchema, {
       commandId: 'cmd-uuid-2',
       success: false,
-      error: { code: 'PERMISSION_DENIED', message: 'Setpoint exceeds property-owner limit' },
+      error: {
+        code: CommandErrorCode.CONSTRAINT_VIOLATED,
+        message: 'Setpoint exceeds property-owner limit',
+      },
     })
     const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
     expect(decoded.success).toBe(false)
-    expect(decoded.error?.code).toBe('PERMISSION_DENIED')
+    expect(decoded.error?.code).toBe(CommandErrorCode.CONSTRAINT_VIOLATED)
   })
 
   it('leaves settles_by unset when the producer states no optimistic window', () => {
@@ -195,7 +199,7 @@ describe('DeviceStateSnapshot', () => {
       devices: [{
         descriptor: { deviceId: { value: 'therm-1' }, matterDeviceTypeId: 0x0301 },
         endpoints: [
-          { endpointId: 1, properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } } },
+          { endpointId: 1, matterProperties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } } },
         ],
       }],
       permissions: { userId: { value: 'user-1' }, gatewayId: { value: 'gw-1' }, deviceAcls: [] },
@@ -435,15 +439,15 @@ describe('DeviceAdded', () => {
       device: {
         descriptor: { deviceId: { value: 'hm:ABC123' }, matterDeviceTypeId: 0x0301 },
         endpoints: [
-          { endpointId: 1, properties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } } },
+          { endpointId: 1, matterProperties: { case: 'thermostat', value: { occupiedHeatingSetpoint: 2100 } } },
         ],
       },
     })
     const decoded = fromBinary(DeviceAddedSchema, toBinary(DeviceAddedSchema, added))
     expect(decoded.device?.descriptor?.deviceId?.value).toBe('hm:ABC123')
-    expect(decoded.device?.endpoints[0].properties?.case).toBe('thermostat')
-    if (decoded.device?.endpoints[0].properties?.case === 'thermostat') {
-      expect(decoded.device.endpoints[0].properties.value.occupiedHeatingSetpoint).toBe(2100)
+    expect(decoded.device?.endpoints[0].matterProperties?.case).toBe('thermostat')
+    if (decoded.device?.endpoints[0].matterProperties?.case === 'thermostat') {
+      expect(decoded.device.endpoints[0].matterProperties.value.occupiedHeatingSetpoint).toBe(2100)
     }
   })
 })

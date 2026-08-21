@@ -25,9 +25,9 @@ export declare const file_kusinta_iot_device_v1_property_update: GenFile;
  *     update's endpoint_id, and the DeviceDescriptor.endpoints entry with the same id,
  *     which is where that endpoint's Matter device type lives.
  *  2. Pick the message. Two branches, chosen by whether vendor_extension is set:
- *       - absent (Matter): the Endpoint.properties case whose message type declares
+ *       - absent (Matter): the Endpoint.matter_properties case whose message type declares
  *         (matter_device_type) == Endpoint.matter_device_type_id.
- *       - present (vendor): the Endpoint.vendor case whose message type declares
+ *       - present (vendor): the Endpoint.vendor_properties case whose message type declares
  *         (vendor_extension) == the update's vendor_extension.
  *  3. Pick the field:
  *       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id AND
@@ -134,7 +134,7 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
    * producer written before this field behaved, so a consumer that ignores it and a
    * producer that never sets it both behave exactly as they did.
    *
-   * Snapshots carry no provenance. Endpoint.properties is a typed message whose fields
+   * Snapshots carry no provenance. Endpoint.matter_properties is a typed message whose fields
    * hold a value and nothing else, so a gateway MUST NOT store an OPTIMISTIC value into
    * its registry: an app reconnecting mid-window would receive it restated as plain
    * fact. A snapshot is a statement of what has been confirmed. A reconnect during an

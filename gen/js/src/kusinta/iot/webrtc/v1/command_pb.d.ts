@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/webrtc/v1/command.proto (package kusinta.iot.webrtc.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -181,6 +181,21 @@ export declare type DoorLockParams = Message<"kusinta.iot.webrtc.v1.DoorLockPara
 export declare const DoorLockParamsSchema: GenMessage<DoorLockParams>;
 
 /**
+ * A command an app asks the gateway to run on a device.
+ *
+ * Authorization
+ *
+ * An app MAY send any command; it does not decide whether it is allowed. The gateway
+ * authorizes every DeviceCommand against the caller's access.v1.DeviceAcl for the target
+ * device before forwarding it to a connector — the command must be permitted by
+ * PERMISSION_ACTION_INVOKE, must target an attribute the ACL's allowed_attribute_refs
+ * reaches, and must respect any PropertyConstraint bounding the value.
+ *
+ * A refusal comes back as an ordinary CommandResult with success = false and an error,
+ * NOT as a session-level GatewayError: one command being refused says nothing about the
+ * session, which continues. A command for a device the caller cannot reach is refused the
+ * same way whether or not it exists, so no result reveals a device the user may not see.
+ *
  * @generated from message kusinta.iot.webrtc.v1.DeviceCommand
  */
 export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand"> & {
@@ -211,7 +226,11 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
   clusterId: number;
 
   /**
-   * Which endpoint of the device to command. Required: a device presents several
+   * Which endpoint of the device to command. Required by rule — proto3 has no `required`,
+   * and `optional` is what makes "not stated" representable so a consumer can reject it
+   * rather than decode an omission to endpoint 0, which is the Matter root node.
+   *
+   * A device presents several
    * endpoints and a command with no destination has no correct one — on a 4-channel
    * actuator, picking any of them moves real hardware. Refuse an unaddressed command
    * rather than guessing.
@@ -285,14 +304,16 @@ export declare const DeviceCommandSchema: GenMessage<DeviceCommand>;
  */
 export declare type CommandError = Message<"kusinta.iot.webrtc.v1.CommandError"> & {
   /**
-   * @generated from field: string code = 1;
-   */
-  code: string;
-
-  /**
+   * human-readable, for logs — never rendered to a user
+   *
    * @generated from field: string message = 2;
    */
   message: string;
+
+  /**
+   * @generated from field: kusinta.iot.webrtc.v1.CommandErrorCode code = 3;
+   */
+  code: CommandErrorCode;
 };
 
 /**
@@ -358,4 +379,83 @@ export declare type CommandResult = Message<"kusinta.iot.webrtc.v1.CommandResult
  * Use `create(CommandResultSchema)` to create a new message.
  */
 export declare const CommandResultSchema: GenMessage<CommandResult>;
+
+/**
+ * Why a command was refused or failed, so an app can branch without string-matching a
+ * human sentence. Closed vocabulary for the same reason as GatewayErrorCode: the app leg
+ * is versioned together with the gateway, so clients can switch exhaustively.
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.CommandErrorCode
+ */
+export enum CommandErrorCode {
+  /**
+   * Sender did not set a code, or sent one this client's schema does not know.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The caller's DeviceAcl does not permit this command. Permanent: do not retry, and do
+   * not reveal whether the device exists. Also the answer for a device out of reach.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_NOT_ENTITLED = 1;
+   */
+  NOT_ENTITLED = 1,
+
+  /**
+   * The value is outside a PropertyConstraint bounding it — a resident asking for a
+   * setpoint above the property owner's limit. About the USER's request, not the app's
+   * correctness: worth telling the user, and the limit is readable from their permissions.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED = 2;
+   */
+  CONSTRAINT_VIOLATED = 2,
+
+  /**
+   * Malformed: no endpoint_id, an unknown parameters case, a cluster the device does not
+   * have. A client bug — log it, do not retry.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_INVALID_COMMAND = 3;
+   */
+  INVALID_COMMAND = 3,
+
+  /**
+   * No route to the device right now: its connector is disconnected, or the device did
+   * not answer. Transient, retrying is reasonable. NOT a statement that the device is
+   * gone — that is webrtc.v1.DeviceRemoved.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_UNREACHABLE = 4;
+   */
+  UNREACHABLE = 4,
+
+  /**
+   * The gateway's own deadline passed with no answer from the connector. The command MAY
+   * still have run: this is the one code that says nothing about what happened to the
+   * device, so it is never a reason to roll back a displayed value.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_TIMEOUT = 5;
+   */
+  TIMEOUT = 5,
+
+  /**
+   * The connector or the device refused it for a reason of its own — a mode the hardware
+   * will not accept, a locked device. Read message for specifics.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_REJECTED_BY_DEVICE = 6;
+   */
+  REJECTED_BY_DEVICE = 6,
+
+  /**
+   * Gateway-side fault. Not the app's doing; retry cautiously.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_INTERNAL = 7;
+   */
+  INTERNAL = 7,
+}
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.CommandErrorCode.
+ */
+export declare const CommandErrorCodeSchema: GenEnum<CommandErrorCode>;
 

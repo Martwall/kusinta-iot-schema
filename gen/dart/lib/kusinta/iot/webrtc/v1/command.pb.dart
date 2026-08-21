@@ -16,8 +16,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
+import 'command.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'command.pbenum.dart';
 
 /// Adjusts a setpoint by a delta. Maps to the Matter SetpointRaiseLower command
 /// (Thermostat cluster 0x0201).
@@ -466,6 +469,20 @@ enum DeviceCommand_Parameters {
   notSet
 }
 
+/// A command an app asks the gateway to run on a device.
+///
+/// Authorization
+///
+/// An app MAY send any command; it does not decide whether it is allowed. The gateway
+/// authorizes every DeviceCommand against the caller's access.v1.DeviceAcl for the target
+/// device before forwarding it to a connector — the command must be permitted by
+/// PERMISSION_ACTION_INVOKE, must target an attribute the ACL's allowed_attribute_refs
+/// reaches, and must respect any PropertyConstraint bounding the value.
+///
+/// A refusal comes back as an ordinary CommandResult with success = false and an error,
+/// NOT as a session-level GatewayError: one command being refused says nothing about the
+/// session, which continues. A command for a device the caller cannot reach is refused the
+/// same way whether or not it exists, so no result reveals a device the user may not see.
 class DeviceCommand extends $pb.GeneratedMessage {
   factory DeviceCommand({
     $core.String? commandId,
@@ -674,7 +691,11 @@ class DeviceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   ThermostatSetpointWriteParams ensureThermostatSetpointWrite() => $_ensure(8);
 
-  /// Which endpoint of the device to command. Required: a device presents several
+  /// Which endpoint of the device to command. Required by rule — proto3 has no `required`,
+  /// and `optional` is what makes "not stated" representable so a consumer can reject it
+  /// rather than decode an omission to endpoint 0, which is the Matter root node.
+  ///
+  /// A device presents several
   /// endpoints and a command with no destination has no correct one — on a 4-channel
   /// actuator, picking any of them moves real hardware. Refuse an unaddressed command
   /// rather than guessing.
@@ -712,12 +733,12 @@ class DeviceCommand extends $pb.GeneratedMessage {
 
 class CommandError extends $pb.GeneratedMessage {
   factory CommandError({
-    $core.String? code,
     $core.String? message,
+    CommandErrorCode? code,
   }) {
     final result = create();
-    if (code != null) result.code = code;
     if (message != null) result.message = message;
+    if (code != null) result.code = code;
     return result;
   }
 
@@ -735,8 +756,11 @@ class CommandError extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'message')
+    ..e<CommandErrorCode>(3, _omitFieldNames ? '' : 'code', $pb.PbFieldType.OE,
+        defaultOrMaker: CommandErrorCode.COMMAND_ERROR_CODE_UNSPECIFIED,
+        valueOf: CommandErrorCode.valueOf,
+        enumValues: CommandErrorCode.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -760,23 +784,23 @@ class CommandError extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<CommandError>(create);
   static CommandError? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $core.String get code => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set code($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasCode() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearCode() => $_clearField(1);
-
   @$pb.TagNumber(2)
-  $core.String get message => $_getSZ(1);
+  $core.String get message => $_getSZ(0);
   @$pb.TagNumber(2)
-  set message($core.String value) => $_setString(1, value);
+  set message($core.String value) => $_setString(0, value);
   @$pb.TagNumber(2)
-  $core.bool hasMessage() => $_has(1);
+  $core.bool hasMessage() => $_has(0);
   @$pb.TagNumber(2)
   void clearMessage() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  CommandErrorCode get code => $_getN(1);
+  @$pb.TagNumber(3)
+  set code(CommandErrorCode value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCode() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearCode() => $_clearField(3);
 }
 
 /// CommandResult travels gateway → app (GatewayMessage) and

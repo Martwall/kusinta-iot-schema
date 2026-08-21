@@ -134,3 +134,47 @@ def test_command_result_settles_by_round_trips():
     decoded.ParseFromString(result.SerializeToString())
     assert decoded.HasField("settles_by")
     assert decoded.settles_by.ToSeconds() == 1_700_000_000
+
+
+# --- refusals carry a machine-readable code ---------------------------------------
+
+
+def test_command_error_code_defaults_to_unspecified():
+    result = command_pb2.CommandResult(command_id="cmd-1", success=False)
+    assert result.error.code == command_pb2.COMMAND_ERROR_CODE_UNSPECIFIED
+
+
+def test_command_error_round_trips_a_refusal():
+    result = command_pb2.CommandResult(
+        command_id="cmd-1",
+        success=False,
+        error=command_pb2.CommandError(
+            code=command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED,
+            message="caller may not act on this device",
+        ),
+    )
+    decoded = command_pb2.CommandResult()
+    decoded.ParseFromString(result.SerializeToString())
+    assert decoded.error.code == command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED
+
+
+def test_timeout_is_distinct_from_a_refusal():
+    """TIMEOUT says nothing about what happened to the device, so a consumer must not
+    treat it as a refusal and roll a displayed value back."""
+    assert (
+        command_pb2.COMMAND_ERROR_CODE_TIMEOUT
+        != command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED
+    )
+    assert (
+        command_pb2.COMMAND_ERROR_CODE_TIMEOUT
+        != command_pb2.COMMAND_ERROR_CODE_REJECTED_BY_DEVICE
+    )
+
+
+def test_constraint_violation_is_distinct_from_not_entitled():
+    """One is about the user's request being out of bounds and is worth showing them;
+    the other must not reveal whether the device exists."""
+    assert (
+        command_pb2.COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED
+        != command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED
+    )
