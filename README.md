@@ -104,6 +104,30 @@ vendor field unreachable in practice.
 This table is documentation only. The mapping itself lives in the schema as custom options
 (see below), so consumers never transcribe it.
 
+## Operations
+
+Matter has four operations against a cluster, and the schema carries all four. Each is
+guarded by its own `PermissionAction`:
+
+| Matter operation | Message | Guarded by |
+|---|---|---|
+| Read attribute | `PropertyReadRequest` | `READ` |
+| Write attribute | `AttributeWriteRequest` | `WRITE` |
+| Invoke command | `DeviceCommand` | `INVOKE` |
+| Subscribe | `AppMessage.subscribe` → `DevicePropertyEvent` | `OBSERVE` |
+
+A write and an invoke are different operations carrying different authority, which is why
+they are separate messages and separate permissions. Everything is addressed numerically —
+`cluster_id`, `attribute_id`, `matter_command_id` — and by one shared type, `AttributeRef`,
+whether the attribute is being read, written, granted or bounded. `command.proto` states the
+rules.
+
+## Events, and how they differ from property updates
+
+`PropertyUpdate` says what a device **is**; `DeviceEvent` says what **happened** to it —
+latest-wins state versus an ordered log. Matter models both because neither substitutes for
+the other, and so does this schema. `device_event.proto` explains when to reach for which.
+
 ## Property or attribute?
 
 The same datum, named from two sides, and both names are load-bearing:
@@ -132,6 +156,8 @@ files — together they would form a package import cycle.
 | `(matter_attribute)` | properties field | Matter attribute name, e.g. `"PIROccupiedToUnoccupiedDelay"` |
 | `(matter_attribute_id)` | properties field | Matter attribute ID, e.g. `0x0012` — **what resolution matches on** |
 | `(matter_device_type)` | properties message | Matter device type IDs modelled, repeated |
+| `(matter_command_cluster)` | command params message | The Matter cluster the command belongs to |
+| `(matter_command_ids)` | command params message | Which command IDs the message can express, repeated |
 | `(vendor_attribute)` | vendor field | Vendor parameter in the vendor's own spelling, e.g. `"LEVEL"` |
 | `(vendor_extension)` | vendor message | Stable key selecting the extension, e.g. `"homematic.thermostat"` |
 

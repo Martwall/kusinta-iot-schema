@@ -3,6 +3,8 @@ syntax = "proto3";
 package kusinta.iot.webrtc.v1;
 
 import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/device/v1/device_event.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
@@ -67,25 +69,21 @@ message SubscriptionAck {
   repeated RefusedSubscription              refused     = 3;
 }
 
-// Reads one attribute of one endpoint. Addressed exactly as device.v1.PropertyUpdate is,
-// so a read and the update answering it name the same thing the same way.
+// Reads one attribute of one endpoint, on demand. The carrier for
+// PERMISSION_ACTION_READ.
+//
+// Addressed by AttributeRef, the same type a write, a grant and a constraint use — so a
+// read, the write that changes the value, and the permission covering both name the
+// attribute identically.
 message PropertyReadRequest {
-  kusinta.iot.identity.v1.DeviceId device_id      = 1;
-  string                           attribute_name = 2;
+  // Was attribute_name + cluster_id_hex + endpoint_id + vendor_extension as four parallel
+  // scalars. Burned rather than reused: the same triple AttributeRef packages, and the last
+  // holder of the hand-spelled shape.
+  reserved 2 to 6;
+  reserved "attribute_name", "cluster_id_hex", "cluster_id", "endpoint_id", "vendor_extension";
 
-  // Was cluster_id_hex, a 4-char hex string; see device.v1.PropertyUpdate.cluster_id.
-  reserved 3;
-  reserved "cluster_id_hex";
-
-  uint32                           cluster_id     = 4; // e.g. 0x0201 for Thermostat
-
-  // Which endpoint to read. Required, for the same reason a command needs one: on a
-  // 4-channel actuator every channel carries the same attribute on the same cluster.
-  optional uint32                  endpoint_id    = 5;
-
-  // Set to read a vendor parameter, naming the extension by its (vendor_extension) key.
-  // Absent means the Matter branch; cluster_id is unset when this is set.
-  optional string                  vendor_extension = 6;
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  kusinta.iot.access.v1.AttributeRef target  = 7;
 }
 
 // Machine-readable classification of a session-level gateway error, so the app
@@ -152,6 +150,9 @@ message ManagementResult {
 
 // GatewayMessage: gateway → app
 message GatewayMessage {
+  reserved 15;
+  reserved "attribute_write_result";
+
   string                    message_id = 1;
   google.protobuf.Timestamp sent_at    = 2;
 
@@ -169,6 +170,11 @@ message GatewayMessage {
     DeviceAdded           device_added       = 12;
     DeviceRemoved         device_removed     = 13;
     ManagementResult      management_result  = 14;
+    // 15 was attribute_write_result. Answers to attribute writes come back as
+    // command_result above instead: a write and an invoke differ in what they do to a
+    // device, not in how the gateway reports having done it, and request_id says which
+    // request is being answered either way.
+    kusinta.iot.device.v1.DeviceEventBatch device_events = 16;
   }
 }
 
@@ -185,5 +191,6 @@ message AppMessage {
     SubscribeDevices    subscribe    = 7;
     UnsubscribeDevices  unsubscribe  = 8;
     ManagementRequest   management   = 9;
+    AttributeWriteRequest attribute_write = 10;
   }
 }

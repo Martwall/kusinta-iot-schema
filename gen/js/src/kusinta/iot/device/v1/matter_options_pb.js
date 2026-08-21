@@ -9,7 +9,7 @@ import { file_google_protobuf_descriptor } from "@bufbuild/protobuf/wkt";
  * Describes the file kusinta/iot/device/v1/matter_options.proto.
  */
 export const file_kusinta_iot_device_v1_matter_options = /*@__PURE__*/
-  fileDesc("CiprdXNpbnRhL2lvdC9kZXZpY2UvdjEvbWF0dGVyX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LmRldmljZS52MTpLChFtYXR0ZXJfY2x1c3Rlcl9pZBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY0YYDIAEoDVIPbWF0dGVyQ2x1c3RlcklkOkoKEG1hdHRlcl9hdHRyaWJ1dGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNKGAyABKAlSD21hdHRlckF0dHJpYnV0ZTpPChNtYXR0ZXJfYXR0cmlidXRlX2lkEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjWhgMgASgNUhFtYXR0ZXJBdHRyaWJ1dGVJZDpPChJtYXR0ZXJfZGV2aWNlX3R5cGUSHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY04YDIAMoDVIQbWF0dGVyRGV2aWNlVHlwZUICSAFiBnByb3RvMw", [file_google_protobuf_descriptor]);
+  fileDesc("CiprdXNpbnRhL2lvdC9kZXZpY2UvdjEvbWF0dGVyX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LmRldmljZS52MTpLChFtYXR0ZXJfY2x1c3Rlcl9pZBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY0YYDIAEoDVIPbWF0dGVyQ2x1c3RlcklkOkoKEG1hdHRlcl9hdHRyaWJ1dGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNKGAyABKAlSD21hdHRlckF0dHJpYnV0ZTpPChNtYXR0ZXJfYXR0cmlidXRlX2lkEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjWhgMgASgNUhFtYXR0ZXJBdHRyaWJ1dGVJZDpPChJtYXR0ZXJfZGV2aWNlX3R5cGUSHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY04YDIAMoDVIQbWF0dGVyRGV2aWNlVHlwZTpXChZtYXR0ZXJfY29tbWFuZF9jbHVzdGVyEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGNeGAyABKA1SFG1hdHRlckNvbW1hbmRDbHVzdGVyOlAKEW1hdHRlcl9jb21tYW5kX2lkEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGNiGAyABKA1SD21hdHRlckNvbW1hbmRJZIgBAUICSAFiBnByb3RvMw", [file_google_protobuf_descriptor]);
 
 /**
  * The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat.
@@ -63,4 +63,29 @@ export const matter_attribute_id = /*@__PURE__*/
  */
 export const matter_device_type = /*@__PURE__*/
   extDesc(file_kusinta_iot_device_v1_matter_options, 3);
+
+/**
+ * The Matter cluster a command-parameters message belongs to, e.g. 0x0006 for On/Off.
+ * Always exactly one — a parameters message never spans clusters.
+ *
+ * @generated from extension: uint32 matter_command_cluster = 50007;
+ */
+export const matter_command_cluster = /*@__PURE__*/
+  extDesc(file_kusinta_iot_device_v1_matter_options, 4);
+
+/**
+ * The Matter command ID this parameters message carries arguments for, e.g. 0x00 for
+ * Thermostat's SetpointRaiseLower.
+ *
+ * Singular on purpose. An earlier form was repeated, so that one message could cover
+ * several commands and choose between them by its own fields — but a message that
+ * encodes WHICH command it is duplicates DeviceCommand.matter_command_id, in a second
+ * numbering, with nothing reconciling the two. The parameters carry arguments; the
+ * command ID says which command. A message shared by several commands that take the
+ * same arguments simply omits this and lets matter_command_id stand alone.
+ *
+ * @generated from extension: optional uint32 matter_command_id = 50008;
+ */
+export const matter_command_id = /*@__PURE__*/
+  extDesc(file_kusinta_iot_device_v1_matter_options, 5);
 

@@ -1,6 +1,8 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
+from kusinta.iot.device.v1 import device_event_pb2 as _device_event_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.space.v1 import space_pb2 as _space_pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as _command_pb2
@@ -86,18 +88,12 @@ class SubscriptionAck(_message.Message):
     def __init__(self, in_reply_to: _Optional[str] = ..., subscribed: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., refused: _Optional[_Iterable[_Union[RefusedSubscription, _Mapping]]] = ...) -> None: ...
 
 class PropertyReadRequest(_message.Message):
-    __slots__ = ("device_id", "attribute_name", "cluster_id", "endpoint_id", "vendor_extension")
+    __slots__ = ("device_id", "target")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
-    ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
-    CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
-    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
-    VENDOR_EXTENSION_FIELD_NUMBER: _ClassVar[int]
+    TARGET_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
-    attribute_name: str
-    cluster_id: int
-    endpoint_id: int
-    vendor_extension: str
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ...) -> None: ...
+    target: _acl_pb2.AttributeRef
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., target: _Optional[_Union[_acl_pb2.AttributeRef, _Mapping]] = ...) -> None: ...
 
 class GatewayError(_message.Message):
     __slots__ = ("code", "message", "metadata")
@@ -131,7 +127,7 @@ class ManagementResult(_message.Message):
     def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ...) -> None: ...
 
 class GatewayMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed", "management_result")
+    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_event", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed", "management_result", "device_events")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
@@ -145,6 +141,7 @@ class GatewayMessage(_message.Message):
     DEVICE_ADDED_FIELD_NUMBER: _ClassVar[int]
     DEVICE_REMOVED_FIELD_NUMBER: _ClassVar[int]
     MANAGEMENT_RESULT_FIELD_NUMBER: _ClassVar[int]
+    DEVICE_EVENTS_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     state_snapshot: _device_state_pb2.DeviceStateSnapshot
@@ -158,10 +155,11 @@ class GatewayMessage(_message.Message):
     device_added: _device_state_pb2.DeviceAdded
     device_removed: _device_state_pb2.DeviceRemoved
     management_result: ManagementResult
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ..., management_result: _Optional[_Union[ManagementResult, _Mapping]] = ...) -> None: ...
+    device_events: _device_event_pb2.DeviceEventBatch
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_event: _Optional[_Union[_device_state_pb2.DevicePropertyEvent, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ..., management_result: _Optional[_Union[ManagementResult, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ...) -> None: ...
 
 class AppMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping", "subscribe", "unsubscribe", "management")
+    __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping", "subscribe", "unsubscribe", "management", "attribute_write")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_FIELD_NUMBER: _ClassVar[int]
@@ -171,6 +169,7 @@ class AppMessage(_message.Message):
     SUBSCRIBE_FIELD_NUMBER: _ClassVar[int]
     UNSUBSCRIBE_FIELD_NUMBER: _ClassVar[int]
     MANAGEMENT_FIELD_NUMBER: _ClassVar[int]
+    ATTRIBUTE_WRITE_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake: AppHandshake
@@ -180,4 +179,5 @@ class AppMessage(_message.Message):
     subscribe: SubscribeDevices
     unsubscribe: UnsubscribeDevices
     management: _management_pb2.ManagementRequest
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[AppHandshake, _Mapping]] = ..., command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., read_request: _Optional[_Union[PropertyReadRequest, _Mapping]] = ..., ping: _Optional[_Union[Ping, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevices, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevices, _Mapping]] = ..., management: _Optional[_Union[_management_pb2.ManagementRequest, _Mapping]] = ...) -> None: ...
+    attribute_write: _command_pb2.AttributeWriteRequest
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[AppHandshake, _Mapping]] = ..., command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., read_request: _Optional[_Union[PropertyReadRequest, _Mapping]] = ..., ping: _Optional[_Union[Ping, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevices, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevices, _Mapping]] = ..., management: _Optional[_Union[_management_pb2.ManagementRequest, _Mapping]] = ..., attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ...) -> None: ...

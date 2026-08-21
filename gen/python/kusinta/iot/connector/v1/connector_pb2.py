@@ -26,11 +26,12 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from kusinta.iot.common.v1 import types_pb2 as kusinta_dot_iot_dot_common_dot_v1_dot_types__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 from kusinta.iot.device.v1 import device_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_device__pb2
+from kusinta.iot.device.v1 import device_event_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_device__event__pb2
 from kusinta.iot.device.v1 import property_update_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_property__update__pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as kusinta_dot_iot_dot_webrtc_dot_v1_dot_command__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/connector/v1/connector.proto\x12\x18kusinta.iot.connector.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a\"kusinta/iot/device/v1/device.proto\x1a+kusinta/iot/device/v1/property_update.proto\x1a#kusinta/iot/webrtc/v1/command.proto\"\xb5\x02\n\rConnectorInfo\x12G\n\x0c\x63onnector_id\x18\x01 \x01(\x0b\x32$.kusinta.iot.identity.v1.ConnectorIdR\x0b\x63onnectorId\x12!\n\x0c\x64isplay_name\x18\x02 \x01(\tR\x0b\x64isplayName\x12\x18\n\x07version\x18\x03 \x01(\tR\x07version\x12G\n\ttransport\x18\x04 \x01(\x0e\x32).kusinta.iot.common.v1.ConnectorTransportR\ttransport\x12\x1a\n\x08\x65ndpoint\x18\x05 \x01(\tR\x08\x65ndpoint\x12\x39\n\x19supported_device_type_ids\x18\x06 \x03(\rR\x16supportedDeviceTypeIds\"\x95\x01\n\x12\x43onnectorHandshake\x12;\n\x04info\x18\x01 \x01(\x0b\x32\'.kusinta.iot.connector.v1.ConnectorInfoR\x04info\x12\x42\n\rknown_devices\x18\x02 \x03(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x0cknownDevices\"\x85\x01\n\x0cHandshakeAck\x12\x1a\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08R\x08\x61\x63\x63\x65pted\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\x12\x41\n\ngateway_id\x18\x03 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\tgatewayId\"]\n\x12\x44\x65viceAnnouncement\x12\x35\n\x06\x64\x65vice\x18\x02 \x01(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x06\x64\x65viceJ\x04\x08\x01\x10\x02R\ndescriptor\"g\n\rDeviceRemoval\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\"\x0b\n\tHeartBeat\"Q\n\x0fSubscribeDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"S\n\x11UnsubscribeDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"[\n\x0cGatewayError\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12\x1d\n\ncommand_id\x18\x03 \x01(\tR\tcommandId\"\xce\x01\n\x16\x43onnectorCommandResult\x12\x1d\n\ncommand_id\x18\x01 \x01(\tR\tcommandId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12<\n\x05\x65rror\x18\x03 \x01(\x0b\x32&.kusinta.iot.connector.v1.GatewayErrorR\x05\x65rror\x12=\n\x0c\x63ompleted_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63ompletedAt\"\xe1\x04\n\x0eSessionRequest\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12L\n\thandshake\x18\x03 \x01(\x0b\x32,.kusinta.iot.connector.v1.ConnectorHandshakeH\x00R\thandshake\x12U\n\x0fproperty_update\x18\x04 \x01(\x0b\x32*.kusinta.iot.device.v1.PropertyUpdateBatchH\x00R\x0epropertyUpdate\x12Y\n\x10\x64\x65vice_announced\x18\x05 \x01(\x0b\x32,.kusinta.iot.connector.v1.DeviceAnnouncementH\x00R\x0f\x64\x65viceAnnounced\x12P\n\x0e\x64\x65vice_removed\x18\x06 \x01(\x0b\x32\'.kusinta.iot.connector.v1.DeviceRemovalH\x00R\rdeviceRemoved\x12Y\n\x0e\x63ommand_result\x18\x07 \x01(\x0b\x32\x30.kusinta.iot.connector.v1.ConnectorCommandResultH\x00R\rcommandResult\x12\x43\n\theartbeat\x18\x08 \x01(\x0b\x32#.kusinta.iot.connector.v1.HeartBeatH\x00R\theartbeatB\t\n\x07payload\"\xf2\x03\n\x0fSessionResponse\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12M\n\rhandshake_ack\x18\x03 \x01(\x0b\x32&.kusinta.iot.connector.v1.HandshakeAckH\x00R\x0chandshakeAck\x12I\n\tsubscribe\x18\x05 \x01(\x0b\x32).kusinta.iot.connector.v1.SubscribeDeviceH\x00R\tsubscribe\x12O\n\x0bunsubscribe\x18\x06 \x01(\x0b\x32+.kusinta.iot.connector.v1.UnsubscribeDeviceH\x00R\x0bunsubscribe\x12>\n\x05\x65rror\x18\x07 \x01(\x0b\x32&.kusinta.iot.connector.v1.GatewayErrorH\x00R\x05\x65rror\x12O\n\x0f\x65xecute_command\x18\x08 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.DeviceCommandH\x00R\x0e\x65xecuteCommandB\t\n\x07payloadJ\x04\x08\x04\x10\x05\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/connector/v1/connector.proto\x12\x18kusinta.iot.connector.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a\"kusinta/iot/device/v1/device.proto\x1a(kusinta/iot/device/v1/device_event.proto\x1a+kusinta/iot/device/v1/property_update.proto\x1a#kusinta/iot/webrtc/v1/command.proto\"\xb5\x02\n\rConnectorInfo\x12G\n\x0c\x63onnector_id\x18\x01 \x01(\x0b\x32$.kusinta.iot.identity.v1.ConnectorIdR\x0b\x63onnectorId\x12!\n\x0c\x64isplay_name\x18\x02 \x01(\tR\x0b\x64isplayName\x12\x18\n\x07version\x18\x03 \x01(\tR\x07version\x12G\n\ttransport\x18\x04 \x01(\x0e\x32).kusinta.iot.common.v1.ConnectorTransportR\ttransport\x12\x1a\n\x08\x65ndpoint\x18\x05 \x01(\tR\x08\x65ndpoint\x12\x39\n\x19supported_device_type_ids\x18\x06 \x03(\rR\x16supportedDeviceTypeIds\"\x95\x01\n\x12\x43onnectorHandshake\x12;\n\x04info\x18\x01 \x01(\x0b\x32\'.kusinta.iot.connector.v1.ConnectorInfoR\x04info\x12\x42\n\rknown_devices\x18\x02 \x03(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x0cknownDevices\"\x85\x01\n\x0cHandshakeAck\x12\x1a\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08R\x08\x61\x63\x63\x65pted\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\x12\x41\n\ngateway_id\x18\x03 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\tgatewayId\"]\n\x12\x44\x65viceAnnouncement\x12\x35\n\x06\x64\x65vice\x18\x02 \x01(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x06\x64\x65viceJ\x04\x08\x01\x10\x02R\ndescriptor\"g\n\rDeviceRemoval\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\"\x0b\n\tHeartBeat\"Q\n\x0fSubscribeDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"S\n\x11UnsubscribeDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"[\n\x0cGatewayError\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12\x1d\n\nrequest_id\x18\x03 \x01(\tR\trequestId\"\xce\x01\n\x16\x43onnectorCommandResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12<\n\x05\x65rror\x18\x03 \x01(\x0b\x32&.kusinta.iot.connector.v1.GatewayErrorR\x05\x65rror\x12=\n\x0c\x63ompleted_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63ompletedAt\"\xb1\x05\n\x0eSessionRequest\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12L\n\thandshake\x18\x03 \x01(\x0b\x32,.kusinta.iot.connector.v1.ConnectorHandshakeH\x00R\thandshake\x12U\n\x0fproperty_update\x18\x04 \x01(\x0b\x32*.kusinta.iot.device.v1.PropertyUpdateBatchH\x00R\x0epropertyUpdate\x12Y\n\x10\x64\x65vice_announced\x18\x05 \x01(\x0b\x32,.kusinta.iot.connector.v1.DeviceAnnouncementH\x00R\x0f\x64\x65viceAnnounced\x12P\n\x0e\x64\x65vice_removed\x18\x06 \x01(\x0b\x32\'.kusinta.iot.connector.v1.DeviceRemovalH\x00R\rdeviceRemoved\x12Y\n\x0e\x63ommand_result\x18\x07 \x01(\x0b\x32\x30.kusinta.iot.connector.v1.ConnectorCommandResultH\x00R\rcommandResult\x12\x43\n\theartbeat\x18\x08 \x01(\x0b\x32#.kusinta.iot.connector.v1.HeartBeatH\x00R\theartbeat\x12N\n\rdevice_events\x18\t \x01(\x0b\x32\'.kusinta.iot.device.v1.DeviceEventBatchH\x00R\x0c\x64\x65viceEventsB\t\n\x07payload\"\xda\x04\n\x0fSessionResponse\x12\x1d\n\nmessage_id\x18\x01 \x01(\tR\tmessageId\x12\x33\n\x07sent_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x06sentAt\x12M\n\rhandshake_ack\x18\x03 \x01(\x0b\x32&.kusinta.iot.connector.v1.HandshakeAckH\x00R\x0chandshakeAck\x12I\n\tsubscribe\x18\x05 \x01(\x0b\x32).kusinta.iot.connector.v1.SubscribeDeviceH\x00R\tsubscribe\x12O\n\x0bunsubscribe\x18\x06 \x01(\x0b\x32+.kusinta.iot.connector.v1.UnsubscribeDeviceH\x00R\x0bunsubscribe\x12>\n\x05\x65rror\x18\x07 \x01(\x0b\x32&.kusinta.iot.connector.v1.GatewayErrorH\x00R\x05\x65rror\x12O\n\x0f\x65xecute_command\x18\x08 \x01(\x0b\x32$.kusinta.iot.webrtc.v1.DeviceCommandH\x00R\x0e\x65xecuteCommand\x12\x66\n\x17\x65xecute_attribute_write\x18\t \x01(\x0b\x32,.kusinta.iot.webrtc.v1.AttributeWriteRequestH\x00R\x15\x65xecuteAttributeWriteB\t\n\x07payloadJ\x04\x08\x04\x10\x05\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,28 +39,28 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.connector.v1.co
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_CONNECTORINFO']._serialized_start=297
-  _globals['_CONNECTORINFO']._serialized_end=606
-  _globals['_CONNECTORHANDSHAKE']._serialized_start=609
-  _globals['_CONNECTORHANDSHAKE']._serialized_end=758
-  _globals['_HANDSHAKEACK']._serialized_start=761
-  _globals['_HANDSHAKEACK']._serialized_end=894
-  _globals['_DEVICEANNOUNCEMENT']._serialized_start=896
-  _globals['_DEVICEANNOUNCEMENT']._serialized_end=989
-  _globals['_DEVICEREMOVAL']._serialized_start=991
-  _globals['_DEVICEREMOVAL']._serialized_end=1094
-  _globals['_HEARTBEAT']._serialized_start=1096
-  _globals['_HEARTBEAT']._serialized_end=1107
-  _globals['_SUBSCRIBEDEVICE']._serialized_start=1109
-  _globals['_SUBSCRIBEDEVICE']._serialized_end=1190
-  _globals['_UNSUBSCRIBEDEVICE']._serialized_start=1192
-  _globals['_UNSUBSCRIBEDEVICE']._serialized_end=1275
-  _globals['_GATEWAYERROR']._serialized_start=1277
-  _globals['_GATEWAYERROR']._serialized_end=1368
-  _globals['_CONNECTORCOMMANDRESULT']._serialized_start=1371
-  _globals['_CONNECTORCOMMANDRESULT']._serialized_end=1577
-  _globals['_SESSIONREQUEST']._serialized_start=1580
-  _globals['_SESSIONREQUEST']._serialized_end=2189
-  _globals['_SESSIONRESPONSE']._serialized_start=2192
-  _globals['_SESSIONRESPONSE']._serialized_end=2690
+  _globals['_CONNECTORINFO']._serialized_start=339
+  _globals['_CONNECTORINFO']._serialized_end=648
+  _globals['_CONNECTORHANDSHAKE']._serialized_start=651
+  _globals['_CONNECTORHANDSHAKE']._serialized_end=800
+  _globals['_HANDSHAKEACK']._serialized_start=803
+  _globals['_HANDSHAKEACK']._serialized_end=936
+  _globals['_DEVICEANNOUNCEMENT']._serialized_start=938
+  _globals['_DEVICEANNOUNCEMENT']._serialized_end=1031
+  _globals['_DEVICEREMOVAL']._serialized_start=1033
+  _globals['_DEVICEREMOVAL']._serialized_end=1136
+  _globals['_HEARTBEAT']._serialized_start=1138
+  _globals['_HEARTBEAT']._serialized_end=1149
+  _globals['_SUBSCRIBEDEVICE']._serialized_start=1151
+  _globals['_SUBSCRIBEDEVICE']._serialized_end=1232
+  _globals['_UNSUBSCRIBEDEVICE']._serialized_start=1234
+  _globals['_UNSUBSCRIBEDEVICE']._serialized_end=1317
+  _globals['_GATEWAYERROR']._serialized_start=1319
+  _globals['_GATEWAYERROR']._serialized_end=1410
+  _globals['_CONNECTORCOMMANDRESULT']._serialized_start=1413
+  _globals['_CONNECTORCOMMANDRESULT']._serialized_end=1619
+  _globals['_SESSIONREQUEST']._serialized_start=1622
+  _globals['_SESSIONREQUEST']._serialized_end=2311
+  _globals['_SESSIONRESPONSE']._serialized_start=2314
+  _globals['_SESSIONRESPONSE']._serialized_end=2916
 # @@protoc_insertion_point(module_scope)

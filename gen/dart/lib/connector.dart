@@ -24,6 +24,8 @@ export 'kusinta/iot/device/v1/descriptor.pb.dart';
 export 'kusinta/iot/device/v1/descriptor.pbenum.dart';
 export 'kusinta/iot/device/v1/device.pb.dart';
 export 'kusinta/iot/device/v1/device.pbenum.dart';
+export 'kusinta/iot/device/v1/device_event.pb.dart';
+export 'kusinta/iot/device/v1/device_event.pbenum.dart';
 export 'kusinta/iot/device/v1/matter_options.pb.dart';
 export 'kusinta/iot/device/v1/matter_options.pbenum.dart';
 export 'kusinta/iot/device/v1/properties.pb.dart';

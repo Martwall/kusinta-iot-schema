@@ -3,6 +3,9 @@ syntax = "proto3";
 package kusinta.iot.webrtc.v1;
 
 import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/device/v1/cluster_state.proto";
+import "kusinta/iot/device/v1/matter_options.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
@@ -35,47 +38,57 @@ option optimize_for = SPEED;
 // temperature nobody asked for. Prefer ThermostatSetpointWriteParams where the caller
 // already knows the absolute value it wants; it has no such failure mode.
 message ThermostatSetpointParams {
+  option (kusinta.iot.device.v1.matter_command_cluster) = 0x0201;
+  option (kusinta.iot.device.v1.matter_command_id) = 0x00;
+
   optional uint32 mode = 1; // SetpointAdjustMode, see above
   sint32 amount        = 2; // centidegrees delta
 }
 
-// Writes a setpoint to an absolute value. Maps to a Matter write of Thermostat (0x0201)
-// OccupiedHeatingSetpoint / OccupiedCoolingSetpoint, NOT to SetpointRaiseLower.
-//
-// Deliberately a separate message from ThermostatSetpointParams rather than an optional
-// field on it: a delta and an absolute are different commands with different failure
-// modes, and one message carrying both would let a producer read the wrong meaning out
-// of bytes that parse cleanly.
-//
-// This is the form battery-powered devices are designed to be driven with. An upstream
-// system accepts an absolute value whether or not the device is awake and queues it for
-// the next wake-up, so the command does not depend on a base nobody holds.
-message ThermostatSetpointWriteParams {
-  optional uint32 mode         = 1; // SetpointAdjustMode, see above
-  sint32 setpoint_centidegrees = 2; // absolute target
-}
-
 // Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
 message LevelControlParams {
+  option (kusinta.iot.device.v1.matter_command_cluster) = 0x0008;
+  option (kusinta.iot.device.v1.matter_command_id) = 0x00;
+
   uint32 level           = 1; // 0–254
   uint32 transition_time = 2; // 100ms units
 }
 
-// Maps to Matter On and Off commands (On/Off cluster 0x0006).
+// Arguments for the Matter On/Off cluster's Off (0x00), On (0x01) and Toggle (0x02)
+// commands — of which there are none: all three take no arguments.
+//
+// Which of the three is meant is DeviceCommand.matter_command_id, and only that. The
+// message previously carried `on` and `toggle` booleans, a second encoding of the same
+// choice in a different shape, so a command could say Toggle in one field and On in
+// another and parse cleanly. Empty is the honest form.
 message OnOffParams {
-  bool on     = 1;
-  bool toggle = 2;
+  option (kusinta.iot.device.v1.matter_command_cluster) = 0x0006;
+
+  reserved 1, 2;
+  reserved "on", "toggle";
 }
 
 // Maps to Matter GoToLiftPercentage command (Window Covering cluster 0x0102).
 message WindowCoveringLiftParams {
+  option (kusinta.iot.device.v1.matter_command_cluster) = 0x0102;
+  option (kusinta.iot.device.v1.matter_command_id) = 0x05;
+
   uint32 lift_percent100ths = 1; // 0–10000
 }
 
-// Maps to Matter LockDoor/UnlockDoor commands (Door Lock cluster 0x0101).
+// Arguments for the Matter Door Lock cluster's LockDoor (0x00) and UnlockDoor (0x01),
+// which take an optional PIN and nothing else.
+//
+// lock_state is gone: it restated LockDoor/UnlockDoor as Locked=1/Unlocked=2, a second
+// selector in a THIRD numbering, disagreeing with both Matter's command IDs and its
+// LockState attribute. Which operation is meant is DeviceCommand.matter_command_id.
 message DoorLockParams {
-  uint32 lock_state = 1; // Locked=1, Unlocked=2
-  string pin_code   = 2; // optional PIN
+  option (kusinta.iot.device.v1.matter_command_cluster) = 0x0101;
+
+  reserved 1;
+  reserved "lock_state";
+
+  string pin_code = 2; // optional PIN
 }
 
 // A command an app asks the gateway to run on a device.
@@ -93,14 +106,39 @@ message DoorLockParams {
 // session, which continues. A command for a device the caller cannot reach is refused the
 // same way whether or not it exists, so no result reveals a device the user may not see.
 message DeviceCommand {
-  string                           command_id     = 1; // UUID, matched in CommandResult
+  // Was command_id. Renamed because Matter has its own numeric command ID, added below,
+  // and two fields called "command id" meaning entirely different things in one message is
+  // a trap. Same name as AttributeWriteRequest.request_id, which correlates the same way.
+  string                           request_id     = 1; // UUID, matched in the result
   kusinta.iot.identity.v1.DeviceId device_id      = 2;
   // Was cluster_id_hex, a 4-char hex string; see device.v1.PropertyUpdate.cluster_id.
   reserved 3;
   reserved "cluster_id_hex";
 
-  string                           command_name   = 4; // PascalCase Matter command name
+  // The command's own PascalCase spelling, for logs and rendering.
+  //
+  // ADVISORY, and not validated against anything: nothing reconciles it with
+  // matter_command_id, so it can say "Toggle" beside an ID meaning On. A consumer MUST NOT
+  // route or authorize on it, and where the two disagree the ID wins. It is here so a
+  // refused or unresolvable command is legible to whoever reads the log.
+  string                           command_name   = 4;
+
   uint32                           cluster_id     = 12; // e.g. 0x0201 for Thermostat
+
+  // The Matter command ID within that cluster, e.g. 0x02 for On/Off's Toggle.
+  //
+  // What a consumer routes and authorizes on, matching Matter's own wire and the numeric
+  // Endpoint.clusters[].accepted_command_ids — so "does this device accept this command"
+  // is answerable before sending it rather than by watching it fail.
+  //
+  // Where the parameters case declares a (matter_command_id), this MUST equal it; where it
+  // declares only a (matter_command_cluster) — because several commands share the same
+  // arguments — this is what picks the command. cluster_id MUST equal the case's
+  // (matter_command_cluster) either way. A mismatch is malformed and is refused with
+  // COMMAND_ERROR_CODE_INVALID_COMMAND.
+  //
+  // raw_tlv has no annotation to check against, so there this is simply required.
+  optional uint32                  matter_command_id = 13;
 
   // Which endpoint of the device to command. Required by rule — proto3 has no `required`,
   // and `optional` is what makes "not stated" representable so a consumer can reject it
@@ -116,13 +154,19 @@ message DeviceCommand {
   // grows an endpoint.
   optional uint32 endpoint_id = 11;
 
+  // Field 10 was ThermostatSetpointWriteParams, an attribute write travelling as a command.
+  // It is now an AttributeWriteRequest — see envelope.proto — so INVOKE stops implying the
+  // right to write attributes, and PropertyConstraint can bound a written value generically
+  // instead of needing a hand-written extractor per writable attribute.
+  reserved 10;
+  reserved "thermostat_setpoint_write";
+
   oneof parameters {
     ThermostatSetpointParams  thermostat_setpoint  = 5;
     LevelControlParams        level_control        = 6;
     OnOffParams               on_off               = 7;
     WindowCoveringLiftParams  window_covering_lift = 8;
     DoorLockParams            door_lock            = 9;
-    ThermostatSetpointWriteParams thermostat_setpoint_write = 10;
     bytes                     raw_tlv              = 99; // escape hatch for unsupported commands
   }
 }
@@ -177,7 +221,7 @@ message CommandError {
 // confirmation is the normal path, not an edge case: waiting for the device would fail
 // every write to a sleeping one.
 message CommandResult {
-  string                    command_id   = 1;
+  string                    request_id   = 1; // matches DeviceCommand.request_id
   bool                      success      = 2;
   CommandError              error        = 3;
   google.protobuf.Timestamp completed_at = 4;
@@ -196,4 +240,34 @@ message CommandResult {
   // This bounds the wait; it does not label the values that arrive. Which update was the
   // optimistic one is device.v1.PropertyUpdate.provenance.
   optional google.protobuf.Timestamp settles_by = 5;
+}
+
+// Writes one attribute of one endpoint. The carrier for PERMISSION_ACTION_WRITE, which
+// until it existed authorized an operation no message performed.
+//
+// Deliberately not a DeviceCommand case. A write and an invoke are different operations in
+// Matter carrying different authority: a user who may toggle a light is not thereby a user
+// who may rewrite its attributes. Routing both through one message made INVOKE imply WRITE
+// and left the distinction unenforceable.
+//
+// Lives here beside DeviceCommand rather than in envelope.proto because both legs carry
+// it — the app sends one, and the gateway forwards it to a connector. That is the same
+// reason DeviceCommand is here.
+//
+// Addressed by AttributeRef, so an access.v1.PropertyConstraint bounds the value by
+// matching target directly rather than needing a rule per writable attribute.
+//
+// A relative adjust is NOT this. Thermostat SetpointRaiseLower is a genuine Matter command
+// and stays a DeviceCommand; this is for writing an absolute value.
+//
+// Answered by CommandResult, correlated on request_id.
+message AttributeWriteRequest {
+  string                           request_id = 1; // UUID, matched in CommandResult
+  kusinta.iot.identity.v1.DeviceId device_id  = 2;
+
+  // Which attribute to write. endpoint_id is required here — an unaddressed write has no
+  // correct destination, exactly as for a command.
+  kusinta.iot.access.v1.AttributeRef target = 3;
+
+  kusinta.iot.device.v1.AttributeValue value = 4;
 }

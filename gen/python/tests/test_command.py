@@ -1,4 +1,4 @@
-"""Command tests for the thermostat setpoint paths.
+"""Command tests for the thermostat setpoint path and command addressing.
 
 Two things are load-bearing here and neither is visible in a round-trip of the
 happy path:
@@ -7,8 +7,11 @@ happy path:
     a real mode, not "unset", so the field carries explicit presence. A bare proto3
     scalar would make a producer that means Heat and one that never set the field
     byte-identical on the wire.
-  * the delta command and the absolute write are separate messages, so a producer
-    reading the wrong one cannot happen by parsing a message that looks valid.
+  * a command names its Matter cluster and command numerically, and the parameters case
+    declares which of those it can express, so the three cannot disagree silently.
+
+An absolute setpoint is NOT here: writing an attribute is webrtc.v1.AttributeWriteRequest,
+not a command. See test_attribute_write.py.
 """
 
 from kusinta.iot.webrtc.v1 import command_pb2
@@ -57,7 +60,7 @@ def test_setpoint_delta_round_trips_negative_amount():
 
 def test_device_command_carries_delta_case():
     cmd = command_pb2.DeviceCommand(
-        command_id="cmd-1",
+        request_id="cmd-1",
         device_id=identity_pb2.DeviceId(value="therm-1"),
         cluster_id=0x0201,
         command_name="SetpointRaiseLower",
@@ -69,66 +72,16 @@ def test_device_command_carries_delta_case():
     assert decoded.thermostat_setpoint.amount == 50
 
 
-# --- absolute write command -------------------------------------------------------
-
-
-def test_device_command_carries_absolute_write_case():
-    cmd = command_pb2.DeviceCommand(
-        command_id="cmd-2",
-        device_id=identity_pb2.DeviceId(value="therm-1"),
-        cluster_id=0x0201,
-        command_name="WriteAttribute",
-        thermostat_setpoint_write=command_pb2.ThermostatSetpointWriteParams(
-            mode=0, setpoint_centidegrees=2150
-        ),
-    )
-    decoded = command_pb2.DeviceCommand()
-    decoded.ParseFromString(cmd.SerializeToString())
-    assert decoded.WhichOneof("parameters") == "thermostat_setpoint_write"
-    assert decoded.thermostat_setpoint_write.setpoint_centidegrees == 2150
-
-
-def test_absolute_write_round_trips_negative_setpoint():
-    original = command_pb2.ThermostatSetpointWriteParams(
-        mode=1, setpoint_centidegrees=-500
-    )
-    decoded = command_pb2.ThermostatSetpointWriteParams()
-    decoded.ParseFromString(original.SerializeToString())
-    assert decoded.setpoint_centidegrees == -500
-
-
-def test_absolute_write_mode_absent_when_never_set():
-    params = command_pb2.ThermostatSetpointWriteParams(setpoint_centidegrees=2150)
-    assert not params.HasField("mode")
-
-
-def test_absolute_write_mode_present_when_set_to_heat():
-    params = command_pb2.ThermostatSetpointWriteParams(
-        mode=0, setpoint_centidegrees=2150
-    )
-    assert params.HasField("mode")
-    assert params.mode == 0
-
-
-def test_delta_and_absolute_write_are_distinct_oneof_cases():
-    cmd = command_pb2.DeviceCommand(
-        thermostat_setpoint=command_pb2.ThermostatSetpointParams(mode=0, amount=50)
-    )
-    cmd.thermostat_setpoint_write.setpoint_centidegrees = 2150
-    assert cmd.WhichOneof("parameters") == "thermostat_setpoint_write"
-    assert not cmd.HasField("thermostat_setpoint")
-
-
 # --- CommandResult.settles_by -----------------------------------------------------
 
 
 def test_command_result_settles_by_absent_by_default():
-    result = command_pb2.CommandResult(command_id="cmd-1", success=True)
+    result = command_pb2.CommandResult(request_id="cmd-1", success=True)
     assert not result.HasField("settles_by")
 
 
 def test_command_result_settles_by_round_trips():
-    result = command_pb2.CommandResult(command_id="cmd-1", success=True)
+    result = command_pb2.CommandResult(request_id="cmd-1", success=True)
     result.settles_by.FromSeconds(1_700_000_000)
     decoded = command_pb2.CommandResult()
     decoded.ParseFromString(result.SerializeToString())
@@ -140,13 +93,13 @@ def test_command_result_settles_by_round_trips():
 
 
 def test_command_error_code_defaults_to_unspecified():
-    result = command_pb2.CommandResult(command_id="cmd-1", success=False)
+    result = command_pb2.CommandResult(request_id="cmd-1", success=False)
     assert result.error.code == command_pb2.COMMAND_ERROR_CODE_UNSPECIFIED
 
 
 def test_command_error_round_trips_a_refusal():
     result = command_pb2.CommandResult(
-        command_id="cmd-1",
+        request_id="cmd-1",
         success=False,
         error=command_pb2.CommandError(
             code=command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED,

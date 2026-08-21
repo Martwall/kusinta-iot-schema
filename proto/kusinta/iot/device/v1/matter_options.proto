@@ -6,11 +6,13 @@ import "google/protobuf/descriptor.proto";
 
 option optimize_for = SPEED;
 
-// Custom options that make this schema's Matter mapping machine-readable.
+// Custom options that make this schema's Matter mappings machine-readable — for
+// properties, for commands, and for the device types that select between them.
 //
-// Without them a consumer has to infer two mappings from naming convention: which
-// *Properties field a PropertyUpdate belongs to, and which Endpoint.matter_properties case an
-// Endpoint.matter_device_type_id selects. Both inferences fail silently — a
+// Without them a consumer has to infer from naming convention which *Properties field a
+// PropertyUpdate belongs to, which Endpoint.matter_properties case an
+// Endpoint.matter_device_type_id selects, and which Matter command a DeviceCommand
+// parameters case carries. Both inferences fail silently — a
 // dropped attribute or an unset oneof looks identical to a device that never reported.
 // These options move both mappings into the descriptor, so consumers read them.
 //
@@ -54,4 +56,19 @@ extend google.protobuf.MessageOptions {
   // Endpoint.matter_device_type_id to an Endpoint.matter_properties case is a
   // function.
   repeated uint32 matter_device_type = 50003;
+
+  // The Matter cluster a command-parameters message belongs to, e.g. 0x0006 for On/Off.
+  // Always exactly one — a parameters message never spans clusters.
+  uint32 matter_command_cluster = 50007;
+
+  // The Matter command ID this parameters message carries arguments for, e.g. 0x00 for
+  // Thermostat's SetpointRaiseLower.
+  //
+  // Singular on purpose. An earlier form was repeated, so that one message could cover
+  // several commands and choose between them by its own fields — but a message that
+  // encodes WHICH command it is duplicates DeviceCommand.matter_command_id, in a second
+  // numbering, with nothing reconciling the two. The parameters carry arguments; the
+  // command ID says which command. A message shared by several commands that take the
+  // same arguments simply omits this and lets matter_command_id stand alone.
+  optional uint32 matter_command_id = 50008;
 }

@@ -208,20 +208,20 @@ const GatewayError$json = {
   '2': [
     {'1': 'code', '3': 1, '4': 1, '5': 9, '10': 'code'},
     {'1': 'message', '3': 2, '4': 1, '5': 9, '10': 'message'},
-    {'1': 'command_id', '3': 3, '4': 1, '5': 9, '10': 'commandId'},
+    {'1': 'request_id', '3': 3, '4': 1, '5': 9, '10': 'requestId'},
   ],
 };
 
 /// Descriptor for `GatewayError`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayErrorDescriptor = $convert.base64Decode(
     'CgxHYXRld2F5RXJyb3ISEgoEY29kZRgBIAEoCVIEY29kZRIYCgdtZXNzYWdlGAIgASgJUgdtZX'
-    'NzYWdlEh0KCmNvbW1hbmRfaWQYAyABKAlSCWNvbW1hbmRJZA==');
+    'NzYWdlEh0KCnJlcXVlc3RfaWQYAyABKAlSCXJlcXVlc3RJZA==');
 
 @$core.Deprecated('Use connectorCommandResultDescriptor instead')
 const ConnectorCommandResult$json = {
   '1': 'ConnectorCommandResult',
   '2': [
-    {'1': 'command_id', '3': 1, '4': 1, '5': 9, '10': 'commandId'},
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
     {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
     {
       '1': 'error',
@@ -244,7 +244,7 @@ const ConnectorCommandResult$json = {
 
 /// Descriptor for `ConnectorCommandResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List connectorCommandResultDescriptor = $convert.base64Decode(
-    'ChZDb25uZWN0b3JDb21tYW5kUmVzdWx0Eh0KCmNvbW1hbmRfaWQYASABKAlSCWNvbW1hbmRJZB'
+    'ChZDb25uZWN0b3JDb21tYW5kUmVzdWx0Eh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZB'
     'IYCgdzdWNjZXNzGAIgASgIUgdzdWNjZXNzEjwKBWVycm9yGAMgASgLMiYua3VzaW50YS5pb3Qu'
     'Y29ubmVjdG9yLnYxLkdhdGV3YXlFcnJvclIFZXJyb3ISPQoMY29tcGxldGVkX2F0GAQgASgLMh'
     'ouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFILY29tcGxldGVkQXQ=');
@@ -316,6 +316,15 @@ const SessionRequest$json = {
       '9': 0,
       '10': 'heartbeat'
     },
+    {
+      '1': 'device_events',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.DeviceEventBatch',
+      '9': 0,
+      '10': 'deviceEvents'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -334,7 +343,9 @@ final $typed_data.Uint8List sessionRequestDescriptor = $convert.base64Decode(
     'RhLmlvdC5jb25uZWN0b3IudjEuRGV2aWNlUmVtb3ZhbEgAUg1kZXZpY2VSZW1vdmVkElkKDmNv'
     'bW1hbmRfcmVzdWx0GAcgASgLMjAua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNvbm5lY3Rvck'
     'NvbW1hbmRSZXN1bHRIAFINY29tbWFuZFJlc3VsdBJDCgloZWFydGJlYXQYCCABKAsyIy5rdXNp'
-    'bnRhLmlvdC5jb25uZWN0b3IudjEuSGVhcnRCZWF0SABSCWhlYXJ0YmVhdEIJCgdwYXlsb2Fk');
+    'bnRhLmlvdC5jb25uZWN0b3IudjEuSGVhcnRCZWF0SABSCWhlYXJ0YmVhdBJOCg1kZXZpY2VfZX'
+    'ZlbnRzGAkgASgLMicua3VzaW50YS5pb3QuZGV2aWNlLnYxLkRldmljZUV2ZW50QmF0Y2hIAFIM'
+    'ZGV2aWNlRXZlbnRzQgkKB3BheWxvYWQ=');
 
 @$core.Deprecated('Use sessionResponseDescriptor instead')
 const SessionResponse$json = {
@@ -394,6 +405,15 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'executeCommand'
     },
+    {
+      '1': 'execute_attribute_write',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.AttributeWriteRequest',
+      '9': 0,
+      '10': 'executeAttributeWrite'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -413,4 +433,6 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'sua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlVuc3Vic2NyaWJlRGV2aWNlSABSC3Vuc3Vic2Ny'
     'aWJlEj4KBWVycm9yGAcgASgLMiYua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkdhdGV3YXlFcn'
     'JvckgAUgVlcnJvchJPCg9leGVjdXRlX2NvbW1hbmQYCCABKAsyJC5rdXNpbnRhLmlvdC53ZWJy'
-    'dGMudjEuRGV2aWNlQ29tbWFuZEgAUg5leGVjdXRlQ29tbWFuZEIJCgdwYXlsb2FkSgQIBBAF');
+    'dGMudjEuRGV2aWNlQ29tbWFuZEgAUg5leGVjdXRlQ29tbWFuZBJmChdleGVjdXRlX2F0dHJpYn'
+    'V0ZV93cml0ZRgJIAEoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5BdHRyaWJ1dGVXcml0ZVJl'
+    'cXVlc3RIAFIVZXhlY3V0ZUF0dHJpYnV0ZVdyaXRlQgkKB3BheWxvYWRKBAgEEAU=');

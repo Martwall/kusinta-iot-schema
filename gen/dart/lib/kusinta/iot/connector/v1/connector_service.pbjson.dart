@@ -15,14 +15,16 @@ import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
 import '../../../../google/protobuf/timestamp.pbjson.dart' as $1;
+import '../../access/v1/acl.pbjson.dart' as $11;
 import '../../device/v1/cluster_state.pbjson.dart' as $7;
 import '../../device/v1/descriptor.pbjson.dart' as $4;
 import '../../device/v1/device.pbjson.dart' as $3;
+import '../../device/v1/device_event.pbjson.dart' as $9;
 import '../../device/v1/properties.pbjson.dart' as $6;
 import '../../device/v1/property_update.pbjson.dart' as $8;
 import '../../identity/v1/identity.pbjson.dart' as $2;
 import '../../vendor/homematic/v1/homematic.pbjson.dart' as $5;
-import '../../webrtc/v1/command.pbjson.dart' as $9;
+import '../../webrtc/v1/command.pbjson.dart' as $10;
 import 'connector.pbjson.dart' as $0;
 
 const $core.Map<$core.String, $core.dynamic> ConnectorGatewayServiceBase$json =
@@ -95,21 +97,24 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
       $0.ConnectorCommandResult$json,
   '.kusinta.iot.connector.v1.GatewayError': $0.GatewayError$json,
   '.kusinta.iot.connector.v1.HeartBeat': $0.HeartBeat$json,
+  '.kusinta.iot.device.v1.DeviceEventBatch': $9.DeviceEventBatch$json,
+  '.kusinta.iot.device.v1.DeviceEvent': $9.DeviceEvent$json,
   '.kusinta.iot.connector.v1.SessionResponse': $0.SessionResponse$json,
   '.kusinta.iot.connector.v1.HandshakeAck': $0.HandshakeAck$json,
   '.kusinta.iot.identity.v1.GatewayId': $2.GatewayId$json,
   '.kusinta.iot.connector.v1.SubscribeDevice': $0.SubscribeDevice$json,
   '.kusinta.iot.connector.v1.UnsubscribeDevice': $0.UnsubscribeDevice$json,
-  '.kusinta.iot.webrtc.v1.DeviceCommand': $9.DeviceCommand$json,
+  '.kusinta.iot.webrtc.v1.DeviceCommand': $10.DeviceCommand$json,
   '.kusinta.iot.webrtc.v1.ThermostatSetpointParams':
-      $9.ThermostatSetpointParams$json,
-  '.kusinta.iot.webrtc.v1.LevelControlParams': $9.LevelControlParams$json,
-  '.kusinta.iot.webrtc.v1.OnOffParams': $9.OnOffParams$json,
+      $10.ThermostatSetpointParams$json,
+  '.kusinta.iot.webrtc.v1.LevelControlParams': $10.LevelControlParams$json,
+  '.kusinta.iot.webrtc.v1.OnOffParams': $10.OnOffParams$json,
   '.kusinta.iot.webrtc.v1.WindowCoveringLiftParams':
-      $9.WindowCoveringLiftParams$json,
-  '.kusinta.iot.webrtc.v1.DoorLockParams': $9.DoorLockParams$json,
-  '.kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams':
-      $9.ThermostatSetpointWriteParams$json,
+      $10.WindowCoveringLiftParams$json,
+  '.kusinta.iot.webrtc.v1.DoorLockParams': $10.DoorLockParams$json,
+  '.kusinta.iot.webrtc.v1.AttributeWriteRequest':
+      $10.AttributeWriteRequest$json,
+  '.kusinta.iot.access.v1.AttributeRef': $11.AttributeRef$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

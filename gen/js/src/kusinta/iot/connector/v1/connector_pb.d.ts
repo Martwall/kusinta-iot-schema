@@ -9,7 +9,8 @@ import type { ConnectorTransport } from "../../common/v1/types_pb.js";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { PropertyUpdateBatch } from "../../device/v1/property_update_pb.js";
-import type { DeviceCommand } from "../../webrtc/v1/command_pb.js";
+import type { DeviceEventBatch } from "../../device/v1/device_event_pb.js";
+import type { AttributeWriteRequest, DeviceCommand } from "../../webrtc/v1/command_pb.js";
 
 /**
  * Describes the file kusinta/iot/connector/v1/connector.proto.
@@ -209,11 +210,11 @@ export declare type GatewayError = Message<"kusinta.iot.connector.v1.GatewayErro
   message: string;
 
   /**
-   * non-empty if the error is in response to a command
+   * non-empty if the error answers a command or a write
    *
-   * @generated from field: string command_id = 3;
+   * @generated from field: string request_id = 3;
    */
-  commandId: string;
+  requestId: string;
 };
 
 /**
@@ -223,13 +224,20 @@ export declare type GatewayError = Message<"kusinta.iot.connector.v1.GatewayErro
 export declare const GatewayErrorSchema: GenMessage<GatewayError>;
 
 /**
+ * A connector's answer to an executed command OR attribute write. One message for both:
+ * the two operations differ in what they do to a device, not in how a connector reports
+ * having done it, and request_id says which request this answers either way.
+ *
  * @generated from message kusinta.iot.connector.v1.ConnectorCommandResult
  */
 export declare type ConnectorCommandResult = Message<"kusinta.iot.connector.v1.ConnectorCommandResult"> & {
   /**
-   * @generated from field: string command_id = 1;
+   * Was command_id. Renamed with webrtc.v1.DeviceCommand.request_id, which it mirrors, and
+   * because it now correlates writes as well as commands.
+   *
+   * @generated from field: string request_id = 1;
    */
-  commandId: string;
+  requestId: string;
 
   /**
    * @generated from field: bool success = 2;
@@ -306,6 +314,12 @@ export declare type SessionRequest = Message<"kusinta.iot.connector.v1.SessionRe
      */
     value: HeartBeat;
     case: "heartbeat";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.device.v1.DeviceEventBatch device_events = 9;
+     */
+    value: DeviceEventBatch;
+    case: "deviceEvents";
   } | { case: undefined; value?: undefined };
 };
 
@@ -362,6 +376,15 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
      */
     value: DeviceCommand;
     case: "executeCommand";
+  } | {
+    /**
+     * The connector-leg half of PERMISSION_ACTION_WRITE. A sibling case rather than another
+     * meaning overloaded onto execute_command, which is the mistake this replaces.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.AttributeWriteRequest execute_attribute_write = 9;
+     */
+    value: AttributeWriteRequest;
+    case: "executeAttributeWrite";
   } | { case: undefined; value?: undefined };
 };
 

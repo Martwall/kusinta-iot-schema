@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package kusinta.iot.device.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/device/v1/cluster_state.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// Matter's event priority. Governs retention and delivery urgency, not severity in a
+// logging sense: CRITICAL events are retained and delivered with the most effort, DEBUG
+// with the least.
+enum EventPriority {
+  EVENT_PRIORITY_UNSPECIFIED = 0;
+  EVENT_PRIORITY_DEBUG       = 1;
+  EVENT_PRIORITY_INFO        = 2;
+  EVENT_PRIORITY_CRITICAL    = 3;
+}
+
+// Something that HAPPENED on a device, as opposed to what a device currently IS.
+//
+// PropertyUpdate answers "what is the lock's state now" — latest wins, order does not
+// matter, a missed one is corrected by the next. DeviceEvent answers "what happened to the
+// lock" — each is a distinct occurrence, order matters, and a missed one is gone unless it
+// is fetched by its number. Matter models both for the same reason, and neither substitutes
+// for the other: a lock's LockState attribute cannot say who unlocked it, with what
+// credential, at what time, and an event log cannot cheaply answer what the state is now.
+//
+// This is the audit surface. In a building with several residents sharing a device, "the
+// door is unlocked" and "this credential unlocked the door at 14:02" are different
+// questions with different consumers.
+//
+// Events do NOT feed Device.endpoints. A consumer must not merge an event into a properties
+// field or a ClusterState — an event's data is its own payload, not an attribute value, and
+// the attribute it relates to reports separately. The resolution rule in
+// property_update.proto has nothing to do with events.
+message DeviceEvent {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+
+  // Which endpoint emitted it, and which cluster defines it. Required, as for an update.
+  optional uint32 endpoint_id = 2;
+  uint32          cluster_id  = 3;
+
+  // The Matter event ID within that cluster.
+  uint32 event_id = 4;
+
+  // Matter's EventNumber: monotonically increasing per node, and the reason an event log
+  // can be resumed rather than merely replayed. A consumer that sees a gap knows it missed
+  // something and can say so — the one guarantee a PropertyUpdate stream cannot give.
+  //
+  // Monotonic within one device. Do NOT compare across devices; they are unrelated
+  // sequences.
+  uint64 event_number = 5;
+
+  // When the device says it happened, which is not when the gateway saw it. On a
+  // battery-powered device that wakes on a cycle, the two can differ by minutes.
+  google.protobuf.Timestamp timestamp = 6;
+
+  EventPriority priority = 7;
+
+  // The event's own payload. Matter events carry a struct, so this is normally
+  // AttributeValue.struct_value keyed by context tag; a scalar-payload event uses a scalar
+  // case directly.
+  AttributeValue data = 8;
+}
+
+message DeviceEventBatch {
+  repeated DeviceEvent events = 1;
+
+  // When the gateway received these, as distinct from each event's own timestamp, which is
+  // when the device says it happened. The two differ by however long a sleeping device took
+  // to wake, and for an audit trail both matter: one is what occurred, the other is when
+  // anyone could have known.
+  google.protobuf.Timestamp received_at = 2;
+}

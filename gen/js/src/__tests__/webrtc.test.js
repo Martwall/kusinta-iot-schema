@@ -17,7 +17,6 @@ import {
   CommandResultSchema,
   CommandErrorCode,
   ThermostatSetpointParamsSchema,
-  ThermostatSetpointWriteParamsSchema,
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import {
   DeviceStateSnapshotSchema,
@@ -43,14 +42,14 @@ describe('AppHandshake', () => {
 describe('DeviceCommand', () => {
   it('round-trips thermostat setpoint command', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-1',
+      requestId: 'cmd-uuid-1',
       deviceId: { value: 'therm-1' },
       clusterId: 0x0201,
       commandName: 'SetpointRaiseLower',
       parameters: { case: 'thermostatSetpoint', value: { mode: 0, amount: 50 } },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
-    expect(decoded.commandId).toBe('cmd-uuid-1')
+    expect(decoded.requestId).toBe('cmd-uuid-1')
     expect(decoded.deviceId?.value).toBe('therm-1')
     expect(decoded.commandName).toBe('SetpointRaiseLower')
     expect(decoded.parameters?.case).toBe('thermostatSetpoint')
@@ -67,49 +66,24 @@ describe('DeviceCommand', () => {
     expect(fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, unset)).mode).toBeUndefined()
   })
 
-  it('round-trips an absolute thermostat setpoint write', () => {
-    const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-6',
-      deviceId: { value: 'therm-1' },
-      clusterId: 0x0201,
-      commandName: 'WriteAttribute',
-      parameters: {
-        case: 'thermostatSetpointWrite',
-        value: { mode: 0, setpointCentidegrees: 2150 },
-      },
-    })
-    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
-    expect(decoded.parameters?.case).toBe('thermostatSetpointWrite')
-    if (decoded.parameters?.case === 'thermostatSetpointWrite') {
-      expect(decoded.parameters.value.mode).toBe(0)
-      expect(decoded.parameters.value.setpointCentidegrees).toBe(2150)
-    }
-  })
-
-  it('round-trips a negative absolute setpoint', () => {
-    const p = create(ThermostatSetpointWriteParamsSchema, { mode: 1, setpointCentidegrees: -500 })
-    const decoded = fromBinary(ThermostatSetpointWriteParamsSchema, toBinary(ThermostatSetpointWriteParamsSchema, p))
-    expect(decoded.setpointCentidegrees).toBe(-500)
-  })
-
   it('round-trips on/off command', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-2',
+      requestId: 'cmd-uuid-2',
       deviceId: { value: 'light-1' },
       clusterId: 0x0006,
       commandName: 'Toggle',
-      parameters: { case: 'onOff', value: { toggle: true } },
+      matterCommandId: 0x02,
+      parameters: { case: 'onOff', value: {} },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.parameters?.case).toBe('onOff')
-    if (decoded.parameters?.case === 'onOff') {
-      expect(decoded.parameters.value.toggle).toBe(true)
-    }
+    // Which of Off/On/Toggle is meant is the command id, and only the command id.
+    expect(decoded.matterCommandId).toBe(0x02)
   })
 
   it('round-trips level control command', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-3',
+      requestId: 'cmd-uuid-3',
       deviceId: { value: 'light-2' },
       clusterId: 0x0008,
       commandName: 'MoveToLevel',
@@ -125,7 +99,7 @@ describe('DeviceCommand', () => {
 
   it('round-trips window covering lift command', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-4',
+      requestId: 'cmd-uuid-4',
       deviceId: { value: 'blind-1' },
       clusterId: 0x0102,
       commandName: 'GoToLiftPercentage',
@@ -140,31 +114,33 @@ describe('DeviceCommand', () => {
 
   it('round-trips door lock command', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-5',
+      requestId: 'cmd-uuid-5',
       deviceId: { value: 'lock-1' },
       clusterId: 0x0101,
       commandName: 'LockDoor',
-      parameters: { case: 'doorLock', value: { lockState: 1 } },
+      matterCommandId: 0x00,
+      parameters: { case: 'doorLock', value: { pinCode: '1234' } },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.parameters?.case).toBe('doorLock')
+    expect(decoded.matterCommandId).toBe(0x00)
     if (decoded.parameters?.case === 'doorLock') {
-      expect(decoded.parameters.value.lockState).toBe(1)
+      expect(decoded.parameters.value.pinCode).toBe('1234')
     }
   })
 })
 
 describe('CommandResult', () => {
   it('round-trips successful result', () => {
-    const result = create(CommandResultSchema, { commandId: 'cmd-uuid-1', success: true })
+    const result = create(CommandResultSchema, { requestId: 'cmd-uuid-1', success: true })
     const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
-    expect(decoded.commandId).toBe('cmd-uuid-1')
+    expect(decoded.requestId).toBe('cmd-uuid-1')
     expect(decoded.success).toBe(true)
   })
 
   it('round-trips failed result with error', () => {
     const result = create(CommandResultSchema, {
-      commandId: 'cmd-uuid-2',
+      requestId: 'cmd-uuid-2',
       success: false,
       error: {
         code: CommandErrorCode.CONSTRAINT_VIOLATED,
@@ -177,14 +153,14 @@ describe('CommandResult', () => {
   })
 
   it('leaves settles_by unset when the producer states no optimistic window', () => {
-    const result = create(CommandResultSchema, { commandId: 'cmd-uuid-3', success: true })
+    const result = create(CommandResultSchema, { requestId: 'cmd-uuid-3', success: true })
     const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
     expect(decoded.settlesBy).toBeUndefined()
   })
 
   it('round-trips settles_by', () => {
     const result = create(CommandResultSchema, {
-      commandId: 'cmd-uuid-4',
+      requestId: 'cmd-uuid-4',
       success: true,
       settlesBy: { seconds: 1700000000n, nanos: 0 },
     })
@@ -538,11 +514,11 @@ describe('AppMessage oneof payload', () => {
       payload: {
         case: 'command',
         value: {
-          commandId: 'cmd-1',
+          requestId: 'cmd-1',
           deviceId: { value: 'light-1' },
           clusterId: 0x0006,
           commandName: 'Toggle',
-          parameters: { case: 'onOff', value: { toggle: true } },
+          parameters: { case: 'onOff', value: {} },
         },
       },
     })
@@ -587,12 +563,12 @@ describe('AppMessage oneof payload', () => {
 describe('DeviceCommand — endpoint routing', () => {
   it('addresses one channel of a multi-channel actuator', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-7',
+      requestId: 'cmd-uuid-7',
       deviceId: { value: 'actuator-1' },
       endpointId: 3,
       clusterId: 0x0006,
       commandName: 'Toggle',
-      parameters: { case: 'onOff', value: { toggle: true } },
+      parameters: { case: 'onOff', value: {} },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.endpointId).toBe(3)
@@ -600,11 +576,68 @@ describe('DeviceCommand — endpoint routing', () => {
 
   it('leaves endpoint_id undefined when unaddressed, so a consumer can refuse it', () => {
     const cmd = create(DeviceCommandSchema, {
-      commandId: 'cmd-uuid-8',
+      requestId: 'cmd-uuid-8',
       deviceId: { value: 'actuator-1' },
-      parameters: { case: 'onOff', value: { toggle: true } },
+      parameters: { case: 'onOff', value: {} },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.endpointId).toBeUndefined()
+  })
+})
+
+describe('AttributeWriteRequest — the WRITE carrier', () => {
+  it('rides its own AppMessage case, not the command case', () => {
+    const msg = create(AppMessageSchema, {
+      messageId: 'm-write-1',
+      payload: {
+        case: 'attributeWrite',
+        value: {
+          requestId: 'w-1',
+          deviceId: { value: 'therm-1' },
+          target: {
+            attributeName: 'OccupiedHeatingSetpoint',
+            clusterId: 0x0201,
+            attributeId: 0x0012,
+            endpointId: 1,
+          },
+          value: { value: { case: 'intValue', value: 2150n } },
+        },
+      },
+    })
+    const decoded = fromBinary(AppMessageSchema, toBinary(AppMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('attributeWrite')
+    if (decoded.payload?.case === 'attributeWrite') {
+      expect(decoded.payload.value.target?.clusterId).toBe(0x0201)
+      expect(decoded.payload.value.target?.attributeId).toBe(0x0012)
+      expect(decoded.payload.value.target?.endpointId).toBe(1)
+    }
+  })
+
+  it('no longer offers an absolute setpoint as a command case', () => {
+    const cases = DeviceCommandSchema.oneofs.find((o) => o.name === 'parameters').fields.map((f) => f.name)
+    expect(cases).not.toContain('thermostat_setpoint_write')
+    expect(cases).toContain('thermostat_setpoint')
+  })
+})
+
+describe('DeviceCommand — numeric command addressing', () => {
+  it('carries a Matter command id distinctly from the correlation id', () => {
+    const cmd = create(DeviceCommandSchema, {
+      requestId: 'cmd-uuid-9',
+      deviceId: { value: 'light-1' },
+      endpointId: 1,
+      clusterId: 0x0006,
+      matterCommandId: 0x02,
+      parameters: { case: 'onOff', value: {} },
+    })
+    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
+    expect(decoded.requestId).toBe('cmd-uuid-9')
+    expect(decoded.matterCommandId).toBe(0x02)
+  })
+
+  it('leaves matter_command_id undefined rather than defaulting to Off', () => {
+    const cmd = create(DeviceCommandSchema, { requestId: 'cmd-uuid-10' })
+    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
+    expect(decoded.matterCommandId).toBeUndefined()
   })
 })

@@ -6,6 +6,8 @@ import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2"
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { AttributeRef } from "../../access/v1/acl_pb.js";
+import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/command.proto.
@@ -47,43 +49,6 @@ export declare type ThermostatSetpointParams = Message<"kusinta.iot.webrtc.v1.Th
 export declare const ThermostatSetpointParamsSchema: GenMessage<ThermostatSetpointParams>;
 
 /**
- * Writes a setpoint to an absolute value. Maps to a Matter write of Thermostat (0x0201)
- * OccupiedHeatingSetpoint / OccupiedCoolingSetpoint, NOT to SetpointRaiseLower.
- *
- * Deliberately a separate message from ThermostatSetpointParams rather than an optional
- * field on it: a delta and an absolute are different commands with different failure
- * modes, and one message carrying both would let a producer read the wrong meaning out
- * of bytes that parse cleanly.
- *
- * This is the form battery-powered devices are designed to be driven with. An upstream
- * system accepts an absolute value whether or not the device is awake and queues it for
- * the next wake-up, so the command does not depend on a base nobody holds.
- *
- * @generated from message kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams
- */
-export declare type ThermostatSetpointWriteParams = Message<"kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams"> & {
-  /**
-   * SetpointAdjustMode, see above
-   *
-   * @generated from field: optional uint32 mode = 1;
-   */
-  mode?: number | undefined;
-
-  /**
-   * absolute target
-   *
-   * @generated from field: sint32 setpoint_centidegrees = 2;
-   */
-  setpointCentidegrees: number;
-};
-
-/**
- * Describes the message kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams.
- * Use `create(ThermostatSetpointWriteParamsSchema)` to create a new message.
- */
-export declare const ThermostatSetpointWriteParamsSchema: GenMessage<ThermostatSetpointWriteParams>;
-
-/**
  * Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
  *
  * @generated from message kusinta.iot.webrtc.v1.LevelControlParams
@@ -111,20 +76,17 @@ export declare type LevelControlParams = Message<"kusinta.iot.webrtc.v1.LevelCon
 export declare const LevelControlParamsSchema: GenMessage<LevelControlParams>;
 
 /**
- * Maps to Matter On and Off commands (On/Off cluster 0x0006).
+ * Arguments for the Matter On/Off cluster's Off (0x00), On (0x01) and Toggle (0x02)
+ * commands — of which there are none: all three take no arguments.
+ *
+ * Which of the three is meant is DeviceCommand.matter_command_id, and only that. The
+ * message previously carried `on` and `toggle` booleans, a second encoding of the same
+ * choice in a different shape, so a command could say Toggle in one field and On in
+ * another and parse cleanly. Empty is the honest form.
  *
  * @generated from message kusinta.iot.webrtc.v1.OnOffParams
  */
 export declare type OnOffParams = Message<"kusinta.iot.webrtc.v1.OnOffParams"> & {
-  /**
-   * @generated from field: bool on = 1;
-   */
-  on: boolean;
-
-  /**
-   * @generated from field: bool toggle = 2;
-   */
-  toggle: boolean;
 };
 
 /**
@@ -154,18 +116,16 @@ export declare type WindowCoveringLiftParams = Message<"kusinta.iot.webrtc.v1.Wi
 export declare const WindowCoveringLiftParamsSchema: GenMessage<WindowCoveringLiftParams>;
 
 /**
- * Maps to Matter LockDoor/UnlockDoor commands (Door Lock cluster 0x0101).
+ * Arguments for the Matter Door Lock cluster's LockDoor (0x00) and UnlockDoor (0x01),
+ * which take an optional PIN and nothing else.
+ *
+ * lock_state is gone: it restated LockDoor/UnlockDoor as Locked=1/Unlocked=2, a second
+ * selector in a THIRD numbering, disagreeing with both Matter's command IDs and its
+ * LockState attribute. Which operation is meant is DeviceCommand.matter_command_id.
  *
  * @generated from message kusinta.iot.webrtc.v1.DoorLockParams
  */
 export declare type DoorLockParams = Message<"kusinta.iot.webrtc.v1.DoorLockParams"> & {
-  /**
-   * Locked=1, Unlocked=2
-   *
-   * @generated from field: uint32 lock_state = 1;
-   */
-  lockState: number;
-
   /**
    * optional PIN
    *
@@ -200,11 +160,15 @@ export declare const DoorLockParamsSchema: GenMessage<DoorLockParams>;
  */
 export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand"> & {
   /**
-   * UUID, matched in CommandResult
+   * Was command_id. Renamed because Matter has its own numeric command ID, added below,
+   * and two fields called "command id" meaning entirely different things in one message is
+   * a trap. Same name as AttributeWriteRequest.request_id, which correlates the same way.
    *
-   * @generated from field: string command_id = 1;
+   * UUID, matched in the result
+   *
+   * @generated from field: string request_id = 1;
    */
-  commandId: string;
+  requestId: string;
 
   /**
    * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 2;
@@ -212,7 +176,12 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
   deviceId?: DeviceId | undefined;
 
   /**
-   * PascalCase Matter command name
+   * The command's own PascalCase spelling, for logs and rendering.
+   *
+   * ADVISORY, and not validated against anything: nothing reconciles it with
+   * matter_command_id, so it can say "Toggle" beside an ID meaning On. A consumer MUST NOT
+   * route or authorize on it, and where the two disagree the ID wins. It is here so a
+   * refused or unresolvable command is legible to whoever reads the log.
    *
    * @generated from field: string command_name = 4;
    */
@@ -224,6 +193,25 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
    * @generated from field: uint32 cluster_id = 12;
    */
   clusterId: number;
+
+  /**
+   * The Matter command ID within that cluster, e.g. 0x02 for On/Off's Toggle.
+   *
+   * What a consumer routes and authorizes on, matching Matter's own wire and the numeric
+   * Endpoint.clusters[].accepted_command_ids — so "does this device accept this command"
+   * is answerable before sending it rather than by watching it fail.
+   *
+   * Where the parameters case declares a (matter_command_id), this MUST equal it; where it
+   * declares only a (matter_command_cluster) — because several commands share the same
+   * arguments — this is what picks the command. cluster_id MUST equal the case's
+   * (matter_command_cluster) either way. A mismatch is malformed and is refused with
+   * COMMAND_ERROR_CODE_INVALID_COMMAND.
+   *
+   * raw_tlv has no annotation to check against, so there this is simply required.
+   *
+   * @generated from field: optional uint32 matter_command_id = 13;
+   */
+  matterCommandId?: number | undefined;
 
   /**
    * Which endpoint of the device to command. Required by rule — proto3 has no `required`,
@@ -278,12 +266,6 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
     case: "doorLock";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams thermostat_setpoint_write = 10;
-     */
-    value: ThermostatSetpointWriteParams;
-    case: "thermostatSetpointWrite";
-  } | {
-    /**
      * escape hatch for unsupported commands
      *
      * @generated from field: bytes raw_tlv = 99;
@@ -335,9 +317,11 @@ export declare const CommandErrorSchema: GenMessage<CommandError>;
  */
 export declare type CommandResult = Message<"kusinta.iot.webrtc.v1.CommandResult"> & {
   /**
-   * @generated from field: string command_id = 1;
+   * matches DeviceCommand.request_id
+   *
+   * @generated from field: string request_id = 1;
    */
-  commandId: string;
+  requestId: string;
 
   /**
    * @generated from field: bool success = 2;
@@ -379,6 +363,62 @@ export declare type CommandResult = Message<"kusinta.iot.webrtc.v1.CommandResult
  * Use `create(CommandResultSchema)` to create a new message.
  */
 export declare const CommandResultSchema: GenMessage<CommandResult>;
+
+/**
+ * Writes one attribute of one endpoint. The carrier for PERMISSION_ACTION_WRITE, which
+ * until it existed authorized an operation no message performed.
+ *
+ * Deliberately not a DeviceCommand case. A write and an invoke are different operations in
+ * Matter carrying different authority: a user who may toggle a light is not thereby a user
+ * who may rewrite its attributes. Routing both through one message made INVOKE imply WRITE
+ * and left the distinction unenforceable.
+ *
+ * Lives here beside DeviceCommand rather than in envelope.proto because both legs carry
+ * it — the app sends one, and the gateway forwards it to a connector. That is the same
+ * reason DeviceCommand is here.
+ *
+ * Addressed by AttributeRef, so an access.v1.PropertyConstraint bounds the value by
+ * matching target directly rather than needing a rule per writable attribute.
+ *
+ * A relative adjust is NOT this. Thermostat SetpointRaiseLower is a genuine Matter command
+ * and stays a DeviceCommand; this is for writing an absolute value.
+ *
+ * Answered by CommandResult, correlated on request_id.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.AttributeWriteRequest
+ */
+export declare type AttributeWriteRequest = Message<"kusinta.iot.webrtc.v1.AttributeWriteRequest"> & {
+  /**
+   * UUID, matched in CommandResult
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 2;
+   */
+  deviceId?: DeviceId | undefined;
+
+  /**
+   * Which attribute to write. endpoint_id is required here — an unaddressed write has no
+   * correct destination, exactly as for a command.
+   *
+   * @generated from field: kusinta.iot.access.v1.AttributeRef target = 3;
+   */
+  target?: AttributeRef | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.device.v1.AttributeValue value = 4;
+   */
+  value?: AttributeValue | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.AttributeWriteRequest.
+ * Use `create(AttributeWriteRequestSchema)` to create a new message.
+ */
+export declare const AttributeWriteRequestSchema: GenMessage<AttributeWriteRequest>;
 
 /**
  * Why a command was refused or failed, so an app can branch without string-matching a

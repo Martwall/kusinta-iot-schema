@@ -13,6 +13,7 @@ import pytest
 
 from kusinta.iot.device.v1 import (
     cluster_state_pb2,
+    device_event_pb2,
     descriptor_pb2,
     device_pb2,
     matter_options_pb2,
@@ -465,3 +466,53 @@ def test_a_directly_reached_device_has_no_bridge():
         device_id=identity_pb2.DeviceId(value="valve-1")
     )
     assert not descriptor.HasField("bridged_by")
+
+
+# --- events: what happened, not what is --------------------------------------------
+
+
+def test_device_event_carries_a_monotonic_number_and_a_payload():
+    event = device_event_pb2.DeviceEvent(
+        device_id=identity_pb2.DeviceId(value="lock-1"),
+        endpoint_id=1,
+        cluster_id=0x0101,
+        event_id=0x0002,
+        event_number=41,
+        priority=device_event_pb2.EVENT_PRIORITY_CRITICAL,
+        data=cluster_state_pb2.AttributeValue(
+            struct_value=cluster_state_pb2.AttributeValueStruct(
+                fields={0: cluster_state_pb2.AttributeValue(uint_value=2)}
+            )
+        ),
+    )
+    decoded = device_event_pb2.DeviceEvent()
+    decoded.ParseFromString(event.SerializeToString())
+    assert decoded.event_number == 41
+    assert decoded.priority == device_event_pb2.EVENT_PRIORITY_CRITICAL
+    assert decoded.data.struct_value.fields[0].uint_value == 2
+
+
+def test_event_numbers_expose_a_gap():
+    """The guarantee a PropertyUpdate stream cannot give: a consumer can tell it missed
+    something rather than silently carrying on."""
+    batch = device_event_pb2.DeviceEventBatch(
+        events=[
+            device_event_pb2.DeviceEvent(event_number=41),
+            device_event_pb2.DeviceEvent(event_number=44),
+        ]
+    )
+    decoded = device_event_pb2.DeviceEventBatch()
+    decoded.ParseFromString(batch.SerializeToString())
+    numbers = [e.event_number for e in decoded.events]
+    assert numbers == [41, 44]
+
+
+def test_event_priority_defaults_to_unspecified():
+    assert (
+        device_event_pb2.DeviceEvent().priority
+        == device_event_pb2.EVENT_PRIORITY_UNSPECIFIED
+    )
+
+
+def test_an_event_endpoint_is_explicit_not_zero_defaulted():
+    assert not device_event_pb2.DeviceEvent().HasField("endpoint_id")

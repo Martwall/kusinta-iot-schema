@@ -4,13 +4,16 @@
 
 import { enumDesc, fileDesc, messageDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import { file_kusinta_iot_access_v1_acl } from "../../access/v1/acl_pb.js";
+import { file_kusinta_iot_device_v1_cluster_state } from "../../device/v1/cluster_state_pb.js";
+import { file_kusinta_iot_device_v1_matter_options } from "../../device/v1/matter_options_pb.js";
 import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/command.proto.
  */
 export const file_kusinta_iot_webrtc_v1_command = /*@__PURE__*/
-  fileDesc("CiNrdXNpbnRhL2lvdC93ZWJydGMvdjEvY29tbWFuZC5wcm90bxIVa3VzaW50YS5pb3Qud2VicnRjLnYxIkYKGFRoZXJtb3N0YXRTZXRwb2ludFBhcmFtcxIRCgRtb2RlGAEgASgNSACIAQESDgoGYW1vdW50GAIgASgRQgcKBV9tb2RlIloKHVRoZXJtb3N0YXRTZXRwb2ludFdyaXRlUGFyYW1zEhEKBG1vZGUYASABKA1IAIgBARIdChVzZXRwb2ludF9jZW50aWRlZ3JlZXMYAiABKBFCBwoFX21vZGUiPAoSTGV2ZWxDb250cm9sUGFyYW1zEg0KBWxldmVsGAEgASgNEhcKD3RyYW5zaXRpb25fdGltZRgCIAEoDSIpCgtPbk9mZlBhcmFtcxIKCgJvbhgBIAEoCBIOCgZ0b2dnbGUYAiABKAgiNgoYV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zEhoKEmxpZnRfcGVyY2VudDEwMHRocxgBIAEoDSI2Cg5Eb29yTG9ja1BhcmFtcxISCgpsb2NrX3N0YXRlGAEgASgNEhAKCHBpbl9jb2RlGAIgASgJIpYFCg1EZXZpY2VDb21tYW5kEhIKCmNvbW1hbmRfaWQYASABKAkSNAoJZGV2aWNlX2lkGAIgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSFAoMY29tbWFuZF9uYW1lGAQgASgJEhIKCmNsdXN0ZXJfaWQYDCABKA0SGAoLZW5kcG9pbnRfaWQYCyABKA1IAYgBARJOChN0aGVybW9zdGF0X3NldHBvaW50GAUgASgLMi8ua3VzaW50YS5pb3Qud2VicnRjLnYxLlRoZXJtb3N0YXRTZXRwb2ludFBhcmFtc0gAEkIKDWxldmVsX2NvbnRyb2wYBiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGV2ZWxDb250cm9sUGFyYW1zSAASNAoGb25fb2ZmGAcgASgLMiIua3VzaW50YS5pb3Qud2VicnRjLnYxLk9uT2ZmUGFyYW1zSAASTwoUd2luZG93X2NvdmVyaW5nX2xpZnQYCCABKAsyLy5rdXNpbnRhLmlvdC53ZWJydGMudjEuV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zSAASOgoJZG9vcl9sb2NrGAkgASgLMiUua3VzaW50YS5pb3Qud2VicnRjLnYxLkRvb3JMb2NrUGFyYW1zSAASWQoZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZRgKIAEoCzI0Lmt1c2ludGEuaW90LndlYnJ0Yy52MS5UaGVybW9zdGF0U2V0cG9pbnRXcml0ZVBhcmFtc0gAEhEKB3Jhd190bHYYYyABKAxIAEIMCgpwYXJhbWV0ZXJzQg4KDF9lbmRwb2ludF9pZEoECAMQBFIOY2x1c3Rlcl9pZF9oZXgiXAoMQ29tbWFuZEVycm9yEg8KB21lc3NhZ2UYAiABKAkSNQoEY29kZRgDIAEoDjInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db21tYW5kRXJyb3JDb2RlSgQIARACIt4BCg1Db21tYW5kUmVzdWx0EhIKCmNvbW1hbmRfaWQYASABKAkSDwoHc3VjY2VzcxgCIAEoCBIyCgVlcnJvchgDIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db21tYW5kRXJyb3ISMAoMY29tcGxldGVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIzCgpzZXR0bGVzX2J5GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAiAEBQg0KC19zZXR0bGVzX2J5Kr8CChBDb21tYW5kRXJyb3JDb2RlEiIKHkNPTU1BTkRfRVJST1JfQ09ERV9VTlNQRUNJRklFRBAAEiMKH0NPTU1BTkRfRVJST1JfQ09ERV9OT1RfRU5USVRMRUQQARIqCiZDT01NQU5EX0VSUk9SX0NPREVfQ09OU1RSQUlOVF9WSU9MQVRFRBACEiYKIkNPTU1BTkRfRVJST1JfQ09ERV9JTlZBTElEX0NPTU1BTkQQAxIiCh5DT01NQU5EX0VSUk9SX0NPREVfVU5SRUFDSEFCTEUQBBIeChpDT01NQU5EX0VSUk9SX0NPREVfVElNRU9VVBAFEikKJUNPTU1BTkRfRVJST1JfQ09ERV9SRUpFQ1RFRF9CWV9ERVZJQ0UQBhIfChtDT01NQU5EX0VSUk9SX0NPREVfSU5URVJOQUwQB0ICSAFiBnByb3RvMw", [file_google_protobuf_timestamp, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CiNrdXNpbnRhL2lvdC93ZWJydGMvdjEvY29tbWFuZC5wcm90bxIVa3VzaW50YS5pb3Qud2VicnRjLnYxIlEKGFRoZXJtb3N0YXRTZXRwb2ludFBhcmFtcxIRCgRtb2RlGAEgASgNSACIAQESDgoGYW1vdW50GAIgASgROgm4tRiBBMC1GABCBwoFX21vZGUiRgoSTGV2ZWxDb250cm9sUGFyYW1zEg0KBWxldmVsGAEgASgNEhcKD3RyYW5zaXRpb25fdGltZRgCIAEoDToIuLUYCMC1GAAiKwoLT25PZmZQYXJhbXM6BLi1GAZKBAgBEAJKBAgCEANSAm9uUgZ0b2dnbGUiQQoYV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zEhoKEmxpZnRfcGVyY2VudDEwMHRocxgBIAEoDToJuLUYggLAtRgFIjsKDkRvb3JMb2NrUGFyYW1zEhAKCHBpbl9jb2RlGAIgASgJOgW4tRiBAkoECAEQAlIKbG9ja19zdGF0ZSKSBQoNRGV2aWNlQ29tbWFuZBISCgpyZXF1ZXN0X2lkGAEgASgJEjQKCWRldmljZV9pZBgCIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEhQKDGNvbW1hbmRfbmFtZRgEIAEoCRISCgpjbHVzdGVyX2lkGAwgASgNEh4KEW1hdHRlcl9jb21tYW5kX2lkGA0gASgNSAGIAQESGAoLZW5kcG9pbnRfaWQYCyABKA1IAogBARJOChN0aGVybW9zdGF0X3NldHBvaW50GAUgASgLMi8ua3VzaW50YS5pb3Qud2VicnRjLnYxLlRoZXJtb3N0YXRTZXRwb2ludFBhcmFtc0gAEkIKDWxldmVsX2NvbnRyb2wYBiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGV2ZWxDb250cm9sUGFyYW1zSAASNAoGb25fb2ZmGAcgASgLMiIua3VzaW50YS5pb3Qud2VicnRjLnYxLk9uT2ZmUGFyYW1zSAASTwoUd2luZG93X2NvdmVyaW5nX2xpZnQYCCABKAsyLy5rdXNpbnRhLmlvdC53ZWJydGMudjEuV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zSAASOgoJZG9vcl9sb2NrGAkgASgLMiUua3VzaW50YS5pb3Qud2VicnRjLnYxLkRvb3JMb2NrUGFyYW1zSAASEQoHcmF3X3RsdhhjIAEoDEgAQgwKCnBhcmFtZXRlcnNCFAoSX21hdHRlcl9jb21tYW5kX2lkQg4KDF9lbmRwb2ludF9pZEoECAMQBEoECAoQC1IOY2x1c3Rlcl9pZF9oZXhSGXRoZXJtb3N0YXRfc2V0cG9pbnRfd3JpdGUiXAoMQ29tbWFuZEVycm9yEg8KB21lc3NhZ2UYAiABKAkSNQoEY29kZRgDIAEoDjInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db21tYW5kRXJyb3JDb2RlSgQIARACIt4BCg1Db21tYW5kUmVzdWx0EhIKCnJlcXVlc3RfaWQYASABKAkSDwoHc3VjY2VzcxgCIAEoCBIyCgVlcnJvchgDIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db21tYW5kRXJyb3ISMAoMY29tcGxldGVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIzCgpzZXR0bGVzX2J5GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAiAEBQg0KC19zZXR0bGVzX2J5IswBChVBdHRyaWJ1dGVXcml0ZVJlcXVlc3QSEgoKcmVxdWVzdF9pZBgBIAEoCRI0CglkZXZpY2VfaWQYAiABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZBIzCgZ0YXJnZXQYAyABKAsyIy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuQXR0cmlidXRlUmVmEjQKBXZhbHVlGAQgASgLMiUua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0dHJpYnV0ZVZhbHVlKr8CChBDb21tYW5kRXJyb3JDb2RlEiIKHkNPTU1BTkRfRVJST1JfQ09ERV9VTlNQRUNJRklFRBAAEiMKH0NPTU1BTkRfRVJST1JfQ09ERV9OT1RfRU5USVRMRUQQARIqCiZDT01NQU5EX0VSUk9SX0NPREVfQ09OU1RSQUlOVF9WSU9MQVRFRBACEiYKIkNPTU1BTkRfRVJST1JfQ09ERV9JTlZBTElEX0NPTU1BTkQQAxIiCh5DT01NQU5EX0VSUk9SX0NPREVfVU5SRUFDSEFCTEUQBBIeChpDT01NQU5EX0VSUk9SX0NPREVfVElNRU9VVBAFEikKJUNPTU1BTkRfRVJST1JfQ09ERV9SRUpFQ1RFRF9CWV9ERVZJQ0UQBhIfChtDT01NQU5EX0VSUk9SX0NPREVfSU5URVJOQUwQB0ICSAFiBnByb3RvMw", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_acl, file_kusinta_iot_device_v1_cluster_state, file_kusinta_iot_device_v1_matter_options, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.ThermostatSetpointParams.
@@ -20,59 +23,59 @@ export const ThermostatSetpointParamsSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_command, 0);
 
 /**
- * Describes the message kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams.
- * Use `create(ThermostatSetpointWriteParamsSchema)` to create a new message.
- */
-export const ThermostatSetpointWriteParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 1);
-
-/**
  * Describes the message kusinta.iot.webrtc.v1.LevelControlParams.
  * Use `create(LevelControlParamsSchema)` to create a new message.
  */
 export const LevelControlParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 2);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 1);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.OnOffParams.
  * Use `create(OnOffParamsSchema)` to create a new message.
  */
 export const OnOffParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 3);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 2);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.WindowCoveringLiftParams.
  * Use `create(WindowCoveringLiftParamsSchema)` to create a new message.
  */
 export const WindowCoveringLiftParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 4);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 3);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DoorLockParams.
  * Use `create(DoorLockParamsSchema)` to create a new message.
  */
 export const DoorLockParamsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 5);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 4);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DeviceCommand.
  * Use `create(DeviceCommandSchema)` to create a new message.
  */
 export const DeviceCommandSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 6);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 5);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.CommandError.
  * Use `create(CommandErrorSchema)` to create a new message.
  */
 export const CommandErrorSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_command, 7);
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 6);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.CommandResult.
  * Use `create(CommandResultSchema)` to create a new message.
  */
 export const CommandResultSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_command, 7);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.AttributeWriteRequest.
+ * Use `create(AttributeWriteRequestSchema)` to create a new message.
+ */
+export const AttributeWriteRequestSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_command, 8);
 
 /**

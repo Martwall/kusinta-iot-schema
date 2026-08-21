@@ -38,11 +38,23 @@ class Matter_options {
       50003,
       $pb.PbFieldType.KU3,
       check: $pb.getCheckFunction($pb.PbFieldType.KU3));
+  static final matterCommandCluster = $pb.Extension<$core.int>(
+      _omitMessageNames ? '' : 'google.protobuf.MessageOptions',
+      _omitFieldNames ? '' : 'matterCommandCluster',
+      50007,
+      $pb.PbFieldType.OU3);
+  static final matterCommandId = $pb.Extension<$core.int>(
+      _omitMessageNames ? '' : 'google.protobuf.MessageOptions',
+      _omitFieldNames ? '' : 'matterCommandId',
+      50008,
+      $pb.PbFieldType.OU3);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
     registry.add(matterClusterId);
     registry.add(matterAttribute);
     registry.add(matterAttributeId);
     registry.add(matterDeviceType);
+    registry.add(matterCommandCluster);
+    registry.add(matterCommandId);
   }
 }
 

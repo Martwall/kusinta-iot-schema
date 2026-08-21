@@ -1,6 +1,9 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
+from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
+from kusinta.iot.device.v1 import matter_options_pb2 as _matter_options_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -37,14 +40,6 @@ class ThermostatSetpointParams(_message.Message):
     amount: int
     def __init__(self, mode: _Optional[int] = ..., amount: _Optional[int] = ...) -> None: ...
 
-class ThermostatSetpointWriteParams(_message.Message):
-    __slots__ = ("mode", "setpoint_centidegrees")
-    MODE_FIELD_NUMBER: _ClassVar[int]
-    SETPOINT_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
-    mode: int
-    setpoint_centidegrees: int
-    def __init__(self, mode: _Optional[int] = ..., setpoint_centidegrees: _Optional[int] = ...) -> None: ...
-
 class LevelControlParams(_message.Message):
     __slots__ = ("level", "transition_time")
     LEVEL_FIELD_NUMBER: _ClassVar[int]
@@ -54,12 +49,8 @@ class LevelControlParams(_message.Message):
     def __init__(self, level: _Optional[int] = ..., transition_time: _Optional[int] = ...) -> None: ...
 
 class OnOffParams(_message.Message):
-    __slots__ = ("on", "toggle")
-    ON_FIELD_NUMBER: _ClassVar[int]
-    TOGGLE_FIELD_NUMBER: _ClassVar[int]
-    on: bool
-    toggle: bool
-    def __init__(self, on: _Optional[bool] = ..., toggle: _Optional[bool] = ...) -> None: ...
+    __slots__ = ()
+    def __init__(self) -> None: ...
 
 class WindowCoveringLiftParams(_message.Message):
     __slots__ = ("lift_percent100ths",)
@@ -68,40 +59,38 @@ class WindowCoveringLiftParams(_message.Message):
     def __init__(self, lift_percent100ths: _Optional[int] = ...) -> None: ...
 
 class DoorLockParams(_message.Message):
-    __slots__ = ("lock_state", "pin_code")
-    LOCK_STATE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("pin_code",)
     PIN_CODE_FIELD_NUMBER: _ClassVar[int]
-    lock_state: int
     pin_code: str
-    def __init__(self, lock_state: _Optional[int] = ..., pin_code: _Optional[str] = ...) -> None: ...
+    def __init__(self, pin_code: _Optional[str] = ...) -> None: ...
 
 class DeviceCommand(_message.Message):
-    __slots__ = ("command_id", "device_id", "command_name", "cluster_id", "endpoint_id", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "thermostat_setpoint_write", "raw_tlv")
-    COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("request_id", "device_id", "command_name", "cluster_id", "matter_command_id", "endpoint_id", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "raw_tlv")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     COMMAND_NAME_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
+    MATTER_COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
     ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
     THERMOSTAT_SETPOINT_FIELD_NUMBER: _ClassVar[int]
     LEVEL_CONTROL_FIELD_NUMBER: _ClassVar[int]
     ON_OFF_FIELD_NUMBER: _ClassVar[int]
     WINDOW_COVERING_LIFT_FIELD_NUMBER: _ClassVar[int]
     DOOR_LOCK_FIELD_NUMBER: _ClassVar[int]
-    THERMOSTAT_SETPOINT_WRITE_FIELD_NUMBER: _ClassVar[int]
     RAW_TLV_FIELD_NUMBER: _ClassVar[int]
-    command_id: str
+    request_id: str
     device_id: _identity_pb2.DeviceId
     command_name: str
     cluster_id: int
+    matter_command_id: int
     endpoint_id: int
     thermostat_setpoint: ThermostatSetpointParams
     level_control: LevelControlParams
     on_off: OnOffParams
     window_covering_lift: WindowCoveringLiftParams
     door_lock: DoorLockParams
-    thermostat_setpoint_write: ThermostatSetpointWriteParams
     raw_tlv: bytes
-    def __init__(self, command_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., thermostat_setpoint_write: _Optional[_Union[ThermostatSetpointWriteParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
+    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
 
 class CommandError(_message.Message):
     __slots__ = ("message", "code")
@@ -112,15 +101,27 @@ class CommandError(_message.Message):
     def __init__(self, message: _Optional[str] = ..., code: _Optional[_Union[CommandErrorCode, str]] = ...) -> None: ...
 
 class CommandResult(_message.Message):
-    __slots__ = ("command_id", "success", "error", "completed_at", "settles_by")
-    COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("request_id", "success", "error", "completed_at", "settles_by")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     COMPLETED_AT_FIELD_NUMBER: _ClassVar[int]
     SETTLES_BY_FIELD_NUMBER: _ClassVar[int]
-    command_id: str
+    request_id: str
     success: bool
     error: CommandError
     completed_at: _timestamp_pb2.Timestamp
     settles_by: _timestamp_pb2.Timestamp
-    def __init__(self, command_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[CommandError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, request_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[CommandError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class AttributeWriteRequest(_message.Message):
+    __slots__ = ("request_id", "device_id", "target", "value")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
+    TARGET_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    device_id: _identity_pb2.DeviceId
+    target: _acl_pb2.AttributeRef
+    value: _cluster_state_pb2.AttributeValue
+    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., target: _Optional[_Union[_acl_pb2.AttributeRef, _Mapping]] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ...) -> None: ...

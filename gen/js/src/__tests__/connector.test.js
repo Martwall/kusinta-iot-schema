@@ -157,7 +157,7 @@ describe('SessionResponse oneof payload', () => {
       payload: {
         case: 'executeCommand',
         value: {
-          commandId: 'cmd-uuid-1',
+          requestId: 'cmd-uuid-1',
           deviceId: { value: 'light-1' },
           clusterId: 0x0006,
           commandName: 'Toggle',
@@ -168,7 +168,7 @@ describe('SessionResponse oneof payload', () => {
     const decoded = fromBinary(SessionResponseSchema, toBinary(SessionResponseSchema, msg))
     expect(decoded.payload?.case).toBe('executeCommand')
     if (decoded.payload?.case === 'executeCommand') {
-      expect(decoded.payload.value.commandId).toBe('cmd-uuid-1')
+      expect(decoded.payload.value.requestId).toBe('cmd-uuid-1')
       expect(decoded.payload.value.deviceId?.value).toBe('light-1')
     }
   })

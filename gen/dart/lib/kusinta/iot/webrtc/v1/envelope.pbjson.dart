@@ -199,45 +199,34 @@ const PropertyReadRequest$json = {
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'deviceId'
     },
-    {'1': 'attribute_name', '3': 2, '4': 1, '5': 9, '10': 'attributeName'},
-    {'1': 'cluster_id', '3': 4, '4': 1, '5': 13, '10': 'clusterId'},
     {
-      '1': 'endpoint_id',
-      '3': 5,
+      '1': 'target',
+      '3': 7,
       '4': 1,
-      '5': 13,
-      '9': 0,
-      '10': 'endpointId',
-      '17': true
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.AttributeRef',
+      '10': 'target'
     },
-    {
-      '1': 'vendor_extension',
-      '3': 6,
-      '4': 1,
-      '5': 9,
-      '9': 1,
-      '10': 'vendorExtension',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_endpoint_id'},
-    {'1': '_vendor_extension'},
   ],
   '9': [
-    {'1': 3, '2': 4},
+    {'1': 2, '2': 7},
   ],
-  '10': ['cluster_id_hex'],
+  '10': [
+    'attribute_name',
+    'cluster_id_hex',
+    'cluster_id',
+    'endpoint_id',
+    'vendor_extension'
+  ],
 };
 
 /// Descriptor for `PropertyReadRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List propertyReadRequestDescriptor = $convert.base64Decode(
     'ChNQcm9wZXJ0eVJlYWRSZXF1ZXN0Ej4KCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90Lm'
-    'lkZW50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBIlCg5hdHRyaWJ1dGVfbmFtZRgCIAEoCVIN'
-    'YXR0cmlidXRlTmFtZRIdCgpjbHVzdGVyX2lkGAQgASgNUgljbHVzdGVySWQSJAoLZW5kcG9pbn'
-    'RfaWQYBSABKA1IAFIKZW5kcG9pbnRJZIgBARIuChB2ZW5kb3JfZXh0ZW5zaW9uGAYgASgJSAFS'
-    'D3ZlbmRvckV4dGVuc2lvbogBAUIOCgxfZW5kcG9pbnRfaWRCEwoRX3ZlbmRvcl9leHRlbnNpb2'
-    '5KBAgDEARSDmNsdXN0ZXJfaWRfaGV4');
+    'lkZW50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBI7CgZ0YXJnZXQYByABKAsyIy5rdXNpbnRh'
+    'LmlvdC5hY2Nlc3MudjEuQXR0cmlidXRlUmVmUgZ0YXJnZXRKBAgCEAdSDmF0dHJpYnV0ZV9uYW'
+    '1lUg5jbHVzdGVyX2lkX2hleFIKY2x1c3Rlcl9pZFILZW5kcG9pbnRfaWRSEHZlbmRvcl9leHRl'
+    'bnNpb24=');
 
 @$core.Deprecated('Use gatewayErrorDescriptor instead')
 const GatewayError$json = {
@@ -450,13 +439,24 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'managementResult'
     },
+    {
+      '1': 'device_events',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.DeviceEventBatch',
+      '9': 0,
+      '10': 'deviceEvents'
+    },
   ],
   '8': [
     {'1': 'payload'},
   ],
   '9': [
+    {'1': 15, '2': 16},
     {'1': 7, '2': 8},
   ],
+  '10': ['attribute_write_result'],
 };
 
 /// Descriptor for `GatewayMessage`. Decode as a `google.protobuf.DescriptorProto`.
@@ -478,7 +478,9 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'ZXZpY2VBZGRlZEgAUgtkZXZpY2VBZGRlZBJNCg5kZXZpY2VfcmVtb3ZlZBgNIAEoCzIkLmt1c2'
     'ludGEuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWQSVgoRbWFu'
     'YWdlbWVudF9yZXN1bHQYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWFuYWdlbWVudF'
-    'Jlc3VsdEgAUhBtYW5hZ2VtZW50UmVzdWx0QgkKB3BheWxvYWRKBAgHEAg=');
+    'Jlc3VsdEgAUhBtYW5hZ2VtZW50UmVzdWx0Ek4KDWRldmljZV9ldmVudHMYECABKAsyJy5rdXNp'
+    'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlRXZlbnRCYXRjaEgAUgxkZXZpY2VFdmVudHNCCQoHcG'
+    'F5bG9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3VsdA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {
@@ -556,6 +558,15 @@ const AppMessage$json = {
       '9': 0,
       '10': 'management'
     },
+    {
+      '1': 'attribute_write',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.AttributeWriteRequest',
+      '9': 0,
+      '10': 'attributeWrite'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -574,4 +585,6 @@ final $typed_data.Uint8List appMessageDescriptor = $convert.base64Decode(
     'ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpYmVEZXZpY2VzSABSCXN1YnNjcmliZRJNCgt1bnN1'
     'YnNjcmliZRgIIAEoCzIpLmt1c2ludGEuaW90LndlYnJ0Yy52MS5VbnN1YnNjcmliZURldmljZX'
     'NIAFILdW5zdWJzY3JpYmUSSgoKbWFuYWdlbWVudBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0'
-    'Yy52MS5NYW5hZ2VtZW50UmVxdWVzdEgAUgptYW5hZ2VtZW50QgkKB3BheWxvYWQ=');
+    'Yy52MS5NYW5hZ2VtZW50UmVxdWVzdEgAUgptYW5hZ2VtZW50ElcKD2F0dHJpYnV0ZV93cml0ZR'
+    'gKIAEoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5BdHRyaWJ1dGVXcml0ZVJlcXVlc3RIAFIO'
+    'YXR0cmlidXRlV3JpdGVCCQoHcGF5bG9hZA==');

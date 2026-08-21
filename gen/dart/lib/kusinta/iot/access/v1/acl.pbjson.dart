@@ -20,6 +20,7 @@ const AttributeRef$json = {
   '2': [
     {'1': 'attribute_name', '3': 1, '4': 1, '5': 9, '10': 'attributeName'},
     {'1': 'cluster_id', '3': 2, '4': 1, '5': 13, '10': 'clusterId'},
+    {'1': 'attribute_id', '3': 4, '4': 1, '5': 13, '10': 'attributeId'},
     {
       '1': 'endpoint_id',
       '3': 3,
@@ -29,17 +30,29 @@ const AttributeRef$json = {
       '10': 'endpointId',
       '17': true
     },
+    {
+      '1': 'vendor_extension',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'vendorExtension',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_endpoint_id'},
+    {'1': '_vendor_extension'},
   ],
 };
 
 /// Descriptor for `AttributeRef`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List attributeRefDescriptor = $convert.base64Decode(
     'CgxBdHRyaWJ1dGVSZWYSJQoOYXR0cmlidXRlX25hbWUYASABKAlSDWF0dHJpYnV0ZU5hbWUSHQ'
-    'oKY2x1c3Rlcl9pZBgCIAEoDVIJY2x1c3RlcklkEiQKC2VuZHBvaW50X2lkGAMgASgNSABSCmVu'
-    'ZHBvaW50SWSIAQFCDgoMX2VuZHBvaW50X2lk');
+    'oKY2x1c3Rlcl9pZBgCIAEoDVIJY2x1c3RlcklkEiEKDGF0dHJpYnV0ZV9pZBgEIAEoDVILYXR0'
+    'cmlidXRlSWQSJAoLZW5kcG9pbnRfaWQYAyABKA1IAFIKZW5kcG9pbnRJZIgBARIuChB2ZW5kb3'
+    'JfZXh0ZW5zaW9uGAUgASgJSAFSD3ZlbmRvckV4dGVuc2lvbogBAUIOCgxfZW5kcG9pbnRfaWRC'
+    'EwoRX3ZlbmRvcl9leHRlbnNpb24=');
 
 @$core.Deprecated('Use propertyConstraintDescriptor instead')
 const PropertyConstraint$json = {

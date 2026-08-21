@@ -5,12 +5,14 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
+import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceAdded, DevicePropertyEvent, DeviceRemoved, DeviceStateSnapshot } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
-import type { CommandResult, DeviceCommand } from "./command_pb.js";
+import type { AttributeWriteRequest, CommandResult, DeviceCommand } from "./command_pb.js";
+import type { DeviceEventBatch } from "../../device/v1/device_event_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/envelope.proto.
@@ -197,8 +199,12 @@ export declare type SubscriptionAck = Message<"kusinta.iot.webrtc.v1.Subscriptio
 export declare const SubscriptionAckSchema: GenMessage<SubscriptionAck>;
 
 /**
- * Reads one attribute of one endpoint. Addressed exactly as device.v1.PropertyUpdate is,
- * so a read and the update answering it name the same thing the same way.
+ * Reads one attribute of one endpoint, on demand. The carrier for
+ * PERMISSION_ACTION_READ.
+ *
+ * Addressed by AttributeRef, the same type a write, a grant and a constraint use — so a
+ * read, the write that changes the value, and the permission covering both name the
+ * attribute identically.
  *
  * @generated from message kusinta.iot.webrtc.v1.PropertyReadRequest
  */
@@ -209,32 +215,9 @@ export declare type PropertyReadRequest = Message<"kusinta.iot.webrtc.v1.Propert
   deviceId?: DeviceId | undefined;
 
   /**
-   * @generated from field: string attribute_name = 2;
+   * @generated from field: kusinta.iot.access.v1.AttributeRef target = 7;
    */
-  attributeName: string;
-
-  /**
-   * e.g. 0x0201 for Thermostat
-   *
-   * @generated from field: uint32 cluster_id = 4;
-   */
-  clusterId: number;
-
-  /**
-   * Which endpoint to read. Required, for the same reason a command needs one: on a
-   * 4-channel actuator every channel carries the same attribute on the same cluster.
-   *
-   * @generated from field: optional uint32 endpoint_id = 5;
-   */
-  endpointId?: number | undefined;
-
-  /**
-   * Set to read a vendor parameter, naming the extension by its (vendor_extension) key.
-   * Absent means the Matter branch; cluster_id is unset when this is set.
-   *
-   * @generated from field: optional string vendor_extension = 6;
-   */
-  vendorExtension?: string | undefined;
+  target?: AttributeRef | undefined;
 };
 
 /**
@@ -427,6 +410,17 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: ManagementResult;
     case: "managementResult";
+  } | {
+    /**
+     * 15 was attribute_write_result. Answers to attribute writes come back as
+     * command_result above instead: a write and an invoke differ in what they do to a
+     * device, not in how the gateway reports having done it, and request_id says which
+     * request is being answered either way.
+     *
+     * @generated from field: kusinta.iot.device.v1.DeviceEventBatch device_events = 16;
+     */
+    value: DeviceEventBatch;
+    case: "deviceEvents";
   } | { case: undefined; value?: undefined };
 };
 
@@ -497,6 +491,12 @@ export declare type AppMessage = Message<"kusinta.iot.webrtc.v1.AppMessage"> & {
      */
     value: ManagementRequest;
     case: "management";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.AttributeWriteRequest attribute_write = 10;
+     */
+    value: AttributeWriteRequest;
+    case: "attributeWrite";
   } | { case: undefined; value?: undefined };
 };
 

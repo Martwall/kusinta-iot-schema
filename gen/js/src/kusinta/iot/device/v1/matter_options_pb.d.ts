@@ -59,3 +59,26 @@ export declare const matter_attribute_id: GenExtension<FieldOptions, number>;
  */
 export declare const matter_device_type: GenExtension<MessageOptions, number[]>;
 
+/**
+ * The Matter cluster a command-parameters message belongs to, e.g. 0x0006 for On/Off.
+ * Always exactly one — a parameters message never spans clusters.
+ *
+ * @generated from extension: uint32 matter_command_cluster = 50007;
+ */
+export declare const matter_command_cluster: GenExtension<MessageOptions, number>;
+
+/**
+ * The Matter command ID this parameters message carries arguments for, e.g. 0x00 for
+ * Thermostat's SetpointRaiseLower.
+ *
+ * Singular on purpose. An earlier form was repeated, so that one message could cover
+ * several commands and choose between them by its own fields — but a message that
+ * encodes WHICH command it is duplicates DeviceCommand.matter_command_id, in a second
+ * numbering, with nothing reconciling the two. The parameters carry arguments; the
+ * command ID says which command. A message shared by several commands that take the
+ * same arguments simply omits this and lets matter_command_id stand alone.
+ *
+ * @generated from extension: optional uint32 matter_command_id = 50008;
+ */
+export declare const matter_command_id: GenExtension<MessageOptions, number>;
+

@@ -15,11 +15,12 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $2;
-import '../../common/v1/types.pbenum.dart' as $5;
+import '../../common/v1/types.pbenum.dart' as $6;
 import '../../device/v1/device.pb.dart' as $1;
+import '../../device/v1/device_event.pb.dart' as $4;
 import '../../device/v1/property_update.pb.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
-import '../../webrtc/v1/command.pb.dart' as $4;
+import '../../webrtc/v1/command.pb.dart' as $5;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -28,7 +29,7 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     $0.ConnectorId? connectorId,
     $core.String? displayName,
     $core.String? version,
-    $5.ConnectorTransport? transport,
+    $6.ConnectorTransport? transport,
     $core.String? endpoint,
     $core.Iterable<$core.int>? supportedDeviceTypeIds,
   }) {
@@ -61,11 +62,11 @@ class ConnectorInfo extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..aOS(3, _omitFieldNames ? '' : 'version')
-    ..e<$5.ConnectorTransport>(
+    ..e<$6.ConnectorTransport>(
         4, _omitFieldNames ? '' : 'transport', $pb.PbFieldType.OE,
-        defaultOrMaker: $5.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
-        valueOf: $5.ConnectorTransport.valueOf,
-        enumValues: $5.ConnectorTransport.values)
+        defaultOrMaker: $6.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
+        valueOf: $6.ConnectorTransport.valueOf,
+        enumValues: $6.ConnectorTransport.values)
     ..aOS(5, _omitFieldNames ? '' : 'endpoint')
     ..p<$core.int>(
         6, _omitFieldNames ? '' : 'supportedDeviceTypeIds', $pb.PbFieldType.KU3)
@@ -122,9 +123,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $5.ConnectorTransport get transport => $_getN(3);
+  $6.ConnectorTransport get transport => $_getN(3);
   @$pb.TagNumber(4)
-  set transport($5.ConnectorTransport value) => $_setField(4, value);
+  set transport($6.ConnectorTransport value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTransport() => $_has(3);
   @$pb.TagNumber(4)
@@ -596,12 +597,12 @@ class GatewayError extends $pb.GeneratedMessage {
   factory GatewayError({
     $core.String? code,
     $core.String? message,
-    $core.String? commandId,
+    $core.String? requestId,
   }) {
     final result = create();
     if (code != null) result.code = code;
     if (message != null) result.message = message;
-    if (commandId != null) result.commandId = commandId;
+    if (requestId != null) result.requestId = requestId;
     return result;
   }
 
@@ -621,7 +622,7 @@ class GatewayError extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'code')
     ..aOS(2, _omitFieldNames ? '' : 'message')
-    ..aOS(3, _omitFieldNames ? '' : 'commandId')
+    ..aOS(3, _omitFieldNames ? '' : 'requestId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -664,24 +665,27 @@ class GatewayError extends $pb.GeneratedMessage {
   void clearMessage() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $core.String get commandId => $_getSZ(2);
+  $core.String get requestId => $_getSZ(2);
   @$pb.TagNumber(3)
-  set commandId($core.String value) => $_setString(2, value);
+  set requestId($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasCommandId() => $_has(2);
+  $core.bool hasRequestId() => $_has(2);
   @$pb.TagNumber(3)
-  void clearCommandId() => $_clearField(3);
+  void clearRequestId() => $_clearField(3);
 }
 
+/// A connector's answer to an executed command OR attribute write. One message for both:
+/// the two operations differ in what they do to a device, not in how a connector reports
+/// having done it, and request_id says which request this answers either way.
 class ConnectorCommandResult extends $pb.GeneratedMessage {
   factory ConnectorCommandResult({
-    $core.String? commandId,
+    $core.String? requestId,
     $core.bool? success,
     GatewayError? error,
     $2.Timestamp? completedAt,
   }) {
     final result = create();
-    if (commandId != null) result.commandId = commandId;
+    if (requestId != null) result.requestId = requestId;
     if (success != null) result.success = success;
     if (error != null) result.error = error;
     if (completedAt != null) result.completedAt = completedAt;
@@ -702,7 +706,7 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'commandId')
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOB(2, _omitFieldNames ? '' : 'success')
     ..aOM<GatewayError>(3, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -733,14 +737,16 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ConnectorCommandResult>(create);
   static ConnectorCommandResult? _defaultInstance;
 
+  /// Was command_id. Renamed with webrtc.v1.DeviceCommand.request_id, which it mirrors, and
+  /// because it now correlates writes as well as commands.
   @$pb.TagNumber(1)
-  $core.String get commandId => $_getSZ(0);
+  $core.String get requestId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set commandId($core.String value) => $_setString(0, value);
+  set requestId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasCommandId() => $_has(0);
+  $core.bool hasRequestId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearCommandId() => $_clearField(1);
+  void clearRequestId() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $core.bool get success => $_getBF(1);
@@ -781,6 +787,7 @@ enum SessionRequest_Payload {
   deviceRemoved,
   commandResult,
   heartbeat,
+  deviceEvents,
   notSet
 }
 
@@ -794,6 +801,7 @@ class SessionRequest extends $pb.GeneratedMessage {
     DeviceRemoval? deviceRemoved,
     ConnectorCommandResult? commandResult,
     HeartBeat? heartbeat,
+    $4.DeviceEventBatch? deviceEvents,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -804,6 +812,7 @@ class SessionRequest extends $pb.GeneratedMessage {
     if (deviceRemoved != null) result.deviceRemoved = deviceRemoved;
     if (commandResult != null) result.commandResult = commandResult;
     if (heartbeat != null) result.heartbeat = heartbeat;
+    if (deviceEvents != null) result.deviceEvents = deviceEvents;
     return result;
   }
 
@@ -824,6 +833,7 @@ class SessionRequest extends $pb.GeneratedMessage {
     6: SessionRequest_Payload.deviceRemoved,
     7: SessionRequest_Payload.commandResult,
     8: SessionRequest_Payload.heartbeat,
+    9: SessionRequest_Payload.deviceEvents,
     0: SessionRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -831,7 +841,7 @@ class SessionRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8])
+    ..oo(0, [3, 4, 5, 6, 7, 8, 9])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $2.Timestamp.create)
@@ -847,6 +857,8 @@ class SessionRequest extends $pb.GeneratedMessage {
         subBuilder: ConnectorCommandResult.create)
     ..aOM<HeartBeat>(8, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
+    ..aOM<$4.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
+        subBuilder: $4.DeviceEventBatch.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -959,6 +971,17 @@ class SessionRequest extends $pb.GeneratedMessage {
   void clearHeartbeat() => $_clearField(8);
   @$pb.TagNumber(8)
   HeartBeat ensureHeartbeat() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  $4.DeviceEventBatch get deviceEvents => $_getN(8);
+  @$pb.TagNumber(9)
+  set deviceEvents($4.DeviceEventBatch value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasDeviceEvents() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDeviceEvents() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $4.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
 }
 
 enum SessionResponse_Payload {
@@ -967,6 +990,7 @@ enum SessionResponse_Payload {
   unsubscribe,
   error,
   executeCommand,
+  executeAttributeWrite,
   notSet
 }
 
@@ -978,7 +1002,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     SubscribeDevice? subscribe,
     UnsubscribeDevice? unsubscribe,
     GatewayError? error,
-    $4.DeviceCommand? executeCommand,
+    $5.DeviceCommand? executeCommand,
+    $5.AttributeWriteRequest? executeAttributeWrite,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -988,6 +1013,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     if (unsubscribe != null) result.unsubscribe = unsubscribe;
     if (error != null) result.error = error;
     if (executeCommand != null) result.executeCommand = executeCommand;
+    if (executeAttributeWrite != null)
+      result.executeAttributeWrite = executeAttributeWrite;
     return result;
   }
 
@@ -1007,6 +1034,7 @@ class SessionResponse extends $pb.GeneratedMessage {
     6: SessionResponse_Payload.unsubscribe,
     7: SessionResponse_Payload.error,
     8: SessionResponse_Payload.executeCommand,
+    9: SessionResponse_Payload.executeAttributeWrite,
     0: SessionResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1014,7 +1042,7 @@ class SessionResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 5, 6, 7, 8])
+    ..oo(0, [3, 5, 6, 7, 8, 9])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $2.Timestamp.create)
@@ -1026,8 +1054,11 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: UnsubscribeDevice.create)
     ..aOM<GatewayError>(7, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
-    ..aOM<$4.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
-        subBuilder: $4.DeviceCommand.create)
+    ..aOM<$5.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
+        subBuilder: $5.DeviceCommand.create)
+    ..aOM<$5.AttributeWriteRequest>(
+        9, _omitFieldNames ? '' : 'executeAttributeWrite',
+        subBuilder: $5.AttributeWriteRequest.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1120,15 +1151,29 @@ class SessionResponse extends $pb.GeneratedMessage {
   GatewayError ensureError() => $_ensure(5);
 
   @$pb.TagNumber(8)
-  $4.DeviceCommand get executeCommand => $_getN(6);
+  $5.DeviceCommand get executeCommand => $_getN(6);
   @$pb.TagNumber(8)
-  set executeCommand($4.DeviceCommand value) => $_setField(8, value);
+  set executeCommand($5.DeviceCommand value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasExecuteCommand() => $_has(6);
   @$pb.TagNumber(8)
   void clearExecuteCommand() => $_clearField(8);
   @$pb.TagNumber(8)
-  $4.DeviceCommand ensureExecuteCommand() => $_ensure(6);
+  $5.DeviceCommand ensureExecuteCommand() => $_ensure(6);
+
+  /// The connector-leg half of PERMISSION_ACTION_WRITE. A sibling case rather than another
+  /// meaning overloaded onto execute_command, which is the mistake this replaces.
+  @$pb.TagNumber(9)
+  $5.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
+  @$pb.TagNumber(9)
+  set executeAttributeWrite($5.AttributeWriteRequest value) =>
+      $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasExecuteAttributeWrite() => $_has(7);
+  @$pb.TagNumber(9)
+  void clearExecuteAttributeWrite() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $5.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
 }
 
 const $core.bool _omitFieldNames =

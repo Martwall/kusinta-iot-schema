@@ -12,14 +12,18 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class AttributeRef(_message.Message):
-    __slots__ = ("attribute_name", "cluster_id", "endpoint_id")
+    __slots__ = ("attribute_name", "cluster_id", "attribute_id", "endpoint_id", "vendor_extension")
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
+    ATTRIBUTE_ID_FIELD_NUMBER: _ClassVar[int]
     ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
+    VENDOR_EXTENSION_FIELD_NUMBER: _ClassVar[int]
     attribute_name: str
     cluster_id: int
+    attribute_id: int
     endpoint_id: int
-    def __init__(self, attribute_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
+    vendor_extension: str
+    def __init__(self, attribute_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., attribute_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ...) -> None: ...
 
 class PropertyConstraint(_message.Message):
     __slots__ = ("attribute", "int_max", "int_min", "uint_max", "uint_min")

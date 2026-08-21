@@ -20,34 +20,43 @@ import 'roles.pbenum.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// AttributeRef names one attribute on one endpoint. All three parts are load-bearing.
+/// AttributeRef names one attribute on one endpoint. It is the schema's single way to say
+/// "this attribute of this device" — used to grant it, to bound it, to read it and to write
+/// it, so a consumer writes one matcher rather than several that must agree.
 ///
-/// The cluster is required because attribute names repeat across clusters — MeasuredValue
-/// is Temperature (0x0402), Relative Humidity (0x0405) and Pressure (0x0403), so a bare
-/// name is ambiguous on any device carrying two of them. It is a number, matching
-/// device.v1.PropertyUpdate.cluster_id and the (matter_cluster_id) annotation, so a
-/// consumer compares the integer it already holds.
+/// Addressed exactly as device.v1.PropertyUpdate is, and for the same reasons:
 ///
-/// The endpoint matters because a device presents several, often of the same device type:
-/// all four channels of a 4-channel actuator are OnOff on cluster 0x0006, so a reference
-/// without one cannot distinguish channel 1 from channel 3.
+///   * cluster_id and attribute_id are NUMERIC and are what resolution matches. Attribute
+///     names repeat across clusters — MeasuredValue is Temperature (0x0402), Relative
+///     Humidity (0x0405) and Pressure (0x0403) — and a numeric pair is what the
+///     (matter_cluster_id)/(matter_attribute_id) annotations carry, so nothing has to be
+///     parsed or looked up to compare them.
+///   * attribute_name is advisory: the attribute's own spelling, for logs and rendering. It
+///     is NOT matched on the Matter branch. On the vendor branch it is the only address
+///     there is, and there it is authoritative.
+///   * endpoint_id matters because a device presents several endpoints, often of the same
+///     device type: all four channels of a 4-channel actuator are OnOff on cluster 0x0006,
+///     so a reference without one cannot tell channel 1 from channel 3.
 ///
-/// What an ABSENT endpoint_id means is decided by the field holding this message, not
-/// here, and the two current holders mean opposite things on purpose — see DeviceAcl
-/// .allowed_attribute_refs and PropertyConstraint.attribute. It is optional on the wire so
-/// that "not stated" is representable and rejectable, rather than a bare uint32 decoding
-/// an omission to endpoint 0 — indistinguishable from a producer that meant 0, and the
-/// reserved-zero sentinel this schema removes rather than adds.
+/// What an ABSENT endpoint_id means is decided by the field holding this message, not here,
+/// and the current holders mean opposite things on purpose — see
+/// DeviceAcl.allowed_attribute_refs and PropertyConstraint.attribute. It is optional on the
+/// wire so that "not stated" is representable and rejectable, rather than a bare uint32
+/// decoding an omission to endpoint 0, which is the Matter root node.
 class AttributeRef extends $pb.GeneratedMessage {
   factory AttributeRef({
     $core.String? attributeName,
     $core.int? clusterId,
     $core.int? endpointId,
+    $core.int? attributeId,
+    $core.String? vendorExtension,
   }) {
     final result = create();
     if (attributeName != null) result.attributeName = attributeName;
     if (clusterId != null) result.clusterId = clusterId;
     if (endpointId != null) result.endpointId = endpointId;
+    if (attributeId != null) result.attributeId = attributeId;
+    if (vendorExtension != null) result.vendorExtension = vendorExtension;
     return result;
   }
 
@@ -68,6 +77,8 @@ class AttributeRef extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'attributeName')
     ..a<$core.int>(2, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'attributeId', $pb.PbFieldType.OU3)
+    ..aOS(5, _omitFieldNames ? '' : 'vendorExtension')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -91,6 +102,7 @@ class AttributeRef extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<AttributeRef>(create);
   static AttributeRef? _defaultInstance;
 
+  /// Advisory on the Matter branch, authoritative on the vendor branch. See above.
   @$pb.TagNumber(1)
   $core.String get attributeName => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -100,6 +112,7 @@ class AttributeRef extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearAttributeName() => $_clearField(1);
 
+  /// Matter branch. Both required there, both unset on the vendor branch.
   @$pb.TagNumber(2)
   $core.int get clusterId => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -117,6 +130,32 @@ class AttributeRef extends $pb.GeneratedMessage {
   $core.bool hasEndpointId() => $_has(2);
   @$pb.TagNumber(3)
   void clearEndpointId() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get attributeId => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set attributeId($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAttributeId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAttributeId() => $_clearField(4);
+
+  /// Set to name a vendor parameter instead of a Matter attribute, by its
+  /// (vendor_extension) key. Then attribute_name addresses it and cluster_id/attribute_id
+  /// play no part — a vendor parameter has no Matter cluster and no numeric ID in any
+  /// specification.
+  ///
+  /// Without this a vendor parameter could be reported but never granted, bounded or
+  /// written: a valve position would be all-or-nothing for permissions, which would undo
+  /// most of the point of making vendor extensions reachable at all.
+  @$pb.TagNumber(5)
+  $core.String get vendorExtension => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set vendorExtension($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasVendorExtension() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVendorExtension() => $_clearField(5);
 }
 
 enum PropertyConstraint_Constraint { intMax, intMin, uintMax, uintMin, notSet }
