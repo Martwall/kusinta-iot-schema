@@ -19,19 +19,21 @@ export declare const file_kusinta_iot_vendor_v1_vendor_options: GenFile;
  * attribute or a vendor parameter. Which branch a PropertyUpdate takes is decided by
  * whether it names a vendor extension, never by inspecting both.
  *
- * Must be unique within the vendor extension message it appears in, nested props
- * messages included — the vendor branch searches the whole extension, so a repeat
- * would make resolution ambiguous.
+ * Must be unique within the message it appears in — the vendor branch matches one
+ * field of one message, so a repeat would make resolution ambiguous.
  *
  * @generated from extension: string vendor_attribute = 50004;
  */
 export declare const vendor_attribute: GenExtension<FieldOptions, string>;
 
 /**
- * The stable key identifying a vendor extension message, e.g. "homematic". Matches
- * device.v1.PropertyUpdate.vendor_extension byte for byte, and is what selects the
- * Endpoint.vendor case. Declared on the top-level extension message only, not on its
- * nested props messages.
+ * The stable key identifying a vendor extension message, e.g. "homematic.thermostat".
+ * Matches device.v1.PropertyUpdate.vendor_extension byte for byte, and is what selects
+ * the Endpoint.vendor case.
+ *
+ * One key per message carried in Endpoint.vendor, so the vendor branch of the
+ * resolution rule is the same shape as the Matter branch: pick a message by a message
+ * option, then one field by a field option. Nothing nests.
  *
  * Not derived from the package or message name — this is the authoritative spelling,
  * exactly as matter_attribute is on the Matter side.

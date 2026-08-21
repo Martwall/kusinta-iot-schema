@@ -15,10 +15,13 @@ import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
 import '../../../../google/protobuf/timestamp.pbjson.dart' as $1;
-import '../../device/v1/descriptor.pbjson.dart' as $3;
-import '../../device/v1/property_update.pbjson.dart' as $4;
+import '../../device/v1/descriptor.pbjson.dart' as $4;
+import '../../device/v1/device.pbjson.dart' as $3;
+import '../../device/v1/properties.pbjson.dart' as $6;
+import '../../device/v1/property_update.pbjson.dart' as $7;
 import '../../identity/v1/identity.pbjson.dart' as $2;
-import '../../webrtc/v1/command.pbjson.dart' as $5;
+import '../../vendor/homematic/v1/homematic.pbjson.dart' as $5;
+import '../../webrtc/v1/command.pbjson.dart' as $8;
 import 'connector.pbjson.dart' as $0;
 
 const $core.Map<$core.String, $core.dynamic> ConnectorGatewayServiceBase$json =
@@ -43,13 +46,40 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.ConnectorHandshake': $0.ConnectorHandshake$json,
   '.kusinta.iot.connector.v1.ConnectorInfo': $0.ConnectorInfo$json,
   '.kusinta.iot.identity.v1.ConnectorId': $2.ConnectorId$json,
-  '.kusinta.iot.device.v1.DeviceDescriptor': $3.DeviceDescriptor$json,
+  '.kusinta.iot.device.v1.Device': $3.Device$json,
+  '.kusinta.iot.device.v1.DeviceDescriptor': $4.DeviceDescriptor$json,
   '.kusinta.iot.identity.v1.DeviceId': $2.DeviceId$json,
   '.kusinta.iot.identity.v1.SpaceId': $2.SpaceId$json,
   '.kusinta.iot.identity.v1.UserId': $2.UserId$json,
-  '.kusinta.iot.device.v1.EndpointDescriptor': $3.EndpointDescriptor$json,
-  '.kusinta.iot.device.v1.PropertyUpdateBatch': $4.PropertyUpdateBatch$json,
-  '.kusinta.iot.device.v1.PropertyUpdate': $4.PropertyUpdate$json,
+  '.kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity':
+      $5.HomematicDeviceIdentity$json,
+  '.kusinta.iot.device.v1.Endpoint': $3.Endpoint$json,
+  '.kusinta.iot.device.v1.ThermostatProperties': $6.ThermostatProperties$json,
+  '.kusinta.iot.device.v1.TemperatureSensorProperties':
+      $6.TemperatureSensorProperties$json,
+  '.kusinta.iot.device.v1.HumiditySensorProperties':
+      $6.HumiditySensorProperties$json,
+  '.kusinta.iot.device.v1.OccupancySensorProperties':
+      $6.OccupancySensorProperties$json,
+  '.kusinta.iot.device.v1.ContactSensorProperties':
+      $6.ContactSensorProperties$json,
+  '.kusinta.iot.device.v1.WindowCoveringProperties':
+      $6.WindowCoveringProperties$json,
+  '.kusinta.iot.device.v1.DoorLockProperties': $6.DoorLockProperties$json,
+  '.kusinta.iot.device.v1.OnOffLightProperties': $6.OnOffLightProperties$json,
+  '.kusinta.iot.device.v1.DimmableLightProperties':
+      $6.DimmableLightProperties$json,
+  '.kusinta.iot.device.v1.ColorTemperatureLightProperties':
+      $6.ColorTemperatureLightProperties$json,
+  '.kusinta.iot.device.v1.EnergySensorProperties':
+      $6.EnergySensorProperties$json,
+  '.kusinta.iot.device.v1.PressureSensorProperties':
+      $6.PressureSensorProperties$json,
+  '.kusinta.iot.device.v1.PowerSourceProperties': $6.PowerSourceProperties$json,
+  '.kusinta.iot.vendor.homematic.v1.HmThermostatProps':
+      $5.HmThermostatProps$json,
+  '.kusinta.iot.device.v1.PropertyUpdateBatch': $7.PropertyUpdateBatch$json,
+  '.kusinta.iot.device.v1.PropertyUpdate': $7.PropertyUpdate$json,
   '.kusinta.iot.connector.v1.DeviceAnnouncement': $0.DeviceAnnouncement$json,
   '.kusinta.iot.connector.v1.DeviceRemoval': $0.DeviceRemoval$json,
   '.kusinta.iot.connector.v1.ConnectorCommandResult':
@@ -61,16 +91,16 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.identity.v1.GatewayId': $2.GatewayId$json,
   '.kusinta.iot.connector.v1.SubscribeDevice': $0.SubscribeDevice$json,
   '.kusinta.iot.connector.v1.UnsubscribeDevice': $0.UnsubscribeDevice$json,
-  '.kusinta.iot.webrtc.v1.DeviceCommand': $5.DeviceCommand$json,
+  '.kusinta.iot.webrtc.v1.DeviceCommand': $8.DeviceCommand$json,
   '.kusinta.iot.webrtc.v1.ThermostatSetpointParams':
-      $5.ThermostatSetpointParams$json,
-  '.kusinta.iot.webrtc.v1.LevelControlParams': $5.LevelControlParams$json,
-  '.kusinta.iot.webrtc.v1.OnOffParams': $5.OnOffParams$json,
+      $8.ThermostatSetpointParams$json,
+  '.kusinta.iot.webrtc.v1.LevelControlParams': $8.LevelControlParams$json,
+  '.kusinta.iot.webrtc.v1.OnOffParams': $8.OnOffParams$json,
   '.kusinta.iot.webrtc.v1.WindowCoveringLiftParams':
-      $5.WindowCoveringLiftParams$json,
-  '.kusinta.iot.webrtc.v1.DoorLockParams': $5.DoorLockParams$json,
+      $8.WindowCoveringLiftParams$json,
+  '.kusinta.iot.webrtc.v1.DoorLockParams': $8.DoorLockParams$json,
   '.kusinta.iot.webrtc.v1.ThermostatSetpointWriteParams':
-      $5.ThermostatSetpointWriteParams$json,
+      $8.ThermostatSetpointWriteParams$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

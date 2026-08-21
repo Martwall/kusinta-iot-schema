@@ -131,8 +131,8 @@ const DeviceCommand$json = {
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'deviceId'
     },
-    {'1': 'cluster_id_hex', '3': 3, '4': 1, '5': 9, '10': 'clusterIdHex'},
     {'1': 'command_name', '3': 4, '4': 1, '5': 9, '10': 'commandName'},
+    {'1': 'cluster_id', '3': 12, '4': 1, '5': 13, '10': 'clusterId'},
     {
       '1': 'endpoint_id',
       '3': 11,
@@ -202,25 +202,29 @@ const DeviceCommand$json = {
     {'1': 'parameters'},
     {'1': '_endpoint_id'},
   ],
+  '9': [
+    {'1': 3, '2': 4},
+  ],
+  '10': ['cluster_id_hex'],
 };
 
 /// Descriptor for `DeviceCommand`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deviceCommandDescriptor = $convert.base64Decode(
     'Cg1EZXZpY2VDb21tYW5kEh0KCmNvbW1hbmRfaWQYASABKAlSCWNvbW1hbmRJZBI+CglkZXZpY2'
     'VfaWQYAiABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIIZGV2aWNlSWQS'
-    'JAoOY2x1c3Rlcl9pZF9oZXgYAyABKAlSDGNsdXN0ZXJJZEhleBIhCgxjb21tYW5kX25hbWUYBC'
-    'ABKAlSC2NvbW1hbmROYW1lEiQKC2VuZHBvaW50X2lkGAsgASgNSAFSCmVuZHBvaW50SWSIAQES'
-    'YgoTdGhlcm1vc3RhdF9zZXRwb2ludBgFIAEoCzIvLmt1c2ludGEuaW90LndlYnJ0Yy52MS5UaG'
-    'VybW9zdGF0U2V0cG9pbnRQYXJhbXNIAFISdGhlcm1vc3RhdFNldHBvaW50ElAKDWxldmVsX2Nv'
-    'bnRyb2wYBiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGV2ZWxDb250cm9sUGFyYW1zSA'
-    'BSDGxldmVsQ29udHJvbBI7CgZvbl9vZmYYByABKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEu'
-    'T25PZmZQYXJhbXNIAFIFb25PZmYSYwoUd2luZG93X2NvdmVyaW5nX2xpZnQYCCABKAsyLy5rdX'
-    'NpbnRhLmlvdC53ZWJydGMudjEuV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zSABSEndpbmRvd0Nv'
-    'dmVyaW5nTGlmdBJECglkb29yX2xvY2sYCSABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuRG'
-    '9vckxvY2tQYXJhbXNIAFIIZG9vckxvY2sScgoZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZRgK'
-    'IAEoCzI0Lmt1c2ludGEuaW90LndlYnJ0Yy52MS5UaGVybW9zdGF0U2V0cG9pbnRXcml0ZVBhcm'
-    'Ftc0gAUhd0aGVybW9zdGF0U2V0cG9pbnRXcml0ZRIZCgdyYXdfdGx2GGMgASgMSABSBnJhd1Rs'
-    'dkIMCgpwYXJhbWV0ZXJzQg4KDF9lbmRwb2ludF9pZA==');
+    'IQoMY29tbWFuZF9uYW1lGAQgASgJUgtjb21tYW5kTmFtZRIdCgpjbHVzdGVyX2lkGAwgASgNUg'
+    'ljbHVzdGVySWQSJAoLZW5kcG9pbnRfaWQYCyABKA1IAVIKZW5kcG9pbnRJZIgBARJiChN0aGVy'
+    'bW9zdGF0X3NldHBvaW50GAUgASgLMi8ua3VzaW50YS5pb3Qud2VicnRjLnYxLlRoZXJtb3N0YX'
+    'RTZXRwb2ludFBhcmFtc0gAUhJ0aGVybW9zdGF0U2V0cG9pbnQSUAoNbGV2ZWxfY29udHJvbBgG'
+    'IAEoCzIpLmt1c2ludGEuaW90LndlYnJ0Yy52MS5MZXZlbENvbnRyb2xQYXJhbXNIAFIMbGV2ZW'
+    'xDb250cm9sEjsKBm9uX29mZhgHIAEoCzIiLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Pbk9mZlBh'
+    'cmFtc0gAUgVvbk9mZhJjChR3aW5kb3dfY292ZXJpbmdfbGlmdBgIIAEoCzIvLmt1c2ludGEuaW'
+    '90LndlYnJ0Yy52MS5XaW5kb3dDb3ZlcmluZ0xpZnRQYXJhbXNIAFISd2luZG93Q292ZXJpbmdM'
+    'aWZ0EkQKCWRvb3JfbG9jaxgJIAEoCzIlLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Eb29yTG9ja1'
+    'BhcmFtc0gAUghkb29yTG9jaxJyChl0aGVybW9zdGF0X3NldHBvaW50X3dyaXRlGAogASgLMjQu'
+    'a3VzaW50YS5pb3Qud2VicnRjLnYxLlRoZXJtb3N0YXRTZXRwb2ludFdyaXRlUGFyYW1zSABSF3'
+    'RoZXJtb3N0YXRTZXRwb2ludFdyaXRlEhkKB3Jhd190bHYYYyABKAxIAFIGcmF3VGx2QgwKCnBh'
+    'cmFtZXRlcnNCDgoMX2VuZHBvaW50X2lkSgQIAxAEUg5jbHVzdGVyX2lkX2hleA==');
 
 @$core.Deprecated('Use commandErrorDescriptor instead')
 const CommandError$json = {

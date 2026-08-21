@@ -17,28 +17,6 @@ import { DeviceSchema } from '../kusinta/iot/device/v1/device_pb.js'
 import { PropertyUpdateSchema, PropertyUpdateBatchSchema, ValueProvenance } from '../kusinta/iot/device/v1/property_update_pb.js'
 
 describe('DeviceDescriptor', () => {
-  it('round-trips matter_device_type_id for thermostat (0x0301 = 769)', () => {
-    const d = create(DeviceDescriptorSchema, {
-      deviceId: { value: 'dev-001' },
-      matterDeviceTypeId: 0x0301,
-      vendorName: 'eQ-3',
-      productName: 'HM-CC-RT-DN',
-      serialNumber: 'MEQ1234567',
-      nodeLabel: 'Living room thermostat',
-      vendorId: 0x0135,
-      productId: 0x0095,
-      hardwareVersionString: '1.4',
-      softwareVersionString: '2.8.0',
-      connectorId: { value: 'homematic-ccu3' },
-      spaceId: { value: 'room-uuid' },
-      ownership: DeviceOwnershipType.COMPANY,
-      lifecycle: DeviceLifecycleState.OWNED,
-    })
-    const decoded = fromBinary(DeviceDescriptorSchema, toBinary(DeviceDescriptorSchema, d))
-    expect(decoded.matterDeviceTypeId).toBe(0x0301)
-    expect(decoded.vendorName).toBe('eQ-3')
-    expect(decoded.ownership).toBe(DeviceOwnershipType.COMPANY)
-  })
 
   it('round-trips resident-owned lifecycle', () => {
     const d = create(DeviceDescriptorSchema, {
@@ -136,7 +114,7 @@ describe('PropertyUpdate', () => {
       deviceId: { value: 'therm-1' },
       attributeName: 'OccupiedHeatingSetpoint',
       value: { case: 'intValue', value: 2150 },
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.attributeName).toBe('OccupiedHeatingSetpoint')
@@ -149,7 +127,7 @@ describe('PropertyUpdate', () => {
       deviceId: { value: 'light-1' },
       attributeName: 'OnOff',
       value: { case: 'boolValue', value: true },
-      clusterIdHex: '0006',
+      clusterId: 0x0006,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.value?.case).toBe('boolValue')
@@ -161,7 +139,7 @@ describe('PropertyUpdate', () => {
       deviceId: { value: 'therm-1' },
       attributeName: 'OccupiedHeatingSetpoint',
       value: { case: 'intValue', value: 2150 },
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.provenance).toBe(ValueProvenance.UNSPECIFIED)
@@ -172,7 +150,7 @@ describe('PropertyUpdate', () => {
       deviceId: { value: 'therm-1' },
       attributeName: 'OccupiedHeatingSetpoint',
       value: { case: 'intValue', value: 2250 },
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
       provenance: ValueProvenance.OPTIMISTIC,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
@@ -184,7 +162,7 @@ describe('PropertyUpdate', () => {
       deviceId: { value: 'therm-1' },
       attributeName: 'OccupiedHeatingSetpoint',
       value: { case: 'intValue', value: 2150 },
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
       provenance: ValueProvenance.CORRECTED,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
@@ -253,21 +231,14 @@ describe('EnergySensorProperties', () => {
 describe('Endpoints — several device types on one device', () => {
   it('carries a thermostat and a humidity sensor on one device', () => {
     const d = create(DeviceSchema, {
-      descriptor: {
-        deviceId: { value: 'wall-therm-1' },
-        matterDeviceTypeId: 0x0301,
-        endpoints: [
-          { endpointId: 1, matterDeviceTypeId: 0x0301 },
-          { endpointId: 2, matterDeviceTypeId: 0x0307 },
-        ],
-      },
+      descriptor: { deviceId: { value: 'wall-therm-1' } },
       endpoints: [
-        { endpointId: 1, properties: { case: 'thermostat', value: { localTemperature: 2150 } } },
-        { endpointId: 2, properties: { case: 'humiditySensor', value: { measuredValue: 4500 } } },
+        { endpointId: 1, matterDeviceTypeId: 0x0301, properties: { case: 'thermostat', value: { localTemperature: 2150 } } },
+        { endpointId: 2, matterDeviceTypeId: 0x0307, properties: { case: 'humiditySensor', value: { measuredValue: 4500 } } },
       ],
     })
     const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
-    expect(decoded.descriptor?.endpoints.map((e) => e.matterDeviceTypeId)).toEqual([0x0301, 0x0307])
+    expect(decoded.endpoints.map((e) => e.matterDeviceTypeId)).toEqual([0x0301, 0x0307])
     expect(decoded.endpoints[1].properties?.case).toBe('humiditySensor')
   })
 
@@ -276,6 +247,7 @@ describe('Endpoints — several device types on one device', () => {
       descriptor: { deviceId: { value: 'actuator-1' }, matterDeviceTypeId: 0x0100 },
       endpoints: [1, 2, 3, 4].map((n) => ({
         endpointId: n,
+        matterDeviceTypeId: 0x0100,
         properties: { case: 'onOffLight', value: { onOff: n % 2 === 1 } },
       })),
     })
@@ -287,8 +259,8 @@ describe('Endpoints — several device types on one device', () => {
     const d = create(DeviceSchema, {
       descriptor: { deviceId: { value: 'valve-1' }, matterDeviceTypeId: 0x0301 },
       endpoints: [
-        { endpointId: 1, properties: { case: 'thermostat', value: { localTemperature: 2150 } } },
-        { endpointId: 2, properties: { case: 'powerSource', value: { batPercentRemaining: 150, batChargeLevel: 1 } } },
+        { endpointId: 1, matterDeviceTypeId: 0x0301, properties: { case: 'thermostat', value: { localTemperature: 2150 } } },
+        { endpointId: 2, matterDeviceTypeId: 0x0011, properties: { case: 'powerSource', value: { batPercentRemaining: 150, batChargeLevel: 1 } } },
       ],
     })
     const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
@@ -300,7 +272,7 @@ describe('Endpoints — several device types on one device', () => {
 
   it('leaves endpoints empty for a device that has reported nothing typed', () => {
     const d = create(DeviceSchema, {
-      descriptor: { deviceId: { value: 'unknown-1' }, matterDeviceTypeId: 0x9999 },
+      descriptor: { deviceId: { value: 'unknown-1' } },
     })
     const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, d))
     expect(decoded.endpoints).toHaveLength(0)
@@ -315,7 +287,7 @@ describe('PropertyUpdate — endpoint and vendor addressing', () => {
       endpointId: 2,
       attributeName: 'MeasuredValue',
       value: { case: 'intValue', value: 4500 },
-      clusterIdHex: '0405',
+      clusterId: 0x0405,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.endpointId).toBe(2)
@@ -331,20 +303,20 @@ describe('PropertyUpdate — endpoint and vendor addressing', () => {
     const u = create(PropertyUpdateSchema, {
       deviceId: { value: 'valve-1' },
       endpointId: 1,
-      vendorExtension: 'homematic',
+      vendorExtension: 'homematic.thermostat',
       attributeName: 'LEVEL',
       value: { case: 'floatValue', value: 0.5 },
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
-    expect(decoded.vendorExtension).toBe('homematic')
-    expect(decoded.clusterIdHex).toBe('')
+    expect(decoded.vendorExtension).toBe('homematic.thermostat')
+    expect(decoded.clusterId).toBeUndefined()
   })
 
   it('leaves vendor_extension undefined on a Matter update', () => {
     const u = create(PropertyUpdateSchema, {
       endpointId: 1,
       attributeName: 'LocalTemperature',
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.vendorExtension).toBeUndefined()

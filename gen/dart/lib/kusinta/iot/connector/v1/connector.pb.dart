@@ -16,7 +16,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../common/v1/types.pbenum.dart' as $5;
-import '../../device/v1/descriptor.pb.dart' as $1;
+import '../../device/v1/device.pb.dart' as $1;
 import '../../device/v1/property_update.pb.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../webrtc/v1/command.pb.dart' as $4;
@@ -146,7 +146,7 @@ class ConnectorInfo extends $pb.GeneratedMessage {
 class ConnectorHandshake extends $pb.GeneratedMessage {
   factory ConnectorHandshake({
     ConnectorInfo? info,
-    $core.Iterable<$1.DeviceDescriptor>? knownDevices,
+    $core.Iterable<$1.Device>? knownDevices,
   }) {
     final result = create();
     if (info != null) result.info = info;
@@ -170,9 +170,9 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<ConnectorInfo>(1, _omitFieldNames ? '' : 'info',
         subBuilder: ConnectorInfo.create)
-    ..pc<$1.DeviceDescriptor>(
+    ..pc<$1.Device>(
         2, _omitFieldNames ? '' : 'knownDevices', $pb.PbFieldType.PM,
-        subBuilder: $1.DeviceDescriptor.create)
+        subBuilder: $1.Device.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -208,7 +208,7 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   ConnectorInfo ensureInfo() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$1.DeviceDescriptor> get knownDevices => $_getList(1);
+  $pb.PbList<$1.Device> get knownDevices => $_getList(1);
 }
 
 class HandshakeAck extends $pb.GeneratedMessage {
@@ -295,12 +295,18 @@ class HandshakeAck extends $pb.GeneratedMessage {
   $0.GatewayId ensureGatewayId() => $_ensure(2);
 }
 
+/// A device the connector has found. Carries the full Device, not just its descriptor,
+/// because a device's endpoints are what say which Matter device types it presents — and
+/// without them the gateway cannot resolve any PropertyUpdate the device goes on to send.
+///
+/// Properties may be unset on every endpoint; that means the device exists and has
+/// reported nothing yet, which is the normal state at announcement.
 class DeviceAnnouncement extends $pb.GeneratedMessage {
   factory DeviceAnnouncement({
-    $1.DeviceDescriptor? descriptor,
+    $1.Device? device,
   }) {
     final result = create();
-    if (descriptor != null) result.descriptor = descriptor;
+    if (device != null) result.device = device;
     return result;
   }
 
@@ -318,8 +324,8 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..aOM<$1.DeviceDescriptor>(1, _omitFieldNames ? '' : 'descriptor',
-        subBuilder: $1.DeviceDescriptor.create)
+    ..aOM<$1.Device>(2, _omitFieldNames ? '' : 'device',
+        subBuilder: $1.Device.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -343,16 +349,16 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<DeviceAnnouncement>(create);
   static DeviceAnnouncement? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  $1.DeviceDescriptor get descriptor => $_getN(0);
-  @$pb.TagNumber(1)
-  set descriptor($1.DeviceDescriptor value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDescriptor() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDescriptor() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $1.DeviceDescriptor ensureDescriptor() => $_ensure(0);
+  @$pb.TagNumber(2)
+  $1.Device get device => $_getN(0);
+  @$pb.TagNumber(2)
+  set device($1.Device value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDevice() => $_has(0);
+  @$pb.TagNumber(2)
+  void clearDevice() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.Device ensureDevice() => $_ensure(0);
 }
 
 class DeviceRemoval extends $pb.GeneratedMessage {

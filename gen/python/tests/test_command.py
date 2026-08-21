@@ -59,7 +59,7 @@ def test_device_command_carries_delta_case():
     cmd = command_pb2.DeviceCommand(
         command_id="cmd-1",
         device_id=identity_pb2.DeviceId(value="therm-1"),
-        cluster_id_hex="0201",
+        cluster_id=0x0201,
         command_name="SetpointRaiseLower",
         thermostat_setpoint=command_pb2.ThermostatSetpointParams(mode=0, amount=50),
     )
@@ -76,7 +76,7 @@ def test_device_command_carries_absolute_write_case():
     cmd = command_pb2.DeviceCommand(
         command_id="cmd-2",
         device_id=identity_pb2.DeviceId(value="therm-1"),
-        cluster_id_hex="0201",
+        cluster_id=0x0201,
         command_name="WriteAttribute",
         thermostat_setpoint_write=command_pb2.ThermostatSetpointWriteParams(
             mode=0, setpoint_centidegrees=2150

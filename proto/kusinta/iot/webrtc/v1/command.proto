@@ -81,8 +81,12 @@ message DoorLockParams {
 message DeviceCommand {
   string                           command_id     = 1; // UUID, matched in CommandResult
   kusinta.iot.identity.v1.DeviceId device_id      = 2;
-  string                           cluster_id_hex = 3;
+  // Was cluster_id_hex, a 4-char hex string; see device.v1.PropertyUpdate.cluster_id.
+  reserved 3;
+  reserved "cluster_id_hex";
+
   string                           command_name   = 4; // PascalCase Matter command name
+  uint32                           cluster_id     = 12; // e.g. 0x0201 for Thermostat
 
   // Which endpoint of the device to command. Required: a device presents several
   // endpoints and a command with no destination has no correct one — on a 4-channel

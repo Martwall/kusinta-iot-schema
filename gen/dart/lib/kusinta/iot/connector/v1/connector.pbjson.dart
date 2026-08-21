@@ -73,7 +73,7 @@ const ConnectorHandshake$json = {
       '3': 2,
       '4': 3,
       '5': 11,
-      '6': '.kusinta.iot.device.v1.DeviceDescriptor',
+      '6': '.kusinta.iot.device.v1.Device',
       '10': 'knownDevices'
     },
   ],
@@ -82,8 +82,8 @@ const ConnectorHandshake$json = {
 /// Descriptor for `ConnectorHandshake`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List connectorHandshakeDescriptor = $convert.base64Decode(
     'ChJDb25uZWN0b3JIYW5kc2hha2USOwoEaW5mbxgBIAEoCzInLmt1c2ludGEuaW90LmNvbm5lY3'
-    'Rvci52MS5Db25uZWN0b3JJbmZvUgRpbmZvEkwKDWtub3duX2RldmljZXMYAiADKAsyJy5rdXNp'
-    'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlRGVzY3JpcHRvclIMa25vd25EZXZpY2Vz');
+    'Rvci52MS5Db25uZWN0b3JJbmZvUgRpbmZvEkIKDWtub3duX2RldmljZXMYAiADKAsyHS5rdXNp'
+    'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlUgxrbm93bkRldmljZXM=');
 
 @$core.Deprecated('Use handshakeAckDescriptor instead')
 const HandshakeAck$json = {
@@ -113,20 +113,24 @@ const DeviceAnnouncement$json = {
   '1': 'DeviceAnnouncement',
   '2': [
     {
-      '1': 'descriptor',
-      '3': 1,
+      '1': 'device',
+      '3': 2,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.device.v1.DeviceDescriptor',
-      '10': 'descriptor'
+      '6': '.kusinta.iot.device.v1.Device',
+      '10': 'device'
     },
   ],
+  '9': [
+    {'1': 1, '2': 2},
+  ],
+  '10': ['descriptor'],
 };
 
 /// Descriptor for `DeviceAnnouncement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deviceAnnouncementDescriptor = $convert.base64Decode(
-    'ChJEZXZpY2VBbm5vdW5jZW1lbnQSRwoKZGVzY3JpcHRvchgBIAEoCzInLmt1c2ludGEuaW90Lm'
-    'RldmljZS52MS5EZXZpY2VEZXNjcmlwdG9yUgpkZXNjcmlwdG9y');
+    'ChJEZXZpY2VBbm5vdW5jZW1lbnQSNQoGZGV2aWNlGAIgASgLMh0ua3VzaW50YS5pb3QuZGV2aW'
+    'NlLnYxLkRldmljZVIGZGV2aWNlSgQIARACUgpkZXNjcmlwdG9y');
 
 @$core.Deprecated('Use deviceRemovalDescriptor instead')
 const DeviceRemoval$json = {

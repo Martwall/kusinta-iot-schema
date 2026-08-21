@@ -20,8 +20,15 @@ const Endpoint$json = {
   '2': [
     {'1': 'endpoint_id', '3': 1, '4': 1, '5': 13, '10': 'endpointId'},
     {
-      '1': 'thermostat',
+      '1': 'matter_device_type_id',
       '3': 2,
+      '4': 1,
+      '5': 13,
+      '10': 'matterDeviceTypeId'
+    },
+    {
+      '1': 'thermostat',
+      '3': 3,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.ThermostatProperties',
@@ -30,7 +37,7 @@ const Endpoint$json = {
     },
     {
       '1': 'temperature_sensor',
-      '3': 3,
+      '3': 4,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.TemperatureSensorProperties',
@@ -39,7 +46,7 @@ const Endpoint$json = {
     },
     {
       '1': 'humidity_sensor',
-      '3': 4,
+      '3': 5,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.HumiditySensorProperties',
@@ -48,7 +55,7 @@ const Endpoint$json = {
     },
     {
       '1': 'occupancy_sensor',
-      '3': 5,
+      '3': 6,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.OccupancySensorProperties',
@@ -57,7 +64,7 @@ const Endpoint$json = {
     },
     {
       '1': 'contact_sensor',
-      '3': 6,
+      '3': 7,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.ContactSensorProperties',
@@ -66,7 +73,7 @@ const Endpoint$json = {
     },
     {
       '1': 'window_covering',
-      '3': 7,
+      '3': 8,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.WindowCoveringProperties',
@@ -75,7 +82,7 @@ const Endpoint$json = {
     },
     {
       '1': 'door_lock',
-      '3': 8,
+      '3': 9,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.DoorLockProperties',
@@ -84,7 +91,7 @@ const Endpoint$json = {
     },
     {
       '1': 'on_off_light',
-      '3': 9,
+      '3': 10,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.OnOffLightProperties',
@@ -93,7 +100,7 @@ const Endpoint$json = {
     },
     {
       '1': 'dimmable_light',
-      '3': 10,
+      '3': 11,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.DimmableLightProperties',
@@ -102,7 +109,7 @@ const Endpoint$json = {
     },
     {
       '1': 'color_temp_light',
-      '3': 11,
+      '3': 12,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.ColorTemperatureLightProperties',
@@ -111,7 +118,7 @@ const Endpoint$json = {
     },
     {
       '1': 'energy_sensor',
-      '3': 12,
+      '3': 13,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.EnergySensorProperties',
@@ -120,7 +127,7 @@ const Endpoint$json = {
     },
     {
       '1': 'pressure_sensor',
-      '3': 13,
+      '3': 14,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.PressureSensorProperties',
@@ -129,7 +136,7 @@ const Endpoint$json = {
     },
     {
       '1': 'power_source',
-      '3': 14,
+      '3': 15,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.PowerSourceProperties',
@@ -137,13 +144,13 @@ const Endpoint$json = {
       '10': 'powerSource'
     },
     {
-      '1': 'homematic',
+      '1': 'hm_thermostat',
       '3': 50,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.vendor.homematic.v1.HomematicVendorExtension',
+      '6': '.kusinta.iot.vendor.homematic.v1.HmThermostatProps',
       '9': 1,
-      '10': 'homematic'
+      '10': 'hmThermostat'
     },
   ],
   '8': [
@@ -154,30 +161,31 @@ const Endpoint$json = {
 
 /// Descriptor for `Endpoint`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
-    'CghFbmRwb2ludBIfCgtlbmRwb2ludF9pZBgBIAEoDVIKZW5kcG9pbnRJZBJNCgp0aGVybW9zdG'
-    'F0GAIgASgLMisua3VzaW50YS5pb3QuZGV2aWNlLnYxLlRoZXJtb3N0YXRQcm9wZXJ0aWVzSABS'
-    'CnRoZXJtb3N0YXQSYwoSdGVtcGVyYXR1cmVfc2Vuc29yGAMgASgLMjIua3VzaW50YS5pb3QuZG'
-    'V2aWNlLnYxLlRlbXBlcmF0dXJlU2Vuc29yUHJvcGVydGllc0gAUhF0ZW1wZXJhdHVyZVNlbnNv'
-    'chJaCg9odW1pZGl0eV9zZW5zb3IYBCABKAsyLy5rdXNpbnRhLmlvdC5kZXZpY2UudjEuSHVtaW'
-    'RpdHlTZW5zb3JQcm9wZXJ0aWVzSABSDmh1bWlkaXR5U2Vuc29yEl0KEG9jY3VwYW5jeV9zZW5z'
-    'b3IYBSABKAsyMC5rdXNpbnRhLmlvdC5kZXZpY2UudjEuT2NjdXBhbmN5U2Vuc29yUHJvcGVydG'
-    'llc0gAUg9vY2N1cGFuY3lTZW5zb3ISVwoOY29udGFjdF9zZW5zb3IYBiABKAsyLi5rdXNpbnRh'
-    'LmlvdC5kZXZpY2UudjEuQ29udGFjdFNlbnNvclByb3BlcnRpZXNIAFINY29udGFjdFNlbnNvch'
-    'JaCg93aW5kb3dfY292ZXJpbmcYByABKAsyLy5rdXNpbnRhLmlvdC5kZXZpY2UudjEuV2luZG93'
-    'Q292ZXJpbmdQcm9wZXJ0aWVzSABSDndpbmRvd0NvdmVyaW5nEkgKCWRvb3JfbG9jaxgIIAEoCz'
-    'IpLmt1c2ludGEuaW90LmRldmljZS52MS5Eb29yTG9ja1Byb3BlcnRpZXNIAFIIZG9vckxvY2sS'
-    'TwoMb25fb2ZmX2xpZ2h0GAkgASgLMisua3VzaW50YS5pb3QuZGV2aWNlLnYxLk9uT2ZmTGlnaH'
-    'RQcm9wZXJ0aWVzSABSCm9uT2ZmTGlnaHQSVwoOZGltbWFibGVfbGlnaHQYCiABKAsyLi5rdXNp'
-    'bnRhLmlvdC5kZXZpY2UudjEuRGltbWFibGVMaWdodFByb3BlcnRpZXNIAFINZGltbWFibGVMaW'
-    'dodBJiChBjb2xvcl90ZW1wX2xpZ2h0GAsgASgLMjYua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNv'
-    'bG9yVGVtcGVyYXR1cmVMaWdodFByb3BlcnRpZXNIAFIOY29sb3JUZW1wTGlnaHQSVAoNZW5lcm'
-    'd5X3NlbnNvchgMIAEoCzItLmt1c2ludGEuaW90LmRldmljZS52MS5FbmVyZ3lTZW5zb3JQcm9w'
-    'ZXJ0aWVzSABSDGVuZXJneVNlbnNvchJaCg9wcmVzc3VyZV9zZW5zb3IYDSABKAsyLy5rdXNpbn'
-    'RhLmlvdC5kZXZpY2UudjEuUHJlc3N1cmVTZW5zb3JQcm9wZXJ0aWVzSABSDnByZXNzdXJlU2Vu'
-    'c29yElEKDHBvd2VyX3NvdXJjZRgOIAEoCzIsLmt1c2ludGEuaW90LmRldmljZS52MS5Qb3dlcl'
-    'NvdXJjZVByb3BlcnRpZXNIAFILcG93ZXJTb3VyY2USWQoJaG9tZW1hdGljGDIgASgLMjkua3Vz'
-    'aW50YS5pb3QudmVuZG9yLmhvbWVtYXRpYy52MS5Ib21lbWF0aWNWZW5kb3JFeHRlbnNpb25IAV'
-    'IJaG9tZW1hdGljQgwKCnByb3BlcnRpZXNCCAoGdmVuZG9y');
+    'CghFbmRwb2ludBIfCgtlbmRwb2ludF9pZBgBIAEoDVIKZW5kcG9pbnRJZBIxChVtYXR0ZXJfZG'
+    'V2aWNlX3R5cGVfaWQYAiABKA1SEm1hdHRlckRldmljZVR5cGVJZBJNCgp0aGVybW9zdGF0GAMg'
+    'ASgLMisua3VzaW50YS5pb3QuZGV2aWNlLnYxLlRoZXJtb3N0YXRQcm9wZXJ0aWVzSABSCnRoZX'
+    'Jtb3N0YXQSYwoSdGVtcGVyYXR1cmVfc2Vuc29yGAQgASgLMjIua3VzaW50YS5pb3QuZGV2aWNl'
+    'LnYxLlRlbXBlcmF0dXJlU2Vuc29yUHJvcGVydGllc0gAUhF0ZW1wZXJhdHVyZVNlbnNvchJaCg'
+    '9odW1pZGl0eV9zZW5zb3IYBSABKAsyLy5rdXNpbnRhLmlvdC5kZXZpY2UudjEuSHVtaWRpdHlT'
+    'ZW5zb3JQcm9wZXJ0aWVzSABSDmh1bWlkaXR5U2Vuc29yEl0KEG9jY3VwYW5jeV9zZW5zb3IYBi'
+    'ABKAsyMC5rdXNpbnRhLmlvdC5kZXZpY2UudjEuT2NjdXBhbmN5U2Vuc29yUHJvcGVydGllc0gA'
+    'Ug9vY2N1cGFuY3lTZW5zb3ISVwoOY29udGFjdF9zZW5zb3IYByABKAsyLi5rdXNpbnRhLmlvdC'
+    '5kZXZpY2UudjEuQ29udGFjdFNlbnNvclByb3BlcnRpZXNIAFINY29udGFjdFNlbnNvchJaCg93'
+    'aW5kb3dfY292ZXJpbmcYCCABKAsyLy5rdXNpbnRhLmlvdC5kZXZpY2UudjEuV2luZG93Q292ZX'
+    'JpbmdQcm9wZXJ0aWVzSABSDndpbmRvd0NvdmVyaW5nEkgKCWRvb3JfbG9jaxgJIAEoCzIpLmt1'
+    'c2ludGEuaW90LmRldmljZS52MS5Eb29yTG9ja1Byb3BlcnRpZXNIAFIIZG9vckxvY2sSTwoMb2'
+    '5fb2ZmX2xpZ2h0GAogASgLMisua3VzaW50YS5pb3QuZGV2aWNlLnYxLk9uT2ZmTGlnaHRQcm9w'
+    'ZXJ0aWVzSABSCm9uT2ZmTGlnaHQSVwoOZGltbWFibGVfbGlnaHQYCyABKAsyLi5rdXNpbnRhLm'
+    'lvdC5kZXZpY2UudjEuRGltbWFibGVMaWdodFByb3BlcnRpZXNIAFINZGltbWFibGVMaWdodBJi'
+    'ChBjb2xvcl90ZW1wX2xpZ2h0GAwgASgLMjYua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNvbG9yVG'
+    'VtcGVyYXR1cmVMaWdodFByb3BlcnRpZXNIAFIOY29sb3JUZW1wTGlnaHQSVAoNZW5lcmd5X3Nl'
+    'bnNvchgNIAEoCzItLmt1c2ludGEuaW90LmRldmljZS52MS5FbmVyZ3lTZW5zb3JQcm9wZXJ0aW'
+    'VzSABSDGVuZXJneVNlbnNvchJaCg9wcmVzc3VyZV9zZW5zb3IYDiABKAsyLy5rdXNpbnRhLmlv'
+    'dC5kZXZpY2UudjEuUHJlc3N1cmVTZW5zb3JQcm9wZXJ0aWVzSABSDnByZXNzdXJlU2Vuc29yEl'
+    'EKDHBvd2VyX3NvdXJjZRgPIAEoCzIsLmt1c2ludGEuaW90LmRldmljZS52MS5Qb3dlclNvdXJj'
+    'ZVByb3BlcnRpZXNIAFILcG93ZXJTb3VyY2USWQoNaG1fdGhlcm1vc3RhdBgyIAEoCzIyLmt1c2'
+    'ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAVIMaG1UaGVy'
+    'bW9zdGF0QgwKCnByb3BlcnRpZXNCCAoGdmVuZG9y');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {

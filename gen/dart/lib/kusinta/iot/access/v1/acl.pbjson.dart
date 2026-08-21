@@ -19,7 +19,7 @@ const AttributeRef$json = {
   '1': 'AttributeRef',
   '2': [
     {'1': 'attribute_name', '3': 1, '4': 1, '5': 9, '10': 'attributeName'},
-    {'1': 'cluster_id_hex', '3': 2, '4': 1, '5': 9, '10': 'clusterIdHex'},
+    {'1': 'cluster_id', '3': 2, '4': 1, '5': 13, '10': 'clusterId'},
     {
       '1': 'endpoint_id',
       '3': 3,
@@ -37,44 +37,45 @@ const AttributeRef$json = {
 
 /// Descriptor for `AttributeRef`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List attributeRefDescriptor = $convert.base64Decode(
-    'CgxBdHRyaWJ1dGVSZWYSJQoOYXR0cmlidXRlX25hbWUYASABKAlSDWF0dHJpYnV0ZU5hbWUSJA'
-    'oOY2x1c3Rlcl9pZF9oZXgYAiABKAlSDGNsdXN0ZXJJZEhleBIkCgtlbmRwb2ludF9pZBgDIAEo'
-    'DUgAUgplbmRwb2ludElkiAEBQg4KDF9lbmRwb2ludF9pZA==');
+    'CgxBdHRyaWJ1dGVSZWYSJQoOYXR0cmlidXRlX25hbWUYASABKAlSDWF0dHJpYnV0ZU5hbWUSHQ'
+    'oKY2x1c3Rlcl9pZBgCIAEoDVIJY2x1c3RlcklkEiQKC2VuZHBvaW50X2lkGAMgASgNSABSCmVu'
+    'ZHBvaW50SWSIAQFCDgoMX2VuZHBvaW50X2lk');
 
 @$core.Deprecated('Use propertyConstraintDescriptor instead')
 const PropertyConstraint$json = {
   '1': 'PropertyConstraint',
   '2': [
-    {'1': 'attribute_name', '3': 1, '4': 1, '5': 9, '10': 'attributeName'},
+    {
+      '1': 'attribute',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.AttributeRef',
+      '10': 'attribute'
+    },
     {'1': 'int_max', '3': 2, '4': 1, '5': 17, '9': 0, '10': 'intMax'},
     {'1': 'int_min', '3': 3, '4': 1, '5': 17, '9': 0, '10': 'intMin'},
     {'1': 'uint_max', '3': 4, '4': 1, '5': 13, '9': 0, '10': 'uintMax'},
     {'1': 'uint_min', '3': 5, '4': 1, '5': 13, '9': 0, '10': 'uintMin'},
-    {'1': 'cluster_id_hex', '3': 6, '4': 1, '5': 9, '10': 'clusterIdHex'},
-    {
-      '1': 'endpoint_id',
-      '3': 7,
-      '4': 1,
-      '5': 13,
-      '9': 1,
-      '10': 'endpointId',
-      '17': true
-    },
   ],
   '8': [
     {'1': 'constraint'},
-    {'1': '_endpoint_id'},
   ],
+  '9': [
+    {'1': 1, '2': 2},
+    {'1': 6, '2': 7},
+    {'1': 7, '2': 8},
+  ],
+  '10': ['attribute_name', 'cluster_id_hex', 'endpoint_id'],
 };
 
 /// Descriptor for `PropertyConstraint`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List propertyConstraintDescriptor = $convert.base64Decode(
-    'ChJQcm9wZXJ0eUNvbnN0cmFpbnQSJQoOYXR0cmlidXRlX25hbWUYASABKAlSDWF0dHJpYnV0ZU'
-    '5hbWUSGQoHaW50X21heBgCIAEoEUgAUgZpbnRNYXgSGQoHaW50X21pbhgDIAEoEUgAUgZpbnRN'
-    'aW4SGwoIdWludF9tYXgYBCABKA1IAFIHdWludE1heBIbCgh1aW50X21pbhgFIAEoDUgAUgd1aW'
-    '50TWluEiQKDmNsdXN0ZXJfaWRfaGV4GAYgASgJUgxjbHVzdGVySWRIZXgSJAoLZW5kcG9pbnRf'
-    'aWQYByABKA1IAVIKZW5kcG9pbnRJZIgBAUIMCgpjb25zdHJhaW50Qg4KDF9lbmRwb2ludF9pZA'
-    '==');
+    'ChJQcm9wZXJ0eUNvbnN0cmFpbnQSQQoJYXR0cmlidXRlGAggASgLMiMua3VzaW50YS5pb3QuYW'
+    'NjZXNzLnYxLkF0dHJpYnV0ZVJlZlIJYXR0cmlidXRlEhkKB2ludF9tYXgYAiABKBFIAFIGaW50'
+    'TWF4EhkKB2ludF9taW4YAyABKBFIAFIGaW50TWluEhsKCHVpbnRfbWF4GAQgASgNSABSB3Vpbn'
+    'RNYXgSGwoIdWludF9taW4YBSABKA1IAFIHdWludE1pbkIMCgpjb25zdHJhaW50SgQIARACSgQI'
+    'BhAHSgQIBxAIUg5hdHRyaWJ1dGVfbmFtZVIOY2x1c3Rlcl9pZF9oZXhSC2VuZHBvaW50X2lk');
 
 @$core.Deprecated('Use deviceAclDescriptor instead')
 const DeviceAcl$json = {

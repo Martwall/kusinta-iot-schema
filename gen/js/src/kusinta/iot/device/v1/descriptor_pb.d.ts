@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { DeviceLifecycleState, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { HomematicDeviceIdentity } from "../../vendor/homematic/v1/homematic_pb.js";
 
 /**
  * Describes the file kusinta/iot/device/v1/descriptor.proto.
@@ -14,37 +15,10 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_device_v1_descriptor: GenFile;
 
 /**
- * One endpoint's shape: which Matter device type it presents. The state that endpoint
- * reports lives in device.v1.Endpoint, keyed by the same endpoint_id.
+ * DeviceDescriptor holds identity and Matter BasicInformation cluster fields — what the
+ * device IS, not what it reports. The device types it presents are one per endpoint, in
+ * Device.endpoints.
  *
- * Shape belongs on the descriptor because the descriptor is what both legs carry. A
- * connector announces a device with connector.v1.DeviceAnnouncement, which is a bare
- * DeviceDescriptor — so without this, a connector could never say that endpoint 2 is a
- * Humidity Sensor, and nothing could populate the device type the PropertyUpdate
- * resolution rule reads.
- *
- * @generated from message kusinta.iot.device.v1.EndpointDescriptor
- */
-export declare type EndpointDescriptor = Message<"kusinta.iot.device.v1.EndpointDescriptor"> & {
-  /**
-   * @generated from field: uint32 endpoint_id = 1;
-   */
-  endpointId: number;
-
-  /**
-   * @generated from field: uint32 matter_device_type_id = 2;
-   */
-  matterDeviceTypeId: number;
-};
-
-/**
- * Describes the message kusinta.iot.device.v1.EndpointDescriptor.
- * Use `create(EndpointDescriptorSchema)` to create a new message.
- */
-export declare const EndpointDescriptorSchema: GenMessage<EndpointDescriptor>;
-
-/**
- * DeviceDescriptor holds identity and Matter BasicInformation cluster fields.
  * Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
  *
  * @generated from message kusinta.iot.device.v1.DeviceDescriptor
@@ -54,18 +28,6 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
    * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
    */
   deviceId?: DeviceId | undefined;
-
-  /**
-   * The device's PRIMARY Matter device type (e.g. 0x0301 = Thermostat) — convenience
-   * over the endpoints list below, defined as the device type of the lowest-numbered
-   * entry in it. An app picks an icon and a card layout from this without walking the
-   * list; it is not the only device type the device presents.
-   *
-   * Producers MUST number the device's main function lowest so this lands on it.
-   *
-   * @generated from field: uint32 matter_device_type_id = 2;
-   */
-  matterDeviceTypeId: number;
 
   /**
    * Matter BasicInformation cluster attributes
@@ -142,18 +104,22 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
   claimedAt?: Timestamp | undefined;
 
   /**
-   * Every endpoint this device presents, and the Matter device type of each. Both legs
-   * carry it: a connector states it at announcement, and it is what lets a consumer
-   * resolve a PropertyUpdate's endpoint_id to a device type and thence to a properties
-   * case. See device/v1/property_update.proto for the normative rule.
+   * Who the device is in its vendor's own terms — an address and a model string that
+   * identify the PHYSICAL device, not one of its endpoints. It belongs here rather than
+   * beside the per-endpoint vendor readings, which would duplicate it onto every
+   * endpoint with no rule saying whether a producer should.
    *
-   * Empty means the device presents no endpoint this schema can describe — legitimate,
-   * and the device still belongs in a list. Endpoint 0 is the Matter root node, whose
-   * BasicInformation this message already carries, so it never appears here.
+   * Absent for a device with no vendor extension, which is most of them.
    *
-   * @generated from field: repeated kusinta.iot.device.v1.EndpointDescriptor endpoints = 17;
+   * @generated from oneof kusinta.iot.device.v1.DeviceDescriptor.vendor_identity
    */
-  endpoints: EndpointDescriptor[];
+  vendorIdentity: {
+    /**
+     * @generated from field: kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity homematic = 18;
+     */
+    value: HomematicDeviceIdentity;
+    case: "homematic";
+  } | { case: undefined; value?: undefined };
 };
 
 /**

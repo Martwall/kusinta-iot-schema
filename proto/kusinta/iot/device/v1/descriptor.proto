@@ -5,34 +5,26 @@ package kusinta.iot.device.v1;
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/vendor/homematic/v1/homematic.proto";
 
 option optimize_for = SPEED;
 
-// One endpoint's shape: which Matter device type it presents. The state that endpoint
-// reports lives in device.v1.Endpoint, keyed by the same endpoint_id.
+// DeviceDescriptor holds identity and Matter BasicInformation cluster fields — what the
+// device IS, not what it reports. The device types it presents are one per endpoint, in
+// Device.endpoints.
 //
-// Shape belongs on the descriptor because the descriptor is what both legs carry. A
-// connector announces a device with connector.v1.DeviceAnnouncement, which is a bare
-// DeviceDescriptor — so without this, a connector could never say that endpoint 2 is a
-// Humidity Sensor, and nothing could populate the device type the PropertyUpdate
-// resolution rule reads.
-message EndpointDescriptor {
-  uint32 endpoint_id           = 1;
-  uint32 matter_device_type_id = 2;
-}
-
-// DeviceDescriptor holds identity and Matter BasicInformation cluster fields.
 // Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
 message DeviceDescriptor {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
 
-  // The device's PRIMARY Matter device type (e.g. 0x0301 = Thermostat) — convenience
-  // over the endpoints list below, defined as the device type of the lowest-numbered
-  // entry in it. An app picks an icon and a card layout from this without walking the
-  // list; it is not the only device type the device presents.
-  //
-  // Producers MUST number the device's main function lowest so this lands on it.
-  uint32 matter_device_type_id = 2;
+  // Held the device's single Matter device type, then its primary one — the device type
+  // of its lowest-numbered endpoint. Removed rather than kept: it was derived from
+  // Device.endpoints and guarded only by a rule saying producers must keep the two in
+  // step, so an icon could disagree with the readings under it and nothing would notice.
+  // Read Endpoint.matter_device_type_id; the primary type is the lowest-numbered
+  // endpoint's, computed where it is needed.
+  reserved 2;
+  reserved "matter_device_type_id";
 
   // Matter BasicInformation cluster attributes
   string vendor_name = 3;
@@ -54,13 +46,18 @@ message DeviceDescriptor {
   kusinta.iot.identity.v1.UserId owner_user_id = 15;
   google.protobuf.Timestamp claimed_at = 16;
 
-  // Every endpoint this device presents, and the Matter device type of each. Both legs
-  // carry it: a connector states it at announcement, and it is what lets a consumer
-  // resolve a PropertyUpdate's endpoint_id to a device type and thence to a properties
-  // case. See device/v1/property_update.proto for the normative rule.
+  // Held a parallel endpoint list, joined to Device.endpoints by endpoint_id. Removed:
+  // Device now travels on both legs, so there is one list and nothing to keep in step.
+  reserved 17;
+  reserved "endpoints";
+
+  // Who the device is in its vendor's own terms — an address and a model string that
+  // identify the PHYSICAL device, not one of its endpoints. It belongs here rather than
+  // beside the per-endpoint vendor readings, which would duplicate it onto every
+  // endpoint with no rule saying whether a producer should.
   //
-  // Empty means the device presents no endpoint this schema can describe — legitimate,
-  // and the device still belongs in a list. Endpoint 0 is the Matter root node, whose
-  // BasicInformation this message already carries, so it never appears here.
-  repeated EndpointDescriptor endpoints = 17;
+  // Absent for a device with no vendor extension, which is most of them.
+  oneof vendor_identity {
+    kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity homematic = 18;
+  }
 }

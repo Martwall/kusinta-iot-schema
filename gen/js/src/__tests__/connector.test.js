@@ -23,7 +23,12 @@ describe('ConnectorHandshake', () => {
         endpoint: '/run/kusinta/connectors/homematic.sock',
         supportedDeviceTypeIds: [0x0301, 0x0302],
       },
-      knownDevices: [{ deviceId: { value: 'dev-1' }, matterDeviceTypeId: 0x0301 }],
+      knownDevices: [
+        {
+          descriptor: { deviceId: { value: 'dev-1' } },
+          endpoints: [{ endpointId: 1, matterDeviceTypeId: 0x0301 }],
+        },
+      ],
     })
     const decoded = fromBinary(ConnectorHandshakeSchema, toBinary(ConnectorHandshakeSchema, h))
     expect(decoded.info?.connectorId?.value).toBe('homematic-ccu3')
@@ -31,7 +36,7 @@ describe('ConnectorHandshake', () => {
     expect(decoded.info?.transport).toBe(ConnectorTransport.UNIX_SOCKET)
     expect(decoded.info?.supportedDeviceTypeIds).toEqual([0x0301, 0x0302])
     expect(decoded.knownDevices).toHaveLength(1)
-    expect(decoded.knownDevices[0].deviceId?.value).toBe('dev-1')
+    expect(decoded.knownDevices[0].descriptor?.deviceId?.value).toBe('dev-1')
   })
 })
 
@@ -52,13 +57,16 @@ describe('HandshakeAck', () => {
 })
 
 describe('DeviceAnnouncement', () => {
-  it('round-trips descriptor', () => {
+  it('round-trips a device with its endpoints', () => {
     const ann = create(DeviceAnnouncementSchema, {
-      descriptor: { deviceId: { value: 'dev-new-1' }, matterDeviceTypeId: 0x0307, vendorName: 'eQ-3', productName: 'HmIP-STH' },
+      device: {
+        descriptor: { deviceId: { value: 'dev-new-1' }, vendorName: 'eQ-3', productName: 'HmIP-STH' },
+        endpoints: [{ endpointId: 1, matterDeviceTypeId: 0x0307 }],
+      },
     })
     const decoded = fromBinary(DeviceAnnouncementSchema, toBinary(DeviceAnnouncementSchema, ann))
-    expect(decoded.descriptor?.deviceId?.value).toBe('dev-new-1')
-    expect(decoded.descriptor?.matterDeviceTypeId).toBe(0x0307)
+    expect(decoded.device?.descriptor?.deviceId?.value).toBe('dev-new-1')
+    expect(decoded.device?.endpoints[0].matterDeviceTypeId).toBe(0x0307)
   })
 })
 
@@ -107,7 +115,7 @@ describe('SessionRequest oneof payload', () => {
             deviceId: { value: 'dev-1' },
             attributeName: 'OccupiedHeatingSetpoint',
             value: { case: 'intValue', value: 2150 },
-            clusterIdHex: '0201',
+            clusterId: 0x0201,
           }],
         },
       },
@@ -151,7 +159,7 @@ describe('SessionResponse oneof payload', () => {
         value: {
           commandId: 'cmd-uuid-1',
           deviceId: { value: 'light-1' },
-          clusterIdHex: '0006',
+          clusterId: 0x0006,
           commandName: 'Toggle',
           parameters: { case: 'onOff', value: { toggle: true } },
         },

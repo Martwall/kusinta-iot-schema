@@ -182,7 +182,7 @@ def test_every_non_vendor_properties_case_declares_a_device_type():
 
 def test_vendor_extension_declares_no_device_type():
     device_types = device_pb2.Endpoint.DESCRIPTOR.fields_by_name[
-        "homematic"
+        "hm_thermostat"
     ].message_type.GetOptions().Extensions[matter_options_pb2.matter_device_type]
     assert list(device_types) == []
 

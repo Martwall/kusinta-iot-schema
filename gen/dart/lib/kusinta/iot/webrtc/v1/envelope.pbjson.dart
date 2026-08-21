@@ -200,15 +200,44 @@ const PropertyReadRequest$json = {
       '10': 'deviceId'
     },
     {'1': 'attribute_name', '3': 2, '4': 1, '5': 9, '10': 'attributeName'},
-    {'1': 'cluster_id_hex', '3': 3, '4': 1, '5': 9, '10': 'clusterIdHex'},
+    {'1': 'cluster_id', '3': 4, '4': 1, '5': 13, '10': 'clusterId'},
+    {
+      '1': 'endpoint_id',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'endpointId',
+      '17': true
+    },
+    {
+      '1': 'vendor_extension',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'vendorExtension',
+      '17': true
+    },
   ],
+  '8': [
+    {'1': '_endpoint_id'},
+    {'1': '_vendor_extension'},
+  ],
+  '9': [
+    {'1': 3, '2': 4},
+  ],
+  '10': ['cluster_id_hex'],
 };
 
 /// Descriptor for `PropertyReadRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List propertyReadRequestDescriptor = $convert.base64Decode(
     'ChNQcm9wZXJ0eVJlYWRSZXF1ZXN0Ej4KCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90Lm'
     'lkZW50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBIlCg5hdHRyaWJ1dGVfbmFtZRgCIAEoCVIN'
-    'YXR0cmlidXRlTmFtZRIkCg5jbHVzdGVyX2lkX2hleBgDIAEoCVIMY2x1c3RlcklkSGV4');
+    'YXR0cmlidXRlTmFtZRIdCgpjbHVzdGVyX2lkGAQgASgNUgljbHVzdGVySWQSJAoLZW5kcG9pbn'
+    'RfaWQYBSABKA1IAFIKZW5kcG9pbnRJZIgBARIuChB2ZW5kb3JfZXh0ZW5zaW9uGAYgASgJSAFS'
+    'D3ZlbmRvckV4dGVuc2lvbogBAUIOCgxfZW5kcG9pbnRfaWRCEwoRX3ZlbmRvcl9leHRlbnNpb2'
+    '5KBAgDEARSDmNsdXN0ZXJfaWRfaGV4');
 
 @$core.Deprecated('Use gatewayErrorDescriptor instead')
 const GatewayError$json = {

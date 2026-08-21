@@ -3,7 +3,7 @@ import datetime
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
-from kusinta.iot.device.v1 import descriptor_pb2 as _descriptor_pb2
+from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.device.v1 import property_update_pb2 as _property_update_pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as _command_pb2
 from google.protobuf.internal import containers as _containers
@@ -35,8 +35,8 @@ class ConnectorHandshake(_message.Message):
     INFO_FIELD_NUMBER: _ClassVar[int]
     KNOWN_DEVICES_FIELD_NUMBER: _ClassVar[int]
     info: ConnectorInfo
-    known_devices: _containers.RepeatedCompositeFieldContainer[_descriptor_pb2.DeviceDescriptor]
-    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_descriptor_pb2.DeviceDescriptor, _Mapping]]] = ...) -> None: ...
+    known_devices: _containers.RepeatedCompositeFieldContainer[_device_pb2.Device]
+    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ...) -> None: ...
 
 class HandshakeAck(_message.Message):
     __slots__ = ("accepted", "reason", "gateway_id")
@@ -49,10 +49,10 @@ class HandshakeAck(_message.Message):
     def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ...) -> None: ...
 
 class DeviceAnnouncement(_message.Message):
-    __slots__ = ("descriptor",)
-    DESCRIPTOR_FIELD_NUMBER: _ClassVar[int]
-    descriptor: _descriptor_pb2.DeviceDescriptor
-    def __init__(self, descriptor: _Optional[_Union[_descriptor_pb2.DeviceDescriptor, _Mapping]] = ...) -> None: ...
+    __slots__ = ("device",)
+    DEVICE_FIELD_NUMBER: _ClassVar[int]
+    device: _device_pb2.Device
+    def __init__(self, device: _Optional[_Union[_device_pb2.Device, _Mapping]] = ...) -> None: ...
 
 class DeviceRemoval(_message.Message):
     __slots__ = ("device_id", "reason")

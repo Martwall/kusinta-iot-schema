@@ -197,6 +197,9 @@ export declare type SubscriptionAck = Message<"kusinta.iot.webrtc.v1.Subscriptio
 export declare const SubscriptionAckSchema: GenMessage<SubscriptionAck>;
 
 /**
+ * Reads one attribute of one endpoint. Addressed exactly as device.v1.PropertyUpdate is,
+ * so a read and the update answering it name the same thing the same way.
+ *
  * @generated from message kusinta.iot.webrtc.v1.PropertyReadRequest
  */
 export declare type PropertyReadRequest = Message<"kusinta.iot.webrtc.v1.PropertyReadRequest"> & {
@@ -211,9 +214,27 @@ export declare type PropertyReadRequest = Message<"kusinta.iot.webrtc.v1.Propert
   attributeName: string;
 
   /**
-   * @generated from field: string cluster_id_hex = 3;
+   * e.g. 0x0201 for Thermostat
+   *
+   * @generated from field: uint32 cluster_id = 4;
    */
-  clusterIdHex: string;
+  clusterId: number;
+
+  /**
+   * Which endpoint to read. Required, for the same reason a command needs one: on a
+   * 4-channel actuator every channel carries the same attribute on the same cluster.
+   *
+   * @generated from field: optional uint32 endpoint_id = 5;
+   */
+  endpointId?: number | undefined;
+
+  /**
+   * Set to read a vendor parameter, naming the extension by its (vendor_extension) key.
+   * Absent means the Matter branch; cluster_id is unset when this is set.
+   *
+   * @generated from field: optional string vendor_extension = 6;
+   */
+  vendorExtension?: string | undefined;
 };
 
 /**

@@ -470,7 +470,6 @@ class DeviceCommand extends $pb.GeneratedMessage {
   factory DeviceCommand({
     $core.String? commandId,
     $0.DeviceId? deviceId,
-    $core.String? clusterIdHex,
     $core.String? commandName,
     ThermostatSetpointParams? thermostatSetpoint,
     LevelControlParams? levelControl,
@@ -479,12 +478,12 @@ class DeviceCommand extends $pb.GeneratedMessage {
     DoorLockParams? doorLock,
     ThermostatSetpointWriteParams? thermostatSetpointWrite,
     $core.int? endpointId,
+    $core.int? clusterId,
     $core.List<$core.int>? rawTlv,
   }) {
     final result = create();
     if (commandId != null) result.commandId = commandId;
     if (deviceId != null) result.deviceId = deviceId;
-    if (clusterIdHex != null) result.clusterIdHex = clusterIdHex;
     if (commandName != null) result.commandName = commandName;
     if (thermostatSetpoint != null)
       result.thermostatSetpoint = thermostatSetpoint;
@@ -496,6 +495,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     if (thermostatSetpointWrite != null)
       result.thermostatSetpointWrite = thermostatSetpointWrite;
     if (endpointId != null) result.endpointId = endpointId;
+    if (clusterId != null) result.clusterId = clusterId;
     if (rawTlv != null) result.rawTlv = rawTlv;
     return result;
   }
@@ -529,7 +529,6 @@ class DeviceCommand extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'commandId')
     ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
-    ..aOS(3, _omitFieldNames ? '' : 'clusterIdHex')
     ..aOS(4, _omitFieldNames ? '' : 'commandName')
     ..aOM<ThermostatSetpointParams>(
         5, _omitFieldNames ? '' : 'thermostatSetpoint',
@@ -547,6 +546,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
         10, _omitFieldNames ? '' : 'thermostatSetpointWrite',
         subBuilder: ThermostatSetpointWriteParams.create)
     ..a<$core.int>(11, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(12, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
     ..a<$core.List<$core.int>>(
         99, _omitFieldNames ? '' : 'rawTlv', $pb.PbFieldType.OY)
     ..hasRequiredFields = false;
@@ -596,92 +596,83 @@ class DeviceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $0.DeviceId ensureDeviceId() => $_ensure(1);
 
-  @$pb.TagNumber(3)
-  $core.String get clusterIdHex => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set clusterIdHex($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasClusterIdHex() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearClusterIdHex() => $_clearField(3);
-
   @$pb.TagNumber(4)
-  $core.String get commandName => $_getSZ(3);
+  $core.String get commandName => $_getSZ(2);
   @$pb.TagNumber(4)
-  set commandName($core.String value) => $_setString(3, value);
+  set commandName($core.String value) => $_setString(2, value);
   @$pb.TagNumber(4)
-  $core.bool hasCommandName() => $_has(3);
+  $core.bool hasCommandName() => $_has(2);
   @$pb.TagNumber(4)
   void clearCommandName() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  ThermostatSetpointParams get thermostatSetpoint => $_getN(4);
+  ThermostatSetpointParams get thermostatSetpoint => $_getN(3);
   @$pb.TagNumber(5)
   set thermostatSetpoint(ThermostatSetpointParams value) =>
       $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasThermostatSetpoint() => $_has(4);
+  $core.bool hasThermostatSetpoint() => $_has(3);
   @$pb.TagNumber(5)
   void clearThermostatSetpoint() => $_clearField(5);
   @$pb.TagNumber(5)
-  ThermostatSetpointParams ensureThermostatSetpoint() => $_ensure(4);
+  ThermostatSetpointParams ensureThermostatSetpoint() => $_ensure(3);
 
   @$pb.TagNumber(6)
-  LevelControlParams get levelControl => $_getN(5);
+  LevelControlParams get levelControl => $_getN(4);
   @$pb.TagNumber(6)
   set levelControl(LevelControlParams value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasLevelControl() => $_has(5);
+  $core.bool hasLevelControl() => $_has(4);
   @$pb.TagNumber(6)
   void clearLevelControl() => $_clearField(6);
   @$pb.TagNumber(6)
-  LevelControlParams ensureLevelControl() => $_ensure(5);
+  LevelControlParams ensureLevelControl() => $_ensure(4);
 
   @$pb.TagNumber(7)
-  OnOffParams get onOff => $_getN(6);
+  OnOffParams get onOff => $_getN(5);
   @$pb.TagNumber(7)
   set onOff(OnOffParams value) => $_setField(7, value);
   @$pb.TagNumber(7)
-  $core.bool hasOnOff() => $_has(6);
+  $core.bool hasOnOff() => $_has(5);
   @$pb.TagNumber(7)
   void clearOnOff() => $_clearField(7);
   @$pb.TagNumber(7)
-  OnOffParams ensureOnOff() => $_ensure(6);
+  OnOffParams ensureOnOff() => $_ensure(5);
 
   @$pb.TagNumber(8)
-  WindowCoveringLiftParams get windowCoveringLift => $_getN(7);
+  WindowCoveringLiftParams get windowCoveringLift => $_getN(6);
   @$pb.TagNumber(8)
   set windowCoveringLift(WindowCoveringLiftParams value) =>
       $_setField(8, value);
   @$pb.TagNumber(8)
-  $core.bool hasWindowCoveringLift() => $_has(7);
+  $core.bool hasWindowCoveringLift() => $_has(6);
   @$pb.TagNumber(8)
   void clearWindowCoveringLift() => $_clearField(8);
   @$pb.TagNumber(8)
-  WindowCoveringLiftParams ensureWindowCoveringLift() => $_ensure(7);
+  WindowCoveringLiftParams ensureWindowCoveringLift() => $_ensure(6);
 
   @$pb.TagNumber(9)
-  DoorLockParams get doorLock => $_getN(8);
+  DoorLockParams get doorLock => $_getN(7);
   @$pb.TagNumber(9)
   set doorLock(DoorLockParams value) => $_setField(9, value);
   @$pb.TagNumber(9)
-  $core.bool hasDoorLock() => $_has(8);
+  $core.bool hasDoorLock() => $_has(7);
   @$pb.TagNumber(9)
   void clearDoorLock() => $_clearField(9);
   @$pb.TagNumber(9)
-  DoorLockParams ensureDoorLock() => $_ensure(8);
+  DoorLockParams ensureDoorLock() => $_ensure(7);
 
   @$pb.TagNumber(10)
-  ThermostatSetpointWriteParams get thermostatSetpointWrite => $_getN(9);
+  ThermostatSetpointWriteParams get thermostatSetpointWrite => $_getN(8);
   @$pb.TagNumber(10)
   set thermostatSetpointWrite(ThermostatSetpointWriteParams value) =>
       $_setField(10, value);
   @$pb.TagNumber(10)
-  $core.bool hasThermostatSetpointWrite() => $_has(9);
+  $core.bool hasThermostatSetpointWrite() => $_has(8);
   @$pb.TagNumber(10)
   void clearThermostatSetpointWrite() => $_clearField(10);
   @$pb.TagNumber(10)
-  ThermostatSetpointWriteParams ensureThermostatSetpointWrite() => $_ensure(9);
+  ThermostatSetpointWriteParams ensureThermostatSetpointWrite() => $_ensure(8);
 
   /// Which endpoint of the device to command. Required: a device presents several
   /// endpoints and a command with no destination has no correct one — on a 4-channel
@@ -692,13 +683,22 @@ class DeviceCommand extends $pb.GeneratedMessage {
   /// invalid depending on the shape of its target is a rule that works until a device
   /// grows an endpoint.
   @$pb.TagNumber(11)
-  $core.int get endpointId => $_getIZ(10);
+  $core.int get endpointId => $_getIZ(9);
   @$pb.TagNumber(11)
-  set endpointId($core.int value) => $_setUnsignedInt32(10, value);
+  set endpointId($core.int value) => $_setUnsignedInt32(9, value);
   @$pb.TagNumber(11)
-  $core.bool hasEndpointId() => $_has(10);
+  $core.bool hasEndpointId() => $_has(9);
   @$pb.TagNumber(11)
   void clearEndpointId() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.int get clusterId => $_getIZ(10);
+  @$pb.TagNumber(12)
+  set clusterId($core.int value) => $_setUnsignedInt32(10, value);
+  @$pb.TagNumber(12)
+  $core.bool hasClusterId() => $_has(10);
+  @$pb.TagNumber(12)
+  void clearClusterId() => $_clearField(12);
 
   @$pb.TagNumber(99)
   $core.List<$core.int> get rawTlv => $_getN(11);

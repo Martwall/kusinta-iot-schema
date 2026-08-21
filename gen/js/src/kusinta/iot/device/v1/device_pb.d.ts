@@ -5,7 +5,7 @@
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ColorTemperatureLightProperties, ContactSensorProperties, DimmableLightProperties, DoorLockProperties, EnergySensorProperties, HumiditySensorProperties, OccupancySensorProperties, OnOffLightProperties, PowerSourceProperties, PressureSensorProperties, TemperatureSensorProperties, ThermostatProperties, WindowCoveringProperties } from "./properties_pb.js";
-import type { HomematicVendorExtension } from "../../vendor/homematic/v1/homematic_pb.js";
+import type { HmThermostatProps } from "../../vendor/homematic/v1/homematic_pb.js";
 import type { DeviceDescriptor } from "./descriptor_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
@@ -23,13 +23,10 @@ export declare const file_kusinta_iot_device_v1_device: GenFile;
  * Source. Endpoints are the only thing that buys; filing, ownership and DeviceId stay
  * per physical device, so a device is still one row, one claim, one placement.
  *
- * Which device type this endpoint presents is NOT here — it is
- * DeviceDescriptor.endpoints, the message both legs carry. One source of truth, so a
- * device's shape cannot disagree with its state.
+ * Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
+ * extensions.
  *
- * Field numbers: 1 identity, 2-49 standard Matter device types, 50-99 vendor extensions.
- *
- * endpoint_id is Matter's own endpoint number, matching an EndpointDescriptor. Endpoint 0 is the Matter root node and
+ * endpoint_id is Matter's own endpoint number. Endpoint 0 is the Matter root node and
  * carries BasicInformation, which DeviceDescriptor already holds — so 0 never appears
  * here and a producer emitting it is wrong. Device endpoints are 1..n.
  *
@@ -52,97 +49,105 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   endpointId: number;
 
   /**
+   * @generated from field: uint32 matter_device_type_id = 2;
+   */
+  matterDeviceTypeId: number;
+
+  /**
    * @generated from oneof kusinta.iot.device.v1.Endpoint.properties
    */
   properties: {
     /**
-     * @generated from field: kusinta.iot.device.v1.ThermostatProperties thermostat = 2;
+     * @generated from field: kusinta.iot.device.v1.ThermostatProperties thermostat = 3;
      */
     value: ThermostatProperties;
     case: "thermostat";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.TemperatureSensorProperties temperature_sensor = 3;
+     * @generated from field: kusinta.iot.device.v1.TemperatureSensorProperties temperature_sensor = 4;
      */
     value: TemperatureSensorProperties;
     case: "temperatureSensor";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.HumiditySensorProperties humidity_sensor = 4;
+     * @generated from field: kusinta.iot.device.v1.HumiditySensorProperties humidity_sensor = 5;
      */
     value: HumiditySensorProperties;
     case: "humiditySensor";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.OccupancySensorProperties occupancy_sensor = 5;
+     * @generated from field: kusinta.iot.device.v1.OccupancySensorProperties occupancy_sensor = 6;
      */
     value: OccupancySensorProperties;
     case: "occupancySensor";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.ContactSensorProperties contact_sensor = 6;
+     * @generated from field: kusinta.iot.device.v1.ContactSensorProperties contact_sensor = 7;
      */
     value: ContactSensorProperties;
     case: "contactSensor";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.WindowCoveringProperties window_covering = 7;
+     * @generated from field: kusinta.iot.device.v1.WindowCoveringProperties window_covering = 8;
      */
     value: WindowCoveringProperties;
     case: "windowCovering";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.DoorLockProperties door_lock = 8;
+     * @generated from field: kusinta.iot.device.v1.DoorLockProperties door_lock = 9;
      */
     value: DoorLockProperties;
     case: "doorLock";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.OnOffLightProperties on_off_light = 9;
+     * @generated from field: kusinta.iot.device.v1.OnOffLightProperties on_off_light = 10;
      */
     value: OnOffLightProperties;
     case: "onOffLight";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.DimmableLightProperties dimmable_light = 10;
+     * @generated from field: kusinta.iot.device.v1.DimmableLightProperties dimmable_light = 11;
      */
     value: DimmableLightProperties;
     case: "dimmableLight";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.ColorTemperatureLightProperties color_temp_light = 11;
+     * @generated from field: kusinta.iot.device.v1.ColorTemperatureLightProperties color_temp_light = 12;
      */
     value: ColorTemperatureLightProperties;
     case: "colorTempLight";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.EnergySensorProperties energy_sensor = 12;
+     * @generated from field: kusinta.iot.device.v1.EnergySensorProperties energy_sensor = 13;
      */
     value: EnergySensorProperties;
     case: "energySensor";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.PressureSensorProperties pressure_sensor = 13;
+     * @generated from field: kusinta.iot.device.v1.PressureSensorProperties pressure_sensor = 14;
      */
     value: PressureSensorProperties;
     case: "pressureSensor";
   } | {
     /**
-     * @generated from field: kusinta.iot.device.v1.PowerSourceProperties power_source = 14;
+     * @generated from field: kusinta.iot.device.v1.PowerSourceProperties power_source = 15;
      */
     value: PowerSourceProperties;
     case: "powerSource";
   } | { case: undefined; value?: undefined };
 
   /**
+   * Vendor readings for this endpoint, beside its Matter properties rather than instead
+   * of them. Vendor IDENTITY — who the physical device is — is on DeviceDescriptor.
+   *
    * @generated from oneof kusinta.iot.device.v1.Endpoint.vendor
    */
   vendor: {
     /**
-     * @generated from field: kusinta.iot.vendor.homematic.v1.HomematicVendorExtension homematic = 50;
+     * @generated from field: kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 50;
      */
-    value: HomematicVendorExtension;
-    case: "homematic";
+    value: HmThermostatProps;
+    case: "hmThermostat";
   } | { case: undefined; value?: undefined };
 };
 
@@ -153,17 +158,18 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
 export declare const EndpointSchema: GenMessage<Endpoint>;
 
 /**
- * Device is a DeviceDescriptor plus the state its endpoints report.
+ * Device is a DeviceDescriptor plus the endpoints it presents.
  *
- * The descriptor says which endpoints exist and what device type each presents; the
- * endpoints list here says what each has reported. They are keyed by the same
- * endpoint_id, and an endpoint may appear in the descriptor with no state yet.
+ * It travels on BOTH legs — a connector announces one with connector.v1.DeviceAnnouncement,
+ * and the gateway sends one to the app. One shape everywhere, so the endpoint list has a
+ * single home and nothing has to be kept in step with a parallel copy.
  *
- * Resolving an endpoint's device type to a properties case is read from the descriptor
- * via (matter_device_type), never hard-coded. property_update.proto states the rule
- * normatively; matter_options.proto defines the annotations.
+ * Resolving an endpoint's device type to a properties case is read from the descriptor via
+ * (matter_device_type), never hard-coded. property_update.proto states the rule normatively;
+ * matter_options.proto defines the annotations.
  *
- * An empty endpoints list means nothing typed has been reported yet. Keep the Device.
+ * An empty endpoints list means the device presents nothing this schema models, or has
+ * reported nothing yet. Keep the Device either way — it exists and belongs in a list.
  *
  * @generated from message kusinta.iot.device.v1.Device
  */
@@ -174,7 +180,7 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
   descriptor?: DeviceDescriptor | undefined;
 
   /**
-   * 14-19 are free; 20+ is the timestamp band.
+   * 15-19 are free; 20+ is the timestamp band.
    *
    * @generated from field: repeated kusinta.iot.device.v1.Endpoint endpoints = 14;
    */

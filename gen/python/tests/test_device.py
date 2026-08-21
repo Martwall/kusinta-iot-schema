@@ -38,7 +38,6 @@ def test_temperature_sensor_round_trip():
 def test_device_descriptor_round_trip():
     original = descriptor_pb2.DeviceDescriptor(
         device_id=identity_pb2.DeviceId(value="dev-001"),
-        matter_device_type_id=0x0301,
         vendor_name="eQ-3",
         product_name="HmIP-eTRV-2",
         ownership=types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY,
@@ -47,7 +46,6 @@ def test_device_descriptor_round_trip():
     decoded = descriptor_pb2.DeviceDescriptor()
     decoded.ParseFromString(original.SerializeToString())
     assert decoded.device_id.value == "dev-001"
-    assert decoded.matter_device_type_id == 0x0301
     assert decoded.vendor_name == "eQ-3"
     assert decoded.ownership == types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY
 
@@ -57,7 +55,7 @@ def test_property_update_int_value():
         device_id=identity_pb2.DeviceId(value="therm-1"),
         attribute_name="OccupiedHeatingSetpoint",
         int_value=2150,
-        cluster_id_hex="0201",
+        cluster_id=0x0201,
     )
     decoded = property_update_pb2.PropertyUpdate()
     decoded.ParseFromString(original.SerializeToString())
@@ -71,7 +69,7 @@ def test_property_update_bool_value():
         device_id=identity_pb2.DeviceId(value="light-1"),
         attribute_name="OnOff",
         bool_value=True,
-        cluster_id_hex="0006",
+        cluster_id=0x0006,
     )
     decoded = property_update_pb2.PropertyUpdate()
     decoded.ParseFromString(original.SerializeToString())
@@ -152,7 +150,7 @@ def test_property_update_provenance_defaults_to_unspecified():
         device_id=identity_pb2.DeviceId(value="therm-1"),
         attribute_name="OccupiedHeatingSetpoint",
         int_value=2150,
-        cluster_id_hex="0201",
+        cluster_id=0x0201,
     )
     assert update.provenance == property_update_pb2.VALUE_PROVENANCE_UNSPECIFIED
 
@@ -162,7 +160,7 @@ def test_property_update_provenance_optimistic_round_trips():
         device_id=identity_pb2.DeviceId(value="therm-1"),
         attribute_name="OccupiedHeatingSetpoint",
         int_value=2250,
-        cluster_id_hex="0201",
+        cluster_id=0x0201,
         provenance=property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC,
     )
     decoded = property_update_pb2.PropertyUpdate()
@@ -191,13 +189,13 @@ def test_property_update_provenance_survives_a_batch():
             property_update_pb2.PropertyUpdate(
                 attribute_name="OccupiedHeatingSetpoint",
                 int_value=2250,
-                cluster_id_hex="0201",
+                cluster_id=0x0201,
                 provenance=property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC,
             ),
             property_update_pb2.PropertyUpdate(
                 attribute_name="OccupiedHeatingSetpoint",
                 int_value=2150,
-                cluster_id_hex="0201",
+                cluster_id=0x0201,
                 provenance=property_update_pb2.VALUE_PROVENANCE_CORRECTED,
             ),
         ]

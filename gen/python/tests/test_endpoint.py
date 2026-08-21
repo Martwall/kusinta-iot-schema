@@ -41,29 +41,21 @@ def test_device_carries_two_endpoints_of_different_device_types():
         endpoints=[
             device_pb2.Endpoint(
                 endpoint_id=1,
+                matter_device_type_id=0x0301,
                 thermostat=properties_pb2.ThermostatProperties(local_temperature=2150),
             ),
             device_pb2.Endpoint(
                 endpoint_id=2,
+                matter_device_type_id=0x0307,
                 humidity_sensor=properties_pb2.HumiditySensorProperties(
                     measured_value=4500
                 ),
             ),
-        ],
-        descriptor=descriptor_pb2.DeviceDescriptor(
-            matter_device_type_id=0x0301,
-            endpoints=[
-                descriptor_pb2.EndpointDescriptor(endpoint_id=1, matter_device_type_id=0x0301),
-                descriptor_pb2.EndpointDescriptor(endpoint_id=2, matter_device_type_id=0x0307),
-            ],
-        ),
+        ]
     )
     decoded = device_pb2.Device()
     decoded.ParseFromString(device.SerializeToString())
-    assert [e.matter_device_type_id for e in decoded.descriptor.endpoints] == [
-        0x0301,
-        0x0307,
-    ]
+    assert [e.matter_device_type_id for e in decoded.endpoints] == [0x0301, 0x0307]
     assert decoded.endpoints[0].thermostat.local_temperature == 2150
     assert decoded.endpoints[1].humidity_sensor.measured_value == 4500
 
@@ -73,6 +65,7 @@ def test_four_endpoints_of_the_same_device_type_stay_distinguishable():
         endpoints=[
             device_pb2.Endpoint(
                 endpoint_id=n,
+                matter_device_type_id=0x0100,
                 on_off_light=properties_pb2.OnOffLightProperties(on_off=(n % 2 == 1)),
             )
             for n in (1, 2, 3, 4)
@@ -92,10 +85,12 @@ def test_power_source_is_its_own_endpoint():
         endpoints=[
             device_pb2.Endpoint(
                 endpoint_id=1,
+                matter_device_type_id=0x0301,
                 thermostat=properties_pb2.ThermostatProperties(local_temperature=2150),
             ),
             device_pb2.Endpoint(
                 endpoint_id=2,
+                matter_device_type_id=0x0011,
                 power_source=properties_pb2.PowerSourceProperties(
                     bat_percent_remaining=150,
                     bat_charge_level=1,
@@ -130,17 +125,14 @@ def test_power_source_fields_carry_the_power_source_cluster():
 def test_endpoint_carries_matter_properties_and_a_vendor_extension_at_once():
     endpoint = device_pb2.Endpoint(
         endpoint_id=1,
+        matter_device_type_id=0x0301,
         thermostat=properties_pb2.ThermostatProperties(local_temperature=2150),
-        homematic=homematic_pb2.HomematicVendorExtension(
-            homematic_address="MEQ1234567",
-            homematic_type="HmIP-eTRV-C",
-            hm_thermostat=homematic_pb2.HmThermostatProps(level=0.42),
-        ),
+        hm_thermostat=homematic_pb2.HmThermostatProps(level=0.42),
     )
     decoded = device_pb2.Endpoint()
     decoded.ParseFromString(endpoint.SerializeToString())
     assert decoded.thermostat.local_temperature == 2150
-    assert decoded.homematic.hm_thermostat.level == pytest.approx(0.42)
+    assert decoded.hm_thermostat.level == pytest.approx(0.42)
 
 
 def test_properties_and_vendor_are_separate_oneofs():
@@ -153,7 +145,7 @@ def test_properties_and_vendor_are_separate_oneofs():
         f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor"].fields
     }
     assert properties_fields.isdisjoint(vendor_fields)
-    assert "homematic" in vendor_fields
+    assert "hm_thermostat" in vendor_fields
 
 
 # --- PropertyUpdate addresses an endpoint -------------------------------------------
@@ -165,7 +157,7 @@ def test_property_update_carries_an_endpoint_id():
         endpoint_id=2,
         attribute_name="MeasuredValue",
         uint_value=4500,
-        cluster_id_hex="0405",
+        cluster_id=0x0405,
     )
     decoded = property_update_pb2.PropertyUpdate()
     decoded.ParseFromString(update.SerializeToString())
@@ -192,13 +184,10 @@ VENDOR_EXTENSIONS = [
 
 
 def vendor_fields_of(message_descriptor):
-    """Every field the vendor branch of the resolution rule can reach: the extension's
-    own fields plus those of any message nested in it. Derived, not listed, so a new
-    extension or a new props case is swept without anyone remembering to add it."""
-    for field in message_descriptor.fields:
-        yield field
-        if field.message_type is not None:
-            yield from vendor_fields_of(field.message_type)
+    """Every field the vendor branch can reach. Flat: a vendor message carried in
+    Endpoint.vendor holds its parameters directly, the same shape the Matter branch
+    matches against."""
+    return message_descriptor.fields
 
 
 def test_every_vendor_extension_declares_a_resolution_key():
@@ -220,16 +209,37 @@ def test_no_two_vendor_extensions_share_a_resolution_key():
 
 def test_homematic_declares_its_documented_key():
     assert (
-        homematic_pb2.HomematicVendorExtension.DESCRIPTOR.GetOptions().Extensions[
+        homematic_pb2.HmThermostatProps.DESCRIPTOR.GetOptions().Extensions[
             vendor_options_pb2.vendor_extension
         ]
-        == "homematic"
+        == "homematic.thermostat"
     )
 
 
-def test_vendor_parameter_fields_declare_a_vendor_attribute():
-    """Identity and container fields carry no reading, so they are exempt; every field
-    holding a value a device reports must be addressable."""
+def test_vendor_identity_lives_on_the_descriptor_not_the_endpoint():
+    """Address and model describe the physical device, so they must not be duplicated
+    onto every endpoint."""
+    descriptor = descriptor_pb2.DeviceDescriptor(
+        homematic=homematic_pb2.HomematicDeviceIdentity(
+            address="MEQ1234567", type="HmIP-eTRV-C"
+        )
+    )
+    decoded = descriptor_pb2.DeviceDescriptor()
+    decoded.ParseFromString(descriptor.SerializeToString())
+    assert decoded.homematic.address == "MEQ1234567"
+    assert "homematic" not in {f.name for f in device_pb2.Endpoint.DESCRIPTOR.fields}
+
+
+def test_every_vendor_parameter_field_declares_a_vendor_attribute():
+    """Vendor messages carry only readings now — identity moved to the descriptor — so
+    every field must be addressable."""
+    unannotated = [
+        f.full_name
+        for m in VENDOR_EXTENSIONS
+        for f in vendor_fields_of(m)
+        if not f.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+    ]
+    assert unannotated == []
     annotated = {
         field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
         for m in VENDOR_EXTENSIONS
@@ -255,25 +265,25 @@ def test_property_update_carries_a_vendor_extension_selector():
     update = property_update_pb2.PropertyUpdate(
         device_id=identity_pb2.DeviceId(value="valve-1"),
         endpoint_id=1,
-        vendor_extension="homematic",
+        vendor_extension="homematic.thermostat",
         attribute_name="LEVEL",
         float_value=0.42,
     )
     decoded = property_update_pb2.PropertyUpdate()
     decoded.ParseFromString(update.SerializeToString())
-    assert decoded.vendor_extension == "homematic"
+    assert decoded.vendor_extension == "homematic.thermostat"
     assert decoded.attribute_name == "LEVEL"
 
 
 def test_vendor_update_needs_no_cluster_id():
     update = property_update_pb2.PropertyUpdate(
-        endpoint_id=1, vendor_extension="homematic", attribute_name="LEVEL"
+        endpoint_id=1, vendor_extension="homematic.thermostat", attribute_name="LEVEL"
     )
-    assert update.cluster_id_hex == ""
+    assert not update.HasField("cluster_id")
 
 
 def test_matter_update_has_no_vendor_extension_set():
     update = property_update_pb2.PropertyUpdate(
-        endpoint_id=1, attribute_name="LocalTemperature", cluster_id_hex="0201"
+        endpoint_id=1, attribute_name="LocalTemperature", cluster_id=0x0201
     )
     assert not update.HasField("vendor_extension")

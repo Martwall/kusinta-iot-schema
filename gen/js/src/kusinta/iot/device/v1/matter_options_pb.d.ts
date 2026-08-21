@@ -15,8 +15,8 @@ export declare const file_kusinta_iot_device_v1_matter_options: GenFile;
  *
  * Required alongside matter_attribute because a properties message may span
  * clusters: DimmableLightProperties.on_off is On/Off (0x0006) while its
- * current_level is Level Control (0x0008). Matches PropertyUpdate.cluster_id_hex
- * parsed as a hex integer.
+ * current_level is Level Control (0x0008). Matches PropertyUpdate.cluster_id, which
+ * is a uint32 too, so the comparison needs no parsing.
  *
  * @generated from extension: uint32 matter_cluster_id = 50001;
  */

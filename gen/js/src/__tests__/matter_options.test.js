@@ -177,7 +177,7 @@ describe('device type resolution', () => {
   })
 
   it('annotates no device type on the vendor extension case', () => {
-    const homematic = EndpointSchema.fields.find((f) => f.name === 'homematic')
+    const homematic = EndpointSchema.fields.find((f) => f.name === 'hm_thermostat')
     expect(getOption(homematic.message, matter_device_type)).toEqual([])
   })
 

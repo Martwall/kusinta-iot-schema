@@ -6,7 +6,7 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identity_pb.js";
 import type { ConnectorTransport } from "../../common/v1/types_pb.js";
-import type { DeviceDescriptor } from "../../device/v1/descriptor_pb.js";
+import type { Device } from "../../device/v1/device_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { PropertyUpdateBatch } from "../../device/v1/property_update_pb.js";
 import type { DeviceCommand } from "../../webrtc/v1/command_pb.js";
@@ -69,9 +69,9 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
   info?: ConnectorInfo | undefined;
 
   /**
-   * @generated from field: repeated kusinta.iot.device.v1.DeviceDescriptor known_devices = 2;
+   * @generated from field: repeated kusinta.iot.device.v1.Device known_devices = 2;
    */
-  knownDevices: DeviceDescriptor[];
+  knownDevices: Device[];
 };
 
 /**
@@ -107,13 +107,20 @@ export declare type HandshakeAck = Message<"kusinta.iot.connector.v1.HandshakeAc
 export declare const HandshakeAckSchema: GenMessage<HandshakeAck>;
 
 /**
+ * A device the connector has found. Carries the full Device, not just its descriptor,
+ * because a device's endpoints are what say which Matter device types it presents — and
+ * without them the gateway cannot resolve any PropertyUpdate the device goes on to send.
+ *
+ * Properties may be unset on every endpoint; that means the device exists and has
+ * reported nothing yet, which is the normal state at announcement.
+ *
  * @generated from message kusinta.iot.connector.v1.DeviceAnnouncement
  */
 export declare type DeviceAnnouncement = Message<"kusinta.iot.connector.v1.DeviceAnnouncement"> & {
   /**
-   * @generated from field: kusinta.iot.device.v1.DeviceDescriptor descriptor = 1;
+   * @generated from field: kusinta.iot.device.v1.Device device = 2;
    */
-  descriptor?: DeviceDescriptor | undefined;
+  device?: Device | undefined;
 };
 
 /**

@@ -48,22 +48,23 @@ enum ValueProvenance {
 //     which is where that endpoint's Matter device type lives.
 //  2. Pick the message. Two branches, chosen by whether vendor_extension is set:
 //       - absent (Matter): the Endpoint.properties case whose message type declares
-//         (matter_device_type) == EndpointDescriptor.matter_device_type_id.
+//         (matter_device_type) == Endpoint.matter_device_type_id.
 //       - present (vendor): the Endpoint.vendor case whose message type declares
 //         (vendor_extension) == the update's vendor_extension.
 //  3. Pick the field:
-//       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id_hex
-//         parsed as a hex integer AND whose (matter_attribute) equals attribute_name.
-//       - Vendor branch: the one field whose (vendor_attribute) equals attribute_name,
-//         searching the whole extension message including its nested props messages.
-//         cluster_id_hex plays no part; a vendor parameter has no Matter cluster.
+//       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id AND
+//         whose (matter_attribute) equals attribute_name.
+//       - Vendor branch: the one field whose (vendor_attribute) equals attribute_name.
+//         cluster_id plays no part; a vendor parameter has no Matter cluster.
+//
+// Both branches are the same shape: pick a message by a message option, then one field by
+// a field option. Nothing nests, and nothing is searched recursively.
 //
 // Steps 2 and 3 depend only on the schema, never on the update: both maps are fixed at
-// compile time. Build them ONCE at startup — a device-type-to-case map, and a
-// (cluster, attribute) map per properties message — and resolve with lookups. Walking
+// compile time. Build them ONCE at startup — a device-type-to-case map and a vendor-key-to-
+// case map, plus a (cluster, attribute) map per message — and resolve with lookups. Walking
 // the descriptor per update costs ~30 option reads on the highest-volume message in this
-// schema, and the vendor branch's nested search costs more. Only step 1 reads per-device
-// data.
+// schema. Only step 1 reads per-device data.
 //
 // Writing the resolved field marks it present, which is how a snapshot distinguishes a
 // reported zero from an attribute the device has never sent. A consumer assembling a
@@ -77,7 +78,7 @@ enum ValueProvenance {
 // transformation reaches. See matter_options.proto.
 //
 // When any step resolves to nothing the update is not storable. A consumer MUST NOT
-// silently drop it: log it at warning with device_id, endpoint_id, cluster_id_hex and
+// silently drop it: log it at warning with device_id, endpoint_id, cluster_id and
 // attribute_name, and count it. A miss means the device reports an attribute this schema
 // does not model, the device type is not modelled at all (see device.proto), the endpoint
 // is unknown, or a producer is sending a name from neither spelling — all of which need
@@ -86,10 +87,10 @@ enum ValueProvenance {
 //
 // Producers: on the Matter branch, attribute_name uses the Matter attribute's own
 // PascalCase, acronyms included (e.g. "OccupiedHeatingSetpoint",
-// "PIROccupiedToUnoccupiedDelay"), and cluster_id_hex is the Matter cluster ID as a
-// 4-char hex string with no 0x prefix (e.g. "0201" for Thermostat). Both are required
-// there. On the vendor branch, set vendor_extension and attribute_name and leave
-// cluster_id_hex empty. endpoint_id is required on both.
+// "PIROccupiedToUnoccupiedDelay"), and cluster_id is the Matter cluster ID as a number
+// (0x0201 for Thermostat). Both are required there. On the vendor branch, set
+// vendor_extension and attribute_name and leave cluster_id unset. endpoint_id is
+// required on both.
 message PropertyUpdate {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
   string attribute_name = 2;
@@ -104,7 +105,11 @@ message PropertyUpdate {
   }
 
   google.protobuf.Timestamp timestamp = 9;
-  string cluster_id_hex = 10;
+
+  // Was cluster_id_hex, a 4-char hex string. Burned rather than reused: the type changed,
+  // and a stale string decoded as a varint would be silently wrong rather than failing.
+  reserved 10;
+  reserved "cluster_id_hex";
 
   // How much the producer believes this value. Unset means no claim, which is how every
   // producer written before this field behaved, so a consumer that ignores it and a
@@ -132,8 +137,18 @@ message PropertyUpdate {
   // its (vendor_extension) key — e.g. "homematic". Absent means the Matter branch, which
   // is what every update carried before this field existed.
   //
-  // A vendor parameter has no Matter cluster, so cluster_id_hex stays empty here.
+  // A vendor parameter has no Matter cluster, so cluster_id stays unset here.
   optional string vendor_extension = 13;
+
+  // The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat. Compared
+  // directly against (matter_cluster_id), which is a uint32 too — a hex string on the
+  // wire meant every consumer parsed it on every update just to compare it with a number
+  // the descriptor already held, and it invented questions the wire should not ask
+  // ("0201" vs "201" vs "0x0201", upper or lower case).
+  //
+  // Required on the Matter branch, unset on the vendor branch: a vendor parameter has no
+  // Matter cluster.
+  optional uint32 cluster_id = 14;
 }
 
 message PropertyUpdateBatch {

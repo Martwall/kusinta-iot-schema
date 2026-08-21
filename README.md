@@ -39,11 +39,15 @@ properties belonging to it — a wall thermostat is a Thermostat *and* a Humidit
 4-channel actuator is four On/Off Lights, a battery valve is also a Power Source. Filing and
 ownership stay per physical device: `DeviceId`, claiming and placement are unaffected.
 
-`DeviceDescriptor.endpoints` lists every endpoint and its device type — it is on the descriptor
-because that is the message both legs carry, so a connector states a device's shape when it
-announces it. `Device.endpoints` carries what each endpoint has *reported*, keyed by the same
-`endpoint_id`. `matter_device_type_id` is the device's *primary* type, the lowest-numbered
-entry in the list, for picking an icon without walking it.
+`Device.endpoints` is the single endpoint list: each entry carries an `endpoint_id`, the Matter
+device type it presents, and what it has reported. `Device` travels on **both** legs — a
+connector announces one with `DeviceAnnouncement` — so there is one shape everywhere and no
+parallel copy to keep in step.
+
+There is no primary-device-type field. It was derived data guarded by a rule, so an icon could
+disagree with the readings under it; compute it from the lowest-numbered endpoint where you
+need it. Vendor *identity* (a device's address and model in its vendor's terms) is on
+`DeviceDescriptor`; vendor *readings* are per endpoint.
 
 All device type IDs are Matter 1.5.1 `uint32` values.
 
@@ -96,16 +100,19 @@ files — together they would form a package import cycle.
 
 A `PropertyUpdate` resolves in three steps, all read from the descriptor:
 
-1. **Endpoint** — the `Device.endpoints` entry whose `endpoint_id` matches, and the
-   `DeviceDescriptor.endpoints` entry with the same id, which holds its device type. Required;
-   an unaddressed update is a miss, never defaulted to the primary endpoint.
+1. **Endpoint** — the `Device.endpoints` entry whose `endpoint_id` matches. Required; an
+   unaddressed update is a miss, never defaulted to the primary endpoint.
 2. **Message** — Matter branch (no `vendor_extension` set): the `Endpoint.properties` case whose
-   message declares `(matter_device_type) == EndpointDescriptor.matter_device_type_id`. Vendor
-   branch: the `Endpoint.vendor` case whose message declares the named `(vendor_extension)`.
+   message declares `(matter_device_type) == Endpoint.matter_device_type_id`. Vendor branch: the
+   `Endpoint.vendor` case whose message declares the named `(vendor_extension)`.
 3. **Field** — Matter branch: exact match on `(matter_cluster_id, matter_attribute)` against
-   `(cluster_id_hex, attribute_name)`. Vendor branch: exact match on `(vendor_attribute)` against
-   `attribute_name`, searching the whole extension message including nested props; no cluster
-   is involved.
+   `(cluster_id, attribute_name)`. Vendor branch: exact match on `(vendor_attribute)` against
+   `attribute_name`; no cluster is involved.
+
+Both branches are the same shape — pick a message by a message option, then one field by a
+field option. Nothing nests and nothing is searched recursively. Cluster IDs are `uint32` on
+the wire, matching the `(matter_cluster_id)` annotation, so no parsing stands between an update
+and the comparison.
 
 Steps 2 and 3 are fixed by the schema, not by the update. Build both maps **once at startup**
 and resolve with lookups; walking the descriptor per update is ~30 option reads on the

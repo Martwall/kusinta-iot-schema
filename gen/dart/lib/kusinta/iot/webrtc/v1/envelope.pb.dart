@@ -515,16 +515,22 @@ class SubscriptionAck extends $pb.GeneratedMessage {
   $pb.PbList<RefusedSubscription> get refused => $_getList(2);
 }
 
+/// Reads one attribute of one endpoint. Addressed exactly as device.v1.PropertyUpdate is,
+/// so a read and the update answering it name the same thing the same way.
 class PropertyReadRequest extends $pb.GeneratedMessage {
   factory PropertyReadRequest({
     $0.DeviceId? deviceId,
     $core.String? attributeName,
-    $core.String? clusterIdHex,
+    $core.int? clusterId,
+    $core.int? endpointId,
+    $core.String? vendorExtension,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
     if (attributeName != null) result.attributeName = attributeName;
-    if (clusterIdHex != null) result.clusterIdHex = clusterIdHex;
+    if (clusterId != null) result.clusterId = clusterId;
+    if (endpointId != null) result.endpointId = endpointId;
+    if (vendorExtension != null) result.vendorExtension = vendorExtension;
     return result;
   }
 
@@ -545,7 +551,9 @@ class PropertyReadRequest extends $pb.GeneratedMessage {
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
     ..aOS(2, _omitFieldNames ? '' : 'attributeName')
-    ..aOS(3, _omitFieldNames ? '' : 'clusterIdHex')
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
+    ..aOS(6, _omitFieldNames ? '' : 'vendorExtension')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -589,14 +597,36 @@ class PropertyReadRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearAttributeName() => $_clearField(2);
 
-  @$pb.TagNumber(3)
-  $core.String get clusterIdHex => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set clusterIdHex($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasClusterIdHex() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearClusterIdHex() => $_clearField(3);
+  @$pb.TagNumber(4)
+  $core.int get clusterId => $_getIZ(2);
+  @$pb.TagNumber(4)
+  set clusterId($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasClusterId() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearClusterId() => $_clearField(4);
+
+  /// Which endpoint to read. Required, for the same reason a command needs one: on a
+  /// 4-channel actuator every channel carries the same attribute on the same cluster.
+  @$pb.TagNumber(5)
+  $core.int get endpointId => $_getIZ(3);
+  @$pb.TagNumber(5)
+  set endpointId($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(5)
+  $core.bool hasEndpointId() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearEndpointId() => $_clearField(5);
+
+  /// Set to read a vendor parameter, naming the extension by its (vendor_extension) key.
+  /// Absent means the Matter branch; cluster_id is unset when this is set.
+  @$pb.TagNumber(6)
+  $core.String get vendorExtension => $_getSZ(4);
+  @$pb.TagNumber(6)
+  set vendorExtension($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(6)
+  $core.bool hasVendorExtension() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearVendorExtension() => $_clearField(6);
 }
 
 /// Session-level error, gateway → app. Mirrors connector.v1.GatewayError

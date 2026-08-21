@@ -1,7 +1,12 @@
 from kusinta.iot.connector.v1 import connector_pb2
 from kusinta.iot.common.v1 import types_pb2
 from kusinta.iot.identity.v1 import identity_pb2
-from kusinta.iot.device.v1 import descriptor_pb2, property_update_pb2
+from kusinta.iot.device.v1 import (
+    descriptor_pb2,
+    device_pb2,
+    properties_pb2,
+    property_update_pb2,
+)
 
 
 def test_connector_handshake_round_trip():
@@ -16,9 +21,13 @@ def test_connector_handshake_round_trip():
     handshake = connector_pb2.ConnectorHandshake(
         info=info,
         known_devices=[
-            descriptor_pb2.DeviceDescriptor(
-                device_id=identity_pb2.DeviceId(value="dev-1"),
-                matter_device_type_id=0x0301,
+            device_pb2.Device(
+                descriptor=descriptor_pb2.DeviceDescriptor(
+                    device_id=identity_pb2.DeviceId(value="dev-1"),
+                ),
+                endpoints=[
+                    device_pb2.Endpoint(endpoint_id=1, matter_device_type_id=0x0301),
+                ],
             )
         ],
     )
@@ -27,7 +36,8 @@ def test_connector_handshake_round_trip():
     assert decoded.info.connector_id.value == "homematic-ccu3"
     assert decoded.info.transport == types_pb2.CONNECTOR_TRANSPORT_UNIX_SOCKET
     assert len(decoded.known_devices) == 1
-    assert decoded.known_devices[0].device_id.value == "dev-1"
+    assert decoded.known_devices[0].descriptor.device_id.value == "dev-1"
+    assert decoded.known_devices[0].endpoints[0].matter_device_type_id == 0x0301
 
 
 def test_handshake_ack_accepted():
@@ -76,7 +86,7 @@ def test_connector_to_gateway_property_update_payload():
                 device_id=identity_pb2.DeviceId(value="dev-1"),
                 attribute_name="OccupiedHeatingSetpoint",
                 int_value=2150,
-                cluster_id_hex="0201",
+                cluster_id=0x0201,
             )
         ]
     )
@@ -103,3 +113,38 @@ def test_gateway_to_connector_handshake_ack():
     decoded.ParseFromString(msg.SerializeToString())
     assert decoded.WhichOneof("payload") == "handshake_ack"
     assert decoded.handshake_ack.accepted is True
+
+
+def test_device_announcement_carries_endpoints_not_just_a_descriptor():
+    """A connector announcing a device must be able to say which Matter device types it
+    presents — otherwise the gateway cannot resolve any update the device sends."""
+    announcement = connector_pb2.DeviceAnnouncement(
+        device=device_pb2.Device(
+            descriptor=descriptor_pb2.DeviceDescriptor(
+                device_id=identity_pb2.DeviceId(value="wall-therm-1"),
+            ),
+            endpoints=[
+                device_pb2.Endpoint(endpoint_id=1, matter_device_type_id=0x0301),
+                device_pb2.Endpoint(endpoint_id=2, matter_device_type_id=0x0307),
+                device_pb2.Endpoint(endpoint_id=3, matter_device_type_id=0x0011),
+            ],
+        )
+    )
+    decoded = connector_pb2.DeviceAnnouncement()
+    decoded.ParseFromString(announcement.SerializeToString())
+    assert [e.matter_device_type_id for e in decoded.device.endpoints] == [
+        0x0301,
+        0x0307,
+        0x0011,
+    ]
+
+
+def test_announced_endpoints_may_carry_no_readings_yet():
+    announcement = connector_pb2.DeviceAnnouncement(
+        device=device_pb2.Device(
+            endpoints=[device_pb2.Endpoint(endpoint_id=1, matter_device_type_id=0x0301)]
+        )
+    )
+    decoded = connector_pb2.DeviceAnnouncement()
+    decoded.ParseFromString(announcement.SerializeToString())
+    assert decoded.device.endpoints[0].WhichOneof("properties") is None

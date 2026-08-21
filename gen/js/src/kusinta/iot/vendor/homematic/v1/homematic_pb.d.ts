@@ -11,13 +11,48 @@ import type { Message } from "@bufbuild/protobuf";
 export declare const file_kusinta_iot_vendor_homematic_v1_homematic: GenFile;
 
 /**
- * HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
- * Add new fields at the next available field number — never reuse a removed number.
+ * Who a HomeMatic device is, in its own terms. Identity, not readings — it describes the
+ * physical device, so it hangs off device.v1.DeviceDescriptor rather than off any one
+ * endpoint.
+ *
+ * @generated from message kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity
+ */
+export declare type HomematicDeviceIdentity = Message<"kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity"> & {
+  /**
+   * upstream device address, e.g. "MEQ1234567"
+   *
+   * @generated from field: string address = 1;
+   */
+  address: string;
+
+  /**
+   * aiohomematic device type string, e.g. "HmIP-eTRV-C"
+   *
+   * @generated from field: string type = 2;
+   */
+  type: string;
+};
+
+/**
+ * Describes the message kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity.
+ * Use `create(HomematicDeviceIdentitySchema)` to create a new message.
+ */
+export declare const HomematicDeviceIdentitySchema: GenMessage<HomematicDeviceIdentity>;
+
+/**
+ * HomeMatic thermostat parameters with no Matter equivalent, carried on the same endpoint
+ * as that thermostat's Matter properties rather than instead of them.
+ *
+ * Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
+ * PowerSource cluster, which every battery device from every technology needs, so they
+ * belong on a Power Source endpoint. See device/v1/properties.proto.
  *
  * Every field is `optional`, for the same reason as device/v1/properties.proto: these are
  * assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
  * false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
  * reported; present means a reading, including zero.
+ *
+ * Add new fields at the next available number — never reuse a removed one.
  *
  * @generated from message kusinta.iot.vendor.homematic.v1.HmThermostatProps
  */
@@ -74,48 +109,4 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
  * Use `create(HmThermostatPropsSchema)` to create a new message.
  */
 export declare const HmThermostatPropsSchema: GenMessage<HmThermostatProps>;
-
-/**
- * Top-level vendor extension, carried on Endpoint.vendor beside the endpoint's typed
- * Matter properties rather than instead of them.
- *
- * Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
- * PowerSource cluster, which every battery device from every technology needs — they
- * belong on a Power Source endpoint, not in a vendor message. See
- * device/v1/properties.proto.
- *
- * @generated from message kusinta.iot.vendor.homematic.v1.HomematicVendorExtension
- */
-export declare type HomematicVendorExtension = Message<"kusinta.iot.vendor.homematic.v1.HomematicVendorExtension"> & {
-  /**
-   * upstream device address, e.g. "MEQ1234567"
-   *
-   * @generated from field: string homematic_address = 1;
-   */
-  homematicAddress: string;
-
-  /**
-   * aiohomematic device type string, e.g. "HmIP-eTRV-C"
-   *
-   * @generated from field: string homematic_type = 2;
-   */
-  homematicType: string;
-
-  /**
-   * @generated from oneof kusinta.iot.vendor.homematic.v1.HomematicVendorExtension.homematic_props
-   */
-  homematicProps: {
-    /**
-     * @generated from field: kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 10;
-     */
-    value: HmThermostatProps;
-    case: "hmThermostat";
-  } | { case: undefined; value?: undefined };
-};
-
-/**
- * Describes the message kusinta.iot.vendor.homematic.v1.HomematicVendorExtension.
- * Use `create(HomematicVendorExtensionSchema)` to create a new message.
- */
-export declare const HomematicVendorExtensionSchema: GenMessage<HomematicVendorExtension>;
 

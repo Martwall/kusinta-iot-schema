@@ -14,26 +14,6 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use endpointDescriptorDescriptor instead')
-const EndpointDescriptor$json = {
-  '1': 'EndpointDescriptor',
-  '2': [
-    {'1': 'endpoint_id', '3': 1, '4': 1, '5': 13, '10': 'endpointId'},
-    {
-      '1': 'matter_device_type_id',
-      '3': 2,
-      '4': 1,
-      '5': 13,
-      '10': 'matterDeviceTypeId'
-    },
-  ],
-};
-
-/// Descriptor for `EndpointDescriptor`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List endpointDescriptorDescriptor = $convert.base64Decode(
-    'ChJFbmRwb2ludERlc2NyaXB0b3ISHwoLZW5kcG9pbnRfaWQYASABKA1SCmVuZHBvaW50SWQSMQ'
-    'oVbWF0dGVyX2RldmljZV90eXBlX2lkGAIgASgNUhJtYXR0ZXJEZXZpY2VUeXBlSWQ=');
-
 @$core.Deprecated('Use deviceDescriptorDescriptor instead')
 const DeviceDescriptor$json = {
   '1': 'DeviceDescriptor',
@@ -45,13 +25,6 @@ const DeviceDescriptor$json = {
       '5': 11,
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'deviceId'
-    },
-    {
-      '1': 'matter_device_type_id',
-      '3': 2,
-      '4': 1,
-      '5': 13,
-      '10': 'matterDeviceTypeId'
     },
     {'1': 'vendor_name', '3': 3, '4': 1, '5': 9, '10': 'vendorName'},
     {'1': 'product_name', '3': 4, '4': 1, '5': 9, '10': 'productName'},
@@ -122,32 +95,42 @@ const DeviceDescriptor$json = {
       '10': 'claimedAt'
     },
     {
-      '1': 'endpoints',
-      '3': 17,
-      '4': 3,
+      '1': 'homematic',
+      '3': 18,
+      '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.device.v1.EndpointDescriptor',
-      '10': 'endpoints'
+      '6': '.kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity',
+      '9': 0,
+      '10': 'homematic'
     },
   ],
+  '8': [
+    {'1': 'vendor_identity'},
+  ],
+  '9': [
+    {'1': 2, '2': 3},
+    {'1': 17, '2': 18},
+  ],
+  '10': ['matter_device_type_id', 'endpoints'],
 };
 
 /// Descriptor for `DeviceDescriptor`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deviceDescriptorDescriptor = $convert.base64Decode(
     'ChBEZXZpY2VEZXNjcmlwdG9yEj4KCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW'
-    '50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBIxChVtYXR0ZXJfZGV2aWNlX3R5cGVfaWQYAiAB'
-    'KA1SEm1hdHRlckRldmljZVR5cGVJZBIfCgt2ZW5kb3JfbmFtZRgDIAEoCVIKdmVuZG9yTmFtZR'
-    'IhCgxwcm9kdWN0X25hbWUYBCABKAlSC3Byb2R1Y3ROYW1lEiMKDXNlcmlhbF9udW1iZXIYBSAB'
-    'KAlSDHNlcmlhbE51bWJlchIdCgpub2RlX2xhYmVsGAYgASgJUglub2RlTGFiZWwSGwoJdmVuZG'
-    '9yX2lkGAcgASgNUgh2ZW5kb3JJZBIdCgpwcm9kdWN0X2lkGAggASgNUglwcm9kdWN0SWQSNgoX'
-    'aGFyZHdhcmVfdmVyc2lvbl9zdHJpbmcYCSABKAlSFWhhcmR3YXJlVmVyc2lvblN0cmluZxI2Ch'
-    'dzb2Z0d2FyZV92ZXJzaW9uX3N0cmluZxgKIAEoCVIVc29mdHdhcmVWZXJzaW9uU3RyaW5nEkcK'
-    'DGNvbm5lY3Rvcl9pZBgLIAEoCzIkLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkNvbm5lY3Rvck'
-    'lkUgtjb25uZWN0b3JJZBI7CghzcGFjZV9pZBgMIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5'
-    'LnYxLlNwYWNlSWRSB3NwYWNlSWQSSAoJb3duZXJzaGlwGA0gASgOMioua3VzaW50YS5pb3QuY2'
-    '9tbW9uLnYxLkRldmljZU93bmVyc2hpcFR5cGVSCW93bmVyc2hpcBJJCglsaWZlY3ljbGUYDiAB'
-    'KA4yKy5rdXNpbnRhLmlvdC5jb21tb24udjEuRGV2aWNlTGlmZWN5Y2xlU3RhdGVSCWxpZmVjeW'
-    'NsZRJDCg1vd25lcl91c2VyX2lkGA8gASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNl'
-    'cklkUgtvd25lclVzZXJJZBI5CgpjbGFpbWVkX2F0GBAgASgLMhouZ29vZ2xlLnByb3RvYnVmLl'
-    'RpbWVzdGFtcFIJY2xhaW1lZEF0EkcKCWVuZHBvaW50cxgRIAMoCzIpLmt1c2ludGEuaW90LmRl'
-    'dmljZS52MS5FbmRwb2ludERlc2NyaXB0b3JSCWVuZHBvaW50cw==');
+    '50aXR5LnYxLkRldmljZUlkUghkZXZpY2VJZBIfCgt2ZW5kb3JfbmFtZRgDIAEoCVIKdmVuZG9y'
+    'TmFtZRIhCgxwcm9kdWN0X25hbWUYBCABKAlSC3Byb2R1Y3ROYW1lEiMKDXNlcmlhbF9udW1iZX'
+    'IYBSABKAlSDHNlcmlhbE51bWJlchIdCgpub2RlX2xhYmVsGAYgASgJUglub2RlTGFiZWwSGwoJ'
+    'dmVuZG9yX2lkGAcgASgNUgh2ZW5kb3JJZBIdCgpwcm9kdWN0X2lkGAggASgNUglwcm9kdWN0SW'
+    'QSNgoXaGFyZHdhcmVfdmVyc2lvbl9zdHJpbmcYCSABKAlSFWhhcmR3YXJlVmVyc2lvblN0cmlu'
+    'ZxI2Chdzb2Z0d2FyZV92ZXJzaW9uX3N0cmluZxgKIAEoCVIVc29mdHdhcmVWZXJzaW9uU3RyaW'
+    '5nEkcKDGNvbm5lY3Rvcl9pZBgLIAEoCzIkLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkNvbm5l'
+    'Y3RvcklkUgtjb25uZWN0b3JJZBI7CghzcGFjZV9pZBgMIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
+    '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSSAoJb3duZXJzaGlwGA0gASgOMioua3VzaW50YS5p'
+    'b3QuY29tbW9uLnYxLkRldmljZU93bmVyc2hpcFR5cGVSCW93bmVyc2hpcBJJCglsaWZlY3ljbG'
+    'UYDiABKA4yKy5rdXNpbnRhLmlvdC5jb21tb24udjEuRGV2aWNlTGlmZWN5Y2xlU3RhdGVSCWxp'
+    'ZmVjeWNsZRJDCg1vd25lcl91c2VyX2lkGA8gASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
+    'EuVXNlcklkUgtvd25lclVzZXJJZBI5CgpjbGFpbWVkX2F0GBAgASgLMhouZ29vZ2xlLnByb3Rv'
+    'YnVmLlRpbWVzdGFtcFIJY2xhaW1lZEF0ElgKCWhvbWVtYXRpYxgSIAEoCzI4Lmt1c2ludGEuaW'
+    '90LnZlbmRvci5ob21lbWF0aWMudjEuSG9tZW1hdGljRGV2aWNlSWRlbnRpdHlIAFIJaG9tZW1h'
+    'dGljQhEKD3ZlbmRvcl9pZGVudGl0eUoECAIQA0oECBEQElIVbWF0dGVyX2RldmljZV90eXBlX2'
+    'lkUgllbmRwb2ludHM=');

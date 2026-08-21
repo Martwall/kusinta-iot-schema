@@ -2,10 +2,11 @@
 import { describe, it, expect } from 'vitest'
 import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
 import {
-  HomematicVendorExtensionSchema,
+  HomematicDeviceIdentitySchema,
   HmThermostatPropsSchema,
 } from '../kusinta/iot/vendor/homematic/v1/homematic_pb.js'
 import { EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
+import { DeviceDescriptorSchema } from '../kusinta/iot/device/v1/descriptor_pb.js'
 
 describe('HmThermostatProps', () => {
   it('round-trips boost_mode and control_mode', () => {
@@ -20,47 +21,40 @@ describe('HmThermostatProps', () => {
   })
 })
 
-describe('HomematicVendorExtension', () => {
-  it('round-trips homematic_address and thermostat props', () => {
-    const ext = create(HomematicVendorExtensionSchema, {
-      homematicAddress: 'MEQ1234567',
-      homematicType: 'HmIP-eTRV-2',
-      homematicProps: { case: 'hmThermostat', value: { boostMode: false, controlMode: 1, currentProfilePeriod: 3.0 } },
+describe('HomematicDeviceIdentity', () => {
+  it('lives on the descriptor, describing the physical device', () => {
+    const d = create(DeviceDescriptorSchema, {
+      deviceId: { value: 'valve-1' },
+      vendorIdentity: { case: 'homematic', value: { address: 'MEQ1234567', type: 'HmIP-eTRV-2' } },
     })
-    const decoded = fromBinary(HomematicVendorExtensionSchema, toBinary(HomematicVendorExtensionSchema, ext))
-    expect(decoded.homematicAddress).toBe('MEQ1234567')
-    expect(decoded.homematicType).toBe('HmIP-eTRV-2')
-    expect(decoded.homematicProps?.case).toBe('hmThermostat')
-    if (decoded.homematicProps?.case === 'hmThermostat') {
-      expect(decoded.homematicProps.value.controlMode).toBe(1)
+    const decoded = fromBinary(DeviceDescriptorSchema, toBinary(DeviceDescriptorSchema, d))
+    expect(decoded.vendorIdentity?.case).toBe('homematic')
+    if (decoded.vendorIdentity?.case === 'homematic') {
+      expect(decoded.vendorIdentity.value.address).toBe('MEQ1234567')
     }
   })
 
+  it('is not duplicated onto endpoints', () => {
+    const names = EndpointSchema.fields.map((f) => f.name)
+    expect(names).not.toContain('homematic_address')
+    expect(names).not.toContain('homematic')
+  })
 })
 
-describe('Endpoint with HomematicVendorExtension (field 50)', () => {
-  it('carries the vendor extension alongside typed Matter properties', () => {
+describe('Endpoint vendor props', () => {
+  it('carries vendor readings alongside typed Matter properties', () => {
     const e = create(EndpointSchema, {
       endpointId: 1,
+      matterDeviceTypeId: 0x0301,
       properties: { case: 'thermostat', value: { localTemperature: 2150 } },
-      vendor: {
-        case: 'homematic',
-        value: {
-          homematicAddress: 'MEQ1234567',
-          homematicType: 'HmIP-eTRV-2',
-          homematicProps: { case: 'hmThermostat', value: { controlMode: 2, level: 0.5 } },
-        },
-      },
+      vendor: { case: 'hmThermostat', value: { controlMode: 2, level: 0.5 } },
     })
     const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
     expect(decoded.properties?.case).toBe('thermostat')
-    expect(decoded.vendor?.case).toBe('homematic')
-    if (decoded.vendor?.case === 'homematic') {
-      expect(decoded.vendor.value.homematicAddress).toBe('MEQ1234567')
-      if (decoded.vendor.value.homematicProps?.case === 'hmThermostat') {
-        expect(decoded.vendor.value.homematicProps.value.level).toBe(0.5)
-      }
+    expect(decoded.vendor?.case).toBe('hmThermostat')
+    if (decoded.vendor?.case === 'hmThermostat') {
+      expect(decoded.vendor.value.level).toBe(0.5)
+      expect(decoded.vendor.value.controlMode).toBe(2)
     }
   })
-
 })

@@ -86,14 +86,18 @@ class SubscriptionAck(_message.Message):
     def __init__(self, in_reply_to: _Optional[str] = ..., subscribed: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., refused: _Optional[_Iterable[_Union[RefusedSubscription, _Mapping]]] = ...) -> None: ...
 
 class PropertyReadRequest(_message.Message):
-    __slots__ = ("device_id", "attribute_name", "cluster_id_hex")
+    __slots__ = ("device_id", "attribute_name", "cluster_id", "endpoint_id", "vendor_extension")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
-    CLUSTER_ID_HEX_FIELD_NUMBER: _ClassVar[int]
+    CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
+    VENDOR_EXTENSION_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     attribute_name: str
-    cluster_id_hex: str
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., cluster_id_hex: _Optional[str] = ...) -> None: ...
+    cluster_id: int
+    endpoint_id: int
+    vendor_extension: str
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ...) -> None: ...
 
 class GatewayError(_message.Message):
     __slots__ = ("code", "message", "metadata")

@@ -25,12 +25,11 @@ describe('Role and PermissionAction enums', () => {
 describe('PropertyConstraint — property-owner setpoint limits', () => {
   it('round-trips int_max constraint for MaxHeatSetpointLimit', () => {
     const c = create(PropertyConstraintSchema, {
-      attributeName: 'MaxHeatSetpointLimit',
+      attribute: { attributeName: 'MaxHeatSetpointLimit', clusterId: 0x0201 },
       constraint: { case: 'intMax', value: 2200 },
-      clusterIdHex: '0201',
     })
     const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
-    expect(decoded.attributeName).toBe('MaxHeatSetpointLimit')
+    expect(decoded.attribute?.attributeName).toBe('MaxHeatSetpointLimit')
     expect(decoded.constraint?.case).toBe('intMax')
     if (decoded.constraint?.case === 'intMax') {
       expect(decoded.constraint.value).toBe(2200)
@@ -39,9 +38,8 @@ describe('PropertyConstraint — property-owner setpoint limits', () => {
 
   it('round-trips int_min constraint for MinHeatSetpointLimit', () => {
     const c = create(PropertyConstraintSchema, {
-      attributeName: 'MinHeatSetpointLimit',
+      attribute: { attributeName: 'MinHeatSetpointLimit', clusterId: 0x0201 },
       constraint: { case: 'intMin', value: 1600 },
-      clusterIdHex: '0201',
     })
     const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
     expect(decoded.constraint?.case).toBe('intMin')
@@ -52,9 +50,8 @@ describe('PropertyConstraint — property-owner setpoint limits', () => {
 
   it('round-trips uint_max constraint', () => {
     const c = create(PropertyConstraintSchema, {
-      attributeName: 'CurrentLevel',
+      attribute: { attributeName: 'CurrentLevel', clusterId: 0x0008 },
       constraint: { case: 'uintMax', value: 200 },
-      clusterIdHex: '0008',
     })
     const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
     expect(decoded.constraint?.case).toBe('uintMax')
@@ -69,19 +66,17 @@ describe('DeviceAcl', () => {
       role: Role.RESIDENT,
       allowedActions: [PermissionAction.READ, PermissionAction.WRITE],
       allowedAttributeRefs: [
-        { attributeName: 'OccupiedHeatingSetpoint', clusterIdHex: '0201', endpointId: 1 },
-        { attributeName: 'LocalTemperature', clusterIdHex: '0201', endpointId: 1 },
+        { attributeName: 'OccupiedHeatingSetpoint', clusterId: 0x0201, endpointId: 1 },
+        { attributeName: 'LocalTemperature', clusterId: 0x0201, endpointId: 1 },
       ],
       propertyConstraints: [
         {
-          attributeName: 'OccupiedHeatingSetpoint',
+          attribute: { attributeName: 'OccupiedHeatingSetpoint', clusterId: 0x0201 },
           constraint: { case: 'intMax', value: 2200 },
-          clusterIdHex: '0201',
         },
         {
-          attributeName: 'OccupiedHeatingSetpoint',
+          attribute: { attributeName: 'OccupiedHeatingSetpoint', clusterId: 0x0201 },
           constraint: { case: 'intMin', value: 1600 },
-          clusterIdHex: '0201',
         },
       ],
     })
@@ -147,12 +142,12 @@ describe('AttributeRef — per-endpoint grants', () => {
       userId: { value: 'user-1' },
       role: Role.RESIDENT,
       allowedAttributeRefs: [
-        { attributeName: 'MeasuredValue', clusterIdHex: '0402', endpointId: 2 },
-        { attributeName: 'MeasuredValue', clusterIdHex: '0405', endpointId: 3 },
+        { attributeName: 'MeasuredValue', clusterId: 0x0402, endpointId: 2 },
+        { attributeName: 'MeasuredValue', clusterId: 0x0405, endpointId: 3 },
       ],
     })
     const decoded = fromBinary(DeviceAclSchema, toBinary(DeviceAclSchema, acl))
-    expect(decoded.allowedAttributeRefs.map((r) => r.clusterIdHex)).toEqual(['0402', '0405'])
+    expect(decoded.allowedAttributeRefs.map((r) => r.clusterId)).toEqual([0x0402, 0x0405])
     expect(decoded.allowedAttributeRefs.map((r) => r.endpointId)).toEqual([2, 3])
   })
 })
@@ -160,22 +155,19 @@ describe('AttributeRef — per-endpoint grants', () => {
 describe('PropertyConstraint — endpoint scope', () => {
   it('leaves endpoint_id absent to bound every endpoint', () => {
     const c = create(PropertyConstraintSchema, {
-      attributeName: 'OccupiedHeatingSetpoint',
-      clusterIdHex: '0201',
+      attribute: { attributeName: 'OccupiedHeatingSetpoint', clusterId: 0x0201 },
       constraint: { case: 'intMax', value: 2200 },
     })
     const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
-    expect(decoded.endpointId).toBeUndefined()
+    expect(decoded.attribute?.endpointId).toBeUndefined()
   })
 
   it('bounds a single endpoint when one is named', () => {
     const c = create(PropertyConstraintSchema, {
-      attributeName: 'OccupiedHeatingSetpoint',
-      clusterIdHex: '0201',
-      endpointId: 1,
+      attribute: { attributeName: 'OccupiedHeatingSetpoint', clusterId: 0x0201, endpointId: 1 },
       constraint: { case: 'intMax', value: 2200 },
     })
     const decoded = fromBinary(PropertyConstraintSchema, toBinary(PropertyConstraintSchema, c))
-    expect(decoded.endpointId).toBe(1)
+    expect(decoded.attribute?.endpointId).toBe(1)
   })
 })

@@ -58,7 +58,6 @@ const PropertyUpdate$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'timestamp'
     },
-    {'1': 'cluster_id_hex', '3': 10, '4': 1, '5': 9, '10': 'clusterIdHex'},
     {
       '1': 'provenance',
       '3': 11,
@@ -85,12 +84,26 @@ const PropertyUpdate$json = {
       '10': 'vendorExtension',
       '17': true
     },
+    {
+      '1': 'cluster_id',
+      '3': 14,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'clusterId',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'value'},
     {'1': '_endpoint_id'},
     {'1': '_vendor_extension'},
+    {'1': '_cluster_id'},
   ],
+  '9': [
+    {'1': 10, '2': 11},
+  ],
+  '10': ['cluster_id_hex'],
 };
 
 /// Descriptor for `PropertyUpdate`. Decode as a `google.protobuf.DescriptorProto`.
@@ -101,12 +114,12 @@ final $typed_data.Uint8List propertyUpdateDescriptor = $convert.base64Decode(
     'ABKA1IAFIJdWludFZhbHVlEh8KCmJvb2xfdmFsdWUYBSABKAhIAFIJYm9vbFZhbHVlEiEKC2Zs'
     'b2F0X3ZhbHVlGAYgASgCSABSCmZsb2F0VmFsdWUSIwoMc3RyaW5nX3ZhbHVlGAcgASgJSABSC3'
     'N0cmluZ1ZhbHVlEiEKC2J5dGVzX3ZhbHVlGAggASgMSABSCmJ5dGVzVmFsdWUSOAoJdGltZXN0'
-    'YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEiQKDmNsdX'
-    'N0ZXJfaWRfaGV4GAogASgJUgxjbHVzdGVySWRIZXgSRgoKcHJvdmVuYW5jZRgLIAEoDjImLmt1'
-    'c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFuY2VSCnByb3ZlbmFuY2USJAoLZW5kcG'
-    '9pbnRfaWQYDCABKA1IAVIKZW5kcG9pbnRJZIgBARIuChB2ZW5kb3JfZXh0ZW5zaW9uGA0gASgJ'
-    'SAJSD3ZlbmRvckV4dGVuc2lvbogBAUIHCgV2YWx1ZUIOCgxfZW5kcG9pbnRfaWRCEwoRX3Zlbm'
-    'Rvcl9leHRlbnNpb24=');
+    'YW1wGAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEkYKCnByb3'
+    'ZlbmFuY2UYCyABKA4yJi5rdXNpbnRhLmlvdC5kZXZpY2UudjEuVmFsdWVQcm92ZW5hbmNlUgpw'
+    'cm92ZW5hbmNlEiQKC2VuZHBvaW50X2lkGAwgASgNSAFSCmVuZHBvaW50SWSIAQESLgoQdmVuZG'
+    '9yX2V4dGVuc2lvbhgNIAEoCUgCUg92ZW5kb3JFeHRlbnNpb26IAQESIgoKY2x1c3Rlcl9pZBgO'
+    'IAEoDUgDUgljbHVzdGVySWSIAQFCBwoFdmFsdWVCDgoMX2VuZHBvaW50X2lkQhMKEV92ZW5kb3'
+    'JfZXh0ZW5zaW9uQg0KC19jbHVzdGVyX2lkSgQIChALUg5jbHVzdGVyX2lkX2hleA==');
 
 @$core.Deprecated('Use propertyUpdateBatchDescriptor instead')
 const PropertyUpdateBatch$json = {

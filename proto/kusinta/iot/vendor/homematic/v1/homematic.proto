@@ -6,42 +6,40 @@ import "kusinta/iot/vendor/v1/vendor_options.proto";
 
 option optimize_for = SPEED;
 
-// HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
-// Add new fields at the next available field number — never reuse a removed number.
+// Who a HomeMatic device is, in its own terms. Identity, not readings — it describes the
+// physical device, so it hangs off device.v1.DeviceDescriptor rather than off any one
+// endpoint.
+message HomematicDeviceIdentity {
+  string address = 1; // upstream device address, e.g. "MEQ1234567"
+  string type    = 2; // aiohomematic device type string, e.g. "HmIP-eTRV-C"
+}
+
+// HomeMatic thermostat parameters with no Matter equivalent, carried on the same endpoint
+// as that thermostat's Matter properties rather than instead of them.
+//
+// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
+// PowerSource cluster, which every battery device from every technology needs, so they
+// belong on a Power Source endpoint. See device/v1/properties.proto.
 //
 // Every field is `optional`, for the same reason as device/v1/properties.proto: these are
 // assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
 // false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
 // reported; present means a reading, including zero.
+//
+// Add new fields at the next available number — never reuse a removed one.
 message HmThermostatProps {
-  optional bool  boost_mode            = 1 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_MODE"];
-  optional float boost_time_period     = 2 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_TIME"]; // minutes remaining
-  optional uint32 control_mode         = 3 [(kusinta.iot.vendor.v1.vendor_attribute) = "CONTROL_MODE"];
-  optional bool  frost_protection      = 4 [(kusinta.iot.vendor.v1.vendor_attribute) = "FROST_PROTECTION"];
-  optional float current_profile_period = 5 [(kusinta.iot.vendor.v1.vendor_attribute) = "PARTY_MODE"];
+  option (kusinta.iot.vendor.v1.vendor_extension) = "homematic.thermostat";
+
+  optional bool   boost_mode             = 1 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_MODE"];
+  optional float  boost_time_period      = 2 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_TIME"]; // minutes remaining
+  optional uint32 control_mode           = 3 [(kusinta.iot.vendor.v1.vendor_attribute) = "CONTROL_MODE"];
+  optional bool   frost_protection       = 4 [(kusinta.iot.vendor.v1.vendor_attribute) = "FROST_PROTECTION"];
+  optional float  current_profile_period = 5 [(kusinta.iot.vendor.v1.vendor_attribute) = "PARTY_MODE"];
 
   // Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
   // this extension exists for: it has no Matter equivalent, and it is what an automatic
   // or learned control strategy needs.
-  optional float level                 = 6 [(kusinta.iot.vendor.v1.vendor_attribute) = "LEVEL"];
-  optional uint32 window_state         = 7 [(kusinta.iot.vendor.v1.vendor_attribute) = "WINDOW_STATE"];
-  optional uint32 valve_state          = 8 [(kusinta.iot.vendor.v1.vendor_attribute) = "VALVE_STATE"];
-}
-
-// Top-level vendor extension, carried on Endpoint.vendor beside the endpoint's typed
-// Matter properties rather than instead of them.
-//
-// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
-// PowerSource cluster, which every battery device from every technology needs — they
-// belong on a Power Source endpoint, not in a vendor message. See
-// device/v1/properties.proto.
-message HomematicVendorExtension {
-  option (kusinta.iot.vendor.v1.vendor_extension) = "homematic";
-
-  string homematic_address = 1; // upstream device address, e.g. "MEQ1234567"
-  string homematic_type    = 2; // aiohomematic device type string, e.g. "HmIP-eTRV-C"
-
-  oneof homematic_props {
-    HmThermostatProps hm_thermostat = 10;
-  }
+  optional float  level                  = 6 [(kusinta.iot.vendor.v1.vendor_attribute) = "LEVEL"];
+  optional uint32 window_state           = 7 [(kusinta.iot.vendor.v1.vendor_attribute) = "WINDOW_STATE"];
+  optional uint32 valve_state            = 8 [(kusinta.iot.vendor.v1.vendor_attribute) = "VALVE_STATE"];
 }

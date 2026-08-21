@@ -17,13 +17,10 @@ option optimize_for = SPEED;
 // Source. Endpoints are the only thing that buys; filing, ownership and DeviceId stay
 // per physical device, so a device is still one row, one claim, one placement.
 //
-// Which device type this endpoint presents is NOT here — it is
-// DeviceDescriptor.endpoints, the message both legs carry. One source of truth, so a
-// device's shape cannot disagree with its state.
+// Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
+// extensions.
 //
-// Field numbers: 1 identity, 2-49 standard Matter device types, 50-99 vendor extensions.
-//
-// endpoint_id is Matter's own endpoint number, matching an EndpointDescriptor. Endpoint 0 is the Matter root node and
+// endpoint_id is Matter's own endpoint number. Endpoint 0 is the Matter root node and
 // carries BasicInformation, which DeviceDescriptor already holds — so 0 never appears
 // here and a producer emitting it is wrong. Device endpoints are 1..n.
 //
@@ -37,40 +34,44 @@ option optimize_for = SPEED;
 // Matter properties AND its vendor extension — one oneof spanning both would make them
 // mutually exclusive, which left every vendor field unreachable in practice.
 message Endpoint {
-  uint32 endpoint_id = 1;
+  uint32 endpoint_id           = 1;
+  uint32 matter_device_type_id = 2;
 
   oneof properties {
-    ThermostatProperties            thermostat         = 2;
-    TemperatureSensorProperties     temperature_sensor = 3;
-    HumiditySensorProperties        humidity_sensor    = 4;
-    OccupancySensorProperties       occupancy_sensor   = 5;
-    ContactSensorProperties         contact_sensor     = 6;
-    WindowCoveringProperties        window_covering    = 7;
-    DoorLockProperties              door_lock          = 8;
-    OnOffLightProperties            on_off_light       = 9;
-    DimmableLightProperties         dimmable_light     = 10;
-    ColorTemperatureLightProperties color_temp_light   = 11;
-    EnergySensorProperties          energy_sensor      = 12;
-    PressureSensorProperties        pressure_sensor    = 13;
-    PowerSourceProperties           power_source       = 14;
+    ThermostatProperties            thermostat         = 3;
+    TemperatureSensorProperties     temperature_sensor = 4;
+    HumiditySensorProperties        humidity_sensor    = 5;
+    OccupancySensorProperties       occupancy_sensor   = 6;
+    ContactSensorProperties         contact_sensor     = 7;
+    WindowCoveringProperties        window_covering    = 8;
+    DoorLockProperties              door_lock          = 9;
+    OnOffLightProperties            on_off_light       = 10;
+    DimmableLightProperties         dimmable_light     = 11;
+    ColorTemperatureLightProperties color_temp_light   = 12;
+    EnergySensorProperties          energy_sensor      = 13;
+    PressureSensorProperties        pressure_sensor    = 14;
+    PowerSourceProperties           power_source       = 15;
   }
 
+  // Vendor readings for this endpoint, beside its Matter properties rather than instead
+  // of them. Vendor IDENTITY — who the physical device is — is on DeviceDescriptor.
   oneof vendor {
-    kusinta.iot.vendor.homematic.v1.HomematicVendorExtension homematic = 50;
+    kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 50;
   }
 }
 
-// Device is a DeviceDescriptor plus the state its endpoints report.
+// Device is a DeviceDescriptor plus the endpoints it presents.
 //
-// The descriptor says which endpoints exist and what device type each presents; the
-// endpoints list here says what each has reported. They are keyed by the same
-// endpoint_id, and an endpoint may appear in the descriptor with no state yet.
+// It travels on BOTH legs — a connector announces one with connector.v1.DeviceAnnouncement,
+// and the gateway sends one to the app. One shape everywhere, so the endpoint list has a
+// single home and nothing has to be kept in step with a parallel copy.
 //
-// Resolving an endpoint's device type to a properties case is read from the descriptor
-// via (matter_device_type), never hard-coded. property_update.proto states the rule
-// normatively; matter_options.proto defines the annotations.
+// Resolving an endpoint's device type to a properties case is read from the descriptor via
+// (matter_device_type), never hard-coded. property_update.proto states the rule normatively;
+// matter_options.proto defines the annotations.
 //
-// An empty endpoints list means nothing typed has been reported yet. Keep the Device.
+// An empty endpoints list means the device presents nothing this schema models, or has
+// reported nothing yet. Keep the Device either way — it exists and belongs in a list.
 message Device {
   DeviceDescriptor descriptor = 1;
 
@@ -83,7 +84,7 @@ message Device {
            "dimmable_light", "color_temp_light", "energy_sensor", "pressure_sensor",
            "homematic";
 
-  // 14-19 are free; 20+ is the timestamp band.
+  // 15-19 are free; 20+ is the timestamp band.
   repeated Endpoint endpoints = 14;
 
   // When the gateway last had evidence this device exists and is reachable — the

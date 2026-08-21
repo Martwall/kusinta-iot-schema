@@ -44,7 +44,7 @@ describe('DeviceCommand', () => {
     const cmd = create(DeviceCommandSchema, {
       commandId: 'cmd-uuid-1',
       deviceId: { value: 'therm-1' },
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
       commandName: 'SetpointRaiseLower',
       parameters: { case: 'thermostatSetpoint', value: { mode: 0, amount: 50 } },
     })
@@ -70,7 +70,7 @@ describe('DeviceCommand', () => {
     const cmd = create(DeviceCommandSchema, {
       commandId: 'cmd-uuid-6',
       deviceId: { value: 'therm-1' },
-      clusterIdHex: '0201',
+      clusterId: 0x0201,
       commandName: 'WriteAttribute',
       parameters: {
         case: 'thermostatSetpointWrite',
@@ -95,7 +95,7 @@ describe('DeviceCommand', () => {
     const cmd = create(DeviceCommandSchema, {
       commandId: 'cmd-uuid-2',
       deviceId: { value: 'light-1' },
-      clusterIdHex: '0006',
+      clusterId: 0x0006,
       commandName: 'Toggle',
       parameters: { case: 'onOff', value: { toggle: true } },
     })
@@ -110,7 +110,7 @@ describe('DeviceCommand', () => {
     const cmd = create(DeviceCommandSchema, {
       commandId: 'cmd-uuid-3',
       deviceId: { value: 'light-2' },
-      clusterIdHex: '0008',
+      clusterId: 0x0008,
       commandName: 'MoveToLevel',
       parameters: { case: 'levelControl', value: { level: 127, transitionTime: 10 } },
     })
@@ -126,7 +126,7 @@ describe('DeviceCommand', () => {
     const cmd = create(DeviceCommandSchema, {
       commandId: 'cmd-uuid-4',
       deviceId: { value: 'blind-1' },
-      clusterIdHex: '0102',
+      clusterId: 0x0102,
       commandName: 'GoToLiftPercentage',
       parameters: { case: 'windowCoveringLift', value: { liftPercent100ths: 5000 } },
     })
@@ -141,7 +141,7 @@ describe('DeviceCommand', () => {
     const cmd = create(DeviceCommandSchema, {
       commandId: 'cmd-uuid-5',
       deviceId: { value: 'lock-1' },
-      clusterIdHex: '0101',
+      clusterId: 0x0101,
       commandName: 'LockDoor',
       parameters: { case: 'doorLock', value: { lockState: 1 } },
     })
@@ -214,7 +214,7 @@ describe('DevicePropertyEvent', () => {
         deviceId: { value: 'therm-1' },
         attributeName: 'LocalTemperature',
         value: { case: 'intValue', value: 2050 },
-        clusterIdHex: '0402',
+        clusterId: 0x0402,
       },
     })
     const decoded = fromBinary(DevicePropertyEventSchema, toBinary(DevicePropertyEventSchema, event))
@@ -266,7 +266,7 @@ describe('GatewayMessage oneof payload', () => {
             deviceId: { value: 'therm-1' },
             attributeName: 'OccupiedHeatingSetpoint',
             value: { case: 'intValue', value: 2100 },
-            clusterIdHex: '0201',
+            clusterId: 0x0201,
           },
         },
       },
@@ -392,14 +392,14 @@ describe('GatewayMessage error payload', () => {
       messageId: 'gw-msg-err-1',
       payload: {
         case: 'error',
-        value: { code: GatewayErrorCode.INVALID_REQUEST, message: 'unknown cluster_id_hex' },
+        value: { code: GatewayErrorCode.INVALID_REQUEST, message: 'unknown cluster_id' },
       },
     })
     const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
     expect(decoded.payload?.case).toBe('error')
     if (decoded.payload?.case === 'error') {
       expect(decoded.payload.value.code).toBe(GatewayErrorCode.INVALID_REQUEST)
-      expect(decoded.payload.value.message).toBe('unknown cluster_id_hex')
+      expect(decoded.payload.value.message).toBe('unknown cluster_id')
     }
   })
 
@@ -536,7 +536,7 @@ describe('AppMessage oneof payload', () => {
         value: {
           commandId: 'cmd-1',
           deviceId: { value: 'light-1' },
-          clusterIdHex: '0006',
+          clusterId: 0x0006,
           commandName: 'Toggle',
           parameters: { case: 'onOff', value: { toggle: true } },
         },
@@ -586,7 +586,7 @@ describe('DeviceCommand — endpoint routing', () => {
       commandId: 'cmd-uuid-7',
       deviceId: { value: 'actuator-1' },
       endpointId: 3,
-      clusterIdHex: '0006',
+      clusterId: 0x0006,
       commandName: 'Toggle',
       parameters: { case: 'onOff', value: { toggle: true } },
     })

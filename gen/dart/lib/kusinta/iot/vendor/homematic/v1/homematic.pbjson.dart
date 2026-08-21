@@ -14,6 +14,21 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use homematicDeviceIdentityDescriptor instead')
+const HomematicDeviceIdentity$json = {
+  '1': 'HomematicDeviceIdentity',
+  '2': [
+    {'1': 'address', '3': 1, '4': 1, '5': 9, '10': 'address'},
+    {'1': 'type', '3': 2, '4': 1, '5': 9, '10': 'type'},
+  ],
+};
+
+/// Descriptor for `HomematicDeviceIdentity`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List homematicDeviceIdentityDescriptor =
+    $convert.base64Decode(
+        'ChdIb21lbWF0aWNEZXZpY2VJZGVudGl0eRIYCgdhZGRyZXNzGAEgASgJUgdhZGRyZXNzEhIKBH'
+        'R5cGUYAiABKAlSBHR5cGU=');
+
 @$core.Deprecated('Use hmThermostatPropsDescriptor instead')
 const HmThermostatProps$json = {
   '1': 'HmThermostatProps',
@@ -99,6 +114,7 @@ const HmThermostatProps$json = {
       '17': true
     },
   ],
+  '7': {},
   '8': [
     {'1': '_boost_mode'},
     {'1': '_boost_time_period'},
@@ -121,43 +137,7 @@ final $typed_data.Uint8List hmThermostatPropsDescriptor = $convert.base64Decode(
     'JvZmlsZV9wZXJpb2QYBSABKAJCDqK1GApQQVJUWV9NT0RFSARSFGN1cnJlbnRQcm9maWxlUGVy'
     'aW9kiAEBEiQKBWxldmVsGAYgASgCQgmitRgFTEVWRUxIBVIFbGV2ZWyIAQESOAoMd2luZG93X3'
     'N0YXRlGAcgASgNQhCitRgMV0lORE9XX1NUQVRFSAZSC3dpbmRvd1N0YXRliAEBEjUKC3ZhbHZl'
-    'X3N0YXRlGAggASgNQg+itRgLVkFMVkVfU1RBVEVIB1IKdmFsdmVTdGF0ZYgBAUINCgtfYm9vc3'
-    'RfbW9kZUIUChJfYm9vc3RfdGltZV9wZXJpb2RCDwoNX2NvbnRyb2xfbW9kZUITChFfZnJvc3Rf'
-    'cHJvdGVjdGlvbkIZChdfY3VycmVudF9wcm9maWxlX3BlcmlvZEIICgZfbGV2ZWxCDwoNX3dpbm'
-    'Rvd19zdGF0ZUIOCgxfdmFsdmVfc3RhdGU=');
-
-@$core.Deprecated('Use homematicVendorExtensionDescriptor instead')
-const HomematicVendorExtension$json = {
-  '1': 'HomematicVendorExtension',
-  '2': [
-    {
-      '1': 'homematic_address',
-      '3': 1,
-      '4': 1,
-      '5': 9,
-      '10': 'homematicAddress'
-    },
-    {'1': 'homematic_type', '3': 2, '4': 1, '5': 9, '10': 'homematicType'},
-    {
-      '1': 'hm_thermostat',
-      '3': 10,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.vendor.homematic.v1.HmThermostatProps',
-      '9': 0,
-      '10': 'hmThermostat'
-    },
-  ],
-  '7': {},
-  '8': [
-    {'1': 'homematic_props'},
-  ],
-};
-
-/// Descriptor for `HomematicVendorExtension`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List homematicVendorExtensionDescriptor = $convert.base64Decode(
-    'ChhIb21lbWF0aWNWZW5kb3JFeHRlbnNpb24SKwoRaG9tZW1hdGljX2FkZHJlc3MYASABKAlSEG'
-    'hvbWVtYXRpY0FkZHJlc3MSJQoOaG9tZW1hdGljX3R5cGUYAiABKAlSDWhvbWVtYXRpY1R5cGUS'
-    'WQoNaG1fdGhlcm1vc3RhdBgKIAEoCzIyLmt1c2ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudj'
-    'EuSG1UaGVybW9zdGF0UHJvcHNIAFIMaG1UaGVybW9zdGF0Og2qtRgJaG9tZW1hdGljQhEKD2hv'
-    'bWVtYXRpY19wcm9wcw==');
+    'X3N0YXRlGAggASgNQg+itRgLVkFMVkVfU1RBVEVIB1IKdmFsdmVTdGF0ZYgBAToYqrUYFGhvbW'
+    'VtYXRpYy50aGVybW9zdGF0Qg0KC19ib29zdF9tb2RlQhQKEl9ib29zdF90aW1lX3BlcmlvZEIP'
+    'Cg1fY29udHJvbF9tb2RlQhMKEV9mcm9zdF9wcm90ZWN0aW9uQhkKF19jdXJyZW50X3Byb2ZpbG'
+    'VfcGVyaW9kQggKBl9sZXZlbEIPCg1fd2luZG93X3N0YXRlQg4KDF92YWx2ZV9zdGF0ZQ==');

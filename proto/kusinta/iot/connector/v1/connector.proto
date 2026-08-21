@@ -5,7 +5,7 @@ package kusinta.iot.connector.v1;
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
-import "kusinta/iot/device/v1/descriptor.proto";
+import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/device/v1/property_update.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 
@@ -21,8 +21,8 @@ message ConnectorInfo {
 }
 
 message ConnectorHandshake {
-  ConnectorInfo                              info          = 1;
-  repeated kusinta.iot.device.v1.DeviceDescriptor known_devices = 2;
+  ConnectorInfo                        info          = 1;
+  repeated kusinta.iot.device.v1.Device known_devices = 2;
 }
 
 message HandshakeAck {
@@ -31,8 +31,17 @@ message HandshakeAck {
   kusinta.iot.identity.v1.GatewayId gateway_id = 3;
 }
 
+// A device the connector has found. Carries the full Device, not just its descriptor,
+// because a device's endpoints are what say which Matter device types it presents — and
+// without them the gateway cannot resolve any PropertyUpdate the device goes on to send.
+//
+// Properties may be unset on every endpoint; that means the device exists and has
+// reported nothing yet, which is the normal state at announcement.
 message DeviceAnnouncement {
-  kusinta.iot.device.v1.DeviceDescriptor descriptor = 1;
+  reserved 1;
+  reserved "descriptor";
+
+  kusinta.iot.device.v1.Device device = 2;
 }
 
 message DeviceRemoval {

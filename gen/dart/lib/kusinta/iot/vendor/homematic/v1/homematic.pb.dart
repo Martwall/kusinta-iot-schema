@@ -16,13 +16,93 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// HomeMatic-specific thermostat properties not available in Matter Thermostat cluster.
-/// Add new fields at the next available field number — never reuse a removed number.
+/// Who a HomeMatic device is, in its own terms. Identity, not readings — it describes the
+/// physical device, so it hangs off device.v1.DeviceDescriptor rather than off any one
+/// endpoint.
+class HomematicDeviceIdentity extends $pb.GeneratedMessage {
+  factory HomematicDeviceIdentity({
+    $core.String? address,
+    $core.String? type,
+  }) {
+    final result = create();
+    if (address != null) result.address = address;
+    if (type != null) result.type = type;
+    return result;
+  }
+
+  HomematicDeviceIdentity._();
+
+  factory HomematicDeviceIdentity.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HomematicDeviceIdentity.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HomematicDeviceIdentity',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.vendor.homematic.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'address')
+    ..aOS(2, _omitFieldNames ? '' : 'type')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HomematicDeviceIdentity clone() =>
+      HomematicDeviceIdentity()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HomematicDeviceIdentity copyWith(
+          void Function(HomematicDeviceIdentity) updates) =>
+      super.copyWith((message) => updates(message as HomematicDeviceIdentity))
+          as HomematicDeviceIdentity;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HomematicDeviceIdentity create() => HomematicDeviceIdentity._();
+  @$core.override
+  HomematicDeviceIdentity createEmptyInstance() => create();
+  static $pb.PbList<HomematicDeviceIdentity> createRepeated() =>
+      $pb.PbList<HomematicDeviceIdentity>();
+  @$core.pragma('dart2js:noInline')
+  static HomematicDeviceIdentity getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HomematicDeviceIdentity>(create);
+  static HomematicDeviceIdentity? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get address => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set address($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAddress() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAddress() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get type => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set type($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearType() => $_clearField(2);
+}
+
+/// HomeMatic thermostat parameters with no Matter equivalent, carried on the same endpoint
+/// as that thermostat's Matter properties rather than instead of them.
+///
+/// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
+/// PowerSource cluster, which every battery device from every technology needs, so they
+/// belong on a Power Source endpoint. See device/v1/properties.proto.
 ///
 /// Every field is `optional`, for the same reason as device/v1/properties.proto: these are
 /// assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
 /// false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
 /// reported; present means a reading, including zero.
+///
+/// Add new fields at the next available number — never reuse a removed one.
 class HmThermostatProps extends $pb.GeneratedMessage {
   factory HmThermostatProps({
     $core.bool? boostMode,
@@ -168,111 +248,6 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   $core.bool hasValveState() => $_has(7);
   @$pb.TagNumber(8)
   void clearValveState() => $_clearField(8);
-}
-
-enum HomematicVendorExtension_HomematicProps { hmThermostat, notSet }
-
-/// Top-level vendor extension, carried on Endpoint.vendor beside the endpoint's typed
-/// Matter properties rather than instead of them.
-///
-/// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
-/// PowerSource cluster, which every battery device from every technology needs — they
-/// belong on a Power Source endpoint, not in a vendor message. See
-/// device/v1/properties.proto.
-class HomematicVendorExtension extends $pb.GeneratedMessage {
-  factory HomematicVendorExtension({
-    $core.String? homematicAddress,
-    $core.String? homematicType,
-    HmThermostatProps? hmThermostat,
-  }) {
-    final result = create();
-    if (homematicAddress != null) result.homematicAddress = homematicAddress;
-    if (homematicType != null) result.homematicType = homematicType;
-    if (hmThermostat != null) result.hmThermostat = hmThermostat;
-    return result;
-  }
-
-  HomematicVendorExtension._();
-
-  factory HomematicVendorExtension.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory HomematicVendorExtension.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static const $core.Map<$core.int, HomematicVendorExtension_HomematicProps>
-      _HomematicVendorExtension_HomematicPropsByTag = {
-    10: HomematicVendorExtension_HomematicProps.hmThermostat,
-    0: HomematicVendorExtension_HomematicProps.notSet
-  };
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'HomematicVendorExtension',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'kusinta.iot.vendor.homematic.v1'),
-      createEmptyInstance: create)
-    ..oo(0, [10])
-    ..aOS(1, _omitFieldNames ? '' : 'homematicAddress')
-    ..aOS(2, _omitFieldNames ? '' : 'homematicType')
-    ..aOM<HmThermostatProps>(10, _omitFieldNames ? '' : 'hmThermostat',
-        subBuilder: HmThermostatProps.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HomematicVendorExtension clone() =>
-      HomematicVendorExtension()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  HomematicVendorExtension copyWith(
-          void Function(HomematicVendorExtension) updates) =>
-      super.copyWith((message) => updates(message as HomematicVendorExtension))
-          as HomematicVendorExtension;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static HomematicVendorExtension create() => HomematicVendorExtension._();
-  @$core.override
-  HomematicVendorExtension createEmptyInstance() => create();
-  static $pb.PbList<HomematicVendorExtension> createRepeated() =>
-      $pb.PbList<HomematicVendorExtension>();
-  @$core.pragma('dart2js:noInline')
-  static HomematicVendorExtension getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<HomematicVendorExtension>(create);
-  static HomematicVendorExtension? _defaultInstance;
-
-  HomematicVendorExtension_HomematicProps whichHomematicProps() =>
-      _HomematicVendorExtension_HomematicPropsByTag[$_whichOneof(0)]!;
-  void clearHomematicProps() => $_clearField($_whichOneof(0));
-
-  @$pb.TagNumber(1)
-  $core.String get homematicAddress => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set homematicAddress($core.String value) => $_setString(0, value);
-  @$pb.TagNumber(1)
-  $core.bool hasHomematicAddress() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearHomematicAddress() => $_clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get homematicType => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set homematicType($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasHomematicType() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearHomematicType() => $_clearField(2);
-
-  @$pb.TagNumber(10)
-  HmThermostatProps get hmThermostat => $_getN(2);
-  @$pb.TagNumber(10)
-  set hmThermostat(HmThermostatProps value) => $_setField(10, value);
-  @$pb.TagNumber(10)
-  $core.bool hasHmThermostat() => $_has(2);
-  @$pb.TagNumber(10)
-  void clearHmThermostat() => $_clearField(10);
-  @$pb.TagNumber(10)
-  HmThermostatProps ensureHmThermostat() => $_ensure(2);
 }
 
 const $core.bool _omitFieldNames =

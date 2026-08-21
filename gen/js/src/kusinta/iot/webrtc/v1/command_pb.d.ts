@@ -197,16 +197,18 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
   deviceId?: DeviceId | undefined;
 
   /**
-   * @generated from field: string cluster_id_hex = 3;
-   */
-  clusterIdHex: string;
-
-  /**
    * PascalCase Matter command name
    *
    * @generated from field: string command_name = 4;
    */
   commandName: string;
+
+  /**
+   * e.g. 0x0201 for Thermostat
+   *
+   * @generated from field: uint32 cluster_id = 12;
+   */
+  clusterId: number;
 
   /**
    * Which endpoint of the device to command. Required: a device presents several

@@ -12,32 +12,28 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class AttributeRef(_message.Message):
-    __slots__ = ("attribute_name", "cluster_id_hex", "endpoint_id")
+    __slots__ = ("attribute_name", "cluster_id", "endpoint_id")
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
-    CLUSTER_ID_HEX_FIELD_NUMBER: _ClassVar[int]
+    CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
     ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
     attribute_name: str
-    cluster_id_hex: str
+    cluster_id: int
     endpoint_id: int
-    def __init__(self, attribute_name: _Optional[str] = ..., cluster_id_hex: _Optional[str] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
+    def __init__(self, attribute_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
 
 class PropertyConstraint(_message.Message):
-    __slots__ = ("attribute_name", "int_max", "int_min", "uint_max", "uint_min", "cluster_id_hex", "endpoint_id")
-    ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("attribute", "int_max", "int_min", "uint_max", "uint_min")
+    ATTRIBUTE_FIELD_NUMBER: _ClassVar[int]
     INT_MAX_FIELD_NUMBER: _ClassVar[int]
     INT_MIN_FIELD_NUMBER: _ClassVar[int]
     UINT_MAX_FIELD_NUMBER: _ClassVar[int]
     UINT_MIN_FIELD_NUMBER: _ClassVar[int]
-    CLUSTER_ID_HEX_FIELD_NUMBER: _ClassVar[int]
-    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
-    attribute_name: str
+    attribute: AttributeRef
     int_max: int
     int_min: int
     uint_max: int
     uint_min: int
-    cluster_id_hex: str
-    endpoint_id: int
-    def __init__(self, attribute_name: _Optional[str] = ..., int_max: _Optional[int] = ..., int_min: _Optional[int] = ..., uint_max: _Optional[int] = ..., uint_min: _Optional[int] = ..., cluster_id_hex: _Optional[str] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
+    def __init__(self, attribute: _Optional[_Union[AttributeRef, _Mapping]] = ..., int_max: _Optional[int] = ..., int_min: _Optional[int] = ..., uint_max: _Optional[int] = ..., uint_min: _Optional[int] = ...) -> None: ...
 
 class DeviceAcl(_message.Message):
     __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attribute_refs", "property_constraints")

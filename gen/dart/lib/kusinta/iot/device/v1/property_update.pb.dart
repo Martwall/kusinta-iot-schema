@@ -45,22 +45,23 @@ enum PropertyUpdate_Value {
 ///     which is where that endpoint's Matter device type lives.
 ///  2. Pick the message. Two branches, chosen by whether vendor_extension is set:
 ///       - absent (Matter): the Endpoint.properties case whose message type declares
-///         (matter_device_type) == EndpointDescriptor.matter_device_type_id.
+///         (matter_device_type) == Endpoint.matter_device_type_id.
 ///       - present (vendor): the Endpoint.vendor case whose message type declares
 ///         (vendor_extension) == the update's vendor_extension.
 ///  3. Pick the field:
-///       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id_hex
-///         parsed as a hex integer AND whose (matter_attribute) equals attribute_name.
-///       - Vendor branch: the one field whose (vendor_attribute) equals attribute_name,
-///         searching the whole extension message including its nested props messages.
-///         cluster_id_hex plays no part; a vendor parameter has no Matter cluster.
+///       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id AND
+///         whose (matter_attribute) equals attribute_name.
+///       - Vendor branch: the one field whose (vendor_attribute) equals attribute_name.
+///         cluster_id plays no part; a vendor parameter has no Matter cluster.
+///
+/// Both branches are the same shape: pick a message by a message option, then one field by
+/// a field option. Nothing nests, and nothing is searched recursively.
 ///
 /// Steps 2 and 3 depend only on the schema, never on the update: both maps are fixed at
-/// compile time. Build them ONCE at startup — a device-type-to-case map, and a
-/// (cluster, attribute) map per properties message — and resolve with lookups. Walking
+/// compile time. Build them ONCE at startup — a device-type-to-case map and a vendor-key-to-
+/// case map, plus a (cluster, attribute) map per message — and resolve with lookups. Walking
 /// the descriptor per update costs ~30 option reads on the highest-volume message in this
-/// schema, and the vendor branch's nested search costs more. Only step 1 reads per-device
-/// data.
+/// schema. Only step 1 reads per-device data.
 ///
 /// Writing the resolved field marks it present, which is how a snapshot distinguishes a
 /// reported zero from an attribute the device has never sent. A consumer assembling a
@@ -74,7 +75,7 @@ enum PropertyUpdate_Value {
 /// transformation reaches. See matter_options.proto.
 ///
 /// When any step resolves to nothing the update is not storable. A consumer MUST NOT
-/// silently drop it: log it at warning with device_id, endpoint_id, cluster_id_hex and
+/// silently drop it: log it at warning with device_id, endpoint_id, cluster_id and
 /// attribute_name, and count it. A miss means the device reports an attribute this schema
 /// does not model, the device type is not modelled at all (see device.proto), the endpoint
 /// is unknown, or a producer is sending a name from neither spelling — all of which need
@@ -83,10 +84,10 @@ enum PropertyUpdate_Value {
 ///
 /// Producers: on the Matter branch, attribute_name uses the Matter attribute's own
 /// PascalCase, acronyms included (e.g. "OccupiedHeatingSetpoint",
-/// "PIROccupiedToUnoccupiedDelay"), and cluster_id_hex is the Matter cluster ID as a
-/// 4-char hex string with no 0x prefix (e.g. "0201" for Thermostat). Both are required
-/// there. On the vendor branch, set vendor_extension and attribute_name and leave
-/// cluster_id_hex empty. endpoint_id is required on both.
+/// "PIROccupiedToUnoccupiedDelay"), and cluster_id is the Matter cluster ID as a number
+/// (0x0201 for Thermostat). Both are required there. On the vendor branch, set
+/// vendor_extension and attribute_name and leave cluster_id unset. endpoint_id is
+/// required on both.
 class PropertyUpdate extends $pb.GeneratedMessage {
   factory PropertyUpdate({
     $0.DeviceId? deviceId,
@@ -98,10 +99,10 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     $core.String? stringValue,
     $core.List<$core.int>? bytesValue,
     $1.Timestamp? timestamp,
-    $core.String? clusterIdHex,
     ValueProvenance? provenance,
     $core.int? endpointId,
     $core.String? vendorExtension,
+    $core.int? clusterId,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -113,10 +114,10 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     if (stringValue != null) result.stringValue = stringValue;
     if (bytesValue != null) result.bytesValue = bytesValue;
     if (timestamp != null) result.timestamp = timestamp;
-    if (clusterIdHex != null) result.clusterIdHex = clusterIdHex;
     if (provenance != null) result.provenance = provenance;
     if (endpointId != null) result.endpointId = endpointId;
     if (vendorExtension != null) result.vendorExtension = vendorExtension;
+    if (clusterId != null) result.clusterId = clusterId;
     return result;
   }
 
@@ -158,7 +159,6 @@ class PropertyUpdate extends $pb.GeneratedMessage {
         8, _omitFieldNames ? '' : 'bytesValue', $pb.PbFieldType.OY)
     ..aOM<$1.Timestamp>(9, _omitFieldNames ? '' : 'timestamp',
         subBuilder: $1.Timestamp.create)
-    ..aOS(10, _omitFieldNames ? '' : 'clusterIdHex')
     ..e<ValueProvenance>(
         11, _omitFieldNames ? '' : 'provenance', $pb.PbFieldType.OE,
         defaultOrMaker: ValueProvenance.VALUE_PROVENANCE_UNSPECIFIED,
@@ -166,6 +166,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
         enumValues: ValueProvenance.values)
     ..a<$core.int>(12, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
     ..aOS(13, _omitFieldNames ? '' : 'vendorExtension')
+    ..a<$core.int>(14, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -278,15 +279,6 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   @$pb.TagNumber(9)
   $1.Timestamp ensureTimestamp() => $_ensure(8);
 
-  @$pb.TagNumber(10)
-  $core.String get clusterIdHex => $_getSZ(9);
-  @$pb.TagNumber(10)
-  set clusterIdHex($core.String value) => $_setString(9, value);
-  @$pb.TagNumber(10)
-  $core.bool hasClusterIdHex() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearClusterIdHex() => $_clearField(10);
-
   /// How much the producer believes this value. Unset means no claim, which is how every
   /// producer written before this field behaved, so a consumer that ignores it and a
   /// producer that never sets it both behave exactly as they did.
@@ -298,11 +290,11 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   /// optimistic window therefore shows the last confirmed value, and the correction or
   /// confirmation arrives on the live path as it would have anyway.
   @$pb.TagNumber(11)
-  ValueProvenance get provenance => $_getN(10);
+  ValueProvenance get provenance => $_getN(9);
   @$pb.TagNumber(11)
   set provenance(ValueProvenance value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasProvenance() => $_has(10);
+  $core.bool hasProvenance() => $_has(9);
   @$pb.TagNumber(11)
   void clearProvenance() => $_clearField(11);
 
@@ -315,11 +307,11 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   /// rather than treating 0 as "unset": 0 is the Matter root node, and a reserved-zero
   /// sentinel is the pattern this schema has been removing, not adding.
   @$pb.TagNumber(12)
-  $core.int get endpointId => $_getIZ(11);
+  $core.int get endpointId => $_getIZ(10);
   @$pb.TagNumber(12)
-  set endpointId($core.int value) => $_setUnsignedInt32(11, value);
+  set endpointId($core.int value) => $_setUnsignedInt32(10, value);
   @$pb.TagNumber(12)
-  $core.bool hasEndpointId() => $_has(11);
+  $core.bool hasEndpointId() => $_has(10);
   @$pb.TagNumber(12)
   void clearEndpointId() => $_clearField(12);
 
@@ -327,15 +319,32 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   /// its (vendor_extension) key — e.g. "homematic". Absent means the Matter branch, which
   /// is what every update carried before this field existed.
   ///
-  /// A vendor parameter has no Matter cluster, so cluster_id_hex stays empty here.
+  /// A vendor parameter has no Matter cluster, so cluster_id stays unset here.
   @$pb.TagNumber(13)
-  $core.String get vendorExtension => $_getSZ(12);
+  $core.String get vendorExtension => $_getSZ(11);
   @$pb.TagNumber(13)
-  set vendorExtension($core.String value) => $_setString(12, value);
+  set vendorExtension($core.String value) => $_setString(11, value);
   @$pb.TagNumber(13)
-  $core.bool hasVendorExtension() => $_has(12);
+  $core.bool hasVendorExtension() => $_has(11);
   @$pb.TagNumber(13)
   void clearVendorExtension() => $_clearField(13);
+
+  /// The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat. Compared
+  /// directly against (matter_cluster_id), which is a uint32 too — a hex string on the
+  /// wire meant every consumer parsed it on every update just to compare it with a number
+  /// the descriptor already held, and it invented questions the wire should not ask
+  /// ("0201" vs "201" vs "0x0201", upper or lower case).
+  ///
+  /// Required on the Matter branch, unset on the vendor branch: a vendor parameter has no
+  /// Matter cluster.
+  @$pb.TagNumber(14)
+  $core.int get clusterId => $_getIZ(12);
+  @$pb.TagNumber(14)
+  set clusterId($core.int value) => $_setUnsignedInt32(12, value);
+  @$pb.TagNumber(14)
+  $core.bool hasClusterId() => $_has(12);
+  @$pb.TagNumber(14)
+  void clearClusterId() => $_clearField(14);
 }
 
 class PropertyUpdateBatch extends $pb.GeneratedMessage {
