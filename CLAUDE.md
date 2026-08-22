@@ -45,8 +45,19 @@ Add an `exports` entry to `gen/js/package.json`:
 
 Dart needs nothing — `gen-dart-barrels.py` derives `gen/dart/lib/app.dart` and
 `connector.dart` from whatever `buf generate` emitted, and CI runs it in the Generate
-stage. If the new package belongs to one leg only, add its directory to `APP_ONLY` or
-`CONNECTOR_ONLY` in that script; otherwise it is leg-neutral and lands in both.
+stage. A barrel is everything the *other* leg does not exclusively own, plus everything
+that leg's entry files transitively import. So:
+
+- A package belonging to one leg only goes in `APP_ONLY` or `CONNECTOR_ONLY`; anything
+  else is leg-neutral and lands in both.
+- A file inside one leg's directory that the *other* leg also carries needs nothing — the
+  import closure picks it up. `webrtc/v1/command.proto` is the standing case: it holds
+  `DeviceCommand` and `AttributeWriteRequest`, which the connector leg receives in
+  `SessionResponse`, so it is exported from `connector.dart` despite living under
+  `webrtc/`.
+
+The script fails if two exported files declare the same class name, naming both — Dart
+cannot alias an export, so that barrel would not compile.
 
 Never hand-write a Dart barrel. Dart export directives cannot alias a name, so a barrel
 spanning both legs cannot compile — `GatewayError` exists on each with different

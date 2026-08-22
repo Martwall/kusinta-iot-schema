@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 """Emit the Dart leg barrels from whatever buf just generated.
 
+Membership is derived from the generated files' own imports, not declared. A leg's
+barrel is the transitive import closure of that leg's entry files, so a type a leg
+actually carries is always exported from that leg's barrel — which a directory rule
+cannot guarantee, because a directory is not the unit that crosses legs. webrtc/v1
+/command.proto is the standing counterexample: it lives in the app leg's directory
+and holds DeviceCommand, CommandResult, CommandError and AttributeWriteRequest, all
+of which the connector leg receives in SessionResponse.
+
 Dart export directives have no aliasing — only show/hide — so a single barrel
 cannot surface two classes that share a name. `GatewayError` is declared on both
 the connector leg (connector/v1) and the app leg (webrtc/v1), deliberately and
@@ -16,16 +24,32 @@ Run after `buf generate --template buf.gen.dart.yaml`; the Jenkins Generate
 stage does exactly that.
 """
 
+import os
 import pathlib
+import re
 import sys
 
 LIB = pathlib.Path(__file__).parent / "gen" / "dart" / "lib"
 PKG = "kusinta/iot"
 
-# Leg membership by proto package directory. Anything not named here is
-# leg-neutral and goes into both barrels.
+# A leg's barrel is everything the OTHER leg does not exclusively own, plus
+# everything this leg's entry files actually import.
+#
+# The first half is the leg-neutral rule: a domain belonging to neither leg —
+# device, access, identity, space, registration, common, vendor — goes in both.
+# It has to stay a directory rule, because some of those are reached by nobody's
+# imports and would vanish from a pure closure: the annotation extensions in
+# matter_options and vendor_options are read out of descriptor bytes at runtime,
+# never imported by generated Dart, so nothing points at them.
+#
+# The second half is what a directory rule cannot express: a file that lives in
+# one leg's directory but is carried by both. webrtc/v1/command.proto holds
+# DeviceCommand, CommandResult, CommandError and AttributeWriteRequest, every one
+# of which the connector leg receives in SessionResponse.
 APP_ONLY = {"webrtc", "signaling"}
 CONNECTOR_ONLY = {"connector"}
+APP_ROOTS = ("webrtc", "signaling")
+CONNECTOR_ROOTS = ("connector",)
 
 # .pbjson.dart is descriptor data the .pb.dart already imports, and
 # .pbserver.dart is the legacy Dart server stub. Neither belongs in a public
@@ -48,6 +72,77 @@ def domain(rel: pathlib.Path) -> str:
     return rel.parts[2]
 
 
+def module(rel: pathlib.Path) -> str:
+    """kusinta/iot/webrtc/v1/command.pb.dart -> kusinta/iot/webrtc/v1/command"""
+    name = rel.name
+    for suffix in SUFFIXES:
+        if name.endswith(suffix):
+            name = name[: -len(suffix)]
+            break
+    return (rel.parent / name).as_posix()
+
+
+IMPORT = re.compile(r"^import '([^']+\.dart)'", re.M)
+
+
+def imports_of(rel: pathlib.Path) -> set[str]:
+    """Modules under PKG that this generated file imports. Well-known types live
+    outside PKG and are reached through the generated files' own imports, never the
+    barrel, so they are skipped here."""
+    text = (LIB / rel).read_text()
+    found = set()
+    for target in IMPORT.findall(text):
+        resolved = (rel.parent / target).resolve().relative_to(
+            (LIB / rel.parent).resolve().parents[len(rel.parent.parts) - 1]
+        ) if False else pathlib.PurePosixPath(
+            os.path.normpath((rel.parent / target).as_posix())
+        )
+        if resolved.as_posix().startswith(PKG + "/"):
+            found.add(module(pathlib.Path(resolved)))
+    return found
+
+
+def closure(files: list[pathlib.Path], roots: tuple[str, ...]) -> set[str]:
+    """Every module reachable from this leg's entry files."""
+    by_module: dict[str, list[pathlib.Path]] = {}
+    for rel in files:
+        by_module.setdefault(module(rel), []).append(rel)
+
+    pending = [m for m in by_module if domain(pathlib.Path(m + ".pb.dart")) in roots]
+    if not pending:
+        sys.exit(f"no entry files for {roots} — run buf generate first")
+
+    seen: set[str] = set()
+    while pending:
+        current = pending.pop()
+        if current in seen:
+            continue
+        seen.add(current)
+        for rel in by_module.get(current, []):
+            pending.extend(imports_of(rel) - seen)
+    return seen
+
+
+CLASS = re.compile(r"^class (\w+) extends", re.M)
+
+
+def check_unambiguous(name: str, exported: list[pathlib.Path]) -> None:
+    """Dart cannot alias an export, so two exported classes sharing a name make the
+    barrel uncompilable. Catch it here, naming the collision, rather than leaving
+    `dart analyze` to report an ambiguous_export with no explanation of why."""
+    seen: dict[str, pathlib.Path] = {}
+    for rel in exported:
+        for cls in CLASS.findall((LIB / rel).read_text()):
+            if cls in seen and seen[cls] != rel:
+                sys.exit(
+                    f"{name}: '{cls}' is exported from both {seen[cls]} and {rel}.\n"
+                    "Dart export directives cannot alias, so this barrel would not "
+                    "compile. The two legs have reached each other's colliding types "
+                    "— check what changed in the proto imports."
+                )
+            seen[cls] = rel
+
+
 def collect() -> list[pathlib.Path]:
     root = LIB / PKG
     if not root.is_dir():
@@ -62,12 +157,16 @@ def collect() -> list[pathlib.Path]:
     return files
 
 
-def write(name: str, what: str, keep) -> int:
+def write(name: str, what: str, roots: tuple[str, ...], excluded: set[str]) -> int:
+    files = collect()
+    members = closure(files, roots)
+    exported = [
+        rel for rel in files if domain(rel) not in excluded or module(rel) in members
+    ]
+    check_unambiguous(name, exported)
+
     lines = [HEADER.format(what=what)]
-    for rel in collect():
-        d = domain(rel)
-        if keep(d):
-            lines.append(f"export '{rel.as_posix()}';")
+    lines.extend(f"export '{rel.as_posix()}';" for rel in exported)
     out = LIB / name
     out.write_text("\n".join(lines) + "\n")
     return len(lines) - 1
@@ -76,15 +175,17 @@ def write(name: str, what: str, keep) -> int:
 def main() -> None:
     app = write(
         "app.dart",
-        "The app leg: the WebRTC data channel and signaling, plus the "
-        "leg-neutral domain types.",
-        lambda d: d not in CONNECTOR_ONLY,
+        "The app leg: the WebRTC data channel and signaling, plus every "
+        "domain type they carry.",
+        APP_ROOTS,
+        CONNECTOR_ONLY,
     )
     conn = write(
         "connector.dart",
-        "The connector leg: the connector session protocol, plus the "
-        "leg-neutral domain types.",
-        lambda d: d not in APP_ONLY,
+        "The connector leg: the connector session protocol, plus every "
+        "domain type it carries.",
+        CONNECTOR_ROOTS,
+        APP_ONLY,
     )
     print(f"app.dart: {app} exports\nconnector.dart: {conn} exports")
 
