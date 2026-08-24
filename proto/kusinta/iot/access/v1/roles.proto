@@ -26,14 +26,20 @@ enum PermissionAction {
   // Read an attribute once, on demand: webrtc.v1.PropertyReadRequest.
   PERMISSION_ACTION_READ = 1;
 
-  // Write an attribute directly.
+  // Write an attribute to a value: webrtc.v1.AttributeWriteRequest, carried on
+  // AppMessage.attribute_write and forwarded to a connector as
+  // SessionResponse.execute_attribute_write.
   //
-  // NOTE: no message on the app leg does this. AppMessage carries handshake, command,
-  // read_request, ping, subscribe, unsubscribe and management — nothing that writes an
-  // attribute, so the only thing that changes a device is a DeviceCommand, which is
-  // INVOKE. This value therefore authorizes an operation that does not yet exist. It is
-  // kept rather than reserved because a direct attribute write is a plausible addition
-  // and burning the number would gain nothing; until then, granting it grants nothing.
+  // MUST be enforced separately from INVOKE. Writing an attribute and invoking a command
+  // are different operations in Matter carrying different authority: a user who may
+  // toggle a light is not thereby a user who may rewrite its attributes. An earlier form
+  // of this schema routed an absolute setpoint through DeviceCommand, which made INVOKE
+  // imply WRITE and left the distinction unenforceable — that is the mistake
+  // AttributeWriteRequest exists to undo, and checking INVOKE for a write would reinstate
+  // it.
+  //
+  // A relative adjust is NOT a write. Thermostat SetpointRaiseLower is a genuine Matter
+  // command and needs INVOKE; setting an absolute value needs WRITE.
   PERMISSION_ACTION_WRITE = 2;
 
   // Receive attribute changes as they happen: webrtc.v1.AppMessage.subscribe and the
