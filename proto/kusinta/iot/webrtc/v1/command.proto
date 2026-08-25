@@ -7,27 +7,9 @@ import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/device/v1/cluster_state.proto";
 import "kusinta/iot/device/v1/matter_options.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/webrtc/v1/setpoint_mode.proto";
 
 option optimize_for = SPEED;
-
-// SetpointAdjustMode selects which setpoint a thermostat command targets. It is
-// Matter's SetpointRaiseLowerModeEnum (Thermostat cluster 0x0201) and carries Matter's
-// own numbering:
-//
-//   0 = Heat  — targets ThermostatProperties.occupied_heating_setpoint
-//   1 = Cool  — targets ThermostatProperties.occupied_cooling_setpoint
-//   2 = Both  — targets both
-//
-// Zero is a real mode, not a "not set" sentinel, so every field carrying this value has
-// explicit presence: absent = the producer stated no mode, present = the mode it named,
-// Heat included. This is the same rule properties.proto applies to readings, for the
-// same reason — a bare proto3 scalar makes "meant Heat" and "never set it" identical on
-// the wire.
-//
-// SetpointAdjustMode is NOT ThermostatProperties.system_mode. system_mode is Matter's
-// SystemModeEnum (Off=0, Auto=1, Cool=3, Heat=4), a different enum over a different set
-// of concepts. Cool is 1 here and 3 there; the two must never be substituted for each
-// other or read through the same mapping table.
 
 // Adjusts a setpoint by a delta. Maps to the Matter SetpointRaiseLower command
 // (Thermostat cluster 0x0201).
@@ -41,8 +23,8 @@ message ThermostatSetpointParams {
   option (kusinta.iot.device.v1.matter_command_cluster) = 0x0201;
   option (kusinta.iot.device.v1.matter_command_id) = 0x00;
 
-  optional uint32 mode = 1; // SetpointAdjustMode, see above
-  sint32 amount        = 2; // centidegrees delta
+  optional SetpointAdjustMode mode   = 1; // absent = the producer stated no mode
+  sint32                      amount = 2; // centidegrees delta
 }
 
 // Maps to Matter MoveToLevel command (Level Control cluster 0x0008).

@@ -10,7 +10,12 @@ import {
   DeviceRemovalSchema,
 } from '../kusinta/iot/connector/v1/connector_pb.js'
 import { ConnectorTransport } from '../kusinta/iot/common/v1/types_pb.js'
-import { DeviceCommandSchema } from '../kusinta/iot/webrtc/v1/command_pb.js'
+import {
+  DeviceCommandSchema,
+  CommandErrorCode,
+  CommandResultSchema,
+} from '../kusinta/iot/webrtc/v1/command_pb.js'
+import { ConnectorCommandResultSchema } from '../kusinta/iot/connector/v1/connector_pb.js'
 
 describe('ConnectorHandshake', () => {
   it('round-trips with known_devices', () => {
@@ -171,5 +176,50 @@ describe('SessionResponse oneof payload', () => {
       expect(decoded.payload.value.requestId).toBe('cmd-uuid-1')
       expect(decoded.payload.value.deviceId?.value).toBe('light-1')
     }
+  })
+})
+
+describe('ConnectorCommandResult', () => {
+  it('reports a refusal in the same closed vocabulary the app is given', () => {
+    const result = create(ConnectorCommandResultSchema, {
+      requestId: 'cmd-1',
+      success: false,
+      error: { code: CommandErrorCode.REJECTED_BY_DEVICE, message: 'device refused the mode' },
+    })
+    const decoded = fromBinary(ConnectorCommandResultSchema, toBinary(ConnectorCommandResultSchema, result))
+    expect(decoded.error?.code).toBe(CommandErrorCode.REJECTED_BY_DEVICE)
+  })
+
+  // Both legs name the same type, so the gateway forwards the error rather than mapping a
+  // string it has to keep a table for.
+  it('carries an error the gateway can forward to the app leg unchanged', () => {
+    const fromConnector = create(ConnectorCommandResultSchema, {
+      requestId: 'cmd-1',
+      success: false,
+      error: { code: CommandErrorCode.UNREACHABLE, message: 'device asleep' },
+    })
+    const toApp = create(CommandResultSchema, {
+      requestId: fromConnector.requestId,
+      success: false,
+      error: fromConnector.error,
+    })
+    const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, toApp))
+    expect(decoded.error?.code).toBe(CommandErrorCode.UNREACHABLE)
+  })
+
+  it('states no settle window by default', () => {
+    const result = create(ConnectorCommandResultSchema, { requestId: 'cmd-1', success: true })
+    const decoded = fromBinary(ConnectorCommandResultSchema, toBinary(ConnectorCommandResultSchema, result))
+    expect(decoded.settlesBy).toBeUndefined()
+  })
+
+  it('round-trips a settle window the connector knows and the gateway does not', () => {
+    const result = create(ConnectorCommandResultSchema, {
+      requestId: 'cmd-1',
+      success: true,
+      settlesBy: { seconds: 1700000000n, nanos: 0 },
+    })
+    const decoded = fromBinary(ConnectorCommandResultSchema, toBinary(ConnectorCommandResultSchema, result))
+    expect(decoded.settlesBy?.seconds).toBe(1700000000n)
   })
 })

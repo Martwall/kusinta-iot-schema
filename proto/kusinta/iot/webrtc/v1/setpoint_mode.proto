@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package kusinta.iot.webrtc.v1;
+
+option optimize_for = SPEED;
+
+// SetpointAdjustMode selects which setpoint a thermostat command targets. It is
+// Matter's SetpointRaiseLowerModeEnum (Thermostat cluster 0x0201) and carries Matter's
+// own numbering.
+//
+// A real type rather than a numbering written down in a comment. The mode field on
+// ThermostatSetpointParams was a bare uint32 with this numbering stated beside it, so a
+// consumer carrying forward an older Heat=1/Cool=2/Both=3 convention compiled cleanly and
+// silently reversed which physical behavior a command produced.
+//
+// Zero is a real mode, not a "not set" sentinel — which is why there is no
+// SETPOINT_ADJUST_MODE_UNSPECIFIED, and why every field carrying this value has explicit
+// presence: absent = the producer stated no mode, present = the mode it named, Heat
+// included. This is the same rule properties.proto applies to readings, for the same
+// reason — a bare proto3 scalar makes "meant Heat" and "never set it" identical on the
+// wire. Renumbering to free zero is not available: the wire value IS Matter's value.
+//
+// SetpointAdjustMode is NOT ThermostatProperties.system_mode. system_mode is Matter's
+// SystemModeEnum (Off=0, Auto=1, Cool=3, Heat=4), a different enum over a different set
+// of concepts. Cool is 1 here and 3 there; the two must never be substituted for each
+// other or read through the same mapping table.
+enum SetpointAdjustMode {
+  // Targets ThermostatProperties.occupied_heating_setpoint.
+  SETPOINT_ADJUST_MODE_HEAT = 0;
+  // Targets ThermostatProperties.occupied_cooling_setpoint.
+  SETPOINT_ADJUST_MODE_COOL = 1;
+  // Targets both setpoints.
+  SETPOINT_ADJUST_MODE_BOTH = 2;
+}
+
+// Why this enum sits alone in a file: its zero is a real mode, so ENUM_ZERO_VALUE_SUFFIX
+// has to be waived for it, and buf waives lint rules by file path and no finer. Sharing a
+// file with CommandErrorCode would have waived the rule for that enum too — one that does
+// need its _UNSPECIFIED zero. A file holding nothing else cannot over-waive. See buf.yaml.

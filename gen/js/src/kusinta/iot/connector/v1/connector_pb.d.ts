@@ -8,9 +8,9 @@ import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identit
 import type { ConnectorTransport } from "../../common/v1/types_pb.js";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { AttributeWriteRequest, CommandError, DeviceCommand } from "../../webrtc/v1/command_pb.js";
 import type { PropertyUpdateBatch } from "../../device/v1/property_update_pb.js";
 import type { DeviceEventBatch } from "../../device/v1/device_event_pb.js";
-import type { AttributeWriteRequest, DeviceCommand } from "../../webrtc/v1/command_pb.js";
 
 /**
  * Describes the file kusinta/iot/connector/v1/connector.proto.
@@ -196,6 +196,15 @@ export declare type UnsubscribeDevice = Message<"kusinta.iot.connector.v1.Unsubs
 export declare const UnsubscribeDeviceSchema: GenMessage<UnsubscribeDevice>;
 
 /**
+ * Session-level error, gateway → connector. NOT how a command or a write fails: that is
+ * an ordinary ConnectorCommandResult with success = false and a typed CommandError, and
+ * one operation failing says nothing about the session, which continues.
+ *
+ * code stays a free-form string here, unlike webrtc.v1.GatewayError's closed
+ * GatewayErrorCode and unlike the CommandError below. A connector is versioned on its own
+ * schedule and one may be a third party's, so the set of things that can go wrong between
+ * a gateway and a connector is not closed the way the app leg's is.
+ *
  * @generated from message kusinta.iot.connector.v1.GatewayError
  */
 export declare type GatewayError = Message<"kusinta.iot.connector.v1.GatewayError"> & {
@@ -210,7 +219,7 @@ export declare type GatewayError = Message<"kusinta.iot.connector.v1.GatewayErro
   message: string;
 
   /**
-   * non-empty if the error answers a command or a write
+   * non-empty if the error refers to a specific request
    *
    * @generated from field: string request_id = 3;
    */
@@ -245,14 +254,53 @@ export declare type ConnectorCommandResult = Message<"kusinta.iot.connector.v1.C
   success: boolean;
 
   /**
-   * @generated from field: kusinta.iot.connector.v1.GatewayError error = 3;
-   */
-  error?: GatewayError | undefined;
-
-  /**
    * @generated from field: google.protobuf.Timestamp completed_at = 4;
    */
   completedAt?: Timestamp | undefined;
+
+  /**
+   * Why it failed, in the same closed vocabulary the app is eventually given. The gateway
+   * forwards this into webrtc.v1.CommandResult.error unchanged; it does not translate.
+   *
+   * Shared rather than mirrored on purpose. The free-form string this replaces left every
+   * connector to invent its own spellings ("TIMEOUT", "UNSUPPORTED_MODE") and the gateway
+   * to keep a mapping table that silently fell behind whenever a connector coined a new
+   * one — which is the drift a closed vocabulary exists to prevent.
+   *
+   * A connector produces the subset it can actually observe: REJECTED_BY_DEVICE,
+   * UNREACHABLE, TIMEOUT, INVALID_COMMAND, INTERNAL. NOT_ENTITLED and
+   * CONSTRAINT_VIOLATED are the gateway's, decided before a command is forwarded at all;
+   * a connector never sees the caller's permissions and must not claim to.
+   *
+   * Rollout note: a connector whose schema predates this sends nothing on field 5 and the
+   * gateway reads UNSPECIFIED. Set success = false with no code and the meaning is "it
+   * failed, reason unstated" — which is what the string codes amounted to anyway.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.CommandError error = 5;
+   */
+  error?: CommandError | undefined;
+
+  /**
+   * When this connector's own optimistic window closes: by this time the value has either
+   * been confirmed by the device or restored, and either way the connector will have
+   * published a PropertyUpdate saying so.
+   *
+   * Set it when the connector applied the value optimistically and runs a rollback timer
+   * of its own — a downstream device with a known, device-specific timeout. The gateway
+   * carries it into webrtc.v1.CommandResult.settles_by instead of applying a fixed guess:
+   * the connector is the only party that knows the timer, and a gateway-side constant
+   * chasing it is the same hardcoded-window problem one level up.
+   *
+   * Absent means no claim — either the connector confirms synchronously, or it cannot
+   * state a bound. Absent is NOT "settles immediately", and the gateway is free to fall
+   * back to a deadline of its own when nothing is stated here.
+   *
+   * This bounds the wait; it does not label the values that arrive. Which update was the
+   * optimistic one is device.v1.PropertyUpdate.provenance.
+   *
+   * @generated from field: optional google.protobuf.Timestamp settles_by = 6;
+   */
+  settlesBy?: Timestamp | undefined;
 };
 
 /**

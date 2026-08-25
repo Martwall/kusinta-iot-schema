@@ -18,6 +18,7 @@ import {
   CommandErrorCode,
   ThermostatSetpointParamsSchema,
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
+import { SetpointAdjustMode } from '../kusinta/iot/webrtc/v1/setpoint_mode_pb.js'
 import {
   DeviceStateSnapshotSchema,
   PropertyReportSchema,
@@ -46,7 +47,7 @@ describe('DeviceCommand', () => {
       deviceId: { value: 'therm-1' },
       clusterId: 0x0201,
       commandName: 'SetpointRaiseLower',
-      parameters: { case: 'thermostatSetpoint', value: { mode: 0, amount: 50 } },
+      parameters: { case: 'thermostatSetpoint', value: { mode: SetpointAdjustMode.HEAT, amount: 50 } },
     })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.requestId).toBe('cmd-uuid-1')
@@ -54,16 +55,32 @@ describe('DeviceCommand', () => {
     expect(decoded.commandName).toBe('SetpointRaiseLower')
     expect(decoded.parameters?.case).toBe('thermostatSetpoint')
     if (decoded.parameters?.case === 'thermostatSetpoint') {
-      expect(decoded.parameters.value.mode).toBe(0)
+      expect(decoded.parameters.value.mode).toBe(SetpointAdjustMode.HEAT)
       expect(decoded.parameters.value.amount).toBe(50)
     }
   })
 
   it('keeps Heat distinguishable from an unset mode', () => {
-    const heat = create(ThermostatSetpointParamsSchema, { mode: 0, amount: 50 })
+    const heat = create(ThermostatSetpointParamsSchema, { mode: SetpointAdjustMode.HEAT, amount: 50 })
     const unset = create(ThermostatSetpointParamsSchema, { amount: 50 })
-    expect(fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, heat)).mode).toBe(0)
+    expect(fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, heat)).mode).toBe(SetpointAdjustMode.HEAT)
     expect(fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, unset)).mode).toBeUndefined()
+  })
+
+  // The numbering is Matter's SetpointRaiseLowerModeEnum. It was stated in a comment over
+  // a bare uint32 before, so a consumer using an older Heat=1/Cool=2/Both=3 convention
+  // compiled cleanly and reversed which physical behavior the command produced.
+  it('numbers SetpointAdjustMode as Matter does', () => {
+    expect(SetpointAdjustMode.HEAT).toBe(0)
+    expect(SetpointAdjustMode.COOL).toBe(1)
+    expect(SetpointAdjustMode.BOTH).toBe(2)
+  })
+
+  it('carries Cool on the wire as Matter numbers it, not as SystemMode does', () => {
+    const cool = create(ThermostatSetpointParamsSchema, { mode: SetpointAdjustMode.COOL, amount: -150 })
+    const decoded = fromBinary(ThermostatSetpointParamsSchema, toBinary(ThermostatSetpointParamsSchema, cool))
+    // SystemMode, a different enum over different concepts, numbers Cool 3.
+    expect(decoded.mode).toBe(1)
   })
 
   it('round-trips on/off command', () => {

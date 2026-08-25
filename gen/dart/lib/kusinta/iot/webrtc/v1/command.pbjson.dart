@@ -42,7 +42,16 @@ final $typed_data.Uint8List commandErrorCodeDescriptor = $convert.base64Decode(
 const ThermostatSetpointParams$json = {
   '1': 'ThermostatSetpointParams',
   '2': [
-    {'1': 'mode', '3': 1, '4': 1, '5': 13, '9': 0, '10': 'mode', '17': true},
+    {
+      '1': 'mode',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.SetpointAdjustMode',
+      '9': 0,
+      '10': 'mode',
+      '17': true
+    },
     {'1': 'amount', '3': 2, '4': 1, '5': 17, '10': 'amount'},
   ],
   '7': {},
@@ -52,10 +61,10 @@ const ThermostatSetpointParams$json = {
 };
 
 /// Descriptor for `ThermostatSetpointParams`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List thermostatSetpointParamsDescriptor =
-    $convert.base64Decode(
-        'ChhUaGVybW9zdGF0U2V0cG9pbnRQYXJhbXMSFwoEbW9kZRgBIAEoDUgAUgRtb2RliAEBEhYKBm'
-        'Ftb3VudBgCIAEoEVIGYW1vdW50Ogm4tRiBBMC1GABCBwoFX21vZGU=');
+final $typed_data.Uint8List thermostatSetpointParamsDescriptor = $convert.base64Decode(
+    'ChhUaGVybW9zdGF0U2V0cG9pbnRQYXJhbXMSQgoEbW9kZRgBIAEoDjIpLmt1c2ludGEuaW90Ln'
+    'dlYnJ0Yy52MS5TZXRwb2ludEFkanVzdE1vZGVIAFIEbW9kZYgBARIWCgZhbW91bnQYAiABKBFS'
+    'BmFtb3VudDoJuLUYgQTAtRgAQgcKBV9tb2Rl');
 
 @$core.Deprecated('Use levelControlParamsDescriptor instead')
 const LevelControlParams$json = {

@@ -47,3 +47,5 @@ export 'kusinta/iot/vendor/v1/vendor_options.pb.dart';
 export 'kusinta/iot/vendor/v1/vendor_options.pbenum.dart';
 export 'kusinta/iot/webrtc/v1/command.pb.dart';
 export 'kusinta/iot/webrtc/v1/command.pbenum.dart';
+export 'kusinta/iot/webrtc/v1/setpoint_mode.pb.dart';
+export 'kusinta/iot/webrtc/v1/setpoint_mode.pbenum.dart';

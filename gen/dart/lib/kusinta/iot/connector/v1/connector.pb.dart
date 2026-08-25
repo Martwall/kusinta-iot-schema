@@ -17,10 +17,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../common/v1/types.pbenum.dart' as $6;
 import '../../device/v1/device.pb.dart' as $1;
-import '../../device/v1/device_event.pb.dart' as $4;
-import '../../device/v1/property_update.pb.dart' as $3;
+import '../../device/v1/device_event.pb.dart' as $5;
+import '../../device/v1/property_update.pb.dart' as $4;
 import '../../identity/v1/identity.pb.dart' as $0;
-import '../../webrtc/v1/command.pb.dart' as $5;
+import '../../webrtc/v1/command.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -593,6 +593,14 @@ class UnsubscribeDevice extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 }
 
+/// Session-level error, gateway → connector. NOT how a command or a write fails: that is
+/// an ordinary ConnectorCommandResult with success = false and a typed CommandError, and
+/// one operation failing says nothing about the session, which continues.
+///
+/// code stays a free-form string here, unlike webrtc.v1.GatewayError's closed
+/// GatewayErrorCode and unlike the CommandError below. A connector is versioned on its own
+/// schedule and one may be a third party's, so the set of things that can go wrong between
+/// a gateway and a connector is not closed the way the app leg's is.
 class GatewayError extends $pb.GeneratedMessage {
   factory GatewayError({
     $core.String? code,
@@ -681,14 +689,16 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   factory ConnectorCommandResult({
     $core.String? requestId,
     $core.bool? success,
-    GatewayError? error,
     $2.Timestamp? completedAt,
+    $3.CommandError? error,
+    $2.Timestamp? settlesBy,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
     if (success != null) result.success = success;
-    if (error != null) result.error = error;
     if (completedAt != null) result.completedAt = completedAt;
+    if (error != null) result.error = error;
+    if (settlesBy != null) result.settlesBy = settlesBy;
     return result;
   }
 
@@ -708,9 +718,11 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOB(2, _omitFieldNames ? '' : 'success')
-    ..aOM<GatewayError>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: GatewayError.create)
     ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'completedAt',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$3.CommandError>(5, _omitFieldNames ? '' : 'error',
+        subBuilder: $3.CommandError.create)
+    ..aOM<$2.Timestamp>(6, _omitFieldNames ? '' : 'settlesBy',
         subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
@@ -757,27 +769,70 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearSuccess() => $_clearField(2);
 
-  @$pb.TagNumber(3)
-  GatewayError get error => $_getN(2);
-  @$pb.TagNumber(3)
-  set error(GatewayError value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasError() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearError() => $_clearField(3);
-  @$pb.TagNumber(3)
-  GatewayError ensureError() => $_ensure(2);
-
   @$pb.TagNumber(4)
-  $2.Timestamp get completedAt => $_getN(3);
+  $2.Timestamp get completedAt => $_getN(2);
   @$pb.TagNumber(4)
   set completedAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasCompletedAt() => $_has(3);
+  $core.bool hasCompletedAt() => $_has(2);
   @$pb.TagNumber(4)
   void clearCompletedAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $2.Timestamp ensureCompletedAt() => $_ensure(3);
+  $2.Timestamp ensureCompletedAt() => $_ensure(2);
+
+  /// Why it failed, in the same closed vocabulary the app is eventually given. The gateway
+  /// forwards this into webrtc.v1.CommandResult.error unchanged; it does not translate.
+  ///
+  /// Shared rather than mirrored on purpose. The free-form string this replaces left every
+  /// connector to invent its own spellings ("TIMEOUT", "UNSUPPORTED_MODE") and the gateway
+  /// to keep a mapping table that silently fell behind whenever a connector coined a new
+  /// one — which is the drift a closed vocabulary exists to prevent.
+  ///
+  /// A connector produces the subset it can actually observe: REJECTED_BY_DEVICE,
+  /// UNREACHABLE, TIMEOUT, INVALID_COMMAND, INTERNAL. NOT_ENTITLED and
+  /// CONSTRAINT_VIOLATED are the gateway's, decided before a command is forwarded at all;
+  /// a connector never sees the caller's permissions and must not claim to.
+  ///
+  /// Rollout note: a connector whose schema predates this sends nothing on field 5 and the
+  /// gateway reads UNSPECIFIED. Set success = false with no code and the meaning is "it
+  /// failed, reason unstated" — which is what the string codes amounted to anyway.
+  @$pb.TagNumber(5)
+  $3.CommandError get error => $_getN(3);
+  @$pb.TagNumber(5)
+  set error($3.CommandError value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasError() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearError() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $3.CommandError ensureError() => $_ensure(3);
+
+  /// When this connector's own optimistic window closes: by this time the value has either
+  /// been confirmed by the device or restored, and either way the connector will have
+  /// published a PropertyUpdate saying so.
+  ///
+  /// Set it when the connector applied the value optimistically and runs a rollback timer
+  /// of its own — a downstream device with a known, device-specific timeout. The gateway
+  /// carries it into webrtc.v1.CommandResult.settles_by instead of applying a fixed guess:
+  /// the connector is the only party that knows the timer, and a gateway-side constant
+  /// chasing it is the same hardcoded-window problem one level up.
+  ///
+  /// Absent means no claim — either the connector confirms synchronously, or it cannot
+  /// state a bound. Absent is NOT "settles immediately", and the gateway is free to fall
+  /// back to a deadline of its own when nothing is stated here.
+  ///
+  /// This bounds the wait; it does not label the values that arrive. Which update was the
+  /// optimistic one is device.v1.PropertyUpdate.provenance.
+  @$pb.TagNumber(6)
+  $2.Timestamp get settlesBy => $_getN(4);
+  @$pb.TagNumber(6)
+  set settlesBy($2.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSettlesBy() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearSettlesBy() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $2.Timestamp ensureSettlesBy() => $_ensure(4);
 }
 
 enum SessionRequest_Payload {
@@ -796,12 +851,12 @@ class SessionRequest extends $pb.GeneratedMessage {
     $core.String? messageId,
     $2.Timestamp? sentAt,
     ConnectorHandshake? handshake,
-    $3.PropertyUpdateBatch? propertyUpdate,
+    $4.PropertyUpdateBatch? propertyUpdate,
     DeviceAnnouncement? deviceAnnounced,
     DeviceRemoval? deviceRemoved,
     ConnectorCommandResult? commandResult,
     HeartBeat? heartbeat,
-    $4.DeviceEventBatch? deviceEvents,
+    $5.DeviceEventBatch? deviceEvents,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -847,8 +902,8 @@ class SessionRequest extends $pb.GeneratedMessage {
         subBuilder: $2.Timestamp.create)
     ..aOM<ConnectorHandshake>(3, _omitFieldNames ? '' : 'handshake',
         subBuilder: ConnectorHandshake.create)
-    ..aOM<$3.PropertyUpdateBatch>(4, _omitFieldNames ? '' : 'propertyUpdate',
-        subBuilder: $3.PropertyUpdateBatch.create)
+    ..aOM<$4.PropertyUpdateBatch>(4, _omitFieldNames ? '' : 'propertyUpdate',
+        subBuilder: $4.PropertyUpdateBatch.create)
     ..aOM<DeviceAnnouncement>(5, _omitFieldNames ? '' : 'deviceAnnounced',
         subBuilder: DeviceAnnouncement.create)
     ..aOM<DeviceRemoval>(6, _omitFieldNames ? '' : 'deviceRemoved',
@@ -857,8 +912,8 @@ class SessionRequest extends $pb.GeneratedMessage {
         subBuilder: ConnectorCommandResult.create)
     ..aOM<HeartBeat>(8, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
-    ..aOM<$4.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
-        subBuilder: $4.DeviceEventBatch.create)
+    ..aOM<$5.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
+        subBuilder: $5.DeviceEventBatch.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -918,15 +973,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   ConnectorHandshake ensureHandshake() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $3.PropertyUpdateBatch get propertyUpdate => $_getN(3);
+  $4.PropertyUpdateBatch get propertyUpdate => $_getN(3);
   @$pb.TagNumber(4)
-  set propertyUpdate($3.PropertyUpdateBatch value) => $_setField(4, value);
+  set propertyUpdate($4.PropertyUpdateBatch value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasPropertyUpdate() => $_has(3);
   @$pb.TagNumber(4)
   void clearPropertyUpdate() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.PropertyUpdateBatch ensurePropertyUpdate() => $_ensure(3);
+  $4.PropertyUpdateBatch ensurePropertyUpdate() => $_ensure(3);
 
   @$pb.TagNumber(5)
   DeviceAnnouncement get deviceAnnounced => $_getN(4);
@@ -973,15 +1028,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   HeartBeat ensureHeartbeat() => $_ensure(7);
 
   @$pb.TagNumber(9)
-  $4.DeviceEventBatch get deviceEvents => $_getN(8);
+  $5.DeviceEventBatch get deviceEvents => $_getN(8);
   @$pb.TagNumber(9)
-  set deviceEvents($4.DeviceEventBatch value) => $_setField(9, value);
+  set deviceEvents($5.DeviceEventBatch value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasDeviceEvents() => $_has(8);
   @$pb.TagNumber(9)
   void clearDeviceEvents() => $_clearField(9);
   @$pb.TagNumber(9)
-  $4.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
+  $5.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
 }
 
 enum SessionResponse_Payload {
@@ -1002,8 +1057,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     SubscribeDevice? subscribe,
     UnsubscribeDevice? unsubscribe,
     GatewayError? error,
-    $5.DeviceCommand? executeCommand,
-    $5.AttributeWriteRequest? executeAttributeWrite,
+    $3.DeviceCommand? executeCommand,
+    $3.AttributeWriteRequest? executeAttributeWrite,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1054,11 +1109,11 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: UnsubscribeDevice.create)
     ..aOM<GatewayError>(7, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
-    ..aOM<$5.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
-        subBuilder: $5.DeviceCommand.create)
-    ..aOM<$5.AttributeWriteRequest>(
+    ..aOM<$3.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
+        subBuilder: $3.DeviceCommand.create)
+    ..aOM<$3.AttributeWriteRequest>(
         9, _omitFieldNames ? '' : 'executeAttributeWrite',
-        subBuilder: $5.AttributeWriteRequest.create)
+        subBuilder: $3.AttributeWriteRequest.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1151,29 +1206,29 @@ class SessionResponse extends $pb.GeneratedMessage {
   GatewayError ensureError() => $_ensure(5);
 
   @$pb.TagNumber(8)
-  $5.DeviceCommand get executeCommand => $_getN(6);
+  $3.DeviceCommand get executeCommand => $_getN(6);
   @$pb.TagNumber(8)
-  set executeCommand($5.DeviceCommand value) => $_setField(8, value);
+  set executeCommand($3.DeviceCommand value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasExecuteCommand() => $_has(6);
   @$pb.TagNumber(8)
   void clearExecuteCommand() => $_clearField(8);
   @$pb.TagNumber(8)
-  $5.DeviceCommand ensureExecuteCommand() => $_ensure(6);
+  $3.DeviceCommand ensureExecuteCommand() => $_ensure(6);
 
   /// The connector-leg half of PERMISSION_ACTION_WRITE. A sibling case rather than another
   /// meaning overloaded onto execute_command, which is the mistake this replaces.
   @$pb.TagNumber(9)
-  $5.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
+  $3.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
   @$pb.TagNumber(9)
-  set executeAttributeWrite($5.AttributeWriteRequest value) =>
+  set executeAttributeWrite($3.AttributeWriteRequest value) =>
       $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasExecuteAttributeWrite() => $_has(7);
   @$pb.TagNumber(9)
   void clearExecuteAttributeWrite() => $_clearField(9);
   @$pb.TagNumber(9)
-  $5.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
+  $3.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
 }
 
 const $core.bool _omitFieldNames =

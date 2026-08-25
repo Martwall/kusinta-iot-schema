@@ -4,6 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { SetpointAdjustMode } from "./setpoint_mode_pb.js";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
@@ -28,11 +29,11 @@ export declare const file_kusinta_iot_webrtc_v1_command: GenFile;
  */
 export declare type ThermostatSetpointParams = Message<"kusinta.iot.webrtc.v1.ThermostatSetpointParams"> & {
   /**
-   * SetpointAdjustMode, see above
+   * absent = the producer stated no mode
    *
-   * @generated from field: optional uint32 mode = 1;
+   * @generated from field: optional kusinta.iot.webrtc.v1.SetpointAdjustMode mode = 1;
    */
-  mode?: number | undefined;
+  mode?: SetpointAdjustMode | undefined;
 
   /**
    * centidegrees delta

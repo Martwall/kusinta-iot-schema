@@ -224,14 +224,6 @@ const ConnectorCommandResult$json = {
     {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
     {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
     {
-      '1': 'error',
-      '3': 3,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.connector.v1.GatewayError',
-      '10': 'error'
-    },
-    {
       '1': 'completed_at',
       '3': 4,
       '4': 1,
@@ -239,15 +231,41 @@ const ConnectorCommandResult$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'completedAt'
     },
+    {
+      '1': 'error',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.CommandError',
+      '10': 'error'
+    },
+    {
+      '1': 'settles_by',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'settlesBy',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_settles_by'},
+  ],
+  '9': [
+    {'1': 3, '2': 4},
   ],
 };
 
 /// Descriptor for `ConnectorCommandResult`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List connectorCommandResultDescriptor = $convert.base64Decode(
     'ChZDb25uZWN0b3JDb21tYW5kUmVzdWx0Eh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZB'
-    'IYCgdzdWNjZXNzGAIgASgIUgdzdWNjZXNzEjwKBWVycm9yGAMgASgLMiYua3VzaW50YS5pb3Qu'
-    'Y29ubmVjdG9yLnYxLkdhdGV3YXlFcnJvclIFZXJyb3ISPQoMY29tcGxldGVkX2F0GAQgASgLMh'
-    'ouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFILY29tcGxldGVkQXQ=');
+    'IYCgdzdWNjZXNzGAIgASgIUgdzdWNjZXNzEj0KDGNvbXBsZXRlZF9hdBgEIAEoCzIaLmdvb2ds'
+    'ZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2NvbXBsZXRlZEF0EjkKBWVycm9yGAUgASgLMiMua3VzaW'
+    '50YS5pb3Qud2VicnRjLnYxLkNvbW1hbmRFcnJvclIFZXJyb3ISPgoKc2V0dGxlc19ieRgGIAEo'
+    'CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAFIJc2V0dGxlc0J5iAEBQg0KC19zZXR0bG'
+    'VzX2J5SgQIAxAE');
 
 @$core.Deprecated('Use sessionRequestDescriptor instead')
 const SessionRequest$json = {

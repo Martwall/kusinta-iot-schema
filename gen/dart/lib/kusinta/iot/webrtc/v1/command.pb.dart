@@ -19,6 +19,7 @@ import '../../access/v1/acl.pb.dart' as $2;
 import '../../device/v1/cluster_state.pb.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'command.pbenum.dart';
+import 'setpoint_mode.pbenum.dart' as $4;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -34,7 +35,7 @@ export 'command.pbenum.dart';
 /// already knows the absolute value it wants; it has no such failure mode.
 class ThermostatSetpointParams extends $pb.GeneratedMessage {
   factory ThermostatSetpointParams({
-    $core.int? mode,
+    $4.SetpointAdjustMode? mode,
     $core.int? amount,
   }) {
     final result = create();
@@ -57,7 +58,11 @@ class ThermostatSetpointParams extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OU3)
+    ..e<$4.SetpointAdjustMode>(
+        1, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $4.SetpointAdjustMode.SETPOINT_ADJUST_MODE_HEAT,
+        valueOf: $4.SetpointAdjustMode.valueOf,
+        enumValues: $4.SetpointAdjustMode.values)
     ..a<$core.int>(2, _omitFieldNames ? '' : 'amount', $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
@@ -85,9 +90,9 @@ class ThermostatSetpointParams extends $pb.GeneratedMessage {
   static ThermostatSetpointParams? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get mode => $_getIZ(0);
+  $4.SetpointAdjustMode get mode => $_getN(0);
   @$pb.TagNumber(1)
-  set mode($core.int value) => $_setUnsignedInt32(0, value);
+  set mode($4.SetpointAdjustMode value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasMode() => $_has(0);
   @$pb.TagNumber(1)

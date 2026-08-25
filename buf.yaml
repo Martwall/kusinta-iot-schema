@@ -6,6 +6,22 @@ modules:
 lint:
   use:
     - STANDARD
+  ignore_only:
+    # SetpointAdjustMode carries Matter's SetpointRaiseLowerModeEnum numbering, where
+    # Heat is 0. The wire value IS Matter's value, so zero cannot be given up to an
+    # _UNSPECIFIED sentinel; the field carries explicit presence instead, which is what
+    # makes "no mode stated" representable.
+    #
+    # The waiver is expressed here rather than as a `// buf:lint:ignore` comment because
+    # leading comments become doc strings in the generated .d.ts and .pb.dart, and those
+    # are published to npm and pub.dev — a linter directive has no business in a
+    # consumer's editor tooltip.
+    #
+    # A path is the finest granularity buf offers, so the enum lives alone in this file:
+    # every other enum keeps the rule, including CommandErrorCode next door, which does
+    # need its _UNSPECIFIED zero.
+    ENUM_ZERO_VALUE_SUFFIX:
+      - proto/kusinta/iot/webrtc/v1/setpoint_mode.proto
 breaking:
   use:
     - FILE

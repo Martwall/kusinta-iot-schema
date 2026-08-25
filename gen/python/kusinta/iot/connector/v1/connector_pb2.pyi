@@ -90,16 +90,18 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[str] = ..., message: _Optional[str] = ..., request_id: _Optional[str] = ...) -> None: ...
 
 class ConnectorCommandResult(_message.Message):
-    __slots__ = ("request_id", "success", "error", "completed_at")
+    __slots__ = ("request_id", "success", "completed_at", "error", "settles_by")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
-    ERROR_FIELD_NUMBER: _ClassVar[int]
     COMPLETED_AT_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    SETTLES_BY_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     success: bool
-    error: GatewayError
     completed_at: _timestamp_pb2.Timestamp
-    def __init__(self, request_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    error: _command_pb2.CommandError
+    settles_by: _timestamp_pb2.Timestamp
+    def __init__(self, request_id: _Optional[str] = ..., success: _Optional[bool] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., error: _Optional[_Union[_command_pb2.CommandError, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class SessionRequest(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake", "property_update", "device_announced", "device_removed", "command_result", "heartbeat", "device_events")

@@ -57,3 +57,5 @@ export 'kusinta/iot/webrtc/v1/management.pb.dart';
 export 'kusinta/iot/webrtc/v1/management.pbenum.dart';
 export 'kusinta/iot/webrtc/v1/permission_push.pb.dart';
 export 'kusinta/iot/webrtc/v1/permission_push.pbenum.dart';
+export 'kusinta/iot/webrtc/v1/setpoint_mode.pb.dart';
+export 'kusinta/iot/webrtc/v1/setpoint_mode.pbenum.dart';

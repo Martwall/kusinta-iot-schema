@@ -5,6 +5,7 @@ from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
 from kusinta.iot.device.v1 import matter_options_pb2 as _matter_options_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
+from kusinta.iot.webrtc.v1 import setpoint_mode_pb2 as _setpoint_mode_pb2
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -36,9 +37,9 @@ class ThermostatSetpointParams(_message.Message):
     __slots__ = ("mode", "amount")
     MODE_FIELD_NUMBER: _ClassVar[int]
     AMOUNT_FIELD_NUMBER: _ClassVar[int]
-    mode: int
+    mode: _setpoint_mode_pb2.SetpointAdjustMode
     amount: int
-    def __init__(self, mode: _Optional[int] = ..., amount: _Optional[int] = ...) -> None: ...
+    def __init__(self, mode: _Optional[_Union[_setpoint_mode_pb2.SetpointAdjustMode, str]] = ..., amount: _Optional[int] = ...) -> None: ...
 
 class LevelControlParams(_message.Message):
     __slots__ = ("level", "transition_time")

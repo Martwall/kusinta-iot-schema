@@ -14,7 +14,7 @@ An absolute setpoint is NOT here: writing an attribute is webrtc.v1.AttributeWri
 not a command. See test_attribute_write.py.
 """
 
-from kusinta.iot.webrtc.v1 import command_pb2
+from kusinta.iot.webrtc.v1 import command_pb2, setpoint_mode_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 
 
@@ -45,6 +45,32 @@ def test_setpoint_mode_unset_survives_round_trip_as_absent():
     decoded = command_pb2.ThermostatSetpointParams()
     decoded.ParseFromString(original.SerializeToString())
     assert not decoded.HasField("mode")
+
+
+# --- mode: a real enum, not a commented-on integer --------------------------------
+
+
+def test_setpoint_adjust_mode_carries_matter_numbering():
+    """Matter's SetpointRaiseLowerModeEnum. An older Heat=1/Cool=2/Both=3 convention
+    reverses which physical behavior a command produces, so the numbering is asserted
+    rather than left to a comment."""
+    assert setpoint_mode_pb2.SETPOINT_ADJUST_MODE_HEAT == 0
+    assert setpoint_mode_pb2.SETPOINT_ADJUST_MODE_COOL == 1
+    assert setpoint_mode_pb2.SETPOINT_ADJUST_MODE_BOTH == 2
+
+
+def test_setpoint_mode_is_typed_as_setpoint_adjust_mode():
+    params = command_pb2.ThermostatSetpointParams(
+        mode=setpoint_mode_pb2.SETPOINT_ADJUST_MODE_COOL, amount=-150
+    )
+    assert params.mode == setpoint_mode_pb2.SETPOINT_ADJUST_MODE_COOL
+
+
+def test_setpoint_adjust_mode_is_not_system_mode():
+    """Matter's SystemModeEnum, carried by ThermostatProperties.system_mode, numbers
+    Cool 3; this enum numbers it 1. Reading one through the other's table silently
+    commands the wrong thing."""
+    assert setpoint_mode_pb2.SETPOINT_ADJUST_MODE_COOL != 3
 
 
 # --- delta command ----------------------------------------------------------------

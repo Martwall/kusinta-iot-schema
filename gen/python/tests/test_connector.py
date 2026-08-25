@@ -1,6 +1,7 @@
 from kusinta.iot.connector.v1 import connector_pb2
 from kusinta.iot.common.v1 import types_pb2
 from kusinta.iot.identity.v1 import identity_pb2
+from kusinta.iot.webrtc.v1 import command_pb2
 from kusinta.iot.device.v1 import (
     descriptor_pb2,
     device_pb2,
@@ -148,3 +149,55 @@ def test_announced_endpoints_may_carry_no_readings_yet():
     decoded = connector_pb2.DeviceAnnouncement()
     decoded.ParseFromString(announcement.SerializeToString())
     assert decoded.device.endpoints[0].WhichOneof("matter_properties") is None
+
+
+# --- ConnectorCommandResult: one error vocabulary, and the connector's own window ---
+
+
+def test_connector_command_result_carries_the_shared_command_error_code():
+    """A connector reports a rejection in the same closed vocabulary the app sees, so
+    nothing between the two has to interpret an ad hoc string."""
+    result = connector_pb2.ConnectorCommandResult(
+        request_id="cmd-1",
+        success=False,
+        error=command_pb2.CommandError(
+            code=command_pb2.COMMAND_ERROR_CODE_REJECTED_BY_DEVICE,
+            message="device refused the mode",
+        ),
+    )
+    decoded = connector_pb2.ConnectorCommandResult()
+    decoded.ParseFromString(result.SerializeToString())
+    assert decoded.error.code == command_pb2.COMMAND_ERROR_CODE_REJECTED_BY_DEVICE
+
+
+def test_connector_error_reaches_the_app_leg_without_a_mapping_table():
+    """The gateway forwards the error into the app-facing CommandResult as-is. Both legs
+    name the same type, so there is no string to reinterpret and nothing to drift."""
+    from_connector = connector_pb2.ConnectorCommandResult(
+        request_id="cmd-1",
+        success=False,
+        error=command_pb2.CommandError(
+            code=command_pb2.COMMAND_ERROR_CODE_UNREACHABLE, message="device asleep"
+        ),
+    )
+    to_app = command_pb2.CommandResult(
+        request_id=from_connector.request_id,
+        success=False,
+        error=from_connector.error,
+    )
+    assert to_app.error.code == command_pb2.COMMAND_ERROR_CODE_UNREACHABLE
+
+
+def test_connector_command_result_settles_by_absent_by_default():
+    """Absent is no claim, not "settles immediately"."""
+    result = connector_pb2.ConnectorCommandResult(request_id="cmd-1", success=True)
+    assert not result.HasField("settles_by")
+
+
+def test_connector_command_result_settles_by_round_trips():
+    result = connector_pb2.ConnectorCommandResult(request_id="cmd-1", success=True)
+    result.settles_by.FromSeconds(1_700_000_000)
+    decoded = connector_pb2.ConnectorCommandResult()
+    decoded.ParseFromString(result.SerializeToString())
+    assert decoded.HasField("settles_by")
+    assert decoded.settles_by.ToSeconds() == 1_700_000_000

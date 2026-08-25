@@ -27,9 +27,10 @@ from kusinta.iot.access.v1 import acl_pb2 as kusinta_dot_iot_dot_access_dot_v1_d
 from kusinta.iot.device.v1 import cluster_state_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_cluster__state__pb2
 from kusinta.iot.device.v1 import matter_options_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_matter__options__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
+from kusinta.iot.webrtc.v1 import setpoint_mode_pb2 as kusinta_dot_iot_dot_webrtc_dot_v1_dot_setpoint__mode__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/webrtc/v1/command.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a)kusinta/iot/device/v1/cluster_state.proto\x1a*kusinta/iot/device/v1/matter_options.proto\x1a&kusinta/iot/identity/v1/identity.proto\"_\n\x18ThermostatSetpointParams\x12\x17\n\x04mode\x18\x01 \x01(\rH\x00R\x04mode\x88\x01\x01\x12\x16\n\x06\x61mount\x18\x02 \x01(\x11R\x06\x61mount:\t\xb8\xb5\x18\x81\x04\xc0\xb5\x18\x00\x42\x07\n\x05_mode\"]\n\x12LevelControlParams\x12\x14\n\x05level\x18\x01 \x01(\rR\x05level\x12\'\n\x0ftransition_time\x18\x02 \x01(\rR\x0etransitionTime:\x08\xb8\xb5\x18\x08\xc0\xb5\x18\x00\"+\n\x0bOnOffParams:\x04\xb8\xb5\x18\x06J\x04\x08\x01\x10\x02J\x04\x08\x02\x10\x03R\x02onR\x06toggle\"T\n\x18WindowCoveringLiftParams\x12-\n\x12lift_percent100ths\x18\x01 \x01(\rR\x11liftPercent100ths:\t\xb8\xb5\x18\x82\x02\xc0\xb5\x18\x05\"D\n\x0e\x44oorLockParams\x12\x19\n\x08pin_code\x18\x02 \x01(\tR\x07pinCode:\x05\xb8\xb5\x18\x81\x02J\x04\x08\x01\x10\x02R\nlock_state\"\xab\x06\n\rDeviceCommand\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12>\n\tdevice_id\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12!\n\x0c\x63ommand_name\x18\x04 \x01(\tR\x0b\x63ommandName\x12\x1d\n\ncluster_id\x18\x0c \x01(\rR\tclusterId\x12/\n\x11matter_command_id\x18\r \x01(\rH\x01R\x0fmatterCommandId\x88\x01\x01\x12$\n\x0b\x65ndpoint_id\x18\x0b \x01(\rH\x02R\nendpointId\x88\x01\x01\x12\x62\n\x13thermostat_setpoint\x18\x05 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.ThermostatSetpointParamsH\x00R\x12thermostatSetpoint\x12P\n\rlevel_control\x18\x06 \x01(\x0b\x32).kusinta.iot.webrtc.v1.LevelControlParamsH\x00R\x0clevelControl\x12;\n\x06on_off\x18\x07 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.OnOffParamsH\x00R\x05onOff\x12\x63\n\x14window_covering_lift\x18\x08 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.WindowCoveringLiftParamsH\x00R\x12windowCoveringLift\x12\x44\n\tdoor_lock\x18\t \x01(\x0b\x32%.kusinta.iot.webrtc.v1.DoorLockParamsH\x00R\x08\x64oorLock\x12\x19\n\x07raw_tlv\x18\x63 \x01(\x0cH\x00R\x06rawTlvB\x0c\n\nparametersB\x14\n\x12_matter_command_idB\x0e\n\x0c_endpoint_idJ\x04\x08\x03\x10\x04J\x04\x08\n\x10\x0bR\x0e\x63luster_id_hexR\x19thermostat_setpoint_write\"k\n\x0c\x43ommandError\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12;\n\x04\x63ode\x18\x03 \x01(\x0e\x32\'.kusinta.iot.webrtc.v1.CommandErrorCodeR\x04\x63odeJ\x04\x08\x01\x10\x02\"\x91\x02\n\rCommandResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12\x39\n\x05\x65rror\x18\x03 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.CommandErrorR\x05\x65rror\x12=\n\x0c\x63ompleted_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63ompletedAt\x12>\n\nsettles_by\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00R\tsettlesBy\x88\x01\x01\x42\r\n\x0b_settles_by\"\xf0\x01\n\x15\x41ttributeWriteRequest\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12>\n\tdevice_id\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x06target\x18\x03 \x01(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\x06target\x12;\n\x05value\x18\x04 \x01(\x0b\x32%.kusinta.iot.device.v1.AttributeValueR\x05value*\xbf\x02\n\x10\x43ommandErrorCode\x12\"\n\x1e\x43OMMAND_ERROR_CODE_UNSPECIFIED\x10\x00\x12#\n\x1f\x43OMMAND_ERROR_CODE_NOT_ENTITLED\x10\x01\x12*\n&COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED\x10\x02\x12&\n\"COMMAND_ERROR_CODE_INVALID_COMMAND\x10\x03\x12\"\n\x1e\x43OMMAND_ERROR_CODE_UNREACHABLE\x10\x04\x12\x1e\n\x1a\x43OMMAND_ERROR_CODE_TIMEOUT\x10\x05\x12)\n%COMMAND_ERROR_CODE_REJECTED_BY_DEVICE\x10\x06\x12\x1f\n\x1b\x43OMMAND_ERROR_CODE_INTERNAL\x10\x07\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/webrtc/v1/command.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a)kusinta/iot/device/v1/cluster_state.proto\x1a*kusinta/iot/device/v1/matter_options.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a)kusinta/iot/webrtc/v1/setpoint_mode.proto\"\x8a\x01\n\x18ThermostatSetpointParams\x12\x42\n\x04mode\x18\x01 \x01(\x0e\x32).kusinta.iot.webrtc.v1.SetpointAdjustModeH\x00R\x04mode\x88\x01\x01\x12\x16\n\x06\x61mount\x18\x02 \x01(\x11R\x06\x61mount:\t\xb8\xb5\x18\x81\x04\xc0\xb5\x18\x00\x42\x07\n\x05_mode\"]\n\x12LevelControlParams\x12\x14\n\x05level\x18\x01 \x01(\rR\x05level\x12\'\n\x0ftransition_time\x18\x02 \x01(\rR\x0etransitionTime:\x08\xb8\xb5\x18\x08\xc0\xb5\x18\x00\"+\n\x0bOnOffParams:\x04\xb8\xb5\x18\x06J\x04\x08\x01\x10\x02J\x04\x08\x02\x10\x03R\x02onR\x06toggle\"T\n\x18WindowCoveringLiftParams\x12-\n\x12lift_percent100ths\x18\x01 \x01(\rR\x11liftPercent100ths:\t\xb8\xb5\x18\x82\x02\xc0\xb5\x18\x05\"D\n\x0e\x44oorLockParams\x12\x19\n\x08pin_code\x18\x02 \x01(\tR\x07pinCode:\x05\xb8\xb5\x18\x81\x02J\x04\x08\x01\x10\x02R\nlock_state\"\xab\x06\n\rDeviceCommand\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12>\n\tdevice_id\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12!\n\x0c\x63ommand_name\x18\x04 \x01(\tR\x0b\x63ommandName\x12\x1d\n\ncluster_id\x18\x0c \x01(\rR\tclusterId\x12/\n\x11matter_command_id\x18\r \x01(\rH\x01R\x0fmatterCommandId\x88\x01\x01\x12$\n\x0b\x65ndpoint_id\x18\x0b \x01(\rH\x02R\nendpointId\x88\x01\x01\x12\x62\n\x13thermostat_setpoint\x18\x05 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.ThermostatSetpointParamsH\x00R\x12thermostatSetpoint\x12P\n\rlevel_control\x18\x06 \x01(\x0b\x32).kusinta.iot.webrtc.v1.LevelControlParamsH\x00R\x0clevelControl\x12;\n\x06on_off\x18\x07 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.OnOffParamsH\x00R\x05onOff\x12\x63\n\x14window_covering_lift\x18\x08 \x01(\x0b\x32/.kusinta.iot.webrtc.v1.WindowCoveringLiftParamsH\x00R\x12windowCoveringLift\x12\x44\n\tdoor_lock\x18\t \x01(\x0b\x32%.kusinta.iot.webrtc.v1.DoorLockParamsH\x00R\x08\x64oorLock\x12\x19\n\x07raw_tlv\x18\x63 \x01(\x0cH\x00R\x06rawTlvB\x0c\n\nparametersB\x14\n\x12_matter_command_idB\x0e\n\x0c_endpoint_idJ\x04\x08\x03\x10\x04J\x04\x08\n\x10\x0bR\x0e\x63luster_id_hexR\x19thermostat_setpoint_write\"k\n\x0c\x43ommandError\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12;\n\x04\x63ode\x18\x03 \x01(\x0e\x32\'.kusinta.iot.webrtc.v1.CommandErrorCodeR\x04\x63odeJ\x04\x08\x01\x10\x02\"\x91\x02\n\rCommandResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x18\n\x07success\x18\x02 \x01(\x08R\x07success\x12\x39\n\x05\x65rror\x18\x03 \x01(\x0b\x32#.kusinta.iot.webrtc.v1.CommandErrorR\x05\x65rror\x12=\n\x0c\x63ompleted_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x63ompletedAt\x12>\n\nsettles_by\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00R\tsettlesBy\x88\x01\x01\x42\r\n\x0b_settles_by\"\xf0\x01\n\x15\x41ttributeWriteRequest\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12>\n\tdevice_id\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x06target\x18\x03 \x01(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\x06target\x12;\n\x05value\x18\x04 \x01(\x0b\x32%.kusinta.iot.device.v1.AttributeValueR\x05value*\xbf\x02\n\x10\x43ommandErrorCode\x12\"\n\x1e\x43OMMAND_ERROR_CODE_UNSPECIFIED\x10\x00\x12#\n\x1f\x43OMMAND_ERROR_CODE_NOT_ENTITLED\x10\x01\x12*\n&COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED\x10\x02\x12&\n\"COMMAND_ERROR_CODE_INVALID_COMMAND\x10\x03\x12\"\n\x1e\x43OMMAND_ERROR_CODE_UNREACHABLE\x10\x04\x12\x1e\n\x1a\x43OMMAND_ERROR_CODE_TIMEOUT\x10\x05\x12)\n%COMMAND_ERROR_CODE_REJECTED_BY_DEVICE\x10\x06\x12\x1f\n\x1b\x43OMMAND_ERROR_CODE_INTERNAL\x10\x07\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -47,24 +48,24 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_options = b'\270\265\030\202\002\300\265\030\005'
   _globals['_DOORLOCKPARAMS']._loaded_options = None
   _globals['_DOORLOCKPARAMS']._serialized_options = b'\270\265\030\201\002'
-  _globals['_COMMANDERRORCODE']._serialized_start=2091
-  _globals['_COMMANDERRORCODE']._serialized_end=2410
-  _globals['_THERMOSTATSETPOINTPARAMS']._serialized_start=255
-  _globals['_THERMOSTATSETPOINTPARAMS']._serialized_end=350
-  _globals['_LEVELCONTROLPARAMS']._serialized_start=352
-  _globals['_LEVELCONTROLPARAMS']._serialized_end=445
-  _globals['_ONOFFPARAMS']._serialized_start=447
-  _globals['_ONOFFPARAMS']._serialized_end=490
-  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_start=492
-  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_end=576
-  _globals['_DOORLOCKPARAMS']._serialized_start=578
-  _globals['_DOORLOCKPARAMS']._serialized_end=646
-  _globals['_DEVICECOMMAND']._serialized_start=649
-  _globals['_DEVICECOMMAND']._serialized_end=1460
-  _globals['_COMMANDERROR']._serialized_start=1462
-  _globals['_COMMANDERROR']._serialized_end=1569
-  _globals['_COMMANDRESULT']._serialized_start=1572
-  _globals['_COMMANDRESULT']._serialized_end=1845
-  _globals['_ATTRIBUTEWRITEREQUEST']._serialized_start=1848
-  _globals['_ATTRIBUTEWRITEREQUEST']._serialized_end=2088
+  _globals['_COMMANDERRORCODE']._serialized_start=2178
+  _globals['_COMMANDERRORCODE']._serialized_end=2497
+  _globals['_THERMOSTATSETPOINTPARAMS']._serialized_start=299
+  _globals['_THERMOSTATSETPOINTPARAMS']._serialized_end=437
+  _globals['_LEVELCONTROLPARAMS']._serialized_start=439
+  _globals['_LEVELCONTROLPARAMS']._serialized_end=532
+  _globals['_ONOFFPARAMS']._serialized_start=534
+  _globals['_ONOFFPARAMS']._serialized_end=577
+  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_start=579
+  _globals['_WINDOWCOVERINGLIFTPARAMS']._serialized_end=663
+  _globals['_DOORLOCKPARAMS']._serialized_start=665
+  _globals['_DOORLOCKPARAMS']._serialized_end=733
+  _globals['_DEVICECOMMAND']._serialized_start=736
+  _globals['_DEVICECOMMAND']._serialized_end=1547
+  _globals['_COMMANDERROR']._serialized_start=1549
+  _globals['_COMMANDERROR']._serialized_end=1656
+  _globals['_COMMANDRESULT']._serialized_start=1659
+  _globals['_COMMANDRESULT']._serialized_end=1932
+  _globals['_ATTRIBUTEWRITEREQUEST']._serialized_start=1935
+  _globals['_ATTRIBUTEWRITEREQUEST']._serialized_end=2175
 # @@protoc_insertion_point(module_scope)
