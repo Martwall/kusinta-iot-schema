@@ -826,7 +826,7 @@ class ManagementResult extends $pb.GeneratedMessage {
 
 enum GatewayMessage_Payload {
   stateSnapshot,
-  propertyEvent,
+  propertyReport,
   permissionUpdate,
   commandResult,
   pong,
@@ -846,7 +846,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     $core.String? messageId,
     $4.Timestamp? sentAt,
     $5.DeviceStateSnapshot? stateSnapshot,
-    $5.DevicePropertyEvent? propertyEvent,
+    $5.PropertyReport? propertyReport,
     $6.LivePermissionUpdate? permissionUpdate,
     $7.CommandResult? commandResult,
     Pong? pong,
@@ -862,7 +862,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (messageId != null) result.messageId = messageId;
     if (sentAt != null) result.sentAt = sentAt;
     if (stateSnapshot != null) result.stateSnapshot = stateSnapshot;
-    if (propertyEvent != null) result.propertyEvent = propertyEvent;
+    if (propertyReport != null) result.propertyReport = propertyReport;
     if (permissionUpdate != null) result.permissionUpdate = permissionUpdate;
     if (commandResult != null) result.commandResult = commandResult;
     if (pong != null) result.pong = pong;
@@ -888,7 +888,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, GatewayMessage_Payload>
       _GatewayMessage_PayloadByTag = {
     3: GatewayMessage_Payload.stateSnapshot,
-    4: GatewayMessage_Payload.propertyEvent,
+    4: GatewayMessage_Payload.propertyReport,
     5: GatewayMessage_Payload.permissionUpdate,
     6: GatewayMessage_Payload.commandResult,
     8: GatewayMessage_Payload.pong,
@@ -912,8 +912,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: $4.Timestamp.create)
     ..aOM<$5.DeviceStateSnapshot>(3, _omitFieldNames ? '' : 'stateSnapshot',
         subBuilder: $5.DeviceStateSnapshot.create)
-    ..aOM<$5.DevicePropertyEvent>(4, _omitFieldNames ? '' : 'propertyEvent',
-        subBuilder: $5.DevicePropertyEvent.create)
+    ..aOM<$5.PropertyReport>(4, _omitFieldNames ? '' : 'propertyReport',
+        subBuilder: $5.PropertyReport.create)
     ..aOM<$6.LivePermissionUpdate>(5, _omitFieldNames ? '' : 'permissionUpdate',
         subBuilder: $6.LivePermissionUpdate.create)
     ..aOM<$7.CommandResult>(6, _omitFieldNames ? '' : 'commandResult',
@@ -992,15 +992,15 @@ class GatewayMessage extends $pb.GeneratedMessage {
   $5.DeviceStateSnapshot ensureStateSnapshot() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $5.DevicePropertyEvent get propertyEvent => $_getN(3);
+  $5.PropertyReport get propertyReport => $_getN(3);
   @$pb.TagNumber(4)
-  set propertyEvent($5.DevicePropertyEvent value) => $_setField(4, value);
+  set propertyReport($5.PropertyReport value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasPropertyEvent() => $_has(3);
+  $core.bool hasPropertyReport() => $_has(3);
   @$pb.TagNumber(4)
-  void clearPropertyEvent() => $_clearField(4);
+  void clearPropertyReport() => $_clearField(4);
   @$pb.TagNumber(4)
-  $5.DevicePropertyEvent ensurePropertyEvent() => $_ensure(3);
+  $5.PropertyReport ensurePropertyReport() => $_ensure(3);
 
   @$pb.TagNumber(5)
   $6.LivePermissionUpdate get permissionUpdate => $_getN(4);

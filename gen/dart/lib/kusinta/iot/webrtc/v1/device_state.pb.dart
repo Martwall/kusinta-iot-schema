@@ -105,9 +105,15 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
   $2.Timestamp ensureSnapshottedAt() => $_ensure(2);
 }
 
-/// Single property change event streamed to the app in real time.
-class DevicePropertyEvent extends $pb.GeneratedMessage {
-  factory DevicePropertyEvent({
+/// One attribute reading streamed to the app as it happens — Matter's Report Data Action,
+/// for a single attribute.
+///
+/// Was DevicePropertyEvent. Renamed because it carries a device.v1.PropertyUpdate, which is
+/// STATE, while device.v1.DeviceEvent carries a journal entry. Two messages with "Event" in
+/// the name meaning opposite things is a trap, and this one was never the event: latest
+/// wins, order does not matter, and a missed one is corrected by the next.
+class PropertyReport extends $pb.GeneratedMessage {
+  factory PropertyReport({
     $3.PropertyUpdate? update,
     $2.Timestamp? gatewayProcessedAt,
   }) {
@@ -118,17 +124,17 @@ class DevicePropertyEvent extends $pb.GeneratedMessage {
     return result;
   }
 
-  DevicePropertyEvent._();
+  PropertyReport._();
 
-  factory DevicePropertyEvent.fromBuffer($core.List<$core.int> data,
+  factory PropertyReport.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory DevicePropertyEvent.fromJson($core.String json,
+  factory PropertyReport.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'DevicePropertyEvent',
+      _omitMessageNames ? '' : 'PropertyReport',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
@@ -139,25 +145,25 @@ class DevicePropertyEvent extends $pb.GeneratedMessage {
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DevicePropertyEvent clone() => DevicePropertyEvent()..mergeFromMessage(this);
+  PropertyReport clone() => PropertyReport()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  DevicePropertyEvent copyWith(void Function(DevicePropertyEvent) updates) =>
-      super.copyWith((message) => updates(message as DevicePropertyEvent))
-          as DevicePropertyEvent;
+  PropertyReport copyWith(void Function(PropertyReport) updates) =>
+      super.copyWith((message) => updates(message as PropertyReport))
+          as PropertyReport;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static DevicePropertyEvent create() => DevicePropertyEvent._();
+  static PropertyReport create() => PropertyReport._();
   @$core.override
-  DevicePropertyEvent createEmptyInstance() => create();
-  static $pb.PbList<DevicePropertyEvent> createRepeated() =>
-      $pb.PbList<DevicePropertyEvent>();
+  PropertyReport createEmptyInstance() => create();
+  static $pb.PbList<PropertyReport> createRepeated() =>
+      $pb.PbList<PropertyReport>();
   @$core.pragma('dart2js:noInline')
-  static DevicePropertyEvent getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DevicePropertyEvent>(create);
-  static DevicePropertyEvent? _defaultInstance;
+  static PropertyReport getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PropertyReport>(create);
+  static PropertyReport? _defaultInstance;
 
   @$pb.TagNumber(1)
   $3.PropertyUpdate get update => $_getN(0);

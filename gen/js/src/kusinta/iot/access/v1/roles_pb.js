@@ -8,7 +8,7 @@ import { enumDesc, fileDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
  * Describes the file kusinta/iot/access/v1/roles.proto.
  */
 export const file_kusinta_iot_access_v1_roles = /*@__PURE__*/
-  fileDesc("CiFrdXNpbnRhL2lvdC9hY2Nlc3MvdjEvcm9sZXMucHJvdG8SFWt1c2ludGEuaW90LmFjY2Vzcy52MSp1CgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIRCg1ST0xFX1JFU0lERU5UEAESFwoTUk9MRV9QUk9QRVJUWV9PV05FUhACEhMKD1JPTEVfVEVDSE5JQ0lBThADEhYKElJPTEVfR0FURVdBWV9BRE1JThAEKqsBChBQZXJtaXNzaW9uQWN0aW9uEiEKHVBFUk1JU1NJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAISHQoZUEVSTUlTU0lPTl9BQ1RJT05fT0JTRVJWRRADEhwKGFBFUk1JU1NJT05fQUNUSU9OX0lOVk9LRRAEQgJIAWIGcHJvdG8z");
+  fileDesc("CiFrdXNpbnRhL2lvdC9hY2Nlc3MvdjEvcm9sZXMucHJvdG8SFWt1c2ludGEuaW90LmFjY2Vzcy52MSp1CgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIRCg1ST0xFX1JFU0lERU5UEAESFwoTUk9MRV9QUk9QRVJUWV9PV05FUhACEhMKD1JPTEVfVEVDSE5JQ0lBThADEhYKElJPTEVfR0FURVdBWV9BRE1JThAEKq0BChBQZXJtaXNzaW9uQWN0aW9uEiEKHVBFUk1JU1NJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAISHwobUEVSTUlTU0lPTl9BQ1RJT05fU1VCU0NSSUJFEAMSHAoYUEVSTUlTU0lPTl9BQ1RJT05fSU5WT0tFEARCAkgBYgZwcm90bzM");
 
 /**
  * Describes the enum kusinta.iot.access.v1.Role.
@@ -17,6 +17,32 @@ export const RoleSchema = /*@__PURE__*/
   enumDesc(file_kusinta_iot_access_v1_roles, 0);
 
 /**
+ * What kind of party a user is, gateway-wide.
+ *
+ * A role is a CEILING on the kinds of action a user may perform anywhere on this gateway.
+ * It is not reach: it says nothing about WHICH devices the user may act on. Reach is
+ * decided by filing — which spaces the user holds, and which devices are in them — and
+ * the two are independent. A role must never be read as reach, and reach must never be
+ * read as permission to act.
+ *
+ * The gateway resolves the two together into DeviceAcl.allowed_actions, per device. A
+ * role narrows what may appear there; it does not put anything there on its own.
+ *
+ * Carried in the app's token as webrtc.v1.AppTokenClaims.roles, as an array of proto3
+ * canonical enum NAME strings (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]) rather than
+ * integers, so the claim stays self-describing. A user may hold several at once and the
+ * effective ceiling is their union.
+ *
+ * UNORDERED. These are categories, not levels: a technician is not "more than" a
+ * resident, and there is no >= comparison to make between them. Anything needing a graded
+ * comparison — Matter's View/Operate/Manage/Administer, say — would be a separate concept
+ * and is deliberately not modelled here.
+ *
+ * A role is a ceiling rather than a floor, so it may be WIDENED per device by facts the
+ * role does not know: a user who owns a device may hold actions on it that their
+ * gateway-wide role alone would not grant. That widening is the gateway's to apply and is
+ * visible to the app only in the resolved DeviceAcl.
+ *
  * @generated from enum kusinta.iot.access.v1.Role
  */
 export const Role = /*@__PURE__*/
@@ -32,6 +58,12 @@ export const PermissionActionSchema = /*@__PURE__*/
  * What a user may do to a device, as listed in DeviceAcl.allowed_actions. Each value
  * names an operation that exists on the app leg, so a grant can be checked against the
  * message that arrived.
+ *
+ * The action says HOW data is reached. WHICH elements it reaches is a separate question,
+ * answered by the ref lists on DeviceAcl — allowed_attribute_refs, allowed_command_refs
+ * and allowed_event_refs. Keeping the two apart is deliberate: attributes, commands and
+ * events are addressed by three different ID spaces, and folding "which kind of element"
+ * into the action verb would make the action mean two things at once.
  *
  * @generated from enum kusinta.iot.access.v1.PermissionAction
  */

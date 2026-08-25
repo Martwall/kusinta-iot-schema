@@ -99,7 +99,7 @@ describe('DeviceAcl', () => {
       deviceId: { value: 'therm-1' },
       userId: { value: 'user-owner-1' },
       role: Role.PROPERTY_OWNER,
-      allowedActions: [PermissionAction.READ, PermissionAction.WRITE, PermissionAction.OBSERVE],
+      allowedActions: [PermissionAction.READ, PermissionAction.WRITE, PermissionAction.SUBSCRIBE],
     })
     const decoded = fromBinary(DeviceAclSchema, toBinary(DeviceAclSchema, acl))
     expect(decoded.role).toBe(Role.PROPERTY_OWNER)
@@ -195,13 +195,13 @@ describe('allowed_actions — an empty grant grants nothing', () => {
     expect(toBinary(DeviceAclSchema, empty)).not.toEqual(toBinary(DeviceAclSchema, unspecified))
   })
 
-  it('carries INVOKE separately from OBSERVE', () => {
+  it('carries INVOKE separately from SUBSCRIBE', () => {
     const acl = create(DeviceAclSchema, {
       deviceId: { value: 'therm-1' },
-      allowedActions: [PermissionAction.OBSERVE],
+      allowedActions: [PermissionAction.SUBSCRIBE],
     })
     const decoded = fromBinary(DeviceAclSchema, toBinary(DeviceAclSchema, acl))
-    expect(decoded.allowedActions).toContain(PermissionAction.OBSERVE)
+    expect(decoded.allowedActions).toContain(PermissionAction.SUBSCRIBE)
     expect(decoded.allowedActions).not.toContain(PermissionAction.INVOKE)
   })
 })

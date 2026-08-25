@@ -23,7 +23,7 @@ class DeviceStateSnapshot(_message.Message):
     snapshotted_at: _timestamp_pb2.Timestamp
     def __init__(self, devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., permissions: _Optional[_Union[_acl_pb2.EffectivePermissions, _Mapping]] = ..., snapshotted_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
-class DevicePropertyEvent(_message.Message):
+class PropertyReport(_message.Message):
     __slots__ = ("update", "gateway_processed_at")
     UPDATE_FIELD_NUMBER: _ClassVar[int]
     GATEWAY_PROCESSED_AT_FIELD_NUMBER: _ClassVar[int]

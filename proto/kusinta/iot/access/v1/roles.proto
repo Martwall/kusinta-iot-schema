@@ -4,17 +4,58 @@ package kusinta.iot.access.v1;
 
 option optimize_for = SPEED;
 
+// What kind of party a user is, gateway-wide.
+//
+// A role is a CEILING on the kinds of action a user may perform anywhere on this gateway.
+// It is not reach: it says nothing about WHICH devices the user may act on. Reach is
+// decided by filing — which spaces the user holds, and which devices are in them — and
+// the two are independent. A role must never be read as reach, and reach must never be
+// read as permission to act.
+//
+// The gateway resolves the two together into DeviceAcl.allowed_actions, per device. A
+// role narrows what may appear there; it does not put anything there on its own.
+//
+// Carried in the app's token as webrtc.v1.AppTokenClaims.roles, as an array of proto3
+// canonical enum NAME strings (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]) rather than
+// integers, so the claim stays self-describing. A user may hold several at once and the
+// effective ceiling is their union.
+//
+// UNORDERED. These are categories, not levels: a technician is not "more than" a
+// resident, and there is no >= comparison to make between them. Anything needing a graded
+// comparison — Matter's View/Operate/Manage/Administer, say — would be a separate concept
+// and is deliberately not modelled here.
+//
+// A role is a ceiling rather than a floor, so it may be WIDENED per device by facts the
+// role does not know: a user who owns a device may hold actions on it that their
+// gateway-wide role alone would not grant. That widening is the gateway's to apply and is
+// visible to the app only in the resolved DeviceAcl.
 enum Role {
   ROLE_UNSPECIFIED = 0;
+
+  // Lives with the devices. Operates what is in the spaces they hold.
   ROLE_RESIDENT = 1;
+
+  // Owns the property the devices are installed in. Sets the bounds residents operate
+  // within — see PropertyConstraint in acl.proto.
   ROLE_PROPERTY_OWNER = 2;
+
+  // Installs and services devices. Present for the work, not for the tenancy.
   ROLE_TECHNICIAN = 3;
+
+  // Administers this gateway itself. The one role that also affects reach: some devices
+  // are visible only to a session holding it.
   ROLE_GATEWAY_ADMIN = 4;
 }
 
 // What a user may do to a device, as listed in DeviceAcl.allowed_actions. Each value
 // names an operation that exists on the app leg, so a grant can be checked against the
 // message that arrived.
+//
+// The action says HOW data is reached. WHICH elements it reaches is a separate question,
+// answered by the ref lists on DeviceAcl — allowed_attribute_refs, allowed_command_refs
+// and allowed_event_refs. Keeping the two apart is deliberate: attributes, commands and
+// events are addressed by three different ID spaces, and folding "which kind of element"
+// into the action verb would make the action mean two things at once.
 enum PermissionAction {
   // Names no action. Present only because buf's ENUM_ZERO_VALUE_SUFFIX requires a zero
   // value; it is not a wildcard and carries no permission.
@@ -23,7 +64,7 @@ enum PermissionAction {
   // Omission must never be what widens access.
   PERMISSION_ACTION_UNSPECIFIED = 0;
 
-  // Read an attribute once, on demand: webrtc.v1.PropertyReadRequest.
+  // Read an element once, on demand: webrtc.v1.PropertyReadRequest.
   PERMISSION_ACTION_READ = 1;
 
   // Write an attribute to a value: webrtc.v1.AttributeWriteRequest, carried on
@@ -42,11 +83,29 @@ enum PermissionAction {
   // command and needs INVOKE; setting an absolute value needs WRITE.
   PERMISSION_ACTION_WRITE = 2;
 
-  // Receive attribute changes as they happen: webrtc.v1.AppMessage.subscribe and the
-  // DevicePropertyEvent stream that follows. Distinct from READ — observing is a standing
-  // interest in a device, not a single question about it.
-  PERMISSION_ACTION_OBSERVE = 3;
+  // Hold a standing stream of a device's reports: webrtc.v1.AppMessage.subscribe, and the
+  // PropertyReport and DeviceEventBatch that follow.
+  //
+  // Covers BOTH attribute reports and events, as a Matter subscription does — one
+  // subscription carries attribute paths and event paths together. Which of them actually
+  // arrives is decided by allowed_attribute_refs and allowed_event_refs, not by this
+  // action. Note their emptiness rules differ: attributes default to all, events to none.
+  //
+  // NOT a privacy boundary. Anyone who may READ an element can poll it, so withholding
+  // SUBSCRIBE while granting READ hides nothing — it only costs the app round trips. Treat
+  // it as a RESOURCE control: bandwidth, battery, and how many standing streams a gateway
+  // will carry. Do not use it to protect data; use the ref lists for that.
+  //
+  // Was PERMISSION_ACTION_OBSERVE. Renamed because "observe" reads as a kind of access
+  // distinct from reading, which it is not — it is the same access held open.
+  PERMISSION_ACTION_SUBSCRIBE = 3;
 
-  // Send a webrtc.v1.DeviceCommand. This is the action that moves hardware.
+  // Invoke a command on a cluster: webrtc.v1.DeviceCommand. This is the action that moves
+  // hardware.
+  //
+  // Commands are named by (cluster_id, matter_command_id), a different ID space from
+  // attributes — On/Off cluster 0x0006 has an attribute 0x0000 and a command 0x0000 that
+  // are unrelated. So allowed_attribute_refs cannot narrow this; allowed_command_refs is
+  // what does.
   PERMISSION_ACTION_INVOKE = 4;
 }

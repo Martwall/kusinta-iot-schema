@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!kusinta/iot/access/v1/roles.proto\x12\x15kusinta.iot.access.v1*u\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\x11\n\rROLE_RESIDENT\x10\x01\x12\x17\n\x13ROLE_PROPERTY_OWNER\x10\x02\x12\x13\n\x0fROLE_TECHNICIAN\x10\x03\x12\x16\n\x12ROLE_GATEWAY_ADMIN\x10\x04*\xab\x01\n\x10PermissionAction\x12!\n\x1dPERMISSION_ACTION_UNSPECIFIED\x10\x00\x12\x1a\n\x16PERMISSION_ACTION_READ\x10\x01\x12\x1b\n\x17PERMISSION_ACTION_WRITE\x10\x02\x12\x1d\n\x19PERMISSION_ACTION_OBSERVE\x10\x03\x12\x1c\n\x18PERMISSION_ACTION_INVOKE\x10\x04\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!kusinta/iot/access/v1/roles.proto\x12\x15kusinta.iot.access.v1*u\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\x11\n\rROLE_RESIDENT\x10\x01\x12\x17\n\x13ROLE_PROPERTY_OWNER\x10\x02\x12\x13\n\x0fROLE_TECHNICIAN\x10\x03\x12\x16\n\x12ROLE_GATEWAY_ADMIN\x10\x04*\xad\x01\n\x10PermissionAction\x12!\n\x1dPERMISSION_ACTION_UNSPECIFIED\x10\x00\x12\x1a\n\x16PERMISSION_ACTION_READ\x10\x01\x12\x1b\n\x17PERMISSION_ACTION_WRITE\x10\x02\x12\x1f\n\x1bPERMISSION_ACTION_SUBSCRIBE\x10\x03\x12\x1c\n\x18PERMISSION_ACTION_INVOKE\x10\x04\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,5 +35,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ROLE']._serialized_start=60
   _globals['_ROLE']._serialized_end=177
   _globals['_PERMISSIONACTION']._serialized_start=180
-  _globals['_PERMISSIONACTION']._serialized_end=351
+  _globals['_PERMISSIONACTION']._serialized_end=353
 # @@protoc_insertion_point(module_scope)

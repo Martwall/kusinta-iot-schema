@@ -20,7 +20,7 @@ import {
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import {
   DeviceStateSnapshotSchema,
-  DevicePropertyEventSchema,
+  PropertyReportSchema,
   DeviceAddedSchema,
   DeviceRemovedSchema,
 } from '../kusinta/iot/webrtc/v1/device_state_pb.js'
@@ -187,9 +187,9 @@ describe('DeviceStateSnapshot', () => {
   })
 })
 
-describe('DevicePropertyEvent', () => {
+describe('PropertyReport', () => {
   it('round-trips a property update event', () => {
-    const event = create(DevicePropertyEventSchema, {
+    const event = create(PropertyReportSchema, {
       update: {
         deviceId: { value: 'therm-1' },
         attributeName: 'LocalTemperature',
@@ -197,7 +197,7 @@ describe('DevicePropertyEvent', () => {
         clusterId: 0x0402,
       },
     })
-    const decoded = fromBinary(DevicePropertyEventSchema, toBinary(DevicePropertyEventSchema, event))
+    const decoded = fromBinary(PropertyReportSchema, toBinary(PropertyReportSchema, event))
     expect(decoded.update?.attributeName).toBe('LocalTemperature')
     expect(decoded.update?.value?.case).toBe('intValue')
   })
@@ -240,7 +240,7 @@ describe('GatewayMessage oneof payload', () => {
     const msg = create(GatewayMessageSchema, {
       messageId: 'gw-msg-002',
       payload: {
-        case: 'propertyEvent',
+        case: 'propertyReport',
         value: {
           update: {
             deviceId: { value: 'therm-1' },
@@ -252,8 +252,8 @@ describe('GatewayMessage oneof payload', () => {
       },
     })
     const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
-    expect(decoded.payload?.case).toBe('propertyEvent')
-    if (decoded.payload?.case === 'propertyEvent') {
+    expect(decoded.payload?.case).toBe('propertyReport')
+    if (decoded.payload?.case === 'propertyReport') {
       expect(decoded.payload.value.update?.attributeName).toBe('OccupiedHeatingSetpoint')
     }
   })

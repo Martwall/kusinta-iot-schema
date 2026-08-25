@@ -350,13 +350,13 @@ const GatewayMessage$json = {
       '10': 'stateSnapshot'
     },
     {
-      '1': 'property_event',
+      '1': 'property_report',
       '3': 4,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.webrtc.v1.DevicePropertyEvent',
+      '6': '.kusinta.iot.webrtc.v1.PropertyReport',
       '9': 0,
-      '10': 'propertyEvent'
+      '10': 'propertyReport'
     },
     {
       '1': 'permission_update',
@@ -456,7 +456,7 @@ const GatewayMessage$json = {
     {'1': 15, '2': 16},
     {'1': 7, '2': 8},
   ],
-  '10': ['attribute_write_result'],
+  '10': ['attribute_write_result', 'property_event'],
 };
 
 /// Descriptor for `GatewayMessage`. Decode as a `google.protobuf.DescriptorProto`.
@@ -464,23 +464,23 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'Cg5HYXRld2F5TWVzc2FnZRIdCgptZXNzYWdlX2lkGAEgASgJUgltZXNzYWdlSWQSMwoHc2VudF'
     '9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBnNlbnRBdBJTCg5zdGF0ZV9z'
     'bmFwc2hvdBgDIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5EZXZpY2VTdGF0ZVNuYXBzaG'
-    '90SABSDXN0YXRlU25hcHNob3QSUwoOcHJvcGVydHlfZXZlbnQYBCABKAsyKi5rdXNpbnRhLmlv'
-    'dC53ZWJydGMudjEuRGV2aWNlUHJvcGVydHlFdmVudEgAUg1wcm9wZXJ0eUV2ZW50EloKEXBlcm'
-    '1pc3Npb25fdXBkYXRlGAUgASgLMisua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpdmVQZXJtaXNz'
-    'aW9uVXBkYXRlSABSEHBlcm1pc3Npb25VcGRhdGUSTQoOY29tbWFuZF9yZXN1bHQYBiABKAsyJC'
-    '5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZFJlc3VsdEgAUg1jb21tYW5kUmVzdWx0EjEK'
-    'BHBvbmcYCCABKAsyGy5rdXNpbnRhLmlvdC53ZWJydGMudjEuUG9uZ0gAUgRwb25nElkKEmhhbm'
-    'RzaGFrZV9yZWplY3RlZBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5IYW5kc2hha2VS'
-    'ZWplY3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZBI7CgVlcnJvchgKIAEoCzIjLmt1c2ludGEuaW'
-    '90LndlYnJ0Yy52MS5HYXRld2F5RXJyb3JIAFIFZXJyb3ISUwoQc3Vic2NyaXB0aW9uX2FjaxgL'
-    'IAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpcHRpb25BY2tIAFIPc3Vic2NyaX'
-    'B0aW9uQWNrEkcKDGRldmljZV9hZGRlZBgMIAEoCzIiLmt1c2ludGEuaW90LndlYnJ0Yy52MS5E'
-    'ZXZpY2VBZGRlZEgAUgtkZXZpY2VBZGRlZBJNCg5kZXZpY2VfcmVtb3ZlZBgNIAEoCzIkLmt1c2'
-    'ludGEuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWQSVgoRbWFu'
-    'YWdlbWVudF9yZXN1bHQYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWFuYWdlbWVudF'
-    'Jlc3VsdEgAUhBtYW5hZ2VtZW50UmVzdWx0Ek4KDWRldmljZV9ldmVudHMYECABKAsyJy5rdXNp'
-    'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlRXZlbnRCYXRjaEgAUgxkZXZpY2VFdmVudHNCCQoHcG'
-    'F5bG9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3VsdA==');
+    '90SABSDXN0YXRlU25hcHNob3QSUAoPcHJvcGVydHlfcmVwb3J0GAQgASgLMiUua3VzaW50YS5p'
+    'b3Qud2VicnRjLnYxLlByb3BlcnR5UmVwb3J0SABSDnByb3BlcnR5UmVwb3J0EloKEXBlcm1pc3'
+    'Npb25fdXBkYXRlGAUgASgLMisua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpdmVQZXJtaXNzaW9u'
+    'VXBkYXRlSABSEHBlcm1pc3Npb25VcGRhdGUSTQoOY29tbWFuZF9yZXN1bHQYBiABKAsyJC5rdX'
+    'NpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZFJlc3VsdEgAUg1jb21tYW5kUmVzdWx0EjEKBHBv'
+    'bmcYCCABKAsyGy5rdXNpbnRhLmlvdC53ZWJydGMudjEuUG9uZ0gAUgRwb25nElkKEmhhbmRzaG'
+    'FrZV9yZWplY3RlZBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5IYW5kc2hha2VSZWpl'
+    'Y3RlZEgAUhFoYW5kc2hha2VSZWplY3RlZBI7CgVlcnJvchgKIAEoCzIjLmt1c2ludGEuaW90Ln'
+    'dlYnJ0Yy52MS5HYXRld2F5RXJyb3JIAFIFZXJyb3ISUwoQc3Vic2NyaXB0aW9uX2FjaxgLIAEo'
+    'CzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TdWJzY3JpcHRpb25BY2tIAFIPc3Vic2NyaXB0aW'
+    '9uQWNrEkcKDGRldmljZV9hZGRlZBgMIAEoCzIiLmt1c2ludGEuaW90LndlYnJ0Yy52MS5EZXZp'
+    'Y2VBZGRlZEgAUgtkZXZpY2VBZGRlZBJNCg5kZXZpY2VfcmVtb3ZlZBgNIAEoCzIkLmt1c2ludG'
+    'EuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWQSVgoRbWFuYWdl'
+    'bWVudF9yZXN1bHQYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWFuYWdlbWVudFJlc3'
+    'VsdEgAUhBtYW5hZ2VtZW50UmVzdWx0Ek4KDWRldmljZV9ldmVudHMYECABKAsyJy5rdXNpbnRh'
+    'LmlvdC5kZXZpY2UudjEuRGV2aWNlRXZlbnRCYXRjaEgAUgxkZXZpY2VFdmVudHNCCQoHcGF5bG'
+    '9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3VsdFIOcHJvcGVydHlfZXZlbnQ=');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

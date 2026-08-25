@@ -158,6 +158,181 @@ class AttributeRef extends $pb.GeneratedMessage {
   void clearVendorExtension() => $_clearField(5);
 }
 
+/// CommandRef names one command on one endpoint, for DeviceAcl.allowed_command_refs.
+///
+/// A separate type from AttributeRef because attributes and commands are numbered
+/// independently within a cluster: On/Off (0x0006) has an attribute 0x0000 (OnOff) and a
+/// command 0x0000 (Off) that have nothing to do with each other. Putting a command ID in a
+/// field named attribute_id would be the same class of ambiguity this schema removed when
+/// it made addressing numeric.
+class CommandRef extends $pb.GeneratedMessage {
+  factory CommandRef({
+    $core.int? clusterId,
+    $core.int? matterCommandId,
+    $core.int? endpointId,
+  }) {
+    final result = create();
+    if (clusterId != null) result.clusterId = clusterId;
+    if (matterCommandId != null) result.matterCommandId = matterCommandId;
+    if (endpointId != null) result.endpointId = endpointId;
+    return result;
+  }
+
+  CommandRef._();
+
+  factory CommandRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CommandRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CommandRef',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.access.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'matterCommandId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommandRef clone() => CommandRef()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommandRef copyWith(void Function(CommandRef) updates) =>
+      super.copyWith((message) => updates(message as CommandRef)) as CommandRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CommandRef create() => CommandRef._();
+  @$core.override
+  CommandRef createEmptyInstance() => create();
+  static $pb.PbList<CommandRef> createRepeated() => $pb.PbList<CommandRef>();
+  @$core.pragma('dart2js:noInline')
+  static CommandRef getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CommandRef>(create);
+  static CommandRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get clusterId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set clusterId($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasClusterId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearClusterId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get matterCommandId => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set matterCommandId($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMatterCommandId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMatterCommandId() => $_clearField(2);
+
+  /// Which endpoint. Required on a grant, for the same reason as AttributeRef.endpoint_id:
+  /// all four channels of a 4-channel actuator accept the same command on the same cluster,
+  /// so a ref without one cannot tell channel 1 from channel 3.
+  @$pb.TagNumber(3)
+  $core.int get endpointId => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set endpointId($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEndpointId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEndpointId() => $_clearField(3);
+}
+
+/// EventRef names one event on one endpoint, for DeviceAcl.allowed_event_refs.
+///
+/// Events are numbered independently of attributes and commands within a cluster, so this
+/// is a third type rather than a reuse. On Door Lock (0x0101), the LockState attribute and
+/// the lock-operation event are different elements answering different questions: what the
+/// lock's state is, and who changed it.
+class EventRef extends $pb.GeneratedMessage {
+  factory EventRef({
+    $core.int? clusterId,
+    $core.int? eventId,
+    $core.int? endpointId,
+  }) {
+    final result = create();
+    if (clusterId != null) result.clusterId = clusterId;
+    if (eventId != null) result.eventId = eventId;
+    if (endpointId != null) result.endpointId = endpointId;
+    return result;
+  }
+
+  EventRef._();
+
+  factory EventRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EventRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EventRef',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.access.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'eventId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EventRef clone() => EventRef()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EventRef copyWith(void Function(EventRef) updates) =>
+      super.copyWith((message) => updates(message as EventRef)) as EventRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static EventRef create() => EventRef._();
+  @$core.override
+  EventRef createEmptyInstance() => create();
+  static $pb.PbList<EventRef> createRepeated() => $pb.PbList<EventRef>();
+  @$core.pragma('dart2js:noInline')
+  static EventRef getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<EventRef>(create);
+  static EventRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get clusterId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set clusterId($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasClusterId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearClusterId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get eventId => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set eventId($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEventId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEventId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get endpointId => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set endpointId($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEndpointId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEndpointId() => $_clearField(3);
+}
+
 enum PropertyConstraint_Constraint { intMax, intMin, uintMax, uintMin, notSet }
 
 /// PropertyConstraint bounds a single Matter cluster attribute.
@@ -296,6 +471,8 @@ class DeviceAcl extends $pb.GeneratedMessage {
     $core.Iterable<$2.PermissionAction>? allowedActions,
     $core.Iterable<PropertyConstraint>? propertyConstraints,
     $core.Iterable<AttributeRef>? allowedAttributeRefs,
+    $core.Iterable<CommandRef>? allowedCommandRefs,
+    $core.Iterable<EventRef>? allowedEventRefs,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -306,6 +483,10 @@ class DeviceAcl extends $pb.GeneratedMessage {
       result.propertyConstraints.addAll(propertyConstraints);
     if (allowedAttributeRefs != null)
       result.allowedAttributeRefs.addAll(allowedAttributeRefs);
+    if (allowedCommandRefs != null)
+      result.allowedCommandRefs.addAll(allowedCommandRefs);
+    if (allowedEventRefs != null)
+      result.allowedEventRefs.addAll(allowedEventRefs);
     return result;
   }
 
@@ -342,6 +523,12 @@ class DeviceAcl extends $pb.GeneratedMessage {
     ..pc<AttributeRef>(
         7, _omitFieldNames ? '' : 'allowedAttributeRefs', $pb.PbFieldType.PM,
         subBuilder: AttributeRef.create)
+    ..pc<CommandRef>(
+        9, _omitFieldNames ? '' : 'allowedCommandRefs', $pb.PbFieldType.PM,
+        subBuilder: CommandRef.create)
+    ..pc<EventRef>(
+        10, _omitFieldNames ? '' : 'allowedEventRefs', $pb.PbFieldType.PM,
+        subBuilder: EventRef.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -385,6 +572,13 @@ class DeviceAcl extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $0.UserId ensureUserId() => $_ensure(1);
 
+  /// The user's role AS RESOLVED FOR THIS DEVICE. A gateway-wide role is a ceiling on the
+  /// kinds of action a user may perform; reach — which devices — is decided separately by
+  /// filing. This field is what the two produced together for this one device, so it may
+  /// differ from any single role the user's token carries. See roles.proto.
+  ///
+  /// Descriptive. allowed_actions and the ref lists below are what a consumer enforces
+  /// against; this says which relationship produced them.
   @$pb.TagNumber(3)
   $2.Role get role => $_getN(2);
   @$pb.TagNumber(3)
@@ -419,8 +613,52 @@ class DeviceAcl extends $pb.GeneratedMessage {
   /// over every endpoint: omission must never be what widens access.
   @$pb.TagNumber(7)
   $pb.PbList<AttributeRef> get allowedAttributeRefs => $_getList(5);
+
+  /// Narrows PERMISSION_ACTION_INVOKE to particular commands. Empty = every command the
+  /// device accepts, matching allowed_attribute_refs — it is a filter, and an empty filter
+  /// narrows nothing. It grants nothing on its own: without INVOKE in allowed_actions, no
+  /// command is permitted however this list reads.
+  ///
+  /// Without it INVOKE is all-or-nothing, and that is the operation that moves hardware —
+  /// a grant covering a thermostat setpoint would equally cover UnlockDoor on a device
+  /// exposing both.
+  ///
+  /// A ref present with no endpoint_id is INVALID and MUST be rejected.
+  @$pb.TagNumber(9)
+  $pb.PbList<CommandRef> get allowedCommandRefs => $_getList(6);
+
+  /// Which events this user may receive. Empty = NONE.
+  ///
+  /// The opposite default to the two lists above, deliberately. Attributes and commands are
+  /// a device's operating surface; events are its journal, and a journal discloses who did
+  /// what and when. Reaching that must be an explicit grant, never something a user gets by
+  /// holding SUBSCRIBE for ordinary readings.
+  ///
+  /// Requires PERMISSION_ACTION_SUBSCRIBE as well: the action says a standing stream is
+  /// permitted, this list says which events travel on it.
+  ///
+  /// A ref present with no endpoint_id is INVALID and MUST be rejected.
+  @$pb.TagNumber(10)
+  $pb.PbList<EventRef> get allowedEventRefs => $_getList(7);
 }
 
+/// Every DeviceAcl in force for one user on one gateway, at valid_at.
+///
+/// ADVISORY WHEN SENT TO AN APP. The gateway is the sole authority and enforces every
+/// read, write, invoke and subscription against its own copy, whether or not the app has
+/// one. This is disclosed so an app can RENDER honestly — grey out a control the user may
+/// not invoke, clamp a setpoint slider to a PropertyConstraint, hide a device — instead of
+/// offering an action and discovering the refusal.
+///
+/// Two mistakes this exists to prevent. An app MUST still handle refusal: this snapshot can
+/// be stale, and it is not a promise. A gateway MUST NOT treat having sent it as having
+/// enforced anything.
+///
+/// It discloses only the recipient's own permissions. It says nothing about what any other
+/// user holds.
+///
+/// Sent whole rather than as a delta, in webrtc.v1.DeviceStateSnapshot at connect and in
+/// webrtc.v1.LivePermissionUpdate when it changes.
 class EffectivePermissions extends $pb.GeneratedMessage {
   factory EffectivePermissions({
     $0.UserId? userId,

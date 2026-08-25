@@ -17,8 +17,14 @@ message DeviceStateSnapshot {
   google.protobuf.Timestamp              snapshotted_at = 3;
 }
 
-// Single property change event streamed to the app in real time.
-message DevicePropertyEvent {
+// One attribute reading streamed to the app as it happens — Matter's Report Data Action,
+// for a single attribute.
+//
+// Was DevicePropertyEvent. Renamed because it carries a device.v1.PropertyUpdate, which is
+// STATE, while device.v1.DeviceEvent carries a journal entry. Two messages with "Event" in
+// the name meaning opposite things is a trap, and this one was never the event: latest
+// wins, order does not matter, and a missed one is corrected by the next.
+message PropertyReport {
   kusinta.iot.device.v1.PropertyUpdate update               = 1;
   google.protobuf.Timestamp            gateway_processed_at = 2;
 }

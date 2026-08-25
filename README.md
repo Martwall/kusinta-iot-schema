@@ -114,10 +114,17 @@ guarded by its own `PermissionAction`:
 | Read attribute | `PropertyReadRequest` | `READ` |
 | Write attribute | `AttributeWriteRequest` | `WRITE` |
 | Invoke command | `DeviceCommand` | `INVOKE` |
-| Subscribe | `AppMessage.subscribe` → `DevicePropertyEvent` | `OBSERVE` |
+| Subscribe | `AppMessage.subscribe` → `PropertyReport` + `DeviceEventBatch` | `SUBSCRIBE` |
 
 A write and an invoke are different operations carrying different authority, which is why
-they are separate messages and separate permissions. Everything is addressed numerically —
+they are separate messages and separate permissions. An action says *how* an element is
+reached; *which* elements are reachable is decided by the three ref lists on `DeviceAcl` —
+`allowed_attribute_refs`, `allowed_command_refs` and `allowed_event_refs`. Attributes and
+commands default to all when the list is empty; **events default to none**, because a
+journal of who did what is an explicit grant rather than something `SUBSCRIBE` confers.
+
+`SUBSCRIBE` is a resource control, not a privacy boundary — anyone who may `READ` an
+element can poll it. Everything is addressed numerically —
 `cluster_id`, `attribute_id`, `matter_command_id` — and by one shared type, `AttributeRef`,
 whether the attribute is being read, written, granted or bounded. `command.proto` states the
 rules.

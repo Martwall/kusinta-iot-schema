@@ -25,6 +25,26 @@ class AttributeRef(_message.Message):
     vendor_extension: str
     def __init__(self, attribute_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., attribute_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ...) -> None: ...
 
+class CommandRef(_message.Message):
+    __slots__ = ("cluster_id", "matter_command_id", "endpoint_id")
+    CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
+    MATTER_COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
+    cluster_id: int
+    matter_command_id: int
+    endpoint_id: int
+    def __init__(self, cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
+
+class EventRef(_message.Message):
+    __slots__ = ("cluster_id", "event_id", "endpoint_id")
+    CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
+    EVENT_ID_FIELD_NUMBER: _ClassVar[int]
+    ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
+    cluster_id: int
+    event_id: int
+    endpoint_id: int
+    def __init__(self, cluster_id: _Optional[int] = ..., event_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ...) -> None: ...
+
 class PropertyConstraint(_message.Message):
     __slots__ = ("attribute", "int_max", "int_min", "uint_max", "uint_min")
     ATTRIBUTE_FIELD_NUMBER: _ClassVar[int]
@@ -40,20 +60,24 @@ class PropertyConstraint(_message.Message):
     def __init__(self, attribute: _Optional[_Union[AttributeRef, _Mapping]] = ..., int_max: _Optional[int] = ..., int_min: _Optional[int] = ..., uint_max: _Optional[int] = ..., uint_min: _Optional[int] = ...) -> None: ...
 
 class DeviceAcl(_message.Message):
-    __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attribute_refs", "property_constraints")
+    __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attribute_refs", "property_constraints", "allowed_command_refs", "allowed_event_refs")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     ALLOWED_ACTIONS_FIELD_NUMBER: _ClassVar[int]
     ALLOWED_ATTRIBUTE_REFS_FIELD_NUMBER: _ClassVar[int]
     PROPERTY_CONSTRAINTS_FIELD_NUMBER: _ClassVar[int]
+    ALLOWED_COMMAND_REFS_FIELD_NUMBER: _ClassVar[int]
+    ALLOWED_EVENT_REFS_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     user_id: _identity_pb2.UserId
     role: _roles_pb2.Role
     allowed_actions: _containers.RepeatedScalarFieldContainer[_roles_pb2.PermissionAction]
     allowed_attribute_refs: _containers.RepeatedCompositeFieldContainer[AttributeRef]
     property_constraints: _containers.RepeatedCompositeFieldContainer[PropertyConstraint]
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., allowed_actions: _Optional[_Iterable[_Union[_roles_pb2.PermissionAction, str]]] = ..., allowed_attribute_refs: _Optional[_Iterable[_Union[AttributeRef, _Mapping]]] = ..., property_constraints: _Optional[_Iterable[_Union[PropertyConstraint, _Mapping]]] = ...) -> None: ...
+    allowed_command_refs: _containers.RepeatedCompositeFieldContainer[CommandRef]
+    allowed_event_refs: _containers.RepeatedCompositeFieldContainer[EventRef]
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., allowed_actions: _Optional[_Iterable[_Union[_roles_pb2.PermissionAction, str]]] = ..., allowed_attribute_refs: _Optional[_Iterable[_Union[AttributeRef, _Mapping]]] = ..., property_constraints: _Optional[_Iterable[_Union[PropertyConstraint, _Mapping]]] = ..., allowed_command_refs: _Optional[_Iterable[_Union[CommandRef, _Mapping]]] = ..., allowed_event_refs: _Optional[_Iterable[_Union[EventRef, _Mapping]]] = ...) -> None: ...
 
 class EffectivePermissions(_message.Message):
     __slots__ = ("user_id", "gateway_id", "device_acls", "valid_at")

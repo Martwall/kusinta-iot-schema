@@ -17,7 +17,7 @@ class PermissionAction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     PERMISSION_ACTION_UNSPECIFIED: _ClassVar[PermissionAction]
     PERMISSION_ACTION_READ: _ClassVar[PermissionAction]
     PERMISSION_ACTION_WRITE: _ClassVar[PermissionAction]
-    PERMISSION_ACTION_OBSERVE: _ClassVar[PermissionAction]
+    PERMISSION_ACTION_SUBSCRIBE: _ClassVar[PermissionAction]
     PERMISSION_ACTION_INVOKE: _ClassVar[PermissionAction]
 ROLE_UNSPECIFIED: Role
 ROLE_RESIDENT: Role
@@ -27,5 +27,5 @@ ROLE_GATEWAY_ADMIN: Role
 PERMISSION_ACTION_UNSPECIFIED: PermissionAction
 PERMISSION_ACTION_READ: PermissionAction
 PERMISSION_ACTION_WRITE: PermissionAction
-PERMISSION_ACTION_OBSERVE: PermissionAction
+PERMISSION_ACTION_SUBSCRIBE: PermissionAction
 PERMISSION_ACTION_INVOKE: PermissionAction

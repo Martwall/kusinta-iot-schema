@@ -54,6 +54,66 @@ final $typed_data.Uint8List attributeRefDescriptor = $convert.base64Decode(
     'JfZXh0ZW5zaW9uGAUgASgJSAFSD3ZlbmRvckV4dGVuc2lvbogBAUIOCgxfZW5kcG9pbnRfaWRC'
     'EwoRX3ZlbmRvcl9leHRlbnNpb24=');
 
+@$core.Deprecated('Use commandRefDescriptor instead')
+const CommandRef$json = {
+  '1': 'CommandRef',
+  '2': [
+    {'1': 'cluster_id', '3': 1, '4': 1, '5': 13, '10': 'clusterId'},
+    {
+      '1': 'matter_command_id',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '10': 'matterCommandId'
+    },
+    {
+      '1': 'endpoint_id',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'endpointId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_endpoint_id'},
+  ],
+};
+
+/// Descriptor for `CommandRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List commandRefDescriptor = $convert.base64Decode(
+    'CgpDb21tYW5kUmVmEh0KCmNsdXN0ZXJfaWQYASABKA1SCWNsdXN0ZXJJZBIqChFtYXR0ZXJfY2'
+    '9tbWFuZF9pZBgCIAEoDVIPbWF0dGVyQ29tbWFuZElkEiQKC2VuZHBvaW50X2lkGAMgASgNSABS'
+    'CmVuZHBvaW50SWSIAQFCDgoMX2VuZHBvaW50X2lk');
+
+@$core.Deprecated('Use eventRefDescriptor instead')
+const EventRef$json = {
+  '1': 'EventRef',
+  '2': [
+    {'1': 'cluster_id', '3': 1, '4': 1, '5': 13, '10': 'clusterId'},
+    {'1': 'event_id', '3': 2, '4': 1, '5': 13, '10': 'eventId'},
+    {
+      '1': 'endpoint_id',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'endpointId',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_endpoint_id'},
+  ],
+};
+
+/// Descriptor for `EventRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List eventRefDescriptor = $convert.base64Decode(
+    'CghFdmVudFJlZhIdCgpjbHVzdGVyX2lkGAEgASgNUgljbHVzdGVySWQSGQoIZXZlbnRfaWQYAi'
+    'ABKA1SB2V2ZW50SWQSJAoLZW5kcG9pbnRfaWQYAyABKA1IAFIKZW5kcG9pbnRJZIgBAUIOCgxf'
+    'ZW5kcG9pbnRfaWQ=');
+
 @$core.Deprecated('Use propertyConstraintDescriptor instead')
 const PropertyConstraint$json = {
   '1': 'PropertyConstraint',
@@ -142,6 +202,22 @@ const DeviceAcl$json = {
       '6': '.kusinta.iot.access.v1.PropertyConstraint',
       '10': 'propertyConstraints'
     },
+    {
+      '1': 'allowed_command_refs',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.CommandRef',
+      '10': 'allowedCommandRefs'
+    },
+    {
+      '1': 'allowed_event_refs',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.EventRef',
+      '10': 'allowedEventRefs'
+    },
   ],
   '9': [
     {'1': 5, '2': 6},
@@ -159,7 +235,10 @@ final $typed_data.Uint8List deviceAclDescriptor = $convert.base64Decode(
     'R0cmlidXRlX3JlZnMYByADKAsyIy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuQXR0cmlidXRlUmVm'
     'UhRhbGxvd2VkQXR0cmlidXRlUmVmcxJcChRwcm9wZXJ0eV9jb25zdHJhaW50cxgGIAMoCzIpLm'
     't1c2ludGEuaW90LmFjY2Vzcy52MS5Qcm9wZXJ0eUNvbnN0cmFpbnRSE3Byb3BlcnR5Q29uc3Ry'
-    'YWludHNKBAgFEAZSEmFsbG93ZWRfYXR0cmlidXRlcw==');
+    'YWludHMSUwoUYWxsb3dlZF9jb21tYW5kX3JlZnMYCSADKAsyIS5rdXNpbnRhLmlvdC5hY2Nlc3'
+    'MudjEuQ29tbWFuZFJlZlISYWxsb3dlZENvbW1hbmRSZWZzEk0KEmFsbG93ZWRfZXZlbnRfcmVm'
+    'cxgKIAMoCzIfLmt1c2ludGEuaW90LmFjY2Vzcy52MS5FdmVudFJlZlIQYWxsb3dlZEV2ZW50Um'
+    'Vmc0oECAUQBlISYWxsb3dlZF9hdHRyaWJ1dGVz');
 
 @$core.Deprecated('Use effectivePermissionsDescriptor instead')
 const EffectivePermissions$json = {

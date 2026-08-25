@@ -9,7 +9,7 @@ import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { DeviceAdded, DevicePropertyEvent, DeviceRemoved, DeviceStateSnapshot } from "./device_state_pb.js";
+import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
 import type { AttributeWriteRequest, CommandResult, DeviceCommand } from "./command_pb.js";
 import type { DeviceEventBatch } from "../../device/v1/device_event_pb.js";
@@ -352,10 +352,10 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
     case: "stateSnapshot";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.DevicePropertyEvent property_event = 4;
+     * @generated from field: kusinta.iot.webrtc.v1.PropertyReport property_report = 4;
      */
-    value: DevicePropertyEvent;
-    case: "propertyEvent";
+    value: PropertyReport;
+    case: "propertyReport";
   } | {
     /**
      * @generated from field: kusinta.iot.webrtc.v1.LivePermissionUpdate permission_update = 5;

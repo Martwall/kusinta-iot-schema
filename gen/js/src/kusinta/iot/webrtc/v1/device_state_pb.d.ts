@@ -44,11 +44,17 @@ export declare type DeviceStateSnapshot = Message<"kusinta.iot.webrtc.v1.DeviceS
 export declare const DeviceStateSnapshotSchema: GenMessage<DeviceStateSnapshot>;
 
 /**
- * Single property change event streamed to the app in real time.
+ * One attribute reading streamed to the app as it happens — Matter's Report Data Action,
+ * for a single attribute.
  *
- * @generated from message kusinta.iot.webrtc.v1.DevicePropertyEvent
+ * Was DevicePropertyEvent. Renamed because it carries a device.v1.PropertyUpdate, which is
+ * STATE, while device.v1.DeviceEvent carries a journal entry. Two messages with "Event" in
+ * the name meaning opposite things is a trap, and this one was never the event: latest
+ * wins, order does not matter, and a missed one is corrected by the next.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PropertyReport
  */
-export declare type DevicePropertyEvent = Message<"kusinta.iot.webrtc.v1.DevicePropertyEvent"> & {
+export declare type PropertyReport = Message<"kusinta.iot.webrtc.v1.PropertyReport"> & {
   /**
    * @generated from field: kusinta.iot.device.v1.PropertyUpdate update = 1;
    */
@@ -61,10 +67,10 @@ export declare type DevicePropertyEvent = Message<"kusinta.iot.webrtc.v1.DeviceP
 };
 
 /**
- * Describes the message kusinta.iot.webrtc.v1.DevicePropertyEvent.
- * Use `create(DevicePropertyEventSchema)` to create a new message.
+ * Describes the message kusinta.iot.webrtc.v1.PropertyReport.
+ * Use `create(PropertyReportSchema)` to create a new message.
  */
-export declare const DevicePropertyEventSchema: GenMessage<DevicePropertyEvent>;
+export declare const PropertyReportSchema: GenMessage<PropertyReport>;
 
 /**
  * A device appeared while the app was connected — the app leg's counterpart to

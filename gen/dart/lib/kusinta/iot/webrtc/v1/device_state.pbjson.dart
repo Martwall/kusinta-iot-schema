@@ -53,9 +53,9 @@ final $typed_data.Uint8List deviceStateSnapshotDescriptor = $convert.base64Decod
     'hvdHRlZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSDXNuYXBzaG90dGVk'
     'QXQ=');
 
-@$core.Deprecated('Use devicePropertyEventDescriptor instead')
-const DevicePropertyEvent$json = {
-  '1': 'DevicePropertyEvent',
+@$core.Deprecated('Use propertyReportDescriptor instead')
+const PropertyReport$json = {
+  '1': 'PropertyReport',
   '2': [
     {
       '1': 'update',
@@ -76,11 +76,11 @@ const DevicePropertyEvent$json = {
   ],
 };
 
-/// Descriptor for `DevicePropertyEvent`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List devicePropertyEventDescriptor = $convert.base64Decode(
-    'ChNEZXZpY2VQcm9wZXJ0eUV2ZW50Ej0KBnVwZGF0ZRgBIAEoCzIlLmt1c2ludGEuaW90LmRldm'
-    'ljZS52MS5Qcm9wZXJ0eVVwZGF0ZVIGdXBkYXRlEkwKFGdhdGV3YXlfcHJvY2Vzc2VkX2F0GAIg'
-    'ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFISZ2F0ZXdheVByb2Nlc3NlZEF0');
+/// Descriptor for `PropertyReport`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List propertyReportDescriptor = $convert.base64Decode(
+    'Cg5Qcm9wZXJ0eVJlcG9ydBI9CgZ1cGRhdGUYASABKAsyJS5rdXNpbnRhLmlvdC5kZXZpY2Uudj'
+    'EuUHJvcGVydHlVcGRhdGVSBnVwZGF0ZRJMChRnYXRld2F5X3Byb2Nlc3NlZF9hdBgCIAEoCzIa'
+    'Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSEmdhdGV3YXlQcm9jZXNzZWRBdA==');
 
 @$core.Deprecated('Use deviceAddedDescriptor instead')
 const DeviceAdded$json = {

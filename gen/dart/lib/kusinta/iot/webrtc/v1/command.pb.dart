@@ -361,9 +361,16 @@ enum DeviceCommand_Parameters {
 ///
 /// An app MAY send any command; it does not decide whether it is allowed. The gateway
 /// authorizes every DeviceCommand against the caller's access.v1.DeviceAcl for the target
-/// device before forwarding it to a connector — the command must be permitted by
-/// PERMISSION_ACTION_INVOKE, must target an attribute the ACL's allowed_attribute_refs
-/// reaches, and must respect any PropertyConstraint bounding the value.
+/// device before forwarding it to a connector: PERMISSION_ACTION_INVOKE must be granted,
+/// and allowed_command_refs must reach this (endpoint, cluster_id, matter_command_id).
+///
+/// NOT allowed_attribute_refs, and NOT PropertyConstraint. Both name attributes, and a
+/// command is not an attribute — the two are numbered independently within a cluster, so an
+/// attribute ref cannot name a command at all. A constraint bounds an attribute's value;
+/// this message carries command arguments, and ThermostatSetpointParams.amount is a DELTA,
+/// which cannot be compared against a bound without first resolving it to an absolute using
+/// a base the gateway may not hold. Where a setpoint must be bounded, bound the write:
+/// AttributeWriteRequest carries the absolute value a PropertyConstraint can be applied to.
 ///
 /// A refusal comes back as an ordinary CommandResult with success = false and an error,
 /// NOT as a session-level GatewayError: one command being refused says nothing about the

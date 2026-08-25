@@ -5,7 +5,7 @@ the separation holds: a write is addressed like a PropertyUpdate, is not reachab
 DeviceCommand, and is answered by its own result.
 """
 
-from kusinta.iot.access.v1 import acl_pb2
+from kusinta.iot.access.v1 import acl_pb2, roles_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.webrtc.v1 import command_pb2, envelope_pb2
@@ -137,3 +137,72 @@ def test_a_vendor_parameter_can_be_read_written_and_granted():
         decoded.ParseFromString(msg.SerializeToString())
     assert grant.allowed_attribute_refs[0].vendor_extension == "homematic.thermostat"
     assert write.target.attribute_name == "LEVEL"
+
+
+# --- commands and events are named by their own ID spaces -----------------------------
+
+
+def test_a_command_cannot_be_named_by_an_attribute_ref():
+    """Attributes and commands are numbered independently within a cluster: On/Off 0x0006
+    has an attribute 0x0000 and a command 0x0000 that are unrelated. This is why
+    allowed_attribute_refs cannot gate a command."""
+    attr_fields = {f.name for f in acl_pb2.AttributeRef.DESCRIPTOR.fields}
+    cmd_fields = {f.name for f in acl_pb2.CommandRef.DESCRIPTOR.fields}
+    assert "attribute_id" in attr_fields and "attribute_id" not in cmd_fields
+    assert "matter_command_id" in cmd_fields and "matter_command_id" not in attr_fields
+
+
+def test_an_event_cannot_be_named_by_an_attribute_ref():
+    event_fields = {f.name for f in acl_pb2.EventRef.DESCRIPTOR.fields}
+    assert "event_id" in event_fields
+    assert "event_id" not in {f.name for f in acl_pb2.AttributeRef.DESCRIPTOR.fields}
+
+
+def test_a_grant_can_name_one_command_of_a_multi_channel_actuator():
+    acl = acl_pb2.DeviceAcl(
+        device_id=identity_pb2.DeviceId(value="actuator-1"),
+        allowed_actions=[roles_pb2.PERMISSION_ACTION_INVOKE],
+        allowed_command_refs=[
+            acl_pb2.CommandRef(cluster_id=0x0006, matter_command_id=0x02, endpoint_id=1)
+        ],
+    )
+    decoded = acl_pb2.DeviceAcl()
+    decoded.ParseFromString(acl.SerializeToString())
+    assert decoded.allowed_command_refs[0].endpoint_id == 1
+    assert decoded.allowed_command_refs[0].matter_command_id == 0x02
+
+
+def test_events_default_to_none_while_attributes_and_commands_default_to_all():
+    """The one deliberate asymmetry: a journal of who did what is an explicit grant, not
+    something SUBSCRIBE confers. Empty lists are indistinguishable on the wire, so the
+    difference lives in the rule, and this test pins that they are separate lists."""
+    acl = acl_pb2.DeviceAcl(
+        device_id=identity_pb2.DeviceId(value="lock-1"),
+        allowed_actions=[roles_pb2.PERMISSION_ACTION_SUBSCRIBE],
+    )
+    decoded = acl_pb2.DeviceAcl()
+    decoded.ParseFromString(acl.SerializeToString())
+    assert list(decoded.allowed_attribute_refs) == []   # means: every attribute
+    assert list(decoded.allowed_command_refs) == []     # means: every command
+    assert list(decoded.allowed_event_refs) == []       # means: NO events
+
+
+def test_granting_the_lock_journal_is_explicit():
+    acl = acl_pb2.DeviceAcl(
+        device_id=identity_pb2.DeviceId(value="lock-1"),
+        allowed_actions=[roles_pb2.PERMISSION_ACTION_SUBSCRIBE],
+        allowed_event_refs=[
+            acl_pb2.EventRef(cluster_id=0x0101, event_id=0x0002, endpoint_id=1)
+        ],
+    )
+    decoded = acl_pb2.DeviceAcl()
+    decoded.ParseFromString(acl.SerializeToString())
+    assert decoded.allowed_event_refs[0].cluster_id == 0x0101
+    assert decoded.allowed_event_refs[0].event_id == 0x0002
+
+
+def test_subscribe_replaced_observe():
+    names = set(roles_pb2.PermissionAction.keys())
+    assert "PERMISSION_ACTION_SUBSCRIBE" in names
+    assert "PERMISSION_ACTION_OBSERVE" not in names
+    assert roles_pb2.PERMISSION_ACTION_SUBSCRIBE == 3  # same number, renamed only

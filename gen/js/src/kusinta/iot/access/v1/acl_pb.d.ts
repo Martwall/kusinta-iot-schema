@@ -87,6 +87,77 @@ export declare type AttributeRef = Message<"kusinta.iot.access.v1.AttributeRef">
 export declare const AttributeRefSchema: GenMessage<AttributeRef>;
 
 /**
+ * CommandRef names one command on one endpoint, for DeviceAcl.allowed_command_refs.
+ *
+ * A separate type from AttributeRef because attributes and commands are numbered
+ * independently within a cluster: On/Off (0x0006) has an attribute 0x0000 (OnOff) and a
+ * command 0x0000 (Off) that have nothing to do with each other. Putting a command ID in a
+ * field named attribute_id would be the same class of ambiguity this schema removed when
+ * it made addressing numeric.
+ *
+ * @generated from message kusinta.iot.access.v1.CommandRef
+ */
+export declare type CommandRef = Message<"kusinta.iot.access.v1.CommandRef"> & {
+  /**
+   * @generated from field: uint32 cluster_id = 1;
+   */
+  clusterId: number;
+
+  /**
+   * @generated from field: uint32 matter_command_id = 2;
+   */
+  matterCommandId: number;
+
+  /**
+   * Which endpoint. Required on a grant, for the same reason as AttributeRef.endpoint_id:
+   * all four channels of a 4-channel actuator accept the same command on the same cluster,
+   * so a ref without one cannot tell channel 1 from channel 3.
+   *
+   * @generated from field: optional uint32 endpoint_id = 3;
+   */
+  endpointId?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.access.v1.CommandRef.
+ * Use `create(CommandRefSchema)` to create a new message.
+ */
+export declare const CommandRefSchema: GenMessage<CommandRef>;
+
+/**
+ * EventRef names one event on one endpoint, for DeviceAcl.allowed_event_refs.
+ *
+ * Events are numbered independently of attributes and commands within a cluster, so this
+ * is a third type rather than a reuse. On Door Lock (0x0101), the LockState attribute and
+ * the lock-operation event are different elements answering different questions: what the
+ * lock's state is, and who changed it.
+ *
+ * @generated from message kusinta.iot.access.v1.EventRef
+ */
+export declare type EventRef = Message<"kusinta.iot.access.v1.EventRef"> & {
+  /**
+   * @generated from field: uint32 cluster_id = 1;
+   */
+  clusterId: number;
+
+  /**
+   * @generated from field: uint32 event_id = 2;
+   */
+  eventId: number;
+
+  /**
+   * @generated from field: optional uint32 endpoint_id = 3;
+   */
+  endpointId?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.access.v1.EventRef.
+ * Use `create(EventRefSchema)` to create a new message.
+ */
+export declare const EventRefSchema: GenMessage<EventRef>;
+
+/**
  * PropertyConstraint bounds a single Matter cluster attribute.
  * MaxHeatSetpointLimit and MinHeatSetpointLimit are actual Matter Thermostat cluster
  * attributes (0x0016, 0x0015) — the gateway writes them directly via the connector.
@@ -155,6 +226,14 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
   userId?: UserId | undefined;
 
   /**
+   * The user's role AS RESOLVED FOR THIS DEVICE. A gateway-wide role is a ceiling on the
+   * kinds of action a user may perform; reach — which devices — is decided separately by
+   * filing. This field is what the two produced together for this one device, so it may
+   * differ from any single role the user's token carries. See roles.proto.
+   *
+   * Descriptive. allowed_actions and the ref lists below are what a consumer enforces
+   * against; this says which relationship produced them.
+   *
    * @generated from field: kusinta.iot.access.v1.Role role = 3;
    */
   role: Role;
@@ -192,6 +271,39 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
    * @generated from field: repeated kusinta.iot.access.v1.PropertyConstraint property_constraints = 6;
    */
   propertyConstraints: PropertyConstraint[];
+
+  /**
+   * Narrows PERMISSION_ACTION_INVOKE to particular commands. Empty = every command the
+   * device accepts, matching allowed_attribute_refs — it is a filter, and an empty filter
+   * narrows nothing. It grants nothing on its own: without INVOKE in allowed_actions, no
+   * command is permitted however this list reads.
+   *
+   * Without it INVOKE is all-or-nothing, and that is the operation that moves hardware —
+   * a grant covering a thermostat setpoint would equally cover UnlockDoor on a device
+   * exposing both.
+   *
+   * A ref present with no endpoint_id is INVALID and MUST be rejected.
+   *
+   * @generated from field: repeated kusinta.iot.access.v1.CommandRef allowed_command_refs = 9;
+   */
+  allowedCommandRefs: CommandRef[];
+
+  /**
+   * Which events this user may receive. Empty = NONE.
+   *
+   * The opposite default to the two lists above, deliberately. Attributes and commands are
+   * a device's operating surface; events are its journal, and a journal discloses who did
+   * what and when. Reaching that must be an explicit grant, never something a user gets by
+   * holding SUBSCRIBE for ordinary readings.
+   *
+   * Requires PERMISSION_ACTION_SUBSCRIBE as well: the action says a standing stream is
+   * permitted, this list says which events travel on it.
+   *
+   * A ref present with no endpoint_id is INVALID and MUST be rejected.
+   *
+   * @generated from field: repeated kusinta.iot.access.v1.EventRef allowed_event_refs = 10;
+   */
+  allowedEventRefs: EventRef[];
 };
 
 /**
@@ -201,6 +313,24 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
 export declare const DeviceAclSchema: GenMessage<DeviceAcl>;
 
 /**
+ * Every DeviceAcl in force for one user on one gateway, at valid_at.
+ *
+ * ADVISORY WHEN SENT TO AN APP. The gateway is the sole authority and enforces every
+ * read, write, invoke and subscription against its own copy, whether or not the app has
+ * one. This is disclosed so an app can RENDER honestly — grey out a control the user may
+ * not invoke, clamp a setpoint slider to a PropertyConstraint, hide a device — instead of
+ * offering an action and discovering the refusal.
+ *
+ * Two mistakes this exists to prevent. An app MUST still handle refusal: this snapshot can
+ * be stale, and it is not a promise. A gateway MUST NOT treat having sent it as having
+ * enforced anything.
+ *
+ * It discloses only the recipient's own permissions. It says nothing about what any other
+ * user holds.
+ *
+ * Sent whole rather than as a delta, in webrtc.v1.DeviceStateSnapshot at connect and in
+ * webrtc.v1.LivePermissionUpdate when it changes.
+ *
  * @generated from message kusinta.iot.access.v1.EffectivePermissions
  */
 export declare type EffectivePermissions = Message<"kusinta.iot.access.v1.EffectivePermissions"> & {
