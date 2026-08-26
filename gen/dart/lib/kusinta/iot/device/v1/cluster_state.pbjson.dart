@@ -198,6 +198,7 @@ const ClusterState$json = {
       '5': 13,
       '10': 'acceptedCommandIds'
     },
+    {'1': 'attribute_ids', '3': 6, '4': 3, '5': 13, '10': 'attributeIds'},
   ],
   '8': [
     {'1': '_cluster_revision'},
@@ -211,5 +212,5 @@ final $typed_data.Uint8List clusterStateDescriptor = $convert.base64Decode(
     'JfcmV2aXNpb24YAiABKA1IAFIPY2x1c3RlclJldmlzaW9uiAEBEiQKC2ZlYXR1cmVfbWFwGAMg'
     'ASgNSAFSCmZlYXR1cmVNYXCIAQESRQoKYXR0cmlidXRlcxgEIAMoCzIlLmt1c2ludGEuaW90Lm'
     'RldmljZS52MS5BdHRyaWJ1dGVTdGF0ZVIKYXR0cmlidXRlcxIwChRhY2NlcHRlZF9jb21tYW5k'
-    'X2lkcxgFIAMoDVISYWNjZXB0ZWRDb21tYW5kSWRzQhMKEV9jbHVzdGVyX3JldmlzaW9uQg4KDF'
-    '9mZWF0dXJlX21hcA==');
+    'X2lkcxgFIAMoDVISYWNjZXB0ZWRDb21tYW5kSWRzEiMKDWF0dHJpYnV0ZV9pZHMYBiADKA1SDG'
+    'F0dHJpYnV0ZUlkc0ITChFfY2x1c3Rlcl9yZXZpc2lvbkIOCgxfZmVhdHVyZV9tYXA=');

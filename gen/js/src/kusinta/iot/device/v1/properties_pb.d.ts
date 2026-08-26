@@ -71,6 +71,16 @@ export declare type ThermostatProperties = Message<"kusinta.iot.device.v1.Thermo
    * @generated from field: optional uint32 thermostat_running_mode = 10;
    */
   thermostatRunningMode?: number | undefined;
+
+  /**
+   * Heating demanded by the control loop, 0-100 %, which is the percentage the valve is
+   * open. A radiator valve's own position belongs here and not in a vendor extension: the
+   * Matter attribute is specified as exactly this quantity. A thermostat that drives no
+   * valve of its own does not implement it — see ClusterState.attribute_ids.
+   *
+   * @generated from field: optional uint32 pi_heating_demand = 11;
+   */
+  piHeatingDemand?: number | undefined;
 };
 
 /**
@@ -389,6 +399,10 @@ export declare type DimmableLightProperties = Message<"kusinta.iot.device.v1.Dim
   startUpCurrentLevel?: number | undefined;
 
   /**
+   * READ only: the Matter data model marks RemainingTime changes-omitted, so it is
+   * readable but never reported — it counts down continuously and reporting it would be
+   * a subscription storm.
+   *
    * @generated from field: optional uint32 remaining_time = 7;
    */
   remainingTime?: number | undefined;

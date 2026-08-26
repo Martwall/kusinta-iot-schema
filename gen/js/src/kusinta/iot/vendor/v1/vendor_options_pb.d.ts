@@ -27,6 +27,27 @@ export declare const file_kusinta_iot_vendor_v1_vendor_options: GenFile;
 export declare const vendor_attribute: GenExtension<FieldOptions, string>;
 
 /**
+ * What this vendor parameter supports, as the same bitmask device/v1/matter_options.proto
+ * defines: READ = 1, WRITE = 2, REPORT = 4.
+ *
+ * One mask across both branches on purpose. Bit 4 is Matter's reportable quality and, for
+ * HomeMatic, the parameter's EVENT bit — the same fact under two names, so a consumer
+ * deciding whether to draw a control or a reading asks one question either way.
+ *
+ * Where the value comes from is the difference. The Matter side reads its mask off the
+ * specification; a vendor parameter has no spec to defer to, so this is the upstream
+ * system's own answer about its own parameter — for HomeMatic, the OPERATIONS value the
+ * CCU reports in getParamsetDescription().
+ *
+ * Not permission, and not the implemented set: see matter_attribute_capabilities for both
+ * distinctions. The vendor mirror of the implemented set is
+ * device.v1.Endpoint.vendor_attribute_names.
+ *
+ * @generated from extension: uint32 vendor_attribute_capabilities = 50010;
+ */
+export declare const vendor_attribute_capabilities: GenExtension<FieldOptions, number>;
+
+/**
  * The stable key identifying a vendor extension message, e.g. "homematic.thermostat".
  * Matches device.v1.PropertyUpdate.vendor_extension byte for byte, and is what selects
  * the Endpoint.vendor_properties case.

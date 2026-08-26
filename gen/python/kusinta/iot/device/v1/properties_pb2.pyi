@@ -6,7 +6,7 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ThermostatProperties(_message.Message):
-    __slots__ = ("local_temperature", "occupied_heating_setpoint", "occupied_cooling_setpoint", "min_heat_setpoint_limit", "max_heat_setpoint_limit", "min_cool_setpoint_limit", "max_cool_setpoint_limit", "control_sequence_of_operation", "system_mode", "thermostat_running_mode")
+    __slots__ = ("local_temperature", "occupied_heating_setpoint", "occupied_cooling_setpoint", "min_heat_setpoint_limit", "max_heat_setpoint_limit", "min_cool_setpoint_limit", "max_cool_setpoint_limit", "control_sequence_of_operation", "system_mode", "thermostat_running_mode", "pi_heating_demand")
     LOCAL_TEMPERATURE_FIELD_NUMBER: _ClassVar[int]
     OCCUPIED_HEATING_SETPOINT_FIELD_NUMBER: _ClassVar[int]
     OCCUPIED_COOLING_SETPOINT_FIELD_NUMBER: _ClassVar[int]
@@ -17,6 +17,7 @@ class ThermostatProperties(_message.Message):
     CONTROL_SEQUENCE_OF_OPERATION_FIELD_NUMBER: _ClassVar[int]
     SYSTEM_MODE_FIELD_NUMBER: _ClassVar[int]
     THERMOSTAT_RUNNING_MODE_FIELD_NUMBER: _ClassVar[int]
+    PI_HEATING_DEMAND_FIELD_NUMBER: _ClassVar[int]
     local_temperature: int
     occupied_heating_setpoint: int
     occupied_cooling_setpoint: int
@@ -27,7 +28,8 @@ class ThermostatProperties(_message.Message):
     control_sequence_of_operation: int
     system_mode: int
     thermostat_running_mode: int
-    def __init__(self, local_temperature: _Optional[int] = ..., occupied_heating_setpoint: _Optional[int] = ..., occupied_cooling_setpoint: _Optional[int] = ..., min_heat_setpoint_limit: _Optional[int] = ..., max_heat_setpoint_limit: _Optional[int] = ..., min_cool_setpoint_limit: _Optional[int] = ..., max_cool_setpoint_limit: _Optional[int] = ..., control_sequence_of_operation: _Optional[int] = ..., system_mode: _Optional[int] = ..., thermostat_running_mode: _Optional[int] = ...) -> None: ...
+    pi_heating_demand: int
+    def __init__(self, local_temperature: _Optional[int] = ..., occupied_heating_setpoint: _Optional[int] = ..., occupied_cooling_setpoint: _Optional[int] = ..., min_heat_setpoint_limit: _Optional[int] = ..., max_heat_setpoint_limit: _Optional[int] = ..., min_cool_setpoint_limit: _Optional[int] = ..., max_cool_setpoint_limit: _Optional[int] = ..., control_sequence_of_operation: _Optional[int] = ..., system_mode: _Optional[int] = ..., thermostat_running_mode: _Optional[int] = ..., pi_heating_demand: _Optional[int] = ...) -> None: ...
 
 class TemperatureSensorProperties(_message.Message):
     __slots__ = ("measured_value", "min_measured_value", "max_measured_value", "tolerance")

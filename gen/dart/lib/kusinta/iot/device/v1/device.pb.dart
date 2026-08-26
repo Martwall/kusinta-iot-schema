@@ -39,7 +39,7 @@ enum Endpoint_MatterProperties {
   notSet
 }
 
-enum Endpoint_VendorProperties { hmThermostat, notSet }
+enum Endpoint_VendorProperties { hmThermostat, hmMaintenance, notSet }
 
 /// The state one Matter endpoint reports.
 ///
@@ -107,7 +107,9 @@ class Endpoint extends $pb.GeneratedMessage {
     $0.PressureSensorProperties? pressureSensor,
     $0.PowerSourceProperties? powerSource,
     $core.Iterable<$1.ClusterState>? clusters,
+    $core.Iterable<$core.String>? vendorAttributeNames,
     $2.HmThermostatProps? hmThermostat,
+    $2.HmMaintenanceProps? hmMaintenance,
   }) {
     final result = create();
     if (endpointId != null) result.endpointId = endpointId;
@@ -127,7 +129,10 @@ class Endpoint extends $pb.GeneratedMessage {
     if (pressureSensor != null) result.pressureSensor = pressureSensor;
     if (powerSource != null) result.powerSource = powerSource;
     if (clusters != null) result.clusters.addAll(clusters);
+    if (vendorAttributeNames != null)
+      result.vendorAttributeNames.addAll(vendorAttributeNames);
     if (hmThermostat != null) result.hmThermostat = hmThermostat;
+    if (hmMaintenance != null) result.hmMaintenance = hmMaintenance;
     return result;
   }
 
@@ -160,6 +165,7 @@ class Endpoint extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, Endpoint_VendorProperties>
       _Endpoint_VendorPropertiesByTag = {
     50: Endpoint_VendorProperties.hmThermostat,
+    51: Endpoint_VendorProperties.hmMaintenance,
     0: Endpoint_VendorProperties.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -168,7 +174,7 @@ class Endpoint extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
     ..oo(0, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
-    ..oo(1, [50])
+    ..oo(1, [50, 51])
     ..a<$core.int>(1, _omitFieldNames ? '' : 'endpointId', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         2, _omitFieldNames ? '' : 'matterDeviceTypeId', $pb.PbFieldType.OU3)
@@ -208,8 +214,11 @@ class Endpoint extends $pb.GeneratedMessage {
     ..pc<$1.ClusterState>(
         16, _omitFieldNames ? '' : 'clusters', $pb.PbFieldType.PM,
         subBuilder: $1.ClusterState.create)
+    ..pPS(17, _omitFieldNames ? '' : 'vendorAttributeNames')
     ..aOM<$2.HmThermostatProps>(50, _omitFieldNames ? '' : 'hmThermostat',
         subBuilder: $2.HmThermostatProps.create)
+    ..aOM<$2.HmMaintenanceProps>(51, _omitFieldNames ? '' : 'hmMaintenance',
+        subBuilder: $2.HmMaintenanceProps.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -414,16 +423,46 @@ class Endpoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $pb.PbList<$1.ClusterState> get clusters => $_getList(15);
 
+  /// Which vendor parameters this endpoint's vendor extension actually implements, in the
+  /// vendor's own spelling — "SABOTAGE", matching (vendor_attribute) byte for byte.
+  ///
+  /// The vendor mirror of ClusterState.attribute_ids, and it needs its own field because a
+  /// vendor parameter has no cluster and so no ClusterState to be listed in. A name list
+  /// rather than an id list because the vendor branch addresses by name, and a bare list
+  /// rather than a per-extension map because an endpoint carries at most one vendor
+  /// extension.
+  ///
+  /// Same reading as the Matter side: named here with no value = implemented, not yet
+  /// reported. Absent from the list = this device does not have it. Empty = not stated,
+  /// which is not a claim that the device implements nothing.
+  ///
+  /// This is what separates "no tamper detected" from "cannot detect tamper" — presence
+  /// alone cannot, and for SABOTAGE the difference is a safety claim. A connector fills it
+  /// at announcement from the parameter description its upstream system already holds.
+  @$pb.TagNumber(17)
+  $pb.PbList<$core.String> get vendorAttributeNames => $_getList(16);
+
   @$pb.TagNumber(50)
-  $2.HmThermostatProps get hmThermostat => $_getN(16);
+  $2.HmThermostatProps get hmThermostat => $_getN(17);
   @$pb.TagNumber(50)
   set hmThermostat($2.HmThermostatProps value) => $_setField(50, value);
   @$pb.TagNumber(50)
-  $core.bool hasHmThermostat() => $_has(16);
+  $core.bool hasHmThermostat() => $_has(17);
   @$pb.TagNumber(50)
   void clearHmThermostat() => $_clearField(50);
   @$pb.TagNumber(50)
-  $2.HmThermostatProps ensureHmThermostat() => $_ensure(16);
+  $2.HmThermostatProps ensureHmThermostat() => $_ensure(17);
+
+  @$pb.TagNumber(51)
+  $2.HmMaintenanceProps get hmMaintenance => $_getN(18);
+  @$pb.TagNumber(51)
+  set hmMaintenance($2.HmMaintenanceProps value) => $_setField(51, value);
+  @$pb.TagNumber(51)
+  $core.bool hasHmMaintenance() => $_has(18);
+  @$pb.TagNumber(51)
+  void clearHmMaintenance() => $_clearField(51);
+  @$pb.TagNumber(51)
+  $2.HmMaintenanceProps ensureHmMaintenance() => $_ensure(18);
 }
 
 /// Device is a DeviceDescriptor plus the endpoints it presents.

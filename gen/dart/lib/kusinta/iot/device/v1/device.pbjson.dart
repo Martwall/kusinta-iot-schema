@@ -153,12 +153,28 @@ const Endpoint$json = {
       '10': 'hmThermostat'
     },
     {
+      '1': 'hm_maintenance',
+      '3': 51,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.vendor.homematic.v1.HmMaintenanceProps',
+      '9': 1,
+      '10': 'hmMaintenance'
+    },
+    {
       '1': 'clusters',
       '3': 16,
       '4': 3,
       '5': 11,
       '6': '.kusinta.iot.device.v1.ClusterState',
       '10': 'clusters'
+    },
+    {
+      '1': 'vendor_attribute_names',
+      '3': 17,
+      '4': 3,
+      '5': 9,
+      '10': 'vendorAttributeNames'
     },
   ],
   '8': [
@@ -193,9 +209,11 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'EKDHBvd2VyX3NvdXJjZRgPIAEoCzIsLmt1c2ludGEuaW90LmRldmljZS52MS5Qb3dlclNvdXJj'
     'ZVByb3BlcnRpZXNIAFILcG93ZXJTb3VyY2USWQoNaG1fdGhlcm1vc3RhdBgyIAEoCzIyLmt1c2'
     'ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAVIMaG1UaGVy'
-    'bW9zdGF0Ej8KCGNsdXN0ZXJzGBAgAygLMiMua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNsdXN0ZX'
-    'JTdGF0ZVIIY2x1c3RlcnNCEwoRbWF0dGVyX3Byb3BlcnRpZXNCEwoRdmVuZG9yX3Byb3BlcnRp'
-    'ZXM=');
+    'bW9zdGF0ElwKDmhtX21haW50ZW5hbmNlGDMgASgLMjMua3VzaW50YS5pb3QudmVuZG9yLmhvbW'
+    'VtYXRpYy52MS5IbU1haW50ZW5hbmNlUHJvcHNIAVINaG1NYWludGVuYW5jZRI/CghjbHVzdGVy'
+    'cxgQIAMoCzIjLmt1c2ludGEuaW90LmRldmljZS52MS5DbHVzdGVyU3RhdGVSCGNsdXN0ZXJzEj'
+    'QKFnZlbmRvcl9hdHRyaWJ1dGVfbmFtZXMYESADKAlSFHZlbmRvckF0dHJpYnV0ZU5hbWVzQhMK'
+    'EW1hdHRlcl9wcm9wZXJ0aWVzQhMKEXZlbmRvcl9wcm9wZXJ0aWVz');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {

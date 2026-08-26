@@ -14,7 +14,7 @@ import {
   EnergySensorPropertiesSchema,
 } from '../kusinta/iot/device/v1/properties_pb.js'
 import { DeviceSchema, EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
-import { AttributeValueSchema } from '../kusinta/iot/device/v1/cluster_state_pb.js'
+import { AttributeValueSchema, ClusterStateSchema } from '../kusinta/iot/device/v1/cluster_state_pb.js'
 import { PropertyUpdateSchema, PropertyUpdateBatchSchema, ValueProvenance } from '../kusinta/iot/device/v1/property_update_pb.js'
 
 describe('DeviceDescriptor', () => {
@@ -305,8 +305,8 @@ describe('PropertyUpdate — endpoint and vendor addressing', () => {
       deviceId: { value: 'valve-1' },
       endpointId: 1,
       vendorExtension: 'homematic.thermostat',
-      attributeName: 'LEVEL',
-      value: { case: 'floatValue', value: 0.5 },
+      attributeName: 'VALVE_STATE',
+      value: { case: 'uintValue', value: 3 },
     })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
     expect(decoded.vendorExtension).toBe('homematic.thermostat')
@@ -393,5 +393,20 @@ describe('bridged devices', () => {
     const d = create(DeviceDescriptorSchema, { deviceId: { value: 'valve-1' } })
     const decoded = fromBinary(DeviceDescriptorSchema, toBinary(DeviceDescriptorSchema, d))
     expect(decoded.bridgedBy).toBeUndefined()
+  })
+})
+
+describe('implemented attribute lists', () => {
+  it('names the attributes a cluster instance actually implements', () => {
+    const state = create(ClusterStateSchema, {
+      clusterId: 0x0201,
+      attributeIds: [0x0000, 0x0012, 0x0008],
+    })
+    const decoded = fromBinary(ClusterStateSchema, toBinary(ClusterStateSchema, state))
+    expect(decoded.attributeIds).toEqual([0x0000, 0x0012, 0x0008])
+  })
+
+  it('is empty rather than a claim of nothing when the producer does not know', () => {
+    expect(create(ClusterStateSchema, { clusterId: 0x0201 }).attributeIds).toEqual([])
   })
 })

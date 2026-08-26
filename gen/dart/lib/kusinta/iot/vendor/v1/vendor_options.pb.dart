@@ -22,6 +22,11 @@ class Vendor_options {
       _omitFieldNames ? '' : 'vendorAttribute',
       50004,
       $pb.PbFieldType.OS);
+  static final vendorAttributeCapabilities = $pb.Extension<$core.int>(
+      _omitMessageNames ? '' : 'google.protobuf.FieldOptions',
+      _omitFieldNames ? '' : 'vendorAttributeCapabilities',
+      50010,
+      $pb.PbFieldType.OU3);
   static final vendorExtension = $pb.Extension<$core.String>(
       _omitMessageNames ? '' : 'google.protobuf.MessageOptions',
       _omitFieldNames ? '' : 'vendorExtension',
@@ -29,6 +34,7 @@ class Vendor_options {
       $pb.PbFieldType.OS);
   static void registerAllExtensions($pb.ExtensionRegistry registry) {
     registry.add(vendorAttribute);
+    registry.add(vendorAttributeCapabilities);
     registry.add(vendorExtension);
   }
 }

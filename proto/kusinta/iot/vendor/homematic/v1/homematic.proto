@@ -17,6 +17,11 @@ message HomematicDeviceIdentity {
 // HomeMatic thermostat parameters with no Matter equivalent, carried on the same endpoint
 // as that thermostat's Matter properties rather than instead of them.
 //
+// "No Matter equivalent" is the entry test, and it is the one to apply before adding a
+// field here. Valve position failed it: LEVEL is Thermostat/PIHeatingDemand, and it lived
+// here for a while under the claim that Matter had nothing for it. It is now
+// device.v1.ThermostatProperties.pi_heating_demand, and field 6 is burned.
+//
 // Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
 // PowerSource cluster, which every battery device from every technology needs, so they
 // belong on a Power Source endpoint. See device/v1/properties.proto.
@@ -26,20 +31,101 @@ message HomematicDeviceIdentity {
 // false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
 // reported; present means a reading, including zero.
 //
+// Enum parameters cross the wire as the CCU's own index, not as a type this schema defines,
+// so each one lists its values in its comment. The order is the CCU's; do not renumber it.
+//
 // Add new fields at the next available number — never reuse a removed one.
 message HmThermostatProps {
   option (kusinta.iot.vendor.v1.vendor_extension) = "homematic.thermostat";
 
-  optional bool   boost_mode             = 1 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_MODE"];
-  optional float  boost_time_period      = 2 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_TIME"]; // minutes remaining
-  optional uint32 control_mode           = 3 [(kusinta.iot.vendor.v1.vendor_attribute) = "CONTROL_MODE"];
-  optional bool   frost_protection       = 4 [(kusinta.iot.vendor.v1.vendor_attribute) = "FROST_PROTECTION"];
-  optional float  current_profile_period = 5 [(kusinta.iot.vendor.v1.vendor_attribute) = "PARTY_MODE"];
+  // Field 6 carried LEVEL as a float 0.0-1.0. Burned rather than reused: the reading moved
+  // to ThermostatProperties.pi_heating_demand as a uint32 percentage, and a stale float
+  // decoded under a new field of another type is a plausible, silently wrong value.
+  reserved 6;
+  reserved "level";
 
-  // Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
-  // this extension exists for: it has no Matter equivalent, and it is what an automatic
-  // or learned control strategy needs.
-  optional float  level                  = 6 [(kusinta.iot.vendor.v1.vendor_attribute) = "LEVEL"];
-  optional uint32 window_state           = 7 [(kusinta.iot.vendor.v1.vendor_attribute) = "WINDOW_STATE"];
-  optional uint32 valve_state            = 8 [(kusinta.iot.vendor.v1.vendor_attribute) = "VALVE_STATE"];
+  // Field 5 was `float current_profile_period`, named for a period but carrying the
+  // boolean PARTY_MODE. Renamed and retyped while nothing populated it; the field number
+  // is kept because no encoding of it was ever produced.
+  reserved "current_profile_period";
+
+  optional bool   boost_mode                = 1 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_MODE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 6];
+  // Minutes remaining, 0-2048. Integer on the CCU — it counts whole minutes.
+  optional uint32 boost_time_period         = 2 [(kusinta.iot.vendor.v1.vendor_attribute) = "BOOST_TIME", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // Write-only on the CCU: it accepts a ControlMode and never reports one back. Carried
+  // here for a future write path, not as a reading — a connector that emits it as a
+  // PropertyUpdate is sending a value the device never gave. 0-3.
+  optional uint32 control_mode              = 3 [(kusinta.iot.vendor.v1.vendor_attribute) = "CONTROL_MODE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 2];
+  optional bool   frost_protection          = 4 [(kusinta.iot.vendor.v1.vendor_attribute) = "FROST_PROTECTION", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // Party mode active. A boolean, whatever the old field name suggested.
+  optional bool   party_mode                = 5 [(kusinta.iot.vendor.v1.vendor_attribute) = "PARTY_MODE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // CLOSED = 0, OPEN = 1
+  optional uint32 window_state              = 7 [(kusinta.iot.vendor.v1.vendor_attribute) = "WINDOW_STATE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 7];
+  // Valve fault and adaption state, nine CCU-defined values. Radiator valves only — a wall
+  // thermostat drives no valve and never reports it.
+  optional uint32 valve_state               = 8 [(kusinta.iot.vendor.v1.vendor_attribute) = "VALVE_STATE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+
+  // Which schedule the thermostat is following: AUTO = 0, MANU = 1, AWAY = 2, plus a
+  // fourth CCU value. NOT webrtc.v1.SetpointAdjustMode, which names which setpoint a
+  // command targets — a different enum over a different set of concepts.
+  optional uint32 set_point_mode            = 9  [(kusinta.iot.vendor.v1.vendor_attribute) = "SET_POINT_MODE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 7];
+  // The active weekly profile: 1-3 on a radiator valve, 1-6 on a wall thermostat. The
+  // upper bound is the device's, not the protocol's.
+  optional uint32 active_profile            = 10 [(kusinta.iot.vendor.v1.vendor_attribute) = "ACTIVE_PROFILE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 7];
+  // Whether the measured temperature is usable: NORMAL = 0, UNKNOWN = 1, OVERFLOW = 2,
+  // UNDERFLOW = 3. A reading beside ACTUAL_TEMPERATURE, not a substitute for it.
+  optional uint32 actual_temperature_status = 11 [(kusinta.iot.vendor.v1.vendor_attribute) = "ACTUAL_TEMPERATURE_STATUS", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // Valve adaption run: writing true starts the valve's stroke calibration.
+  optional bool   valve_adaption            = 12 [(kusinta.iot.vendor.v1.vendor_attribute) = "VALVE_ADAPTION", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 7];
+}
+
+// The maintenance channel every HomeMatic device carries — device health and radio state,
+// not what the device measures or controls.
+//
+// It is device-agnostic: a radiator valve, a wall thermostat and a switch actuator all
+// report the same core set on the same channel, which is why this is one message rather
+// than a per-device-type one. Which of these a given device actually has is model-
+// dependent, and stated per device in device.v1.Endpoint.vendor_attribute_names — SABOTAGE
+// especially, where "no tamper detected" and "cannot detect tamper" must not render alike.
+//
+// Not a Matter endpoint of its own: the maintenance channel is channel 0 upstream, and
+// Matter reserves endpoint 0 for the root node. A connector puts these readings on the
+// endpoint whose Matter properties they belong beside — the Power Source endpoint, whose
+// battery attributes are derived from this same channel's LOW_BAT and OPERATING_VOLTAGE.
+//
+// LOW_BAT, OPERATING_VOLTAGE and OPERATING_VOLTAGE_LEVEL are deliberately absent: they are
+// Matter's PowerSource cluster, and PowerSourceProperties carries them. Only the derived
+// Matter value has a home there, so the raw OPERATING_VOLTAGE_STATUS enum is kept here.
+//
+// Every field is `optional`, for the reason HmThermostatProps gives: ERROR_CODE 0 is "no
+// error", a reading, and SABOTAGE false is a safety claim.
+message HmMaintenanceProps {
+  option (kusinta.iot.vendor.v1.vendor_extension) = "homematic.maintenance";
+
+  // Device-defined fault code, 0-255, where 0 is no error. Present only on models that
+  // have one.
+  optional uint32 error_code               = 1 [(kusinta.iot.vendor.v1.vendor_attribute) = "ERROR_CODE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // Tamper detection: true means the device reports having been removed or opened. Present
+  // only on models with the hardware for it.
+  optional bool   sabotage                 = 2 [(kusinta.iot.vendor.v1.vendor_attribute) = "SABOTAGE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+
+  // Received signal strength in dBm, -128 to 127, as this device measures it.
+  //
+  // sint32, not uint32: these are negative in normal operation, and an unsigned field would
+  // carry -72 dBm as 4294967224.
+  optional sint32 rssi_device               = 3 [(kusinta.iot.vendor.v1.vendor_attribute) = "RSSI_DEVICE", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // The same measurement made at the other end of the link, as reported back.
+  optional sint32 rssi_peer                 = 4 [(kusinta.iot.vendor.v1.vendor_attribute) = "RSSI_PEER", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+
+  // Supply state as the CCU reports it: NORMAL = 0, UNKNOWN = 1, OVERFLOW = 2,
+  // EXTERNAL = 3. The raw enum; PowerSourceProperties.status carries the Matter
+  // PowerSourceStatusEnum value derived from it, and the two are not interchangeable.
+  optional uint32 operating_voltage_status  = 5 [(kusinta.iot.vendor.v1.vendor_attribute) = "OPERATING_VOLTAGE_STATUS", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // True when the gateway has lost contact with the device. Reachability as the upstream
+  // system sees it, which is not the same claim as device.v1.Device.last_seen — that is
+  // when the gateway last had evidence of the device, observed one hop further out.
+  optional bool   unreach                   = 6 [(kusinta.iot.vendor.v1.vendor_attribute) = "UNREACH", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
+  // True while a configuration change is queued for a device that has not yet woken to
+  // take it. A battery device can sit here for its whole report interval.
+  optional bool   config_pending            = 7 [(kusinta.iot.vendor.v1.vendor_attribute) = "CONFIG_PENDING", (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5];
 }

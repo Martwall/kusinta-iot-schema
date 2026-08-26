@@ -107,3 +107,77 @@ def test_every_stream_assembled_property_field_has_explicit_presence():
         if not field.has_presence
     ]
     assert implicit == []
+
+
+# --- vendor readings: same rule, second branch ---------------------------------
+
+# Derived from the Endpoint.vendor_properties oneof for the same reason as
+# PROPERTIES_MESSAGES above.
+VENDOR_EXTENSIONS = [
+    field.message_type._concrete_class
+    for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
+]
+
+
+def test_no_tamper_is_distinguishable_from_a_device_that_cannot_detect_tamper():
+    """SABOTAGE false is a safety claim. A device with no tamper switch never reports it,
+    and the two must not encode identically."""
+    reported = homematic_pb2.HmMaintenanceProps(sabotage=False)
+    decoded = homematic_pb2.HmMaintenanceProps()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("sabotage") is True
+
+
+def test_a_device_that_never_reported_sabotage_is_absent():
+    assert homematic_pb2.HmMaintenanceProps().HasField("sabotage") is False
+
+
+def test_error_code_zero_is_distinguishable_from_an_unreported_error_code():
+    """ERROR_CODE 0 is "no error", which is a reading, not silence."""
+    reported = homematic_pb2.HmMaintenanceProps(error_code=0)
+    decoded = homematic_pb2.HmMaintenanceProps()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("error_code") is True
+
+
+def test_zero_rssi_is_distinguishable_from_an_unreported_rssi():
+    reported = homematic_pb2.HmMaintenanceProps(rssi_device=0)
+    decoded = homematic_pb2.HmMaintenanceProps()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("rssi_device") is True
+
+
+def test_party_mode_off_is_distinguishable_from_an_unreported_party_mode():
+    reported = homematic_pb2.HmThermostatProps(party_mode=False)
+    decoded = homematic_pb2.HmThermostatProps()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("party_mode") is True
+
+
+def test_set_point_mode_zero_is_distinguishable_from_an_unreported_set_point_mode():
+    reported = homematic_pb2.HmThermostatProps(set_point_mode=0)
+    decoded = homematic_pb2.HmThermostatProps()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("set_point_mode") is True
+
+
+def test_unreported_heating_demand_is_absent():
+    """A closed valve reports 0 %; a device with no valve reports nothing."""
+    assert properties_pb2.ThermostatProperties().HasField("pi_heating_demand") is False
+
+
+def test_a_closed_valve_is_distinguishable_from_a_device_with_no_valve():
+    reported = properties_pb2.ThermostatProperties(pi_heating_demand=0)
+    decoded = properties_pb2.ThermostatProperties()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("pi_heating_demand") is True
+
+
+def test_every_vendor_reading_field_has_explicit_presence():
+    implicit = [
+        f"{message.DESCRIPTOR.name}.{field.name}"
+        for message in VENDOR_EXTENSIONS
+        for field in message.DESCRIPTOR.fields
+        if not field.has_presence
+    ]
+    assert implicit == []

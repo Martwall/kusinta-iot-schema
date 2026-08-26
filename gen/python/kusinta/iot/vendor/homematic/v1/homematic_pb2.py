@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from kusinta.iot.vendor.v1 import vendor_options_pb2 as kusinta_dot_iot_dot_vendor_dot_v1_dot_vendor__options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/kusinta/iot/vendor/homematic/v1/homematic.proto\x12\x1fkusinta.iot.vendor.homematic.v1\x1a*kusinta/iot/vendor/v1/vendor_options.proto\"G\n\x17HomematicDeviceIdentity\x12\x18\n\x07\x61\x64\x64ress\x18\x01 \x01(\tR\x07\x61\x64\x64ress\x12\x12\n\x04type\x18\x02 \x01(\tR\x04type\"\x95\x05\n\x11HmThermostatProps\x12\x32\n\nboost_mode\x18\x01 \x01(\x08\x42\x0e\xa2\xb5\x18\nBOOST_MODEH\x00R\tboostMode\x88\x01\x01\x12?\n\x11\x62oost_time_period\x18\x02 \x01(\x02\x42\x0e\xa2\xb5\x18\nBOOST_TIMEH\x01R\x0f\x62oostTimePeriod\x88\x01\x01\x12\x38\n\x0c\x63ontrol_mode\x18\x03 \x01(\rB\x10\xa2\xb5\x18\x0c\x43ONTROL_MODEH\x02R\x0b\x63ontrolMode\x88\x01\x01\x12\x44\n\x10\x66rost_protection\x18\x04 \x01(\x08\x42\x14\xa2\xb5\x18\x10\x46ROST_PROTECTIONH\x03R\x0f\x66rostProtection\x88\x01\x01\x12I\n\x16\x63urrent_profile_period\x18\x05 \x01(\x02\x42\x0e\xa2\xb5\x18\nPARTY_MODEH\x04R\x14\x63urrentProfilePeriod\x88\x01\x01\x12$\n\x05level\x18\x06 \x01(\x02\x42\t\xa2\xb5\x18\x05LEVELH\x05R\x05level\x88\x01\x01\x12\x38\n\x0cwindow_state\x18\x07 \x01(\rB\x10\xa2\xb5\x18\x0cWINDOW_STATEH\x06R\x0bwindowState\x88\x01\x01\x12\x35\n\x0bvalve_state\x18\x08 \x01(\rB\x0f\xa2\xb5\x18\x0bVALVE_STATEH\x07R\nvalveState\x88\x01\x01:\x18\xaa\xb5\x18\x14homematic.thermostatB\r\n\x0b_boost_modeB\x14\n\x12_boost_time_periodB\x0f\n\r_control_modeB\x13\n\x11_frost_protectionB\x19\n\x17_current_profile_periodB\x08\n\x06_levelB\x0f\n\r_window_stateB\x0e\n\x0c_valve_stateB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n/kusinta/iot/vendor/homematic/v1/homematic.proto\x12\x1fkusinta.iot.vendor.homematic.v1\x1a*kusinta/iot/vendor/v1/vendor_options.proto\"G\n\x17HomematicDeviceIdentity\x12\x18\n\x07\x61\x64\x64ress\x18\x01 \x01(\tR\x07\x61\x64\x64ress\x12\x12\n\x04type\x18\x02 \x01(\tR\x04type\"\x89\x08\n\x11HmThermostatProps\x12\x36\n\nboost_mode\x18\x01 \x01(\x08\x42\x12\xa2\xb5\x18\nBOOST_MODE\xd0\xb5\x18\x06H\x00R\tboostMode\x88\x01\x01\x12\x43\n\x11\x62oost_time_period\x18\x02 \x01(\rB\x12\xa2\xb5\x18\nBOOST_TIME\xd0\xb5\x18\x05H\x01R\x0f\x62oostTimePeriod\x88\x01\x01\x12<\n\x0c\x63ontrol_mode\x18\x03 \x01(\rB\x14\xa2\xb5\x18\x0c\x43ONTROL_MODE\xd0\xb5\x18\x02H\x02R\x0b\x63ontrolMode\x88\x01\x01\x12H\n\x10\x66rost_protection\x18\x04 \x01(\x08\x42\x18\xa2\xb5\x18\x10\x46ROST_PROTECTION\xd0\xb5\x18\x05H\x03R\x0f\x66rostProtection\x88\x01\x01\x12\x36\n\nparty_mode\x18\x05 \x01(\x08\x42\x12\xa2\xb5\x18\nPARTY_MODE\xd0\xb5\x18\x05H\x04R\tpartyMode\x88\x01\x01\x12<\n\x0cwindow_state\x18\x07 \x01(\rB\x14\xa2\xb5\x18\x0cWINDOW_STATE\xd0\xb5\x18\x07H\x05R\x0bwindowState\x88\x01\x01\x12\x39\n\x0bvalve_state\x18\x08 \x01(\rB\x13\xa2\xb5\x18\x0bVALVE_STATE\xd0\xb5\x18\x05H\x06R\nvalveState\x88\x01\x01\x12\x41\n\x0eset_point_mode\x18\t \x01(\rB\x16\xa2\xb5\x18\x0eSET_POINT_MODE\xd0\xb5\x18\x07H\x07R\x0csetPointMode\x88\x01\x01\x12\x42\n\x0e\x61\x63tive_profile\x18\n \x01(\rB\x16\xa2\xb5\x18\x0e\x41\x43TIVE_PROFILE\xd0\xb5\x18\x07H\x08R\ractiveProfile\x88\x01\x01\x12\x62\n\x19\x61\x63tual_temperature_status\x18\x0b \x01(\rB!\xa2\xb5\x18\x19\x41\x43TUAL_TEMPERATURE_STATUS\xd0\xb5\x18\x05H\tR\x17\x61\x63tualTemperatureStatus\x88\x01\x01\x12\x42\n\x0evalve_adaption\x18\x0c \x01(\x08\x42\x16\xa2\xb5\x18\x0eVALVE_ADAPTION\xd0\xb5\x18\x07H\nR\rvalveAdaption\x88\x01\x01:\x18\xaa\xb5\x18\x14homematic.thermostatB\r\n\x0b_boost_modeB\x14\n\x12_boost_time_periodB\x0f\n\r_control_modeB\x13\n\x11_frost_protectionB\r\n\x0b_party_modeB\x0f\n\r_window_stateB\x0e\n\x0c_valve_stateB\x11\n\x0f_set_point_modeB\x11\n\x0f_active_profileB\x1c\n\x1a_actual_temperature_statusB\x11\n\x0f_valve_adaptionJ\x04\x08\x06\x10\x07R\x05levelR\x16\x63urrent_profile_period\"\xd5\x04\n\x12HmMaintenanceProps\x12\x36\n\nerror_code\x18\x01 \x01(\rB\x12\xa2\xb5\x18\nERROR_CODE\xd0\xb5\x18\x05H\x00R\terrorCode\x88\x01\x01\x12\x31\n\x08sabotage\x18\x02 \x01(\x08\x42\x10\xa2\xb5\x18\x08SABOTAGE\xd0\xb5\x18\x05H\x01R\x08sabotage\x88\x01\x01\x12\x39\n\x0brssi_device\x18\x03 \x01(\x11\x42\x13\xa2\xb5\x18\x0bRSSI_DEVICE\xd0\xb5\x18\x05H\x02R\nrssiDevice\x88\x01\x01\x12\x33\n\trssi_peer\x18\x04 \x01(\x11\x42\x11\xa2\xb5\x18\tRSSI_PEER\xd0\xb5\x18\x05H\x03R\x08rssiPeer\x88\x01\x01\x12_\n\x18operating_voltage_status\x18\x05 \x01(\rB \xa2\xb5\x18\x18OPERATING_VOLTAGE_STATUS\xd0\xb5\x18\x05H\x04R\x16operatingVoltageStatus\x88\x01\x01\x12.\n\x07unreach\x18\x06 \x01(\x08\x42\x0f\xa2\xb5\x18\x07UNREACH\xd0\xb5\x18\x05H\x05R\x07unreach\x88\x01\x01\x12\x42\n\x0e\x63onfig_pending\x18\x07 \x01(\x08\x42\x16\xa2\xb5\x18\x0e\x43ONFIG_PENDING\xd0\xb5\x18\x05H\x06R\rconfigPending\x88\x01\x01:\x19\xaa\xb5\x18\x15homematic.maintenanceB\r\n\x0b_error_codeB\x0b\n\t_sabotageB\x0e\n\x0c_rssi_deviceB\x0c\n\n_rssi_peerB\x1b\n\x19_operating_voltage_statusB\n\n\x08_unreachB\x11\n\x0f_config_pendingB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,25 +34,49 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_HMTHERMOSTATPROPS'].fields_by_name['boost_mode']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['boost_mode']._serialized_options = b'\242\265\030\nBOOST_MODE'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['boost_mode']._serialized_options = b'\242\265\030\nBOOST_MODE\320\265\030\006'
   _globals['_HMTHERMOSTATPROPS'].fields_by_name['boost_time_period']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['boost_time_period']._serialized_options = b'\242\265\030\nBOOST_TIME'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['boost_time_period']._serialized_options = b'\242\265\030\nBOOST_TIME\320\265\030\005'
   _globals['_HMTHERMOSTATPROPS'].fields_by_name['control_mode']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['control_mode']._serialized_options = b'\242\265\030\014CONTROL_MODE'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['control_mode']._serialized_options = b'\242\265\030\014CONTROL_MODE\320\265\030\002'
   _globals['_HMTHERMOSTATPROPS'].fields_by_name['frost_protection']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['frost_protection']._serialized_options = b'\242\265\030\020FROST_PROTECTION'
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['current_profile_period']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['current_profile_period']._serialized_options = b'\242\265\030\nPARTY_MODE'
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['level']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['level']._serialized_options = b'\242\265\030\005LEVEL'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['frost_protection']._serialized_options = b'\242\265\030\020FROST_PROTECTION\320\265\030\005'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['party_mode']._loaded_options = None
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['party_mode']._serialized_options = b'\242\265\030\nPARTY_MODE\320\265\030\005'
   _globals['_HMTHERMOSTATPROPS'].fields_by_name['window_state']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['window_state']._serialized_options = b'\242\265\030\014WINDOW_STATE'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['window_state']._serialized_options = b'\242\265\030\014WINDOW_STATE\320\265\030\007'
   _globals['_HMTHERMOSTATPROPS'].fields_by_name['valve_state']._loaded_options = None
-  _globals['_HMTHERMOSTATPROPS'].fields_by_name['valve_state']._serialized_options = b'\242\265\030\013VALVE_STATE'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['valve_state']._serialized_options = b'\242\265\030\013VALVE_STATE\320\265\030\005'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['set_point_mode']._loaded_options = None
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['set_point_mode']._serialized_options = b'\242\265\030\016SET_POINT_MODE\320\265\030\007'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['active_profile']._loaded_options = None
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['active_profile']._serialized_options = b'\242\265\030\016ACTIVE_PROFILE\320\265\030\007'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['actual_temperature_status']._loaded_options = None
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['actual_temperature_status']._serialized_options = b'\242\265\030\031ACTUAL_TEMPERATURE_STATUS\320\265\030\005'
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['valve_adaption']._loaded_options = None
+  _globals['_HMTHERMOSTATPROPS'].fields_by_name['valve_adaption']._serialized_options = b'\242\265\030\016VALVE_ADAPTION\320\265\030\007'
   _globals['_HMTHERMOSTATPROPS']._loaded_options = None
   _globals['_HMTHERMOSTATPROPS']._serialized_options = b'\252\265\030\024homematic.thermostat'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['error_code']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['error_code']._serialized_options = b'\242\265\030\nERROR_CODE\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['sabotage']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['sabotage']._serialized_options = b'\242\265\030\010SABOTAGE\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['rssi_device']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['rssi_device']._serialized_options = b'\242\265\030\013RSSI_DEVICE\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['rssi_peer']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['rssi_peer']._serialized_options = b'\242\265\030\tRSSI_PEER\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['operating_voltage_status']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['operating_voltage_status']._serialized_options = b'\242\265\030\030OPERATING_VOLTAGE_STATUS\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['unreach']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['unreach']._serialized_options = b'\242\265\030\007UNREACH\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['config_pending']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS'].fields_by_name['config_pending']._serialized_options = b'\242\265\030\016CONFIG_PENDING\320\265\030\005'
+  _globals['_HMMAINTENANCEPROPS']._loaded_options = None
+  _globals['_HMMAINTENANCEPROPS']._serialized_options = b'\252\265\030\025homematic.maintenance'
   _globals['_HOMEMATICDEVICEIDENTITY']._serialized_start=128
   _globals['_HOMEMATICDEVICEIDENTITY']._serialized_end=199
   _globals['_HMTHERMOSTATPROPS']._serialized_start=202
-  _globals['_HMTHERMOSTATPROPS']._serialized_end=863
+  _globals['_HMTHERMOSTATPROPS']._serialized_end=1235
+  _globals['_HMMAINTENANCEPROPS']._serialized_start=1238
+  _globals['_HMMAINTENANCEPROPS']._serialized_end=1835
 # @@protoc_insertion_point(module_scope)

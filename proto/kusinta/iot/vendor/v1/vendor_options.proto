@@ -11,8 +11,8 @@ import "google/protobuf/descriptor.proto";
 // must be able to import these while device/v1 imports the extension files — putting
 // them together makes a package import cycle.
 //
-// Extension numbers 50004-50005 come out of the 50001-50999 range this schema reserves
-// for its own annotations; device/v1/matter_options.proto records what is taken.
+// Extension numbers 50004-50005 and 50010 come out of the 50001-50999 range this schema
+// reserves for its own annotations; device/v1/matter_options.proto records what is taken.
 
 extend google.protobuf.FieldOptions {
   // The vendor parameter this field carries, in the vendor's own spelling — e.g.
@@ -26,6 +26,23 @@ extend google.protobuf.FieldOptions {
   // Must be unique within the message it appears in — the vendor branch matches one
   // field of one message, so a repeat would make resolution ambiguous.
   string vendor_attribute = 50004;
+
+  // What this vendor parameter supports, as the same bitmask device/v1/matter_options.proto
+  // defines: READ = 1, WRITE = 2, REPORT = 4.
+  //
+  // One mask across both branches on purpose. Bit 4 is Matter's reportable quality and, for
+  // HomeMatic, the parameter's EVENT bit — the same fact under two names, so a consumer
+  // deciding whether to draw a control or a reading asks one question either way.
+  //
+  // Where the value comes from is the difference. The Matter side reads its mask off the
+  // specification; a vendor parameter has no spec to defer to, so this is the upstream
+  // system's own answer about its own parameter — for HomeMatic, the OPERATIONS value the
+  // CCU reports in getParamsetDescription().
+  //
+  // Not permission, and not the implemented set: see matter_attribute_capabilities for both
+  // distinctions. The vendor mirror of the implemented set is
+  // device.v1.Endpoint.vendor_attribute_names.
+  uint32 vendor_attribute_capabilities = 50010;
 }
 
 extend google.protobuf.MessageOptions {

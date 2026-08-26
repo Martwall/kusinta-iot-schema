@@ -9,6 +9,8 @@ MATTER_ATTRIBUTE_FIELD_NUMBER: _ClassVar[int]
 matter_attribute: _descriptor.FieldDescriptor
 MATTER_ATTRIBUTE_ID_FIELD_NUMBER: _ClassVar[int]
 matter_attribute_id: _descriptor.FieldDescriptor
+MATTER_ATTRIBUTE_CAPABILITIES_FIELD_NUMBER: _ClassVar[int]
+matter_attribute_capabilities: _descriptor.FieldDescriptor
 MATTER_DEVICE_TYPE_FIELD_NUMBER: _ClassVar[int]
 matter_device_type: _descriptor.FieldDescriptor
 MATTER_COMMAND_CLUSTER_FIELD_NUMBER: _ClassVar[int]

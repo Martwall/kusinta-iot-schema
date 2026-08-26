@@ -3,6 +3,8 @@ import { describe, it, expect } from 'vitest'
 import { getOption, hasOption } from '@bufbuild/protobuf'
 import {
   matter_attribute,
+  matter_attribute_capabilities,
+  matter_attribute_id,
   matter_cluster_id,
   matter_device_type,
 } from '../kusinta/iot/device/v1/matter_options_pb.js'
@@ -187,5 +189,45 @@ describe('device type resolution', () => {
       f.fieldKind === 'message' ? getOption(f.message, matter_device_type) : [],
     )
     expect(deviceTypes.length).toBe(new Set(deviceTypes).size)
+  })
+})
+
+describe('PIHeatingDemand', () => {
+  it('resolves as a standard Thermostat attribute, not a vendor parameter', () => {
+    expect(resolveField(ThermostatPropertiesSchema, 0x0201, 'PIHeatingDemand')).toBe(
+      'pi_heating_demand',
+    )
+  })
+
+  it('carries the attribute id the specification gives it', () => {
+    const field = ThermostatPropertiesSchema.fields.find((f) => f.name === 'pi_heating_demand')
+    expect(getOption(field, matter_attribute_id)).toBe(0x0008)
+  })
+
+  it('is readable and reportable but not writable', () => {
+    const field = ThermostatPropertiesSchema.fields.find((f) => f.name === 'pi_heating_demand')
+    expect(getOption(field, matter_attribute_capabilities)).toBe(1 | 4)
+  })
+})
+
+describe('attribute capabilities', () => {
+  it('are declared on every annotated Matter attribute', () => {
+    const unannotated = PROPERTIES_MESSAGES.flatMap((m) =>
+      m.fields
+        .filter((f) => !hasOption(f, matter_attribute_capabilities))
+        .map((f) => `${m.name}.${f.name}`),
+    )
+    expect(unannotated).toEqual([])
+  })
+
+  it('mark a setpoint writable and a measurement not', () => {
+    const setpoint = ThermostatPropertiesSchema.fields.find(
+      (f) => f.name === 'occupied_heating_setpoint',
+    )
+    const measurement = ThermostatPropertiesSchema.fields.find(
+      (f) => f.name === 'local_temperature',
+    )
+    expect(getOption(setpoint, matter_attribute_capabilities) & 2).toBe(2)
+    expect(getOption(measurement, matter_attribute_capabilities) & 2).toBe(0)
   })
 })

@@ -9,7 +9,7 @@ could express:
   * typed Matter properties and a vendor extension on one endpoint at once
 """
 
-import pytest
+from google.protobuf import descriptor_pb2 as google_descriptor_pb2
 
 from kusinta.iot.device.v1 import (
     cluster_state_pb2,
@@ -129,12 +129,12 @@ def test_endpoint_carries_matter_properties_and_a_vendor_extension_at_once():
         endpoint_id=1,
         matter_device_type_id=0x0301,
         thermostat=properties_pb2.ThermostatProperties(local_temperature=2150),
-        hm_thermostat=homematic_pb2.HmThermostatProps(level=0.42),
+        hm_thermostat=homematic_pb2.HmThermostatProps(valve_state=3),
     )
     decoded = device_pb2.Endpoint()
     decoded.ParseFromString(endpoint.SerializeToString())
     assert decoded.thermostat.local_temperature == 2150
-    assert decoded.hm_thermostat.level == pytest.approx(0.42)
+    assert decoded.hm_thermostat.valve_state == 3
 
 
 def test_properties_and_vendor_are_separate_oneofs():
@@ -247,7 +247,7 @@ def test_every_vendor_parameter_field_declares_a_vendor_attribute():
         for m in VENDOR_EXTENSIONS
         for field in vendor_fields_of(m)
     }
-    assert "LEVEL" in annotated
+    assert "VALVE_STATE" in annotated
     assert "BOOST_MODE" in annotated
 
 
@@ -268,18 +268,18 @@ def test_property_update_carries_a_vendor_extension_selector():
         device_id=identity_pb2.DeviceId(value="valve-1"),
         endpoint_id=1,
         vendor_extension="homematic.thermostat",
-        attribute_name="LEVEL",
+        attribute_name="VALVE_STATE",
         float_value=0.42,
     )
     decoded = property_update_pb2.PropertyUpdate()
     decoded.ParseFromString(update.SerializeToString())
     assert decoded.vendor_extension == "homematic.thermostat"
-    assert decoded.attribute_name == "LEVEL"
+    assert decoded.attribute_name == "VALVE_STATE"
 
 
 def test_vendor_update_needs_no_cluster_id():
     update = property_update_pb2.PropertyUpdate(
-        endpoint_id=1, vendor_extension="homematic.thermostat", attribute_name="LEVEL"
+        endpoint_id=1, vendor_extension="homematic.thermostat", attribute_name="VALVE_STATE"
     )
     assert not update.HasField("cluster_id")
 
@@ -442,7 +442,7 @@ def test_attribute_name_is_optional_on_the_matter_branch():
 
 def test_vendor_update_carries_no_attribute_id():
     update = property_update_pb2.PropertyUpdate(
-        endpoint_id=1, vendor_extension="homematic.thermostat", attribute_name="LEVEL"
+        endpoint_id=1, vendor_extension="homematic.thermostat", attribute_name="VALVE_STATE"
     )
     assert not update.HasField("attribute_id")
     assert not update.HasField("cluster_id")
@@ -516,3 +516,120 @@ def test_event_priority_defaults_to_unspecified():
 
 def test_an_event_endpoint_is_explicit_not_zero_defaulted():
     assert not device_event_pb2.DeviceEvent().HasField("endpoint_id")
+
+
+# --- the maintenance channel every HomeMatic device carries -------------------------
+
+
+def test_maintenance_extension_declares_its_documented_key():
+    assert (
+        homematic_pb2.HmMaintenanceProps.DESCRIPTOR.GetOptions().Extensions[
+            vendor_options_pb2.vendor_extension
+        ]
+        == "homematic.maintenance"
+    )
+
+
+def test_maintenance_readings_ride_on_the_power_source_endpoint():
+    """Channel 0 is not a Matter endpoint, so its readings land on the synthesized Power
+    Source endpoint beside the battery attributes derived from them."""
+    endpoint = device_pb2.Endpoint(
+        endpoint_id=0xF000,
+        matter_device_type_id=0x0011,
+        power_source=properties_pb2.PowerSourceProperties(bat_voltage=2600),
+        hm_maintenance=homematic_pb2.HmMaintenanceProps(rssi_device=-72, unreach=False),
+    )
+    decoded = device_pb2.Endpoint()
+    decoded.ParseFromString(endpoint.SerializeToString())
+    assert decoded.power_source.bat_voltage == 2600
+    assert decoded.hm_maintenance.rssi_device == -72
+
+
+def test_rssi_carries_a_negative_reading():
+    """dBm is negative in practice. A uint32 would have wrapped it to ~4.29 billion."""
+    decoded = homematic_pb2.HmMaintenanceProps()
+    decoded.ParseFromString(
+        homematic_pb2.HmMaintenanceProps(rssi_device=-128, rssi_peer=-128).SerializeToString()
+    )
+    assert decoded.rssi_device == -128
+    assert decoded.rssi_peer == -128
+
+
+def test_maintenance_is_a_second_vendor_case_not_a_replacement():
+    vendor_fields = {
+        f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
+    }
+    assert vendor_fields == {"hm_thermostat", "hm_maintenance"}
+
+
+# --- valve position is a Matter attribute, not a vendor parameter -------------------
+
+
+def test_level_is_no_longer_a_vendor_parameter():
+    """It resolves as Thermostat/PIHeatingDemand now. A field still annotated LEVEL would
+    give the same reading two homes."""
+    annotated = {
+        field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+        for m in VENDOR_EXTENSIONS
+        for field in vendor_fields_of(m)
+    }
+    assert "LEVEL" not in annotated
+
+
+def test_the_vacated_level_field_number_is_reserved():
+    """Field 6 carried a float 0.0-1.0; PIHeatingDemand is a uint32 0-100. Reusing the
+    number would decode a stale valve position as a plausible wrong percentage."""
+    proto = google_descriptor_pb2.DescriptorProto()
+    homematic_pb2.HmThermostatProps.DESCRIPTOR.CopyToProto(proto)
+    assert (6, 7) in {(r.start, r.end) for r in proto.reserved_range}
+
+
+def test_the_vacated_level_field_name_is_reserved():
+    proto = google_descriptor_pb2.DescriptorProto()
+    homematic_pb2.HmThermostatProps.DESCRIPTOR.CopyToProto(proto)
+    assert "level" in list(proto.reserved_name)
+
+
+# --- which attributes this device actually implements --------------------------------
+
+
+def test_cluster_state_lists_the_attributes_implemented_here():
+    """Matter's AttributeList (0xFFFB). In the list with no value = implemented, not yet
+    reported; absent from the list = the device does not have it."""
+    state = cluster_state_pb2.ClusterState(
+        cluster_id=0x0201, attribute_ids=[0x0000, 0x0012, 0x0008]
+    )
+    decoded = cluster_state_pb2.ClusterState()
+    decoded.ParseFromString(state.SerializeToString())
+    assert list(decoded.attribute_ids) == [0x0000, 0x0012, 0x0008]
+
+
+def test_a_thermostat_without_a_valve_omits_heating_demand_from_its_attribute_list():
+    """The wall thermostat drives no valve, so PIHeatingDemand is not merely unreported."""
+    state = cluster_state_pb2.ClusterState(cluster_id=0x0201, attribute_ids=[0x0000, 0x0012])
+    assert 0x0008 not in state.attribute_ids
+
+
+def test_an_unstated_attribute_list_is_empty_not_a_claim_of_nothing():
+    assert list(cluster_state_pb2.ClusterState(cluster_id=0x0201).attribute_ids) == []
+
+
+def test_endpoint_lists_the_vendor_parameters_this_device_implements():
+    """The vendor mirror of AttributeList: vendor parameters have no cluster and so no
+    ClusterState to carry it. Spelled as (vendor_attribute) is, byte for byte."""
+    endpoint = device_pb2.Endpoint(
+        endpoint_id=0xF000,
+        matter_device_type_id=0x0011,
+        hm_maintenance=homematic_pb2.HmMaintenanceProps(),
+        vendor_attribute_names=["ERROR_CODE", "SABOTAGE", "RSSI_DEVICE"],
+    )
+    decoded = device_pb2.Endpoint()
+    decoded.ParseFromString(endpoint.SerializeToString())
+    assert list(decoded.vendor_attribute_names) == ["ERROR_CODE", "SABOTAGE", "RSSI_DEVICE"]
+
+
+def test_a_device_that_cannot_detect_tamper_omits_sabotage_from_its_parameter_list():
+    endpoint = device_pb2.Endpoint(
+        endpoint_id=0xF000, vendor_attribute_names=["ERROR_CODE", "RSSI_DEVICE"]
+    )
+    assert "SABOTAGE" not in endpoint.vendor_attribute_names

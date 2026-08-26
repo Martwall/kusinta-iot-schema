@@ -5,7 +5,7 @@
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ColorTemperatureLightProperties, ContactSensorProperties, DimmableLightProperties, DoorLockProperties, EnergySensorProperties, HumiditySensorProperties, OccupancySensorProperties, OnOffLightProperties, PowerSourceProperties, PressureSensorProperties, TemperatureSensorProperties, ThermostatProperties, WindowCoveringProperties } from "./properties_pb.js";
-import type { HmThermostatProps } from "../../vendor/homematic/v1/homematic_pb.js";
+import type { HmMaintenanceProps, HmThermostatProps } from "../../vendor/homematic/v1/homematic_pb.js";
 import type { ClusterState } from "./cluster_state_pb.js";
 import type { DeviceDescriptor } from "./descriptor_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -173,6 +173,12 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
      */
     value: HmThermostatProps;
     case: "hmThermostat";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.vendor.homematic.v1.HmMaintenanceProps hm_maintenance = 51;
+     */
+    value: HmMaintenanceProps;
+    case: "hmMaintenance";
   } | { case: undefined; value?: undefined };
 
   /**
@@ -187,6 +193,28 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
    * @generated from field: repeated kusinta.iot.device.v1.ClusterState clusters = 16;
    */
   clusters: ClusterState[];
+
+  /**
+   * Which vendor parameters this endpoint's vendor extension actually implements, in the
+   * vendor's own spelling — "SABOTAGE", matching (vendor_attribute) byte for byte.
+   *
+   * The vendor mirror of ClusterState.attribute_ids, and it needs its own field because a
+   * vendor parameter has no cluster and so no ClusterState to be listed in. A name list
+   * rather than an id list because the vendor branch addresses by name, and a bare list
+   * rather than a per-extension map because an endpoint carries at most one vendor
+   * extension.
+   *
+   * Same reading as the Matter side: named here with no value = implemented, not yet
+   * reported. Absent from the list = this device does not have it. Empty = not stated,
+   * which is not a claim that the device implements nothing.
+   *
+   * This is what separates "no tamper detected" from "cannot detect tamper" — presence
+   * alone cannot, and for SABOTAGE the difference is a safety claim. A connector fills it
+   * at announcement from the parameter description its upstream system already holds.
+   *
+   * @generated from field: repeated string vendor_attribute_names = 17;
+   */
+  vendorAttributeNames: string[];
 };
 
 /**

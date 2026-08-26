@@ -47,7 +47,7 @@ const HmThermostatProps$json = {
       '1': 'boost_time_period',
       '3': 2,
       '4': 1,
-      '5': 2,
+      '5': 13,
       '8': {},
       '9': 1,
       '10': 'boostTimePeriod',
@@ -74,23 +74,13 @@ const HmThermostatProps$json = {
       '17': true
     },
     {
-      '1': 'current_profile_period',
+      '1': 'party_mode',
       '3': 5,
       '4': 1,
-      '5': 2,
+      '5': 8,
       '8': {},
       '9': 4,
-      '10': 'currentProfilePeriod',
-      '17': true
-    },
-    {
-      '1': 'level',
-      '3': 6,
-      '4': 1,
-      '5': 2,
-      '8': {},
-      '9': 5,
-      '10': 'level',
+      '10': 'partyMode',
       '17': true
     },
     {
@@ -99,7 +89,7 @@ const HmThermostatProps$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 6,
+      '9': 5,
       '10': 'windowState',
       '17': true
     },
@@ -109,8 +99,48 @@ const HmThermostatProps$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 7,
+      '9': 6,
       '10': 'valveState',
+      '17': true
+    },
+    {
+      '1': 'set_point_mode',
+      '3': 9,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 7,
+      '10': 'setPointMode',
+      '17': true
+    },
+    {
+      '1': 'active_profile',
+      '3': 10,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 8,
+      '10': 'activeProfile',
+      '17': true
+    },
+    {
+      '1': 'actual_temperature_status',
+      '3': 11,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 9,
+      '10': 'actualTemperatureStatus',
+      '17': true
+    },
+    {
+      '1': 'valve_adaption',
+      '3': 12,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 10,
+      '10': 'valveAdaption',
       '17': true
     },
   ],
@@ -120,24 +150,139 @@ const HmThermostatProps$json = {
     {'1': '_boost_time_period'},
     {'1': '_control_mode'},
     {'1': '_frost_protection'},
-    {'1': '_current_profile_period'},
-    {'1': '_level'},
+    {'1': '_party_mode'},
     {'1': '_window_state'},
     {'1': '_valve_state'},
+    {'1': '_set_point_mode'},
+    {'1': '_active_profile'},
+    {'1': '_actual_temperature_status'},
+    {'1': '_valve_adaption'},
   ],
+  '9': [
+    {'1': 6, '2': 7},
+  ],
+  '10': ['level', 'current_profile_period'],
 };
 
 /// Descriptor for `HmThermostatProps`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List hmThermostatPropsDescriptor = $convert.base64Decode(
-    'ChFIbVRoZXJtb3N0YXRQcm9wcxIyCgpib29zdF9tb2RlGAEgASgIQg6itRgKQk9PU1RfTU9ERU'
-    'gAUglib29zdE1vZGWIAQESPwoRYm9vc3RfdGltZV9wZXJpb2QYAiABKAJCDqK1GApCT09TVF9U'
-    'SU1FSAFSD2Jvb3N0VGltZVBlcmlvZIgBARI4Cgxjb250cm9sX21vZGUYAyABKA1CEKK1GAxDT0'
-    '5UUk9MX01PREVIAlILY29udHJvbE1vZGWIAQESRAoQZnJvc3RfcHJvdGVjdGlvbhgEIAEoCEIU'
-    'orUYEEZST1NUX1BST1RFQ1RJT05IA1IPZnJvc3RQcm90ZWN0aW9uiAEBEkkKFmN1cnJlbnRfcH'
-    'JvZmlsZV9wZXJpb2QYBSABKAJCDqK1GApQQVJUWV9NT0RFSARSFGN1cnJlbnRQcm9maWxlUGVy'
-    'aW9kiAEBEiQKBWxldmVsGAYgASgCQgmitRgFTEVWRUxIBVIFbGV2ZWyIAQESOAoMd2luZG93X3'
-    'N0YXRlGAcgASgNQhCitRgMV0lORE9XX1NUQVRFSAZSC3dpbmRvd1N0YXRliAEBEjUKC3ZhbHZl'
-    'X3N0YXRlGAggASgNQg+itRgLVkFMVkVfU1RBVEVIB1IKdmFsdmVTdGF0ZYgBAToYqrUYFGhvbW'
-    'VtYXRpYy50aGVybW9zdGF0Qg0KC19ib29zdF9tb2RlQhQKEl9ib29zdF90aW1lX3BlcmlvZEIP'
-    'Cg1fY29udHJvbF9tb2RlQhMKEV9mcm9zdF9wcm90ZWN0aW9uQhkKF19jdXJyZW50X3Byb2ZpbG'
-    'VfcGVyaW9kQggKBl9sZXZlbEIPCg1fd2luZG93X3N0YXRlQg4KDF92YWx2ZV9zdGF0ZQ==');
+    'ChFIbVRoZXJtb3N0YXRQcm9wcxI2Cgpib29zdF9tb2RlGAEgASgIQhKitRgKQk9PU1RfTU9ERd'
+    'C1GAZIAFIJYm9vc3RNb2RliAEBEkMKEWJvb3N0X3RpbWVfcGVyaW9kGAIgASgNQhKitRgKQk9P'
+    'U1RfVElNRdC1GAVIAVIPYm9vc3RUaW1lUGVyaW9kiAEBEjwKDGNvbnRyb2xfbW9kZRgDIAEoDU'
+    'IUorUYDENPTlRST0xfTU9ERdC1GAJIAlILY29udHJvbE1vZGWIAQESSAoQZnJvc3RfcHJvdGVj'
+    'dGlvbhgEIAEoCEIYorUYEEZST1NUX1BST1RFQ1RJT07QtRgFSANSD2Zyb3N0UHJvdGVjdGlvbo'
+    'gBARI2CgpwYXJ0eV9tb2RlGAUgASgIQhKitRgKUEFSVFlfTU9ERdC1GAVIBFIJcGFydHlNb2Rl'
+    'iAEBEjwKDHdpbmRvd19zdGF0ZRgHIAEoDUIUorUYDFdJTkRPV19TVEFURdC1GAdIBVILd2luZG'
+    '93U3RhdGWIAQESOQoLdmFsdmVfc3RhdGUYCCABKA1CE6K1GAtWQUxWRV9TVEFURdC1GAVIBlIK'
+    'dmFsdmVTdGF0ZYgBARJBCg5zZXRfcG9pbnRfbW9kZRgJIAEoDUIWorUYDlNFVF9QT0lOVF9NT0'
+    'RF0LUYB0gHUgxzZXRQb2ludE1vZGWIAQESQgoOYWN0aXZlX3Byb2ZpbGUYCiABKA1CFqK1GA5B'
+    'Q1RJVkVfUFJPRklMRdC1GAdICFINYWN0aXZlUHJvZmlsZYgBARJiChlhY3R1YWxfdGVtcGVyYX'
+    'R1cmVfc3RhdHVzGAsgASgNQiGitRgZQUNUVUFMX1RFTVBFUkFUVVJFX1NUQVRVU9C1GAVICVIX'
+    'YWN0dWFsVGVtcGVyYXR1cmVTdGF0dXOIAQESQgoOdmFsdmVfYWRhcHRpb24YDCABKAhCFqK1GA'
+    '5WQUxWRV9BREFQVElPTtC1GAdIClINdmFsdmVBZGFwdGlvbogBAToYqrUYFGhvbWVtYXRpYy50'
+    'aGVybW9zdGF0Qg0KC19ib29zdF9tb2RlQhQKEl9ib29zdF90aW1lX3BlcmlvZEIPCg1fY29udH'
+    'JvbF9tb2RlQhMKEV9mcm9zdF9wcm90ZWN0aW9uQg0KC19wYXJ0eV9tb2RlQg8KDV93aW5kb3df'
+    'c3RhdGVCDgoMX3ZhbHZlX3N0YXRlQhEKD19zZXRfcG9pbnRfbW9kZUIRCg9fYWN0aXZlX3Byb2'
+    'ZpbGVCHAoaX2FjdHVhbF90ZW1wZXJhdHVyZV9zdGF0dXNCEQoPX3ZhbHZlX2FkYXB0aW9uSgQI'
+    'BhAHUgVsZXZlbFIWY3VycmVudF9wcm9maWxlX3BlcmlvZA==');
+
+@$core.Deprecated('Use hmMaintenancePropsDescriptor instead')
+const HmMaintenanceProps$json = {
+  '1': 'HmMaintenanceProps',
+  '2': [
+    {
+      '1': 'error_code',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'errorCode',
+      '17': true
+    },
+    {
+      '1': 'sabotage',
+      '3': 2,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 1,
+      '10': 'sabotage',
+      '17': true
+    },
+    {
+      '1': 'rssi_device',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 2,
+      '10': 'rssiDevice',
+      '17': true
+    },
+    {
+      '1': 'rssi_peer',
+      '3': 4,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 3,
+      '10': 'rssiPeer',
+      '17': true
+    },
+    {
+      '1': 'operating_voltage_status',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 4,
+      '10': 'operatingVoltageStatus',
+      '17': true
+    },
+    {
+      '1': 'unreach',
+      '3': 6,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 5,
+      '10': 'unreach',
+      '17': true
+    },
+    {
+      '1': 'config_pending',
+      '3': 7,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 6,
+      '10': 'configPending',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_error_code'},
+    {'1': '_sabotage'},
+    {'1': '_rssi_device'},
+    {'1': '_rssi_peer'},
+    {'1': '_operating_voltage_status'},
+    {'1': '_unreach'},
+    {'1': '_config_pending'},
+  ],
+};
+
+/// Descriptor for `HmMaintenanceProps`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List hmMaintenancePropsDescriptor = $convert.base64Decode(
+    'ChJIbU1haW50ZW5hbmNlUHJvcHMSNgoKZXJyb3JfY29kZRgBIAEoDUISorUYCkVSUk9SX0NPRE'
+    'XQtRgFSABSCWVycm9yQ29kZYgBARIxCghzYWJvdGFnZRgCIAEoCEIQorUYCFNBQk9UQUdF0LUY'
+    'BUgBUghzYWJvdGFnZYgBARI5Cgtyc3NpX2RldmljZRgDIAEoEUITorUYC1JTU0lfREVWSUNF0L'
+    'UYBUgCUgpyc3NpRGV2aWNliAEBEjMKCXJzc2lfcGVlchgEIAEoEUIRorUYCVJTU0lfUEVFUtC1'
+    'GAVIA1IIcnNzaVBlZXKIAQESXwoYb3BlcmF0aW5nX3ZvbHRhZ2Vfc3RhdHVzGAUgASgNQiCitR'
+    'gYT1BFUkFUSU5HX1ZPTFRBR0VfU1RBVFVT0LUYBUgEUhZvcGVyYXRpbmdWb2x0YWdlU3RhdHVz'
+    'iAEBEi4KB3VucmVhY2gYBiABKAhCD6K1GAdVTlJFQUNI0LUYBUgFUgd1bnJlYWNoiAEBEkIKDm'
+    'NvbmZpZ19wZW5kaW5nGAcgASgIQhaitRgOQ09ORklHX1BFTkRJTkfQtRgFSAZSDWNvbmZpZ1Bl'
+    'bmRpbmeIAQE6Gaq1GBVob21lbWF0aWMubWFpbnRlbmFuY2VCDQoLX2Vycm9yX2NvZGVCCwoJX3'
+    'NhYm90YWdlQg4KDF9yc3NpX2RldmljZUIMCgpfcnNzaV9wZWVyQhsKGV9vcGVyYXRpbmdfdm9s'
+    'dGFnZV9zdGF0dXNCCgoIX3VucmVhY2hCEQoPX2NvbmZpZ19wZW5kaW5n');

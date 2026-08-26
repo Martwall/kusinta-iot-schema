@@ -270,3 +270,22 @@ def test_known_matter_attribute_ids_are_correct():
             ] = o[matter_options_pb2.matter_attribute_id]
     for key, want in expected.items():
         assert actual[key] == want, f"{key}: got 0x{actual[key]:04X}, spec says 0x{want:04X}"
+
+
+# --- valve position resolves as a standard Matter attribute -------------------
+
+
+def test_heating_demand_resolves_on_the_thermostat_cluster():
+    """Homematic LEVEL is Thermostat/PIHeatingDemand, not a vendor parameter: the
+    attribute is specified as the percentage of valve opening the PI loop demands."""
+    resolved = resolve_field(properties_pb2.ThermostatProperties, 0x0201, "PIHeatingDemand")
+    assert resolved == "pi_heating_demand"
+
+
+def test_heating_demand_carries_the_specified_attribute_id():
+    attribute_id = (
+        properties_pb2.ThermostatProperties.DESCRIPTOR.fields_by_name["pi_heating_demand"]
+        .GetOptions()
+        .Extensions[matter_options_pb2.matter_attribute_id]
+    )
+    assert attribute_id == 0x0008

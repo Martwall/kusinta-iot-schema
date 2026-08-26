@@ -9,7 +9,7 @@ import { file_google_protobuf_descriptor } from "@bufbuild/protobuf/wkt";
  * Describes the file kusinta/iot/vendor/v1/vendor_options.proto.
  */
 export const file_kusinta_iot_vendor_v1_vendor_options = /*@__PURE__*/
-  fileDesc("CiprdXNpbnRhL2lvdC92ZW5kb3IvdjEvdmVuZG9yX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LnZlbmRvci52MTpKChB2ZW5kb3JfYXR0cmlidXRlEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjUhgMgASgJUg92ZW5kb3JBdHRyaWJ1dGU6TAoQdmVuZG9yX2V4dGVuc2lvbhIfLmdvb2dsZS5wcm90b2J1Zi5NZXNzYWdlT3B0aW9ucxjVhgMgASgJUg92ZW5kb3JFeHRlbnNpb25iBnByb3RvMw", [file_google_protobuf_descriptor]);
+  fileDesc("CiprdXNpbnRhL2lvdC92ZW5kb3IvdjEvdmVuZG9yX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LnZlbmRvci52MTpKChB2ZW5kb3JfYXR0cmlidXRlEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjUhgMgASgJUg92ZW5kb3JBdHRyaWJ1dGU6YwoddmVuZG9yX2F0dHJpYnV0ZV9jYXBhYmlsaXRpZXMSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNqGAyABKA1SG3ZlbmRvckF0dHJpYnV0ZUNhcGFiaWxpdGllczpMChB2ZW5kb3JfZXh0ZW5zaW9uEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGNWGAyABKAlSD3ZlbmRvckV4dGVuc2lvbmIGcHJvdG8z", [file_google_protobuf_descriptor]);
 
 /**
  * The vendor parameter this field carries, in the vendor's own spelling — e.g.
@@ -27,6 +27,28 @@ export const file_kusinta_iot_vendor_v1_vendor_options = /*@__PURE__*/
  */
 export const vendor_attribute = /*@__PURE__*/
   extDesc(file_kusinta_iot_vendor_v1_vendor_options, 0);
+
+/**
+ * What this vendor parameter supports, as the same bitmask device/v1/matter_options.proto
+ * defines: READ = 1, WRITE = 2, REPORT = 4.
+ *
+ * One mask across both branches on purpose. Bit 4 is Matter's reportable quality and, for
+ * HomeMatic, the parameter's EVENT bit — the same fact under two names, so a consumer
+ * deciding whether to draw a control or a reading asks one question either way.
+ *
+ * Where the value comes from is the difference. The Matter side reads its mask off the
+ * specification; a vendor parameter has no spec to defer to, so this is the upstream
+ * system's own answer about its own parameter — for HomeMatic, the OPERATIONS value the
+ * CCU reports in getParamsetDescription().
+ *
+ * Not permission, and not the implemented set: see matter_attribute_capabilities for both
+ * distinctions. The vendor mirror of the implemented set is
+ * device.v1.Endpoint.vendor_attribute_names.
+ *
+ * @generated from extension: uint32 vendor_attribute_capabilities = 50010;
+ */
+export const vendor_attribute_capabilities = /*@__PURE__*/
+  extDesc(file_kusinta_iot_vendor_v1_vendor_options, 1);
 
 /**
  * The stable key identifying a vendor extension message, e.g. "homematic.thermostat".
@@ -49,5 +71,5 @@ export const vendor_attribute = /*@__PURE__*/
  * @generated from extension: string vendor_extension = 50005;
  */
 export const vendor_extension = /*@__PURE__*/
-  extDesc(file_kusinta_iot_vendor_v1_vendor_options, 1);
+  extDesc(file_kusinta_iot_vendor_v1_vendor_options, 2);
 

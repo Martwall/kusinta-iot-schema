@@ -47,6 +47,32 @@ export declare const matter_attribute: GenExtension<FieldOptions, string>;
 export declare const matter_attribute_id: GenExtension<FieldOptions, number>;
 
 /**
+ * What the Matter specification says this attribute supports, as a bitmask:
+ * READ = 1, WRITE = 2, REPORT = 4. So a read-only reportable attribute is 5, a
+ * writable one 7, a write-only one 2.
+ *
+ * Two things this is NOT.
+ *
+ * It is not PERMISSION. access/v1/acl.proto's PermissionAction and allowed_actions
+ * say what a given user may do; this says what the attribute is capable of. They are
+ * orthogonal — a user can hold WRITE on an attribute no device will ever accept a
+ * write for, and the schema would be lying if either could be read off the other.
+ *
+ * It is not the IMPLEMENTED SET either. This is uniform for every device that reports
+ * the attribute, because it comes from the specification. Whether one particular
+ * device implements it at all is a runtime fact, carried per endpoint by
+ * ClusterState.attribute_ids — Matter's own AttributeList. A device may implement
+ * less than the specification allows; it may not implement more.
+ *
+ * Bit 4 is Matter's subscribable/reportable quality. Named REPORT rather than EVENT
+ * because Matter spends "event" on a separate concept; the vendor branch's
+ * equivalent bit means the same thing under its own name.
+ *
+ * @generated from extension: uint32 matter_attribute_capabilities = 50009;
+ */
+export declare const matter_attribute_capabilities: GenExtension<FieldOptions, number>;
+
+/**
  * The Matter device type IDs this properties message models, e.g. 0x0301 for
  * Thermostat. Repeated because one shape of properties can serve several device
  * types; empty on vendor extension messages, which have no Matter device type.

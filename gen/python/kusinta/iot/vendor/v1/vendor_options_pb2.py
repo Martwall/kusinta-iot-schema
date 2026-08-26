@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*kusinta/iot/vendor/v1/vendor_options.proto\x12\x15kusinta.iot.vendor.v1\x1a google/protobuf/descriptor.proto:J\n\x10vendor_attribute\x12\x1d.google.protobuf.FieldOptions\x18\xd4\x86\x03 \x01(\tR\x0fvendorAttribute:L\n\x10vendor_extension\x12\x1f.google.protobuf.MessageOptions\x18\xd5\x86\x03 \x01(\tR\x0fvendorExtensionb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n*kusinta/iot/vendor/v1/vendor_options.proto\x12\x15kusinta.iot.vendor.v1\x1a google/protobuf/descriptor.proto:J\n\x10vendor_attribute\x12\x1d.google.protobuf.FieldOptions\x18\xd4\x86\x03 \x01(\tR\x0fvendorAttribute:c\n\x1dvendor_attribute_capabilities\x12\x1d.google.protobuf.FieldOptions\x18\xda\x86\x03 \x01(\rR\x1bvendorAttributeCapabilities:L\n\x10vendor_extension\x12\x1f.google.protobuf.MessageOptions\x18\xd5\x86\x03 \x01(\tR\x0fvendorExtensionb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)

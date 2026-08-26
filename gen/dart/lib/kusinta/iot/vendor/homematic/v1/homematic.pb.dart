@@ -93,6 +93,11 @@ class HomematicDeviceIdentity extends $pb.GeneratedMessage {
 /// HomeMatic thermostat parameters with no Matter equivalent, carried on the same endpoint
 /// as that thermostat's Matter properties rather than instead of them.
 ///
+/// "No Matter equivalent" is the entry test, and it is the one to apply before adding a
+/// field here. Valve position failed it: LEVEL is Thermostat/PIHeatingDemand, and it lived
+/// here for a while under the claim that Matter had nothing for it. It is now
+/// device.v1.ThermostatProperties.pi_heating_demand, and field 6 is burned.
+///
 /// Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
 /// PowerSource cluster, which every battery device from every technology needs, so they
 /// belong on a Power Source endpoint. See device/v1/properties.proto.
@@ -102,28 +107,37 @@ class HomematicDeviceIdentity extends $pb.GeneratedMessage {
 /// false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
 /// reported; present means a reading, including zero.
 ///
+/// Enum parameters cross the wire as the CCU's own index, not as a type this schema defines,
+/// so each one lists its values in its comment. The order is the CCU's; do not renumber it.
+///
 /// Add new fields at the next available number — never reuse a removed one.
 class HmThermostatProps extends $pb.GeneratedMessage {
   factory HmThermostatProps({
     $core.bool? boostMode,
-    $core.double? boostTimePeriod,
+    $core.int? boostTimePeriod,
     $core.int? controlMode,
     $core.bool? frostProtection,
-    $core.double? currentProfilePeriod,
-    $core.double? level,
+    $core.bool? partyMode,
     $core.int? windowState,
     $core.int? valveState,
+    $core.int? setPointMode,
+    $core.int? activeProfile,
+    $core.int? actualTemperatureStatus,
+    $core.bool? valveAdaption,
   }) {
     final result = create();
     if (boostMode != null) result.boostMode = boostMode;
     if (boostTimePeriod != null) result.boostTimePeriod = boostTimePeriod;
     if (controlMode != null) result.controlMode = controlMode;
     if (frostProtection != null) result.frostProtection = frostProtection;
-    if (currentProfilePeriod != null)
-      result.currentProfilePeriod = currentProfilePeriod;
-    if (level != null) result.level = level;
+    if (partyMode != null) result.partyMode = partyMode;
     if (windowState != null) result.windowState = windowState;
     if (valveState != null) result.valveState = valveState;
+    if (setPointMode != null) result.setPointMode = setPointMode;
+    if (activeProfile != null) result.activeProfile = activeProfile;
+    if (actualTemperatureStatus != null)
+      result.actualTemperatureStatus = actualTemperatureStatus;
+    if (valveAdaption != null) result.valveAdaption = valveAdaption;
     return result;
   }
 
@@ -142,15 +156,20 @@ class HmThermostatProps extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.vendor.homematic.v1'),
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'boostMode')
-    ..a<$core.double>(
-        2, _omitFieldNames ? '' : 'boostTimePeriod', $pb.PbFieldType.OF)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'boostTimePeriod', $pb.PbFieldType.OU3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'controlMode', $pb.PbFieldType.OU3)
     ..aOB(4, _omitFieldNames ? '' : 'frostProtection')
-    ..a<$core.double>(
-        5, _omitFieldNames ? '' : 'currentProfilePeriod', $pb.PbFieldType.OF)
-    ..a<$core.double>(6, _omitFieldNames ? '' : 'level', $pb.PbFieldType.OF)
+    ..aOB(5, _omitFieldNames ? '' : 'partyMode')
     ..a<$core.int>(7, _omitFieldNames ? '' : 'windowState', $pb.PbFieldType.OU3)
     ..a<$core.int>(8, _omitFieldNames ? '' : 'valveState', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        9, _omitFieldNames ? '' : 'setPointMode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        10, _omitFieldNames ? '' : 'activeProfile', $pb.PbFieldType.OU3)
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'actualTemperatureStatus',
+        $pb.PbFieldType.OU3)
+    ..aOB(12, _omitFieldNames ? '' : 'valveAdaption')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -183,15 +202,19 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearBoostMode() => $_clearField(1);
 
+  /// Minutes remaining, 0-2048. Integer on the CCU — it counts whole minutes.
   @$pb.TagNumber(2)
-  $core.double get boostTimePeriod => $_getN(1);
+  $core.int get boostTimePeriod => $_getIZ(1);
   @$pb.TagNumber(2)
-  set boostTimePeriod($core.double value) => $_setFloat(1, value);
+  set boostTimePeriod($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
   $core.bool hasBoostTimePeriod() => $_has(1);
   @$pb.TagNumber(2)
   void clearBoostTimePeriod() => $_clearField(2);
 
+  /// Write-only on the CCU: it accepts a ControlMode and never reports one back. Carried
+  /// here for a future write path, not as a reading — a connector that emits it as a
+  /// PropertyUpdate is sending a value the device never gave. 0-3.
   @$pb.TagNumber(3)
   $core.int get controlMode => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -210,44 +233,248 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearFrostProtection() => $_clearField(4);
 
+  /// Party mode active. A boolean, whatever the old field name suggested.
   @$pb.TagNumber(5)
-  $core.double get currentProfilePeriod => $_getN(4);
+  $core.bool get partyMode => $_getBF(4);
   @$pb.TagNumber(5)
-  set currentProfilePeriod($core.double value) => $_setFloat(4, value);
+  set partyMode($core.bool value) => $_setBool(4, value);
   @$pb.TagNumber(5)
-  $core.bool hasCurrentProfilePeriod() => $_has(4);
+  $core.bool hasPartyMode() => $_has(4);
   @$pb.TagNumber(5)
-  void clearCurrentProfilePeriod() => $_clearField(5);
+  void clearPartyMode() => $_clearField(5);
 
-  /// Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
-  /// this extension exists for: it has no Matter equivalent, and it is what an automatic
-  /// or learned control strategy needs.
-  @$pb.TagNumber(6)
-  $core.double get level => $_getN(5);
-  @$pb.TagNumber(6)
-  set level($core.double value) => $_setFloat(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasLevel() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearLevel() => $_clearField(6);
-
+  /// CLOSED = 0, OPEN = 1
   @$pb.TagNumber(7)
-  $core.int get windowState => $_getIZ(6);
+  $core.int get windowState => $_getIZ(5);
   @$pb.TagNumber(7)
-  set windowState($core.int value) => $_setUnsignedInt32(6, value);
+  set windowState($core.int value) => $_setUnsignedInt32(5, value);
   @$pb.TagNumber(7)
-  $core.bool hasWindowState() => $_has(6);
+  $core.bool hasWindowState() => $_has(5);
   @$pb.TagNumber(7)
   void clearWindowState() => $_clearField(7);
 
+  /// Valve fault and adaption state, nine CCU-defined values. Radiator valves only — a wall
+  /// thermostat drives no valve and never reports it.
   @$pb.TagNumber(8)
-  $core.int get valveState => $_getIZ(7);
+  $core.int get valveState => $_getIZ(6);
   @$pb.TagNumber(8)
-  set valveState($core.int value) => $_setUnsignedInt32(7, value);
+  set valveState($core.int value) => $_setUnsignedInt32(6, value);
   @$pb.TagNumber(8)
-  $core.bool hasValveState() => $_has(7);
+  $core.bool hasValveState() => $_has(6);
   @$pb.TagNumber(8)
   void clearValveState() => $_clearField(8);
+
+  /// Which schedule the thermostat is following: AUTO = 0, MANU = 1, AWAY = 2, plus a
+  /// fourth CCU value. NOT webrtc.v1.SetpointAdjustMode, which names which setpoint a
+  /// command targets — a different enum over a different set of concepts.
+  @$pb.TagNumber(9)
+  $core.int get setPointMode => $_getIZ(7);
+  @$pb.TagNumber(9)
+  set setPointMode($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(9)
+  $core.bool hasSetPointMode() => $_has(7);
+  @$pb.TagNumber(9)
+  void clearSetPointMode() => $_clearField(9);
+
+  /// The active weekly profile: 1-3 on a radiator valve, 1-6 on a wall thermostat. The
+  /// upper bound is the device's, not the protocol's.
+  @$pb.TagNumber(10)
+  $core.int get activeProfile => $_getIZ(8);
+  @$pb.TagNumber(10)
+  set activeProfile($core.int value) => $_setUnsignedInt32(8, value);
+  @$pb.TagNumber(10)
+  $core.bool hasActiveProfile() => $_has(8);
+  @$pb.TagNumber(10)
+  void clearActiveProfile() => $_clearField(10);
+
+  /// Whether the measured temperature is usable: NORMAL = 0, UNKNOWN = 1, OVERFLOW = 2,
+  /// UNDERFLOW = 3. A reading beside ACTUAL_TEMPERATURE, not a substitute for it.
+  @$pb.TagNumber(11)
+  $core.int get actualTemperatureStatus => $_getIZ(9);
+  @$pb.TagNumber(11)
+  set actualTemperatureStatus($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(11)
+  $core.bool hasActualTemperatureStatus() => $_has(9);
+  @$pb.TagNumber(11)
+  void clearActualTemperatureStatus() => $_clearField(11);
+
+  /// Valve adaption run: writing true starts the valve's stroke calibration.
+  @$pb.TagNumber(12)
+  $core.bool get valveAdaption => $_getBF(10);
+  @$pb.TagNumber(12)
+  set valveAdaption($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(12)
+  $core.bool hasValveAdaption() => $_has(10);
+  @$pb.TagNumber(12)
+  void clearValveAdaption() => $_clearField(12);
+}
+
+/// The maintenance channel every HomeMatic device carries — device health and radio state,
+/// not what the device measures or controls.
+///
+/// It is device-agnostic: a radiator valve, a wall thermostat and a switch actuator all
+/// report the same core set on the same channel, which is why this is one message rather
+/// than a per-device-type one. Which of these a given device actually has is model-
+/// dependent, and stated per device in device.v1.Endpoint.vendor_attribute_names — SABOTAGE
+/// especially, where "no tamper detected" and "cannot detect tamper" must not render alike.
+///
+/// Not a Matter endpoint of its own: the maintenance channel is channel 0 upstream, and
+/// Matter reserves endpoint 0 for the root node. A connector puts these readings on the
+/// endpoint whose Matter properties they belong beside — the Power Source endpoint, whose
+/// battery attributes are derived from this same channel's LOW_BAT and OPERATING_VOLTAGE.
+///
+/// LOW_BAT, OPERATING_VOLTAGE and OPERATING_VOLTAGE_LEVEL are deliberately absent: they are
+/// Matter's PowerSource cluster, and PowerSourceProperties carries them. Only the derived
+/// Matter value has a home there, so the raw OPERATING_VOLTAGE_STATUS enum is kept here.
+///
+/// Every field is `optional`, for the reason HmThermostatProps gives: ERROR_CODE 0 is "no
+/// error", a reading, and SABOTAGE false is a safety claim.
+class HmMaintenanceProps extends $pb.GeneratedMessage {
+  factory HmMaintenanceProps({
+    $core.int? errorCode,
+    $core.bool? sabotage,
+    $core.int? rssiDevice,
+    $core.int? rssiPeer,
+    $core.int? operatingVoltageStatus,
+    $core.bool? unreach,
+    $core.bool? configPending,
+  }) {
+    final result = create();
+    if (errorCode != null) result.errorCode = errorCode;
+    if (sabotage != null) result.sabotage = sabotage;
+    if (rssiDevice != null) result.rssiDevice = rssiDevice;
+    if (rssiPeer != null) result.rssiPeer = rssiPeer;
+    if (operatingVoltageStatus != null)
+      result.operatingVoltageStatus = operatingVoltageStatus;
+    if (unreach != null) result.unreach = unreach;
+    if (configPending != null) result.configPending = configPending;
+    return result;
+  }
+
+  HmMaintenanceProps._();
+
+  factory HmMaintenanceProps.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HmMaintenanceProps.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HmMaintenanceProps',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.vendor.homematic.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'errorCode', $pb.PbFieldType.OU3)
+    ..aOB(2, _omitFieldNames ? '' : 'sabotage')
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'rssiDevice', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'rssiPeer', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'operatingVoltageStatus', $pb.PbFieldType.OU3)
+    ..aOB(6, _omitFieldNames ? '' : 'unreach')
+    ..aOB(7, _omitFieldNames ? '' : 'configPending')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HmMaintenanceProps clone() => HmMaintenanceProps()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HmMaintenanceProps copyWith(void Function(HmMaintenanceProps) updates) =>
+      super.copyWith((message) => updates(message as HmMaintenanceProps))
+          as HmMaintenanceProps;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HmMaintenanceProps create() => HmMaintenanceProps._();
+  @$core.override
+  HmMaintenanceProps createEmptyInstance() => create();
+  static $pb.PbList<HmMaintenanceProps> createRepeated() =>
+      $pb.PbList<HmMaintenanceProps>();
+  @$core.pragma('dart2js:noInline')
+  static HmMaintenanceProps getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HmMaintenanceProps>(create);
+  static HmMaintenanceProps? _defaultInstance;
+
+  /// Device-defined fault code, 0-255, where 0 is no error. Present only on models that
+  /// have one.
+  @$pb.TagNumber(1)
+  $core.int get errorCode => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set errorCode($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasErrorCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearErrorCode() => $_clearField(1);
+
+  /// Tamper detection: true means the device reports having been removed or opened. Present
+  /// only on models with the hardware for it.
+  @$pb.TagNumber(2)
+  $core.bool get sabotage => $_getBF(1);
+  @$pb.TagNumber(2)
+  set sabotage($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSabotage() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSabotage() => $_clearField(2);
+
+  /// Received signal strength in dBm, -128 to 127, as this device measures it.
+  ///
+  /// sint32, not uint32: these are negative in normal operation, and an unsigned field would
+  /// carry -72 dBm as 4294967224.
+  @$pb.TagNumber(3)
+  $core.int get rssiDevice => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set rssiDevice($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRssiDevice() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRssiDevice() => $_clearField(3);
+
+  /// The same measurement made at the other end of the link, as reported back.
+  @$pb.TagNumber(4)
+  $core.int get rssiPeer => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set rssiPeer($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRssiPeer() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRssiPeer() => $_clearField(4);
+
+  /// Supply state as the CCU reports it: NORMAL = 0, UNKNOWN = 1, OVERFLOW = 2,
+  /// EXTERNAL = 3. The raw enum; PowerSourceProperties.status carries the Matter
+  /// PowerSourceStatusEnum value derived from it, and the two are not interchangeable.
+  @$pb.TagNumber(5)
+  $core.int get operatingVoltageStatus => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set operatingVoltageStatus($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasOperatingVoltageStatus() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearOperatingVoltageStatus() => $_clearField(5);
+
+  /// True when the gateway has lost contact with the device. Reachability as the upstream
+  /// system sees it, which is not the same claim as device.v1.Device.last_seen — that is
+  /// when the gateway last had evidence of the device, observed one hop further out.
+  @$pb.TagNumber(6)
+  $core.bool get unreach => $_getBF(5);
+  @$pb.TagNumber(6)
+  set unreach($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasUnreach() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearUnreach() => $_clearField(6);
+
+  /// True while a configuration change is queued for a device that has not yet woken to
+  /// take it. A battery device can sit here for its whole report interval.
+  @$pb.TagNumber(7)
+  $core.bool get configPending => $_getBF(6);
+  @$pb.TagNumber(7)
+  set configPending($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasConfigPending() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearConfigPending() => $_clearField(7);
 }
 
 const $core.bool _omitFieldNames =

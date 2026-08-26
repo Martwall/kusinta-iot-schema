@@ -9,7 +9,7 @@ import { file_google_protobuf_descriptor } from "@bufbuild/protobuf/wkt";
  * Describes the file kusinta/iot/device/v1/matter_options.proto.
  */
 export const file_kusinta_iot_device_v1_matter_options = /*@__PURE__*/
-  fileDesc("CiprdXNpbnRhL2lvdC9kZXZpY2UvdjEvbWF0dGVyX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LmRldmljZS52MTpLChFtYXR0ZXJfY2x1c3Rlcl9pZBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY0YYDIAEoDVIPbWF0dGVyQ2x1c3RlcklkOkoKEG1hdHRlcl9hdHRyaWJ1dGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNKGAyABKAlSD21hdHRlckF0dHJpYnV0ZTpPChNtYXR0ZXJfYXR0cmlidXRlX2lkEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjWhgMgASgNUhFtYXR0ZXJBdHRyaWJ1dGVJZDpPChJtYXR0ZXJfZGV2aWNlX3R5cGUSHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY04YDIAMoDVIQbWF0dGVyRGV2aWNlVHlwZTpXChZtYXR0ZXJfY29tbWFuZF9jbHVzdGVyEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGNeGAyABKA1SFG1hdHRlckNvbW1hbmRDbHVzdGVyOlAKEW1hdHRlcl9jb21tYW5kX2lkEh8uZ29vZ2xlLnByb3RvYnVmLk1lc3NhZ2VPcHRpb25zGNiGAyABKA1SD21hdHRlckNvbW1hbmRJZIgBAUICSAFiBnByb3RvMw", [file_google_protobuf_descriptor]);
+  fileDesc("CiprdXNpbnRhL2lvdC9kZXZpY2UvdjEvbWF0dGVyX29wdGlvbnMucHJvdG8SFWt1c2ludGEuaW90LmRldmljZS52MTpLChFtYXR0ZXJfY2x1c3Rlcl9pZBIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY0YYDIAEoDVIPbWF0dGVyQ2x1c3RlcklkOkoKEG1hdHRlcl9hdHRyaWJ1dGUSHS5nb29nbGUucHJvdG9idWYuRmllbGRPcHRpb25zGNKGAyABKAlSD21hdHRlckF0dHJpYnV0ZTpPChNtYXR0ZXJfYXR0cmlidXRlX2lkEh0uZ29vZ2xlLnByb3RvYnVmLkZpZWxkT3B0aW9ucxjWhgMgASgNUhFtYXR0ZXJBdHRyaWJ1dGVJZDpjCh1tYXR0ZXJfYXR0cmlidXRlX2NhcGFiaWxpdGllcxIdLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE9wdGlvbnMY2YYDIAEoDVIbbWF0dGVyQXR0cmlidXRlQ2FwYWJpbGl0aWVzOk8KEm1hdHRlcl9kZXZpY2VfdHlwZRIfLmdvb2dsZS5wcm90b2J1Zi5NZXNzYWdlT3B0aW9ucxjThgMgAygNUhBtYXR0ZXJEZXZpY2VUeXBlOlcKFm1hdHRlcl9jb21tYW5kX2NsdXN0ZXISHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY14YDIAEoDVIUbWF0dGVyQ29tbWFuZENsdXN0ZXI6UAoRbWF0dGVyX2NvbW1hbmRfaWQSHy5nb29nbGUucHJvdG9idWYuTWVzc2FnZU9wdGlvbnMY2IYDIAEoDVIPbWF0dGVyQ29tbWFuZElkiAEBQgJIAWIGcHJvdG8z", [file_google_protobuf_descriptor]);
 
 /**
  * The Matter cluster this attribute belongs to, e.g. 0x0201 for Thermostat.
@@ -51,6 +51,33 @@ export const matter_attribute_id = /*@__PURE__*/
   extDesc(file_kusinta_iot_device_v1_matter_options, 2);
 
 /**
+ * What the Matter specification says this attribute supports, as a bitmask:
+ * READ = 1, WRITE = 2, REPORT = 4. So a read-only reportable attribute is 5, a
+ * writable one 7, a write-only one 2.
+ *
+ * Two things this is NOT.
+ *
+ * It is not PERMISSION. access/v1/acl.proto's PermissionAction and allowed_actions
+ * say what a given user may do; this says what the attribute is capable of. They are
+ * orthogonal — a user can hold WRITE on an attribute no device will ever accept a
+ * write for, and the schema would be lying if either could be read off the other.
+ *
+ * It is not the IMPLEMENTED SET either. This is uniform for every device that reports
+ * the attribute, because it comes from the specification. Whether one particular
+ * device implements it at all is a runtime fact, carried per endpoint by
+ * ClusterState.attribute_ids — Matter's own AttributeList. A device may implement
+ * less than the specification allows; it may not implement more.
+ *
+ * Bit 4 is Matter's subscribable/reportable quality. Named REPORT rather than EVENT
+ * because Matter spends "event" on a separate concept; the vendor branch's
+ * equivalent bit means the same thing under its own name.
+ *
+ * @generated from extension: uint32 matter_attribute_capabilities = 50009;
+ */
+export const matter_attribute_capabilities = /*@__PURE__*/
+  extDesc(file_kusinta_iot_device_v1_matter_options, 3);
+
+/**
  * The Matter device type IDs this properties message models, e.g. 0x0301 for
  * Thermostat. Repeated because one shape of properties can serve several device
  * types; empty on vendor extension messages, which have no Matter device type.
@@ -62,7 +89,7 @@ export const matter_attribute_id = /*@__PURE__*/
  * @generated from extension: repeated uint32 matter_device_type = 50003;
  */
 export const matter_device_type = /*@__PURE__*/
-  extDesc(file_kusinta_iot_device_v1_matter_options, 3);
+  extDesc(file_kusinta_iot_device_v1_matter_options, 4);
 
 /**
  * The Matter cluster a command-parameters message belongs to, e.g. 0x0006 for On/Off.
@@ -71,7 +98,7 @@ export const matter_device_type = /*@__PURE__*/
  * @generated from extension: uint32 matter_command_cluster = 50007;
  */
 export const matter_command_cluster = /*@__PURE__*/
-  extDesc(file_kusinta_iot_device_v1_matter_options, 4);
+  extDesc(file_kusinta_iot_device_v1_matter_options, 5);
 
 /**
  * The Matter command ID this parameters message carries arguments for, e.g. 0x00 for
@@ -87,5 +114,5 @@ export const matter_command_cluster = /*@__PURE__*/
  * @generated from extension: optional uint32 matter_command_id = 50008;
  */
 export const matter_command_id = /*@__PURE__*/
-  extDesc(file_kusinta_iot_device_v1_matter_options, 5);
+  extDesc(file_kusinta_iot_device_v1_matter_options, 6);
 

@@ -30,6 +30,7 @@ class ThermostatProperties extends $pb.GeneratedMessage {
     $core.int? controlSequenceOfOperation,
     $core.int? systemMode,
     $core.int? thermostatRunningMode,
+    $core.int? piHeatingDemand,
   }) {
     final result = create();
     if (localTemperature != null) result.localTemperature = localTemperature;
@@ -50,6 +51,7 @@ class ThermostatProperties extends $pb.GeneratedMessage {
     if (systemMode != null) result.systemMode = systemMode;
     if (thermostatRunningMode != null)
       result.thermostatRunningMode = thermostatRunningMode;
+    if (piHeatingDemand != null) result.piHeatingDemand = piHeatingDemand;
     return result;
   }
 
@@ -86,6 +88,8 @@ class ThermostatProperties extends $pb.GeneratedMessage {
     ..a<$core.int>(9, _omitFieldNames ? '' : 'systemMode', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         10, _omitFieldNames ? '' : 'thermostatRunningMode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        11, _omitFieldNames ? '' : 'piHeatingDemand', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -203,6 +207,19 @@ class ThermostatProperties extends $pb.GeneratedMessage {
   $core.bool hasThermostatRunningMode() => $_has(9);
   @$pb.TagNumber(10)
   void clearThermostatRunningMode() => $_clearField(10);
+
+  /// Heating demanded by the control loop, 0-100 %, which is the percentage the valve is
+  /// open. A radiator valve's own position belongs here and not in a vendor extension: the
+  /// Matter attribute is specified as exactly this quantity. A thermostat that drives no
+  /// valve of its own does not implement it — see ClusterState.attribute_ids.
+  @$pb.TagNumber(11)
+  $core.int get piHeatingDemand => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set piHeatingDemand($core.int value) => $_setUnsignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasPiHeatingDemand() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearPiHeatingDemand() => $_clearField(11);
 }
 
 /// Matter Temperature Measurement cluster (0x0402)
@@ -1099,6 +1116,9 @@ class DimmableLightProperties extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearStartUpCurrentLevel() => $_clearField(6);
 
+  /// READ only: the Matter data model marks RemainingTime changes-omitted, so it is
+  /// readable but never reported — it counts down continuously and reporting it would be
+  /// a subscription storm.
   @$pb.TagNumber(7)
   $core.int get remainingTime => $_getIZ(6);
   @$pb.TagNumber(7)

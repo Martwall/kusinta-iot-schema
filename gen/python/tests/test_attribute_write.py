@@ -125,9 +125,9 @@ def test_read_no_longer_spells_the_triple_by_hand():
 
 def test_a_vendor_parameter_can_be_read_written_and_granted():
     """It could previously be reported but never written or granted, which would have made
-    a valve position all-or-nothing for permissions."""
+    a vendor parameter all-or-nothing for permissions."""
     ref = acl_pb2.AttributeRef(
-        vendor_extension="homematic.thermostat", attribute_name="LEVEL", endpoint_id=1
+        vendor_extension="homematic.thermostat", attribute_name="BOOST_MODE", endpoint_id=1
     )
     write = command_pb2.AttributeWriteRequest(target=ref)
     grant = acl_pb2.DeviceAcl(allowed_attribute_refs=[ref])
@@ -136,7 +136,7 @@ def test_a_vendor_parameter_can_be_read_written_and_granted():
         decoded = type(msg)()
         decoded.ParseFromString(msg.SerializeToString())
     assert grant.allowed_attribute_refs[0].vendor_extension == "homematic.thermostat"
-    assert write.target.attribute_name == "LEVEL"
+    assert write.target.attribute_name == "BOOST_MODE"
 
 
 # --- commands and events are named by their own ID spaces -----------------------------

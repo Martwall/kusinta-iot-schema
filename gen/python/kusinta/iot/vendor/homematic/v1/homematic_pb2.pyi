@@ -14,21 +14,45 @@ class HomematicDeviceIdentity(_message.Message):
     def __init__(self, address: _Optional[str] = ..., type: _Optional[str] = ...) -> None: ...
 
 class HmThermostatProps(_message.Message):
-    __slots__ = ("boost_mode", "boost_time_period", "control_mode", "frost_protection", "current_profile_period", "level", "window_state", "valve_state")
+    __slots__ = ("boost_mode", "boost_time_period", "control_mode", "frost_protection", "party_mode", "window_state", "valve_state", "set_point_mode", "active_profile", "actual_temperature_status", "valve_adaption")
     BOOST_MODE_FIELD_NUMBER: _ClassVar[int]
     BOOST_TIME_PERIOD_FIELD_NUMBER: _ClassVar[int]
     CONTROL_MODE_FIELD_NUMBER: _ClassVar[int]
     FROST_PROTECTION_FIELD_NUMBER: _ClassVar[int]
-    CURRENT_PROFILE_PERIOD_FIELD_NUMBER: _ClassVar[int]
-    LEVEL_FIELD_NUMBER: _ClassVar[int]
+    PARTY_MODE_FIELD_NUMBER: _ClassVar[int]
     WINDOW_STATE_FIELD_NUMBER: _ClassVar[int]
     VALVE_STATE_FIELD_NUMBER: _ClassVar[int]
+    SET_POINT_MODE_FIELD_NUMBER: _ClassVar[int]
+    ACTIVE_PROFILE_FIELD_NUMBER: _ClassVar[int]
+    ACTUAL_TEMPERATURE_STATUS_FIELD_NUMBER: _ClassVar[int]
+    VALVE_ADAPTION_FIELD_NUMBER: _ClassVar[int]
     boost_mode: bool
-    boost_time_period: float
+    boost_time_period: int
     control_mode: int
     frost_protection: bool
-    current_profile_period: float
-    level: float
+    party_mode: bool
     window_state: int
     valve_state: int
-    def __init__(self, boost_mode: _Optional[bool] = ..., boost_time_period: _Optional[float] = ..., control_mode: _Optional[int] = ..., frost_protection: _Optional[bool] = ..., current_profile_period: _Optional[float] = ..., level: _Optional[float] = ..., window_state: _Optional[int] = ..., valve_state: _Optional[int] = ...) -> None: ...
+    set_point_mode: int
+    active_profile: int
+    actual_temperature_status: int
+    valve_adaption: bool
+    def __init__(self, boost_mode: _Optional[bool] = ..., boost_time_period: _Optional[int] = ..., control_mode: _Optional[int] = ..., frost_protection: _Optional[bool] = ..., party_mode: _Optional[bool] = ..., window_state: _Optional[int] = ..., valve_state: _Optional[int] = ..., set_point_mode: _Optional[int] = ..., active_profile: _Optional[int] = ..., actual_temperature_status: _Optional[int] = ..., valve_adaption: _Optional[bool] = ...) -> None: ...
+
+class HmMaintenanceProps(_message.Message):
+    __slots__ = ("error_code", "sabotage", "rssi_device", "rssi_peer", "operating_voltage_status", "unreach", "config_pending")
+    ERROR_CODE_FIELD_NUMBER: _ClassVar[int]
+    SABOTAGE_FIELD_NUMBER: _ClassVar[int]
+    RSSI_DEVICE_FIELD_NUMBER: _ClassVar[int]
+    RSSI_PEER_FIELD_NUMBER: _ClassVar[int]
+    OPERATING_VOLTAGE_STATUS_FIELD_NUMBER: _ClassVar[int]
+    UNREACH_FIELD_NUMBER: _ClassVar[int]
+    CONFIG_PENDING_FIELD_NUMBER: _ClassVar[int]
+    error_code: int
+    sabotage: bool
+    rssi_device: int
+    rssi_peer: int
+    operating_voltage_status: int
+    unreach: bool
+    config_pending: bool
+    def __init__(self, error_code: _Optional[int] = ..., sabotage: _Optional[bool] = ..., rssi_device: _Optional[int] = ..., rssi_peer: _Optional[int] = ..., operating_voltage_status: _Optional[int] = ..., unreach: _Optional[bool] = ..., config_pending: _Optional[bool] = ...) -> None: ...

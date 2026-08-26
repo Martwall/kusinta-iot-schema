@@ -477,6 +477,7 @@ class ClusterState extends $pb.GeneratedMessage {
     $core.int? featureMap,
     $core.Iterable<AttributeState>? attributes,
     $core.Iterable<$core.int>? acceptedCommandIds,
+    $core.Iterable<$core.int>? attributeIds,
   }) {
     final result = create();
     if (clusterId != null) result.clusterId = clusterId;
@@ -485,6 +486,7 @@ class ClusterState extends $pb.GeneratedMessage {
     if (attributes != null) result.attributes.addAll(attributes);
     if (acceptedCommandIds != null)
       result.acceptedCommandIds.addAll(acceptedCommandIds);
+    if (attributeIds != null) result.attributeIds.addAll(attributeIds);
     return result;
   }
 
@@ -511,6 +513,8 @@ class ClusterState extends $pb.GeneratedMessage {
         subBuilder: AttributeState.create)
     ..p<$core.int>(
         5, _omitFieldNames ? '' : 'acceptedCommandIds', $pb.PbFieldType.KU3)
+    ..p<$core.int>(
+        6, _omitFieldNames ? '' : 'attributeIds', $pb.PbFieldType.KU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -580,6 +584,28 @@ class ClusterState extends $pb.GeneratedMessage {
   /// discover the truth by sending a command and watching it fail.
   @$pb.TagNumber(5)
   $pb.PbList<$core.int> get acceptedCommandIds => $_getList(4);
+
+  /// Matter's AttributeList (0xFFFB): which attributes this cluster instance actually
+  /// implements HERE, on this endpoint of this device.
+  ///
+  /// It answers the question presence cannot. A typed field that is absent means "never
+  /// reported" — and a device that will never report it, because it does not have the
+  /// hardware, looks exactly the same. A wall thermostat drives no valve, so it has no
+  /// PIHeatingDemand; a radiator valve has one it has not sent yet. Listed here with no
+  /// value in the properties message = implemented, not yet reported. Absent from this
+  /// list = the device does not have it.
+  ///
+  /// Distinct from feature_map, which is per-feature rather than per-attribute, and from
+  /// (matter_attribute_capabilities), which says what the attribute IS — readable,
+  /// writable, reportable — uniformly for every device, at compile time. Neither
+  /// substitutes for the other: an app needs both to decide whether to draw a control,
+  /// draw a value, or draw nothing.
+  ///
+  /// An empty list is "not stated", not "implements nothing". A producer that does not
+  /// know its device's attribute list leaves it empty; one that does SHOULD fill it at
+  /// announcement, where it costs nothing per update.
+  @$pb.TagNumber(6)
+  $pb.PbList<$core.int> get attributeIds => $_getList(5);
 }
 
 const $core.bool _omitFieldNames =

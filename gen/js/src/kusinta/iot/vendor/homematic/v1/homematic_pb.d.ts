@@ -43,6 +43,11 @@ export declare const HomematicDeviceIdentitySchema: GenMessage<HomematicDeviceId
  * HomeMatic thermostat parameters with no Matter equivalent, carried on the same endpoint
  * as that thermostat's Matter properties rather than instead of them.
  *
+ * "No Matter equivalent" is the entry test, and it is the one to apply before adding a
+ * field here. Valve position failed it: LEVEL is Thermostat/PIHeatingDemand, and it lived
+ * here for a while under the claim that Matter had nothing for it. It is now
+ * device.v1.ThermostatProperties.pi_heating_demand, and field 6 is burned.
+ *
  * Battery state is deliberately NOT here. LOW_BAT and OPERATING_VOLTAGE are Matter's
  * PowerSource cluster, which every battery device from every technology needs, so they
  * belong on a Power Source endpoint. See device/v1/properties.proto.
@@ -51,6 +56,9 @@ export declare const HomematicDeviceIdentitySchema: GenMessage<HomematicDeviceId
  * assembled from a PropertyUpdate stream, and zero is a real reading here too — boost_mode
  * false means not boosting, control_mode 0 is an HmIP ControlMode value. Absent means never
  * reported; present means a reading, including zero.
+ *
+ * Enum parameters cross the wire as the CCU's own index, not as a type this schema defines,
+ * so each one lists its values in its comment. The order is the CCU's; do not renumber it.
  *
  * Add new fields at the next available number — never reuse a removed one.
  *
@@ -63,13 +71,17 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
   boostMode?: boolean | undefined;
 
   /**
-   * minutes remaining
+   * Minutes remaining, 0-2048. Integer on the CCU — it counts whole minutes.
    *
-   * @generated from field: optional float boost_time_period = 2;
+   * @generated from field: optional uint32 boost_time_period = 2;
    */
   boostTimePeriod?: number | undefined;
 
   /**
+   * Write-only on the CCU: it accepts a ControlMode and never reports one back. Carried
+   * here for a future write path, not as a reading — a connector that emits it as a
+   * PropertyUpdate is sending a value the device never gave. 0-3.
+   *
    * @generated from field: optional uint32 control_mode = 3;
    */
   controlMode?: number | undefined;
@@ -80,28 +92,58 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
   frostProtection?: boolean | undefined;
 
   /**
-   * @generated from field: optional float current_profile_period = 5;
-   */
-  currentProfilePeriod?: number | undefined;
-
-  /**
-   * Valve position, 0.0-1.0 — how far the radiator valve is actually open. The reading
-   * this extension exists for: it has no Matter equivalent, and it is what an automatic
-   * or learned control strategy needs.
+   * Party mode active. A boolean, whatever the old field name suggested.
    *
-   * @generated from field: optional float level = 6;
+   * @generated from field: optional bool party_mode = 5;
    */
-  level?: number | undefined;
+  partyMode?: boolean | undefined;
 
   /**
+   * CLOSED = 0, OPEN = 1
+   *
    * @generated from field: optional uint32 window_state = 7;
    */
   windowState?: number | undefined;
 
   /**
+   * Valve fault and adaption state, nine CCU-defined values. Radiator valves only — a wall
+   * thermostat drives no valve and never reports it.
+   *
    * @generated from field: optional uint32 valve_state = 8;
    */
   valveState?: number | undefined;
+
+  /**
+   * Which schedule the thermostat is following: AUTO = 0, MANU = 1, AWAY = 2, plus a
+   * fourth CCU value. NOT webrtc.v1.SetpointAdjustMode, which names which setpoint a
+   * command targets — a different enum over a different set of concepts.
+   *
+   * @generated from field: optional uint32 set_point_mode = 9;
+   */
+  setPointMode?: number | undefined;
+
+  /**
+   * The active weekly profile: 1-3 on a radiator valve, 1-6 on a wall thermostat. The
+   * upper bound is the device's, not the protocol's.
+   *
+   * @generated from field: optional uint32 active_profile = 10;
+   */
+  activeProfile?: number | undefined;
+
+  /**
+   * Whether the measured temperature is usable: NORMAL = 0, UNKNOWN = 1, OVERFLOW = 2,
+   * UNDERFLOW = 3. A reading beside ACTUAL_TEMPERATURE, not a substitute for it.
+   *
+   * @generated from field: optional uint32 actual_temperature_status = 11;
+   */
+  actualTemperatureStatus?: number | undefined;
+
+  /**
+   * Valve adaption run: writing true starts the valve's stroke calibration.
+   *
+   * @generated from field: optional bool valve_adaption = 12;
+   */
+  valveAdaption?: boolean | undefined;
 };
 
 /**
@@ -109,4 +151,95 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
  * Use `create(HmThermostatPropsSchema)` to create a new message.
  */
 export declare const HmThermostatPropsSchema: GenMessage<HmThermostatProps>;
+
+/**
+ * The maintenance channel every HomeMatic device carries — device health and radio state,
+ * not what the device measures or controls.
+ *
+ * It is device-agnostic: a radiator valve, a wall thermostat and a switch actuator all
+ * report the same core set on the same channel, which is why this is one message rather
+ * than a per-device-type one. Which of these a given device actually has is model-
+ * dependent, and stated per device in device.v1.Endpoint.vendor_attribute_names — SABOTAGE
+ * especially, where "no tamper detected" and "cannot detect tamper" must not render alike.
+ *
+ * Not a Matter endpoint of its own: the maintenance channel is channel 0 upstream, and
+ * Matter reserves endpoint 0 for the root node. A connector puts these readings on the
+ * endpoint whose Matter properties they belong beside — the Power Source endpoint, whose
+ * battery attributes are derived from this same channel's LOW_BAT and OPERATING_VOLTAGE.
+ *
+ * LOW_BAT, OPERATING_VOLTAGE and OPERATING_VOLTAGE_LEVEL are deliberately absent: they are
+ * Matter's PowerSource cluster, and PowerSourceProperties carries them. Only the derived
+ * Matter value has a home there, so the raw OPERATING_VOLTAGE_STATUS enum is kept here.
+ *
+ * Every field is `optional`, for the reason HmThermostatProps gives: ERROR_CODE 0 is "no
+ * error", a reading, and SABOTAGE false is a safety claim.
+ *
+ * @generated from message kusinta.iot.vendor.homematic.v1.HmMaintenanceProps
+ */
+export declare type HmMaintenanceProps = Message<"kusinta.iot.vendor.homematic.v1.HmMaintenanceProps"> & {
+  /**
+   * Device-defined fault code, 0-255, where 0 is no error. Present only on models that
+   * have one.
+   *
+   * @generated from field: optional uint32 error_code = 1;
+   */
+  errorCode?: number | undefined;
+
+  /**
+   * Tamper detection: true means the device reports having been removed or opened. Present
+   * only on models with the hardware for it.
+   *
+   * @generated from field: optional bool sabotage = 2;
+   */
+  sabotage?: boolean | undefined;
+
+  /**
+   * Received signal strength in dBm, -128 to 127, as this device measures it.
+   *
+   * sint32, not uint32: these are negative in normal operation, and an unsigned field would
+   * carry -72 dBm as 4294967224.
+   *
+   * @generated from field: optional sint32 rssi_device = 3;
+   */
+  rssiDevice?: number | undefined;
+
+  /**
+   * The same measurement made at the other end of the link, as reported back.
+   *
+   * @generated from field: optional sint32 rssi_peer = 4;
+   */
+  rssiPeer?: number | undefined;
+
+  /**
+   * Supply state as the CCU reports it: NORMAL = 0, UNKNOWN = 1, OVERFLOW = 2,
+   * EXTERNAL = 3. The raw enum; PowerSourceProperties.status carries the Matter
+   * PowerSourceStatusEnum value derived from it, and the two are not interchangeable.
+   *
+   * @generated from field: optional uint32 operating_voltage_status = 5;
+   */
+  operatingVoltageStatus?: number | undefined;
+
+  /**
+   * True when the gateway has lost contact with the device. Reachability as the upstream
+   * system sees it, which is not the same claim as device.v1.Device.last_seen — that is
+   * when the gateway last had evidence of the device, observed one hop further out.
+   *
+   * @generated from field: optional bool unreach = 6;
+   */
+  unreach?: boolean | undefined;
+
+  /**
+   * True while a configuration change is queued for a device that has not yet woken to
+   * take it. A battery device can sit here for its whole report interval.
+   *
+   * @generated from field: optional bool config_pending = 7;
+   */
+  configPending?: boolean | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.vendor.homematic.v1.HmMaintenanceProps.
+ * Use `create(HmMaintenancePropsSchema)` to create a new message.
+ */
+export declare const HmMaintenancePropsSchema: GenMessage<HmMaintenanceProps>;
 

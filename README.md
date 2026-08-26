@@ -19,7 +19,7 @@ proto/
   connector/       # ConnectorToGatewayMessage, GatewayToConnectorMessage, gRPC service
   webrtc/          # GatewayMessage, AppMessage, DeviceCommand, DeviceStateSnapshot, …
   vendor/
-    homematic/     # HomematicVendorExtension, HmThermostatProps (eTRV-C / eTRV-C-2)
+    homematic/     # HomematicDeviceIdentity, HmThermostatProps, HmMaintenanceProps
 
 gen/
   js/              # @kusinta/iot-schema npm package (generated, committed)
@@ -162,10 +162,12 @@ files — together they would form a package import cycle.
 | `(matter_cluster_id)` | properties field | Matter cluster ID, e.g. `0x0201` |
 | `(matter_attribute)` | properties field | Matter attribute name, e.g. `"PIROccupiedToUnoccupiedDelay"` |
 | `(matter_attribute_id)` | properties field | Matter attribute ID, e.g. `0x0012` — **what resolution matches on** |
+| `(matter_attribute_capabilities)` | properties field | What the spec says the attribute supports: `READ = 1`, `WRITE = 2`, `REPORT = 4` |
 | `(matter_device_type)` | properties message | Matter device type IDs modelled, repeated |
 | `(matter_command_cluster)` | command params message | The Matter cluster the command belongs to |
 | `(matter_command_ids)` | command params message | Which command IDs the message can express, repeated |
-| `(vendor_attribute)` | vendor field | Vendor parameter in the vendor's own spelling, e.g. `"LEVEL"` |
+| `(vendor_attribute)` | vendor field | Vendor parameter in the vendor's own spelling, e.g. `"VALVE_STATE"` |
+| `(vendor_attribute_capabilities)` | vendor field | Same bitmask, from the upstream system's own answer about its parameter |
 | `(vendor_extension)` | vendor message | Stable key selecting the extension, e.g. `"homematic.thermostat"` |
 
 A `PropertyUpdate` resolves in three steps, all read from the descriptor:
@@ -212,12 +214,33 @@ keep them).
 
 **When adding a properties or vendor message or field, annotate it.** Nothing in `buf lint` enforces this;
 the completeness tests do — `matter_options.test.js` / `test_matter_options.py` for the Matter
-annotations, `test_endpoint.py` for the vendor ones. All of them derive their message lists from
-the `Endpoint` oneofs, so a new message is swept automatically.
+annotations, `test_endpoint.py` for the vendor ones, `test_capabilities.py` for the capability
+masks on both. All of them derive their message lists from the `Endpoint` oneofs, so a new
+message is swept automatically.
+
+## Three questions the schema keeps apart
+
+"Can this be written?" has three different answers, and conflating any two of them produces a
+UI that offers a control the device will reject, or hides one the user is entitled to.
+
+| Question | Where it lives | Nature |
+|---|---|---|
+| What is this attribute *capable* of? | `(matter_attribute_capabilities)`, `(vendor_attribute_capabilities)` | Compile-time, from the spec (or the vendor's own parameter description). Same for every device. |
+| Does *this device* have it? | `ClusterState.attribute_ids` (Matter's `AttributeList`, `0xFFFB`), `Endpoint.vendor_attribute_names` | Runtime, per endpoint, sent at announcement. Model-varying. |
+| May *this user* do it? | `access/v1/acl.proto` — `PermissionAction`, `DeviceAcl.allowed_actions` | Per user, per device. Orthogonal to both. |
+
+The first two together are what an app needs to decide whether to draw a control, draw a
+value, or draw nothing. Presence alone cannot: an absent field means "never reported", which
+is indistinguishable from "this device has no such hardware" — and for a parameter like
+`SABOTAGE`, "no tamper detected" and "cannot detect tamper" must not render the same. Naming
+the attribute in the implemented list with no value in the properties message says
+*implemented, not yet reported*; omitting it says *the device does not have it*. An empty list
+is "not stated", never "implements nothing".
 
 ## Field presence in properties
 
-Every field in `properties.proto` and in `HmThermostatProps` is `optional` — explicit presence.
+Every field in `properties.proto` and in the vendor extension messages is `optional` — explicit
+presence.
 These messages are assembled incrementally from a `PropertyUpdate` stream, and Matter gives zero
 a meaning nearly everywhere: `SystemMode` `Off=0`, `LockState` `NotFullyLocked=0`, `Type`
 `Rollershade=0`, a dimmer at level `0`, `0.00 °C`, `0 W`. `StateValue` is the sharpest — `false`
@@ -271,9 +294,9 @@ buf breaking --against ".git#branch=main"
 `reserved` statement.
 
 ```protobuf
-// Example: if field 3 is later removed from HmThermostatProps
-reserved 3;
-reserved "control_mode";
+// HmThermostatProps, after LEVEL moved to ThermostatProperties.pi_heating_demand
+reserved 6;
+reserved "level";
 ```
 
 ## Versioning

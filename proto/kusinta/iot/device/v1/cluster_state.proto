@@ -90,4 +90,25 @@ message ClusterState {
   // Without it a consumer must infer a device's capabilities from its device type and
   // discover the truth by sending a command and watching it fail.
   repeated uint32 accepted_command_ids = 5;
+
+  // Matter's AttributeList (0xFFFB): which attributes this cluster instance actually
+  // implements HERE, on this endpoint of this device.
+  //
+  // It answers the question presence cannot. A typed field that is absent means "never
+  // reported" — and a device that will never report it, because it does not have the
+  // hardware, looks exactly the same. A wall thermostat drives no valve, so it has no
+  // PIHeatingDemand; a radiator valve has one it has not sent yet. Listed here with no
+  // value in the properties message = implemented, not yet reported. Absent from this
+  // list = the device does not have it.
+  //
+  // Distinct from feature_map, which is per-feature rather than per-attribute, and from
+  // (matter_attribute_capabilities), which says what the attribute IS — readable,
+  // writable, reportable — uniformly for every device, at compile time. Neither
+  // substitutes for the other: an app needs both to decide whether to draw a control,
+  // draw a value, or draw nothing.
+  //
+  // An empty list is "not stated", not "implements nothing". A producer that does not
+  // know its device's attribute list leaves it empty; one that does SHOULD fill it at
+  // announcement, where it costs nothing per update.
+  repeated uint32 attribute_ids = 6;
 }
