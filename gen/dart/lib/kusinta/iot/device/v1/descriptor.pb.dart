@@ -27,7 +27,9 @@ enum DeviceDescriptor_VendorIdentity { homematic, notSet }
 /// device IS, not what it reports. The device types it presents are one per endpoint, in
 /// Device.endpoints.
 ///
-/// Fields 1-19 are stable Matter-aligned fields. Fields 20+ are ownership/lifecycle.
+/// Field bands: 1-2 identity, 3-10 Matter BasicInformation, 11-12 placement,
+/// 13-16 ownership and lifecycle, 18-19 vendor identity and bridging.
+/// 2 and 17 are burned; the next free number is 20.
 class DeviceDescriptor extends $pb.GeneratedMessage {
   factory DeviceDescriptor({
     $0.DeviceId? deviceId,
