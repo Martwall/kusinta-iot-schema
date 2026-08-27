@@ -71,11 +71,12 @@ export declare type HmThermostatProps = Message<"kusinta.iot.vendor.homematic.v1
   boostMode?: boolean | undefined;
 
   /**
-   * Minutes remaining, 0-2048. Integer on the CCU — it counts whole minutes.
+   * Seconds remaining, 0-2048 — the CCU counts boost in whole seconds, not minutes.
+   * Default boost is 5 min (300), maximum 30 min (1800).
    *
-   * @generated from field: optional uint32 boost_time_period = 2;
+   * @generated from field: optional uint32 boost_time_remaining = 2;
    */
-  boostTimePeriod?: number | undefined;
+  boostTimeRemaining?: number | undefined;
 
   /**
    * Write-only on the CCU: it accepts a ControlMode and never reports one back. Carried

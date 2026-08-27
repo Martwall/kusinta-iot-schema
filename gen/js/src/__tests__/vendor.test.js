@@ -12,11 +12,11 @@ import { DeviceDescriptorSchema } from '../kusinta/iot/device/v1/descriptor_pb.j
 describe('HmThermostatProps', () => {
   it('round-trips boost_mode and control_mode', () => {
     const p = create(HmThermostatPropsSchema, {
-      boostMode: true, boostTimePeriod: 15, controlMode: 2, frostProtection: false,
+      boostMode: true, boostTimeRemaining: 15, controlMode: 2, frostProtection: false,
     })
     const decoded = fromBinary(HmThermostatPropsSchema, toBinary(HmThermostatPropsSchema, p))
     expect(decoded.boostMode).toBe(true)
-    expect(decoded.boostTimePeriod).toBe(15)
+    expect(decoded.boostTimeRemaining).toBe(15)
     expect(decoded.controlMode).toBe(2)
     expect(decoded.frostProtection).toBe(false)
   })

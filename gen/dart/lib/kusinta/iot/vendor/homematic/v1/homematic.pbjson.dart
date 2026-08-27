@@ -44,13 +44,13 @@ const HmThermostatProps$json = {
       '17': true
     },
     {
-      '1': 'boost_time_period',
+      '1': 'boost_time_remaining',
       '3': 2,
       '4': 1,
       '5': 13,
       '8': {},
       '9': 1,
-      '10': 'boostTimePeriod',
+      '10': 'boostTimeRemaining',
       '17': true
     },
     {
@@ -147,7 +147,7 @@ const HmThermostatProps$json = {
   '7': {},
   '8': [
     {'1': '_boost_mode'},
-    {'1': '_boost_time_period'},
+    {'1': '_boost_time_remaining'},
     {'1': '_control_mode'},
     {'1': '_frost_protection'},
     {'1': '_party_mode'},
@@ -161,30 +161,31 @@ const HmThermostatProps$json = {
   '9': [
     {'1': 6, '2': 7},
   ],
-  '10': ['level', 'current_profile_period'],
+  '10': ['level', 'current_profile_period', 'boost_time_period'],
 };
 
 /// Descriptor for `HmThermostatProps`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List hmThermostatPropsDescriptor = $convert.base64Decode(
     'ChFIbVRoZXJtb3N0YXRQcm9wcxI2Cgpib29zdF9tb2RlGAEgASgIQhKitRgKQk9PU1RfTU9ERd'
-    'C1GAZIAFIJYm9vc3RNb2RliAEBEkMKEWJvb3N0X3RpbWVfcGVyaW9kGAIgASgNQhKitRgKQk9P'
-    'U1RfVElNRdC1GAVIAVIPYm9vc3RUaW1lUGVyaW9kiAEBEjwKDGNvbnRyb2xfbW9kZRgDIAEoDU'
-    'IUorUYDENPTlRST0xfTU9ERdC1GAJIAlILY29udHJvbE1vZGWIAQESSAoQZnJvc3RfcHJvdGVj'
-    'dGlvbhgEIAEoCEIYorUYEEZST1NUX1BST1RFQ1RJT07QtRgFSANSD2Zyb3N0UHJvdGVjdGlvbo'
-    'gBARI2CgpwYXJ0eV9tb2RlGAUgASgIQhKitRgKUEFSVFlfTU9ERdC1GAVIBFIJcGFydHlNb2Rl'
-    'iAEBEjwKDHdpbmRvd19zdGF0ZRgHIAEoDUIUorUYDFdJTkRPV19TVEFURdC1GAdIBVILd2luZG'
-    '93U3RhdGWIAQESOQoLdmFsdmVfc3RhdGUYCCABKA1CE6K1GAtWQUxWRV9TVEFURdC1GAVIBlIK'
-    'dmFsdmVTdGF0ZYgBARJBCg5zZXRfcG9pbnRfbW9kZRgJIAEoDUIWorUYDlNFVF9QT0lOVF9NT0'
-    'RF0LUYB0gHUgxzZXRQb2ludE1vZGWIAQESQgoOYWN0aXZlX3Byb2ZpbGUYCiABKA1CFqK1GA5B'
-    'Q1RJVkVfUFJPRklMRdC1GAdICFINYWN0aXZlUHJvZmlsZYgBARJiChlhY3R1YWxfdGVtcGVyYX'
-    'R1cmVfc3RhdHVzGAsgASgNQiGitRgZQUNUVUFMX1RFTVBFUkFUVVJFX1NUQVRVU9C1GAVICVIX'
-    'YWN0dWFsVGVtcGVyYXR1cmVTdGF0dXOIAQESQgoOdmFsdmVfYWRhcHRpb24YDCABKAhCFqK1GA'
-    '5WQUxWRV9BREFQVElPTtC1GAdIClINdmFsdmVBZGFwdGlvbogBAToYqrUYFGhvbWVtYXRpYy50'
-    'aGVybW9zdGF0Qg0KC19ib29zdF9tb2RlQhQKEl9ib29zdF90aW1lX3BlcmlvZEIPCg1fY29udH'
-    'JvbF9tb2RlQhMKEV9mcm9zdF9wcm90ZWN0aW9uQg0KC19wYXJ0eV9tb2RlQg8KDV93aW5kb3df'
-    'c3RhdGVCDgoMX3ZhbHZlX3N0YXRlQhEKD19zZXRfcG9pbnRfbW9kZUIRCg9fYWN0aXZlX3Byb2'
-    'ZpbGVCHAoaX2FjdHVhbF90ZW1wZXJhdHVyZV9zdGF0dXNCEQoPX3ZhbHZlX2FkYXB0aW9uSgQI'
-    'BhAHUgVsZXZlbFIWY3VycmVudF9wcm9maWxlX3BlcmlvZA==');
+    'C1GAZIAFIJYm9vc3RNb2RliAEBEkkKFGJvb3N0X3RpbWVfcmVtYWluaW5nGAIgASgNQhKitRgK'
+    'Qk9PU1RfVElNRdC1GAVIAVISYm9vc3RUaW1lUmVtYWluaW5niAEBEjwKDGNvbnRyb2xfbW9kZR'
+    'gDIAEoDUIUorUYDENPTlRST0xfTU9ERdC1GAJIAlILY29udHJvbE1vZGWIAQESSAoQZnJvc3Rf'
+    'cHJvdGVjdGlvbhgEIAEoCEIYorUYEEZST1NUX1BST1RFQ1RJT07QtRgFSANSD2Zyb3N0UHJvdG'
+    'VjdGlvbogBARI2CgpwYXJ0eV9tb2RlGAUgASgIQhKitRgKUEFSVFlfTU9ERdC1GAVIBFIJcGFy'
+    'dHlNb2RliAEBEjwKDHdpbmRvd19zdGF0ZRgHIAEoDUIUorUYDFdJTkRPV19TVEFURdC1GAdIBV'
+    'ILd2luZG93U3RhdGWIAQESOQoLdmFsdmVfc3RhdGUYCCABKA1CE6K1GAtWQUxWRV9TVEFURdC1'
+    'GAVIBlIKdmFsdmVTdGF0ZYgBARJBCg5zZXRfcG9pbnRfbW9kZRgJIAEoDUIWorUYDlNFVF9QT0'
+    'lOVF9NT0RF0LUYB0gHUgxzZXRQb2ludE1vZGWIAQESQgoOYWN0aXZlX3Byb2ZpbGUYCiABKA1C'
+    'FqK1GA5BQ1RJVkVfUFJPRklMRdC1GAdICFINYWN0aXZlUHJvZmlsZYgBARJiChlhY3R1YWxfdG'
+    'VtcGVyYXR1cmVfc3RhdHVzGAsgASgNQiGitRgZQUNUVUFMX1RFTVBFUkFUVVJFX1NUQVRVU9C1'
+    'GAVICVIXYWN0dWFsVGVtcGVyYXR1cmVTdGF0dXOIAQESQgoOdmFsdmVfYWRhcHRpb24YDCABKA'
+    'hCFqK1GA5WQUxWRV9BREFQVElPTtC1GAdIClINdmFsdmVBZGFwdGlvbogBAToYqrUYFGhvbWVt'
+    'YXRpYy50aGVybW9zdGF0Qg0KC19ib29zdF9tb2RlQhcKFV9ib29zdF90aW1lX3JlbWFpbmluZ0'
+    'IPCg1fY29udHJvbF9tb2RlQhMKEV9mcm9zdF9wcm90ZWN0aW9uQg0KC19wYXJ0eV9tb2RlQg8K'
+    'DV93aW5kb3dfc3RhdGVCDgoMX3ZhbHZlX3N0YXRlQhEKD19zZXRfcG9pbnRfbW9kZUIRCg9fYW'
+    'N0aXZlX3Byb2ZpbGVCHAoaX2FjdHVhbF90ZW1wZXJhdHVyZV9zdGF0dXNCEQoPX3ZhbHZlX2Fk'
+    'YXB0aW9uSgQIBhAHUgVsZXZlbFIWY3VycmVudF9wcm9maWxlX3BlcmlvZFIRYm9vc3RfdGltZV'
+    '9wZXJpb2Q=');
 
 @$core.Deprecated('Use hmMaintenancePropsDescriptor instead')
 const HmMaintenanceProps$json = {

@@ -114,7 +114,7 @@ class HomematicDeviceIdentity extends $pb.GeneratedMessage {
 class HmThermostatProps extends $pb.GeneratedMessage {
   factory HmThermostatProps({
     $core.bool? boostMode,
-    $core.int? boostTimePeriod,
+    $core.int? boostTimeRemaining,
     $core.int? controlMode,
     $core.bool? frostProtection,
     $core.bool? partyMode,
@@ -127,7 +127,8 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (boostMode != null) result.boostMode = boostMode;
-    if (boostTimePeriod != null) result.boostTimePeriod = boostTimePeriod;
+    if (boostTimeRemaining != null)
+      result.boostTimeRemaining = boostTimeRemaining;
     if (controlMode != null) result.controlMode = controlMode;
     if (frostProtection != null) result.frostProtection = frostProtection;
     if (partyMode != null) result.partyMode = partyMode;
@@ -157,7 +158,7 @@ class HmThermostatProps extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'boostMode')
     ..a<$core.int>(
-        2, _omitFieldNames ? '' : 'boostTimePeriod', $pb.PbFieldType.OU3)
+        2, _omitFieldNames ? '' : 'boostTimeRemaining', $pb.PbFieldType.OU3)
     ..a<$core.int>(3, _omitFieldNames ? '' : 'controlMode', $pb.PbFieldType.OU3)
     ..aOB(4, _omitFieldNames ? '' : 'frostProtection')
     ..aOB(5, _omitFieldNames ? '' : 'partyMode')
@@ -202,15 +203,16 @@ class HmThermostatProps extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearBoostMode() => $_clearField(1);
 
-  /// Minutes remaining, 0-2048. Integer on the CCU — it counts whole minutes.
+  /// Seconds remaining, 0-2048 — the CCU counts boost in whole seconds, not minutes.
+  /// Default boost is 5 min (300), maximum 30 min (1800).
   @$pb.TagNumber(2)
-  $core.int get boostTimePeriod => $_getIZ(1);
+  $core.int get boostTimeRemaining => $_getIZ(1);
   @$pb.TagNumber(2)
-  set boostTimePeriod($core.int value) => $_setUnsignedInt32(1, value);
+  set boostTimeRemaining($core.int value) => $_setUnsignedInt32(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasBoostTimePeriod() => $_has(1);
+  $core.bool hasBoostTimeRemaining() => $_has(1);
   @$pb.TagNumber(2)
-  void clearBoostTimePeriod() => $_clearField(2);
+  void clearBoostTimeRemaining() => $_clearField(2);
 
   /// Write-only on the CCU: it accepts a ControlMode and never reports one back. Carried
   /// here for a future write path, not as a reading — a connector that emits it as a
