@@ -2,10 +2,10 @@ import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
-from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.device.v1 import device_event_pb2 as _device_event_pb2
 from kusinta.iot.device.v1 import property_update_pb2 as _property_update_pb2
+from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as _command_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor

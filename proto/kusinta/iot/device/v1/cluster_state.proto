@@ -22,15 +22,15 @@ message NullValue {}
 // know an attribute's declared width to carry its value.
 message AttributeValue {
   oneof value {
-    bool                 bool_value   = 1;
-    sint64               int_value    = 2;
-    uint64               uint_value   = 3;
-    double               double_value = 4;
-    string               string_value = 5;
-    bytes                bytes_value  = 6;
-    AttributeValueList   list_value   = 7;
+    bool bool_value = 1;
+    sint64 int_value = 2;
+    uint64 uint_value = 3;
+    double double_value = 4;
+    string string_value = 5;
+    bytes bytes_value = 6;
+    AttributeValueList list_value = 7;
     AttributeValueStruct struct_value = 8;
-    NullValue            null_value   = 9;
+    NullValue null_value = 9;
   }
 }
 
@@ -46,8 +46,8 @@ message AttributeValueStruct {
 }
 
 message AttributeState {
-  uint32         attribute_id = 1;
-  AttributeValue value        = 2;
+  uint32 attribute_id = 1;
+  AttributeValue value = 2;
 }
 
 // One cluster hosted by an endpoint: what it is, what it supports, and any attribute value

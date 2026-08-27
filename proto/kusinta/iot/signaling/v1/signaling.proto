@@ -1,10 +1,16 @@
 syntax = "proto3";
 package kusinta.iot.signaling.v1;
+
 import "kusinta/iot/identity/v1/identity.proto";
+
 option optimize_for = SPEED;
 
-message SdpOffer     { string sdp = 1; }
-message SdpAnswer    { string sdp = 1; }
+message SdpOffer {
+  string sdp = 1;
+}
+message SdpAnswer {
+  string sdp = 1;
+}
 // candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
 // bind it to a media section: WebRTC's addIceCandidate requires a non-null
 // sdpMid (some native WebRTC bindings crash on a null). Under BUNDLE both are
@@ -24,8 +30,13 @@ message HeartBeat {}
 
 // JWT for user auth is sent in the Authorization: Bearer metadata header, not here.
 // First message carries only the target gateway for stream-specific routing.
-message UserHandshake    { kusinta.iot.identity.v1.GatewayId target_gateway_id = 1; }
-message UserHandshakeAck { bool accepted = 1; string reason = 2; }
+message UserHandshake {
+  kusinta.iot.identity.v1.GatewayId target_gateway_id = 1;
+}
+message UserHandshakeAck {
+  bool accepted = 1;
+  string reason = 2;
+}
 
 // Identifies one of a user's concurrent signaling sessions. Addressing by user
 // alone would allow a user only one live session, because two streams opened
@@ -58,11 +69,11 @@ message GatewayConnectRequest {
   kusinta.iot.identity.v1.UserId target_user_id = 1;
   // The session of target_user_id this message answers. See the contract above.
   // Ignored on a heartbeat, which carries no routing target at all.
-  string                         session_id     = 5;
+  string session_id = 5;
   oneof payload {
-    SdpAnswer    answer        = 2;
+    SdpAnswer answer = 2;
     IceCandidate ice_candidate = 3;
-    HeartBeat    heartbeat     = 4;
+    HeartBeat heartbeat = 4;
   }
 }
 
@@ -72,9 +83,9 @@ message GatewayConnectResponse {
   // The session of from_user_id this message originates from — the value the
   // gateway must echo on the GatewayConnectRequest that answers it. See the
   // contract above.
-  string                         session_id   = 4;
+  string session_id = 4;
   oneof payload {
-    SdpOffer     offer         = 2;
+    SdpOffer offer = 2;
     IceCandidate ice_candidate = 3;
   }
 }
@@ -87,9 +98,9 @@ message UserConnectRequest {
   // from the first frame.
   string session_id = 4;
   oneof payload {
-    UserHandshake handshake     = 1;
-    SdpOffer      offer         = 2;
-    IceCandidate  ice_candidate = 3;
+    UserHandshake handshake = 1;
+    SdpOffer offer = 2;
+    IceCandidate ice_candidate = 3;
   }
 }
 
@@ -101,7 +112,7 @@ message UserConnectResponse {
   string session_id = 4;
   oneof payload {
     UserHandshakeAck handshake_ack = 1;
-    SdpAnswer        answer        = 2;
-    IceCandidate     ice_candidate = 3;
+    SdpAnswer answer = 2;
+    IceCandidate ice_candidate = 3;
   }
 }

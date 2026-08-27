@@ -4,31 +4,31 @@ package kusinta.iot.connector.v1;
 
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/common/v1/types.proto";
-import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/device/v1/device_event.proto";
 import "kusinta/iot/device/v1/property_update.proto";
+import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 
 option optimize_for = SPEED;
 
 message ConnectorInfo {
-  kusinta.iot.identity.v1.ConnectorId connector_id            = 1;
-  string                              display_name            = 2;
-  string                              version                 = 3;
-  kusinta.iot.common.v1.ConnectorTransport transport          = 4;
-  string                              endpoint                = 5; // unix socket path or host:port
-  repeated uint32                     supported_device_type_ids = 6;
+  kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+  string display_name = 2;
+  string version = 3;
+  kusinta.iot.common.v1.ConnectorTransport transport = 4;
+  string endpoint = 5; // unix socket path or host:port
+  repeated uint32 supported_device_type_ids = 6;
 }
 
 message ConnectorHandshake {
-  ConnectorInfo                        info          = 1;
+  ConnectorInfo info = 1;
   repeated kusinta.iot.device.v1.Device known_devices = 2;
 }
 
 message HandshakeAck {
-  bool                              accepted   = 1;
-  string                            reason     = 2;
+  bool accepted = 1;
+  string reason = 2;
   kusinta.iot.identity.v1.GatewayId gateway_id = 3;
 }
 
@@ -47,7 +47,7 @@ message DeviceAnnouncement {
 
 message DeviceRemoval {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
-  string                           reason    = 2;
+  string reason = 2;
 }
 
 message HeartBeat {}
@@ -69,9 +69,9 @@ message UnsubscribeDevice {
 // schedule and one may be a third party's, so the set of things that can go wrong between
 // a gateway and a connector is not closed the way the app leg's is.
 message GatewayError {
-  string                   code    = 1;
-  string                   message = 2;
-  string                   request_id = 3; // non-empty if the error refers to a specific request
+  string code = 1;
+  string message = 2;
+  string request_id = 3; // non-empty if the error refers to a specific request
 }
 
 // A connector's answer to an executed command OR attribute write. One message for both:
@@ -80,8 +80,8 @@ message GatewayError {
 message ConnectorCommandResult {
   // Was command_id. Renamed with webrtc.v1.DeviceCommand.request_id, which it mirrors, and
   // because it now correlates writes as well as commands.
-  string                    request_id    = 1;
-  bool                      success       = 2;
+  string request_id = 1;
+  bool success = 2;
 
   // Field 3 was a GatewayError, whose code is a free-form string. The number is burned
   // rather than retyped, because the two messages overlap exactly where it would hurt:
@@ -94,7 +94,7 @@ message ConnectorCommandResult {
   // at a new number, as webrtc.v1.CommandError.code did.
   reserved 3;
 
-  google.protobuf.Timestamp completed_at  = 4;
+  google.protobuf.Timestamp completed_at = 4;
 
   // Why it failed, in the same closed vocabulary the app is eventually given. The gateway
   // forwards this into webrtc.v1.CommandResult.error unchanged; it does not translate.
@@ -134,31 +134,31 @@ message ConnectorCommandResult {
 }
 
 message SessionRequest {
-  string                    message_id = 1;
-  google.protobuf.Timestamp sent_at    = 2;
+  string message_id = 1;
+  google.protobuf.Timestamp sent_at = 2;
 
   oneof payload {
-    ConnectorHandshake                        handshake       = 3;
+    ConnectorHandshake handshake = 3;
     kusinta.iot.device.v1.PropertyUpdateBatch property_update = 4;
-    DeviceAnnouncement                        device_announced = 5;
-    DeviceRemoval                             device_removed  = 6;
-    ConnectorCommandResult                    command_result  = 7;
-    HeartBeat                                 heartbeat       = 8;
-    kusinta.iot.device.v1.DeviceEventBatch     device_events   = 9;
+    DeviceAnnouncement device_announced = 5;
+    DeviceRemoval device_removed = 6;
+    ConnectorCommandResult command_result = 7;
+    HeartBeat heartbeat = 8;
+    kusinta.iot.device.v1.DeviceEventBatch device_events = 9;
   }
 }
 
 message SessionResponse {
-  string                    message_id = 1;
-  google.protobuf.Timestamp sent_at    = 2;
+  string message_id = 1;
+  google.protobuf.Timestamp sent_at = 2;
 
   reserved 4;
 
   oneof payload {
-    HandshakeAck                        handshake_ack   = 3;
-    SubscribeDevice                     subscribe       = 5;
-    UnsubscribeDevice                   unsubscribe     = 6;
-    GatewayError                        error           = 7;
+    HandshakeAck handshake_ack = 3;
+    SubscribeDevice subscribe = 5;
+    UnsubscribeDevice unsubscribe = 6;
+    GatewayError error = 7;
     kusinta.iot.webrtc.v1.DeviceCommand execute_command = 8;
 
     // The connector-leg half of PERMISSION_ACTION_WRITE. A sibling case rather than another

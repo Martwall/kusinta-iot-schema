@@ -27,10 +27,10 @@ option optimize_for = SPEED;
 // stronger request than it looks: there is no parent whose reach could authorize
 // it, so it is reserved to the gateway's administrator.
 message CreateSpace {
-  kusinta.iot.common.v1.SpaceType space_type      = 1;
-  string                          name            = 2;
-  string                          description     = 3;
-  int32                           floor           = 4; // meaningful for FLOOR type
+  kusinta.iot.common.v1.SpaceType space_type = 1;
+  string name = 2;
+  string description = 3;
+  int32 floor = 4; // meaningful for FLOOR type
   kusinta.iot.identity.v1.SpaceId parent_space_id = 5; // unset = top level
 }
 
@@ -38,11 +38,11 @@ message CreateSpace {
 // absent means leave it alone, present means set it to this — including to the
 // empty string, which is how a description is cleared.
 message UpdateSpace {
-  kusinta.iot.identity.v1.SpaceId          space_id    = 1;
-  optional kusinta.iot.common.v1.SpaceType space_type  = 2;
-  optional string                          name        = 3;
-  optional string                          description = 4;
-  optional int32                           floor       = 5;
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  optional kusinta.iot.common.v1.SpaceType space_type = 2;
+  optional string name = 3;
+  optional string description = 4;
+  optional int32 floor = 5;
 
   // Reparenting needs three states, not two: leave the parent alone, move to a
   // new one, or become top level. A bare optional parent_space_id can only
@@ -50,7 +50,7 @@ message UpdateSpace {
   // spelled as an empty id.
   oneof parent_change {
     kusinta.iot.identity.v1.SpaceId parent_space_id = 6;
-    bool                            detach          = 7;
+    bool detach = 7;
   }
 }
 
@@ -59,7 +59,7 @@ message UpdateSpace {
 // asked for rather than something a stale client did by accident.
 message DeleteSpace {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
-  bool                            cascade  = 2;
+  bool cascade = 2;
 }
 
 // Adds a user to a space, granting them reach of it and everything beneath it.
@@ -69,37 +69,37 @@ message AssignUserToSpace {
   reserved 3; // held for a per-space Role, should roles stop being gateway-wide
 
   kusinta.iot.identity.v1.SpaceId space_id = 1;
-  kusinta.iot.identity.v1.UserId  user_id  = 2;
+  kusinta.iot.identity.v1.UserId user_id = 2;
 }
 
 // Removes a user's membership of a space. Losing reach also drops whatever the
 // user was streaming from it, announced by LivePermissionUpdate.
 message RemoveUserFromSpace {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
-  kusinta.iot.identity.v1.UserId  user_id  = 2;
+  kusinta.iot.identity.v1.UserId user_id = 2;
 }
 
 // Files a device into a space. A device may sit in several spaces at once; this
 // is additive, and filing a device where it already sits is a no-op.
 message PlaceDeviceInSpace {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
-  kusinta.iot.identity.v1.SpaceId  space_id  = 2;
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
 }
 
 // Takes a device out of one space, leaving any others intact. A device in no
 // space and with no owner is unfiled, and visible only to the administrator.
 message RemoveDeviceFromSpace {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
-  kusinta.iot.identity.v1.SpaceId  space_id  = 2;
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
 }
 
 // Takes ownership of a device. Ownership is reach in its own right: an owner may
 // see and control their device whatever their gateway-wide role permits, and may
 // file it into spaces they belong to.
 message ClaimDevice {
-  kusinta.iot.identity.v1.DeviceId          device_id        = 1;
-  kusinta.iot.common.v1.DeviceOwnershipType ownership        = 2;
-  kusinta.iot.identity.v1.SpaceId           initial_space_id = 3;
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  kusinta.iot.common.v1.DeviceOwnershipType ownership = 2;
+  kusinta.iot.identity.v1.SpaceId initial_space_id = 3;
 
   // Evidence the claimant is standing at the device: the serial printed on it,
   // matched against DeviceDescriptor.serial_number. Required precisely when the
@@ -109,7 +109,7 @@ message ClaimDevice {
   // someone guessing ids. The administrator, who can already reach it, needs no
   // proof. A device whose connector reports no serial can only be claimed by the
   // administrator.
-  string                                    possession_proof = 4;
+  string possession_proof = 4;
 }
 
 // Gives up ownership. The device keeps whatever space filing it has; if it has
@@ -151,15 +151,15 @@ message ManagementAck {}
 // must authorize, and one refusal path that must not leak whether a target exists.
 message ManagementRequest {
   oneof request {
-    CreateSpace           create_space             = 1;
-    UpdateSpace           update_space             = 2;
-    DeleteSpace           delete_space             = 3;
-    AssignUserToSpace     assign_user_to_space     = 4;
-    RemoveUserFromSpace   remove_user_from_space   = 5;
-    PlaceDeviceInSpace    place_device_in_space    = 6;
+    CreateSpace create_space = 1;
+    UpdateSpace update_space = 2;
+    DeleteSpace delete_space = 3;
+    AssignUserToSpace assign_user_to_space = 4;
+    RemoveUserFromSpace remove_user_from_space = 5;
+    PlaceDeviceInSpace place_device_in_space = 6;
     RemoveDeviceFromSpace remove_device_from_space = 7;
-    ClaimDevice           claim_device             = 8;
-    ReleaseDevice         release_device           = 9;
-    ListSpaces            list_spaces              = 10;
+    ClaimDevice claim_device = 8;
+    ReleaseDevice release_device = 9;
+    ListSpaces list_spaces = 10;
   }
 }

@@ -2,20 +2,20 @@ syntax = "proto3";
 
 package kusinta.iot.webrtc.v1;
 
-import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
 // Pushed to the app whenever the user's effective permissions change.
 // change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED", "CONSTRAINT_UPDATED"
 message LivePermissionUpdate {
-  kusinta.iot.access.v1.EffectivePermissions new_permissions  = 1;
+  kusinta.iot.access.v1.EffectivePermissions new_permissions = 1;
   // Newly entitled devices. Entitlement is not interest: the app is not subscribed
   // to these until it asks via AppMessage.subscribe.
-  repeated kusinta.iot.identity.v1.DeviceId  added_devices    = 2;
+  repeated kusinta.iot.identity.v1.DeviceId added_devices = 2;
   // Devices the user may no longer see. The gateway has already dropped these from
   // the app's interest set — no property events follow, and no unsubscribe is needed.
-  repeated kusinta.iot.identity.v1.DeviceId  removed_devices  = 3;
-  string                                     change_reason    = 4;
+  repeated kusinta.iot.identity.v1.DeviceId removed_devices = 3;
+  string change_reason = 4;
 }

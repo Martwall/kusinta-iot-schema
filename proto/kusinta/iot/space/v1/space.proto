@@ -8,15 +8,15 @@ import "kusinta/iot/identity/v1/identity.proto";
 option optimize_for = SPEED;
 
 message Space {
-  kusinta.iot.identity.v1.SpaceId   space_id         = 1;
-  kusinta.iot.common.v1.SpaceType   space_type       = 2;
-  string                            name             = 3;
-  string                            description      = 4;
-  int32                             floor            = 5; // meaningful for FLOOR type
-  kusinta.iot.identity.v1.SpaceId   parent_space_id  = 6; // null for top-level Building
-  repeated kusinta.iot.identity.v1.SpaceId  sub_space_ids    = 7;
-  repeated kusinta.iot.identity.v1.DeviceId device_ids       = 8;
-  kusinta.iot.identity.v1.UserId    resident_user_id = 9; // only for APARTMENT
-  kusinta.iot.identity.v1.TenantId  tenant_id        = 10;
-  kusinta.iot.identity.v1.GatewayId gateway_id       = 11;
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.common.v1.SpaceType space_type = 2;
+  string name = 3;
+  string description = 4;
+  int32 floor = 5; // meaningful for FLOOR type
+  kusinta.iot.identity.v1.SpaceId parent_space_id = 6; // null for top-level Building
+  repeated kusinta.iot.identity.v1.SpaceId sub_space_ids = 7;
+  repeated kusinta.iot.identity.v1.DeviceId device_ids = 8;
+  kusinta.iot.identity.v1.UserId resident_user_id = 9; // only for APARTMENT
+  kusinta.iot.identity.v1.TenantId tenant_id = 10;
+  kusinta.iot.identity.v1.GatewayId gateway_id = 11;
 }

@@ -1,5 +1,5 @@
-from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
+from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message

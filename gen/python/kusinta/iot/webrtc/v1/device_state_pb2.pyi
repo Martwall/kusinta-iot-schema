@@ -1,9 +1,9 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
 from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.device.v1 import property_update_pb2 as _property_update_pb2
-from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor

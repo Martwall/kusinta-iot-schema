@@ -3,18 +3,18 @@ syntax = "proto3";
 package kusinta.iot.webrtc.v1;
 
 import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/device/v1/property_update.proto";
-import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
 // Full device state sent to the app on initial WebRTC connection.
 message DeviceStateSnapshot {
-  repeated kusinta.iot.device.v1.Device devices        = 1;
+  repeated kusinta.iot.device.v1.Device devices = 1;
   kusinta.iot.access.v1.EffectivePermissions permissions = 2;
-  google.protobuf.Timestamp              snapshotted_at = 3;
+  google.protobuf.Timestamp snapshotted_at = 3;
 }
 
 // One attribute reading streamed to the app as it happens — Matter's Report Data Action,
@@ -25,8 +25,8 @@ message DeviceStateSnapshot {
 // the name meaning opposite things is a trap, and this one was never the event: latest
 // wins, order does not matter, and a missed one is corrected by the next.
 message PropertyReport {
-  kusinta.iot.device.v1.PropertyUpdate update               = 1;
-  google.protobuf.Timestamp            gateway_processed_at = 2;
+  kusinta.iot.device.v1.PropertyUpdate update = 1;
+  google.protobuf.Timestamp gateway_processed_at = 2;
 }
 
 // A device appeared while the app was connected — the app leg's counterpart to
@@ -56,5 +56,5 @@ message DeviceAdded {
 // device.v1.Device.last_seen for that.
 message DeviceRemoved {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
-  string                           reason    = 2; // passed through from the connector, for logs
+  string reason = 2; // passed through from the connector, for logs
 }

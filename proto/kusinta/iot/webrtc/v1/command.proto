@@ -23,8 +23,8 @@ message ThermostatSetpointParams {
   option (kusinta.iot.device.v1.matter_command_cluster) = 0x0201;
   option (kusinta.iot.device.v1.matter_command_id) = 0x00;
 
-  optional SetpointAdjustMode mode   = 1; // absent = the producer stated no mode
-  sint32                      amount = 2; // centidegrees delta
+  optional SetpointAdjustMode mode = 1; // absent = the producer stated no mode
+  sint32 amount = 2; // centidegrees delta
 }
 
 // Maps to Matter MoveToLevel command (Level Control cluster 0x0008).
@@ -32,7 +32,7 @@ message LevelControlParams {
   option (kusinta.iot.device.v1.matter_command_cluster) = 0x0008;
   option (kusinta.iot.device.v1.matter_command_id) = 0x00;
 
-  uint32 level           = 1; // 0–254
+  uint32 level = 1; // 0–254
   uint32 transition_time = 2; // 100ms units
 }
 
@@ -98,8 +98,8 @@ message DeviceCommand {
   // Was command_id. Renamed because Matter has its own numeric command ID, added below,
   // and two fields called "command id" meaning entirely different things in one message is
   // a trap. Same name as AttributeWriteRequest.request_id, which correlates the same way.
-  string                           request_id     = 1; // UUID, matched in the result
-  kusinta.iot.identity.v1.DeviceId device_id      = 2;
+  string request_id = 1; // UUID, matched in the result
+  kusinta.iot.identity.v1.DeviceId device_id = 2;
   // Was cluster_id_hex, a 4-char hex string; see device.v1.PropertyUpdate.cluster_id.
   reserved 3;
   reserved "cluster_id_hex";
@@ -110,9 +110,9 @@ message DeviceCommand {
   // matter_command_id, so it can say "Toggle" beside an ID meaning On. A consumer MUST NOT
   // route or authorize on it, and where the two disagree the ID wins. It is here so a
   // refused or unresolvable command is legible to whoever reads the log.
-  string                           command_name   = 4;
+  string command_name = 4;
 
-  uint32                           cluster_id     = 12; // e.g. 0x0201 for Thermostat
+  uint32 cluster_id = 12; // e.g. 0x0201 for Thermostat
 
   // The Matter command ID within that cluster, e.g. 0x02 for On/Off's Toggle.
   //
@@ -127,7 +127,7 @@ message DeviceCommand {
   // COMMAND_ERROR_CODE_INVALID_COMMAND.
   //
   // raw_tlv has no annotation to check against, so there this is simply required.
-  optional uint32                  matter_command_id = 13;
+  optional uint32 matter_command_id = 13;
 
   // Which endpoint of the device to command. Required by rule — proto3 has no `required`,
   // and `optional` is what makes "not stated" representable so a consumer can reject it
@@ -151,12 +151,12 @@ message DeviceCommand {
   reserved "thermostat_setpoint_write";
 
   oneof parameters {
-    ThermostatSetpointParams  thermostat_setpoint  = 5;
-    LevelControlParams        level_control        = 6;
-    OnOffParams               on_off               = 7;
-    WindowCoveringLiftParams  window_covering_lift = 8;
-    DoorLockParams            door_lock            = 9;
-    bytes                     raw_tlv              = 99; // escape hatch for unsupported commands
+    ThermostatSetpointParams thermostat_setpoint = 5;
+    LevelControlParams level_control = 6;
+    OnOffParams on_off = 7;
+    WindowCoveringLiftParams window_covering_lift = 8;
+    DoorLockParams door_lock = 9;
+    bytes raw_tlv = 99; // escape hatch for unsupported commands
   }
 }
 
@@ -198,8 +198,8 @@ message CommandError {
   // the field still means the same thing, so it keeps its name at a new number.
   reserved 1;
 
-  string           message = 2; // human-readable, for logs — never rendered to a user
-  CommandErrorCode code    = 3;
+  string message = 2; // human-readable, for logs — never rendered to a user
+  CommandErrorCode code = 3;
 }
 
 // CommandResult travels gateway → app (GatewayMessage) and
@@ -210,9 +210,9 @@ message CommandError {
 // confirmation is the normal path, not an edge case: waiting for the device would fail
 // every write to a sleeping one.
 message CommandResult {
-  string                    request_id   = 1; // matches DeviceCommand.request_id
-  bool                      success      = 2;
-  CommandError              error        = 3;
+  string request_id = 1; // matches DeviceCommand.request_id
+  bool success = 2;
+  CommandError error = 3;
   google.protobuf.Timestamp completed_at = 4;
 
   // When the producer's own optimistic window closes: by this time the value has either
@@ -251,8 +251,8 @@ message CommandResult {
 //
 // Answered by CommandResult, correlated on request_id.
 message AttributeWriteRequest {
-  string                           request_id = 1; // UUID, matched in CommandResult
-  kusinta.iot.identity.v1.DeviceId device_id  = 2;
+  string request_id = 1; // UUID, matched in CommandResult
+  kusinta.iot.identity.v1.DeviceId device_id = 2;
 
   // Which attribute to write. endpoint_id is required here — an unaddressed write has no
   // correct destination, exactly as for a command.

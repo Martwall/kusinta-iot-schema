@@ -13,9 +13,9 @@ option optimize_for = SPEED;
 // with the least.
 enum EventPriority {
   EVENT_PRIORITY_UNSPECIFIED = 0;
-  EVENT_PRIORITY_DEBUG       = 1;
-  EVENT_PRIORITY_INFO        = 2;
-  EVENT_PRIORITY_CRITICAL    = 3;
+  EVENT_PRIORITY_DEBUG = 1;
+  EVENT_PRIORITY_INFO = 2;
+  EVENT_PRIORITY_CRITICAL = 3;
 }
 
 // Something that HAPPENED on a device, as opposed to what a device currently IS.
@@ -40,7 +40,7 @@ message DeviceEvent {
 
   // Which endpoint emitted it, and which cluster defines it. Required, as for an update.
   optional uint32 endpoint_id = 2;
-  uint32          cluster_id  = 3;
+  uint32 cluster_id = 3;
 
   // The Matter event ID within that cluster.
   uint32 event_id = 4;

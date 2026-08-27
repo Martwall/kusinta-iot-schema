@@ -22,11 +22,11 @@ message AppTokenClaims {
   // Registered claims (RFC 7519).
   // Issuer: the api-server's issuer identifier, agreed out of band. A fixed
   // string both sides compare exactly — not derived from anything here.
-  string                    iss = 1;
-  string                    aud = 2;  // audience: the target GatewayId value
-  string                    sub = 3;  // subject: the UserId value
-  google.protobuf.Timestamp iat = 4;  // issued-at  (JWT NumericDate on the wire)
-  google.protobuf.Timestamp exp = 5;  // expiry     (JWT NumericDate on the wire)
+  string iss = 1;
+  string aud = 2; // audience: the target GatewayId value
+  string sub = 3; // subject: the UserId value
+  google.protobuf.Timestamp iat = 4; // issued-at  (JWT NumericDate on the wire)
+  google.protobuf.Timestamp exp = 5; // expiry     (JWT NumericDate on the wire)
 
   // Custom claims.
   // A user may hold several roles at once (e.g. resident + gateway admin), so

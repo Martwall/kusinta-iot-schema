@@ -22,11 +22,11 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 from kusinta.iot.access.v1 import acl_pb2 as kusinta_dot_iot_dot_access_dot_v1_dot_acl__pb2
+from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+kusinta/iot/webrtc/v1/permission_push.proto\x12\x15kusinta.iot.webrtc.v1\x1a&kusinta/iot/identity/v1/identity.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\"\xa5\x02\n\x14LivePermissionUpdate\x12T\n\x0fnew_permissions\x18\x01 \x01(\x0b\x32+.kusinta.iot.access.v1.EffectivePermissionsR\x0enewPermissions\x12\x46\n\radded_devices\x18\x02 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x0c\x61\x64\x64\x65\x64\x44\x65vices\x12J\n\x0fremoved_devices\x18\x03 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x0eremovedDevices\x12#\n\rchange_reason\x18\x04 \x01(\tR\x0c\x63hangeReasonB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+kusinta/iot/webrtc/v1/permission_push.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xa5\x02\n\x14LivePermissionUpdate\x12T\n\x0fnew_permissions\x18\x01 \x01(\x0b\x32+.kusinta.iot.access.v1.EffectivePermissionsR\x0enewPermissions\x12\x46\n\radded_devices\x18\x02 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x0c\x61\x64\x64\x65\x64\x44\x65vices\x12J\n\x0fremoved_devices\x18\x03 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x0eremovedDevices\x12#\n\rchange_reason\x18\x04 \x01(\tR\x0c\x63hangeReasonB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)

@@ -59,29 +59,29 @@ option optimize_for = SPEED;
 // two annotation namespaces: (matter_attribute) resolves one, (vendor_attribute) the
 // other. See property_update.proto for the two branches.
 message Endpoint {
-  uint32 endpoint_id           = 1;
+  uint32 endpoint_id = 1;
   uint32 matter_device_type_id = 2;
 
   oneof matter_properties {
-    ThermostatProperties            thermostat         = 3;
-    TemperatureSensorProperties     temperature_sensor = 4;
-    HumiditySensorProperties        humidity_sensor    = 5;
-    OccupancySensorProperties       occupancy_sensor   = 6;
-    ContactSensorProperties         contact_sensor     = 7;
-    WindowCoveringProperties        window_covering    = 8;
-    DoorLockProperties              door_lock          = 9;
-    OnOffLightProperties            on_off_light       = 10;
-    DimmableLightProperties         dimmable_light     = 11;
-    ColorTemperatureLightProperties color_temp_light   = 12;
-    EnergySensorProperties          energy_sensor      = 13;
-    PressureSensorProperties        pressure_sensor    = 14;
-    PowerSourceProperties           power_source       = 15;
+    ThermostatProperties thermostat = 3;
+    TemperatureSensorProperties temperature_sensor = 4;
+    HumiditySensorProperties humidity_sensor = 5;
+    OccupancySensorProperties occupancy_sensor = 6;
+    ContactSensorProperties contact_sensor = 7;
+    WindowCoveringProperties window_covering = 8;
+    DoorLockProperties door_lock = 9;
+    OnOffLightProperties on_off_light = 10;
+    DimmableLightProperties dimmable_light = 11;
+    ColorTemperatureLightProperties color_temp_light = 12;
+    EnergySensorProperties energy_sensor = 13;
+    PressureSensorProperties pressure_sensor = 14;
+    PowerSourceProperties power_source = 15;
   }
 
   // Vendor readings for this endpoint, beside its Matter properties rather than instead
   // of them. Vendor IDENTITY — who the physical device is — is on DeviceDescriptor.
   oneof vendor_properties {
-    kusinta.iot.vendor.homematic.v1.HmThermostatProps  hm_thermostat  = 50;
+    kusinta.iot.vendor.homematic.v1.HmThermostatProps hm_thermostat = 50;
     kusinta.iot.vendor.homematic.v1.HmMaintenanceProps hm_maintenance = 51;
   }
 
@@ -132,10 +132,7 @@ message Device {
   // reused: an endpoint-shaped message decoded under the old numbers would be a
   // plausible, silently wrong properties message.
   reserved 2 to 13, 50;
-  reserved "thermostat", "temperature_sensor", "humidity_sensor", "occupancy_sensor",
-           "contact_sensor", "window_covering", "door_lock", "on_off_light",
-           "dimmable_light", "color_temp_light", "energy_sensor", "pressure_sensor",
-           "homematic";
+  reserved "thermostat", "temperature_sensor", "humidity_sensor", "occupancy_sensor", "contact_sensor", "window_covering", "door_lock", "on_off_light", "dimmable_light", "color_temp_light", "energy_sensor", "pressure_sensor", "homematic";
 
   // 15-19 are free; 20+ is the timestamp band.
   repeated Endpoint endpoints = 14;
@@ -151,7 +148,7 @@ message Device {
   //
   // Advisory, for showing staleness in a UI. It is not a removal signal — that is
   // webrtc.v1.DeviceRemoved, sent only when a connector reports the device gone.
-  google.protobuf.Timestamp last_seen    = 20;
+  google.protobuf.Timestamp last_seen = 20;
   // When any field of this Device last changed value.
   google.protobuf.Timestamp last_updated = 21;
 }

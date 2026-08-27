@@ -116,12 +116,12 @@ message PropertyUpdate {
   optional string attribute_name = 2;
 
   oneof value {
-    sint32 int_value    = 3;
-    uint32 uint_value   = 4;
-    bool   bool_value   = 5;
-    float  float_value  = 6;
+    sint32 int_value = 3;
+    uint32 uint_value = 4;
+    bool bool_value = 5;
+    float float_value = 6;
     string string_value = 7;
-    bytes  bytes_value  = 8;
+    bytes bytes_value = 8;
   }
 
   google.protobuf.Timestamp timestamp = 9;

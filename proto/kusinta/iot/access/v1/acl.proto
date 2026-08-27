@@ -3,8 +3,8 @@ syntax = "proto3";
 package kusinta.iot.access.v1;
 
 import "google/protobuf/timestamp.proto";
-import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/access/v1/roles.proto";
+import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
@@ -36,7 +36,7 @@ message AttributeRef {
   string attribute_name = 1;
 
   // Matter branch. Both required there, both unset on the vendor branch.
-  uint32 cluster_id   = 2;
+  uint32 cluster_id = 2;
   uint32 attribute_id = 4;
 
   optional uint32 endpoint_id = 3;
@@ -60,7 +60,7 @@ message AttributeRef {
 // field named attribute_id would be the same class of ambiguity this schema removed when
 // it made addressing numeric.
 message CommandRef {
-  uint32 cluster_id        = 1;
+  uint32 cluster_id = 1;
   uint32 matter_command_id = 2;
 
   // Which endpoint. Required on a grant, for the same reason as AttributeRef.endpoint_id:
@@ -77,7 +77,7 @@ message CommandRef {
 // lock's state is, and who changed it.
 message EventRef {
   uint32 cluster_id = 1;
-  uint32 event_id   = 2;
+  uint32 event_id = 2;
 
   optional uint32 endpoint_id = 3;
 }
@@ -99,8 +99,8 @@ message PropertyConstraint {
   AttributeRef attribute = 8;
 
   oneof constraint {
-    sint32 int_max  = 2;
-    sint32 int_min  = 3;
+    sint32 int_max = 2;
+    sint32 int_min = 3;
     uint32 uint_max = 4;
     uint32 uint_min = 5;
   }
@@ -108,7 +108,7 @@ message PropertyConstraint {
 
 message DeviceAcl {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
-  kusinta.iot.identity.v1.UserId   user_id   = 2;
+  kusinta.iot.identity.v1.UserId user_id = 2;
   // The user's role AS RESOLVED FOR THIS DEVICE. A gateway-wide role is a ceiling on the
   // kinds of action a user may perform; reach — which devices — is decided separately by
   // filing. This field is what the two produced together for this one device, so it may
@@ -116,7 +116,7 @@ message DeviceAcl {
   //
   // Descriptive. allowed_actions and the ref lists below are what a consumer enforces
   // against; this says which relationship produced them.
-  Role                             role      = 3;
+  Role role = 3;
   // What this user may do to this device. EMPTY GRANTS NOTHING — an ACL with no actions
   // permits no operation at all.
   //
@@ -127,7 +127,7 @@ message DeviceAcl {
   //
   // PERMISSION_ACTION_UNSPECIFIED in this list is invalid and MUST be rejected; it is not
   // a wildcard. See roles.proto for what each action authorizes.
-  repeated PermissionAction        allowed_actions     = 4;
+  repeated PermissionAction allowed_actions = 4;
 
   // Was a repeated bare attribute name, with no cluster and no endpoint. Burned rather
   // than reused: the old form is ambiguous on any multi-endpoint device, and silently
@@ -142,8 +142,8 @@ message DeviceAcl {
   //
   // A ref present with no endpoint_id is INVALID and MUST be rejected, not read as a grant
   // over every endpoint: omission must never be what widens access.
-  repeated AttributeRef            allowed_attribute_refs = 7;
-  repeated PropertyConstraint      property_constraints = 6;
+  repeated AttributeRef allowed_attribute_refs = 7;
+  repeated PropertyConstraint property_constraints = 6;
 
   // Narrows PERMISSION_ACTION_INVOKE to particular commands. Empty = every command the
   // device accepts, matching allowed_attribute_refs — it is a filter, and an empty filter
@@ -155,7 +155,7 @@ message DeviceAcl {
   // exposing both.
   //
   // A ref present with no endpoint_id is INVALID and MUST be rejected.
-  repeated CommandRef              allowed_command_refs = 9;
+  repeated CommandRef allowed_command_refs = 9;
 
   // Which events this user may receive. Empty = NONE.
   //
@@ -168,7 +168,7 @@ message DeviceAcl {
   // permitted, this list says which events travel on it.
   //
   // A ref present with no endpoint_id is INVALID and MUST be rejected.
-  repeated EventRef                allowed_event_refs = 10;
+  repeated EventRef allowed_event_refs = 10;
 }
 
 // Every DeviceAcl in force for one user on one gateway, at valid_at.
@@ -189,8 +189,8 @@ message DeviceAcl {
 // Sent whole rather than as a delta, in webrtc.v1.DeviceStateSnapshot at connect and in
 // webrtc.v1.LivePermissionUpdate when it changes.
 message EffectivePermissions {
-  kusinta.iot.identity.v1.UserId    user_id    = 1;
+  kusinta.iot.identity.v1.UserId user_id = 1;
   kusinta.iot.identity.v1.GatewayId gateway_id = 2;
-  repeated DeviceAcl                device_acls = 3;
-  google.protobuf.Timestamp         valid_at   = 4;
+  repeated DeviceAcl device_acls = 3;
+  google.protobuf.Timestamp valid_at = 4;
 }
