@@ -26,6 +26,7 @@ gen/
   python/          # kusinta-iot-schema Python package (generated, committed)
   dart/            # kusinta_iot_schema Dart package (generated, committed)
 
+check.sh           # runs every check Jenkins runs (lint, generate, all three legs)
 set-version.sh     # bumps version in all three package manifests at once
 buf.gen.yaml       # buf generate config (remote plugins for JS, Python, Dart)
 buf.yaml           # buf lint + breaking-change config
@@ -271,15 +272,36 @@ Requires: [`buf` CLI](https://buf.build/docs/installation) (remote plugins — n
 buf generate
 ```
 
-Then run the tests:
+## Checks
+
+`./check.sh` runs everything Jenkins runs, in the same order, from the repo root — and
+regenerates first, because the suites read the generated trees and not the protos. Editing
+a `.proto` and running the tests without regenerating tests the old schema, and passes.
 
 ```bash
-# JavaScript (primary test suite)
-cd gen/js && npm test
-
-# Python
-cd gen/python && python3 -m pytest tests/ -v
+./check.sh            # everything
+./check.sh proto      # buf lint + format + breaking + version match
+./check.sh js         # vitest
+./check.sh python     # pytest
+./check.sh dart       # dart analyze
 ```
+
+A failing suite does not stop the run; failures are listed at the end. It uses `buf` from
+PATH when present and `npx @bufbuild/buf` otherwise, so it needs no local install.
+
+The individual commands, if you want one directly:
+
+```bash
+cd gen/js     && npm test
+cd gen/python && python3 -m venv .venv && .venv/bin/pip install -e ".[dev]" \
+              && .venv/bin/python -m pytest tests -q
+cd gen/dart   && dart pub get && dart analyze --no-fatal-warnings
+```
+
+The Python suite imports the generated `kusinta` package, so the editable install is what
+puts it on the path — `pytest` alone will not find it. Dart has no test suite; `analyze` is
+the check, and it is what catches an ambiguous export across the leg barrels, which `buf`
+and the other two suites cannot see.
 
 ## Linting and breaking-change detection
 
@@ -287,6 +309,9 @@ cd gen/python && python3 -m pytest tests/ -v
 buf lint
 buf breaking --against ".git#branch=main"
 ```
+
+`buf breaking` compares against `main`, so it says nothing when run on `main` — `check.sh`
+skips it there, as Jenkins does.
 
 ## Proto rules
 
