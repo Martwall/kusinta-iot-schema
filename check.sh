@@ -39,11 +39,16 @@ wants() { [ "$TARGET" = "all" ] || [ "$TARGET" = "$1" ]; }
 if wants proto; then
   run "buf lint" "buf lint" "$BUF lint"
 
-  # Advisory: the tree is not fully buf-formatted yet, so this reports rather than fails.
-  step "buf format (advisory)"
+  # Fatal, not advisory: the whole tree is buf-formatted, and the way that decays is one
+  # saved file at a time. Fix with `buf format -w`.
+  step "buf format"
   UNFORMATTED=$($BUF format --diff | grep -c '^+++' || true)
-  [ "$UNFORMATTED" -eq 0 ] && echo "all files formatted" \
-                           || echo "$UNFORMATTED file(s) not buf-formatted"
+  if [ "$UNFORMATTED" -eq 0 ]; then
+    echo "all files formatted"
+  else
+    echo "$UNFORMATTED file(s) not buf-formatted — run: $BUF format -w"
+    fail "buf format"
+  fi
 
   # Meaningless on main, where the comparison is against itself. Jenkins skips it there
   # for the same reason.
