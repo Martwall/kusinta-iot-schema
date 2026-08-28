@@ -11,6 +11,7 @@ message SdpOffer {
 message SdpAnswer {
   string sdp = 1;
 }
+
 // candidate is the SDP candidate attribute line. sdp_mid / sdp_mline_index
 // bind it to a media section: WebRTC's addIceCandidate requires a non-null
 // sdpMid (some native WebRTC bindings crash on a null). Under BUNDLE both are
