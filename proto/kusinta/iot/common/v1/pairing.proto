@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package kusinta.iot.common.v1;
+
+option optimize_for = SPEED;
+
+// Why a pairing attempt did not produce a device, in one vocabulary both the app and a
+// connector speak.
+//
+// Shared rather than mirrored, for the reason CommandError's comment gives: mirrored enums
+// leave every connector inventing its own spellings and something in the middle keeping a
+// translation table that silently falls behind. A connector produces the subset it can
+// observe; the gateway produces the rest and passes a connector's value through unchanged.
+//
+// Every value answers one question: *what should the client do now?* A code that does not
+// change the answer does not need to exist, which is why "the device is on the hub and
+// unusable" is one value and not two.
+enum PairingError {
+  // Sender set no code, or sent one this client's schema does not know.
+  //
+  // This must stay the safe reading. A client decodes every value added after its build as
+  // UNSPECIFIED, so the sensible handling is "it did not work, offering a retry is
+  // reasonable" — and no value below is so dangerous that reading it this way misleads.
+  PAIRING_ERROR_UNSPECIFIED = 0;
+
+  // The caller may not pair here. Permanent for this caller: stop, and say so.
+  PAIRING_ERROR_NOT_ENTITLED = 1;
+
+  // A pairing window is already open, and only one may be. Retrying after it closes is the
+  // right response; retrying at once is not.
+  //
+  // The exclusivity is not incidental. Where a request names no device, the only thing
+  // attributing an arrival to a requester is that theirs was the one window open.
+  PAIRING_ERROR_ALREADY_IN_PROGRESS = 2;
+
+  // The connector could not be reached, or refused to open its window. Transient.
+  PAIRING_ERROR_CONNECTOR_UNAVAILABLE = 3;
+
+  // The window closed with nothing paired: no device was put into pairing mode, or it was
+  // out of range, or its batteries are flat. The ordinary outcome of a user who walked away,
+  // so the useful response is to say what to do and offer another go, not to report a fault.
+  PAIRING_ERROR_NO_DEVICE_APPEARED = 4;
+
+  // A device joined the hub and cannot be presented — the connector has no model for it, or
+  // could not assemble a complete description of it.
+  //
+  // One value rather than two, because the client does the same thing either way: stop, do
+  // not retry, and tell the user there is now an unusable device on their hub. Which of the
+  // two it was belongs in PairingErrorDetail.message, where it can name the device.
+  //
+  // It stays joined deliberately. A later connector release that models it adopts it with
+  // nobody returning to the hardware, where removing it would need someone standing there.
+  PAIRING_ERROR_DEVICE_UNUSABLE = 5;
+
+  // A device joined that is not the one the request named. The connector checked the arrival
+  // against the identifier it was given and they did not match, so it was not attributed.
+  PAIRING_ERROR_WRONG_DEVICE = 6;
+
+  // A fault on the gateway's or the connector's own side. Not the caller's doing.
+  PAIRING_ERROR_INTERNAL = 7;
+}
+
+// A pairing failure and what can be said about it, the pairing counterpart of CommandError.
+//
+// The message matters more here than elsewhere: DEVICE_UNUSABLE is the code a user is most
+// likely to see and least able to act on, and naming the device that joined is the whole
+// difference between "something went wrong" and "this hub does not support that model yet".
+message PairingErrorDetail {
+  PairingError code = 1;
+  string message = 2; // human-readable; may name the device, its model, or the fault
+}
+
+// How long a hub accepts new devices, and which it will take.
+//
+// One message on both legs rather than the same three fields declared twice: the clamp rule
+// and the meaning of a hint are the sort of thing that is written once and then diverges,
+// and the two copies had already begun to.
+message PairingWindow {
+  // How long to accept arrivals. Whoever forwards this clamps it, and so does whoever acts
+  // on it: a window is an interval during which anything nearby can join, so its length is a
+  // security parameter rather than purely the caller's to choose.
+  //
+  // Absent means "no preference, use the default" — distinct from a caller asking for zero.
+  optional uint32 duration_seconds = 1;
+
+  // The identifier printed on the device being paired, where the technology has one that is
+  // legible and the person is holding it. Free-form: what is printed differs per technology,
+  // and nothing between the app and the hub interprets it.
+  //
+  // Setting it changes the mechanism, not just the accuracy. The hub is restricted to that
+  // device and the arrival is verified against this value, so an arrival is attributed on
+  // identity. Leaving it empty opens the window to anything nearby, and attribution falls
+  // back to the arrival being the only one — which is why one window may be open at a time.
+  //
+  // Verification is not optional where this is set. A restriction can silently fail to take,
+  // and an arrival attributed on a restriction that did not hold is the wrong device in
+  // someone's home.
+  string device_hint = 2;
+
+  // How many arrivals this one window may attribute. Absent means one.
+  //
+  // A batch suits commissioning, where devices are paired in a row and become a building's
+  // rather than any person's. It does not suit a caller whose pairing mints personal
+  // ownership.
+  //
+  // A hint and a batch cannot be combined, and that is a contradiction rather than a
+  // limitation: device_hint names one device, so a window restricted to it can never produce
+  // a second arrival to attribute.
+  optional uint32 max_devices = 3;
+}

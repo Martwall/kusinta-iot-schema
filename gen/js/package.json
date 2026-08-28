@@ -10,6 +10,7 @@
   },
   "exports": {
     "./common":                 "./src/kusinta/iot/common/v1/types_pb.js",
+    "./common/pairing":         "./src/kusinta/iot/common/v1/pairing_pb.js",
     "./identity":               "./src/kusinta/iot/identity/v1/identity_pb.js",
     "./device":                 "./src/kusinta/iot/device/v1/device_pb.js",
     "./device/descriptor":      "./src/kusinta/iot/device/v1/descriptor_pb.js",

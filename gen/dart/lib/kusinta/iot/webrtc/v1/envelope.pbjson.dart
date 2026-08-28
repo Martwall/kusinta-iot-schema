@@ -327,6 +327,116 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'c3BhY2VUcmVlEjgKA2FjaxgFIAEoCzIkLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NYW5hZ2VtZW'
     '50QWNrSABSA2Fja0IICgZyZXN1bHQ=');
 
+@$core.Deprecated('Use startPairingDescriptor instead')
+const StartPairing$json = {
+  '1': 'StartPairing',
+  '2': [
+    {
+      '1': 'connector_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.ConnectorId',
+      '10': 'connectorId'
+    },
+    {
+      '1': 'window',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.PairingWindow',
+      '10': 'window'
+    },
+    {
+      '1': 'initial_space_id',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'initialSpaceId'
+    },
+    {
+      '1': 'ownership',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.DeviceOwnershipType',
+      '10': 'ownership'
+    },
+  ],
+};
+
+/// Descriptor for `StartPairing`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List startPairingDescriptor = $convert.base64Decode(
+    'CgxTdGFydFBhaXJpbmcSRwoMY29ubmVjdG9yX2lkGAEgASgLMiQua3VzaW50YS5pb3QuaWRlbn'
+    'RpdHkudjEuQ29ubmVjdG9ySWRSC2Nvbm5lY3RvcklkEjwKBndpbmRvdxgCIAEoCzIkLmt1c2lu'
+    'dGEuaW90LmNvbW1vbi52MS5QYWlyaW5nV2luZG93UgZ3aW5kb3cSSgoQaW5pdGlhbF9zcGFjZV'
+    '9pZBgDIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSDmluaXRpYWxTcGFj'
+    'ZUlkEkgKCW93bmVyc2hpcBgEIAEoDjIqLmt1c2ludGEuaW90LmNvbW1vbi52MS5EZXZpY2VPd2'
+    '5lcnNoaXBUeXBlUglvd25lcnNoaXA=');
+
+@$core.Deprecated('Use pairingStartedDescriptor instead')
+const PairingStarted$json = {
+  '1': 'PairingStarted',
+  '2': [
+    {'1': 'in_reply_to', '3': 1, '4': 1, '5': 9, '10': 'inReplyTo'},
+    {
+      '1': 'expires_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'expiresAt'
+    },
+    {
+      '1': 'error',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.PairingErrorDetail',
+      '10': 'error'
+    },
+  ],
+};
+
+/// Descriptor for `PairingStarted`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingStartedDescriptor = $convert.base64Decode(
+    'Cg5QYWlyaW5nU3RhcnRlZBIeCgtpbl9yZXBseV90bxgBIAEoCVIJaW5SZXBseVRvEjkKCmV4cG'
+    'lyZXNfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUglleHBpcmVzQXQSPwoF'
+    'ZXJyb3IYAyABKAsyKS5rdXNpbnRhLmlvdC5jb21tb24udjEuUGFpcmluZ0Vycm9yRGV0YWlsUg'
+    'VlcnJvcg==');
+
+@$core.Deprecated('Use pairingFinishedDescriptor instead')
+const PairingFinished$json = {
+  '1': 'PairingFinished',
+  '2': [
+    {'1': 'in_reply_to', '3': 1, '4': 1, '5': 9, '10': 'inReplyTo'},
+    {
+      '1': 'device_ids',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceIds'
+    },
+    {
+      '1': 'error',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.PairingErrorDetail',
+      '10': 'error'
+    },
+  ],
+};
+
+/// Descriptor for `PairingFinished`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingFinishedDescriptor = $convert.base64Decode(
+    'Cg9QYWlyaW5nRmluaXNoZWQSHgoLaW5fcmVwbHlfdG8YASABKAlSCWluUmVwbHlUbxJACgpkZX'
+    'ZpY2VfaWRzGAIgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCWRldmlj'
+    'ZUlkcxI/CgVlcnJvchgDIAEoCzIpLmt1c2ludGEuaW90LmNvbW1vbi52MS5QYWlyaW5nRXJyb3'
+    'JEZXRhaWxSBWVycm9y');
+
 @$core.Deprecated('Use gatewayMessageDescriptor instead')
 const GatewayMessage$json = {
   '1': 'GatewayMessage',
@@ -448,6 +558,24 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'deviceEvents'
     },
+    {
+      '1': 'pairing_started',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PairingStarted',
+      '9': 0,
+      '10': 'pairingStarted'
+    },
+    {
+      '1': 'pairing_finished',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PairingFinished',
+      '9': 0,
+      '10': 'pairingFinished'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -479,8 +607,12 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'EuaW90LndlYnJ0Yy52MS5EZXZpY2VSZW1vdmVkSABSDWRldmljZVJlbW92ZWQSVgoRbWFuYWdl'
     'bWVudF9yZXN1bHQYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWFuYWdlbWVudFJlc3'
     'VsdEgAUhBtYW5hZ2VtZW50UmVzdWx0Ek4KDWRldmljZV9ldmVudHMYECABKAsyJy5rdXNpbnRh'
-    'LmlvdC5kZXZpY2UudjEuRGV2aWNlRXZlbnRCYXRjaEgAUgxkZXZpY2VFdmVudHNCCQoHcGF5bG'
-    '9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3VsdFIOcHJvcGVydHlfZXZlbnQ=');
+    'LmlvdC5kZXZpY2UudjEuRGV2aWNlRXZlbnRCYXRjaEgAUgxkZXZpY2VFdmVudHMSUAoPcGFpcm'
+    'luZ19zdGFydGVkGBEgASgLMiUua3VzaW50YS5pb3Qud2VicnRjLnYxLlBhaXJpbmdTdGFydGVk'
+    'SABSDnBhaXJpbmdTdGFydGVkElMKEHBhaXJpbmdfZmluaXNoZWQYEiABKAsyJi5rdXNpbnRhLm'
+    'lvdC53ZWJydGMudjEuUGFpcmluZ0ZpbmlzaGVkSABSD3BhaXJpbmdGaW5pc2hlZEIJCgdwYXls'
+    'b2FkSgQIDxAQSgQIBxAIUhZhdHRyaWJ1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA'
+    '==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {
@@ -567,6 +699,15 @@ const AppMessage$json = {
       '9': 0,
       '10': 'attributeWrite'
     },
+    {
+      '1': 'start_pairing',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.StartPairing',
+      '9': 0,
+      '10': 'startPairing'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -587,4 +728,5 @@ final $typed_data.Uint8List appMessageDescriptor = $convert.base64Decode(
     'NIAFILdW5zdWJzY3JpYmUSSgoKbWFuYWdlbWVudBgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0'
     'Yy52MS5NYW5hZ2VtZW50UmVxdWVzdEgAUgptYW5hZ2VtZW50ElcKD2F0dHJpYnV0ZV93cml0ZR'
     'gKIAEoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5BdHRyaWJ1dGVXcml0ZVJlcXVlc3RIAFIO'
-    'YXR0cmlidXRlV3JpdGVCCQoHcGF5bG9hZA==');
+    'YXR0cmlidXRlV3JpdGUSSgoNc3RhcnRfcGFpcmluZxgLIAEoCzIjLmt1c2ludGEuaW90LndlYn'
+    'J0Yy52MS5TdGFydFBhaXJpbmdIAFIMc3RhcnRQYWlyaW5nQgkKB3BheWxvYWQ=');

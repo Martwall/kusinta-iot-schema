@@ -9,6 +9,7 @@ import type { ConnectorTransport } from "../../common/v1/types_pb.js";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { AttributeWriteRequest, CommandError, DeviceCommand } from "../../webrtc/v1/command_pb.js";
+import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { PropertyUpdateBatch } from "../../device/v1/property_update_pb.js";
 import type { DeviceEventBatch } from "../../device/v1/device_event_pb.js";
 
@@ -122,6 +123,25 @@ export declare type DeviceAnnouncement = Message<"kusinta.iot.connector.v1.Devic
    * @generated from field: kusinta.iot.device.v1.Device device = 2;
    */
   device?: Device | undefined;
+
+  /**
+   * The pairing request this device arrived for, empty for a device that arrived on its own.
+   *
+   * This field is the whole attribution mechanism. A connector is the only party that knows
+   * when its own hub was accepting devices, so it decides whether an arrival belongs to a
+   * request and says so here.
+   *
+   * Set it only when the arrival was actually checked. An arrival that fails the check is
+   * still announced — the device exists and has joined — but with this empty, which files it
+   * as belonging to nobody rather than to the wrong person.
+   *
+   * This is EnterPairingMode.request_id, minted per connector, and NOT an app message id:
+   * whoever forwards the outcome to the app has to map it back. The name avoids `in_reply_to`
+   * for that reason, which everywhere else in this schema means the app's own message id.
+   *
+   * @generated from field: string pairing_request_id = 3;
+   */
+  pairingRequestId: string;
 };
 
 /**
@@ -310,6 +330,127 @@ export declare type ConnectorCommandResult = Message<"kusinta.iot.connector.v1.C
 export declare const ConnectorCommandResultSchema: GenMessage<ConnectorCommandResult>;
 
 /**
+ * Tells a connector to accept new devices for a while, gateway → connector.
+ *
+ * Named for what the connector does rather than for what the app asked. The two legs are
+ * named differently on purpose: the app starts one pairing, and the gateway may put several
+ * connectors into pairing mode to serve it.
+ *
+ * @generated from message kusinta.iot.connector.v1.EnterPairingMode
+ */
+export declare type EnterPairingMode = Message<"kusinta.iot.connector.v1.EnterPairingMode"> & {
+  /**
+   * echoed on PairingModeResult, PairingModeEnded and the announcement
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * How long, which device, how many. See PairingWindow — and clamp the duration again here.
+   * A connector is the last thing standing between a number on the wire and a radio that
+   * accepts anything nearby for that long.
+   *
+   * @generated from field: kusinta.iot.common.v1.PairingWindow window = 2;
+   */
+  window?: PairingWindow | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.EnterPairingMode.
+ * Use `create(EnterPairingModeSchema)` to create a new message.
+ */
+export declare const EnterPairingModeSchema: GenMessage<EnterPairingMode>;
+
+/**
+ * A connector's answer to EnterPairingMode: whether the window opened, and nothing more.
+ *
+ * The same accept-now-report-later split as ConnectorCommandResult, for the same reason — a
+ * connector that waited for a device to wake before answering would blow every deadline
+ * above it. What the window produced arrives later, as PairingModeEnded.
+ *
+ * @generated from message kusinta.iot.connector.v1.PairingModeResult
+ */
+export declare type PairingModeResult = Message<"kusinta.iot.connector.v1.PairingModeResult"> & {
+  /**
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * @generated from field: bool accepted = 2;
+   */
+  accepted: boolean;
+
+  /**
+   * Why the window did not open. Only what a connector can observe at this point:
+   * CONNECTOR_UNAVAILABLE, INTERNAL. NOT_ENTITLED and ALREADY_IN_PROGRESS are the gateway's,
+   * decided before this message is sent, and a connector must not claim them.
+   *
+   * @generated from field: kusinta.iot.common.v1.PairingErrorDetail error = 3;
+   */
+  error?: PairingErrorDetail | undefined;
+
+  /**
+   * When the window closes, if it opened. Lets the gateway expire its own record against the
+   * connector's clock rather than a guess — the connector is the party that clamped it.
+   *
+   * @generated from field: google.protobuf.Timestamp expires_at = 4;
+   */
+  expiresAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.PairingModeResult.
+ * Use `create(PairingModeResultSchema)` to create a new message.
+ */
+export declare const PairingModeResultSchema: GenMessage<PairingModeResult>;
+
+/**
+ * What the window produced, connector → gateway, sent once when it closes.
+ *
+ * Without this the connector has no way to report anything it learned after the window
+ * opened: a device that joined and cannot be modelled, or one that joined and was not the
+ * device the hint named. Neither can travel on a DeviceAnnouncement — the first has nothing
+ * announceable, and the second is announced but unattributed, which says a device arrived
+ * and not why it was refused.
+ *
+ * It also gives a batch window a definite end. Counting announcements cannot distinguish
+ * "three of five so far" from "three of five, and that is all".
+ *
+ * @generated from message kusinta.iot.connector.v1.PairingModeEnded
+ */
+export declare type PairingModeEnded = Message<"kusinta.iot.connector.v1.PairingModeEnded"> & {
+  /**
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * How many arrivals this connector attributed to the request. The gateway can count the
+   * announcements it received, but only the connector knows it has stopped.
+   *
+   * @generated from field: uint32 devices_attributed = 2;
+   */
+  devicesAttributed: number;
+
+  /**
+   * Why it produced fewer than asked for, absent when it produced them all. DEVICE_UNUSABLE
+   * and WRONG_DEVICE are reported here and should name the device in the message, since that
+   * is the only place a user learns which device is now sitting on their hub.
+   *
+   * @generated from field: kusinta.iot.common.v1.PairingErrorDetail error = 3;
+   */
+  error?: PairingErrorDetail | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.PairingModeEnded.
+ * Use `create(PairingModeEndedSchema)` to create a new message.
+ */
+export declare const PairingModeEndedSchema: GenMessage<PairingModeEnded>;
+
+/**
  * @generated from message kusinta.iot.connector.v1.SessionRequest
  */
 export declare type SessionRequest = Message<"kusinta.iot.connector.v1.SessionRequest"> & {
@@ -368,6 +509,18 @@ export declare type SessionRequest = Message<"kusinta.iot.connector.v1.SessionRe
      */
     value: DeviceEventBatch;
     case: "deviceEvents";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.PairingModeResult pairing_mode_result = 10;
+     */
+    value: PairingModeResult;
+    case: "pairingModeResult";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.PairingModeEnded pairing_mode_ended = 11;
+     */
+    value: PairingModeEnded;
+    case: "pairingModeEnded";
   } | { case: undefined; value?: undefined };
 };
 
@@ -433,6 +586,14 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
      */
     value: AttributeWriteRequest;
     case: "executeAttributeWrite";
+  } | {
+    /**
+     * The connector-leg half of the pairing flow. See EnterPairingMode.
+     *
+     * @generated from field: kusinta.iot.connector.v1.EnterPairingMode enter_pairing_mode = 10;
+     */
+    value: EnterPairingMode;
+    case: "enterPairingMode";
   } | { case: undefined; value?: undefined };
 };
 

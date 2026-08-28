@@ -4,10 +4,12 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { DeviceId } from "../../identity/v1/identity_pb.js";
+import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
+import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
+import type { DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
@@ -326,6 +328,157 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
 export declare const ManagementResultSchema: GenMessage<ManagementResult>;
 
 /**
+ * Asks the gateway to put a connector into pairing mode, so a device joined during the
+ * window becomes the caller's rather than belonging to nobody.
+ *
+ * A payload case of its own rather than a ManagementRequest. Those are gated on a target —
+ * a space, a device — and that is the justification for keeping them behind one wrapper.
+ * This one names no target: connector_id is optional, and unset means every connector, so
+ * it is authorized against the caller's role and nothing else.
+ *
+ * Answered twice, and the two answers say different things at different times.
+ * PairingStarted reports whether the window opened; PairingFinished reports what came of
+ * it, seconds or minutes later, once someone has pressed a button on hardware that may be
+ * asleep or out of range.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.StartPairing
+ */
+export declare type StartPairing = Message<"kusinta.iot.webrtc.v1.StartPairing"> & {
+  /**
+   * Which connector to open. Unset means every connector the gateway holds, which is the
+   * sensible default: a device picks its hub by radio range, and asking a user to choose is
+   * asking them to guess at something they cannot observe.
+   *
+   * Name one where the answer is not a guess — a device that will be linked to devices on a
+   * particular hub has to join that hub, because links are held by the hub that brokered
+   * them.
+   *
+   * @generated from field: kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+   */
+  connectorId?: ConnectorId | undefined;
+
+  /**
+   * How long, which device, how many. See PairingWindow.
+   *
+   * @generated from field: kusinta.iot.common.v1.PairingWindow window = 2;
+   */
+  window?: PairingWindow | undefined;
+
+  /**
+   * Where to file the device once it arrives.
+   *
+   * Optional, and the two cases differ. A caller pairing a device of their own must name a
+   * space they reach, so it is theirs and placed on arrival rather than sitting unfiled and
+   * invisible to them. A caller commissioning for a building may leave it unset: a building
+   * is commissioned before its spaces are recorded, and an unfiled device is visible to the
+   * administrator, who is the person doing the pairing.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId initial_space_id = 3;
+   */
+  initialSpaceId?: SpaceId | undefined;
+
+  /**
+   * What the device should become. Unset lets the gateway decide from the caller's role,
+   * which is the reading that scales: someone commissioning fifty devices for a building
+   * should not come to own fifty devices because a field defaulted.
+   *
+   * The gateway refuses an ownership the caller may not confer, and never mints ownership
+   * for a third party — handing a device to someone else is a transfer, a separate operation
+   * with its own authority.
+   *
+   * @generated from field: kusinta.iot.common.v1.DeviceOwnershipType ownership = 4;
+   */
+  ownership: DeviceOwnershipType;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.StartPairing.
+ * Use `create(StartPairingSchema)` to create a new message.
+ */
+export declare const StartPairingSchema: GenMessage<StartPairing>;
+
+/**
+ * Whether the pairing window opened, gateway → app. The first of two answers to a
+ * StartPairing.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PairingStarted
+ */
+export declare type PairingStarted = Message<"kusinta.iot.webrtc.v1.PairingStarted"> & {
+  /**
+   * AppMessage.message_id of the StartPairing
+   *
+   * @generated from field: string in_reply_to = 1;
+   */
+  inReplyTo: string;
+
+  /**
+   * When the window closes. Present when it opened, and this is the value to count down
+   * from — not the duration that was asked for, which both the gateway and the connector
+   * clamp. A countdown run on the request rather than on this one disagrees with the hub.
+   *
+   * @generated from field: google.protobuf.Timestamp expires_at = 2;
+   */
+  expiresAt?: Timestamp | undefined;
+
+  /**
+   * Why it did not open. Present instead of expires_at.
+   *
+   * @generated from field: kusinta.iot.common.v1.PairingErrorDetail error = 3;
+   */
+  error?: PairingErrorDetail | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PairingStarted.
+ * Use `create(PairingStartedSchema)` to create a new message.
+ */
+export declare const PairingStartedSchema: GenMessage<PairingStarted>;
+
+/**
+ * What the pairing window produced, gateway → app. The second and last answer, sent once
+ * when the window closes.
+ *
+ * One message per request, not per device: a batch window attributes several, and a client
+ * given one message each has nothing telling it the window is over and no defined moment to
+ * stop waiting. The devices are listed here; each also arrives as an ordinary DeviceAdded
+ * as it appears, so a client may show them as they come and use this to finish.
+ *
+ * An error and a non-empty device list are not exclusive. A batch of five that attributed
+ * three and then expired reports both — three devices and NO_DEVICE_APPEARED — because
+ * "some worked" and "the window ran out" are both true and a user needs to be told both.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PairingFinished
+ */
+export declare type PairingFinished = Message<"kusinta.iot.webrtc.v1.PairingFinished"> & {
+  /**
+   * AppMessage.message_id of the StartPairing
+   *
+   * @generated from field: string in_reply_to = 1;
+   */
+  inReplyTo: string;
+
+  /**
+   * @generated from field: repeated kusinta.iot.identity.v1.DeviceId device_ids = 2;
+   */
+  deviceIds: DeviceId[];
+
+  /**
+   * Why the window produced fewer devices than asked for, absent when it produced them all.
+   * Note this is not always a failure of the request: a window that simply expired unused
+   * ends here too, and is the ordinary result of a user changing their mind.
+   *
+   * @generated from field: kusinta.iot.common.v1.PairingErrorDetail error = 3;
+   */
+  error?: PairingErrorDetail | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PairingFinished.
+ * Use `create(PairingFinishedSchema)` to create a new message.
+ */
+export declare const PairingFinishedSchema: GenMessage<PairingFinished>;
+
+/**
  * GatewayMessage: gateway → app
  *
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
@@ -421,6 +574,18 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: DeviceEventBatch;
     case: "deviceEvents";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PairingStarted pairing_started = 17;
+     */
+    value: PairingStarted;
+    case: "pairingStarted";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PairingFinished pairing_finished = 18;
+     */
+    value: PairingFinished;
+    case: "pairingFinished";
   } | { case: undefined; value?: undefined };
 };
 
@@ -497,6 +662,12 @@ export declare type AppMessage = Message<"kusinta.iot.webrtc.v1.AppMessage"> & {
      */
     value: AttributeWriteRequest;
     case: "attributeWrite";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.StartPairing start_pairing = 11;
+     */
+    value: StartPairing;
+    case: "startPairing";
   } | { case: undefined; value?: undefined };
 };
 

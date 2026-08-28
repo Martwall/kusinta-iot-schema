@@ -265,8 +265,18 @@ export declare type ClaimDevice = Message<"kusinta.iot.webrtc.v1.ClaimDevice"> &
   initialSpaceId?: SpaceId | undefined;
 
   /**
-   * Evidence the claimant is standing at the device: the serial printed on it,
-   * matched against DeviceDescriptor.serial_number. Required precisely when the
+   * Evidence the claimant is standing at the device: the identifier printed on it,
+   * matched against DeviceDescriptor.serial_number.
+   *
+   * The match is by SUFFIX, because what a connector announces is not always the whole
+   * of what is printed and the announced value is commonly the tail of the printed one.
+   * Both sides are normalised first — lowercased, with whitespace and ASCII hyphens
+   * removed, since a label prints the value in groups and a scan does not — and the proof
+   * is accepted when what remains ends with the announced serial. Spelled out because two
+   * gateways normalising differently would accept different proofs for the same device.
+   *
+   * A serial shorter than eight characters cannot be proved at all: under a suffix rule a
+   * short one is proved by almost anything ending with it. Required precisely when the
    * caller cannot already reach the device, which is the ordinary case for a
    * resident claiming something they just bought — an unfiled device is invisible
    * to them, so possession is the only thing left that can distinguish them from

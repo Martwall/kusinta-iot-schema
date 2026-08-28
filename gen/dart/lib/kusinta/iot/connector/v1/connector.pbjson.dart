@@ -120,6 +120,13 @@ const DeviceAnnouncement$json = {
       '6': '.kusinta.iot.device.v1.Device',
       '10': 'device'
     },
+    {
+      '1': 'pairing_request_id',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '10': 'pairingRequestId'
+    },
   ],
   '9': [
     {'1': 1, '2': 2},
@@ -130,7 +137,8 @@ const DeviceAnnouncement$json = {
 /// Descriptor for `DeviceAnnouncement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deviceAnnouncementDescriptor = $convert.base64Decode(
     'ChJEZXZpY2VBbm5vdW5jZW1lbnQSNQoGZGV2aWNlGAIgASgLMh0ua3VzaW50YS5pb3QuZGV2aW'
-    'NlLnYxLkRldmljZVIGZGV2aWNlSgQIARACUgpkZXNjcmlwdG9y');
+    'NlLnYxLkRldmljZVIGZGV2aWNlEiwKEnBhaXJpbmdfcmVxdWVzdF9pZBgDIAEoCVIQcGFpcmlu'
+    'Z1JlcXVlc3RJZEoECAEQAlIKZGVzY3JpcHRvcg==');
 
 @$core.Deprecated('Use deviceRemovalDescriptor instead')
 const DeviceRemoval$json = {
@@ -267,6 +275,88 @@ final $typed_data.Uint8List connectorCommandResultDescriptor = $convert.base64De
     'CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBIAFIJc2V0dGxlc0J5iAEBQg0KC19zZXR0bG'
     'VzX2J5SgQIAxAE');
 
+@$core.Deprecated('Use enterPairingModeDescriptor instead')
+const EnterPairingMode$json = {
+  '1': 'EnterPairingMode',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'window',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.PairingWindow',
+      '10': 'window'
+    },
+  ],
+};
+
+/// Descriptor for `EnterPairingMode`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List enterPairingModeDescriptor = $convert.base64Decode(
+    'ChBFbnRlclBhaXJpbmdNb2RlEh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZBI8CgZ3aW'
+    '5kb3cYAiABKAsyJC5rdXNpbnRhLmlvdC5jb21tb24udjEuUGFpcmluZ1dpbmRvd1IGd2luZG93');
+
+@$core.Deprecated('Use pairingModeResultDescriptor instead')
+const PairingModeResult$json = {
+  '1': 'PairingModeResult',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {'1': 'accepted', '3': 2, '4': 1, '5': 8, '10': 'accepted'},
+    {
+      '1': 'error',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.PairingErrorDetail',
+      '10': 'error'
+    },
+    {
+      '1': 'expires_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'expiresAt'
+    },
+  ],
+};
+
+/// Descriptor for `PairingModeResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingModeResultDescriptor = $convert.base64Decode(
+    'ChFQYWlyaW5nTW9kZVJlc3VsdBIdCgpyZXF1ZXN0X2lkGAEgASgJUglyZXF1ZXN0SWQSGgoIYW'
+    'NjZXB0ZWQYAiABKAhSCGFjY2VwdGVkEj8KBWVycm9yGAMgASgLMikua3VzaW50YS5pb3QuY29t'
+    'bW9uLnYxLlBhaXJpbmdFcnJvckRldGFpbFIFZXJyb3ISOQoKZXhwaXJlc19hdBgEIAEoCzIaLm'
+    'dvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCWV4cGlyZXNBdA==');
+
+@$core.Deprecated('Use pairingModeEndedDescriptor instead')
+const PairingModeEnded$json = {
+  '1': 'PairingModeEnded',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'devices_attributed',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '10': 'devicesAttributed'
+    },
+    {
+      '1': 'error',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.PairingErrorDetail',
+      '10': 'error'
+    },
+  ],
+};
+
+/// Descriptor for `PairingModeEnded`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingModeEndedDescriptor = $convert.base64Decode(
+    'ChBQYWlyaW5nTW9kZUVuZGVkEh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZBItChJkZX'
+    'ZpY2VzX2F0dHJpYnV0ZWQYAiABKA1SEWRldmljZXNBdHRyaWJ1dGVkEj8KBWVycm9yGAMgASgL'
+    'Mikua3VzaW50YS5pb3QuY29tbW9uLnYxLlBhaXJpbmdFcnJvckRldGFpbFIFZXJyb3I=');
+
 @$core.Deprecated('Use sessionRequestDescriptor instead')
 const SessionRequest$json = {
   '1': 'SessionRequest',
@@ -343,6 +433,24 @@ const SessionRequest$json = {
       '9': 0,
       '10': 'deviceEvents'
     },
+    {
+      '1': 'pairing_mode_result',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.PairingModeResult',
+      '9': 0,
+      '10': 'pairingModeResult'
+    },
+    {
+      '1': 'pairing_mode_ended',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.PairingModeEnded',
+      '9': 0,
+      '10': 'pairingModeEnded'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -363,7 +471,10 @@ final $typed_data.Uint8List sessionRequestDescriptor = $convert.base64Decode(
     'NvbW1hbmRSZXN1bHRIAFINY29tbWFuZFJlc3VsdBJDCgloZWFydGJlYXQYCCABKAsyIy5rdXNp'
     'bnRhLmlvdC5jb25uZWN0b3IudjEuSGVhcnRCZWF0SABSCWhlYXJ0YmVhdBJOCg1kZXZpY2VfZX'
     'ZlbnRzGAkgASgLMicua3VzaW50YS5pb3QuZGV2aWNlLnYxLkRldmljZUV2ZW50QmF0Y2hIAFIM'
-    'ZGV2aWNlRXZlbnRzQgkKB3BheWxvYWQ=');
+    'ZGV2aWNlRXZlbnRzEl0KE3BhaXJpbmdfbW9kZV9yZXN1bHQYCiABKAsyKy5rdXNpbnRhLmlvdC'
+    '5jb25uZWN0b3IudjEuUGFpcmluZ01vZGVSZXN1bHRIAFIRcGFpcmluZ01vZGVSZXN1bHQSWgoS'
+    'cGFpcmluZ19tb2RlX2VuZGVkGAsgASgLMioua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlBhaX'
+    'JpbmdNb2RlRW5kZWRIAFIQcGFpcmluZ01vZGVFbmRlZEIJCgdwYXlsb2Fk');
 
 @$core.Deprecated('Use sessionResponseDescriptor instead')
 const SessionResponse$json = {
@@ -432,6 +543,15 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'executeAttributeWrite'
     },
+    {
+      '1': 'enter_pairing_mode',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.EnterPairingMode',
+      '9': 0,
+      '10': 'enterPairingMode'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -453,4 +573,6 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'JvckgAUgVlcnJvchJPCg9leGVjdXRlX2NvbW1hbmQYCCABKAsyJC5rdXNpbnRhLmlvdC53ZWJy'
     'dGMudjEuRGV2aWNlQ29tbWFuZEgAUg5leGVjdXRlQ29tbWFuZBJmChdleGVjdXRlX2F0dHJpYn'
     'V0ZV93cml0ZRgJIAEoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5BdHRyaWJ1dGVXcml0ZVJl'
-    'cXVlc3RIAFIVZXhlY3V0ZUF0dHJpYnV0ZVdyaXRlQgkKB3BheWxvYWRKBAgEEAU=');
+    'cXVlc3RIAFIVZXhlY3V0ZUF0dHJpYnV0ZVdyaXRlEloKEmVudGVyX3BhaXJpbmdfbW9kZRgKIA'
+    'EoCzIqLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5FbnRlclBhaXJpbmdNb2RlSABSEGVudGVy'
+    'UGFpcmluZ01vZGVCCQoHcGF5bG9hZEoECAQQBQ==');

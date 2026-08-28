@@ -4,6 +4,8 @@ package kusinta.iot.webrtc.v1;
 
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/common/v1/pairing.proto";
+import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/device/v1/device_event.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/space/v1/space.proto";
@@ -148,6 +150,86 @@ message ManagementResult {
   }
 }
 
+// Asks the gateway to put a connector into pairing mode, so a device joined during the
+// window becomes the caller's rather than belonging to nobody.
+//
+// A payload case of its own rather than a ManagementRequest. Those are gated on a target —
+// a space, a device — and that is the justification for keeping them behind one wrapper.
+// This one names no target: connector_id is optional, and unset means every connector, so
+// it is authorized against the caller's role and nothing else.
+//
+// Answered twice, and the two answers say different things at different times.
+// PairingStarted reports whether the window opened; PairingFinished reports what came of
+// it, seconds or minutes later, once someone has pressed a button on hardware that may be
+// asleep or out of range.
+message StartPairing {
+  // Which connector to open. Unset means every connector the gateway holds, which is the
+  // sensible default: a device picks its hub by radio range, and asking a user to choose is
+  // asking them to guess at something they cannot observe.
+  //
+  // Name one where the answer is not a guess — a device that will be linked to devices on a
+  // particular hub has to join that hub, because links are held by the hub that brokered
+  // them.
+  kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+
+  // How long, which device, how many. See PairingWindow.
+  kusinta.iot.common.v1.PairingWindow window = 2;
+
+  // Where to file the device once it arrives.
+  //
+  // Optional, and the two cases differ. A caller pairing a device of their own must name a
+  // space they reach, so it is theirs and placed on arrival rather than sitting unfiled and
+  // invisible to them. A caller commissioning for a building may leave it unset: a building
+  // is commissioned before its spaces are recorded, and an unfiled device is visible to the
+  // administrator, who is the person doing the pairing.
+  kusinta.iot.identity.v1.SpaceId initial_space_id = 3;
+
+  // What the device should become. Unset lets the gateway decide from the caller's role,
+  // which is the reading that scales: someone commissioning fifty devices for a building
+  // should not come to own fifty devices because a field defaulted.
+  //
+  // The gateway refuses an ownership the caller may not confer, and never mints ownership
+  // for a third party — handing a device to someone else is a transfer, a separate operation
+  // with its own authority.
+  kusinta.iot.common.v1.DeviceOwnershipType ownership = 4;
+}
+
+// Whether the pairing window opened, gateway → app. The first of two answers to a
+// StartPairing.
+message PairingStarted {
+  string in_reply_to = 1; // AppMessage.message_id of the StartPairing
+
+  // When the window closes. Present when it opened, and this is the value to count down
+  // from — not the duration that was asked for, which both the gateway and the connector
+  // clamp. A countdown run on the request rather than on this one disagrees with the hub.
+  google.protobuf.Timestamp expires_at = 2;
+
+  // Why it did not open. Present instead of expires_at.
+  kusinta.iot.common.v1.PairingErrorDetail error = 3;
+}
+
+// What the pairing window produced, gateway → app. The second and last answer, sent once
+// when the window closes.
+//
+// One message per request, not per device: a batch window attributes several, and a client
+// given one message each has nothing telling it the window is over and no defined moment to
+// stop waiting. The devices are listed here; each also arrives as an ordinary DeviceAdded
+// as it appears, so a client may show them as they come and use this to finish.
+//
+// An error and a non-empty device list are not exclusive. A batch of five that attributed
+// three and then expired reports both — three devices and NO_DEVICE_APPEARED — because
+// "some worked" and "the window ran out" are both true and a user needs to be told both.
+message PairingFinished {
+  string in_reply_to = 1; // AppMessage.message_id of the StartPairing
+
+  repeated kusinta.iot.identity.v1.DeviceId device_ids = 2;
+
+  // Why the window produced fewer devices than asked for, absent when it produced them all.
+  // Note this is not always a failure of the request: a window that simply expired unused
+  // ends here too, and is the ordinary result of a user changing their mind.
+  kusinta.iot.common.v1.PairingErrorDetail error = 3;
+}
+
 // GatewayMessage: gateway → app
 message GatewayMessage {
   reserved 15;
@@ -175,6 +257,8 @@ message GatewayMessage {
     // device, not in how the gateway reports having done it, and request_id says which
     // request is being answered either way.
     kusinta.iot.device.v1.DeviceEventBatch device_events = 16;
+    PairingStarted pairing_started = 17;
+    PairingFinished pairing_finished = 18;
   }
 }
 
@@ -192,5 +276,6 @@ message AppMessage {
     UnsubscribeDevices unsubscribe = 8;
     ManagementRequest management = 9;
     AttributeWriteRequest attribute_write = 10;
+    StartPairing start_pairing = 11;
   }
 }

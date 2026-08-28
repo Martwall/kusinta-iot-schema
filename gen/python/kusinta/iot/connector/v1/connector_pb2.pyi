@@ -1,6 +1,7 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.common.v1 import pairing_pb2 as _pairing_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.device.v1 import device_event_pb2 as _device_event_pb2
@@ -50,10 +51,12 @@ class HandshakeAck(_message.Message):
     def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ...) -> None: ...
 
 class DeviceAnnouncement(_message.Message):
-    __slots__ = ("device",)
+    __slots__ = ("device", "pairing_request_id")
     DEVICE_FIELD_NUMBER: _ClassVar[int]
+    PAIRING_REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     device: _device_pb2.Device
-    def __init__(self, device: _Optional[_Union[_device_pb2.Device, _Mapping]] = ...) -> None: ...
+    pairing_request_id: str
+    def __init__(self, device: _Optional[_Union[_device_pb2.Device, _Mapping]] = ..., pairing_request_id: _Optional[str] = ...) -> None: ...
 
 class DeviceRemoval(_message.Message):
     __slots__ = ("device_id", "reason")
@@ -103,8 +106,38 @@ class ConnectorCommandResult(_message.Message):
     settles_by: _timestamp_pb2.Timestamp
     def __init__(self, request_id: _Optional[str] = ..., success: _Optional[bool] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., error: _Optional[_Union[_command_pb2.CommandError, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
+class EnterPairingMode(_message.Message):
+    __slots__ = ("request_id", "window")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    WINDOW_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    window: _pairing_pb2.PairingWindow
+    def __init__(self, request_id: _Optional[str] = ..., window: _Optional[_Union[_pairing_pb2.PairingWindow, _Mapping]] = ...) -> None: ...
+
+class PairingModeResult(_message.Message):
+    __slots__ = ("request_id", "accepted", "error", "expires_at")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    ACCEPTED_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    accepted: bool
+    error: _pairing_pb2.PairingErrorDetail
+    expires_at: _timestamp_pb2.Timestamp
+    def __init__(self, request_id: _Optional[str] = ..., accepted: _Optional[bool] = ..., error: _Optional[_Union[_pairing_pb2.PairingErrorDetail, _Mapping]] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class PairingModeEnded(_message.Message):
+    __slots__ = ("request_id", "devices_attributed", "error")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    DEVICES_ATTRIBUTED_FIELD_NUMBER: _ClassVar[int]
+    ERROR_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    devices_attributed: int
+    error: _pairing_pb2.PairingErrorDetail
+    def __init__(self, request_id: _Optional[str] = ..., devices_attributed: _Optional[int] = ..., error: _Optional[_Union[_pairing_pb2.PairingErrorDetail, _Mapping]] = ...) -> None: ...
+
 class SessionRequest(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake", "property_update", "device_announced", "device_removed", "command_result", "heartbeat", "device_events")
+    __slots__ = ("message_id", "sent_at", "handshake", "property_update", "device_announced", "device_removed", "command_result", "heartbeat", "device_events", "pairing_mode_result", "pairing_mode_ended")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_FIELD_NUMBER: _ClassVar[int]
@@ -114,6 +147,8 @@ class SessionRequest(_message.Message):
     COMMAND_RESULT_FIELD_NUMBER: _ClassVar[int]
     HEARTBEAT_FIELD_NUMBER: _ClassVar[int]
     DEVICE_EVENTS_FIELD_NUMBER: _ClassVar[int]
+    PAIRING_MODE_RESULT_FIELD_NUMBER: _ClassVar[int]
+    PAIRING_MODE_ENDED_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake: ConnectorHandshake
@@ -123,10 +158,12 @@ class SessionRequest(_message.Message):
     command_result: ConnectorCommandResult
     heartbeat: HeartBeat
     device_events: _device_event_pb2.DeviceEventBatch
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[ConnectorCommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ...) -> None: ...
+    pairing_mode_result: PairingModeResult
+    pairing_mode_ended: PairingModeEnded
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[ConnectorCommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_mode_result: _Optional[_Union[PairingModeResult, _Mapping]] = ..., pairing_mode_ended: _Optional[_Union[PairingModeEnded, _Mapping]] = ...) -> None: ...
 
 class SessionResponse(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command", "execute_attribute_write")
+    __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command", "execute_attribute_write", "enter_pairing_mode")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_ACK_FIELD_NUMBER: _ClassVar[int]
@@ -135,6 +172,7 @@ class SessionResponse(_message.Message):
     ERROR_FIELD_NUMBER: _ClassVar[int]
     EXECUTE_COMMAND_FIELD_NUMBER: _ClassVar[int]
     EXECUTE_ATTRIBUTE_WRITE_FIELD_NUMBER: _ClassVar[int]
+    ENTER_PAIRING_MODE_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake_ack: HandshakeAck
@@ -143,4 +181,5 @@ class SessionResponse(_message.Message):
     error: GatewayError
     execute_command: _command_pb2.DeviceCommand
     execute_attribute_write: _command_pb2.AttributeWriteRequest
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake_ack: _Optional[_Union[HandshakeAck, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevice, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevice, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., execute_command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., execute_attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ...) -> None: ...
+    enter_pairing_mode: EnterPairingMode
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake_ack: _Optional[_Union[HandshakeAck, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevice, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevice, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., execute_command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., execute_attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ..., enter_pairing_mode: _Optional[_Union[EnterPairingMode, _Mapping]] = ...) -> None: ...

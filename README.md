@@ -117,6 +117,20 @@ guarded by its own `PermissionAction`:
 | Invoke command | `DeviceCommand` | `INVOKE` |
 | Subscribe | `AppMessage.subscribe` → `PropertyReport` + `DeviceEventBatch` | `SUBSCRIBE` |
 
+**Pairing is not one of these, and is guarded differently.** The four above act on a
+cluster of an existing device, so each is gated by a `PermissionAction` against that
+element. `StartPairing` has no device to gate on — that is the point of it — and names a
+*connector*, or none at all, so it is authorized against the caller's role and what the
+result may become: who ends up owning the device, and which space it may be filed into.
+There is no fifth `PermissionAction`, and adding one would be a permission nothing consults.
+
+It is answered twice, because whether a device joins is settled seconds or minutes later by
+someone pressing a button on hardware that may be asleep or out of range. `PairingStarted`
+reports whether the window opened and when it closes; `PairingFinished` reports what came of
+it, once, listing every device the window produced. `common/v1/pairing.proto` carries
+`PairingError` — one vocabulary both legs speak, so a connector's reason reaches the app
+without a translation table in between.
+
 A write and an invoke are different operations carrying different authority, which is why
 they are separate messages and separate permissions. An action says *how* an element is
 reached; *which* elements are reachable is decided by the three ref lists on `DeviceAcl` —

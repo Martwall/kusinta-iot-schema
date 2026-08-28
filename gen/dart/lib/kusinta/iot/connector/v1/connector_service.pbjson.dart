@@ -15,7 +15,8 @@ import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
 import '../../../../google/protobuf/timestamp.pbjson.dart' as $1;
-import '../../access/v1/acl.pbjson.dart' as $11;
+import '../../access/v1/acl.pbjson.dart' as $12;
+import '../../common/v1/pairing.pbjson.dart' as $11;
 import '../../device/v1/cluster_state.pbjson.dart' as $7;
 import '../../device/v1/descriptor.pbjson.dart' as $4;
 import '../../device/v1/device.pbjson.dart' as $3;
@@ -101,6 +102,9 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.HeartBeat': $0.HeartBeat$json,
   '.kusinta.iot.device.v1.DeviceEventBatch': $10.DeviceEventBatch$json,
   '.kusinta.iot.device.v1.DeviceEvent': $10.DeviceEvent$json,
+  '.kusinta.iot.connector.v1.PairingModeResult': $0.PairingModeResult$json,
+  '.kusinta.iot.common.v1.PairingErrorDetail': $11.PairingErrorDetail$json,
+  '.kusinta.iot.connector.v1.PairingModeEnded': $0.PairingModeEnded$json,
   '.kusinta.iot.connector.v1.SessionResponse': $0.SessionResponse$json,
   '.kusinta.iot.connector.v1.HandshakeAck': $0.HandshakeAck$json,
   '.kusinta.iot.identity.v1.GatewayId': $2.GatewayId$json,
@@ -116,7 +120,9 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
       $9.WindowCoveringLiftParams$json,
   '.kusinta.iot.webrtc.v1.DoorLockParams': $9.DoorLockParams$json,
   '.kusinta.iot.webrtc.v1.AttributeWriteRequest': $9.AttributeWriteRequest$json,
-  '.kusinta.iot.access.v1.AttributeRef': $11.AttributeRef$json,
+  '.kusinta.iot.access.v1.AttributeRef': $12.AttributeRef$json,
+  '.kusinta.iot.connector.v1.EnterPairingMode': $0.EnterPairingMode$json,
+  '.kusinta.iot.common.v1.PairingWindow': $11.PairingWindow$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

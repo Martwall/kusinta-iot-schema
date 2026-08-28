@@ -11,6 +11,8 @@ export 'kusinta/iot/access/v1/acl.pb.dart';
 export 'kusinta/iot/access/v1/acl.pbenum.dart';
 export 'kusinta/iot/access/v1/roles.pb.dart';
 export 'kusinta/iot/access/v1/roles.pbenum.dart';
+export 'kusinta/iot/common/v1/pairing.pb.dart';
+export 'kusinta/iot/common/v1/pairing.pbenum.dart';
 export 'kusinta/iot/common/v1/types.pb.dart';
 export 'kusinta/iot/common/v1/types.pbenum.dart';
 export 'kusinta/iot/device/v1/cluster_state.pb.dart';
