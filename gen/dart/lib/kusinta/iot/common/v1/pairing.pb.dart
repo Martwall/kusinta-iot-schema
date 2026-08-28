@@ -197,9 +197,11 @@ class PairingWindow extends $pb.GeneratedMessage {
   /// rather than any person's. It does not suit a caller whose pairing mints personal
   /// ownership.
   ///
-  /// A hint and a batch cannot be combined, and that is a contradiction rather than a
-  /// limitation: device_hint names one device, so a window restricted to it can never produce
-  /// a second arrival to attribute.
+  /// Ignored where device_hint is set, and narrowed to one rather than refused: a hint names
+  /// one device, so a window restricted to it can never produce a second arrival to attribute.
+  /// The combination is meaningless rather than dangerous, and there is no honest code in
+  /// PairingError for "your request contradicted itself" — refusing it would mean answering a
+  /// malformed request with an entitlement decision that was never made.
   @$pb.TagNumber(3)
   $core.int get maxDevices => $_getIZ(2);
   @$pb.TagNumber(3)
