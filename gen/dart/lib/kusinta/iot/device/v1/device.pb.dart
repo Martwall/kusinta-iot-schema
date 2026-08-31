@@ -550,8 +550,11 @@ class Device extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $pb.PbList<Endpoint> get endpoints => $_getList(1);
 
-  /// When the gateway last had evidence this device exists and is reachable — the
-  /// most recent PropertyUpdate, announcement, or command result concerning it.
+  /// When the gateway last had evidence this device itself — the
+  /// most recent PropertyUpdate (wheter or not the property changed) or command
+  /// result concerning it. Should not be advanced on a device announcement: a
+  /// connector typically re-announces from its own device list, so a device with a
+  /// flat battery would otherwise keep looking freshly seen.
   /// Gateway-observed, not connector-reported: no message on either leg carries a
   /// per-device liveness timestamp, so this is as precise as the device's own report
   /// interval. A device that reports every 15 minutes looks stale for 15 minutes.
