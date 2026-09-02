@@ -8,6 +8,7 @@ import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
+import type { DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -318,6 +319,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: ManagementAck;
     case: "ack";
+  } | {
+    /**
+     * list_device_links
+     *
+     * @generated from field: kusinta.iot.link.v1.DeviceLinkList links = 6;
+     */
+    value: DeviceLinkList;
+    case: "links";
   } | { case: undefined; value?: undefined };
 };
 

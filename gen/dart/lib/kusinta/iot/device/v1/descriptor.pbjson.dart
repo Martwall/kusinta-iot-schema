@@ -105,6 +105,14 @@ const DeviceDescriptor$json = {
       '17': true
     },
     {
+      '1': 'link_capabilities',
+      '3': 20,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.LinkCapability',
+      '10': 'linkCapabilities'
+    },
+    {
       '1': 'homematic',
       '3': 18,
       '4': 1,
@@ -142,7 +150,9 @@ final $typed_data.Uint8List deviceDescriptorDescriptor = $convert.base64Decode(
     'ZmVjeWNsZRJDCg1vd25lcl91c2VyX2lkGA8gASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
     'EuVXNlcklkUgtvd25lclVzZXJJZBI5CgpjbGFpbWVkX2F0GBAgASgLMhouZ29vZ2xlLnByb3Rv'
     'YnVmLlRpbWVzdGFtcFIJY2xhaW1lZEF0EkUKCmJyaWRnZWRfYnkYEyABKAsyIS5rdXNpbnRhLm'
-    'lvdC5pZGVudGl0eS52MS5EZXZpY2VJZEgBUglicmlkZ2VkQnmIAQESWAoJaG9tZW1hdGljGBIg'
-    'ASgLMjgua3VzaW50YS5pb3QudmVuZG9yLmhvbWVtYXRpYy52MS5Ib21lbWF0aWNEZXZpY2VJZG'
-    'VudGl0eUgAUglob21lbWF0aWNCEQoPdmVuZG9yX2lkZW50aXR5Qg0KC19icmlkZ2VkX2J5SgQI'
-    'AhADSgQIERASUhVtYXR0ZXJfZGV2aWNlX3R5cGVfaWRSCWVuZHBvaW50cw==');
+    'lvdC5pZGVudGl0eS52MS5EZXZpY2VJZEgBUglicmlkZ2VkQnmIAQESUAoRbGlua19jYXBhYmls'
+    'aXRpZXMYFCADKAsyIy5rdXNpbnRhLmlvdC5saW5rLnYxLkxpbmtDYXBhYmlsaXR5UhBsaW5rQ2'
+    'FwYWJpbGl0aWVzElgKCWhvbWVtYXRpYxgSIAEoCzI4Lmt1c2ludGEuaW90LnZlbmRvci5ob21l'
+    'bWF0aWMudjEuSG9tZW1hdGljRGV2aWNlSWRlbnRpdHlIAFIJaG9tZW1hdGljQhEKD3ZlbmRvcl'
+    '9pZGVudGl0eUINCgtfYnJpZGdlZF9ieUoECAIQA0oECBEQElIVbWF0dGVyX2RldmljZV90eXBl'
+    'X2lkUgllbmRwb2ludHM=');

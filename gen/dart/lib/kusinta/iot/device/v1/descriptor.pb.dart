@@ -15,8 +15,9 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
-import '../../common/v1/types.pbenum.dart' as $3;
+import '../../common/v1/types.pbenum.dart' as $4;
 import '../../identity/v1/identity.pb.dart' as $0;
+import '../../link/v1/link.pb.dart' as $3;
 import '../../vendor/homematic/v1/homematic.pb.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -43,12 +44,13 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     $core.String? softwareVersionString,
     $0.ConnectorId? connectorId,
     $0.SpaceId? spaceId,
-    $3.DeviceOwnershipType? ownership,
-    $3.DeviceLifecycleState? lifecycle,
+    $4.DeviceOwnershipType? ownership,
+    $4.DeviceLifecycleState? lifecycle,
     $0.UserId? ownerUserId,
     $1.Timestamp? claimedAt,
     $2.HomematicDeviceIdentity? homematic,
     $0.DeviceId? bridgedBy,
+    $core.Iterable<$3.LinkCapability>? linkCapabilities,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -70,6 +72,8 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     if (claimedAt != null) result.claimedAt = claimedAt;
     if (homematic != null) result.homematic = homematic;
     if (bridgedBy != null) result.bridgedBy = bridgedBy;
+    if (linkCapabilities != null)
+      result.linkCapabilities.addAll(linkCapabilities);
     return result;
   }
 
@@ -107,18 +111,18 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOM<$0.SpaceId>(12, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$3.DeviceOwnershipType>(
+    ..e<$4.DeviceOwnershipType>(
         13, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $3.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
-        valueOf: $3.DeviceOwnershipType.valueOf,
-        enumValues: $3.DeviceOwnershipType.values)
-    ..e<$3.DeviceLifecycleState>(
+            $4.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $4.DeviceOwnershipType.valueOf,
+        enumValues: $4.DeviceOwnershipType.values)
+    ..e<$4.DeviceLifecycleState>(
         14, _omitFieldNames ? '' : 'lifecycle', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $3.DeviceLifecycleState.DEVICE_LIFECYCLE_STATE_UNSPECIFIED,
-        valueOf: $3.DeviceLifecycleState.valueOf,
-        enumValues: $3.DeviceLifecycleState.values)
+            $4.DeviceLifecycleState.DEVICE_LIFECYCLE_STATE_UNSPECIFIED,
+        valueOf: $4.DeviceLifecycleState.valueOf,
+        enumValues: $4.DeviceLifecycleState.values)
     ..aOM<$0.UserId>(15, _omitFieldNames ? '' : 'ownerUserId',
         subBuilder: $0.UserId.create)
     ..aOM<$1.Timestamp>(16, _omitFieldNames ? '' : 'claimedAt',
@@ -127,6 +131,9 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
         subBuilder: $2.HomematicDeviceIdentity.create)
     ..aOM<$0.DeviceId>(19, _omitFieldNames ? '' : 'bridgedBy',
         subBuilder: $0.DeviceId.create)
+    ..pc<$3.LinkCapability>(
+        20, _omitFieldNames ? '' : 'linkCapabilities', $pb.PbFieldType.PM,
+        subBuilder: $3.LinkCapability.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -261,18 +268,18 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(10);
 
   @$pb.TagNumber(13)
-  $3.DeviceOwnershipType get ownership => $_getN(11);
+  $4.DeviceOwnershipType get ownership => $_getN(11);
   @$pb.TagNumber(13)
-  set ownership($3.DeviceOwnershipType value) => $_setField(13, value);
+  set ownership($4.DeviceOwnershipType value) => $_setField(13, value);
   @$pb.TagNumber(13)
   $core.bool hasOwnership() => $_has(11);
   @$pb.TagNumber(13)
   void clearOwnership() => $_clearField(13);
 
   @$pb.TagNumber(14)
-  $3.DeviceLifecycleState get lifecycle => $_getN(12);
+  $4.DeviceLifecycleState get lifecycle => $_getN(12);
   @$pb.TagNumber(14)
-  set lifecycle($3.DeviceLifecycleState value) => $_setField(14, value);
+  set lifecycle($4.DeviceLifecycleState value) => $_setField(14, value);
   @$pb.TagNumber(14)
   $core.bool hasLifecycle() => $_has(12);
   @$pb.TagNumber(14)
@@ -337,6 +344,15 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   void clearBridgedBy() => $_clearField(19);
   @$pb.TagNumber(19)
   $0.DeviceId ensureBridgedBy() => $_ensure(16);
+
+  /// What this device can be linked as, if anything — see link.v1.LinkCapability.
+  ///
+  /// Declared by the connector that models the device, because only it knows
+  /// which of a device's connections can lead, which can follow, and what a hub
+  /// will actually broker. Empty means "states nothing", never "cannot be
+  /// linked": a connector that does not model linking says nothing here.
+  @$pb.TagNumber(20)
+  $pb.PbList<$3.LinkCapability> get linkCapabilities => $_getList(17);
 }
 
 const $core.bool _omitFieldNames =

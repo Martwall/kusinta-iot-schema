@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
 import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
+import type { LinkFunction, LinkMode } from "../../link/v1/link_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -383,7 +384,91 @@ export declare const ManagementAckSchema: GenMessage<ManagementAck>;
  * message kind, so these can never be gated by a table keyed on the envelope case
  * the way device messages are. Keeping them behind one case means one place that
  * must authorize, and one refusal path that must not leak whether a target exists.
+ * Links one device to another, so the sender leads the receiver. The gateway
+ * resolves which underlying connections that needs and asks the connector for
+ * them; a caller names two devices and what the link is for.
  *
+ * Authorized against both ends, and not symmetrically. Leading a device is a
+ * standing grant of control over it, so the receiver requires ownership or a
+ * servicing role. The sender's requirement depends on the mode: a gateway-kept
+ * link only reads what the caller can already see, while a device-to-device one
+ * writes configuration to the sender and spends its battery, which is a change
+ * to someone else's hardware.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.CreateDeviceLink
+ */
+export declare type CreateDeviceLink = Message<"kusinta.iot.webrtc.v1.CreateDeviceLink"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId sender = 1;
+   */
+  sender?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId receiver = 2;
+   */
+  receiver?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.link.v1.LinkFunction function = 3;
+   */
+  function: LinkFunction;
+
+  /**
+   * Unset lets the gateway choose, which prefers a device-to-device link where
+   * one can be brokered: it survives a gateway outage and runs at the devices'
+   * own rate. Name one to override that.
+   *
+   * @generated from field: kusinta.iot.link.v1.LinkMode mode = 4;
+   */
+  mode: LinkMode;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.CreateDeviceLink.
+ * Use `create(CreateDeviceLinkSchema)` to create a new message.
+ */
+export declare const CreateDeviceLinkSchema: GenMessage<CreateDeviceLink>;
+
+/**
+ * Removes a link. Note that on at least one vendor, removing a link disturbs the
+ * receiver's own settings and the connector must repair them, so this is not the
+ * no-op it appears to be.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RemoveDeviceLink
+ */
+export declare type RemoveDeviceLink = Message<"kusinta.iot.webrtc.v1.RemoveDeviceLink"> & {
+  /**
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RemoveDeviceLink.
+ * Use `create(RemoveDeviceLinkSchema)` to create a new message.
+ */
+export declare const RemoveDeviceLinkSchema: GenMessage<RemoveDeviceLink>;
+
+/**
+ * Lists links. Unset device_id lists every link among devices the caller can
+ * reach; naming one narrows it to that device's own, in either direction.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListDeviceLinks
+ */
+export declare type ListDeviceLinks = Message<"kusinta.iot.webrtc.v1.ListDeviceLinks"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListDeviceLinks.
+ * Use `create(ListDeviceLinksSchema)` to create a new message.
+ */
+export declare const ListDeviceLinksSchema: GenMessage<ListDeviceLinks>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
  */
 export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.ManagementRequest"> & {
@@ -450,6 +535,24 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ListSpaces;
     case: "listSpaces";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.CreateDeviceLink create_device_link = 11;
+     */
+    value: CreateDeviceLink;
+    case: "createDeviceLink";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.RemoveDeviceLink remove_device_link = 12;
+     */
+    value: RemoveDeviceLink;
+    case: "removeDeviceLink";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListDeviceLinks list_device_links = 13;
+     */
+    value: ListDeviceLinks;
+    case: "listDeviceLinks";
   } | { case: undefined; value?: undefined };
 };
 

@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identity_pb.js";
 import type { ConnectorTransport } from "../../common/v1/types_pb.js";
 import type { Device } from "../../device/v1/device_pb.js";
+import type { DeviceLink, LinkFunction, LinkState } from "../../link/v1/link_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { AttributeWriteRequest, CommandError, DeviceCommand } from "../../webrtc/v1/command_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
@@ -74,6 +75,22 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
    * @generated from field: repeated kusinta.iot.device.v1.Device known_devices = 2;
    */
   knownDevices: Device[];
+
+  /**
+   * Every link the hub currently holds, reported the way known_devices is.
+   *
+   * Links are hub state, not gateway state: they outlive a connector restart and
+   * can be changed by anyone with access to the hub. The gateway's records are a
+   * statement of intent that can drift, so the handshake is the moment to
+   * reconcile them against what is really there. A link in the gateway's records
+   * and not here has gone; one here and not in the records was made elsewhere.
+   *
+   * Empty means "states nothing" — a connector that does not model linking is not
+   * asserting that no links exist.
+   *
+   * @generated from field: repeated kusinta.iot.link.v1.DeviceLink known_links = 3;
+   */
+  knownLinks: DeviceLink[];
 };
 
 /**
@@ -81,6 +98,163 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
  * Use `create(ConnectorHandshakeSchema)` to create a new message.
  */
 export declare const ConnectorHandshakeSchema: GenMessage<ConnectorHandshake>;
+
+/**
+ * Asks the connector to make a link, gateway to connector.
+ *
+ * Names two devices and a function; resolving that into whatever set of
+ * underlying connections the hub needs is the connector's work. It is expected to
+ * build the set atomically and roll back a partial one, because a half-built set
+ * is a link that lists as healthy and carries nothing.
+ *
+ * The connector is also expected to repair whatever the operation disturbs. On at
+ * least one vendor, both making and removing a link leaves the receiving device
+ * in a state it was not in before, with settings that must be captured
+ * beforehand and put back after.
+ *
+ * @generated from message kusinta.iot.connector.v1.CreateLink
+ */
+export declare type CreateLink = Message<"kusinta.iot.connector.v1.CreateLink"> & {
+  /**
+   * assigned by the gateway, echoed in the result
+   *
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId sender = 2;
+   */
+  sender?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId receiver = 3;
+   */
+  receiver?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.link.v1.LinkFunction function = 4;
+   */
+  function: LinkFunction;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.CreateLink.
+ * Use `create(CreateLinkSchema)` to create a new message.
+ */
+export declare const CreateLinkSchema: GenMessage<CreateLink>;
+
+/**
+ * Asks the connector to remove a link it previously made.
+ *
+ * @generated from message kusinta.iot.connector.v1.RemoveLink
+ */
+export declare type RemoveLink = Message<"kusinta.iot.connector.v1.RemoveLink"> & {
+  /**
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId sender = 2;
+   */
+  sender?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId receiver = 3;
+   */
+  receiver?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.link.v1.LinkFunction function = 4;
+   */
+  function: LinkFunction;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.RemoveLink.
+ * Use `create(RemoveLinkSchema)` to create a new message.
+ */
+export declare const RemoveLinkSchema: GenMessage<RemoveLink>;
+
+/**
+ * Asks the connector what links the hub holds, for reconciliation outside a
+ * handshake.
+ *
+ * @generated from message kusinta.iot.connector.v1.ListLinks
+ */
+export declare type ListLinks = Message<"kusinta.iot.connector.v1.ListLinks"> & {
+  /**
+   * Unset asks for every link the hub holds.
+   *
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.ListLinks.
+ * Use `create(ListLinksSchema)` to create a new message.
+ */
+export declare const ListLinksSchema: GenMessage<ListLinks>;
+
+/**
+ * What became of a CreateLink or RemoveLink, connector to gateway.
+ *
+ * Reports the link's observed state rather than merely whether the call was
+ * accepted. A hub will report a link as present and healthy while the devices
+ * ignore it, so "the request did not fail" is not the same claim as "the link is
+ * carrying" and must not be encoded as though it were.
+ *
+ * @generated from message kusinta.iot.connector.v1.LinkResult
+ */
+export declare type LinkResult = Message<"kusinta.iot.connector.v1.LinkResult"> & {
+  /**
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+
+  /**
+   * @generated from field: bool success = 2;
+   */
+  success: boolean;
+
+  /**
+   * @generated from field: kusinta.iot.link.v1.LinkState state = 3;
+   */
+  state: LinkState;
+
+  /**
+   * Why not, when success is false. For a person; never parsed.
+   *
+   * @generated from field: string detail = 4;
+   */
+  detail: string;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.LinkResult.
+ * Use `create(LinkResultSchema)` to create a new message.
+ */
+export declare const LinkResultSchema: GenMessage<LinkResult>;
+
+/**
+ * Every link the hub holds, connector to gateway, in reply to ListLinks.
+ *
+ * @generated from message kusinta.iot.connector.v1.LinksReported
+ */
+export declare type LinksReported = Message<"kusinta.iot.connector.v1.LinksReported"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.link.v1.DeviceLink links = 1;
+   */
+  links: DeviceLink[];
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.LinksReported.
+ * Use `create(LinksReportedSchema)` to create a new message.
+ */
+export declare const LinksReportedSchema: GenMessage<LinksReported>;
 
 /**
  * @generated from message kusinta.iot.connector.v1.HandshakeAck
@@ -521,6 +695,18 @@ export declare type SessionRequest = Message<"kusinta.iot.connector.v1.SessionRe
      */
     value: PairingModeEnded;
     case: "pairingModeEnded";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.LinkResult link_result = 12;
+     */
+    value: LinkResult;
+    case: "linkResult";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.LinksReported links_reported = 13;
+     */
+    value: LinksReported;
+    case: "linksReported";
   } | { case: undefined; value?: undefined };
 };
 
@@ -594,6 +780,28 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
      */
     value: EnterPairingMode;
     case: "enterPairingMode";
+  } | {
+    /**
+     * The link operations. Separate cases rather than one with a verb, so a
+     * connector that models none of them fails to match rather than having to
+     * decode a request it cannot serve.
+     *
+     * @generated from field: kusinta.iot.connector.v1.CreateLink create_link = 11;
+     */
+    value: CreateLink;
+    case: "createLink";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.RemoveLink remove_link = 12;
+     */
+    value: RemoveLink;
+    case: "removeLink";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.ListLinks list_links = 13;
+     */
+    value: ListLinks;
+    case: "listLinks";
   } | { case: undefined; value?: undefined };
 };
 

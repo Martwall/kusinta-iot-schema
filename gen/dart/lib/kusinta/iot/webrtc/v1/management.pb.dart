@@ -16,6 +16,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../common/v1/types.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
+import '../../link/v1/link.pbenum.dart' as $3;
 import '../../space/v1/space.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -1022,6 +1023,252 @@ class ManagementAck extends $pb.GeneratedMessage {
   static ManagementAck? _defaultInstance;
 }
 
+/// A single filing operation, app → gateway. One wrapper rather than ten payload
+/// cases on AppMessage: authorization for filing depends on the target, not on the
+/// message kind, so these can never be gated by a table keyed on the envelope case
+/// the way device messages are. Keeping them behind one case means one place that
+/// must authorize, and one refusal path that must not leak whether a target exists.
+/// Links one device to another, so the sender leads the receiver. The gateway
+/// resolves which underlying connections that needs and asks the connector for
+/// them; a caller names two devices and what the link is for.
+///
+/// Authorized against both ends, and not symmetrically. Leading a device is a
+/// standing grant of control over it, so the receiver requires ownership or a
+/// servicing role. The sender's requirement depends on the mode: a gateway-kept
+/// link only reads what the caller can already see, while a device-to-device one
+/// writes configuration to the sender and spends its battery, which is a change
+/// to someone else's hardware.
+class CreateDeviceLink extends $pb.GeneratedMessage {
+  factory CreateDeviceLink({
+    $0.DeviceId? sender,
+    $0.DeviceId? receiver,
+    $3.LinkFunction? function,
+    $3.LinkMode? mode,
+  }) {
+    final result = create();
+    if (sender != null) result.sender = sender;
+    if (receiver != null) result.receiver = receiver;
+    if (function != null) result.function = function;
+    if (mode != null) result.mode = mode;
+    return result;
+  }
+
+  CreateDeviceLink._();
+
+  factory CreateDeviceLink.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CreateDeviceLink.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateDeviceLink',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'sender',
+        subBuilder: $0.DeviceId.create)
+    ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'receiver',
+        subBuilder: $0.DeviceId.create)
+    ..e<$3.LinkFunction>(
+        3, _omitFieldNames ? '' : 'function', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
+        valueOf: $3.LinkFunction.valueOf,
+        enumValues: $3.LinkFunction.values)
+    ..e<$3.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.LinkMode.LINK_MODE_UNSPECIFIED,
+        valueOf: $3.LinkMode.valueOf,
+        enumValues: $3.LinkMode.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateDeviceLink clone() => CreateDeviceLink()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateDeviceLink copyWith(void Function(CreateDeviceLink) updates) =>
+      super.copyWith((message) => updates(message as CreateDeviceLink))
+          as CreateDeviceLink;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CreateDeviceLink create() => CreateDeviceLink._();
+  @$core.override
+  CreateDeviceLink createEmptyInstance() => create();
+  static $pb.PbList<CreateDeviceLink> createRepeated() =>
+      $pb.PbList<CreateDeviceLink>();
+  @$core.pragma('dart2js:noInline')
+  static CreateDeviceLink getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateDeviceLink>(create);
+  static CreateDeviceLink? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.DeviceId get sender => $_getN(0);
+  @$pb.TagNumber(1)
+  set sender($0.DeviceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSender() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSender() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.DeviceId ensureSender() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $0.DeviceId get receiver => $_getN(1);
+  @$pb.TagNumber(2)
+  set receiver($0.DeviceId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReceiver() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReceiver() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.DeviceId ensureReceiver() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $3.LinkFunction get function => $_getN(2);
+  @$pb.TagNumber(3)
+  set function($3.LinkFunction value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFunction() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFunction() => $_clearField(3);
+
+  /// Unset lets the gateway choose, which prefers a device-to-device link where
+  /// one can be brokered: it survives a gateway outage and runs at the devices'
+  /// own rate. Name one to override that.
+  @$pb.TagNumber(4)
+  $3.LinkMode get mode => $_getN(3);
+  @$pb.TagNumber(4)
+  set mode($3.LinkMode value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMode() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMode() => $_clearField(4);
+}
+
+/// Removes a link. Note that on at least one vendor, removing a link disturbs the
+/// receiver's own settings and the connector must repair them, so this is not the
+/// no-op it appears to be.
+class RemoveDeviceLink extends $pb.GeneratedMessage {
+  factory RemoveDeviceLink({
+    $core.String? linkId,
+  }) {
+    final result = create();
+    if (linkId != null) result.linkId = linkId;
+    return result;
+  }
+
+  RemoveDeviceLink._();
+
+  factory RemoveDeviceLink.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RemoveDeviceLink.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RemoveDeviceLink',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'linkId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveDeviceLink clone() => RemoveDeviceLink()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RemoveDeviceLink copyWith(void Function(RemoveDeviceLink) updates) =>
+      super.copyWith((message) => updates(message as RemoveDeviceLink))
+          as RemoveDeviceLink;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RemoveDeviceLink create() => RemoveDeviceLink._();
+  @$core.override
+  RemoveDeviceLink createEmptyInstance() => create();
+  static $pb.PbList<RemoveDeviceLink> createRepeated() =>
+      $pb.PbList<RemoveDeviceLink>();
+  @$core.pragma('dart2js:noInline')
+  static RemoveDeviceLink getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoveDeviceLink>(create);
+  static RemoveDeviceLink? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get linkId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set linkId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLinkId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLinkId() => $_clearField(1);
+}
+
+/// Lists links. Unset device_id lists every link among devices the caller can
+/// reach; naming one narrows it to that device's own, in either direction.
+class ListDeviceLinks extends $pb.GeneratedMessage {
+  factory ListDeviceLinks({
+    $0.DeviceId? deviceId,
+  }) {
+    final result = create();
+    if (deviceId != null) result.deviceId = deviceId;
+    return result;
+  }
+
+  ListDeviceLinks._();
+
+  factory ListDeviceLinks.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListDeviceLinks.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListDeviceLinks',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $0.DeviceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListDeviceLinks clone() => ListDeviceLinks()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListDeviceLinks copyWith(void Function(ListDeviceLinks) updates) =>
+      super.copyWith((message) => updates(message as ListDeviceLinks))
+          as ListDeviceLinks;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListDeviceLinks create() => ListDeviceLinks._();
+  @$core.override
+  ListDeviceLinks createEmptyInstance() => create();
+  static $pb.PbList<ListDeviceLinks> createRepeated() =>
+      $pb.PbList<ListDeviceLinks>();
+  @$core.pragma('dart2js:noInline')
+  static ListDeviceLinks getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListDeviceLinks>(create);
+  static ListDeviceLinks? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.DeviceId get deviceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set deviceId($0.DeviceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.DeviceId ensureDeviceId() => $_ensure(0);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -1033,14 +1280,12 @@ enum ManagementRequest_Request {
   claimDevice,
   releaseDevice,
   listSpaces,
+  createDeviceLink,
+  removeDeviceLink,
+  listDeviceLinks,
   notSet
 }
 
-/// A single filing operation, app → gateway. One wrapper rather than ten payload
-/// cases on AppMessage: authorization for filing depends on the target, not on the
-/// message kind, so these can never be gated by a table keyed on the envelope case
-/// the way device messages are. Keeping them behind one case means one place that
-/// must authorize, and one refusal path that must not leak whether a target exists.
 class ManagementRequest extends $pb.GeneratedMessage {
   factory ManagementRequest({
     CreateSpace? createSpace,
@@ -1053,6 +1298,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ClaimDevice? claimDevice,
     ReleaseDevice? releaseDevice,
     ListSpaces? listSpaces,
+    CreateDeviceLink? createDeviceLink,
+    RemoveDeviceLink? removeDeviceLink,
+    ListDeviceLinks? listDeviceLinks,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -1068,6 +1316,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (claimDevice != null) result.claimDevice = claimDevice;
     if (releaseDevice != null) result.releaseDevice = releaseDevice;
     if (listSpaces != null) result.listSpaces = listSpaces;
+    if (createDeviceLink != null) result.createDeviceLink = createDeviceLink;
+    if (removeDeviceLink != null) result.removeDeviceLink = removeDeviceLink;
+    if (listDeviceLinks != null) result.listDeviceLinks = listDeviceLinks;
     return result;
   }
 
@@ -1092,6 +1343,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     8: ManagementRequest_Request.claimDevice,
     9: ManagementRequest_Request.releaseDevice,
     10: ManagementRequest_Request.listSpaces,
+    11: ManagementRequest_Request.createDeviceLink,
+    12: ManagementRequest_Request.removeDeviceLink,
+    13: ManagementRequest_Request.listDeviceLinks,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1099,7 +1353,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
     ..aOM<UpdateSpace>(2, _omitFieldNames ? '' : 'updateSpace',
@@ -1121,6 +1375,12 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: ReleaseDevice.create)
     ..aOM<ListSpaces>(10, _omitFieldNames ? '' : 'listSpaces',
         subBuilder: ListSpaces.create)
+    ..aOM<CreateDeviceLink>(11, _omitFieldNames ? '' : 'createDeviceLink',
+        subBuilder: CreateDeviceLink.create)
+    ..aOM<RemoveDeviceLink>(12, _omitFieldNames ? '' : 'removeDeviceLink',
+        subBuilder: RemoveDeviceLink.create)
+    ..aOM<ListDeviceLinks>(13, _omitFieldNames ? '' : 'listDeviceLinks',
+        subBuilder: ListDeviceLinks.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1258,6 +1518,39 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearListSpaces() => $_clearField(10);
   @$pb.TagNumber(10)
   ListSpaces ensureListSpaces() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  CreateDeviceLink get createDeviceLink => $_getN(10);
+  @$pb.TagNumber(11)
+  set createDeviceLink(CreateDeviceLink value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasCreateDeviceLink() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearCreateDeviceLink() => $_clearField(11);
+  @$pb.TagNumber(11)
+  CreateDeviceLink ensureCreateDeviceLink() => $_ensure(10);
+
+  @$pb.TagNumber(12)
+  RemoveDeviceLink get removeDeviceLink => $_getN(11);
+  @$pb.TagNumber(12)
+  set removeDeviceLink(RemoveDeviceLink value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasRemoveDeviceLink() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearRemoveDeviceLink() => $_clearField(12);
+  @$pb.TagNumber(12)
+  RemoveDeviceLink ensureRemoveDeviceLink() => $_ensure(11);
+
+  @$pb.TagNumber(13)
+  ListDeviceLinks get listDeviceLinks => $_getN(12);
+  @$pb.TagNumber(13)
+  set listDeviceLinks(ListDeviceLinks value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasListDeviceLinks() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearListDeviceLinks() => $_clearField(13);
+  @$pb.TagNumber(13)
+  ListDeviceLinks ensureListDeviceLinks() => $_ensure(12);
 }
 
 const $core.bool _omitFieldNames =

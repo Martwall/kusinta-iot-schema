@@ -24,6 +24,7 @@
     "./space":                  "./src/kusinta/iot/space/v1/space_pb.js",
     "./access":                 "./src/kusinta/iot/access/v1/acl_pb.js",
     "./access/roles":           "./src/kusinta/iot/access/v1/roles_pb.js",
+    "./link":                   "./src/kusinta/iot/link/v1/link_pb.js",
     "./connector":              "./src/kusinta/iot/connector/v1/connector_pb.js",
     "./connector/service":      "./src/kusinta/iot/connector/v1/connector_service_pb.js",
     "./webrtc":                 "./src/kusinta/iot/webrtc/v1/envelope_pb.js",

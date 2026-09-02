@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { DeviceLifecycleState, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { LinkCapability } from "../../link/v1/link_pb.js";
 import type { HomematicDeviceIdentity } from "../../vendor/homematic/v1/homematic_pb.js";
 
 /**
@@ -125,6 +126,18 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
    * @generated from field: optional kusinta.iot.identity.v1.DeviceId bridged_by = 19;
    */
   bridgedBy?: DeviceId | undefined;
+
+  /**
+   * What this device can be linked as, if anything — see link.v1.LinkCapability.
+   *
+   * Declared by the connector that models the device, because only it knows
+   * which of a device's connections can lead, which can follow, and what a hub
+   * will actually broker. Empty means "states nothing", never "cannot be
+   * linked": a connector that does not model linking says nothing here.
+   *
+   * @generated from field: repeated kusinta.iot.link.v1.LinkCapability link_capabilities = 20;
+   */
+  linkCapabilities: LinkCapability[];
 
   /**
    * @generated from oneof kusinta.iot.device.v1.DeviceDescriptor.vendor_identity

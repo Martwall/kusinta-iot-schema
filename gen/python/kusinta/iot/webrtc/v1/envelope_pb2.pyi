@@ -6,6 +6,7 @@ from kusinta.iot.common.v1 import pairing_pb2 as _pairing_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.device.v1 import device_event_pb2 as _device_event_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
+from kusinta.iot.link.v1 import link_pb2 as _link_pb2
 from kusinta.iot.space.v1 import space_pb2 as _space_pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as _command_pb2
 from kusinta.iot.webrtc.v1 import device_state_pb2 as _device_state_pb2
@@ -115,18 +116,20 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class ManagementResult(_message.Message):
-    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack")
+    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links")
     IN_REPLY_TO_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     SPACE_FIELD_NUMBER: _ClassVar[int]
     SPACE_TREE_FIELD_NUMBER: _ClassVar[int]
     ACK_FIELD_NUMBER: _ClassVar[int]
+    LINKS_FIELD_NUMBER: _ClassVar[int]
     in_reply_to: str
     error: GatewayError
     space: _space_pb2.Space
     space_tree: _management_pb2.SpaceTree
     ack: _management_pb2.ManagementAck
-    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ...) -> None: ...
+    links: _link_pb2.DeviceLinkList
+    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ...) -> None: ...
 
 class StartPairing(_message.Message):
     __slots__ = ("connector_id", "window", "initial_space_id", "ownership")

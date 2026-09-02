@@ -36,6 +36,8 @@ export 'kusinta/iot/device/v1/property_update.pb.dart';
 export 'kusinta/iot/device/v1/property_update.pbenum.dart';
 export 'kusinta/iot/identity/v1/identity.pb.dart';
 export 'kusinta/iot/identity/v1/identity.pbenum.dart';
+export 'kusinta/iot/link/v1/link.pb.dart';
+export 'kusinta/iot/link/v1/link.pbenum.dart';
 export 'kusinta/iot/registration/v1/registration.pb.dart';
 export 'kusinta/iot/registration/v1/registration.pbenum.dart';
 export 'kusinta/iot/registration/v1/registration_service.connect.client.dart';
