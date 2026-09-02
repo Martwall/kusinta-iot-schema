@@ -120,7 +120,7 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'iot-schema-github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
           sh '''
-            git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/Martwall/kusinta-iot-schema.git
+            git config --local credential.helper '!f() { echo "username=$GIT_USER"; echo "password=$GIT_TOKEN"; }; f'
             VERSION=$(python3 -c "import json; print(json.load(open('gen/js/package.json'))['version'])")
             TAG="v${VERSION}"
             if git rev-parse "$TAG" >/dev/null 2>&1; then
@@ -130,6 +130,7 @@ pipeline {
               git push origin "$TAG"
               echo "Tagged $TAG"
             fi
+            git config --local --unset credential.helper
           '''
         }
       }

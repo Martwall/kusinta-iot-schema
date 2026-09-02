@@ -10,3 +10,6 @@ node_modules/
 
 # Claude Code AI tooling (local only)
 .claude/
+
+# npm auth file written by CI at publish time
+gen/js/.npmrc
