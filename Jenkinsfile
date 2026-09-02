@@ -130,7 +130,7 @@ pipeline {
               git push origin "$TAG"
               echo "Tagged $TAG"
             fi
-            git config --local --unset credential.helper
+            git config --local --unset-all credential.helper || true
           '''
         }
       }
@@ -147,10 +147,7 @@ pipeline {
             if npm view "@kusinta/iot-schema@${VERSION}" version >/dev/null 2>&1; then
               echo "@kusinta/iot-schema@${VERSION} already published — skipping."
             else
-              (umask 077; cat > gen/js/.npmrc <<EOF
-//registry.npmjs.org/:_authToken=${NPM_KUSINTA_IOT_SCHEMA_TOKEN}
-EOF
-              )
+              echo '//registry.npmjs.org/:_authToken=${NPM_KUSINTA_IOT_SCHEMA_TOKEN}' > gen/js/.npmrc
               cd gen/js && npm publish --access public --tag latest
               echo "Published @kusinta/iot-schema@${VERSION}"
             fi
