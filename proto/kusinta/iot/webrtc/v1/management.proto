@@ -4,6 +4,7 @@ package kusinta.iot.webrtc.v1;
 
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
 
 option optimize_for = SPEED;
@@ -159,6 +160,40 @@ message ManagementAck {}
 // message kind, so these can never be gated by a table keyed on the envelope case
 // the way device messages are. Keeping them behind one case means one place that
 // must authorize, and one refusal path that must not leak whether a target exists.
+// Links one device to another, so the sender leads the receiver. The gateway
+// resolves which underlying connections that needs and asks the connector for
+// them; a caller names two devices and what the link is for.
+//
+// Authorized against both ends, and not symmetrically. Leading a device is a
+// standing grant of control over it, so the receiver requires ownership or a
+// servicing role. The sender's requirement depends on the mode: a gateway-kept
+// link only reads what the caller can already see, while a device-to-device one
+// writes configuration to the sender and spends its battery, which is a change
+// to someone else's hardware.
+message CreateDeviceLink {
+  kusinta.iot.identity.v1.DeviceId sender = 1;
+  kusinta.iot.identity.v1.DeviceId receiver = 2;
+  kusinta.iot.link.v1.LinkFunction function = 3;
+
+  // Unset lets the gateway choose, which prefers a device-to-device link where
+  // one can be brokered: it survives a gateway outage and runs at the devices'
+  // own rate. Name one to override that.
+  kusinta.iot.link.v1.LinkMode mode = 4;
+}
+
+// Removes a link. Note that on at least one vendor, removing a link disturbs the
+// receiver's own settings and the connector must repair them, so this is not the
+// no-op it appears to be.
+message RemoveDeviceLink {
+  string link_id = 1;
+}
+
+// Lists links. Unset device_id lists every link among devices the caller can
+// reach; naming one narrows it to that device's own, in either direction.
+message ListDeviceLinks {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -171,5 +206,14 @@ message ManagementRequest {
     ClaimDevice claim_device = 8;
     ReleaseDevice release_device = 9;
     ListSpaces list_spaces = 10;
+    CreateDeviceLink create_device_link = 11;
+    RemoveDeviceLink remove_device_link = 12;
+    ListDeviceLinks list_device_links = 13;
   }
+
+  // Held for an update operation. Nothing about a link is mutable today — remove
+  // and recreate is equivalent and atomic — but tuning a gateway-kept link will
+  // need one. A oneof cannot carry its own reservation; the numbers are the
+  // message's.
+  reserved 14;
 }

@@ -236,6 +236,21 @@ export declare type HmMaintenanceProps = Message<"kusinta.iot.vendor.homematic.v
    * @generated from field: optional bool config_pending = 7;
    */
   configPending?: boolean | undefined;
+
+  /**
+   * True while the device has spent its share of the radio band's transmit budget and
+   * must wait before sending again. The 868 MHz band permits roughly one percent duty
+   * cycle, and it regenerates at about that rate per half minute.
+   *
+   * Worth carrying rather than leaving to the connector, because a spent budget is
+   * indistinguishable from a working device that simply has nothing to say: it stays
+   * reachable, reports no error, and silently drops what it was asked to do. Anything
+   * that writes on a schedule needs to be able to see this before it concludes a device
+   * is ignoring it.
+   *
+   * @generated from field: optional bool duty_cycle = 8;
+   */
+  dutyCycle?: boolean | undefined;
 };
 
 /**

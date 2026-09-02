@@ -24,10 +24,11 @@ _sym_db = _symbol_database.Default()
 
 from kusinta.iot.common.v1 import types_pb2 as kusinta_dot_iot_dot_common_dot_v1_dot_types__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
+from kusinta.iot.link.v1 import link_pb2 as kusinta_dot_iot_dot_link_dot_v1_dot_link__pb2
 from kusinta.iot.space.v1 import space_pb2 as kusinta_dot_iot_dot_space_dot_v1_dot_space__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n&kusinta/iot/webrtc/v1/management.proto\x12\x15kusinta.iot.webrtc.v1\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a kusinta/iot/space/v1/space.proto\"\xe4\x01\n\x0b\x43reateSpace\x12?\n\nspace_type\x18\x01 \x01(\x0e\x32 .kusinta.iot.common.v1.SpaceTypeR\tspaceType\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\x0b\x64\x65scription\x18\x03 \x01(\tR\x0b\x64\x65scription\x12\x14\n\x05\x66loor\x18\x04 \x01(\x05R\x05\x66loor\x12H\n\x0fparent_space_id\x18\x05 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\rparentSpaceId\"\x94\x03\n\x0bUpdateSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x44\n\nspace_type\x18\x02 \x01(\x0e\x32 .kusinta.iot.common.v1.SpaceTypeH\x01R\tspaceType\x88\x01\x01\x12\x17\n\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12%\n\x0b\x64\x65scription\x18\x04 \x01(\tH\x03R\x0b\x64\x65scription\x88\x01\x01\x12\x19\n\x05\x66loor\x18\x05 \x01(\x05H\x04R\x05\x66loor\x88\x01\x01\x12J\n\x0fparent_space_id\x18\x06 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdH\x00R\rparentSpaceId\x12\x18\n\x06\x64\x65tach\x18\x07 \x01(\x08H\x00R\x06\x64\x65tachB\x0f\n\rparent_changeB\r\n\x0b_space_typeB\x07\n\x05_nameB\x0e\n\x0c_descriptionB\x08\n\x06_floor\"d\n\x0b\x44\x65leteSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x18\n\x07\x63\x61scade\x18\x02 \x01(\x08R\x07\x63\x61scade\"\x90\x01\n\x11\x41ssignUserToSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userIdJ\x04\x08\x03\x10\x04\"\x8c\x01\n\x13RemoveUserFromSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\"\x91\x01\n\x12PlaceDeviceInSpace\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x08space_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\"\x94\x01\n\x15RemoveDeviceFromSpace\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x08space_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\"\x8e\x02\n\x0b\x43laimDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12H\n\townership\x18\x02 \x01(\x0e\x32*.kusinta.iot.common.v1.DeviceOwnershipTypeR\townership\x12J\n\x10initial_space_id\x18\x03 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x0einitialSpaceId\x12)\n\x10possession_proof\x18\x04 \x01(\tR\x0fpossessionProof\"O\n\rReleaseDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"R\n\nListSpaces\x12\x44\n\rroot_space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x0brootSpaceId\"@\n\tSpaceTree\x12\x33\n\x06spaces\x18\x01 \x03(\x0b\x32\x1b.kusinta.iot.space.v1.SpaceR\x06spaces\"\x0f\n\rManagementAck\"\xe0\x06\n\x11ManagementRequest\x12G\n\x0c\x63reate_space\x18\x01 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.CreateSpaceH\x00R\x0b\x63reateSpace\x12G\n\x0cupdate_space\x18\x02 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.UpdateSpaceH\x00R\x0bupdateSpace\x12G\n\x0c\x64\x65lete_space\x18\x03 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.DeleteSpaceH\x00R\x0b\x64\x65leteSpace\x12[\n\x14\x61ssign_user_to_space\x18\x04 \x01(\x0b\x32(.kusinta.iot.webrtc.v1.AssignUserToSpaceH\x00R\x11\x61ssignUserToSpace\x12\x61\n\x16remove_user_from_space\x18\x05 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.RemoveUserFromSpaceH\x00R\x13removeUserFromSpace\x12^\n\x15place_device_in_space\x18\x06 \x01(\x0b\x32).kusinta.iot.webrtc.v1.PlaceDeviceInSpaceH\x00R\x12placeDeviceInSpace\x12g\n\x18remove_device_from_space\x18\x07 \x01(\x0b\x32,.kusinta.iot.webrtc.v1.RemoveDeviceFromSpaceH\x00R\x15removeDeviceFromSpace\x12G\n\x0c\x63laim_device\x18\x08 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.ClaimDeviceH\x00R\x0b\x63laimDevice\x12M\n\x0erelease_device\x18\t \x01(\x0b\x32$.kusinta.iot.webrtc.v1.ReleaseDeviceH\x00R\rreleaseDevice\x12\x44\n\x0blist_spaces\x18\n \x01(\x0b\x32!.kusinta.iot.webrtc.v1.ListSpacesH\x00R\nlistSpacesB\t\n\x07requestB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n&kusinta/iot/webrtc/v1/management.proto\x12\x15kusinta.iot.webrtc.v1\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\x1a\x1ekusinta/iot/link/v1/link.proto\x1a kusinta/iot/space/v1/space.proto\"\xe4\x01\n\x0b\x43reateSpace\x12?\n\nspace_type\x18\x01 \x01(\x0e\x32 .kusinta.iot.common.v1.SpaceTypeR\tspaceType\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12 \n\x0b\x64\x65scription\x18\x03 \x01(\tR\x0b\x64\x65scription\x12\x14\n\x05\x66loor\x18\x04 \x01(\x05R\x05\x66loor\x12H\n\x0fparent_space_id\x18\x05 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\rparentSpaceId\"\x94\x03\n\x0bUpdateSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x44\n\nspace_type\x18\x02 \x01(\x0e\x32 .kusinta.iot.common.v1.SpaceTypeH\x01R\tspaceType\x88\x01\x01\x12\x17\n\x04name\x18\x03 \x01(\tH\x02R\x04name\x88\x01\x01\x12%\n\x0b\x64\x65scription\x18\x04 \x01(\tH\x03R\x0b\x64\x65scription\x88\x01\x01\x12\x19\n\x05\x66loor\x18\x05 \x01(\x05H\x04R\x05\x66loor\x88\x01\x01\x12J\n\x0fparent_space_id\x18\x06 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdH\x00R\rparentSpaceId\x12\x18\n\x06\x64\x65tach\x18\x07 \x01(\x08H\x00R\x06\x64\x65tachB\x0f\n\rparent_changeB\r\n\x0b_space_typeB\x07\n\x05_nameB\x0e\n\x0c_descriptionB\x08\n\x06_floor\"d\n\x0b\x44\x65leteSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x18\n\x07\x63\x61scade\x18\x02 \x01(\x08R\x07\x63\x61scade\"\x90\x01\n\x11\x41ssignUserToSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userIdJ\x04\x08\x03\x10\x04\"\x8c\x01\n\x13RemoveUserFromSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\"\x91\x01\n\x12PlaceDeviceInSpace\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x08space_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\"\x94\x01\n\x15RemoveDeviceFromSpace\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12;\n\x08space_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\"\x8e\x02\n\x0b\x43laimDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12H\n\townership\x18\x02 \x01(\x0e\x32*.kusinta.iot.common.v1.DeviceOwnershipTypeR\townership\x12J\n\x10initial_space_id\x18\x03 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x0einitialSpaceId\x12)\n\x10possession_proof\x18\x04 \x01(\tR\x0fpossessionProof\"O\n\rReleaseDevice\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"R\n\nListSpaces\x12\x44\n\rroot_space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x0brootSpaceId\"@\n\tSpaceTree\x12\x33\n\x06spaces\x18\x01 \x03(\x0b\x32\x1b.kusinta.iot.space.v1.SpaceR\x06spaces\"\x0f\n\rManagementAck\"\xfe\x01\n\x10\x43reateDeviceLink\x12\x39\n\x06sender\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x06sender\x12=\n\x08receiver\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08receiver\x12=\n\x08\x66unction\x18\x03 \x01(\x0e\x32!.kusinta.iot.link.v1.LinkFunctionR\x08\x66unction\x12\x31\n\x04mode\x18\x04 \x01(\x0e\x32\x1d.kusinta.iot.link.v1.LinkModeR\x04mode\"+\n\x10RemoveDeviceLink\x12\x17\n\x07link_id\x18\x01 \x01(\tR\x06linkId\"Q\n\x0fListDeviceLinks\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\"\xee\x08\n\x11ManagementRequest\x12G\n\x0c\x63reate_space\x18\x01 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.CreateSpaceH\x00R\x0b\x63reateSpace\x12G\n\x0cupdate_space\x18\x02 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.UpdateSpaceH\x00R\x0bupdateSpace\x12G\n\x0c\x64\x65lete_space\x18\x03 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.DeleteSpaceH\x00R\x0b\x64\x65leteSpace\x12[\n\x14\x61ssign_user_to_space\x18\x04 \x01(\x0b\x32(.kusinta.iot.webrtc.v1.AssignUserToSpaceH\x00R\x11\x61ssignUserToSpace\x12\x61\n\x16remove_user_from_space\x18\x05 \x01(\x0b\x32*.kusinta.iot.webrtc.v1.RemoveUserFromSpaceH\x00R\x13removeUserFromSpace\x12^\n\x15place_device_in_space\x18\x06 \x01(\x0b\x32).kusinta.iot.webrtc.v1.PlaceDeviceInSpaceH\x00R\x12placeDeviceInSpace\x12g\n\x18remove_device_from_space\x18\x07 \x01(\x0b\x32,.kusinta.iot.webrtc.v1.RemoveDeviceFromSpaceH\x00R\x15removeDeviceFromSpace\x12G\n\x0c\x63laim_device\x18\x08 \x01(\x0b\x32\".kusinta.iot.webrtc.v1.ClaimDeviceH\x00R\x0b\x63laimDevice\x12M\n\x0erelease_device\x18\t \x01(\x0b\x32$.kusinta.iot.webrtc.v1.ReleaseDeviceH\x00R\rreleaseDevice\x12\x44\n\x0blist_spaces\x18\n \x01(\x0b\x32!.kusinta.iot.webrtc.v1.ListSpacesH\x00R\nlistSpaces\x12W\n\x12\x63reate_device_link\x18\x0b \x01(\x0b\x32\'.kusinta.iot.webrtc.v1.CreateDeviceLinkH\x00R\x10\x63reateDeviceLink\x12W\n\x12remove_device_link\x18\x0c \x01(\x0b\x32\'.kusinta.iot.webrtc.v1.RemoveDeviceLinkH\x00R\x10removeDeviceLink\x12T\n\x11list_device_links\x18\r \x01(\x0b\x32&.kusinta.iot.webrtc.v1.ListDeviceLinksH\x00R\x0flistDeviceLinksB\t\n\x07requestJ\x04\x08\x0e\x10\x0f\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,30 +36,36 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.webrtc.v1.manag
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_CREATESPACE']._serialized_start=175
-  _globals['_CREATESPACE']._serialized_end=403
-  _globals['_UPDATESPACE']._serialized_start=406
-  _globals['_UPDATESPACE']._serialized_end=810
-  _globals['_DELETESPACE']._serialized_start=812
-  _globals['_DELETESPACE']._serialized_end=912
-  _globals['_ASSIGNUSERTOSPACE']._serialized_start=915
-  _globals['_ASSIGNUSERTOSPACE']._serialized_end=1059
-  _globals['_REMOVEUSERFROMSPACE']._serialized_start=1062
-  _globals['_REMOVEUSERFROMSPACE']._serialized_end=1202
-  _globals['_PLACEDEVICEINSPACE']._serialized_start=1205
-  _globals['_PLACEDEVICEINSPACE']._serialized_end=1350
-  _globals['_REMOVEDEVICEFROMSPACE']._serialized_start=1353
-  _globals['_REMOVEDEVICEFROMSPACE']._serialized_end=1501
-  _globals['_CLAIMDEVICE']._serialized_start=1504
-  _globals['_CLAIMDEVICE']._serialized_end=1774
-  _globals['_RELEASEDEVICE']._serialized_start=1776
-  _globals['_RELEASEDEVICE']._serialized_end=1855
-  _globals['_LISTSPACES']._serialized_start=1857
-  _globals['_LISTSPACES']._serialized_end=1939
-  _globals['_SPACETREE']._serialized_start=1941
-  _globals['_SPACETREE']._serialized_end=2005
-  _globals['_MANAGEMENTACK']._serialized_start=2007
-  _globals['_MANAGEMENTACK']._serialized_end=2022
-  _globals['_MANAGEMENTREQUEST']._serialized_start=2025
-  _globals['_MANAGEMENTREQUEST']._serialized_end=2889
+  _globals['_CREATESPACE']._serialized_start=207
+  _globals['_CREATESPACE']._serialized_end=435
+  _globals['_UPDATESPACE']._serialized_start=438
+  _globals['_UPDATESPACE']._serialized_end=842
+  _globals['_DELETESPACE']._serialized_start=844
+  _globals['_DELETESPACE']._serialized_end=944
+  _globals['_ASSIGNUSERTOSPACE']._serialized_start=947
+  _globals['_ASSIGNUSERTOSPACE']._serialized_end=1091
+  _globals['_REMOVEUSERFROMSPACE']._serialized_start=1094
+  _globals['_REMOVEUSERFROMSPACE']._serialized_end=1234
+  _globals['_PLACEDEVICEINSPACE']._serialized_start=1237
+  _globals['_PLACEDEVICEINSPACE']._serialized_end=1382
+  _globals['_REMOVEDEVICEFROMSPACE']._serialized_start=1385
+  _globals['_REMOVEDEVICEFROMSPACE']._serialized_end=1533
+  _globals['_CLAIMDEVICE']._serialized_start=1536
+  _globals['_CLAIMDEVICE']._serialized_end=1806
+  _globals['_RELEASEDEVICE']._serialized_start=1808
+  _globals['_RELEASEDEVICE']._serialized_end=1887
+  _globals['_LISTSPACES']._serialized_start=1889
+  _globals['_LISTSPACES']._serialized_end=1971
+  _globals['_SPACETREE']._serialized_start=1973
+  _globals['_SPACETREE']._serialized_end=2037
+  _globals['_MANAGEMENTACK']._serialized_start=2039
+  _globals['_MANAGEMENTACK']._serialized_end=2054
+  _globals['_CREATEDEVICELINK']._serialized_start=2057
+  _globals['_CREATEDEVICELINK']._serialized_end=2311
+  _globals['_REMOVEDEVICELINK']._serialized_start=2313
+  _globals['_REMOVEDEVICELINK']._serialized_end=2356
+  _globals['_LISTDEVICELINKS']._serialized_start=2358
+  _globals['_LISTDEVICELINKS']._serialized_end=2439
+  _globals['_MANAGEMENTREQUEST']._serialized_start=2442
+  _globals['_MANAGEMENTREQUEST']._serialized_end=3576
 # @@protoc_insertion_point(module_scope)

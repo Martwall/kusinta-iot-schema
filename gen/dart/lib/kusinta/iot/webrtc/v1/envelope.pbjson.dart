@@ -312,6 +312,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'ack'
     },
+    {
+      '1': 'links',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.DeviceLinkList',
+      '9': 0,
+      '10': 'links'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -325,7 +334,8 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'EjMKBXNwYWNlGAMgASgLMhsua3VzaW50YS5pb3Quc3BhY2UudjEuU3BhY2VIAFIFc3BhY2USQQ'
     'oKc3BhY2VfdHJlZRgEIAEoCzIgLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TcGFjZVRyZWVIAFIJ'
     'c3BhY2VUcmVlEjgKA2FjaxgFIAEoCzIkLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NYW5hZ2VtZW'
-    '50QWNrSABSA2Fja0IICgZyZXN1bHQ=');
+    '50QWNrSABSA2FjaxI7CgVsaW5rcxgGIAEoCzIjLmt1c2ludGEuaW90LmxpbmsudjEuRGV2aWNl'
+    'TGlua0xpc3RIAFIFbGlua3NCCAoGcmVzdWx0');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

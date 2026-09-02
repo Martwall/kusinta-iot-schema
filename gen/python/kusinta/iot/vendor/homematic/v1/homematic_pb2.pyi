@@ -40,7 +40,7 @@ class HmThermostatProps(_message.Message):
     def __init__(self, boost_mode: _Optional[bool] = ..., boost_time_remaining: _Optional[int] = ..., control_mode: _Optional[int] = ..., frost_protection: _Optional[bool] = ..., party_mode: _Optional[bool] = ..., window_state: _Optional[int] = ..., valve_state: _Optional[int] = ..., set_point_mode: _Optional[int] = ..., active_profile: _Optional[int] = ..., actual_temperature_status: _Optional[int] = ..., valve_adaption: _Optional[bool] = ...) -> None: ...
 
 class HmMaintenanceProps(_message.Message):
-    __slots__ = ("error_code", "sabotage", "rssi_device", "rssi_peer", "operating_voltage_status", "unreach", "config_pending")
+    __slots__ = ("error_code", "sabotage", "rssi_device", "rssi_peer", "operating_voltage_status", "unreach", "config_pending", "duty_cycle")
     ERROR_CODE_FIELD_NUMBER: _ClassVar[int]
     SABOTAGE_FIELD_NUMBER: _ClassVar[int]
     RSSI_DEVICE_FIELD_NUMBER: _ClassVar[int]
@@ -48,6 +48,7 @@ class HmMaintenanceProps(_message.Message):
     OPERATING_VOLTAGE_STATUS_FIELD_NUMBER: _ClassVar[int]
     UNREACH_FIELD_NUMBER: _ClassVar[int]
     CONFIG_PENDING_FIELD_NUMBER: _ClassVar[int]
+    DUTY_CYCLE_FIELD_NUMBER: _ClassVar[int]
     error_code: int
     sabotage: bool
     rssi_device: int
@@ -55,4 +56,5 @@ class HmMaintenanceProps(_message.Message):
     operating_voltage_status: int
     unreach: bool
     config_pending: bool
-    def __init__(self, error_code: _Optional[int] = ..., sabotage: _Optional[bool] = ..., rssi_device: _Optional[int] = ..., rssi_peer: _Optional[int] = ..., operating_voltage_status: _Optional[int] = ..., unreach: _Optional[bool] = ..., config_pending: _Optional[bool] = ...) -> None: ...
+    duty_cycle: bool
+    def __init__(self, error_code: _Optional[int] = ..., sabotage: _Optional[bool] = ..., rssi_device: _Optional[int] = ..., rssi_peer: _Optional[int] = ..., operating_voltage_status: _Optional[int] = ..., unreach: _Optional[bool] = ..., config_pending: _Optional[bool] = ..., duty_cycle: _Optional[bool] = ...) -> None: ...

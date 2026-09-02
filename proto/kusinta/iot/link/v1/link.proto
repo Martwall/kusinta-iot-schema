@@ -1,0 +1,161 @@
+syntax = "proto3";
+
+package kusinta.iot.link.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// Links: one device driving another, directly, without the gateway in the loop.
+//
+// A link is a standing arrangement between two devices on the same hub, brokered
+// once and then carried by the devices themselves over their own radio. That is
+// what distinguishes it from anything the gateway could do with a control loop:
+// it keeps working while the gateway is restarting, and it runs at the devices'
+// own rate rather than a polling interval.
+//
+// Links are named device to device on this wire, never channel to channel, even
+// where the underlying system is channel-addressed. Resolving a pair of devices
+// and a function into whatever set of underlying connections that vendor needs is
+// the connector's work, because only the connector knows how many there are or
+// what they are called. A single logical link is routinely several underlying
+// ones, and a half-built set is a broken link that lists as healthy.
+//
+// Field numbers 20-29 are held on DeviceLink for a future endpoint-addressed
+// form, for a vendor whose links are not adequately described by naming two
+// devices.
+
+// What a link makes the sender do to the receiver.
+//
+// A function, not a cluster id, because the two ends do not necessarily speak the
+// same cluster: a wall thermostat reports its temperature as Thermostat
+// LocalTemperature while a bare sensor reports the same quantity as Temperature
+// Measurement MeasuredValue. Each end states its own attribute in its
+// LinkCapability; the function is what says the two belong together.
+enum LinkFunction {
+  LINK_FUNCTION_UNSPECIFIED = 0;
+
+  // The sender leads the receiver's climate control.
+  //
+  // Stronger than feeding a measurement, and the difference matters to anything
+  // building a UI. Both the sender's measured temperature and its setpoint reach
+  // the receiver, and the transfer is one way: the receiver reports the sender's
+  // temperature as its own, and a setpoint written to the receiver is accepted
+  // and then reverted to the sender's. So the sender is the control surface for
+  // the pair, and a setpoint control offered on a linked receiver is one that
+  // appears to work and silently undoes itself.
+  LINK_FUNCTION_CLIMATE_LEAD = 1;
+
+  // The sender's open/closed state reaches the receiver, which acts on it —
+  // typically a contact telling a valve to stop heating an open room.
+  //
+  // Not implied by CLIMATE_LEAD: a device that leads a room's climate does not
+  // necessarily forward its own window state, and on at least one vendor it does
+  // not. Where both are wanted, both are linked.
+  LINK_FUNCTION_WINDOW_STATE = 2;
+
+  // The sender is an input the receiver acts on — a button or remote.
+  LINK_FUNCTION_REMOTE_CONTROL = 3;
+}
+
+// Which end of a link a device can be.
+enum LinkDirection {
+  LINK_DIRECTION_UNSPECIFIED = 0;
+  LINK_DIRECTION_SOURCE = 1; // can lead
+  LINK_DIRECTION_TARGET = 2; // can follow
+}
+
+// How a link is carried.
+enum LinkMode {
+  LINK_MODE_UNSPECIFIED = 0;
+
+  // Device to device, brokered by the hub and then carried without it. Survives
+  // a gateway outage. Requires both devices on the same hub, and the hub's own
+  // support for the function.
+  LINK_MODE_HARD = 1;
+
+  // Kept by the gateway, which reads one device and writes the other. Works
+  // across vendors and across hubs, and is the only option where no hub can
+  // broker the pair — at the cost of not surviving a gateway outage.
+  LINK_MODE_SOFT = 2;
+}
+
+// Whether a link is doing anything.
+//
+// There is deliberately no "created but not yet in effect" state. On current
+// device firmware a link takes effect immediately, and on firmware old enough not
+// to, it never takes effect at all without physical intervention — which is a
+// refusal at creation time, not a state to wait in.
+//
+// Nor should ACTIVE be inferred from the hub reporting a link exists. A hub can
+// report a link as present, unpending and healthy while the devices ignore it
+// entirely; only behaviour distinguishes the two.
+enum LinkState {
+  LINK_STATE_UNSPECIFIED = 0;
+  LINK_STATE_ACTIVE = 1; // carrying
+  LINK_STATE_BROKEN = 2; // the sender is unreachable, gone, or the set is incomplete
+  LINK_STATE_UNKNOWN = 3; // the hub and our records disagree, or the hub cannot say
+}
+
+// One device leading another.
+message DeviceLink {
+  string link_id = 1;
+
+  // Which device leads. This is the control surface for the pair: for a climate
+  // link, the setpoint that governs both is written here.
+  kusinta.iot.identity.v1.DeviceId sender = 2;
+
+  // Which device follows. One sender may lead several receivers — a room with
+  // more than one radiator is the ordinary case — and each is its own link.
+  // Several senders leading one receiver is not modelled: combining two
+  // measurements needs a policy, and no policy is defined.
+  kusinta.iot.identity.v1.DeviceId receiver = 3;
+
+  LinkFunction function = 4;
+  LinkMode mode = 5;
+  LinkState state = 6;
+  google.protobuf.Timestamp created_at = 7;
+
+  // Why the link is not carrying, when state says it is not. Free text for a
+  // person, never parsed.
+  string state_detail = 8;
+
+  reserved 20 to 29; // held for an endpoint-addressed form
+}
+
+// What a device can be linked as, declared by the connector that models it.
+//
+// Without this an interface cannot offer a sensible choice: it has no way to know
+// which of two devices may lead, whether a hub can broker them, or which
+// attribute carries the quantity in question. Matching is mechanical — the same
+// function, opposite directions, and a mode both ends support.
+//
+// Declared per device rather than per endpoint. Endpoint would be more precise,
+// but the channels a link actually attaches to frequently carry no readings and
+// so are not announced as endpoints at all; a per-endpoint declaration would have
+// nowhere honest to live. The reserved range on DeviceLink is where that would go
+// if a vendor ever needs it.
+message LinkCapability {
+  LinkFunction function = 1;
+  LinkDirection direction = 2;
+
+  // Modes this device supports for this function. A hard link additionally
+  // requires the other end to be on the same hub, which this cannot state alone.
+  repeated LinkMode supported_modes = 3;
+
+  // This device's own attribute for this function — the one it reads as a
+  // sender, or the one it is driven through as a receiver. Present because the
+  // two ends of a link need not speak the same cluster.
+  kusinta.iot.access.v1.AttributeRef attribute = 4;
+
+  // Human-readable, from the connector, in whatever locale it was given. For
+  // display beside a choice; never matched on.
+  string label = 5;
+}
+
+// Every link a caller was shown, in reply to a listing.
+message DeviceLinkList {
+  repeated DeviceLink links = 1;
+}

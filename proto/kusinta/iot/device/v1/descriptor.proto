@@ -5,6 +5,7 @@ package kusinta.iot.device.v1;
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/vendor/homematic/v1/homematic.proto";
 
 option optimize_for = SPEED;
@@ -69,6 +70,14 @@ message DeviceDescriptor {
   // not exact, and this field is how a consumer tells which. Absent means the device is
   // reached directly.
   optional kusinta.iot.identity.v1.DeviceId bridged_by = 19;
+
+  // What this device can be linked as, if anything — see link.v1.LinkCapability.
+  //
+  // Declared by the connector that models the device, because only it knows
+  // which of a device's connections can lead, which can follow, and what a hub
+  // will actually broker. Empty means "states nothing", never "cannot be
+  // linked": a connector that does not model linking says nothing here.
+  repeated kusinta.iot.link.v1.LinkCapability link_capabilities = 20;
 
   oneof vendor_identity {
     kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity homematic = 18;

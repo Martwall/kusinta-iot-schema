@@ -76,6 +76,14 @@ const ConnectorHandshake$json = {
       '6': '.kusinta.iot.device.v1.Device',
       '10': 'knownDevices'
     },
+    {
+      '1': 'known_links',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.DeviceLink',
+      '10': 'knownLinks'
+    },
   ],
 };
 
@@ -83,7 +91,150 @@ const ConnectorHandshake$json = {
 final $typed_data.Uint8List connectorHandshakeDescriptor = $convert.base64Decode(
     'ChJDb25uZWN0b3JIYW5kc2hha2USOwoEaW5mbxgBIAEoCzInLmt1c2ludGEuaW90LmNvbm5lY3'
     'Rvci52MS5Db25uZWN0b3JJbmZvUgRpbmZvEkIKDWtub3duX2RldmljZXMYAiADKAsyHS5rdXNp'
-    'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlUgxrbm93bkRldmljZXM=');
+    'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlUgxrbm93bkRldmljZXMSQAoLa25vd25fbGlua3MYAy'
+    'ADKAsyHy5rdXNpbnRhLmlvdC5saW5rLnYxLkRldmljZUxpbmtSCmtub3duTGlua3M=');
+
+@$core.Deprecated('Use createLinkDescriptor instead')
+const CreateLink$json = {
+  '1': 'CreateLink',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {
+      '1': 'sender',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'sender'
+    },
+    {
+      '1': 'receiver',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'receiver'
+    },
+    {
+      '1': 'function',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.link.v1.LinkFunction',
+      '10': 'function'
+    },
+  ],
+};
+
+/// Descriptor for `CreateLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createLinkDescriptor = $convert.base64Decode(
+    'CgpDcmVhdGVMaW5rEhcKB2xpbmtfaWQYASABKAlSBmxpbmtJZBI5CgZzZW5kZXIYAiABKAsyIS'
+    '5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIGc2VuZGVyEj0KCHJlY2VpdmVyGAMg'
+    'ASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCHJlY2VpdmVyEj0KCGZ1bm'
+    'N0aW9uGAQgASgOMiEua3VzaW50YS5pb3QubGluay52MS5MaW5rRnVuY3Rpb25SCGZ1bmN0aW9u');
+
+@$core.Deprecated('Use removeLinkDescriptor instead')
+const RemoveLink$json = {
+  '1': 'RemoveLink',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {
+      '1': 'sender',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'sender'
+    },
+    {
+      '1': 'receiver',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'receiver'
+    },
+    {
+      '1': 'function',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.link.v1.LinkFunction',
+      '10': 'function'
+    },
+  ],
+};
+
+/// Descriptor for `RemoveLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List removeLinkDescriptor = $convert.base64Decode(
+    'CgpSZW1vdmVMaW5rEhcKB2xpbmtfaWQYASABKAlSBmxpbmtJZBI5CgZzZW5kZXIYAiABKAsyIS'
+    '5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIGc2VuZGVyEj0KCHJlY2VpdmVyGAMg'
+    'ASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCHJlY2VpdmVyEj0KCGZ1bm'
+    'N0aW9uGAQgASgOMiEua3VzaW50YS5pb3QubGluay52MS5MaW5rRnVuY3Rpb25SCGZ1bmN0aW9u');
+
+@$core.Deprecated('Use listLinksDescriptor instead')
+const ListLinks$json = {
+  '1': 'ListLinks',
+  '2': [
+    {
+      '1': 'device_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListLinks`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listLinksDescriptor = $convert.base64Decode(
+    'CglMaXN0TGlua3MSPgoJZGV2aWNlX2lkGAEgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
+    'EuRGV2aWNlSWRSCGRldmljZUlk');
+
+@$core.Deprecated('Use linkResultDescriptor instead')
+const LinkResult$json = {
+  '1': 'LinkResult',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {'1': 'success', '3': 2, '4': 1, '5': 8, '10': 'success'},
+    {
+      '1': 'state',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.link.v1.LinkState',
+      '10': 'state'
+    },
+    {'1': 'detail', '3': 4, '4': 1, '5': 9, '10': 'detail'},
+  ],
+};
+
+/// Descriptor for `LinkResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List linkResultDescriptor = $convert.base64Decode(
+    'CgpMaW5rUmVzdWx0EhcKB2xpbmtfaWQYASABKAlSBmxpbmtJZBIYCgdzdWNjZXNzGAIgASgIUg'
+    'dzdWNjZXNzEjQKBXN0YXRlGAMgASgOMh4ua3VzaW50YS5pb3QubGluay52MS5MaW5rU3RhdGVS'
+    'BXN0YXRlEhYKBmRldGFpbBgEIAEoCVIGZGV0YWls');
+
+@$core.Deprecated('Use linksReportedDescriptor instead')
+const LinksReported$json = {
+  '1': 'LinksReported',
+  '2': [
+    {
+      '1': 'links',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.DeviceLink',
+      '10': 'links'
+    },
+  ],
+};
+
+/// Descriptor for `LinksReported`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List linksReportedDescriptor = $convert.base64Decode(
+    'Cg1MaW5rc1JlcG9ydGVkEjUKBWxpbmtzGAEgAygLMh8ua3VzaW50YS5pb3QubGluay52MS5EZX'
+    'ZpY2VMaW5rUgVsaW5rcw==');
 
 @$core.Deprecated('Use handshakeAckDescriptor instead')
 const HandshakeAck$json = {
@@ -451,6 +602,24 @@ const SessionRequest$json = {
       '9': 0,
       '10': 'pairingModeEnded'
     },
+    {
+      '1': 'link_result',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.LinkResult',
+      '9': 0,
+      '10': 'linkResult'
+    },
+    {
+      '1': 'links_reported',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.LinksReported',
+      '9': 0,
+      '10': 'linksReported'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -474,7 +643,10 @@ final $typed_data.Uint8List sessionRequestDescriptor = $convert.base64Decode(
     'ZGV2aWNlRXZlbnRzEl0KE3BhaXJpbmdfbW9kZV9yZXN1bHQYCiABKAsyKy5rdXNpbnRhLmlvdC'
     '5jb25uZWN0b3IudjEuUGFpcmluZ01vZGVSZXN1bHRIAFIRcGFpcmluZ01vZGVSZXN1bHQSWgoS'
     'cGFpcmluZ19tb2RlX2VuZGVkGAsgASgLMioua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlBhaX'
-    'JpbmdNb2RlRW5kZWRIAFIQcGFpcmluZ01vZGVFbmRlZEIJCgdwYXlsb2Fk');
+    'JpbmdNb2RlRW5kZWRIAFIQcGFpcmluZ01vZGVFbmRlZBJHCgtsaW5rX3Jlc3VsdBgMIAEoCzIk'
+    'Lmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5MaW5rUmVzdWx0SABSCmxpbmtSZXN1bHQSUAoObG'
+    'lua3NfcmVwb3J0ZWQYDSABKAsyJy5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuTGlua3NSZXBv'
+    'cnRlZEgAUg1saW5rc1JlcG9ydGVkQgkKB3BheWxvYWQ=');
 
 @$core.Deprecated('Use sessionResponseDescriptor instead')
 const SessionResponse$json = {
@@ -552,6 +724,33 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'enterPairingMode'
     },
+    {
+      '1': 'create_link',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CreateLink',
+      '9': 0,
+      '10': 'createLink'
+    },
+    {
+      '1': 'remove_link',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.RemoveLink',
+      '9': 0,
+      '10': 'removeLink'
+    },
+    {
+      '1': 'list_links',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.ListLinks',
+      '9': 0,
+      '10': 'listLinks'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -575,4 +774,8 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'V0ZV93cml0ZRgJIAEoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5BdHRyaWJ1dGVXcml0ZVJl'
     'cXVlc3RIAFIVZXhlY3V0ZUF0dHJpYnV0ZVdyaXRlEloKEmVudGVyX3BhaXJpbmdfbW9kZRgKIA'
     'EoCzIqLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5FbnRlclBhaXJpbmdNb2RlSABSEGVudGVy'
-    'UGFpcmluZ01vZGVCCQoHcGF5bG9hZEoECAQQBQ==');
+    'UGFpcmluZ01vZGUSRwoLY3JlYXRlX2xpbmsYCyABKAsyJC5rdXNpbnRhLmlvdC5jb25uZWN0b3'
+    'IudjEuQ3JlYXRlTGlua0gAUgpjcmVhdGVMaW5rEkcKC3JlbW92ZV9saW5rGAwgASgLMiQua3Vz'
+    'aW50YS5pb3QuY29ubmVjdG9yLnYxLlJlbW92ZUxpbmtIAFIKcmVtb3ZlTGluaxJECgpsaXN0X2'
+    'xpbmtzGA0gASgLMiMua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkxpc3RMaW5rc0gAUglsaXN0'
+    'TGlua3NCCQoHcGF5bG9hZEoECAQQBQ==');

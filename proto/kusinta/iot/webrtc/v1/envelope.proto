@@ -8,6 +8,7 @@ import "kusinta/iot/common/v1/pairing.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/device/v1/device_event.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 import "kusinta/iot/webrtc/v1/device_state.proto";
@@ -147,6 +148,7 @@ message ManagementResult {
     kusinta.iot.space.v1.Space space = 3; // create_space, update_space
     SpaceTree space_tree = 4; // list_spaces
     ManagementAck ack = 5; // everything else
+    kusinta.iot.link.v1.DeviceLinkList links = 6; // list_device_links
   }
 }
 

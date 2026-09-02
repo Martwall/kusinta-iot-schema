@@ -361,6 +361,85 @@ const ManagementAck$json = {
 final $typed_data.Uint8List managementAckDescriptor =
     $convert.base64Decode('Cg1NYW5hZ2VtZW50QWNr');
 
+@$core.Deprecated('Use createDeviceLinkDescriptor instead')
+const CreateDeviceLink$json = {
+  '1': 'CreateDeviceLink',
+  '2': [
+    {
+      '1': 'sender',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'sender'
+    },
+    {
+      '1': 'receiver',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'receiver'
+    },
+    {
+      '1': 'function',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.link.v1.LinkFunction',
+      '10': 'function'
+    },
+    {
+      '1': 'mode',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.link.v1.LinkMode',
+      '10': 'mode'
+    },
+  ],
+};
+
+/// Descriptor for `CreateDeviceLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createDeviceLinkDescriptor = $convert.base64Decode(
+    'ChBDcmVhdGVEZXZpY2VMaW5rEjkKBnNlbmRlchgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aX'
+    'R5LnYxLkRldmljZUlkUgZzZW5kZXISPQoIcmVjZWl2ZXIYAiABKAsyIS5rdXNpbnRhLmlvdC5p'
+    'ZGVudGl0eS52MS5EZXZpY2VJZFIIcmVjZWl2ZXISPQoIZnVuY3Rpb24YAyABKA4yIS5rdXNpbn'
+    'RhLmlvdC5saW5rLnYxLkxpbmtGdW5jdGlvblIIZnVuY3Rpb24SMQoEbW9kZRgEIAEoDjIdLmt1'
+    'c2ludGEuaW90LmxpbmsudjEuTGlua01vZGVSBG1vZGU=');
+
+@$core.Deprecated('Use removeDeviceLinkDescriptor instead')
+const RemoveDeviceLink$json = {
+  '1': 'RemoveDeviceLink',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+  ],
+};
+
+/// Descriptor for `RemoveDeviceLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List removeDeviceLinkDescriptor = $convert.base64Decode(
+    'ChBSZW1vdmVEZXZpY2VMaW5rEhcKB2xpbmtfaWQYASABKAlSBmxpbmtJZA==');
+
+@$core.Deprecated('Use listDeviceLinksDescriptor instead')
+const ListDeviceLinks$json = {
+  '1': 'ListDeviceLinks',
+  '2': [
+    {
+      '1': 'device_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListDeviceLinks`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listDeviceLinksDescriptor = $convert.base64Decode(
+    'Cg9MaXN0RGV2aWNlTGlua3MSPgoJZGV2aWNlX2lkGAEgASgLMiEua3VzaW50YS5pb3QuaWRlbn'
+    'RpdHkudjEuRGV2aWNlSWRSCGRldmljZUlk');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -455,9 +534,39 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'listSpaces'
     },
+    {
+      '1': 'create_device_link',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.CreateDeviceLink',
+      '9': 0,
+      '10': 'createDeviceLink'
+    },
+    {
+      '1': 'remove_device_link',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RemoveDeviceLink',
+      '9': 0,
+      '10': 'removeDeviceLink'
+    },
+    {
+      '1': 'list_device_links',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListDeviceLinks',
+      '9': 0,
+      '10': 'listDeviceLinks'
+    },
   ],
   '8': [
     {'1': 'request'},
+  ],
+  '9': [
+    {'1': 14, '2': 15},
   ],
 };
 
@@ -478,4 +587,9 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'dC53ZWJydGMudjEuQ2xhaW1EZXZpY2VIAFILY2xhaW1EZXZpY2USTQoOcmVsZWFzZV9kZXZpY2'
     'UYCSABKAsyJC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUmVsZWFzZURldmljZUgAUg1yZWxlYXNl'
     'RGV2aWNlEkQKC2xpc3Rfc3BhY2VzGAogASgLMiEua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpc3'
-    'RTcGFjZXNIAFIKbGlzdFNwYWNlc0IJCgdyZXF1ZXN0');
+    'RTcGFjZXNIAFIKbGlzdFNwYWNlcxJXChJjcmVhdGVfZGV2aWNlX2xpbmsYCyABKAsyJy5rdXNp'
+    'bnRhLmlvdC53ZWJydGMudjEuQ3JlYXRlRGV2aWNlTGlua0gAUhBjcmVhdGVEZXZpY2VMaW5rEl'
+    'cKEnJlbW92ZV9kZXZpY2VfbGluaxgMIAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5SZW1v'
+    'dmVEZXZpY2VMaW5rSABSEHJlbW92ZURldmljZUxpbmsSVAoRbGlzdF9kZXZpY2VfbGlua3MYDS'
+    'ABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlzdERldmljZUxpbmtzSABSD2xpc3REZXZp'
+    'Y2VMaW5rc0IJCgdyZXF1ZXN0SgQIDhAP');
