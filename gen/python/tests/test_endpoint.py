@@ -530,6 +530,39 @@ def test_maintenance_extension_declares_its_documented_key():
     )
 
 
+def test_duty_cycle_is_carried_and_names_its_ccu_parameter():
+    """A spent radio budget is indistinguishable from a device with nothing to say —
+    reachable, no error, and silently dropping what it was asked to do. Anything writing
+    on a schedule has to be able to see it, so it rides the maintenance extension like
+    the other channel-0 readings."""
+    field = homematic_pb2.HmMaintenanceProps.DESCRIPTOR.fields_by_name["duty_cycle"]
+    assert (
+        field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute] == "DUTY_CYCLE"
+    )
+
+
+def test_duty_cycle_is_read_and_report_only():
+    """The device tells you its budget is spent; nothing can set it."""
+    field = homematic_pb2.HmMaintenanceProps.DESCRIPTOR.fields_by_name["duty_cycle"]
+    capabilities = field.GetOptions().Extensions[
+        vendor_options_pb2.vendor_attribute_capabilities
+    ]
+    read, write, report = 1, 2, 4
+    assert capabilities & read
+    assert capabilities & report
+    assert not capabilities & write
+
+
+def test_unset_duty_cycle_is_not_a_claim_that_the_budget_is_fine():
+    """False and absent are different answers, and only the first is the device's."""
+    assert homematic_pb2.HmMaintenanceProps().HasField("duty_cycle") is False
+    reported = homematic_pb2.HmMaintenanceProps(duty_cycle=False)
+    decoded = homematic_pb2.HmMaintenanceProps()
+    decoded.ParseFromString(reported.SerializeToString())
+    assert decoded.HasField("duty_cycle") is True
+    assert decoded.duty_cycle is False
+
+
 def test_maintenance_readings_ride_on_the_power_source_endpoint():
     """Channel 0 is not a Matter endpoint, so its readings land on the synthesized Power
     Source endpoint beside the battery attributes derived from them."""

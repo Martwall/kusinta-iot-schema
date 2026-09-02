@@ -261,6 +261,16 @@ const HmMaintenanceProps$json = {
       '10': 'configPending',
       '17': true
     },
+    {
+      '1': 'duty_cycle',
+      '3': 8,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 7,
+      '10': 'dutyCycle',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -271,6 +281,7 @@ const HmMaintenanceProps$json = {
     {'1': '_operating_voltage_status'},
     {'1': '_unreach'},
     {'1': '_config_pending'},
+    {'1': '_duty_cycle'},
   ],
 };
 
@@ -284,6 +295,8 @@ final $typed_data.Uint8List hmMaintenancePropsDescriptor = $convert.base64Decode
     'gYT1BFUkFUSU5HX1ZPTFRBR0VfU1RBVFVT0LUYBUgEUhZvcGVyYXRpbmdWb2x0YWdlU3RhdHVz'
     'iAEBEi4KB3VucmVhY2gYBiABKAhCD6K1GAdVTlJFQUNI0LUYBUgFUgd1bnJlYWNoiAEBEkIKDm'
     'NvbmZpZ19wZW5kaW5nGAcgASgIQhaitRgOQ09ORklHX1BFTkRJTkfQtRgFSAZSDWNvbmZpZ1Bl'
-    'bmRpbmeIAQE6Gaq1GBVob21lbWF0aWMubWFpbnRlbmFuY2VCDQoLX2Vycm9yX2NvZGVCCwoJX3'
-    'NhYm90YWdlQg4KDF9yc3NpX2RldmljZUIMCgpfcnNzaV9wZWVyQhsKGV9vcGVyYXRpbmdfdm9s'
-    'dGFnZV9zdGF0dXNCCgoIX3VucmVhY2hCEQoPX2NvbmZpZ19wZW5kaW5n');
+    'bmRpbmeIAQESNgoKZHV0eV9jeWNsZRgIIAEoCEISorUYCkRVVFlfQ1lDTEXQtRgFSAdSCWR1dH'
+    'lDeWNsZYgBAToZqrUYFWhvbWVtYXRpYy5tYWludGVuYW5jZUINCgtfZXJyb3JfY29kZUILCglf'
+    'c2Fib3RhZ2VCDgoMX3Jzc2lfZGV2aWNlQgwKCl9yc3NpX3BlZXJCGwoZX29wZXJhdGluZ192b2'
+    'x0YWdlX3N0YXR1c0IKCghfdW5yZWFjaEIRCg9fY29uZmlnX3BlbmRpbmdCDQoLX2R1dHlfY3lj'
+    'bGU=');

@@ -340,6 +340,7 @@ class HmMaintenanceProps extends $pb.GeneratedMessage {
     $core.int? operatingVoltageStatus,
     $core.bool? unreach,
     $core.bool? configPending,
+    $core.bool? dutyCycle,
   }) {
     final result = create();
     if (errorCode != null) result.errorCode = errorCode;
@@ -350,6 +351,7 @@ class HmMaintenanceProps extends $pb.GeneratedMessage {
       result.operatingVoltageStatus = operatingVoltageStatus;
     if (unreach != null) result.unreach = unreach;
     if (configPending != null) result.configPending = configPending;
+    if (dutyCycle != null) result.dutyCycle = dutyCycle;
     return result;
   }
 
@@ -375,6 +377,7 @@ class HmMaintenanceProps extends $pb.GeneratedMessage {
         5, _omitFieldNames ? '' : 'operatingVoltageStatus', $pb.PbFieldType.OU3)
     ..aOB(6, _omitFieldNames ? '' : 'unreach')
     ..aOB(7, _omitFieldNames ? '' : 'configPending')
+    ..aOB(8, _omitFieldNames ? '' : 'dutyCycle')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -477,6 +480,24 @@ class HmMaintenanceProps extends $pb.GeneratedMessage {
   $core.bool hasConfigPending() => $_has(6);
   @$pb.TagNumber(7)
   void clearConfigPending() => $_clearField(7);
+
+  /// True while the device has spent its share of the radio band's transmit budget and
+  /// must wait before sending again. The 868 MHz band permits roughly one percent duty
+  /// cycle, and it regenerates at about that rate per half minute.
+  ///
+  /// Worth carrying rather than leaving to the connector, because a spent budget is
+  /// indistinguishable from a working device that simply has nothing to say: it stays
+  /// reachable, reports no error, and silently drops what it was asked to do. Anything
+  /// that writes on a schedule needs to be able to see this before it concludes a device
+  /// is ignoring it.
+  @$pb.TagNumber(8)
+  $core.bool get dutyCycle => $_getBF(7);
+  @$pb.TagNumber(8)
+  set dutyCycle($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasDutyCycle() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearDutyCycle() => $_clearField(8);
 }
 
 const $core.bool _omitFieldNames =
