@@ -447,6 +447,27 @@ final $typed_data.Uint8List pairingFinishedDescriptor = $convert.base64Decode(
     'ZUlkcxI/CgVlcnJvchgDIAEoCzIpLmt1c2ludGEuaW90LmNvbW1vbi52MS5QYWlyaW5nRXJyb3'
     'JEZXRhaWxSBWVycm9y');
 
+@$core.Deprecated('Use linkChangedDescriptor instead')
+const LinkChanged$json = {
+  '1': 'LinkChanged',
+  '2': [
+    {
+      '1': 'link',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.DeviceLink',
+      '10': 'link'
+    },
+    {'1': 'removed', '3': 2, '4': 1, '5': 8, '10': 'removed'},
+  ],
+};
+
+/// Descriptor for `LinkChanged`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List linkChangedDescriptor = $convert.base64Decode(
+    'CgtMaW5rQ2hhbmdlZBIzCgRsaW5rGAEgASgLMh8ua3VzaW50YS5pb3QubGluay52MS5EZXZpY2'
+    'VMaW5rUgRsaW5rEhgKB3JlbW92ZWQYAiABKAhSB3JlbW92ZWQ=');
+
 @$core.Deprecated('Use gatewayMessageDescriptor instead')
 const GatewayMessage$json = {
   '1': 'GatewayMessage',
@@ -586,6 +607,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'pairingFinished'
     },
+    {
+      '1': 'link_changed',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.LinkChanged',
+      '9': 0,
+      '10': 'linkChanged'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -620,9 +650,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'LmlvdC5kZXZpY2UudjEuRGV2aWNlRXZlbnRCYXRjaEgAUgxkZXZpY2VFdmVudHMSUAoPcGFpcm'
     'luZ19zdGFydGVkGBEgASgLMiUua3VzaW50YS5pb3Qud2VicnRjLnYxLlBhaXJpbmdTdGFydGVk'
     'SABSDnBhaXJpbmdTdGFydGVkElMKEHBhaXJpbmdfZmluaXNoZWQYEiABKAsyJi5rdXNpbnRhLm'
-    'lvdC53ZWJydGMudjEuUGFpcmluZ0ZpbmlzaGVkSABSD3BhaXJpbmdGaW5pc2hlZEIJCgdwYXls'
-    'b2FkSgQIDxAQSgQIBxAIUhZhdHRyaWJ1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA'
-    '==');
+    'lvdC53ZWJydGMudjEuUGFpcmluZ0ZpbmlzaGVkSABSD3BhaXJpbmdGaW5pc2hlZBJHCgxsaW5r'
+    'X2NoYW5nZWQYEyABKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlua0NoYW5nZWRIAFILbG'
+    'lua0NoYW5nZWRCCQoHcGF5bG9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3Vs'
+    'dFIOcHJvcGVydHlfZXZlbnQ=');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

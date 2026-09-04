@@ -8,7 +8,7 @@ import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
-import type { DeviceLinkList } from "../../link/v1/link_pb.js";
+import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -489,7 +489,52 @@ export declare const PairingFinishedSchema: GenMessage<PairingFinished>;
 
 /**
  * GatewayMessage: gateway → app
+ * A link between two devices has changed, gateway to app.
  *
+ * Sent without being asked for, like device_added, and for the same reason: a link's
+ * state is not settled when it is made. A hub accepting a link is not the two devices
+ * honouring it, and a link that was carrying stops when its sender goes quiet — so the
+ * interesting transitions all happen long after the request that created it was
+ * answered. Without this an app can only learn by listing every link again and
+ * diffing, which means a room that has quietly stopped following its wall thermostat
+ * looks correct until somebody reloads.
+ *
+ * Apply as an upsert keyed on link.link_id, never as an insert: the same link is sent
+ * again whenever its state moves.
+ *
+ * Sent only for links the recipient is entitled to see. An unfiltered one would say
+ * which devices exist and how they are arranged, to somebody entitled to neither.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.LinkChanged
+ */
+export declare type LinkChanged = Message<"kusinta.iot.webrtc.v1.LinkChanged"> & {
+  /**
+   * @generated from field: kusinta.iot.link.v1.DeviceLink link = 1;
+   */
+  link?: DeviceLink | undefined;
+
+  /**
+   * The link is gone, rather than merely not carrying. Distinct from a BROKEN state
+   * because the two need opposite responses: a removal is finished business, while a
+   * link that has stopped carrying is a fault worth showing somebody. Announcing a
+   * deletion as BROKEN would leave every removed link looking like something to go
+   * and repair.
+   *
+   * `link` still carries the whole link when this is set, so the app can name what
+   * went rather than only its id.
+   *
+   * @generated from field: bool removed = 2;
+   */
+  removed: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.LinkChanged.
+ * Use `create(LinkChangedSchema)` to create a new message.
+ */
+export declare const LinkChangedSchema: GenMessage<LinkChanged>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
  */
 export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessage"> & {
@@ -595,6 +640,12 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: PairingFinished;
     case: "pairingFinished";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.LinkChanged link_changed = 19;
+     */
+    value: LinkChanged;
+    case: "linkChanged";
   } | { case: undefined; value?: undefined };
 };
 

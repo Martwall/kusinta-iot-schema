@@ -166,3 +166,41 @@ def test_a_link_result_reports_observed_state_not_merely_acceptance():
     fields = connector_pb2.LinkResult.DESCRIPTOR.fields_by_name
     assert "success" in fields
     assert fields["state"].enum_type.full_name == "kusinta.iot.link.v1.LinkState"
+
+
+# --- telling the app a link changed -------------------------------------------------
+
+
+def test_the_app_is_told_when_a_link_changes_rather_than_having_to_ask_again():
+    """A link's state is not settled when it is created.
+
+    A hub accepting a link is not the devices honouring it, and a link that was
+    carrying stops when its sender goes silent. Without a push, an app can only learn
+    either by listing every link again and diffing — so a room that quietly stopped
+    following its wall thermostat looks fine until somebody reloads.
+    """
+    changed = envelope_pb2.LinkChanged(
+        link=link_pb2.DeviceLink(link_id="l-1", state=link_pb2.LINK_STATE_BROKEN)
+    )
+    decoded = envelope_pb2.LinkChanged()
+    decoded.ParseFromString(changed.SerializeToString())
+    assert decoded.link.state == link_pb2.LINK_STATE_BROKEN
+
+
+def test_a_link_change_reaches_the_app_on_its_own_message():
+    """Carried on GatewayMessage beside device_added, and for the same reason: the app
+    is told about a thing it can already see changing, without having asked."""
+    message = envelope_pb2.GatewayMessage(
+        link_changed=envelope_pb2.LinkChanged(link=link_pb2.DeviceLink(link_id="l-1"))
+    )
+    decoded = envelope_pb2.GatewayMessage()
+    decoded.ParseFromString(message.SerializeToString())
+    assert decoded.WhichOneof("payload") == "link_changed"
+
+
+def test_a_removed_link_is_announced_as_removed_not_as_broken():
+    """A link somebody deleted and a link that has stopped carrying need different
+    answers: one is finished, the other is a fault to investigate. Reporting a removal
+    as BROKEN would leave every deleted link looking like something to go and fix."""
+    fields = envelope_pb2.LinkChanged.DESCRIPTOR.fields_by_name
+    assert "removed" in fields

@@ -19,6 +19,7 @@ import {
   ThermostatSetpointParamsSchema,
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import { SetpointAdjustMode } from '../kusinta/iot/webrtc/v1/setpoint_mode_pb.js'
+import { LinkState } from '../kusinta/iot/link/v1/link_pb.js'
 import {
   DeviceStateSnapshotSchema,
   PropertyReportSchema,
@@ -237,6 +238,38 @@ describe('LivePermissionUpdate', () => {
 })
 
 describe('GatewayMessage oneof payload', () => {
+  it('round-trips link_changed payload, so a link that stops carrying can be told', () => {
+    // A hub accepting a link is not the two devices honouring it, and a link that
+    // was carrying stops when its sender goes quiet — both happen long after the
+    // request that made it was answered. Without this the app can only find out by
+    // listing every link again and diffing.
+    const msg = create(GatewayMessageSchema, {
+      messageId: 'gw-msg-link',
+      payload: {
+        case: 'linkChanged',
+        value: { link: { linkId: 'l-1', state: LinkState.BROKEN } },
+      },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case).toBe('linkChanged')
+    if (decoded.payload?.case === 'linkChanged') {
+      expect(decoded.payload.value.link?.state).toBe(LinkState.BROKEN)
+    }
+  })
+
+  it('distinguishes a removed link from one that has merely stopped carrying', () => {
+    // Opposite responses: a removal is finished business, a link that stopped is a
+    // fault worth showing somebody.
+    const msg = create(GatewayMessageSchema, {
+      payload: {
+        case: 'linkChanged',
+        value: { link: { linkId: 'l-1' }, removed: true },
+      },
+    })
+    const decoded = fromBinary(GatewayMessageSchema, toBinary(GatewayMessageSchema, msg))
+    expect(decoded.payload?.case === 'linkChanged' && decoded.payload.value.removed).toBe(true)
+  })
+
   it('round-trips state_snapshot payload', () => {
     const msg = create(GatewayMessageSchema, {
       messageId: 'gw-msg-001',

@@ -1170,6 +1170,101 @@ class PairingFinished extends $pb.GeneratedMessage {
   $5.PairingErrorDetail ensureError() => $_ensure(2);
 }
 
+/// GatewayMessage: gateway → app
+/// A link between two devices has changed, gateway to app.
+///
+/// Sent without being asked for, like device_added, and for the same reason: a link's
+/// state is not settled when it is made. A hub accepting a link is not the two devices
+/// honouring it, and a link that was carrying stops when its sender goes quiet — so the
+/// interesting transitions all happen long after the request that created it was
+/// answered. Without this an app can only learn by listing every link again and
+/// diffing, which means a room that has quietly stopped following its wall thermostat
+/// looks correct until somebody reloads.
+///
+/// Apply as an upsert keyed on link.link_id, never as an insert: the same link is sent
+/// again whenever its state moves.
+///
+/// Sent only for links the recipient is entitled to see. An unfiltered one would say
+/// which devices exist and how they are arranged, to somebody entitled to neither.
+class LinkChanged extends $pb.GeneratedMessage {
+  factory LinkChanged({
+    $4.DeviceLink? link,
+    $core.bool? removed,
+  }) {
+    final result = create();
+    if (link != null) result.link = link;
+    if (removed != null) result.removed = removed;
+    return result;
+  }
+
+  LinkChanged._();
+
+  factory LinkChanged.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LinkChanged.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LinkChanged',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$4.DeviceLink>(1, _omitFieldNames ? '' : 'link',
+        subBuilder: $4.DeviceLink.create)
+    ..aOB(2, _omitFieldNames ? '' : 'removed')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LinkChanged clone() => LinkChanged()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LinkChanged copyWith(void Function(LinkChanged) updates) =>
+      super.copyWith((message) => updates(message as LinkChanged))
+          as LinkChanged;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LinkChanged create() => LinkChanged._();
+  @$core.override
+  LinkChanged createEmptyInstance() => create();
+  static $pb.PbList<LinkChanged> createRepeated() => $pb.PbList<LinkChanged>();
+  @$core.pragma('dart2js:noInline')
+  static LinkChanged getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LinkChanged>(create);
+  static LinkChanged? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $4.DeviceLink get link => $_getN(0);
+  @$pb.TagNumber(1)
+  set link($4.DeviceLink value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLink() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLink() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $4.DeviceLink ensureLink() => $_ensure(0);
+
+  /// The link is gone, rather than merely not carrying. Distinct from a BROKEN state
+  /// because the two need opposite responses: a removal is finished business, while a
+  /// link that has stopped carrying is a fault worth showing somebody. Announcing a
+  /// deletion as BROKEN would leave every removed link looking like something to go
+  /// and repair.
+  ///
+  /// `link` still carries the whole link when this is set, so the app can name what
+  /// went rather than only its id.
+  @$pb.TagNumber(2)
+  $core.bool get removed => $_getBF(1);
+  @$pb.TagNumber(2)
+  set removed($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRemoved() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRemoved() => $_clearField(2);
+}
+
 enum GatewayMessage_Payload {
   stateSnapshot,
   propertyReport,
@@ -1185,10 +1280,10 @@ enum GatewayMessage_Payload {
   deviceEvents,
   pairingStarted,
   pairingFinished,
+  linkChanged,
   notSet
 }
 
-/// GatewayMessage: gateway → app
 class GatewayMessage extends $pb.GeneratedMessage {
   factory GatewayMessage({
     $core.String? messageId,
@@ -1207,6 +1302,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     $10.DeviceEventBatch? deviceEvents,
     PairingStarted? pairingStarted,
     PairingFinished? pairingFinished,
+    LinkChanged? linkChanged,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1225,6 +1321,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (deviceEvents != null) result.deviceEvents = deviceEvents;
     if (pairingStarted != null) result.pairingStarted = pairingStarted;
     if (pairingFinished != null) result.pairingFinished = pairingFinished;
+    if (linkChanged != null) result.linkChanged = linkChanged;
     return result;
   }
 
@@ -1253,6 +1350,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     16: GatewayMessage_Payload.deviceEvents,
     17: GatewayMessage_Payload.pairingStarted,
     18: GatewayMessage_Payload.pairingFinished,
+    19: GatewayMessage_Payload.linkChanged,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1260,7 +1358,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18])
+    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$6.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $6.Timestamp.create)
@@ -1291,6 +1389,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: PairingStarted.create)
     ..aOM<PairingFinished>(18, _omitFieldNames ? '' : 'pairingFinished',
         subBuilder: PairingFinished.create)
+    ..aOM<LinkChanged>(19, _omitFieldNames ? '' : 'linkChanged',
+        subBuilder: LinkChanged.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1495,6 +1595,17 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearPairingFinished() => $_clearField(18);
   @$pb.TagNumber(18)
   PairingFinished ensurePairingFinished() => $_ensure(15);
+
+  @$pb.TagNumber(19)
+  LinkChanged get linkChanged => $_getN(16);
+  @$pb.TagNumber(19)
+  set linkChanged(LinkChanged value) => $_setField(19, value);
+  @$pb.TagNumber(19)
+  $core.bool hasLinkChanged() => $_has(16);
+  @$pb.TagNumber(19)
+  void clearLinkChanged() => $_clearField(19);
+  @$pb.TagNumber(19)
+  LinkChanged ensureLinkChanged() => $_ensure(16);
 }
 
 enum AppMessage_Payload {

@@ -233,6 +233,35 @@ message PairingFinished {
 }
 
 // GatewayMessage: gateway → app
+// A link between two devices has changed, gateway to app.
+//
+// Sent without being asked for, like device_added, and for the same reason: a link's
+// state is not settled when it is made. A hub accepting a link is not the two devices
+// honouring it, and a link that was carrying stops when its sender goes quiet — so the
+// interesting transitions all happen long after the request that created it was
+// answered. Without this an app can only learn by listing every link again and
+// diffing, which means a room that has quietly stopped following its wall thermostat
+// looks correct until somebody reloads.
+//
+// Apply as an upsert keyed on link.link_id, never as an insert: the same link is sent
+// again whenever its state moves.
+//
+// Sent only for links the recipient is entitled to see. An unfiltered one would say
+// which devices exist and how they are arranged, to somebody entitled to neither.
+message LinkChanged {
+  kusinta.iot.link.v1.DeviceLink link = 1;
+
+  // The link is gone, rather than merely not carrying. Distinct from a BROKEN state
+  // because the two need opposite responses: a removal is finished business, while a
+  // link that has stopped carrying is a fault worth showing somebody. Announcing a
+  // deletion as BROKEN would leave every removed link looking like something to go
+  // and repair.
+  //
+  // `link` still carries the whole link when this is set, so the app can name what
+  // went rather than only its id.
+  bool removed = 2;
+}
+
 message GatewayMessage {
   reserved 15;
   reserved "attribute_write_result", "property_event";
@@ -261,6 +290,7 @@ message GatewayMessage {
     kusinta.iot.device.v1.DeviceEventBatch device_events = 16;
     PairingStarted pairing_started = 17;
     PairingFinished pairing_finished = 18;
+    LinkChanged link_changed = 19;
   }
 }
 
