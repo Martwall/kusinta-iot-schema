@@ -52,8 +52,20 @@ LINK_STATE_ACTIVE: LinkState
 LINK_STATE_BROKEN: LinkState
 LINK_STATE_UNKNOWN: LinkState
 
+class LinkSettings(_message.Message):
+    __slots__ = ("climate_lead",)
+    CLIMATE_LEAD_FIELD_NUMBER: _ClassVar[int]
+    climate_lead: ClimateLeadSettings
+    def __init__(self, climate_lead: _Optional[_Union[ClimateLeadSettings, _Mapping]] = ...) -> None: ...
+
+class ClimateLeadSettings(_message.Message):
+    __slots__ = ("target_setpoint",)
+    TARGET_SETPOINT_FIELD_NUMBER: _ClassVar[int]
+    target_setpoint: int
+    def __init__(self, target_setpoint: _Optional[int] = ...) -> None: ...
+
 class DeviceLink(_message.Message):
-    __slots__ = ("link_id", "sender", "receiver", "function", "mode", "state", "created_at", "state_detail")
+    __slots__ = ("link_id", "sender", "receiver", "function", "mode", "state", "created_at", "state_detail", "settings")
     LINK_ID_FIELD_NUMBER: _ClassVar[int]
     SENDER_FIELD_NUMBER: _ClassVar[int]
     RECEIVER_FIELD_NUMBER: _ClassVar[int]
@@ -62,6 +74,7 @@ class DeviceLink(_message.Message):
     STATE_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_DETAIL_FIELD_NUMBER: _ClassVar[int]
+    SETTINGS_FIELD_NUMBER: _ClassVar[int]
     link_id: str
     sender: _identity_pb2.DeviceId
     receiver: _identity_pb2.DeviceId
@@ -70,7 +83,8 @@ class DeviceLink(_message.Message):
     state: LinkState
     created_at: _timestamp_pb2.Timestamp
     state_detail: str
-    def __init__(self, link_id: _Optional[str] = ..., sender: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., receiver: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., function: _Optional[_Union[LinkFunction, str]] = ..., mode: _Optional[_Union[LinkMode, str]] = ..., state: _Optional[_Union[LinkState, str]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_detail: _Optional[str] = ...) -> None: ...
+    settings: LinkSettings
+    def __init__(self, link_id: _Optional[str] = ..., sender: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., receiver: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., function: _Optional[_Union[LinkFunction, str]] = ..., mode: _Optional[_Union[LinkMode, str]] = ..., state: _Optional[_Union[LinkState, str]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_detail: _Optional[str] = ..., settings: _Optional[_Union[LinkSettings, _Mapping]] = ...) -> None: ...
 
 class LinkCapability(_message.Message):
     __slots__ = ("function", "direction", "supported_modes", "attribute", "label")

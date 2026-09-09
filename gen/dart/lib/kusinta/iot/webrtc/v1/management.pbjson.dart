@@ -397,6 +397,14 @@ const CreateDeviceLink$json = {
       '6': '.kusinta.iot.link.v1.LinkMode',
       '10': 'mode'
     },
+    {
+      '1': 'settings',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.LinkSettings',
+      '10': 'settings'
+    },
   ],
 };
 
@@ -406,7 +414,8 @@ final $typed_data.Uint8List createDeviceLinkDescriptor = $convert.base64Decode(
     'R5LnYxLkRldmljZUlkUgZzZW5kZXISPQoIcmVjZWl2ZXIYAiABKAsyIS5rdXNpbnRhLmlvdC5p'
     'ZGVudGl0eS52MS5EZXZpY2VJZFIIcmVjZWl2ZXISPQoIZnVuY3Rpb24YAyABKA4yIS5rdXNpbn'
     'RhLmlvdC5saW5rLnYxLkxpbmtGdW5jdGlvblIIZnVuY3Rpb24SMQoEbW9kZRgEIAEoDjIdLmt1'
-    'c2ludGEuaW90LmxpbmsudjEuTGlua01vZGVSBG1vZGU=');
+    'c2ludGEuaW90LmxpbmsudjEuTGlua01vZGVSBG1vZGUSPQoIc2V0dGluZ3MYBSABKAsyIS5rdX'
+    'NpbnRhLmlvdC5saW5rLnYxLkxpbmtTZXR0aW5nc1IIc2V0dGluZ3M=');
 
 @$core.Deprecated('Use removeDeviceLinkDescriptor instead')
 const RemoveDeviceLink$json = {
@@ -419,6 +428,27 @@ const RemoveDeviceLink$json = {
 /// Descriptor for `RemoveDeviceLink`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List removeDeviceLinkDescriptor = $convert.base64Decode(
     'ChBSZW1vdmVEZXZpY2VMaW5rEhcKB2xpbmtfaWQYASABKAlSBmxpbmtJZA==');
+
+@$core.Deprecated('Use updateDeviceLinkDescriptor instead')
+const UpdateDeviceLink$json = {
+  '1': 'UpdateDeviceLink',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {
+      '1': 'settings',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.LinkSettings',
+      '10': 'settings'
+    },
+  ],
+};
+
+/// Descriptor for `UpdateDeviceLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateDeviceLinkDescriptor = $convert.base64Decode(
+    'ChBVcGRhdGVEZXZpY2VMaW5rEhcKB2xpbmtfaWQYASABKAlSBmxpbmtJZBI9CghzZXR0aW5ncx'
+    'gCIAEoCzIhLmt1c2ludGEuaW90LmxpbmsudjEuTGlua1NldHRpbmdzUghzZXR0aW5ncw==');
 
 @$core.Deprecated('Use listDeviceLinksDescriptor instead')
 const ListDeviceLinks$json = {
@@ -561,12 +591,18 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'listDeviceLinks'
     },
+    {
+      '1': 'update_device_link',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.UpdateDeviceLink',
+      '9': 0,
+      '10': 'updateDeviceLink'
+    },
   ],
   '8': [
     {'1': 'request'},
-  ],
-  '9': [
-    {'1': 14, '2': 15},
   ],
 };
 
@@ -592,4 +628,5 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'cKEnJlbW92ZV9kZXZpY2VfbGluaxgMIAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5SZW1v'
     'dmVEZXZpY2VMaW5rSABSEHJlbW92ZURldmljZUxpbmsSVAoRbGlzdF9kZXZpY2VfbGlua3MYDS'
     'ABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlzdERldmljZUxpbmtzSABSD2xpc3REZXZp'
-    'Y2VMaW5rc0IJCgdyZXF1ZXN0SgQIDhAP');
+    'Y2VMaW5rcxJXChJ1cGRhdGVfZGV2aWNlX2xpbmsYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydG'
+    'MudjEuVXBkYXRlRGV2aWNlTGlua0gAUhB1cGRhdGVEZXZpY2VMaW5rQgkKB3JlcXVlc3Q=');

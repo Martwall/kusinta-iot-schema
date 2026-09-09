@@ -117,22 +117,32 @@ class ManagementAck(_message.Message):
     def __init__(self) -> None: ...
 
 class CreateDeviceLink(_message.Message):
-    __slots__ = ("sender", "receiver", "function", "mode")
+    __slots__ = ("sender", "receiver", "function", "mode", "settings")
     SENDER_FIELD_NUMBER: _ClassVar[int]
     RECEIVER_FIELD_NUMBER: _ClassVar[int]
     FUNCTION_FIELD_NUMBER: _ClassVar[int]
     MODE_FIELD_NUMBER: _ClassVar[int]
+    SETTINGS_FIELD_NUMBER: _ClassVar[int]
     sender: _identity_pb2.DeviceId
     receiver: _identity_pb2.DeviceId
     function: _link_pb2.LinkFunction
     mode: _link_pb2.LinkMode
-    def __init__(self, sender: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., receiver: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., function: _Optional[_Union[_link_pb2.LinkFunction, str]] = ..., mode: _Optional[_Union[_link_pb2.LinkMode, str]] = ...) -> None: ...
+    settings: _link_pb2.LinkSettings
+    def __init__(self, sender: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., receiver: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., function: _Optional[_Union[_link_pb2.LinkFunction, str]] = ..., mode: _Optional[_Union[_link_pb2.LinkMode, str]] = ..., settings: _Optional[_Union[_link_pb2.LinkSettings, _Mapping]] = ...) -> None: ...
 
 class RemoveDeviceLink(_message.Message):
     __slots__ = ("link_id",)
     LINK_ID_FIELD_NUMBER: _ClassVar[int]
     link_id: str
     def __init__(self, link_id: _Optional[str] = ...) -> None: ...
+
+class UpdateDeviceLink(_message.Message):
+    __slots__ = ("link_id", "settings")
+    LINK_ID_FIELD_NUMBER: _ClassVar[int]
+    SETTINGS_FIELD_NUMBER: _ClassVar[int]
+    link_id: str
+    settings: _link_pb2.LinkSettings
+    def __init__(self, link_id: _Optional[str] = ..., settings: _Optional[_Union[_link_pb2.LinkSettings, _Mapping]] = ...) -> None: ...
 
 class ListDeviceLinks(_message.Message):
     __slots__ = ("device_id",)
@@ -141,7 +151,7 @@ class ListDeviceLinks(_message.Message):
     def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
 
 class ManagementRequest(_message.Message):
-    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links")
+    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link")
     CREATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     UPDATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     DELETE_SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -155,6 +165,7 @@ class ManagementRequest(_message.Message):
     CREATE_DEVICE_LINK_FIELD_NUMBER: _ClassVar[int]
     REMOVE_DEVICE_LINK_FIELD_NUMBER: _ClassVar[int]
     LIST_DEVICE_LINKS_FIELD_NUMBER: _ClassVar[int]
+    UPDATE_DEVICE_LINK_FIELD_NUMBER: _ClassVar[int]
     create_space: CreateSpace
     update_space: UpdateSpace
     delete_space: DeleteSpace
@@ -168,4 +179,5 @@ class ManagementRequest(_message.Message):
     create_device_link: CreateDeviceLink
     remove_device_link: RemoveDeviceLink
     list_device_links: ListDeviceLinks
-    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ...) -> None: ...
+    update_device_link: UpdateDeviceLink
+    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ...) -> None: ...

@@ -77,6 +77,54 @@ final $typed_data.Uint8List linkStateDescriptor = $convert.base64Decode(
     'CglMaW5rU3RhdGUSGgoWTElOS19TVEFURV9VTlNQRUNJRklFRBAAEhUKEUxJTktfU1RBVEVfQU'
     'NUSVZFEAESFQoRTElOS19TVEFURV9CUk9LRU4QAhIWChJMSU5LX1NUQVRFX1VOS05PV04QAw==');
 
+@$core.Deprecated('Use linkSettingsDescriptor instead')
+const LinkSettings$json = {
+  '1': 'LinkSettings',
+  '2': [
+    {
+      '1': 'climate_lead',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.ClimateLeadSettings',
+      '9': 0,
+      '10': 'climateLead'
+    },
+  ],
+  '8': [
+    {'1': 'per_function'},
+  ],
+};
+
+/// Descriptor for `LinkSettings`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List linkSettingsDescriptor = $convert.base64Decode(
+    'CgxMaW5rU2V0dGluZ3MSTQoMY2xpbWF0ZV9sZWFkGAEgASgLMigua3VzaW50YS5pb3QubGluay'
+    '52MS5DbGltYXRlTGVhZFNldHRpbmdzSABSC2NsaW1hdGVMZWFkQg4KDHBlcl9mdW5jdGlvbg==');
+
+@$core.Deprecated('Use climateLeadSettingsDescriptor instead')
+const ClimateLeadSettings$json = {
+  '1': 'ClimateLeadSettings',
+  '2': [
+    {
+      '1': 'target_setpoint',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'targetSetpoint',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_target_setpoint'},
+  ],
+};
+
+/// Descriptor for `ClimateLeadSettings`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List climateLeadSettingsDescriptor = $convert.base64Decode(
+    'ChNDbGltYXRlTGVhZFNldHRpbmdzEiwKD3RhcmdldF9zZXRwb2ludBgBIAEoEUgAUg50YXJnZX'
+    'RTZXRwb2ludIgBAUISChBfdGFyZ2V0X3NldHBvaW50');
+
 @$core.Deprecated('Use deviceLinkDescriptor instead')
 const DeviceLink$json = {
   '1': 'DeviceLink',
@@ -131,6 +179,14 @@ const DeviceLink$json = {
       '10': 'createdAt'
     },
     {'1': 'state_detail', '3': 8, '4': 1, '5': 9, '10': 'stateDetail'},
+    {
+      '1': 'settings',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.link.v1.LinkSettings',
+      '10': 'settings'
+    },
   ],
   '9': [
     {'1': 20, '2': 30},
@@ -146,7 +202,8 @@ final $typed_data.Uint8List deviceLinkDescriptor = $convert.base64Decode(
     'EjEKBG1vZGUYBSABKA4yHS5rdXNpbnRhLmlvdC5saW5rLnYxLkxpbmtNb2RlUgRtb2RlEjQKBX'
     'N0YXRlGAYgASgOMh4ua3VzaW50YS5pb3QubGluay52MS5MaW5rU3RhdGVSBXN0YXRlEjkKCmNy'
     'ZWF0ZWRfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgljcmVhdGVkQXQSIQ'
-    'oMc3RhdGVfZGV0YWlsGAggASgJUgtzdGF0ZURldGFpbEoECBQQHg==');
+    'oMc3RhdGVfZGV0YWlsGAggASgJUgtzdGF0ZURldGFpbBI9CghzZXR0aW5ncxgJIAEoCzIhLmt1'
+    'c2ludGEuaW90LmxpbmsudjEuTGlua1NldHRpbmdzUghzZXR0aW5nc0oECBQQHg==');
 
 @$core.Deprecated('Use linkCapabilityDescriptor instead')
 const LinkCapability$json = {

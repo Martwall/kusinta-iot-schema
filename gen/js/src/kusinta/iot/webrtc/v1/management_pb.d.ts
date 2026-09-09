@@ -7,7 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
 import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
-import type { LinkFunction, LinkMode } from "../../link/v1/link_pb.js";
+import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -421,6 +421,20 @@ export declare type CreateDeviceLink = Message<"kusinta.iot.webrtc.v1.CreateDevi
    * @generated from field: kusinta.iot.link.v1.LinkMode mode = 4;
    */
   mode: LinkMode;
+
+  /**
+   * How a gateway-kept link is to behave, set as it is made. Carried here as
+   * well as on UpdateDeviceLink so that a link does not have to exist in a
+   * configured-by-nobody state first — a soft climate link created without a
+   * target is one that holds the room at nothing until a second request
+   * arrives, and every reader would have to handle that transient forever.
+   *
+   * Unset is still allowed and still means unconfigured, since a hard link has
+   * nothing to configure and a caller may genuinely not know the target yet.
+   *
+   * @generated from field: kusinta.iot.link.v1.LinkSettings settings = 5;
+   */
+  settings?: LinkSettings | undefined;
 };
 
 /**
@@ -448,6 +462,49 @@ export declare type RemoveDeviceLink = Message<"kusinta.iot.webrtc.v1.RemoveDevi
  * Use `create(RemoveDeviceLinkSchema)` to create a new message.
  */
 export declare const RemoveDeviceLinkSchema: GenMessage<RemoveDeviceLink>;
+
+/**
+ * Changes how a gateway-kept link behaves — for a climate lead, the temperature
+ * it is to hold.
+ *
+ * Refused on a link that has nothing to configure — see LinkSettings — rather
+ * than accepted as a no-op, so that a caller who has mistaken which link they
+ * are holding is told.
+ *
+ * Authorized against both ends, as creating and removing the link are: deciding
+ * what temperature a room is held at is directing a device, not adjusting one,
+ * so it takes ownership of the ends or a servicing role, not the permission to
+ * turn a thermostat up.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.UpdateDeviceLink
+ */
+export declare type UpdateDeviceLink = Message<"kusinta.iot.webrtc.v1.UpdateDeviceLink"> & {
+  /**
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+
+  /**
+   * Replaces the link's settings rather than patching them: the settings of one
+   * function are few and are set together, so there is no half-update worth
+   * expressing. This is why it does not follow UpdateSpace's per-field optional
+   * shape, which exists for a message whose fields genuinely move alone.
+   *
+   * Unset is refused rather than being given a meaning. It would have to mean
+   * either "leave everything alone", making the request a no-op, or "clear the
+   * settings", which is the one thing that reads like an accident — and the
+   * wire cannot tell those two callers apart.
+   *
+   * @generated from field: kusinta.iot.link.v1.LinkSettings settings = 2;
+   */
+  settings?: LinkSettings | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.UpdateDeviceLink.
+ * Use `create(UpdateDeviceLinkSchema)` to create a new message.
+ */
+export declare const UpdateDeviceLinkSchema: GenMessage<UpdateDeviceLink>;
 
 /**
  * Lists links. Unset device_id lists every link among devices the caller can
@@ -553,6 +610,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ListDeviceLinks;
     case: "listDeviceLinks";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.UpdateDeviceLink update_device_link = 14;
+     */
+    value: UpdateDeviceLink;
+    case: "updateDeviceLink";
   } | { case: undefined; value?: undefined };
 };
 

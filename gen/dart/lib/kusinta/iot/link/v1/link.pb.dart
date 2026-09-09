@@ -23,6 +23,175 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'link.pbenum.dart';
 
+enum LinkSettings_PerFunction { climateLead, notSet }
+
+/// What a gateway-kept link of a given function needs told to it.
+///
+/// Only a soft link has settings at all — see LINK_MODE_HARD for why there is
+/// nothing in a device-to-device link for anyone to tune. And what a soft link
+/// needs differs entirely by function: a climate lead needs a target
+/// temperature, while forwarding a window's open state needs nothing whatsoever.
+/// Hence a oneof per function rather than a flat set of fields: the second
+/// function to arrive must not turn this into a bag of unrelated optionals named
+/// after the first.
+///
+/// A function with no arm here has nothing to configure, and an attempt to
+/// configure it should be refused rather than accepted as a no-op.
+class LinkSettings extends $pb.GeneratedMessage {
+  factory LinkSettings({
+    ClimateLeadSettings? climateLead,
+  }) {
+    final result = create();
+    if (climateLead != null) result.climateLead = climateLead;
+    return result;
+  }
+
+  LinkSettings._();
+
+  factory LinkSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LinkSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, LinkSettings_PerFunction>
+      _LinkSettings_PerFunctionByTag = {
+    1: LinkSettings_PerFunction.climateLead,
+    0: LinkSettings_PerFunction.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LinkSettings',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'kusinta.iot.link.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1])
+    ..aOM<ClimateLeadSettings>(1, _omitFieldNames ? '' : 'climateLead',
+        subBuilder: ClimateLeadSettings.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LinkSettings clone() => LinkSettings()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LinkSettings copyWith(void Function(LinkSettings) updates) =>
+      super.copyWith((message) => updates(message as LinkSettings))
+          as LinkSettings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LinkSettings create() => LinkSettings._();
+  @$core.override
+  LinkSettings createEmptyInstance() => create();
+  static $pb.PbList<LinkSettings> createRepeated() =>
+      $pb.PbList<LinkSettings>();
+  @$core.pragma('dart2js:noInline')
+  static LinkSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<LinkSettings>(create);
+  static LinkSettings? _defaultInstance;
+
+  LinkSettings_PerFunction whichPerFunction() =>
+      _LinkSettings_PerFunctionByTag[$_whichOneof(0)]!;
+  void clearPerFunction() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  ClimateLeadSettings get climateLead => $_getN(0);
+  @$pb.TagNumber(1)
+  set climateLead(ClimateLeadSettings value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasClimateLead() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearClimateLead() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ClimateLeadSettings ensureClimateLead() => $_ensure(0);
+}
+
+/// Settings for a gateway-kept LINK_FUNCTION_CLIMATE_LEAD.
+class ClimateLeadSettings extends $pb.GeneratedMessage {
+  factory ClimateLeadSettings({
+    $core.int? targetSetpoint,
+  }) {
+    final result = create();
+    if (targetSetpoint != null) result.targetSetpoint = targetSetpoint;
+    return result;
+  }
+
+  ClimateLeadSettings._();
+
+  factory ClimateLeadSettings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClimateLeadSettings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClimateLeadSettings',
+      package:
+          const $pb.PackageName(_omitMessageNames ? '' : 'kusinta.iot.link.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'targetSetpoint', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimateLeadSettings clone() => ClimateLeadSettings()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimateLeadSettings copyWith(void Function(ClimateLeadSettings) updates) =>
+      super.copyWith((message) => updates(message as ClimateLeadSettings))
+          as ClimateLeadSettings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClimateLeadSettings create() => ClimateLeadSettings._();
+  @$core.override
+  ClimateLeadSettings createEmptyInstance() => create();
+  static $pb.PbList<ClimateLeadSettings> createRepeated() =>
+      $pb.PbList<ClimateLeadSettings>();
+  @$core.pragma('dart2js:noInline')
+  static ClimateLeadSettings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClimateLeadSettings>(create);
+  static ClimateLeadSettings? _defaultInstance;
+
+  /// The temperature this link is to hold, in centidegrees — the unit and
+  /// encoding device/v1/properties.proto declares for every temperature in this
+  /// schema, so nothing converts between the target and the readings it is
+  /// compared against.
+  ///
+  /// Deliberately not the receiver's own setpoint attribute. A gateway steering
+  /// a radiator valve it cannot feed a measurement to has only that setpoint to
+  /// act through, so the setpoint becomes an actuator position which moves on
+  /// its own and settles wherever the target needs it to. It stops being a
+  /// statement of what anybody asked for, which is why the request is kept here.
+  ///
+  /// Per link, and a sender may lead several receivers — a room with more than
+  /// one radiator is the ordinary case, and each of its links carries this
+  /// number separately. An interface offering "the temperature in here" is
+  /// therefore setting several links at once and is responsible for keeping them
+  /// equal; nothing on this wire enforces it. A single target per room needs a
+  /// room to hang it on, which is a larger idea than a link.
+  ///
+  /// One target, not one per heating and cooling mode: this addresses a valve
+  /// that only heats. A device that can do both would need the setpoint's mode
+  /// named alongside, the way webrtc/v1/setpoint_mode.proto names it for a
+  /// command, and that is a new arm rather than a reinterpretation of this one.
+  ///
+  /// Explicit presence, per the rule properties.proto sets out: a settings
+  /// message present with this never set must not be indistinguishable from a
+  /// request to hold the room at 0.00 °C.
+  @$pb.TagNumber(1)
+  $core.int get targetSetpoint => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set targetSetpoint($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTargetSetpoint() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTargetSetpoint() => $_clearField(1);
+}
+
 /// One device leading another.
 class DeviceLink extends $pb.GeneratedMessage {
   factory DeviceLink({
@@ -34,6 +203,7 @@ class DeviceLink extends $pb.GeneratedMessage {
     LinkState? state,
     $1.Timestamp? createdAt,
     $core.String? stateDetail,
+    LinkSettings? settings,
   }) {
     final result = create();
     if (linkId != null) result.linkId = linkId;
@@ -44,6 +214,7 @@ class DeviceLink extends $pb.GeneratedMessage {
     if (state != null) result.state = state;
     if (createdAt != null) result.createdAt = createdAt;
     if (stateDetail != null) result.stateDetail = stateDetail;
+    if (settings != null) result.settings = settings;
     return result;
   }
 
@@ -81,6 +252,8 @@ class DeviceLink extends $pb.GeneratedMessage {
     ..aOM<$1.Timestamp>(7, _omitFieldNames ? '' : 'createdAt',
         subBuilder: $1.Timestamp.create)
     ..aOS(8, _omitFieldNames ? '' : 'stateDetail')
+    ..aOM<LinkSettings>(9, _omitFieldNames ? '' : 'settings',
+        subBuilder: LinkSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -187,6 +360,24 @@ class DeviceLink extends $pb.GeneratedMessage {
   $core.bool hasStateDetail() => $_has(7);
   @$pb.TagNumber(8)
   void clearStateDetail() => $_clearField(8);
+
+  /// How this link is configured, where its mode and function give it anything
+  /// to configure. Unset on every hard link, and on a soft one nobody has set up
+  /// yet — which is a link that exists and is not doing anything, not an error.
+  ///
+  /// Carried on the link rather than left to be asked for separately, because an
+  /// interface showing a soft climate link has to show the room's target next to
+  /// it, and the receiver's own setpoint is not that number.
+  @$pb.TagNumber(9)
+  LinkSettings get settings => $_getN(8);
+  @$pb.TagNumber(9)
+  set settings(LinkSettings value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasSettings() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearSettings() => $_clearField(9);
+  @$pb.TagNumber(9)
+  LinkSettings ensureSettings() => $_ensure(8);
 }
 
 /// What a device can be linked as, declared by the connector that models it.

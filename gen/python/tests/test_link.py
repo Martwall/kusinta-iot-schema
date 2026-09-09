@@ -13,7 +13,7 @@ shape encodes, each of which was paid for on hardware:
 from google.protobuf import descriptor_pb2 as google_descriptor_pb2
 
 from kusinta.iot.connector.v1 import connector_pb2
-from kusinta.iot.device.v1 import descriptor_pb2
+from kusinta.iot.device.v1 import descriptor_pb2, properties_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.link.v1 import link_pb2
 from kusinta.iot.webrtc.v1 import envelope_pb2, management_pb2
@@ -125,16 +125,20 @@ def test_no_declared_capabilities_is_not_a_claim_that_linking_is_impossible():
 
 def test_link_operations_ride_the_management_wrapper():
     """Authorization depends on the targets, not the message kind — the same reason
-    every filing operation sits behind this wrapper rather than beside it."""
+    every filing operation sits behind this wrapper rather than beside it.
+
+    Update is among them because turning a room's temperature down must not take the
+    link apart: remaking one is not free — on a hard link it disturbs the receiver's
+    own settings — and a link that briefly does not exist is one nothing else can
+    reason about meanwhile.
+    """
     cases = {f.name for f in management_pb2.ManagementRequest.DESCRIPTOR.oneofs[0].fields}
-    assert {"create_device_link", "remove_device_link", "list_device_links"} <= cases
-
-
-def test_an_update_operation_number_is_held():
-    """Nothing about a link is mutable today, but tuning a gateway-kept one will need
-    it, and a oneof cannot carry its own reservation."""
-    ranges = _reserved_ranges(management_pb2.ManagementRequest.DESCRIPTOR)
-    assert any(start <= 14 < end for start, end in ranges), ranges
+    assert {
+        "create_device_link",
+        "remove_device_link",
+        "list_device_links",
+        "update_device_link",
+    } <= cases
 
 
 def test_a_listing_comes_back_as_links_not_an_ack():
@@ -204,3 +208,73 @@ def test_a_removed_link_is_announced_as_removed_not_as_broken():
     as BROKEN would leave every deleted link looking like something to go and fix."""
     fields = envelope_pb2.LinkChanged.DESCRIPTOR.fields_by_name
     assert "removed" in fields
+
+
+# --- configuring a gateway-kept link ------------------------------------------------
+
+
+def test_a_soft_link_s_settings_are_per_function_not_a_flat_set_of_fields():
+    """The second gateway-kept function will not be a climate lead.
+
+    A window contact closing a valve carries a state and needs nothing configured;
+    a climate lead needs the room's target. Flat fields would make the second one
+    arrive as an unrelated optional on a message named after the first, so the
+    settings are a oneof from the start — with one arm today.
+    """
+    assert [o.name for o in link_pb2.LinkSettings.DESCRIPTOR.oneofs] == ["per_function"]
+
+
+def test_the_room_s_target_is_kept_on_the_link_not_on_the_receiver():
+    """On a soft link the receiver's own setpoint is an actuator position the gateway
+    moves as the room needs, not a statement of what anybody asked for. The request
+    has to be recorded somewhere that is not being written to on a timer."""
+    link = link_pb2.DeviceLink(
+        link_id="l-1",
+        mode=link_pb2.LINK_MODE_SOFT,
+        settings=link_pb2.LinkSettings(
+            climate_lead=link_pb2.ClimateLeadSettings(target_setpoint=2150)
+        ),
+    )
+    decoded = link_pb2.DeviceLink()
+    decoded.ParseFromString(link.SerializeToString())
+    assert decoded.settings.climate_lead.target_setpoint == 2150
+
+
+def test_a_target_temperature_is_carried_in_the_same_unit_as_the_readings():
+    """Centidegrees, as a thermostat's own reported setpoint is, so nothing converts
+    between the target and the temperature it is compared against. Asserted against
+    that reading rather than against a constant, so the two cannot part company."""
+    target = link_pb2.ClimateLeadSettings.DESCRIPTOR.fields_by_name["target_setpoint"]
+    reading = properties_pb2.ThermostatProperties.DESCRIPTOR.fields_by_name[
+        "occupied_heating_setpoint"
+    ]
+    assert target.type == reading.type
+
+
+def test_a_target_that_was_never_set_is_not_a_room_held_at_freezing():
+    """Zero is a temperature. Without explicit presence a settings message carrying no
+    target at all is byte-identical to one asking for 0.00 degrees — the rule
+    properties.proto states for every reading, for the same reason."""
+    implicit = [
+        f"{arm.message_type.name}.{field.name}"
+        for arm in link_pb2.LinkSettings.DESCRIPTOR.oneofs_by_name["per_function"].fields
+        for field in arm.message_type.fields
+        if not field.has_presence
+    ]
+    assert implicit == []
+
+
+def test_an_update_names_a_link_and_carries_settings_shaped_like_the_link_s_own():
+    """The same LinkSettings the link itself carries, so a caller reading a link back
+    and adjusting it does not have to translate between two shapes."""
+    fields = management_pb2.UpdateDeviceLink.DESCRIPTOR.fields_by_name
+    assert fields["link_id"].type == google_descriptor_pb2.FieldDescriptorProto.TYPE_STRING
+    assert fields["settings"].message_type.full_name == "kusinta.iot.link.v1.LinkSettings"
+
+
+def test_a_gateway_kept_link_can_be_configured_as_it_is_made():
+    """Otherwise a soft climate link necessarily exists first with no target — holding
+    the room at nothing until a second request lands — and every reader has to handle
+    that transient forever rather than never seeing it."""
+    fields = management_pb2.CreateDeviceLink.DESCRIPTOR.fields_by_name
+    assert fields["settings"].message_type.full_name == "kusinta.iot.link.v1.LinkSettings"

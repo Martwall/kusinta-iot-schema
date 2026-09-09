@@ -179,6 +179,16 @@ message CreateDeviceLink {
   // one can be brokered: it survives a gateway outage and runs at the devices'
   // own rate. Name one to override that.
   kusinta.iot.link.v1.LinkMode mode = 4;
+
+  // How a gateway-kept link is to behave, set as it is made. Carried here as
+  // well as on UpdateDeviceLink so that a link does not have to exist in a
+  // configured-by-nobody state first — a soft climate link created without a
+  // target is one that holds the room at nothing until a second request
+  // arrives, and every reader would have to handle that transient forever.
+  //
+  // Unset is still allowed and still means unconfigured, since a hard link has
+  // nothing to configure and a caller may genuinely not know the target yet.
+  kusinta.iot.link.v1.LinkSettings settings = 5;
 }
 
 // Removes a link. Note that on at least one vendor, removing a link disturbs the
@@ -186,6 +196,32 @@ message CreateDeviceLink {
 // no-op it appears to be.
 message RemoveDeviceLink {
   string link_id = 1;
+}
+
+// Changes how a gateway-kept link behaves — for a climate lead, the temperature
+// it is to hold.
+//
+// Refused on a link that has nothing to configure — see LinkSettings — rather
+// than accepted as a no-op, so that a caller who has mistaken which link they
+// are holding is told.
+//
+// Authorized against both ends, as creating and removing the link are: deciding
+// what temperature a room is held at is directing a device, not adjusting one,
+// so it takes ownership of the ends or a servicing role, not the permission to
+// turn a thermostat up.
+message UpdateDeviceLink {
+  string link_id = 1;
+
+  // Replaces the link's settings rather than patching them: the settings of one
+  // function are few and are set together, so there is no half-update worth
+  // expressing. This is why it does not follow UpdateSpace's per-field optional
+  // shape, which exists for a message whose fields genuinely move alone.
+  //
+  // Unset is refused rather than being given a meaning. It would have to mean
+  // either "leave everything alone", making the request a no-op, or "clear the
+  // settings", which is the one thing that reads like an accident — and the
+  // wire cannot tell those two callers apart.
+  kusinta.iot.link.v1.LinkSettings settings = 2;
 }
 
 // Lists links. Unset device_id lists every link among devices the caller can
@@ -209,11 +245,6 @@ message ManagementRequest {
     CreateDeviceLink create_device_link = 11;
     RemoveDeviceLink remove_device_link = 12;
     ListDeviceLinks list_device_links = 13;
+    UpdateDeviceLink update_device_link = 14;
   }
-
-  // Held for an update operation. Nothing about a link is mutable today — remove
-  // and recreate is equivalent and atomic — but tuning a gateway-kept link will
-  // need one. A oneof cannot carry its own reservation; the numbers are the
-  // message's.
-  reserved 14;
 }

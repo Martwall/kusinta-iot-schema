@@ -27,7 +27,7 @@ from kusinta.iot.access.v1 import acl_pb2 as kusinta_dot_iot_dot_access_dot_v1_d
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ekusinta/iot/link/v1/link.proto\x12\x13kusinta.iot.link.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xab\x03\n\nDeviceLink\x12\x17\n\x07link_id\x18\x01 \x01(\tR\x06linkId\x12\x39\n\x06sender\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x06sender\x12=\n\x08receiver\x18\x03 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08receiver\x12=\n\x08\x66unction\x18\x04 \x01(\x0e\x32!.kusinta.iot.link.v1.LinkFunctionR\x08\x66unction\x12\x31\n\x04mode\x18\x05 \x01(\x0e\x32\x1d.kusinta.iot.link.v1.LinkModeR\x04mode\x12\x34\n\x05state\x18\x06 \x01(\x0e\x32\x1e.kusinta.iot.link.v1.LinkStateR\x05state\x12\x39\n\ncreated_at\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\tcreatedAt\x12!\n\x0cstate_detail\x18\x08 \x01(\tR\x0bstateDetailJ\x04\x08\x14\x10\x1e\"\xb2\x02\n\x0eLinkCapability\x12=\n\x08\x66unction\x18\x01 \x01(\x0e\x32!.kusinta.iot.link.v1.LinkFunctionR\x08\x66unction\x12@\n\tdirection\x18\x02 \x01(\x0e\x32\".kusinta.iot.link.v1.LinkDirectionR\tdirection\x12\x46\n\x0fsupported_modes\x18\x03 \x03(\x0e\x32\x1d.kusinta.iot.link.v1.LinkModeR\x0esupportedModes\x12\x41\n\tattribute\x18\x04 \x01(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\tattribute\x12\x14\n\x05label\x18\x05 \x01(\tR\x05label\"G\n\x0e\x44\x65viceLinkList\x12\x35\n\x05links\x18\x01 \x03(\x0b\x32\x1f.kusinta.iot.link.v1.DeviceLinkR\x05links*\x8f\x01\n\x0cLinkFunction\x12\x1d\n\x19LINK_FUNCTION_UNSPECIFIED\x10\x00\x12\x1e\n\x1aLINK_FUNCTION_CLIMATE_LEAD\x10\x01\x12\x1e\n\x1aLINK_FUNCTION_WINDOW_STATE\x10\x02\x12 \n\x1cLINK_FUNCTION_REMOTE_CONTROL\x10\x03*e\n\rLinkDirection\x12\x1e\n\x1aLINK_DIRECTION_UNSPECIFIED\x10\x00\x12\x19\n\x15LINK_DIRECTION_SOURCE\x10\x01\x12\x19\n\x15LINK_DIRECTION_TARGET\x10\x02*M\n\x08LinkMode\x12\x19\n\x15LINK_MODE_UNSPECIFIED\x10\x00\x12\x12\n\x0eLINK_MODE_HARD\x10\x01\x12\x12\n\x0eLINK_MODE_SOFT\x10\x02*m\n\tLinkState\x12\x1a\n\x16LINK_STATE_UNSPECIFIED\x10\x00\x12\x15\n\x11LINK_STATE_ACTIVE\x10\x01\x12\x15\n\x11LINK_STATE_BROKEN\x10\x02\x12\x16\n\x12LINK_STATE_UNKNOWN\x10\x03\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1ekusinta/iot/link/v1/link.proto\x12\x13kusinta.iot.link.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a&kusinta/iot/identity/v1/identity.proto\"m\n\x0cLinkSettings\x12M\n\x0c\x63limate_lead\x18\x01 \x01(\x0b\x32(.kusinta.iot.link.v1.ClimateLeadSettingsH\x00R\x0b\x63limateLeadB\x0e\n\x0cper_function\"W\n\x13\x43limateLeadSettings\x12,\n\x0ftarget_setpoint\x18\x01 \x01(\x11H\x00R\x0etargetSetpoint\x88\x01\x01\x42\x12\n\x10_target_setpoint\"\xea\x03\n\nDeviceLink\x12\x17\n\x07link_id\x18\x01 \x01(\tR\x06linkId\x12\x39\n\x06sender\x18\x02 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x06sender\x12=\n\x08receiver\x18\x03 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08receiver\x12=\n\x08\x66unction\x18\x04 \x01(\x0e\x32!.kusinta.iot.link.v1.LinkFunctionR\x08\x66unction\x12\x31\n\x04mode\x18\x05 \x01(\x0e\x32\x1d.kusinta.iot.link.v1.LinkModeR\x04mode\x12\x34\n\x05state\x18\x06 \x01(\x0e\x32\x1e.kusinta.iot.link.v1.LinkStateR\x05state\x12\x39\n\ncreated_at\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\tcreatedAt\x12!\n\x0cstate_detail\x18\x08 \x01(\tR\x0bstateDetail\x12=\n\x08settings\x18\t \x01(\x0b\x32!.kusinta.iot.link.v1.LinkSettingsR\x08settingsJ\x04\x08\x14\x10\x1e\"\xb2\x02\n\x0eLinkCapability\x12=\n\x08\x66unction\x18\x01 \x01(\x0e\x32!.kusinta.iot.link.v1.LinkFunctionR\x08\x66unction\x12@\n\tdirection\x18\x02 \x01(\x0e\x32\".kusinta.iot.link.v1.LinkDirectionR\tdirection\x12\x46\n\x0fsupported_modes\x18\x03 \x03(\x0e\x32\x1d.kusinta.iot.link.v1.LinkModeR\x0esupportedModes\x12\x41\n\tattribute\x18\x04 \x01(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\tattribute\x12\x14\n\x05label\x18\x05 \x01(\tR\x05label\"G\n\x0e\x44\x65viceLinkList\x12\x35\n\x05links\x18\x01 \x03(\x0b\x32\x1f.kusinta.iot.link.v1.DeviceLinkR\x05links*\x8f\x01\n\x0cLinkFunction\x12\x1d\n\x19LINK_FUNCTION_UNSPECIFIED\x10\x00\x12\x1e\n\x1aLINK_FUNCTION_CLIMATE_LEAD\x10\x01\x12\x1e\n\x1aLINK_FUNCTION_WINDOW_STATE\x10\x02\x12 \n\x1cLINK_FUNCTION_REMOTE_CONTROL\x10\x03*e\n\rLinkDirection\x12\x1e\n\x1aLINK_DIRECTION_UNSPECIFIED\x10\x00\x12\x19\n\x15LINK_DIRECTION_SOURCE\x10\x01\x12\x19\n\x15LINK_DIRECTION_TARGET\x10\x02*M\n\x08LinkMode\x12\x19\n\x15LINK_MODE_UNSPECIFIED\x10\x00\x12\x12\n\x0eLINK_MODE_HARD\x10\x01\x12\x12\n\x0eLINK_MODE_SOFT\x10\x02*m\n\tLinkState\x12\x1a\n\x16LINK_STATE_UNSPECIFIED\x10\x00\x12\x15\n\x11LINK_STATE_ACTIVE\x10\x01\x12\x15\n\x11LINK_STATE_BROKEN\x10\x02\x12\x16\n\x12LINK_STATE_UNKNOWN\x10\x03\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,18 +35,22 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.link.v1.link_pb
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_LINKFUNCTION']._serialized_start=974
-  _globals['_LINKFUNCTION']._serialized_end=1117
-  _globals['_LINKDIRECTION']._serialized_start=1119
-  _globals['_LINKDIRECTION']._serialized_end=1220
-  _globals['_LINKMODE']._serialized_start=1222
-  _globals['_LINKMODE']._serialized_end=1299
-  _globals['_LINKSTATE']._serialized_start=1301
-  _globals['_LINKSTATE']._serialized_end=1410
-  _globals['_DEVICELINK']._serialized_start=162
-  _globals['_DEVICELINK']._serialized_end=589
-  _globals['_LINKCAPABILITY']._serialized_start=592
-  _globals['_LINKCAPABILITY']._serialized_end=898
-  _globals['_DEVICELINKLIST']._serialized_start=900
-  _globals['_DEVICELINKLIST']._serialized_end=971
+  _globals['_LINKFUNCTION']._serialized_start=1237
+  _globals['_LINKFUNCTION']._serialized_end=1380
+  _globals['_LINKDIRECTION']._serialized_start=1382
+  _globals['_LINKDIRECTION']._serialized_end=1483
+  _globals['_LINKMODE']._serialized_start=1485
+  _globals['_LINKMODE']._serialized_end=1562
+  _globals['_LINKSTATE']._serialized_start=1564
+  _globals['_LINKSTATE']._serialized_end=1673
+  _globals['_LINKSETTINGS']._serialized_start=161
+  _globals['_LINKSETTINGS']._serialized_end=270
+  _globals['_CLIMATELEADSETTINGS']._serialized_start=272
+  _globals['_CLIMATELEADSETTINGS']._serialized_end=359
+  _globals['_DEVICELINK']._serialized_start=362
+  _globals['_DEVICELINK']._serialized_end=852
+  _globals['_LINKCAPABILITY']._serialized_start=855
+  _globals['_LINKCAPABILITY']._serialized_end=1161
+  _globals['_DEVICELINKLIST']._serialized_start=1163
+  _globals['_DEVICELINKLIST']._serialized_end=1234
 # @@protoc_insertion_point(module_scope)

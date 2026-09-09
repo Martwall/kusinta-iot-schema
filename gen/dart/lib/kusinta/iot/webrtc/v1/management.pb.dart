@@ -14,9 +14,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../common/v1/types.pbenum.dart' as $2;
+import '../../common/v1/types.pbenum.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
-import '../../link/v1/link.pbenum.dart' as $3;
+import '../../link/v1/link.pb.dart' as $2;
 import '../../space/v1/space.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -26,7 +26,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// it, so it is reserved to the gateway's administrator.
 class CreateSpace extends $pb.GeneratedMessage {
   factory CreateSpace({
-    $2.SpaceType? spaceType,
+    $3.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -55,10 +55,10 @@ class CreateSpace extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..e<$2.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $2.SpaceType.valueOf,
-        enumValues: $2.SpaceType.values)
+    ..e<$3.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $3.SpaceType.valueOf,
+        enumValues: $3.SpaceType.values)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(4, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -87,9 +87,9 @@ class CreateSpace extends $pb.GeneratedMessage {
   static CreateSpace? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $2.SpaceType get spaceType => $_getN(0);
+  $3.SpaceType get spaceType => $_getN(0);
   @$pb.TagNumber(1)
-  set spaceType($2.SpaceType value) => $_setField(1, value);
+  set spaceType($3.SpaceType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasSpaceType() => $_has(0);
   @$pb.TagNumber(1)
@@ -142,7 +142,7 @@ enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 class UpdateSpace extends $pb.GeneratedMessage {
   factory UpdateSpace({
     $0.SpaceId? spaceId,
-    $2.SpaceType? spaceType,
+    $3.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -183,10 +183,10 @@ class UpdateSpace extends $pb.GeneratedMessage {
     ..oo(0, [6, 7])
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$2.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $2.SpaceType.valueOf,
-        enumValues: $2.SpaceType.values)
+    ..e<$3.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $3.SpaceType.valueOf,
+        enumValues: $3.SpaceType.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(5, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -231,9 +231,9 @@ class UpdateSpace extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.SpaceType get spaceType => $_getN(1);
+  $3.SpaceType get spaceType => $_getN(1);
   @$pb.TagNumber(2)
-  set spaceType($2.SpaceType value) => $_setField(2, value);
+  set spaceType($3.SpaceType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSpaceType() => $_has(1);
   @$pb.TagNumber(2)
@@ -678,7 +678,7 @@ class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
 class ClaimDevice extends $pb.GeneratedMessage {
   factory ClaimDevice({
     $0.DeviceId? deviceId,
-    $2.DeviceOwnershipType? ownership,
+    $3.DeviceOwnershipType? ownership,
     $0.SpaceId? initialSpaceId,
     $core.String? possessionProof,
   }) {
@@ -706,12 +706,12 @@ class ClaimDevice extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
-    ..e<$2.DeviceOwnershipType>(
+    ..e<$3.DeviceOwnershipType>(
         2, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $2.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
-        valueOf: $2.DeviceOwnershipType.valueOf,
-        enumValues: $2.DeviceOwnershipType.values)
+            $3.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $3.DeviceOwnershipType.valueOf,
+        enumValues: $3.DeviceOwnershipType.values)
     ..aOM<$0.SpaceId>(3, _omitFieldNames ? '' : 'initialSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOS(4, _omitFieldNames ? '' : 'possessionProof')
@@ -749,9 +749,9 @@ class ClaimDevice extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.DeviceOwnershipType get ownership => $_getN(1);
+  $3.DeviceOwnershipType get ownership => $_getN(1);
   @$pb.TagNumber(2)
-  set ownership($2.DeviceOwnershipType value) => $_setField(2, value);
+  set ownership($3.DeviceOwnershipType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOwnership() => $_has(1);
   @$pb.TagNumber(2)
@@ -1042,14 +1042,16 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   factory CreateDeviceLink({
     $0.DeviceId? sender,
     $0.DeviceId? receiver,
-    $3.LinkFunction? function,
-    $3.LinkMode? mode,
+    $2.LinkFunction? function,
+    $2.LinkMode? mode,
+    $2.LinkSettings? settings,
   }) {
     final result = create();
     if (sender != null) result.sender = sender;
     if (receiver != null) result.receiver = receiver;
     if (function != null) result.function = function;
     if (mode != null) result.mode = mode;
+    if (settings != null) result.settings = settings;
     return result;
   }
 
@@ -1071,15 +1073,17 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'receiver',
         subBuilder: $0.DeviceId.create)
-    ..e<$3.LinkFunction>(
+    ..e<$2.LinkFunction>(
         3, _omitFieldNames ? '' : 'function', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
-        valueOf: $3.LinkFunction.valueOf,
-        enumValues: $3.LinkFunction.values)
-    ..e<$3.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkMode.LINK_MODE_UNSPECIFIED,
-        valueOf: $3.LinkMode.valueOf,
-        enumValues: $3.LinkMode.values)
+        defaultOrMaker: $2.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
+        valueOf: $2.LinkFunction.valueOf,
+        enumValues: $2.LinkFunction.values)
+    ..e<$2.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.LinkMode.LINK_MODE_UNSPECIFIED,
+        valueOf: $2.LinkMode.valueOf,
+        enumValues: $2.LinkMode.values)
+    ..aOM<$2.LinkSettings>(5, _omitFieldNames ? '' : 'settings',
+        subBuilder: $2.LinkSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1126,9 +1130,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   $0.DeviceId ensureReceiver() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $3.LinkFunction get function => $_getN(2);
+  $2.LinkFunction get function => $_getN(2);
   @$pb.TagNumber(3)
-  set function($3.LinkFunction value) => $_setField(3, value);
+  set function($2.LinkFunction value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFunction() => $_has(2);
   @$pb.TagNumber(3)
@@ -1138,13 +1142,32 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   /// one can be brokered: it survives a gateway outage and runs at the devices'
   /// own rate. Name one to override that.
   @$pb.TagNumber(4)
-  $3.LinkMode get mode => $_getN(3);
+  $2.LinkMode get mode => $_getN(3);
   @$pb.TagNumber(4)
-  set mode($3.LinkMode value) => $_setField(4, value);
+  set mode($2.LinkMode value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasMode() => $_has(3);
   @$pb.TagNumber(4)
   void clearMode() => $_clearField(4);
+
+  /// How a gateway-kept link is to behave, set as it is made. Carried here as
+  /// well as on UpdateDeviceLink so that a link does not have to exist in a
+  /// configured-by-nobody state first — a soft climate link created without a
+  /// target is one that holds the room at nothing until a second request
+  /// arrives, and every reader would have to handle that transient forever.
+  ///
+  /// Unset is still allowed and still means unconfigured, since a hard link has
+  /// nothing to configure and a caller may genuinely not know the target yet.
+  @$pb.TagNumber(5)
+  $2.LinkSettings get settings => $_getN(4);
+  @$pb.TagNumber(5)
+  set settings($2.LinkSettings value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSettings() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSettings() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $2.LinkSettings ensureSettings() => $_ensure(4);
 }
 
 /// Removes a link. Note that on at least one vendor, removing a link disturbs the
@@ -1205,6 +1228,98 @@ class RemoveDeviceLink extends $pb.GeneratedMessage {
   $core.bool hasLinkId() => $_has(0);
   @$pb.TagNumber(1)
   void clearLinkId() => $_clearField(1);
+}
+
+/// Changes how a gateway-kept link behaves — for a climate lead, the temperature
+/// it is to hold.
+///
+/// Refused on a link that has nothing to configure — see LinkSettings — rather
+/// than accepted as a no-op, so that a caller who has mistaken which link they
+/// are holding is told.
+///
+/// Authorized against both ends, as creating and removing the link are: deciding
+/// what temperature a room is held at is directing a device, not adjusting one,
+/// so it takes ownership of the ends or a servicing role, not the permission to
+/// turn a thermostat up.
+class UpdateDeviceLink extends $pb.GeneratedMessage {
+  factory UpdateDeviceLink({
+    $core.String? linkId,
+    $2.LinkSettings? settings,
+  }) {
+    final result = create();
+    if (linkId != null) result.linkId = linkId;
+    if (settings != null) result.settings = settings;
+    return result;
+  }
+
+  UpdateDeviceLink._();
+
+  factory UpdateDeviceLink.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateDeviceLink.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateDeviceLink',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'linkId')
+    ..aOM<$2.LinkSettings>(2, _omitFieldNames ? '' : 'settings',
+        subBuilder: $2.LinkSettings.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateDeviceLink clone() => UpdateDeviceLink()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateDeviceLink copyWith(void Function(UpdateDeviceLink) updates) =>
+      super.copyWith((message) => updates(message as UpdateDeviceLink))
+          as UpdateDeviceLink;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateDeviceLink create() => UpdateDeviceLink._();
+  @$core.override
+  UpdateDeviceLink createEmptyInstance() => create();
+  static $pb.PbList<UpdateDeviceLink> createRepeated() =>
+      $pb.PbList<UpdateDeviceLink>();
+  @$core.pragma('dart2js:noInline')
+  static UpdateDeviceLink getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateDeviceLink>(create);
+  static UpdateDeviceLink? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get linkId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set linkId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLinkId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLinkId() => $_clearField(1);
+
+  /// Replaces the link's settings rather than patching them: the settings of one
+  /// function are few and are set together, so there is no half-update worth
+  /// expressing. This is why it does not follow UpdateSpace's per-field optional
+  /// shape, which exists for a message whose fields genuinely move alone.
+  ///
+  /// Unset is refused rather than being given a meaning. It would have to mean
+  /// either "leave everything alone", making the request a no-op, or "clear the
+  /// settings", which is the one thing that reads like an accident — and the
+  /// wire cannot tell those two callers apart.
+  @$pb.TagNumber(2)
+  $2.LinkSettings get settings => $_getN(1);
+  @$pb.TagNumber(2)
+  set settings($2.LinkSettings value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSettings() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSettings() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.LinkSettings ensureSettings() => $_ensure(1);
 }
 
 /// Lists links. Unset device_id lists every link among devices the caller can
@@ -1283,6 +1398,7 @@ enum ManagementRequest_Request {
   createDeviceLink,
   removeDeviceLink,
   listDeviceLinks,
+  updateDeviceLink,
   notSet
 }
 
@@ -1301,6 +1417,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     CreateDeviceLink? createDeviceLink,
     RemoveDeviceLink? removeDeviceLink,
     ListDeviceLinks? listDeviceLinks,
+    UpdateDeviceLink? updateDeviceLink,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -1319,6 +1436,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (createDeviceLink != null) result.createDeviceLink = createDeviceLink;
     if (removeDeviceLink != null) result.removeDeviceLink = removeDeviceLink;
     if (listDeviceLinks != null) result.listDeviceLinks = listDeviceLinks;
+    if (updateDeviceLink != null) result.updateDeviceLink = updateDeviceLink;
     return result;
   }
 
@@ -1346,6 +1464,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     11: ManagementRequest_Request.createDeviceLink,
     12: ManagementRequest_Request.removeDeviceLink,
     13: ManagementRequest_Request.listDeviceLinks,
+    14: ManagementRequest_Request.updateDeviceLink,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1353,7 +1472,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
     ..aOM<UpdateSpace>(2, _omitFieldNames ? '' : 'updateSpace',
@@ -1381,6 +1500,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: RemoveDeviceLink.create)
     ..aOM<ListDeviceLinks>(13, _omitFieldNames ? '' : 'listDeviceLinks',
         subBuilder: ListDeviceLinks.create)
+    ..aOM<UpdateDeviceLink>(14, _omitFieldNames ? '' : 'updateDeviceLink',
+        subBuilder: UpdateDeviceLink.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1551,6 +1672,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearListDeviceLinks() => $_clearField(13);
   @$pb.TagNumber(13)
   ListDeviceLinks ensureListDeviceLinks() => $_ensure(12);
+
+  @$pb.TagNumber(14)
+  UpdateDeviceLink get updateDeviceLink => $_getN(13);
+  @$pb.TagNumber(14)
+  set updateDeviceLink(UpdateDeviceLink value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasUpdateDeviceLink() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearUpdateDeviceLink() => $_clearField(14);
+  @$pb.TagNumber(14)
+  UpdateDeviceLink ensureUpdateDeviceLink() => $_ensure(13);
 }
 
 const $core.bool _omitFieldNames =

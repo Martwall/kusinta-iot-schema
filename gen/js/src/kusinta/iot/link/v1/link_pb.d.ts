@@ -14,6 +14,86 @@ import type { AttributeRef } from "../../access/v1/acl_pb.js";
 export declare const file_kusinta_iot_link_v1_link: GenFile;
 
 /**
+ * What a gateway-kept link of a given function needs told to it.
+ *
+ * Only a soft link has settings at all — see LINK_MODE_HARD for why there is
+ * nothing in a device-to-device link for anyone to tune. And what a soft link
+ * needs differs entirely by function: a climate lead needs a target
+ * temperature, while forwarding a window's open state needs nothing whatsoever.
+ * Hence a oneof per function rather than a flat set of fields: the second
+ * function to arrive must not turn this into a bag of unrelated optionals named
+ * after the first.
+ *
+ * A function with no arm here has nothing to configure, and an attempt to
+ * configure it should be refused rather than accepted as a no-op.
+ *
+ * @generated from message kusinta.iot.link.v1.LinkSettings
+ */
+export declare type LinkSettings = Message<"kusinta.iot.link.v1.LinkSettings"> & {
+  /**
+   * @generated from oneof kusinta.iot.link.v1.LinkSettings.per_function
+   */
+  perFunction: {
+    /**
+     * @generated from field: kusinta.iot.link.v1.ClimateLeadSettings climate_lead = 1;
+     */
+    value: ClimateLeadSettings;
+    case: "climateLead";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.link.v1.LinkSettings.
+ * Use `create(LinkSettingsSchema)` to create a new message.
+ */
+export declare const LinkSettingsSchema: GenMessage<LinkSettings>;
+
+/**
+ * Settings for a gateway-kept LINK_FUNCTION_CLIMATE_LEAD.
+ *
+ * @generated from message kusinta.iot.link.v1.ClimateLeadSettings
+ */
+export declare type ClimateLeadSettings = Message<"kusinta.iot.link.v1.ClimateLeadSettings"> & {
+  /**
+   * The temperature this link is to hold, in centidegrees — the unit and
+   * encoding device/v1/properties.proto declares for every temperature in this
+   * schema, so nothing converts between the target and the readings it is
+   * compared against.
+   *
+   * Deliberately not the receiver's own setpoint attribute. A gateway steering
+   * a radiator valve it cannot feed a measurement to has only that setpoint to
+   * act through, so the setpoint becomes an actuator position which moves on
+   * its own and settles wherever the target needs it to. It stops being a
+   * statement of what anybody asked for, which is why the request is kept here.
+   *
+   * Per link, and a sender may lead several receivers — a room with more than
+   * one radiator is the ordinary case, and each of its links carries this
+   * number separately. An interface offering "the temperature in here" is
+   * therefore setting several links at once and is responsible for keeping them
+   * equal; nothing on this wire enforces it. A single target per room needs a
+   * room to hang it on, which is a larger idea than a link.
+   *
+   * One target, not one per heating and cooling mode: this addresses a valve
+   * that only heats. A device that can do both would need the setpoint's mode
+   * named alongside, the way webrtc/v1/setpoint_mode.proto names it for a
+   * command, and that is a new arm rather than a reinterpretation of this one.
+   *
+   * Explicit presence, per the rule properties.proto sets out: a settings
+   * message present with this never set must not be indistinguishable from a
+   * request to hold the room at 0.00 °C.
+   *
+   * @generated from field: optional sint32 target_setpoint = 1;
+   */
+  targetSetpoint?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.link.v1.ClimateLeadSettings.
+ * Use `create(ClimateLeadSettingsSchema)` to create a new message.
+ */
+export declare const ClimateLeadSettingsSchema: GenMessage<ClimateLeadSettings>;
+
+/**
  * One device leading another.
  *
  * @generated from message kusinta.iot.link.v1.DeviceLink
@@ -69,6 +149,19 @@ export declare type DeviceLink = Message<"kusinta.iot.link.v1.DeviceLink"> & {
    * @generated from field: string state_detail = 8;
    */
   stateDetail: string;
+
+  /**
+   * How this link is configured, where its mode and function give it anything
+   * to configure. Unset on every hard link, and on a soft one nobody has set up
+   * yet — which is a link that exists and is not doing anything, not an error.
+   *
+   * Carried on the link rather than left to be asked for separately, because an
+   * interface showing a soft climate link has to show the room's target next to
+   * it, and the receiver's own setpoint is not that number.
+   *
+   * @generated from field: kusinta.iot.link.v1.LinkSettings settings = 9;
+   */
+  settings?: LinkSettings | undefined;
 };
 
 /**
