@@ -848,8 +848,9 @@ class ManagementResult extends $pb.GeneratedMessage {
 ///
 /// A payload case of its own rather than a ManagementRequest. Those are gated on a target —
 /// a space, a device — and that is the justification for keeping them behind one wrapper.
-/// This one names no target: connector_id is optional, and unset means every connector, so
-/// it is authorized against the caller's role and nothing else.
+/// A connector is not a target the caller must reach the way a space is, so this is
+/// authorized against the caller's role and nothing else — but it must still name the
+/// connector to open (see connector_id), never every connector at once.
 ///
 /// Answered twice, and the two answers say different things at different times.
 /// PairingStarted reports whether the window opened; PairingFinished reports what came of
@@ -919,13 +920,13 @@ class StartPairing extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<StartPairing>(create);
   static StartPairing? _defaultInstance;
 
-  /// Which connector to open. Unset means every connector the gateway holds, which is the
-  /// sensible default: a device picks its hub by radio range, and asking a user to choose is
-  /// asking them to guess at something they cannot observe.
-  ///
-  /// Name one where the answer is not a guess — a device that will be linked to devices on a
-  /// particular hub has to join that hub, because links are held by the hub that brokered
-  /// them.
+  /// Which connector to open. Required: pairing always targets exactly one connector,
+  /// picked from the connector enumeration (see ConnectorsAnnounced and
+  /// ConnectorInfo.supports_pairing). An untargeted request is refused with
+  /// PairingError.CONNECTOR_REQUIRED, never fanned out across every hub — so that no
+  /// client can open every radio at once, and so a device is paired onto the specific hub
+  /// that will broker its links. The field is a message, so proto cannot mark it required;
+  /// the gateway enforces it.
   @$pb.TagNumber(1)
   $0.ConnectorId get connectorId => $_getN(0);
   @$pb.TagNumber(1)

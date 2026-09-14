@@ -26,6 +26,7 @@ const PairingError$json = {
     {'1': 'PAIRING_ERROR_DEVICE_UNUSABLE', '2': 5},
     {'1': 'PAIRING_ERROR_WRONG_DEVICE', '2': 6},
     {'1': 'PAIRING_ERROR_INTERNAL', '2': 7},
+    {'1': 'PAIRING_ERROR_CONNECTOR_REQUIRED', '2': 8},
   ],
 };
 
@@ -36,7 +37,7 @@ final $typed_data.Uint8List pairingErrorDescriptor = $convert.base64Decode(
     'RVNTEAISJwojUEFJUklOR19FUlJPUl9DT05ORUNUT1JfVU5BVkFJTEFCTEUQAxIkCiBQQUlSSU'
     '5HX0VSUk9SX05PX0RFVklDRV9BUFBFQVJFRBAEEiEKHVBBSVJJTkdfRVJST1JfREVWSUNFX1VO'
     'VVNBQkxFEAUSHgoaUEFJUklOR19FUlJPUl9XUk9OR19ERVZJQ0UQBhIaChZQQUlSSU5HX0VSUk'
-    '9SX0lOVEVSTkFMEAc=');
+    '9SX0lOVEVSTkFMEAcSJAogUEFJUklOR19FUlJPUl9DT05ORUNUT1JfUkVRVUlSRUQQCA==');
 
 @$core.Deprecated('Use pairingErrorDetailDescriptor instead')
 const PairingErrorDetail$json = {

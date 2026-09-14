@@ -78,6 +78,19 @@ class PairingError extends $pb.ProtobufEnum {
   static const PairingError PAIRING_ERROR_INTERNAL =
       PairingError._(7, _omitEnumNames ? '' : 'PAIRING_ERROR_INTERNAL');
 
+  /// The request named no connector. Pairing always targets exactly one connector,
+  /// chosen from the connector enumeration; an untargeted "pair anything" is refused
+  /// rather than fanned out across every hub. Permanent for the request as sent —
+  /// naming a connector and asking again is the fix, retrying identically is not —
+  /// which is why this is not CONNECTOR_UNAVAILABLE, whose retry is reasonable.
+  ///
+  /// The gateway is the enforcer: connector_id is a message field, so proto cannot
+  /// mark it required, and the check lives where the fan-out used to. A client whose
+  /// schema predates this reads it as UNSPECIFIED and offers a retry, which is
+  /// harmless — an app built against the enumeration always names a connector anyway.
+  static const PairingError PAIRING_ERROR_CONNECTOR_REQUIRED = PairingError._(
+      8, _omitEnumNames ? '' : 'PAIRING_ERROR_CONNECTOR_REQUIRED');
+
   static const $core.List<PairingError> values = <PairingError>[
     PAIRING_ERROR_UNSPECIFIED,
     PAIRING_ERROR_NOT_ENTITLED,
@@ -87,10 +100,11 @@ class PairingError extends $pb.ProtobufEnum {
     PAIRING_ERROR_DEVICE_UNUSABLE,
     PAIRING_ERROR_WRONG_DEVICE,
     PAIRING_ERROR_INTERNAL,
+    PAIRING_ERROR_CONNECTOR_REQUIRED,
   ];
 
   static final $core.List<PairingError?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 7);
+      $pb.ProtobufEnum.$_initByValueList(values, 8);
   static PairingError? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

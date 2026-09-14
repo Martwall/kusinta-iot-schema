@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/common/v1/pairing.proto\x12\x15kusinta.iot.common.v1\"g\n\x12PairingErrorDetail\x12\x37\n\x04\x63ode\x18\x01 \x01(\x0e\x32#.kusinta.iot.common.v1.PairingErrorR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\"\xab\x01\n\rPairingWindow\x12.\n\x10\x64uration_seconds\x18\x01 \x01(\rH\x00R\x0f\x64urationSeconds\x88\x01\x01\x12\x1f\n\x0b\x64\x65vice_hint\x18\x02 \x01(\tR\ndeviceHint\x12$\n\x0bmax_devices\x18\x03 \x01(\rH\x01R\nmaxDevices\x88\x01\x01\x42\x13\n\x11_duration_secondsB\x0e\n\x0c_max_devices*\xa2\x02\n\x0cPairingError\x12\x1d\n\x19PAIRING_ERROR_UNSPECIFIED\x10\x00\x12\x1e\n\x1aPAIRING_ERROR_NOT_ENTITLED\x10\x01\x12%\n!PAIRING_ERROR_ALREADY_IN_PROGRESS\x10\x02\x12\'\n#PAIRING_ERROR_CONNECTOR_UNAVAILABLE\x10\x03\x12$\n PAIRING_ERROR_NO_DEVICE_APPEARED\x10\x04\x12!\n\x1dPAIRING_ERROR_DEVICE_UNUSABLE\x10\x05\x12\x1e\n\x1aPAIRING_ERROR_WRONG_DEVICE\x10\x06\x12\x1a\n\x16PAIRING_ERROR_INTERNAL\x10\x07\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/common/v1/pairing.proto\x12\x15kusinta.iot.common.v1\"g\n\x12PairingErrorDetail\x12\x37\n\x04\x63ode\x18\x01 \x01(\x0e\x32#.kusinta.iot.common.v1.PairingErrorR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\"\xab\x01\n\rPairingWindow\x12.\n\x10\x64uration_seconds\x18\x01 \x01(\rH\x00R\x0f\x64urationSeconds\x88\x01\x01\x12\x1f\n\x0b\x64\x65vice_hint\x18\x02 \x01(\tR\ndeviceHint\x12$\n\x0bmax_devices\x18\x03 \x01(\rH\x01R\nmaxDevices\x88\x01\x01\x42\x13\n\x11_duration_secondsB\x0e\n\x0c_max_devices*\xc8\x02\n\x0cPairingError\x12\x1d\n\x19PAIRING_ERROR_UNSPECIFIED\x10\x00\x12\x1e\n\x1aPAIRING_ERROR_NOT_ENTITLED\x10\x01\x12%\n!PAIRING_ERROR_ALREADY_IN_PROGRESS\x10\x02\x12\'\n#PAIRING_ERROR_CONNECTOR_UNAVAILABLE\x10\x03\x12$\n PAIRING_ERROR_NO_DEVICE_APPEARED\x10\x04\x12!\n\x1dPAIRING_ERROR_DEVICE_UNUSABLE\x10\x05\x12\x1e\n\x1aPAIRING_ERROR_WRONG_DEVICE\x10\x06\x12\x1a\n\x16PAIRING_ERROR_INTERNAL\x10\x07\x12$\n PAIRING_ERROR_CONNECTOR_REQUIRED\x10\x08\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,7 +33,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_PAIRINGERROR']._serialized_start=342
-  _globals['_PAIRINGERROR']._serialized_end=632
+  _globals['_PAIRINGERROR']._serialized_end=670
   _globals['_PAIRINGERRORDETAIL']._serialized_start=62
   _globals['_PAIRINGERRORDETAIL']._serialized_end=165
   _globals['_PAIRINGWINDOW']._serialized_start=168

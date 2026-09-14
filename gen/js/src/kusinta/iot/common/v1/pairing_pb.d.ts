@@ -192,6 +192,22 @@ export enum PairingError {
    * @generated from enum value: PAIRING_ERROR_INTERNAL = 7;
    */
   INTERNAL = 7,
+
+  /**
+   * The request named no connector. Pairing always targets exactly one connector,
+   * chosen from the connector enumeration; an untargeted "pair anything" is refused
+   * rather than fanned out across every hub. Permanent for the request as sent —
+   * naming a connector and asking again is the fix, retrying identically is not —
+   * which is why this is not CONNECTOR_UNAVAILABLE, whose retry is reasonable.
+   *
+   * The gateway is the enforcer: connector_id is a message field, so proto cannot
+   * mark it required, and the check lives where the fan-out used to. A client whose
+   * schema predates this reads it as UNSPECIFIED and offers a retry, which is
+   * harmless — an app built against the enumeration always names a connector anyway.
+   *
+   * @generated from enum value: PAIRING_ERROR_CONNECTOR_REQUIRED = 8;
+   */
+  CONNECTOR_REQUIRED = 8,
 }
 
 /**

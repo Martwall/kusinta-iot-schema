@@ -227,3 +227,15 @@ def test_an_unset_pairing_error_reads_as_unspecified():
     # A client decodes any value added after its build as UNSPECIFIED, so that has to
     # remain the safe reading.
     assert pairing_pb2.PairingErrorDetail().code == pairing_pb2.PAIRING_ERROR_UNSPECIFIED
+
+
+def test_pairing_error_has_a_code_for_an_untargeted_request():
+    """Pairing must always name a connector; the gateway refuses an untargeted
+    request with this code rather than fanning out. Distinct from
+    CONNECTOR_UNAVAILABLE, which is transient — retrying without naming a connector
+    will never pass, so the two must not share a code."""
+    assert pairing_pb2.PAIRING_ERROR_CONNECTOR_REQUIRED == 8
+    assert (
+        pairing_pb2.PAIRING_ERROR_CONNECTOR_REQUIRED
+        != pairing_pb2.PAIRING_ERROR_CONNECTOR_UNAVAILABLE
+    )

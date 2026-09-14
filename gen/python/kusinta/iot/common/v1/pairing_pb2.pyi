@@ -15,6 +15,7 @@ class PairingError(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     PAIRING_ERROR_DEVICE_UNUSABLE: _ClassVar[PairingError]
     PAIRING_ERROR_WRONG_DEVICE: _ClassVar[PairingError]
     PAIRING_ERROR_INTERNAL: _ClassVar[PairingError]
+    PAIRING_ERROR_CONNECTOR_REQUIRED: _ClassVar[PairingError]
 PAIRING_ERROR_UNSPECIFIED: PairingError
 PAIRING_ERROR_NOT_ENTITLED: PairingError
 PAIRING_ERROR_ALREADY_IN_PROGRESS: PairingError
@@ -23,6 +24,7 @@ PAIRING_ERROR_NO_DEVICE_APPEARED: PairingError
 PAIRING_ERROR_DEVICE_UNUSABLE: PairingError
 PAIRING_ERROR_WRONG_DEVICE: PairingError
 PAIRING_ERROR_INTERNAL: PairingError
+PAIRING_ERROR_CONNECTOR_REQUIRED: PairingError
 
 class PairingErrorDetail(_message.Message):
     __slots__ = ("code", "message")
