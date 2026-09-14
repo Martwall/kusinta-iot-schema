@@ -312,6 +312,40 @@ final $typed_data.Uint8List releaseDeviceDescriptor = $convert.base64Decode(
     'Cg1SZWxlYXNlRGV2aWNlEj4KCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aX'
     'R5LnYxLkRldmljZUlkUghkZXZpY2VJZA==');
 
+@$core.Deprecated('Use provisionDeviceDescriptor instead')
+const ProvisionDevice$json = {
+  '1': 'ProvisionDevice',
+  '2': [
+    {
+      '1': 'connector_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.ConnectorId',
+      '10': 'connectorId'
+    },
+    {
+      '1': 'lorawan',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.vendor.lorawan.v1.LorawanProvisioning',
+      '9': 0,
+      '10': 'lorawan'
+    },
+  ],
+  '8': [
+    {'1': 'credentials'},
+  ],
+};
+
+/// Descriptor for `ProvisionDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List provisionDeviceDescriptor = $convert.base64Decode(
+    'Cg9Qcm92aXNpb25EZXZpY2USRwoMY29ubmVjdG9yX2lkGAEgASgLMiQua3VzaW50YS5pb3QuaW'
+    'RlbnRpdHkudjEuQ29ubmVjdG9ySWRSC2Nvbm5lY3RvcklkEk4KB2xvcmF3YW4YAiABKAsyMi5r'
+    'dXNpbnRhLmlvdC52ZW5kb3IubG9yYXdhbi52MS5Mb3Jhd2FuUHJvdmlzaW9uaW5nSABSB2xvcm'
+    'F3YW5CDQoLY3JlZGVudGlhbHM=');
+
 @$core.Deprecated('Use listSpacesDescriptor instead')
 const ListSpaces$json = {
   '1': 'ListSpaces',
@@ -600,6 +634,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'updateDeviceLink'
     },
+    {
+      '1': 'provision_device',
+      '3': 15,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ProvisionDevice',
+      '9': 0,
+      '10': 'provisionDevice'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -629,4 +672,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'dmVEZXZpY2VMaW5rSABSEHJlbW92ZURldmljZUxpbmsSVAoRbGlzdF9kZXZpY2VfbGlua3MYDS'
     'ABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlzdERldmljZUxpbmtzSABSD2xpc3REZXZp'
     'Y2VMaW5rcxJXChJ1cGRhdGVfZGV2aWNlX2xpbmsYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydG'
-    'MudjEuVXBkYXRlRGV2aWNlTGlua0gAUhB1cGRhdGVEZXZpY2VMaW5rQgkKB3JlcXVlc3Q=');
+    'MudjEuVXBkYXRlRGV2aWNlTGlua0gAUhB1cGRhdGVEZXZpY2VMaW5rElMKEHByb3Zpc2lvbl9k'
+    'ZXZpY2UYDyABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvdmlzaW9uRGV2aWNlSABSD3'
+    'Byb3Zpc2lvbkRldmljZUIJCgdyZXF1ZXN0');

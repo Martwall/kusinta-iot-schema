@@ -468,6 +468,78 @@ final $typed_data.Uint8List linkChangedDescriptor = $convert.base64Decode(
     'CgtMaW5rQ2hhbmdlZBIzCgRsaW5rGAEgASgLMh8ua3VzaW50YS5pb3QubGluay52MS5EZXZpY2'
     'VMaW5rUgRsaW5rEhgKB3JlbW92ZWQYAiABKAhSB3JlbW92ZWQ=');
 
+@$core.Deprecated('Use connectorDescriptorDescriptor instead')
+const ConnectorDescriptor$json = {
+  '1': 'ConnectorDescriptor',
+  '2': [
+    {
+      '1': 'connector_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.ConnectorId',
+      '10': 'connectorId'
+    },
+    {'1': 'display_name', '3': 2, '4': 1, '5': 9, '10': 'displayName'},
+    {
+      '1': 'supported_device_type_ids',
+      '3': 3,
+      '4': 3,
+      '5': 13,
+      '10': 'supportedDeviceTypeIds'
+    },
+    {'1': 'supports_pairing', '3': 4, '4': 1, '5': 8, '10': 'supportsPairing'},
+    {
+      '1': 'supports_provisioning',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '10': 'supportsProvisioning'
+    },
+    {'1': 'brokers_links', '3': 6, '4': 1, '5': 8, '10': 'brokersLinks'},
+    {
+      '1': 'kind',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.ConnectorKind',
+      '10': 'kind'
+    },
+    {'1': 'description', '3': 8, '4': 1, '5': 9, '10': 'description'},
+  ],
+};
+
+/// Descriptor for `ConnectorDescriptor`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List connectorDescriptorDescriptor = $convert.base64Decode(
+    'ChNDb25uZWN0b3JEZXNjcmlwdG9yEkcKDGNvbm5lY3Rvcl9pZBgBIAEoCzIkLmt1c2ludGEuaW'
+    '90LmlkZW50aXR5LnYxLkNvbm5lY3RvcklkUgtjb25uZWN0b3JJZBIhCgxkaXNwbGF5X25hbWUY'
+    'AiABKAlSC2Rpc3BsYXlOYW1lEjkKGXN1cHBvcnRlZF9kZXZpY2VfdHlwZV9pZHMYAyADKA1SFn'
+    'N1cHBvcnRlZERldmljZVR5cGVJZHMSKQoQc3VwcG9ydHNfcGFpcmluZxgEIAEoCFIPc3VwcG9y'
+    'dHNQYWlyaW5nEjMKFXN1cHBvcnRzX3Byb3Zpc2lvbmluZxgFIAEoCFIUc3VwcG9ydHNQcm92aX'
+    'Npb25pbmcSIwoNYnJva2Vyc19saW5rcxgGIAEoCFIMYnJva2Vyc0xpbmtzEjgKBGtpbmQYByAB'
+    'KA4yJC5rdXNpbnRhLmlvdC5jb21tb24udjEuQ29ubmVjdG9yS2luZFIEa2luZBIgCgtkZXNjcm'
+    'lwdGlvbhgIIAEoCVILZGVzY3JpcHRpb24=');
+
+@$core.Deprecated('Use connectorsAnnouncedDescriptor instead')
+const ConnectorsAnnounced$json = {
+  '1': 'ConnectorsAnnounced',
+  '2': [
+    {
+      '1': 'connectors',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ConnectorDescriptor',
+      '10': 'connectors'
+    },
+  ],
+};
+
+/// Descriptor for `ConnectorsAnnounced`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List connectorsAnnouncedDescriptor = $convert.base64Decode(
+    'ChNDb25uZWN0b3JzQW5ub3VuY2VkEkoKCmNvbm5lY3RvcnMYASADKAsyKi5rdXNpbnRhLmlvdC'
+    '53ZWJydGMudjEuQ29ubmVjdG9yRGVzY3JpcHRvclIKY29ubmVjdG9ycw==');
+
 @$core.Deprecated('Use gatewayMessageDescriptor instead')
 const GatewayMessage$json = {
   '1': 'GatewayMessage',
@@ -616,6 +688,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'linkChanged'
     },
+    {
+      '1': 'connectors_announced',
+      '3': 20,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ConnectorsAnnounced',
+      '9': 0,
+      '10': 'connectorsAnnounced'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -652,8 +733,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'SABSDnBhaXJpbmdTdGFydGVkElMKEHBhaXJpbmdfZmluaXNoZWQYEiABKAsyJi5rdXNpbnRhLm'
     'lvdC53ZWJydGMudjEuUGFpcmluZ0ZpbmlzaGVkSABSD3BhaXJpbmdGaW5pc2hlZBJHCgxsaW5r'
     'X2NoYW5nZWQYEyABKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlua0NoYW5nZWRIAFILbG'
-    'lua0NoYW5nZWRCCQoHcGF5bG9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3Vs'
-    'dFIOcHJvcGVydHlfZXZlbnQ=');
+    'lua0NoYW5nZWQSXwoUY29ubmVjdG9yc19hbm5vdW5jZWQYFCABKAsyKi5rdXNpbnRhLmlvdC53'
+    'ZWJydGMudjEuQ29ubmVjdG9yc0Fubm91bmNlZEgAUhNjb25uZWN0b3JzQW5ub3VuY2VkQgkKB3'
+    'BheWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cml0ZV9yZXN1bHRSDnByb3BlcnR5X2V2'
+    'ZW50');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

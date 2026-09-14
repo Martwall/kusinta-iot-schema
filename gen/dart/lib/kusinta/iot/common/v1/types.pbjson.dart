@@ -85,6 +85,21 @@ final $typed_data.Uint8List connectorTransportDescriptor = $convert.base64Decode
     'AAEiMKH0NPTk5FQ1RPUl9UUkFOU1BPUlRfVU5JWF9TT0NLRVQQARIgChxDT05ORUNUT1JfVFJB'
     'TlNQT1JUX01UTFNfVENQEAI=');
 
+@$core.Deprecated('Use connectorKindDescriptor instead')
+const ConnectorKind$json = {
+  '1': 'ConnectorKind',
+  '2': [
+    {'1': 'CONNECTOR_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'CONNECTOR_KIND_HOMEMATIC_IP', '2': 1},
+    {'1': 'CONNECTOR_KIND_LORAWAN', '2': 2},
+  ],
+};
+
+/// Descriptor for `ConnectorKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List connectorKindDescriptor = $convert.base64Decode(
+    'Cg1Db25uZWN0b3JLaW5kEh4KGkNPTk5FQ1RPUl9LSU5EX1VOU1BFQ0lGSUVEEAASHwobQ09OTk'
+    'VDVE9SX0tJTkRfSE9NRU1BVElDX0lQEAESGgoWQ09OTkVDVE9SX0tJTkRfTE9SQVdBThAC');
+
 @$core.Deprecated('Use errorDetailDescriptor instead')
 const ErrorDetail$json = {
   '1': 'ErrorDetail',

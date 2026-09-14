@@ -16,11 +16,48 @@ option optimize_for = SPEED;
 
 message ConnectorInfo {
   kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+
+  // User-facing and free-form — "HomeMatic hub", "LoRaWAN". An interface may show
+  // it; nothing ever matches on it. connector_id is the routing key; this is only
+  // a label for a person.
   string display_name = 2;
   string version = 3;
   kusinta.iot.common.v1.ConnectorTransport transport = 4;
   string endpoint = 5; // unix socket path or host:port
   repeated uint32 supported_device_type_ids = 6;
+
+  // What this connector can do, stated rather than inferred. An interface branches
+  // on these — never on kind — so a new technology needs no client change, only a
+  // connector that sets the right booleans. The gateway copies them into the
+  // webrtc.v1.ConnectorDescriptor it announces to the app.
+
+  // The connector opens a radio window on request: the app may offer the pairing
+  // flow and target webrtc.v1.StartPairing.connector_id at it. A connector whose
+  // devices are registered rather than paired (see supports_provisioning) sets this
+  // false.
+  bool supports_pairing = 7;
+
+  // The connector registers a device from credentials it is handed, rather than
+  // adopting one that joins during a window — the webrtc.v1.ProvisionDevice path.
+  // This is how the app knows to show a credential-entry flow instead of pairing,
+  // and ProvisionDevice.connector_id is targeted at a connector that declares it.
+  bool supports_provisioning = 8;
+
+  // The connector brokers device-to-device (hard) links: the link picker may offer
+  // them and can name the hub behind an otherwise-hidden candidate. Declared here
+  // rather than inferred from both devices reporting LINK_MODE_HARD, so it is a
+  // statement the connector makes rather than a guess the app assembles.
+  bool brokers_links = 9;
+
+  // Presentation only — an icon or a phrase; see common.v1.ConnectorKind for why it
+  // never gates behaviour. Unset is CONNECTOR_KIND_UNSPECIFIED, a generic hub.
+  kusinta.iot.common.v1.ConnectorKind kind = 10;
+
+  // Installer or operator detail — where the hub is, which building leg it serves.
+  // Kept off connector_id, whose identity contract routing depends on, and off
+  // display_name, which is the short label. Free-form, for a person; never matched
+  // on.
+  string description = 11;
 }
 
 message ConnectorHandshake {

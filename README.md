@@ -20,6 +20,7 @@ proto/
   webrtc/          # GatewayMessage, AppMessage, DeviceCommand, DeviceStateSnapshot, …
   vendor/
     homematic/     # HomematicDeviceIdentity, HmThermostatProps, HmMaintenanceProps
+    lorawan/       # LorawanProvisioning — device onboarding credentials (not an extension)
 
 gen/
   js/              # @kusinta/iot-schema npm package (generated, committed)

@@ -8,8 +8,9 @@ import {
   HandshakeAckSchema,
   DeviceAnnouncementSchema,
   DeviceRemovalSchema,
+  ConnectorInfoSchema,
 } from '../kusinta/iot/connector/v1/connector_pb.js'
-import { ConnectorTransport } from '../kusinta/iot/common/v1/types_pb.js'
+import { ConnectorTransport, ConnectorKind } from '../kusinta/iot/common/v1/types_pb.js'
 import {
   DeviceCommandSchema,
   CommandErrorCode,
@@ -221,5 +222,55 @@ describe('ConnectorCommandResult', () => {
     })
     const decoded = fromBinary(ConnectorCommandResultSchema, toBinary(ConnectorCommandResultSchema, result))
     expect(decoded.settlesBy?.seconds).toBe(1700000000n)
+  })
+})
+
+describe('ConnectorInfo capabilities', () => {
+  // Two profiles rather than one, so each boolean carries `true` on the wire at least
+  // once: proto3 omits a `false` bool, so a false-only assertion would pass even for a
+  // field with the wrong number. The mixed values also catch a cross-wiring — provisioning
+  // decoding into pairing's slot would fail the LoRaWAN case's `supportsPairing` check.
+  it('round-trips a provisioning connector: provisioning only, no pairing or links', () => {
+    const info = create(ConnectorInfoSchema, {
+      connectorId: { value: 'lorawan' },
+      displayName: 'LoRaWAN',
+      supportsPairing: false,
+      supportsProvisioning: true,
+      brokersLinks: false,
+      kind: ConnectorKind.LORAWAN,
+      description: 'ChirpStack, building east riser',
+    })
+    const decoded = fromBinary(ConnectorInfoSchema, toBinary(ConnectorInfoSchema, info))
+    expect(decoded.supportsPairing).toBe(false)
+    expect(decoded.supportsProvisioning).toBe(true)
+    expect(decoded.brokersLinks).toBe(false)
+    expect(decoded.kind).toBe(ConnectorKind.LORAWAN)
+    expect(decoded.description).toBe('ChirpStack, building east riser')
+  })
+
+  it('round-trips a pairing connector that brokers links: pairing and links, no provisioning', () => {
+    const info = create(ConnectorInfoSchema, {
+      connectorId: { value: 'homematic-ccu3' },
+      supportsPairing: true,
+      supportsProvisioning: false,
+      brokersLinks: true,
+      kind: ConnectorKind.HOMEMATIC_IP,
+    })
+    const decoded = fromBinary(ConnectorInfoSchema, toBinary(ConnectorInfoSchema, info))
+    expect(decoded.supportsPairing).toBe(true)
+    expect(decoded.supportsProvisioning).toBe(false)
+    expect(decoded.brokersLinks).toBe(true)
+    expect(decoded.kind).toBe(ConnectorKind.HOMEMATIC_IP)
+  })
+
+  it('defaults every capability to false and the kind to unspecified', () => {
+    const decoded = fromBinary(
+      ConnectorInfoSchema,
+      toBinary(ConnectorInfoSchema, create(ConnectorInfoSchema, { connectorId: { value: 'c' } })),
+    )
+    expect(decoded.supportsPairing).toBe(false)
+    expect(decoded.supportsProvisioning).toBe(false)
+    expect(decoded.brokersLinks).toBe(false)
+    expect(decoded.kind).toBe(ConnectorKind.UNSPECIFIED)
   })
 })

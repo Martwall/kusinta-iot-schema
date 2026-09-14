@@ -35,6 +35,12 @@ class ConnectorTransport(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CONNECTOR_TRANSPORT_UNSPECIFIED: _ClassVar[ConnectorTransport]
     CONNECTOR_TRANSPORT_UNIX_SOCKET: _ClassVar[ConnectorTransport]
     CONNECTOR_TRANSPORT_MTLS_TCP: _ClassVar[ConnectorTransport]
+
+class ConnectorKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CONNECTOR_KIND_UNSPECIFIED: _ClassVar[ConnectorKind]
+    CONNECTOR_KIND_HOMEMATIC_IP: _ClassVar[ConnectorKind]
+    CONNECTOR_KIND_LORAWAN: _ClassVar[ConnectorKind]
 SPACE_TYPE_UNSPECIFIED: SpaceType
 SPACE_TYPE_BUILDING: SpaceType
 SPACE_TYPE_FLOOR: SpaceType
@@ -52,6 +58,9 @@ DEVICE_LIFECYCLE_STATE_BUILDING_POOL: DeviceLifecycleState
 CONNECTOR_TRANSPORT_UNSPECIFIED: ConnectorTransport
 CONNECTOR_TRANSPORT_UNIX_SOCKET: ConnectorTransport
 CONNECTOR_TRANSPORT_MTLS_TCP: ConnectorTransport
+CONNECTOR_KIND_UNSPECIFIED: ConnectorKind
+CONNECTOR_KIND_HOMEMATIC_IP: ConnectorKind
+CONNECTOR_KIND_LORAWAN: ConnectorKind
 
 class ErrorDetail(_message.Message):
     __slots__ = ("code", "message", "metadata")

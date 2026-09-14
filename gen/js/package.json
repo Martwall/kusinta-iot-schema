@@ -1,6 +1,6 @@
 {
   "name": "@kusinta/iot-schema",
-  "version": "0.2.0-beta.10",
+  "version": "0.2.0-beta.11",
   "type": "module",
   "license": "MIT",
   "files": ["src"],
@@ -21,6 +21,7 @@
     "./device/event":           "./src/kusinta/iot/device/v1/device_event_pb.js",
     "./vendor/options":         "./src/kusinta/iot/vendor/v1/vendor_options_pb.js",
     "./vendor/homematic":       "./src/kusinta/iot/vendor/homematic/v1/homematic_pb.js",
+    "./vendor/lorawan":         "./src/kusinta/iot/vendor/lorawan/v1/lorawan_pb.js",
     "./space":                  "./src/kusinta/iot/space/v1/space_pb.js",
     "./access":                 "./src/kusinta/iot/access/v1/acl_pb.js",
     "./access/roles":           "./src/kusinta/iot/access/v1/roles_pb.js",

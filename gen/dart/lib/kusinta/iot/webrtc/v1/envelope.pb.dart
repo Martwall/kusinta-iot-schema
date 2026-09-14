@@ -1265,6 +1265,226 @@ class LinkChanged extends $pb.GeneratedMessage {
   void clearRemoved() => $_clearField(2);
 }
 
+/// One connected connector, described for the app, gateway → app.
+///
+/// Deliberately not connector.v1.ConnectorInfo: that carries transport and endpoint,
+/// which are the gateway↔connector wiring and no business of the app. This is the
+/// app-facing projection — who the connector is and what it can do — and nothing
+/// about how the gateway reaches it.
+class ConnectorDescriptor extends $pb.GeneratedMessage {
+  factory ConnectorDescriptor({
+    $0.ConnectorId? connectorId,
+    $core.String? displayName,
+    $core.Iterable<$core.int>? supportedDeviceTypeIds,
+    $core.bool? supportsPairing,
+    $core.bool? supportsProvisioning,
+    $core.bool? brokersLinks,
+    $11.ConnectorKind? kind,
+    $core.String? description,
+  }) {
+    final result = create();
+    if (connectorId != null) result.connectorId = connectorId;
+    if (displayName != null) result.displayName = displayName;
+    if (supportedDeviceTypeIds != null)
+      result.supportedDeviceTypeIds.addAll(supportedDeviceTypeIds);
+    if (supportsPairing != null) result.supportsPairing = supportsPairing;
+    if (supportsProvisioning != null)
+      result.supportsProvisioning = supportsProvisioning;
+    if (brokersLinks != null) result.brokersLinks = brokersLinks;
+    if (kind != null) result.kind = kind;
+    if (description != null) result.description = description;
+    return result;
+  }
+
+  ConnectorDescriptor._();
+
+  factory ConnectorDescriptor.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ConnectorDescriptor.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ConnectorDescriptor',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
+        subBuilder: $0.ConnectorId.create)
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..p<$core.int>(
+        3, _omitFieldNames ? '' : 'supportedDeviceTypeIds', $pb.PbFieldType.KU3)
+    ..aOB(4, _omitFieldNames ? '' : 'supportsPairing')
+    ..aOB(5, _omitFieldNames ? '' : 'supportsProvisioning')
+    ..aOB(6, _omitFieldNames ? '' : 'brokersLinks')
+    ..e<$11.ConnectorKind>(7, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $11.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $11.ConnectorKind.valueOf,
+        enumValues: $11.ConnectorKind.values)
+    ..aOS(8, _omitFieldNames ? '' : 'description')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConnectorDescriptor clone() => ConnectorDescriptor()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConnectorDescriptor copyWith(void Function(ConnectorDescriptor) updates) =>
+      super.copyWith((message) => updates(message as ConnectorDescriptor))
+          as ConnectorDescriptor;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ConnectorDescriptor create() => ConnectorDescriptor._();
+  @$core.override
+  ConnectorDescriptor createEmptyInstance() => create();
+  static $pb.PbList<ConnectorDescriptor> createRepeated() =>
+      $pb.PbList<ConnectorDescriptor>();
+  @$core.pragma('dart2js:noInline')
+  static ConnectorDescriptor getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ConnectorDescriptor>(create);
+  static ConnectorDescriptor? _defaultInstance;
+
+  /// The routing key. Stable and unique; what StartPairing.connector_id and
+  /// ProvisionDevice.connector_id name.
+  @$pb.TagNumber(1)
+  $0.ConnectorId get connectorId => $_getN(0);
+  @$pb.TagNumber(1)
+  set connectorId($0.ConnectorId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectorId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectorId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.ConnectorId ensureConnectorId() => $_ensure(0);
+
+  /// User-facing label, free-form, never matched on.
+  @$pb.TagNumber(2)
+  $core.String get displayName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set displayName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisplayName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisplayName() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<$core.int> get supportedDeviceTypeIds => $_getList(2);
+
+  /// The capabilities the app branches on. Copied from the connector's handshake;
+  /// see ConnectorInfo for what each means. The app decides pairing-vs-provisioning
+  /// and whether to offer hard links from these, never from kind.
+  @$pb.TagNumber(4)
+  $core.bool get supportsPairing => $_getBF(3);
+  @$pb.TagNumber(4)
+  set supportsPairing($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSupportsPairing() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSupportsPairing() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get supportsProvisioning => $_getBF(4);
+  @$pb.TagNumber(5)
+  set supportsProvisioning($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSupportsProvisioning() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSupportsProvisioning() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get brokersLinks => $_getBF(5);
+  @$pb.TagNumber(6)
+  set brokersLinks($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasBrokersLinks() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearBrokersLinks() => $_clearField(6);
+
+  /// Presentation only — an icon or an "unknown hub" fallback; see
+  /// common.v1.ConnectorKind. Unset renders as a generic hub.
+  @$pb.TagNumber(7)
+  $11.ConnectorKind get kind => $_getN(6);
+  @$pb.TagNumber(7)
+  set kind($11.ConnectorKind value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasKind() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearKind() => $_clearField(7);
+
+  /// Installer or operator detail, free-form, for a person.
+  @$pb.TagNumber(8)
+  $core.String get description => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set description($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasDescription() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearDescription() => $_clearField(8);
+}
+
+/// The connectors the gateway currently holds, gateway → app.
+///
+/// A push, not a ManagementResult arm: a new result-oneof member is a compile error
+/// in a consumer whose match on the result is exhaustive, whereas a new push case is
+/// absorbed by that switch's default. Sent on connect and whenever the set changes —
+/// a connector arriving, leaving, or revising its capabilities — and replaces the
+/// app's whole picture each time rather than being a delta, so a client that missed
+/// one re-syncs from the next.
+class ConnectorsAnnounced extends $pb.GeneratedMessage {
+  factory ConnectorsAnnounced({
+    $core.Iterable<ConnectorDescriptor>? connectors,
+  }) {
+    final result = create();
+    if (connectors != null) result.connectors.addAll(connectors);
+    return result;
+  }
+
+  ConnectorsAnnounced._();
+
+  factory ConnectorsAnnounced.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ConnectorsAnnounced.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ConnectorsAnnounced',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<ConnectorDescriptor>(
+        1, _omitFieldNames ? '' : 'connectors', $pb.PbFieldType.PM,
+        subBuilder: ConnectorDescriptor.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConnectorsAnnounced clone() => ConnectorsAnnounced()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConnectorsAnnounced copyWith(void Function(ConnectorsAnnounced) updates) =>
+      super.copyWith((message) => updates(message as ConnectorsAnnounced))
+          as ConnectorsAnnounced;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ConnectorsAnnounced create() => ConnectorsAnnounced._();
+  @$core.override
+  ConnectorsAnnounced createEmptyInstance() => create();
+  static $pb.PbList<ConnectorsAnnounced> createRepeated() =>
+      $pb.PbList<ConnectorsAnnounced>();
+  @$core.pragma('dart2js:noInline')
+  static ConnectorsAnnounced getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ConnectorsAnnounced>(create);
+  static ConnectorsAnnounced? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<ConnectorDescriptor> get connectors => $_getList(0);
+}
+
 enum GatewayMessage_Payload {
   stateSnapshot,
   propertyReport,
@@ -1281,6 +1501,7 @@ enum GatewayMessage_Payload {
   pairingStarted,
   pairingFinished,
   linkChanged,
+  connectorsAnnounced,
   notSet
 }
 
@@ -1303,6 +1524,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     PairingStarted? pairingStarted,
     PairingFinished? pairingFinished,
     LinkChanged? linkChanged,
+    ConnectorsAnnounced? connectorsAnnounced,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1322,6 +1544,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (pairingStarted != null) result.pairingStarted = pairingStarted;
     if (pairingFinished != null) result.pairingFinished = pairingFinished;
     if (linkChanged != null) result.linkChanged = linkChanged;
+    if (connectorsAnnounced != null)
+      result.connectorsAnnounced = connectorsAnnounced;
     return result;
   }
 
@@ -1351,6 +1575,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     17: GatewayMessage_Payload.pairingStarted,
     18: GatewayMessage_Payload.pairingFinished,
     19: GatewayMessage_Payload.linkChanged,
+    20: GatewayMessage_Payload.connectorsAnnounced,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1358,7 +1583,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19])
+    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$6.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $6.Timestamp.create)
@@ -1391,6 +1616,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: PairingFinished.create)
     ..aOM<LinkChanged>(19, _omitFieldNames ? '' : 'linkChanged',
         subBuilder: LinkChanged.create)
+    ..aOM<ConnectorsAnnounced>(20, _omitFieldNames ? '' : 'connectorsAnnounced',
+        subBuilder: ConnectorsAnnounced.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1606,6 +1833,17 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearLinkChanged() => $_clearField(19);
   @$pb.TagNumber(19)
   LinkChanged ensureLinkChanged() => $_ensure(16);
+
+  @$pb.TagNumber(20)
+  ConnectorsAnnounced get connectorsAnnounced => $_getN(17);
+  @$pb.TagNumber(20)
+  set connectorsAnnounced(ConnectorsAnnounced value) => $_setField(20, value);
+  @$pb.TagNumber(20)
+  $core.bool hasConnectorsAnnounced() => $_has(17);
+  @$pb.TagNumber(20)
+  void clearConnectorsAnnounced() => $_clearField(20);
+  @$pb.TagNumber(20)
+  ConnectorsAnnounced ensureConnectorsAnnounced() => $_ensure(17);
 }
 
 enum AppMessage_Payload {

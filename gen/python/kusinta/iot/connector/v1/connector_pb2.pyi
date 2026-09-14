@@ -18,20 +18,30 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ConnectorInfo(_message.Message):
-    __slots__ = ("connector_id", "display_name", "version", "transport", "endpoint", "supported_device_type_ids")
+    __slots__ = ("connector_id", "display_name", "version", "transport", "endpoint", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description")
     CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
     VERSION_FIELD_NUMBER: _ClassVar[int]
     TRANSPORT_FIELD_NUMBER: _ClassVar[int]
     ENDPOINT_FIELD_NUMBER: _ClassVar[int]
     SUPPORTED_DEVICE_TYPE_IDS_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_PAIRING_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_PROVISIONING_FIELD_NUMBER: _ClassVar[int]
+    BROKERS_LINKS_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     connector_id: _identity_pb2.ConnectorId
     display_name: str
     version: str
     transport: _types_pb2.ConnectorTransport
     endpoint: str
     supported_device_type_ids: _containers.RepeatedScalarFieldContainer[int]
-    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., version: _Optional[str] = ..., transport: _Optional[_Union[_types_pb2.ConnectorTransport, str]] = ..., endpoint: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ...) -> None: ...
+    supports_pairing: bool
+    supports_provisioning: bool
+    brokers_links: bool
+    kind: _types_pb2.ConnectorKind
+    description: str
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., version: _Optional[str] = ..., transport: _Optional[_Union[_types_pb2.ConnectorTransport, str]] = ..., endpoint: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ...) -> None: ...
 
 class ConnectorHandshake(_message.Message):
     __slots__ = ("info", "known_devices", "known_links")

@@ -128,5 +128,35 @@ class ConnectorTransport extends $pb.ProtobufEnum {
   const ConnectorTransport._(super.value, super.name);
 }
 
+/// What technology a connector speaks, for an interface to pick an icon or an
+/// explanatory phrase. Presentation only, and never a behaviour gate: what a
+/// connector can do is stated by the capability booleans on ConnectorInfo
+/// (supports_pairing, supports_provisioning, brokers_links), and branching on the
+/// kind instead would hardcode vendor knowledge and force a client change for every
+/// new technology. A proto3 open enum: a reader given a value its schema predates
+/// keeps UNSPECIFIED's fallback rather than failing, which is exactly why the kind
+/// may never decide anything that matters.
+class ConnectorKind extends $pb.ProtobufEnum {
+  static const ConnectorKind CONNECTOR_KIND_UNSPECIFIED =
+      ConnectorKind._(0, _omitEnumNames ? '' : 'CONNECTOR_KIND_UNSPECIFIED');
+  static const ConnectorKind CONNECTOR_KIND_HOMEMATIC_IP =
+      ConnectorKind._(1, _omitEnumNames ? '' : 'CONNECTOR_KIND_HOMEMATIC_IP');
+  static const ConnectorKind CONNECTOR_KIND_LORAWAN =
+      ConnectorKind._(2, _omitEnumNames ? '' : 'CONNECTOR_KIND_LORAWAN');
+
+  static const $core.List<ConnectorKind> values = <ConnectorKind>[
+    CONNECTOR_KIND_UNSPECIFIED,
+    CONNECTOR_KIND_HOMEMATIC_IP,
+    CONNECTOR_KIND_LORAWAN,
+  ];
+
+  static final $core.List<ConnectorKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static ConnectorKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ConnectorKind._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

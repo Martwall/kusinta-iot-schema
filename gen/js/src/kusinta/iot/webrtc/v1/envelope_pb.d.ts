@@ -10,7 +10,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
-import type { DeviceOwnershipType } from "../../common/v1/types_pb.js";
+import type { ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
@@ -535,6 +535,103 @@ export declare type LinkChanged = Message<"kusinta.iot.webrtc.v1.LinkChanged"> &
 export declare const LinkChangedSchema: GenMessage<LinkChanged>;
 
 /**
+ * One connected connector, described for the app, gateway → app.
+ *
+ * Deliberately not connector.v1.ConnectorInfo: that carries transport and endpoint,
+ * which are the gateway↔connector wiring and no business of the app. This is the
+ * app-facing projection — who the connector is and what it can do — and nothing
+ * about how the gateway reaches it.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ConnectorDescriptor
+ */
+export declare type ConnectorDescriptor = Message<"kusinta.iot.webrtc.v1.ConnectorDescriptor"> & {
+  /**
+   * The routing key. Stable and unique; what StartPairing.connector_id and
+   * ProvisionDevice.connector_id name.
+   *
+   * @generated from field: kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+   */
+  connectorId?: ConnectorId | undefined;
+
+  /**
+   * User-facing label, free-form, never matched on.
+   *
+   * @generated from field: string display_name = 2;
+   */
+  displayName: string;
+
+  /**
+   * @generated from field: repeated uint32 supported_device_type_ids = 3;
+   */
+  supportedDeviceTypeIds: number[];
+
+  /**
+   * The capabilities the app branches on. Copied from the connector's handshake;
+   * see ConnectorInfo for what each means. The app decides pairing-vs-provisioning
+   * and whether to offer hard links from these, never from kind.
+   *
+   * @generated from field: bool supports_pairing = 4;
+   */
+  supportsPairing: boolean;
+
+  /**
+   * @generated from field: bool supports_provisioning = 5;
+   */
+  supportsProvisioning: boolean;
+
+  /**
+   * @generated from field: bool brokers_links = 6;
+   */
+  brokersLinks: boolean;
+
+  /**
+   * Presentation only — an icon or an "unknown hub" fallback; see
+   * common.v1.ConnectorKind. Unset renders as a generic hub.
+   *
+   * @generated from field: kusinta.iot.common.v1.ConnectorKind kind = 7;
+   */
+  kind: ConnectorKind;
+
+  /**
+   * Installer or operator detail, free-form, for a person.
+   *
+   * @generated from field: string description = 8;
+   */
+  description: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ConnectorDescriptor.
+ * Use `create(ConnectorDescriptorSchema)` to create a new message.
+ */
+export declare const ConnectorDescriptorSchema: GenMessage<ConnectorDescriptor>;
+
+/**
+ * The connectors the gateway currently holds, gateway → app.
+ *
+ * A push, not a ManagementResult arm: a new result-oneof member is a compile error
+ * in a consumer whose match on the result is exhaustive, whereas a new push case is
+ * absorbed by that switch's default. Sent on connect and whenever the set changes —
+ * a connector arriving, leaving, or revising its capabilities — and replaces the
+ * app's whole picture each time rather than being a delta, so a client that missed
+ * one re-syncs from the next.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ConnectorsAnnounced
+ */
+export declare type ConnectorsAnnounced = Message<"kusinta.iot.webrtc.v1.ConnectorsAnnounced"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.webrtc.v1.ConnectorDescriptor connectors = 1;
+   */
+  connectors: ConnectorDescriptor[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ConnectorsAnnounced.
+ * Use `create(ConnectorsAnnouncedSchema)` to create a new message.
+ */
+export declare const ConnectorsAnnouncedSchema: GenMessage<ConnectorsAnnounced>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
  */
 export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessage"> & {
@@ -646,6 +743,12 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: LinkChanged;
     case: "linkChanged";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ConnectorsAnnounced connectors_announced = 20;
+     */
+    value: ConnectorsAnnounced;
+    case: "connectorsAnnounced";
   } | { case: undefined; value?: undefined };
 };
 

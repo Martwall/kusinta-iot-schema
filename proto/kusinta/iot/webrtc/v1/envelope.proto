@@ -262,6 +262,49 @@ message LinkChanged {
   bool removed = 2;
 }
 
+// One connected connector, described for the app, gateway → app.
+//
+// Deliberately not connector.v1.ConnectorInfo: that carries transport and endpoint,
+// which are the gateway↔connector wiring and no business of the app. This is the
+// app-facing projection — who the connector is and what it can do — and nothing
+// about how the gateway reaches it.
+message ConnectorDescriptor {
+  // The routing key. Stable and unique; what StartPairing.connector_id and
+  // ProvisionDevice.connector_id name.
+  kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+
+  // User-facing label, free-form, never matched on.
+  string display_name = 2;
+
+  repeated uint32 supported_device_type_ids = 3;
+
+  // The capabilities the app branches on. Copied from the connector's handshake;
+  // see ConnectorInfo for what each means. The app decides pairing-vs-provisioning
+  // and whether to offer hard links from these, never from kind.
+  bool supports_pairing = 4;
+  bool supports_provisioning = 5;
+  bool brokers_links = 6;
+
+  // Presentation only — an icon or an "unknown hub" fallback; see
+  // common.v1.ConnectorKind. Unset renders as a generic hub.
+  kusinta.iot.common.v1.ConnectorKind kind = 7;
+
+  // Installer or operator detail, free-form, for a person.
+  string description = 8;
+}
+
+// The connectors the gateway currently holds, gateway → app.
+//
+// A push, not a ManagementResult arm: a new result-oneof member is a compile error
+// in a consumer whose match on the result is exhaustive, whereas a new push case is
+// absorbed by that switch's default. Sent on connect and whenever the set changes —
+// a connector arriving, leaving, or revising its capabilities — and replaces the
+// app's whole picture each time rather than being a delta, so a client that missed
+// one re-syncs from the next.
+message ConnectorsAnnounced {
+  repeated ConnectorDescriptor connectors = 1;
+}
+
 message GatewayMessage {
   reserved 15;
   reserved "attribute_write_result", "property_event";
@@ -291,6 +334,7 @@ message GatewayMessage {
     PairingStarted pairing_started = 17;
     PairingFinished pairing_finished = 18;
     LinkChanged link_changed = 19;
+    ConnectorsAnnounced connectors_announced = 20;
   }
 }
 

@@ -201,3 +201,55 @@ def test_connector_command_result_settles_by_round_trips():
     decoded.ParseFromString(result.SerializeToString())
     assert decoded.HasField("settles_by")
     assert decoded.settles_by.ToSeconds() == 1_700_000_000
+
+
+# --- capabilities: what a connector can do, stated rather than inferred ---------
+
+
+def test_connector_info_carries_the_three_capability_booleans_a_kind_and_description():
+    info = connector_pb2.ConnectorInfo(
+        connector_id=identity_pb2.ConnectorId(value="lorawan"),
+        display_name="LoRaWAN",
+        supports_pairing=False,
+        supports_provisioning=True,
+        brokers_links=False,
+        kind=types_pb2.CONNECTOR_KIND_LORAWAN,
+        description="ChirpStack, building east riser",
+    )
+    decoded = connector_pb2.ConnectorInfo()
+    decoded.ParseFromString(info.SerializeToString())
+    assert decoded.supports_pairing is False
+    assert decoded.supports_provisioning is True
+    assert decoded.brokers_links is False
+    assert decoded.kind == types_pb2.CONNECTOR_KIND_LORAWAN
+    assert decoded.description == "ChirpStack, building east riser"
+
+
+def test_connector_info_round_trips_a_pairing_connector_that_brokers_links():
+    """The other profile, so supports_pairing and brokers_links each carry True on the
+    wire — proto3 omits a False bool, so a False-only check would pass for a mis-numbered
+    field."""
+    info = connector_pb2.ConnectorInfo(
+        connector_id=identity_pb2.ConnectorId(value="homematic-ccu3"),
+        supports_pairing=True,
+        supports_provisioning=False,
+        brokers_links=True,
+        kind=types_pb2.CONNECTOR_KIND_HOMEMATIC_IP,
+    )
+    decoded = connector_pb2.ConnectorInfo()
+    decoded.ParseFromString(info.SerializeToString())
+    assert decoded.supports_pairing is True
+    assert decoded.supports_provisioning is False
+    assert decoded.brokers_links is True
+    assert decoded.kind == types_pb2.CONNECTOR_KIND_HOMEMATIC_IP
+
+
+def test_connector_info_capabilities_default_off_and_kind_unspecified():
+    """A connector whose schema predates the capabilities sends none of them; the
+    gateway must read that as no capability, never as all of them."""
+    decoded = connector_pb2.ConnectorInfo()
+    decoded.ParseFromString(connector_pb2.ConnectorInfo().SerializeToString())
+    assert decoded.supports_pairing is False
+    assert decoded.supports_provisioning is False
+    assert decoded.brokers_links is False
+    assert decoded.kind == types_pb2.CONNECTOR_KIND_UNSPECIFIED

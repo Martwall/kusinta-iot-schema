@@ -5,7 +5,7 @@
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identity_pb.js";
-import type { ConnectorTransport } from "../../common/v1/types_pb.js";
+import type { ConnectorKind, ConnectorTransport } from "../../common/v1/types_pb.js";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { DeviceLink, LinkFunction, LinkState } from "../../link/v1/link_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -29,6 +29,10 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
   connectorId?: ConnectorId | undefined;
 
   /**
+   * User-facing and free-form — "HomeMatic hub", "LoRaWAN". An interface may show
+   * it; nothing ever matches on it. connector_id is the routing key; this is only
+   * a label for a person.
+   *
    * @generated from field: string display_name = 2;
    */
   displayName: string;
@@ -54,6 +58,54 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
    * @generated from field: repeated uint32 supported_device_type_ids = 6;
    */
   supportedDeviceTypeIds: number[];
+
+  /**
+   * The connector opens a radio window on request: the app may offer the pairing
+   * flow and target webrtc.v1.StartPairing.connector_id at it. A connector whose
+   * devices are registered rather than paired (see supports_provisioning) sets this
+   * false.
+   *
+   * @generated from field: bool supports_pairing = 7;
+   */
+  supportsPairing: boolean;
+
+  /**
+   * The connector registers a device from credentials it is handed, rather than
+   * adopting one that joins during a window — the webrtc.v1.ProvisionDevice path.
+   * This is how the app knows to show a credential-entry flow instead of pairing,
+   * and ProvisionDevice.connector_id is targeted at a connector that declares it.
+   *
+   * @generated from field: bool supports_provisioning = 8;
+   */
+  supportsProvisioning: boolean;
+
+  /**
+   * The connector brokers device-to-device (hard) links: the link picker may offer
+   * them and can name the hub behind an otherwise-hidden candidate. Declared here
+   * rather than inferred from both devices reporting LINK_MODE_HARD, so it is a
+   * statement the connector makes rather than a guess the app assembles.
+   *
+   * @generated from field: bool brokers_links = 9;
+   */
+  brokersLinks: boolean;
+
+  /**
+   * Presentation only — an icon or a phrase; see common.v1.ConnectorKind for why it
+   * never gates behaviour. Unset is CONNECTOR_KIND_UNSPECIFIED, a generic hub.
+   *
+   * @generated from field: kusinta.iot.common.v1.ConnectorKind kind = 10;
+   */
+  kind: ConnectorKind;
+
+  /**
+   * Installer or operator detail — where the hub is, which building leg it serves.
+   * Kept off connector_id, whose identity contract routing depends on, and off
+   * display_name, which is the short label. Free-form, for a person; never matched
+   * on.
+   *
+   * @generated from field: string description = 11;
+   */
+  description: string;
 };
 
 /**

@@ -22,7 +22,8 @@ import {
   ManagementResultSchema,
   GatewayErrorCode,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
-import { SpaceType, DeviceOwnershipType } from '../kusinta/iot/common/v1/types_pb.js'
+import { SpaceType, DeviceOwnershipType, ConnectorKind } from '../kusinta/iot/common/v1/types_pb.js'
+import { LorawanProvisioningSchema } from '../kusinta/iot/vendor/lorawan/v1/lorawan_pb.js'
 
 /**
  * Round-trips a message through the wire so assertions read decoded bytes rather
@@ -268,5 +269,102 @@ describe('management on the envelopes', () => {
     const decoded = onTheWire(ManagementAckSchema, {})
 
     expect(decoded.$typeName).toBe('kusinta.iot.webrtc.v1.ManagementAck')
+  })
+})
+
+describe('ProvisionDevice', () => {
+  it('round-trips a lorawan provision as a ManagementRequest, credentials in the oneof', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'provisionDevice',
+        value: {
+          connectorId: { value: 'lorawan' },
+          credentials: {
+            case: 'lorawan',
+            value: {
+              devEui: '0102030405060708',
+              appKey: '00112233445566778899aabbccddeeff',
+              joinEui: 'a0b0c0d0e0f00102',
+            },
+          },
+        },
+      },
+    })
+
+    expect(decoded.request.case).toBe('provisionDevice')
+    expect(decoded.request.value.connectorId?.value).toBe('lorawan')
+    expect(decoded.request.value.credentials.case).toBe('lorawan')
+    if (decoded.request.value.credentials.case === 'lorawan') {
+      expect(decoded.request.value.credentials.value.devEui).toBe('0102030405060708')
+      expect(decoded.request.value.credentials.value.appKey).toBe('00112233445566778899aabbccddeeff')
+      expect(decoded.request.value.credentials.value.joinEui).toBe('a0b0c0d0e0f00102')
+    }
+  })
+
+  // join_eui is `optional` so that a server pinning a JoinEUI is distinguishable from one
+  // taking the shipped default. Both sides of that distinction are exercised: unset stays
+  // undefined, a deliberate empty string stays present-but-empty.
+  it('leaves an omitted join_eui unset, not empty', () => {
+    const decoded = onTheWire(LorawanProvisioningSchema, {
+      devEui: '0102030405060708',
+      appKey: '00112233445566778899aabbccddeeff',
+    })
+    expect(decoded.joinEui).toBeUndefined()
+  })
+
+  it('keeps a deliberately empty join_eui present rather than collapsing it to unset', () => {
+    const decoded = onTheWire(LorawanProvisioningSchema, {
+      devEui: '0102030405060708',
+      appKey: '00112233445566778899aabbccddeeff',
+      joinEui: '',
+    })
+    expect(decoded.joinEui).toBe('')
+  })
+})
+
+describe('ConnectorsAnnounced', () => {
+  it('is a gateway push, not a management result arm', () => {
+    const decoded = onTheWire(GatewayMessageSchema, {
+      payload: {
+        case: 'connectorsAnnounced',
+        value: {
+          connectors: [
+            {
+              connectorId: { value: 'homematic-ccu3' },
+              displayName: 'HomeMatic hub',
+              supportedDeviceTypeIds: [0x0301, 0x0302],
+              supportsPairing: true,
+              supportsProvisioning: false,
+              brokersLinks: true,
+              kind: ConnectorKind.HOMEMATIC_IP,
+              description: 'CCU3 in the basement riser',
+            },
+            {
+              connectorId: { value: 'lorawan' },
+              displayName: 'LoRaWAN',
+              supportsPairing: false,
+              supportsProvisioning: true,
+              brokersLinks: false,
+              kind: ConnectorKind.LORAWAN,
+            },
+          ],
+        },
+      },
+    })
+
+    expect(decoded.payload.case).toBe('connectorsAnnounced')
+    if (decoded.payload.case === 'connectorsAnnounced') {
+      const [hm, lora] = decoded.payload.value.connectors
+      expect(hm.connectorId?.value).toBe('homematic-ccu3')
+      expect(hm.displayName).toBe('HomeMatic hub')
+      expect(hm.supportedDeviceTypeIds).toEqual([0x0301, 0x0302])
+      expect(hm.supportsPairing).toBe(true)
+      expect(hm.brokersLinks).toBe(true)
+      expect(hm.kind).toBe(ConnectorKind.HOMEMATIC_IP)
+      expect(hm.description).toBe('CCU3 in the basement riser')
+      expect(lora.supportsProvisioning).toBe(true)
+      expect(lora.supportsPairing).toBe(false)
+      expect(lora.kind).toBe(ConnectorKind.LORAWAN)
+    }
   })
 })

@@ -34,6 +34,11 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     $8.ConnectorTransport? transport,
     $core.String? endpoint,
     $core.Iterable<$core.int>? supportedDeviceTypeIds,
+    $core.bool? supportsPairing,
+    $core.bool? supportsProvisioning,
+    $core.bool? brokersLinks,
+    $8.ConnectorKind? kind,
+    $core.String? description,
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
@@ -43,6 +48,12 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     if (endpoint != null) result.endpoint = endpoint;
     if (supportedDeviceTypeIds != null)
       result.supportedDeviceTypeIds.addAll(supportedDeviceTypeIds);
+    if (supportsPairing != null) result.supportsPairing = supportsPairing;
+    if (supportsProvisioning != null)
+      result.supportsProvisioning = supportsProvisioning;
+    if (brokersLinks != null) result.brokersLinks = brokersLinks;
+    if (kind != null) result.kind = kind;
+    if (description != null) result.description = description;
     return result;
   }
 
@@ -72,6 +83,14 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'endpoint')
     ..p<$core.int>(
         6, _omitFieldNames ? '' : 'supportedDeviceTypeIds', $pb.PbFieldType.KU3)
+    ..aOB(7, _omitFieldNames ? '' : 'supportsPairing')
+    ..aOB(8, _omitFieldNames ? '' : 'supportsProvisioning')
+    ..aOB(9, _omitFieldNames ? '' : 'brokersLinks')
+    ..e<$8.ConnectorKind>(10, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $8.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $8.ConnectorKind.valueOf,
+        enumValues: $8.ConnectorKind.values)
+    ..aOS(11, _omitFieldNames ? '' : 'description')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -106,6 +125,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.ConnectorId ensureConnectorId() => $_ensure(0);
 
+  /// User-facing and free-form — "HomeMatic hub", "LoRaWAN". An interface may show
+  /// it; nothing ever matches on it. connector_id is the routing key; this is only
+  /// a label for a person.
   @$pb.TagNumber(2)
   $core.String get displayName => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -144,6 +166,69 @@ class ConnectorInfo extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(6)
   $pb.PbList<$core.int> get supportedDeviceTypeIds => $_getList(5);
+
+  /// The connector opens a radio window on request: the app may offer the pairing
+  /// flow and target webrtc.v1.StartPairing.connector_id at it. A connector whose
+  /// devices are registered rather than paired (see supports_provisioning) sets this
+  /// false.
+  @$pb.TagNumber(7)
+  $core.bool get supportsPairing => $_getBF(6);
+  @$pb.TagNumber(7)
+  set supportsPairing($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSupportsPairing() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSupportsPairing() => $_clearField(7);
+
+  /// The connector registers a device from credentials it is handed, rather than
+  /// adopting one that joins during a window — the webrtc.v1.ProvisionDevice path.
+  /// This is how the app knows to show a credential-entry flow instead of pairing,
+  /// and ProvisionDevice.connector_id is targeted at a connector that declares it.
+  @$pb.TagNumber(8)
+  $core.bool get supportsProvisioning => $_getBF(7);
+  @$pb.TagNumber(8)
+  set supportsProvisioning($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasSupportsProvisioning() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearSupportsProvisioning() => $_clearField(8);
+
+  /// The connector brokers device-to-device (hard) links: the link picker may offer
+  /// them and can name the hub behind an otherwise-hidden candidate. Declared here
+  /// rather than inferred from both devices reporting LINK_MODE_HARD, so it is a
+  /// statement the connector makes rather than a guess the app assembles.
+  @$pb.TagNumber(9)
+  $core.bool get brokersLinks => $_getBF(8);
+  @$pb.TagNumber(9)
+  set brokersLinks($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasBrokersLinks() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearBrokersLinks() => $_clearField(9);
+
+  /// Presentation only — an icon or a phrase; see common.v1.ConnectorKind for why it
+  /// never gates behaviour. Unset is CONNECTOR_KIND_UNSPECIFIED, a generic hub.
+  @$pb.TagNumber(10)
+  $8.ConnectorKind get kind => $_getN(9);
+  @$pb.TagNumber(10)
+  set kind($8.ConnectorKind value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasKind() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearKind() => $_clearField(10);
+
+  /// Installer or operator detail — where the hub is, which building leg it serves.
+  /// Kept off connector_id, whose identity contract routing depends on, and off
+  /// display_name, which is the short label. Free-form, for a person; never matched
+  /// on.
+  @$pb.TagNumber(11)
+  $core.String get description => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set description($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasDescription() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearDescription() => $_clearField(11);
 }
 
 class ConnectorHandshake extends $pb.GeneratedMessage {

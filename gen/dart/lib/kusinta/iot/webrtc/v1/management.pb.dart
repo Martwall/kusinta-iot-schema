@@ -14,10 +14,11 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../common/v1/types.pbenum.dart' as $3;
+import '../../common/v1/types.pbenum.dart' as $4;
 import '../../identity/v1/identity.pb.dart' as $0;
-import '../../link/v1/link.pb.dart' as $2;
-import '../../space/v1/space.pb.dart' as $1;
+import '../../link/v1/link.pb.dart' as $3;
+import '../../space/v1/space.pb.dart' as $2;
+import '../../vendor/lorawan/v1/lorawan.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -26,7 +27,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// it, so it is reserved to the gateway's administrator.
 class CreateSpace extends $pb.GeneratedMessage {
   factory CreateSpace({
-    $3.SpaceType? spaceType,
+    $4.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -55,10 +56,10 @@ class CreateSpace extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..e<$3.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $3.SpaceType.valueOf,
-        enumValues: $3.SpaceType.values)
+    ..e<$4.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $4.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $4.SpaceType.valueOf,
+        enumValues: $4.SpaceType.values)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(4, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -87,9 +88,9 @@ class CreateSpace extends $pb.GeneratedMessage {
   static CreateSpace? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.SpaceType get spaceType => $_getN(0);
+  $4.SpaceType get spaceType => $_getN(0);
   @$pb.TagNumber(1)
-  set spaceType($3.SpaceType value) => $_setField(1, value);
+  set spaceType($4.SpaceType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasSpaceType() => $_has(0);
   @$pb.TagNumber(1)
@@ -142,7 +143,7 @@ enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 class UpdateSpace extends $pb.GeneratedMessage {
   factory UpdateSpace({
     $0.SpaceId? spaceId,
-    $3.SpaceType? spaceType,
+    $4.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -183,10 +184,10 @@ class UpdateSpace extends $pb.GeneratedMessage {
     ..oo(0, [6, 7])
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$3.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $3.SpaceType.valueOf,
-        enumValues: $3.SpaceType.values)
+    ..e<$4.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $4.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $4.SpaceType.valueOf,
+        enumValues: $4.SpaceType.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(5, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -231,9 +232,9 @@ class UpdateSpace extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $3.SpaceType get spaceType => $_getN(1);
+  $4.SpaceType get spaceType => $_getN(1);
   @$pb.TagNumber(2)
-  set spaceType($3.SpaceType value) => $_setField(2, value);
+  set spaceType($4.SpaceType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSpaceType() => $_has(1);
   @$pb.TagNumber(2)
@@ -678,7 +679,7 @@ class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
 class ClaimDevice extends $pb.GeneratedMessage {
   factory ClaimDevice({
     $0.DeviceId? deviceId,
-    $3.DeviceOwnershipType? ownership,
+    $4.DeviceOwnershipType? ownership,
     $0.SpaceId? initialSpaceId,
     $core.String? possessionProof,
   }) {
@@ -706,12 +707,12 @@ class ClaimDevice extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
-    ..e<$3.DeviceOwnershipType>(
+    ..e<$4.DeviceOwnershipType>(
         2, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $3.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
-        valueOf: $3.DeviceOwnershipType.valueOf,
-        enumValues: $3.DeviceOwnershipType.values)
+            $4.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $4.DeviceOwnershipType.valueOf,
+        enumValues: $4.DeviceOwnershipType.values)
     ..aOM<$0.SpaceId>(3, _omitFieldNames ? '' : 'initialSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOS(4, _omitFieldNames ? '' : 'possessionProof')
@@ -749,9 +750,9 @@ class ClaimDevice extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $3.DeviceOwnershipType get ownership => $_getN(1);
+  $4.DeviceOwnershipType get ownership => $_getN(1);
   @$pb.TagNumber(2)
-  set ownership($3.DeviceOwnershipType value) => $_setField(2, value);
+  set ownership($4.DeviceOwnershipType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOwnership() => $_has(1);
   @$pb.TagNumber(2)
@@ -858,6 +859,119 @@ class ReleaseDevice extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 }
 
+enum ProvisionDevice_Credentials { lorawan, notSet }
+
+/// Registers a device with the system that will admit it, so that it can join
+/// later. For a technology where a device is enrolled as a record rather than
+/// adopted during a window — see common.v1.PairingWindow for the other case, where
+/// something joins a hub during a window and the arrival is attributed to the
+/// caller. A LoRaWAN device has no window: it is written into a network server and
+/// joins whenever it is next powered, which may be minutes, days, or never.
+///
+/// Answered with the ordinary ManagementAck. A provision writes a record and returns
+/// nothing to show; the device itself is announced by device_added if and when it
+/// joins, the same path every other device takes — which is why this adds no
+/// ManagementResult arm. A new result arm is a compile error in a consumer that
+/// matches the result exhaustively; a new request arm is not.
+///
+/// Registering and owning stay two operations. ClaimDevice records the caller and
+/// carries possession_proof, so a device that has not joined yet is still claimable
+/// by whoever holds it — and because the connector derives the device id and the
+/// serial from the identifier here, that claim can be made before the join.
+///
+/// Provisioning the same identifier twice is an upsert: it replaces the credentials
+/// rather than being refused as a conflict, so correcting a mistyped key does not
+/// require removing the device first. Removing a record is a distinct act from
+/// giving up ownership (ReleaseDevice) and is left to a later operation.
+class ProvisionDevice extends $pb.GeneratedMessage {
+  factory ProvisionDevice({
+    $0.ConnectorId? connectorId,
+    $1.LorawanProvisioning? lorawan,
+  }) {
+    final result = create();
+    if (connectorId != null) result.connectorId = connectorId;
+    if (lorawan != null) result.lorawan = lorawan;
+    return result;
+  }
+
+  ProvisionDevice._();
+
+  factory ProvisionDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProvisionDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProvisionDevice_Credentials>
+      _ProvisionDevice_CredentialsByTag = {
+    2: ProvisionDevice_Credentials.lorawan,
+    0: ProvisionDevice_Credentials.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProvisionDevice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2])
+    ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
+        subBuilder: $0.ConnectorId.create)
+    ..aOM<$1.LorawanProvisioning>(2, _omitFieldNames ? '' : 'lorawan',
+        subBuilder: $1.LorawanProvisioning.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisionDevice clone() => ProvisionDevice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisionDevice copyWith(void Function(ProvisionDevice) updates) =>
+      super.copyWith((message) => updates(message as ProvisionDevice))
+          as ProvisionDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProvisionDevice create() => ProvisionDevice._();
+  @$core.override
+  ProvisionDevice createEmptyInstance() => create();
+  static $pb.PbList<ProvisionDevice> createRepeated() =>
+      $pb.PbList<ProvisionDevice>();
+  @$core.pragma('dart2js:noInline')
+  static ProvisionDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProvisionDevice>(create);
+  static ProvisionDevice? _defaultInstance;
+
+  ProvisionDevice_Credentials whichCredentials() =>
+      _ProvisionDevice_CredentialsByTag[$_whichOneof(0)]!;
+  void clearCredentials() => $_clearField($_whichOneof(0));
+
+  /// Required, unlike a pairing window's connector target. A registration is written
+  /// to one specific registry; there is no sensible "open them all and see what
+  /// joins". The app names it from the connector enumeration, targeting a connector
+  /// that declares ConnectorInfo.supports_provisioning.
+  @$pb.TagNumber(1)
+  $0.ConnectorId get connectorId => $_getN(0);
+  @$pb.TagNumber(1)
+  set connectorId($0.ConnectorId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectorId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectorId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.ConnectorId ensureConnectorId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $1.LorawanProvisioning get lorawan => $_getN(1);
+  @$pb.TagNumber(2)
+  set lorawan($1.LorawanProvisioning value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLorawan() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLorawan() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.LorawanProvisioning ensureLorawan() => $_ensure(1);
+}
+
 /// Asks for the spaces the caller can reach. Unset root_space_id means all of
 /// them, which for most users is one apartment and for an administrator is the
 /// building.
@@ -930,7 +1044,7 @@ class ListSpaces extends $pb.GeneratedMessage {
 /// enumeration channel the snapshot filter exists to close.
 class SpaceTree extends $pb.GeneratedMessage {
   factory SpaceTree({
-    $core.Iterable<$1.Space>? spaces,
+    $core.Iterable<$2.Space>? spaces,
   }) {
     final result = create();
     if (spaces != null) result.spaces.addAll(spaces);
@@ -951,8 +1065,8 @@ class SpaceTree extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..pc<$1.Space>(1, _omitFieldNames ? '' : 'spaces', $pb.PbFieldType.PM,
-        subBuilder: $1.Space.create)
+    ..pc<$2.Space>(1, _omitFieldNames ? '' : 'spaces', $pb.PbFieldType.PM,
+        subBuilder: $2.Space.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -975,7 +1089,7 @@ class SpaceTree extends $pb.GeneratedMessage {
   static SpaceTree? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$1.Space> get spaces => $_getList(0);
+  $pb.PbList<$2.Space> get spaces => $_getList(0);
 }
 
 /// The answer to an operation that changes something and has nothing to return.
@@ -1042,9 +1156,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   factory CreateDeviceLink({
     $0.DeviceId? sender,
     $0.DeviceId? receiver,
-    $2.LinkFunction? function,
-    $2.LinkMode? mode,
-    $2.LinkSettings? settings,
+    $3.LinkFunction? function,
+    $3.LinkMode? mode,
+    $3.LinkSettings? settings,
   }) {
     final result = create();
     if (sender != null) result.sender = sender;
@@ -1073,17 +1187,17 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'receiver',
         subBuilder: $0.DeviceId.create)
-    ..e<$2.LinkFunction>(
+    ..e<$3.LinkFunction>(
         3, _omitFieldNames ? '' : 'function', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
-        valueOf: $2.LinkFunction.valueOf,
-        enumValues: $2.LinkFunction.values)
-    ..e<$2.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.LinkMode.LINK_MODE_UNSPECIFIED,
-        valueOf: $2.LinkMode.valueOf,
-        enumValues: $2.LinkMode.values)
-    ..aOM<$2.LinkSettings>(5, _omitFieldNames ? '' : 'settings',
-        subBuilder: $2.LinkSettings.create)
+        defaultOrMaker: $3.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
+        valueOf: $3.LinkFunction.valueOf,
+        enumValues: $3.LinkFunction.values)
+    ..e<$3.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.LinkMode.LINK_MODE_UNSPECIFIED,
+        valueOf: $3.LinkMode.valueOf,
+        enumValues: $3.LinkMode.values)
+    ..aOM<$3.LinkSettings>(5, _omitFieldNames ? '' : 'settings',
+        subBuilder: $3.LinkSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1130,9 +1244,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   $0.DeviceId ensureReceiver() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $2.LinkFunction get function => $_getN(2);
+  $3.LinkFunction get function => $_getN(2);
   @$pb.TagNumber(3)
-  set function($2.LinkFunction value) => $_setField(3, value);
+  set function($3.LinkFunction value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFunction() => $_has(2);
   @$pb.TagNumber(3)
@@ -1142,9 +1256,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   /// one can be brokered: it survives a gateway outage and runs at the devices'
   /// own rate. Name one to override that.
   @$pb.TagNumber(4)
-  $2.LinkMode get mode => $_getN(3);
+  $3.LinkMode get mode => $_getN(3);
   @$pb.TagNumber(4)
-  set mode($2.LinkMode value) => $_setField(4, value);
+  set mode($3.LinkMode value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasMode() => $_has(3);
   @$pb.TagNumber(4)
@@ -1159,15 +1273,15 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   /// Unset is still allowed and still means unconfigured, since a hard link has
   /// nothing to configure and a caller may genuinely not know the target yet.
   @$pb.TagNumber(5)
-  $2.LinkSettings get settings => $_getN(4);
+  $3.LinkSettings get settings => $_getN(4);
   @$pb.TagNumber(5)
-  set settings($2.LinkSettings value) => $_setField(5, value);
+  set settings($3.LinkSettings value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasSettings() => $_has(4);
   @$pb.TagNumber(5)
   void clearSettings() => $_clearField(5);
   @$pb.TagNumber(5)
-  $2.LinkSettings ensureSettings() => $_ensure(4);
+  $3.LinkSettings ensureSettings() => $_ensure(4);
 }
 
 /// Removes a link. Note that on at least one vendor, removing a link disturbs the
@@ -1244,7 +1358,7 @@ class RemoveDeviceLink extends $pb.GeneratedMessage {
 class UpdateDeviceLink extends $pb.GeneratedMessage {
   factory UpdateDeviceLink({
     $core.String? linkId,
-    $2.LinkSettings? settings,
+    $3.LinkSettings? settings,
   }) {
     final result = create();
     if (linkId != null) result.linkId = linkId;
@@ -1267,8 +1381,8 @@ class UpdateDeviceLink extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'linkId')
-    ..aOM<$2.LinkSettings>(2, _omitFieldNames ? '' : 'settings',
-        subBuilder: $2.LinkSettings.create)
+    ..aOM<$3.LinkSettings>(2, _omitFieldNames ? '' : 'settings',
+        subBuilder: $3.LinkSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1311,15 +1425,15 @@ class UpdateDeviceLink extends $pb.GeneratedMessage {
   /// settings", which is the one thing that reads like an accident — and the
   /// wire cannot tell those two callers apart.
   @$pb.TagNumber(2)
-  $2.LinkSettings get settings => $_getN(1);
+  $3.LinkSettings get settings => $_getN(1);
   @$pb.TagNumber(2)
-  set settings($2.LinkSettings value) => $_setField(2, value);
+  set settings($3.LinkSettings value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSettings() => $_has(1);
   @$pb.TagNumber(2)
   void clearSettings() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.LinkSettings ensureSettings() => $_ensure(1);
+  $3.LinkSettings ensureSettings() => $_ensure(1);
 }
 
 /// Lists links. Unset device_id lists every link among devices the caller can
@@ -1399,6 +1513,7 @@ enum ManagementRequest_Request {
   removeDeviceLink,
   listDeviceLinks,
   updateDeviceLink,
+  provisionDevice,
   notSet
 }
 
@@ -1418,6 +1533,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     RemoveDeviceLink? removeDeviceLink,
     ListDeviceLinks? listDeviceLinks,
     UpdateDeviceLink? updateDeviceLink,
+    ProvisionDevice? provisionDevice,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -1437,6 +1553,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (removeDeviceLink != null) result.removeDeviceLink = removeDeviceLink;
     if (listDeviceLinks != null) result.listDeviceLinks = listDeviceLinks;
     if (updateDeviceLink != null) result.updateDeviceLink = updateDeviceLink;
+    if (provisionDevice != null) result.provisionDevice = provisionDevice;
     return result;
   }
 
@@ -1465,6 +1582,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     12: ManagementRequest_Request.removeDeviceLink,
     13: ManagementRequest_Request.listDeviceLinks,
     14: ManagementRequest_Request.updateDeviceLink,
+    15: ManagementRequest_Request.provisionDevice,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1472,7 +1590,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
     ..aOM<UpdateSpace>(2, _omitFieldNames ? '' : 'updateSpace',
@@ -1502,6 +1620,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: ListDeviceLinks.create)
     ..aOM<UpdateDeviceLink>(14, _omitFieldNames ? '' : 'updateDeviceLink',
         subBuilder: UpdateDeviceLink.create)
+    ..aOM<ProvisionDevice>(15, _omitFieldNames ? '' : 'provisionDevice',
+        subBuilder: ProvisionDevice.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1683,6 +1803,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearUpdateDeviceLink() => $_clearField(14);
   @$pb.TagNumber(14)
   UpdateDeviceLink ensureUpdateDeviceLink() => $_ensure(13);
+
+  @$pb.TagNumber(15)
+  ProvisionDevice get provisionDevice => $_getN(14);
+  @$pb.TagNumber(15)
+  set provisionDevice(ProvisionDevice value) => $_setField(15, value);
+  @$pb.TagNumber(15)
+  $core.bool hasProvisionDevice() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearProvisionDevice() => $_clearField(15);
+  @$pb.TagNumber(15)
+  ProvisionDevice ensureProvisionDevice() => $_ensure(14);
 }
 
 const $core.bool _omitFieldNames =

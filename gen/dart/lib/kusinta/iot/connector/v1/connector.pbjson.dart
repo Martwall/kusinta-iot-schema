@@ -44,6 +44,24 @@ const ConnectorInfo$json = {
       '5': 13,
       '10': 'supportedDeviceTypeIds'
     },
+    {'1': 'supports_pairing', '3': 7, '4': 1, '5': 8, '10': 'supportsPairing'},
+    {
+      '1': 'supports_provisioning',
+      '3': 8,
+      '4': 1,
+      '5': 8,
+      '10': 'supportsProvisioning'
+    },
+    {'1': 'brokers_links', '3': 9, '4': 1, '5': 8, '10': 'brokersLinks'},
+    {
+      '1': 'kind',
+      '3': 10,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.ConnectorKind',
+      '10': 'kind'
+    },
+    {'1': 'description', '3': 11, '4': 1, '5': 9, '10': 'description'},
   ],
 };
 
@@ -54,7 +72,11 @@ final $typed_data.Uint8List connectorInfoDescriptor = $convert.base64Decode(
     'C2Rpc3BsYXlOYW1lEhgKB3ZlcnNpb24YAyABKAlSB3ZlcnNpb24SRwoJdHJhbnNwb3J0GAQgAS'
     'gOMikua3VzaW50YS5pb3QuY29tbW9uLnYxLkNvbm5lY3RvclRyYW5zcG9ydFIJdHJhbnNwb3J0'
     'EhoKCGVuZHBvaW50GAUgASgJUghlbmRwb2ludBI5ChlzdXBwb3J0ZWRfZGV2aWNlX3R5cGVfaW'
-    'RzGAYgAygNUhZzdXBwb3J0ZWREZXZpY2VUeXBlSWRz');
+    'RzGAYgAygNUhZzdXBwb3J0ZWREZXZpY2VUeXBlSWRzEikKEHN1cHBvcnRzX3BhaXJpbmcYByAB'
+    'KAhSD3N1cHBvcnRzUGFpcmluZxIzChVzdXBwb3J0c19wcm92aXNpb25pbmcYCCABKAhSFHN1cH'
+    'BvcnRzUHJvdmlzaW9uaW5nEiMKDWJyb2tlcnNfbGlua3MYCSABKAhSDGJyb2tlcnNMaW5rcxI4'
+    'CgRraW5kGAogASgOMiQua3VzaW50YS5pb3QuY29tbW9uLnYxLkNvbm5lY3RvcktpbmRSBGtpbm'
+    'QSIAoLZGVzY3JpcHRpb24YCyABKAlSC2Rlc2NyaXB0aW9u');
 
 @$core.Deprecated('Use connectorHandshakeDescriptor instead')
 const ConnectorHandshake$json = {

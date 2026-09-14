@@ -47,6 +47,8 @@ export 'kusinta/iot/space/v1/space.pb.dart';
 export 'kusinta/iot/space/v1/space.pbenum.dart';
 export 'kusinta/iot/vendor/homematic/v1/homematic.pb.dart';
 export 'kusinta/iot/vendor/homematic/v1/homematic.pbenum.dart';
+export 'kusinta/iot/vendor/lorawan/v1/lorawan.pb.dart';
+export 'kusinta/iot/vendor/lorawan/v1/lorawan.pbenum.dart';
 export 'kusinta/iot/vendor/v1/vendor_options.pb.dart';
 export 'kusinta/iot/vendor/v1/vendor_options.pbenum.dart';
 export 'kusinta/iot/webrtc/v1/app_token.pb.dart';

@@ -5,7 +5,8 @@
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
-import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
+import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
+import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 
@@ -316,6 +317,66 @@ export declare type ReleaseDevice = Message<"kusinta.iot.webrtc.v1.ReleaseDevice
 export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
 
 /**
+ * Registers a device with the system that will admit it, so that it can join
+ * later. For a technology where a device is enrolled as a record rather than
+ * adopted during a window — see common.v1.PairingWindow for the other case, where
+ * something joins a hub during a window and the arrival is attributed to the
+ * caller. A LoRaWAN device has no window: it is written into a network server and
+ * joins whenever it is next powered, which may be minutes, days, or never.
+ *
+ * Answered with the ordinary ManagementAck. A provision writes a record and returns
+ * nothing to show; the device itself is announced by device_added if and when it
+ * joins, the same path every other device takes — which is why this adds no
+ * ManagementResult arm. A new result arm is a compile error in a consumer that
+ * matches the result exhaustively; a new request arm is not.
+ *
+ * Registering and owning stay two operations. ClaimDevice records the caller and
+ * carries possession_proof, so a device that has not joined yet is still claimable
+ * by whoever holds it — and because the connector derives the device id and the
+ * serial from the identifier here, that claim can be made before the join.
+ *
+ * Provisioning the same identifier twice is an upsert: it replaces the credentials
+ * rather than being refused as a conflict, so correcting a mistyped key does not
+ * require removing the device first. Removing a record is a distinct act from
+ * giving up ownership (ReleaseDevice) and is left to a later operation.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ProvisionDevice
+ */
+export declare type ProvisionDevice = Message<"kusinta.iot.webrtc.v1.ProvisionDevice"> & {
+  /**
+   * Required, unlike a pairing window's connector target. A registration is written
+   * to one specific registry; there is no sensible "open them all and see what
+   * joins". The app names it from the connector enumeration, targeting a connector
+   * that declares ConnectorInfo.supports_provisioning.
+   *
+   * @generated from field: kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+   */
+  connectorId?: ConnectorId | undefined;
+
+  /**
+   * What the registry needs to admit the device, which differs entirely by
+   * technology — a oneof per technology rather than a flat set of fields, for the
+   * reason LinkSettings gives: the second technology to arrive must not turn this
+   * into a bag of unrelated optionals named after the first.
+   *
+   * @generated from oneof kusinta.iot.webrtc.v1.ProvisionDevice.credentials
+   */
+  credentials: {
+    /**
+     * @generated from field: kusinta.iot.vendor.lorawan.v1.LorawanProvisioning lorawan = 2;
+     */
+    value: LorawanProvisioning;
+    case: "lorawan";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ProvisionDevice.
+ * Use `create(ProvisionDeviceSchema)` to create a new message.
+ */
+export declare const ProvisionDeviceSchema: GenMessage<ProvisionDevice>;
+
+/**
  * Asks for the spaces the caller can reach. Unset root_space_id means all of
  * them, which for most users is one apartment and for an administrator is the
  * building.
@@ -616,6 +677,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: UpdateDeviceLink;
     case: "updateDeviceLink";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ProvisionDevice provision_device = 15;
+     */
+    value: ProvisionDevice;
+    case: "provisionDevice";
   } | { case: undefined; value?: undefined };
 };
 

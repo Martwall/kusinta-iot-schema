@@ -161,3 +161,37 @@ export enum ConnectorTransport {
  */
 export declare const ConnectorTransportSchema: GenEnum<ConnectorTransport>;
 
+/**
+ * What technology a connector speaks, for an interface to pick an icon or an
+ * explanatory phrase. Presentation only, and never a behaviour gate: what a
+ * connector can do is stated by the capability booleans on ConnectorInfo
+ * (supports_pairing, supports_provisioning, brokers_links), and branching on the
+ * kind instead would hardcode vendor knowledge and force a client change for every
+ * new technology. A proto3 open enum: a reader given a value its schema predates
+ * keeps UNSPECIFIED's fallback rather than failing, which is exactly why the kind
+ * may never decide anything that matters.
+ *
+ * @generated from enum kusinta.iot.common.v1.ConnectorKind
+ */
+export enum ConnectorKind {
+  /**
+   * @generated from enum value: CONNECTOR_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CONNECTOR_KIND_HOMEMATIC_IP = 1;
+   */
+  HOMEMATIC_IP = 1,
+
+  /**
+   * @generated from enum value: CONNECTOR_KIND_LORAWAN = 2;
+   */
+  LORAWAN = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.common.v1.ConnectorKind.
+ */
+export declare const ConnectorKindSchema: GenEnum<ConnectorKind>;
+

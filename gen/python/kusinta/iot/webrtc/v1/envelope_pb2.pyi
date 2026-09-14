@@ -171,8 +171,34 @@ class LinkChanged(_message.Message):
     removed: bool
     def __init__(self, link: _Optional[_Union[_link_pb2.DeviceLink, _Mapping]] = ..., removed: _Optional[bool] = ...) -> None: ...
 
+class ConnectorDescriptor(_message.Message):
+    __slots__ = ("connector_id", "display_name", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description")
+    CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTED_DEVICE_TYPE_IDS_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_PAIRING_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_PROVISIONING_FIELD_NUMBER: _ClassVar[int]
+    BROKERS_LINKS_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    connector_id: _identity_pb2.ConnectorId
+    display_name: str
+    supported_device_type_ids: _containers.RepeatedScalarFieldContainer[int]
+    supports_pairing: bool
+    supports_provisioning: bool
+    brokers_links: bool
+    kind: _types_pb2.ConnectorKind
+    description: str
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ...) -> None: ...
+
+class ConnectorsAnnounced(_message.Message):
+    __slots__ = ("connectors",)
+    CONNECTORS_FIELD_NUMBER: _ClassVar[int]
+    connectors: _containers.RepeatedCompositeFieldContainer[ConnectorDescriptor]
+    def __init__(self, connectors: _Optional[_Iterable[_Union[ConnectorDescriptor, _Mapping]]] = ...) -> None: ...
+
 class GatewayMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_report", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed", "management_result", "device_events", "pairing_started", "pairing_finished", "link_changed")
+    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_report", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed", "management_result", "device_events", "pairing_started", "pairing_finished", "link_changed", "connectors_announced")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
@@ -190,6 +216,7 @@ class GatewayMessage(_message.Message):
     PAIRING_STARTED_FIELD_NUMBER: _ClassVar[int]
     PAIRING_FINISHED_FIELD_NUMBER: _ClassVar[int]
     LINK_CHANGED_FIELD_NUMBER: _ClassVar[int]
+    CONNECTORS_ANNOUNCED_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     state_snapshot: _device_state_pb2.DeviceStateSnapshot
@@ -207,7 +234,8 @@ class GatewayMessage(_message.Message):
     pairing_started: PairingStarted
     pairing_finished: PairingFinished
     link_changed: LinkChanged
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_report: _Optional[_Union[_device_state_pb2.PropertyReport, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ..., management_result: _Optional[_Union[ManagementResult, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_started: _Optional[_Union[PairingStarted, _Mapping]] = ..., pairing_finished: _Optional[_Union[PairingFinished, _Mapping]] = ..., link_changed: _Optional[_Union[LinkChanged, _Mapping]] = ...) -> None: ...
+    connectors_announced: ConnectorsAnnounced
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_report: _Optional[_Union[_device_state_pb2.PropertyReport, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ..., management_result: _Optional[_Union[ManagementResult, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_started: _Optional[_Union[PairingStarted, _Mapping]] = ..., pairing_finished: _Optional[_Union[PairingFinished, _Mapping]] = ..., link_changed: _Optional[_Union[LinkChanged, _Mapping]] = ..., connectors_announced: _Optional[_Union[ConnectorsAnnounced, _Mapping]] = ...) -> None: ...
 
 class AppMessage(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping", "subscribe", "unsubscribe", "management", "attribute_write", "start_pairing")
