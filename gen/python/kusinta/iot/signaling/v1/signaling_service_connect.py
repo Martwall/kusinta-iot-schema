@@ -24,6 +24,12 @@ class GatewaySignalingService(Protocol):
     def user_connect(self, request: AsyncIterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectRequest], ctx: RequestContext) -> AsyncIterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectResponse]:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
+    def user_listen(self, request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest, ctx: RequestContext) -> AsyncIterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse]:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+
+    async def user_send(self, request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+
 
 class GatewaySignalingServiceASGIApplication(ConnectASGIApplication[GatewaySignalingService]):
     def __init__(self, service: GatewaySignalingService | AsyncGenerator[GatewaySignalingService], *, interceptors: Iterable[Interceptor]=(), read_max_bytes: int | None = None, compressions: Iterable[Compression] | None = None, codecs: Iterable[Codec] | None = None) -> None:
@@ -49,6 +55,26 @@ class GatewaySignalingServiceASGIApplication(ConnectASGIApplication[GatewaySigna
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
                     function=svc.user_connect,
+                ),
+                "/kusinta.iot.signaling.v1.GatewaySignalingService/UserListen": Endpoint.server_stream(
+                    method=MethodInfo(
+                        name="UserListen",
+                        service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                        input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest,
+                        output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=svc.user_listen,
+                ),
+                "/kusinta.iot.signaling.v1.GatewaySignalingService/UserSend": Endpoint.unary(
+                    method=MethodInfo(
+                        name="UserSend",
+                        service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                        input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest,
+                        output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=svc.user_send,
                 ),
             },
             interceptors=interceptors,
@@ -104,6 +130,46 @@ class GatewaySignalingServiceClient(ConnectClient):
             timeout_ms=timeout_ms,
         )
 
+    def user_listen(
+        self,
+        request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> AsyncIterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse]:
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="UserListen",
+                service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest,
+                output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
+    async def user_send(
+        self,
+        request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse:
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="UserSend",
+                service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest,
+                output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
 
 
 
@@ -112,6 +178,10 @@ class GatewaySignalingServiceSync(Protocol):
     def gateway_connect(self, request: Iterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.GatewayConnectRequest], ctx: RequestContext) -> Iterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.GatewayConnectResponse]:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
     def user_connect(self, request: Iterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectRequest], ctx: RequestContext) -> Iterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectResponse]:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+    def user_listen(self, request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest, ctx: RequestContext) -> Iterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse]:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+    def user_send(self, request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
 
@@ -138,6 +208,26 @@ class GatewaySignalingServiceWSGIApplication(ConnectWSGIApplication):
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
                     function=service.user_connect,
+                ),
+                "/kusinta.iot.signaling.v1.GatewaySignalingService/UserListen": EndpointSync.server_stream(
+                    method=MethodInfo(
+                        name="UserListen",
+                        service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                        input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest,
+                        output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=service.user_listen,
+                ),
+                "/kusinta.iot.signaling.v1.GatewaySignalingService/UserSend": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="UserSend",
+                        service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                        input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest,
+                        output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=service.user_send,
                 ),
             },
             interceptors=interceptors,
@@ -187,6 +277,46 @@ class GatewaySignalingServiceClientSync(ConnectClientSync):
                 service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
                 input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectRequest,
                 output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
+    def user_listen(
+        self,
+        request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> Iterator[kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse]:
+        return self.execute_server_stream(
+            request=request,
+            method=MethodInfo(
+                name="UserListen",
+                service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest,
+                output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
+    def user_send(
+        self,
+        request: kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse:
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="UserSend",
+                service_name="kusinta.iot.signaling.v1.GatewaySignalingService",
+                input=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest,
+                output=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
             ),
             headers=headers,

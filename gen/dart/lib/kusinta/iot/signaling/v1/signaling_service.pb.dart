@@ -32,4 +32,19 @@ class GatewaySignalingServiceApi {
           $pb.ClientContext? ctx, $0.UserConnectRequest request) =>
       _client.invoke<$0.UserConnectResponse>(ctx, 'GatewaySignalingService',
           'UserConnect', request, $0.UserConnectResponse());
+
+  /// Opens the session and its downstream half, for a client whose transport
+  /// cannot stream a request body and so cannot call UserConnect. The handshake
+  /// travels in the request; the acknowledgement is the stream's first message.
+  $async.Future<$0.UserListenResponse> userListen(
+          $pb.ClientContext? ctx, $0.UserListenRequest request) =>
+      _client.invoke<$0.UserListenResponse>(ctx, 'GatewaySignalingService',
+          'UserListen', request, $0.UserListenResponse());
+
+  /// Delivers one upstream message into a session UserListen has already opened.
+  /// A call naming a session the relay does not hold is refused, not queued.
+  $async.Future<$0.UserSendResponse> userSend(
+          $pb.ClientContext? ctx, $0.UserSendRequest request) =>
+      _client.invoke<$0.UserSendResponse>(ctx, 'GatewaySignalingService',
+          'UserSend', request, $0.UserSendResponse());
 }

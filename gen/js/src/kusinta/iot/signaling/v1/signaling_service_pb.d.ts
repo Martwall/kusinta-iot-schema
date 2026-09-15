@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import type { GenFile, GenService } from "@bufbuild/protobuf/codegenv2";
-import type { GatewayConnectRequestSchema, GatewayConnectResponseSchema, UserConnectRequestSchema, UserConnectResponseSchema } from "./signaling_pb.js";
+import type { GatewayConnectRequestSchema, GatewayConnectResponseSchema, UserConnectRequestSchema, UserConnectResponseSchema, UserListenRequestSchema, UserListenResponseSchema, UserSendRequestSchema, UserSendResponseSchema } from "./signaling_pb.js";
 
 /**
  * Describes the file kusinta/iot/signaling/v1/signaling_service.proto.
@@ -29,6 +29,29 @@ export declare const GatewaySignalingService: GenService<{
     methodKind: "bidi_streaming";
     input: typeof UserConnectRequestSchema;
     output: typeof UserConnectResponseSchema;
+  },
+  /**
+   * Opens the session and its downstream half, for a client whose transport
+   * cannot stream a request body and so cannot call UserConnect. The handshake
+   * travels in the request; the acknowledgement is the stream's first message.
+   *
+   * @generated from rpc kusinta.iot.signaling.v1.GatewaySignalingService.UserListen
+   */
+  userListen: {
+    methodKind: "server_streaming";
+    input: typeof UserListenRequestSchema;
+    output: typeof UserListenResponseSchema;
+  },
+  /**
+   * Delivers one upstream message into a session UserListen has already opened.
+   * A call naming a session the relay does not hold is refused, not queued.
+   *
+   * @generated from rpc kusinta.iot.signaling.v1.GatewaySignalingService.UserSend
+   */
+  userSend: {
+    methodKind: "unary";
+    input: typeof UserSendRequestSchema;
+    output: typeof UserSendResponseSchema;
   },
 }>;
 

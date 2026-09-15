@@ -12,6 +12,9 @@ import {
   GatewayConnectResponseSchema,
   UserConnectRequestSchema,
   UserConnectResponseSchema,
+  UserListenRequestSchema,
+  UserListenResponseSchema,
+  UserSendRequestSchema,
 } from '../kusinta/iot/signaling/v1/signaling_pb.js'
 
 describe('SdpOffer / SdpAnswer / IceCandidate', () => {
@@ -260,5 +263,52 @@ describe('session_id on the signaling messages', () => {
     })
     const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, req))
     expect(decoded.sessionId).toBe('a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88')
+  })
+})
+
+describe('UserListen / UserSend (half-duplex app leg)', () => {
+  it('round-trips a UserListenRequest carrying the handshake', () => {
+    const req = create(UserListenRequestSchema, {
+      sessionId: 'a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88',
+      handshake: { targetGatewayId: { value: 'gw-home-1' } },
+    })
+    const decoded = fromBinary(UserListenRequestSchema, toBinary(UserListenRequestSchema, req))
+    expect(decoded.sessionId).toBe('a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88')
+    expect(decoded.handshake?.targetGatewayId?.value).toBe('gw-home-1')
+  })
+
+  it('delivers the same UserConnectResponse a bidi stream would, wrapped', () => {
+    const inner = create(UserConnectResponseSchema, {
+      sessionId: 'session-web',
+      payload: { case: 'answer', value: { sdp: 'v=0\r\n' } },
+    })
+    const wrapped = create(UserListenResponseSchema, { response: inner })
+    const decoded = fromBinary(UserListenResponseSchema, toBinary(UserListenResponseSchema, wrapped))
+    expect(decoded.response?.sessionId).toBe('session-web')
+    expect(decoded.response?.payload.case).toBe('answer')
+  })
+
+  it('round-trips a UserSendRequest offer against its session', () => {
+    const req = create(UserSendRequestSchema, {
+      sessionId: 'session-web',
+      payload: { case: 'offer', value: { sdp: 'v=0\r\n' } },
+    })
+    const decoded = fromBinary(UserSendRequestSchema, toBinary(UserSendRequestSchema, req))
+    expect(decoded.sessionId).toBe('session-web')
+    expect(decoded.payload.case).toBe('offer')
+  })
+
+  it('carries the media-section binding of a UserSendRequest ice candidate', () => {
+    const req = create(UserSendRequestSchema, {
+      sessionId: 'session-web',
+      payload: {
+        case: 'iceCandidate',
+        value: { candidate: 'candidate:1 1 UDP 2130706431 192.168.1.2 56789 typ host', sdpMid: '1', sdpMlineIndex: 1 },
+      },
+    })
+    const decoded = fromBinary(UserSendRequestSchema, toBinary(UserSendRequestSchema, req))
+    expect(decoded.payload.case).toBe('iceCandidate')
+    expect(decoded.payload.value?.sdpMid).toBe('1')
+    expect(decoded.payload.value?.sdpMlineIndex).toBe(1)
   })
 })

@@ -8,4 +8,13 @@ option optimize_for = SPEED;
 service GatewaySignalingService {
   rpc GatewayConnect(stream GatewayConnectRequest) returns (stream GatewayConnectResponse);
   rpc UserConnect(stream UserConnectRequest) returns (stream UserConnectResponse);
+
+  // Opens the session and its downstream half, for a client whose transport
+  // cannot stream a request body and so cannot call UserConnect. The handshake
+  // travels in the request; the acknowledgement is the stream's first message.
+  rpc UserListen(UserListenRequest) returns (stream UserListenResponse);
+
+  // Delivers one upstream message into a session UserListen has already opened.
+  // A call naming a session the relay does not hold is refused, not queued.
+  rpc UserSend(UserSendRequest) returns (UserSendResponse);
 }

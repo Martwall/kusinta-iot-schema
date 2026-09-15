@@ -889,6 +889,306 @@ class UserConnectResponse extends $pb.GeneratedMessage {
   void clearSessionId() => $_clearField(4);
 }
 
+/// The app leg of the protocol exists twice. UserConnect is one bidi stream, and
+/// is what a client uses when its transport can stream a request body. A client
+/// whose transport cannot — a browser, whose fetch API has no full-duplex request
+/// stream — uses UserListen and UserSend instead. Both forms carry the same
+/// messages and are served by the same relay: once a session is live, how it was
+/// opened is not observable.
+///
+/// Opens the downstream half of a half-duplex app session, and carries the
+/// handshake that is the first frame of the bidi form. Field numbers are those of
+/// the equivalent UserConnectRequest, so the two cannot be confused on the wire.
+class UserListenRequest extends $pb.GeneratedMessage {
+  factory UserListenRequest({
+    UserHandshake? handshake,
+    $core.String? sessionId,
+  }) {
+    final result = create();
+    if (handshake != null) result.handshake = handshake;
+    if (sessionId != null) result.sessionId = sessionId;
+    return result;
+  }
+
+  UserListenRequest._();
+
+  factory UserListenRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserListenRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserListenRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOM<UserHandshake>(1, _omitFieldNames ? '' : 'handshake',
+        subBuilder: UserHandshake.create)
+    ..aOS(4, _omitFieldNames ? '' : 'sessionId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserListenRequest clone() => UserListenRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserListenRequest copyWith(void Function(UserListenRequest) updates) =>
+      super.copyWith((message) => updates(message as UserListenRequest))
+          as UserListenRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserListenRequest create() => UserListenRequest._();
+  @$core.override
+  UserListenRequest createEmptyInstance() => create();
+  static $pb.PbList<UserListenRequest> createRepeated() =>
+      $pb.PbList<UserListenRequest>();
+  @$core.pragma('dart2js:noInline')
+  static UserListenRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserListenRequest>(create);
+  static UserListenRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  UserHandshake get handshake => $_getN(0);
+  @$pb.TagNumber(1)
+  set handshake(UserHandshake value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHandshake() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHandshake() => $_clearField(1);
+  @$pb.TagNumber(1)
+  UserHandshake ensureHandshake() => $_ensure(0);
+
+  /// This client's session: opaque, minted by the client, stable across
+  /// reconnects, never a credential, and required. See the contract above.
+  @$pb.TagNumber(4)
+  $core.String get sessionId => $_getSZ(1);
+  @$pb.TagNumber(4)
+  set sessionId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSessionId() => $_has(1);
+  @$pb.TagNumber(4)
+  void clearSessionId() => $_clearField(4);
+}
+
+/// One message of the downstream half. Wraps the response the bidi form delivers
+/// directly, rather than restating its payloads: a response message is not shared
+/// between two rpcs, and a second copy of the oneof would be free to drift from
+/// the first.
+class UserListenResponse extends $pb.GeneratedMessage {
+  factory UserListenResponse({
+    UserConnectResponse? response,
+  }) {
+    final result = create();
+    if (response != null) result.response = response;
+    return result;
+  }
+
+  UserListenResponse._();
+
+  factory UserListenResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserListenResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserListenResponse',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOM<UserConnectResponse>(1, _omitFieldNames ? '' : 'response',
+        subBuilder: UserConnectResponse.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserListenResponse clone() => UserListenResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserListenResponse copyWith(void Function(UserListenResponse) updates) =>
+      super.copyWith((message) => updates(message as UserListenResponse))
+          as UserListenResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserListenResponse create() => UserListenResponse._();
+  @$core.override
+  UserListenResponse createEmptyInstance() => create();
+  static $pb.PbList<UserListenResponse> createRepeated() =>
+      $pb.PbList<UserListenResponse>();
+  @$core.pragma('dart2js:noInline')
+  static UserListenResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserListenResponse>(create);
+  static UserListenResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  UserConnectResponse get response => $_getN(0);
+  @$pb.TagNumber(1)
+  set response(UserConnectResponse value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasResponse() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearResponse() => $_clearField(1);
+  @$pb.TagNumber(1)
+  UserConnectResponse ensureResponse() => $_ensure(0);
+}
+
+enum UserSendRequest_Payload { offer, iceCandidate, notSet }
+
+/// One upstream message of a half-duplex app session, delivered by its own call.
+///
+/// The session must already be open, which is what makes ordering the caller's
+/// job: the handshake is acknowledged on the UserListen stream, and a UserSend
+/// issued before that acknowledgement names a session the relay does not hold
+/// yet. It is refused, not queued. Two sends racing each other can also arrive
+/// out of order, so a caller that must preserve order — an offer before the
+/// candidates that belong to it — issues them one at a time.
+class UserSendRequest extends $pb.GeneratedMessage {
+  factory UserSendRequest({
+    SdpOffer? offer,
+    IceCandidate? iceCandidate,
+    $core.String? sessionId,
+  }) {
+    final result = create();
+    if (offer != null) result.offer = offer;
+    if (iceCandidate != null) result.iceCandidate = iceCandidate;
+    if (sessionId != null) result.sessionId = sessionId;
+    return result;
+  }
+
+  UserSendRequest._();
+
+  factory UserSendRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserSendRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, UserSendRequest_Payload>
+      _UserSendRequest_PayloadByTag = {
+    2: UserSendRequest_Payload.offer,
+    3: UserSendRequest_Payload.iceCandidate,
+    0: UserSendRequest_Payload.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserSendRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2, 3])
+    ..aOM<SdpOffer>(2, _omitFieldNames ? '' : 'offer',
+        subBuilder: SdpOffer.create)
+    ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
+        subBuilder: IceCandidate.create)
+    ..aOS(4, _omitFieldNames ? '' : 'sessionId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserSendRequest clone() => UserSendRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserSendRequest copyWith(void Function(UserSendRequest) updates) =>
+      super.copyWith((message) => updates(message as UserSendRequest))
+          as UserSendRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserSendRequest create() => UserSendRequest._();
+  @$core.override
+  UserSendRequest createEmptyInstance() => create();
+  static $pb.PbList<UserSendRequest> createRepeated() =>
+      $pb.PbList<UserSendRequest>();
+  @$core.pragma('dart2js:noInline')
+  static UserSendRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserSendRequest>(create);
+  static UserSendRequest? _defaultInstance;
+
+  UserSendRequest_Payload whichPayload() =>
+      _UserSendRequest_PayloadByTag[$_whichOneof(0)]!;
+  void clearPayload() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(2)
+  SdpOffer get offer => $_getN(0);
+  @$pb.TagNumber(2)
+  set offer(SdpOffer value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOffer() => $_has(0);
+  @$pb.TagNumber(2)
+  void clearOffer() => $_clearField(2);
+  @$pb.TagNumber(2)
+  SdpOffer ensureOffer() => $_ensure(0);
+
+  @$pb.TagNumber(3)
+  IceCandidate get iceCandidate => $_getN(1);
+  @$pb.TagNumber(3)
+  set iceCandidate(IceCandidate value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasIceCandidate() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearIceCandidate() => $_clearField(3);
+  @$pb.TagNumber(3)
+  IceCandidate ensureIceCandidate() => $_ensure(1);
+
+  /// The session to deliver into. See the contract above.
+  @$pb.TagNumber(4)
+  $core.String get sessionId => $_getSZ(2);
+  @$pb.TagNumber(4)
+  set sessionId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSessionId() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearSessionId() => $_clearField(4);
+}
+
+/// Empty. Delivery is acknowledged by the call succeeding; a message that could
+/// not be routed fails the call instead.
+class UserSendResponse extends $pb.GeneratedMessage {
+  factory UserSendResponse() => create();
+
+  UserSendResponse._();
+
+  factory UserSendResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UserSendResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UserSendResponse',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserSendResponse clone() => UserSendResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UserSendResponse copyWith(void Function(UserSendResponse) updates) =>
+      super.copyWith((message) => updates(message as UserSendResponse))
+          as UserSendResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UserSendResponse create() => UserSendResponse._();
+  @$core.override
+  UserSendResponse createEmptyInstance() => create();
+  static $pb.PbList<UserSendResponse> createRepeated() =>
+      $pb.PbList<UserSendResponse>();
+  @$core.pragma('dart2js:noInline')
+  static UserSendResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UserSendResponse>(create);
+  static UserSendResponse? _defaultInstance;
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

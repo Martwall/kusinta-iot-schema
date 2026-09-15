@@ -95,3 +95,31 @@ class UserConnectResponse(_message.Message):
     answer: SdpAnswer
     ice_candidate: IceCandidate
     def __init__(self, session_id: _Optional[str] = ..., handshake_ack: _Optional[_Union[UserHandshakeAck, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+
+class UserListenRequest(_message.Message):
+    __slots__ = ("handshake", "session_id")
+    HANDSHAKE_FIELD_NUMBER: _ClassVar[int]
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
+    handshake: UserHandshake
+    session_id: str
+    def __init__(self, handshake: _Optional[_Union[UserHandshake, _Mapping]] = ..., session_id: _Optional[str] = ...) -> None: ...
+
+class UserListenResponse(_message.Message):
+    __slots__ = ("response",)
+    RESPONSE_FIELD_NUMBER: _ClassVar[int]
+    response: UserConnectResponse
+    def __init__(self, response: _Optional[_Union[UserConnectResponse, _Mapping]] = ...) -> None: ...
+
+class UserSendRequest(_message.Message):
+    __slots__ = ("session_id", "offer", "ice_candidate")
+    SESSION_ID_FIELD_NUMBER: _ClassVar[int]
+    OFFER_FIELD_NUMBER: _ClassVar[int]
+    ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
+    session_id: str
+    offer: SdpOffer
+    ice_candidate: IceCandidate
+    def __init__(self, session_id: _Optional[str] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+
+class UserSendResponse(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...

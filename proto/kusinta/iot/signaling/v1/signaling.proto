@@ -98,6 +98,9 @@ message UserConnectRequest {
   // every message including the handshake, so the relay can key the stream on it
   // from the first frame.
   string session_id = 4;
+  // A payload added here, the handshake aside, belongs in UserSendRequest too:
+  // the half-duplex form of this leg carries the same upstream messages, and
+  // nothing fails if one of them is only added to one of the two.
   oneof payload {
     UserHandshake handshake = 1;
     SdpOffer offer = 2;
@@ -117,3 +120,56 @@ message UserConnectResponse {
     IceCandidate ice_candidate = 3;
   }
 }
+
+// The app leg of the protocol exists twice. UserConnect is one bidi stream, and
+// is what a client uses when its transport can stream a request body. A client
+// whose transport cannot — a browser, whose fetch API has no full-duplex request
+// stream — uses UserListen and UserSend instead. Both forms carry the same
+// messages and are served by the same relay: once a session is live, how it was
+// opened is not observable.
+//
+// Opens the downstream half of a half-duplex app session, and carries the
+// handshake that is the first frame of the bidi form. Field numbers are those of
+// the equivalent UserConnectRequest, so the two cannot be confused on the wire.
+message UserListenRequest {
+  reserved 2, 3;
+
+  UserHandshake handshake = 1;
+  // This client's session: opaque, minted by the client, stable across
+  // reconnects, never a credential, and required. See the contract above.
+  string session_id = 4;
+}
+
+// One message of the downstream half. Wraps the response the bidi form delivers
+// directly, rather than restating its payloads: a response message is not shared
+// between two rpcs, and a second copy of the oneof would be free to drift from
+// the first.
+message UserListenResponse {
+  UserConnectResponse response = 1;
+}
+
+// One upstream message of a half-duplex app session, delivered by its own call.
+//
+// The session must already be open, which is what makes ordering the caller's
+// job: the handshake is acknowledged on the UserListen stream, and a UserSend
+// issued before that acknowledgement names a session the relay does not hold
+// yet. It is refused, not queued. Two sends racing each other can also arrive
+// out of order, so a caller that must preserve order — an offer before the
+// candidates that belong to it — issues them one at a time.
+message UserSendRequest {
+  // 1 is UserConnectRequest.handshake. A session is opened by UserListen, so
+  // this message has no handshake to carry.
+  reserved 1;
+  reserved "handshake";
+
+  // The session to deliver into. See the contract above.
+  string session_id = 4;
+  oneof payload {
+    SdpOffer offer = 2;
+    IceCandidate ice_candidate = 3;
+  }
+}
+
+// Empty. Delivery is acknowledged by the call succeeding; a message that could
+// not be routed fails the call instead.
+message UserSendResponse {}

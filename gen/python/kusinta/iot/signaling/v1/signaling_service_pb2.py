@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from kusinta.iot.signaling.v1 import signaling_pb2 as kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0kusinta/iot/signaling/v1/signaling_service.proto\x12\x18kusinta.iot.signaling.v1\x1a(kusinta/iot/signaling/v1/signaling.proto2\x82\x02\n\x17GatewaySignalingService\x12w\n\x0eGatewayConnect\x12/.kusinta.iot.signaling.v1.GatewayConnectRequest\x1a\x30.kusinta.iot.signaling.v1.GatewayConnectResponse(\x01\x30\x01\x12n\n\x0bUserConnect\x12,.kusinta.iot.signaling.v1.UserConnectRequest\x1a-.kusinta.iot.signaling.v1.UserConnectResponse(\x01\x30\x01\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0kusinta/iot/signaling/v1/signaling_service.proto\x12\x18kusinta.iot.signaling.v1\x1a(kusinta/iot/signaling/v1/signaling.proto2\xd0\x03\n\x17GatewaySignalingService\x12w\n\x0eGatewayConnect\x12/.kusinta.iot.signaling.v1.GatewayConnectRequest\x1a\x30.kusinta.iot.signaling.v1.GatewayConnectResponse(\x01\x30\x01\x12n\n\x0bUserConnect\x12,.kusinta.iot.signaling.v1.UserConnectRequest\x1a-.kusinta.iot.signaling.v1.UserConnectResponse(\x01\x30\x01\x12i\n\nUserListen\x12+.kusinta.iot.signaling.v1.UserListenRequest\x1a,.kusinta.iot.signaling.v1.UserListenResponse0\x01\x12\x61\n\x08UserSend\x12).kusinta.iot.signaling.v1.UserSendRequest\x1a*.kusinta.iot.signaling.v1.UserSendResponseB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,5 +34,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_GATEWAYSIGNALINGSERVICE']._serialized_start=121
-  _globals['_GATEWAYSIGNALINGSERVICE']._serialized_end=379
+  _globals['_GATEWAYSIGNALINGSERVICE']._serialized_end=585
 # @@protoc_insertion_point(module_scope)

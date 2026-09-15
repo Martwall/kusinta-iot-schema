@@ -244,6 +244,10 @@ export declare type UserConnectRequest = Message<"kusinta.iot.signaling.v1.UserC
   sessionId: string;
 
   /**
+   * A payload added here, the handshake aside, belongs in UserSendRequest too:
+   * the half-duplex form of this leg carries the same upstream messages, and
+   * nothing fails if one of them is only added to one of the two.
+   *
    * @generated from oneof kusinta.iot.signaling.v1.UserConnectRequest.payload
    */
   payload: {
@@ -317,4 +321,119 @@ export declare type UserConnectResponse = Message<"kusinta.iot.signaling.v1.User
  * Use `create(UserConnectResponseSchema)` to create a new message.
  */
 export declare const UserConnectResponseSchema: GenMessage<UserConnectResponse>;
+
+/**
+ * The app leg of the protocol exists twice. UserConnect is one bidi stream, and
+ * is what a client uses when its transport can stream a request body. A client
+ * whose transport cannot — a browser, whose fetch API has no full-duplex request
+ * stream — uses UserListen and UserSend instead. Both forms carry the same
+ * messages and are served by the same relay: once a session is live, how it was
+ * opened is not observable.
+ *
+ * Opens the downstream half of a half-duplex app session, and carries the
+ * handshake that is the first frame of the bidi form. Field numbers are those of
+ * the equivalent UserConnectRequest, so the two cannot be confused on the wire.
+ *
+ * @generated from message kusinta.iot.signaling.v1.UserListenRequest
+ */
+export declare type UserListenRequest = Message<"kusinta.iot.signaling.v1.UserListenRequest"> & {
+  /**
+   * @generated from field: kusinta.iot.signaling.v1.UserHandshake handshake = 1;
+   */
+  handshake?: UserHandshake | undefined;
+
+  /**
+   * This client's session: opaque, minted by the client, stable across
+   * reconnects, never a credential, and required. See the contract above.
+   *
+   * @generated from field: string session_id = 4;
+   */
+  sessionId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.UserListenRequest.
+ * Use `create(UserListenRequestSchema)` to create a new message.
+ */
+export declare const UserListenRequestSchema: GenMessage<UserListenRequest>;
+
+/**
+ * One message of the downstream half. Wraps the response the bidi form delivers
+ * directly, rather than restating its payloads: a response message is not shared
+ * between two rpcs, and a second copy of the oneof would be free to drift from
+ * the first.
+ *
+ * @generated from message kusinta.iot.signaling.v1.UserListenResponse
+ */
+export declare type UserListenResponse = Message<"kusinta.iot.signaling.v1.UserListenResponse"> & {
+  /**
+   * @generated from field: kusinta.iot.signaling.v1.UserConnectResponse response = 1;
+   */
+  response?: UserConnectResponse | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.UserListenResponse.
+ * Use `create(UserListenResponseSchema)` to create a new message.
+ */
+export declare const UserListenResponseSchema: GenMessage<UserListenResponse>;
+
+/**
+ * One upstream message of a half-duplex app session, delivered by its own call.
+ *
+ * The session must already be open, which is what makes ordering the caller's
+ * job: the handshake is acknowledged on the UserListen stream, and a UserSend
+ * issued before that acknowledgement names a session the relay does not hold
+ * yet. It is refused, not queued. Two sends racing each other can also arrive
+ * out of order, so a caller that must preserve order — an offer before the
+ * candidates that belong to it — issues them one at a time.
+ *
+ * @generated from message kusinta.iot.signaling.v1.UserSendRequest
+ */
+export declare type UserSendRequest = Message<"kusinta.iot.signaling.v1.UserSendRequest"> & {
+  /**
+   * The session to deliver into. See the contract above.
+   *
+   * @generated from field: string session_id = 4;
+   */
+  sessionId: string;
+
+  /**
+   * @generated from oneof kusinta.iot.signaling.v1.UserSendRequest.payload
+   */
+  payload: {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.SdpOffer offer = 2;
+     */
+    value: SdpOffer;
+    case: "offer";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.IceCandidate ice_candidate = 3;
+     */
+    value: IceCandidate;
+    case: "iceCandidate";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.UserSendRequest.
+ * Use `create(UserSendRequestSchema)` to create a new message.
+ */
+export declare const UserSendRequestSchema: GenMessage<UserSendRequest>;
+
+/**
+ * Empty. Delivery is acknowledged by the call succeeding; a message that could
+ * not be routed fails the call instead.
+ *
+ * @generated from message kusinta.iot.signaling.v1.UserSendResponse
+ */
+export declare type UserSendResponse = Message<"kusinta.iot.signaling.v1.UserSendResponse"> & {
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.UserSendResponse.
+ * Use `create(UserSendResponseSchema)` to create a new message.
+ */
+export declare const UserSendResponseSchema: GenMessage<UserSendResponse>;
 

@@ -239,3 +239,55 @@ def test_two_sessions_of_the_same_user_are_distinguishable():
     )
     assert phone.from_user_id.value == desktop.from_user_id.value
     assert phone.session_id != desktop.session_id
+
+
+def test_user_listen_request_carries_the_handshake():
+    req = signaling_pb2.UserListenRequest(
+        session_id="a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88",
+        handshake=signaling_pb2.UserHandshake(
+            target_gateway_id=identity_pb2.GatewayId(value="gw-home-1")
+        ),
+    )
+    decoded = signaling_pb2.UserListenRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.session_id == "a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88"
+    assert decoded.handshake.target_gateway_id.value == "gw-home-1"
+
+
+def test_user_listen_response_wraps_a_user_connect_response():
+    resp = signaling_pb2.UserListenResponse(
+        response=signaling_pb2.UserConnectResponse(
+            session_id="session-web",
+            answer=signaling_pb2.SdpAnswer(sdp="v=0\r\n"),
+        )
+    )
+    decoded = signaling_pb2.UserListenResponse()
+    decoded.ParseFromString(resp.SerializeToString())
+    assert decoded.response.session_id == "session-web"
+    assert decoded.response.WhichOneof("payload") == "answer"
+
+
+def test_user_send_request_offer_payload():
+    req = signaling_pb2.UserSendRequest(
+        session_id="session-web", offer=signaling_pb2.SdpOffer(sdp="v=0\r\n")
+    )
+    decoded = signaling_pb2.UserSendRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.session_id == "session-web"
+    assert decoded.WhichOneof("payload") == "offer"
+
+
+def test_user_send_request_carries_the_ice_media_section_binding():
+    req = signaling_pb2.UserSendRequest(
+        session_id="session-web",
+        ice_candidate=signaling_pb2.IceCandidate(
+            candidate="candidate:1 1 UDP 2130706431 192.168.1.2 56789 typ host",
+            sdp_mid="1",
+            sdp_mline_index=1,
+        ),
+    )
+    decoded = signaling_pb2.UserSendRequest()
+    decoded.ParseFromString(req.SerializeToString())
+    assert decoded.WhichOneof("payload") == "ice_candidate"
+    assert decoded.ice_candidate.sdp_mid == "1"
+    assert decoded.ice_candidate.sdp_mline_index == 1

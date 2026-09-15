@@ -25,6 +25,10 @@ abstract class GatewaySignalingServiceBase extends $pb.GeneratedService {
       $pb.ServerContext ctx, $0.GatewayConnectRequest request);
   $async.Future<$0.UserConnectResponse> userConnect(
       $pb.ServerContext ctx, $0.UserConnectRequest request);
+  $async.Future<$0.UserListenResponse> userListen(
+      $pb.ServerContext ctx, $0.UserListenRequest request);
+  $async.Future<$0.UserSendResponse> userSend(
+      $pb.ServerContext ctx, $0.UserSendRequest request);
 
   $pb.GeneratedMessage createRequest($core.String methodName) {
     switch (methodName) {
@@ -32,6 +36,10 @@ abstract class GatewaySignalingServiceBase extends $pb.GeneratedService {
         return $0.GatewayConnectRequest();
       case 'UserConnect':
         return $0.UserConnectRequest();
+      case 'UserListen':
+        return $0.UserListenRequest();
+      case 'UserSend':
+        return $0.UserSendRequest();
       default:
         throw $core.ArgumentError('Unknown method: $methodName');
     }
@@ -44,6 +52,10 @@ abstract class GatewaySignalingServiceBase extends $pb.GeneratedService {
         return gatewayConnect(ctx, request as $0.GatewayConnectRequest);
       case 'UserConnect':
         return userConnect(ctx, request as $0.UserConnectRequest);
+      case 'UserListen':
+        return userListen(ctx, request as $0.UserListenRequest);
+      case 'UserSend':
+        return userSend(ctx, request as $0.UserSendRequest);
       default:
         throw $core.ArgumentError('Unknown method: $methodName');
     }

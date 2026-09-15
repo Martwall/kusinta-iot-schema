@@ -24,6 +24,16 @@ class GatewaySignalingServiceStub(object):
                 request_serializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectRequest.SerializeToString,
                 response_deserializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectResponse.FromString,
                 _registered_method=True)
+        self.UserListen = channel.unary_stream(
+                '/kusinta.iot.signaling.v1.GatewaySignalingService/UserListen',
+                request_serializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest.SerializeToString,
+                response_deserializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse.FromString,
+                _registered_method=True)
+        self.UserSend = channel.unary_unary(
+                '/kusinta.iot.signaling.v1.GatewaySignalingService/UserSend',
+                request_serializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest.SerializeToString,
+                response_deserializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse.FromString,
+                _registered_method=True)
 
 
 class GatewaySignalingServiceServicer(object):
@@ -41,6 +51,23 @@ class GatewaySignalingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UserListen(self, request, context):
+        """Opens the session and its downstream half, for a client whose transport
+        cannot stream a request body and so cannot call UserConnect. The handshake
+        travels in the request; the acknowledgement is the stream's first message.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UserSend(self, request, context):
+        """Delivers one upstream message into a session UserListen has already opened.
+        A call naming a session the relay does not hold is refused, not queued.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_GatewaySignalingServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +80,16 @@ def add_GatewaySignalingServiceServicer_to_server(servicer, server):
                     servicer.UserConnect,
                     request_deserializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectRequest.FromString,
                     response_serializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectResponse.SerializeToString,
+            ),
+            'UserListen': grpc.unary_stream_rpc_method_handler(
+                    servicer.UserListen,
+                    request_deserializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest.FromString,
+                    response_serializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse.SerializeToString,
+            ),
+            'UserSend': grpc.unary_unary_rpc_method_handler(
+                    servicer.UserSend,
+                    request_deserializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest.FromString,
+                    response_serializer=kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -109,6 +146,60 @@ class GatewaySignalingService(object):
             '/kusinta.iot.signaling.v1.GatewaySignalingService/UserConnect',
             kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectRequest.SerializeToString,
             kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserConnectResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UserListen(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(
+            request,
+            target,
+            '/kusinta.iot.signaling.v1.GatewaySignalingService/UserListen',
+            kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenRequest.SerializeToString,
+            kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserListenResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UserSend(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/kusinta.iot.signaling.v1.GatewaySignalingService/UserSend',
+            kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendRequest.SerializeToString,
+            kusinta_dot_iot_dot_signaling_dot_v1_dot_signaling__pb2.UserSendResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -35,6 +35,17 @@ const $core.Map<$core.String, $core.dynamic> GatewaySignalingServiceBase$json =
       '5': true,
       '6': true
     },
+    {
+      '1': 'UserListen',
+      '2': '.kusinta.iot.signaling.v1.UserListenRequest',
+      '3': '.kusinta.iot.signaling.v1.UserListenResponse',
+      '6': true
+    },
+    {
+      '1': 'UserSend',
+      '2': '.kusinta.iot.signaling.v1.UserSendRequest',
+      '3': '.kusinta.iot.signaling.v1.UserSendResponse'
+    },
   ],
 };
 
@@ -55,6 +66,10 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.identity.v1.GatewayId': $1.GatewayId$json,
   '.kusinta.iot.signaling.v1.UserConnectResponse': $0.UserConnectResponse$json,
   '.kusinta.iot.signaling.v1.UserHandshakeAck': $0.UserHandshakeAck$json,
+  '.kusinta.iot.signaling.v1.UserListenRequest': $0.UserListenRequest$json,
+  '.kusinta.iot.signaling.v1.UserListenResponse': $0.UserListenResponse$json,
+  '.kusinta.iot.signaling.v1.UserSendRequest': $0.UserSendRequest$json,
+  '.kusinta.iot.signaling.v1.UserSendResponse': $0.UserSendResponse$json,
 };
 
 /// Descriptor for `GatewaySignalingService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
@@ -63,4 +78,8 @@ final $typed_data.Uint8List gatewaySignalingServiceDescriptor = $convert.base64D
     '90LnNpZ25hbGluZy52MS5HYXRld2F5Q29ubmVjdFJlcXVlc3QaMC5rdXNpbnRhLmlvdC5zaWdu'
     'YWxpbmcudjEuR2F0ZXdheUNvbm5lY3RSZXNwb25zZSgBMAESbgoLVXNlckNvbm5lY3QSLC5rdX'
     'NpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckNvbm5lY3RSZXF1ZXN0Gi0ua3VzaW50YS5pb3Qu'
-    'c2lnbmFsaW5nLnYxLlVzZXJDb25uZWN0UmVzcG9uc2UoATAB');
+    'c2lnbmFsaW5nLnYxLlVzZXJDb25uZWN0UmVzcG9uc2UoATABEmkKClVzZXJMaXN0ZW4SKy5rdX'
+    'NpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckxpc3RlblJlcXVlc3QaLC5rdXNpbnRhLmlvdC5z'
+    'aWduYWxpbmcudjEuVXNlckxpc3RlblJlc3BvbnNlMAESYQoIVXNlclNlbmQSKS5rdXNpbnRhLm'
+    'lvdC5zaWduYWxpbmcudjEuVXNlclNlbmRSZXF1ZXN0Gioua3VzaW50YS5pb3Quc2lnbmFsaW5n'
+    'LnYxLlVzZXJTZW5kUmVzcG9uc2U=');

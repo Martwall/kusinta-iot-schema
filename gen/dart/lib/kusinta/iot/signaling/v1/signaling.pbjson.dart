@@ -289,3 +289,98 @@ final $typed_data.Uint8List userConnectResponseDescriptor = $convert.base64Decod
     'NpZ25hbGluZy52MS5TZHBBbnN3ZXJIAFIGYW5zd2VyEk0KDWljZV9jYW5kaWRhdGUYAyABKAsy'
     'Ji5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABSDGljZUNhbmRpZGF0ZU'
     'IJCgdwYXlsb2Fk');
+
+@$core.Deprecated('Use userListenRequestDescriptor instead')
+const UserListenRequest$json = {
+  '1': 'UserListenRequest',
+  '2': [
+    {
+      '1': 'handshake',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.UserHandshake',
+      '10': 'handshake'
+    },
+    {'1': 'session_id', '3': 4, '4': 1, '5': 9, '10': 'sessionId'},
+  ],
+  '9': [
+    {'1': 2, '2': 3},
+    {'1': 3, '2': 4},
+  ],
+};
+
+/// Descriptor for `UserListenRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userListenRequestDescriptor = $convert.base64Decode(
+    'ChFVc2VyTGlzdGVuUmVxdWVzdBJFCgloYW5kc2hha2UYASABKAsyJy5rdXNpbnRhLmlvdC5zaW'
+    'duYWxpbmcudjEuVXNlckhhbmRzaGFrZVIJaGFuZHNoYWtlEh0KCnNlc3Npb25faWQYBCABKAlS'
+    'CXNlc3Npb25JZEoECAIQA0oECAMQBA==');
+
+@$core.Deprecated('Use userListenResponseDescriptor instead')
+const UserListenResponse$json = {
+  '1': 'UserListenResponse',
+  '2': [
+    {
+      '1': 'response',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.UserConnectResponse',
+      '10': 'response'
+    },
+  ],
+};
+
+/// Descriptor for `UserListenResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userListenResponseDescriptor = $convert.base64Decode(
+    'ChJVc2VyTGlzdGVuUmVzcG9uc2USSQoIcmVzcG9uc2UYASABKAsyLS5rdXNpbnRhLmlvdC5zaW'
+    'duYWxpbmcudjEuVXNlckNvbm5lY3RSZXNwb25zZVIIcmVzcG9uc2U=');
+
+@$core.Deprecated('Use userSendRequestDescriptor instead')
+const UserSendRequest$json = {
+  '1': 'UserSendRequest',
+  '2': [
+    {'1': 'session_id', '3': 4, '4': 1, '5': 9, '10': 'sessionId'},
+    {
+      '1': 'offer',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.SdpOffer',
+      '9': 0,
+      '10': 'offer'
+    },
+    {
+      '1': 'ice_candidate',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.IceCandidate',
+      '9': 0,
+      '10': 'iceCandidate'
+    },
+  ],
+  '8': [
+    {'1': 'payload'},
+  ],
+  '9': [
+    {'1': 1, '2': 2},
+  ],
+  '10': ['handshake'],
+};
+
+/// Descriptor for `UserSendRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userSendRequestDescriptor = $convert.base64Decode(
+    'Cg9Vc2VyU2VuZFJlcXVlc3QSHQoKc2Vzc2lvbl9pZBgEIAEoCVIJc2Vzc2lvbklkEjoKBW9mZm'
+    'VyGAIgASgLMiIua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcE9mZmVySABSBW9mZmVyEk0K'
+    'DWljZV9jYW5kaWRhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZG'
+    'lkYXRlSABSDGljZUNhbmRpZGF0ZUIJCgdwYXlsb2FkSgQIARACUgloYW5kc2hha2U=');
+
+@$core.Deprecated('Use userSendResponseDescriptor instead')
+const UserSendResponse$json = {
+  '1': 'UserSendResponse',
+};
+
+/// Descriptor for `UserSendResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List userSendResponseDescriptor =
+    $convert.base64Decode('ChBVc2VyU2VuZFJlc3BvbnNl');
