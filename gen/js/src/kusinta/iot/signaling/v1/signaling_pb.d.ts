@@ -76,10 +76,19 @@ export declare type IceCandidate = Message<"kusinta.iot.signaling.v1.IceCandidat
 export declare const IceCandidateSchema: GenMessage<IceCandidate>;
 
 /**
- * Empty keepalive. The gateway sends this periodically on the GatewayConnect
- * stream so the otherwise-idle bidi request keeps producing DATA frames, which
- * resets the inactivity timers on any proxy between the two ends and stops it
- * from tearing the stream down. Carries no routing target and is dropped on receipt.
+ * Empty keepalive, sent periodically on a stream that would otherwise fall
+ * silent. The DATA frames it produces reset the inactivity timers on any proxy
+ * between the two ends and stop it tearing the stream down. Carries no routing
+ * target and is dropped on receipt.
+ *
+ * Carried on two arms, each covering a half that falls silent while neither end
+ * has anything to say: the building-server gateway sends it upstream on
+ * GatewayConnect, and the api-server sends it downstream to the app on
+ * UserConnectResponse. The remaining halves have no arm — an app leg's upstream
+ * that goes idle is one the client can write on whenever it needs to.
+ *
+ * Never an acknowledgement. A heartbeat answers no message and must not be
+ * treated as confirming one.
  *
  * @generated from message kusinta.iot.signaling.v1.HeartBeat
  */
@@ -124,6 +133,23 @@ export declare type UserHandshakeAck = Message<"kusinta.iot.signaling.v1.UserHan
    * @generated from field: string reason = 2;
    */
   reason: string;
+
+  /**
+   * How often the api-server will send a HeartBeat on this stream, in
+   * milliseconds.
+   *
+   * Advisory, and a client must not refuse a stream over it: a client that has
+   * seen no traffic at all for a small multiple of this may take the stream for
+   * gone and reattach with the same session_id, which is the difference between
+   * a renegotiation that stalls and one that reconnects. The server is free to
+   * answer with a different value on the next session.
+   *
+   * Zero means the server is not heartbeating this stream, and a client must
+   * then not infer anything from silence.
+   *
+   * @generated from field: uint32 heartbeat_interval_ms = 3;
+   */
+  heartbeatIntervalMs: number;
 };
 
 /**
@@ -280,6 +306,10 @@ export declare const UserConnectRequestSchema: GenMessage<UserConnectRequest>;
 /**
  * Messages sent by the api-server to the app.
  *
+ * One oneof serves both forms of the leg: UserListenResponse wraps this message
+ * rather than restating its payloads, so an arm added here reaches the bidi and
+ * half-duplex forms alike.
+ *
  * @generated from message kusinta.iot.signaling.v1.UserConnectResponse
  */
 export declare type UserConnectResponse = Message<"kusinta.iot.signaling.v1.UserConnectResponse"> & {
@@ -287,6 +317,7 @@ export declare type UserConnectResponse = Message<"kusinta.iot.signaling.v1.User
    * Echoes the session_id of the stream this message is delivered on, so a
    * client can assert the relay routed to the session it thinks it is. See the
    * contract above.
+   * Ignored on a heartbeat, which carries no routing target at all.
    *
    * @generated from field: string session_id = 4;
    */
@@ -313,6 +344,22 @@ export declare type UserConnectResponse = Message<"kusinta.iot.signaling.v1.User
      */
     value: IceCandidate;
     case: "iceCandidate";
+  } | {
+    /**
+     * Keeps a silent stream alive. UserListen is downstream-only — the client
+     * opens it with a handshake and then writes nothing — so between the
+     * acknowledgement and an answer there is no traffic in either direction, and
+     * an idle negotiation can outlast a proxy's patience. Upstream cannot help:
+     * the client has nothing to send, and it is traffic *to* the client that
+     * resets a client-side idle timer.
+     *
+     * A client that does not know this arm sees an unset payload rather than an
+     * error, which is what the oneof buys.
+     *
+     * @generated from field: kusinta.iot.signaling.v1.HeartBeat heartbeat = 5;
+     */
+    value: HeartBeat;
+    case: "heartbeat";
   } | { case: undefined; value?: undefined };
 };
 

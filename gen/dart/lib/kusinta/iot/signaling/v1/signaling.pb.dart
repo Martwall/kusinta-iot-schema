@@ -215,10 +215,19 @@ class IceCandidate extends $pb.GeneratedMessage {
   void clearSdpMlineIndex() => $_clearField(3);
 }
 
-/// Empty keepalive. The gateway sends this periodically on the GatewayConnect
-/// stream so the otherwise-idle bidi request keeps producing DATA frames, which
-/// resets the inactivity timers on any proxy between the two ends and stops it
-/// from tearing the stream down. Carries no routing target and is dropped on receipt.
+/// Empty keepalive, sent periodically on a stream that would otherwise fall
+/// silent. The DATA frames it produces reset the inactivity timers on any proxy
+/// between the two ends and stop it tearing the stream down. Carries no routing
+/// target and is dropped on receipt.
+///
+/// Carried on two arms, each covering a half that falls silent while neither end
+/// has anything to say: the building-server gateway sends it upstream on
+/// GatewayConnect, and the api-server sends it downstream to the app on
+/// UserConnectResponse. The remaining halves have no arm — an app leg's upstream
+/// that goes idle is one the client can write on whenever it needs to.
+///
+/// Never an acknowledgement. A heartbeat answers no message and must not be
+/// treated as confirming one.
 class HeartBeat extends $pb.GeneratedMessage {
   factory HeartBeat() => create();
 
@@ -324,10 +333,13 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
   factory UserHandshakeAck({
     $core.bool? accepted,
     $core.String? reason,
+    $core.int? heartbeatIntervalMs,
   }) {
     final result = create();
     if (accepted != null) result.accepted = accepted;
     if (reason != null) result.reason = reason;
+    if (heartbeatIntervalMs != null)
+      result.heartbeatIntervalMs = heartbeatIntervalMs;
     return result;
   }
 
@@ -347,6 +359,8 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOB(1, _omitFieldNames ? '' : 'accepted')
     ..aOS(2, _omitFieldNames ? '' : 'reason')
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'heartbeatIntervalMs', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -387,6 +401,26 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(1);
   @$pb.TagNumber(2)
   void clearReason() => $_clearField(2);
+
+  /// How often the api-server will send a HeartBeat on this stream, in
+  /// milliseconds.
+  ///
+  /// Advisory, and a client must not refuse a stream over it: a client that has
+  /// seen no traffic at all for a small multiple of this may take the stream for
+  /// gone and reattach with the same session_id, which is the difference between
+  /// a renegotiation that stalls and one that reconnects. The server is free to
+  /// answer with a different value on the next session.
+  ///
+  /// Zero means the server is not heartbeating this stream, and a client must
+  /// then not infer anything from silence.
+  @$pb.TagNumber(3)
+  $core.int get heartbeatIntervalMs => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set heartbeatIntervalMs($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasHeartbeatIntervalMs() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearHeartbeatIntervalMs() => $_clearField(3);
 }
 
 enum GatewayConnectRequest_Payload { answer, iceCandidate, heartbeat, notSet }
@@ -769,21 +803,33 @@ class UserConnectRequest extends $pb.GeneratedMessage {
   void clearSessionId() => $_clearField(4);
 }
 
-enum UserConnectResponse_Payload { handshakeAck, answer, iceCandidate, notSet }
+enum UserConnectResponse_Payload {
+  handshakeAck,
+  answer,
+  iceCandidate,
+  heartbeat,
+  notSet
+}
 
 /// Messages sent by the api-server to the app.
+///
+/// One oneof serves both forms of the leg: UserListenResponse wraps this message
+/// rather than restating its payloads, so an arm added here reaches the bidi and
+/// half-duplex forms alike.
 class UserConnectResponse extends $pb.GeneratedMessage {
   factory UserConnectResponse({
     UserHandshakeAck? handshakeAck,
     SdpAnswer? answer,
     IceCandidate? iceCandidate,
     $core.String? sessionId,
+    HeartBeat? heartbeat,
   }) {
     final result = create();
     if (handshakeAck != null) result.handshakeAck = handshakeAck;
     if (answer != null) result.answer = answer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
     if (sessionId != null) result.sessionId = sessionId;
+    if (heartbeat != null) result.heartbeat = heartbeat;
     return result;
   }
 
@@ -801,6 +847,7 @@ class UserConnectResponse extends $pb.GeneratedMessage {
     1: UserConnectResponse_Payload.handshakeAck,
     2: UserConnectResponse_Payload.answer,
     3: UserConnectResponse_Payload.iceCandidate,
+    5: UserConnectResponse_Payload.heartbeat,
     0: UserConnectResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -808,7 +855,7 @@ class UserConnectResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3])
+    ..oo(0, [1, 2, 3, 5])
     ..aOM<UserHandshakeAck>(1, _omitFieldNames ? '' : 'handshakeAck',
         subBuilder: UserHandshakeAck.create)
     ..aOM<SdpAnswer>(2, _omitFieldNames ? '' : 'answer',
@@ -816,6 +863,8 @@ class UserConnectResponse extends $pb.GeneratedMessage {
     ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
         subBuilder: IceCandidate.create)
     ..aOS(4, _omitFieldNames ? '' : 'sessionId')
+    ..aOM<HeartBeat>(5, _omitFieldNames ? '' : 'heartbeat',
+        subBuilder: HeartBeat.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -879,6 +928,7 @@ class UserConnectResponse extends $pb.GeneratedMessage {
   /// Echoes the session_id of the stream this message is delivered on, so a
   /// client can assert the relay routed to the session it thinks it is. See the
   /// contract above.
+  /// Ignored on a heartbeat, which carries no routing target at all.
   @$pb.TagNumber(4)
   $core.String get sessionId => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -887,6 +937,26 @@ class UserConnectResponse extends $pb.GeneratedMessage {
   $core.bool hasSessionId() => $_has(3);
   @$pb.TagNumber(4)
   void clearSessionId() => $_clearField(4);
+
+  /// Keeps a silent stream alive. UserListen is downstream-only — the client
+  /// opens it with a handshake and then writes nothing — so between the
+  /// acknowledgement and an answer there is no traffic in either direction, and
+  /// an idle negotiation can outlast a proxy's patience. Upstream cannot help:
+  /// the client has nothing to send, and it is traffic *to* the client that
+  /// resets a client-side idle timer.
+  ///
+  /// A client that does not know this arm sees an unset payload rather than an
+  /// error, which is what the oneof buys.
+  @$pb.TagNumber(5)
+  HeartBeat get heartbeat => $_getN(4);
+  @$pb.TagNumber(5)
+  set heartbeat(HeartBeat value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasHeartbeat() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearHeartbeat() => $_clearField(5);
+  @$pb.TagNumber(5)
+  HeartBeat ensureHeartbeat() => $_ensure(4);
 }
 
 /// The app leg of the protocol exists twice. UserConnect is one bidi stream, and

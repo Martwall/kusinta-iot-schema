@@ -50,6 +50,18 @@ describe('UserHandshake / UserHandshakeAck', () => {
     expect(decoded.accepted).toBe(true)
   })
 
+  it('carries the heartbeat cadence the server promises on the stream', () => {
+    const ack = create(UserHandshakeAckSchema, { accepted: true, heartbeatIntervalMs: 20000 })
+    const decoded = fromBinary(UserHandshakeAckSchema, toBinary(UserHandshakeAckSchema, ack))
+    expect(decoded.heartbeatIntervalMs).toBe(20000)
+  })
+
+  it('defaults the heartbeat cadence to zero, meaning the server is not heartbeating', () => {
+    const ack = create(UserHandshakeAckSchema, { accepted: true })
+    const decoded = fromBinary(UserHandshakeAckSchema, toBinary(UserHandshakeAckSchema, ack))
+    expect(decoded.heartbeatIntervalMs).toBe(0)
+  })
+
   it('round-trips UserHandshakeAck rejected with reason', () => {
     const ack = create(UserHandshakeAckSchema, { accepted: false, reason: 'JWT expired' })
     const decoded = fromBinary(UserHandshakeAckSchema, toBinary(UserHandshakeAckSchema, ack))
@@ -170,6 +182,14 @@ describe('UserConnectResponse oneof payload', () => {
     }
   })
 
+  it('round-trips a heartbeat, which keeps a silent downstream alive', () => {
+    const resp = create(UserConnectResponseSchema, {
+      payload: { case: 'heartbeat', value: create(HeartBeatSchema, {}) },
+    })
+    const decoded = fromBinary(UserConnectResponseSchema, toBinary(UserConnectResponseSchema, resp))
+    expect(decoded.payload?.case).toBe('heartbeat')
+  })
+
   it('round-trips answer payload', () => {
     const resp = create(UserConnectResponseSchema, {
       payload: { case: 'answer', value: { sdp: 'v=0\r\n' } },
@@ -267,6 +287,15 @@ describe('session_id on the signaling messages', () => {
 })
 
 describe('UserListen / UserSend (half-duplex app leg)', () => {
+  it('delivers a heartbeat through the wrapper, so one arm serves both forms', () => {
+    const inner = create(UserConnectResponseSchema, {
+      payload: { case: 'heartbeat', value: create(HeartBeatSchema, {}) },
+    })
+    const wrapped = create(UserListenResponseSchema, { response: inner })
+    const decoded = fromBinary(UserListenResponseSchema, toBinary(UserListenResponseSchema, wrapped))
+    expect(decoded.response?.payload?.case).toBe('heartbeat')
+  })
+
   it('round-trips a UserListenRequest carrying the handshake', () => {
     const req = create(UserListenRequestSchema, {
       sessionId: 'a3d9f0b2-1c8e-4a76-b5d3-90fe2c714a88',

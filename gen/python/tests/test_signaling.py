@@ -81,6 +81,36 @@ def test_gateway_connect_request_heartbeat_payload():
     assert decoded.WhichOneof("payload") == "heartbeat"
 
 
+def test_user_connect_response_heartbeat_payload():
+    resp = signaling_pb2.UserConnectResponse(heartbeat=signaling_pb2.HeartBeat())
+    decoded = signaling_pb2.UserConnectResponse()
+    decoded.ParseFromString(resp.SerializeToString())
+    assert decoded.WhichOneof("payload") == "heartbeat"
+
+
+def test_user_listen_response_wraps_a_heartbeat():
+    wrapped = signaling_pb2.UserListenResponse(
+        response=signaling_pb2.UserConnectResponse(heartbeat=signaling_pb2.HeartBeat())
+    )
+    decoded = signaling_pb2.UserListenResponse()
+    decoded.ParseFromString(wrapped.SerializeToString())
+    assert decoded.response.WhichOneof("payload") == "heartbeat"
+
+
+def test_user_handshake_ack_carries_heartbeat_interval():
+    ack = signaling_pb2.UserHandshakeAck(accepted=True, heartbeat_interval_ms=20000)
+    decoded = signaling_pb2.UserHandshakeAck()
+    decoded.ParseFromString(ack.SerializeToString())
+    assert decoded.heartbeat_interval_ms == 20000
+
+
+def test_user_handshake_ack_heartbeat_interval_defaults_to_zero():
+    ack = signaling_pb2.UserHandshakeAck(accepted=True)
+    decoded = signaling_pb2.UserHandshakeAck()
+    decoded.ParseFromString(ack.SerializeToString())
+    assert decoded.heartbeat_interval_ms == 0
+
+
 def test_gateway_connect_response_offer_payload():
     resp = signaling_pb2.GatewayConnectResponse(
         from_user_id=identity_pb2.UserId(value="user-1"),

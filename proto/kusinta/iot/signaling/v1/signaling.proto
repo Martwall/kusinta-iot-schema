@@ -23,10 +23,19 @@ message IceCandidate {
   int32 sdp_mline_index = 3;
 }
 
-// Empty keepalive. The gateway sends this periodically on the GatewayConnect
-// stream so the otherwise-idle bidi request keeps producing DATA frames, which
-// resets the inactivity timers on any proxy between the two ends and stops it
-// from tearing the stream down. Carries no routing target and is dropped on receipt.
+// Empty keepalive, sent periodically on a stream that would otherwise fall
+// silent. The DATA frames it produces reset the inactivity timers on any proxy
+// between the two ends and stop it tearing the stream down. Carries no routing
+// target and is dropped on receipt.
+//
+// Carried on two arms, each covering a half that falls silent while neither end
+// has anything to say: the building-server gateway sends it upstream on
+// GatewayConnect, and the api-server sends it downstream to the app on
+// UserConnectResponse. The remaining halves have no arm — an app leg's upstream
+// that goes idle is one the client can write on whenever it needs to.
+//
+// Never an acknowledgement. A heartbeat answers no message and must not be
+// treated as confirming one.
 message HeartBeat {}
 
 // JWT for user auth is sent in the Authorization: Bearer metadata header, not here.
@@ -37,6 +46,19 @@ message UserHandshake {
 message UserHandshakeAck {
   bool accepted = 1;
   string reason = 2;
+
+  // How often the api-server will send a HeartBeat on this stream, in
+  // milliseconds.
+  //
+  // Advisory, and a client must not refuse a stream over it: a client that has
+  // seen no traffic at all for a small multiple of this may take the stream for
+  // gone and reattach with the same session_id, which is the difference between
+  // a renegotiation that stalls and one that reconnects. The server is free to
+  // answer with a different value on the next session.
+  //
+  // Zero means the server is not heartbeating this stream, and a client must
+  // then not infer anything from silence.
+  uint32 heartbeat_interval_ms = 3;
 }
 
 // Identifies one of a user's concurrent signaling sessions. Addressing by user
@@ -59,9 +81,15 @@ message UserHandshakeAck {
 //     the gateway leg. The id is scoped within that user, so a forged value can
 //     only collide with the forger's own sessions. Never derive identity,
 //     entitlement or trust from it.
-//   - Required. An empty value is not a legacy "single session" — it makes two
-//     clients indistinguishable again on exactly the path this field exists to
-//     fix. An endpoint should refuse a message that omits it.
+//   - Required on any message that has somewhere to be delivered. An empty
+//     value is not a legacy "single session" — it makes two clients
+//     indistinguishable again on exactly the path this field exists to fix. An
+//     endpoint should refuse a message that omits it.
+//   - Except on a heartbeat, which is addressed to the stream it arrives on and
+//     has nothing to route. Both heartbeat arms leave the field unset, and an
+//     endpoint must accept that rather than refuse the message — on the app
+//     leg's downstream, refusing it would break the keepalive for the stream it
+//     is keeping alive.
 
 // Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
 // Auth: x-client-cert-fingerprint metadata header, set from the client
@@ -109,15 +137,30 @@ message UserConnectRequest {
 }
 
 // Messages sent by the api-server to the app.
+//
+// One oneof serves both forms of the leg: UserListenResponse wraps this message
+// rather than restating its payloads, so an arm added here reaches the bidi and
+// half-duplex forms alike.
 message UserConnectResponse {
   // Echoes the session_id of the stream this message is delivered on, so a
   // client can assert the relay routed to the session it thinks it is. See the
   // contract above.
+  // Ignored on a heartbeat, which carries no routing target at all.
   string session_id = 4;
   oneof payload {
     UserHandshakeAck handshake_ack = 1;
     SdpAnswer answer = 2;
     IceCandidate ice_candidate = 3;
+    // Keeps a silent stream alive. UserListen is downstream-only — the client
+    // opens it with a handshake and then writes nothing — so between the
+    // acknowledgement and an answer there is no traffic in either direction, and
+    // an idle negotiation can outlast a proxy's patience. Upstream cannot help:
+    // the client has nothing to send, and it is traffic *to* the client that
+    // resets a client-side idle timer.
+    //
+    // A client that does not know this arm sees an unset payload rather than an
+    // error, which is what the oneof buys.
+    HeartBeat heartbeat = 5;
   }
 }
 
