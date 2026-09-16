@@ -39,12 +39,14 @@ class UserHandshake(_message.Message):
     def __init__(self, target_gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ...) -> None: ...
 
 class UserHandshakeAck(_message.Message):
-    __slots__ = ("accepted", "reason")
+    __slots__ = ("accepted", "reason", "heartbeat_interval_ms")
     ACCEPTED_FIELD_NUMBER: _ClassVar[int]
     REASON_FIELD_NUMBER: _ClassVar[int]
+    HEARTBEAT_INTERVAL_MS_FIELD_NUMBER: _ClassVar[int]
     accepted: bool
     reason: str
-    def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ...) -> None: ...
+    heartbeat_interval_ms: int
+    def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., heartbeat_interval_ms: _Optional[int] = ...) -> None: ...
 
 class GatewayConnectRequest(_message.Message):
     __slots__ = ("target_user_id", "session_id", "answer", "ice_candidate", "heartbeat")
@@ -85,16 +87,18 @@ class UserConnectRequest(_message.Message):
     def __init__(self, session_id: _Optional[str] = ..., handshake: _Optional[_Union[UserHandshake, _Mapping]] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
 
 class UserConnectResponse(_message.Message):
-    __slots__ = ("session_id", "handshake_ack", "answer", "ice_candidate")
+    __slots__ = ("session_id", "handshake_ack", "answer", "ice_candidate", "heartbeat")
     SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_ACK_FIELD_NUMBER: _ClassVar[int]
     ANSWER_FIELD_NUMBER: _ClassVar[int]
     ICE_CANDIDATE_FIELD_NUMBER: _ClassVar[int]
+    HEARTBEAT_FIELD_NUMBER: _ClassVar[int]
     session_id: str
     handshake_ack: UserHandshakeAck
     answer: SdpAnswer
     ice_candidate: IceCandidate
-    def __init__(self, session_id: _Optional[str] = ..., handshake_ack: _Optional[_Union[UserHandshakeAck, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ...) -> None: ...
+    heartbeat: HeartBeat
+    def __init__(self, session_id: _Optional[str] = ..., handshake_ack: _Optional[_Union[UserHandshakeAck, _Mapping]] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ...) -> None: ...
 
 class UserListenRequest(_message.Message):
     __slots__ = ("handshake", "session_id")

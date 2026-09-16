@@ -88,13 +88,21 @@ const UserHandshakeAck$json = {
   '2': [
     {'1': 'accepted', '3': 1, '4': 1, '5': 8, '10': 'accepted'},
     {'1': 'reason', '3': 2, '4': 1, '5': 9, '10': 'reason'},
+    {
+      '1': 'heartbeat_interval_ms',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '10': 'heartbeatIntervalMs'
+    },
   ],
 };
 
 /// Descriptor for `UserHandshakeAck`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List userHandshakeAckDescriptor = $convert.base64Decode(
     'ChBVc2VySGFuZHNoYWtlQWNrEhoKCGFjY2VwdGVkGAEgASgIUghhY2NlcHRlZBIWCgZyZWFzb2'
-    '4YAiABKAlSBnJlYXNvbg==');
+    '4YAiABKAlSBnJlYXNvbhIyChVoZWFydGJlYXRfaW50ZXJ2YWxfbXMYAyABKA1SE2hlYXJ0YmVh'
+    'dEludGVydmFsTXM=');
 
 @$core.Deprecated('Use gatewayConnectRequestDescriptor instead')
 const GatewayConnectRequest$json = {
@@ -275,6 +283,15 @@ const UserConnectResponse$json = {
       '9': 0,
       '10': 'iceCandidate'
     },
+    {
+      '1': 'heartbeat',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.HeartBeat',
+      '9': 0,
+      '10': 'heartbeat'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -287,8 +304,9 @@ final $typed_data.Uint8List userConnectResponseDescriptor = $convert.base64Decod
     '1oYW5kc2hha2VfYWNrGAEgASgLMioua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlVzZXJIYW5k'
     'c2hha2VBY2tIAFIMaGFuZHNoYWtlQWNrEj0KBmFuc3dlchgCIAEoCzIjLmt1c2ludGEuaW90Ln'
     'NpZ25hbGluZy52MS5TZHBBbnN3ZXJIAFIGYW5zd2VyEk0KDWljZV9jYW5kaWRhdGUYAyABKAsy'
-    'Ji5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABSDGljZUNhbmRpZGF0ZU'
-    'IJCgdwYXlsb2Fk');
+    'Ji5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABSDGljZUNhbmRpZGF0ZR'
+    'JDCgloZWFydGJlYXQYBSABKAsyIy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSGVhcnRCZWF0'
+    'SABSCWhlYXJ0YmVhdEIJCgdwYXlsb2Fk');
 
 @$core.Deprecated('Use userListenRequestDescriptor instead')
 const UserListenRequest$json = {
