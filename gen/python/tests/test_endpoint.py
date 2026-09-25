@@ -647,6 +647,22 @@ def test_an_unstated_attribute_list_is_empty_not_a_claim_of_nothing():
     assert list(cluster_state_pb2.ClusterState(cluster_id=0x0201).attribute_ids) == []
 
 
+# --- how finely a writable attribute can be set ---------------------------------------
+
+
+def test_cluster_state_states_the_step_a_setpoint_takes():
+    """Matter defines no setpoint granularity. A valve that holds tenths states 10 on
+    OccupiedHeatingSetpoint, in the attribute's own unit (centidegrees)."""
+    state = cluster_state_pb2.ClusterState(cluster_id=0x0201, attribute_steps={0x0012: 10})
+    decoded = cluster_state_pb2.ClusterState()
+    decoded.ParseFromString(state.SerializeToString())
+    assert dict(decoded.attribute_steps) == {0x0012: 10}
+
+
+def test_an_unstated_step_is_absent_not_a_step_of_zero():
+    assert 0x0012 not in cluster_state_pb2.ClusterState(cluster_id=0x0201).attribute_steps
+
+
 def test_endpoint_lists_the_vendor_parameters_this_device_implements():
     """The vendor mirror of AttributeList: vendor parameters have no cluster and so no
     ClusterState to carry it. Spelled as (vendor_attribute) is, byte for byte."""

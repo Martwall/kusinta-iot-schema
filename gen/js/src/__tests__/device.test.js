@@ -410,3 +410,18 @@ describe('implemented attribute lists', () => {
     expect(create(ClusterStateSchema, { clusterId: 0x0201 }).attributeIds).toEqual([])
   })
 })
+
+describe('attribute steps', () => {
+  it('states the step a writable attribute takes, in its own unit', () => {
+    const state = create(ClusterStateSchema, {
+      clusterId: 0x0201,
+      attributeSteps: { [0x0012]: 10 },
+    })
+    const decoded = fromBinary(ClusterStateSchema, toBinary(ClusterStateSchema, state))
+    expect(decoded.attributeSteps).toEqual({ [0x0012]: 10 })
+  })
+
+  it('is empty rather than a step of zero when the producer does not say', () => {
+    expect(create(ClusterStateSchema, { clusterId: 0x0201 }).attributeSteps).toEqual({})
+  })
+})

@@ -91,6 +91,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.device.v1.AttributeValueStruct.FieldsEntry':
       $9.AttributeValueStruct_FieldsEntry$json,
   '.kusinta.iot.device.v1.NullValue': $9.NullValue$json,
+  '.kusinta.iot.device.v1.ClusterState.AttributeStepsEntry':
+      $9.ClusterState_AttributeStepsEntry$json,
   '.kusinta.iot.vendor.homematic.v1.HmThermostatProps':
       $5.HmThermostatProps$json,
   '.kusinta.iot.vendor.homematic.v1.HmMaintenanceProps':

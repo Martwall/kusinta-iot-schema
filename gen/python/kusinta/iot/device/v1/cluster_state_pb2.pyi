@@ -60,17 +60,26 @@ class AttributeState(_message.Message):
     def __init__(self, attribute_id: _Optional[int] = ..., value: _Optional[_Union[AttributeValue, _Mapping]] = ...) -> None: ...
 
 class ClusterState(_message.Message):
-    __slots__ = ("cluster_id", "cluster_revision", "feature_map", "attributes", "accepted_command_ids", "attribute_ids")
+    __slots__ = ("cluster_id", "cluster_revision", "feature_map", "attributes", "accepted_command_ids", "attribute_ids", "attribute_steps")
+    class AttributeStepsEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: int
+        value: int
+        def __init__(self, key: _Optional[int] = ..., value: _Optional[int] = ...) -> None: ...
     CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_REVISION_FIELD_NUMBER: _ClassVar[int]
     FEATURE_MAP_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTES_FIELD_NUMBER: _ClassVar[int]
     ACCEPTED_COMMAND_IDS_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_IDS_FIELD_NUMBER: _ClassVar[int]
+    ATTRIBUTE_STEPS_FIELD_NUMBER: _ClassVar[int]
     cluster_id: int
     cluster_revision: int
     feature_map: int
     attributes: _containers.RepeatedCompositeFieldContainer[AttributeState]
     accepted_command_ids: _containers.RepeatedScalarFieldContainer[int]
     attribute_ids: _containers.RepeatedScalarFieldContainer[int]
-    def __init__(self, cluster_id: _Optional[int] = ..., cluster_revision: _Optional[int] = ..., feature_map: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[AttributeState, _Mapping]]] = ..., accepted_command_ids: _Optional[_Iterable[int]] = ..., attribute_ids: _Optional[_Iterable[int]] = ...) -> None: ...
+    attribute_steps: _containers.ScalarMap[int, int]
+    def __init__(self, cluster_id: _Optional[int] = ..., cluster_revision: _Optional[int] = ..., feature_map: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[AttributeState, _Mapping]]] = ..., accepted_command_ids: _Optional[_Iterable[int]] = ..., attribute_ids: _Optional[_Iterable[int]] = ..., attribute_steps: _Optional[_Mapping[int, int]] = ...) -> None: ...

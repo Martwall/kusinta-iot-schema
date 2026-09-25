@@ -253,6 +253,25 @@ export declare type ClusterState = Message<"kusinta.iot.device.v1.ClusterState">
    * @generated from field: repeated uint32 attribute_ids = 6;
    */
   attributeIds: number[];
+
+  /**
+   * The step each writable attribute is set in, keyed by attribute id, in the attribute's
+   * own wire unit: 50 on OccupiedHeatingSetpoint is a half degree, since the setpoint is
+   * carried in centidegrees.
+   *
+   * Matter defines no granularity for a setpoint, and devices differ by a factor of ten —
+   * one valve holds tenths, another half degrees, another whole degrees. A consumer that
+   * guesses offers steps the device silently rounds away, and one that compares a written
+   * value with the device's report on the wrong grid never sees the two agree. A value
+   * written on this step is one the device holds as written.
+   *
+   * Stated by the producer at announcement, like attribute_ids, and the same rule
+   * applies: an absent key is "not stated", never a step of zero, and a consumer falls
+   * back to its own default. A value of 0 means nothing and is treated as absent.
+   *
+   * @generated from field: map<uint32, uint32> attribute_steps = 7;
+   */
+  attributeSteps: { [key: number]: number };
 };
 
 /**

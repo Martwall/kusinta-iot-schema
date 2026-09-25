@@ -199,11 +199,30 @@ const ClusterState$json = {
       '10': 'acceptedCommandIds'
     },
     {'1': 'attribute_ids', '3': 6, '4': 3, '5': 13, '10': 'attributeIds'},
+    {
+      '1': 'attribute_steps',
+      '3': 7,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.ClusterState.AttributeStepsEntry',
+      '10': 'attributeSteps'
+    },
   ],
+  '3': [ClusterState_AttributeStepsEntry$json],
   '8': [
     {'1': '_cluster_revision'},
     {'1': '_feature_map'},
   ],
+};
+
+@$core.Deprecated('Use clusterStateDescriptor instead')
+const ClusterState_AttributeStepsEntry$json = {
+  '1': 'AttributeStepsEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 13, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 13, '10': 'value'},
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `ClusterState`. Decode as a `google.protobuf.DescriptorProto`.
@@ -213,4 +232,7 @@ final $typed_data.Uint8List clusterStateDescriptor = $convert.base64Decode(
     'ASgNSAFSCmZlYXR1cmVNYXCIAQESRQoKYXR0cmlidXRlcxgEIAMoCzIlLmt1c2ludGEuaW90Lm'
     'RldmljZS52MS5BdHRyaWJ1dGVTdGF0ZVIKYXR0cmlidXRlcxIwChRhY2NlcHRlZF9jb21tYW5k'
     'X2lkcxgFIAMoDVISYWNjZXB0ZWRDb21tYW5kSWRzEiMKDWF0dHJpYnV0ZV9pZHMYBiADKA1SDG'
-    'F0dHJpYnV0ZUlkc0ITChFfY2x1c3Rlcl9yZXZpc2lvbkIOCgxfZmVhdHVyZV9tYXA=');
+    'F0dHJpYnV0ZUlkcxJgCg9hdHRyaWJ1dGVfc3RlcHMYByADKAsyNy5rdXNpbnRhLmlvdC5kZXZp'
+    'Y2UudjEuQ2x1c3RlclN0YXRlLkF0dHJpYnV0ZVN0ZXBzRW50cnlSDmF0dHJpYnV0ZVN0ZXBzGk'
+    'EKE0F0dHJpYnV0ZVN0ZXBzRW50cnkSEAoDa2V5GAEgASgNUgNrZXkSFAoFdmFsdWUYAiABKA1S'
+    'BXZhbHVlOgI4AUITChFfY2x1c3Rlcl9yZXZpc2lvbkIOCgxfZmVhdHVyZV9tYXA=');

@@ -478,6 +478,7 @@ class ClusterState extends $pb.GeneratedMessage {
     $core.Iterable<AttributeState>? attributes,
     $core.Iterable<$core.int>? acceptedCommandIds,
     $core.Iterable<$core.int>? attributeIds,
+    $core.Iterable<$core.MapEntry<$core.int, $core.int>>? attributeSteps,
   }) {
     final result = create();
     if (clusterId != null) result.clusterId = clusterId;
@@ -487,6 +488,8 @@ class ClusterState extends $pb.GeneratedMessage {
     if (acceptedCommandIds != null)
       result.acceptedCommandIds.addAll(acceptedCommandIds);
     if (attributeIds != null) result.attributeIds.addAll(attributeIds);
+    if (attributeSteps != null)
+      result.attributeSteps.addEntries(attributeSteps);
     return result;
   }
 
@@ -515,6 +518,11 @@ class ClusterState extends $pb.GeneratedMessage {
         5, _omitFieldNames ? '' : 'acceptedCommandIds', $pb.PbFieldType.KU3)
     ..p<$core.int>(
         6, _omitFieldNames ? '' : 'attributeIds', $pb.PbFieldType.KU3)
+    ..m<$core.int, $core.int>(7, _omitFieldNames ? '' : 'attributeSteps',
+        entryClassName: 'ClusterState.AttributeStepsEntry',
+        keyFieldType: $pb.PbFieldType.OU3,
+        valueFieldType: $pb.PbFieldType.OU3,
+        packageName: const $pb.PackageName('kusinta.iot.device.v1'))
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -606,6 +614,22 @@ class ClusterState extends $pb.GeneratedMessage {
   /// announcement, where it costs nothing per update.
   @$pb.TagNumber(6)
   $pb.PbList<$core.int> get attributeIds => $_getList(5);
+
+  /// The step each writable attribute is set in, keyed by attribute id, in the attribute's
+  /// own wire unit: 50 on OccupiedHeatingSetpoint is a half degree, since the setpoint is
+  /// carried in centidegrees.
+  ///
+  /// Matter defines no granularity for a setpoint, and devices differ by a factor of ten —
+  /// one valve holds tenths, another half degrees, another whole degrees. A consumer that
+  /// guesses offers steps the device silently rounds away, and one that compares a written
+  /// value with the device's report on the wrong grid never sees the two agree. A value
+  /// written on this step is one the device holds as written.
+  ///
+  /// Stated by the producer at announcement, like attribute_ids, and the same rule
+  /// applies: an absent key is "not stated", never a step of zero, and a consumer falls
+  /// back to its own default. A value of 0 means nothing and is treated as absent.
+  @$pb.TagNumber(7)
+  $pb.PbMap<$core.int, $core.int> get attributeSteps => $_getMap(6);
 }
 
 const $core.bool _omitFieldNames =
