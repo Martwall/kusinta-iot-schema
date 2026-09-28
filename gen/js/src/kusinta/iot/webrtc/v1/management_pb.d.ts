@@ -9,6 +9,8 @@ import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/i
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
+import type { ClimateModeKind } from "../../climate/v1/climate_pb.js";
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -587,6 +589,188 @@ export declare type ListDeviceLinks = Message<"kusinta.iot.webrtc.v1.ListDeviceL
 export declare const ListDeviceLinksSchema: GenMessage<ListDeviceLinks>;
 
 /**
+ * Sets the temperature a room is to be held at.
+ *
+ * Authorized as adjusting, not directing: WRITE on the room is enough — a resident in
+ * their own apartment, as well as owners and filing roles. It is the same act as turning
+ * a radiator's knob, which a resident can already do; setting up what the room obeys is
+ * ConfigureRoomClimate, and stays with owners.
+ *
+ * Clamped to the room's limits rather than refused outside them, and the clamped value is
+ * what the room's RoomClimate then reports.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetRoomTarget
+ */
+export declare type SetRoomTarget = Message<"kusinta.iot.webrtc.v1.SetRoomTarget"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 1;
+   */
+  roomId?: SpaceId | undefined;
+
+  /**
+   * Unset clears the target: the room goes back to having none (NO_TARGET) and its
+   * devices to their own behaviour. With presence, so that a request that forgot the
+   * field is not read as 0 °C and clamped to the room's minimum.
+   *
+   * @generated from field: optional sint32 target_centidegrees = 2;
+   */
+  targetCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetRoomTarget.
+ * Use `create(SetRoomTargetSchema)` to create a new message.
+ */
+export declare const SetRoomTargetSchema: GenMessage<SetRoomTarget>;
+
+/**
+ * The sensors a room measures with, in order of preference. A message of its own so that
+ * "leave the sensors alone" (unset) differs from "set" on the wire. Set but empty returns
+ * the room to the default order, every temperature sensor filed in it in filing order.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RoomSensors
+ */
+export declare type RoomSensors = Message<"kusinta.iot.webrtc.v1.RoomSensors"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.identity.v1.DeviceId sensor_ids = 1;
+   */
+  sensorIds: DeviceId[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RoomSensors.
+ * Use `create(RoomSensorsSchema)` to create a new message.
+ */
+export declare const RoomSensorsSchema: GenMessage<RoomSensors>;
+
+/**
+ * A room's limits. A message of its own so that "leave the limits alone" (unset) differs
+ * from "set" — and, set, an unset bound inside it removes that bound, which a bare
+ * optional on the request could not say.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RoomLimits
+ */
+export declare type RoomLimits = Message<"kusinta.iot.webrtc.v1.RoomLimits"> & {
+  /**
+   * @generated from field: optional sint32 min_centidegrees = 1;
+   */
+  minCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 max_centidegrees = 2;
+   */
+  maxCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RoomLimits.
+ * Use `create(RoomLimitsSchema)` to create a new message.
+ */
+export declare const RoomLimitsSchema: GenMessage<RoomLimits>;
+
+/**
+ * Configures what a room obeys: its limits, its sensors, and whether a change made by
+ * hand at one of its devices counts. Authorized as directing — owners and filing roles —
+ * because this decides what everybody in the room can do.
+ *
+ * Each field moves alone, as on UpdateSpace: unset leaves it as it is.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ConfigureRoomClimate
+ */
+export declare type ConfigureRoomClimate = Message<"kusinta.iot.webrtc.v1.ConfigureRoomClimate"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 1;
+   */
+  roomId?: SpaceId | undefined;
+
+  /**
+   * Replaces both bounds; see RoomLimits.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.RoomLimits limits = 2;
+   */
+  limits?: RoomLimits | undefined;
+
+  /**
+   * Only devices filed in this room; any other is refused.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.RoomSensors sensors = 3;
+   */
+  sensors?: RoomSensors | undefined;
+
+  /**
+   * @generated from field: optional bool lock_device_controls = 4;
+   */
+  lockDeviceControls?: boolean | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ConfigureRoomClimate.
+ * Use `create(ConfigureRoomClimateSchema)` to create a new message.
+ */
+export declare const ConfigureRoomClimateSchema: GenMessage<ConfigureRoomClimate>;
+
+/**
+ * Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
+ * Switching one on needs setback_centidegrees; a mode with nothing to set back to is
+ * refused.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetClimateMode
+ */
+export declare type SetClimateMode = Message<"kusinta.iot.webrtc.v1.SetClimateMode"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.ClimateModeKind kind = 2;
+   */
+  kind: ClimateModeKind;
+
+  /**
+   * @generated from field: optional sint32 setback_centidegrees = 3;
+   */
+  setbackCentidegrees?: number | undefined;
+
+  /**
+   * HOLIDAY only; both required there. Refused on AWAY.
+   *
+   * @generated from field: google.protobuf.Timestamp starts_at = 4;
+   */
+  startsAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp ends_at = 5;
+   */
+  endsAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetClimateMode.
+ * Use `create(SetClimateModeSchema)` to create a new message.
+ */
+export declare const SetClimateModeSchema: GenMessage<SetClimateMode>;
+
+/**
+ * Lists the room climates and modes a caller may see. Unset root_space_id lists every
+ * one the caller can reach; naming a space narrows it to that space and those below.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListRoomClimates
+ */
+export declare type ListRoomClimates = Message<"kusinta.iot.webrtc.v1.ListRoomClimates"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+   */
+  rootSpaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListRoomClimates.
+ * Use `create(ListRoomClimatesSchema)` to create a new message.
+ */
+export declare const ListRoomClimatesSchema: GenMessage<ListRoomClimates>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
  */
 export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.ManagementRequest"> & {
@@ -683,6 +867,30 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ProvisionDevice;
     case: "provisionDevice";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetRoomTarget set_room_target = 16;
+     */
+    value: SetRoomTarget;
+    case: "setRoomTarget";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ConfigureRoomClimate configure_room_climate = 17;
+     */
+    value: ConfigureRoomClimate;
+    case: "configureRoomClimate";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetClimateMode set_climate_mode = 18;
+     */
+    value: SetClimateMode;
+    case: "setClimateMode";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListRoomClimates list_room_climates = 19;
+     */
+    value: ListRoomClimates;
+    case: "listRoomClimates";
   } | { case: undefined; value?: undefined };
 };
 

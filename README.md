@@ -145,6 +145,26 @@ element can poll it. Everything is addressed numerically —
 whether the attribute is being read, written, granted or bounded. `command.proto` states the
 rules.
 
+## Room climate
+
+A person controls a **room's** temperature, not a device's. `climate/v1/climate.proto`
+gives a room (a `Space` of `SPACE_TYPE_ROOM`) a `RoomClimate`: the target, who or what set
+it (`TargetChange`: a user in the app, or a device turned by hand), the owner's limits, the
+sensors it measures with in order of preference, what the valves are actually held at, and
+a one-word `condition`. The devices filed in that room are how the target is held — which
+mechanism the gateway uses underneath (a device-to-device link, or a loop of its own) is not
+part of the contract. A `ClimateMode` (away, holiday) sets back every room in an apartment,
+and a room somebody changes during the mode keeps its own target until the mode ends.
+
+Setting a room's target (`SetRoomTarget`) is adjusting, and needs `WRITE` on the room — the
+same act as turning a radiator's knob. Configuring what the room obeys
+(`ConfigureRoomClimate`: limits, sensors, whether device controls are locked) is directing,
+and stays with owners and filing roles. Both travel as `ManagementRequest` cases; changes are
+pushed as `RoomClimateChanged` and `ClimateModeChanged`.
+
+Device links (`link/v1`) remain, but as the mechanism underneath a room rather than something
+a person sets a temperature on.
+
 ## Events, and how they differ from property updates
 
 `PropertyUpdate` says what a device **is**; `DeviceEvent` says what **happened** to it —

@@ -9,6 +9,7 @@ import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
+import type { ClimateMode, RoomClimate, RoomClimateList } from "../../climate/v1/climate_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -327,6 +328,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: DeviceLinkList;
     case: "links";
+  } | {
+    /**
+     * list_room_climates
+     *
+     * @generated from field: kusinta.iot.climate.v1.RoomClimateList room_climates = 7;
+     */
+    value: RoomClimateList;
+    case: "roomClimates";
   } | { case: undefined; value?: undefined };
 };
 
@@ -633,6 +642,51 @@ export declare type ConnectorsAnnounced = Message<"kusinta.iot.webrtc.v1.Connect
 export declare const ConnectorsAnnouncedSchema: GenMessage<ConnectorsAnnounced>;
 
 /**
+ * A room's climate changed, gateway → app: its target, what set it, what it is being
+ * held at, its condition. Apply as an upsert keyed on room.space_id. Sent only for rooms
+ * the recipient may see, and whenever any field moves — a knob turned by hand shows up
+ * here without the app asking.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RoomClimateChanged
+ */
+export declare type RoomClimateChanged = Message<"kusinta.iot.webrtc.v1.RoomClimateChanged"> & {
+  /**
+   * @generated from field: kusinta.iot.climate.v1.RoomClimate room = 1;
+   */
+  room?: RoomClimate | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RoomClimateChanged.
+ * Use `create(RoomClimateChangedSchema)` to create a new message.
+ */
+export declare const RoomClimateChangedSchema: GenMessage<RoomClimateChanged>;
+
+/**
+ * A mode on a space was switched on, changed or ended, gateway → app. `ended` rather than
+ * kind UNSPECIFIED, so an app can still name the mode that finished.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ClimateModeChanged
+ */
+export declare type ClimateModeChanged = Message<"kusinta.iot.webrtc.v1.ClimateModeChanged"> & {
+  /**
+   * @generated from field: kusinta.iot.climate.v1.ClimateMode mode = 1;
+   */
+  mode?: ClimateMode | undefined;
+
+  /**
+   * @generated from field: bool ended = 2;
+   */
+  ended: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ClimateModeChanged.
+ * Use `create(ClimateModeChangedSchema)` to create a new message.
+ */
+export declare const ClimateModeChangedSchema: GenMessage<ClimateModeChanged>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.GatewayMessage
  */
 export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessage"> & {
@@ -750,6 +804,18 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: ConnectorsAnnounced;
     case: "connectorsAnnounced";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.RoomClimateChanged room_climate_changed = 21;
+     */
+    value: RoomClimateChanged;
+    case: "roomClimateChanged";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ClimateModeChanged climate_mode_changed = 22;
+     */
+    value: ClimateModeChanged;
+    case: "climateModeChanged";
   } | { case: undefined; value?: undefined };
 };
 

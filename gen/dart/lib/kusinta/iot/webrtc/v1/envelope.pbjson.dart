@@ -321,6 +321,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'links'
     },
+    {
+      '1': 'room_climates',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.RoomClimateList',
+      '9': 0,
+      '10': 'roomClimates'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -335,7 +344,8 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'oKc3BhY2VfdHJlZRgEIAEoCzIgLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TcGFjZVRyZWVIAFIJ'
     'c3BhY2VUcmVlEjgKA2FjaxgFIAEoCzIkLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NYW5hZ2VtZW'
     '50QWNrSABSA2FjaxI7CgVsaW5rcxgGIAEoCzIjLmt1c2ludGEuaW90LmxpbmsudjEuRGV2aWNl'
-    'TGlua0xpc3RIAFIFbGlua3NCCAoGcmVzdWx0');
+    'TGlua0xpc3RIAFIFbGlua3MSTgoNcm9vbV9jbGltYXRlcxgHIAEoCzInLmt1c2ludGEuaW90Lm'
+    'NsaW1hdGUudjEuUm9vbUNsaW1hdGVMaXN0SABSDHJvb21DbGltYXRlc0IICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -540,6 +550,47 @@ final $typed_data.Uint8List connectorsAnnouncedDescriptor = $convert.base64Decod
     'ChNDb25uZWN0b3JzQW5ub3VuY2VkEkoKCmNvbm5lY3RvcnMYASADKAsyKi5rdXNpbnRhLmlvdC'
     '53ZWJydGMudjEuQ29ubmVjdG9yRGVzY3JpcHRvclIKY29ubmVjdG9ycw==');
 
+@$core.Deprecated('Use roomClimateChangedDescriptor instead')
+const RoomClimateChanged$json = {
+  '1': 'RoomClimateChanged',
+  '2': [
+    {
+      '1': 'room',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.RoomClimate',
+      '10': 'room'
+    },
+  ],
+};
+
+/// Descriptor for `RoomClimateChanged`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roomClimateChangedDescriptor = $convert.base64Decode(
+    'ChJSb29tQ2xpbWF0ZUNoYW5nZWQSNwoEcm9vbRgBIAEoCzIjLmt1c2ludGEuaW90LmNsaW1hdG'
+    'UudjEuUm9vbUNsaW1hdGVSBHJvb20=');
+
+@$core.Deprecated('Use climateModeChangedDescriptor instead')
+const ClimateModeChanged$json = {
+  '1': 'ClimateModeChanged',
+  '2': [
+    {
+      '1': 'mode',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ClimateMode',
+      '10': 'mode'
+    },
+    {'1': 'ended', '3': 2, '4': 1, '5': 8, '10': 'ended'},
+  ],
+};
+
+/// Descriptor for `ClimateModeChanged`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List climateModeChangedDescriptor = $convert.base64Decode(
+    'ChJDbGltYXRlTW9kZUNoYW5nZWQSNwoEbW9kZRgBIAEoCzIjLmt1c2ludGEuaW90LmNsaW1hdG'
+    'UudjEuQ2xpbWF0ZU1vZGVSBG1vZGUSFAoFZW5kZWQYAiABKAhSBWVuZGVk');
+
 @$core.Deprecated('Use gatewayMessageDescriptor instead')
 const GatewayMessage$json = {
   '1': 'GatewayMessage',
@@ -697,6 +748,24 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'connectorsAnnounced'
     },
+    {
+      '1': 'room_climate_changed',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RoomClimateChanged',
+      '9': 0,
+      '10': 'roomClimateChanged'
+    },
+    {
+      '1': 'climate_mode_changed',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ClimateModeChanged',
+      '9': 0,
+      '10': 'climateModeChanged'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -734,9 +803,12 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'lvdC53ZWJydGMudjEuUGFpcmluZ0ZpbmlzaGVkSABSD3BhaXJpbmdGaW5pc2hlZBJHCgxsaW5r'
     'X2NoYW5nZWQYEyABKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlua0NoYW5nZWRIAFILbG'
     'lua0NoYW5nZWQSXwoUY29ubmVjdG9yc19hbm5vdW5jZWQYFCABKAsyKi5rdXNpbnRhLmlvdC53'
-    'ZWJydGMudjEuQ29ubmVjdG9yc0Fubm91bmNlZEgAUhNjb25uZWN0b3JzQW5ub3VuY2VkQgkKB3'
-    'BheWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cml0ZV9yZXN1bHRSDnByb3BlcnR5X2V2'
-    'ZW50');
+    'ZWJydGMudjEuQ29ubmVjdG9yc0Fubm91bmNlZEgAUhNjb25uZWN0b3JzQW5ub3VuY2VkEl0KFH'
+    'Jvb21fY2xpbWF0ZV9jaGFuZ2VkGBUgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlJvb21D'
+    'bGltYXRlQ2hhbmdlZEgAUhJyb29tQ2xpbWF0ZUNoYW5nZWQSXQoUY2xpbWF0ZV9tb2RlX2NoYW'
+    '5nZWQYFiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ2xpbWF0ZU1vZGVDaGFuZ2VkSABS'
+    'EmNsaW1hdGVNb2RlQ2hhbmdlZEIJCgdwYXlsb2FkSgQIDxAQSgQIBxAIUhZhdHRyaWJ1dGVfd3'
+    'JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

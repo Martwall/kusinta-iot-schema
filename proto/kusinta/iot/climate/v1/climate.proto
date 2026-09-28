@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package kusinta.iot.climate.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// Room climate: the room, not a link between two devices, is what a person controls.
+//
+// A room's temperature used to be set on a link from a sensor to its valves, which made a
+// bare thermometer look like the thing in charge. Here the target belongs to the room
+// (a Space of SPACE_TYPE_ROOM), and the devices filed in that room are how the gateway
+// holds it: sensors measure, valves heat, window contacts pause. Which mechanism carries
+// that — a device-to-device link where the hardware can, a gateway-kept loop otherwise —
+// is the gateway's choice and not part of this contract.
+//
+// Only devices filed in exactly that room take part, and a heating device is in at most
+// one room. A device filed at apartment level takes part in nothing until it is filed
+// into a room.
+
+// Who or what last set a room's target, and when.
+//
+// Shown beside the target, because under "last change wins" a target that moved on its
+// own looks like a fault unless the reader can see that somebody turned a radiator by
+// hand ten minutes ago.
+message TargetChange {
+  google.protobuf.Timestamp at = 1;
+
+  oneof by {
+    // Set in the app, by this user.
+    kusinta.iot.identity.v1.UserId user = 2;
+
+    // Turned by hand at this device: a valve's knob or a wall thermostat's dial, as the
+    // device reported it (Matter Thermostat SetpointChangeSource = Manual). A change the
+    // device made on its own — window-open, frost protection, its own schedule — is never
+    // adopted and never appears here.
+    kusinta.iot.identity.v1.DeviceId device = 3;
+  }
+}
+
+// What a room is doing right now, in one word. Details live in the fields of
+// RoomClimate; this is what a list row shows.
+//
+// Where several hold at once the room reports the first that applies, in this order:
+// NO_TARGET, NO_HEATING, WINDOW_OPEN, HEATING_UNREACHABLE, SENSOR_LOST, NO_SENSOR,
+// HOLDING — the one that most changes what a person should expect of the room.
+enum RoomClimateCondition {
+  ROOM_CLIMATE_CONDITION_UNSPECIFIED = 0;
+
+  // Being held at its effective target from a sensor's reading.
+  ROOM_CLIMATE_CONDITION_HOLDING = 1;
+
+  // Nobody has set a target yet. Not a fault: a room that was just created.
+  ROOM_CLIMATE_CONDITION_NO_TARGET = 2;
+
+  // Every sensor the room uses has gone quiet. The valves regulate on their own probes
+  // towards the target meanwhile — worse comfort, never a frozen reading.
+  ROOM_CLIMATE_CONDITION_SENSOR_LOST = 3;
+
+  // A window in the room is open, so heating is paused.
+  ROOM_CLIMATE_CONDITION_WINDOW_OPEN = 4;
+
+  // The room has a target but nothing in it can heat.
+  ROOM_CLIMATE_CONDITION_NO_HEATING = 5;
+
+  // Every heating device in the room has gone quiet, so nothing is being held however
+  // the target is set.
+  ROOM_CLIMATE_CONDITION_HEATING_UNREACHABLE = 6;
+
+  // The room has no temperature sensor, so its valves regulate on their own probes
+  // towards the target. Not a fault; a room can be set up that way.
+  ROOM_CLIMATE_CONDITION_NO_SENSOR = 7;
+}
+
+// The climate of one room.
+//
+// Apply as an upsert keyed on space_id: the same room is sent again whenever any of this
+// moves.
+message RoomClimate {
+  // A Space of SPACE_TYPE_ROOM.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // The temperature the room is to be held at, in centidegrees. Unset: nobody has set
+  // one. Always within [min_centidegrees, max_centidegrees] where those are set.
+  optional sint32 target_centidegrees = 2;
+
+  // Who or what set target_centidegrees. Unset while the target is.
+  TargetChange target_change = 3;
+
+  // What the valves are actually being held at, in centidegrees. Equal to the target
+  // unless a ClimateMode on an enclosing space sets the room back — and then the room's
+  // own target again if somebody changed this room during the mode (see
+  // overrides_mode). Unset while nothing is being held.
+  optional sint32 effective_target_centidegrees = 4;
+
+  // Set when somebody changed this room while a ClimateMode was on: the room keeps its
+  // own target until the mode ends, while the rest of the apartment stays set back.
+  bool overrides_mode = 5;
+
+  // The space whose ClimateMode applies to this room, if one does — set back or,
+  // with overrides_mode, overridden. Unset when no mode applies.
+  kusinta.iot.identity.v1.SpaceId mode_space_id = 13;
+
+  // The owner's limits, in centidegrees. The gateway writes them to every device in the
+  // room (Matter Min/MaxHeatSetpointLimit), so a knob stops at them physically, and
+  // clamps every target — from the app, a knob or a mode — to them. The minimum is also
+  // the floor under a mode's setback.
+  optional sint32 min_centidegrees = 6;
+  optional sint32 max_centidegrees = 7;
+
+  // The sensors the room measures with, in order: the first is used, each later one
+  // takes over while those before it are quiet. Only devices filed in this room.
+  //
+  // By default every temperature sensor filed in the room, in the order it was filed, so
+  // a sensor filed later joins at the end without anyone configuring anything. An owner
+  // can set the order explicitly (see sensors_configured). Empty: the room has no
+  // temperature sensor, and its valves regulate on their own probes (NO_SENSOR).
+  repeated kusinta.iot.identity.v1.DeviceId sensor_ids = 8;
+
+  // Whether sensor_ids is an order an owner chose, rather than the default of filing
+  // order. A sensor filed into a room with a chosen order is not added to it.
+  bool sensors_configured = 14;
+
+  // The reading steering the room now, in centidegrees, and which sensor it came from.
+  // measured_by unset while the valves are on their own probes.
+  optional sint32 measured_centidegrees = 9;
+  kusinta.iot.identity.v1.DeviceId measured_by = 10;
+
+  RoomClimateCondition condition = 11;
+
+  // Whether the controls on this room's devices are locked. While unlocked, a change made
+  // by hand at a device becomes the room's target. Locked, the gateway sets the devices'
+  // own lock (Matter Thermostat User Interface Configuration KeypadLockout), so the
+  // refusal happens at the device rather than being undone later.
+  //
+  // Stated as the lock rather than as a permission so that the proto3 default — false,
+  // unlocked — is the intended default: a room nobody has configured takes changes at its
+  // devices, as a room in an apartment always should. Elsewhere locking is the owner's
+  // choice.
+  bool lock_device_controls = 12;
+}
+
+// A setback that applies to every room in a space while it is on.
+enum ClimateModeKind {
+  // No mode: every room at its own target.
+  CLIMATE_MODE_KIND_UNSPECIFIED = 0;
+
+  // Every room to the setback until the mode is switched off.
+  CLIMATE_MODE_KIND_AWAY = 1;
+
+  // Every room to the setback between starts_at and ends_at, then back to normal on its
+  // own — timed so the rooms are warm again at ends_at, not starting to heat then.
+  CLIMATE_MODE_KIND_HOLIDAY = 2;
+}
+
+// A mode set on an apartment — or, for rooms that are not in one, on their floor or
+// common area. While it is on it sets back every room below that space, except that a
+// room inside an apartment follows only its apartment's mode: a mode on a floor does not
+// reach into the flats on it. Where more than one mode could apply, the nearest enclosing
+// space's wins. A room somebody changes during the mode keeps its own target
+// (RoomClimate.overrides_mode) until the mode ends.
+message ClimateMode {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  ClimateModeKind kind = 2;
+
+  // The temperature every room is set back to, in centidegrees. Required while a mode is
+  // on — a mode with nothing to set back to is refused, not defaulted. Clamped by each
+  // room's min_centidegrees, which is the frost floor.
+  optional sint32 setback_centidegrees = 3;
+
+  // HOLIDAY: when the setback begins and when the rooms are to be back at their own
+  // targets. AWAY: starts_at is when it was switched on; ends_at is unset.
+  google.protobuf.Timestamp starts_at = 4;
+  google.protobuf.Timestamp ends_at = 5;
+
+  // Who switched it on.
+  kusinta.iot.identity.v1.UserId set_by = 6;
+}
+
+// Every room climate and mode a caller may see, in reply to a listing.
+message RoomClimateList {
+  repeated RoomClimate rooms = 1;
+  repeated ClimateMode modes = 2;
+}

@@ -504,6 +504,226 @@ final $typed_data.Uint8List listDeviceLinksDescriptor = $convert.base64Decode(
     'Cg9MaXN0RGV2aWNlTGlua3MSPgoJZGV2aWNlX2lkGAEgASgLMiEua3VzaW50YS5pb3QuaWRlbn'
     'RpdHkudjEuRGV2aWNlSWRSCGRldmljZUlk');
 
+@$core.Deprecated('Use setRoomTargetDescriptor instead')
+const SetRoomTarget$json = {
+  '1': 'SetRoomTarget',
+  '2': [
+    {
+      '1': 'room_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'roomId'
+    },
+    {
+      '1': 'target_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'targetCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_target_centidegrees'},
+  ],
+};
+
+/// Descriptor for `SetRoomTarget`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setRoomTargetDescriptor = $convert.base64Decode(
+    'Cg1TZXRSb29tVGFyZ2V0EjkKB3Jvb21faWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
+    '52MS5TcGFjZUlkUgZyb29tSWQSNAoTdGFyZ2V0X2NlbnRpZGVncmVlcxgCIAEoEUgAUhJ0YXJn'
+    'ZXRDZW50aWRlZ3JlZXOIAQFCFgoUX3RhcmdldF9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use roomSensorsDescriptor instead')
+const RoomSensors$json = {
+  '1': 'RoomSensors',
+  '2': [
+    {
+      '1': 'sensor_ids',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'sensorIds'
+    },
+  ],
+};
+
+/// Descriptor for `RoomSensors`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roomSensorsDescriptor = $convert.base64Decode(
+    'CgtSb29tU2Vuc29ycxJACgpzZW5zb3JfaWRzGAEgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdH'
+    'kudjEuRGV2aWNlSWRSCXNlbnNvcklkcw==');
+
+@$core.Deprecated('Use roomLimitsDescriptor instead')
+const RoomLimits$json = {
+  '1': 'RoomLimits',
+  '2': [
+    {
+      '1': 'min_centidegrees',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'minCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'max_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'maxCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_min_centidegrees'},
+    {'1': '_max_centidegrees'},
+  ],
+};
+
+/// Descriptor for `RoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roomLimitsDescriptor = $convert.base64Decode(
+    'CgpSb29tTGltaXRzEi4KEG1pbl9jZW50aWRlZ3JlZXMYASABKBFIAFIPbWluQ2VudGlkZWdyZW'
+    'VziAEBEi4KEG1heF9jZW50aWRlZ3JlZXMYAiABKBFIAVIPbWF4Q2VudGlkZWdyZWVziAEBQhMK'
+    'EV9taW5fY2VudGlkZWdyZWVzQhMKEV9tYXhfY2VudGlkZWdyZWVz');
+
+@$core.Deprecated('Use configureRoomClimateDescriptor instead')
+const ConfigureRoomClimate$json = {
+  '1': 'ConfigureRoomClimate',
+  '2': [
+    {
+      '1': 'room_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'roomId'
+    },
+    {
+      '1': 'limits',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RoomLimits',
+      '10': 'limits'
+    },
+    {
+      '1': 'sensors',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RoomSensors',
+      '10': 'sensors'
+    },
+    {
+      '1': 'lock_device_controls',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 0,
+      '10': 'lockDeviceControls',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_lock_device_controls'},
+  ],
+};
+
+/// Descriptor for `ConfigureRoomClimate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List configureRoomClimateDescriptor = $convert.base64Decode(
+    'ChRDb25maWd1cmVSb29tQ2xpbWF0ZRI5Cgdyb29tX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaW'
+    'RlbnRpdHkudjEuU3BhY2VJZFIGcm9vbUlkEjkKBmxpbWl0cxgCIAEoCzIhLmt1c2ludGEuaW90'
+    'LndlYnJ0Yy52MS5Sb29tTGltaXRzUgZsaW1pdHMSPAoHc2Vuc29ycxgDIAEoCzIiLmt1c2ludG'
+    'EuaW90LndlYnJ0Yy52MS5Sb29tU2Vuc29yc1IHc2Vuc29ycxI1ChRsb2NrX2RldmljZV9jb250'
+    'cm9scxgEIAEoCEgAUhJsb2NrRGV2aWNlQ29udHJvbHOIAQFCFwoVX2xvY2tfZGV2aWNlX2Nvbn'
+    'Ryb2xz');
+
+@$core.Deprecated('Use setClimateModeDescriptor instead')
+const SetClimateMode$json = {
+  '1': 'SetClimateMode',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'kind',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateModeKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'setback_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'setbackCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'starts_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'startsAt'
+    },
+    {
+      '1': 'ends_at',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'endsAt'
+    },
+  ],
+  '8': [
+    {'1': '_setback_centidegrees'},
+  ],
+};
+
+/// Descriptor for `SetClimateMode`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setClimateModeDescriptor = $convert.base64Decode(
+    'Cg5TZXRDbGltYXRlTW9kZRI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aX'
+    'R5LnYxLlNwYWNlSWRSB3NwYWNlSWQSOwoEa2luZBgCIAEoDjInLmt1c2ludGEuaW90LmNsaW1h'
+    'dGUudjEuQ2xpbWF0ZU1vZGVLaW5kUgRraW5kEjYKFHNldGJhY2tfY2VudGlkZWdyZWVzGAMgAS'
+    'gRSABSE3NldGJhY2tDZW50aWRlZ3JlZXOIAQESNwoJc3RhcnRzX2F0GAQgASgLMhouZ29vZ2xl'
+    'LnByb3RvYnVmLlRpbWVzdGFtcFIIc3RhcnRzQXQSMwoHZW5kc19hdBgFIAEoCzIaLmdvb2dsZS'
+    '5wcm90b2J1Zi5UaW1lc3RhbXBSBmVuZHNBdEIXChVfc2V0YmFja19jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use listRoomClimatesDescriptor instead')
+const ListRoomClimates$json = {
+  '1': 'ListRoomClimates',
+  '2': [
+    {
+      '1': 'root_space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'rootSpaceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListRoomClimates`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listRoomClimatesDescriptor = $convert.base64Decode(
+    'ChBMaXN0Um9vbUNsaW1hdGVzEkQKDXJvb3Rfc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC'
+    '5pZGVudGl0eS52MS5TcGFjZUlkUgtyb290U3BhY2VJZA==');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -643,6 +863,42 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'provisionDevice'
     },
+    {
+      '1': 'set_room_target',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetRoomTarget',
+      '9': 0,
+      '10': 'setRoomTarget'
+    },
+    {
+      '1': 'configure_room_climate',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ConfigureRoomClimate',
+      '9': 0,
+      '10': 'configureRoomClimate'
+    },
+    {
+      '1': 'set_climate_mode',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetClimateMode',
+      '9': 0,
+      '10': 'setClimateMode'
+    },
+    {
+      '1': 'list_room_climates',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListRoomClimates',
+      '9': 0,
+      '10': 'listRoomClimates'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -674,4 +930,10 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'Y2VMaW5rcxJXChJ1cGRhdGVfZGV2aWNlX2xpbmsYDiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydG'
     'MudjEuVXBkYXRlRGV2aWNlTGlua0gAUhB1cGRhdGVEZXZpY2VMaW5rElMKEHByb3Zpc2lvbl9k'
     'ZXZpY2UYDyABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvdmlzaW9uRGV2aWNlSABSD3'
-    'Byb3Zpc2lvbkRldmljZUIJCgdyZXF1ZXN0');
+    'Byb3Zpc2lvbkRldmljZRJOCg9zZXRfcm9vbV90YXJnZXQYECABKAsyJC5rdXNpbnRhLmlvdC53'
+    'ZWJydGMudjEuU2V0Um9vbVRhcmdldEgAUg1zZXRSb29tVGFyZ2V0EmMKFmNvbmZpZ3VyZV9yb2'
+    '9tX2NsaW1hdGUYESABKAsyKy5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29uZmlndXJlUm9vbUNs'
+    'aW1hdGVIAFIUY29uZmlndXJlUm9vbUNsaW1hdGUSUQoQc2V0X2NsaW1hdGVfbW9kZRgSIAEoCz'
+    'IlLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZXRDbGltYXRlTW9kZUgAUg5zZXRDbGltYXRlTW9k'
+    'ZRJXChJsaXN0X3Jvb21fY2xpbWF0ZXMYEyABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTG'
+    'lzdFJvb21DbGltYXRlc0gAUhBsaXN0Um9vbUNsaW1hdGVzQgkKB3JlcXVlc3Q=');

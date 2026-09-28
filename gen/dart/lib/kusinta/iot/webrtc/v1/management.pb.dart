@@ -14,7 +14,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../common/v1/types.pbenum.dart' as $4;
+import '../../../../google/protobuf/timestamp.pb.dart' as $4;
+import '../../climate/v1/climate.pbenum.dart' as $6;
+import '../../common/v1/types.pbenum.dart' as $5;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $3;
 import '../../space/v1/space.pb.dart' as $2;
@@ -27,7 +29,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// it, so it is reserved to the gateway's administrator.
 class CreateSpace extends $pb.GeneratedMessage {
   factory CreateSpace({
-    $4.SpaceType? spaceType,
+    $5.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -56,10 +58,10 @@ class CreateSpace extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..e<$4.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $4.SpaceType.valueOf,
-        enumValues: $4.SpaceType.values)
+    ..e<$5.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $5.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $5.SpaceType.valueOf,
+        enumValues: $5.SpaceType.values)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(4, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -88,9 +90,9 @@ class CreateSpace extends $pb.GeneratedMessage {
   static CreateSpace? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $4.SpaceType get spaceType => $_getN(0);
+  $5.SpaceType get spaceType => $_getN(0);
   @$pb.TagNumber(1)
-  set spaceType($4.SpaceType value) => $_setField(1, value);
+  set spaceType($5.SpaceType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasSpaceType() => $_has(0);
   @$pb.TagNumber(1)
@@ -143,7 +145,7 @@ enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 class UpdateSpace extends $pb.GeneratedMessage {
   factory UpdateSpace({
     $0.SpaceId? spaceId,
-    $4.SpaceType? spaceType,
+    $5.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -184,10 +186,10 @@ class UpdateSpace extends $pb.GeneratedMessage {
     ..oo(0, [6, 7])
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$4.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $4.SpaceType.valueOf,
-        enumValues: $4.SpaceType.values)
+    ..e<$5.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $5.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $5.SpaceType.valueOf,
+        enumValues: $5.SpaceType.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(5, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -232,9 +234,9 @@ class UpdateSpace extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $4.SpaceType get spaceType => $_getN(1);
+  $5.SpaceType get spaceType => $_getN(1);
   @$pb.TagNumber(2)
-  set spaceType($4.SpaceType value) => $_setField(2, value);
+  set spaceType($5.SpaceType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSpaceType() => $_has(1);
   @$pb.TagNumber(2)
@@ -679,7 +681,7 @@ class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
 class ClaimDevice extends $pb.GeneratedMessage {
   factory ClaimDevice({
     $0.DeviceId? deviceId,
-    $4.DeviceOwnershipType? ownership,
+    $5.DeviceOwnershipType? ownership,
     $0.SpaceId? initialSpaceId,
     $core.String? possessionProof,
   }) {
@@ -707,12 +709,12 @@ class ClaimDevice extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
-    ..e<$4.DeviceOwnershipType>(
+    ..e<$5.DeviceOwnershipType>(
         2, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $4.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
-        valueOf: $4.DeviceOwnershipType.valueOf,
-        enumValues: $4.DeviceOwnershipType.values)
+            $5.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $5.DeviceOwnershipType.valueOf,
+        enumValues: $5.DeviceOwnershipType.values)
     ..aOM<$0.SpaceId>(3, _omitFieldNames ? '' : 'initialSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOS(4, _omitFieldNames ? '' : 'possessionProof')
@@ -750,9 +752,9 @@ class ClaimDevice extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $4.DeviceOwnershipType get ownership => $_getN(1);
+  $5.DeviceOwnershipType get ownership => $_getN(1);
   @$pb.TagNumber(2)
-  set ownership($4.DeviceOwnershipType value) => $_setField(2, value);
+  set ownership($5.DeviceOwnershipType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOwnership() => $_has(1);
   @$pb.TagNumber(2)
@@ -1498,6 +1500,515 @@ class ListDeviceLinks extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 }
 
+/// Sets the temperature a room is to be held at.
+///
+/// Authorized as adjusting, not directing: WRITE on the room is enough — a resident in
+/// their own apartment, as well as owners and filing roles. It is the same act as turning
+/// a radiator's knob, which a resident can already do; setting up what the room obeys is
+/// ConfigureRoomClimate, and stays with owners.
+///
+/// Clamped to the room's limits rather than refused outside them, and the clamped value is
+/// what the room's RoomClimate then reports.
+class SetRoomTarget extends $pb.GeneratedMessage {
+  factory SetRoomTarget({
+    $0.SpaceId? roomId,
+    $core.int? targetCentidegrees,
+  }) {
+    final result = create();
+    if (roomId != null) result.roomId = roomId;
+    if (targetCentidegrees != null)
+      result.targetCentidegrees = targetCentidegrees;
+    return result;
+  }
+
+  SetRoomTarget._();
+
+  factory SetRoomTarget.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetRoomTarget.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetRoomTarget',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $0.SpaceId.create)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'targetCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetRoomTarget clone() => SetRoomTarget()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetRoomTarget copyWith(void Function(SetRoomTarget) updates) =>
+      super.copyWith((message) => updates(message as SetRoomTarget))
+          as SetRoomTarget;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetRoomTarget create() => SetRoomTarget._();
+  @$core.override
+  SetRoomTarget createEmptyInstance() => create();
+  static $pb.PbList<SetRoomTarget> createRepeated() =>
+      $pb.PbList<SetRoomTarget>();
+  @$core.pragma('dart2js:noInline')
+  static SetRoomTarget getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetRoomTarget>(create);
+  static SetRoomTarget? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get roomId => $_getN(0);
+  @$pb.TagNumber(1)
+  set roomId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureRoomId() => $_ensure(0);
+
+  /// Unset clears the target: the room goes back to having none (NO_TARGET) and its
+  /// devices to their own behaviour. With presence, so that a request that forgot the
+  /// field is not read as 0 °C and clamped to the room's minimum.
+  @$pb.TagNumber(2)
+  $core.int get targetCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set targetCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTargetCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTargetCentidegrees() => $_clearField(2);
+}
+
+/// The sensors a room measures with, in order of preference. A message of its own so that
+/// "leave the sensors alone" (unset) differs from "set" on the wire. Set but empty returns
+/// the room to the default order, every temperature sensor filed in it in filing order.
+class RoomSensors extends $pb.GeneratedMessage {
+  factory RoomSensors({
+    $core.Iterable<$0.DeviceId>? sensorIds,
+  }) {
+    final result = create();
+    if (sensorIds != null) result.sensorIds.addAll(sensorIds);
+    return result;
+  }
+
+  RoomSensors._();
+
+  factory RoomSensors.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoomSensors.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoomSensors',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<$0.DeviceId>(1, _omitFieldNames ? '' : 'sensorIds', $pb.PbFieldType.PM,
+        subBuilder: $0.DeviceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomSensors clone() => RoomSensors()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomSensors copyWith(void Function(RoomSensors) updates) =>
+      super.copyWith((message) => updates(message as RoomSensors))
+          as RoomSensors;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RoomSensors create() => RoomSensors._();
+  @$core.override
+  RoomSensors createEmptyInstance() => create();
+  static $pb.PbList<RoomSensors> createRepeated() => $pb.PbList<RoomSensors>();
+  @$core.pragma('dart2js:noInline')
+  static RoomSensors getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoomSensors>(create);
+  static RoomSensors? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$0.DeviceId> get sensorIds => $_getList(0);
+}
+
+/// A room's limits. A message of its own so that "leave the limits alone" (unset) differs
+/// from "set" — and, set, an unset bound inside it removes that bound, which a bare
+/// optional on the request could not say.
+class RoomLimits extends $pb.GeneratedMessage {
+  factory RoomLimits({
+    $core.int? minCentidegrees,
+    $core.int? maxCentidegrees,
+  }) {
+    final result = create();
+    if (minCentidegrees != null) result.minCentidegrees = minCentidegrees;
+    if (maxCentidegrees != null) result.maxCentidegrees = maxCentidegrees;
+    return result;
+  }
+
+  RoomLimits._();
+
+  factory RoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'minCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'maxCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomLimits clone() => RoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomLimits copyWith(void Function(RoomLimits) updates) =>
+      super.copyWith((message) => updates(message as RoomLimits)) as RoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RoomLimits create() => RoomLimits._();
+  @$core.override
+  RoomLimits createEmptyInstance() => create();
+  static $pb.PbList<RoomLimits> createRepeated() => $pb.PbList<RoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static RoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoomLimits>(create);
+  static RoomLimits? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get minCentidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set minCentidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMinCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMinCentidegrees() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get maxCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set maxCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMaxCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMaxCentidegrees() => $_clearField(2);
+}
+
+/// Configures what a room obeys: its limits, its sensors, and whether a change made by
+/// hand at one of its devices counts. Authorized as directing — owners and filing roles —
+/// because this decides what everybody in the room can do.
+///
+/// Each field moves alone, as on UpdateSpace: unset leaves it as it is.
+class ConfigureRoomClimate extends $pb.GeneratedMessage {
+  factory ConfigureRoomClimate({
+    $0.SpaceId? roomId,
+    RoomLimits? limits,
+    RoomSensors? sensors,
+    $core.bool? lockDeviceControls,
+  }) {
+    final result = create();
+    if (roomId != null) result.roomId = roomId;
+    if (limits != null) result.limits = limits;
+    if (sensors != null) result.sensors = sensors;
+    if (lockDeviceControls != null)
+      result.lockDeviceControls = lockDeviceControls;
+    return result;
+  }
+
+  ConfigureRoomClimate._();
+
+  factory ConfigureRoomClimate.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ConfigureRoomClimate.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ConfigureRoomClimate',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<RoomLimits>(2, _omitFieldNames ? '' : 'limits',
+        subBuilder: RoomLimits.create)
+    ..aOM<RoomSensors>(3, _omitFieldNames ? '' : 'sensors',
+        subBuilder: RoomSensors.create)
+    ..aOB(4, _omitFieldNames ? '' : 'lockDeviceControls')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConfigureRoomClimate clone() =>
+      ConfigureRoomClimate()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ConfigureRoomClimate copyWith(void Function(ConfigureRoomClimate) updates) =>
+      super.copyWith((message) => updates(message as ConfigureRoomClimate))
+          as ConfigureRoomClimate;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ConfigureRoomClimate create() => ConfigureRoomClimate._();
+  @$core.override
+  ConfigureRoomClimate createEmptyInstance() => create();
+  static $pb.PbList<ConfigureRoomClimate> createRepeated() =>
+      $pb.PbList<ConfigureRoomClimate>();
+  @$core.pragma('dart2js:noInline')
+  static ConfigureRoomClimate getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ConfigureRoomClimate>(create);
+  static ConfigureRoomClimate? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get roomId => $_getN(0);
+  @$pb.TagNumber(1)
+  set roomId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureRoomId() => $_ensure(0);
+
+  /// Replaces both bounds; see RoomLimits.
+  @$pb.TagNumber(2)
+  RoomLimits get limits => $_getN(1);
+  @$pb.TagNumber(2)
+  set limits(RoomLimits value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLimits() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLimits() => $_clearField(2);
+  @$pb.TagNumber(2)
+  RoomLimits ensureLimits() => $_ensure(1);
+
+  /// Only devices filed in this room; any other is refused.
+  @$pb.TagNumber(3)
+  RoomSensors get sensors => $_getN(2);
+  @$pb.TagNumber(3)
+  set sensors(RoomSensors value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSensors() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSensors() => $_clearField(3);
+  @$pb.TagNumber(3)
+  RoomSensors ensureSensors() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.bool get lockDeviceControls => $_getBF(3);
+  @$pb.TagNumber(4)
+  set lockDeviceControls($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasLockDeviceControls() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearLockDeviceControls() => $_clearField(4);
+}
+
+/// Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
+/// Switching one on needs setback_centidegrees; a mode with nothing to set back to is
+/// refused.
+class SetClimateMode extends $pb.GeneratedMessage {
+  factory SetClimateMode({
+    $0.SpaceId? spaceId,
+    $6.ClimateModeKind? kind,
+    $core.int? setbackCentidegrees,
+    $4.Timestamp? startsAt,
+    $4.Timestamp? endsAt,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (kind != null) result.kind = kind;
+    if (setbackCentidegrees != null)
+      result.setbackCentidegrees = setbackCentidegrees;
+    if (startsAt != null) result.startsAt = startsAt;
+    if (endsAt != null) result.endsAt = endsAt;
+    return result;
+  }
+
+  SetClimateMode._();
+
+  factory SetClimateMode.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetClimateMode.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetClimateMode',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$6.ClimateModeKind>(
+        2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
+        valueOf: $6.ClimateModeKind.valueOf,
+        enumValues: $6.ClimateModeKind.values)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'setbackCentidegrees', $pb.PbFieldType.OS3)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'startsAt',
+        subBuilder: $4.Timestamp.create)
+    ..aOM<$4.Timestamp>(5, _omitFieldNames ? '' : 'endsAt',
+        subBuilder: $4.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetClimateMode clone() => SetClimateMode()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetClimateMode copyWith(void Function(SetClimateMode) updates) =>
+      super.copyWith((message) => updates(message as SetClimateMode))
+          as SetClimateMode;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetClimateMode create() => SetClimateMode._();
+  @$core.override
+  SetClimateMode createEmptyInstance() => create();
+  static $pb.PbList<SetClimateMode> createRepeated() =>
+      $pb.PbList<SetClimateMode>();
+  @$core.pragma('dart2js:noInline')
+  static SetClimateMode getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetClimateMode>(create);
+  static SetClimateMode? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $6.ClimateModeKind get kind => $_getN(1);
+  @$pb.TagNumber(2)
+  set kind($6.ClimateModeKind value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKind() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKind() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get setbackCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set setbackCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSetbackCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSetbackCentidegrees() => $_clearField(3);
+
+  /// HOLIDAY only; both required there. Refused on AWAY.
+  @$pb.TagNumber(4)
+  $4.Timestamp get startsAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set startsAt($4.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasStartsAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStartsAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $4.Timestamp ensureStartsAt() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $4.Timestamp get endsAt => $_getN(4);
+  @$pb.TagNumber(5)
+  set endsAt($4.Timestamp value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasEndsAt() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearEndsAt() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $4.Timestamp ensureEndsAt() => $_ensure(4);
+}
+
+/// Lists the room climates and modes a caller may see. Unset root_space_id lists every
+/// one the caller can reach; naming a space narrows it to that space and those below.
+class ListRoomClimates extends $pb.GeneratedMessage {
+  factory ListRoomClimates({
+    $0.SpaceId? rootSpaceId,
+  }) {
+    final result = create();
+    if (rootSpaceId != null) result.rootSpaceId = rootSpaceId;
+    return result;
+  }
+
+  ListRoomClimates._();
+
+  factory ListRoomClimates.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListRoomClimates.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListRoomClimates',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'rootSpaceId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRoomClimates clone() => ListRoomClimates()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListRoomClimates copyWith(void Function(ListRoomClimates) updates) =>
+      super.copyWith((message) => updates(message as ListRoomClimates))
+          as ListRoomClimates;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListRoomClimates create() => ListRoomClimates._();
+  @$core.override
+  ListRoomClimates createEmptyInstance() => create();
+  static $pb.PbList<ListRoomClimates> createRepeated() =>
+      $pb.PbList<ListRoomClimates>();
+  @$core.pragma('dart2js:noInline')
+  static ListRoomClimates getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListRoomClimates>(create);
+  static ListRoomClimates? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get rootSpaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set rootSpaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRootSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRootSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureRootSpaceId() => $_ensure(0);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -1514,6 +2025,10 @@ enum ManagementRequest_Request {
   listDeviceLinks,
   updateDeviceLink,
   provisionDevice,
+  setRoomTarget,
+  configureRoomClimate,
+  setClimateMode,
+  listRoomClimates,
   notSet
 }
 
@@ -1534,6 +2049,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ListDeviceLinks? listDeviceLinks,
     UpdateDeviceLink? updateDeviceLink,
     ProvisionDevice? provisionDevice,
+    SetRoomTarget? setRoomTarget,
+    ConfigureRoomClimate? configureRoomClimate,
+    SetClimateMode? setClimateMode,
+    ListRoomClimates? listRoomClimates,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -1554,6 +2073,11 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (listDeviceLinks != null) result.listDeviceLinks = listDeviceLinks;
     if (updateDeviceLink != null) result.updateDeviceLink = updateDeviceLink;
     if (provisionDevice != null) result.provisionDevice = provisionDevice;
+    if (setRoomTarget != null) result.setRoomTarget = setRoomTarget;
+    if (configureRoomClimate != null)
+      result.configureRoomClimate = configureRoomClimate;
+    if (setClimateMode != null) result.setClimateMode = setClimateMode;
+    if (listRoomClimates != null) result.listRoomClimates = listRoomClimates;
     return result;
   }
 
@@ -1583,6 +2107,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     13: ManagementRequest_Request.listDeviceLinks,
     14: ManagementRequest_Request.updateDeviceLink,
     15: ManagementRequest_Request.provisionDevice,
+    16: ManagementRequest_Request.setRoomTarget,
+    17: ManagementRequest_Request.configureRoomClimate,
+    18: ManagementRequest_Request.setClimateMode,
+    19: ManagementRequest_Request.listRoomClimates,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1590,7 +2118,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
     ..aOM<UpdateSpace>(2, _omitFieldNames ? '' : 'updateSpace',
@@ -1622,6 +2150,15 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: UpdateDeviceLink.create)
     ..aOM<ProvisionDevice>(15, _omitFieldNames ? '' : 'provisionDevice',
         subBuilder: ProvisionDevice.create)
+    ..aOM<SetRoomTarget>(16, _omitFieldNames ? '' : 'setRoomTarget',
+        subBuilder: SetRoomTarget.create)
+    ..aOM<ConfigureRoomClimate>(
+        17, _omitFieldNames ? '' : 'configureRoomClimate',
+        subBuilder: ConfigureRoomClimate.create)
+    ..aOM<SetClimateMode>(18, _omitFieldNames ? '' : 'setClimateMode',
+        subBuilder: SetClimateMode.create)
+    ..aOM<ListRoomClimates>(19, _omitFieldNames ? '' : 'listRoomClimates',
+        subBuilder: ListRoomClimates.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1814,6 +2351,50 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearProvisionDevice() => $_clearField(15);
   @$pb.TagNumber(15)
   ProvisionDevice ensureProvisionDevice() => $_ensure(14);
+
+  @$pb.TagNumber(16)
+  SetRoomTarget get setRoomTarget => $_getN(15);
+  @$pb.TagNumber(16)
+  set setRoomTarget(SetRoomTarget value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasSetRoomTarget() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearSetRoomTarget() => $_clearField(16);
+  @$pb.TagNumber(16)
+  SetRoomTarget ensureSetRoomTarget() => $_ensure(15);
+
+  @$pb.TagNumber(17)
+  ConfigureRoomClimate get configureRoomClimate => $_getN(16);
+  @$pb.TagNumber(17)
+  set configureRoomClimate(ConfigureRoomClimate value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasConfigureRoomClimate() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearConfigureRoomClimate() => $_clearField(17);
+  @$pb.TagNumber(17)
+  ConfigureRoomClimate ensureConfigureRoomClimate() => $_ensure(16);
+
+  @$pb.TagNumber(18)
+  SetClimateMode get setClimateMode => $_getN(17);
+  @$pb.TagNumber(18)
+  set setClimateMode(SetClimateMode value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasSetClimateMode() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearSetClimateMode() => $_clearField(18);
+  @$pb.TagNumber(18)
+  SetClimateMode ensureSetClimateMode() => $_ensure(17);
+
+  @$pb.TagNumber(19)
+  ListRoomClimates get listRoomClimates => $_getN(18);
+  @$pb.TagNumber(19)
+  set listRoomClimates(ListRoomClimates value) => $_setField(19, value);
+  @$pb.TagNumber(19)
+  $core.bool hasListRoomClimates() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearListRoomClimates() => $_clearField(19);
+  @$pb.TagNumber(19)
+  ListRoomClimates ensureListRoomClimates() => $_ensure(18);
 }
 
 const $core.bool _omitFieldNames =

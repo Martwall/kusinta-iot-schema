@@ -171,8 +171,10 @@ class ClimateLeadSettings extends $pb.GeneratedMessage {
   /// one radiator is the ordinary case, and each of its links carries this
   /// number separately. An interface offering "the temperature in here" is
   /// therefore setting several links at once and is responsible for keeping them
-  /// equal; nothing on this wire enforces it. A single target per room needs a
-  /// room to hang it on, which is a larger idea than a link.
+  /// equal; nothing on this wire enforces it. A single target per room is
+  /// climate.v1.RoomClimate: a person sets the room's target there, and the
+  /// gateway keeps the links it uses underneath in step. New interfaces set
+  /// rooms, not this.
   ///
   /// One target, not one per heating and cooling mode: this addresses a valve
   /// that only heats. A device that can do both would need the setpoint's mode

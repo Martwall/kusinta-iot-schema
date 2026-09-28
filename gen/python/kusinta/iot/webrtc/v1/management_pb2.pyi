@@ -1,3 +1,7 @@
+import datetime
+
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.climate.v1 import climate_pb2 as _climate_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.link.v1 import link_pb2 as _link_pb2
@@ -159,8 +163,62 @@ class ListDeviceLinks(_message.Message):
     device_id: _identity_pb2.DeviceId
     def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
 
+class SetRoomTarget(_message.Message):
+    __slots__ = ("room_id", "target_centidegrees")
+    ROOM_ID_FIELD_NUMBER: _ClassVar[int]
+    TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    room_id: _identity_pb2.SpaceId
+    target_centidegrees: int
+    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ...) -> None: ...
+
+class RoomSensors(_message.Message):
+    __slots__ = ("sensor_ids",)
+    SENSOR_IDS_FIELD_NUMBER: _ClassVar[int]
+    sensor_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.DeviceId]
+    def __init__(self, sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ...) -> None: ...
+
+class RoomLimits(_message.Message):
+    __slots__ = ("min_centidegrees", "max_centidegrees")
+    MIN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    MAX_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    min_centidegrees: int
+    max_centidegrees: int
+    def __init__(self, min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ...) -> None: ...
+
+class ConfigureRoomClimate(_message.Message):
+    __slots__ = ("room_id", "limits", "sensors", "lock_device_controls")
+    ROOM_ID_FIELD_NUMBER: _ClassVar[int]
+    LIMITS_FIELD_NUMBER: _ClassVar[int]
+    SENSORS_FIELD_NUMBER: _ClassVar[int]
+    LOCK_DEVICE_CONTROLS_FIELD_NUMBER: _ClassVar[int]
+    room_id: _identity_pb2.SpaceId
+    limits: RoomLimits
+    sensors: RoomSensors
+    lock_device_controls: bool
+    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., limits: _Optional[_Union[RoomLimits, _Mapping]] = ..., sensors: _Optional[_Union[RoomSensors, _Mapping]] = ..., lock_device_controls: _Optional[bool] = ...) -> None: ...
+
+class SetClimateMode(_message.Message):
+    __slots__ = ("space_id", "kind", "setback_centidegrees", "starts_at", "ends_at")
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    SETBACK_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    STARTS_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDS_AT_FIELD_NUMBER: _ClassVar[int]
+    space_id: _identity_pb2.SpaceId
+    kind: _climate_pb2.ClimateModeKind
+    setback_centidegrees: int
+    starts_at: _timestamp_pb2.Timestamp
+    ends_at: _timestamp_pb2.Timestamp
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kind: _Optional[_Union[_climate_pb2.ClimateModeKind, str]] = ..., setback_centidegrees: _Optional[int] = ..., starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class ListRoomClimates(_message.Message):
+    __slots__ = ("root_space_id",)
+    ROOT_SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    root_space_id: _identity_pb2.SpaceId
+    def __init__(self, root_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
+
 class ManagementRequest(_message.Message):
-    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device")
+    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates")
     CREATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     UPDATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     DELETE_SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -176,6 +234,10 @@ class ManagementRequest(_message.Message):
     LIST_DEVICE_LINKS_FIELD_NUMBER: _ClassVar[int]
     UPDATE_DEVICE_LINK_FIELD_NUMBER: _ClassVar[int]
     PROVISION_DEVICE_FIELD_NUMBER: _ClassVar[int]
+    SET_ROOM_TARGET_FIELD_NUMBER: _ClassVar[int]
+    CONFIGURE_ROOM_CLIMATE_FIELD_NUMBER: _ClassVar[int]
+    SET_CLIMATE_MODE_FIELD_NUMBER: _ClassVar[int]
+    LIST_ROOM_CLIMATES_FIELD_NUMBER: _ClassVar[int]
     create_space: CreateSpace
     update_space: UpdateSpace
     delete_space: DeleteSpace
@@ -191,4 +253,8 @@ class ManagementRequest(_message.Message):
     list_device_links: ListDeviceLinks
     update_device_link: UpdateDeviceLink
     provision_device: ProvisionDevice
-    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ...) -> None: ...
+    set_room_target: SetRoomTarget
+    configure_room_climate: ConfigureRoomClimate
+    set_climate_mode: SetClimateMode
+    list_room_climates: ListRoomClimates
+    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ...) -> None: ...

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package kusinta.iot.webrtc.v1;
 
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
@@ -269,6 +271,75 @@ message ListDeviceLinks {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
 }
 
+// Sets the temperature a room is to be held at.
+//
+// Authorized as adjusting, not directing: WRITE on the room is enough — a resident in
+// their own apartment, as well as owners and filing roles. It is the same act as turning
+// a radiator's knob, which a resident can already do; setting up what the room obeys is
+// ConfigureRoomClimate, and stays with owners.
+//
+// Clamped to the room's limits rather than refused outside them, and the clamped value is
+// what the room's RoomClimate then reports.
+message SetRoomTarget {
+  kusinta.iot.identity.v1.SpaceId room_id = 1;
+
+  // Unset clears the target: the room goes back to having none (NO_TARGET) and its
+  // devices to their own behaviour. With presence, so that a request that forgot the
+  // field is not read as 0 °C and clamped to the room's minimum.
+  optional sint32 target_centidegrees = 2;
+}
+
+// The sensors a room measures with, in order of preference. A message of its own so that
+// "leave the sensors alone" (unset) differs from "set" on the wire. Set but empty returns
+// the room to the default order, every temperature sensor filed in it in filing order.
+message RoomSensors {
+  repeated kusinta.iot.identity.v1.DeviceId sensor_ids = 1;
+}
+
+// A room's limits. A message of its own so that "leave the limits alone" (unset) differs
+// from "set" — and, set, an unset bound inside it removes that bound, which a bare
+// optional on the request could not say.
+message RoomLimits {
+  optional sint32 min_centidegrees = 1;
+  optional sint32 max_centidegrees = 2;
+}
+
+// Configures what a room obeys: its limits, its sensors, and whether a change made by
+// hand at one of its devices counts. Authorized as directing — owners and filing roles —
+// because this decides what everybody in the room can do.
+//
+// Each field moves alone, as on UpdateSpace: unset leaves it as it is.
+message ConfigureRoomClimate {
+  kusinta.iot.identity.v1.SpaceId room_id = 1;
+
+  // Replaces both bounds; see RoomLimits.
+  RoomLimits limits = 2;
+
+  // Only devices filed in this room; any other is refused.
+  RoomSensors sensors = 3;
+
+  optional bool lock_device_controls = 4;
+}
+
+// Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
+// Switching one on needs setback_centidegrees; a mode with nothing to set back to is
+// refused.
+message SetClimateMode {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.climate.v1.ClimateModeKind kind = 2;
+  optional sint32 setback_centidegrees = 3;
+
+  // HOLIDAY only; both required there. Refused on AWAY.
+  google.protobuf.Timestamp starts_at = 4;
+  google.protobuf.Timestamp ends_at = 5;
+}
+
+// Lists the room climates and modes a caller may see. Unset root_space_id lists every
+// one the caller can reach; naming a space narrows it to that space and those below.
+message ListRoomClimates {
+  kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -286,5 +357,9 @@ message ManagementRequest {
     ListDeviceLinks list_device_links = 13;
     UpdateDeviceLink update_device_link = 14;
     ProvisionDevice provision_device = 15;
+    SetRoomTarget set_room_target = 16;
+    ConfigureRoomClimate configure_room_climate = 17;
+    SetClimateMode set_climate_mode = 18;
+    ListRoomClimates list_room_climates = 19;
   }
 }
