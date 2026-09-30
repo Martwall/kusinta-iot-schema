@@ -107,6 +107,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.ConnectorCommandResult':
       $0.ConnectorCommandResult$json,
   '.kusinta.iot.webrtc.v1.CommandError': $11.CommandError$json,
+  '.kusinta.iot.webrtc.v1.CommandError.MetadataEntry':
+      $11.CommandError_MetadataEntry$json,
   '.kusinta.iot.connector.v1.HeartBeat': $0.HeartBeat$json,
   '.kusinta.iot.device.v1.DeviceEventBatch': $12.DeviceEventBatch$json,
   '.kusinta.iot.device.v1.DeviceEvent': $12.DeviceEvent$json,

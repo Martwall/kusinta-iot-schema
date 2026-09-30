@@ -258,16 +258,38 @@ const CommandError$json = {
       '6': '.kusinta.iot.webrtc.v1.CommandErrorCode',
       '10': 'code'
     },
+    {
+      '1': 'metadata',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.CommandError.MetadataEntry',
+      '10': 'metadata'
+    },
   ],
+  '3': [CommandError_MetadataEntry$json],
   '9': [
     {'1': 1, '2': 2},
   ],
 };
 
+@$core.Deprecated('Use commandErrorDescriptor instead')
+const CommandError_MetadataEntry$json = {
+  '1': 'MetadataEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': {'7': true},
+};
+
 /// Descriptor for `CommandError`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List commandErrorDescriptor = $convert.base64Decode(
     'CgxDb21tYW5kRXJyb3ISGAoHbWVzc2FnZRgCIAEoCVIHbWVzc2FnZRI7CgRjb2RlGAMgASgOMi'
-    'cua3VzaW50YS5pb3Qud2VicnRjLnYxLkNvbW1hbmRFcnJvckNvZGVSBGNvZGVKBAgBEAI=');
+    'cua3VzaW50YS5pb3Qud2VicnRjLnYxLkNvbW1hbmRFcnJvckNvZGVSBGNvZGUSTQoIbWV0YWRh'
+    'dGEYBCADKAsyMS5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ29tbWFuZEVycm9yLk1ldGFkYXRhRW'
+    '50cnlSCG1ldGFkYXRhGjsKDU1ldGFkYXRhRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFs'
+    'dWUYAiABKAlSBXZhbHVlOgI4AUoECAEQAg==');
 
 @$core.Deprecated('Use commandResultDescriptor instead')
 const CommandResult$json = {

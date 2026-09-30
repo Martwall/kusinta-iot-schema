@@ -6,6 +6,7 @@ from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
 from kusinta.iot.device.v1 import matter_options_pb2 as _matter_options_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.webrtc.v1 import setpoint_mode_pb2 as _setpoint_mode_pb2
+from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -94,12 +95,21 @@ class DeviceCommand(_message.Message):
     def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
 
 class CommandError(_message.Message):
-    __slots__ = ("message", "code")
+    __slots__ = ("message", "code", "metadata")
+    class MetadataEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
     CODE_FIELD_NUMBER: _ClassVar[int]
+    METADATA_FIELD_NUMBER: _ClassVar[int]
     message: str
     code: CommandErrorCode
-    def __init__(self, message: _Optional[str] = ..., code: _Optional[_Union[CommandErrorCode, str]] = ...) -> None: ...
+    metadata: _containers.ScalarMap[str, str]
+    def __init__(self, message: _Optional[str] = ..., code: _Optional[_Union[CommandErrorCode, str]] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class CommandResult(_message.Message):
     __slots__ = ("request_id", "success", "error", "completed_at", "settles_by")

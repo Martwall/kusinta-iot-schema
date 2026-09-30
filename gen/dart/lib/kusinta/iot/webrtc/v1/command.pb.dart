@@ -649,10 +649,12 @@ class CommandError extends $pb.GeneratedMessage {
   factory CommandError({
     $core.String? message,
     CommandErrorCode? code,
+    $core.Iterable<$core.MapEntry<$core.String, $core.String>>? metadata,
   }) {
     final result = create();
     if (message != null) result.message = message;
     if (code != null) result.code = code;
+    if (metadata != null) result.metadata.addEntries(metadata);
     return result;
   }
 
@@ -675,6 +677,11 @@ class CommandError extends $pb.GeneratedMessage {
         defaultOrMaker: CommandErrorCode.COMMAND_ERROR_CODE_UNSPECIFIED,
         valueOf: CommandErrorCode.valueOf,
         enumValues: CommandErrorCode.values)
+    ..m<$core.String, $core.String>(4, _omitFieldNames ? '' : 'metadata',
+        entryClassName: 'CommandError.MetadataEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('kusinta.iot.webrtc.v1'))
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -715,6 +722,17 @@ class CommandError extends $pb.GeneratedMessage {
   $core.bool hasCode() => $_has(1);
   @$pb.TagNumber(3)
   void clearCode() => $_clearField(3);
+
+  /// Structured detail for the app, beside `code`. Mirrors GatewayError.metadata.
+  ///
+  ///   "reason": a stable, machine-readable code the app may branch on — a reason
+  ///             such as a setting being governed by the device's room.
+  ///   "detail": one sentence the app may show the user.
+  ///
+  /// `message` stays log-only; anything meant for a user goes here. Empty means the
+  /// producer has nothing to add beyond `code`.
+  @$pb.TagNumber(4)
+  $pb.PbMap<$core.String, $core.String> get metadata => $_getMap(2);
 }
 
 /// CommandResult travels gateway → app (GatewayMessage) and

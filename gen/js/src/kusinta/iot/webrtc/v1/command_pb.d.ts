@@ -304,6 +304,20 @@ export declare type CommandError = Message<"kusinta.iot.webrtc.v1.CommandError">
    * @generated from field: kusinta.iot.webrtc.v1.CommandErrorCode code = 3;
    */
   code: CommandErrorCode;
+
+  /**
+   * Structured detail for the app, beside `code`. Mirrors GatewayError.metadata.
+   *
+   *   "reason": a stable, machine-readable code the app may branch on — a reason
+   *             such as a setting being governed by the device's room.
+   *   "detail": one sentence the app may show the user.
+   *
+   * `message` stays log-only; anything meant for a user goes here. Empty means the
+   * producer has nothing to add beyond `code`.
+   *
+   * @generated from field: map<string, string> metadata = 4;
+   */
+  metadata: { [key: string]: string };
 };
 
 /**

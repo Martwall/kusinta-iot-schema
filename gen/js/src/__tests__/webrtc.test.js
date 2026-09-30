@@ -170,6 +170,34 @@ describe('CommandResult', () => {
     expect(decoded.error?.code).toBe(CommandErrorCode.CONSTRAINT_VIOLATED)
   })
 
+  it('leaves CommandError metadata empty by default', () => {
+    const result = create(CommandResultSchema, {
+      requestId: 'cmd-uuid-5',
+      success: false,
+      error: { code: CommandErrorCode.REJECTED_BY_DEVICE },
+    })
+    const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
+    expect(decoded.error?.metadata).toEqual({})
+  })
+
+  it('round-trips CommandError metadata with reason and detail', () => {
+    const metadata = {
+      reason: 'governed_by_room',
+      detail: 'This setting follows the room.',
+    }
+    const result = create(CommandResultSchema, {
+      requestId: 'cmd-uuid-6',
+      success: false,
+      error: {
+        code: CommandErrorCode.REJECTED_BY_DEVICE,
+        message: 'setting is governed elsewhere',
+        metadata,
+      },
+    })
+    const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
+    expect(decoded.error?.metadata).toEqual(metadata)
+  })
+
   it('leaves settles_by unset when the producer states no optimistic window', () => {
     const result = create(CommandResultSchema, { requestId: 'cmd-uuid-3', success: true })
     const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))

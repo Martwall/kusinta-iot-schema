@@ -200,6 +200,16 @@ message CommandError {
 
   string message = 2; // human-readable, for logs — never rendered to a user
   CommandErrorCode code = 3;
+
+  // Structured detail for the app, beside `code`. Mirrors GatewayError.metadata.
+  //
+  //   "reason": a stable, machine-readable code the app may branch on — a reason
+  //             such as a setting being governed by the device's room.
+  //   "detail": one sentence the app may show the user.
+  //
+  // `message` stays log-only; anything meant for a user goes here. Empty means the
+  // producer has nothing to add beyond `code`.
+  map<string, string> metadata = 4;
 }
 
 // CommandResult travels gateway → app (GatewayMessage) and

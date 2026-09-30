@@ -137,6 +137,35 @@ def test_command_error_round_trips_a_refusal():
     assert decoded.error.code == command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED
 
 
+def test_command_error_metadata_is_empty_by_default():
+    error = command_pb2.CommandError(
+        code=command_pb2.COMMAND_ERROR_CODE_REJECTED_BY_DEVICE,
+    )
+    assert dict(error.metadata) == {}
+
+
+def test_command_error_metadata_round_trips_reason_and_detail():
+    """metadata is what the app branches on and may show; message stays log-only."""
+    result = command_pb2.CommandResult(
+        request_id="cmd-1",
+        success=False,
+        error=command_pb2.CommandError(
+            code=command_pb2.COMMAND_ERROR_CODE_REJECTED_BY_DEVICE,
+            message="setting is governed elsewhere",
+            metadata={
+                "reason": "governed_by_room",
+                "detail": "This setting follows the room.",
+            },
+        ),
+    )
+    decoded = command_pb2.CommandResult()
+    decoded.ParseFromString(result.SerializeToString())
+    assert dict(decoded.error.metadata) == {
+        "reason": "governed_by_room",
+        "detail": "This setting follows the room.",
+    }
+
+
 def test_timeout_is_distinct_from_a_refusal():
     """TIMEOUT says nothing about what happened to the device, so a consumer must not
     treat it as a refusal and roll a displayed value back."""

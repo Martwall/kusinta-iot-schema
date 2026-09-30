@@ -145,6 +145,12 @@ element can poll it. Everything is addressed numerically —
 whether the attribute is being read, written, granted or bounded. `command.proto` states the
 rules.
 
+A refused command or write says why in `CommandError`. `code` is the closed vocabulary;
+`metadata` carries structured detail for the app, as `GatewayError.metadata` does:
+`reason` is a stable code to branch on (a reason such as a setting being governed by the
+device's room), and `detail` is a sentence the app may show. `message` is for logs only and
+is never rendered to a user.
+
 ## Room climate
 
 A person controls a **room's** temperature, not a device's. `climate/v1/climate.proto`
