@@ -85,6 +85,7 @@ const Space$json = {
       '6': '.kusinta.iot.identity.v1.GatewayId',
       '10': 'gatewayId'
     },
+    {'1': 'time_zone', '3': 12, '4': 1, '5': 9, '10': 'timeZone'},
   ],
 };
 
@@ -101,4 +102,4 @@ final $typed_data.Uint8List spaceDescriptor = $convert.base64Decode(
     'CzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIOcmVzaWRlbnRVc2VySWQSPgoJdG'
     'VuYW50X2lkGAogASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVGVuYW50SWRSCHRlbmFu'
     'dElkEkEKCmdhdGV3YXlfaWQYCyABKAsyIi5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5HYXRld2'
-    'F5SWRSCWdhdGV3YXlJZA==');
+    'F5SWRSCWdhdGV3YXlJZBIbCgl0aW1lX3pvbmUYDCABKAlSCHRpbWVab25l');

@@ -9,7 +9,7 @@ import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
-import type { ClimateMode, RoomClimate, RoomClimateList } from "../../climate/v1/climate_pb.js";
+import type { ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -336,6 +336,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: RoomClimateList;
     case: "roomClimates";
+  } | {
+    /**
+     * get_room_history
+     *
+     * @generated from field: kusinta.iot.climate.v1.RoomHistory room_history = 8;
+     */
+    value: RoomHistory;
+    case: "roomHistory";
   } | { case: undefined; value?: undefined };
 };
 

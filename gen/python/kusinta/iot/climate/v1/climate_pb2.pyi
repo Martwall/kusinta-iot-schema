@@ -82,20 +82,22 @@ class RoomClimate(_message.Message):
     def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ...) -> None: ...
 
 class ClimateMode(_message.Message):
-    __slots__ = ("space_id", "kind", "setback_centidegrees", "starts_at", "ends_at", "set_by")
+    __slots__ = ("space_id", "kind", "setback_centidegrees", "starts_at", "ends_at", "set_by", "warm_from")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     SETBACK_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     STARTS_AT_FIELD_NUMBER: _ClassVar[int]
     ENDS_AT_FIELD_NUMBER: _ClassVar[int]
     SET_BY_FIELD_NUMBER: _ClassVar[int]
+    WARM_FROM_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     kind: ClimateModeKind
     setback_centidegrees: int
     starts_at: _timestamp_pb2.Timestamp
     ends_at: _timestamp_pb2.Timestamp
     set_by: _identity_pb2.UserId
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kind: _Optional[_Union[ClimateModeKind, str]] = ..., setback_centidegrees: _Optional[int] = ..., starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., set_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ...) -> None: ...
+    warm_from: _timestamp_pb2.Timestamp
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kind: _Optional[_Union[ClimateModeKind, str]] = ..., setback_centidegrees: _Optional[int] = ..., starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., set_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., warm_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class RoomClimateList(_message.Message):
     __slots__ = ("rooms", "modes")
@@ -104,3 +106,29 @@ class RoomClimateList(_message.Message):
     rooms: _containers.RepeatedCompositeFieldContainer[RoomClimate]
     modes: _containers.RepeatedCompositeFieldContainer[ClimateMode]
     def __init__(self, rooms: _Optional[_Iterable[_Union[RoomClimate, _Mapping]]] = ..., modes: _Optional[_Iterable[_Union[ClimateMode, _Mapping]]] = ...) -> None: ...
+
+class RoomHistorySample(_message.Message):
+    __slots__ = ("at", "measured_centidegrees", "target_centidegrees", "effective_target_centidegrees", "valve_open_permille", "valve_open_seconds")
+    AT_FIELD_NUMBER: _ClassVar[int]
+    MEASURED_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    EFFECTIVE_TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    VALVE_OPEN_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    VALVE_OPEN_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    at: _timestamp_pb2.Timestamp
+    measured_centidegrees: int
+    target_centidegrees: int
+    effective_target_centidegrees: int
+    valve_open_permille: int
+    valve_open_seconds: int
+    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., measured_centidegrees: _Optional[int] = ..., target_centidegrees: _Optional[int] = ..., effective_target_centidegrees: _Optional[int] = ..., valve_open_permille: _Optional[int] = ..., valve_open_seconds: _Optional[int] = ...) -> None: ...
+
+class RoomHistory(_message.Message):
+    __slots__ = ("room_id", "kept_from", "samples")
+    ROOM_ID_FIELD_NUMBER: _ClassVar[int]
+    KEPT_FROM_FIELD_NUMBER: _ClassVar[int]
+    SAMPLES_FIELD_NUMBER: _ClassVar[int]
+    room_id: _identity_pb2.SpaceId
+    kept_from: _timestamp_pb2.Timestamp
+    samples: _containers.RepeatedCompositeFieldContainer[RoomHistorySample]
+    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., samples: _Optional[_Iterable[_Union[RoomHistorySample, _Mapping]]] = ...) -> None: ...

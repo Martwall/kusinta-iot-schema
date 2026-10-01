@@ -330,6 +330,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'roomClimates'
     },
+    {
+      '1': 'room_history',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.RoomHistory',
+      '9': 0,
+      '10': 'roomHistory'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -345,7 +354,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'c3BhY2VUcmVlEjgKA2FjaxgFIAEoCzIkLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NYW5hZ2VtZW'
     '50QWNrSABSA2FjaxI7CgVsaW5rcxgGIAEoCzIjLmt1c2ludGEuaW90LmxpbmsudjEuRGV2aWNl'
     'TGlua0xpc3RIAFIFbGlua3MSTgoNcm9vbV9jbGltYXRlcxgHIAEoCzInLmt1c2ludGEuaW90Lm'
-    'NsaW1hdGUudjEuUm9vbUNsaW1hdGVMaXN0SABSDHJvb21DbGltYXRlc0IICgZyZXN1bHQ=');
+    'NsaW1hdGUudjEuUm9vbUNsaW1hdGVMaXN0SABSDHJvb21DbGltYXRlcxJICgxyb29tX2hpc3Rv'
+    'cnkYCCABKAsyIy5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21IaXN0b3J5SABSC3Jvb21IaX'
+    'N0b3J5QggKBnJlc3VsdA==');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

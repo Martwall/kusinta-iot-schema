@@ -32,6 +32,7 @@ class Space extends $pb.GeneratedMessage {
     $0.UserId? residentUserId,
     $0.TenantId? tenantId,
     $0.GatewayId? gatewayId,
+    $core.String? timeZone,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -45,6 +46,7 @@ class Space extends $pb.GeneratedMessage {
     if (residentUserId != null) result.residentUserId = residentUserId;
     if (tenantId != null) result.tenantId = tenantId;
     if (gatewayId != null) result.gatewayId = gatewayId;
+    if (timeZone != null) result.timeZone = timeZone;
     return result;
   }
 
@@ -84,6 +86,7 @@ class Space extends $pb.GeneratedMessage {
         subBuilder: $0.TenantId.create)
     ..aOM<$0.GatewayId>(11, _omitFieldNames ? '' : 'gatewayId',
         subBuilder: $0.GatewayId.create)
+    ..aOS(12, _omitFieldNames ? '' : 'timeZone')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -201,6 +204,19 @@ class Space extends $pb.GeneratedMessage {
   void clearGatewayId() => $_clearField(11);
   @$pb.TagNumber(11)
   $0.GatewayId ensureGatewayId() => $_ensure(10);
+
+  /// An IANA time zone name, e.g. "Europe/Stockholm". Written on the building — the
+  /// top-level space. When listing, a gateway fills it on every space with the effective
+  /// value, inherited from the nearest ancestor that has one, so every listed space
+  /// carries it. Empty means unknown, not UTC.
+  @$pb.TagNumber(12)
+  $core.String get timeZone => $_getSZ(11);
+  @$pb.TagNumber(12)
+  set timeZone($core.String value) => $_setString(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasTimeZone() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearTimeZone() => $_clearField(12);
 }
 
 const $core.bool _omitFieldNames =

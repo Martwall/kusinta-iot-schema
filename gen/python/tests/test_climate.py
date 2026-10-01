@@ -7,6 +7,8 @@ These assert the decisions the shape encodes:
   * what the valves are held at is reported apart from the target, for modes
   * the sensors are an ordered list, and "leave them alone" differs from "none"
   * a mode sits on a space and is switched off with kind UNSPECIFIED
+  * a holiday's warm-up lead is the gateway's, and absent when there is none
+  * a room's history is fixed buckets whose readings are each optional
 """
 
 from google.protobuf import timestamp_pb2
@@ -148,6 +150,22 @@ def test_a_holiday_carries_when_it_starts_and_ends():
     assert (decoded.starts_at.seconds, decoded.ends_at.seconds) == (1_800_000_000, 1_800_600_000)
 
 
+def test_a_mode_without_a_warm_up_lead_leaves_warm_from_absent():
+    mode = climate_pb2.ClimateMode(kind=climate_pb2.CLIMATE_MODE_KIND_AWAY)
+
+    assert not _round_trip(mode).HasField("warm_from")
+
+
+def test_a_holiday_says_when_its_setback_ends_ahead_of_ends_at():
+    mode = climate_pb2.ClimateMode(
+        kind=climate_pb2.CLIMATE_MODE_KIND_HOLIDAY,
+        ends_at=timestamp_pb2.Timestamp(seconds=1_800_600_000),
+        warm_from=timestamp_pb2.Timestamp(seconds=1_800_589_200),
+    )
+
+    assert _round_trip(mode).warm_from.seconds == 1_800_589_200
+
+
 def test_switching_a_mode_off_is_kind_unspecified():
     request = management_pb2.SetClimateMode(space_id=identity_pb2.SpaceId(value="apt-1"))
 
@@ -187,3 +205,77 @@ def test_an_ended_mode_still_names_what_ended():
 
     decoded = _round_trip(changed)
     assert (decoded.ended, decoded.mode.kind) == (True, climate_pb2.CLIMATE_MODE_KIND_HOLIDAY)
+
+
+# --- room history ---------------------------------------------------------------------
+
+
+def test_asking_for_a_room_s_history_is_a_management_request():
+    request = management_pb2.ManagementRequest(
+        get_room_history=management_pb2.GetRoomHistory(
+            room_id=_ROOM,
+            from_time=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+            to_time=timestamp_pb2.Timestamp(seconds=1_800_086_400),
+        )
+    )
+
+    decoded = _round_trip(request)
+    assert (
+        decoded.WhichOneof("request"),
+        decoded.get_room_history.from_time.seconds,
+        decoded.get_room_history.to_time.seconds,
+    ) == ("get_room_history", 1_800_000_000, 1_800_086_400)
+
+
+def test_a_history_bucket_without_readings_leaves_them_absent_not_zero():
+    sample = climate_pb2.RoomHistorySample(at=timestamp_pb2.Timestamp(seconds=1_800_000_000))
+
+    decoded = _round_trip(sample)
+    assert [
+        decoded.HasField("measured_centidegrees"),
+        decoded.HasField("target_centidegrees"),
+        decoded.HasField("effective_target_centidegrees"),
+        decoded.HasField("valve_open_permille"),
+        decoded.HasField("valve_open_seconds"),
+    ] == [False, False, False, False, False]
+
+
+def test_a_history_bucket_carries_its_readings():
+    sample = climate_pb2.RoomHistorySample(
+        at=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+        measured_centidegrees=2087,
+        target_centidegrees=2100,
+        effective_target_centidegrees=1700,
+        valve_open_permille=420,
+        valve_open_seconds=540,
+    )
+
+    decoded = _round_trip(sample)
+    assert (
+        decoded.measured_centidegrees,
+        decoded.target_centidegrees,
+        decoded.effective_target_centidegrees,
+        decoded.valve_open_permille,
+        decoded.valve_open_seconds,
+    ) == (2087, 2100, 1700, 420, 540)
+
+
+def test_a_history_answers_with_how_far_back_it_is_kept_and_its_samples():
+    result = envelope_pb2.ManagementResult(
+        in_reply_to="m-1",
+        room_history=climate_pb2.RoomHistory(
+            room_id=_ROOM,
+            kept_from=timestamp_pb2.Timestamp(seconds=1_799_000_000),
+            samples=[
+                climate_pb2.RoomHistorySample(at=timestamp_pb2.Timestamp(seconds=1_800_000_000)),
+                climate_pb2.RoomHistorySample(at=timestamp_pb2.Timestamp(seconds=1_800_000_900)),
+            ],
+        ),
+    )
+
+    decoded = _round_trip(result)
+    assert (
+        decoded.WhichOneof("result"),
+        decoded.room_history.kept_from.seconds,
+        [s.at.seconds for s in decoded.room_history.samples],
+    ) == ("room_history", 1_799_000_000, [1_800_000_000, 1_800_000_900])

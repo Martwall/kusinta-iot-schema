@@ -34,6 +34,7 @@ class CreateSpace extends $pb.GeneratedMessage {
     $core.String? description,
     $core.int? floor,
     $0.SpaceId? parentSpaceId,
+    $core.String? timeZone,
   }) {
     final result = create();
     if (spaceType != null) result.spaceType = spaceType;
@@ -41,6 +42,7 @@ class CreateSpace extends $pb.GeneratedMessage {
     if (description != null) result.description = description;
     if (floor != null) result.floor = floor;
     if (parentSpaceId != null) result.parentSpaceId = parentSpaceId;
+    if (timeZone != null) result.timeZone = timeZone;
     return result;
   }
 
@@ -67,6 +69,7 @@ class CreateSpace extends $pb.GeneratedMessage {
     ..a<$core.int>(4, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
     ..aOM<$0.SpaceId>(5, _omitFieldNames ? '' : 'parentSpaceId',
         subBuilder: $0.SpaceId.create)
+    ..aOS(6, _omitFieldNames ? '' : 'timeZone')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -135,6 +138,17 @@ class CreateSpace extends $pb.GeneratedMessage {
   void clearParentSpaceId() => $_clearField(5);
   @$pb.TagNumber(5)
   $0.SpaceId ensureParentSpaceId() => $_ensure(4);
+
+  /// An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
+  /// top-level space — and refused on any other. Unset leaves it unknown.
+  @$pb.TagNumber(6)
+  $core.String get timeZone => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set timeZone($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasTimeZone() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearTimeZone() => $_clearField(6);
 }
 
 enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
@@ -151,6 +165,7 @@ class UpdateSpace extends $pb.GeneratedMessage {
     $core.int? floor,
     $0.SpaceId? parentSpaceId,
     $core.bool? detach,
+    $core.String? timeZone,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -160,6 +175,7 @@ class UpdateSpace extends $pb.GeneratedMessage {
     if (floor != null) result.floor = floor;
     if (parentSpaceId != null) result.parentSpaceId = parentSpaceId;
     if (detach != null) result.detach = detach;
+    if (timeZone != null) result.timeZone = timeZone;
     return result;
   }
 
@@ -196,6 +212,7 @@ class UpdateSpace extends $pb.GeneratedMessage {
     ..aOM<$0.SpaceId>(6, _omitFieldNames ? '' : 'parentSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOB(7, _omitFieldNames ? '' : 'detach')
+    ..aOS(8, _omitFieldNames ? '' : 'timeZone')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -288,6 +305,18 @@ class UpdateSpace extends $pb.GeneratedMessage {
   $core.bool hasDetach() => $_has(6);
   @$pb.TagNumber(7)
   void clearDetach() => $_clearField(7);
+
+  /// An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
+  /// top-level space — and refused on any other. Unset leaves it unchanged; the empty
+  /// string clears it.
+  @$pb.TagNumber(8)
+  $core.String get timeZone => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set timeZone($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasTimeZone() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTimeZone() => $_clearField(8);
 }
 
 /// Deletes a space. Refused if the space still holds devices or sub-spaces unless
@@ -2009,6 +2038,102 @@ class ListRoomClimates extends $pb.GeneratedMessage {
   $0.SpaceId ensureRootSpaceId() => $_ensure(0);
 }
 
+/// Reads a room's history, answered with a climate.v1.RoomHistory of fixed 15-minute
+/// buckets aligned to UTC quarter hours (:00, :15, :30, :45). Needs READ on the room.
+///
+/// The range is half-open: a bucket is returned when from_time <= at < to_time, so
+/// back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
+/// unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+class GetRoomHistory extends $pb.GeneratedMessage {
+  factory GetRoomHistory({
+    $0.SpaceId? roomId,
+    $4.Timestamp? fromTime,
+    $4.Timestamp? toTime,
+  }) {
+    final result = create();
+    if (roomId != null) result.roomId = roomId;
+    if (fromTime != null) result.fromTime = fromTime;
+    if (toTime != null) result.toTime = toTime;
+    return result;
+  }
+
+  GetRoomHistory._();
+
+  factory GetRoomHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetRoomHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetRoomHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<$4.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $4.Timestamp.create)
+    ..aOM<$4.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $4.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetRoomHistory clone() => GetRoomHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetRoomHistory copyWith(void Function(GetRoomHistory) updates) =>
+      super.copyWith((message) => updates(message as GetRoomHistory))
+          as GetRoomHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetRoomHistory create() => GetRoomHistory._();
+  @$core.override
+  GetRoomHistory createEmptyInstance() => create();
+  static $pb.PbList<GetRoomHistory> createRepeated() =>
+      $pb.PbList<GetRoomHistory>();
+  @$core.pragma('dart2js:noInline')
+  static GetRoomHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetRoomHistory>(create);
+  static GetRoomHistory? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get roomId => $_getN(0);
+  @$pb.TagNumber(1)
+  set roomId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureRoomId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $4.Timestamp get fromTime => $_getN(1);
+  @$pb.TagNumber(2)
+  set fromTime($4.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFromTime() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFromTime() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $4.Timestamp ensureFromTime() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $4.Timestamp get toTime => $_getN(2);
+  @$pb.TagNumber(3)
+  set toTime($4.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasToTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearToTime() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $4.Timestamp ensureToTime() => $_ensure(2);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -2029,6 +2154,7 @@ enum ManagementRequest_Request {
   configureRoomClimate,
   setClimateMode,
   listRoomClimates,
+  getRoomHistory,
   notSet
 }
 
@@ -2053,6 +2179,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ConfigureRoomClimate? configureRoomClimate,
     SetClimateMode? setClimateMode,
     ListRoomClimates? listRoomClimates,
+    GetRoomHistory? getRoomHistory,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -2078,6 +2205,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.configureRoomClimate = configureRoomClimate;
     if (setClimateMode != null) result.setClimateMode = setClimateMode;
     if (listRoomClimates != null) result.listRoomClimates = listRoomClimates;
+    if (getRoomHistory != null) result.getRoomHistory = getRoomHistory;
     return result;
   }
 
@@ -2111,6 +2239,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     17: ManagementRequest_Request.configureRoomClimate,
     18: ManagementRequest_Request.setClimateMode,
     19: ManagementRequest_Request.listRoomClimates,
+    20: ManagementRequest_Request.getRoomHistory,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2118,7 +2247,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+    ..oo(0,
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
     ..aOM<UpdateSpace>(2, _omitFieldNames ? '' : 'updateSpace',
@@ -2159,6 +2289,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: SetClimateMode.create)
     ..aOM<ListRoomClimates>(19, _omitFieldNames ? '' : 'listRoomClimates',
         subBuilder: ListRoomClimates.create)
+    ..aOM<GetRoomHistory>(20, _omitFieldNames ? '' : 'getRoomHistory',
+        subBuilder: GetRoomHistory.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2395,6 +2527,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearListRoomClimates() => $_clearField(19);
   @$pb.TagNumber(19)
   ListRoomClimates ensureListRoomClimates() => $_ensure(18);
+
+  @$pb.TagNumber(20)
+  GetRoomHistory get getRoomHistory => $_getN(19);
+  @$pb.TagNumber(20)
+  set getRoomHistory(GetRoomHistory value) => $_setField(20, value);
+  @$pb.TagNumber(20)
+  $core.bool hasGetRoomHistory() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearGetRoomHistory() => $_clearField(20);
+  @$pb.TagNumber(20)
+  GetRoomHistory ensureGetRoomHistory() => $_ensure(19);
 }
 
 const $core.bool _omitFieldNames =

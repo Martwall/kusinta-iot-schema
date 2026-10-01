@@ -76,6 +76,16 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
    * @generated from field: kusinta.iot.identity.v1.GatewayId gateway_id = 11;
    */
   gatewayId?: GatewayId | undefined;
+
+  /**
+   * An IANA time zone name, e.g. "Europe/Stockholm". Written on the building — the
+   * top-level space. When listing, a gateway fills it on every space with the effective
+   * value, inherited from the nearest ancestor that has one, so every listed space
+   * carries it. Empty means unknown, not UTC.
+   *
+   * @generated from field: string time_zone = 12;
+   */
+  timeZone: string;
 };
 
 /**

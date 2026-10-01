@@ -420,6 +420,7 @@ class ClimateMode extends $pb.GeneratedMessage {
     $0.Timestamp? startsAt,
     $0.Timestamp? endsAt,
     $1.UserId? setBy,
+    $0.Timestamp? warmFrom,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -429,6 +430,7 @@ class ClimateMode extends $pb.GeneratedMessage {
     if (startsAt != null) result.startsAt = startsAt;
     if (endsAt != null) result.endsAt = endsAt;
     if (setBy != null) result.setBy = setBy;
+    if (warmFrom != null) result.warmFrom = warmFrom;
     return result;
   }
 
@@ -460,6 +462,8 @@ class ClimateMode extends $pb.GeneratedMessage {
         subBuilder: $0.Timestamp.create)
     ..aOM<$1.UserId>(6, _omitFieldNames ? '' : 'setBy',
         subBuilder: $1.UserId.create)
+    ..aOM<$0.Timestamp>(7, _omitFieldNames ? '' : 'warmFrom',
+        subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -515,7 +519,8 @@ class ClimateMode extends $pb.GeneratedMessage {
   void clearSetbackCentidegrees() => $_clearField(3);
 
   /// HOLIDAY: when the setback begins and when the rooms are to be back at their own
-  /// targets. AWAY: starts_at is when it was switched on; ends_at is unset.
+  /// targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is
+  /// when it was switched on; ends_at is unset.
   @$pb.TagNumber(4)
   $0.Timestamp get startsAt => $_getN(3);
   @$pb.TagNumber(4)
@@ -549,6 +554,20 @@ class ClimateMode extends $pb.GeneratedMessage {
   void clearSetBy() => $_clearField(6);
   @$pb.TagNumber(6)
   $1.UserId ensureSetBy() => $_ensure(5);
+
+  /// Read-only: filled by the gateway, ignored if sent to it. The moment the setback ends
+  /// ahead of ends_at, so that the rooms are warm by ends_at. Absent when there is no
+  /// lead — an AWAY mode, or one the gateway has not computed.
+  @$pb.TagNumber(7)
+  $0.Timestamp get warmFrom => $_getN(6);
+  @$pb.TagNumber(7)
+  set warmFrom($0.Timestamp value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasWarmFrom() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearWarmFrom() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $0.Timestamp ensureWarmFrom() => $_ensure(6);
 }
 
 /// Every room climate and mode a caller may see, in reply to a listing.
@@ -609,6 +628,232 @@ class RoomClimateList extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<ClimateMode> get modes => $_getList(1);
+}
+
+/// One fixed 15-minute bucket of a room's history. Every reading is optional: absent
+/// means nothing was known for that bucket, never zero.
+class RoomHistorySample extends $pb.GeneratedMessage {
+  factory RoomHistorySample({
+    $0.Timestamp? at,
+    $core.int? measuredCentidegrees,
+    $core.int? targetCentidegrees,
+    $core.int? effectiveTargetCentidegrees,
+    $core.int? valveOpenPermille,
+    $core.int? valveOpenSeconds,
+  }) {
+    final result = create();
+    if (at != null) result.at = at;
+    if (measuredCentidegrees != null)
+      result.measuredCentidegrees = measuredCentidegrees;
+    if (targetCentidegrees != null)
+      result.targetCentidegrees = targetCentidegrees;
+    if (effectiveTargetCentidegrees != null)
+      result.effectiveTargetCentidegrees = effectiveTargetCentidegrees;
+    if (valveOpenPermille != null) result.valveOpenPermille = valveOpenPermille;
+    if (valveOpenSeconds != null) result.valveOpenSeconds = valveOpenSeconds;
+    return result;
+  }
+
+  RoomHistorySample._();
+
+  factory RoomHistorySample.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoomHistorySample.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoomHistorySample',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'at',
+        subBuilder: $0.Timestamp.create)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'measuredCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'targetCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'effectiveTargetCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'valveOpenPermille', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'valveOpenSeconds', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomHistorySample clone() => RoomHistorySample()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomHistorySample copyWith(void Function(RoomHistorySample) updates) =>
+      super.copyWith((message) => updates(message as RoomHistorySample))
+          as RoomHistorySample;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RoomHistorySample create() => RoomHistorySample._();
+  @$core.override
+  RoomHistorySample createEmptyInstance() => create();
+  static $pb.PbList<RoomHistorySample> createRepeated() =>
+      $pb.PbList<RoomHistorySample>();
+  @$core.pragma('dart2js:noInline')
+  static RoomHistorySample getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoomHistorySample>(create);
+  static RoomHistorySample? _defaultInstance;
+
+  /// The start of the bucket. Buckets are fixed 15-minute intervals aligned to UTC
+  /// quarter hours (:00, :15, :30, :45).
+  @$pb.TagNumber(1)
+  $0.Timestamp get at => $_getN(0);
+  @$pb.TagNumber(1)
+  set at($0.Timestamp value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAt() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAt() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Timestamp ensureAt() => $_ensure(0);
+
+  /// The mean of the room's measured temperature over the bucket, in centidegrees.
+  @$pb.TagNumber(2)
+  $core.int get measuredCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set measuredCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMeasuredCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMeasuredCentidegrees() => $_clearField(2);
+
+  /// RoomClimate.target_centidegrees and .effective_target_centidegrees as they were in
+  /// force at the bucket's start, in centidegrees.
+  @$pb.TagNumber(3)
+  $core.int get targetCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set targetCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTargetCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTargetCentidegrees() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get effectiveTargetCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set effectiveTargetCentidegrees($core.int value) =>
+      $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEffectiveTargetCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEffectiveTargetCentidegrees() => $_clearField(4);
+
+  /// The mean opening over the bucket across the room's valves that report one, in
+  /// thousandths of fully open. Absent if none of them does.
+  @$pb.TagNumber(5)
+  $core.int get valveOpenPermille => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set valveOpenPermille($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasValveOpenPermille() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearValveOpenPermille() => $_clearField(5);
+
+  /// The seconds within the bucket during which any of the room's valves was open.
+  @$pb.TagNumber(6)
+  $core.int get valveOpenSeconds => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set valveOpenSeconds($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasValveOpenSeconds() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearValveOpenSeconds() => $_clearField(6);
+}
+
+/// A room's history, in reply to GetRoomHistory.
+class RoomHistory extends $pb.GeneratedMessage {
+  factory RoomHistory({
+    $1.SpaceId? roomId,
+    $0.Timestamp? keptFrom,
+    $core.Iterable<RoomHistorySample>? samples,
+  }) {
+    final result = create();
+    if (roomId != null) result.roomId = roomId;
+    if (keptFrom != null) result.keptFrom = keptFrom;
+    if (samples != null) result.samples.addAll(samples);
+    return result;
+  }
+
+  RoomHistory._();
+
+  factory RoomHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoomHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoomHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<$1.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $1.SpaceId.create)
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'keptFrom',
+        subBuilder: $0.Timestamp.create)
+    ..pc<RoomHistorySample>(
+        3, _omitFieldNames ? '' : 'samples', $pb.PbFieldType.PM,
+        subBuilder: RoomHistorySample.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomHistory clone() => RoomHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomHistory copyWith(void Function(RoomHistory) updates) =>
+      super.copyWith((message) => updates(message as RoomHistory))
+          as RoomHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RoomHistory create() => RoomHistory._();
+  @$core.override
+  RoomHistory createEmptyInstance() => create();
+  static $pb.PbList<RoomHistory> createRepeated() => $pb.PbList<RoomHistory>();
+  @$core.pragma('dart2js:noInline')
+  static RoomHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoomHistory>(create);
+  static RoomHistory? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $1.SpaceId get roomId => $_getN(0);
+  @$pb.TagNumber(1)
+  set roomId($1.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.SpaceId ensureRoomId() => $_ensure(0);
+
+  /// The earliest moment the gateway still holds for this room. The request's from_time
+  /// and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
+  /// returned.
+  @$pb.TagNumber(2)
+  $0.Timestamp get keptFrom => $_getN(1);
+  @$pb.TagNumber(2)
+  set keptFrom($0.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKeptFrom() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKeptFrom() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.Timestamp ensureKeptFrom() => $_ensure(1);
+
+  /// The buckets within the clamped range, in order of `at`.
+  @$pb.TagNumber(3)
+  $pb.PbList<RoomHistorySample> get samples => $_getList(2);
 }
 
 const $core.bool _omitFieldNames =

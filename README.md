@@ -161,6 +161,21 @@ a one-word `condition`. The devices filed in that room are how the target is hel
 mechanism the gateway uses underneath (a device-to-device link, or a loop of its own) is not
 part of the contract. A `ClimateMode` (away, holiday) sets back every room in an apartment,
 and a room somebody changes during the mode keeps its own target until the mode ends.
+A holiday ends its setback ahead of `ends_at` so the rooms are warm by then; the gateway
+reports when in the read-only `warm_from`, absent when there is no lead.
+
+A room's history (`GetRoomHistory`, needing `READ` on the room) comes back as a
+`RoomHistory` of fixed 15-minute buckets aligned to UTC quarter hours: the mean measured
+temperature, the target and effective target in force at each bucket's start, the mean
+valve opening, and how long any valve was open. Every reading is optional. The requested
+range is half-open — a bucket is returned when `from_time <= at < to_time` — so
+back-to-back windows neither repeat nor skip one. Unset bounds mean `kept_from` and now,
+and both are clamped to `[kept_from, now]`, `kept_from` being the earliest moment the
+gateway still holds.
+
+Times of day are read in the building's zone: `Space.time_zone` is an IANA name written on
+the building (`CreateSpace` or `UpdateSpace`, refused on any other space), and a listing
+fills it on every space with the value it inherits.
 
 Setting a room's target (`SetRoomTarget`) is adjusting, and needs `WRITE` on the room — the
 same act as turning a radiator's knob. Configuring what the room obeys

@@ -37,6 +37,18 @@ const CreateSpace$json = {
       '6': '.kusinta.iot.identity.v1.SpaceId',
       '10': 'parentSpaceId'
     },
+    {
+      '1': 'time_zone',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'timeZone',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_time_zone'},
   ],
 };
 
@@ -46,7 +58,7 @@ final $typed_data.Uint8List createSpaceDescriptor = $convert.base64Decode(
     'YxLlNwYWNlVHlwZVIJc3BhY2VUeXBlEhIKBG5hbWUYAiABKAlSBG5hbWUSIAoLZGVzY3JpcHRp'
     'b24YAyABKAlSC2Rlc2NyaXB0aW9uEhQKBWZsb29yGAQgASgFUgVmbG9vchJICg9wYXJlbnRfc3'
     'BhY2VfaWQYBSABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUg1wYXJlbnRT'
-    'cGFjZUlk');
+    'cGFjZUlkEiAKCXRpbWVfem9uZRgGIAEoCUgAUgh0aW1lWm9uZYgBAUIMCgpfdGltZV96b25l');
 
 @$core.Deprecated('Use updateSpaceDescriptor instead')
 const UpdateSpace$json = {
@@ -91,6 +103,15 @@ const UpdateSpace$json = {
       '10': 'parentSpaceId'
     },
     {'1': 'detach', '3': 7, '4': 1, '5': 8, '9': 0, '10': 'detach'},
+    {
+      '1': 'time_zone',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '9': 5,
+      '10': 'timeZone',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'parent_change'},
@@ -98,6 +119,7 @@ const UpdateSpace$json = {
     {'1': '_name'},
     {'1': '_description'},
     {'1': '_floor'},
+    {'1': '_time_zone'},
   ],
 };
 
@@ -109,8 +131,9 @@ final $typed_data.Uint8List updateSpaceDescriptor = $convert.base64Decode(
     'gBARIlCgtkZXNjcmlwdGlvbhgEIAEoCUgDUgtkZXNjcmlwdGlvbogBARIZCgVmbG9vchgFIAEo'
     'BUgEUgVmbG9vcogBARJKCg9wYXJlbnRfc3BhY2VfaWQYBiABKAsyIC5rdXNpbnRhLmlvdC5pZG'
     'VudGl0eS52MS5TcGFjZUlkSABSDXBhcmVudFNwYWNlSWQSGAoGZGV0YWNoGAcgASgISABSBmRl'
-    'dGFjaEIPCg1wYXJlbnRfY2hhbmdlQg0KC19zcGFjZV90eXBlQgcKBV9uYW1lQg4KDF9kZXNjcm'
-    'lwdGlvbkIICgZfZmxvb3I=');
+    'dGFjaBIgCgl0aW1lX3pvbmUYCCABKAlIBVIIdGltZVpvbmWIAQFCDwoNcGFyZW50X2NoYW5nZU'
+    'INCgtfc3BhY2VfdHlwZUIHCgVfbmFtZUIOCgxfZGVzY3JpcHRpb25CCAoGX2Zsb29yQgwKCl90'
+    'aW1lX3pvbmU=');
 
 @$core.Deprecated('Use deleteSpaceDescriptor instead')
 const DeleteSpace$json = {
@@ -724,6 +747,44 @@ final $typed_data.Uint8List listRoomClimatesDescriptor = $convert.base64Decode(
     'ChBMaXN0Um9vbUNsaW1hdGVzEkQKDXJvb3Rfc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC'
     '5pZGVudGl0eS52MS5TcGFjZUlkUgtyb290U3BhY2VJZA==');
 
+@$core.Deprecated('Use getRoomHistoryDescriptor instead')
+const GetRoomHistory$json = {
+  '1': 'GetRoomHistory',
+  '2': [
+    {
+      '1': 'room_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'roomId'
+    },
+    {
+      '1': 'from_time',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'fromTime'
+    },
+    {
+      '1': 'to_time',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'toTime'
+    },
+  ],
+};
+
+/// Descriptor for `GetRoomHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getRoomHistoryDescriptor = $convert.base64Decode(
+    'Cg5HZXRSb29tSGlzdG9yeRI5Cgdyb29tX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdH'
+    'kudjEuU3BhY2VJZFIGcm9vbUlkEjcKCWZyb21fdGltZRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1'
+    'Zi5UaW1lc3RhbXBSCGZyb21UaW1lEjMKB3RvX3RpbWUYAyABKAsyGi5nb29nbGUucHJvdG9idW'
+    'YuVGltZXN0YW1wUgZ0b1RpbWU=');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -899,6 +960,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'listRoomClimates'
     },
+    {
+      '1': 'get_room_history',
+      '3': 20,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetRoomHistory',
+      '9': 0,
+      '10': 'getRoomHistory'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -936,4 +1006,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'aW1hdGVIAFIUY29uZmlndXJlUm9vbUNsaW1hdGUSUQoQc2V0X2NsaW1hdGVfbW9kZRgSIAEoCz'
     'IlLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZXRDbGltYXRlTW9kZUgAUg5zZXRDbGltYXRlTW9k'
     'ZRJXChJsaXN0X3Jvb21fY2xpbWF0ZXMYEyABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTG'
-    'lzdFJvb21DbGltYXRlc0gAUhBsaXN0Um9vbUNsaW1hdGVzQgkKB3JlcXVlc3Q=');
+    'lzdFJvb21DbGltYXRlc0gAUhBsaXN0Um9vbUNsaW1hdGVzElEKEGdldF9yb29tX2hpc3RvcnkY'
+    'FCABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0Um9vbUhpc3RvcnlIAFIOZ2V0Um9vbU'
+    'hpc3RvcnlCCQoHcmVxdWVzdA==');

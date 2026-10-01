@@ -293,9 +293,20 @@ const ClimateMode$json = {
       '6': '.kusinta.iot.identity.v1.UserId',
       '10': 'setBy'
     },
+    {
+      '1': 'warm_from',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 1,
+      '10': 'warmFrom',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_setback_centidegrees'},
+    {'1': '_warm_from'},
   ],
 };
 
@@ -307,7 +318,9 @@ final $typed_data.Uint8List climateModeDescriptor = $convert.base64Decode(
     'BSE3NldGJhY2tDZW50aWRlZ3JlZXOIAQESNwoJc3RhcnRzX2F0GAQgASgLMhouZ29vZ2xlLnBy'
     'b3RvYnVmLlRpbWVzdGFtcFIIc3RhcnRzQXQSMwoHZW5kc19hdBgFIAEoCzIaLmdvb2dsZS5wcm'
     '90b2J1Zi5UaW1lc3RhbXBSBmVuZHNBdBI2CgZzZXRfYnkYBiABKAsyHy5rdXNpbnRhLmlvdC5p'
-    'ZGVudGl0eS52MS5Vc2VySWRSBXNldEJ5QhcKFV9zZXRiYWNrX2NlbnRpZGVncmVlcw==');
+    'ZGVudGl0eS52MS5Vc2VySWRSBXNldEJ5EjwKCXdhcm1fZnJvbRgHIAEoCzIaLmdvb2dsZS5wcm'
+    '90b2J1Zi5UaW1lc3RhbXBIAVIId2FybUZyb22IAQFCFwoVX3NldGJhY2tfY2VudGlkZWdyZWVz'
+    'QgwKCl93YXJtX2Zyb20=');
 
 @$core.Deprecated('Use roomClimateListDescriptor instead')
 const RoomClimateList$json = {
@@ -337,3 +350,120 @@ final $typed_data.Uint8List roomClimateListDescriptor = $convert.base64Decode(
     'Cg9Sb29tQ2xpbWF0ZUxpc3QSOQoFcm9vbXMYASADKAsyIy5rdXNpbnRhLmlvdC5jbGltYXRlLn'
     'YxLlJvb21DbGltYXRlUgVyb29tcxI5CgVtb2RlcxgCIAMoCzIjLmt1c2ludGEuaW90LmNsaW1h'
     'dGUudjEuQ2xpbWF0ZU1vZGVSBW1vZGVz');
+
+@$core.Deprecated('Use roomHistorySampleDescriptor instead')
+const RoomHistorySample$json = {
+  '1': 'RoomHistorySample',
+  '2': [
+    {
+      '1': 'at',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'at'
+    },
+    {
+      '1': 'measured_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'measuredCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'target_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'targetCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'effective_target_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 17,
+      '9': 2,
+      '10': 'effectiveTargetCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'valve_open_permille',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'valveOpenPermille',
+      '17': true
+    },
+    {
+      '1': 'valve_open_seconds',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '9': 4,
+      '10': 'valveOpenSeconds',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_measured_centidegrees'},
+    {'1': '_target_centidegrees'},
+    {'1': '_effective_target_centidegrees'},
+    {'1': '_valve_open_permille'},
+    {'1': '_valve_open_seconds'},
+  ],
+};
+
+/// Descriptor for `RoomHistorySample`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roomHistorySampleDescriptor = $convert.base64Decode(
+    'ChFSb29tSGlzdG9yeVNhbXBsZRIqCgJhdBgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3'
+    'RhbXBSAmF0EjgKFW1lYXN1cmVkX2NlbnRpZGVncmVlcxgCIAEoEUgAUhRtZWFzdXJlZENlbnRp'
+    'ZGVncmVlc4gBARI0ChN0YXJnZXRfY2VudGlkZWdyZWVzGAMgASgRSAFSEnRhcmdldENlbnRpZG'
+    'VncmVlc4gBARJHCh1lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlcxgEIAEoEUgCUhtlZmZl'
+    'Y3RpdmVUYXJnZXRDZW50aWRlZ3JlZXOIAQESMwoTdmFsdmVfb3Blbl9wZXJtaWxsZRgFIAEoDU'
+    'gDUhF2YWx2ZU9wZW5QZXJtaWxsZYgBARIxChJ2YWx2ZV9vcGVuX3NlY29uZHMYBiABKA1IBFIQ'
+    'dmFsdmVPcGVuU2Vjb25kc4gBAUIYChZfbWVhc3VyZWRfY2VudGlkZWdyZWVzQhYKFF90YXJnZX'
+    'RfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlc0IWChRfdmFs'
+    'dmVfb3Blbl9wZXJtaWxsZUIVChNfdmFsdmVfb3Blbl9zZWNvbmRz');
+
+@$core.Deprecated('Use roomHistoryDescriptor instead')
+const RoomHistory$json = {
+  '1': 'RoomHistory',
+  '2': [
+    {
+      '1': 'room_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'roomId'
+    },
+    {
+      '1': 'kept_from',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'keptFrom'
+    },
+    {
+      '1': 'samples',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.RoomHistorySample',
+      '10': 'samples'
+    },
+  ],
+};
+
+/// Descriptor for `RoomHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roomHistoryDescriptor = $convert.base64Decode(
+    'CgtSb29tSGlzdG9yeRI5Cgdyb29tX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
+    'EuU3BhY2VJZFIGcm9vbUlkEjcKCWtlcHRfZnJvbRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U'
+    'aW1lc3RhbXBSCGtlcHRGcm9tEkMKB3NhbXBsZXMYAyADKAsyKS5rdXNpbnRhLmlvdC5jbGltYX'
+    'RlLnYxLlJvb21IaXN0b3J5U2FtcGxlUgdzYW1wbGVz');

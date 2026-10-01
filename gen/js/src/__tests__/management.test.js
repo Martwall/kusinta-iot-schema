@@ -72,6 +72,34 @@ describe('ManagementRequest', () => {
     expect(decoded.description).toBeUndefined()
   })
 
+  it('leaves an unset create_space time zone absent', () => {
+    const decoded = onTheWire(CreateSpaceSchema, { spaceType: SpaceType.BUILDING, name: 'B' })
+
+    expect(decoded.timeZone).toBeUndefined()
+  })
+
+  it('round-trips a building\'s time zone on create_space', () => {
+    const decoded = onTheWire(CreateSpaceSchema, {
+      spaceType: SpaceType.BUILDING,
+      name: 'B',
+      timeZone: 'Europe/Stockholm',
+    })
+
+    expect(decoded.timeZone).toBe('Europe/Stockholm')
+  })
+
+  it('leaves the time zone alone when an update does not set it', () => {
+    const decoded = onTheWire(UpdateSpaceSchema, { spaceId: { value: 'building-1' } })
+
+    expect(decoded.timeZone).toBeUndefined()
+  })
+
+  it('clears the time zone when an update sets it to empty', () => {
+    const decoded = onTheWire(UpdateSpaceSchema, { spaceId: { value: 'building-1' }, timeZone: '' })
+
+    expect(decoded.timeZone).toBe('')
+  })
+
   it('round-trips a reparent to a new parent', () => {
     const decoded = onTheWire(UpdateSpaceSchema, {
       spaceId: { value: 'space-1' },

@@ -223,7 +223,8 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
 
   /**
    * HOLIDAY: when the setback begins and when the rooms are to be back at their own
-   * targets. AWAY: starts_at is when it was switched on; ends_at is unset.
+   * targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is
+   * when it was switched on; ends_at is unset.
    *
    * @generated from field: google.protobuf.Timestamp starts_at = 4;
    */
@@ -240,6 +241,15 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
    * @generated from field: kusinta.iot.identity.v1.UserId set_by = 6;
    */
   setBy?: UserId | undefined;
+
+  /**
+   * Read-only: filled by the gateway, ignored if sent to it. The moment the setback ends
+   * ahead of ends_at, so that the rooms are warm by ends_at. Absent when there is no
+   * lead — an AWAY mode, or one the gateway has not computed.
+   *
+   * @generated from field: optional google.protobuf.Timestamp warm_from = 7;
+   */
+  warmFrom?: Timestamp | undefined;
 };
 
 /**
@@ -270,6 +280,97 @@ export declare type RoomClimateList = Message<"kusinta.iot.climate.v1.RoomClimat
  * Use `create(RoomClimateListSchema)` to create a new message.
  */
 export declare const RoomClimateListSchema: GenMessage<RoomClimateList>;
+
+/**
+ * One fixed 15-minute bucket of a room's history. Every reading is optional: absent
+ * means nothing was known for that bucket, never zero.
+ *
+ * @generated from message kusinta.iot.climate.v1.RoomHistorySample
+ */
+export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHistorySample"> & {
+  /**
+   * The start of the bucket. Buckets are fixed 15-minute intervals aligned to UTC
+   * quarter hours (:00, :15, :30, :45).
+   *
+   * @generated from field: google.protobuf.Timestamp at = 1;
+   */
+  at?: Timestamp | undefined;
+
+  /**
+   * The mean of the room's measured temperature over the bucket, in centidegrees.
+   *
+   * @generated from field: optional sint32 measured_centidegrees = 2;
+   */
+  measuredCentidegrees?: number | undefined;
+
+  /**
+   * RoomClimate.target_centidegrees and .effective_target_centidegrees as they were in
+   * force at the bucket's start, in centidegrees.
+   *
+   * @generated from field: optional sint32 target_centidegrees = 3;
+   */
+  targetCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 effective_target_centidegrees = 4;
+   */
+  effectiveTargetCentidegrees?: number | undefined;
+
+  /**
+   * The mean opening over the bucket across the room's valves that report one, in
+   * thousandths of fully open. Absent if none of them does.
+   *
+   * @generated from field: optional uint32 valve_open_permille = 5;
+   */
+  valveOpenPermille?: number | undefined;
+
+  /**
+   * The seconds within the bucket during which any of the room's valves was open.
+   *
+   * @generated from field: optional uint32 valve_open_seconds = 6;
+   */
+  valveOpenSeconds?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.RoomHistorySample.
+ * Use `create(RoomHistorySampleSchema)` to create a new message.
+ */
+export declare const RoomHistorySampleSchema: GenMessage<RoomHistorySample>;
+
+/**
+ * A room's history, in reply to GetRoomHistory.
+ *
+ * @generated from message kusinta.iot.climate.v1.RoomHistory
+ */
+export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 1;
+   */
+  roomId?: SpaceId | undefined;
+
+  /**
+   * The earliest moment the gateway still holds for this room. The request's from_time
+   * and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
+   * returned.
+   *
+   * @generated from field: google.protobuf.Timestamp kept_from = 2;
+   */
+  keptFrom?: Timestamp | undefined;
+
+  /**
+   * The buckets within the clamped range, in order of `at`.
+   *
+   * @generated from field: repeated kusinta.iot.climate.v1.RoomHistorySample samples = 3;
+   */
+  samples: RoomHistorySample[];
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.RoomHistory.
+ * Use `create(RoomHistorySchema)` to create a new message.
+ */
+export declare const RoomHistorySchema: GenMessage<RoomHistory>;
 
 /**
  * What a room is doing right now, in one word. Details live in the fields of

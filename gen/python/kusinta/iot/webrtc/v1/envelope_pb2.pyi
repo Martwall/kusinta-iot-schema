@@ -117,7 +117,7 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class ManagementResult(_message.Message):
-    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links", "room_climates")
+    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links", "room_climates", "room_history")
     IN_REPLY_TO_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -125,6 +125,7 @@ class ManagementResult(_message.Message):
     ACK_FIELD_NUMBER: _ClassVar[int]
     LINKS_FIELD_NUMBER: _ClassVar[int]
     ROOM_CLIMATES_FIELD_NUMBER: _ClassVar[int]
+    ROOM_HISTORY_FIELD_NUMBER: _ClassVar[int]
     in_reply_to: str
     error: GatewayError
     space: _space_pb2.Space
@@ -132,7 +133,8 @@ class ManagementResult(_message.Message):
     ack: _management_pb2.ManagementAck
     links: _link_pb2.DeviceLinkList
     room_climates: _climate_pb2.RoomClimateList
-    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ...) -> None: ...
+    room_history: _climate_pb2.RoomHistory
+    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ...) -> None: ...
 
 class StartPairing(_message.Message):
     __slots__ = ("connector_id", "window", "initial_space_id", "ownership")

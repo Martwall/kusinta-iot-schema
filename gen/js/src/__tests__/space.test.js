@@ -51,4 +51,20 @@ describe('Space', () => {
     expect(decoded.spaceType).toBe(SpaceType.ROOM)
     expect(decoded.name).toBe('Living Room')
   })
+
+  it('leaves an unknown time zone empty', () => {
+    const space = create(SpaceSchema, { spaceId: { value: 'building-1' } })
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, space))
+    expect(decoded.timeZone).toBe('')
+  })
+
+  it('round-trips a building\'s IANA time zone', () => {
+    const building = create(SpaceSchema, {
+      spaceId: { value: 'building-1' },
+      spaceType: SpaceType.BUILDING,
+      timeZone: 'Europe/Stockholm',
+    })
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, building))
+    expect(decoded.timeZone).toBe('Europe/Stockholm')
+  })
 })

@@ -694,6 +694,7 @@ enum ManagementResult_Result {
   ack,
   links,
   roomClimates,
+  roomHistory,
   notSet
 }
 
@@ -715,6 +716,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $3.ManagementAck? ack,
     $4.DeviceLinkList? links,
     $5.RoomClimateList? roomClimates,
+    $5.RoomHistory? roomHistory,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -724,6 +726,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (ack != null) result.ack = ack;
     if (links != null) result.links = links;
     if (roomClimates != null) result.roomClimates = roomClimates;
+    if (roomHistory != null) result.roomHistory = roomHistory;
     return result;
   }
 
@@ -744,6 +747,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     5: ManagementResult_Result.ack,
     6: ManagementResult_Result.links,
     7: ManagementResult_Result.roomClimates,
+    8: ManagementResult_Result.roomHistory,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -751,7 +755,7 @@ class ManagementResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -765,6 +769,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $4.DeviceLinkList.create)
     ..aOM<$5.RoomClimateList>(7, _omitFieldNames ? '' : 'roomClimates',
         subBuilder: $5.RoomClimateList.create)
+    ..aOM<$5.RoomHistory>(8, _omitFieldNames ? '' : 'roomHistory',
+        subBuilder: $5.RoomHistory.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -866,6 +872,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearRoomClimates() => $_clearField(7);
   @$pb.TagNumber(7)
   $5.RoomClimateList ensureRoomClimates() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  $5.RoomHistory get roomHistory => $_getN(7);
+  @$pb.TagNumber(8)
+  set roomHistory($5.RoomHistory value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasRoomHistory() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearRoomHistory() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $5.RoomHistory ensureRoomHistory() => $_ensure(7);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

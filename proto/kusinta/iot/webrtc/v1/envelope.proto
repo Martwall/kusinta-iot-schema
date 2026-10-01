@@ -151,6 +151,7 @@ message ManagementResult {
     ManagementAck ack = 5; // everything else
     kusinta.iot.link.v1.DeviceLinkList links = 6; // list_device_links
     kusinta.iot.climate.v1.RoomClimateList room_climates = 7; // list_room_climates
+    kusinta.iot.climate.v1.RoomHistory room_history = 8; // get_room_history
   }
 }
 

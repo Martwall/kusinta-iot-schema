@@ -53,6 +53,14 @@ export declare type CreateSpace = Message<"kusinta.iot.webrtc.v1.CreateSpace"> &
    * @generated from field: kusinta.iot.identity.v1.SpaceId parent_space_id = 5;
    */
   parentSpaceId?: SpaceId | undefined;
+
+  /**
+   * An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
+   * top-level space — and refused on any other. Unset leaves it unknown.
+   *
+   * @generated from field: optional string time_zone = 6;
+   */
+  timeZone?: string | undefined;
 };
 
 /**
@@ -115,6 +123,15 @@ export declare type UpdateSpace = Message<"kusinta.iot.webrtc.v1.UpdateSpace"> &
     value: boolean;
     case: "detach";
   } | { case: undefined; value?: undefined };
+
+  /**
+   * An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
+   * top-level space — and refused on any other. Unset leaves it unchanged; the empty
+   * string clears it.
+   *
+   * @generated from field: optional string time_zone = 8;
+   */
+  timeZone?: string | undefined;
 };
 
 /**
@@ -771,6 +788,39 @@ export declare type ListRoomClimates = Message<"kusinta.iot.webrtc.v1.ListRoomCl
 export declare const ListRoomClimatesSchema: GenMessage<ListRoomClimates>;
 
 /**
+ * Reads a room's history, answered with a climate.v1.RoomHistory of fixed 15-minute
+ * buckets aligned to UTC quarter hours (:00, :15, :30, :45). Needs READ on the room.
+ *
+ * The range is half-open: a bucket is returned when from_time <= at < to_time, so
+ * back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
+ * unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetRoomHistory
+ */
+export declare type GetRoomHistory = Message<"kusinta.iot.webrtc.v1.GetRoomHistory"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 1;
+   */
+  roomId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp from_time = 2;
+   */
+  fromTime?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp to_time = 3;
+   */
+  toTime?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetRoomHistory.
+ * Use `create(GetRoomHistorySchema)` to create a new message.
+ */
+export declare const GetRoomHistorySchema: GenMessage<GetRoomHistory>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
  */
 export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.ManagementRequest"> & {
@@ -891,6 +941,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ListRoomClimates;
     case: "listRoomClimates";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetRoomHistory get_room_history = 20;
+     */
+    value: GetRoomHistory;
+    case: "getRoomHistory";
   } | { case: undefined; value?: undefined };
 };
 

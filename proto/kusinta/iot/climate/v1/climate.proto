@@ -171,16 +171,58 @@ message ClimateMode {
   optional sint32 setback_centidegrees = 3;
 
   // HOLIDAY: when the setback begins and when the rooms are to be back at their own
-  // targets. AWAY: starts_at is when it was switched on; ends_at is unset.
+  // targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is
+  // when it was switched on; ends_at is unset.
   google.protobuf.Timestamp starts_at = 4;
   google.protobuf.Timestamp ends_at = 5;
 
   // Who switched it on.
   kusinta.iot.identity.v1.UserId set_by = 6;
+
+  // Read-only: filled by the gateway, ignored if sent to it. The moment the setback ends
+  // ahead of ends_at, so that the rooms are warm by ends_at. Absent when there is no
+  // lead — an AWAY mode, or one the gateway has not computed.
+  optional google.protobuf.Timestamp warm_from = 7;
 }
 
 // Every room climate and mode a caller may see, in reply to a listing.
 message RoomClimateList {
   repeated RoomClimate rooms = 1;
   repeated ClimateMode modes = 2;
+}
+
+// One fixed 15-minute bucket of a room's history. Every reading is optional: absent
+// means nothing was known for that bucket, never zero.
+message RoomHistorySample {
+  // The start of the bucket. Buckets are fixed 15-minute intervals aligned to UTC
+  // quarter hours (:00, :15, :30, :45).
+  google.protobuf.Timestamp at = 1;
+
+  // The mean of the room's measured temperature over the bucket, in centidegrees.
+  optional sint32 measured_centidegrees = 2;
+
+  // RoomClimate.target_centidegrees and .effective_target_centidegrees as they were in
+  // force at the bucket's start, in centidegrees.
+  optional sint32 target_centidegrees = 3;
+  optional sint32 effective_target_centidegrees = 4;
+
+  // The mean opening over the bucket across the room's valves that report one, in
+  // thousandths of fully open. Absent if none of them does.
+  optional uint32 valve_open_permille = 5;
+
+  // The seconds within the bucket during which any of the room's valves was open.
+  optional uint32 valve_open_seconds = 6;
+}
+
+// A room's history, in reply to GetRoomHistory.
+message RoomHistory {
+  kusinta.iot.identity.v1.SpaceId room_id = 1;
+
+  // The earliest moment the gateway still holds for this room. The request's from_time
+  // and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
+  // returned.
+  google.protobuf.Timestamp kept_from = 2;
+
+  // The buckets within the clamped range, in order of `at`.
+  repeated RoomHistorySample samples = 3;
 }

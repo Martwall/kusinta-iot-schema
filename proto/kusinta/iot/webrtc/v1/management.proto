@@ -36,6 +36,10 @@ message CreateSpace {
   string description = 3;
   int32 floor = 4; // meaningful for FLOOR type
   kusinta.iot.identity.v1.SpaceId parent_space_id = 5; // unset = top level
+
+  // An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
+  // top-level space — and refused on any other. Unset leaves it unknown.
+  optional string time_zone = 6;
 }
 
 // Changes a space in place. Every descriptive field carries explicit presence:
@@ -56,6 +60,11 @@ message UpdateSpace {
     kusinta.iot.identity.v1.SpaceId parent_space_id = 6;
     bool detach = 7;
   }
+
+  // An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
+  // top-level space — and refused on any other. Unset leaves it unchanged; the empty
+  // string clears it.
+  optional string time_zone = 8;
 }
 
 // Deletes a space. Refused if the space still holds devices or sub-spaces unless
@@ -340,6 +349,18 @@ message ListRoomClimates {
   kusinta.iot.identity.v1.SpaceId root_space_id = 1;
 }
 
+// Reads a room's history, answered with a climate.v1.RoomHistory of fixed 15-minute
+// buckets aligned to UTC quarter hours (:00, :15, :30, :45). Needs READ on the room.
+//
+// The range is half-open: a bucket is returned when from_time <= at < to_time, so
+// back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
+// unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+message GetRoomHistory {
+  kusinta.iot.identity.v1.SpaceId room_id = 1;
+  google.protobuf.Timestamp from_time = 2;
+  google.protobuf.Timestamp to_time = 3;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -361,5 +382,6 @@ message ManagementRequest {
     ConfigureRoomClimate configure_room_climate = 17;
     SetClimateMode set_climate_mode = 18;
     ListRoomClimates list_room_climates = 19;
+    GetRoomHistory get_room_history = 20;
   }
 }

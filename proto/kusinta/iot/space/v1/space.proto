@@ -19,4 +19,10 @@ message Space {
   kusinta.iot.identity.v1.UserId resident_user_id = 9; // only for APARTMENT
   kusinta.iot.identity.v1.TenantId tenant_id = 10;
   kusinta.iot.identity.v1.GatewayId gateway_id = 11;
+
+  // An IANA time zone name, e.g. "Europe/Stockholm". Written on the building — the
+  // top-level space. When listing, a gateway fills it on every space with the effective
+  // value, inherited from the nearest ancestor that has one, so every listed space
+  // carries it. Empty means unknown, not UTC.
+  string time_zone = 12;
 }
