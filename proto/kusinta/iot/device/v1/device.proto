@@ -7,6 +7,7 @@ import "kusinta/iot/device/v1/cluster_state.proto";
 import "kusinta/iot/device/v1/descriptor.proto";
 import "kusinta/iot/device/v1/properties.proto";
 import "kusinta/iot/vendor/homematic/v1/homematic.proto";
+import "kusinta/iot/vendor/v1/vendor_options.proto";
 
 option optimize_for = SPEED;
 
@@ -19,7 +20,7 @@ option optimize_for = SPEED;
 // per physical device, so a device is still one row, one claim, one placement.
 //
 // Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
-// extensions.
+// extensions — the vendor_properties cases, and radio_link (52) outside that oneof.
 //
 // endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
 // global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -85,6 +86,14 @@ message Endpoint {
     kusinta.iot.vendor.homematic.v1.HmMaintenanceProps hm_maintenance = 51;
   }
 
+  // How well this device's radio link is doing, on whichever endpoint its connector
+  // reports it. Outside vendor_properties on purpose: it is not a vendor's extension of
+  // one device type but a reading any radio device has, so it must be able to sit beside
+  // whichever vendor case the endpoint already carries — on a HomeMatic device's Power
+  // Source endpoint, beside hm_maintenance. Selected by the vendor branch like a
+  // vendor_properties case, by its (vendor_extension) key "kusinta.radio".
+  RadioLink radio_link = 52;
+
   // Every cluster this endpoint hosts: what it supports, and any attribute value that has
   // no typed field above. This is what makes a device the schema does not model usable
   // rather than silent — and what carries the optional clusters the Matter specification
@@ -94,14 +103,17 @@ message Endpoint {
   // cases, and a ClusterState's tag is amortised over the attributes it carries.
   repeated ClusterState clusters = 16;
 
-  // Which vendor parameters this endpoint's vendor extension actually implements, in the
+  // Which vendor parameters this endpoint's vendor extensions actually implement, in the
   // vendor's own spelling — "SABOTAGE", matching (vendor_attribute) byte for byte.
   //
   // The vendor mirror of ClusterState.attribute_ids, and it needs its own field because a
   // vendor parameter has no cluster and so no ClusterState to be listed in. A name list
-  // rather than an id list because the vendor branch addresses by name, and a bare list
-  // rather than a per-extension map because an endpoint carries at most one vendor
-  // extension.
+  // rather than an id list because the vendor branch addresses by name. A bare list
+  // rather than a per-extension map because an endpoint carries at most one
+  // vendor_properties case and at most a radio_link beside it, and the schema keeps
+  // radio_link's attribute names disjoint from every vendor_properties case's — a test
+  // enforces it — so a name here never needs its extension to be read. radio_link's
+  // parameters are listed here the same way as a vendor's.
   //
   // Same reading as the Matter side: named here with no value = implemented, not yet
   // reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -154,4 +166,58 @@ message Device {
   google.protobuf.Timestamp last_seen = 20;
   // When any field of this Device last changed value.
   google.protobuf.Timestamp last_updated = 21;
+}
+
+// The value set of RadioLink.quality: how well a link is doing, as the device's
+// connector rates it. Not a field type — quality is a uint32 like every enum-valued
+// reading, so it keeps explicit presence — but the named constants for its numbers.
+// Defined here, unlike the HomeMatic enum parameters, because this vocabulary is the
+// schema's own rather than an upstream system's.
+//
+// The rating is radio-specific and made by the connector that reaches the device, from
+// whatever its technology measures; the thresholds behind it are not part of this
+// contract and may differ between technologies. A consumer shows the rating, and treats
+// the raw readings as detail.
+enum RadioQuality {
+  // Never sent; an unreported quality is an absent field.
+  RADIO_QUALITY_UNSPECIFIED = 0;
+  RADIO_QUALITY_GOOD = 1;
+  RADIO_QUALITY_FAIR = 2;
+  RADIO_QUALITY_POOR = 3;
+}
+
+// A device's radio link, as its connector reports it.
+//
+// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.radio" and
+// these attribute names, the value case following the field type as everywhere on the
+// vendor branch: "quality" as uint_value, "rssi_dbm" as int_value, "snr_db" as
+// float_value.
+//
+// Every field is `optional`, for the reason vendor readings always are: absent means
+// never reported, present means a reading.
+//
+// Technology-agnostic: the same message for every radio. A vendor's own raw radio
+// readings, such as HmMaintenanceProps.rssi_device, stay in that vendor's extension.
+message RadioLink {
+  option (kusinta.iot.vendor.v1.vendor_extension) = "kusinta.radio";
+
+  // The connector's rating: GOOD = 1, FAIR = 2, POOR = 3 (RadioQuality); 0 is not used.
+  // A number, not the name, as every enum-valued reading travels.
+  optional uint32 quality = 1 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "quality",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Received signal strength in dBm. sint32: negative in normal operation.
+  optional sint32 rssi_dbm = 2 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "rssi_dbm",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Signal-to-noise ratio in dB, for technologies that measure one — LoRaWAN does.
+  // Absent elsewhere. Negative values are normal for LoRa.
+  optional float snr_db = 3 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "snr_db",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
 }

@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/device/v1/device.proto (package kusinta.iot.device.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ColorTemperatureLightProperties, ContactSensorProperties, DimmableLightProperties, DoorLockProperties, EnergySensorProperties, HumiditySensorProperties, OccupancySensorProperties, OnOffLightProperties, PowerSourceProperties, PressureSensorProperties, TemperatureSensorProperties, ThermostatProperties, WindowCoveringProperties } from "./properties_pb.js";
 import type { HmMaintenanceProps, HmThermostatProps } from "../../vendor/homematic/v1/homematic_pb.js";
@@ -25,7 +25,7 @@ export declare const file_kusinta_iot_device_v1_device: GenFile;
  * per physical device, so a device is still one row, one claim, one placement.
  *
  * Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
- * extensions.
+ * extensions — the vendor_properties cases, and radio_link (52) outside that oneof.
  *
  * endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
  * global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -182,6 +182,18 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   } | { case: undefined; value?: undefined };
 
   /**
+   * How well this device's radio link is doing, on whichever endpoint its connector
+   * reports it. Outside vendor_properties on purpose: it is not a vendor's extension of
+   * one device type but a reading any radio device has, so it must be able to sit beside
+   * whichever vendor case the endpoint already carries — on a HomeMatic device's Power
+   * Source endpoint, beside hm_maintenance. Selected by the vendor branch like a
+   * vendor_properties case, by its (vendor_extension) key "kusinta.radio".
+   *
+   * @generated from field: kusinta.iot.device.v1.RadioLink radio_link = 52;
+   */
+  radioLink?: RadioLink | undefined;
+
+  /**
    * Every cluster this endpoint hosts: what it supports, and any attribute value that has
    * no typed field above. This is what makes a device the schema does not model usable
    * rather than silent — and what carries the optional clusters the Matter specification
@@ -195,14 +207,17 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   clusters: ClusterState[];
 
   /**
-   * Which vendor parameters this endpoint's vendor extension actually implements, in the
+   * Which vendor parameters this endpoint's vendor extensions actually implement, in the
    * vendor's own spelling — "SABOTAGE", matching (vendor_attribute) byte for byte.
    *
    * The vendor mirror of ClusterState.attribute_ids, and it needs its own field because a
    * vendor parameter has no cluster and so no ClusterState to be listed in. A name list
-   * rather than an id list because the vendor branch addresses by name, and a bare list
-   * rather than a per-extension map because an endpoint carries at most one vendor
-   * extension.
+   * rather than an id list because the vendor branch addresses by name. A bare list
+   * rather than a per-extension map because an endpoint carries at most one
+   * vendor_properties case and at most a radio_link beside it, and the schema keeps
+   * radio_link's attribute names disjoint from every vendor_properties case's — a test
+   * enforces it — so a name here never needs its extension to be read. radio_link's
+   * parameters are listed here the same way as a vendor's.
    *
    * Same reading as the Matter side: named here with no value = implemented, not yet
    * reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -285,4 +300,94 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
  * Use `create(DeviceSchema)` to create a new message.
  */
 export declare const DeviceSchema: GenMessage<Device>;
+
+/**
+ * A device's radio link, as its connector reports it.
+ *
+ * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.radio" and
+ * these attribute names, the value case following the field type as everywhere on the
+ * vendor branch: "quality" as uint_value, "rssi_dbm" as int_value, "snr_db" as
+ * float_value.
+ *
+ * Every field is `optional`, for the reason vendor readings always are: absent means
+ * never reported, present means a reading.
+ *
+ * Technology-agnostic: the same message for every radio. A vendor's own raw radio
+ * readings, such as HmMaintenanceProps.rssi_device, stay in that vendor's extension.
+ *
+ * @generated from message kusinta.iot.device.v1.RadioLink
+ */
+export declare type RadioLink = Message<"kusinta.iot.device.v1.RadioLink"> & {
+  /**
+   * The connector's rating: GOOD = 1, FAIR = 2, POOR = 3 (RadioQuality); 0 is not used.
+   * A number, not the name, as every enum-valued reading travels.
+   *
+   * @generated from field: optional uint32 quality = 1;
+   */
+  quality?: number | undefined;
+
+  /**
+   * Received signal strength in dBm. sint32: negative in normal operation.
+   *
+   * @generated from field: optional sint32 rssi_dbm = 2;
+   */
+  rssiDbm?: number | undefined;
+
+  /**
+   * Signal-to-noise ratio in dB, for technologies that measure one — LoRaWAN does.
+   * Absent elsewhere. Negative values are normal for LoRa.
+   *
+   * @generated from field: optional float snr_db = 3;
+   */
+  snrDb?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.RadioLink.
+ * Use `create(RadioLinkSchema)` to create a new message.
+ */
+export declare const RadioLinkSchema: GenMessage<RadioLink>;
+
+/**
+ * The value set of RadioLink.quality: how well a link is doing, as the device's
+ * connector rates it. Not a field type — quality is a uint32 like every enum-valued
+ * reading, so it keeps explicit presence — but the named constants for its numbers.
+ * Defined here, unlike the HomeMatic enum parameters, because this vocabulary is the
+ * schema's own rather than an upstream system's.
+ *
+ * The rating is radio-specific and made by the connector that reaches the device, from
+ * whatever its technology measures; the thresholds behind it are not part of this
+ * contract and may differ between technologies. A consumer shows the rating, and treats
+ * the raw readings as detail.
+ *
+ * @generated from enum kusinta.iot.device.v1.RadioQuality
+ */
+export enum RadioQuality {
+  /**
+   * Never sent; an unreported quality is an absent field.
+   *
+   * @generated from enum value: RADIO_QUALITY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: RADIO_QUALITY_GOOD = 1;
+   */
+  GOOD = 1,
+
+  /**
+   * @generated from enum value: RADIO_QUALITY_FAIR = 2;
+   */
+  FAIR = 2,
+
+  /**
+   * @generated from enum value: RADIO_QUALITY_POOR = 3;
+   */
+  POOR = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.RadioQuality.
+ */
+export declare const RadioQualitySchema: GenEnum<RadioQuality>;
 

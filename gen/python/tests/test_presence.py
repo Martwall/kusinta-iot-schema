@@ -112,11 +112,11 @@ def test_every_stream_assembled_property_field_has_explicit_presence():
 # --- vendor readings: same rule, second branch ---------------------------------
 
 # Derived from the Endpoint.vendor_properties oneof for the same reason as
-# PROPERTIES_MESSAGES above.
+# PROPERTIES_MESSAGES above, plus radio_link, which sits outside it.
 VENDOR_EXTENSIONS = [
     field.message_type._concrete_class
     for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
-]
+] + [device_pb2.RadioLink]  # outside the oneof, selected by the vendor branch all the same
 
 
 def test_no_tamper_is_distinguishable_from_a_device_that_cannot_detect_tamper():

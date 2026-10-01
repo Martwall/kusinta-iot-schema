@@ -97,7 +97,7 @@ PROPERTIES_MESSAGES = [
 VENDOR_EXTENSIONS = [
     field.message_type._concrete_class
     for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
-]
+] + [device_pb2.RadioLink]  # outside the oneof, selected by the vendor branch all the same
 
 
 def test_every_matter_attribute_declares_its_capabilities():

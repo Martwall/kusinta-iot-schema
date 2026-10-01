@@ -97,6 +97,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
       $5.HmThermostatProps$json,
   '.kusinta.iot.vendor.homematic.v1.HmMaintenanceProps':
       $5.HmMaintenanceProps$json,
+  '.kusinta.iot.device.v1.RadioLink': $3.RadioLink$json,
   '.kusinta.iot.link.v1.DeviceLink': $6.DeviceLink$json,
   '.kusinta.iot.link.v1.LinkSettings': $6.LinkSettings$json,
   '.kusinta.iot.link.v1.ClimateLeadSettings': $6.ClimateLeadSettings$json,

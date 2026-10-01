@@ -22,6 +22,8 @@ import 'properties.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+export 'device.pbenum.dart';
+
 enum Endpoint_MatterProperties {
   thermostat,
   temperatureSensor,
@@ -50,7 +52,7 @@ enum Endpoint_VendorProperties { hmThermostat, hmMaintenance, notSet }
 /// per physical device, so a device is still one row, one claim, one placement.
 ///
 /// Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
-/// extensions.
+/// extensions — the vendor_properties cases, and radio_link (52) outside that oneof.
 ///
 /// endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
 /// global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -110,6 +112,7 @@ class Endpoint extends $pb.GeneratedMessage {
     $core.Iterable<$core.String>? vendorAttributeNames,
     $2.HmThermostatProps? hmThermostat,
     $2.HmMaintenanceProps? hmMaintenance,
+    RadioLink? radioLink,
   }) {
     final result = create();
     if (endpointId != null) result.endpointId = endpointId;
@@ -133,6 +136,7 @@ class Endpoint extends $pb.GeneratedMessage {
       result.vendorAttributeNames.addAll(vendorAttributeNames);
     if (hmThermostat != null) result.hmThermostat = hmThermostat;
     if (hmMaintenance != null) result.hmMaintenance = hmMaintenance;
+    if (radioLink != null) result.radioLink = radioLink;
     return result;
   }
 
@@ -219,6 +223,8 @@ class Endpoint extends $pb.GeneratedMessage {
         subBuilder: $2.HmThermostatProps.create)
     ..aOM<$2.HmMaintenanceProps>(51, _omitFieldNames ? '' : 'hmMaintenance',
         subBuilder: $2.HmMaintenanceProps.create)
+    ..aOM<RadioLink>(52, _omitFieldNames ? '' : 'radioLink',
+        subBuilder: RadioLink.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -423,14 +429,17 @@ class Endpoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   $pb.PbList<$1.ClusterState> get clusters => $_getList(15);
 
-  /// Which vendor parameters this endpoint's vendor extension actually implements, in the
+  /// Which vendor parameters this endpoint's vendor extensions actually implement, in the
   /// vendor's own spelling — "SABOTAGE", matching (vendor_attribute) byte for byte.
   ///
   /// The vendor mirror of ClusterState.attribute_ids, and it needs its own field because a
   /// vendor parameter has no cluster and so no ClusterState to be listed in. A name list
-  /// rather than an id list because the vendor branch addresses by name, and a bare list
-  /// rather than a per-extension map because an endpoint carries at most one vendor
-  /// extension.
+  /// rather than an id list because the vendor branch addresses by name. A bare list
+  /// rather than a per-extension map because an endpoint carries at most one
+  /// vendor_properties case and at most a radio_link beside it, and the schema keeps
+  /// radio_link's attribute names disjoint from every vendor_properties case's — a test
+  /// enforces it — so a name here never needs its extension to be read. radio_link's
+  /// parameters are listed here the same way as a vendor's.
   ///
   /// Same reading as the Matter side: named here with no value = implemented, not yet
   /// reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -463,6 +472,23 @@ class Endpoint extends $pb.GeneratedMessage {
   void clearHmMaintenance() => $_clearField(51);
   @$pb.TagNumber(51)
   $2.HmMaintenanceProps ensureHmMaintenance() => $_ensure(18);
+
+  /// How well this device's radio link is doing, on whichever endpoint its connector
+  /// reports it. Outside vendor_properties on purpose: it is not a vendor's extension of
+  /// one device type but a reading any radio device has, so it must be able to sit beside
+  /// whichever vendor case the endpoint already carries — on a HomeMatic device's Power
+  /// Source endpoint, beside hm_maintenance. Selected by the vendor branch like a
+  /// vendor_properties case, by its (vendor_extension) key "kusinta.radio".
+  @$pb.TagNumber(52)
+  RadioLink get radioLink => $_getN(19);
+  @$pb.TagNumber(52)
+  set radioLink(RadioLink value) => $_setField(52, value);
+  @$pb.TagNumber(52)
+  $core.bool hasRadioLink() => $_has(19);
+  @$pb.TagNumber(52)
+  void clearRadioLink() => $_clearField(52);
+  @$pb.TagNumber(52)
+  RadioLink ensureRadioLink() => $_ensure(19);
 }
 
 /// Device is a DeviceDescriptor plus the endpoints it presents.
@@ -586,6 +612,102 @@ class Device extends $pb.GeneratedMessage {
   void clearLastUpdated() => $_clearField(21);
   @$pb.TagNumber(21)
   $4.Timestamp ensureLastUpdated() => $_ensure(3);
+}
+
+/// A device's radio link, as its connector reports it.
+///
+/// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.radio" and
+/// these attribute names, the value case following the field type as everywhere on the
+/// vendor branch: "quality" as uint_value, "rssi_dbm" as int_value, "snr_db" as
+/// float_value.
+///
+/// Every field is `optional`, for the reason vendor readings always are: absent means
+/// never reported, present means a reading.
+///
+/// Technology-agnostic: the same message for every radio. A vendor's own raw radio
+/// readings, such as HmMaintenanceProps.rssi_device, stay in that vendor's extension.
+class RadioLink extends $pb.GeneratedMessage {
+  factory RadioLink({
+    $core.int? quality,
+    $core.int? rssiDbm,
+    $core.double? snrDb,
+  }) {
+    final result = create();
+    if (quality != null) result.quality = quality;
+    if (rssiDbm != null) result.rssiDbm = rssiDbm;
+    if (snrDb != null) result.snrDb = snrDb;
+    return result;
+  }
+
+  RadioLink._();
+
+  factory RadioLink.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RadioLink.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RadioLink',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'quality', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'rssiDbm', $pb.PbFieldType.OS3)
+    ..a<$core.double>(3, _omitFieldNames ? '' : 'snrDb', $pb.PbFieldType.OF)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RadioLink clone() => RadioLink()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RadioLink copyWith(void Function(RadioLink) updates) =>
+      super.copyWith((message) => updates(message as RadioLink)) as RadioLink;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RadioLink create() => RadioLink._();
+  @$core.override
+  RadioLink createEmptyInstance() => create();
+  static $pb.PbList<RadioLink> createRepeated() => $pb.PbList<RadioLink>();
+  @$core.pragma('dart2js:noInline')
+  static RadioLink getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RadioLink>(create);
+  static RadioLink? _defaultInstance;
+
+  /// The connector's rating: GOOD = 1, FAIR = 2, POOR = 3 (RadioQuality); 0 is not used.
+  /// A number, not the name, as every enum-valued reading travels.
+  @$pb.TagNumber(1)
+  $core.int get quality => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set quality($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasQuality() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearQuality() => $_clearField(1);
+
+  /// Received signal strength in dBm. sint32: negative in normal operation.
+  @$pb.TagNumber(2)
+  $core.int get rssiDbm => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set rssiDbm($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRssiDbm() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRssiDbm() => $_clearField(2);
+
+  /// Signal-to-noise ratio in dB, for technologies that measure one — LoRaWAN does.
+  /// Absent elsewhere. Negative values are normal for LoRa.
+  @$pb.TagNumber(3)
+  $core.double get snrDb => $_getN(2);
+  @$pb.TagNumber(3)
+  set snrDb($core.double value) => $_setFloat(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSnrDb() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSnrDb() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

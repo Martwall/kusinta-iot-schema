@@ -6,7 +6,11 @@ import {
   HmMaintenancePropsSchema,
   HmThermostatPropsSchema,
 } from '../kusinta/iot/vendor/homematic/v1/homematic_pb.js'
-import { EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
+import {
+  EndpointSchema,
+  RadioLinkSchema,
+  RadioQuality,
+} from '../kusinta/iot/device/v1/device_pb.js'
 import { DeviceDescriptorSchema } from '../kusinta/iot/device/v1/descriptor_pb.js'
 
 describe('HmThermostatProps', () => {
@@ -86,6 +90,43 @@ describe('HmMaintenanceProps', () => {
     const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
     expect(decoded.vendorProperties?.case).toBe('hmMaintenance')
     expect(decoded.vendorAttributeNames).toEqual(['ERROR_CODE', 'RSSI_DEVICE'])
+  })
+})
+
+describe('RadioLink', () => {
+  it('rides beside the maintenance extension on the power source endpoint', () => {
+    const e = create(EndpointSchema, {
+      endpointId: 0xF000,
+      matterDeviceTypeId: 0x0011,
+      vendorProperties: { case: 'hmMaintenance', value: { unreach: false } },
+      radioLink: { quality: RadioQuality.FAIR, rssiDbm: -90 },
+    })
+    const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
+    expect([decoded.vendorProperties?.case, decoded.radioLink?.quality]).toEqual([
+      'hmMaintenance',
+      RadioQuality.FAIR,
+    ])
+  })
+
+  it('pins the quality numbers that travel on the wire', () => {
+    expect([RadioQuality.UNSPECIFIED, RadioQuality.GOOD, RadioQuality.FAIR, RadioQuality.POOR]).toEqual([
+      0, 1, 2, 3,
+    ])
+  })
+
+  it('leaves unreported readings absent', () => {
+    const decoded = fromBinary(RadioLinkSchema, toBinary(RadioLinkSchema, create(RadioLinkSchema, {})))
+    expect([decoded.quality, decoded.rssiDbm, decoded.snrDb]).toEqual([
+      undefined,
+      undefined,
+      undefined,
+    ])
+  })
+
+  it('carries a negative rssi and snr', () => {
+    const link = create(RadioLinkSchema, { quality: RadioQuality.POOR, rssiDbm: -117, snrDb: -7.5 })
+    const decoded = fromBinary(RadioLinkSchema, toBinary(RadioLinkSchema, link))
+    expect([decoded.rssiDbm, decoded.snrDb]).toEqual([-117, -7.5])
   })
 })
 

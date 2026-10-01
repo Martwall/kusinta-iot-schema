@@ -97,11 +97,22 @@ negative on export.
 `PowerSourceProperties.bat_percent_remaining` is Matter's **half-percent, 0–200** — 200 is a full
 battery. Divide by two for display; do not rescale on the wire.
 
-Vendor extensions sit in `Endpoint.vendor_properties`, a oneof separate from
-`Endpoint.matter_properties` and
-occupying fields 50–99. `HomematicVendorExtension` is at field 50. Separate oneofs so an endpoint
+Vendor extensions occupy `Endpoint` fields 50–99: the `vendor_properties` oneof
+(`hm_thermostat` at 50, `hm_maintenance` at 51), separate from `Endpoint.matter_properties`,
+and `radio_link` at 52 outside that oneof. Separate oneofs so an endpoint
 carries typed Matter properties *and* its vendor extension — one oneof spanning both made every
 vendor field unreachable in practice.
+
+A device's radio link is `Endpoint.radio_link`, a `RadioLink` — outside `vendor_properties`, so
+it rides beside whichever vendor case the endpoint carries (on a HomeMatic device, the Power
+Source endpoint's `hm_maintenance`). It is technology-agnostic: a `quality` rating made by the
+device's connector, whose thresholds are not part of the contract, plus `rssi_dbm` and, where
+the radio measures it, `snr_db`. Every field is `optional`, like every vendor reading. It
+travels as vendor-branch updates under the key `"kusinta.radio"`, attributes `"quality"`,
+`"rssi_dbm"` and `"snr_db"`. `quality` is a `uint32` holding the `RadioQuality` number
+(`GOOD = 1`, `FAIR = 2`, `POOR = 3`) and crosses as `uint_value`, as every enum-valued reading
+does. The schema keeps radio attribute names disjoint from every `vendor_properties` case's, so
+`Endpoint.vendor_attribute_names` stays one flat list.
 
 This table is documentation only. The mapping itself lives in the schema as custom options
 (see below), so consumers never transcribe it.
@@ -233,7 +244,8 @@ A `PropertyUpdate` resolves in three steps, all read from the descriptor:
    unaddressed update is a miss, never defaulted to the primary endpoint.
 2. **Message** — Matter branch (no `vendor_extension` set): the `Endpoint.matter_properties` case whose
    message declares `(matter_device_type) == Endpoint.matter_device_type_id`. Vendor branch: the
-   `Endpoint.vendor_properties` case whose message declares the named `(vendor_extension)`.
+   `Endpoint` field — a `vendor_properties` case, or `radio_link` — whose message declares the
+   named `(vendor_extension)`.
 3. **Field** — Matter branch: exact match on `(matter_cluster_id, matter_attribute_id)` against
    `(cluster_id, attribute_id)`. Vendor branch: exact match on `(vendor_attribute)` against
    `attribute_name`; no cluster is involved.

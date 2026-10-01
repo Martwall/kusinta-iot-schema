@@ -29,6 +29,13 @@ const PROPERTIES_MESSAGES = EndpointSchema.oneofs
   .find((o) => o.name === 'matter_properties')
   .fields.map((f) => f.message)
 
+// Every message the vendor branch can select: the vendor_properties cases, plus
+// radio_link, which sits outside that oneof.
+const VENDOR_EXTENSIONS = [
+  ...EndpointSchema.oneofs.find((o) => o.name === 'vendor_properties').fields.map((f) => f.message),
+  EndpointSchema.fields.find((f) => f.name === 'radio_link').message,
+]
+
 describe('contact state, where false is the alarm reading', () => {
   it('leaves an unreported contact state undefined', () => {
     const p = create(ContactSensorPropertiesSchema, {})
@@ -102,6 +109,12 @@ describe('zero as a real reading', () => {
 describe('schema-wide invariant', () => {
   it('gives every stream-assembled property field explicit presence', () => {
     const implicit = PROPERTIES_MESSAGES.flatMap((schema) =>
+      schema.fields.filter((f) => f.presence !== EXPLICIT).map((f) => `${schema.name}.${f.name}`),
+    )
+    expect(implicit).toEqual([])
+  })
+  it('gives every vendor reading field explicit presence, radio_link included', () => {
+    const implicit = VENDOR_EXTENSIONS.flatMap((schema) =>
       schema.fields.filter((f) => f.presence !== EXPLICIT).map((f) => `${schema.name}.${f.name}`),
     )
     expect(implicit).toEqual([])

@@ -179,10 +179,12 @@ def test_property_update_endpoint_zero_is_still_expressible_as_present():
 # --- vendor addressing: the second resolution branch --------------------------------
 
 
+# Every message the vendor branch can select: the vendor_properties cases, plus the
+# radio link, which sits outside that oneof so it can ride beside any of them.
 VENDOR_EXTENSIONS = [
     field.message_type
     for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
-]
+] + [device_pb2.Endpoint.DESCRIPTOR.fields_by_name["radio_link"].message_type]
 
 
 def vendor_fields_of(message_descriptor):
@@ -593,6 +595,116 @@ def test_maintenance_is_a_second_vendor_case_not_a_replacement():
         f.name for f in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
     }
     assert vendor_fields == {"hm_thermostat", "hm_maintenance"}
+
+
+# --- the radio link every radio connector reports -----------------------------------
+
+
+def _radio_attribute(field_name):
+    field = device_pb2.RadioLink.DESCRIPTOR.fields_by_name[field_name]
+    return field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+
+
+def test_radio_link_declares_its_documented_key():
+    assert (
+        device_pb2.RadioLink.DESCRIPTOR.GetOptions().Extensions[
+            vendor_options_pb2.vendor_extension
+        ]
+        == "kusinta.radio"
+    )
+
+
+def test_radio_link_fields_carry_the_published_attribute_names():
+    assert [
+        _radio_attribute("quality"),
+        _radio_attribute("rssi_dbm"),
+        _radio_attribute("snr_db"),
+    ] == ["quality", "rssi_dbm", "snr_db"]
+
+
+def test_radio_link_is_read_and_report_only():
+    """A link's quality is measured, never set."""
+    capabilities = {
+        f.GetOptions().Extensions[vendor_options_pb2.vendor_attribute_capabilities]
+        for f in device_pb2.RadioLink.DESCRIPTOR.fields
+    }
+    assert capabilities == {5}
+
+
+def test_radio_link_rides_beside_the_maintenance_extension_on_one_endpoint():
+    """The Power Source endpoint already holds hm_maintenance in vendor_properties; the
+    radio link sits outside that oneof so setting one never clears the other."""
+    endpoint = device_pb2.Endpoint(
+        endpoint_id=0xF000,
+        matter_device_type_id=0x0011,
+        hm_maintenance=homematic_pb2.HmMaintenanceProps(unreach=False),
+        radio_link=device_pb2.RadioLink(quality=device_pb2.RADIO_QUALITY_FAIR),
+    )
+    decoded = device_pb2.Endpoint()
+    decoded.ParseFromString(endpoint.SerializeToString())
+    assert (decoded.WhichOneof("vendor_properties"), decoded.radio_link.quality) == (
+        "hm_maintenance",
+        device_pb2.RADIO_QUALITY_FAIR,
+    )
+
+
+def test_radio_quality_numbers_are_the_wire_contract():
+    """quality travels in a PropertyUpdate as its number, so the numbers must not move."""
+    assert (
+        device_pb2.RADIO_QUALITY_UNSPECIFIED,
+        device_pb2.RADIO_QUALITY_GOOD,
+        device_pb2.RADIO_QUALITY_FAIR,
+        device_pb2.RADIO_QUALITY_POOR,
+    ) == (0, 1, 2, 3)
+
+
+def test_an_unreported_radio_link_has_no_quality_and_no_readings():
+    decoded = device_pb2.RadioLink()
+    decoded.ParseFromString(device_pb2.RadioLink().SerializeToString())
+    assert (
+        decoded.HasField("quality"),
+        decoded.HasField("rssi_dbm"),
+        decoded.HasField("snr_db"),
+    ) == (False, False, False)
+
+
+def test_radio_link_attribute_names_are_disjoint_from_every_vendor_case():
+    """vendor_attribute_names is one flat list per endpoint, and radio_link rides beside a
+    vendor_properties case, so a shared name would make the list ambiguous."""
+    radio = {
+        f.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+        for f in device_pb2.RadioLink.DESCRIPTOR.fields
+    }
+    vendor = {
+        f.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+        for case in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
+        for f in case.message_type.fields
+    }
+    assert radio & vendor == set()
+
+
+def test_radio_link_carries_a_negative_rssi_and_snr():
+    link = device_pb2.RadioLink(
+        quality=device_pb2.RADIO_QUALITY_POOR, rssi_dbm=-117, snr_db=-7.5
+    )
+    decoded = device_pb2.RadioLink()
+    decoded.ParseFromString(link.SerializeToString())
+    assert (decoded.rssi_dbm, decoded.snr_db) == (-117, -7.5)
+
+
+def test_radio_quality_update_carries_the_enum_number_as_uint_value():
+    update = property_update_pb2.PropertyUpdate(
+        endpoint_id=1,
+        vendor_extension="kusinta.radio",
+        attribute_name="quality",
+        uint_value=device_pb2.RADIO_QUALITY_GOOD,
+    )
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(update.SerializeToString())
+    assert (decoded.WhichOneof("value"), decoded.uint_value) == (
+        "uint_value",
+        device_pb2.RADIO_QUALITY_GOOD,
+    )
 
 
 # --- valve position is a Matter attribute, not a vendor parameter -------------------

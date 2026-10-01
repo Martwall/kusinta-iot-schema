@@ -14,6 +14,23 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use radioQualityDescriptor instead')
+const RadioQuality$json = {
+  '1': 'RadioQuality',
+  '2': [
+    {'1': 'RADIO_QUALITY_UNSPECIFIED', '2': 0},
+    {'1': 'RADIO_QUALITY_GOOD', '2': 1},
+    {'1': 'RADIO_QUALITY_FAIR', '2': 2},
+    {'1': 'RADIO_QUALITY_POOR', '2': 3},
+  ],
+};
+
+/// Descriptor for `RadioQuality`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List radioQualityDescriptor = $convert.base64Decode(
+    'CgxSYWRpb1F1YWxpdHkSHQoZUkFESU9fUVVBTElUWV9VTlNQRUNJRklFRBAAEhYKElJBRElPX1'
+    'FVQUxJVFlfR09PRBABEhYKElJBRElPX1FVQUxJVFlfRkFJUhACEhYKElJBRElPX1FVQUxJVFlf'
+    'UE9PUhAD');
+
 @$core.Deprecated('Use endpointDescriptor instead')
 const Endpoint$json = {
   '1': 'Endpoint',
@@ -162,6 +179,14 @@ const Endpoint$json = {
       '10': 'hmMaintenance'
     },
     {
+      '1': 'radio_link',
+      '3': 52,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.RadioLink',
+      '10': 'radioLink'
+    },
+    {
       '1': 'clusters',
       '3': 16,
       '4': 3,
@@ -210,10 +235,11 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'ZVByb3BlcnRpZXNIAFILcG93ZXJTb3VyY2USWQoNaG1fdGhlcm1vc3RhdBgyIAEoCzIyLmt1c2'
     'ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAVIMaG1UaGVy'
     'bW9zdGF0ElwKDmhtX21haW50ZW5hbmNlGDMgASgLMjMua3VzaW50YS5pb3QudmVuZG9yLmhvbW'
-    'VtYXRpYy52MS5IbU1haW50ZW5hbmNlUHJvcHNIAVINaG1NYWludGVuYW5jZRI/CghjbHVzdGVy'
-    'cxgQIAMoCzIjLmt1c2ludGEuaW90LmRldmljZS52MS5DbHVzdGVyU3RhdGVSCGNsdXN0ZXJzEj'
-    'QKFnZlbmRvcl9hdHRyaWJ1dGVfbmFtZXMYESADKAlSFHZlbmRvckF0dHJpYnV0ZU5hbWVzQhMK'
-    'EW1hdHRlcl9wcm9wZXJ0aWVzQhMKEXZlbmRvcl9wcm9wZXJ0aWVz');
+    'VtYXRpYy52MS5IbU1haW50ZW5hbmNlUHJvcHNIAVINaG1NYWludGVuYW5jZRI/CgpyYWRpb19s'
+    'aW5rGDQgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJhZGlvTGlua1IJcmFkaW9MaW5rEj'
+    '8KCGNsdXN0ZXJzGBAgAygLMiMua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNsdXN0ZXJTdGF0ZVII'
+    'Y2x1c3RlcnMSNAoWdmVuZG9yX2F0dHJpYnV0ZV9uYW1lcxgRIAMoCVIUdmVuZG9yQXR0cmlidX'
+    'RlTmFtZXNCEwoRbWF0dGVyX3Byb3BlcnRpZXNCEwoRdmVuZG9yX3Byb3BlcnRpZXM=');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {
@@ -284,3 +310,53 @@ final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode(
     'bmN5X3NlbnNvclIOY29udGFjdF9zZW5zb3JSD3dpbmRvd19jb3ZlcmluZ1IJZG9vcl9sb2NrUg'
     'xvbl9vZmZfbGlnaHRSDmRpbW1hYmxlX2xpZ2h0UhBjb2xvcl90ZW1wX2xpZ2h0Ug1lbmVyZ3lf'
     'c2Vuc29yUg9wcmVzc3VyZV9zZW5zb3JSCWhvbWVtYXRpYw==');
+
+@$core.Deprecated('Use radioLinkDescriptor instead')
+const RadioLink$json = {
+  '1': 'RadioLink',
+  '2': [
+    {
+      '1': 'quality',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'quality',
+      '17': true
+    },
+    {
+      '1': 'rssi_dbm',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 1,
+      '10': 'rssiDbm',
+      '17': true
+    },
+    {
+      '1': 'snr_db',
+      '3': 3,
+      '4': 1,
+      '5': 2,
+      '8': {},
+      '9': 2,
+      '10': 'snrDb',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_quality'},
+    {'1': '_rssi_dbm'},
+    {'1': '_snr_db'},
+  ],
+};
+
+/// Descriptor for `RadioLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List radioLinkDescriptor = $convert.base64Decode(
+    'CglSYWRpb0xpbmsSLgoHcXVhbGl0eRgBIAEoDUIPorUYB3F1YWxpdHnQtRgFSABSB3F1YWxpdH'
+    'mIAQESMAoIcnNzaV9kYm0YAiABKBFCEKK1GAhyc3NpX2RibdC1GAVIAVIHcnNzaURibYgBARIq'
+    'CgZzbnJfZGIYAyABKAJCDqK1GAZzbnJfZGLQtRgFSAJSBXNuckRiiAEBOhGqtRgNa3VzaW50YS'
+    '5yYWRpb0IKCghfcXVhbGl0eUILCglfcnNzaV9kYm1CCQoHX3Nucl9kYg==');

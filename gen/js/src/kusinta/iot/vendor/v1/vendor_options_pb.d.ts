@@ -50,11 +50,11 @@ export declare const vendor_attribute_capabilities: GenExtension<FieldOptions, n
 /**
  * The stable key identifying a vendor extension message, e.g. "homematic.thermostat".
  * Matches device.v1.PropertyUpdate.vendor_extension byte for byte, and is what selects
- * the Endpoint.vendor_properties case.
+ * the Endpoint.vendor_properties case — or Endpoint.radio_link, for "kusinta.radio".
  *
- * One key per message carried in Endpoint.vendor_properties, so the vendor branch of the
- * resolution rule is the same shape as the Matter branch: pick a message by a message
- * option, then one field by a field option. Nothing nests.
+ * One key per message carried in Endpoint.vendor_properties or radio_link, so the vendor
+ * branch of the resolution rule is the same shape as the Matter branch: pick a message
+ * by a message option, then one field by a field option. Nothing nests.
  *
  * Form: "<vendor>.<what the message models>", lower_snake_case on both sides —
  * "homematic.thermostat", and a humidity one would be "homematic.humidity_sensor". The
