@@ -102,6 +102,9 @@ export declare const ClimateLeadSettingsSchema: GenMessage<ClimateLeadSettings>;
  */
 export declare type DeviceLink = Message<"kusinta.iot.link.v1.DeviceLink"> & {
   /**
+   * Opaque, and must not encode when the link was made — a UUIDv4 is the expected form — since
+   * that time is withheld from some recipients (see created_at).
+   *
    * @generated from field: string link_id = 1;
    */
   linkId: string;
@@ -140,6 +143,10 @@ export declare type DeviceLink = Message<"kusinta.iot.link.v1.DeviceLink"> & {
   state: LinkState;
 
   /**
+   * Unset when it is withheld from the recipient: from service in a home, and from anyone
+   * when it dates from before their current residency in the home, or from a home they did
+   * not live in at the time (see access.v1.MembershipRelation).
+   *
    * @generated from field: google.protobuf.Timestamp created_at = 7;
    */
   createdAt?: Timestamp | undefined;
@@ -164,6 +171,16 @@ export declare type DeviceLink = Message<"kusinta.iot.link.v1.DeviceLink"> & {
    * @generated from field: kusinta.iot.link.v1.LinkSettings settings = 9;
    */
   settings?: LinkSettings | undefined;
+
+  /**
+   * Set when the recipient sees this link as service, because an end is in a home (see
+   * access.v1.MembershipRelation): state, state_detail, settings and created_at are
+   * WITHHELD and left unset, not unconfigured. An app must not render it as a link doing
+   * nothing.
+   *
+   * @generated from field: bool details_withheld = 10;
+   */
+  detailsWithheld: boolean;
 };
 
 /**

@@ -14,6 +14,32 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use serviceSignalDescriptor instead')
+const ServiceSignal$json = {
+  '1': 'ServiceSignal',
+  '2': [
+    {'1': 'SERVICE_SIGNAL_UNSPECIFIED', '2': 0},
+    {'1': 'SERVICE_SIGNAL_REACHABILITY', '2': 1},
+    {'1': 'SERVICE_SIGNAL_BATTERY', '2': 2},
+    {'1': 'SERVICE_SIGNAL_RADIO_LINK', '2': 3},
+    {'1': 'SERVICE_SIGNAL_FIRMWARE', '2': 4},
+    {'1': 'SERVICE_SIGNAL_FAULT', '2': 5},
+    {'1': 'SERVICE_SIGNAL_FILING', '2': 6},
+    {'1': 'SERVICE_SIGNAL_ROOM_SETUP', '2': 7},
+    {'1': 'SERVICE_SIGNAL_LINKS', '2': 8},
+    {'1': 'SERVICE_SIGNAL_RESIDENTS', '2': 9},
+  ],
+};
+
+/// Descriptor for `ServiceSignal`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List serviceSignalDescriptor = $convert.base64Decode(
+    'Cg1TZXJ2aWNlU2lnbmFsEh4KGlNFUlZJQ0VfU0lHTkFMX1VOU1BFQ0lGSUVEEAASHwobU0VSVk'
+    'lDRV9TSUdOQUxfUkVBQ0hBQklMSVRZEAESGgoWU0VSVklDRV9TSUdOQUxfQkFUVEVSWRACEh0K'
+    'GVNFUlZJQ0VfU0lHTkFMX1JBRElPX0xJTksQAxIbChdTRVJWSUNFX1NJR05BTF9GSVJNV0FSRR'
+    'AEEhgKFFNFUlZJQ0VfU0lHTkFMX0ZBVUxUEAUSGQoVU0VSVklDRV9TSUdOQUxfRklMSU5HEAYS'
+    'HQoZU0VSVklDRV9TSUdOQUxfUk9PTV9TRVRVUBAHEhgKFFNFUlZJQ0VfU0lHTkFMX0xJTktTEA'
+    'gSHAoYU0VSVklDRV9TSUdOQUxfUkVTSURFTlRTEAk=');
+
 @$core.Deprecated('Use attributeRefDescriptor instead')
 const AttributeRef$json = {
   '1': 'AttributeRef',
@@ -218,6 +244,14 @@ const DeviceAcl$json = {
       '6': '.kusinta.iot.access.v1.EventRef',
       '10': 'allowedEventRefs'
     },
+    {
+      '1': 'relation',
+      '3': 11,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.MembershipRelation',
+      '10': 'relation'
+    },
   ],
   '9': [
     {'1': 5, '2': 6},
@@ -238,7 +272,8 @@ final $typed_data.Uint8List deviceAclDescriptor = $convert.base64Decode(
     'YWludHMSUwoUYWxsb3dlZF9jb21tYW5kX3JlZnMYCSADKAsyIS5rdXNpbnRhLmlvdC5hY2Nlc3'
     'MudjEuQ29tbWFuZFJlZlISYWxsb3dlZENvbW1hbmRSZWZzEk0KEmFsbG93ZWRfZXZlbnRfcmVm'
     'cxgKIAMoCzIfLmt1c2ludGEuaW90LmFjY2Vzcy52MS5FdmVudFJlZlIQYWxsb3dlZEV2ZW50Um'
-    'Vmc0oECAUQBlISYWxsb3dlZF9hdHRyaWJ1dGVz');
+    'VmcxJFCghyZWxhdGlvbhgLIAEoDjIpLmt1c2ludGEuaW90LmFjY2Vzcy52MS5NZW1iZXJzaGlw'
+    'UmVsYXRpb25SCHJlbGF0aW9uSgQIBRAGUhJhbGxvd2VkX2F0dHJpYnV0ZXM=');
 
 @$core.Deprecated('Use effectivePermissionsDescriptor instead')
 const EffectivePermissions$json = {

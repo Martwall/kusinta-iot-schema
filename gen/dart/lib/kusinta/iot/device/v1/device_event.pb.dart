@@ -51,6 +51,9 @@ class DeviceEvent extends $pb.GeneratedMessage {
     $1.Timestamp? timestamp,
     EventPriority? priority,
     $2.AttributeValue? data,
+    $fixnum.Int64? previousEventNumber,
+    $core.bool? followsLoss,
+    $core.String? numberingId,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -61,6 +64,10 @@ class DeviceEvent extends $pb.GeneratedMessage {
     if (timestamp != null) result.timestamp = timestamp;
     if (priority != null) result.priority = priority;
     if (data != null) result.data = data;
+    if (previousEventNumber != null)
+      result.previousEventNumber = previousEventNumber;
+    if (followsLoss != null) result.followsLoss = followsLoss;
+    if (numberingId != null) result.numberingId = numberingId;
     return result;
   }
 
@@ -94,6 +101,11 @@ class DeviceEvent extends $pb.GeneratedMessage {
         enumValues: EventPriority.values)
     ..aOM<$2.AttributeValue>(8, _omitFieldNames ? '' : 'data',
         subBuilder: $2.AttributeValue.create)
+    ..a<$fixnum.Int64>(
+        9, _omitFieldNames ? '' : 'previousEventNumber', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(10, _omitFieldNames ? '' : 'followsLoss')
+    ..aOS(11, _omitFieldNames ? '' : 'numberingId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -156,12 +168,21 @@ class DeviceEvent extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearEventId() => $_clearField(4);
 
-  /// Matter's EventNumber: monotonically increasing per node, and the reason an event log
-  /// can be resumed rather than merely replayed. A consumer that sees a gap knows it missed
-  /// something and can say so — the one guarantee a PropertyUpdate stream cannot give.
+  /// The device's event number, as its connector numbers it — per device, where Matter's
+  /// EventNumber is per node; a connector renumbers what a node gives it. It is the reason
+  /// an event log can be resumed rather than merely replayed. A consumer that sees a gap
+  /// knows it missed something and can say so — the one guarantee a PropertyUpdate stream
+  /// cannot give. On the app leg a gap is judged by previous_event_number and follows_loss
+  /// below, not by a skip in this number.
   ///
-  /// Monotonic within one device. Do NOT compare across devices; they are unrelated
-  /// sequences.
+  /// Monotonic within one device, its connector and one numbering_id — a device that moves
+  /// to another connector begins a new sequence — and consecutive as a connector delivers
+  /// it: a connector numbers each device's events on its own, so a skip means events were
+  /// lost — including ones the connector lost itself, whose numbers it skips. A number at or
+  /// below one already received for the device from the same connector under the same
+  /// numbering_id is that event again — a connector resends what it could not confirm,
+  /// always the whole unconfirmed tail of what it sent, in order — and is dropped. Do NOT
+  /// compare across devices; they are unrelated sequences.
   @$pb.TagNumber(5)
   $fixnum.Int64 get eventNumber => $_getI64(4);
   @$pb.TagNumber(5)
@@ -206,6 +227,88 @@ class DeviceEvent extends $pb.GeneratedMessage {
   void clearData() => $_clearField(8);
   @$pb.TagNumber(8)
   $2.AttributeValue ensureData() => $_ensure(7);
+
+  /// How a recipient tells events it was not sent from events that were lost. Filled by the
+  /// gateway on the app leg; a connector leaves both unset.
+  ///
+  /// A recipient is not sent every event of a device: which ones it receives depends on its
+  /// grant (access.v1.DeviceAcl.allowed_event_refs), so event_number skips wherever an event
+  /// went to somebody else. A skip in event_number is therefore NOT a gap. A gap is:
+  ///
+  ///   * previous_event_number set, the recipient holding a last-received event_number for
+  ///     this device under the same numbering_id (whether or not it kept the event), and
+  ///     previous_event_number above it — its log misses events the gateway sent this user,
+  ///     on another session or while it was away, or that were lost; one at or below it is
+  ///     no gap; or
+  ///   * follows_loss set on an event above the last number the recipient holds, or when it
+  ///     holds none.
+  ///
+  /// Otherwise — previous_event_number unset, or the recipient holding no number for the
+  /// device under that numbering_id — continuity is unknown, and only follows_loss claims a
+  /// gap: the gateway knows events were lost, whatever the recipient holds.
+  ///
+  /// event_number counts a device's events over its life, so it tells anyone it reaches
+  /// roughly how many events came before; that much the number discloses. And it is still
+  /// the device's own, so a recipient granted only some of a device's events learns from it
+  /// how many it was not sent: that much a partial grant of events discloses.
+  ///
+  /// previous_event_number never names an event from before the user's current residency in
+  /// a home, nor from before their current, unbroken stretch of seeing the device — it is
+  /// unset instead, and follows_loss then looks no further back either. Otherwise it is the
+  /// event_number of the previous event of this device that this user was due — within the
+  /// grant they held when it happened — whether or not any session of theirs was open to be
+  /// sent it, so that events missed while away are a gap like any other. A number of the
+  /// event's own numbering_id. Unset when the gateway has received no such event under that
+  /// numbering since the gateway itself last started — the first event after a numbering
+  /// restart included: continuity is then unknown. The gateway remembers nothing of a
+  /// numbering across its own restart, so follows_loss too covers only what it received
+  /// since, and a resend it can no longer recognise reaches the app: an app drops an event
+  /// whose number is at or below the last it holds for the device under the same
+  /// numbering_id.
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get previousEventNumber => $_getI64(8);
+  @$pb.TagNumber(9)
+  set previousEventNumber($fixnum.Int64 value) => $_setInt64(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPreviousEventNumber() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearPreviousEventNumber() => $_clearField(9);
+
+  /// Set when the gateway itself missed events of this device since previous_event_number —
+  /// or, when that is unset, since the latest of the start of what the user may learn of the
+  /// device, the start of the current numbering and the gateway's own last start — the
+  /// sequence it receives from the device skipped. A restart of the numbering is not itself
+  /// a loss; a connector shows what it lost by skipping numbers. What was lost is unknown,
+  /// so it may have been an event this recipient would have been sent.
+  @$pb.TagNumber(10)
+  $core.bool get followsLoss => $_getBF(9);
+  @$pb.TagNumber(10)
+  set followsLoss($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasFollowsLoss() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearFollowsLoss() => $_clearField(10);
+
+  /// Which numbering event_number belongs to. A connector changes it whenever it restarts a
+  /// device's numbering — after losing its own count — so that a restart is never mistaken
+  /// for a resend. The gateway then begins a new sequence for the device: the first event of
+  /// it that each user is due carries previous_event_number unset, continuity unknown. A new
+  /// value is one never used before for the device — a UUIDv4 is the expected form. Opaque;
+  /// compare for equality only. Empty is a numbering like any other, for a connector whose
+  /// count for a device never restarts; a connector that begins a device's sequence anew —
+  /// having lost its count, or the device having come back to it — must give it a
+  /// numbering_id never used for that device before. Every numbering starts at 1. On the app leg
+  /// the gateway derives it from the connector's own id and the connector's numbering_id
+  /// alone, so that it is the same across a gateway restart and changes whenever either
+  /// does — a numbering restart, or a device moving to another connector.
+  @$pb.TagNumber(11)
+  $core.String get numberingId => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set numberingId($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasNumberingId() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearNumberingId() => $_clearField(11);
 }
 
 class DeviceEventBatch extends $pb.GeneratedMessage {

@@ -590,6 +590,10 @@ class Device extends $pb.GeneratedMessage {
   ///
   /// Advisory, for showing staleness in a UI. It is not a removal signal — that is
   /// webrtc.v1.DeviceRemoved, sent only when a connector reports the device gone.
+  ///
+  /// Unset in a service view (access.v1.DeviceAcl.relation SERVICE): a device that reports on
+  /// change would give away each opening and each turn of a knob. Service learns whether it
+  /// is reachable from webrtc.v1.ServiceStatus.
   @$pb.TagNumber(20)
   $4.Timestamp get lastSeen => $_getN(2);
   @$pb.TagNumber(20)
@@ -601,7 +605,11 @@ class Device extends $pb.GeneratedMessage {
   @$pb.TagNumber(20)
   $4.Timestamp ensureLastSeen() => $_ensure(2);
 
-  /// When any field of this Device last changed value.
+  /// When any field of this Device last changed value. Unset in a service view, for the
+  /// reason last_seen is. Both are also unset when they date from before the recipient's
+  /// current residency in the home, or from a home they did not live in at the time (see
+  /// access.v1.MembershipRelation).
+  /// Whether such a device is reachable is still told by its webrtc.v1.ServiceStatus.
   @$pb.TagNumber(21)
   $4.Timestamp get lastUpdated => $_getN(3);
   @$pb.TagNumber(21)

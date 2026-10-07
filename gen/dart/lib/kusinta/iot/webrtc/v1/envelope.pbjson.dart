@@ -339,6 +339,24 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'roomHistory'
     },
+    {
+      '1': 'privacy_disclosure',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PrivacyDisclosure',
+      '9': 0,
+      '10': 'privacyDisclosure'
+    },
+    {
+      '1': 'apartment_climate_summary',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ApartmentClimateSummary',
+      '9': 0,
+      '10': 'apartmentClimateSummary'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -356,7 +374,10 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'TGlua0xpc3RIAFIFbGlua3MSTgoNcm9vbV9jbGltYXRlcxgHIAEoCzInLmt1c2ludGEuaW90Lm'
     'NsaW1hdGUudjEuUm9vbUNsaW1hdGVMaXN0SABSDHJvb21DbGltYXRlcxJICgxyb29tX2hpc3Rv'
     'cnkYCCABKAsyIy5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21IaXN0b3J5SABSC3Jvb21IaX'
-    'N0b3J5QggKBnJlc3VsdA==');
+    'N0b3J5ElkKEnByaXZhY3lfZGlzY2xvc3VyZRgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52'
+    'MS5Qcml2YWN5RGlzY2xvc3VyZUgAUhFwcml2YWN5RGlzY2xvc3VyZRJtChlhcGFydG1lbnRfY2'
+    'xpbWF0ZV9zdW1tYXJ5GAogASgLMi8ua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5BcGFydG1lbnRD'
+    'bGltYXRlU3VtbWFyeUgAUhdhcGFydG1lbnRDbGltYXRlU3VtbWFyeUIICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -777,6 +798,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'climateModeChanged'
     },
+    {
+      '1': 'service_status_changed',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ServiceStatusChanged',
+      '9': 0,
+      '10': 'serviceStatusChanged'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -818,8 +848,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'Jvb21fY2xpbWF0ZV9jaGFuZ2VkGBUgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlJvb21D'
     'bGltYXRlQ2hhbmdlZEgAUhJyb29tQ2xpbWF0ZUNoYW5nZWQSXQoUY2xpbWF0ZV9tb2RlX2NoYW'
     '5nZWQYFiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ2xpbWF0ZU1vZGVDaGFuZ2VkSABS'
-    'EmNsaW1hdGVNb2RlQ2hhbmdlZEIJCgdwYXlsb2FkSgQIDxAQSgQIBxAIUhZhdHRyaWJ1dGVfd3'
-    'JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA==');
+    'EmNsaW1hdGVNb2RlQ2hhbmdlZBJjChZzZXJ2aWNlX3N0YXR1c19jaGFuZ2VkGBcgASgLMisua3'
+    'VzaW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VTdGF0dXNDaGFuZ2VkSABSFHNlcnZpY2VTdGF0'
+    'dXNDaGFuZ2VkQgkKB3BheWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cml0ZV9yZXN1bH'
+    'RSDnByb3BlcnR5X2V2ZW50');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

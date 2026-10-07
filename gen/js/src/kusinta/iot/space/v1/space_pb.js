@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import { file_kusinta_iot_access_v1_roles } from "../../access/v1/roles_pb.js";
 import { file_kusinta_iot_common_v1_types } from "../../common/v1/types_pb.js";
 import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 
@@ -10,7 +11,7 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/space/v1/space.proto.
  */
 export const file_kusinta_iot_space_v1_space = /*@__PURE__*/
-  fileDesc("CiBrdXNpbnRhL2lvdC9zcGFjZS92MS9zcGFjZS5wcm90bxIUa3VzaW50YS5pb3Quc3BhY2UudjEiigQKBVNwYWNlEjIKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZBI0CgpzcGFjZV90eXBlGAIgASgOMiAua3VzaW50YS5pb3QuY29tbW9uLnYxLlNwYWNlVHlwZRIMCgRuYW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEg0KBWZsb29yGAUgASgFEjkKD3BhcmVudF9zcGFjZV9pZBgGIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSNwoNc3ViX3NwYWNlX2lkcxgHIAMoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSNQoKZGV2aWNlX2lkcxgIIAMoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEjkKEHJlc2lkZW50X3VzZXJfaWQYCSABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSNAoJdGVuYW50X2lkGAogASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVGVuYW50SWQSNgoKZ2F0ZXdheV9pZBgLIAEoCzIiLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkdhdGV3YXlJZBIRCgl0aW1lX3pvbmUYDCABKAlCAkgBYgZwcm90bzM", [file_kusinta_iot_common_v1_types, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CiBrdXNpbnRhL2lvdC9zcGFjZS92MS9zcGFjZS5wcm90bxIUa3VzaW50YS5pb3Quc3BhY2UudjEi3AQKBVNwYWNlEjIKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZBI0CgpzcGFjZV90eXBlGAIgASgOMiAua3VzaW50YS5pb3QuY29tbW9uLnYxLlNwYWNlVHlwZRIMCgRuYW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEg0KBWZsb29yGAUgASgFEjkKD3BhcmVudF9zcGFjZV9pZBgGIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSNwoNc3ViX3NwYWNlX2lkcxgHIAMoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSNQoKZGV2aWNlX2lkcxgIIAMoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEj0KEHJlc2lkZW50X3VzZXJfaWQYCSABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWRCAhgBEjQKCXRlbmFudF9pZBgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlRlbmFudElkEjYKCmdhdGV3YXlfaWQYCyABKAsyIi5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5HYXRld2F5SWQSEQoJdGltZV96b25lGAwgASgJEjIKB21lbWJlcnMYDSADKAsyIS5rdXNpbnRhLmlvdC5zcGFjZS52MS5TcGFjZU1lbWJlchIYChBtZW1iZXJzX3dpdGhoZWxkGA4gASgIInwKC1NwYWNlTWVtYmVyEjAKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSOwoIcmVsYXRpb24YAiABKA4yKS5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuTWVtYmVyc2hpcFJlbGF0aW9uQgJIAWIGcHJvdG8z", [file_kusinta_iot_access_v1_roles, file_kusinta_iot_common_v1_types, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.space.v1.Space.
@@ -18,4 +19,11 @@ export const file_kusinta_iot_space_v1_space = /*@__PURE__*/
  */
 export const SpaceSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_space_v1_space, 0);
+
+/**
+ * Describes the message kusinta.iot.space.v1.SpaceMember.
+ * Use `create(SpaceMemberSchema)` to create a new message.
+ */
+export const SpaceMemberSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_space_v1_space, 1);
 

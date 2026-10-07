@@ -102,6 +102,10 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
   ownerUserId?: UserId | undefined;
 
   /**
+   * Unset when it is withheld from the recipient: in a service view, and from anyone when
+   * it dates from before their current residency in the home, or from a home they did not
+   * live in at the time (see access.v1.MembershipRelation).
+   *
    * @generated from field: google.protobuf.Timestamp claimed_at = 16;
    */
   claimedAt?: Timestamp | undefined;
@@ -121,7 +125,8 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
    *
    * So a Device is a Matter node OR one device behind one — the equivalence is deliberately
    * not exact, and this field is how a consumer tells which. Absent means the device is
-   * reached directly.
+   * reached directly, or that its bridge is withheld from the recipient (see
+   * access.v1.ServiceSignal FILING).
    *
    * @generated from field: optional kusinta.iot.identity.v1.DeviceId bridged_by = 19;
    */

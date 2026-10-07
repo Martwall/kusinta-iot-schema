@@ -228,6 +228,13 @@ class IceCandidate extends $pb.GeneratedMessage {
 ///
 /// Never an acknowledgement. A heartbeat answers no message and must not be
 /// treated as confirming one.
+///
+/// On GatewayConnect it also lets the api-server judge whether the gateway is
+/// present. A gateway is present while its stream is open, and never lets it
+/// carry nothing for more than 30 seconds: a heartbeat fills any longer silence.
+/// A stream that has carried nothing for 90 seconds may be taken as gone, even
+/// when the transport has not yet said so. That is the gateway's presence and
+/// nothing more: a present gateway may still have lost its devices.
 class HeartBeat extends $pb.GeneratedMessage {
   factory HeartBeat() => create();
 

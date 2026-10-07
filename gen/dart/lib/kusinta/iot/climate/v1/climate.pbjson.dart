@@ -54,6 +54,37 @@ final $typed_data.Uint8List climateModeKindDescriptor = $convert.base64Decode(
     'Cg9DbGltYXRlTW9kZUtpbmQSIQodQ0xJTUFURV9NT0RFX0tJTkRfVU5TUEVDSUZJRUQQABIaCh'
     'ZDTElNQVRFX01PREVfS0lORF9BV0FZEAESHQoZQ0xJTUFURV9NT0RFX0tJTkRfSE9MSURBWRAC');
 
+@$core.Deprecated('Use climateSummaryPeriodDescriptor instead')
+const ClimateSummaryPeriod$json = {
+  '1': 'ClimateSummaryPeriod',
+  '2': [
+    {'1': 'CLIMATE_SUMMARY_PERIOD_UNSPECIFIED', '2': 0},
+    {'1': 'CLIMATE_SUMMARY_PERIOD_DAY', '2': 1},
+    {'1': 'CLIMATE_SUMMARY_PERIOD_WEEK', '2': 2},
+    {'1': 'CLIMATE_SUMMARY_PERIOD_MONTH', '2': 3},
+  ],
+};
+
+/// Descriptor for `ClimateSummaryPeriod`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List climateSummaryPeriodDescriptor = $convert.base64Decode(
+    'ChRDbGltYXRlU3VtbWFyeVBlcmlvZBImCiJDTElNQVRFX1NVTU1BUllfUEVSSU9EX1VOU1BFQ0'
+    'lGSUVEEAASHgoaQ0xJTUFURV9TVU1NQVJZX1BFUklPRF9EQVkQARIfChtDTElNQVRFX1NVTU1B'
+    'UllfUEVSSU9EX1dFRUsQAhIgChxDTElNQVRFX1NVTU1BUllfUEVSSU9EX01PTlRIEAM=');
+
+@$core.Deprecated('Use climateSummaryWeightingDescriptor instead')
+const ClimateSummaryWeighting$json = {
+  '1': 'ClimateSummaryWeighting',
+  '2': [
+    {'1': 'CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED', '2': 0},
+    {'1': 'CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL', '2': 1},
+  ],
+};
+
+/// Descriptor for `ClimateSummaryWeighting`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List climateSummaryWeightingDescriptor = $convert.base64Decode(
+    'ChdDbGltYXRlU3VtbWFyeVdlaWdodGluZxIpCiVDTElNQVRFX1NVTU1BUllfV0VJR0hUSU5HX1'
+    'VOU1BFQ0lGSUVEEAASKQolQ0xJTUFURV9TVU1NQVJZX1dFSUdIVElOR19ST09NU19FUVVBTBAB');
+
 @$core.Deprecated('Use targetChangeDescriptor instead')
 const TargetChange$json = {
   '1': 'TargetChange',
@@ -209,6 +240,7 @@ const RoomClimate$json = {
       '5': 8,
       '10': 'lockDeviceControls'
     },
+    {'1': 'state_withheld', '3': 15, '4': 1, '5': 8, '10': 'stateWithheld'},
   ],
   '8': [
     {'1': '_target_centidegrees'},
@@ -236,9 +268,10 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     'eRgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUgptZWFzdXJlZEJ5Ek'
     'oKCWNvbmRpdGlvbhgLIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbUNsaW1hdGVD'
     'b25kaXRpb25SCWNvbmRpdGlvbhIwChRsb2NrX2RldmljZV9jb250cm9scxgMIAEoCFISbG9ja0'
-    'RldmljZUNvbnRyb2xzQhYKFF90YXJnZXRfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFy'
-    'Z2V0X2NlbnRpZGVncmVlc0ITChFfbWluX2NlbnRpZGVncmVlc0ITChFfbWF4X2NlbnRpZGVncm'
-    'Vlc0IYChZfbWVhc3VyZWRfY2VudGlkZWdyZWVz');
+    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkQhYK'
+    'FF90YXJnZXRfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlc0'
+    'ITChFfbWluX2NlbnRpZGVncmVlc0ITChFfbWF4X2NlbnRpZGVncmVlc0IYChZfbWVhc3VyZWRf'
+    'Y2VudGlkZWdyZWVz');
 
 @$core.Deprecated('Use climateModeDescriptor instead')
 const ClimateMode$json = {
@@ -467,3 +500,133 @@ final $typed_data.Uint8List roomHistoryDescriptor = $convert.base64Decode(
     'EuU3BhY2VJZFIGcm9vbUlkEjcKCWtlcHRfZnJvbRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U'
     'aW1lc3RhbXBSCGtlcHRGcm9tEkMKB3NhbXBsZXMYAyADKAsyKS5rdXNpbnRhLmlvdC5jbGltYX'
     'RlLnYxLlJvb21IaXN0b3J5U2FtcGxlUgdzYW1wbGVz');
+
+@$core.Deprecated('Use climatePeriodMeanDescriptor instead')
+const ClimatePeriodMean$json = {
+  '1': 'ClimatePeriodMean',
+  '2': [
+    {
+      '1': 'starts_at',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'startsAt'
+    },
+    {
+      '1': 'ends_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'endsAt'
+    },
+    {
+      '1': 'measured_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'measuredCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'target_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'targetCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'measured_coverage_permille',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '10': 'measuredCoveragePermille'
+    },
+    {
+      '1': 'target_coverage_permille',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '10': 'targetCoveragePermille'
+    },
+    {'1': 'rooms_measured', '3': 7, '4': 1, '5': 13, '10': 'roomsMeasured'},
+    {'1': 'rooms', '3': 8, '4': 1, '5': 13, '10': 'rooms'},
+  ],
+  '8': [
+    {'1': '_measured_centidegrees'},
+    {'1': '_target_centidegrees'},
+  ],
+};
+
+/// Descriptor for `ClimatePeriodMean`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List climatePeriodMeanDescriptor = $convert.base64Decode(
+    'ChFDbGltYXRlUGVyaW9kTWVhbhI3CglzdGFydHNfYXQYASABKAsyGi5nb29nbGUucHJvdG9idW'
+    'YuVGltZXN0YW1wUghzdGFydHNBdBIzCgdlbmRzX2F0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm'
+    'LlRpbWVzdGFtcFIGZW5kc0F0EjgKFW1lYXN1cmVkX2NlbnRpZGVncmVlcxgDIAEoEUgAUhRtZW'
+    'FzdXJlZENlbnRpZGVncmVlc4gBARI0ChN0YXJnZXRfY2VudGlkZWdyZWVzGAQgASgRSAFSEnRh'
+    'cmdldENlbnRpZGVncmVlc4gBARI8ChptZWFzdXJlZF9jb3ZlcmFnZV9wZXJtaWxsZRgFIAEoDV'
+    'IYbWVhc3VyZWRDb3ZlcmFnZVBlcm1pbGxlEjgKGHRhcmdldF9jb3ZlcmFnZV9wZXJtaWxsZRgG'
+    'IAEoDVIWdGFyZ2V0Q292ZXJhZ2VQZXJtaWxsZRIlCg5yb29tc19tZWFzdXJlZBgHIAEoDVINcm'
+    '9vbXNNZWFzdXJlZBIUCgVyb29tcxgIIAEoDVIFcm9vbXNCGAoWX21lYXN1cmVkX2NlbnRpZGVn'
+    'cmVlc0IWChRfdGFyZ2V0X2NlbnRpZGVncmVlcw==');
+
+@$core.Deprecated('Use apartmentClimateSummaryDescriptor instead')
+const ApartmentClimateSummary$json = {
+  '1': 'ApartmentClimateSummary',
+  '2': [
+    {
+      '1': 'apartment_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'apartmentId'
+    },
+    {
+      '1': 'period',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateSummaryPeriod',
+      '10': 'period'
+    },
+    {
+      '1': 'weighting',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateSummaryWeighting',
+      '10': 'weighting'
+    },
+    {
+      '1': 'kept_from',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'keptFrom'
+    },
+    {
+      '1': 'periods',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ClimatePeriodMean',
+      '10': 'periods'
+    },
+  ],
+};
+
+/// Descriptor for `ApartmentClimateSummary`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List apartmentClimateSummaryDescriptor = $convert.base64Decode(
+    'ChdBcGFydG1lbnRDbGltYXRlU3VtbWFyeRJDCgxhcGFydG1lbnRfaWQYASABKAsyIC5rdXNpbn'
+    'RhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgthcGFydG1lbnRJZBJECgZwZXJpb2QYAiABKA4y'
+    'LC5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLkNsaW1hdGVTdW1tYXJ5UGVyaW9kUgZwZXJpb2QSTQ'
+    'oJd2VpZ2h0aW5nGAMgASgOMi8ua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5DbGltYXRlU3VtbWFy'
+    'eVdlaWdodGluZ1IJd2VpZ2h0aW5nEjcKCWtlcHRfZnJvbRgEIAEoCzIaLmdvb2dsZS5wcm90b2'
+    'J1Zi5UaW1lc3RhbXBSCGtlcHRGcm9tEkMKB3BlcmlvZHMYBSADKAsyKS5rdXNpbnRhLmlvdC5j'
+    'bGltYXRlLnYxLkNsaW1hdGVQZXJpb2RNZWFuUgdwZXJpb2Rz');

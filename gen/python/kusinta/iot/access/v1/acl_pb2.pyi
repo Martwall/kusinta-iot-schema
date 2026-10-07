@@ -4,12 +4,36 @@ from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from collections.abc import Iterable as _Iterable, Mapping as _Mapping
 from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
+
+class ServiceSignal(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    SERVICE_SIGNAL_UNSPECIFIED: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_REACHABILITY: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_BATTERY: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_RADIO_LINK: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_FIRMWARE: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_FAULT: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_FILING: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_ROOM_SETUP: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_LINKS: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_RESIDENTS: _ClassVar[ServiceSignal]
+SERVICE_SIGNAL_UNSPECIFIED: ServiceSignal
+SERVICE_SIGNAL_REACHABILITY: ServiceSignal
+SERVICE_SIGNAL_BATTERY: ServiceSignal
+SERVICE_SIGNAL_RADIO_LINK: ServiceSignal
+SERVICE_SIGNAL_FIRMWARE: ServiceSignal
+SERVICE_SIGNAL_FAULT: ServiceSignal
+SERVICE_SIGNAL_FILING: ServiceSignal
+SERVICE_SIGNAL_ROOM_SETUP: ServiceSignal
+SERVICE_SIGNAL_LINKS: ServiceSignal
+SERVICE_SIGNAL_RESIDENTS: ServiceSignal
 
 class AttributeRef(_message.Message):
     __slots__ = ("attribute_name", "cluster_id", "attribute_id", "endpoint_id", "vendor_extension")
@@ -60,7 +84,7 @@ class PropertyConstraint(_message.Message):
     def __init__(self, attribute: _Optional[_Union[AttributeRef, _Mapping]] = ..., int_max: _Optional[int] = ..., int_min: _Optional[int] = ..., uint_max: _Optional[int] = ..., uint_min: _Optional[int] = ...) -> None: ...
 
 class DeviceAcl(_message.Message):
-    __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attribute_refs", "property_constraints", "allowed_command_refs", "allowed_event_refs")
+    __slots__ = ("device_id", "user_id", "role", "allowed_actions", "allowed_attribute_refs", "property_constraints", "allowed_command_refs", "allowed_event_refs", "relation")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
@@ -69,6 +93,7 @@ class DeviceAcl(_message.Message):
     PROPERTY_CONSTRAINTS_FIELD_NUMBER: _ClassVar[int]
     ALLOWED_COMMAND_REFS_FIELD_NUMBER: _ClassVar[int]
     ALLOWED_EVENT_REFS_FIELD_NUMBER: _ClassVar[int]
+    RELATION_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     user_id: _identity_pb2.UserId
     role: _roles_pb2.Role
@@ -77,7 +102,8 @@ class DeviceAcl(_message.Message):
     property_constraints: _containers.RepeatedCompositeFieldContainer[PropertyConstraint]
     allowed_command_refs: _containers.RepeatedCompositeFieldContainer[CommandRef]
     allowed_event_refs: _containers.RepeatedCompositeFieldContainer[EventRef]
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., allowed_actions: _Optional[_Iterable[_Union[_roles_pb2.PermissionAction, str]]] = ..., allowed_attribute_refs: _Optional[_Iterable[_Union[AttributeRef, _Mapping]]] = ..., property_constraints: _Optional[_Iterable[_Union[PropertyConstraint, _Mapping]]] = ..., allowed_command_refs: _Optional[_Iterable[_Union[CommandRef, _Mapping]]] = ..., allowed_event_refs: _Optional[_Iterable[_Union[EventRef, _Mapping]]] = ...) -> None: ...
+    relation: _roles_pb2.MembershipRelation
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., allowed_actions: _Optional[_Iterable[_Union[_roles_pb2.PermissionAction, str]]] = ..., allowed_attribute_refs: _Optional[_Iterable[_Union[AttributeRef, _Mapping]]] = ..., property_constraints: _Optional[_Iterable[_Union[PropertyConstraint, _Mapping]]] = ..., allowed_command_refs: _Optional[_Iterable[_Union[CommandRef, _Mapping]]] = ..., allowed_event_refs: _Optional[_Iterable[_Union[EventRef, _Mapping]]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ...) -> None: ...
 
 class EffectivePermissions(_message.Message):
     __slots__ = ("user_id", "gateway_id", "device_acls", "valid_at")

@@ -43,6 +43,14 @@ const LivePermissionUpdate$json = {
       '10': 'removedDevices'
     },
     {'1': 'change_reason', '3': 4, '4': 1, '5': 9, '10': 'changeReason'},
+    {
+      '1': 'reset_spaces',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'resetSpaces'
+    },
   ],
 };
 
@@ -53,4 +61,5 @@ final $typed_data.Uint8List livePermissionUpdateDescriptor = $convert.base64Deco
     'DWFkZGVkX2RldmljZXMYAiADKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZF'
     'IMYWRkZWREZXZpY2VzEkoKD3JlbW92ZWRfZGV2aWNlcxgDIAMoCzIhLmt1c2ludGEuaW90Lmlk'
     'ZW50aXR5LnYxLkRldmljZUlkUg5yZW1vdmVkRGV2aWNlcxIjCg1jaGFuZ2VfcmVhc29uGAQgAS'
-    'gJUgxjaGFuZ2VSZWFzb24=');
+    'gJUgxjaGFuZ2VSZWFzb24SQwoMcmVzZXRfc3BhY2VzGAUgAygLMiAua3VzaW50YS5pb3QuaWRl'
+    'bnRpdHkudjEuU3BhY2VJZFILcmVzZXRTcGFjZXM=');

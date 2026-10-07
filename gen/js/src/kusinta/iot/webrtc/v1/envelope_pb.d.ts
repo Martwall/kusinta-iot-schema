@@ -7,13 +7,13 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
-import type { ManagementAck, ManagementRequest, SpaceTree } from "./management_pb.js";
+import type { ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
-import type { ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
+import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport } from "./device_state_pb.js";
+import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport, ServiceStatusChanged } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
 import type { AttributeWriteRequest, CommandResult, DeviceCommand } from "./command_pb.js";
 import type { DeviceEventBatch } from "../../device/v1/device_event_pb.js";
@@ -344,6 +344,22 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: RoomHistory;
     case: "roomHistory";
+  } | {
+    /**
+     * get_privacy_disclosure
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.PrivacyDisclosure privacy_disclosure = 9;
+     */
+    value: PrivacyDisclosure;
+    case: "privacyDisclosure";
+  } | {
+    /**
+     * get_apartment_climate_summary
+     *
+     * @generated from field: kusinta.iot.climate.v1.ApartmentClimateSummary apartment_climate_summary = 10;
+     */
+    value: ApartmentClimateSummary;
+    case: "apartmentClimateSummary";
   } | { case: undefined; value?: undefined };
 };
 
@@ -392,7 +408,8 @@ export declare type StartPairing = Message<"kusinta.iot.webrtc.v1.StartPairing">
   window?: PairingWindow | undefined;
 
   /**
-   * Where to file the device once it arrives.
+   * Where to file the device once it arrives. Into a home only as PlaceDeviceInSpace
+   * allows.
    *
    * Optional, and the two cases differ. A caller pairing a device of their own must name a
    * space they reach, so it is theirs and placed on arrival rather than sitting unfiled and
@@ -468,7 +485,8 @@ export declare const PairingStartedSchema: GenMessage<PairingStarted>;
  * One message per request, not per device: a batch window attributes several, and a client
  * given one message each has nothing telling it the window is over and no defined moment to
  * stop waiting. The devices are listed here; each also arrives as an ordinary DeviceAdded
- * as it appears, so a client may show them as they come and use this to finish.
+ * as it appears — for a device the caller sees as service, at the next quarter hour — so a
+ * client may show them as they come and use this to finish.
  *
  * An error and a non-empty device list are not exclusive. A batch of five that attributed
  * three and then expired reports both — three devices and NO_DEVICE_APPEARED — because
@@ -521,7 +539,12 @@ export declare const PairingFinishedSchema: GenMessage<PairingFinished>;
  * again whenever its state moves.
  *
  * Sent only for links the recipient is entitled to see. An unfiltered one would say
- * which devices exist and how they are arranged, to somebody entitled to neither.
+ * which devices exist and how they are arranged, to somebody entitled to neither. A link
+ * with an end in a home is not pushed to a recipient who sees it as service when it is made
+ * or changes — when its residents make one is theirs to know; service reads a home's links
+ * by ListDeviceLinks, where a new one appears from the next quarter hour. Its removal is
+ * pushed to them at once, with details_withheld, as every loss is — to those whose view
+ * held it at a quarter hour since it was made, and to nobody else.
  *
  * @generated from message kusinta.iot.webrtc.v1.LinkChanged
  */
@@ -539,7 +562,9 @@ export declare type LinkChanged = Message<"kusinta.iot.webrtc.v1.LinkChanged"> &
    * and repair.
    *
    * `link` still carries the whole link when this is set, so the app can name what
-   * went rather than only its id.
+   * went rather than only its id — as much of it as the recipient was shown, so with
+   * details_withheld to one who saw it as service. To such a recipient it means the link is
+   * gone from their view, which need not mean it is gone.
    *
    * @generated from field: bool removed = 2;
    */
@@ -652,8 +677,11 @@ export declare const ConnectorsAnnouncedSchema: GenMessage<ConnectorsAnnounced>;
 /**
  * A room's climate changed, gateway → app: its target, what set it, what it is being
  * held at, its condition. Apply as an upsert keyed on room.space_id. Sent only for rooms
- * the recipient may see, and whenever any field moves — a knob turned by hand shows up
- * here without the app asking.
+ * the recipient may see, and whenever any field the recipient is sent moves — a knob
+ * turned by hand shows up here without the app asking. To a recipient who sees the room
+ * as service, what is new is sent at the next quarter hour and what is lost at once. A
+ * recipient who is sent the room with state_withheld is therefore not sent it when only
+ * withheld fields move.
  *
  * @generated from message kusinta.iot.webrtc.v1.RoomClimateChanged
  */
@@ -672,7 +700,9 @@ export declare const RoomClimateChangedSchema: GenMessage<RoomClimateChanged>;
 
 /**
  * A mode on a space was switched on, changed or ended, gateway → app. `ended` rather than
- * kind UNSPECIFIED, so an app can still name the mode that finished.
+ * kind UNSPECIFIED, so an app can still name the mode that finished. A mode on an
+ * apartment or a room in one is sent to its residents only — whether a home stands empty
+ * is theirs to know; one on any other space, to whoever reaches it.
  *
  * @generated from message kusinta.iot.webrtc.v1.ClimateModeChanged
  */
@@ -824,6 +854,12 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: ClimateModeChanged;
     case: "climateModeChanged";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ServiceStatusChanged service_status_changed = 23;
+     */
+    value: ServiceStatusChanged;
+    case: "serviceStatusChanged";
   } | { case: undefined; value?: undefined };
 };
 

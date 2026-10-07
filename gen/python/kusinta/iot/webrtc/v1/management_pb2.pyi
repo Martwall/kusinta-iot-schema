@@ -1,6 +1,8 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
+from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.climate.v1 import climate_pb2 as _climate_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
@@ -60,12 +62,14 @@ class DeleteSpace(_message.Message):
     def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., cascade: _Optional[bool] = ...) -> None: ...
 
 class AssignUserToSpace(_message.Message):
-    __slots__ = ("space_id", "user_id")
+    __slots__ = ("space_id", "user_id", "relation")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
+    RELATION_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     user_id: _identity_pb2.UserId
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ...) -> None: ...
+    relation: _roles_pb2.MembershipRelation
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ...) -> None: ...
 
 class RemoveUserFromSpace(_message.Message):
     __slots__ = ("space_id", "user_id")
@@ -231,8 +235,44 @@ class GetRoomHistory(_message.Message):
     to_time: _timestamp_pb2.Timestamp
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., from_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., to_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
+class PrivacyDisclosure(_message.Message):
+    __slots__ = ("space_id", "service_parties", "climate_summary_period")
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_PARTIES_FIELD_NUMBER: _ClassVar[int]
+    CLIMATE_SUMMARY_PERIOD_FIELD_NUMBER: _ClassVar[int]
+    space_id: _identity_pb2.SpaceId
+    service_parties: _containers.RepeatedCompositeFieldContainer[ServiceParty]
+    climate_summary_period: _climate_pb2.ClimateSummaryPeriod
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ...) -> None: ...
+
+class ServiceParty(_message.Message):
+    __slots__ = ("role", "signals")
+    ROLE_FIELD_NUMBER: _ClassVar[int]
+    SIGNALS_FIELD_NUMBER: _ClassVar[int]
+    role: _roles_pb2.Role
+    signals: _containers.RepeatedScalarFieldContainer[_acl_pb2.ServiceSignal]
+    def __init__(self, role: _Optional[_Union[_roles_pb2.Role, str]] = ..., signals: _Optional[_Iterable[_Union[_acl_pb2.ServiceSignal, str]]] = ...) -> None: ...
+
+class GetPrivacyDisclosure(_message.Message):
+    __slots__ = ("space_id",)
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    space_id: _identity_pb2.SpaceId
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
+
+class GetApartmentClimateSummary(_message.Message):
+    __slots__ = ("apartment_id", "period", "from_time", "to_time")
+    APARTMENT_ID_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_FIELD_NUMBER: _ClassVar[int]
+    FROM_TIME_FIELD_NUMBER: _ClassVar[int]
+    TO_TIME_FIELD_NUMBER: _ClassVar[int]
+    apartment_id: _identity_pb2.SpaceId
+    period: _climate_pb2.ClimateSummaryPeriod
+    from_time: _timestamp_pb2.Timestamp
+    to_time: _timestamp_pb2.Timestamp
+    def __init__(self, apartment_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ..., from_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., to_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
 class ManagementRequest(_message.Message):
-    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history")
+    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary")
     CREATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     UPDATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     DELETE_SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -253,6 +293,8 @@ class ManagementRequest(_message.Message):
     SET_CLIMATE_MODE_FIELD_NUMBER: _ClassVar[int]
     LIST_ROOM_CLIMATES_FIELD_NUMBER: _ClassVar[int]
     GET_ROOM_HISTORY_FIELD_NUMBER: _ClassVar[int]
+    GET_PRIVACY_DISCLOSURE_FIELD_NUMBER: _ClassVar[int]
+    GET_APARTMENT_CLIMATE_SUMMARY_FIELD_NUMBER: _ClassVar[int]
     create_space: CreateSpace
     update_space: UpdateSpace
     delete_space: DeleteSpace
@@ -273,4 +315,6 @@ class ManagementRequest(_message.Message):
     set_climate_mode: SetClimateMode
     list_room_climates: ListRoomClimates
     get_room_history: GetRoomHistory
-    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ...) -> None: ...
+    get_privacy_disclosure: GetPrivacyDisclosure
+    get_apartment_climate_summary: GetApartmentClimateSummary
+    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ...) -> None: ...

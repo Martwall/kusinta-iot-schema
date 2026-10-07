@@ -117,7 +117,7 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class ManagementResult(_message.Message):
-    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links", "room_climates", "room_history")
+    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links", "room_climates", "room_history", "privacy_disclosure", "apartment_climate_summary")
     IN_REPLY_TO_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -126,6 +126,8 @@ class ManagementResult(_message.Message):
     LINKS_FIELD_NUMBER: _ClassVar[int]
     ROOM_CLIMATES_FIELD_NUMBER: _ClassVar[int]
     ROOM_HISTORY_FIELD_NUMBER: _ClassVar[int]
+    PRIVACY_DISCLOSURE_FIELD_NUMBER: _ClassVar[int]
+    APARTMENT_CLIMATE_SUMMARY_FIELD_NUMBER: _ClassVar[int]
     in_reply_to: str
     error: GatewayError
     space: _space_pb2.Space
@@ -134,7 +136,9 @@ class ManagementResult(_message.Message):
     links: _link_pb2.DeviceLinkList
     room_climates: _climate_pb2.RoomClimateList
     room_history: _climate_pb2.RoomHistory
-    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ...) -> None: ...
+    privacy_disclosure: _management_pb2.PrivacyDisclosure
+    apartment_climate_summary: _climate_pb2.ApartmentClimateSummary
+    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ..., privacy_disclosure: _Optional[_Union[_management_pb2.PrivacyDisclosure, _Mapping]] = ..., apartment_climate_summary: _Optional[_Union[_climate_pb2.ApartmentClimateSummary, _Mapping]] = ...) -> None: ...
 
 class StartPairing(_message.Message):
     __slots__ = ("connector_id", "window", "initial_space_id", "ownership")
@@ -217,7 +221,7 @@ class ClimateModeChanged(_message.Message):
     def __init__(self, mode: _Optional[_Union[_climate_pb2.ClimateMode, _Mapping]] = ..., ended: _Optional[bool] = ...) -> None: ...
 
 class GatewayMessage(_message.Message):
-    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_report", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed", "management_result", "device_events", "pairing_started", "pairing_finished", "link_changed", "connectors_announced", "room_climate_changed", "climate_mode_changed")
+    __slots__ = ("message_id", "sent_at", "state_snapshot", "property_report", "permission_update", "command_result", "pong", "handshake_rejected", "error", "subscription_ack", "device_added", "device_removed", "management_result", "device_events", "pairing_started", "pairing_finished", "link_changed", "connectors_announced", "room_climate_changed", "climate_mode_changed", "service_status_changed")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
@@ -238,6 +242,7 @@ class GatewayMessage(_message.Message):
     CONNECTORS_ANNOUNCED_FIELD_NUMBER: _ClassVar[int]
     ROOM_CLIMATE_CHANGED_FIELD_NUMBER: _ClassVar[int]
     CLIMATE_MODE_CHANGED_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_STATUS_CHANGED_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     state_snapshot: _device_state_pb2.DeviceStateSnapshot
@@ -258,7 +263,8 @@ class GatewayMessage(_message.Message):
     connectors_announced: ConnectorsAnnounced
     room_climate_changed: RoomClimateChanged
     climate_mode_changed: ClimateModeChanged
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_report: _Optional[_Union[_device_state_pb2.PropertyReport, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ..., management_result: _Optional[_Union[ManagementResult, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_started: _Optional[_Union[PairingStarted, _Mapping]] = ..., pairing_finished: _Optional[_Union[PairingFinished, _Mapping]] = ..., link_changed: _Optional[_Union[LinkChanged, _Mapping]] = ..., connectors_announced: _Optional[_Union[ConnectorsAnnounced, _Mapping]] = ..., room_climate_changed: _Optional[_Union[RoomClimateChanged, _Mapping]] = ..., climate_mode_changed: _Optional[_Union[ClimateModeChanged, _Mapping]] = ...) -> None: ...
+    service_status_changed: _device_state_pb2.ServiceStatusChanged
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_snapshot: _Optional[_Union[_device_state_pb2.DeviceStateSnapshot, _Mapping]] = ..., property_report: _Optional[_Union[_device_state_pb2.PropertyReport, _Mapping]] = ..., permission_update: _Optional[_Union[_permission_push_pb2.LivePermissionUpdate, _Mapping]] = ..., command_result: _Optional[_Union[_command_pb2.CommandResult, _Mapping]] = ..., pong: _Optional[_Union[Pong, _Mapping]] = ..., handshake_rejected: _Optional[_Union[HandshakeRejected, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., subscription_ack: _Optional[_Union[SubscriptionAck, _Mapping]] = ..., device_added: _Optional[_Union[_device_state_pb2.DeviceAdded, _Mapping]] = ..., device_removed: _Optional[_Union[_device_state_pb2.DeviceRemoved, _Mapping]] = ..., management_result: _Optional[_Union[ManagementResult, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_started: _Optional[_Union[PairingStarted, _Mapping]] = ..., pairing_finished: _Optional[_Union[PairingFinished, _Mapping]] = ..., link_changed: _Optional[_Union[LinkChanged, _Mapping]] = ..., connectors_announced: _Optional[_Union[ConnectorsAnnounced, _Mapping]] = ..., room_climate_changed: _Optional[_Union[RoomClimateChanged, _Mapping]] = ..., climate_mode_changed: _Optional[_Union[ClimateModeChanged, _Mapping]] = ..., service_status_changed: _Optional[_Union[_device_state_pb2.ServiceStatusChanged, _Mapping]] = ...) -> None: ...
 
 class AppMessage(_message.Message):
     __slots__ = ("message_id", "sent_at", "handshake", "command", "read_request", "ping", "subscribe", "unsubscribe", "management", "attribute_write", "start_pairing")

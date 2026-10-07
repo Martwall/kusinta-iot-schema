@@ -6,11 +6,13 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
+import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
-import type { ClimateModeKind } from "../../climate/v1/climate_pb.js";
+import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -21,6 +23,10 @@ export declare const file_kusinta_iot_webrtc_v1_management: GenFile;
  * Creates a space. A space with no parent_space_id is top level, which is a
  * stronger request than it looks: there is no parent whose reach could authorize
  * it, so it is reserved to the gateway's administrator.
+ *
+ * Under an apartment only a room may be created. Creating in a home is guarded as
+ * UpdateSpace is, and refused whatever the caller where UpdateSpace's structure rules would
+ * refuse it.
  *
  * @generated from message kusinta.iot.webrtc.v1.CreateSpace
  */
@@ -70,9 +76,22 @@ export declare type CreateSpace = Message<"kusinta.iot.webrtc.v1.CreateSpace"> &
 export declare const CreateSpaceSchema: GenMessage<CreateSpace>;
 
 /**
- * Changes a space in place. Every descriptive field carries explicit presence:
- * absent means leave it alone, present means set it to this — including to the
- * empty string, which is how a description is cleared.
+ * Changes a space in place. Changes that would take a space into or out of a home, or move
+ * a home, are guarded by the gateway; a caller not allowed is refused as NOT_ENTITLED. A
+ * change is refused whatever the caller if it would leave anything but a room under an
+ * apartment, an apartment in a home, or — among what the caller can see — a device in two
+ * homes or a link across a home's boundary. What the caller cannot see never refuses it: a
+ * device a resident owns that would leave its owner's home, enter a home not theirs or sit
+ * in two homes is taken out of the moving space instead — staying in its owner's home,
+ * filed on the apartment, where it was in it — and any link it would carry across a
+ * boundary is removed. Changing the type of a space that has members needs
+ * ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, who see them, and is refused if it would
+ * leave a RESIDENT membership on a room — which can tell them of a membership change since
+ * the last quarter hour; that much this refusal discloses.
+ *
+ * Every descriptive field carries explicit presence: absent means leave it alone, present
+ * means set it to this — including to the empty string, which is how a description is
+ * cleared.
  *
  * @generated from message kusinta.iot.webrtc.v1.UpdateSpace
  */
@@ -143,7 +162,8 @@ export declare const UpdateSpaceSchema: GenMessage<UpdateSpace>;
 /**
  * Deletes a space. Refused if the space still holds devices or sub-spaces unless
  * cascade is set, so that emptying a building is always something the caller
- * asked for rather than something a stale client did by accident.
+ * asked for rather than something a stale client did by accident. Deleting a home, or
+ * anything in one, is guarded as UpdateSpace is.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeleteSpace
  */
@@ -166,9 +186,16 @@ export declare type DeleteSpace = Message<"kusinta.iot.webrtc.v1.DeleteSpace"> &
 export declare const DeleteSpaceSchema: GenMessage<DeleteSpace>;
 
 /**
- * Adds a user to a space, granting them reach of it and everything beneath it.
+ * Adds a user to a space, granting them reach of it and everything beneath it — except
+ * that a RESIDENT membership reaches no home beneath it (see access.v1.MembershipRelation).
  * The user need not be known to the gateway beforehand — identities are minted by
  * the token issuer, and this records that one of them belongs here.
+ *
+ * Assigning a user who is already a member changes their relation to the space.
+ * RESIDENT is refused on a room; see access.v1.MembershipRelation.
+ *
+ * Who may change who belongs to a home is restricted by the gateway; a caller not allowed is
+ * refused as NOT_ENTITLED. Residents see who is filed on their home in Space.members.
  *
  * @generated from message kusinta.iot.webrtc.v1.AssignUserToSpace
  */
@@ -182,6 +209,15 @@ export declare type AssignUserToSpace = Message<"kusinta.iot.webrtc.v1.AssignUse
    * @generated from field: kusinta.iot.identity.v1.UserId user_id = 2;
    */
   userId?: UserId | undefined;
+
+  /**
+   * How the user stands to the space — whether they live there or are there for the
+   * building. Required: UNSPECIFIED is refused, never defaulted. See
+   * access.v1.MembershipRelation for what each lets a member see of a home.
+   *
+   * @generated from field: kusinta.iot.access.v1.MembershipRelation relation = 4;
+   */
+  relation: MembershipRelation;
 };
 
 /**
@@ -193,6 +229,8 @@ export declare const AssignUserToSpaceSchema: GenMessage<AssignUserToSpace>;
 /**
  * Removes a user's membership of a space. Losing reach also drops whatever the
  * user was streaming from it, announced by LivePermissionUpdate.
+ *
+ * Removing someone else from a home is guarded as assigning is.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveUserFromSpace
  */
@@ -218,6 +256,12 @@ export declare const RemoveUserFromSpaceSchema: GenMessage<RemoveUserFromSpace>;
  * Files a device into a space. A device may sit in several spaces at once; this
  * is additive, and filing a device where it already sits is a no-op.
  *
+ * Into a home go only the building's own devices and devices its residents own, and a
+ * device belongs to one home at most; filing into, out of or beside a home is guarded by
+ * the gateway. A caller not allowed is refused as NOT_ENTITLED, and filing that would leave
+ * a link the caller can see across a home's boundary is refused whatever the caller; one
+ * they cannot see is removed instead.
+ *
  * @generated from message kusinta.iot.webrtc.v1.PlaceDeviceInSpace
  */
 export declare type PlaceDeviceInSpace = Message<"kusinta.iot.webrtc.v1.PlaceDeviceInSpace"> & {
@@ -242,6 +286,9 @@ export declare const PlaceDeviceInSpaceSchema: GenMessage<PlaceDeviceInSpace>;
  * Takes a device out of one space, leaving any others intact. A device in no
  * space and with no owner is unfiled, and visible only to the administrator.
  *
+ * Taking a device out of a home is guarded as PlaceDeviceInSpace is, and removes its links
+ * to devices still in the home.
+ *
  * @generated from message kusinta.iot.webrtc.v1.RemoveDeviceFromSpace
  */
 export declare type RemoveDeviceFromSpace = Message<"kusinta.iot.webrtc.v1.RemoveDeviceFromSpace"> & {
@@ -265,7 +312,12 @@ export declare const RemoveDeviceFromSpaceSchema: GenMessage<RemoveDeviceFromSpa
 /**
  * Takes ownership of a device. Ownership is reach in its own right: an owner may
  * see and control their device whatever their gateway-wide role permits, and may
- * file it into spaces they belong to.
+ * file it into spaces they belong to, and the rooms of a home they live in — though into a
+ * home only if they live there (see PlaceDeviceInSpace).
+ *
+ * Only a RESIDENT claim makes the caller the owner. A COMPANY claim records that the
+ * building owns the device, names no person, and grants the caller no reach. Claims of a
+ * device in a home, or of one already claimed, are restricted by the gateway.
  *
  * @generated from message kusinta.iot.webrtc.v1.ClaimDevice
  */
@@ -317,8 +369,9 @@ export declare type ClaimDevice = Message<"kusinta.iot.webrtc.v1.ClaimDevice"> &
 export declare const ClaimDeviceSchema: GenMessage<ClaimDevice>;
 
 /**
- * Gives up ownership. The device keeps whatever space filing it has; if it has
- * none it becomes unfiled.
+ * Gives up ownership. The device keeps whatever space filing it has, except that a device in
+ * a home stays filed in the home alone, as one of the building's own devices there — as
+ * when its owner moves out; if it has none it becomes unfiled.
  *
  * @generated from message kusinta.iot.webrtc.v1.ReleaseDevice
  */
@@ -424,7 +477,9 @@ export declare const ListSpacesSchema: GenMessage<ListSpaces>;
  *
  * device_ids on each Space are filtered to what the caller may see. An
  * unfiltered tree would list every device on the gateway by id, which is the
- * enumeration channel the snapshot filter exists to close.
+ * enumeration channel the snapshot filter exists to close. To a caller who sees a home as
+ * service, what is new in it is listed from the next quarter hour and what is gone at once
+ * — except its members, which change only at quarter hours (see Space.members).
  *
  * @generated from message kusinta.iot.webrtc.v1.SpaceTree
  */
@@ -474,6 +529,11 @@ export declare const ManagementAckSchema: GenMessage<ManagementAck>;
  * link only reads what the caller can already see, while a device-to-device one
  * writes configuration to the sender and spends its battery, which is a change
  * to someone else's hardware.
+ *
+ * In a home it is the other way round: links between its devices are its residents' to
+ * make, change and remove, and a caller who reaches it as service is refused as
+ * NOT_ENTITLED. A link between a device in a home and one outside it is refused to anyone.
+ * The same holds for UpdateDeviceLink and RemoveDeviceLink.
  *
  * @generated from message kusinta.iot.webrtc.v1.CreateDeviceLink
  */
@@ -554,7 +614,7 @@ export declare const RemoveDeviceLinkSchema: GenMessage<RemoveDeviceLink>;
  * Authorized against both ends, as creating and removing the link are: deciding
  * what temperature a room is held at is directing a device, not adjusting one,
  * so it takes ownership of the ends or a servicing role, not the permission to
- * turn a thermostat up.
+ * turn a thermostat up. In a home it is its residents' instead (see CreateDeviceLink).
  *
  * @generated from message kusinta.iot.webrtc.v1.UpdateDeviceLink
  */
@@ -590,6 +650,11 @@ export declare const UpdateDeviceLinkSchema: GenMessage<UpdateDeviceLink>;
  * Lists links. Unset device_id lists every link among devices the caller can
  * reach; naming one narrows it to that device's own, in either direction.
  *
+ * A link with an end in a home reaches a caller who sees it as service with
+ * DeviceLink.details_withheld set, and what that withholds unset — a new link
+ * from the next quarter hour, a removed one at once — and not at all when either end is a
+ * device a resident owns.
+ *
  * @generated from message kusinta.iot.webrtc.v1.ListDeviceLinks
  */
 export declare type ListDeviceLinks = Message<"kusinta.iot.webrtc.v1.ListDeviceLinks"> & {
@@ -608,10 +673,12 @@ export declare const ListDeviceLinksSchema: GenMessage<ListDeviceLinks>;
 /**
  * Sets the temperature a room is to be held at.
  *
- * Authorized as adjusting, not directing: WRITE on the room is enough — a resident in
- * their own apartment, as well as owners and filing roles. It is the same act as turning
- * a radiator's knob, which a resident can already do; setting up what the room obeys is
- * ConfigureRoomClimate, and stays with owners.
+ * Authorized as adjusting, not directing: WRITE on the room is enough. It is the same act
+ * as turning a radiator's knob; setting up what the room obeys is ConfigureRoomClimate,
+ * and stays with owners, except the lock in a home.
+ *
+ * In a home, only its residents may set it; a caller who reaches the room as service is
+ * refused as NOT_ENTITLED.
  *
  * Clamped to the room's limits rather than refused outside them, and the clamped value is
  * what the room's RoomClimate then reports.
@@ -642,8 +709,10 @@ export declare const SetRoomTargetSchema: GenMessage<SetRoomTarget>;
 
 /**
  * The sensors a room measures with, in order of preference. A message of its own so that
- * "leave the sensors alone" (unset) differs from "set" on the wire. Set but empty returns
- * the room to the default order, every temperature sensor filed in it in filing order.
+ * "leave the sensors alone" (unset) differs from "set" on the wire. It orders the
+ * building's sensors only (see climate.v1.RoomClimate.sensor_ids); set but empty returns
+ * them to the default, every building temperature sensor filed in the room in filing
+ * order.
  *
  * @generated from message kusinta.iot.webrtc.v1.RoomSensors
  */
@@ -690,6 +759,14 @@ export declare const RoomLimitsSchema: GenMessage<RoomLimits>;
  * hand at one of its devices counts. Authorized as directing — owners and filing roles —
  * because this decides what everybody in the room can do.
  *
+ * One exception: in a home, lock_device_controls is its residents' alone. They may send
+ * this request with nothing else set. Outside homes the lock is the owner's, as the rest
+ * is. A request that sets anything its caller may not — the lock in a home for service;
+ * anything but the lock in a home, or the lock outside one, for a caller with neither
+ * ROLE_PROPERTY_OWNER nor a filing role — is refused whole as NOT_ENTITLED, so nothing of
+ * it applies. sensors orders only the building's own
+ * sensors (see RoomClimate.sensor_ids).
+ *
  * Each field moves alone, as on UpdateSpace: unset leaves it as it is.
  *
  * @generated from message kusinta.iot.webrtc.v1.ConfigureRoomClimate
@@ -708,7 +785,8 @@ export declare type ConfigureRoomClimate = Message<"kusinta.iot.webrtc.v1.Config
   limits?: RoomLimits | undefined;
 
   /**
-   * Only devices filed in this room; any other is refused.
+   * Only the building's sensors filed in this room; any other — including a sensor a
+   * resident owns — is refused, the same way whether or not it exists.
    *
    * @generated from field: kusinta.iot.webrtc.v1.RoomSensors sensors = 3;
    */
@@ -729,7 +807,18 @@ export declare const ConfigureRoomClimateSchema: GenMessage<ConfigureRoomClimate
 /**
  * Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
  * Switching one on needs setback_centidegrees; a mode with nothing to set back to is
- * refused.
+ * refused. Switching one on is refused on a room inside an apartment, whose rooms follow
+ * the apartment's mode alone; such a room carries none (see climate.v1.ClimateMode), and
+ * switching one off there is accepted and does nothing — for those who may switch modes in
+ * that home at all, which is checked first: anyone else is refused as NOT_ENTITLED.
+ *
+ * In a home, only its residents may switch one on or off: whether a home stands empty is
+ * theirs to say. A caller who reaches it as service is refused as NOT_ENTITLED — except
+ * that, while the home had no resident at the last quarter hour, ROLE_PROPERTY_OWNER or
+ * ROLE_GATEWAY_ADMIN may switch off a mode that was on then and whose setter is not a
+ * resident now, so that no mode outlives everyone who could end it. Any other switch-off
+ * from them — no mode on, or one that is a resident's — is accepted and does nothing, so
+ * the answer tells them nothing of whether a mode was on or whether anyone has moved in.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetClimateMode
  */
@@ -772,6 +861,10 @@ export declare const SetClimateModeSchema: GenMessage<SetClimateMode>;
  * Lists the room climates and modes a caller may see. Unset root_space_id lists every
  * one the caller can reach; naming a space narrows it to that space and those below.
  *
+ * A caller who reaches a room inside an apartment as service gets it with
+ * RoomClimate.state_withheld set — what is new from the next quarter hour, what is gone at
+ * once — and gets no ClimateMode set on that apartment or its rooms.
+ *
  * @generated from message kusinta.iot.webrtc.v1.ListRoomClimates
  */
 export declare type ListRoomClimates = Message<"kusinta.iot.webrtc.v1.ListRoomClimates"> & {
@@ -794,6 +887,11 @@ export declare const ListRoomClimatesSchema: GenMessage<ListRoomClimates>;
  * The range is half-open: a bucket is returned when from_time <= at < to_time, so
  * back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
  * unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+ *
+ * A room in a home is readable by its residents only, and only from the start of their
+ * current residency (see access.v1.MembershipRelation). A caller who reaches it as service is
+ * refused as NOT_ENTITLED; one who reaches the apartment itself has
+ * GetApartmentClimateSummary instead.
  *
  * @generated from message kusinta.iot.webrtc.v1.GetRoomHistory
  */
@@ -819,6 +917,152 @@ export declare type GetRoomHistory = Message<"kusinta.iot.webrtc.v1.GetRoomHisto
  * Use `create(GetRoomHistorySchema)` to create a new message.
  */
 export declare const GetRoomHistorySchema: GenMessage<GetRoomHistory>;
+
+/**
+ * What the parties who do not live in a private space learn of it — the answer to a
+ * resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
+ *
+ * It states the policy and the kinds of party it applies to now. It NAMES NOBODY: a resident
+ * learns that a technician can see the battery of their radiator valve, not which
+ * technician. Those filed on the home itself are named to its residents in Space.members;
+ * service reach from a building or floor above is not.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PrivacyDisclosure
+ */
+export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDisclosure"> & {
+  /**
+   * An apartment, or a room in one.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * The kinds of party who see this space, or any part of it, as service now — or would
+   * through another membership, were they not its residents — each role once, with what
+   * that role brings here. Each party is listed under every role it holds other than
+   * ROLE_RESIDENT, and sees what its entries say together; one with no other role, or whose
+   * role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. The gateway's
+   * administrator is always listed. So the list reads the same whether or not anyone lives
+   * in the home, and never understates who has reach or what they see. Devices a resident
+   * owns are not shown to service at all. To a caller who sees the space as service, it is
+   * answered as it stood at the last quarter hour.
+   *
+   * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceParty service_parties = 5;
+   */
+  serviceParties: ServiceParty[];
+
+  /**
+   * How finely the space's climate is summarised for service, as means over periods of
+   * this length (climate.v1.ApartmentClimateSummary). UNSPECIFIED: no summary is given.
+   * The gateway's own setting, WEEK unless it is configured otherwise; no operation in this
+   * contract changes it. A change applies to periods that open after it: service is given
+   * no period that opened before the last change.
+   *
+   * @generated from field: kusinta.iot.climate.v1.ClimateSummaryPeriod climate_summary_period = 4;
+   */
+  climateSummaryPeriod: ClimateSummaryPeriod;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PrivacyDisclosure.
+ * Use `create(PrivacyDisclosureSchema)` to create a new message.
+ */
+export declare const PrivacyDisclosureSchema: GenMessage<PrivacyDisclosure>;
+
+/**
+ * One kind of party with service reach of a home, and what it sees there. Every service
+ * party sees the same kinds of thing of the part of the home it reaches — a whole
+ * ServiceStatus, nothing withheld from it — so signals differ between parties only in
+ * RESIDENTS. How much of the home that part is, a room or all of it, the disclosure does
+ * not say.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ServiceParty
+ */
+export declare type ServiceParty = Message<"kusinta.iot.webrtc.v1.ServiceParty"> & {
+  /**
+   * @generated from field: kusinta.iot.access.v1.Role role = 1;
+   */
+  role: Role;
+
+  /**
+   * @generated from field: repeated kusinta.iot.access.v1.ServiceSignal signals = 2;
+   */
+  signals: ServiceSignal[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ServiceParty.
+ * Use `create(ServicePartySchema)` to create a new message.
+ */
+export declare const ServicePartySchema: GenMessage<ServiceParty>;
+
+/**
+ * Asks what the parties who do not live in a space learn of it, answered with a
+ * PrivacyDisclosure. For an apartment or a room in one, and refused on any other
+ * space. Needs READ on the space.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetPrivacyDisclosure
+ */
+export declare type GetPrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.GetPrivacyDisclosure"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetPrivacyDisclosure.
+ * Use `create(GetPrivacyDisclosureSchema)` to create a new message.
+ */
+export declare const GetPrivacyDisclosureSchema: GenMessage<GetPrivacyDisclosure>;
+
+/**
+ * Reads an apartment's climate as means over whole periods, answered with a
+ * climate.v1.ApartmentClimateSummary. Needs READ on the apartment itself. Refused on a
+ * space that is not an apartment, and while the building's time zone (Space.time_zone) is
+ * unknown, since periods are cut at its midnights.
+ *
+ * The range is half-open over the periods' starts: a period is returned when from_time <=
+ * starts_at < to_time. Unset from_time means kept_from; unset to_time means now. Both are
+ * clamped to [kept_from, the start of the period running now — or now, if none is] (see
+ * ApartmentClimateSummary).
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetApartmentClimateSummary
+ */
+export declare type GetApartmentClimateSummary = Message<"kusinta.iot.webrtc.v1.GetApartmentClimateSummary"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId apartment_id = 1;
+   */
+  apartmentId?: SpaceId | undefined;
+
+  /**
+   * Unset asks for the period the apartment's privacy disclosure names
+   * (PrivacyDisclosure.climate_summary_period), or weeks when it names none. Anyone but the
+   * apartment's residents may ask for that period only, and is refused as NOT_ENTITLED for
+   * any other or when it names none. Its residents may ask for any, and are given only
+   * periods that began in their current residency.
+   *
+   * @generated from field: kusinta.iot.climate.v1.ClimateSummaryPeriod period = 2;
+   */
+  period: ClimateSummaryPeriod;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp from_time = 3;
+   */
+  fromTime?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp to_time = 4;
+   */
+  toTime?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetApartmentClimateSummary.
+ * Use `create(GetApartmentClimateSummarySchema)` to create a new message.
+ */
+export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentClimateSummary>;
 
 /**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
@@ -947,6 +1191,18 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: GetRoomHistory;
     case: "getRoomHistory";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetPrivacyDisclosure get_privacy_disclosure = 21;
+     */
+    value: GetPrivacyDisclosure;
+    case: "getPrivacyDisclosure";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetApartmentClimateSummary get_apartment_climate_summary = 22;
+     */
+    value: GetApartmentClimateSummary;
+    case: "getApartmentClimateSummary";
   } | { case: undefined; value?: undefined };
 };
 

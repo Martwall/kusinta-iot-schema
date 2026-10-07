@@ -67,7 +67,8 @@ const Space$json = {
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.identity.v1.UserId',
-      '10': 'residentUserId'
+      '8': {'3': true},
+      '10': 'residentUserId',
     },
     {
       '1': 'tenant_id',
@@ -86,6 +87,15 @@ const Space$json = {
       '10': 'gatewayId'
     },
     {'1': 'time_zone', '3': 12, '4': 1, '5': 9, '10': 'timeZone'},
+    {
+      '1': 'members',
+      '3': 13,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.space.v1.SpaceMember',
+      '10': 'members'
+    },
+    {'1': 'members_withheld', '3': 14, '4': 1, '5': 8, '10': 'membersWithheld'},
   ],
 };
 
@@ -98,8 +108,39 @@ final $typed_data.Uint8List spaceDescriptor = $convert.base64Decode(
     'YWNlX2lkGAYgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZFINcGFyZW50U3'
     'BhY2VJZBJECg1zdWJfc3BhY2VfaWRzGAcgAygLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEu'
     'U3BhY2VJZFILc3ViU3BhY2VJZHMSQAoKZGV2aWNlX2lkcxgIIAMoCzIhLmt1c2ludGEuaW90Lm'
-    'lkZW50aXR5LnYxLkRldmljZUlkUglkZXZpY2VJZHMSSQoQcmVzaWRlbnRfdXNlcl9pZBgJIAEo'
-    'CzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIOcmVzaWRlbnRVc2VySWQSPgoJdG'
-    'VuYW50X2lkGAogASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVGVuYW50SWRSCHRlbmFu'
-    'dElkEkEKCmdhdGV3YXlfaWQYCyABKAsyIi5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5HYXRld2'
-    'F5SWRSCWdhdGV3YXlJZBIbCgl0aW1lX3pvbmUYDCABKAlSCHRpbWVab25l');
+    'lkZW50aXR5LnYxLkRldmljZUlkUglkZXZpY2VJZHMSTQoQcmVzaWRlbnRfdXNlcl9pZBgJIAEo'
+    'CzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZEICGAFSDnJlc2lkZW50VXNlcklkEj'
+    '4KCXRlbmFudF9pZBgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlRlbmFudElkUgh0'
+    'ZW5hbnRJZBJBCgpnYXRld2F5X2lkGAsgASgLMiIua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuR2'
+    'F0ZXdheUlkUglnYXRld2F5SWQSGwoJdGltZV96b25lGAwgASgJUgh0aW1lWm9uZRI7CgdtZW1i'
+    'ZXJzGA0gAygLMiEua3VzaW50YS5pb3Quc3BhY2UudjEuU3BhY2VNZW1iZXJSB21lbWJlcnMSKQ'
+    'oQbWVtYmVyc193aXRoaGVsZBgOIAEoCFIPbWVtYmVyc1dpdGhoZWxk');
+
+@$core.Deprecated('Use spaceMemberDescriptor instead')
+const SpaceMember$json = {
+  '1': 'SpaceMember',
+  '2': [
+    {
+      '1': 'user_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'userId'
+    },
+    {
+      '1': 'relation',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.MembershipRelation',
+      '10': 'relation'
+    },
+  ],
+};
+
+/// Descriptor for `SpaceMember`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List spaceMemberDescriptor = $convert.base64Decode(
+    'CgtTcGFjZU1lbWJlchI4Cgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
+    'EuVXNlcklkUgZ1c2VySWQSRQoIcmVsYXRpb24YAiABKA4yKS5rdXNpbnRhLmlvdC5hY2Nlc3Mu'
+    'djEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbg==');

@@ -24,7 +24,7 @@ EVENT_PRIORITY_INFO: EventPriority
 EVENT_PRIORITY_CRITICAL: EventPriority
 
 class DeviceEvent(_message.Message):
-    __slots__ = ("device_id", "endpoint_id", "cluster_id", "event_id", "event_number", "timestamp", "priority", "data")
+    __slots__ = ("device_id", "endpoint_id", "cluster_id", "event_id", "event_number", "timestamp", "priority", "data", "previous_event_number", "follows_loss", "numbering_id")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
@@ -33,6 +33,9 @@ class DeviceEvent(_message.Message):
     TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
     PRIORITY_FIELD_NUMBER: _ClassVar[int]
     DATA_FIELD_NUMBER: _ClassVar[int]
+    PREVIOUS_EVENT_NUMBER_FIELD_NUMBER: _ClassVar[int]
+    FOLLOWS_LOSS_FIELD_NUMBER: _ClassVar[int]
+    NUMBERING_ID_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     endpoint_id: int
     cluster_id: int
@@ -41,7 +44,10 @@ class DeviceEvent(_message.Message):
     timestamp: _timestamp_pb2.Timestamp
     priority: EventPriority
     data: _cluster_state_pb2.AttributeValue
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., endpoint_id: _Optional[int] = ..., cluster_id: _Optional[int] = ..., event_id: _Optional[int] = ..., event_number: _Optional[int] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., priority: _Optional[_Union[EventPriority, str]] = ..., data: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ...) -> None: ...
+    previous_event_number: int
+    follows_loss: bool
+    numbering_id: str
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., endpoint_id: _Optional[int] = ..., cluster_id: _Optional[int] = ..., event_id: _Optional[int] = ..., event_number: _Optional[int] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., priority: _Optional[_Union[EventPriority, str]] = ..., data: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., previous_event_number: _Optional[int] = ..., follows_loss: _Optional[bool] = ..., numbering_id: _Optional[str] = ...) -> None: ...
 
 class DeviceEventBatch(_message.Message):
     __slots__ = ("events", "received_at")

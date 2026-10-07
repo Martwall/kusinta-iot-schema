@@ -61,8 +61,8 @@ export declare const TargetChangeSchema: GenMessage<TargetChange>;
 /**
  * The climate of one room.
  *
- * Apply as an upsert keyed on space_id: the same room is sent again whenever any of this
- * moves.
+ * Apply as an upsert keyed on space_id: the same room is sent again whenever any of it
+ * that the recipient is sent moves (see state_withheld).
  *
  * @generated from message kusinta.iot.climate.v1.RoomClimate
  */
@@ -83,7 +83,10 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   targetCentidegrees?: number | undefined;
 
   /**
-   * Who or what set target_centidegrees. Unset while the target is.
+   * Who or what set target_centidegrees. Unset while the target is, and when it is withheld
+   * from the recipient: from service in a home, and from anyone when it dates from before
+   * their current residency in the home, or from a home they did not live in at the time
+   * (see access.v1.MembershipRelation).
    *
    * @generated from field: kusinta.iot.climate.v1.TargetChange target_change = 3;
    */
@@ -134,18 +137,23 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * The sensors the room measures with, in order: the first is used, each later one
    * takes over while those before it are quiet. Only devices filed in this room.
    *
-   * By default every temperature sensor filed in the room, in the order it was filed, so
-   * a sensor filed later joins at the end without anyone configuring anything. An owner
-   * can set the order explicitly (see sensors_configured). Empty: the room has no
-   * temperature sensor, and its valves regulate on their own probes (NO_SENSOR).
+   * In a home, sensors its residents own come first, in the order they were filed, and then
+   * the building's; outside homes a room measures with the building's sensors only. The
+   * building's are by default every building temperature sensor filed in the room, in the
+   * order it was filed, so a sensor filed later joins at the end without anyone configuring
+   * anything; an owner can set their order explicitly (see sensors_configured). Empty: the
+   * room has no temperature sensor, and its valves regulate on their own probes
+   * (NO_SENSOR).
    *
    * @generated from field: repeated kusinta.iot.identity.v1.DeviceId sensor_ids = 8;
    */
   sensorIds: DeviceId[];
 
   /**
-   * Whether sensor_ids is an order an owner chose, rather than the default of filing
-   * order. A sensor filed into a room with a chosen order is not added to it.
+   * Whether the building's part of sensor_ids is an order an owner chose, rather than the
+   * default of filing order. A building sensor filed into a room with a chosen order is
+   * not added to it; a resident's own always is. A sensor that becomes the building's in a
+   * room — released by its owner — counts as filed there at that moment.
    *
    * @generated from field: bool sensors_configured = 14;
    */
@@ -177,12 +185,31 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    *
    * Stated as the lock rather than as a permission so that the proto3 default — false,
    * unlocked — is the intended default: a room nobody has configured takes changes at its
-   * devices, as a room in an apartment always should. Elsewhere locking is the owner's
-   * choice.
+   * devices, as a room in an apartment should until its residents decide otherwise; when a
+   * home loses its last resident, its rooms' locks are cleared. Elsewhere locking is the
+   * owner's choice.
    *
    * @generated from field: bool lock_device_controls = 12;
    */
   lockDeviceControls: boolean;
+
+  /**
+   * Set when the recipient reaches this room only as service (see
+   * access.v1.MembershipRelation): the room is in someone's home, and what describes the
+   * people in it is WITHHELD — target_centidegrees, target_change,
+   * effective_target_centidegrees, overrides_mode, mode_space_id, measured_centidegrees,
+   * measured_by, condition and lock_device_controls are all left unset, and sensor_ids
+   * leaves out sensors a resident owns.
+   *
+   * Unset because withheld, not because unknown: an app must not render them as NO_TARGET or
+   * a lost sensor. A withheld room is sent again only when something that IS sent changes,
+   * so that the timing of an update does not give away what was withheld. Its limits and
+   * the sensors service may see are still sent, since setting a room up is service work.
+   * Its climate over time is available to service only as an ApartmentClimateSummary.
+   *
+   * @generated from field: bool state_withheld = 15;
+   */
+  stateWithheld: boolean;
 };
 
 /**
@@ -192,6 +219,17 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 export declare const RoomClimateSchema: GenMessage<RoomClimate>;
 
 /**
+ * A mode on a home ends when whoever switched it on stops being one of its residents: a new
+ * tenant does not inherit the previous one's holiday. A mode on a room ends when the room
+ * joins a home, whose rooms follow the apartment's mode alone. Any other mode — one switched on by
+ * someone who is not one of its residents now: who never lived there, or a member still
+ * recorded with no relation — ends when the
+ * home gains a resident: when anyone other than its setter, not already its resident, is
+ * assigned RESIDENT on the apartment, a member recorded with no relation included, or the
+ * space becomes an apartment with RESIDENT members on it other than its setter. A mode's
+ * setter recorded with no relation being assigned RESIDENT ends none of their own modes;
+ * being assigned SERVICE or removed ends them.
+ *
  * A mode set on an apartment — or, for rooms that are not in one, on their floor or
  * common area. While it is on it sets back every room below that space, except that a
  * room inside an apartment follows only its apartment's mode: a mode on a floor does not
@@ -223,8 +261,10 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
 
   /**
    * HOLIDAY: when the setback begins and when the rooms are to be back at their own
-   * targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is
-   * when it was switched on; ends_at is unset.
+   * targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is when it
+   * was switched on; ends_at is unset. starts_at is unset when it dates from before the
+   * recipient's current residency in the home, or from a home they did not live in at the
+   * time; an ends_at ahead is always sent.
    *
    * @generated from field: google.protobuf.Timestamp starts_at = 4;
    */
@@ -236,7 +276,9 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
   endsAt?: Timestamp | undefined;
 
   /**
-   * Who switched it on.
+   * Who switched it on. Unset when it is withheld from the recipient: from service in a
+   * home, and from anyone when it dates from before their current residency in the home, or
+   * from a home they did not live in at the time (see access.v1.MembershipRelation).
    *
    * @generated from field: kusinta.iot.identity.v1.UserId set_by = 6;
    */
@@ -352,7 +394,9 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
   /**
    * The earliest moment the gateway still holds for this room. The request's from_time
    * and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
-   * returned.
+   * returned. For a room in the recipient's own home it is no earlier than the start of
+   * their current residency, nor than when the room last joined their home; for any other
+   * room, no earlier than when it last left a home.
    *
    * @generated from field: google.protobuf.Timestamp kept_from = 2;
    */
@@ -371,6 +415,135 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
  * Use `create(RoomHistorySchema)` to create a new message.
  */
 export declare const RoomHistorySchema: GenMessage<RoomHistory>;
+
+/**
+ * An apartment's climate over one period.
+ *
+ * Each room's mean is taken over the quarter hours of the period in which it was in this
+ * apartment and had a value; coverage likewise counts only the quarter hours it was here,
+ * and the apartment's mean is formed from the rooms' means as the summary's weighting says.
+ * Every mean is optional: absent means nothing was known, never zero.
+ *
+ * @generated from message kusinta.iot.climate.v1.ClimatePeriodMean
+ */
+export declare type ClimatePeriodMean = Message<"kusinta.iot.climate.v1.ClimatePeriodMean"> & {
+  /**
+   * The period, half-open: starts_at <= t < ends_at.
+   *
+   * @generated from field: google.protobuf.Timestamp starts_at = 1;
+   */
+  startsAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp ends_at = 2;
+   */
+  endsAt?: Timestamp | undefined;
+
+  /**
+   * The mean measured temperature, in centidegrees, taken from the building's own sensors
+   * only: in each room, the first of its building sensors that was heard. A reading from a
+   * sensor a resident owns never enters it.
+   *
+   * @generated from field: optional sint32 measured_centidegrees = 3;
+   */
+  measuredCentidegrees?: number | undefined;
+
+  /**
+   * The mean target, in centidegrees: RoomClimate.target_centidegrees — the temperature
+   * somebody asked for, not the effective target a mode set it back to, so that a
+   * setback is not reported as what the residents chose. The measured mean still falls
+   * while a home is set back; how much that reveals is governed by how long a period
+   * service may ask for (webrtc.v1.PrivacyDisclosure.climate_summary_period).
+   *
+   * @generated from field: optional sint32 target_centidegrees = 4;
+   */
+  targetCentidegrees?: number | undefined;
+
+  /**
+   * How much of the period the means rest on, in thousandths: the quarter hours with a
+   * value, summed over the apartment's rooms, divided by the quarter hours each room was in
+   * the apartment during the period, summed likewise. A room with no sensor, or one that
+   * went quiet, lowers it — a mean with low coverage describes part of the apartment, or
+   * part of the period.
+   *
+   * @generated from field: uint32 measured_coverage_permille = 5;
+   */
+  measuredCoveragePermille: number;
+
+  /**
+   * @generated from field: uint32 target_coverage_permille = 6;
+   */
+  targetCoveragePermille: number;
+
+  /**
+   * The rooms that contributed a measured value, of the rooms the apartment had at any time
+   * in the period.
+   *
+   * @generated from field: uint32 rooms_measured = 7;
+   */
+  roomsMeasured: number;
+
+  /**
+   * @generated from field: uint32 rooms = 8;
+   */
+  rooms: number;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.ClimatePeriodMean.
+ * Use `create(ClimatePeriodMeanSchema)` to create a new message.
+ */
+export declare const ClimatePeriodMeanSchema: GenMessage<ClimatePeriodMean>;
+
+/**
+ * An apartment's climate as means over whole periods, in reply to
+ * webrtc.v1.GetApartmentClimateSummary. What a party who does not live there may know of
+ * how warm it is kept — see webrtc.v1.PrivacyDisclosure.
+ *
+ * Only CLOSED periods are given. The period running now is never included, so that a
+ * summary cannot be polled into a live reading.
+ *
+ * @generated from message kusinta.iot.climate.v1.ApartmentClimateSummary
+ */
+export declare type ApartmentClimateSummary = Message<"kusinta.iot.climate.v1.ApartmentClimateSummary"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId apartment_id = 1;
+   */
+  apartmentId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.ClimateSummaryPeriod period = 2;
+   */
+  period: ClimateSummaryPeriod;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.ClimateSummaryWeighting weighting = 3;
+   */
+  weighting: ClimateSummaryWeighting;
+
+  /**
+   * The start of the earliest period the gateway still holds that the recipient may be
+   * given: for a resident of this apartment, no earlier than their current residency; for
+   * anyone else, of the length disclosed now, and no earlier than the first such period
+   * after it was last changed (see webrtc.v1.PrivacyDisclosure.climate_summary_period).
+   *
+   * @generated from field: google.protobuf.Timestamp kept_from = 4;
+   */
+  keptFrom?: Timestamp | undefined;
+
+  /**
+   * The periods within the requested range, in order of starts_at.
+   *
+   * @generated from field: repeated kusinta.iot.climate.v1.ClimatePeriodMean periods = 5;
+   */
+  periods: ClimatePeriodMean[];
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.ApartmentClimateSummary.
+ * Use `create(ApartmentClimateSummarySchema)` to create a new message.
+ */
+export declare const ApartmentClimateSummarySchema: GenMessage<ApartmentClimateSummary>;
 
 /**
  * What a room is doing right now, in one word. Details live in the fields of
@@ -479,4 +652,75 @@ export enum ClimateModeKind {
  * Describes the enum kusinta.iot.climate.v1.ClimateModeKind.
  */
 export declare const ClimateModeKindSchema: GenEnum<ClimateModeKind>;
+
+/**
+ * The length of the periods an ApartmentClimateSummary is given in. Each period runs from
+ * the start of one local date to the start of another in the building's time zone
+ * (space.v1.Space.time_zone) — midnight, or the first moment of the date where daylight
+ * saving skips midnight — so a day is 23 or 25 hours long across a change of daylight
+ * saving time. A period is cut by the time zone in force when it opened, and kept as cut.
+ * After a change of zone, the next period runs from that cut to the first boundary of its
+ * length in the new zone — a midnight, a Monday or a first of the month — that leaves it
+ * covering at least one whole day, week or month of the new zone's calendar, so no period
+ * covers less than one whole day, week or month of its calendar, however many hours that
+ * is. While the zone is unknown — never set, or cleared — nothing is summarised, and the
+ * period open when it was cleared ends unsummarised; once it is known again, the first
+ * period begins at the first boundary of its length after that.
+ *
+ * @generated from enum kusinta.iot.climate.v1.ClimateSummaryPeriod
+ */
+export enum ClimateSummaryPeriod {
+  /**
+   * @generated from enum value: CLIMATE_SUMMARY_PERIOD_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: CLIMATE_SUMMARY_PERIOD_DAY = 1;
+   */
+  DAY = 1,
+
+  /**
+   * ISO weeks, Monday to Monday.
+   *
+   * @generated from enum value: CLIMATE_SUMMARY_PERIOD_WEEK = 2;
+   */
+  WEEK = 2,
+
+  /**
+   * Calendar months.
+   *
+   * @generated from enum value: CLIMATE_SUMMARY_PERIOD_MONTH = 3;
+   */
+  MONTH = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.climate.v1.ClimateSummaryPeriod.
+ */
+export declare const ClimateSummaryPeriodSchema: GenEnum<ClimateSummaryPeriod>;
+
+/**
+ * How an apartment's mean is formed from its rooms' means.
+ *
+ * @generated from enum kusinta.iot.climate.v1.ClimateSummaryWeighting
+ */
+export enum ClimateSummaryWeighting {
+  /**
+   * @generated from enum value: CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Each room counts once, whatever its size: a bathroom weighs as much as a living room.
+   *
+   * @generated from enum value: CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL = 1;
+   */
+  ROOMS_EQUAL = 1,
+}
+
+/**
+ * Describes the enum kusinta.iot.climate.v1.ClimateSummaryWeighting.
+ */
+export declare const ClimateSummaryWeightingSchema: GenEnum<ClimateSummaryWeighting>;
 

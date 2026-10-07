@@ -176,6 +176,14 @@ const AssignUserToSpace$json = {
       '6': '.kusinta.iot.identity.v1.UserId',
       '10': 'userId'
     },
+    {
+      '1': 'relation',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.MembershipRelation',
+      '10': 'relation'
+    },
   ],
   '9': [
     {'1': 3, '2': 4},
@@ -186,7 +194,8 @@ const AssignUserToSpace$json = {
 final $typed_data.Uint8List assignUserToSpaceDescriptor = $convert.base64Decode(
     'ChFBc3NpZ25Vc2VyVG9TcGFjZRI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
     '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSOAoHdXNlcl9pZBgCIAEoCzIfLmt1c2ludGEuaW90'
-    'LmlkZW50aXR5LnYxLlVzZXJJZFIGdXNlcklkSgQIAxAE');
+    'LmlkZW50aXR5LnYxLlVzZXJJZFIGdXNlcklkEkUKCHJlbGF0aW9uGAQgASgOMikua3VzaW50YS'
+    '5pb3QuYWNjZXNzLnYxLk1lbWJlcnNoaXBSZWxhdGlvblIIcmVsYXRpb25KBAgDEAQ=');
 
 @$core.Deprecated('Use removeUserFromSpaceDescriptor instead')
 const RemoveUserFromSpace$json = {
@@ -785,6 +794,146 @@ final $typed_data.Uint8List getRoomHistoryDescriptor = $convert.base64Decode(
     'Zi5UaW1lc3RhbXBSCGZyb21UaW1lEjMKB3RvX3RpbWUYAyABKAsyGi5nb29nbGUucHJvdG9idW'
     'YuVGltZXN0YW1wUgZ0b1RpbWU=');
 
+@$core.Deprecated('Use privacyDisclosureDescriptor instead')
+const PrivacyDisclosure$json = {
+  '1': 'PrivacyDisclosure',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'service_parties',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ServiceParty',
+      '10': 'serviceParties'
+    },
+    {
+      '1': 'climate_summary_period',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateSummaryPeriod',
+      '10': 'climateSummaryPeriod'
+    },
+  ],
+  '9': [
+    {'1': 2, '2': 3},
+    {'1': 3, '2': 4},
+  ],
+};
+
+/// Descriptor for `PrivacyDisclosure`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List privacyDisclosureDescriptor = $convert.base64Decode(
+    'ChFQcml2YWN5RGlzY2xvc3VyZRI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
+    '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSTAoPc2VydmljZV9wYXJ0aWVzGAUgAygLMiMua3Vz'
+    'aW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VQYXJ0eVIOc2VydmljZVBhcnRpZXMSYgoWY2xpbW'
+    'F0ZV9zdW1tYXJ5X3BlcmlvZBgEIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0'
+    'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kSgQIAhADSgQIAxAE');
+
+@$core.Deprecated('Use servicePartyDescriptor instead')
+const ServiceParty$json = {
+  '1': 'ServiceParty',
+  '2': [
+    {
+      '1': 'role',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'role'
+    },
+    {
+      '1': 'signals',
+      '3': 2,
+      '4': 3,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.ServiceSignal',
+      '10': 'signals'
+    },
+  ],
+};
+
+/// Descriptor for `ServiceParty`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List servicePartyDescriptor = $convert.base64Decode(
+    'CgxTZXJ2aWNlUGFydHkSLwoEcm9sZRgBIAEoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2'
+    'xlUgRyb2xlEj4KB3NpZ25hbHMYAiADKA4yJC5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuU2Vydmlj'
+    'ZVNpZ25hbFIHc2lnbmFscw==');
+
+@$core.Deprecated('Use getPrivacyDisclosureDescriptor instead')
+const GetPrivacyDisclosure$json = {
+  '1': 'GetPrivacyDisclosure',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+  ],
+};
+
+/// Descriptor for `GetPrivacyDisclosure`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getPrivacyDisclosureDescriptor = $convert.base64Decode(
+    'ChRHZXRQcml2YWN5RGlzY2xvc3VyZRI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90Lm'
+    'lkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQ=');
+
+@$core.Deprecated('Use getApartmentClimateSummaryDescriptor instead')
+const GetApartmentClimateSummary$json = {
+  '1': 'GetApartmentClimateSummary',
+  '2': [
+    {
+      '1': 'apartment_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'apartmentId'
+    },
+    {
+      '1': 'period',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateSummaryPeriod',
+      '10': 'period'
+    },
+    {
+      '1': 'from_time',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'fromTime'
+    },
+    {
+      '1': 'to_time',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'toTime'
+    },
+  ],
+};
+
+/// Descriptor for `GetApartmentClimateSummary`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getApartmentClimateSummaryDescriptor = $convert.base64Decode(
+    'ChpHZXRBcGFydG1lbnRDbGltYXRlU3VtbWFyeRJDCgxhcGFydG1lbnRfaWQYASABKAsyIC5rdX'
+    'NpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgthcGFydG1lbnRJZBJECgZwZXJpb2QYAiAB'
+    'KA4yLC5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLkNsaW1hdGVTdW1tYXJ5UGVyaW9kUgZwZXJpb2'
+    'QSNwoJZnJvbV90aW1lGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIZnJvbVRp'
+    'bWUSMwoHdG9fdGltZRgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBnRvVGltZQ'
+    '==');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -969,6 +1118,24 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'getRoomHistory'
     },
+    {
+      '1': 'get_privacy_disclosure',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetPrivacyDisclosure',
+      '9': 0,
+      '10': 'getPrivacyDisclosure'
+    },
+    {
+      '1': 'get_apartment_climate_summary',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetApartmentClimateSummary',
+      '9': 0,
+      '10': 'getApartmentClimateSummary'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1008,4 +1175,8 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'ZRJXChJsaXN0X3Jvb21fY2xpbWF0ZXMYEyABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuTG'
     'lzdFJvb21DbGltYXRlc0gAUhBsaXN0Um9vbUNsaW1hdGVzElEKEGdldF9yb29tX2hpc3RvcnkY'
     'FCABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0Um9vbUhpc3RvcnlIAFIOZ2V0Um9vbU'
-    'hpc3RvcnlCCQoHcmVxdWVzdA==');
+    'hpc3RvcnkSYwoWZ2V0X3ByaXZhY3lfZGlzY2xvc3VyZRgVIAEoCzIrLmt1c2ludGEuaW90Lndl'
+    'YnJ0Yy52MS5HZXRQcml2YWN5RGlzY2xvc3VyZUgAUhRnZXRQcml2YWN5RGlzY2xvc3VyZRJ2Ch'
+    '1nZXRfYXBhcnRtZW50X2NsaW1hdGVfc3VtbWFyeRgWIAEoCzIxLmt1c2ludGEuaW90LndlYnJ0'
+    'Yy52MS5HZXRBcGFydG1lbnRDbGltYXRlU3VtbWFyeUgAUhpnZXRBcGFydG1lbnRDbGltYXRlU3'
+    'VtbWFyeUIJCgdyZXF1ZXN0');

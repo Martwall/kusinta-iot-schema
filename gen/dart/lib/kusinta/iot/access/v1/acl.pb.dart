@@ -20,6 +20,8 @@ import 'roles.pbenum.dart' as $2;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
+export 'acl.pbenum.dart';
+
 /// AttributeRef names one attribute on one endpoint. It is the schema's single way to say
 /// "this attribute of this device" — used to grant it, to bound it, to read it and to write
 /// it, so a consumer writes one matcher rather than several that must agree.
@@ -473,6 +475,7 @@ class DeviceAcl extends $pb.GeneratedMessage {
     $core.Iterable<AttributeRef>? allowedAttributeRefs,
     $core.Iterable<CommandRef>? allowedCommandRefs,
     $core.Iterable<EventRef>? allowedEventRefs,
+    $2.MembershipRelation? relation,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -487,6 +490,7 @@ class DeviceAcl extends $pb.GeneratedMessage {
       result.allowedCommandRefs.addAll(allowedCommandRefs);
     if (allowedEventRefs != null)
       result.allowedEventRefs.addAll(allowedEventRefs);
+    if (relation != null) result.relation = relation;
     return result;
   }
 
@@ -529,6 +533,11 @@ class DeviceAcl extends $pb.GeneratedMessage {
     ..pc<EventRef>(
         10, _omitFieldNames ? '' : 'allowedEventRefs', $pb.PbFieldType.PM,
         subBuilder: EventRef.create)
+    ..e<$2.MembershipRelation>(
+        11, _omitFieldNames ? '' : 'relation', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
+        valueOf: $2.MembershipRelation.valueOf,
+        enumValues: $2.MembershipRelation.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -640,9 +649,33 @@ class DeviceAcl extends $pb.GeneratedMessage {
   /// A ref present with no endpoint_id is INVALID and MUST be rejected.
   @$pb.TagNumber(10)
   $pb.PbList<EventRef> get allowedEventRefs => $_getList(7);
+
+  /// How the user stands to the home this device is filed in, where that shaped this ACL.
+  /// See MembershipRelation in roles.proto.
+  ///
+  /// SERVICE: the user sees this building device in someone's home as service, whatever
+  /// relation their membership records. They hold no action on it — allowed_actions is empty
+  /// — and are sent no reading or event of it. The Device they are sent carries its
+  /// description only: its endpoints with their device types and implemented lists, and no
+  /// property value. What keeps it working comes as a webrtc.v1.ServiceStatus instead. An
+  /// app should show its readings as withheld, not missing. RESIDENT: the user lives in the
+  /// home the device is filed in, whether or not they also own it. UNSPECIFIED: neither
+  /// applies — the device is not in a home, or the user reaches it only by owning it.
+  ///
+  /// Descriptive, like role: allowed_actions and the ref lists are what is enforced.
+  @$pb.TagNumber(11)
+  $2.MembershipRelation get relation => $_getN(8);
+  @$pb.TagNumber(11)
+  set relation($2.MembershipRelation value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasRelation() => $_has(8);
+  @$pb.TagNumber(11)
+  void clearRelation() => $_clearField(11);
 }
 
-/// Every DeviceAcl in force for one user on one gateway, at valid_at.
+/// Every DeviceAcl in force for one user on one gateway, at valid_at — except that what the
+/// user newly sees of a home as service appears only from the next quarter hour (see
+/// webrtc.v1.LivePermissionUpdate).
 ///
 /// ADVISORY WHEN SENT TO AN APP. The gateway is the sole authority and enforces every
 /// read, write, invoke and subscription against its own copy, whether or not the app has

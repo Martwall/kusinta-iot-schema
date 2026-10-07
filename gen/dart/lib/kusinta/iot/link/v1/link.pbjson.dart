@@ -187,6 +187,7 @@ const DeviceLink$json = {
       '6': '.kusinta.iot.link.v1.LinkSettings',
       '10': 'settings'
     },
+    {'1': 'details_withheld', '3': 10, '4': 1, '5': 8, '10': 'detailsWithheld'},
   ],
   '9': [
     {'1': 20, '2': 30},
@@ -203,7 +204,8 @@ final $typed_data.Uint8List deviceLinkDescriptor = $convert.base64Decode(
     'N0YXRlGAYgASgOMh4ua3VzaW50YS5pb3QubGluay52MS5MaW5rU3RhdGVSBXN0YXRlEjkKCmNy'
     'ZWF0ZWRfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgljcmVhdGVkQXQSIQ'
     'oMc3RhdGVfZGV0YWlsGAggASgJUgtzdGF0ZURldGFpbBI9CghzZXR0aW5ncxgJIAEoCzIhLmt1'
-    'c2ludGEuaW90LmxpbmsudjEuTGlua1NldHRpbmdzUghzZXR0aW5nc0oECBQQHg==');
+    'c2ludGEuaW90LmxpbmsudjEuTGlua1NldHRpbmdzUghzZXR0aW5ncxIpChBkZXRhaWxzX3dpdG'
+    'hoZWxkGAogASgIUg9kZXRhaWxzV2l0aGhlbGRKBAgUEB4=');
 
 @$core.Deprecated('Use linkCapabilityDescriptor instead')
 const LinkCapability$json = {

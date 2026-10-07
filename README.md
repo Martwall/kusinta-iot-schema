@@ -182,26 +182,81 @@ valve opening, and how long any valve was open. Every reading is optional. The r
 range is half-open — a bucket is returned when `from_time <= at < to_time` — so
 back-to-back windows neither repeat nor skip one. Unset bounds mean `kept_from` and now,
 and both are clamped to `[kept_from, now]`, `kept_from` being the earliest moment the
-gateway still holds.
+gateway still holds — for a room in the caller's own home, no earlier than the start of
+their current residency nor than when the room last joined their home; for any other room, no
+earlier than when it last left a home.
 
 Times of day are read in the building's zone: `Space.time_zone` is an IANA name written on
 the building (`CreateSpace` or `UpdateSpace`, refused on any other space), and a listing
 fills it on every space with the value it inherits.
 
 Setting a room's target (`SetRoomTarget`) is adjusting, and needs `WRITE` on the room — the
-same act as turning a radiator's knob. Configuring what the room obeys
+same act as turning a radiator's knob — and in a home it is its residents' alone (see below). Configuring what the room obeys
 (`ConfigureRoomClimate`: limits, sensors, whether device controls are locked) is directing,
-and stays with owners and filing roles. Both travel as `ManagementRequest` cases; changes are
+and stays with owners and filing roles — except the lock in a home, which is its
+residents'. Both travel as `ManagementRequest` cases; changes are
 pushed as `RoomClimateChanged` and `ClimateModeChanged`.
 
 Device links (`link/v1`) remain, but as the mechanism underneath a room rather than something
 a person sets a temperature on.
+
+## Residents and service: what a home discloses
+
+Reach says which spaces a user gets to; it does not say what they learn there. In a
+**home** — an apartment and the rooms in it — that depends on how they stand to it, held
+per membership as a `MembershipRelation` (`access/v1/roles.proto`) and set by
+`AssignUserToSpace.relation`, which is required:
+
+| How the user reaches the home | Building devices filed there | Devices a resident owns |
+|---|---|---|
+| `RESIDENT` on the apartment | everything, from when they moved in; operate them | if filed in their home |
+| `SERVICE` on the apartment, a room, or a building or floor above; or as the administrator | a `ServiceStatus` each, of the part they reach; operate none | nothing |
+| `RESIDENT` on a building or floor above | nothing: the home is out of reach | nothing |
+
+`RESIDENT` is refused on rooms. Where several apply, the first row that matches wins.
+Outside homes the relation changes nothing, except for devices a resident owns.
+
+How it shows on the wire:
+
+- A service view's `DeviceAcl` says `relation = SERVICE` and holds no action. Its `Device`
+  carries a description and no values, and no reading or event of it is sent; its
+  `ServiceStatus` (`webrtc/v1/device_state.proto`) is all it gets: reachable, battery, radio
+  quality and faults, evaluated by the gateway each quarter hour. Every recipient gets a
+  `ServiceStatus` for every device it sees — from the next quarter hour for one newly seen —
+  so an app reads problems from one place.
+- Withheld state is marked, not left looking empty: `RoomClimate.state_withheld`,
+  `DeviceLink.details_withheld`, `Space.members_withheld`. Times from before a resident's
+  residency are simply unset. A mode on a home goes to its residents only.
+- Setting a target, switching a mode, locking device controls and changing a link in a home
+  are its residents' alone; anyone else is refused `NOT_ENTITLED` — save that the property
+  owner or administrator may switch a mode off: it ends one that was on while the home had
+  no resident at the last quarter hour and whose setter is not a resident now, and is
+  otherwise accepted and does nothing, so the answer says nothing of who lives there.
+  Service is refused `GetRoomHistory` on a room in a home; service that reaches the apartment itself gets
+  `GetApartmentClimateSummary` instead: means over whole, closed periods of the disclosed
+  length in the building's time zone, of the measured temperature and of the target
+  somebody asked for, with how much of the period they rest on.
+- When a user loses their view of a home, `LivePermissionUpdate.reset_spaces` tells the app
+  to drop what it held of it and read it again.
+- Changing who belongs to a home, or what is filed in it, is guarded by the gateway. Every
+  change to a home's members shows in `Space.members`, which its residents see.
+- `GetPrivacyDisclosure` tells a resident who can see what in their home, per kind of party —
+  never by name.
 
 ## Events, and how they differ from property updates
 
 `PropertyUpdate` says what a device **is**; `DeviceEvent` says what **happened** to it —
 latest-wins state versus an ordered log. Matter models both because neither substitutes for
 the other, and so does this schema. `device_event.proto` explains when to reach for which.
+
+A recipient is sent only the events its grant names, so a skip in `event_number` is not a
+gap. On the app leg the gateway fills `previous_event_number`, the previous event *this
+user* was due within their grant, whether or not a session was open, and `follows_loss`, set
+when it missed events itself. An app first drops an event numbered at or below the last it
+holds for that device under the same `numbering_id` — a resend. A gap is then
+`previous_event_number` set and above the last number the app received for that device under
+the same `numbering_id`, or `follows_loss` on an event above it or when it holds none.
+Otherwise — unset, or no number held under that numbering — continuity is unknown.
 
 ## Property or attribute?
 

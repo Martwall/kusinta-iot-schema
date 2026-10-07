@@ -112,5 +112,75 @@ class ClimateModeKind extends $pb.ProtobufEnum {
   const ClimateModeKind._(super.value, super.name);
 }
 
+/// The length of the periods an ApartmentClimateSummary is given in. Each period runs from
+/// the start of one local date to the start of another in the building's time zone
+/// (space.v1.Space.time_zone) — midnight, or the first moment of the date where daylight
+/// saving skips midnight — so a day is 23 or 25 hours long across a change of daylight
+/// saving time. A period is cut by the time zone in force when it opened, and kept as cut.
+/// After a change of zone, the next period runs from that cut to the first boundary of its
+/// length in the new zone — a midnight, a Monday or a first of the month — that leaves it
+/// covering at least one whole day, week or month of the new zone's calendar, so no period
+/// covers less than one whole day, week or month of its calendar, however many hours that
+/// is. While the zone is unknown — never set, or cleared — nothing is summarised, and the
+/// period open when it was cleared ends unsummarised; once it is known again, the first
+/// period begins at the first boundary of its length after that.
+class ClimateSummaryPeriod extends $pb.ProtobufEnum {
+  static const ClimateSummaryPeriod CLIMATE_SUMMARY_PERIOD_UNSPECIFIED =
+      ClimateSummaryPeriod._(
+          0, _omitEnumNames ? '' : 'CLIMATE_SUMMARY_PERIOD_UNSPECIFIED');
+  static const ClimateSummaryPeriod CLIMATE_SUMMARY_PERIOD_DAY =
+      ClimateSummaryPeriod._(
+          1, _omitEnumNames ? '' : 'CLIMATE_SUMMARY_PERIOD_DAY');
+
+  /// ISO weeks, Monday to Monday.
+  static const ClimateSummaryPeriod CLIMATE_SUMMARY_PERIOD_WEEK =
+      ClimateSummaryPeriod._(
+          2, _omitEnumNames ? '' : 'CLIMATE_SUMMARY_PERIOD_WEEK');
+
+  /// Calendar months.
+  static const ClimateSummaryPeriod CLIMATE_SUMMARY_PERIOD_MONTH =
+      ClimateSummaryPeriod._(
+          3, _omitEnumNames ? '' : 'CLIMATE_SUMMARY_PERIOD_MONTH');
+
+  static const $core.List<ClimateSummaryPeriod> values = <ClimateSummaryPeriod>[
+    CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+    CLIMATE_SUMMARY_PERIOD_DAY,
+    CLIMATE_SUMMARY_PERIOD_WEEK,
+    CLIMATE_SUMMARY_PERIOD_MONTH,
+  ];
+
+  static final $core.List<ClimateSummaryPeriod?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static ClimateSummaryPeriod? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ClimateSummaryPeriod._(super.value, super.name);
+}
+
+/// How an apartment's mean is formed from its rooms' means.
+class ClimateSummaryWeighting extends $pb.ProtobufEnum {
+  static const ClimateSummaryWeighting CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED =
+      ClimateSummaryWeighting._(
+          0, _omitEnumNames ? '' : 'CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED');
+
+  /// Each room counts once, whatever its size: a bathroom weighs as much as a living room.
+  static const ClimateSummaryWeighting CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL =
+      ClimateSummaryWeighting._(
+          1, _omitEnumNames ? '' : 'CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL');
+
+  static const $core.List<ClimateSummaryWeighting> values =
+      <ClimateSummaryWeighting>[
+    CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED,
+    CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL,
+  ];
+
+  static final $core.List<ClimateSummaryWeighting?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static ClimateSummaryWeighting? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ClimateSummaryWeighting._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

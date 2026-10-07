@@ -60,12 +60,21 @@ export declare type DeviceEvent = Message<"kusinta.iot.device.v1.DeviceEvent"> &
   eventId: number;
 
   /**
-   * Matter's EventNumber: monotonically increasing per node, and the reason an event log
-   * can be resumed rather than merely replayed. A consumer that sees a gap knows it missed
-   * something and can say so — the one guarantee a PropertyUpdate stream cannot give.
+   * The device's event number, as its connector numbers it — per device, where Matter's
+   * EventNumber is per node; a connector renumbers what a node gives it. It is the reason
+   * an event log can be resumed rather than merely replayed. A consumer that sees a gap
+   * knows it missed something and can say so — the one guarantee a PropertyUpdate stream
+   * cannot give. On the app leg a gap is judged by previous_event_number and follows_loss
+   * below, not by a skip in this number.
    *
-   * Monotonic within one device. Do NOT compare across devices; they are unrelated
-   * sequences.
+   * Monotonic within one device, its connector and one numbering_id — a device that moves
+   * to another connector begins a new sequence — and consecutive as a connector delivers
+   * it: a connector numbers each device's events on its own, so a skip means events were
+   * lost — including ones the connector lost itself, whose numbers it skips. A number at or
+   * below one already received for the device from the same connector under the same
+   * numbering_id is that event again — a connector resends what it could not confirm,
+   * always the whole unconfirmed tail of what it sent, in order — and is dropped. Do NOT
+   * compare across devices; they are unrelated sequences.
    *
    * @generated from field: uint64 event_number = 5;
    */
@@ -92,6 +101,79 @@ export declare type DeviceEvent = Message<"kusinta.iot.device.v1.DeviceEvent"> &
    * @generated from field: kusinta.iot.device.v1.AttributeValue data = 8;
    */
   data?: AttributeValue | undefined;
+
+  /**
+   * How a recipient tells events it was not sent from events that were lost. Filled by the
+   * gateway on the app leg; a connector leaves both unset.
+   *
+   * A recipient is not sent every event of a device: which ones it receives depends on its
+   * grant (access.v1.DeviceAcl.allowed_event_refs), so event_number skips wherever an event
+   * went to somebody else. A skip in event_number is therefore NOT a gap. A gap is:
+   *
+   *   * previous_event_number set, the recipient holding a last-received event_number for
+   *     this device under the same numbering_id (whether or not it kept the event), and
+   *     previous_event_number above it — its log misses events the gateway sent this user,
+   *     on another session or while it was away, or that were lost; one at or below it is
+   *     no gap; or
+   *   * follows_loss set on an event above the last number the recipient holds, or when it
+   *     holds none.
+   *
+   * Otherwise — previous_event_number unset, or the recipient holding no number for the
+   * device under that numbering_id — continuity is unknown, and only follows_loss claims a
+   * gap: the gateway knows events were lost, whatever the recipient holds.
+   *
+   * event_number counts a device's events over its life, so it tells anyone it reaches
+   * roughly how many events came before; that much the number discloses. And it is still
+   * the device's own, so a recipient granted only some of a device's events learns from it
+   * how many it was not sent: that much a partial grant of events discloses.
+   *
+   * previous_event_number never names an event from before the user's current residency in
+   * a home, nor from before their current, unbroken stretch of seeing the device — it is
+   * unset instead, and follows_loss then looks no further back either. Otherwise it is the
+   * event_number of the previous event of this device that this user was due — within the
+   * grant they held when it happened — whether or not any session of theirs was open to be
+   * sent it, so that events missed while away are a gap like any other. A number of the
+   * event's own numbering_id. Unset when the gateway has received no such event under that
+   * numbering since the gateway itself last started — the first event after a numbering
+   * restart included: continuity is then unknown. The gateway remembers nothing of a
+   * numbering across its own restart, so follows_loss too covers only what it received
+   * since, and a resend it can no longer recognise reaches the app: an app drops an event
+   * whose number is at or below the last it holds for the device under the same
+   * numbering_id.
+   *
+   * @generated from field: optional uint64 previous_event_number = 9;
+   */
+  previousEventNumber?: bigint | undefined;
+
+  /**
+   * Set when the gateway itself missed events of this device since previous_event_number —
+   * or, when that is unset, since the latest of the start of what the user may learn of the
+   * device, the start of the current numbering and the gateway's own last start — the
+   * sequence it receives from the device skipped. A restart of the numbering is not itself
+   * a loss; a connector shows what it lost by skipping numbers. What was lost is unknown,
+   * so it may have been an event this recipient would have been sent.
+   *
+   * @generated from field: bool follows_loss = 10;
+   */
+  followsLoss: boolean;
+
+  /**
+   * Which numbering event_number belongs to. A connector changes it whenever it restarts a
+   * device's numbering — after losing its own count — so that a restart is never mistaken
+   * for a resend. The gateway then begins a new sequence for the device: the first event of
+   * it that each user is due carries previous_event_number unset, continuity unknown. A new
+   * value is one never used before for the device — a UUIDv4 is the expected form. Opaque;
+   * compare for equality only. Empty is a numbering like any other, for a connector whose
+   * count for a device never restarts; a connector that begins a device's sequence anew —
+   * having lost its count, or the device having come back to it — must give it a
+   * numbering_id never used for that device before. Every numbering starts at 1. On the app leg
+   * the gateway derives it from the connector's own id and the connector's numbering_id
+   * alone, so that it is the same across a gateway restart and changes whenever either
+   * does — a numbering restart, or a device moving to another connector.
+   *
+   * @generated from field: string numbering_id = 11;
+   */
+  numberingId: string;
 };
 
 /**

@@ -50,3 +50,19 @@ final $typed_data.Uint8List permissionActionDescriptor = $convert.base64Decode(
     'oWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAIS'
     'HwobUEVSTUlTU0lPTl9BQ1RJT05fU1VCU0NSSUJFEAMSHAoYUEVSTUlTU0lPTl9BQ1RJT05fSU'
     '5WT0tFEAQ=');
+
+@$core.Deprecated('Use membershipRelationDescriptor instead')
+const MembershipRelation$json = {
+  '1': 'MembershipRelation',
+  '2': [
+    {'1': 'MEMBERSHIP_RELATION_UNSPECIFIED', '2': 0},
+    {'1': 'MEMBERSHIP_RELATION_RESIDENT', '2': 1},
+    {'1': 'MEMBERSHIP_RELATION_SERVICE', '2': 2},
+  ],
+};
+
+/// Descriptor for `MembershipRelation`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List membershipRelationDescriptor = $convert.base64Decode(
+    'ChJNZW1iZXJzaGlwUmVsYXRpb24SIwofTUVNQkVSU0hJUF9SRUxBVElPTl9VTlNQRUNJRklFRB'
+    'AAEiAKHE1FTUJFUlNISVBfUkVMQVRJT05fUkVTSURFTlQQARIfChtNRU1CRVJTSElQX1JFTEFU'
+    'SU9OX1NFUlZJQ0UQAg==');

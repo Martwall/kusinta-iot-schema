@@ -47,6 +47,9 @@ message DeviceDescriptor {
 
   // Populated when ownership == RESIDENT
   kusinta.iot.identity.v1.UserId owner_user_id = 15;
+  // Unset when it is withheld from the recipient: in a service view, and from anyone when
+  // it dates from before their current residency in the home, or from a home they did not
+  // live in at the time (see access.v1.MembershipRelation).
   google.protobuf.Timestamp claimed_at = 16;
 
   // Held a parallel endpoint list, joined to Device.endpoints by endpoint_id. Removed:
@@ -68,7 +71,8 @@ message DeviceDescriptor {
   //
   // So a Device is a Matter node OR one device behind one — the equivalence is deliberately
   // not exact, and this field is how a consumer tells which. Absent means the device is
-  // reached directly.
+  // reached directly, or that its bridge is withheld from the recipient (see
+  // access.v1.ServiceSignal FILING).
   optional kusinta.iot.identity.v1.DeviceId bridged_by = 19;
 
   // What this device can be linked as, if anything — see link.v1.LinkCapability.

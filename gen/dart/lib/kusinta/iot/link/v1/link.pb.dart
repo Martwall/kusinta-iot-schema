@@ -206,6 +206,7 @@ class DeviceLink extends $pb.GeneratedMessage {
     $1.Timestamp? createdAt,
     $core.String? stateDetail,
     LinkSettings? settings,
+    $core.bool? detailsWithheld,
   }) {
     final result = create();
     if (linkId != null) result.linkId = linkId;
@@ -217,6 +218,7 @@ class DeviceLink extends $pb.GeneratedMessage {
     if (createdAt != null) result.createdAt = createdAt;
     if (stateDetail != null) result.stateDetail = stateDetail;
     if (settings != null) result.settings = settings;
+    if (detailsWithheld != null) result.detailsWithheld = detailsWithheld;
     return result;
   }
 
@@ -256,6 +258,7 @@ class DeviceLink extends $pb.GeneratedMessage {
     ..aOS(8, _omitFieldNames ? '' : 'stateDetail')
     ..aOM<LinkSettings>(9, _omitFieldNames ? '' : 'settings',
         subBuilder: LinkSettings.create)
+    ..aOB(10, _omitFieldNames ? '' : 'detailsWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -277,6 +280,8 @@ class DeviceLink extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<DeviceLink>(create);
   static DeviceLink? _defaultInstance;
 
+  /// Opaque, and must not encode when the link was made — a UUIDv4 is the expected form — since
+  /// that time is withheld from some recipients (see created_at).
   @$pb.TagNumber(1)
   $core.String get linkId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -341,6 +346,9 @@ class DeviceLink extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearState() => $_clearField(6);
 
+  /// Unset when it is withheld from the recipient: from service in a home, and from anyone
+  /// when it dates from before their current residency in the home, or from a home they did
+  /// not live in at the time (see access.v1.MembershipRelation).
   @$pb.TagNumber(7)
   $1.Timestamp get createdAt => $_getN(6);
   @$pb.TagNumber(7)
@@ -380,6 +388,19 @@ class DeviceLink extends $pb.GeneratedMessage {
   void clearSettings() => $_clearField(9);
   @$pb.TagNumber(9)
   LinkSettings ensureSettings() => $_ensure(8);
+
+  /// Set when the recipient sees this link as service, because an end is in a home (see
+  /// access.v1.MembershipRelation): state, state_detail, settings and created_at are
+  /// WITHHELD and left unset, not unconfigured. An app must not render it as a link doing
+  /// nothing.
+  @$pb.TagNumber(10)
+  $core.bool get detailsWithheld => $_getBF(9);
+  @$pb.TagNumber(10)
+  set detailsWithheld($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDetailsWithheld() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDetailsWithheld() => $_clearField(10);
 }
 
 /// What a device can be linked as, declared by the connector that models it.

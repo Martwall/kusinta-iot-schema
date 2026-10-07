@@ -29,7 +29,7 @@ from kusinta.iot.device.v1 import property_update_pb2 as kusinta_dot_iot_dot_dev
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/webrtc/v1/device_state.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a\"kusinta/iot/device/v1/device.proto\x1a+kusinta/iot/device/v1/property_update.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xe0\x01\n\x13\x44\x65viceStateSnapshot\x12\x37\n\x07\x64\x65vices\x18\x01 \x03(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x07\x64\x65vices\x12M\n\x0bpermissions\x18\x02 \x01(\x0b\x32+.kusinta.iot.access.v1.EffectivePermissionsR\x0bpermissions\x12\x41\n\x0esnapshotted_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\rsnapshottedAt\"\x9d\x01\n\x0ePropertyReport\x12=\n\x06update\x18\x01 \x01(\x0b\x32%.kusinta.iot.device.v1.PropertyUpdateR\x06update\x12L\n\x14gateway_processed_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x12gatewayProcessedAt\"D\n\x0b\x44\x65viceAdded\x12\x35\n\x06\x64\x65vice\x18\x01 \x01(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x06\x64\x65vice\"g\n\rDeviceRemoved\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reasonB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/webrtc/v1/device_state.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a\"kusinta/iot/device/v1/device.proto\x1a+kusinta/iot/device/v1/property_update.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xb1\x02\n\x13\x44\x65viceStateSnapshot\x12\x37\n\x07\x64\x65vices\x18\x01 \x03(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x07\x64\x65vices\x12M\n\x0bpermissions\x18\x02 \x01(\x0b\x32+.kusinta.iot.access.v1.EffectivePermissionsR\x0bpermissions\x12\x41\n\x0esnapshotted_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\rsnapshottedAt\x12O\n\x10service_statuses\x18\x04 \x03(\x0b\x32$.kusinta.iot.webrtc.v1.ServiceStatusR\x0fserviceStatuses\"\x81\x04\n\rServiceStatus\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12/\n\x05\x61s_of\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x04\x61sOf\x12\x1c\n\treachable\x18\x03 \x01(\x08R\treachable\x12G\n\x11unreachable_since\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x10unreachableSince\x12,\n\x0f\x62\x61ttery_percent\x18\x05 \x01(\rH\x00R\x0e\x62\x61tteryPercent\x88\x01\x01\x12\x1f\n\x0b\x62\x61ttery_low\x18\x06 \x01(\x08R\nbatteryLow\x12<\n\x1a\x62\x61ttery_replacement_needed\x18\x07 \x01(\x08R\x18\x62\x61tteryReplacementNeeded\x12(\n\rradio_quality\x18\x08 \x01(\rH\x01R\x0cradioQuality\x88\x01\x01\x12;\n\x06\x66\x61ults\x18\t \x03(\x0e\x32#.kusinta.iot.webrtc.v1.ServiceFaultR\x06\x66\x61ultsB\x12\n\x10_battery_percentB\x10\n\x0e_radio_quality\"X\n\x14ServiceStatusChanged\x12@\n\x08statuses\x18\x01 \x03(\x0b\x32$.kusinta.iot.webrtc.v1.ServiceStatusR\x08statuses\"\x9d\x01\n\x0ePropertyReport\x12=\n\x06update\x18\x01 \x01(\x0b\x32%.kusinta.iot.device.v1.PropertyUpdateR\x06update\x12L\n\x14gateway_processed_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x12gatewayProcessedAt\"D\n\x0b\x44\x65viceAdded\x12\x35\n\x06\x64\x65vice\x18\x01 \x01(\x0b\x32\x1d.kusinta.iot.device.v1.DeviceR\x06\x64\x65vice\"g\n\rDeviceRemoved\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason*`\n\x0cServiceFault\x12\x1d\n\x19SERVICE_FAULT_UNSPECIFIED\x10\x00\x12\x17\n\x13SERVICE_FAULT_ERROR\x10\x01\x12\x18\n\x14SERVICE_FAULT_TAMPER\x10\x02\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,12 +37,18 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.webrtc.v1.devic
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
+  _globals['_SERVICEFAULT']._serialized_start=1503
+  _globals['_SERVICEFAULT']._serialized_end=1599
   _globals['_DEVICESTATESNAPSHOT']._serialized_start=255
-  _globals['_DEVICESTATESNAPSHOT']._serialized_end=479
-  _globals['_PROPERTYREPORT']._serialized_start=482
-  _globals['_PROPERTYREPORT']._serialized_end=639
-  _globals['_DEVICEADDED']._serialized_start=641
-  _globals['_DEVICEADDED']._serialized_end=709
-  _globals['_DEVICEREMOVED']._serialized_start=711
-  _globals['_DEVICEREMOVED']._serialized_end=814
+  _globals['_DEVICESTATESNAPSHOT']._serialized_end=560
+  _globals['_SERVICESTATUS']._serialized_start=563
+  _globals['_SERVICESTATUS']._serialized_end=1076
+  _globals['_SERVICESTATUSCHANGED']._serialized_start=1078
+  _globals['_SERVICESTATUSCHANGED']._serialized_end=1166
+  _globals['_PROPERTYREPORT']._serialized_start=1169
+  _globals['_PROPERTYREPORT']._serialized_end=1326
+  _globals['_DEVICEADDED']._serialized_start=1328
+  _globals['_DEVICEADDED']._serialized_end=1396
+  _globals['_DEVICEREMOVED']._serialized_start=1398
+  _globals['_DEVICEREMOVED']._serialized_end=1501
 # @@protoc_insertion_point(module_scope)

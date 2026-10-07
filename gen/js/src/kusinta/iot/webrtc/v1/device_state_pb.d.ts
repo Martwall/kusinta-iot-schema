@@ -2,13 +2,13 @@
 // @generated from file kusinta/iot/webrtc/v1/device_state.proto (package kusinta.iot.webrtc.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { EffectivePermissions } from "../../access/v1/acl_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { PropertyUpdate } from "../../device/v1/property_update_pb.js";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
+import type { PropertyUpdate } from "../../device/v1/property_update_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/device_state.proto.
@@ -16,7 +16,9 @@ import type { DeviceId } from "../../identity/v1/identity_pb.js";
 export declare const file_kusinta_iot_webrtc_v1_device_state: GenFile;
 
 /**
- * Full device state sent to the app on initial WebRTC connection.
+ * Full device state sent to the app on initial WebRTC connection. Devices the recipient sees
+ * as service are as they stood at the last quarter hour, less any since taken away, each
+ * with its ServiceStatus.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeviceStateSnapshot
  */
@@ -35,6 +37,15 @@ export declare type DeviceStateSnapshot = Message<"kusinta.iot.webrtc.v1.DeviceS
    * @generated from field: google.protobuf.Timestamp snapshotted_at = 3;
    */
   snapshottedAt?: Timestamp | undefined;
+
+  /**
+   * One for every device the recipient sees, as last evaluated (see ServiceStatus). A device
+   * the recipient began to see since the last quarter hour — or began to see as its
+   * resident — has none until the next.
+   *
+   * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceStatus service_statuses = 4;
+   */
+  serviceStatuses: ServiceStatus[];
 };
 
 /**
@@ -42,6 +53,123 @@ export declare type DeviceStateSnapshot = Message<"kusinta.iot.webrtc.v1.DeviceS
  * Use `create(DeviceStateSnapshotSchema)` to create a new message.
  */
 export declare const DeviceStateSnapshotSchema: GenMessage<DeviceStateSnapshot>;
+
+/**
+ * What keeps a device working, as the gateway judges it, and nothing that describes the
+ * people around it. Sent for every device a recipient sees, so that an app reads a
+ * device's problems from one place whatever its view. To a recipient whose
+ * DeviceAcl.relation is SERVICE it is all they get of the device's state, beside its
+ * description-only Device: they hold no action on
+ * it and are sent no PropertyReport or DeviceEvent for it (see
+ * access.v1.MembershipRelation).
+ *
+ * Evaluated by the gateway at each quarter hour (:00, :15, :30, :45 UTC) from what it holds
+ * then, and pushed in ServiceStatusChanged when it differs from what the recipient was last
+ * sent. Between quarter hours nothing here changes, so polling learns nothing more. A
+ * change still says the device was heard within that quarter hour, and nothing finer.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ServiceStatus
+ */
+export declare type ServiceStatus = Message<"kusinta.iot.webrtc.v1.ServiceStatus"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+
+  /**
+   * Always set. The quarter hour at which the status took its current value, but never
+   * earlier than the start of the recipient's current, unbroken stretch of seeing the
+   * device, nor, for a resident, than their current residency — each start taken at the
+   * first quarter hour at or after it. When that start moves because the recipient becomes
+   * a resident, the app drops the status it held and is sent one again from the new start at
+   * the next quarter hour. These quarter hours, and the moment a device is
+   * taken away, are the only times service is given of a device in a home (see
+   * access.v1.MembershipRelation). Pushed and in a
+   * snapshot alike, so an unchanged status carries the same as_of however it arrived.
+   *
+   * @generated from field: google.protobuf.Timestamp as_of = 2;
+   */
+  asOf?: Timestamp | undefined;
+
+  /**
+   * @generated from field: bool reachable = 3;
+   */
+  reachable: boolean;
+
+  /**
+   * While unreachable, the quarter hour at which the gateway found it so — not when it was
+   * last heard, which for a device that reports on change is when it was last used — and,
+   * like as_of, never earlier than those starts. Unset while reachable.
+   *
+   * @generated from field: google.protobuf.Timestamp unreachable_since = 4;
+   */
+  unreachableSince?: Timestamp | undefined;
+
+  /**
+   * Remaining charge, rounded up to a multiple of ten — 4 % is sent as 10, and 0 only when
+   * the device reports none left. Absent for a device that does not report one.
+   *
+   * @generated from field: optional uint32 battery_percent = 5;
+   */
+  batteryPercent?: number | undefined;
+
+  /**
+   * battery_low: the device reports its charge low or critical (Matter Power Source
+   * BatChargeLevel, or a vendor's low-battery flag). battery_replacement_needed: it reports
+   * that its battery must be replaced. Each is set on its own report alone.
+   *
+   * @generated from field: bool battery_low = 6;
+   */
+  batteryLow: boolean;
+
+  /**
+   * @generated from field: bool battery_replacement_needed = 7;
+   */
+  batteryReplacementNeeded: boolean;
+
+  /**
+   * A device.v1.RadioQuality number, travelling as a uint32 as every enum-valued reading
+   * does. Absent: the device does not report one.
+   *
+   * @generated from field: optional uint32 radio_quality = 8;
+   */
+  radioQuality?: number | undefined;
+
+  /**
+   * Faults the device reports now, each listed once. Empty: none. A fault can follow from
+   * what someone did — a casing opened — and service learns that within the quarter hour;
+   * that much fault reporting discloses.
+   *
+   * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceFault faults = 9;
+   */
+  faults: ServiceFault[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ServiceStatus.
+ * Use `create(ServiceStatusSchema)` to create a new message.
+ */
+export declare const ServiceStatusSchema: GenMessage<ServiceStatus>;
+
+/**
+ * The service statuses that changed at a quarter hour, gateway → app. Apply each as an
+ * upsert keyed on device_id. Sent for every device the recipient sees, without a
+ * subscription: a service view holds no SUBSCRIBE, and needs none for this.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ServiceStatusChanged
+ */
+export declare type ServiceStatusChanged = Message<"kusinta.iot.webrtc.v1.ServiceStatusChanged"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceStatus statuses = 1;
+   */
+  statuses: ServiceStatus[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ServiceStatusChanged.
+ * Use `create(ServiceStatusChangedSchema)` to create a new message.
+ */
+export declare const ServiceStatusChangedSchema: GenMessage<ServiceStatusChanged>;
 
 /**
  * One attribute reading streamed to the app as it happens — Matter's Report Data Action,
@@ -78,7 +206,9 @@ export declare const PropertyReportSchema: GenMessage<PropertyReport>;
  *
  * Carries the full Device, descriptor plus current typed properties, so the app can
  * render it without a follow-up read — the same payload DeviceStateSnapshot gives
- * per device.
+ * per device. To a recipient who sees it as service, the Device carries its description
+ * only, as in a snapshot, and is sent at the next quarter hour (see
+ * access.v1.DeviceAcl.relation).
  *
  * Apply as an upsert keyed on descriptor.device_id, never as an insert: a device can
  * be in the snapshot and then announced, or announced twice across a connector
@@ -106,11 +236,15 @@ export declare const DeviceAddedSchema: GenMessage<DeviceAdded>;
 
 /**
  * A device is gone, because its connector said so via connector.v1.DeviceRemoval.
+ * To a recipient who sees it as service, sent at once, as the removal from their
+ * permissions is (see LivePermissionUpdate) — if they were shown the device; otherwise not
+ * at all.
  *
  * A connector disconnecting is NOT a removal: an ordinary reconnect wipes the
  * device→connector route while every device still exists, and treating that as a
  * removal makes the whole UI flap. Unreachability is a separate signal — read
- * device.v1.Device.last_seen for that.
+ * ServiceStatus.reachable for that, which every recipient gets; device.v1.Device.last_seen
+ * may be unset.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeviceRemoved
  */
@@ -133,4 +267,35 @@ export declare type DeviceRemoved = Message<"kusinta.iot.webrtc.v1.DeviceRemoved
  * Use `create(DeviceRemovedSchema)` to create a new message.
  */
 export declare const DeviceRemovedSchema: GenMessage<DeviceRemoved>;
+
+/**
+ * A fault a device reports about itself, as service sees it.
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.ServiceFault
+ */
+export enum ServiceFault {
+  /**
+   * @generated from enum value: SERVICE_FAULT_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * An error the device reports in its own operation.
+   *
+   * @generated from enum value: SERVICE_FAULT_ERROR = 1;
+   */
+  ERROR = 1,
+
+  /**
+   * Its casing was opened or it was taken off its mount.
+   *
+   * @generated from enum value: SERVICE_FAULT_TAMPER = 2;
+   */
+  TAMPER = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.ServiceFault.
+ */
+export declare const ServiceFaultSchema: GenEnum<ServiceFault>;
 

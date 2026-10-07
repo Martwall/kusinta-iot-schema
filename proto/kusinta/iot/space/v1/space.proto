@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package kusinta.iot.space.v1;
 
+import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
@@ -14,9 +15,15 @@ message Space {
   string description = 4;
   int32 floor = 5; // meaningful for FLOOR type
   kusinta.iot.identity.v1.SpaceId parent_space_id = 6; // null for top-level Building
+  // Filtered to the spaces the caller reaches, as device_ids is.
   repeated kusinta.iot.identity.v1.SpaceId sub_space_ids = 7;
+  // Filtered to the devices the caller may see (see webrtc.v1.SpaceTree): for service, no
+  // device a resident owns.
   repeated kusinta.iot.identity.v1.DeviceId device_ids = 8;
-  kusinta.iot.identity.v1.UserId resident_user_id = 9; // only for APARTMENT
+  // Superseded by members, which can say that more than one person lives in an apartment,
+  // and how each member stands to the space. A gateway leaves it unset, so a client that
+  // still reads it sees no resident anywhere; read members instead.
+  kusinta.iot.identity.v1.UserId resident_user_id = 9 [deprecated = true];
   kusinta.iot.identity.v1.TenantId tenant_id = 10;
   kusinta.iot.identity.v1.GatewayId gateway_id = 11;
 
@@ -25,4 +32,30 @@ message Space {
   // value, inherited from the nearest ancestor that has one, so every listed space
   // carries it. Empty means unknown, not UTC.
   string time_zone = 12;
+
+  // Who is filed directly on this space, and how each stands to it. Members of a space
+  // above it are listed there, not here.
+  //
+  // Filled according to who asks, since a membership list says who lives where:
+  //
+  //   * a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN who reaches the space
+  //     sees every member — for a home they see as service, as it stood at the last
+  //     quarter hour, so that a move in or out is not timed by polling;
+  //   * a resident of an apartment sees every member filed on it or on its rooms — who they
+  //     live with, and anyone filed on their home as service, since being filed on a home
+  //     is an act on it its residents should see. Service reach from a building or floor
+  //     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
+  //     hold it, without naming anyone;
+  //   * anyone else sees none, residents of a building or floor included.
+  repeated SpaceMember members = 13;
+
+  // Set when members are not listed to this caller, so that an empty list is not read as
+  // nobody being filed here.
+  bool members_withheld = 14;
+}
+
+// One membership of a space.
+message SpaceMember {
+  kusinta.iot.identity.v1.UserId user_id = 1;
+  kusinta.iot.access.v1.MembershipRelation relation = 2;
 }

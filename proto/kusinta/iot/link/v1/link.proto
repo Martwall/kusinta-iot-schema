@@ -152,6 +152,8 @@ message ClimateLeadSettings {
 
 // One device leading another.
 message DeviceLink {
+  // Opaque, and must not encode when the link was made — a UUIDv4 is the expected form — since
+  // that time is withheld from some recipients (see created_at).
   string link_id = 1;
 
   // Which device leads. This is the control surface for the pair: for a climate
@@ -167,6 +169,9 @@ message DeviceLink {
   LinkFunction function = 4;
   LinkMode mode = 5;
   LinkState state = 6;
+  // Unset when it is withheld from the recipient: from service in a home, and from anyone
+  // when it dates from before their current residency in the home, or from a home they did
+  // not live in at the time (see access.v1.MembershipRelation).
   google.protobuf.Timestamp created_at = 7;
 
   // Why the link is not carrying, when state says it is not. Free text for a
@@ -181,6 +186,12 @@ message DeviceLink {
   // interface showing a soft climate link has to show the room's target next to
   // it, and the receiver's own setpoint is not that number.
   LinkSettings settings = 9;
+
+  // Set when the recipient sees this link as service, because an end is in a home (see
+  // access.v1.MembershipRelation): state, state_detail, settings and created_at are
+  // WITHHELD and left unset, not unconfigured. An app must not render it as a link doing
+  // nothing.
+  bool details_withheld = 10;
 
   reserved 20 to 29; // held for an endpoint-addressed form
 }

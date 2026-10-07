@@ -65,7 +65,7 @@ class ClimateLeadSettings(_message.Message):
     def __init__(self, target_setpoint: _Optional[int] = ...) -> None: ...
 
 class DeviceLink(_message.Message):
-    __slots__ = ("link_id", "sender", "receiver", "function", "mode", "state", "created_at", "state_detail", "settings")
+    __slots__ = ("link_id", "sender", "receiver", "function", "mode", "state", "created_at", "state_detail", "settings", "details_withheld")
     LINK_ID_FIELD_NUMBER: _ClassVar[int]
     SENDER_FIELD_NUMBER: _ClassVar[int]
     RECEIVER_FIELD_NUMBER: _ClassVar[int]
@@ -75,6 +75,7 @@ class DeviceLink(_message.Message):
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     STATE_DETAIL_FIELD_NUMBER: _ClassVar[int]
     SETTINGS_FIELD_NUMBER: _ClassVar[int]
+    DETAILS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     link_id: str
     sender: _identity_pb2.DeviceId
     receiver: _identity_pb2.DeviceId
@@ -84,7 +85,8 @@ class DeviceLink(_message.Message):
     created_at: _timestamp_pb2.Timestamp
     state_detail: str
     settings: LinkSettings
-    def __init__(self, link_id: _Optional[str] = ..., sender: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., receiver: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., function: _Optional[_Union[LinkFunction, str]] = ..., mode: _Optional[_Union[LinkMode, str]] = ..., state: _Optional[_Union[LinkState, str]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_detail: _Optional[str] = ..., settings: _Optional[_Union[LinkSettings, _Mapping]] = ...) -> None: ...
+    details_withheld: bool
+    def __init__(self, link_id: _Optional[str] = ..., sender: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., receiver: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., function: _Optional[_Union[LinkFunction, str]] = ..., mode: _Optional[_Union[LinkMode, str]] = ..., state: _Optional[_Union[LinkState, str]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., state_detail: _Optional[str] = ..., settings: _Optional[_Union[LinkSettings, _Mapping]] = ..., details_withheld: _Optional[bool] = ...) -> None: ...
 
 class LinkCapability(_message.Message):
     __slots__ = ("function", "direction", "supported_modes", "attribute", "label")

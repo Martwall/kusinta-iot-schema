@@ -8,7 +8,7 @@ import { enumDesc, fileDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
  * Describes the file kusinta/iot/access/v1/roles.proto.
  */
 export const file_kusinta_iot_access_v1_roles = /*@__PURE__*/
-  fileDesc("CiFrdXNpbnRhL2lvdC9hY2Nlc3MvdjEvcm9sZXMucHJvdG8SFWt1c2ludGEuaW90LmFjY2Vzcy52MSp1CgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIRCg1ST0xFX1JFU0lERU5UEAESFwoTUk9MRV9QUk9QRVJUWV9PV05FUhACEhMKD1JPTEVfVEVDSE5JQ0lBThADEhYKElJPTEVfR0FURVdBWV9BRE1JThAEKq0BChBQZXJtaXNzaW9uQWN0aW9uEiEKHVBFUk1JU1NJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAISHwobUEVSTUlTU0lPTl9BQ1RJT05fU1VCU0NSSUJFEAMSHAoYUEVSTUlTU0lPTl9BQ1RJT05fSU5WT0tFEARCAkgBYgZwcm90bzM");
+  fileDesc("CiFrdXNpbnRhL2lvdC9hY2Nlc3MvdjEvcm9sZXMucHJvdG8SFWt1c2ludGEuaW90LmFjY2Vzcy52MSp1CgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIRCg1ST0xFX1JFU0lERU5UEAESFwoTUk9MRV9QUk9QRVJUWV9PV05FUhACEhMKD1JPTEVfVEVDSE5JQ0lBThADEhYKElJPTEVfR0FURVdBWV9BRE1JThAEKq0BChBQZXJtaXNzaW9uQWN0aW9uEiEKHVBFUk1JU1NJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAISHwobUEVSTUlTU0lPTl9BQ1RJT05fU1VCU0NSSUJFEAMSHAoYUEVSTUlTU0lPTl9BQ1RJT05fSU5WT0tFEAQqfAoSTWVtYmVyc2hpcFJlbGF0aW9uEiMKH01FTUJFUlNISVBfUkVMQVRJT05fVU5TUEVDSUZJRUQQABIgChxNRU1CRVJTSElQX1JFTEFUSU9OX1JFU0lERU5UEAESHwobTUVNQkVSU0hJUF9SRUxBVElPTl9TRVJWSUNFEAJCAkgBYgZwcm90bzM");
 
 /**
  * Describes the enum kusinta.iot.access.v1.Role.
@@ -69,4 +69,84 @@ export const PermissionActionSchema = /*@__PURE__*/
  */
 export const PermissionAction = /*@__PURE__*/
   tsEnum(PermissionActionSchema);
+
+/**
+ * Describes the enum kusinta.iot.access.v1.MembershipRelation.
+ */
+export const MembershipRelationSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_access_v1_roles, 2);
+
+/**
+ * How a member stands to a space they are filed in. Held per membership — set by
+ * webrtc.v1.AssignUserToSpace — unlike Role, which is gateway-wide. The two are independent:
+ * a technician who lives in an apartment is filed on it as RESIDENT, and a resident who
+ * looks after a building's plant room is filed there as SERVICE. RESIDENT is refused on a
+ * room: a home's residents live in all of it.
+ *
+ * A HOME is an apartment and the rooms in it. What a user learns of a home depends on how
+ * they reach it; where several apply, the first wins:
+ *
+ *   * As its resident — RESIDENT on the apartment. They see and operate everything filed
+ *     in it, and its history from the start of their current residency, never before: a new
+ *     tenant does not read the previous one's, nor learn when or by whom anything was
+ *     changed before they moved in: every time from before that a home's rooms and devices
+ *     carry — a reading's timestamp included — is unset for them, save a
+ *     webrtc.v1.ServiceStatus, which always carries its times and so gives none before the first
+ *     quarter hour of their residency, from that quarter hour on.
+ *   * As service — SERVICE on the apartment, a room in it, or a building or floor above it,
+ *     or as the gateway's administrator. Of the building's own devices in what they reach of
+ *     the home — any
+ *     device no person owns — they see what each is and a webrtc.v1.ServiceStatus,
+ *     evaluated each quarter hour, and no reading, event or time of the device itself; they
+ *     operate none of them. Of what they reach of the home — from the room they are filed
+ *     on, or all of it — they see how its rooms are set up, with
+ *     RoomClimate.state_withheld marking what is not shown, and its links with
+ *     DeviceLink.details_withheld; modes on a home are not sent to them at all. Service
+ *     that reaches the apartment itself also gets its climate summary over the disclosed
+ *     period. What they newly see of the home reaches them at quarter hours; what they
+ *     lose, at once.
+ *   * Not at all — RESIDENT on a building or floor above it. Living in a building is not
+ *     living in every apartment in it.
+ *
+ * What was recorded while a room or device was in a home stays with the home after it
+ * leaves: its history, and the times and people it carries from then, are never given to
+ * whoever reaches it later.
+ *
+ * A residency starts when a user is assigned RESIDENT on an apartment while not already its
+ * resident — a membership recorded with no relation included, so its holder starts afresh —
+ * and ends with any other change to that membership. Assigning RESIDENT to a resident
+ * changes nothing. A space becoming an apartment starts the residency of each RESIDENT
+ * member on it, and ceasing to be one ends it — though it releases no device: what is no
+ * longer a home holds nobody's devices for a next tenant. A device in a space becoming an
+ * apartment, owned by someone who is not to be its resident, is taken out of that space.
+ *
+ * A device filed in a home counts as in the home wherever else it is also filed, a device a
+ * resident owns included: reaching it through another space shows it to nobody. A link
+ * never joins a device in a home to one outside it. Outside homes the relation changes
+ * nothing: what is filed there is visible to whoever reaches it. A device owned as RESIDENT
+ * is the exception everywhere, whoever owns it: it is visible to its owner and the RESIDENT
+ * members filed on the space it is filed in — for a device in a home, the home's residents
+ * alone, wherever else it is filed; never those who merely reach a space from above — and
+ * to nobody else. An owner who stops living in the home it is filed in gives it up: it is
+ * released, with no owner, and stays filed in the home alone, as one of the building's own
+ * devices there. A device given up so, or released, then appears to service as any device
+ * newly in the home does, at a quarter hour; that much a release shows.
+ *
+ * Who may change a home's members, move its spaces or file devices into and out of it is
+ * restricted by the gateway, and a refused caller gets NOT_ENTITLED. This keeps a home's
+ * life — its readings, history and modes — from anyone but its residents by default; those
+ * who service the building get the service view above and no more. It does not keep the
+ * property owner or the administrator out by force — they hold the building's filing
+ * authority and the gateway itself — but it makes their seeing in a deliberate act on the
+ * home, such as filing themselves on it, rather than something handed out by default.
+ *
+ * A membership recorded with no relation, made before relations existed, sees no more than
+ * either relation would where it is held: on an apartment or a room, a home as service; on a
+ * building or floor, no home at all. It is listed with UNSPECIFIED so that it can be found
+ * and assigned again.
+ *
+ * @generated from enum kusinta.iot.access.v1.MembershipRelation
+ */
+export const MembershipRelation = /*@__PURE__*/
+  tsEnum(MembershipRelationSchema);
 

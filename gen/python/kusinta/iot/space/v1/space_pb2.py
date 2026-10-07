@@ -22,11 +22,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from kusinta.iot.access.v1 import roles_pb2 as kusinta_dot_iot_dot_access_dot_v1_dot_roles__pb2
 from kusinta.iot.common.v1 import types_pb2 as kusinta_dot_iot_dot_common_dot_v1_dot_types__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n kusinta/iot/space/v1/space.proto\x12\x14kusinta.iot.space.v1\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x8e\x05\n\x05Space\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12?\n\nspace_type\x18\x02 \x01(\x0e\x32 .kusinta.iot.common.v1.SpaceTypeR\tspaceType\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12 \n\x0b\x64\x65scription\x18\x04 \x01(\tR\x0b\x64\x65scription\x12\x14\n\x05\x66loor\x18\x05 \x01(\x05R\x05\x66loor\x12H\n\x0fparent_space_id\x18\x06 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\rparentSpaceId\x12\x44\n\rsub_space_ids\x18\x07 \x03(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x0bsubSpaceIds\x12@\n\ndevice_ids\x18\x08 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\tdeviceIds\x12I\n\x10resident_user_id\x18\t \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0eresidentUserId\x12>\n\ttenant_id\x18\n \x01(\x0b\x32!.kusinta.iot.identity.v1.TenantIdR\x08tenantId\x12\x41\n\ngateway_id\x18\x0b \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\tgatewayId\x12\x1b\n\ttime_zone\x18\x0c \x01(\tR\x08timeZoneB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n kusinta/iot/space/v1/space.proto\x12\x14kusinta.iot.space.v1\x1a!kusinta/iot/access/v1/roles.proto\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\xfa\x05\n\x05Space\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12?\n\nspace_type\x18\x02 \x01(\x0e\x32 .kusinta.iot.common.v1.SpaceTypeR\tspaceType\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12 \n\x0b\x64\x65scription\x18\x04 \x01(\tR\x0b\x64\x65scription\x12\x14\n\x05\x66loor\x18\x05 \x01(\x05R\x05\x66loor\x12H\n\x0fparent_space_id\x18\x06 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\rparentSpaceId\x12\x44\n\rsub_space_ids\x18\x07 \x03(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x0bsubSpaceIds\x12@\n\ndevice_ids\x18\x08 \x03(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\tdeviceIds\x12M\n\x10resident_user_id\x18\t \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdB\x02\x18\x01R\x0eresidentUserId\x12>\n\ttenant_id\x18\n \x01(\x0b\x32!.kusinta.iot.identity.v1.TenantIdR\x08tenantId\x12\x41\n\ngateway_id\x18\x0b \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\tgatewayId\x12\x1b\n\ttime_zone\x18\x0c \x01(\tR\x08timeZone\x12;\n\x07members\x18\r \x03(\x0b\x32!.kusinta.iot.space.v1.SpaceMemberR\x07members\x12)\n\x10members_withheld\x18\x0e \x01(\x08R\x0fmembersWithheld\"\x8e\x01\n\x0bSpaceMember\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12\x45\n\x08relation\x18\x02 \x01(\x0e\x32).kusinta.iot.access.v1.MembershipRelationR\x08relationB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,6 +35,10 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.space.v1.space_
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_SPACE']._serialized_start=134
-  _globals['_SPACE']._serialized_end=788
+  _globals['_SPACE'].fields_by_name['resident_user_id']._loaded_options = None
+  _globals['_SPACE'].fields_by_name['resident_user_id']._serialized_options = b'\030\001'
+  _globals['_SPACE']._serialized_start=169
+  _globals['_SPACE']._serialized_end=931
+  _globals['_SPACEMEMBER']._serialized_start=934
+  _globals['_SPACEMEMBER']._serialized_end=1076
 # @@protoc_insertion_point(module_scope)

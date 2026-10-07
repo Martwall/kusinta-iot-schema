@@ -2,10 +2,10 @@
 // @generated from file kusinta/iot/access/v1/acl.proto (package kusinta.iot.access.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId, GatewayId, UserId } from "../../identity/v1/identity_pb.js";
-import type { PermissionAction, Role } from "./roles_pb.js";
+import type { MembershipRelation, PermissionAction, Role } from "./roles_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
@@ -304,6 +304,25 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
    * @generated from field: repeated kusinta.iot.access.v1.EventRef allowed_event_refs = 10;
    */
   allowedEventRefs: EventRef[];
+
+  /**
+   * How the user stands to the home this device is filed in, where that shaped this ACL.
+   * See MembershipRelation in roles.proto.
+   *
+   * SERVICE: the user sees this building device in someone's home as service, whatever
+   * relation their membership records. They hold no action on it — allowed_actions is empty
+   * — and are sent no reading or event of it. The Device they are sent carries its
+   * description only: its endpoints with their device types and implemented lists, and no
+   * property value. What keeps it working comes as a webrtc.v1.ServiceStatus instead. An
+   * app should show its readings as withheld, not missing. RESIDENT: the user lives in the
+   * home the device is filed in, whether or not they also own it. UNSPECIFIED: neither
+   * applies — the device is not in a home, or the user reaches it only by owning it.
+   *
+   * Descriptive, like role: allowed_actions and the ref lists are what is enforced.
+   *
+   * @generated from field: kusinta.iot.access.v1.MembershipRelation relation = 11;
+   */
+  relation: MembershipRelation;
 };
 
 /**
@@ -313,7 +332,9 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
 export declare const DeviceAclSchema: GenMessage<DeviceAcl>;
 
 /**
- * Every DeviceAcl in force for one user on one gateway, at valid_at.
+ * Every DeviceAcl in force for one user on one gateway, at valid_at — except that what the
+ * user newly sees of a home as service appears only from the next quarter hour (see
+ * webrtc.v1.LivePermissionUpdate).
  *
  * ADVISORY WHEN SENT TO AN APP. The gateway is the sole authority and enforces every
  * read, write, invoke and subscription against its own copy, whether or not the app has
@@ -360,4 +381,101 @@ export declare type EffectivePermissions = Message<"kusinta.iot.access.v1.Effect
  * Use `create(EffectivePermissionsSchema)` to create a new message.
  */
 export declare const EffectivePermissionsSchema: GenMessage<EffectivePermissions>;
+
+/**
+ * What service sees of a home, as a resident is told it in webrtc.v1.PrivacyDisclosure.
+ * Each names part of a webrtc.v1.ServiceStatus, of a device's description, of how the
+ * home is set up, or of who lives there; with the climate summary the disclosure names
+ * separately, nothing else of the home reaches service.
+ *
+ * @generated from enum kusinta.iot.access.v1.ServiceSignal
+ */
+export enum ServiceSignal {
+  /**
+   * @generated from enum value: SERVICE_SIGNAL_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Whether the device is reachable, and since which quarter hour it has not been.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_REACHABILITY = 1;
+   */
+  REACHABILITY = 1,
+
+  /**
+   * Its remaining charge in steps of ten, and low-battery and replacement warnings.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_BATTERY = 2;
+   */
+  BATTERY = 2,
+
+  /**
+   * How good its radio link is.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_RADIO_LINK = 3;
+   */
+  RADIO_LINK = 3,
+
+  /**
+   * Its firmware version: DeviceDescriptor.software_version_string, sent to service.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_FIRMWARE = 4;
+   */
+  FIRMWARE = 4,
+
+  /**
+   * Faults it reports about itself: errors and tampering. Not configuration it has yet to
+   * take, which would show when its residents changed a setting.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_FAULT = 5;
+   */
+  FAULT = 5,
+
+  /**
+   * What the device is — its description, every field of device.v1.DeviceDescriptor but
+   * claimed_at: type, name, vendor, product, serial number, versions, ownership, lifecycle
+   * and connector; its endpoints and what each supports — and where it is filed. A
+   * bridged_by naming a device the recipient may not see, such as a bridge a resident owns,
+   * is unset. Always disclosed together with FIRMWARE, whose
+   * version it carries. Not when it was claimed: the only times service is given of a
+   * device are the quarter hours of its webrtc.v1.ServiceStatus, and the moment it is taken
+   * away from them.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_FILING = 6;
+   */
+  FILING = 6,
+
+  /**
+   * How the home is set up: the apartment and its rooms, their names and descriptions, the
+   * rooms' limits, and the building's sensors in them.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_ROOM_SETUP = 7;
+   */
+  ROOM_SETUP = 7,
+
+  /**
+   * Which of the building's devices are linked to which, for what, and whether device to
+   * device or through the gateway — not how a link is set or what it is doing, and no
+   * sooner than the quarter hour after it was made; its removal, at once.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_LINKS = 8;
+   */
+  LINKS = 8,
+
+  /**
+   * Who is filed on the home, and how: every membership of it — residents, service, and
+   * those recorded with no relation — by user id. Shown to the property owner and the
+   * gateway administrator only, not to every party with service reach (see
+   * space.v1.Space.members).
+   *
+   * @generated from enum value: SERVICE_SIGNAL_RESIDENTS = 9;
+   */
+  RESIDENTS = 9,
+}
+
+/**
+ * Describes the enum kusinta.iot.access.v1.ServiceSignal.
+ */
+export declare const ServiceSignalSchema: GenEnum<ServiceSignal>;
 

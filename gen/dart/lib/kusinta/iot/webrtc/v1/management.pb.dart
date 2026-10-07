@@ -15,7 +15,9 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $4;
-import '../../climate/v1/climate.pbenum.dart' as $6;
+import '../../access/v1/acl.pbenum.dart' as $8;
+import '../../access/v1/roles.pbenum.dart' as $6;
+import '../../climate/v1/climate.pbenum.dart' as $7;
 import '../../common/v1/types.pbenum.dart' as $5;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $3;
@@ -27,6 +29,10 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// Creates a space. A space with no parent_space_id is top level, which is a
 /// stronger request than it looks: there is no parent whose reach could authorize
 /// it, so it is reserved to the gateway's administrator.
+///
+/// Under an apartment only a room may be created. Creating in a home is guarded as
+/// UpdateSpace is, and refused whatever the caller where UpdateSpace's structure rules would
+/// refuse it.
 class CreateSpace extends $pb.GeneratedMessage {
   factory CreateSpace({
     $5.SpaceType? spaceType,
@@ -153,9 +159,22 @@ class CreateSpace extends $pb.GeneratedMessage {
 
 enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 
-/// Changes a space in place. Every descriptive field carries explicit presence:
-/// absent means leave it alone, present means set it to this — including to the
-/// empty string, which is how a description is cleared.
+/// Changes a space in place. Changes that would take a space into or out of a home, or move
+/// a home, are guarded by the gateway; a caller not allowed is refused as NOT_ENTITLED. A
+/// change is refused whatever the caller if it would leave anything but a room under an
+/// apartment, an apartment in a home, or — among what the caller can see — a device in two
+/// homes or a link across a home's boundary. What the caller cannot see never refuses it: a
+/// device a resident owns that would leave its owner's home, enter a home not theirs or sit
+/// in two homes is taken out of the moving space instead — staying in its owner's home,
+/// filed on the apartment, where it was in it — and any link it would carry across a
+/// boundary is removed. Changing the type of a space that has members needs
+/// ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, who see them, and is refused if it would
+/// leave a RESIDENT membership on a room — which can tell them of a membership change since
+/// the last quarter hour; that much this refusal discloses.
+///
+/// Every descriptive field carries explicit presence: absent means leave it alone, present
+/// means set it to this — including to the empty string, which is how a description is
+/// cleared.
 class UpdateSpace extends $pb.GeneratedMessage {
   factory UpdateSpace({
     $0.SpaceId? spaceId,
@@ -321,7 +340,8 @@ class UpdateSpace extends $pb.GeneratedMessage {
 
 /// Deletes a space. Refused if the space still holds devices or sub-spaces unless
 /// cascade is set, so that emptying a building is always something the caller
-/// asked for rather than something a stale client did by accident.
+/// asked for rather than something a stale client did by accident. Deleting a home, or
+/// anything in one, is guarded as UpdateSpace is.
 class DeleteSpace extends $pb.GeneratedMessage {
   factory DeleteSpace({
     $0.SpaceId? spaceId,
@@ -393,17 +413,26 @@ class DeleteSpace extends $pb.GeneratedMessage {
   void clearCascade() => $_clearField(2);
 }
 
-/// Adds a user to a space, granting them reach of it and everything beneath it.
+/// Adds a user to a space, granting them reach of it and everything beneath it — except
+/// that a RESIDENT membership reaches no home beneath it (see access.v1.MembershipRelation).
 /// The user need not be known to the gateway beforehand — identities are minted by
 /// the token issuer, and this records that one of them belongs here.
+///
+/// Assigning a user who is already a member changes their relation to the space.
+/// RESIDENT is refused on a room; see access.v1.MembershipRelation.
+///
+/// Who may change who belongs to a home is restricted by the gateway; a caller not allowed is
+/// refused as NOT_ENTITLED. Residents see who is filed on their home in Space.members.
 class AssignUserToSpace extends $pb.GeneratedMessage {
   factory AssignUserToSpace({
     $0.SpaceId? spaceId,
     $0.UserId? userId,
+    $6.MembershipRelation? relation,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
     if (userId != null) result.userId = userId;
+    if (relation != null) result.relation = relation;
     return result;
   }
 
@@ -425,6 +454,11 @@ class AssignUserToSpace extends $pb.GeneratedMessage {
         subBuilder: $0.SpaceId.create)
     ..aOM<$0.UserId>(2, _omitFieldNames ? '' : 'userId',
         subBuilder: $0.UserId.create)
+    ..e<$6.MembershipRelation>(
+        4, _omitFieldNames ? '' : 'relation', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
+        valueOf: $6.MembershipRelation.valueOf,
+        enumValues: $6.MembershipRelation.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -469,10 +503,24 @@ class AssignUserToSpace extends $pb.GeneratedMessage {
   void clearUserId() => $_clearField(2);
   @$pb.TagNumber(2)
   $0.UserId ensureUserId() => $_ensure(1);
+
+  /// How the user stands to the space — whether they live there or are there for the
+  /// building. Required: UNSPECIFIED is refused, never defaulted. See
+  /// access.v1.MembershipRelation for what each lets a member see of a home.
+  @$pb.TagNumber(4)
+  $6.MembershipRelation get relation => $_getN(2);
+  @$pb.TagNumber(4)
+  set relation($6.MembershipRelation value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRelation() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearRelation() => $_clearField(4);
 }
 
 /// Removes a user's membership of a space. Losing reach also drops whatever the
 /// user was streaming from it, announced by LivePermissionUpdate.
+///
+/// Removing someone else from a home is guarded as assigning is.
 class RemoveUserFromSpace extends $pb.GeneratedMessage {
   factory RemoveUserFromSpace({
     $0.SpaceId? spaceId,
@@ -550,6 +598,12 @@ class RemoveUserFromSpace extends $pb.GeneratedMessage {
 
 /// Files a device into a space. A device may sit in several spaces at once; this
 /// is additive, and filing a device where it already sits is a no-op.
+///
+/// Into a home go only the building's own devices and devices its residents own, and a
+/// device belongs to one home at most; filing into, out of or beside a home is guarded by
+/// the gateway. A caller not allowed is refused as NOT_ENTITLED, and filing that would leave
+/// a link the caller can see across a home's boundary is refused whatever the caller; one
+/// they cannot see is removed instead.
 class PlaceDeviceInSpace extends $pb.GeneratedMessage {
   factory PlaceDeviceInSpace({
     $0.DeviceId? deviceId,
@@ -627,6 +681,9 @@ class PlaceDeviceInSpace extends $pb.GeneratedMessage {
 
 /// Takes a device out of one space, leaving any others intact. A device in no
 /// space and with no owner is unfiled, and visible only to the administrator.
+///
+/// Taking a device out of a home is guarded as PlaceDeviceInSpace is, and removes its links
+/// to devices still in the home.
 class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
   factory RemoveDeviceFromSpace({
     $0.DeviceId? deviceId,
@@ -706,7 +763,12 @@ class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
 
 /// Takes ownership of a device. Ownership is reach in its own right: an owner may
 /// see and control their device whatever their gateway-wide role permits, and may
-/// file it into spaces they belong to.
+/// file it into spaces they belong to, and the rooms of a home they live in — though into a
+/// home only if they live there (see PlaceDeviceInSpace).
+///
+/// Only a RESIDENT claim makes the caller the owner. A COMPANY claim records that the
+/// building owns the device, names no person, and grants the caller no reach. Claims of a
+/// device in a home, or of one already claimed, are restricted by the gateway.
 class ClaimDevice extends $pb.GeneratedMessage {
   factory ClaimDevice({
     $0.DeviceId? deviceId,
@@ -828,8 +890,9 @@ class ClaimDevice extends $pb.GeneratedMessage {
   void clearPossessionProof() => $_clearField(4);
 }
 
-/// Gives up ownership. The device keeps whatever space filing it has; if it has
-/// none it becomes unfiled.
+/// Gives up ownership. The device keeps whatever space filing it has, except that a device in
+/// a home stays filed in the home alone, as one of the building's own devices there — as
+/// when its owner moves out; if it has none it becomes unfiled.
 class ReleaseDevice extends $pb.GeneratedMessage {
   factory ReleaseDevice({
     $0.DeviceId? deviceId,
@@ -1072,7 +1135,9 @@ class ListSpaces extends $pb.GeneratedMessage {
 ///
 /// device_ids on each Space are filtered to what the caller may see. An
 /// unfiltered tree would list every device on the gateway by id, which is the
-/// enumeration channel the snapshot filter exists to close.
+/// enumeration channel the snapshot filter exists to close. To a caller who sees a home as
+/// service, what is new in it is listed from the next quarter hour and what is gone at once
+/// — except its members, which change only at quarter hours (see Space.members).
 class SpaceTree extends $pb.GeneratedMessage {
   factory SpaceTree({
     $core.Iterable<$2.Space>? spaces,
@@ -1183,6 +1248,11 @@ class ManagementAck extends $pb.GeneratedMessage {
 /// link only reads what the caller can already see, while a device-to-device one
 /// writes configuration to the sender and spends its battery, which is a change
 /// to someone else's hardware.
+///
+/// In a home it is the other way round: links between its devices are its residents' to
+/// make, change and remove, and a caller who reaches it as service is refused as
+/// NOT_ENTITLED. A link between a device in a home and one outside it is refused to anyone.
+/// The same holds for UpdateDeviceLink and RemoveDeviceLink.
 class CreateDeviceLink extends $pb.GeneratedMessage {
   factory CreateDeviceLink({
     $0.DeviceId? sender,
@@ -1385,7 +1455,7 @@ class RemoveDeviceLink extends $pb.GeneratedMessage {
 /// Authorized against both ends, as creating and removing the link are: deciding
 /// what temperature a room is held at is directing a device, not adjusting one,
 /// so it takes ownership of the ends or a servicing role, not the permission to
-/// turn a thermostat up.
+/// turn a thermostat up. In a home it is its residents' instead (see CreateDeviceLink).
 class UpdateDeviceLink extends $pb.GeneratedMessage {
   factory UpdateDeviceLink({
     $core.String? linkId,
@@ -1469,6 +1539,11 @@ class UpdateDeviceLink extends $pb.GeneratedMessage {
 
 /// Lists links. Unset device_id lists every link among devices the caller can
 /// reach; naming one narrows it to that device's own, in either direction.
+///
+/// A link with an end in a home reaches a caller who sees it as service with
+/// DeviceLink.details_withheld set, and what that withholds unset — a new link
+/// from the next quarter hour, a removed one at once — and not at all when either end is a
+/// device a resident owns.
 class ListDeviceLinks extends $pb.GeneratedMessage {
   factory ListDeviceLinks({
     $0.DeviceId? deviceId,
@@ -1531,10 +1606,12 @@ class ListDeviceLinks extends $pb.GeneratedMessage {
 
 /// Sets the temperature a room is to be held at.
 ///
-/// Authorized as adjusting, not directing: WRITE on the room is enough — a resident in
-/// their own apartment, as well as owners and filing roles. It is the same act as turning
-/// a radiator's knob, which a resident can already do; setting up what the room obeys is
-/// ConfigureRoomClimate, and stays with owners.
+/// Authorized as adjusting, not directing: WRITE on the room is enough. It is the same act
+/// as turning a radiator's knob; setting up what the room obeys is ConfigureRoomClimate,
+/// and stays with owners, except the lock in a home.
+///
+/// In a home, only its residents may set it; a caller who reaches the room as service is
+/// refused as NOT_ENTITLED.
 ///
 /// Clamped to the room's limits rather than refused outside them, and the clamped value is
 /// what the room's RoomClimate then reports.
@@ -1616,8 +1693,10 @@ class SetRoomTarget extends $pb.GeneratedMessage {
 }
 
 /// The sensors a room measures with, in order of preference. A message of its own so that
-/// "leave the sensors alone" (unset) differs from "set" on the wire. Set but empty returns
-/// the room to the default order, every temperature sensor filed in it in filing order.
+/// "leave the sensors alone" (unset) differs from "set" on the wire. It orders the
+/// building's sensors only (see climate.v1.RoomClimate.sensor_ids); set but empty returns
+/// them to the default, every building temperature sensor filed in the room in filing
+/// order.
 class RoomSensors extends $pb.GeneratedMessage {
   factory RoomSensors({
     $core.Iterable<$0.DeviceId>? sensorIds,
@@ -1745,6 +1824,14 @@ class RoomLimits extends $pb.GeneratedMessage {
 /// hand at one of its devices counts. Authorized as directing — owners and filing roles —
 /// because this decides what everybody in the room can do.
 ///
+/// One exception: in a home, lock_device_controls is its residents' alone. They may send
+/// this request with nothing else set. Outside homes the lock is the owner's, as the rest
+/// is. A request that sets anything its caller may not — the lock in a home for service;
+/// anything but the lock in a home, or the lock outside one, for a caller with neither
+/// ROLE_PROPERTY_OWNER nor a filing role — is refused whole as NOT_ENTITLED, so nothing of
+/// it applies. sensors orders only the building's own
+/// sensors (see RoomClimate.sensor_ids).
+///
 /// Each field moves alone, as on UpdateSpace: unset leaves it as it is.
 class ConfigureRoomClimate extends $pb.GeneratedMessage {
   factory ConfigureRoomClimate({
@@ -1830,7 +1917,8 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   RoomLimits ensureLimits() => $_ensure(1);
 
-  /// Only devices filed in this room; any other is refused.
+  /// Only the building's sensors filed in this room; any other — including a sensor a
+  /// resident owns — is refused, the same way whether or not it exists.
   @$pb.TagNumber(3)
   RoomSensors get sensors => $_getN(2);
   @$pb.TagNumber(3)
@@ -1854,11 +1942,22 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
 
 /// Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
 /// Switching one on needs setback_centidegrees; a mode with nothing to set back to is
-/// refused.
+/// refused. Switching one on is refused on a room inside an apartment, whose rooms follow
+/// the apartment's mode alone; such a room carries none (see climate.v1.ClimateMode), and
+/// switching one off there is accepted and does nothing — for those who may switch modes in
+/// that home at all, which is checked first: anyone else is refused as NOT_ENTITLED.
+///
+/// In a home, only its residents may switch one on or off: whether a home stands empty is
+/// theirs to say. A caller who reaches it as service is refused as NOT_ENTITLED — except
+/// that, while the home had no resident at the last quarter hour, ROLE_PROPERTY_OWNER or
+/// ROLE_GATEWAY_ADMIN may switch off a mode that was on then and whose setter is not a
+/// resident now, so that no mode outlives everyone who could end it. Any other switch-off
+/// from them — no mode on, or one that is a resident's — is accepted and does nothing, so
+/// the answer tells them nothing of whether a mode was on or whether anyone has moved in.
 class SetClimateMode extends $pb.GeneratedMessage {
   factory SetClimateMode({
     $0.SpaceId? spaceId,
-    $6.ClimateModeKind? kind,
+    $7.ClimateModeKind? kind,
     $core.int? setbackCentidegrees,
     $4.Timestamp? startsAt,
     $4.Timestamp? endsAt,
@@ -1889,11 +1988,11 @@ class SetClimateMode extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$6.ClimateModeKind>(
+    ..e<$7.ClimateModeKind>(
         2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $6.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
-        valueOf: $6.ClimateModeKind.valueOf,
-        enumValues: $6.ClimateModeKind.values)
+        defaultOrMaker: $7.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
+        valueOf: $7.ClimateModeKind.valueOf,
+        enumValues: $7.ClimateModeKind.values)
     ..a<$core.int>(
         3, _omitFieldNames ? '' : 'setbackCentidegrees', $pb.PbFieldType.OS3)
     ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'startsAt',
@@ -1935,9 +2034,9 @@ class SetClimateMode extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $6.ClimateModeKind get kind => $_getN(1);
+  $7.ClimateModeKind get kind => $_getN(1);
   @$pb.TagNumber(2)
-  set kind($6.ClimateModeKind value) => $_setField(2, value);
+  set kind($7.ClimateModeKind value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasKind() => $_has(1);
   @$pb.TagNumber(2)
@@ -1978,6 +2077,10 @@ class SetClimateMode extends $pb.GeneratedMessage {
 
 /// Lists the room climates and modes a caller may see. Unset root_space_id lists every
 /// one the caller can reach; naming a space narrows it to that space and those below.
+///
+/// A caller who reaches a room inside an apartment as service gets it with
+/// RoomClimate.state_withheld set — what is new from the next quarter hour, what is gone at
+/// once — and gets no ClimateMode set on that apartment or its rooms.
 class ListRoomClimates extends $pb.GeneratedMessage {
   factory ListRoomClimates({
     $0.SpaceId? rootSpaceId,
@@ -2044,6 +2147,11 @@ class ListRoomClimates extends $pb.GeneratedMessage {
 /// The range is half-open: a bucket is returned when from_time <= at < to_time, so
 /// back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
 /// unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+///
+/// A room in a home is readable by its residents only, and only from the start of their
+/// current residency (see access.v1.MembershipRelation). A caller who reaches it as service is
+/// refused as NOT_ENTITLED; one who reaches the apartment itself has
+/// GetApartmentClimateSummary instead.
 class GetRoomHistory extends $pb.GeneratedMessage {
   factory GetRoomHistory({
     $0.SpaceId? roomId,
@@ -2134,6 +2242,378 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   $4.Timestamp ensureToTime() => $_ensure(2);
 }
 
+/// What the parties who do not live in a private space learn of it — the answer to a
+/// resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
+///
+/// It states the policy and the kinds of party it applies to now. It NAMES NOBODY: a resident
+/// learns that a technician can see the battery of their radiator valve, not which
+/// technician. Those filed on the home itself are named to its residents in Space.members;
+/// service reach from a building or floor above is not.
+class PrivacyDisclosure extends $pb.GeneratedMessage {
+  factory PrivacyDisclosure({
+    $0.SpaceId? spaceId,
+    $7.ClimateSummaryPeriod? climateSummaryPeriod,
+    $core.Iterable<ServiceParty>? serviceParties,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (climateSummaryPeriod != null)
+      result.climateSummaryPeriod = climateSummaryPeriod;
+    if (serviceParties != null) result.serviceParties.addAll(serviceParties);
+    return result;
+  }
+
+  PrivacyDisclosure._();
+
+  factory PrivacyDisclosure.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PrivacyDisclosure.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PrivacyDisclosure',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$7.ClimateSummaryPeriod>(
+        4, _omitFieldNames ? '' : 'climateSummaryPeriod', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $7.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: $7.ClimateSummaryPeriod.valueOf,
+        enumValues: $7.ClimateSummaryPeriod.values)
+    ..pc<ServiceParty>(
+        5, _omitFieldNames ? '' : 'serviceParties', $pb.PbFieldType.PM,
+        subBuilder: ServiceParty.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrivacyDisclosure clone() => PrivacyDisclosure()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PrivacyDisclosure copyWith(void Function(PrivacyDisclosure) updates) =>
+      super.copyWith((message) => updates(message as PrivacyDisclosure))
+          as PrivacyDisclosure;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PrivacyDisclosure create() => PrivacyDisclosure._();
+  @$core.override
+  PrivacyDisclosure createEmptyInstance() => create();
+  static $pb.PbList<PrivacyDisclosure> createRepeated() =>
+      $pb.PbList<PrivacyDisclosure>();
+  @$core.pragma('dart2js:noInline')
+  static PrivacyDisclosure getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrivacyDisclosure>(create);
+  static PrivacyDisclosure? _defaultInstance;
+
+  /// An apartment, or a room in one.
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  /// How finely the space's climate is summarised for service, as means over periods of
+  /// this length (climate.v1.ApartmentClimateSummary). UNSPECIFIED: no summary is given.
+  /// The gateway's own setting, WEEK unless it is configured otherwise; no operation in this
+  /// contract changes it. A change applies to periods that open after it: service is given
+  /// no period that opened before the last change.
+  @$pb.TagNumber(4)
+  $7.ClimateSummaryPeriod get climateSummaryPeriod => $_getN(1);
+  @$pb.TagNumber(4)
+  set climateSummaryPeriod($7.ClimateSummaryPeriod value) =>
+      $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasClimateSummaryPeriod() => $_has(1);
+  @$pb.TagNumber(4)
+  void clearClimateSummaryPeriod() => $_clearField(4);
+
+  /// The kinds of party who see this space, or any part of it, as service now — or would
+  /// through another membership, were they not its residents — each role once, with what
+  /// that role brings here. Each party is listed under every role it holds other than
+  /// ROLE_RESIDENT, and sees what its entries say together; one with no other role, or whose
+  /// role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. The gateway's
+  /// administrator is always listed. So the list reads the same whether or not anyone lives
+  /// in the home, and never understates who has reach or what they see. Devices a resident
+  /// owns are not shown to service at all. To a caller who sees the space as service, it is
+  /// answered as it stood at the last quarter hour.
+  @$pb.TagNumber(5)
+  $pb.PbList<ServiceParty> get serviceParties => $_getList(2);
+}
+
+/// One kind of party with service reach of a home, and what it sees there. Every service
+/// party sees the same kinds of thing of the part of the home it reaches — a whole
+/// ServiceStatus, nothing withheld from it — so signals differ between parties only in
+/// RESIDENTS. How much of the home that part is, a room or all of it, the disclosure does
+/// not say.
+class ServiceParty extends $pb.GeneratedMessage {
+  factory ServiceParty({
+    $6.Role? role,
+    $core.Iterable<$8.ServiceSignal>? signals,
+  }) {
+    final result = create();
+    if (role != null) result.role = role;
+    if (signals != null) result.signals.addAll(signals);
+    return result;
+  }
+
+  ServiceParty._();
+
+  factory ServiceParty.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServiceParty.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServiceParty',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..e<$6.Role>(1, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.Role.ROLE_UNSPECIFIED,
+        valueOf: $6.Role.valueOf,
+        enumValues: $6.Role.values)
+    ..pc<$8.ServiceSignal>(
+        2, _omitFieldNames ? '' : 'signals', $pb.PbFieldType.KE,
+        valueOf: $8.ServiceSignal.valueOf,
+        enumValues: $8.ServiceSignal.values,
+        defaultEnumValue: $8.ServiceSignal.SERVICE_SIGNAL_UNSPECIFIED)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServiceParty clone() => ServiceParty()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServiceParty copyWith(void Function(ServiceParty) updates) =>
+      super.copyWith((message) => updates(message as ServiceParty))
+          as ServiceParty;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ServiceParty create() => ServiceParty._();
+  @$core.override
+  ServiceParty createEmptyInstance() => create();
+  static $pb.PbList<ServiceParty> createRepeated() =>
+      $pb.PbList<ServiceParty>();
+  @$core.pragma('dart2js:noInline')
+  static ServiceParty getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServiceParty>(create);
+  static ServiceParty? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $6.Role get role => $_getN(0);
+  @$pb.TagNumber(1)
+  set role($6.Role value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRole() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRole() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<$8.ServiceSignal> get signals => $_getList(1);
+}
+
+/// Asks what the parties who do not live in a space learn of it, answered with a
+/// PrivacyDisclosure. For an apartment or a room in one, and refused on any other
+/// space. Needs READ on the space.
+class GetPrivacyDisclosure extends $pb.GeneratedMessage {
+  factory GetPrivacyDisclosure({
+    $0.SpaceId? spaceId,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    return result;
+  }
+
+  GetPrivacyDisclosure._();
+
+  factory GetPrivacyDisclosure.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetPrivacyDisclosure.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetPrivacyDisclosure',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetPrivacyDisclosure clone() =>
+      GetPrivacyDisclosure()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetPrivacyDisclosure copyWith(void Function(GetPrivacyDisclosure) updates) =>
+      super.copyWith((message) => updates(message as GetPrivacyDisclosure))
+          as GetPrivacyDisclosure;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetPrivacyDisclosure create() => GetPrivacyDisclosure._();
+  @$core.override
+  GetPrivacyDisclosure createEmptyInstance() => create();
+  static $pb.PbList<GetPrivacyDisclosure> createRepeated() =>
+      $pb.PbList<GetPrivacyDisclosure>();
+  @$core.pragma('dart2js:noInline')
+  static GetPrivacyDisclosure getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetPrivacyDisclosure>(create);
+  static GetPrivacyDisclosure? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+}
+
+/// Reads an apartment's climate as means over whole periods, answered with a
+/// climate.v1.ApartmentClimateSummary. Needs READ on the apartment itself. Refused on a
+/// space that is not an apartment, and while the building's time zone (Space.time_zone) is
+/// unknown, since periods are cut at its midnights.
+///
+/// The range is half-open over the periods' starts: a period is returned when from_time <=
+/// starts_at < to_time. Unset from_time means kept_from; unset to_time means now. Both are
+/// clamped to [kept_from, the start of the period running now — or now, if none is] (see
+/// ApartmentClimateSummary).
+class GetApartmentClimateSummary extends $pb.GeneratedMessage {
+  factory GetApartmentClimateSummary({
+    $0.SpaceId? apartmentId,
+    $7.ClimateSummaryPeriod? period,
+    $4.Timestamp? fromTime,
+    $4.Timestamp? toTime,
+  }) {
+    final result = create();
+    if (apartmentId != null) result.apartmentId = apartmentId;
+    if (period != null) result.period = period;
+    if (fromTime != null) result.fromTime = fromTime;
+    if (toTime != null) result.toTime = toTime;
+    return result;
+  }
+
+  GetApartmentClimateSummary._();
+
+  factory GetApartmentClimateSummary.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetApartmentClimateSummary.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetApartmentClimateSummary',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'apartmentId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$7.ClimateSummaryPeriod>(
+        2, _omitFieldNames ? '' : 'period', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $7.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: $7.ClimateSummaryPeriod.valueOf,
+        enumValues: $7.ClimateSummaryPeriod.values)
+    ..aOM<$4.Timestamp>(3, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $4.Timestamp.create)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $4.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetApartmentClimateSummary clone() =>
+      GetApartmentClimateSummary()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetApartmentClimateSummary copyWith(
+          void Function(GetApartmentClimateSummary) updates) =>
+      super.copyWith(
+              (message) => updates(message as GetApartmentClimateSummary))
+          as GetApartmentClimateSummary;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetApartmentClimateSummary create() => GetApartmentClimateSummary._();
+  @$core.override
+  GetApartmentClimateSummary createEmptyInstance() => create();
+  static $pb.PbList<GetApartmentClimateSummary> createRepeated() =>
+      $pb.PbList<GetApartmentClimateSummary>();
+  @$core.pragma('dart2js:noInline')
+  static GetApartmentClimateSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetApartmentClimateSummary>(create);
+  static GetApartmentClimateSummary? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get apartmentId => $_getN(0);
+  @$pb.TagNumber(1)
+  set apartmentId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasApartmentId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearApartmentId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureApartmentId() => $_ensure(0);
+
+  /// Unset asks for the period the apartment's privacy disclosure names
+  /// (PrivacyDisclosure.climate_summary_period), or weeks when it names none. Anyone but the
+  /// apartment's residents may ask for that period only, and is refused as NOT_ENTITLED for
+  /// any other or when it names none. Its residents may ask for any, and are given only
+  /// periods that began in their current residency.
+  @$pb.TagNumber(2)
+  $7.ClimateSummaryPeriod get period => $_getN(1);
+  @$pb.TagNumber(2)
+  set period($7.ClimateSummaryPeriod value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPeriod() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPeriod() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $4.Timestamp get fromTime => $_getN(2);
+  @$pb.TagNumber(3)
+  set fromTime($4.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFromTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFromTime() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $4.Timestamp ensureFromTime() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $4.Timestamp get toTime => $_getN(3);
+  @$pb.TagNumber(4)
+  set toTime($4.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasToTime() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearToTime() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $4.Timestamp ensureToTime() => $_ensure(3);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -2155,6 +2635,8 @@ enum ManagementRequest_Request {
   setClimateMode,
   listRoomClimates,
   getRoomHistory,
+  getPrivacyDisclosure,
+  getApartmentClimateSummary,
   notSet
 }
 
@@ -2180,6 +2662,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     SetClimateMode? setClimateMode,
     ListRoomClimates? listRoomClimates,
     GetRoomHistory? getRoomHistory,
+    GetPrivacyDisclosure? getPrivacyDisclosure,
+    GetApartmentClimateSummary? getApartmentClimateSummary,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -2206,6 +2690,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (setClimateMode != null) result.setClimateMode = setClimateMode;
     if (listRoomClimates != null) result.listRoomClimates = listRoomClimates;
     if (getRoomHistory != null) result.getRoomHistory = getRoomHistory;
+    if (getPrivacyDisclosure != null)
+      result.getPrivacyDisclosure = getPrivacyDisclosure;
+    if (getApartmentClimateSummary != null)
+      result.getApartmentClimateSummary = getApartmentClimateSummary;
     return result;
   }
 
@@ -2240,6 +2728,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     18: ManagementRequest_Request.setClimateMode,
     19: ManagementRequest_Request.listRoomClimates,
     20: ManagementRequest_Request.getRoomHistory,
+    21: ManagementRequest_Request.getPrivacyDisclosure,
+    22: ManagementRequest_Request.getApartmentClimateSummary,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2247,8 +2737,30 @@ class ManagementRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0,
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
+    ..oo(0, [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22
+    ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
     ..aOM<UpdateSpace>(2, _omitFieldNames ? '' : 'updateSpace',
@@ -2291,6 +2803,12 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: ListRoomClimates.create)
     ..aOM<GetRoomHistory>(20, _omitFieldNames ? '' : 'getRoomHistory',
         subBuilder: GetRoomHistory.create)
+    ..aOM<GetPrivacyDisclosure>(
+        21, _omitFieldNames ? '' : 'getPrivacyDisclosure',
+        subBuilder: GetPrivacyDisclosure.create)
+    ..aOM<GetApartmentClimateSummary>(
+        22, _omitFieldNames ? '' : 'getApartmentClimateSummary',
+        subBuilder: GetApartmentClimateSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2538,6 +3056,29 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearGetRoomHistory() => $_clearField(20);
   @$pb.TagNumber(20)
   GetRoomHistory ensureGetRoomHistory() => $_ensure(19);
+
+  @$pb.TagNumber(21)
+  GetPrivacyDisclosure get getPrivacyDisclosure => $_getN(20);
+  @$pb.TagNumber(21)
+  set getPrivacyDisclosure(GetPrivacyDisclosure value) => $_setField(21, value);
+  @$pb.TagNumber(21)
+  $core.bool hasGetPrivacyDisclosure() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearGetPrivacyDisclosure() => $_clearField(21);
+  @$pb.TagNumber(21)
+  GetPrivacyDisclosure ensureGetPrivacyDisclosure() => $_ensure(20);
+
+  @$pb.TagNumber(22)
+  GetApartmentClimateSummary get getApartmentClimateSummary => $_getN(21);
+  @$pb.TagNumber(22)
+  set getApartmentClimateSummary(GetApartmentClimateSummary value) =>
+      $_setField(22, value);
+  @$pb.TagNumber(22)
+  $core.bool hasGetApartmentClimateSummary() => $_has(21);
+  @$pb.TagNumber(22)
+  void clearGetApartmentClimateSummary() => $_clearField(22);
+  @$pb.TagNumber(22)
+  GetApartmentClimateSummary ensureGetApartmentClimateSummary() => $_ensure(21);
 }
 
 const $core.bool _omitFieldNames =

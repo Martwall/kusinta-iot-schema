@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/webrtc/v1/device_state.proto (package kusinta.iot.webrtc.v1, syntax proto3)
 /* eslint-disable */
 
-import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import { file_kusinta_iot_access_v1_acl } from "../../access/v1/acl_pb.js";
 import { file_kusinta_iot_device_v1_device } from "../../device/v1/device_pb.js";
@@ -13,7 +13,7 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/webrtc/v1/device_state.proto.
  */
 export const file_kusinta_iot_webrtc_v1_device_state = /*@__PURE__*/
-  fileDesc("CihrdXNpbnRhL2lvdC93ZWJydGMvdjEvZGV2aWNlX3N0YXRlLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEiuwEKE0RldmljZVN0YXRlU25hcHNob3QSLgoHZGV2aWNlcxgBIAMoCzIdLmt1c2ludGEuaW90LmRldmljZS52MS5EZXZpY2USQAoLcGVybWlzc2lvbnMYAiABKAsyKy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuRWZmZWN0aXZlUGVybWlzc2lvbnMSMgoOc25hcHNob3R0ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIoEBCg5Qcm9wZXJ0eVJlcG9ydBI1CgZ1cGRhdGUYASABKAsyJS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuUHJvcGVydHlVcGRhdGUSOAoUZ2F0ZXdheV9wcm9jZXNzZWRfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIjwKC0RldmljZUFkZGVkEi0KBmRldmljZRgBIAEoCzIdLmt1c2ludGEuaW90LmRldmljZS52MS5EZXZpY2UiVQoNRGV2aWNlUmVtb3ZlZBI0CglkZXZpY2VfaWQYASABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZBIOCgZyZWFzb24YAiABKAlCAkgBYgZwcm90bzM", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_acl, file_kusinta_iot_device_v1_device, file_kusinta_iot_device_v1_property_update, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CihrdXNpbnRhL2lvdC93ZWJydGMvdjEvZGV2aWNlX3N0YXRlLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEi+wEKE0RldmljZVN0YXRlU25hcHNob3QSLgoHZGV2aWNlcxgBIAMoCzIdLmt1c2ludGEuaW90LmRldmljZS52MS5EZXZpY2USQAoLcGVybWlzc2lvbnMYAiABKAsyKy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuRWZmZWN0aXZlUGVybWlzc2lvbnMSMgoOc25hcHNob3R0ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEj4KEHNlcnZpY2Vfc3RhdHVzZXMYBCADKAsyJC5rdXNpbnRhLmlvdC53ZWJydGMudjEuU2VydmljZVN0YXR1cyKIAwoNU2VydmljZVN0YXR1cxI0CglkZXZpY2VfaWQYASABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZBIpCgVhc19vZhgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJcmVhY2hhYmxlGAMgASgIEjUKEXVucmVhY2hhYmxlX3NpbmNlGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIcCg9iYXR0ZXJ5X3BlcmNlbnQYBSABKA1IAIgBARITCgtiYXR0ZXJ5X2xvdxgGIAEoCBIiChpiYXR0ZXJ5X3JlcGxhY2VtZW50X25lZWRlZBgHIAEoCBIaCg1yYWRpb19xdWFsaXR5GAggASgNSAGIAQESMwoGZmF1bHRzGAkgAygOMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VGYXVsdEISChBfYmF0dGVyeV9wZXJjZW50QhAKDl9yYWRpb19xdWFsaXR5Ik4KFFNlcnZpY2VTdGF0dXNDaGFuZ2VkEjYKCHN0YXR1c2VzGAEgAygLMiQua3VzaW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VTdGF0dXMigQEKDlByb3BlcnR5UmVwb3J0EjUKBnVwZGF0ZRgBIAEoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5Qcm9wZXJ0eVVwZGF0ZRI4ChRnYXRld2F5X3Byb2Nlc3NlZF9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiPAoLRGV2aWNlQWRkZWQSLQoGZGV2aWNlGAEgASgLMh0ua3VzaW50YS5pb3QuZGV2aWNlLnYxLkRldmljZSJVCg1EZXZpY2VSZW1vdmVkEjQKCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEg4KBnJlYXNvbhgCIAEoCSpgCgxTZXJ2aWNlRmF1bHQSHQoZU0VSVklDRV9GQVVMVF9VTlNQRUNJRklFRBAAEhcKE1NFUlZJQ0VfRkFVTFRfRVJST1IQARIYChRTRVJWSUNFX0ZBVUxUX1RBTVBFUhACQgJIAWIGcHJvdG8z", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_acl, file_kusinta_iot_device_v1_device, file_kusinta_iot_device_v1_property_update, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DeviceStateSnapshot.
@@ -23,23 +23,51 @@ export const DeviceStateSnapshotSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_device_state, 0);
 
 /**
+ * Describes the message kusinta.iot.webrtc.v1.ServiceStatus.
+ * Use `create(ServiceStatusSchema)` to create a new message.
+ */
+export const ServiceStatusSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 1);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ServiceStatusChanged.
+ * Use `create(ServiceStatusChangedSchema)` to create a new message.
+ */
+export const ServiceStatusChangedSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 2);
+
+/**
  * Describes the message kusinta.iot.webrtc.v1.PropertyReport.
  * Use `create(PropertyReportSchema)` to create a new message.
  */
 export const PropertyReportSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 1);
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 3);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DeviceAdded.
  * Use `create(DeviceAddedSchema)` to create a new message.
  */
 export const DeviceAddedSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 2);
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 4);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.DeviceRemoved.
  * Use `create(DeviceRemovedSchema)` to create a new message.
  */
 export const DeviceRemovedSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 3);
+  messageDesc(file_kusinta_iot_webrtc_v1_device_state, 5);
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.ServiceFault.
+ */
+export const ServiceFaultSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_webrtc_v1_device_state, 0);
+
+/**
+ * A fault a device reports about itself, as service sees it.
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.ServiceFault
+ */
+export const ServiceFault = /*@__PURE__*/
+  tsEnum(ServiceFaultSchema);
 

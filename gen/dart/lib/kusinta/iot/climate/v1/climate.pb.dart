@@ -135,8 +135,8 @@ class TargetChange extends $pb.GeneratedMessage {
 
 /// The climate of one room.
 ///
-/// Apply as an upsert keyed on space_id: the same room is sent again whenever any of this
-/// moves.
+/// Apply as an upsert keyed on space_id: the same room is sent again whenever any of it
+/// that the recipient is sent moves (see state_withheld).
 class RoomClimate extends $pb.GeneratedMessage {
   factory RoomClimate({
     $1.SpaceId? spaceId,
@@ -153,6 +153,7 @@ class RoomClimate extends $pb.GeneratedMessage {
     $core.bool? lockDeviceControls,
     $1.SpaceId? modeSpaceId,
     $core.bool? sensorsConfigured,
+    $core.bool? stateWithheld,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -173,6 +174,7 @@ class RoomClimate extends $pb.GeneratedMessage {
       result.lockDeviceControls = lockDeviceControls;
     if (modeSpaceId != null) result.modeSpaceId = modeSpaceId;
     if (sensorsConfigured != null) result.sensorsConfigured = sensorsConfigured;
+    if (stateWithheld != null) result.stateWithheld = stateWithheld;
     return result;
   }
 
@@ -218,6 +220,7 @@ class RoomClimate extends $pb.GeneratedMessage {
     ..aOM<$1.SpaceId>(13, _omitFieldNames ? '' : 'modeSpaceId',
         subBuilder: $1.SpaceId.create)
     ..aOB(14, _omitFieldNames ? '' : 'sensorsConfigured')
+    ..aOB(15, _omitFieldNames ? '' : 'stateWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -263,7 +266,10 @@ class RoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearTargetCentidegrees() => $_clearField(2);
 
-  /// Who or what set target_centidegrees. Unset while the target is.
+  /// Who or what set target_centidegrees. Unset while the target is, and when it is withheld
+  /// from the recipient: from service in a home, and from anyone when it dates from before
+  /// their current residency in the home, or from a home they did not live in at the time
+  /// (see access.v1.MembershipRelation).
   @$pb.TagNumber(3)
   TargetChange get targetChange => $_getN(2);
   @$pb.TagNumber(3)
@@ -325,10 +331,13 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// The sensors the room measures with, in order: the first is used, each later one
   /// takes over while those before it are quiet. Only devices filed in this room.
   ///
-  /// By default every temperature sensor filed in the room, in the order it was filed, so
-  /// a sensor filed later joins at the end without anyone configuring anything. An owner
-  /// can set the order explicitly (see sensors_configured). Empty: the room has no
-  /// temperature sensor, and its valves regulate on their own probes (NO_SENSOR).
+  /// In a home, sensors its residents own come first, in the order they were filed, and then
+  /// the building's; outside homes a room measures with the building's sensors only. The
+  /// building's are by default every building temperature sensor filed in the room, in the
+  /// order it was filed, so a sensor filed later joins at the end without anyone configuring
+  /// anything; an owner can set their order explicitly (see sensors_configured). Empty: the
+  /// room has no temperature sensor, and its valves regulate on their own probes
+  /// (NO_SENSOR).
   @$pb.TagNumber(8)
   $pb.PbList<$1.DeviceId> get sensorIds => $_getList(7);
 
@@ -370,8 +379,9 @@ class RoomClimate extends $pb.GeneratedMessage {
   ///
   /// Stated as the lock rather than as a permission so that the proto3 default — false,
   /// unlocked — is the intended default: a room nobody has configured takes changes at its
-  /// devices, as a room in an apartment always should. Elsewhere locking is the owner's
-  /// choice.
+  /// devices, as a room in an apartment should until its residents decide otherwise; when a
+  /// home loses its last resident, its rooms' locks are cleared. Elsewhere locking is the
+  /// owner's choice.
   @$pb.TagNumber(12)
   $core.bool get lockDeviceControls => $_getBF(11);
   @$pb.TagNumber(12)
@@ -394,8 +404,10 @@ class RoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   $1.SpaceId ensureModeSpaceId() => $_ensure(12);
 
-  /// Whether sensor_ids is an order an owner chose, rather than the default of filing
-  /// order. A sensor filed into a room with a chosen order is not added to it.
+  /// Whether the building's part of sensor_ids is an order an owner chose, rather than the
+  /// default of filing order. A building sensor filed into a room with a chosen order is
+  /// not added to it; a resident's own always is. A sensor that becomes the building's in a
+  /// room — released by its owner — counts as filed there at that moment.
   @$pb.TagNumber(14)
   $core.bool get sensorsConfigured => $_getBF(13);
   @$pb.TagNumber(14)
@@ -404,8 +416,40 @@ class RoomClimate extends $pb.GeneratedMessage {
   $core.bool hasSensorsConfigured() => $_has(13);
   @$pb.TagNumber(14)
   void clearSensorsConfigured() => $_clearField(14);
+
+  /// Set when the recipient reaches this room only as service (see
+  /// access.v1.MembershipRelation): the room is in someone's home, and what describes the
+  /// people in it is WITHHELD — target_centidegrees, target_change,
+  /// effective_target_centidegrees, overrides_mode, mode_space_id, measured_centidegrees,
+  /// measured_by, condition and lock_device_controls are all left unset, and sensor_ids
+  /// leaves out sensors a resident owns.
+  ///
+  /// Unset because withheld, not because unknown: an app must not render them as NO_TARGET or
+  /// a lost sensor. A withheld room is sent again only when something that IS sent changes,
+  /// so that the timing of an update does not give away what was withheld. Its limits and
+  /// the sensors service may see are still sent, since setting a room up is service work.
+  /// Its climate over time is available to service only as an ApartmentClimateSummary.
+  @$pb.TagNumber(15)
+  $core.bool get stateWithheld => $_getBF(14);
+  @$pb.TagNumber(15)
+  set stateWithheld($core.bool value) => $_setBool(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasStateWithheld() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearStateWithheld() => $_clearField(15);
 }
 
+/// A mode on a home ends when whoever switched it on stops being one of its residents: a new
+/// tenant does not inherit the previous one's holiday. A mode on a room ends when the room
+/// joins a home, whose rooms follow the apartment's mode alone. Any other mode — one switched on by
+/// someone who is not one of its residents now: who never lived there, or a member still
+/// recorded with no relation — ends when the
+/// home gains a resident: when anyone other than its setter, not already its resident, is
+/// assigned RESIDENT on the apartment, a member recorded with no relation included, or the
+/// space becomes an apartment with RESIDENT members on it other than its setter. A mode's
+/// setter recorded with no relation being assigned RESIDENT ends none of their own modes;
+/// being assigned SERVICE or removed ends them.
+///
 /// A mode set on an apartment — or, for rooms that are not in one, on their floor or
 /// common area. While it is on it sets back every room below that space, except that a
 /// room inside an apartment follows only its apartment's mode: a mode on a floor does not
@@ -519,8 +563,10 @@ class ClimateMode extends $pb.GeneratedMessage {
   void clearSetbackCentidegrees() => $_clearField(3);
 
   /// HOLIDAY: when the setback begins and when the rooms are to be back at their own
-  /// targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is
-  /// when it was switched on; ends_at is unset.
+  /// targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is when it
+  /// was switched on; ends_at is unset. starts_at is unset when it dates from before the
+  /// recipient's current residency in the home, or from a home they did not live in at the
+  /// time; an ends_at ahead is always sent.
   @$pb.TagNumber(4)
   $0.Timestamp get startsAt => $_getN(3);
   @$pb.TagNumber(4)
@@ -543,7 +589,9 @@ class ClimateMode extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $0.Timestamp ensureEndsAt() => $_ensure(4);
 
-  /// Who switched it on.
+  /// Who switched it on. Unset when it is withheld from the recipient: from service in a
+  /// home, and from anyone when it dates from before their current residency in the home, or
+  /// from a home they did not live in at the time (see access.v1.MembershipRelation).
   @$pb.TagNumber(6)
   $1.UserId get setBy => $_getN(5);
   @$pb.TagNumber(6)
@@ -839,7 +887,9 @@ class RoomHistory extends $pb.GeneratedMessage {
 
   /// The earliest moment the gateway still holds for this room. The request's from_time
   /// and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
-  /// returned.
+  /// returned. For a room in the recipient's own home it is no earlier than the start of
+  /// their current residency, nor than when the room last joined their home; for any other
+  /// room, no earlier than when it last left a home.
   @$pb.TagNumber(2)
   $0.Timestamp get keptFrom => $_getN(1);
   @$pb.TagNumber(2)
@@ -854,6 +904,313 @@ class RoomHistory extends $pb.GeneratedMessage {
   /// The buckets within the clamped range, in order of `at`.
   @$pb.TagNumber(3)
   $pb.PbList<RoomHistorySample> get samples => $_getList(2);
+}
+
+/// An apartment's climate over one period.
+///
+/// Each room's mean is taken over the quarter hours of the period in which it was in this
+/// apartment and had a value; coverage likewise counts only the quarter hours it was here,
+/// and the apartment's mean is formed from the rooms' means as the summary's weighting says.
+/// Every mean is optional: absent means nothing was known, never zero.
+class ClimatePeriodMean extends $pb.GeneratedMessage {
+  factory ClimatePeriodMean({
+    $0.Timestamp? startsAt,
+    $0.Timestamp? endsAt,
+    $core.int? measuredCentidegrees,
+    $core.int? targetCentidegrees,
+    $core.int? measuredCoveragePermille,
+    $core.int? targetCoveragePermille,
+    $core.int? roomsMeasured,
+    $core.int? rooms,
+  }) {
+    final result = create();
+    if (startsAt != null) result.startsAt = startsAt;
+    if (endsAt != null) result.endsAt = endsAt;
+    if (measuredCentidegrees != null)
+      result.measuredCentidegrees = measuredCentidegrees;
+    if (targetCentidegrees != null)
+      result.targetCentidegrees = targetCentidegrees;
+    if (measuredCoveragePermille != null)
+      result.measuredCoveragePermille = measuredCoveragePermille;
+    if (targetCoveragePermille != null)
+      result.targetCoveragePermille = targetCoveragePermille;
+    if (roomsMeasured != null) result.roomsMeasured = roomsMeasured;
+    if (rooms != null) result.rooms = rooms;
+    return result;
+  }
+
+  ClimatePeriodMean._();
+
+  factory ClimatePeriodMean.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClimatePeriodMean.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClimatePeriodMean',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'startsAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'endsAt',
+        subBuilder: $0.Timestamp.create)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'measuredCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'targetCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'measuredCoveragePermille',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'targetCoveragePermille', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'roomsMeasured', $pb.PbFieldType.OU3)
+    ..a<$core.int>(8, _omitFieldNames ? '' : 'rooms', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimatePeriodMean clone() => ClimatePeriodMean()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimatePeriodMean copyWith(void Function(ClimatePeriodMean) updates) =>
+      super.copyWith((message) => updates(message as ClimatePeriodMean))
+          as ClimatePeriodMean;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClimatePeriodMean create() => ClimatePeriodMean._();
+  @$core.override
+  ClimatePeriodMean createEmptyInstance() => create();
+  static $pb.PbList<ClimatePeriodMean> createRepeated() =>
+      $pb.PbList<ClimatePeriodMean>();
+  @$core.pragma('dart2js:noInline')
+  static ClimatePeriodMean getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClimatePeriodMean>(create);
+  static ClimatePeriodMean? _defaultInstance;
+
+  /// The period, half-open: starts_at <= t < ends_at.
+  @$pb.TagNumber(1)
+  $0.Timestamp get startsAt => $_getN(0);
+  @$pb.TagNumber(1)
+  set startsAt($0.Timestamp value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStartsAt() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStartsAt() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Timestamp ensureStartsAt() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $0.Timestamp get endsAt => $_getN(1);
+  @$pb.TagNumber(2)
+  set endsAt($0.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEndsAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEndsAt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.Timestamp ensureEndsAt() => $_ensure(1);
+
+  /// The mean measured temperature, in centidegrees, taken from the building's own sensors
+  /// only: in each room, the first of its building sensors that was heard. A reading from a
+  /// sensor a resident owns never enters it.
+  @$pb.TagNumber(3)
+  $core.int get measuredCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set measuredCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMeasuredCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMeasuredCentidegrees() => $_clearField(3);
+
+  /// The mean target, in centidegrees: RoomClimate.target_centidegrees — the temperature
+  /// somebody asked for, not the effective target a mode set it back to, so that a
+  /// setback is not reported as what the residents chose. The measured mean still falls
+  /// while a home is set back; how much that reveals is governed by how long a period
+  /// service may ask for (webrtc.v1.PrivacyDisclosure.climate_summary_period).
+  @$pb.TagNumber(4)
+  $core.int get targetCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set targetCentidegrees($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasTargetCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearTargetCentidegrees() => $_clearField(4);
+
+  /// How much of the period the means rest on, in thousandths: the quarter hours with a
+  /// value, summed over the apartment's rooms, divided by the quarter hours each room was in
+  /// the apartment during the period, summed likewise. A room with no sensor, or one that
+  /// went quiet, lowers it — a mean with low coverage describes part of the apartment, or
+  /// part of the period.
+  @$pb.TagNumber(5)
+  $core.int get measuredCoveragePermille => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set measuredCoveragePermille($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMeasuredCoveragePermille() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMeasuredCoveragePermille() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get targetCoveragePermille => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set targetCoveragePermille($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasTargetCoveragePermille() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearTargetCoveragePermille() => $_clearField(6);
+
+  /// The rooms that contributed a measured value, of the rooms the apartment had at any time
+  /// in the period.
+  @$pb.TagNumber(7)
+  $core.int get roomsMeasured => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set roomsMeasured($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasRoomsMeasured() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearRoomsMeasured() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.int get rooms => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set rooms($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasRooms() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearRooms() => $_clearField(8);
+}
+
+/// An apartment's climate as means over whole periods, in reply to
+/// webrtc.v1.GetApartmentClimateSummary. What a party who does not live there may know of
+/// how warm it is kept — see webrtc.v1.PrivacyDisclosure.
+///
+/// Only CLOSED periods are given. The period running now is never included, so that a
+/// summary cannot be polled into a live reading.
+class ApartmentClimateSummary extends $pb.GeneratedMessage {
+  factory ApartmentClimateSummary({
+    $1.SpaceId? apartmentId,
+    ClimateSummaryPeriod? period,
+    ClimateSummaryWeighting? weighting,
+    $0.Timestamp? keptFrom,
+    $core.Iterable<ClimatePeriodMean>? periods,
+  }) {
+    final result = create();
+    if (apartmentId != null) result.apartmentId = apartmentId;
+    if (period != null) result.period = period;
+    if (weighting != null) result.weighting = weighting;
+    if (keptFrom != null) result.keptFrom = keptFrom;
+    if (periods != null) result.periods.addAll(periods);
+    return result;
+  }
+
+  ApartmentClimateSummary._();
+
+  factory ApartmentClimateSummary.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ApartmentClimateSummary.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ApartmentClimateSummary',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<$1.SpaceId>(1, _omitFieldNames ? '' : 'apartmentId',
+        subBuilder: $1.SpaceId.create)
+    ..e<ClimateSummaryPeriod>(
+        2, _omitFieldNames ? '' : 'period', $pb.PbFieldType.OE,
+        defaultOrMaker: ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: ClimateSummaryPeriod.valueOf,
+        enumValues: ClimateSummaryPeriod.values)
+    ..e<ClimateSummaryWeighting>(
+        3, _omitFieldNames ? '' : 'weighting', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            ClimateSummaryWeighting.CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED,
+        valueOf: ClimateSummaryWeighting.valueOf,
+        enumValues: ClimateSummaryWeighting.values)
+    ..aOM<$0.Timestamp>(4, _omitFieldNames ? '' : 'keptFrom',
+        subBuilder: $0.Timestamp.create)
+    ..pc<ClimatePeriodMean>(
+        5, _omitFieldNames ? '' : 'periods', $pb.PbFieldType.PM,
+        subBuilder: ClimatePeriodMean.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ApartmentClimateSummary clone() =>
+      ApartmentClimateSummary()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ApartmentClimateSummary copyWith(
+          void Function(ApartmentClimateSummary) updates) =>
+      super.copyWith((message) => updates(message as ApartmentClimateSummary))
+          as ApartmentClimateSummary;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ApartmentClimateSummary create() => ApartmentClimateSummary._();
+  @$core.override
+  ApartmentClimateSummary createEmptyInstance() => create();
+  static $pb.PbList<ApartmentClimateSummary> createRepeated() =>
+      $pb.PbList<ApartmentClimateSummary>();
+  @$core.pragma('dart2js:noInline')
+  static ApartmentClimateSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ApartmentClimateSummary>(create);
+  static ApartmentClimateSummary? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $1.SpaceId get apartmentId => $_getN(0);
+  @$pb.TagNumber(1)
+  set apartmentId($1.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasApartmentId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearApartmentId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.SpaceId ensureApartmentId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ClimateSummaryPeriod get period => $_getN(1);
+  @$pb.TagNumber(2)
+  set period(ClimateSummaryPeriod value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPeriod() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPeriod() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  ClimateSummaryWeighting get weighting => $_getN(2);
+  @$pb.TagNumber(3)
+  set weighting(ClimateSummaryWeighting value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWeighting() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWeighting() => $_clearField(3);
+
+  /// The start of the earliest period the gateway still holds that the recipient may be
+  /// given: for a resident of this apartment, no earlier than their current residency; for
+  /// anyone else, of the length disclosed now, and no earlier than the first such period
+  /// after it was last changed (see webrtc.v1.PrivacyDisclosure.climate_summary_period).
+  @$pb.TagNumber(4)
+  $0.Timestamp get keptFrom => $_getN(3);
+  @$pb.TagNumber(4)
+  set keptFrom($0.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasKeptFrom() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearKeptFrom() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.Timestamp ensureKeptFrom() => $_ensure(3);
+
+  /// The periods within the requested range, in order of starts_at.
+  @$pb.TagNumber(5)
+  $pb.PbList<ClimatePeriodMean> get periods => $_getList(4);
 }
 
 const $core.bool _omitFieldNames =

@@ -297,6 +297,9 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $0.UserId ensureOwnerUserId() => $_ensure(13);
 
+  /// Unset when it is withheld from the recipient: in a service view, and from anyone when
+  /// it dates from before their current residency in the home, or from a home they did not
+  /// live in at the time (see access.v1.MembershipRelation).
   @$pb.TagNumber(16)
   $1.Timestamp get claimedAt => $_getN(14);
   @$pb.TagNumber(16)
@@ -333,7 +336,8 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   ///
   /// So a Device is a Matter node OR one device behind one — the equivalence is deliberately
   /// not exact, and this field is how a consumer tells which. Absent means the device is
-  /// reached directly.
+  /// reached directly, or that its bridge is withheld from the recipient (see
+  /// access.v1.ServiceSignal FILING).
   @$pb.TagNumber(19)
   $0.DeviceId get bridgedBy => $_getN(16);
   @$pb.TagNumber(19)

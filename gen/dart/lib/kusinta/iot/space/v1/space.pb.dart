@@ -14,6 +14,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../access/v1/roles.pbenum.dart' as $2;
 import '../../common/v1/types.pbenum.dart' as $1;
 import '../../identity/v1/identity.pb.dart' as $0;
 
@@ -29,10 +30,12 @@ class Space extends $pb.GeneratedMessage {
     $0.SpaceId? parentSpaceId,
     $core.Iterable<$0.SpaceId>? subSpaceIds,
     $core.Iterable<$0.DeviceId>? deviceIds,
-    $0.UserId? residentUserId,
+    @$core.Deprecated('This field is deprecated.') $0.UserId? residentUserId,
     $0.TenantId? tenantId,
     $0.GatewayId? gatewayId,
     $core.String? timeZone,
+    $core.Iterable<SpaceMember>? members,
+    $core.bool? membersWithheld,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -47,6 +50,8 @@ class Space extends $pb.GeneratedMessage {
     if (tenantId != null) result.tenantId = tenantId;
     if (gatewayId != null) result.gatewayId = gatewayId;
     if (timeZone != null) result.timeZone = timeZone;
+    if (members != null) result.members.addAll(members);
+    if (membersWithheld != null) result.membersWithheld = membersWithheld;
     return result;
   }
 
@@ -87,6 +92,9 @@ class Space extends $pb.GeneratedMessage {
     ..aOM<$0.GatewayId>(11, _omitFieldNames ? '' : 'gatewayId',
         subBuilder: $0.GatewayId.create)
     ..aOS(12, _omitFieldNames ? '' : 'timeZone')
+    ..pc<SpaceMember>(13, _omitFieldNames ? '' : 'members', $pb.PbFieldType.PM,
+        subBuilder: SpaceMember.create)
+    ..aOB(14, _omitFieldNames ? '' : 'membersWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -166,20 +174,31 @@ class Space extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   $0.SpaceId ensureParentSpaceId() => $_ensure(5);
 
+  /// Filtered to the spaces the caller reaches, as device_ids is.
   @$pb.TagNumber(7)
   $pb.PbList<$0.SpaceId> get subSpaceIds => $_getList(6);
 
+  /// Filtered to the devices the caller may see (see webrtc.v1.SpaceTree): for service, no
+  /// device a resident owns.
   @$pb.TagNumber(8)
   $pb.PbList<$0.DeviceId> get deviceIds => $_getList(7);
 
+  /// Superseded by members, which can say that more than one person lives in an apartment,
+  /// and how each member stands to the space. A gateway leaves it unset, so a client that
+  /// still reads it sees no resident anywhere; read members instead.
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(9)
   $0.UserId get residentUserId => $_getN(8);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(9)
   set residentUserId($0.UserId value) => $_setField(9, value);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(9)
   $core.bool hasResidentUserId() => $_has(8);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(9)
   void clearResidentUserId() => $_clearField(9);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(9)
   $0.UserId ensureResidentUserId() => $_ensure(8);
 
@@ -217,6 +236,110 @@ class Space extends $pb.GeneratedMessage {
   $core.bool hasTimeZone() => $_has(11);
   @$pb.TagNumber(12)
   void clearTimeZone() => $_clearField(12);
+
+  /// Who is filed directly on this space, and how each stands to it. Members of a space
+  /// above it are listed there, not here.
+  ///
+  /// Filled according to who asks, since a membership list says who lives where:
+  ///
+  ///   * a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN who reaches the space
+  ///     sees every member — for a home they see as service, as it stood at the last
+  ///     quarter hour, so that a move in or out is not timed by polling;
+  ///   * a resident of an apartment sees every member filed on it or on its rooms — who they
+  ///     live with, and anyone filed on their home as service, since being filed on a home
+  ///     is an act on it its residents should see. Service reach from a building or floor
+  ///     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
+  ///     hold it, without naming anyone;
+  ///   * anyone else sees none, residents of a building or floor included.
+  @$pb.TagNumber(13)
+  $pb.PbList<SpaceMember> get members => $_getList(12);
+
+  /// Set when members are not listed to this caller, so that an empty list is not read as
+  /// nobody being filed here.
+  @$pb.TagNumber(14)
+  $core.bool get membersWithheld => $_getBF(13);
+  @$pb.TagNumber(14)
+  set membersWithheld($core.bool value) => $_setBool(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasMembersWithheld() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearMembersWithheld() => $_clearField(14);
+}
+
+/// One membership of a space.
+class SpaceMember extends $pb.GeneratedMessage {
+  factory SpaceMember({
+    $0.UserId? userId,
+    $2.MembershipRelation? relation,
+  }) {
+    final result = create();
+    if (userId != null) result.userId = userId;
+    if (relation != null) result.relation = relation;
+    return result;
+  }
+
+  SpaceMember._();
+
+  factory SpaceMember.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SpaceMember.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SpaceMember',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.space.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'userId',
+        subBuilder: $0.UserId.create)
+    ..e<$2.MembershipRelation>(
+        2, _omitFieldNames ? '' : 'relation', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
+        valueOf: $2.MembershipRelation.valueOf,
+        enumValues: $2.MembershipRelation.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SpaceMember clone() => SpaceMember()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SpaceMember copyWith(void Function(SpaceMember) updates) =>
+      super.copyWith((message) => updates(message as SpaceMember))
+          as SpaceMember;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SpaceMember create() => SpaceMember._();
+  @$core.override
+  SpaceMember createEmptyInstance() => create();
+  static $pb.PbList<SpaceMember> createRepeated() => $pb.PbList<SpaceMember>();
+  @$core.pragma('dart2js:noInline')
+  static SpaceMember getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SpaceMember>(create);
+  static SpaceMember? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.UserId get userId => $_getN(0);
+  @$pb.TagNumber(1)
+  set userId($0.UserId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.UserId ensureUserId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $2.MembershipRelation get relation => $_getN(1);
+  @$pb.TagNumber(2)
+  set relation($2.MembershipRelation value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRelation() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRelation() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

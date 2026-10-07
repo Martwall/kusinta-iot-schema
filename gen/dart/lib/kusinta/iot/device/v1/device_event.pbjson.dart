@@ -79,9 +79,21 @@ const DeviceEvent$json = {
       '6': '.kusinta.iot.device.v1.AttributeValue',
       '10': 'data'
     },
+    {
+      '1': 'previous_event_number',
+      '3': 9,
+      '4': 1,
+      '5': 4,
+      '9': 1,
+      '10': 'previousEventNumber',
+      '17': true
+    },
+    {'1': 'follows_loss', '3': 10, '4': 1, '5': 8, '10': 'followsLoss'},
+    {'1': 'numbering_id', '3': 11, '4': 1, '5': 9, '10': 'numberingId'},
   ],
   '8': [
     {'1': '_endpoint_id'},
+    {'1': '_previous_event_number'},
   ],
 };
 
@@ -94,7 +106,10 @@ final $typed_data.Uint8List deviceEventDescriptor = $convert.base64Decode(
     'BiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgl0aW1lc3RhbXASQAoIcHJpb3JpdH'
     'kYByABKA4yJC5rdXNpbnRhLmlvdC5kZXZpY2UudjEuRXZlbnRQcmlvcml0eVIIcHJpb3JpdHkS'
     'OQoEZGF0YRgIIAEoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5BdHRyaWJ1dGVWYWx1ZVIEZG'
-    'F0YUIOCgxfZW5kcG9pbnRfaWQ=');
+    'F0YRI3ChVwcmV2aW91c19ldmVudF9udW1iZXIYCSABKARIAVITcHJldmlvdXNFdmVudE51bWJl'
+    'cogBARIhCgxmb2xsb3dzX2xvc3MYCiABKAhSC2ZvbGxvd3NMb3NzEiEKDG51bWJlcmluZ19pZB'
+    'gLIAEoCVILbnVtYmVyaW5nSWRCDgoMX2VuZHBvaW50X2lkQhgKFl9wcmV2aW91c19ldmVudF9u'
+    'dW1iZXI=');
 
 @$core.Deprecated('Use deviceEventBatchDescriptor instead')
 const DeviceEventBatch$json = {

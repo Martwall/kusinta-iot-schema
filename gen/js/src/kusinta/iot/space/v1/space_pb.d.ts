@@ -6,6 +6,7 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId, GatewayId, SpaceId, TenantId, UserId } from "../../identity/v1/identity_pb.js";
 import type { SpaceType } from "../../common/v1/types_pb.js";
+import type { MembershipRelation } from "../../access/v1/roles_pb.js";
 
 /**
  * Describes the file kusinta/iot/space/v1/space.proto.
@@ -51,19 +52,27 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
   parentSpaceId?: SpaceId | undefined;
 
   /**
+   * Filtered to the spaces the caller reaches, as device_ids is.
+   *
    * @generated from field: repeated kusinta.iot.identity.v1.SpaceId sub_space_ids = 7;
    */
   subSpaceIds: SpaceId[];
 
   /**
+   * Filtered to the devices the caller may see (see webrtc.v1.SpaceTree): for service, no
+   * device a resident owns.
+   *
    * @generated from field: repeated kusinta.iot.identity.v1.DeviceId device_ids = 8;
    */
   deviceIds: DeviceId[];
 
   /**
-   * only for APARTMENT
+   * Superseded by members, which can say that more than one person lives in an apartment,
+   * and how each member stands to the space. A gateway leaves it unset, so a client that
+   * still reads it sees no resident anywhere; read members instead.
    *
-   * @generated from field: kusinta.iot.identity.v1.UserId resident_user_id = 9;
+   * @generated from field: kusinta.iot.identity.v1.UserId resident_user_id = 9 [deprecated = true];
+   * @deprecated
    */
   residentUserId?: UserId | undefined;
 
@@ -86,6 +95,34 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
    * @generated from field: string time_zone = 12;
    */
   timeZone: string;
+
+  /**
+   * Who is filed directly on this space, and how each stands to it. Members of a space
+   * above it are listed there, not here.
+   *
+   * Filled according to who asks, since a membership list says who lives where:
+   *
+   *   * a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN who reaches the space
+   *     sees every member — for a home they see as service, as it stood at the last
+   *     quarter hour, so that a move in or out is not timed by polling;
+   *   * a resident of an apartment sees every member filed on it or on its rooms — who they
+   *     live with, and anyone filed on their home as service, since being filed on a home
+   *     is an act on it its residents should see. Service reach from a building or floor
+   *     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
+   *     hold it, without naming anyone;
+   *   * anyone else sees none, residents of a building or floor included.
+   *
+   * @generated from field: repeated kusinta.iot.space.v1.SpaceMember members = 13;
+   */
+  members: SpaceMember[];
+
+  /**
+   * Set when members are not listed to this caller, so that an empty list is not read as
+   * nobody being filed here.
+   *
+   * @generated from field: bool members_withheld = 14;
+   */
+  membersWithheld: boolean;
 };
 
 /**
@@ -93,4 +130,27 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
  * Use `create(SpaceSchema)` to create a new message.
  */
 export declare const SpaceSchema: GenMessage<Space>;
+
+/**
+ * One membership of a space.
+ *
+ * @generated from message kusinta.iot.space.v1.SpaceMember
+ */
+export declare type SpaceMember = Message<"kusinta.iot.space.v1.SpaceMember"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.UserId user_id = 1;
+   */
+  userId?: UserId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.access.v1.MembershipRelation relation = 2;
+   */
+  relation: MembershipRelation;
+};
+
+/**
+ * Describes the message kusinta.iot.space.v1.SpaceMember.
+ * Use `create(SpaceMemberSchema)` to create a new message.
+ */
+export declare const SpaceMemberSchema: GenMessage<SpaceMember>;
 

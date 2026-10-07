@@ -5,7 +5,7 @@
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { EffectivePermissions } from "../../access/v1/acl_pb.js";
-import type { DeviceId } from "../../identity/v1/identity_pb.js";
+import type { DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/permission_push.proto.
@@ -13,8 +13,24 @@ import type { DeviceId } from "../../identity/v1/identity_pb.js";
 export declare const file_kusinta_iot_webrtc_v1_permission_push: GenFile;
 
 /**
- * Pushed to the app whenever the user's effective permissions change.
- * change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED", "CONSTRAINT_UPDATED"
+ * Pushed to the app whenever the user's effective permissions change. A change that takes
+ * away what the user may see or do takes effect and is sent at once. What a user newly sees
+ * of a home as service — a device filed into it, a home newly reached — is judged at
+ * quarter hours instead: here and in a snapshot it is as it stood at the last one, even
+ * when the push is for another change, and it is sent at the next quarter hour with
+ * change_reason empty and new_permissions.valid_at that quarter hour, so that no push
+ * tells when, or why, a home changed. A resident who becomes service loses the resident
+ * view at once — the home's devices are listed in removed_devices, so the app drops what it
+ * holds of them — and gains the service view at the next quarter hour, when they come back
+ * in added_devices as service and their stretch of seeing the home as service begins. A
+ * member who becomes a resident gains the resident view at once: the home's devices come
+ * again in added_devices, each with a DeviceAdded carrying its full Device, and the app
+ * drops the ServiceStatus it held of them until their next one. A quarter-hour
+ * push that brings a home newly seen as service lists it in reset_spaces, so the app reads
+ * its rooms and links then.
+ * change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED",
+ * "CONSTRAINT_UPDATED"; empty whenever the change concerns a home the user sees, or saw, as
+ * service — held or not — so that no push says why a home changed.
  *
  * @generated from message kusinta.iot.webrtc.v1.LivePermissionUpdate
  */
@@ -34,7 +50,8 @@ export declare type LivePermissionUpdate = Message<"kusinta.iot.webrtc.v1.LivePe
 
   /**
    * Devices the user may no longer see. The gateway has already dropped these from
-   * the app's interest set — no property events follow, and no unsubscribe is needed.
+   * the app's interest set — no property events follow, and no unsubscribe is needed. The
+   * app drops what it holds of them, their ServiceStatus included.
    *
    * @generated from field: repeated kusinta.iot.identity.v1.DeviceId removed_devices = 3;
    */
@@ -44,6 +61,19 @@ export declare type LivePermissionUpdate = Message<"kusinta.iot.webrtc.v1.LivePe
    * @generated from field: string change_reason = 4;
    */
   changeReason: string;
+
+  /**
+   * Spaces whose climate, modes and links the user sees differently from now — whenever how
+   * they see a home changes: they moved in or out, became service or resident, lost the
+   * space, or newly see it as service. The app drops everything it holds of each and of the
+   * spaces beneath it, and reads them again (ListSpaces, ListRoomClimates, ListDeviceLinks)
+   * if it may.
+   * A loss, or a wider view as a resident, is sent at once; a home newly seen as service, at
+   * the quarter hour it is seen from.
+   *
+   * @generated from field: repeated kusinta.iot.identity.v1.SpaceId reset_spaces = 5;
+   */
+  resetSpaces: SpaceId[];
 };
 
 /**

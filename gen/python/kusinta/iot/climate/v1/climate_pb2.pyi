@@ -27,6 +27,18 @@ class ClimateModeKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CLIMATE_MODE_KIND_UNSPECIFIED: _ClassVar[ClimateModeKind]
     CLIMATE_MODE_KIND_AWAY: _ClassVar[ClimateModeKind]
     CLIMATE_MODE_KIND_HOLIDAY: _ClassVar[ClimateModeKind]
+
+class ClimateSummaryPeriod(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CLIMATE_SUMMARY_PERIOD_UNSPECIFIED: _ClassVar[ClimateSummaryPeriod]
+    CLIMATE_SUMMARY_PERIOD_DAY: _ClassVar[ClimateSummaryPeriod]
+    CLIMATE_SUMMARY_PERIOD_WEEK: _ClassVar[ClimateSummaryPeriod]
+    CLIMATE_SUMMARY_PERIOD_MONTH: _ClassVar[ClimateSummaryPeriod]
+
+class ClimateSummaryWeighting(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED: _ClassVar[ClimateSummaryWeighting]
+    CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL: _ClassVar[ClimateSummaryWeighting]
 ROOM_CLIMATE_CONDITION_UNSPECIFIED: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_HOLDING: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_NO_TARGET: RoomClimateCondition
@@ -38,6 +50,12 @@ ROOM_CLIMATE_CONDITION_NO_SENSOR: RoomClimateCondition
 CLIMATE_MODE_KIND_UNSPECIFIED: ClimateModeKind
 CLIMATE_MODE_KIND_AWAY: ClimateModeKind
 CLIMATE_MODE_KIND_HOLIDAY: ClimateModeKind
+CLIMATE_SUMMARY_PERIOD_UNSPECIFIED: ClimateSummaryPeriod
+CLIMATE_SUMMARY_PERIOD_DAY: ClimateSummaryPeriod
+CLIMATE_SUMMARY_PERIOD_WEEK: ClimateSummaryPeriod
+CLIMATE_SUMMARY_PERIOD_MONTH: ClimateSummaryPeriod
+CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED: ClimateSummaryWeighting
+CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL: ClimateSummaryWeighting
 
 class TargetChange(_message.Message):
     __slots__ = ("at", "user", "device")
@@ -50,7 +68,7 @@ class TargetChange(_message.Message):
     def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., user: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., device: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
 
 class RoomClimate(_message.Message):
-    __slots__ = ("space_id", "target_centidegrees", "target_change", "effective_target_centidegrees", "overrides_mode", "mode_space_id", "min_centidegrees", "max_centidegrees", "sensor_ids", "sensors_configured", "measured_centidegrees", "measured_by", "condition", "lock_device_controls")
+    __slots__ = ("space_id", "target_centidegrees", "target_change", "effective_target_centidegrees", "overrides_mode", "mode_space_id", "min_centidegrees", "max_centidegrees", "sensor_ids", "sensors_configured", "measured_centidegrees", "measured_by", "condition", "lock_device_controls", "state_withheld")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     TARGET_CHANGE_FIELD_NUMBER: _ClassVar[int]
@@ -65,6 +83,7 @@ class RoomClimate(_message.Message):
     MEASURED_BY_FIELD_NUMBER: _ClassVar[int]
     CONDITION_FIELD_NUMBER: _ClassVar[int]
     LOCK_DEVICE_CONTROLS_FIELD_NUMBER: _ClassVar[int]
+    STATE_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     target_centidegrees: int
     target_change: TargetChange
@@ -79,7 +98,8 @@ class RoomClimate(_message.Message):
     measured_by: _identity_pb2.DeviceId
     condition: RoomClimateCondition
     lock_device_controls: bool
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ...) -> None: ...
+    state_withheld: bool
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ..., state_withheld: _Optional[bool] = ...) -> None: ...
 
 class ClimateMode(_message.Message):
     __slots__ = ("space_id", "kind", "setback_centidegrees", "starts_at", "ends_at", "set_by", "warm_from")
@@ -132,3 +152,37 @@ class RoomHistory(_message.Message):
     kept_from: _timestamp_pb2.Timestamp
     samples: _containers.RepeatedCompositeFieldContainer[RoomHistorySample]
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., samples: _Optional[_Iterable[_Union[RoomHistorySample, _Mapping]]] = ...) -> None: ...
+
+class ClimatePeriodMean(_message.Message):
+    __slots__ = ("starts_at", "ends_at", "measured_centidegrees", "target_centidegrees", "measured_coverage_permille", "target_coverage_permille", "rooms_measured", "rooms")
+    STARTS_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDS_AT_FIELD_NUMBER: _ClassVar[int]
+    MEASURED_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    MEASURED_COVERAGE_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    TARGET_COVERAGE_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    ROOMS_MEASURED_FIELD_NUMBER: _ClassVar[int]
+    ROOMS_FIELD_NUMBER: _ClassVar[int]
+    starts_at: _timestamp_pb2.Timestamp
+    ends_at: _timestamp_pb2.Timestamp
+    measured_centidegrees: int
+    target_centidegrees: int
+    measured_coverage_permille: int
+    target_coverage_permille: int
+    rooms_measured: int
+    rooms: int
+    def __init__(self, starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., measured_centidegrees: _Optional[int] = ..., target_centidegrees: _Optional[int] = ..., measured_coverage_permille: _Optional[int] = ..., target_coverage_permille: _Optional[int] = ..., rooms_measured: _Optional[int] = ..., rooms: _Optional[int] = ...) -> None: ...
+
+class ApartmentClimateSummary(_message.Message):
+    __slots__ = ("apartment_id", "period", "weighting", "kept_from", "periods")
+    APARTMENT_ID_FIELD_NUMBER: _ClassVar[int]
+    PERIOD_FIELD_NUMBER: _ClassVar[int]
+    WEIGHTING_FIELD_NUMBER: _ClassVar[int]
+    KEPT_FROM_FIELD_NUMBER: _ClassVar[int]
+    PERIODS_FIELD_NUMBER: _ClassVar[int]
+    apartment_id: _identity_pb2.SpaceId
+    period: ClimateSummaryPeriod
+    weighting: ClimateSummaryWeighting
+    kept_from: _timestamp_pb2.Timestamp
+    periods: _containers.RepeatedCompositeFieldContainer[ClimatePeriodMean]
+    def __init__(self, apartment_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., period: _Optional[_Union[ClimateSummaryPeriod, str]] = ..., weighting: _Optional[_Union[ClimateSummaryWeighting, str]] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., periods: _Optional[_Iterable[_Union[ClimatePeriodMean, _Mapping]]] = ...) -> None: ...

@@ -17,22 +17,29 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../access/v1/acl.pb.dart' as $1;
 import '../../device/v1/device.pb.dart' as $0;
-import '../../device/v1/property_update.pb.dart' as $3;
-import '../../identity/v1/identity.pb.dart' as $4;
+import '../../device/v1/property_update.pb.dart' as $4;
+import '../../identity/v1/identity.pb.dart' as $3;
+import 'device_state.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Full device state sent to the app on initial WebRTC connection.
+export 'device_state.pbenum.dart';
+
+/// Full device state sent to the app on initial WebRTC connection. Devices the recipient sees
+/// as service are as they stood at the last quarter hour, less any since taken away, each
+/// with its ServiceStatus.
 class DeviceStateSnapshot extends $pb.GeneratedMessage {
   factory DeviceStateSnapshot({
     $core.Iterable<$0.Device>? devices,
     $1.EffectivePermissions? permissions,
     $2.Timestamp? snapshottedAt,
+    $core.Iterable<ServiceStatus>? serviceStatuses,
   }) {
     final result = create();
     if (devices != null) result.devices.addAll(devices);
     if (permissions != null) result.permissions = permissions;
     if (snapshottedAt != null) result.snapshottedAt = snapshottedAt;
+    if (serviceStatuses != null) result.serviceStatuses.addAll(serviceStatuses);
     return result;
   }
 
@@ -56,6 +63,9 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
         subBuilder: $1.EffectivePermissions.create)
     ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'snapshottedAt',
         subBuilder: $2.Timestamp.create)
+    ..pc<ServiceStatus>(
+        4, _omitFieldNames ? '' : 'serviceStatuses', $pb.PbFieldType.PM,
+        subBuilder: ServiceStatus.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -103,6 +113,265 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
   void clearSnapshottedAt() => $_clearField(3);
   @$pb.TagNumber(3)
   $2.Timestamp ensureSnapshottedAt() => $_ensure(2);
+
+  /// One for every device the recipient sees, as last evaluated (see ServiceStatus). A device
+  /// the recipient began to see since the last quarter hour — or began to see as its
+  /// resident — has none until the next.
+  @$pb.TagNumber(4)
+  $pb.PbList<ServiceStatus> get serviceStatuses => $_getList(3);
+}
+
+/// What keeps a device working, as the gateway judges it, and nothing that describes the
+/// people around it. Sent for every device a recipient sees, so that an app reads a
+/// device's problems from one place whatever its view. To a recipient whose
+/// DeviceAcl.relation is SERVICE it is all they get of the device's state, beside its
+/// description-only Device: they hold no action on
+/// it and are sent no PropertyReport or DeviceEvent for it (see
+/// access.v1.MembershipRelation).
+///
+/// Evaluated by the gateway at each quarter hour (:00, :15, :30, :45 UTC) from what it holds
+/// then, and pushed in ServiceStatusChanged when it differs from what the recipient was last
+/// sent. Between quarter hours nothing here changes, so polling learns nothing more. A
+/// change still says the device was heard within that quarter hour, and nothing finer.
+class ServiceStatus extends $pb.GeneratedMessage {
+  factory ServiceStatus({
+    $3.DeviceId? deviceId,
+    $2.Timestamp? asOf,
+    $core.bool? reachable,
+    $2.Timestamp? unreachableSince,
+    $core.int? batteryPercent,
+    $core.bool? batteryLow,
+    $core.bool? batteryReplacementNeeded,
+    $core.int? radioQuality,
+    $core.Iterable<ServiceFault>? faults,
+  }) {
+    final result = create();
+    if (deviceId != null) result.deviceId = deviceId;
+    if (asOf != null) result.asOf = asOf;
+    if (reachable != null) result.reachable = reachable;
+    if (unreachableSince != null) result.unreachableSince = unreachableSince;
+    if (batteryPercent != null) result.batteryPercent = batteryPercent;
+    if (batteryLow != null) result.batteryLow = batteryLow;
+    if (batteryReplacementNeeded != null)
+      result.batteryReplacementNeeded = batteryReplacementNeeded;
+    if (radioQuality != null) result.radioQuality = radioQuality;
+    if (faults != null) result.faults.addAll(faults);
+    return result;
+  }
+
+  ServiceStatus._();
+
+  factory ServiceStatus.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServiceStatus.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServiceStatus',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$3.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $3.DeviceId.create)
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'asOf',
+        subBuilder: $2.Timestamp.create)
+    ..aOB(3, _omitFieldNames ? '' : 'reachable')
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'unreachableSince',
+        subBuilder: $2.Timestamp.create)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'batteryPercent', $pb.PbFieldType.OU3)
+    ..aOB(6, _omitFieldNames ? '' : 'batteryLow')
+    ..aOB(7, _omitFieldNames ? '' : 'batteryReplacementNeeded')
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'radioQuality', $pb.PbFieldType.OU3)
+    ..pc<ServiceFault>(9, _omitFieldNames ? '' : 'faults', $pb.PbFieldType.KE,
+        valueOf: ServiceFault.valueOf,
+        enumValues: ServiceFault.values,
+        defaultEnumValue: ServiceFault.SERVICE_FAULT_UNSPECIFIED)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServiceStatus clone() => ServiceStatus()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServiceStatus copyWith(void Function(ServiceStatus) updates) =>
+      super.copyWith((message) => updates(message as ServiceStatus))
+          as ServiceStatus;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ServiceStatus create() => ServiceStatus._();
+  @$core.override
+  ServiceStatus createEmptyInstance() => create();
+  static $pb.PbList<ServiceStatus> createRepeated() =>
+      $pb.PbList<ServiceStatus>();
+  @$core.pragma('dart2js:noInline')
+  static ServiceStatus getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServiceStatus>(create);
+  static ServiceStatus? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $3.DeviceId get deviceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set deviceId($3.DeviceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $3.DeviceId ensureDeviceId() => $_ensure(0);
+
+  /// Always set. The quarter hour at which the status took its current value, but never
+  /// earlier than the start of the recipient's current, unbroken stretch of seeing the
+  /// device, nor, for a resident, than their current residency — each start taken at the
+  /// first quarter hour at or after it. When that start moves because the recipient becomes
+  /// a resident, the app drops the status it held and is sent one again from the new start at
+  /// the next quarter hour. These quarter hours, and the moment a device is
+  /// taken away, are the only times service is given of a device in a home (see
+  /// access.v1.MembershipRelation). Pushed and in a
+  /// snapshot alike, so an unchanged status carries the same as_of however it arrived.
+  @$pb.TagNumber(2)
+  $2.Timestamp get asOf => $_getN(1);
+  @$pb.TagNumber(2)
+  set asOf($2.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAsOf() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAsOf() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureAsOf() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.bool get reachable => $_getBF(2);
+  @$pb.TagNumber(3)
+  set reachable($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReachable() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReachable() => $_clearField(3);
+
+  /// While unreachable, the quarter hour at which the gateway found it so — not when it was
+  /// last heard, which for a device that reports on change is when it was last used — and,
+  /// like as_of, never earlier than those starts. Unset while reachable.
+  @$pb.TagNumber(4)
+  $2.Timestamp get unreachableSince => $_getN(3);
+  @$pb.TagNumber(4)
+  set unreachableSince($2.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasUnreachableSince() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearUnreachableSince() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.Timestamp ensureUnreachableSince() => $_ensure(3);
+
+  /// Remaining charge, rounded up to a multiple of ten — 4 % is sent as 10, and 0 only when
+  /// the device reports none left. Absent for a device that does not report one.
+  @$pb.TagNumber(5)
+  $core.int get batteryPercent => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set batteryPercent($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasBatteryPercent() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearBatteryPercent() => $_clearField(5);
+
+  /// battery_low: the device reports its charge low or critical (Matter Power Source
+  /// BatChargeLevel, or a vendor's low-battery flag). battery_replacement_needed: it reports
+  /// that its battery must be replaced. Each is set on its own report alone.
+  @$pb.TagNumber(6)
+  $core.bool get batteryLow => $_getBF(5);
+  @$pb.TagNumber(6)
+  set batteryLow($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasBatteryLow() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearBatteryLow() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get batteryReplacementNeeded => $_getBF(6);
+  @$pb.TagNumber(7)
+  set batteryReplacementNeeded($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBatteryReplacementNeeded() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBatteryReplacementNeeded() => $_clearField(7);
+
+  /// A device.v1.RadioQuality number, travelling as a uint32 as every enum-valued reading
+  /// does. Absent: the device does not report one.
+  @$pb.TagNumber(8)
+  $core.int get radioQuality => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set radioQuality($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasRadioQuality() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearRadioQuality() => $_clearField(8);
+
+  /// Faults the device reports now, each listed once. Empty: none. A fault can follow from
+  /// what someone did — a casing opened — and service learns that within the quarter hour;
+  /// that much fault reporting discloses.
+  @$pb.TagNumber(9)
+  $pb.PbList<ServiceFault> get faults => $_getList(8);
+}
+
+/// The service statuses that changed at a quarter hour, gateway → app. Apply each as an
+/// upsert keyed on device_id. Sent for every device the recipient sees, without a
+/// subscription: a service view holds no SUBSCRIBE, and needs none for this.
+class ServiceStatusChanged extends $pb.GeneratedMessage {
+  factory ServiceStatusChanged({
+    $core.Iterable<ServiceStatus>? statuses,
+  }) {
+    final result = create();
+    if (statuses != null) result.statuses.addAll(statuses);
+    return result;
+  }
+
+  ServiceStatusChanged._();
+
+  factory ServiceStatusChanged.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ServiceStatusChanged.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ServiceStatusChanged',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<ServiceStatus>(
+        1, _omitFieldNames ? '' : 'statuses', $pb.PbFieldType.PM,
+        subBuilder: ServiceStatus.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServiceStatusChanged clone() =>
+      ServiceStatusChanged()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ServiceStatusChanged copyWith(void Function(ServiceStatusChanged) updates) =>
+      super.copyWith((message) => updates(message as ServiceStatusChanged))
+          as ServiceStatusChanged;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ServiceStatusChanged create() => ServiceStatusChanged._();
+  @$core.override
+  ServiceStatusChanged createEmptyInstance() => create();
+  static $pb.PbList<ServiceStatusChanged> createRepeated() =>
+      $pb.PbList<ServiceStatusChanged>();
+  @$core.pragma('dart2js:noInline')
+  static ServiceStatusChanged getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ServiceStatusChanged>(create);
+  static ServiceStatusChanged? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<ServiceStatus> get statuses => $_getList(0);
 }
 
 /// One attribute reading streamed to the app as it happens — Matter's Report Data Action,
@@ -114,7 +383,7 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
 /// wins, order does not matter, and a missed one is corrected by the next.
 class PropertyReport extends $pb.GeneratedMessage {
   factory PropertyReport({
-    $3.PropertyUpdate? update,
+    $4.PropertyUpdate? update,
     $2.Timestamp? gatewayProcessedAt,
   }) {
     final result = create();
@@ -138,8 +407,8 @@ class PropertyReport extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$3.PropertyUpdate>(1, _omitFieldNames ? '' : 'update',
-        subBuilder: $3.PropertyUpdate.create)
+    ..aOM<$4.PropertyUpdate>(1, _omitFieldNames ? '' : 'update',
+        subBuilder: $4.PropertyUpdate.create)
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'gatewayProcessedAt',
         subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
@@ -166,15 +435,15 @@ class PropertyReport extends $pb.GeneratedMessage {
   static PropertyReport? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.PropertyUpdate get update => $_getN(0);
+  $4.PropertyUpdate get update => $_getN(0);
   @$pb.TagNumber(1)
-  set update($3.PropertyUpdate value) => $_setField(1, value);
+  set update($4.PropertyUpdate value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUpdate() => $_has(0);
   @$pb.TagNumber(1)
   void clearUpdate() => $_clearField(1);
   @$pb.TagNumber(1)
-  $3.PropertyUpdate ensureUpdate() => $_ensure(0);
+  $4.PropertyUpdate ensureUpdate() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $2.Timestamp get gatewayProcessedAt => $_getN(1);
@@ -193,7 +462,9 @@ class PropertyReport extends $pb.GeneratedMessage {
 ///
 /// Carries the full Device, descriptor plus current typed properties, so the app can
 /// render it without a follow-up read — the same payload DeviceStateSnapshot gives
-/// per device.
+/// per device. To a recipient who sees it as service, the Device carries its description
+/// only, as in a snapshot, and is sent at the next quarter hour (see
+/// access.v1.DeviceAcl.relation).
 ///
 /// Apply as an upsert keyed on descriptor.device_id, never as an insert: a device can
 /// be in the snapshot and then announced, or announced twice across a connector
@@ -263,14 +534,18 @@ class DeviceAdded extends $pb.GeneratedMessage {
 }
 
 /// A device is gone, because its connector said so via connector.v1.DeviceRemoval.
+/// To a recipient who sees it as service, sent at once, as the removal from their
+/// permissions is (see LivePermissionUpdate) — if they were shown the device; otherwise not
+/// at all.
 ///
 /// A connector disconnecting is NOT a removal: an ordinary reconnect wipes the
 /// device→connector route while every device still exists, and treating that as a
 /// removal makes the whole UI flap. Unreachability is a separate signal — read
-/// device.v1.Device.last_seen for that.
+/// ServiceStatus.reachable for that, which every recipient gets; device.v1.Device.last_seen
+/// may be unset.
 class DeviceRemoved extends $pb.GeneratedMessage {
   factory DeviceRemoved({
-    $4.DeviceId? deviceId,
+    $3.DeviceId? deviceId,
     $core.String? reason,
   }) {
     final result = create();
@@ -293,8 +568,8 @@ class DeviceRemoved extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$4.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
-        subBuilder: $4.DeviceId.create)
+    ..aOM<$3.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $3.DeviceId.create)
     ..aOS(2, _omitFieldNames ? '' : 'reason')
     ..hasRequiredFields = false;
 
@@ -320,15 +595,15 @@ class DeviceRemoved extends $pb.GeneratedMessage {
   static DeviceRemoved? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $4.DeviceId get deviceId => $_getN(0);
+  $3.DeviceId get deviceId => $_getN(0);
   @$pb.TagNumber(1)
-  set deviceId($4.DeviceId value) => $_setField(1, value);
+  set deviceId($3.DeviceId value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDeviceId() => $_has(0);
   @$pb.TagNumber(1)
   void clearDeviceId() => $_clearField(1);
   @$pb.TagNumber(1)
-  $4.DeviceId ensureDeviceId() => $_ensure(0);
+  $3.DeviceId ensureDeviceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get reason => $_getSZ(1);

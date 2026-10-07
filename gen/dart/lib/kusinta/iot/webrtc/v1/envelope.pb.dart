@@ -695,6 +695,8 @@ enum ManagementResult_Result {
   links,
   roomClimates,
   roomHistory,
+  privacyDisclosure,
+  apartmentClimateSummary,
   notSet
 }
 
@@ -717,6 +719,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     $4.DeviceLinkList? links,
     $5.RoomClimateList? roomClimates,
     $5.RoomHistory? roomHistory,
+    $3.PrivacyDisclosure? privacyDisclosure,
+    $5.ApartmentClimateSummary? apartmentClimateSummary,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -727,6 +731,9 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (links != null) result.links = links;
     if (roomClimates != null) result.roomClimates = roomClimates;
     if (roomHistory != null) result.roomHistory = roomHistory;
+    if (privacyDisclosure != null) result.privacyDisclosure = privacyDisclosure;
+    if (apartmentClimateSummary != null)
+      result.apartmentClimateSummary = apartmentClimateSummary;
     return result;
   }
 
@@ -748,6 +755,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     6: ManagementResult_Result.links,
     7: ManagementResult_Result.roomClimates,
     8: ManagementResult_Result.roomHistory,
+    9: ManagementResult_Result.privacyDisclosure,
+    10: ManagementResult_Result.apartmentClimateSummary,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -755,7 +764,7 @@ class ManagementResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7, 8])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -771,6 +780,11 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $5.RoomClimateList.create)
     ..aOM<$5.RoomHistory>(8, _omitFieldNames ? '' : 'roomHistory',
         subBuilder: $5.RoomHistory.create)
+    ..aOM<$3.PrivacyDisclosure>(9, _omitFieldNames ? '' : 'privacyDisclosure',
+        subBuilder: $3.PrivacyDisclosure.create)
+    ..aOM<$5.ApartmentClimateSummary>(
+        10, _omitFieldNames ? '' : 'apartmentClimateSummary',
+        subBuilder: $5.ApartmentClimateSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -883,6 +897,30 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearRoomHistory() => $_clearField(8);
   @$pb.TagNumber(8)
   $5.RoomHistory ensureRoomHistory() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  $3.PrivacyDisclosure get privacyDisclosure => $_getN(8);
+  @$pb.TagNumber(9)
+  set privacyDisclosure($3.PrivacyDisclosure value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPrivacyDisclosure() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearPrivacyDisclosure() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $3.PrivacyDisclosure ensurePrivacyDisclosure() => $_ensure(8);
+
+  /// get_apartment_climate_summary
+  @$pb.TagNumber(10)
+  $5.ApartmentClimateSummary get apartmentClimateSummary => $_getN(9);
+  @$pb.TagNumber(10)
+  set apartmentClimateSummary($5.ApartmentClimateSummary value) =>
+      $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasApartmentClimateSummary() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearApartmentClimateSummary() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $5.ApartmentClimateSummary ensureApartmentClimateSummary() => $_ensure(9);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the
@@ -992,7 +1030,8 @@ class StartPairing extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $6.PairingWindow ensureWindow() => $_ensure(1);
 
-  /// Where to file the device once it arrives.
+  /// Where to file the device once it arrives. Into a home only as PlaceDeviceInSpace
+  /// allows.
   ///
   /// Optional, and the two cases differ. A caller pairing a device of their own must name a
   /// space they reach, so it is theirs and placed on arrival rather than sitting unfiled and
@@ -1126,7 +1165,8 @@ class PairingStarted extends $pb.GeneratedMessage {
 /// One message per request, not per device: a batch window attributes several, and a client
 /// given one message each has nothing telling it the window is over and no defined moment to
 /// stop waiting. The devices are listed here; each also arrives as an ordinary DeviceAdded
-/// as it appears, so a client may show them as they come and use this to finish.
+/// as it appears — for a device the caller sees as service, at the next quarter hour — so a
+/// client may show them as they come and use this to finish.
 ///
 /// An error and a non-empty device list are not exclusive. A batch of five that attributed
 /// three and then expired reports both — three devices and NO_DEVICE_APPEARED — because
@@ -1228,7 +1268,12 @@ class PairingFinished extends $pb.GeneratedMessage {
 /// again whenever its state moves.
 ///
 /// Sent only for links the recipient is entitled to see. An unfiltered one would say
-/// which devices exist and how they are arranged, to somebody entitled to neither.
+/// which devices exist and how they are arranged, to somebody entitled to neither. A link
+/// with an end in a home is not pushed to a recipient who sees it as service when it is made
+/// or changes — when its residents make one is theirs to know; service reads a home's links
+/// by ListDeviceLinks, where a new one appears from the next quarter hour. Its removal is
+/// pushed to them at once, with details_withheld, as every loss is — to those whose view
+/// held it at a quarter hour since it was made, and to nobody else.
 class LinkChanged extends $pb.GeneratedMessage {
   factory LinkChanged({
     $4.DeviceLink? link,
@@ -1297,7 +1342,9 @@ class LinkChanged extends $pb.GeneratedMessage {
   /// and repair.
   ///
   /// `link` still carries the whole link when this is set, so the app can name what
-  /// went rather than only its id.
+  /// went rather than only its id — as much of it as the recipient was shown, so with
+  /// details_withheld to one who saw it as service. To such a recipient it means the link is
+  /// gone from their view, which need not mean it is gone.
   @$pb.TagNumber(2)
   $core.bool get removed => $_getBF(1);
   @$pb.TagNumber(2)
@@ -1530,8 +1577,11 @@ class ConnectorsAnnounced extends $pb.GeneratedMessage {
 
 /// A room's climate changed, gateway → app: its target, what set it, what it is being
 /// held at, its condition. Apply as an upsert keyed on room.space_id. Sent only for rooms
-/// the recipient may see, and whenever any field moves — a knob turned by hand shows up
-/// here without the app asking.
+/// the recipient may see, and whenever any field the recipient is sent moves — a knob
+/// turned by hand shows up here without the app asking. To a recipient who sees the room
+/// as service, what is new is sent at the next quarter hour and what is lost at once. A
+/// recipient who is sent the room with state_withheld is therefore not sent it when only
+/// withheld fields move.
 class RoomClimateChanged extends $pb.GeneratedMessage {
   factory RoomClimateChanged({
     $5.RoomClimate? room,
@@ -1593,7 +1643,9 @@ class RoomClimateChanged extends $pb.GeneratedMessage {
 }
 
 /// A mode on a space was switched on, changed or ended, gateway → app. `ended` rather than
-/// kind UNSPECIFIED, so an app can still name the mode that finished.
+/// kind UNSPECIFIED, so an app can still name the mode that finished. A mode on an
+/// apartment or a room in one is sent to its residents only — whether a home stands empty
+/// is theirs to know; one on any other space, to whoever reaches it.
 class ClimateModeChanged extends $pb.GeneratedMessage {
   factory ClimateModeChanged({
     $5.ClimateMode? mode,
@@ -1685,6 +1737,7 @@ enum GatewayMessage_Payload {
   connectorsAnnounced,
   roomClimateChanged,
   climateModeChanged,
+  serviceStatusChanged,
   notSet
 }
 
@@ -1710,6 +1763,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     ConnectorsAnnounced? connectorsAnnounced,
     RoomClimateChanged? roomClimateChanged,
     ClimateModeChanged? climateModeChanged,
+    $8.ServiceStatusChanged? serviceStatusChanged,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1735,6 +1789,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
       result.roomClimateChanged = roomClimateChanged;
     if (climateModeChanged != null)
       result.climateModeChanged = climateModeChanged;
+    if (serviceStatusChanged != null)
+      result.serviceStatusChanged = serviceStatusChanged;
     return result;
   }
 
@@ -1767,6 +1823,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     20: GatewayMessage_Payload.connectorsAnnounced,
     21: GatewayMessage_Payload.roomClimateChanged,
     22: GatewayMessage_Payload.climateModeChanged,
+    23: GatewayMessage_Payload.serviceStatusChanged,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1774,7 +1831,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22])
+    ..oo(0,
+        [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$7.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $7.Timestamp.create)
@@ -1813,6 +1871,9 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: RoomClimateChanged.create)
     ..aOM<ClimateModeChanged>(22, _omitFieldNames ? '' : 'climateModeChanged',
         subBuilder: ClimateModeChanged.create)
+    ..aOM<$8.ServiceStatusChanged>(
+        23, _omitFieldNames ? '' : 'serviceStatusChanged',
+        subBuilder: $8.ServiceStatusChanged.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2061,6 +2122,18 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearClimateModeChanged() => $_clearField(22);
   @$pb.TagNumber(22)
   ClimateModeChanged ensureClimateModeChanged() => $_ensure(19);
+
+  @$pb.TagNumber(23)
+  $8.ServiceStatusChanged get serviceStatusChanged => $_getN(20);
+  @$pb.TagNumber(23)
+  set serviceStatusChanged($8.ServiceStatusChanged value) =>
+      $_setField(23, value);
+  @$pb.TagNumber(23)
+  $core.bool hasServiceStatusChanged() => $_has(20);
+  @$pb.TagNumber(23)
+  void clearServiceStatusChanged() => $_clearField(23);
+  @$pb.TagNumber(23)
+  $8.ServiceStatusChanged ensureServiceStatusChanged() => $_ensure(20);
 }
 
 enum AppMessage_Payload {

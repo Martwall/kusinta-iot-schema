@@ -19,6 +19,12 @@ class PermissionAction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     PERMISSION_ACTION_WRITE: _ClassVar[PermissionAction]
     PERMISSION_ACTION_SUBSCRIBE: _ClassVar[PermissionAction]
     PERMISSION_ACTION_INVOKE: _ClassVar[PermissionAction]
+
+class MembershipRelation(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MEMBERSHIP_RELATION_UNSPECIFIED: _ClassVar[MembershipRelation]
+    MEMBERSHIP_RELATION_RESIDENT: _ClassVar[MembershipRelation]
+    MEMBERSHIP_RELATION_SERVICE: _ClassVar[MembershipRelation]
 ROLE_UNSPECIFIED: Role
 ROLE_RESIDENT: Role
 ROLE_PROPERTY_OWNER: Role
@@ -29,3 +35,6 @@ PERMISSION_ACTION_READ: PermissionAction
 PERMISSION_ACTION_WRITE: PermissionAction
 PERMISSION_ACTION_SUBSCRIBE: PermissionAction
 PERMISSION_ACTION_INVOKE: PermissionAction
+MEMBERSHIP_RELATION_UNSPECIFIED: MembershipRelation
+MEMBERSHIP_RELATION_RESIDENT: MembershipRelation
+MEMBERSHIP_RELATION_SERVICE: MembershipRelation
