@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package kusinta.iot.reporting.v1;
+
+import "kusinta/iot/reporting/v1/reporting.proto";
+
+option optimize_for = SPEED;
+
+// The building-server gateway's reports to the api-server, over the gateway's client
+// certificate: which gateway is reporting comes from the certificate. Three unary calls, one
+// per concern, each with its own stream of reports, so a slow call for one never holds back
+// another.
+service GatewayReportingService {
+  rpc ReportProblems(ReportProblemsRequest) returns (ReportProblemsResponse);
+  rpc ReportServiceReach(ReportServiceReachRequest) returns (ReportServiceReachResponse);
+  rpc ReportServedSpaces(ReportServedSpacesRequest) returns (ReportServedSpacesResponse);
+}

@@ -16,6 +16,7 @@ proto/
   device/          # DeviceDescriptor, per-type Properties messages, Device/Endpoint, PropertyUpdate
   space/           # Space (building hierarchy)
   access/          # Role, PermissionAction, DeviceAcl, EffectivePermissions
+  reporting/       # gateway → api-server reports: open problems, service reach, served spaces
   connector/       # ConnectorToGatewayMessage, GatewayToConnectorMessage, gRPC service
   webrtc/          # GatewayMessage, AppMessage, DeviceCommand, DeviceStateSnapshot, …
   vendor/

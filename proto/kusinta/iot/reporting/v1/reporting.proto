@@ -1,0 +1,498 @@
+syntax = "proto3";
+
+package kusinta.iot.reporting.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/common/v1/types.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// What the building-server gateway reports to the api-server about the building it serves:
+// the problems open there, who among service staff reaches which spaces, and which spaces it
+// serves. The api-server keeps these so it can say what needs attention across properties,
+// to the right people, while a gateway is offline.
+//
+// The gateway is the source of truth for all three. Delivery is at least once: the gateway
+// sends a report again until the api-server acknowledges it, across its own restarts and
+// offline spells, and the api-server makes a repeat harmless. Which gateway is reporting
+// comes from its client certificate, never from a message field.
+//
+// What leaves the gateway follows the same privacy rules as what the gateway shows service
+// staff (see access.v1.MembershipRelation): the api-server learns no more of a home than
+// service on the gateway does. The rules are stated where they bind, below.
+
+// Each concern's reports travel on a stream. The gateway starts a new one each time its
+// process starts, minting a stream_id (a UUIDv4) and keeping it before it sends anything on
+// it; a call that gets no answer is sent again, unchanged, on the same stream. Every request
+// carries a seq counting the stream's requests from 1, and the api-server applies a request
+// only if its seq is exactly one above the last it applied on that stream: no request is
+// skipped, none is applied twice, and parts arrive in order. A repeat of a request already
+// applied (its answer was lost) is not applied again and is answered with applied_seq as it
+// stands. The gateway sends one request at a time per stream, the next once the last is
+// answered; a request not covered by the answer's applied_seq is sent again unchanged.
+//
+// A stream completes its snapshot of the concern (see SnapshotPart), and from then it is the
+// gateway's current stream for that concern. Every request also names, in previous_stream_ids,
+// every stream the gateway started since the last one it got an answer on, that one included —
+// at most the 16 most recent, which only a gateway restarting over and over without reaching
+// the api-server would exceed. The api-server never applies a request on a stream another
+// stream has named as previous, and otherwise orders a gateway's streams by when it first
+// received a request on each — no clock of the gateway's is trusted for it — applying nothing
+// more on a stream first seen before the current one. So a request on an ended stream that
+// arrives late, after its successor began, is refused, even when it is the first ever seen on
+// its stream. A fresh stream per start is what lets a gateway restored from a backup, or
+// reinstalled, carry on: it never speaks on a stream the api-server has counts for, and its
+// snapshot is authoritative whatever the api-server held.
+//
+// How a stream opens: for service reach and served spaces, with the snapshot — anything
+// queued from before is superseded by it. For problems, transitions are history as well as
+// state (a problem may have opened and cleared while the gateway was offline), so the stream
+// opens with the transitions still queued, and the snapshot follows, settling every problem
+// to its state at the last evaluation.
+//
+// The api-server sets resync_required in a response when it will not apply the request's
+// stream at all: a stream superseded by one seen later, a seq more than one above the last
+// applied, a reach or spaces stream whose first request is not part 0 of a snapshot. The
+// gateway then starts a new stream.
+//
+// Changes that concern a home wait for the next quarter hour, as problems of its devices do,
+// so that the api-server cannot time a move in or out more closely than service staff on the
+// gateway can. That covers anything entering or leaving a home (a room moved, a device
+// handed to a resident), anything about a home space (added, removed, renamed, retyped), and
+// every change of reach that follows from those, a membership a home change ends included.
+//
+// A subject the gateway stops reporting — a device handed to a resident, a room moved into a
+// home, whose window is then the residents' alone — gets nothing more but, at that quarter
+// hour, the clear its problems take (CLEAR_REASON_NO_LONGER_REPORTED). Any other subject that
+// moves into or out of a home closes its open problems at that quarter hour — one that still
+// holds with CLEAR_REASON_MOVED, opening again there as a new problem stamped with that
+// quarter hour, one that has ended with CLEAR_REASON_RECOVERED — no time from while it was in
+// a home follows it out, and none from before follows it in. A move from one home to another
+// is a move out and a move in, and any change of a home device's space_id, within one home
+// included, is a move too. A space retyped into or out of being a home (access.v1 has a home
+// start or end there) moves everything within it, as if each subject had been carried in or
+// out. A subject that starts being reported — a device handed back by a resident, a room moved
+// out of a home — opens any problem that holds at that quarter hour, stamped with it. Any
+// other change of a problem's space_id (a device refiled outside any home) is sent as a change
+// of the problem.
+//
+// Moves are judged from one quarter hour to the next: the gateway compares where a subject
+// was, and who owned it, at the last quarter hour with where it is now. A move undone in
+// between is no move, and keeps its problems as they are. A subject the gateway stops
+// reporting always closes with CLEAR_REASON_NO_LONGER_REPORTED, whatever its condition; of any
+// other moved subject, a problem that no longer holds closes as CLEAR_REASON_RECOVERED and one
+// that still holds as CLEAR_REASON_MOVED. Between a move and the quarter hour that reports it,
+// the subject is treated as in a home whichever way it moved: nothing about it leaves the
+// gateway with a time finer than that quarter hour, and what it may raise is judged by its new
+// place from then on.
+//
+// The one exception is reach into a home taken away by a change to the member — a membership
+// ended, or a relation changing from service to resident — which is sent at once, since it
+// narrows what someone sees. Both causes go at once alike, so the
+// timing of a loss cannot tell the api-server that a member became a resident. A loss that
+// follows from a home change (a home removed, a room moved into one) waits with that change.
+//
+// The three concerns are otherwise not ordered against each other, with one rule at a quarter
+// hour: the gateway sends that quarter hour's problem transitions only once its reach and
+// served-space changes have been applied, so that a problem moved into a home is never shown
+// by reach the api-server has not yet lost. If reach or spaces cannot get through, problems
+// wait for them. On new streams the same holds: the problems stream sends nothing, its queued
+// transitions or its snapshot, until the new reach and served-spaces streams have each
+// completed their snapshot. Reach gained, a relation
+// changing to service included, waits like any other home change. A reach update sent at
+// once, and a snapshot, carry the same: for anything about a home, the state at the last
+// quarter hour, less reach since taken away by this exception.
+
+// One part of a full set: a concern's whole current state, sent on every new stream as above.
+// A large set may span several requests, each carrying the same snapshot_id.
+//
+// The api-server applies a snapshot only once it holds every part of it: parts 0 to the one
+// marked last, all with one snapshot_id, on one stream. Then, and only then, it drops what
+// the snapshot does not name — closing open problems that are absent, forgetting reach and
+// spaces that are absent. A snapshot belongs to its stream: a part with another snapshot_id,
+// or any request on a newer stream, discards a snapshot in progress. A snapshot not
+// completed is never applied, and the next stream sends its own.
+//
+// While a snapshot of a concern is in progress, the gateway sends that concern nothing but
+// the snapshot's parts; whatever it queued meanwhile follows the last part. A change sent
+// between parts could be missing from a snapshot built before it, and completing the snapshot
+// would then undo it. A request without a snapshot part that arrives while one is in progress
+// is not applied: the answer's applied_seq does not cover it.
+//
+// A part other than the last is held, not applied, but its seq counts as applied: the gateway
+// sends the next. The snapshot applies with its last part.
+message SnapshotPart {
+  // Minted by the gateway, opaque, unique per snapshot.
+  string snapshot_id = 1;
+
+  // This part's place in the snapshot, from 0.
+  uint32 part = 2;
+
+  // Set on the final part. The snapshot has part + 1 parts.
+  bool last = 3;
+}
+
+// What kind of problem is open. The device kinds mirror what service staff are given of a
+// device (webrtc.v1.ServiceStatus: reachability, the battery flags, the ServiceFault values);
+// a device signal added there is added here too.
+enum ProblemKind {
+  PROBLEM_KIND_UNSPECIFIED = 0;
+
+  // The device cannot be heard, as its connector judges it.
+  PROBLEM_KIND_DEVICE_OFFLINE = 1;
+
+  // The device reports its battery low or critical.
+  PROBLEM_KIND_BATTERY_LOW = 2;
+
+  // The device reports that its battery must be replaced.
+  PROBLEM_KIND_BATTERY_REPLACEMENT_NEEDED = 3;
+
+  // The device reports an error in its own operation.
+  PROBLEM_KIND_DEVICE_ERROR = 4;
+
+  // The device reports being tampered with: a casing opened, a mount removed.
+  PROBLEM_KIND_DEVICE_TAMPER = 5;
+
+  // A connector's stream to the gateway is down. While it is open, the gateway raises no
+  // DEVICE_OFFLINE for the devices behind that connector and clears any it had raised, with
+  // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE: one problem rather than one per device. For
+  // a device in a home that clear, like any, waits for the quarter hour (see Problem).
+  PROBLEM_KIND_CONNECTOR_OFFLINE = 6;
+
+  // A connector is connected, but the backend it drives is failing: a central it cannot
+  // reach, a network server answering with errors.
+  PROBLEM_KIND_CONNECTOR_ERROR = 7;
+
+  // Company-owned devices are paired with the gateway but filed in no space. A device a
+  // resident owns is never counted. The count changes only at quarter-hour evaluations, and
+  // opened_at and cleared_at are quarter hours, as for a device in a home, so the problem
+  // cannot time what a resident does with a device.
+  PROBLEM_KIND_UNFILED_DEVICES = 8;
+
+  // A window is open in a room whose heating it pauses. Raised only for a room in no home: in
+  // a common area, or under a floor or building directly. Whether a window in a home is open
+  // is the residents' alone, and the gateway never reports it: a room that leaves a home with
+  // its window open raises this at the quarter hour it leaves, stamped with that quarter hour,
+  // never with when the window opened.
+  PROBLEM_KIND_WINDOW_OPEN = 9;
+}
+
+// Why a problem closed.
+enum ClearReason {
+  CLEAR_REASON_UNSPECIFIED = 0;
+
+  // The condition ended: the device was heard, its battery recovered or was replaced, the
+  // connector came back, the window closed.
+  CLEAR_REASON_RECOVERED = 1;
+
+  // The unfiled devices were filed.
+  CLEAR_REASON_FILED = 2;
+
+  // The device was removed from the gateway. Every problem open on it closes with this.
+  CLEAR_REASON_DEVICE_REMOVED = 3;
+
+  // The connector behind the device went offline; see PROBLEM_KIND_CONNECTOR_OFFLINE.
+  CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE = 4;
+
+  // The problem's subject left what the gateway reports, though the condition may hold: a
+  // device now owned by a resident, a room moved into a home. Sent, and stamped, at the next
+  // quarter hour.
+  CLEAR_REASON_NO_LONGER_REPORTED = 5;
+
+  // The subject moved into or out of a home. A problem that still holds opens again as a new
+  // one at the same quarter hour.
+  CLEAR_REASON_MOVED = 6;
+}
+
+// The thing a problem is about.
+message ProblemSubject {
+  oneof subject {
+    // DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER.
+    kusinta.iot.identity.v1.DeviceId device_id = 1;
+
+    // CONNECTOR_OFFLINE, CONNECTOR_ERROR.
+    kusinta.iot.identity.v1.ConnectorId connector_id = 2;
+
+    // WINDOW_OPEN: the room.
+    kusinta.iot.identity.v1.SpaceId room_id = 3;
+
+    // UNFILED_DEVICES: the gateway itself.
+    bool gateway = 4;
+  }
+}
+
+// A problem as it stands while open.
+//
+// For a device in a home (an apartment, or a room in one), a problem carries only what a
+// ServiceStatus would give service staff of it, at the same precision:
+//   * opened_at is the quarter hour the gateway's evaluated status changed, never the time
+//     of a device report;
+//   * battery_percent is rounded up to a multiple of ten, as ServiceStatus.battery_percent is;
+//   * the only device faults reported are DEVICE_ERROR and DEVICE_TAMPER.
+// A device a resident owns raises no problem at all: it is theirs, and building staff are not
+// told of it.
+//
+// When a transition for a device in a home is sent matters as much as what it carries: the
+// gateway evaluates such a device's problems only at quarter hours, so a condition that comes
+// and goes between two of them — a connector outage included — changes nothing, and it sends a
+// transition only at that evaluation, as ServiceStatus changes are pushed,
+// never on the device report that prompted it. That holds for every transition of such a
+// device, a clear for its removal or for its connector going offline included: each is sent,
+// and stamped, at the next quarter hour.
+message Problem {
+  ProblemKind kind = 2;
+
+  ProblemSubject subject = 3;
+
+  // The space a device subject is filed in. A device filed in several spaces, any of them in a
+  // home (an apartment or a room in one), counts as in a home, as access.v1 has it, and reports
+  // the deepest space it is filed in within any home, the lowest id between equals. Otherwise
+  // the deepest it is filed in, the lowest id between equals. Unset for any other subject (a
+  // room is its own place) and for a device filed nowhere.
+  kusinta.iot.identity.v1.SpaceId space_id = 4;
+
+  // When the problem opened. For a device in a home, the quarter hour; see above.
+  //
+  // A problem's space is space_id for a device subject and room_id for a room subject; a
+  // connector or the gateway has none.
+  //
+  // Of any problem with a space, the api-server shows a member only what falls within their
+  // unbroken reach to that space, from the since the gateway gives for it (see ReachedSpace),
+  // or for the administrator from when their administration began (see ServiceReach):
+  // a problem that closed at or before then is not shown to them at all, and an opened_at
+  // before then shows as then. Applied whether or not the space is in a home now, since a
+  // space may have been one while the problem was open. The gateway likewise never shows
+  // service staff a status from before they could see the device. A problem whose space the
+  // api-server does not hold is shown only to the gateway's administrator (see ServiceReach),
+  // its times as of when that administration began.
+  google.protobuf.Timestamp opened_at = 5;
+
+  // BATTERY_*: remaining charge, rounded up to a multiple of ten. Absent when the device
+  // reports none.
+  optional uint32 battery_percent = 6;
+
+  // UNFILED_DEVICES: how many devices are filed nowhere.
+  uint32 device_count = 7;
+}
+
+// A problem closing.
+message ProblemCleared {
+  // When it closed. For a device in a home, the quarter hour the evaluated status changed,
+  // as for opened_at; never the time of a device report.
+  google.protobuf.Timestamp cleared_at = 1;
+
+  ClearReason reason = 2;
+}
+
+// One change to one problem.
+//
+// (problem_id, seq) is the idempotency key. seq counts the transitions of one problem from 1:
+// its opening is 1, and each later change one more. Outside a snapshot, the api-server
+// applies a transition only if its seq is above the highest it holds for that problem; any
+// other — a repeat, or a retry overtaken by a later change — is acknowledged as a duplicate
+// and not applied, so a late update cannot reopen a problem since cleared. Seqs of one
+// problem need not arrive without gaps: each transition carries the problem's whole state.
+//
+// A snapshot is authoritative: each problem it names takes the snapshot's state and seq,
+// whatever the api-server held. A transition in it acknowledged REJECTED does not count as
+// naming its problem. A problem it does not name, the api-server closes as of the snapshot,
+// with no reason given (CLEAR_REASON_UNSPECIFIED), at the quarter hour the snapshot completed,
+// rounded down whatever the subject (the api-server may not yet know where it is), and never
+// earlier than the problem's opened_at. Its highest seq stays as held, so only a later
+// transition of it applies.
+message ProblemTransition {
+  // Minted by the gateway for one open period of one (subject, kind), stable across gateway
+  // restarts. A problem that clears and opens again is a new problem with a new id.
+  //
+  // A UUIDv4: opaque, and never time-ordered. An id that sorted by time (a ULID, a UUIDv7)
+  // would carry the moment a problem opened, which the quarter-hour rule withholds.
+  string problem_id = 1;
+  uint64 seq = 2;
+
+  oneof change {
+    // The problem opened, or something it carries changed while open (a battery level, a
+    // device count, the space it is filed in). Carries the whole problem, not a delta: the
+    // same problem_id, the next seq and the original opened_at.
+    Problem open = 3;
+
+    ProblemCleared cleared = 4;
+  }
+}
+
+message ReportProblemsRequest {
+  // This concern's stream and the request's place on it; see SnapshotPart.
+  string stream_id = 3;
+
+  // The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  repeated string previous_stream_ids = 5;
+  uint64 seq = 4;
+
+  // Applied in order.
+  repeated ProblemTransition transitions = 1;
+
+  // Set when this request is part of a snapshot of every open problem. Its transitions are
+  // then each problem's latest open state, and the api-server, once it holds the whole
+  // snapshot, closes every open problem the snapshot does not name.
+  SnapshotPart snapshot = 2;
+}
+
+// What the api-server made of one transition.
+enum AckStatus {
+  ACK_STATUS_UNSPECIFIED = 0;
+
+  // Applied now.
+  ACK_STATUS_APPLIED = 1;
+
+  // Already held, or overtaken by a later transition of the same problem; not applied.
+  ACK_STATUS_DUPLICATE = 2;
+
+  // Not applied, and never will be: malformed, or for something this gateway may not report.
+  // The gateway does not send it again. Never because of what the api-server holds of spaces —
+  // one it does not hold, one since removed, one it still files elsewhere: the three concerns
+  // are not ordered against each other, so a problem may run ahead of or behind its space, and
+  // is kept (see ServiceReach for who sees it).
+  ACK_STATUS_REJECTED = 3;
+
+  // Part of a snapshot not yet complete: received, to be applied with the last part.
+  ACK_STATUS_HELD = 4;
+}
+
+message TransitionAck {
+  string problem_id = 1;
+  uint64 seq = 2;
+  AckStatus status = 3;
+}
+
+message ReportProblemsResponse {
+  // One per transition of a request the api-server took in order, named by its key.
+  repeated TransitionAck acks = 1;
+
+  // As ReportServiceReachResponse.applied_seq: whether the request was taken at all. A request
+  // above it was not, carries no acks, and is sent again.
+  uint64 applied_seq = 3;
+
+  // The gateway must connect afresh; see SnapshotPart.
+  bool resync_required = 2;
+}
+
+// Which spaces one member of service staff reaches on this gateway: whom the api-server may
+// show a problem to, by where the problem is.
+//
+// Sent for every member who stands to some space as service (access.v1.MembershipRelation),
+// from their memberships alone. Never for a resident: where people live stays on the gateway.
+// A member's own home is not left out of their reach, since a gap would show where they live.
+// A user who is no longer service anywhere on the gateway is named in removed_user_ids.
+//
+// The administration of the gateway is not reported here; the administrator's own service
+// memberships, if any, are, like anyone's. The api-server records who administers a gateway
+// itself, and from when, and gives the administrator every space the gateway serves
+// from that moment, applying a change of administrator at once. A problem with no space the
+// api-server holds — a device filed nowhere, a space not yet held or since removed — is shown
+// only to the administrator. A problem about a connector or the gateway itself concerns no
+// one's home, and is shown to the administrator and every member with any reach.
+message ServiceReach {
+  // As the token issuer mints it: the sub of the member's token.
+  kusinta.iot.identity.v1.UserId user_id = 1;
+
+  // Every space the member reaches, the spaces beneath a reached space included. Replaces
+  // whatever the api-server held for this member on this gateway, so one member's reach is
+  // never split across requests or snapshot parts.
+  repeated ReachedSpace spaces = 3;
+}
+
+// One space a member reaches, and since when.
+message ReachedSpace {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // The quarter hour, rounded up, from which the member's reach to this space has been
+  // unbroken, as the gateway counts it. Given by the gateway, which saw any break, rather than
+  // inferred by the api-server from when reports arrived: a snapshot replaces what was queued,
+  // and would hide a break the gateway saw while offline.
+  google.protobuf.Timestamp since = 2;
+}
+
+message ReportServiceReachRequest {
+  // This concern's stream; see SnapshotPart.
+  string stream_id = 5;
+
+  // The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  repeated string previous_stream_ids = 6;
+
+  // The request's place on stream_id; see SnapshotPart. Applied in order, exactly once, so a
+  // late retry cannot restore reach since taken away.
+  uint64 seq = 1;
+
+  repeated ServiceReach reach = 2;
+
+  // Members who reach nothing on this gateway as service any more. A member named here and in
+  // reach is removed.
+  repeated kusinta.iot.identity.v1.UserId removed_user_ids = 3;
+
+  // Set when this request is part of a snapshot of every member's reach; members absent from
+  // a whole snapshot reach nothing.
+  SnapshotPart snapshot = 4;
+}
+
+message ReportServiceReachResponse {
+  // The seq the api-server has applied up to on the request's stream, a held snapshot part
+  // counting as applied. The gateway does not send any request up to it again; one above it
+  // was not applied, and is sent again.
+  uint64 applied_seq = 1;
+
+  // The gateway must connect afresh; see SnapshotPart.
+  bool resync_required = 2;
+}
+
+// A space this gateway serves, enough for the api-server to say which spaces an offline
+// gateway affects and to name where a problem is. The fields of space.v1.Space it needs and
+// no more: who is filed on a space, and which devices are in it, stay on the gateway.
+//
+// name is the space's name as filed. Building staff see it in the app already, but the name
+// of a home may carry personal data ("Apt 101 – Andersson"), so it is stored by the api-server
+// as personal data: something an operator's data protection assessment covers.
+message ServedSpace {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.common.v1.SpaceType space_type = 2;
+  string name = 3;
+
+  // Unset for a top-level space.
+  kusinta.iot.identity.v1.SpaceId parent_space_id = 4;
+
+  // As Space.floor: meaningful for a floor.
+  int32 floor = 5;
+
+  // The building's IANA time zone, as Space.time_zone: set on the building, so a time the
+  // api-server holds can be shown on the building's clock without a session to the gateway.
+  string time_zone = 6;
+}
+
+message ReportServedSpacesRequest {
+  // This concern's stream; see SnapshotPart.
+  string stream_id = 5;
+
+  // The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  repeated string previous_stream_ids = 6;
+
+  // As ReportServiceReachRequest.seq, on this concern's own stream.
+  uint64 seq = 1;
+
+  // Added or changed. Each replaces what the api-server held for that space.
+  repeated ServedSpace spaces = 2;
+
+  // No longer served: deleted, or moved off this gateway. A space named here and in spaces is
+  // removed.
+  repeated kusinta.iot.identity.v1.SpaceId removed_space_ids = 3;
+
+  // Set when this request is part of a snapshot of every served space; spaces absent from a
+  // whole snapshot are no longer served.
+  SnapshotPart snapshot = 4;
+}
+
+message ReportServedSpacesResponse {
+  // As ReportServiceReachResponse.applied_seq.
+  uint64 applied_seq = 1;
+
+  // As ReportServiceReachResponse.resync_required.
+  bool resync_required = 2;
+}

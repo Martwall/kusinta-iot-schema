@@ -36,7 +36,7 @@ PKG = "kusinta/iot"
 # everything this leg's entry files actually import.
 #
 # The first half is the leg-neutral rule: a domain belonging to neither leg —
-# device, access, identity, space, registration, common, vendor — goes in both.
+# device, access, identity, space, registration, reporting, common, vendor — goes in both.
 # It has to stay a directory rule, because some of those are reached by nobody's
 # imports and would vanish from a pure closure: the annotation extensions in
 # matter_options and vendor_options are read out of descriptor bytes at runtime,

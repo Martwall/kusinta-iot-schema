@@ -1,6 +1,6 @@
 {
   "name": "@kusinta/iot-schema",
-  "version": "0.2.0-beta.20",
+  "version": "0.2.0-beta.21",
   "type": "module",
   "license": "MIT",
   "files": ["src"],
@@ -38,6 +38,8 @@
     "./webrtc/setpoint-mode":   "./src/kusinta/iot/webrtc/v1/setpoint_mode_pb.js",
     "./registration":           "./src/kusinta/iot/registration/v1/registration_pb.js",
     "./registration/service":   "./src/kusinta/iot/registration/v1/registration_service_pb.js",
+    "./reporting":              "./src/kusinta/iot/reporting/v1/reporting_pb.js",
+    "./reporting/service":      "./src/kusinta/iot/reporting/v1/reporting_service_pb.js",
     "./signaling":              "./src/kusinta/iot/signaling/v1/signaling_pb.js",
     "./signaling/service":      "./src/kusinta/iot/signaling/v1/signaling_service_pb.js"
   },
