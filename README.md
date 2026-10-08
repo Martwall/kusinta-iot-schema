@@ -230,14 +230,17 @@ How it shows on the wire:
   residency are simply unset. A mode on a home goes to its residents only.
 - Setting a target, switching a mode, locking device controls and changing a link in a home
   are its residents' alone; anyone else is refused `NOT_ENTITLED` — save that the property
-  owner or administrator may switch a mode off: it ends one that was on while the home had
-  no resident at the last quarter hour and whose setter is not a resident now, and is
-  otherwise accepted and does nothing, so the answer says nothing of who lives there.
+  owner or administrator may switch a mode off: it ends one that is on while the home has
+  no resident and whose setter is not a resident, and is otherwise accepted and does
+  nothing, so the answer says nothing of who lives there.
   Service is refused `GetRoomHistory` on a room in a home; service that reaches the apartment itself gets
   `GetApartmentClimateSummary` instead: means over whole, closed periods of the disclosed
   length in the building's time zone, of the measured temperature and of the target
   somebody asked for, with how much of the period they rest on.
-- When a user loses their view of a home, `LivePermissionUpdate.reset_spaces` tells the app
+- Service sees a home's setup as it changes — its rooms, what is filed in it, its links,
+  names and descriptions, its members where they are shown — and loses what it no longer
+  reaches at once. What is withheld from service stays withheld; nothing else is held back.
+- When a user's view of a home changes, `LivePermissionUpdate.reset_spaces` tells the app
   to drop what it held of it and read it again.
 - Changing who belongs to a home, or what is filed in it, is guarded by the gateway. Every
   change to a home's members shows in `Space.members`, which its residents see.

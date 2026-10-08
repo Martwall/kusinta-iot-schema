@@ -19,24 +19,21 @@ import '../../identity/v1/identity.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
-/// Pushed to the app whenever the user's effective permissions change. A change that takes
-/// away what the user may see or do takes effect and is sent at once. What a user newly sees
-/// of a home as service — a device filed into it, a home newly reached — is judged at
-/// quarter hours instead: here and in a snapshot it is as it stood at the last one, even
-/// when the push is for another change, and it is sent at the next quarter hour with
-/// change_reason empty and new_permissions.valid_at that quarter hour, so that no push
-/// tells when, or why, a home changed. A resident who becomes service loses the resident
-/// view at once — the home's devices are listed in removed_devices, so the app drops what it
-/// holds of them — and gains the service view at the next quarter hour, when they come back
-/// in added_devices as service and their stretch of seeing the home as service begins. A
-/// member who becomes a resident gains the resident view at once: the home's devices come
-/// again in added_devices, each with a DeviceAdded carrying its full Device, and the app
-/// drops the ServiceStatus it held of them until their next one. A quarter-hour
-/// push that brings a home newly seen as service lists it in reset_spaces, so the app reads
-/// its rooms and links then.
+/// Pushed to the app whenever the user's effective permissions change, as they change. A
+/// change that takes away what the user may see or do takes effect and is sent at once; what
+/// a user newly sees of a home as service — a device filed into it, a home newly reached —
+/// is sent as it happens too, with new_permissions.valid_at the moment it took effect. A
+/// resident who becomes service loses the resident view at once — the home's devices are
+/// listed in removed_devices, so the app drops what it holds of them — and gains the service
+/// view at once, in a push that follows, where they come back in added_devices as service
+/// and their stretch of seeing the home as service begins. A member who becomes a resident
+/// gains the resident view at once: the home's devices come again in added_devices, each
+/// with a DeviceAdded carrying its full Device, and the app drops the ServiceStatus it held
+/// of them until their next one. A push that brings a home newly seen as service lists it in
+/// reset_spaces, so the app reads its rooms and links then.
 /// change_reason values: "DEVICE_ASSIGNED", "DEVICE_UNASSIGNED", "RESIDENT_CHANGED",
 /// "CONSTRAINT_UPDATED"; empty whenever the change concerns a home the user sees, or saw, as
-/// service — held or not — so that no push says why a home changed.
+/// service, so that no push says why a home changed.
 class LivePermissionUpdate extends $pb.GeneratedMessage {
   factory LivePermissionUpdate({
     $0.EffectivePermissions? newPermissions,
@@ -140,8 +137,8 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
   /// space, or newly see it as service. The app drops everything it holds of each and of the
   /// spaces beneath it, and reads them again (ListSpaces, ListRoomClimates, ListDeviceLinks)
   /// if it may.
-  /// A loss, or a wider view as a resident, is sent at once; a home newly seen as service, at
-  /// the quarter hour it is seen from.
+  /// Each is sent as the change happens: a loss, a wider view as a resident and a home newly
+  /// seen as service alike.
   @$pb.TagNumber(5)
   $pb.PbList<$1.SpaceId> get resetSpaces => $_getList(4);
 }

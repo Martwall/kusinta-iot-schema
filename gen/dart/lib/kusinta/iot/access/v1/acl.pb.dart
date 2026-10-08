@@ -673,9 +673,7 @@ class DeviceAcl extends $pb.GeneratedMessage {
   void clearRelation() => $_clearField(11);
 }
 
-/// Every DeviceAcl in force for one user on one gateway, at valid_at — except that what the
-/// user newly sees of a home as service appears only from the next quarter hour (see
-/// webrtc.v1.LivePermissionUpdate).
+/// Every DeviceAcl in force for one user on one gateway, at valid_at.
 ///
 /// ADVISORY WHEN SENT TO AN APP. The gateway is the sole authority and enforces every
 /// read, write, invoke and subscription against its own copy, whether or not the app has

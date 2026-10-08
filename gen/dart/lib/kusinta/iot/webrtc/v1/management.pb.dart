@@ -169,8 +169,7 @@ enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 /// filed on the apartment, where it was in it — and any link it would carry across a
 /// boundary is removed. Changing the type of a space that has members needs
 /// ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, who see them, and is refused if it would
-/// leave a RESIDENT membership on a room — which can tell them of a membership change since
-/// the last quarter hour; that much this refusal discloses.
+/// leave a RESIDENT membership on a room.
 ///
 /// Every descriptive field carries explicit presence: absent means leave it alone, present
 /// means set it to this — including to the empty string, which is how a description is
@@ -1136,8 +1135,8 @@ class ListSpaces extends $pb.GeneratedMessage {
 /// device_ids on each Space are filtered to what the caller may see. An
 /// unfiltered tree would list every device on the gateway by id, which is the
 /// enumeration channel the snapshot filter exists to close. To a caller who sees a home as
-/// service, what is new in it is listed from the next quarter hour and what is gone at once
-/// — except its members, which change only at quarter hours (see Space.members).
+/// service, what is new in it is listed as it happens and what is gone at once, its members
+/// included where they are shown (see Space.members).
 class SpaceTree extends $pb.GeneratedMessage {
   factory SpaceTree({
     $core.Iterable<$2.Space>? spaces,
@@ -1542,7 +1541,7 @@ class UpdateDeviceLink extends $pb.GeneratedMessage {
 ///
 /// A link with an end in a home reaches a caller who sees it as service with
 /// DeviceLink.details_withheld set, and what that withholds unset — a new link
-/// from the next quarter hour, a removed one at once — and not at all when either end is a
+/// as it is made, a removed one at once — and not at all when either end is a
 /// device a resident owns.
 class ListDeviceLinks extends $pb.GeneratedMessage {
   factory ListDeviceLinks({
@@ -1949,11 +1948,11 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
 ///
 /// In a home, only its residents may switch one on or off: whether a home stands empty is
 /// theirs to say. A caller who reaches it as service is refused as NOT_ENTITLED — except
-/// that, while the home had no resident at the last quarter hour, ROLE_PROPERTY_OWNER or
-/// ROLE_GATEWAY_ADMIN may switch off a mode that was on then and whose setter is not a
-/// resident now, so that no mode outlives everyone who could end it. Any other switch-off
-/// from them — no mode on, or one that is a resident's — is accepted and does nothing, so
-/// the answer tells them nothing of whether a mode was on or whether anyone has moved in.
+/// that, while the home has no resident, ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN may
+/// switch off a mode that is on and whose setter is not a resident, so that no mode
+/// outlives everyone who could end it. Any other switch-off from them — no mode on, or one
+/// that is a resident's — is accepted and does nothing, so the answer tells them nothing of
+/// whether a mode was on or whether anyone has moved in.
 class SetClimateMode extends $pb.GeneratedMessage {
   factory SetClimateMode({
     $0.SpaceId? spaceId,
@@ -2079,8 +2078,8 @@ class SetClimateMode extends $pb.GeneratedMessage {
 /// one the caller can reach; naming a space narrows it to that space and those below.
 ///
 /// A caller who reaches a room inside an apartment as service gets it with
-/// RoomClimate.state_withheld set — what is new from the next quarter hour, what is gone at
-/// once — and gets no ClimateMode set on that apartment or its rooms.
+/// RoomClimate.state_withheld set — what is new as it happens, what is gone at once — and
+/// gets no ClimateMode set on that apartment or its rooms.
 class ListRoomClimates extends $pb.GeneratedMessage {
   factory ListRoomClimates({
     $0.SpaceId? rootSpaceId,
@@ -2345,8 +2344,7 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. The gateway's
   /// administrator is always listed. So the list reads the same whether or not anyone lives
   /// in the home, and never understates who has reach or what they see. Devices a resident
-  /// owns are not shown to service at all. To a caller who sees the space as service, it is
-  /// answered as it stood at the last quarter hour.
+  /// owns are not shown to service at all.
   @$pb.TagNumber(5)
   $pb.PbList<ServiceParty> get serviceParties => $_getList(2);
 }

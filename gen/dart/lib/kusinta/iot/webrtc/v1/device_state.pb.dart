@@ -26,8 +26,8 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 export 'device_state.pbenum.dart';
 
 /// Full device state sent to the app on initial WebRTC connection. Devices the recipient sees
-/// as service are as they stood at the last quarter hour, less any since taken away, each
-/// with its ServiceStatus.
+/// as service are as they are now, by description only, each with its ServiceStatus once
+/// one has been evaluated for them (see service_statuses).
 class DeviceStateSnapshot extends $pb.GeneratedMessage {
   factory DeviceStateSnapshot({
     $core.Iterable<$0.Device>? devices,
@@ -229,9 +229,9 @@ class ServiceStatus extends $pb.GeneratedMessage {
   /// device, nor, for a resident, than their current residency — each start taken at the
   /// first quarter hour at or after it. When that start moves because the recipient becomes
   /// a resident, the app drops the status it held and is sent one again from the new start at
-  /// the next quarter hour. These quarter hours, and the moment a device is
-  /// taken away, are the only times service is given of a device in a home (see
-  /// access.v1.MembershipRelation). Pushed and in a
+  /// the next quarter hour. These quarter hours, and the moments a device appears to service,
+  /// changes and is taken away, which they see as they happen, are the only times service is
+  /// given of a device in a home (see access.v1.MembershipRelation). Pushed and in a
   /// snapshot alike, so an unchanged status carries the same as_of however it arrived.
   @$pb.TagNumber(2)
   $2.Timestamp get asOf => $_getN(1);
@@ -463,8 +463,8 @@ class PropertyReport extends $pb.GeneratedMessage {
 /// Carries the full Device, descriptor plus current typed properties, so the app can
 /// render it without a follow-up read — the same payload DeviceStateSnapshot gives
 /// per device. To a recipient who sees it as service, the Device carries its description
-/// only, as in a snapshot, and is sent at the next quarter hour (see
-/// access.v1.DeviceAcl.relation).
+/// only, as in a snapshot, and is sent as it appears; its ServiceStatus follows from the
+/// next quarter hour (see access.v1.DeviceAcl.relation).
 ///
 /// Apply as an upsert keyed on descriptor.device_id, never as an insert: a device can
 /// be in the snapshot and then announced, or announced twice across a connector

@@ -103,8 +103,8 @@ export const MembershipRelationSchema = /*@__PURE__*/
  *     RoomClimate.state_withheld marking what is not shown, and its links with
  *     DeviceLink.details_withheld; modes on a home are not sent to them at all. Service
  *     that reaches the apartment itself also gets its climate summary over the disclosed
- *     period. What they newly see of the home reaches them at quarter hours; what they
- *     lose, at once.
+ *     period. What they newly see of the home reaches them as it happens; what they lose,
+ *     at once.
  *   * Not at all — RESIDENT on a building or floor above it. Living in a building is not
  *     living in every apartment in it.
  *
@@ -130,7 +130,7 @@ export const MembershipRelationSchema = /*@__PURE__*/
  * to nobody else. An owner who stops living in the home it is filed in gives it up: it is
  * released, with no owner, and stays filed in the home alone, as one of the building's own
  * devices there. A device given up so, or released, then appears to service as any device
- * newly in the home does, at a quarter hour; that much a release shows.
+ * newly in the home does, as it happens; that much a release shows.
  *
  * Who may change a home's members, move its spaces or file devices into and out of it is
  * restricted by the gateway, and a refused caller gets NOT_ENTITLED. This keeps a home's

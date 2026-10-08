@@ -243,8 +243,7 @@ class Space extends $pb.GeneratedMessage {
   /// Filled according to who asks, since a membership list says who lives where:
   ///
   ///   * a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN who reaches the space
-  ///     sees every member — for a home they see as service, as it stood at the last
-  ///     quarter hour, so that a move in or out is not timed by polling;
+  ///     sees every member, in a home they see as service too, as the members change;
   ///   * a resident of an apartment sees every member filed on it or on its rooms — who they
   ///     live with, and anyone filed on their home as service, since being filed on a home
   ///     is an act on it its residents should see. Service reach from a building or floor

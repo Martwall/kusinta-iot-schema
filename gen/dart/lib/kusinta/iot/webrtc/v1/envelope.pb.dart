@@ -1165,8 +1165,7 @@ class PairingStarted extends $pb.GeneratedMessage {
 /// One message per request, not per device: a batch window attributes several, and a client
 /// given one message each has nothing telling it the window is over and no defined moment to
 /// stop waiting. The devices are listed here; each also arrives as an ordinary DeviceAdded
-/// as it appears — for a device the caller sees as service, at the next quarter hour — so a
-/// client may show them as they come and use this to finish.
+/// as it appears, so a client may show them as they come and use this to finish.
 ///
 /// An error and a non-empty device list are not exclusive. A batch of five that attributed
 /// three and then expired reports both — three devices and NO_DEVICE_APPEARED — because
@@ -1269,11 +1268,11 @@ class PairingFinished extends $pb.GeneratedMessage {
 ///
 /// Sent only for links the recipient is entitled to see. An unfiltered one would say
 /// which devices exist and how they are arranged, to somebody entitled to neither. A link
-/// with an end in a home is not pushed to a recipient who sees it as service when it is made
-/// or changes — when its residents make one is theirs to know; service reads a home's links
-/// by ListDeviceLinks, where a new one appears from the next quarter hour. Its removal is
-/// pushed to them at once, with details_withheld, as every loss is — to those whose view
-/// held it at a quarter hour since it was made, and to nobody else.
+/// with an end in a home reaches a recipient who sees it as service with details_withheld,
+/// and is pushed to them only when what that leaves them changes — the link appears, is
+/// removed, or its function or mode changes — never when only its state or settings move,
+/// which are not theirs to see. Its removal is pushed to them at once, as every loss is — to
+/// those who were shown it, and to nobody else.
 class LinkChanged extends $pb.GeneratedMessage {
   factory LinkChanged({
     $4.DeviceLink? link,
@@ -1579,9 +1578,9 @@ class ConnectorsAnnounced extends $pb.GeneratedMessage {
 /// held at, its condition. Apply as an upsert keyed on room.space_id. Sent only for rooms
 /// the recipient may see, and whenever any field the recipient is sent moves — a knob
 /// turned by hand shows up here without the app asking. To a recipient who sees the room
-/// as service, what is new is sent at the next quarter hour and what is lost at once. A
-/// recipient who is sent the room with state_withheld is therefore not sent it when only
-/// withheld fields move.
+/// as service, what is new is sent as it happens and what is lost at once. A recipient who
+/// is sent the room with state_withheld is therefore not sent it when only withheld fields
+/// move.
 class RoomClimateChanged extends $pb.GeneratedMessage {
   factory RoomClimateChanged({
     $5.RoomClimate? room,

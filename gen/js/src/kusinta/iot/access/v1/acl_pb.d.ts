@@ -332,9 +332,7 @@ export declare type DeviceAcl = Message<"kusinta.iot.access.v1.DeviceAcl"> & {
 export declare const DeviceAclSchema: GenMessage<DeviceAcl>;
 
 /**
- * Every DeviceAcl in force for one user on one gateway, at valid_at — except that what the
- * user newly sees of a home as service appears only from the next quarter hour (see
- * webrtc.v1.LivePermissionUpdate).
+ * Every DeviceAcl in force for one user on one gateway, at valid_at.
  *
  * ADVISORY WHEN SENT TO AN APP. The gateway is the sole authority and enforces every
  * read, write, invoke and subscription against its own copy, whether or not the app has
@@ -439,8 +437,8 @@ export enum ServiceSignal {
    * bridged_by naming a device the recipient may not see, such as a bridge a resident owns,
    * is unset. Always disclosed together with FIRMWARE, whose
    * version it carries. Not when it was claimed: the only times service is given of a
-   * device are the quarter hours of its webrtc.v1.ServiceStatus, and the moment it is taken
-   * away from them.
+   * device are the quarter hours of its webrtc.v1.ServiceStatus, and the moments it appears
+   * to them, changes and is taken away from them, which they see as they happen.
    *
    * @generated from enum value: SERVICE_SIGNAL_FILING = 6;
    */
@@ -456,8 +454,8 @@ export enum ServiceSignal {
 
   /**
    * Which of the building's devices are linked to which, for what, and whether device to
-   * device or through the gateway — not how a link is set or what it is doing, and no
-   * sooner than the quarter hour after it was made; its removal, at once.
+   * device or through the gateway — not how a link is set or what it is doing. A link shows
+   * as it is made, as its function or mode changes, and as it is removed.
    *
    * @generated from enum value: SERVICE_SIGNAL_LINKS = 8;
    */

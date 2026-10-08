@@ -49,8 +49,8 @@ class ServiceSignal extends $pb.ProtobufEnum {
   /// bridged_by naming a device the recipient may not see, such as a bridge a resident owns,
   /// is unset. Always disclosed together with FIRMWARE, whose
   /// version it carries. Not when it was claimed: the only times service is given of a
-  /// device are the quarter hours of its webrtc.v1.ServiceStatus, and the moment it is taken
-  /// away from them.
+  /// device are the quarter hours of its webrtc.v1.ServiceStatus, and the moments it appears
+  /// to them, changes and is taken away from them, which they see as they happen.
   static const ServiceSignal SERVICE_SIGNAL_FILING =
       ServiceSignal._(6, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FILING');
 
@@ -60,8 +60,8 @@ class ServiceSignal extends $pb.ProtobufEnum {
       ServiceSignal._(7, _omitEnumNames ? '' : 'SERVICE_SIGNAL_ROOM_SETUP');
 
   /// Which of the building's devices are linked to which, for what, and whether device to
-  /// device or through the gateway — not how a link is set or what it is doing, and no
-  /// sooner than the quarter hour after it was made; its removal, at once.
+  /// device or through the gateway — not how a link is set or what it is doing. A link shows
+  /// as it is made, as its function or mode changes, and as it is removed.
   static const ServiceSignal SERVICE_SIGNAL_LINKS =
       ServiceSignal._(8, _omitEnumNames ? '' : 'SERVICE_SIGNAL_LINKS');
 
