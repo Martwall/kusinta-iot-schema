@@ -56,11 +56,12 @@ option optimize_for = SPEED;
 // applied, a reach or spaces stream whose first request is not part 0 of a snapshot. The
 // gateway then starts a new stream.
 //
-// Changes that concern a home wait for the next quarter hour, as problems of its devices do,
-// so that the api-server cannot time a move in or out more closely than service staff on the
-// gateway can. That covers anything entering or leaving a home (a room moved, a device
-// handed to a resident), anything about a home space (added, removed, renamed, retyped), and
-// every change of reach that follows from those, a membership a home change ends included.
+// Changes that concern a home wait for the next quarter hour, as problems of its devices do.
+// This is data minimisation: the api-server keeps only a quarter-hour-coarse record of moves
+// into and out of homes and of reach, since it needs no finer one to handle problems. That
+// covers anything entering or leaving a home (a room moved, a device handed to a resident),
+// anything about a home space (added, removed, renamed, retyped), and every change of reach
+// that follows from those, a membership a home change ends included.
 //
 // A subject the gateway stops reporting — a device handed to a resident, a room moved into a
 // home, whose window is then the residents' alone — gets nothing more but, at that quarter

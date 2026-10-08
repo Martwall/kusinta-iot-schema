@@ -540,10 +540,9 @@ export declare const PairingFinishedSchema: GenMessage<PairingFinished>;
  * Sent only for links the recipient is entitled to see. An unfiltered one would say
  * which devices exist and how they are arranged, to somebody entitled to neither. A link
  * with an end in a home reaches a recipient who sees it as service with details_withheld,
- * and is pushed to them only when what that leaves them changes — the link appears, is
- * removed, or its function or mode changes — never when only its state or settings move,
- * which are not theirs to see. Its removal is pushed to them at once, as every loss is — to
- * those who were shown it, and to nobody else.
+ * and is pushed to them only when it appears and when it is removed — never for anything
+ * else, its state and settings included, which are not theirs to see. Its removal is pushed
+ * to them at once, as every loss is — to those who were shown it, and to nobody else.
  *
  * @generated from message kusinta.iot.webrtc.v1.LinkChanged
  */

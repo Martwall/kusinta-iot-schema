@@ -455,7 +455,7 @@ export enum ServiceSignal {
   /**
    * Which of the building's devices are linked to which, for what, and whether device to
    * device or through the gateway — not how a link is set or what it is doing. A link shows
-   * as it is made, as its function or mode changes, and as it is removed.
+   * as it is made and as it is removed, and changes for service at no other time.
    *
    * @generated from enum value: SERVICE_SIGNAL_LINKS = 8;
    */

@@ -61,7 +61,7 @@ class ServiceSignal extends $pb.ProtobufEnum {
 
   /// Which of the building's devices are linked to which, for what, and whether device to
   /// device or through the gateway — not how a link is set or what it is doing. A link shows
-  /// as it is made, as its function or mode changes, and as it is removed.
+  /// as it is made and as it is removed, and changes for service at no other time.
   static const ServiceSignal SERVICE_SIGNAL_LINKS =
       ServiceSignal._(8, _omitEnumNames ? '' : 'SERVICE_SIGNAL_LINKS');
 

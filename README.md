@@ -239,7 +239,8 @@ How it shows on the wire:
   somebody asked for, with how much of the period they rest on.
 - Service sees a home's setup as it changes — its rooms, what is filed in it, its links,
   names and descriptions, its members where they are shown — and loses what it no longer
-  reaches at once. What is withheld from service stays withheld; nothing else is held back.
+  reaches at once. What is withheld stays withheld; nothing else of the setup is held back,
+  though a newly seen device's `ServiceStatus` still comes from the next quarter hour.
 - When a user's view of a home changes, `LivePermissionUpdate.reset_spaces` tells the app
   to drop what it held of it and read it again.
 - Changing who belongs to a home, or what is filed in it, is guarded by the gateway. Every
