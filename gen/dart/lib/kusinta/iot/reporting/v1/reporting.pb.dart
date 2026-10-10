@@ -627,8 +627,8 @@ class ProblemTransition extends $pb.GeneratedMessage {
   void clearSeq() => $_clearField(2);
 
   /// The problem opened, or something it carries changed while open (a battery level, a
-  /// device count, the space it is filed in, a backend failure reason). Carries the whole problem, not a delta: the
-  /// same problem_id, the next seq and the original opened_at.
+  /// device count, the space it is filed in, a backend failure reason). Carries the whole
+  /// problem, not a delta: the same problem_id, the next seq and the original opened_at.
   @$pb.TagNumber(3)
   Problem get open => $_getN(2);
   @$pb.TagNumber(3)

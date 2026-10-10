@@ -1085,8 +1085,8 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  * health it left (FAILING, e.g. with AUTH_FAILED, UNREACHABLE or BACKEND_ERROR) already
  * pushed: after the ack, the app reads ConnectorDescriptor.backend_health for the outcome,
  * and a FAILING health there means the reconnect did not help. The app handles any reason
- * there, one its schema does not know included. No push precedes the ack when the attempt left
- * health as it was; the descriptor the app holds is then still the outcome.
+ * there, one its schema does not know included. No push precedes the ack when the attempt
+ * left health as it was; the descriptor the app holds is then still the outcome.
  *
  * A refusal is a GatewayError whose metadata "reason" says which, as CommandError.metadata
  * describes, and whose "detail" is a sentence the app may show. The app branches on
@@ -1108,15 +1108,16 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  *                          arrives as backend health.
  *   "REINITIALIZE_FAILED"  The connector could not attempt it at all
  *                          (connector.v1.REINITIALIZE_OUTCOME_FAILED, or an outcome the
- *                          gateway's schema does not know, read as FAILED). The code depends
- *                          on the reason: FAILED_PRECONDITION when it is MISCONFIGURED,
- *                          which needs a person to correct the connector's configuration
- *                          before asking again can help; UNAVAILABLE for any other —
- *                          INTERNAL, UNSPECIFIED, a value the gateway does not know — since
- *                          a retry may work. Rejected credentials are never this: they are
- *                          found by attempting, and come back as an ack (see above). metadata "backend_failure" is
- *                          always set: the common.v1.BackendFailureReason by its enum name,
- *                          e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED". A reason that is
+ *                          gateway's schema does not know, read as FAILED). The code
+ *                          depends on the reason: FAILED_PRECONDITION when it is
+ *                          MISCONFIGURED, which needs a person to correct the connector's
+ *                          configuration before asking again can help; UNAVAILABLE for
+ *                          any other — INTERNAL, UNSPECIFIED, a value the gateway does not
+ *                          know — since a retry may work. Rejected credentials are never
+ *                          this: they are found by attempting, and come back as an ack
+ *                          (see above). metadata "backend_failure" is always set: the
+ *                          common.v1.BackendFailureReason by its enum name, e.g.
+ *                          "BACKEND_FAILURE_REASON_MISCONFIGURED". A reason that is
  *                          UNSPECIFIED, or a value the gateway's schema does not know, is
  *                          sent as "BACKEND_FAILURE_REASON_BACKEND_ERROR", as
  *                          BackendFailureReason has it; an app reading a name its own

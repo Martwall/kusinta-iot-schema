@@ -62,12 +62,15 @@ class ProblemKind extends $pb.ProtobufEnum {
   /// connector, as for CONNECTOR_OFFLINE: one problem rather than one per device. A
   /// DEVICE_OFFLINE open when the backend starts failing closes with
   /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
-  /// When it clears as recovered, the devices behind the connector are judged as Problem has
-  /// it, on their connector's own judgement: a device in a home that its connector judges
-  /// offline at the next quarter hour opens a new DEVICE_OFFLINE then, stamped with that
-  /// quarter hour; one it judges online then opens nothing. A device in a home is never
-  /// stamped off the quarter hour. Any device not in a home that its connector judges
-  /// offline opens one at once; one it judges online opens nothing.
+  /// When it clears as recovered, the devices behind the connector are judged as Problem
+  /// has it, on their connector's own judgement. A device whose DEVICE_OFFLINE closed with
+  /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, or that had none, opens a new one only if
+  /// its connector judges it offline: a device in a home at the next quarter hour, opened
+  /// then and stamped with that quarter hour; a device not in a home at once. One judged
+  /// online opens nothing. A device in a home whose DEVICE_OFFLINE is still open — its
+  /// superseded clear not yet sent, because the error came and went between two quarter
+  /// hours — keeps it open, and it closes only as any DEVICE_OFFLINE does. A device in a
+  /// home is never stamped off the quarter hour.
   ///
   /// When CONNECTOR_OFFLINE supersedes it instead, that problem holds the devices'
   /// DEVICE_OFFLINE back. For a device in a home, the clear with
