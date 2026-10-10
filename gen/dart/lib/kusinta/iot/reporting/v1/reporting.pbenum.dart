@@ -42,10 +42,9 @@ class ProblemKind extends $pb.ProtobufEnum {
   static const ProblemKind PROBLEM_KIND_DEVICE_TAMPER =
       ProblemKind._(5, _omitEnumNames ? '' : 'PROBLEM_KIND_DEVICE_TAMPER');
 
-  /// A connector's stream to the gateway is down. While it is open, the gateway raises no
-  /// DEVICE_OFFLINE for the devices behind that connector and clears any it had raised, with
-  /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE: one problem rather than one per device. For
-  /// a device in a home that clear, like any, waits for the quarter hour (see Problem).
+  /// A connector's stream to the gateway is down. A connector problem: while it is open, it
+  /// stands in for the DEVICE_OFFLINE of every device behind that connector, one problem
+  /// rather than one per device, and none of theirs opens until it ends (see ClearReason).
   static const ProblemKind PROBLEM_KIND_CONNECTOR_OFFLINE =
       ProblemKind._(6, _omitEnumNames ? '' : 'PROBLEM_KIND_CONNECTOR_OFFLINE');
 
@@ -58,27 +57,9 @@ class ProblemKind extends $pb.ProtobufEnum {
   /// handshake decides it afresh. Nothing of the connector's own detail is reported; the
   /// problem carries only the category, in backend_failure.
   ///
-  /// While it is open, the gateway raises no DEVICE_OFFLINE for the devices behind that
-  /// connector, as for CONNECTOR_OFFLINE: one problem rather than one per device. A
-  /// DEVICE_OFFLINE open when the backend starts failing closes with
-  /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
-  /// When it clears as recovered, the devices behind the connector are judged as Problem
-  /// has it, on their connector's own judgement. A device with no DEVICE_OFFLINE open opens
-  /// one if its connector judges it offline: a device in a home at the next quarter hour,
-  /// stamped with it; any other device at once. One judged online opens nothing. A device
-  /// whose DEVICE_OFFLINE is still open keeps it — for a device in a home, one whose
-  /// superseded clear was never sent because the error came and went between two quarter
-  /// hours — and it closes only as any DEVICE_OFFLINE does. A device in a home is never
-  /// stamped off the quarter hour.
-  ///
-  /// When CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR would land at the same quarter hour as a
-  /// clear of the device's own — RECOVERED, MOVED, NO_LONGER_REPORTED, DEVICE_REMOVED — the
-  /// device's own reason is used.
-  ///
-  /// When CONNECTOR_OFFLINE supersedes it instead, that problem holds the devices'
-  /// DEVICE_OFFLINE back. For a device in a home, the clear with
-  /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, like any, is sent and stamped at the next
-  /// quarter hour, and an error that comes and goes between two of them changes nothing.
+  /// A connector problem, as CONNECTOR_OFFLINE is: while it is open, it stands in for the
+  /// DEVICE_OFFLINE of every device behind that connector, and none of theirs opens until it
+  /// ends (see ClearReason).
   static const ProblemKind PROBLEM_KIND_CONNECTOR_ERROR =
       ProblemKind._(7, _omitEnumNames ? '' : 'PROBLEM_KIND_CONNECTOR_ERROR');
 
@@ -119,6 +100,30 @@ class ProblemKind extends $pb.ProtobufEnum {
 }
 
 /// Why a problem closed.
+///
+/// A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
+/// DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
+/// device. The same rules hold for both:
+///
+///   * A DEVICE_OFFLINE open when a connector problem begins closes with the matching
+///     superseded reason, SUPERSEDED_BY_CONNECTOR_OFFLINE or SUPERSEDED_BY_CONNECTOR_ERROR,
+///     and no new one opens while any connector problem is open for that connector — a
+///     CONNECTOR_ERROR followed by CONNECTOR_OFFLINE, or the reverse, included. For a device
+///     in a home that clear, like any, is sent and stamped at the next quarter hour; a
+///     connector problem that comes and goes between two of them changes nothing for it, and
+///     its DEVICE_OFFLINE stays open.
+///   * When a superseded clear and a clear of the device's own — RECOVERED, MOVED,
+///     NO_LONGER_REPORTED, DEVICE_REMOVED — would land at the same quarter hour, the
+///     superseded clear is used. A device that moved is not reopened while its connector is
+///     offline or failing.
+///   * Once no connector problem is open for the connector — it is back, and its backend is
+///     not failing — the devices behind it are judged afresh as Problem has it, on their
+///     connector's own judgement. A device with no DEVICE_OFFLINE open opens one if its
+///     connector judges it offline: a device in a home at the next quarter hour, stamped with
+///     it; any other device at once. One judged online opens nothing, and a device removed
+///     meanwhile has nothing to open. A device whose DEVICE_OFFLINE is still open keeps it,
+///     and it closes only as any DEVICE_OFFLINE does. A device in a home is never stamped off
+///     the quarter hour.
 class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_UNSPECIFIED =
       ClearReason._(0, _omitEnumNames ? '' : 'CLEAR_REASON_UNSPECIFIED');
@@ -137,7 +142,7 @@ class ClearReason extends $pb.ProtobufEnum {
       ClearReason._(3, _omitEnumNames ? '' : 'CLEAR_REASON_DEVICE_REMOVED');
 
   /// The connector behind the device went offline — or, for a CONNECTOR_ERROR, the connector
-  /// itself; see PROBLEM_KIND_CONNECTOR_OFFLINE.
+  /// itself. See the connector problem rules above.
   static const ClearReason CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE =
       ClearReason._(4,
           _omitEnumNames ? '' : 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE');
@@ -149,12 +154,13 @@ class ClearReason extends $pb.ProtobufEnum {
       ClearReason._(5, _omitEnumNames ? '' : 'CLEAR_REASON_NO_LONGER_REPORTED');
 
   /// The subject moved into or out of a home. A problem that still holds opens again as a new
-  /// one at the same quarter hour.
+  /// one at the same quarter hour — except a DEVICE_OFFLINE while a connector problem is open
+  /// for the device's connector, which is superseded instead (see above).
   static const ClearReason CLEAR_REASON_MOVED =
       ClearReason._(6, _omitEnumNames ? '' : 'CLEAR_REASON_MOVED');
 
-  /// The backend of the connector behind the device started failing; see
-  /// PROBLEM_KIND_CONNECTOR_ERROR.
+  /// The backend of the connector behind the device started failing. See the connector
+  /// problem rules above.
   static const ClearReason CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR =
       ClearReason._(7,
           _omitEnumNames ? '' : 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR');

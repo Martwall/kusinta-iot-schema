@@ -143,6 +143,30 @@ export const ClearReasonSchema = /*@__PURE__*/
 /**
  * Why a problem closed.
  *
+ * A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
+ * DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
+ * device. The same rules hold for both:
+ *
+ *   * A DEVICE_OFFLINE open when a connector problem begins closes with the matching
+ *     superseded reason, SUPERSEDED_BY_CONNECTOR_OFFLINE or SUPERSEDED_BY_CONNECTOR_ERROR,
+ *     and no new one opens while any connector problem is open for that connector — a
+ *     CONNECTOR_ERROR followed by CONNECTOR_OFFLINE, or the reverse, included. For a device
+ *     in a home that clear, like any, is sent and stamped at the next quarter hour; a
+ *     connector problem that comes and goes between two of them changes nothing for it, and
+ *     its DEVICE_OFFLINE stays open.
+ *   * When a superseded clear and a clear of the device's own — RECOVERED, MOVED,
+ *     NO_LONGER_REPORTED, DEVICE_REMOVED — would land at the same quarter hour, the
+ *     superseded clear is used. A device that moved is not reopened while its connector is
+ *     offline or failing.
+ *   * Once no connector problem is open for the connector — it is back, and its backend is
+ *     not failing — the devices behind it are judged afresh as Problem has it, on their
+ *     connector's own judgement. A device with no DEVICE_OFFLINE open opens one if its
+ *     connector judges it offline: a device in a home at the next quarter hour, stamped with
+ *     it; any other device at once. One judged online opens nothing, and a device removed
+ *     meanwhile has nothing to open. A device whose DEVICE_OFFLINE is still open keeps it,
+ *     and it closes only as any DEVICE_OFFLINE does. A device in a home is never stamped off
+ *     the quarter hour.
+ *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */
 export const ClearReason = /*@__PURE__*/
