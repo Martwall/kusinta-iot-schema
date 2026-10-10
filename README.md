@@ -178,8 +178,9 @@ connector works as before. The report's free-text `detail` is for the gateway's 
 app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
 only the problem and its `backend_failure` category. While either connector problem is open,
 no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open is not
-closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason only if its
-device is still reported and a connector problem is still open when its clear is sent;
+closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason if, and only
+if, its device is still reported and a connector problem is still open as the gateway closes
+it (for a home device, at the quarter hour; a queued clear keeps its reason);
 otherwise as any `DEVICE_OFFLINE`. A removed device always closes with `DEVICE_REMOVED`;
 any other subject that stops being reported always closes with `NO_LONGER_REPORTED`.
 

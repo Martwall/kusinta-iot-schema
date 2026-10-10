@@ -803,10 +803,12 @@ export declare const ProblemKindSchema: GenEnum<ProblemKind>;
  * connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
  * devices behind that connector. One already open is not closed at once, so a receiver may
  * hold both open for a while. The DEVICE_OFFLINE of a device still reported closes with a
- * SUPERSEDED_* reason when a connector problem of its connector is open at the time the
- * clear is sent, the reason naming that problem; otherwise it closes, or stays open, as any
+ * SUPERSEDED_* reason when a connector problem of its connector is open as the gateway
+ * closes it, the reason naming that problem; otherwise it closes, or stays open, as any
  * DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
- * the gateway judges. Times are as for any transition (see Problem): a device in a home is
+ * the gateway judges. The gateway closes a problem when it decides the clear — for a device in
+ * a home, at the quarter hour — and a clear queued or sent again keeps the reason it was
+ * given then. Times are as for any transition (see Problem): a device in a home is
  * stamped only with quarter hours, and no time crosses a home's boundary.
  *
  * When the gateway stops tracking a connector — when is the gateway's own policy — the
@@ -870,8 +872,8 @@ export enum ClearReason {
   /**
    * The subject moved into or out of a home. A problem that still holds opens again as a new
    * one at the same quarter hour — a DEVICE_OFFLINE only while no connector problem is open
-   * for its connector. A DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see
-   * above).
+   * for its connector. A DEVICE_OFFLINE closes with a SUPERSEDED_* reason instead when a
+   * connector problem of its connector is open as the gateway closes it (see above).
    *
    * @generated from enum value: CLEAR_REASON_MOVED = 6;
    */

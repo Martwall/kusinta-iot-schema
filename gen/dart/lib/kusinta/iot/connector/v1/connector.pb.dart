@@ -376,8 +376,10 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
 /// The health of the backend the connector drives, connector to gateway: whether the radio
 /// central or network server behind it is working. See common.v1.BackendHealth.
 ///
-/// Sent only to a gateway that sets HandshakeAck.supports_backend_health. To one that does
-/// not — a gateway that predates backend health — the connector sends neither this nor
+/// Sent on the session only to a gateway that sets HandshakeAck.supports_backend_health; the
+/// handshake's ConnectorHandshake.backend_health is set whatever the gateway, since the ack is
+/// not yet known. To a gateway that does not set it — one that predates backend health — the
+/// connector sends neither this on the session nor
 /// ReinitializeBackendResult, and keeps working as it did before: its backend failing is
 /// then only in its own logs.
 ///

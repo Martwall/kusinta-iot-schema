@@ -65,28 +65,33 @@ option optimize_for = SPEED;
 //
 // A subject the gateway stops reporting — a device handed to a resident, a room moved into a
 // home, whose window is then the residents' alone — gets nothing more but, at that quarter
-// hour, the clear its problems take (CLEAR_REASON_NO_LONGER_REPORTED). Any other subject that
+// hour, the clear its problems take (CLEAR_REASON_NO_LONGER_REPORTED, with the exceptions
+// ClearReason gives). Any other subject that
 // moves into or out of a home closes its open problems at that quarter hour — one that still
 // holds with CLEAR_REASON_MOVED, opening again there as a new problem stamped with that
 // quarter hour (a DEVICE_OFFLINE only while no connector problem is open for its connector;
-// see ClearReason), one that has ended with CLEAR_REASON_RECOVERED — no time from while it was in
+// see ClearReason), one that has ended with CLEAR_REASON_RECOVERED; either way, a
+// DEVICE_OFFLINE closes with a SUPERSEDED_* reason instead when a connector problem of its
+// connector is open as the gateway closes it (see ClearReason) — no time from while it was in
 // a home follows it out, and none from before follows it in. A move from one home to another
 // is a move out and a move in, and any change of a home device's space_id, within one home
 // included, is a move too. A space retyped into or out of being a home (access.v1 has a home
 // start or end there) moves everything within it, as if each subject had been carried in or
 // out. A subject that starts being reported — a device handed back by a resident, a room moved
-// out of a home — opens any problem that holds at that quarter hour, stamped with it. Any
+// out of a home — opens any problem that holds at that quarter hour, stamped with it (a
+// DEVICE_OFFLINE only while no connector problem is open for its connector). Any
 // other change of a problem's space_id (a device refiled outside any home) is sent as a change
 // of the problem.
 //
 // Moves are judged from one quarter hour to the next: the gateway compares where a subject
 // was, and who owned it, at the last quarter hour with where it is now. A move undone in
 // between is no move, and keeps its problems as they are. A subject the gateway stops
-// reporting always closes with CLEAR_REASON_NO_LONGER_REPORTED, whatever its condition; of any
+// reporting always closes with CLEAR_REASON_NO_LONGER_REPORTED, whatever its condition (a
+// removed device with CLEAR_REASON_DEVICE_REMOVED instead; see ClearReason); of any
 // other moved subject, a problem that no longer holds closes as CLEAR_REASON_RECOVERED and one
-// that still holds as CLEAR_REASON_MOVED. The DEVICE_OFFLINE of a device still reported may
-// close with a SUPERSEDED_* reason instead where a connector problem of its connector is open
-// when the clear is sent (see ClearReason); the times are the same either way. Between a
+// that still holds as CLEAR_REASON_MOVED. The DEVICE_OFFLINE of a device still reported
+// closes with a SUPERSEDED_* reason instead when a connector problem of its connector is open
+// as the gateway closes it (see ClearReason); the times are the same either way. Between a
 // move and the quarter hour that reports it, the subject is treated as in a home whichever
 // way it moved: nothing about it leaves the gateway with a time finer than that quarter hour,
 // and what it may raise is judged by its new place from then on.
@@ -196,10 +201,12 @@ enum ProblemKind {
 // connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
 // devices behind that connector. One already open is not closed at once, so a receiver may
 // hold both open for a while. The DEVICE_OFFLINE of a device still reported closes with a
-// SUPERSEDED_* reason when a connector problem of its connector is open at the time the
-// clear is sent, the reason naming that problem; otherwise it closes, or stays open, as any
+// SUPERSEDED_* reason when a connector problem of its connector is open as the gateway
+// closes it, the reason naming that problem; otherwise it closes, or stays open, as any
 // DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
-// the gateway judges. Times are as for any transition (see Problem): a device in a home is
+// the gateway judges. The gateway closes a problem when it decides the clear — for a device in
+// a home, at the quarter hour — and a clear queued or sent again keeps the reason it was
+// given then. Times are as for any transition (see Problem): a device in a home is
 // stamped only with quarter hours, and no time crosses a home's boundary.
 //
 // When the gateway stops tracking a connector — when is the gateway's own policy — the
@@ -236,8 +243,8 @@ enum ClearReason {
 
   // The subject moved into or out of a home. A problem that still holds opens again as a new
   // one at the same quarter hour — a DEVICE_OFFLINE only while no connector problem is open
-  // for its connector. A DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see
-  // above).
+  // for its connector. A DEVICE_OFFLINE closes with a SUPERSEDED_* reason instead when a
+  // connector problem of its connector is open as the gateway closes it (see above).
   CLEAR_REASON_MOVED = 6;
 
   // The backend of the connector behind the device is failing. For a DEVICE_OFFLINE only; no
