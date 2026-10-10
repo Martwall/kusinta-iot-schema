@@ -92,10 +92,11 @@ option optimize_for = SPEED;
 // reporting always closes with CLEAR_REASON_NO_LONGER_REPORTED, whatever its condition; of any
 // other moved subject, a problem that no longer holds closes as CLEAR_REASON_RECOVERED and one
 // that still holds as CLEAR_REASON_MOVED; for a DEVICE_OFFLINE under a connector problem the
-// reason differs, and nothing else (see above). Between a move and the quarter hour that
-// reports it, the subject is treated as in a home whichever way it moved: nothing about it
-// leaves the gateway with a time finer than that quarter hour, and what it may raise is
-// judged by its new place from then on.
+// reason differs, and it does not open again until the connector problem ends; the times are
+// unchanged (see above). Between a move and the quarter hour that reports it, the subject is
+// treated as in a home whichever way it moved: nothing about it leaves the gateway with a
+// time finer than that quarter hour, and what it may raise is judged by its new place from
+// then on.
 //
 // The one exception is reach into a home taken away by a change to the member — a membership
 // ended, or a relation changing from service to resident — which is sent at once, since it
@@ -247,9 +248,10 @@ enum ClearReason {
   // superseded reason at that same time (see above).
   CLEAR_REASON_DEVICE_REMOVED = 3;
 
-  // The connector behind the device went offline. For a device's problems, see the
-  // connector problem rules above — and for a CONNECTOR_ERROR, whose connector's stream went
-  // down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
+  // The connector behind the device went offline. For a device's DEVICE_OFFLINE only — no
+  // other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER and the rest stay as they
+  // are — see the connector problem rules above. Also for a CONNECTOR_ERROR, whose
+  // connector's stream went down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
   CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE = 4;
 
   // The problem's subject left what the gateway reports, though the condition may hold: a
@@ -264,8 +266,9 @@ enum ClearReason {
   // open again until the connector problem ends (see above).
   CLEAR_REASON_MOVED = 6;
 
-  // The backend of the connector behind the device started failing. For a device's problems
-  // only; see the connector problem rules above.
+  // The backend of the connector behind the device started failing. For a device's
+  // DEVICE_OFFLINE only — no other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER
+  // and the rest stay as they are. See the connector problem rules above.
   CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR = 7;
 }
 

@@ -153,9 +153,10 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_DEVICE_REMOVED =
       ClearReason._(3, _omitEnumNames ? '' : 'CLEAR_REASON_DEVICE_REMOVED');
 
-  /// The connector behind the device went offline. For a device's problems, see the
-  /// connector problem rules above — and for a CONNECTOR_ERROR, whose connector's stream went
-  /// down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
+  /// The connector behind the device went offline. For a device's DEVICE_OFFLINE only — no
+  /// other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER and the rest stay as they
+  /// are — see the connector problem rules above. Also for a CONNECTOR_ERROR, whose
+  /// connector's stream went down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
   static const ClearReason CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE =
       ClearReason._(4,
           _omitEnumNames ? '' : 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE');
@@ -174,8 +175,9 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_MOVED =
       ClearReason._(6, _omitEnumNames ? '' : 'CLEAR_REASON_MOVED');
 
-  /// The backend of the connector behind the device started failing. For a device's problems
-  /// only; see the connector problem rules above.
+  /// The backend of the connector behind the device started failing. For a device's
+  /// DEVICE_OFFLINE only — no other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER
+  /// and the rest stay as they are. See the connector problem rules above.
   static const ClearReason CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR =
       ClearReason._(7,
           _omitEnumNames ? '' : 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR');

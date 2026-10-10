@@ -174,9 +174,9 @@ The connector states its backend's health as a `common.v1.BackendHealth` — a s
 `BackendHealthReport` whenever either changes. A connector that never sends one is read as
 `OK`. It reports on the session only to a gateway that sets
 `HandshakeAck.supports_backend_health`; an older gateway is sent nothing new, and the
-connector works as before. The report's free-text `detail` is for the gateway's logs; the app is given only the
-`BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud only the problem and
-its `backend_failure` category. While `CONNECTOR_ERROR` is open, the devices behind that
+connector works as before. The report's free-text `detail` is for the gateway's logs; the
+app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
+only the problem and its `backend_failure` category. While `CONNECTOR_ERROR` is open, the devices behind that
 connector raise no `DEVICE_OFFLINE` of their own, as under `CONNECTOR_OFFLINE`.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to

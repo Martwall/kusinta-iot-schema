@@ -379,9 +379,10 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
 /// last. The gateway applies no debounce of its own, so a connector reports FAILING only
 /// once a fault has outlasted its own retries, never for a single failed call.
 ///
-/// The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while the
-/// latest report is FAILING, and clears it when one is anything else. A connector that never
-/// sends one is OK throughout. CONNECTOR_OFFLINE is the other problem and is not this one:
+/// The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while its
+/// stream is up and the latest report is FAILING, and clears it when one is anything else; a
+/// stream that drops closes it too, and the next handshake decides afresh (see reporting.v1).
+/// A connector that never sends one is OK throughout. CONNECTOR_OFFLINE is the other problem and is not this one:
 /// that is the stream to the gateway down, this is the stream up and the backend failing.
 class BackendHealthReport extends $pb.GeneratedMessage {
   factory BackendHealthReport({
@@ -472,9 +473,9 @@ class BackendHealthReport extends $pb.GeneratedMessage {
 ///
 /// Sent only by a gateway that sets HandshakeAck.supports_backend_health, so a connector
 /// that receives it may answer. Answered once, by ReinitializeBackendResult with the same
-/// request_id. The connector
-/// bounds its attempt so that it answers within 30 seconds of receiving this; the gateway
-/// waits at least 45 seconds before it treats the request as timed out. A result arriving
+/// request_id. The connector bounds its attempt so that it answers within 30 seconds of
+/// receiving this; the gateway waits at least 45 seconds before it treats the request as
+/// timed out. A result arriving
 /// after the gateway has given up is ignored, but the health report sent before it still
 /// applies.
 class ReinitializeBackend extends $pb.GeneratedMessage {

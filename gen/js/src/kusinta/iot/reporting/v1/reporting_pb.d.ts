@@ -867,9 +867,10 @@ export enum ClearReason {
   DEVICE_REMOVED = 3,
 
   /**
-   * The connector behind the device went offline. For a device's problems, see the
-   * connector problem rules above — and for a CONNECTOR_ERROR, whose connector's stream went
-   * down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
+   * The connector behind the device went offline. For a device's DEVICE_OFFLINE only — no
+   * other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER and the rest stay as they
+   * are — see the connector problem rules above. Also for a CONNECTOR_ERROR, whose
+   * connector's stream went down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
    *
    * @generated from enum value: CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE = 4;
    */
@@ -896,8 +897,9 @@ export enum ClearReason {
   MOVED = 6,
 
   /**
-   * The backend of the connector behind the device started failing. For a device's problems
-   * only; see the connector problem rules above.
+   * The backend of the connector behind the device started failing. For a device's
+   * DEVICE_OFFLINE only — no other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER
+   * and the rest stay as they are. See the connector problem rules above.
    *
    * @generated from enum value: CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR = 7;
    */
