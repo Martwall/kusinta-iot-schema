@@ -69,27 +69,32 @@ option optimize_for = SPEED;
 // moves into or out of a home closes its open problems at that quarter hour — one that still
 // holds with CLEAR_REASON_MOVED, opening again there as a new problem stamped with that
 // quarter hour, one that has ended with CLEAR_REASON_RECOVERED — no time from while it was in
-// a home follows it out, and none from before follows it in. Both hold for every problem but
-// a DEVICE_OFFLINE superseded under a connector problem; see ClearReason. A move from one home to another
+// a home follows it out, and none from before follows it in. A move from one home to another
 // is a move out and a move in, and any change of a home device's space_id, within one home
 // included, is a move too. A space retyped into or out of being a home (access.v1 has a home
 // start or end there) moves everything within it, as if each subject had been carried in or
 // out. A subject that starts being reported — a device handed back by a resident, a room moved
-// out of a home — opens any problem that holds at that quarter hour, stamped with it —
-// except a DEVICE_OFFLINE while a connector problem is open for its connector; see
-// ClearReason. Any other change of a problem's space_id (a device refiled outside any home) is sent as a change
+// out of a home — opens any problem that holds at that quarter hour, stamped with it. Any
+// other change of a problem's space_id (a device refiled outside any home) is sent as a change
 // of the problem.
+//
+// For a device's DEVICE_OFFLINE while a connector problem is open for its connector (see
+// ClearReason), the rules above differ in two things only: which reason closes it — the
+// superseded reason rather than NO_LONGER_REPORTED, MOVED or RECOVERED — and whether it
+// opens, which it does not until the connector problem ends. The times hold without
+// exception: no time from while a device was in a home follows it out, none from before
+// follows it in, and a device in a home is stamped only with quarter hours.
 //
 // Moves are judged from one quarter hour to the next: the gateway compares where a subject
 // was, and who owned it, at the last quarter hour with where it is now. A move undone in
 // between is no move, and keeps its problems as they are. A subject the gateway stops
 // reporting always closes with CLEAR_REASON_NO_LONGER_REPORTED, whatever its condition; of any
 // other moved subject, a problem that no longer holds closes as CLEAR_REASON_RECOVERED and one
-// that still holds as CLEAR_REASON_MOVED — except, in both, a DEVICE_OFFLINE superseded under
-// a connector problem; see ClearReason. Between a move and the quarter hour that reports it,
-// the subject is treated as in a home whichever way it moved: nothing about it leaves the
-// gateway with a time finer than that quarter hour, and what it may raise is judged by its new
-// place from then on.
+// that still holds as CLEAR_REASON_MOVED; for a DEVICE_OFFLINE under a connector problem the
+// reason differs, and nothing else (see above). Between a move and the quarter hour that
+// reports it, the subject is treated as in a home whichever way it moved: nothing about it
+// leaves the gateway with a time finer than that quarter hour, and what it may raise is
+// judged by its new place from then on.
 //
 // The one exception is reach into a home taken away by a change to the member — a membership
 // ended, or a relation changing from service to resident — which is sent at once, since it
@@ -170,7 +175,8 @@ enum ProblemKind {
   // one says otherwise; a connector that never reports its backend never raises it. When the
   // connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
   // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
-  // handshake decides it afresh. Nothing of the connector's own detail is reported; the
+  // handshake decides it afresh, a FAILING one opening it again as CONNECTOR_OFFLINE closes
+  // (see ClearReason). Nothing of the connector's own detail is reported; the
   // problem carries only the category, in backend_failure.
   //
   // A connector problem, as CONNECTOR_OFFLINE is: while it is open, it stands in for the
@@ -196,18 +202,18 @@ enum ProblemKind {
 //
 // A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
 // DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
-// device. The same rules hold for both:
+// device. At most one is open for a connector at a time: a connector cannot be offline and
+// failing at once, and CONNECTOR_OFFLINE supersedes a CONNECTOR_ERROR. A reconnect whose
+// handshake reports FAILING closes CONNECTOR_OFFLINE and opens CONNECTOR_ERROR in the same
+// step, with no gap between. The same rules hold for both:
 //
-//   * A DEVICE_OFFLINE open when a connector problem begins closes as superseded, and no new
-//     one opens while any connector problem is open for that connector — a CONNECTOR_ERROR
-//     followed by CONNECTOR_OFFLINE, or the reverse, is one span. The reason names the
-//     connector problem that began the span: SUPERSEDED_BY_CONNECTOR_ERROR for a span that
-//     began with CONNECTOR_ERROR, even if CONNECTOR_OFFLINE is open by the quarter hour the
-//     clear is sent at, and SUPERSEDED_BY_CONNECTOR_OFFLINE for one that began with
-//     CONNECTOR_OFFLINE, even if CONNECTOR_ERROR is open by then. For a device
-//     in a home that clear, like any, is sent and stamped at the next quarter hour; a
-//     connector problem that comes and goes between two of them changes nothing for it, and
-//     its DEVICE_OFFLINE stays open.
+//   * No DEVICE_OFFLINE opens for a device while a connector problem is open for its
+//     connector. One that is open closes as superseded, the reason naming the connector
+//     problem open when the clear is sent: SUPERSEDED_BY_CONNECTOR_OFFLINE or
+//     SUPERSEDED_BY_CONNECTOR_ERROR. For a device in a home that clear, like any, is sent and
+//     stamped at the next quarter hour; if no connector problem is open by then — it came
+//     and went between two quarter hours — nothing is sent, and its DEVICE_OFFLINE stays
+//     open.
 //   * When a superseded clear and a clear of the device's own — RECOVERED, MOVED,
 //     NO_LONGER_REPORTED, DEVICE_REMOVED — would land at the same quarter hour, the
 //     superseded clear is used. A device that moved is not reopened while its connector is
@@ -230,8 +236,10 @@ enum ClearReason {
   // The unfiled devices were filed.
   CLEAR_REASON_FILED = 2;
 
-  // The device was removed from the gateway. Every problem open on it closes with this —
-  // except a DEVICE_OFFLINE superseded under a connector problem; see above.
+  // The device was removed from the gateway. Every problem open on it closes, with this
+  // reason — a DEVICE_OFFLINE under a connector problem with the superseded reason instead
+  // (see above) — and for a device in a home is still sent and stamped at the next quarter
+  // hour.
   CLEAR_REASON_DEVICE_REMOVED = 3;
 
   // The connector behind the device went offline — or, for a CONNECTOR_ERROR, the connector
@@ -240,12 +248,15 @@ enum ClearReason {
 
   // The problem's subject left what the gateway reports, though the condition may hold: a
   // device now owned by a resident, a room moved into a home. Sent, and stamped, at the next
-  // quarter hour — except a DEVICE_OFFLINE superseded under a connector problem; see above.
+  // quarter hour. A DEVICE_OFFLINE under a connector problem takes the superseded reason
+  // instead (see above), and is still sent and stamped at the next quarter hour.
   CLEAR_REASON_NO_LONGER_REPORTED = 5;
 
   // The subject moved into or out of a home. A problem that still holds opens again as a new
-  // one at the same quarter hour — except a DEVICE_OFFLINE superseded under a connector
-  // problem; see above.
+  // one at the same quarter hour. A DEVICE_OFFLINE under a connector problem takes the
+  // superseded reason instead and does not open again until the connector problem ends (see
+  // above); its clear is still sent and stamped at the next quarter hour for a device in a
+  // home.
   CLEAR_REASON_MOVED = 6;
 
   // The backend of the connector behind the device started failing. See the connector

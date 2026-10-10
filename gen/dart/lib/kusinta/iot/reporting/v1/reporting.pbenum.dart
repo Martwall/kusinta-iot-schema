@@ -55,7 +55,8 @@ class ProblemKind extends $pb.ProtobufEnum {
   /// one says otherwise; a connector that never reports its backend never raises it. When the
   /// connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
   /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
-  /// handshake decides it afresh. Nothing of the connector's own detail is reported; the
+  /// handshake decides it afresh, a FAILING one opening it again as CONNECTOR_OFFLINE closes
+  /// (see ClearReason). Nothing of the connector's own detail is reported; the
   /// problem carries only the category, in backend_failure.
   ///
   /// A connector problem, as CONNECTOR_OFFLINE is: while it is open, it stands in for the
@@ -104,18 +105,18 @@ class ProblemKind extends $pb.ProtobufEnum {
 ///
 /// A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
 /// DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
-/// device. The same rules hold for both:
+/// device. At most one is open for a connector at a time: a connector cannot be offline and
+/// failing at once, and CONNECTOR_OFFLINE supersedes a CONNECTOR_ERROR. A reconnect whose
+/// handshake reports FAILING closes CONNECTOR_OFFLINE and opens CONNECTOR_ERROR in the same
+/// step, with no gap between. The same rules hold for both:
 ///
-///   * A DEVICE_OFFLINE open when a connector problem begins closes as superseded, and no new
-///     one opens while any connector problem is open for that connector — a CONNECTOR_ERROR
-///     followed by CONNECTOR_OFFLINE, or the reverse, is one span. The reason names the
-///     connector problem that began the span: SUPERSEDED_BY_CONNECTOR_ERROR for a span that
-///     began with CONNECTOR_ERROR, even if CONNECTOR_OFFLINE is open by the quarter hour the
-///     clear is sent at, and SUPERSEDED_BY_CONNECTOR_OFFLINE for one that began with
-///     CONNECTOR_OFFLINE, even if CONNECTOR_ERROR is open by then. For a device
-///     in a home that clear, like any, is sent and stamped at the next quarter hour; a
-///     connector problem that comes and goes between two of them changes nothing for it, and
-///     its DEVICE_OFFLINE stays open.
+///   * No DEVICE_OFFLINE opens for a device while a connector problem is open for its
+///     connector. One that is open closes as superseded, the reason naming the connector
+///     problem open when the clear is sent: SUPERSEDED_BY_CONNECTOR_OFFLINE or
+///     SUPERSEDED_BY_CONNECTOR_ERROR. For a device in a home that clear, like any, is sent and
+///     stamped at the next quarter hour; if no connector problem is open by then — it came
+///     and went between two quarter hours — nothing is sent, and its DEVICE_OFFLINE stays
+///     open.
 ///   * When a superseded clear and a clear of the device's own — RECOVERED, MOVED,
 ///     NO_LONGER_REPORTED, DEVICE_REMOVED — would land at the same quarter hour, the
 ///     superseded clear is used. A device that moved is not reopened while its connector is
@@ -141,8 +142,10 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_FILED =
       ClearReason._(2, _omitEnumNames ? '' : 'CLEAR_REASON_FILED');
 
-  /// The device was removed from the gateway. Every problem open on it closes with this —
-  /// except a DEVICE_OFFLINE superseded under a connector problem; see above.
+  /// The device was removed from the gateway. Every problem open on it closes, with this
+  /// reason — a DEVICE_OFFLINE under a connector problem with the superseded reason instead
+  /// (see above) — and for a device in a home is still sent and stamped at the next quarter
+  /// hour.
   static const ClearReason CLEAR_REASON_DEVICE_REMOVED =
       ClearReason._(3, _omitEnumNames ? '' : 'CLEAR_REASON_DEVICE_REMOVED');
 
@@ -154,13 +157,16 @@ class ClearReason extends $pb.ProtobufEnum {
 
   /// The problem's subject left what the gateway reports, though the condition may hold: a
   /// device now owned by a resident, a room moved into a home. Sent, and stamped, at the next
-  /// quarter hour — except a DEVICE_OFFLINE superseded under a connector problem; see above.
+  /// quarter hour. A DEVICE_OFFLINE under a connector problem takes the superseded reason
+  /// instead (see above), and is still sent and stamped at the next quarter hour.
   static const ClearReason CLEAR_REASON_NO_LONGER_REPORTED =
       ClearReason._(5, _omitEnumNames ? '' : 'CLEAR_REASON_NO_LONGER_REPORTED');
 
   /// The subject moved into or out of a home. A problem that still holds opens again as a new
-  /// one at the same quarter hour — except a DEVICE_OFFLINE superseded under a connector
-  /// problem; see above.
+  /// one at the same quarter hour. A DEVICE_OFFLINE under a connector problem takes the
+  /// superseded reason instead and does not open again until the connector problem ends (see
+  /// above); its clear is still sent and stamped at the next quarter hour for a device in a
+  /// home.
   static const ClearReason CLEAR_REASON_MOVED =
       ClearReason._(6, _omitEnumNames ? '' : 'CLEAR_REASON_MOVED');
 

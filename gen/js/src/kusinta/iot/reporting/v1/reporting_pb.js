@@ -145,18 +145,18 @@ export const ClearReasonSchema = /*@__PURE__*/
  *
  * A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
  * DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
- * device. The same rules hold for both:
+ * device. At most one is open for a connector at a time: a connector cannot be offline and
+ * failing at once, and CONNECTOR_OFFLINE supersedes a CONNECTOR_ERROR. A reconnect whose
+ * handshake reports FAILING closes CONNECTOR_OFFLINE and opens CONNECTOR_ERROR in the same
+ * step, with no gap between. The same rules hold for both:
  *
- *   * A DEVICE_OFFLINE open when a connector problem begins closes as superseded, and no new
- *     one opens while any connector problem is open for that connector — a CONNECTOR_ERROR
- *     followed by CONNECTOR_OFFLINE, or the reverse, is one span. The reason names the
- *     connector problem that began the span: SUPERSEDED_BY_CONNECTOR_ERROR for a span that
- *     began with CONNECTOR_ERROR, even if CONNECTOR_OFFLINE is open by the quarter hour the
- *     clear is sent at, and SUPERSEDED_BY_CONNECTOR_OFFLINE for one that began with
- *     CONNECTOR_OFFLINE, even if CONNECTOR_ERROR is open by then. For a device
- *     in a home that clear, like any, is sent and stamped at the next quarter hour; a
- *     connector problem that comes and goes between two of them changes nothing for it, and
- *     its DEVICE_OFFLINE stays open.
+ *   * No DEVICE_OFFLINE opens for a device while a connector problem is open for its
+ *     connector. One that is open closes as superseded, the reason naming the connector
+ *     problem open when the clear is sent: SUPERSEDED_BY_CONNECTOR_OFFLINE or
+ *     SUPERSEDED_BY_CONNECTOR_ERROR. For a device in a home that clear, like any, is sent and
+ *     stamped at the next quarter hour; if no connector problem is open by then — it came
+ *     and went between two quarter hours — nothing is sent, and its DEVICE_OFFLINE stays
+ *     open.
  *   * When a superseded clear and a clear of the device's own — RECOVERED, MOVED,
  *     NO_LONGER_REPORTED, DEVICE_REMOVED — would land at the same quarter hour, the
  *     superseded clear is used. A device that moved is not reopened while its connector is
