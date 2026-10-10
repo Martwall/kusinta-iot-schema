@@ -180,8 +180,8 @@ only the problem and its `backend_failure` category. While either connector prob
 no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open is not
 closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason only if its
 device is still reported and a connector problem is still open when its clear is sent;
-otherwise as any `DEVICE_OFFLINE`. A subject that stops being reported always closes with
-`NO_LONGER_REPORTED`.
+otherwise as any `DEVICE_OFFLINE`. A removed device always closes with `DEVICE_REMOVED`;
+any other subject that stops being reported always closes with `NO_LONGER_REPORTED`.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by

@@ -112,8 +112,10 @@ class ProblemKind extends $pb.ProtobufEnum {
 ///
 /// When the gateway stops tracking a connector — when is the gateway's own policy — the
 /// connector and the devices behind it stop being reported, and their open problems close
-/// with NO_LONGER_REPORTED. A subject that stops being reported always closes with
-/// NO_LONGER_REPORTED, never with a SUPERSEDED_* reason, even while a connector problem is open.
+/// with NO_LONGER_REPORTED. A removed device's problems always close with DEVICE_REMOVED, even
+/// when it also stops being reported; any other subject that stops being reported always
+/// closes with NO_LONGER_REPORTED. Neither takes a SUPERSEDED_* reason, even while a connector
+/// problem is open.
 class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_UNSPECIFIED =
       ClearReason._(0, _omitEnumNames ? '' : 'CLEAR_REASON_UNSPECIFIED');
@@ -127,8 +129,8 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_FILED =
       ClearReason._(2, _omitEnumNames ? '' : 'CLEAR_REASON_FILED');
 
-  /// The device was removed from the gateway. Every problem open on it closes with this; a
-  /// DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see above).
+  /// The device was removed from the gateway. Every problem open on it closes with this,
+  /// never with a SUPERSEDED_* reason (see above).
   static const ClearReason CLEAR_REASON_DEVICE_REMOVED =
       ClearReason._(3, _omitEnumNames ? '' : 'CLEAR_REASON_DEVICE_REMOVED');
 

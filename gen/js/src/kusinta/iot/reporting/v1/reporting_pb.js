@@ -155,8 +155,10 @@ export const ClearReasonSchema = /*@__PURE__*/
  *
  * When the gateway stops tracking a connector — when is the gateway's own policy — the
  * connector and the devices behind it stop being reported, and their open problems close
- * with NO_LONGER_REPORTED. A subject that stops being reported always closes with
- * NO_LONGER_REPORTED, never with a SUPERSEDED_* reason, even while a connector problem is open.
+ * with NO_LONGER_REPORTED. A removed device's problems always close with DEVICE_REMOVED, even
+ * when it also stops being reported; any other subject that stops being reported always
+ * closes with NO_LONGER_REPORTED. Neither takes a SUPERSEDED_* reason, even while a connector
+ * problem is open.
  *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */

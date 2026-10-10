@@ -68,7 +68,8 @@ option optimize_for = SPEED;
 // hour, the clear its problems take (CLEAR_REASON_NO_LONGER_REPORTED). Any other subject that
 // moves into or out of a home closes its open problems at that quarter hour — one that still
 // holds with CLEAR_REASON_MOVED, opening again there as a new problem stamped with that
-// quarter hour, one that has ended with CLEAR_REASON_RECOVERED — no time from while it was in
+// quarter hour (a DEVICE_OFFLINE only while no connector problem is open for its connector;
+// see ClearReason), one that has ended with CLEAR_REASON_RECOVERED — no time from while it was in
 // a home follows it out, and none from before follows it in. A move from one home to another
 // is a move out and a move in, and any change of a home device's space_id, within one home
 // included, is a move too. A space retyped into or out of being a home (access.v1 has a home
@@ -203,8 +204,10 @@ enum ProblemKind {
 //
 // When the gateway stops tracking a connector — when is the gateway's own policy — the
 // connector and the devices behind it stop being reported, and their open problems close
-// with NO_LONGER_REPORTED. A subject that stops being reported always closes with
-// NO_LONGER_REPORTED, never with a SUPERSEDED_* reason, even while a connector problem is open.
+// with NO_LONGER_REPORTED. A removed device's problems always close with DEVICE_REMOVED, even
+// when it also stops being reported; any other subject that stops being reported always
+// closes with NO_LONGER_REPORTED. Neither takes a SUPERSEDED_* reason, even while a connector
+// problem is open.
 enum ClearReason {
   CLEAR_REASON_UNSPECIFIED = 0;
 
@@ -215,8 +218,8 @@ enum ClearReason {
   // The unfiled devices were filed.
   CLEAR_REASON_FILED = 2;
 
-  // The device was removed from the gateway. Every problem open on it closes with this; a
-  // DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see above).
+  // The device was removed from the gateway. Every problem open on it closes with this,
+  // never with a SUPERSEDED_* reason (see above).
   CLEAR_REASON_DEVICE_REMOVED = 3;
 
   // The connector behind the device went offline. For a DEVICE_OFFLINE, and for a
@@ -275,8 +278,8 @@ message ProblemSubject {
 // and goes between two of them — a connector outage included — changes nothing, and it sends a
 // transition only at that evaluation, as ServiceStatus changes are pushed,
 // never on the device report that prompted it. That holds for every transition of such a
-// device, a clear for its removal or for a connector problem beginning included: each is
-// sent, and stamped, at the next quarter hour.
+// device, a clear for its removal or a SUPERSEDED_* clear included: each is sent, and
+// stamped, at the next quarter hour.
 message Problem {
   ProblemKind kind = 2;
 

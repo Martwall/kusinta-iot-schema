@@ -131,8 +131,8 @@ export declare const ProblemSubjectSchema: GenMessage<ProblemSubject>;
  * and goes between two of them — a connector outage included — changes nothing, and it sends a
  * transition only at that evaluation, as ServiceStatus changes are pushed,
  * never on the device report that prompted it. That holds for every transition of such a
- * device, a clear for its removal or for a connector problem beginning included: each is
- * sent, and stamped, at the next quarter hour.
+ * device, a clear for its removal or a SUPERSEDED_* clear included: each is sent, and
+ * stamped, at the next quarter hour.
  *
  * @generated from message kusinta.iot.reporting.v1.Problem
  */
@@ -811,8 +811,10 @@ export declare const ProblemKindSchema: GenEnum<ProblemKind>;
  *
  * When the gateway stops tracking a connector — when is the gateway's own policy — the
  * connector and the devices behind it stop being reported, and their open problems close
- * with NO_LONGER_REPORTED. A subject that stops being reported always closes with
- * NO_LONGER_REPORTED, never with a SUPERSEDED_* reason, even while a connector problem is open.
+ * with NO_LONGER_REPORTED. A removed device's problems always close with DEVICE_REMOVED, even
+ * when it also stops being reported; any other subject that stops being reported always
+ * closes with NO_LONGER_REPORTED. Neither takes a SUPERSEDED_* reason, even while a connector
+ * problem is open.
  *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */
@@ -838,8 +840,8 @@ export enum ClearReason {
   FILED = 2,
 
   /**
-   * The device was removed from the gateway. Every problem open on it closes with this; a
-   * DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see above).
+   * The device was removed from the gateway. Every problem open on it closes with this,
+   * never with a SUPERSEDED_* reason (see above).
    *
    * @generated from enum value: CLEAR_REASON_DEVICE_REMOVED = 3;
    */
