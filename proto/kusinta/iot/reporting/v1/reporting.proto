@@ -175,14 +175,17 @@ enum ProblemKind {
   // DEVICE_OFFLINE open when the backend starts failing closes with
   // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
   // When it clears as recovered, the devices behind the connector are judged as Problem
-  // has it, on their connector's own judgement. A device whose DEVICE_OFFLINE closed with
-  // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, or that had none, opens a new one only if
-  // its connector judges it offline: a device in a home at the next quarter hour, opened
-  // then and stamped with that quarter hour; a device not in a home at once. One judged
-  // online opens nothing. A device in a home whose DEVICE_OFFLINE is still open — its
-  // superseded clear not yet sent, because the error came and went between two quarter
-  // hours — keeps it open, and it closes only as any DEVICE_OFFLINE does. A device in a
-  // home is never stamped off the quarter hour.
+  // has it, on their connector's own judgement. A device with no DEVICE_OFFLINE open opens
+  // one if its connector judges it offline: a device in a home at the next quarter hour,
+  // stamped with it; any other device at once. One judged online opens nothing. A device
+  // whose DEVICE_OFFLINE is still open keeps it — for a device in a home, one whose
+  // superseded clear was never sent because the error came and went between two quarter
+  // hours — and it closes only as any DEVICE_OFFLINE does. A device in a home is never
+  // stamped off the quarter hour.
+  //
+  // When CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR would land at the same quarter hour as a
+  // clear of the device's own — RECOVERED, MOVED, NO_LONGER_REPORTED, DEVICE_REMOVED — the
+  // device's own reason is used.
   //
   // When CONNECTOR_OFFLINE supersedes it instead, that problem holds the devices'
   // DEVICE_OFFLINE back. For a device in a home, the clear with
