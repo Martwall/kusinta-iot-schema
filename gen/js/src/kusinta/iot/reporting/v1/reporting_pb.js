@@ -147,20 +147,21 @@ export const ClearReasonSchema = /*@__PURE__*/
  * DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
  * device. At most one is open for a connector at a time: a connector cannot be offline and
  * failing at once, and CONNECTOR_OFFLINE supersedes a CONNECTOR_ERROR. A reconnect whose
- * handshake reports FAILING closes CONNECTOR_OFFLINE and opens CONNECTOR_ERROR in the same
- * step, with no gap between. The same rules hold for both:
+ * handshake reports FAILING closes CONNECTOR_OFFLINE, with RECOVERED, and opens a new
+ * CONNECTOR_ERROR in the same step, with no gap between. The same rules hold for both:
  *
  *   * No DEVICE_OFFLINE opens for a device while a connector problem is open for its
- *     connector. One that is open closes as superseded, the reason naming the connector
- *     problem open when the clear is sent: SUPERSEDED_BY_CONNECTOR_OFFLINE or
- *     SUPERSEDED_BY_CONNECTOR_ERROR. For a device in a home that clear, like any, is sent and
- *     stamped at the next quarter hour; if no connector problem is open by then — it came
- *     and went between two quarter hours — nothing is sent, and its DEVICE_OFFLINE stays
- *     open.
- *   * When a superseded clear and a clear of the device's own — RECOVERED, MOVED,
- *     NO_LONGER_REPORTED, DEVICE_REMOVED — would land at the same quarter hour, the
- *     superseded clear is used. A device that moved is not reopened while its connector is
- *     offline or failing.
+ *     connector, and a device that moved is not reopened then.
+ *   * A clear of an open DEVICE_OFFLINE is judged when it is sent: for a device in a home at
+ *     the next quarter hour, for any other at once. If a connector problem is open for its
+ *     connector then, it closes with the superseded reason naming that problem,
+ *     SUPERSEDED_BY_CONNECTOR_OFFLINE or SUPERSEDED_BY_CONNECTOR_ERROR, even where a reason
+ *     of the device's own — RECOVERED, MOVED, NO_LONGER_REPORTED, DEVICE_REMOVED — also
+ *     holds. If none is open, it closes with the device's own reason where one holds. Only
+ *     when neither holds — a connector problem that came and went between two quarter hours,
+ *     the device still judged offline and still where it was — is nothing sent, and its
+ *     DEVICE_OFFLINE stays open. So a device in a home removed at 10:07, while its connector
+ *     was offline from 10:05 to 10:10, closes with DEVICE_REMOVED at 10:15.
  *   * Once no connector problem is open for the connector — it is back, and its backend is
  *     not failing — the devices behind it are judged afresh as Problem has it, on their
  *     connector's own judgement. A device with no DEVICE_OFFLINE open opens one if its
