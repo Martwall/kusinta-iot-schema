@@ -350,6 +350,12 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   /// first attempt at its backend when it handshakes leaves it unset and sends a report once
   /// that attempt has settled.
   ///
+  /// Until its first backend attempt since connecting has settled, a connector judges no
+  /// device: it reports none of its devices unreachable, and none reachable again either, by
+  /// whatever its technology uses to say so. Its devices are not judged meanwhile, so no
+  /// DEVICE_OFFLINE opens for them and none closes as recovered, and a reconnect that ends
+  /// in a FAILING report leaves no gap in which they are judged one by one.
+  ///
   /// Safe to set whatever the gateway: the handshake goes before the connector knows which
   /// gateway it reached, and a gateway that predates backend health skips the field as
   /// unknown. Everything after the handshake waits for HandshakeAck.supports_backend_health.
@@ -376,14 +382,18 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
 /// Sent in the handshake (ConnectorHandshake.backend_health), then whenever state or reason
 /// changes, and once after every re-initialisation attempt, changed or not, before the
 /// result that answers it. Not sent for a change of detail alone. Each report replaces the
-/// last. The gateway applies no debounce of its own, so a connector reports FAILING only
-/// once a fault has outlasted its own retries, never for a single failed call.
+/// last. The gateway applies no debounce of its own, so for a fault it finds by itself a
+/// connector reports FAILING only once the fault has outlasted its own retries, never for a
+/// single failed call. After a ReinitializeBackend it reports the attempt's true outcome at
+/// once, FAILING included, or OK, before the result: the request is the retry a person
+/// asked for.
 ///
 /// The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while its
 /// stream is up and the latest report is FAILING, and clears it when one is anything else; a
 /// stream that drops closes it too, and the next handshake decides afresh (see reporting.v1).
-/// A connector that never sends one is OK throughout. CONNECTOR_OFFLINE is the other problem and is not this one:
-/// that is the stream to the gateway down, this is the stream up and the backend failing.
+/// A connector that never sends one is OK throughout. CONNECTOR_OFFLINE is the other problem
+/// and is not this one: that is the stream to the gateway down, this is the stream up and
+/// the backend failing.
 class BackendHealthReport extends $pb.GeneratedMessage {
   factory BackendHealthReport({
     $3.BackendHealth? health,

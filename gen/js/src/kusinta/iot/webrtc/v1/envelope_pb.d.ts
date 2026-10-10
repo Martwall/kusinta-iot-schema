@@ -668,7 +668,10 @@ export declare type ConnectorDescriptor = Message<"kusinta.iot.webrtc.v1.Connect
 export declare const ConnectorDescriptorSchema: GenMessage<ConnectorDescriptor>;
 
 /**
- * The connectors the gateway currently holds, gateway → app.
+ * The connectors the gateway currently holds, gateway → app: those connected now. A
+ * connector whose stream drops leaves the list, and its backend health with it; it is
+ * listed again when it reconnects. The app offers ReconnectConnector only for a listed
+ * connector.
  *
  * A push, not a ManagementResult arm: a new result-oneof member is a compile error
  * in a consumer whose match on the result is exhaustive, whereas a new push case is

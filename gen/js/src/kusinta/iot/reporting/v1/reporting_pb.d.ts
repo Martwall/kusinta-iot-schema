@@ -709,8 +709,9 @@ export enum ProblemKind {
   UNSPECIFIED = 0,
 
   /**
-   * The device cannot be heard, as its connector judges it. Never raised while a connector
-   * problem is open for its connector; see ClearReason.
+   * The device cannot be heard, as its connector judges it — or the gateway, for a connector
+   * it no longer tracks. Never raised while a connector problem is open for its connector, or
+   * before the connector has judged it; see ClearReason.
    *
    * @generated from enum value: PROBLEM_KIND_DEVICE_OFFLINE = 1;
    */
@@ -750,7 +751,10 @@ export enum ProblemKind {
    * rather than one per device, and none of theirs opens until it ends (see ClearReason).
    * Closes with CLEAR_REASON_RECOVERED when the stream comes back, also when the handshake
    * reports the backend FAILING: the CONNECTOR_ERROR that opens in the same step is a
-   * separate problem.
+   * separate problem. When the gateway stops tracking the connector — an administrator
+   * removes it, or the gateway's own retention lets it go; when is the gateway's policy —
+   * it closes at once with CLEAR_REASON_NO_LONGER_REPORTED, and its devices' DEVICE_OFFLINE
+   * are no longer held for it.
    *
    * @generated from enum value: PROBLEM_KIND_CONNECTOR_OFFLINE = 6;
    */
@@ -824,14 +828,20 @@ export declare const ProblemKindSchema: GenEnum<ProblemKind>;
  *     the device still judged offline and still where it was — is nothing sent, and its
  *     DEVICE_OFFLINE stays open. So a device in a home removed at 10:07, while its connector
  *     was offline from 10:05 to 10:10, closes with DEVICE_REMOVED at 10:15.
- *   * Once no connector problem is open for the connector — it is back, and its backend is
- *     not failing — the devices behind it are judged afresh as Problem has it, on their
- *     connector's own judgement. A device with no DEVICE_OFFLINE open opens one if its
- *     connector judges it offline: a device in a home at the next quarter hour, stamped with
- *     it; any other device at once. One judged online opens nothing, and a device removed
- *     meanwhile has nothing to open. A device whose DEVICE_OFFLINE is still open keeps it,
- *     and it closes only as any DEVICE_OFFLINE does. A device in a home is never stamped off
- *     the quarter hour.
+ *   * A connector judges no device until its first backend attempt since connecting has
+ *     settled (see connector.v1.ConnectorHandshake.backend_health). Until then no
+ *     DEVICE_OFFLINE of its devices opens and none closes as RECOVERED, so the handover from
+ *     CONNECTOR_OFFLINE to CONNECTOR_ERROR leaves no gap in which devices are judged one by
+ *     one.
+ *   * Once no connector problem is open for the connector — it is back, its first backend
+ *     attempt has settled and its backend is not failing, or the gateway has stopped
+ *     tracking it — the devices behind it are judged afresh as Problem has it, on their
+ *     connector's own judgement, or on the gateway's for a connector it no longer tracks. A
+ *     device with no DEVICE_OFFLINE open opens one if judged offline: a device in a home at
+ *     the next quarter hour, stamped with it; any other device at once. One judged online
+ *     opens nothing, and a device removed meanwhile has nothing to open. A device whose
+ *     DEVICE_OFFLINE is still open keeps it, and it closes only as any DEVICE_OFFLINE does.
+ *     A device in a home is never stamped off the quarter hour.
  *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */
@@ -878,9 +888,10 @@ export enum ClearReason {
 
   /**
    * The problem's subject left what the gateway reports, though the condition may hold: a
-   * device now owned by a resident, a room moved into a home. Sent, and stamped, at the next
-   * quarter hour — save a DEVICE_OFFLINE whose connector has a connector problem open then,
-   * which takes the superseded reason at that same time (see above).
+   * device now owned by a resident, a room moved into a home, a connector the gateway has
+   * stopped tracking. Sent, and stamped, at the next quarter hour — at once for a connector,
+   * which is in no home — save a DEVICE_OFFLINE whose connector has a connector problem open
+   * then, which takes the superseded reason at that same time (see above).
    *
    * @generated from enum value: CLEAR_REASON_NO_LONGER_REPORTED = 5;
    */

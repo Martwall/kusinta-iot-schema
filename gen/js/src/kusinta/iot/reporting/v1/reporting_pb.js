@@ -162,14 +162,20 @@ export const ClearReasonSchema = /*@__PURE__*/
  *     the device still judged offline and still where it was — is nothing sent, and its
  *     DEVICE_OFFLINE stays open. So a device in a home removed at 10:07, while its connector
  *     was offline from 10:05 to 10:10, closes with DEVICE_REMOVED at 10:15.
- *   * Once no connector problem is open for the connector — it is back, and its backend is
- *     not failing — the devices behind it are judged afresh as Problem has it, on their
- *     connector's own judgement. A device with no DEVICE_OFFLINE open opens one if its
- *     connector judges it offline: a device in a home at the next quarter hour, stamped with
- *     it; any other device at once. One judged online opens nothing, and a device removed
- *     meanwhile has nothing to open. A device whose DEVICE_OFFLINE is still open keeps it,
- *     and it closes only as any DEVICE_OFFLINE does. A device in a home is never stamped off
- *     the quarter hour.
+ *   * A connector judges no device until its first backend attempt since connecting has
+ *     settled (see connector.v1.ConnectorHandshake.backend_health). Until then no
+ *     DEVICE_OFFLINE of its devices opens and none closes as RECOVERED, so the handover from
+ *     CONNECTOR_OFFLINE to CONNECTOR_ERROR leaves no gap in which devices are judged one by
+ *     one.
+ *   * Once no connector problem is open for the connector — it is back, its first backend
+ *     attempt has settled and its backend is not failing, or the gateway has stopped
+ *     tracking it — the devices behind it are judged afresh as Problem has it, on their
+ *     connector's own judgement, or on the gateway's for a connector it no longer tracks. A
+ *     device with no DEVICE_OFFLINE open opens one if judged offline: a device in a home at
+ *     the next quarter hour, stamped with it; any other device at once. One judged online
+ *     opens nothing, and a device removed meanwhile has nothing to open. A device whose
+ *     DEVICE_OFFLINE is still open keeps it, and it closes only as any DEVICE_OFFLINE does.
+ *     A device in a home is never stamped off the quarter hour.
  *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */
