@@ -1082,9 +1082,10 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  *
  * So a failure found only by attempting — credentials the backend rejects, a backend that
  * does not answer — is not a refusal. It arrives as a ManagementAck, with the backend
- * health it left (FAILING, with AUTH_FAILED or UNREACHABLE) already pushed: after the ack,
- * the app reads ConnectorDescriptor.backend_health for the outcome, and a FAILING health
- * there means the reconnect did not help. No push precedes the ack when the attempt left
+ * health it left (FAILING, e.g. with AUTH_FAILED, UNREACHABLE or BACKEND_ERROR) already
+ * pushed: after the ack, the app reads ConnectorDescriptor.backend_health for the outcome,
+ * and a FAILING health there means the reconnect did not help. The app handles any reason
+ * there, one its schema does not know included. No push precedes the ack when the attempt left
  * health as it was; the descriptor the app holds is then still the outcome.
  *
  * A refusal is a GatewayError whose metadata "reason" says which, as CommandError.metadata
@@ -1108,10 +1109,11 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  *   "REINITIALIZE_FAILED"  The connector could not attempt it at all
  *                          (connector.v1.REINITIALIZE_OUTCOME_FAILED, or an outcome the
  *                          gateway's schema does not know, read as FAILED). The code depends
- *                          on the reason: FAILED_PRECONDITION when it is MISCONFIGURED,
- *                          which needs a person before asking again can help; UNAVAILABLE
- *                          for any other — INTERNAL, UNSPECIFIED, a value the gateway does
- *                          not know — since a retry may work. metadata "backend_failure" is
+ *                          on the reason: FAILED_PRECONDITION when it is MISCONFIGURED or
+ *                          AUTH_FAILED, which need a person before asking again can help —
+ *                          retrying the same credentials cannot work; UNAVAILABLE for any
+ *                          other — INTERNAL, UNSPECIFIED, a value the gateway does not
+ *                          know — since a retry may work. metadata "backend_failure" is
  *                          always set: the common.v1.BackendFailureReason by its enum name,
  *                          e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED". A reason that is
  *                          UNSPECIFIED, or a value the gateway's schema does not know, is

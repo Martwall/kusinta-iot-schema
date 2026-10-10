@@ -768,10 +768,10 @@ export enum ProblemKind {
    * DEVICE_OFFLINE open when the backend starts failing closes with
    * CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
    * When it clears as recovered, the devices behind the connector are judged as Problem has
-   * it, on their connector's own judgement: a device in a home that its connector
-   * still judges offline opens a new DEVICE_OFFLINE stamped with the next quarter hour; any
-   * other device its connector judges offline opens one at once; a device its connector no
-   * longer judges offline opens nothing.
+   * it, on their connector's own judgement: a device in a home that its connector still
+   * judges offline at the next quarter hour opens a new DEVICE_OFFLINE then, stamped with
+   * that quarter hour; any other device its connector judges offline opens one at once; a
+   * device its connector no longer judges offline opens nothing.
    *
    * When CONNECTOR_OFFLINE supersedes it instead, that problem holds the devices'
    * DEVICE_OFFLINE back. For a device in a home, the clear with
