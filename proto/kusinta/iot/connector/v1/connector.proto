@@ -159,8 +159,10 @@ message ReinitializeBackendResult {
   string request_id = 1;
   ReinitializeOutcome outcome = 2;
 
-  // Why it could not be attempted, when outcome is FAILED: typically MISCONFIGURED or
-  // INTERNAL. UNSPECIFIED otherwise.
+  // Why it could not be attempted, when outcome is FAILED: MISCONFIGURED or INTERNAL.
+  // UNSPECIFIED otherwise. Never a failure found by attempting — rejected credentials, a
+  // backend that does not answer: the attempt was made, so the outcome is DONE and the
+  // health report before it says FAILING with AUTH_FAILED, UNREACHABLE or the like.
   kusinta.iot.common.v1.BackendFailureReason reason = 3;
 
   // For the gateway's logs only, as BackendHealthReport.detail; never forwarded.

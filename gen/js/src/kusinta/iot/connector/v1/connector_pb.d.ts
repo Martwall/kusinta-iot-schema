@@ -285,8 +285,10 @@ export declare type ReinitializeBackendResult = Message<"kusinta.iot.connector.v
   outcome: ReinitializeOutcome;
 
   /**
-   * Why it could not be attempted, when outcome is FAILED: typically MISCONFIGURED or
-   * INTERNAL. UNSPECIFIED otherwise.
+   * Why it could not be attempted, when outcome is FAILED: MISCONFIGURED or INTERNAL.
+   * UNSPECIFIED otherwise. Never a failure found by attempting — rejected credentials, a
+   * backend that does not answer: the attempt was made, so the outcome is DONE and the
+   * health report before it says FAILING with AUTH_FAILED, UNREACHABLE or the like.
    *
    * @generated from field: kusinta.iot.common.v1.BackendFailureReason reason = 3;
    */

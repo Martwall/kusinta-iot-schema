@@ -571,11 +571,12 @@ message GetApartmentClimateSummary {
 //   "REINITIALIZE_FAILED"  The connector could not attempt it at all
 //                          (connector.v1.REINITIALIZE_OUTCOME_FAILED, or an outcome the
 //                          gateway's schema does not know, read as FAILED). The code depends
-//                          on the reason: FAILED_PRECONDITION when it is MISCONFIGURED or
-//                          AUTH_FAILED, which need a person before asking again can help —
-//                          retrying the same credentials cannot work; UNAVAILABLE for any
-//                          other — INTERNAL, UNSPECIFIED, a value the gateway does not
-//                          know — since a retry may work. metadata "backend_failure" is
+//                          on the reason: FAILED_PRECONDITION when it is MISCONFIGURED,
+//                          which needs a person to correct the connector's configuration
+//                          before asking again can help; UNAVAILABLE for any other —
+//                          INTERNAL, UNSPECIFIED, a value the gateway does not know — since
+//                          a retry may work. Rejected credentials are never this: they are
+//                          found by attempting, and come back as an ack (see above). metadata "backend_failure" is
 //                          always set: the common.v1.BackendFailureReason by its enum name,
 //                          e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED". A reason that is
 //                          UNSPECIFIED, or a value the gateway's schema does not know, is

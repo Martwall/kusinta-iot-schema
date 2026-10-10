@@ -626,8 +626,10 @@ class ReinitializeBackendResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearOutcome() => $_clearField(2);
 
-  /// Why it could not be attempted, when outcome is FAILED: typically MISCONFIGURED or
-  /// INTERNAL. UNSPECIFIED otherwise.
+  /// Why it could not be attempted, when outcome is FAILED: MISCONFIGURED or INTERNAL.
+  /// UNSPECIFIED otherwise. Never a failure found by attempting — rejected credentials, a
+  /// backend that does not answer: the attempt was made, so the outcome is DONE and the
+  /// health report before it says FAILING with AUTH_FAILED, UNREACHABLE or the like.
   @$pb.TagNumber(3)
   $3.BackendFailureReason get reason => $_getN(2);
   @$pb.TagNumber(3)
