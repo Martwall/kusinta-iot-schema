@@ -349,12 +349,14 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   /// health never sends it, and is never taken to be failing. A connector still making its
   /// first attempt at its backend when it handshakes leaves it unset.
   ///
-  /// After connecting, a connector that reports backend health states its first settled
-  /// state — OK or FAILING — within 60 seconds, or sooner: here, or in a BackendHealthReport
-  /// to a gateway that sets HandshakeAck.supports_backend_health. Settled means its first
+  /// After connecting to a gateway that sets HandshakeAck.supports_backend_health, a
+  /// connector that reports backend health states its first settled state — OK or FAILING —
+  /// within 60 seconds, or sooner: here, or in a BackendHealthReport. Settled means its first
   /// attempt at the backend succeeded, or its own retries for that attempt are used up; one
   /// still trying at 60 seconds reports FAILING then. Until it has stated a settled state it
   /// reports none of its devices as unreachable, by whatever its technology uses to say so.
+  /// Toward a gateway that does not set it, neither rule applies: the connector reports its
+  /// devices as it did before backend health existed.
   ///
   /// Safe to set whatever the gateway: the handshake goes before the connector knows which
   /// gateway it reached, and a gateway that predates backend health skips the field as

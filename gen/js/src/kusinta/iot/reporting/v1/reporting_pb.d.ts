@@ -709,8 +709,8 @@ export enum ProblemKind {
   UNSPECIFIED = 0,
 
   /**
-   * The device cannot be heard, as its connector judges it. Not reported while a connector
-   * problem is open for its connector; see ClearReason.
+   * The device cannot be heard, as its connector judges it. Does not open, or open again,
+   * while a connector problem is open for its connector; see ClearReason.
    *
    * @generated from enum value: PROBLEM_KIND_DEVICE_OFFLINE = 1;
    */
@@ -746,8 +746,8 @@ export enum ProblemKind {
 
   /**
    * A connector's stream to the gateway is down. A connector problem (see ClearReason): while
-   * it is open, the gateway reports no DEVICE_OFFLINE for the devices behind that connector,
-   * one problem rather than one per device. Closes with CLEAR_REASON_RECOVERED when the
+   * it is open, no DEVICE_OFFLINE opens for the devices behind that connector, one problem
+   * rather than one per device. Closes with CLEAR_REASON_RECOVERED when the
    * connector reconnects, or CLEAR_REASON_NO_LONGER_REPORTED when the gateway stops tracking
    * the connector.
    *
@@ -760,7 +760,7 @@ export enum ProblemKind {
    * reach, a network server answering with errors. Raised from the connector's own health
    * reports (connector.v1.BackendHealthReport); backend_failure carries the category, never
    * the connector's own detail. A connector problem, as CONNECTOR_OFFLINE is: while it is
-   * open, the gateway reports no DEVICE_OFFLINE for the devices behind that connector. Closes
+   * open, no DEVICE_OFFLINE opens for the devices behind that connector. Closes
    * with CLEAR_REASON_RECOVERED when the health is no longer FAILING,
    * CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE when the connector's stream drops, or
    * CLEAR_REASON_NO_LONGER_REPORTED when the gateway stops tracking the connector.
@@ -800,11 +800,13 @@ export declare const ProblemKindSchema: GenEnum<ProblemKind>;
  * Why a problem closed.
  *
  * A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
- * connector at a time. While one is open, the gateway reports no DEVICE_OFFLINE for the
- * devices behind that connector. A DEVICE_OFFLINE open when a connector problem begins
- * closes with the matching SUPERSEDED_* reason, which names the connector problem open when
- * the clear is sent. After the connector problem ends, a DEVICE_OFFLINE may open again as the
- * gateway judges. Times are as for any transition (see Problem): a device in a home is
+ * connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
+ * devices behind that connector. One already open closes at the time Problem gives for its
+ * subject, so a receiver may hold both open for a while. A DEVICE_OFFLINE closes with a
+ * SUPERSEDED_* reason when a connector problem of its connector is open at the time the
+ * clear is sent, the reason naming that problem; otherwise it closes, or stays open, as any
+ * DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
+ * the gateway judges. Times are as for any transition (see Problem): a device in a home is
  * stamped only with quarter hours, and no time crosses a home's boundary.
  *
  * When the gateway stops tracking a connector — when is the gateway's own policy — the
