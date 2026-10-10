@@ -178,8 +178,10 @@ connector works as before. The report's free-text `detail` is for the gateway's 
 app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
 only the problem and its `backend_failure` category. While either connector problem is open,
 no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open is not
-closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason only if a
-connector problem is still open when its clear is sent; otherwise as any `DEVICE_OFFLINE`.
+closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason only if its
+device is still reported and a connector problem is still open when its clear is sent;
+otherwise as any `DEVICE_OFFLINE`. A subject that stops being reported always closes with
+`NO_LONGER_REPORTED`.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by

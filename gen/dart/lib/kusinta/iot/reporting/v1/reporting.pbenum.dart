@@ -103,7 +103,7 @@ class ProblemKind extends $pb.ProtobufEnum {
 /// A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
 /// connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
 /// devices behind that connector. One already open is not closed at once, so a receiver may
-/// hold both open for a while. A DEVICE_OFFLINE closes with a
+/// hold both open for a while. The DEVICE_OFFLINE of a device still reported closes with a
 /// SUPERSEDED_* reason when a connector problem of its connector is open at the time the
 /// clear is sent, the reason naming that problem; otherwise it closes, or stays open, as any
 /// DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
@@ -112,7 +112,8 @@ class ProblemKind extends $pb.ProtobufEnum {
 ///
 /// When the gateway stops tracking a connector — when is the gateway's own policy — the
 /// connector and the devices behind it stop being reported, and their open problems close
-/// with NO_LONGER_REPORTED.
+/// with NO_LONGER_REPORTED. A subject that stops being reported always closes with
+/// NO_LONGER_REPORTED, never with a SUPERSEDED_* reason, even while a connector problem is open.
 class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_UNSPECIFIED =
       ClearReason._(0, _omitEnumNames ? '' : 'CLEAR_REASON_UNSPECIFIED');
@@ -141,8 +142,8 @@ class ClearReason extends $pb.ProtobufEnum {
   /// The problem's subject left what the gateway reports, though the condition may hold: a
   /// device now owned by a resident, a room moved into a home, a connector the gateway has
   /// stopped tracking and the devices behind it. A device or room leaving with a move is sent,
-  /// and stamped, at the next quarter hour; anything else as Problem says for its subject. A
-  /// DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see above).
+  /// and stamped, at the next quarter hour; anything else as Problem says for its subject.
+  /// Never replaced by a SUPERSEDED_* reason (see above).
   static const ClearReason CLEAR_REASON_NO_LONGER_REPORTED =
       ClearReason._(5, _omitEnumNames ? '' : 'CLEAR_REASON_NO_LONGER_REPORTED');
 

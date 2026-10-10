@@ -146,7 +146,7 @@ export const ClearReasonSchema = /*@__PURE__*/
  * A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
  * connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
  * devices behind that connector. One already open is not closed at once, so a receiver may
- * hold both open for a while. A DEVICE_OFFLINE closes with a
+ * hold both open for a while. The DEVICE_OFFLINE of a device still reported closes with a
  * SUPERSEDED_* reason when a connector problem of its connector is open at the time the
  * clear is sent, the reason naming that problem; otherwise it closes, or stays open, as any
  * DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
@@ -155,7 +155,8 @@ export const ClearReasonSchema = /*@__PURE__*/
  *
  * When the gateway stops tracking a connector — when is the gateway's own policy — the
  * connector and the devices behind it stop being reported, and their open problems close
- * with NO_LONGER_REPORTED.
+ * with NO_LONGER_REPORTED. A subject that stops being reported always closes with
+ * NO_LONGER_REPORTED, never with a SUPERSEDED_* reason, even while a connector problem is open.
  *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */
