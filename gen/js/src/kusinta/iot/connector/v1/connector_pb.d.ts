@@ -165,6 +165,10 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
    * first attempt at its backend when it handshakes leaves it unset and sends a report once
    * that attempt has settled.
    *
+   * Safe to set whatever the gateway: the handshake goes before the connector knows which
+   * gateway it reached, and a gateway that predates backend health skips the field as
+   * unknown. Everything after the handshake waits for HandshakeAck.supports_backend_health.
+   *
    * @generated from field: kusinta.iot.connector.v1.BackendHealthReport backend_health = 4;
    */
   backendHealth?: BackendHealthReport | undefined;
@@ -179,6 +183,11 @@ export declare const ConnectorHandshakeSchema: GenMessage<ConnectorHandshake>;
 /**
  * The health of the backend the connector drives, connector to gateway: whether the radio
  * central or network server behind it is working. See common.v1.BackendHealth.
+ *
+ * Sent only to a gateway that sets HandshakeAck.supports_backend_health. To one that does
+ * not — a gateway that predates backend health — the connector sends neither this nor
+ * ReinitializeBackendResult, and keeps working as it did before: its backend failing is
+ * then only in its own logs.
  *
  * Sent in the handshake (ConnectorHandshake.backend_health), then whenever state or reason
  * changes, and once after every re-initialisation attempt, changed or not, before the
@@ -228,7 +237,9 @@ export declare const BackendHealthReportSchema: GenMessage<BackendHealthReport>;
  * outstanding; the connector's coalescing covers the case where the gateway gave up waiting
  * and asked again.
  *
- * Answered once, by ReinitializeBackendResult with the same request_id. The connector
+ * Sent only by a gateway that sets HandshakeAck.supports_backend_health, so a connector
+ * that receives it may answer. Answered once, by ReinitializeBackendResult with the same
+ * request_id. The connector
  * bounds its attempt so that it answers within 30 seconds of receiving this; the gateway
  * waits at least 45 seconds before it treats the request as timed out. A result arriving
  * after the gateway has given up is ignored, but the health report sent before it still
@@ -470,6 +481,16 @@ export declare type HandshakeAck = Message<"kusinta.iot.connector.v1.HandshakeAc
    * @generated from field: kusinta.iot.identity.v1.GatewayId gateway_id = 3;
    */
   gatewayId?: GatewayId | undefined;
+
+  /**
+   * The gateway understands BackendHealthReport and ReinitializeBackendResult. A connector
+   * sends either on the session only when this is set. Unset — a gateway that predates
+   * backend health — the connector sends neither and works as before; such a gateway never
+   * sends ReinitializeBackend.
+   *
+   * @generated from field: bool supports_backend_health = 4;
+   */
+  supportsBackendHealth: boolean;
 };
 
 /**

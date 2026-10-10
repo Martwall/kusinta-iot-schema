@@ -349,6 +349,10 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   /// health never sends it, and is never taken to be failing. A connector still making its
   /// first attempt at its backend when it handshakes leaves it unset and sends a report once
   /// that attempt has settled.
+  ///
+  /// Safe to set whatever the gateway: the handshake goes before the connector knows which
+  /// gateway it reached, and a gateway that predates backend health skips the field as
+  /// unknown. Everything after the handshake waits for HandshakeAck.supports_backend_health.
   @$pb.TagNumber(4)
   BackendHealthReport get backendHealth => $_getN(3);
   @$pb.TagNumber(4)
@@ -363,6 +367,11 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
 
 /// The health of the backend the connector drives, connector to gateway: whether the radio
 /// central or network server behind it is working. See common.v1.BackendHealth.
+///
+/// Sent only to a gateway that sets HandshakeAck.supports_backend_health. To one that does
+/// not — a gateway that predates backend health — the connector sends neither this nor
+/// ReinitializeBackendResult, and keeps working as it did before: its backend failing is
+/// then only in its own logs.
 ///
 /// Sent in the handshake (ConnectorHandshake.backend_health), then whenever state or reason
 /// changes, and once after every re-initialisation attempt, changed or not, before the
@@ -461,7 +470,9 @@ class BackendHealthReport extends $pb.GeneratedMessage {
 /// outstanding; the connector's coalescing covers the case where the gateway gave up waiting
 /// and asked again.
 ///
-/// Answered once, by ReinitializeBackendResult with the same request_id. The connector
+/// Sent only by a gateway that sets HandshakeAck.supports_backend_health, so a connector
+/// that receives it may answer. Answered once, by ReinitializeBackendResult with the same
+/// request_id. The connector
 /// bounds its attempt so that it answers within 30 seconds of receiving this; the gateway
 /// waits at least 45 seconds before it treats the request as timed out. A result arriving
 /// after the gateway has given up is ignored, but the health report sent before it still
@@ -1071,11 +1082,14 @@ class HandshakeAck extends $pb.GeneratedMessage {
     $core.bool? accepted,
     $core.String? reason,
     $0.GatewayId? gatewayId,
+    $core.bool? supportsBackendHealth,
   }) {
     final result = create();
     if (accepted != null) result.accepted = accepted;
     if (reason != null) result.reason = reason;
     if (gatewayId != null) result.gatewayId = gatewayId;
+    if (supportsBackendHealth != null)
+      result.supportsBackendHealth = supportsBackendHealth;
     return result;
   }
 
@@ -1097,6 +1111,7 @@ class HandshakeAck extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'reason')
     ..aOM<$0.GatewayId>(3, _omitFieldNames ? '' : 'gatewayId',
         subBuilder: $0.GatewayId.create)
+    ..aOB(4, _omitFieldNames ? '' : 'supportsBackendHealth')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1148,6 +1163,19 @@ class HandshakeAck extends $pb.GeneratedMessage {
   void clearGatewayId() => $_clearField(3);
   @$pb.TagNumber(3)
   $0.GatewayId ensureGatewayId() => $_ensure(2);
+
+  /// The gateway understands BackendHealthReport and ReinitializeBackendResult. A connector
+  /// sends either on the session only when this is set. Unset — a gateway that predates
+  /// backend health — the connector sends neither and works as before; such a gateway never
+  /// sends ReinitializeBackend.
+  @$pb.TagNumber(4)
+  $core.bool get supportsBackendHealth => $_getBF(3);
+  @$pb.TagNumber(4)
+  set supportsBackendHealth($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSupportsBackendHealth() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSupportsBackendHealth() => $_clearField(4);
 }
 
 /// A device the connector has found. Carries the full Device, not just its descriptor,

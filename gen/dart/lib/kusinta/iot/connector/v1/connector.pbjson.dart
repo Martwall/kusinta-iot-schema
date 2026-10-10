@@ -373,6 +373,13 @@ const HandshakeAck$json = {
       '6': '.kusinta.iot.identity.v1.GatewayId',
       '10': 'gatewayId'
     },
+    {
+      '1': 'supports_backend_health',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '10': 'supportsBackendHealth'
+    },
   ],
 };
 
@@ -380,7 +387,8 @@ const HandshakeAck$json = {
 final $typed_data.Uint8List handshakeAckDescriptor = $convert.base64Decode(
     'CgxIYW5kc2hha2VBY2sSGgoIYWNjZXB0ZWQYASABKAhSCGFjY2VwdGVkEhYKBnJlYXNvbhgCIA'
     'EoCVIGcmVhc29uEkEKCmdhdGV3YXlfaWQYAyABKAsyIi5rdXNpbnRhLmlvdC5pZGVudGl0eS52'
-    'MS5HYXRld2F5SWRSCWdhdGV3YXlJZA==');
+    'MS5HYXRld2F5SWRSCWdhdGV3YXlJZBI2ChdzdXBwb3J0c19iYWNrZW5kX2hlYWx0aBgEIAEoCF'
+    'IVc3VwcG9ydHNCYWNrZW5kSGVhbHRo');
 
 @$core.Deprecated('Use deviceAnnouncementDescriptor instead')
 const DeviceAnnouncement$json = {

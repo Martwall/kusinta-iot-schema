@@ -144,14 +144,16 @@ class LinksReported(_message.Message):
     def __init__(self, links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ...) -> None: ...
 
 class HandshakeAck(_message.Message):
-    __slots__ = ("accepted", "reason", "gateway_id")
+    __slots__ = ("accepted", "reason", "gateway_id", "supports_backend_health")
     ACCEPTED_FIELD_NUMBER: _ClassVar[int]
     REASON_FIELD_NUMBER: _ClassVar[int]
     GATEWAY_ID_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
     accepted: bool
     reason: str
     gateway_id: _identity_pb2.GatewayId
-    def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ...) -> None: ...
+    supports_backend_health: bool
+    def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., supports_backend_health: _Optional[bool] = ...) -> None: ...
 
 class DeviceAnnouncement(_message.Message):
     __slots__ = ("device", "pairing_request_id")

@@ -172,7 +172,9 @@ gateway↔connector stream down, `CONNECTOR_ERROR` is the stream up and the back
 The connector states its backend's health as a `common.v1.BackendHealth` — a state (`OK`,
 `FAILING`) and a coarse `BackendFailureReason` — in its handshake and in a
 `BackendHealthReport` whenever either changes. A connector that never sends one is read as
-`OK`. The report's free-text `detail` is for the gateway's logs; the app is given only the
+`OK`. It reports on the session only to a gateway that sets
+`HandshakeAck.supports_backend_health`; an older gateway is sent nothing new, and the
+connector works as before. The report's free-text `detail` is for the gateway's logs; the app is given only the
 `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud only the problem and
 its `backend_failure` category. While `CONNECTOR_ERROR` is open, the devices behind that
 connector raise no `DEVICE_OFFLINE` of their own, as under `CONNECTOR_OFFLINE`.
@@ -182,7 +184,8 @@ re-initialise its backend connection (`ReinitializeBackend`, answered by
 `ReinitializeBackendResult`); `DONE` means the attempt finished, and whether it worked is the
 health report sent just before it. A technician or the gateway's administrator asks for this
 from the app with `ReconnectConnector`, whose refusals name a `reason` in
-`GatewayError.metadata`, as listed on the message.
+`GatewayError.metadata`, as listed on the message; the app branches on that `reason`, with
+the code only as a fallback.
 
 ## Room climate
 

@@ -174,11 +174,13 @@ enum ProblemKind {
   // connector, as for CONNECTOR_OFFLINE: one problem rather than one per device. A
   // DEVICE_OFFLINE open when the backend starts failing closes with
   // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
-  // When it clears as recovered, the next quarter-hour evaluation judges each device afresh,
-  // and a device still unheard opens a new DEVICE_OFFLINE stamped with that quarter hour;
-  // when CONNECTOR_OFFLINE supersedes it, that problem holds the devices' DEVICE_OFFLINE back
-  // instead. For a device in a home the clear, like any, waits for the quarter hour (see
-  // Problem).
+  // When it clears as recovered, each device behind the connector is judged afresh, as
+  // Problem has it: a device in a home at the next quarter-hour evaluation, a DEVICE_OFFLINE
+  // it still holds opened then and stamped with that quarter hour; any other device at once.
+  // When CONNECTOR_OFFLINE supersedes it instead, that problem holds the devices'
+  // DEVICE_OFFLINE back. For a device in a home, the clear with
+  // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, like any, is sent and stamped at the next
+  // quarter hour, and an error that comes and goes between two of them changes nothing.
   PROBLEM_KIND_CONNECTOR_ERROR = 7;
 
   // Company-owned devices are paired with the gateway but filed in no space. A device a

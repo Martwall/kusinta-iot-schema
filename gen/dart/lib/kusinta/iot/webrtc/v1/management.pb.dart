@@ -2630,22 +2630,31 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
 /// request at a time per connector.
 ///
 /// A refusal is a GatewayError whose metadata "reason" says which, as CommandError.metadata
-/// describes, and whose "detail" is a sentence the app may show:
-///   "UNKNOWN_CONNECTOR"    INVALID_REQUEST. The gateway holds no connector by that id.
+/// describes, and whose "detail" is a sentence the app may show. The app branches on
+/// "reason" for this operation; the code is only the fallback for a reason it does not know,
+/// since GatewayErrorCode is too coarse to say what to do here:
+///   "UNKNOWN_CONNECTOR"    UNAVAILABLE. The gateway holds no connector by that id — it may
+///                          have left just before the request. Not a client bug.
 ///   "CONNECTOR_OFFLINE"    UNAVAILABLE. Its stream to the gateway is down, before or while
 ///                          the request was outstanding; that is CONNECTOR_OFFLINE, and a
 ///                          reconnect of its backend cannot help it.
-///   "NOT_SUPPORTED"        INVALID_REQUEST. The connector does not declare
-///                          ConnectorDescriptor.supports_backend_reinitialize, or answered
-///                          that it has nothing to re-initialise. Do not retry.
+///   "NOT_SUPPORTED"        UNSPECIFIED. The connector does not declare
+///                          ConnectorDescriptor.supports_backend_reinitialize, or declared it
+///                          and answered that it has nothing to re-initialise. Not a client
+///                          bug, and not worth retrying; no code says that, so none is set.
 ///   "ALREADY_IN_PROGRESS"  UNAVAILABLE. A reconnect of this connector is outstanding, from
 ///                          this caller or another. Retry once it is answered.
 ///   "TIMED_OUT"            UNAVAILABLE. The connector did not answer within the gateway's
 ///                          deadline. The attempt may still finish, and its outcome still
 ///                          arrives as backend health.
-///   "REINITIALIZE_FAILED"  INTERNAL. The connector could not attempt it. metadata
-///                          "backend_failure" carries the common.v1.BackendFailureReason by
-///                          its enum name, e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED".
+///   "REINITIALIZE_FAILED"  UNSPECIFIED. The connector could not attempt it. Whether a retry
+///                          can help depends on why — MISCONFIGURED and AUTH_FAILED need a
+///                          person, not a retry — so no code is set and the app reads
+///                          "backend_failure": the common.v1.BackendFailureReason by its enum
+///                          name, e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED". The key is
+///                          omitted when the reason is UNSPECIFIED or a value the gateway's
+///                          schema does not know, there being no name to write; the app then
+///                          shows a generic failure.
 /// The connector's own detail is never in a refusal; GatewayError.message is the gateway's.
 class ReconnectConnector extends $pb.GeneratedMessage {
   factory ReconnectConnector({

@@ -72,6 +72,17 @@ def test_a_connector_descriptor_carries_health_without_the_connector_detail():
     assert _round_trip(descriptor).backend_health == FAILING_UNREACHABLE
 
 
+def test_a_gateway_that_understands_backend_health_says_so_in_its_ack():
+    ack = connector_pb2.HandshakeAck(accepted=True, supports_backend_health=True)
+
+    assert _round_trip(ack).supports_backend_health is True
+
+
+def test_an_older_gateway_ack_reads_as_not_understanding_backend_health():
+    """The connector then sends no health report and no re-initialise result."""
+    assert _round_trip(connector_pb2.HandshakeAck(accepted=True)).supports_backend_health is False
+
+
 # --- gateway → connector: re-initialise -----------------------------------------------
 
 
