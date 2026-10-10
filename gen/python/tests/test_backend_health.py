@@ -170,3 +170,19 @@ def test_a_reconnect_that_cannot_be_attempted_is_a_failed_precondition_with_its_
     )
 
     assert _round_trip(result).error == result.error
+
+
+def test_a_reconnect_that_failed_for_a_connector_fault_is_unavailable():
+    """Only MISCONFIGURED needs a person; any other reason may clear on a retry."""
+    result = envelope_pb2.ManagementResult(
+        in_reply_to="m-1",
+        error=envelope_pb2.GatewayError(
+            code=envelope_pb2.GATEWAY_ERROR_CODE_UNAVAILABLE,
+            metadata={
+                "reason": "REINITIALIZE_FAILED",
+                "backend_failure": "BACKEND_FAILURE_REASON_INTERNAL",
+            },
+        ),
+    )
+
+    assert _round_trip(result).error == result.error
