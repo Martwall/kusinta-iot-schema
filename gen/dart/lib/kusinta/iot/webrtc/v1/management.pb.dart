@@ -2612,6 +2612,103 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
   $4.Timestamp ensureToTime() => $_ensure(3);
 }
 
+/// Asks the gateway to have a connector re-initialise its backend connection: reconnect to
+/// its radio central or network server. Meant to be offered while a
+/// reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR is open for the connector — its
+/// ConnectorDescriptor.backend_health is FAILING — but accepted at any time, since
+/// re-initialising a healthy backend is harmless.
+///
+/// Authorized against the caller's role alone, as StartPairing is: a connector is not a
+/// target the caller reaches the way a space is. ROLE_TECHNICIAN and ROLE_GATEWAY_ADMIN may
+/// ask; anyone else is refused as NOT_ENTITLED, before the connector is looked up, so the
+/// refusal says nothing of which connectors exist.
+///
+/// The gateway forwards it as connector.v1.ReinitializeBackend and answers once the
+/// connector has: with ManagementAck when the attempt was made. That says the attempt
+/// finished, not that it worked. Whether it worked is the connector's backend health, and
+/// when that changed the gateway pushes it in ConnectorsAnnounced before the ack. One
+/// request at a time per connector.
+///
+/// A refusal is a GatewayError whose metadata "reason" says which, as CommandError.metadata
+/// describes, and whose "detail" is a sentence the app may show:
+///   "UNKNOWN_CONNECTOR"    INVALID_REQUEST. The gateway holds no connector by that id.
+///   "CONNECTOR_OFFLINE"    UNAVAILABLE. Its stream to the gateway is down, before or while
+///                          the request was outstanding; that is CONNECTOR_OFFLINE, and a
+///                          reconnect of its backend cannot help it.
+///   "NOT_SUPPORTED"        INVALID_REQUEST. The connector does not declare
+///                          ConnectorDescriptor.supports_backend_reinitialize, or answered
+///                          that it has nothing to re-initialise. Do not retry.
+///   "ALREADY_IN_PROGRESS"  UNAVAILABLE. A reconnect of this connector is outstanding, from
+///                          this caller or another. Retry once it is answered.
+///   "TIMED_OUT"            UNAVAILABLE. The connector did not answer within the gateway's
+///                          deadline. The attempt may still finish, and its outcome still
+///                          arrives as backend health.
+///   "REINITIALIZE_FAILED"  INTERNAL. The connector could not attempt it. metadata
+///                          "backend_failure" carries the common.v1.BackendFailureReason by
+///                          its enum name, e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED".
+/// The connector's own detail is never in a refusal; GatewayError.message is the gateway's.
+class ReconnectConnector extends $pb.GeneratedMessage {
+  factory ReconnectConnector({
+    $0.ConnectorId? connectorId,
+  }) {
+    final result = create();
+    if (connectorId != null) result.connectorId = connectorId;
+    return result;
+  }
+
+  ReconnectConnector._();
+
+  factory ReconnectConnector.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReconnectConnector.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReconnectConnector',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
+        subBuilder: $0.ConnectorId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReconnectConnector clone() => ReconnectConnector()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReconnectConnector copyWith(void Function(ReconnectConnector) updates) =>
+      super.copyWith((message) => updates(message as ReconnectConnector))
+          as ReconnectConnector;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReconnectConnector create() => ReconnectConnector._();
+  @$core.override
+  ReconnectConnector createEmptyInstance() => create();
+  static $pb.PbList<ReconnectConnector> createRepeated() =>
+      $pb.PbList<ReconnectConnector>();
+  @$core.pragma('dart2js:noInline')
+  static ReconnectConnector getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReconnectConnector>(create);
+  static ReconnectConnector? _defaultInstance;
+
+  /// As ConnectorDescriptor.connector_id, and the id a CONNECTOR_ERROR problem's subject
+  /// names (reporting.v1.ProblemSubject.connector_id).
+  @$pb.TagNumber(1)
+  $0.ConnectorId get connectorId => $_getN(0);
+  @$pb.TagNumber(1)
+  set connectorId($0.ConnectorId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectorId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectorId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.ConnectorId ensureConnectorId() => $_ensure(0);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -2635,6 +2732,7 @@ enum ManagementRequest_Request {
   getRoomHistory,
   getPrivacyDisclosure,
   getApartmentClimateSummary,
+  reconnectConnector,
   notSet
 }
 
@@ -2662,6 +2760,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetRoomHistory? getRoomHistory,
     GetPrivacyDisclosure? getPrivacyDisclosure,
     GetApartmentClimateSummary? getApartmentClimateSummary,
+    ReconnectConnector? reconnectConnector,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -2692,6 +2791,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.getPrivacyDisclosure = getPrivacyDisclosure;
     if (getApartmentClimateSummary != null)
       result.getApartmentClimateSummary = getApartmentClimateSummary;
+    if (reconnectConnector != null)
+      result.reconnectConnector = reconnectConnector;
     return result;
   }
 
@@ -2728,6 +2829,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     20: ManagementRequest_Request.getRoomHistory,
     21: ManagementRequest_Request.getPrivacyDisclosure,
     22: ManagementRequest_Request.getApartmentClimateSummary,
+    23: ManagementRequest_Request.reconnectConnector,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2757,7 +2859,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       19,
       20,
       21,
-      22
+      22,
+      23
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -2807,6 +2910,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<GetApartmentClimateSummary>(
         22, _omitFieldNames ? '' : 'getApartmentClimateSummary',
         subBuilder: GetApartmentClimateSummary.create)
+    ..aOM<ReconnectConnector>(23, _omitFieldNames ? '' : 'reconnectConnector',
+        subBuilder: ReconnectConnector.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3077,6 +3182,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearGetApartmentClimateSummary() => $_clearField(22);
   @$pb.TagNumber(22)
   GetApartmentClimateSummary ensureGetApartmentClimateSummary() => $_ensure(21);
+
+  @$pb.TagNumber(23)
+  ReconnectConnector get reconnectConnector => $_getN(22);
+  @$pb.TagNumber(23)
+  set reconnectConnector(ReconnectConnector value) => $_setField(23, value);
+  @$pb.TagNumber(23)
+  $core.bool hasReconnectConnector() => $_has(22);
+  @$pb.TagNumber(23)
+  void clearReconnectConnector() => $_clearField(23);
+  @$pb.TagNumber(23)
+  ReconnectConnector ensureReconnectConnector() => $_ensure(22);
 }
 
 const $core.bool _omitFieldNames =

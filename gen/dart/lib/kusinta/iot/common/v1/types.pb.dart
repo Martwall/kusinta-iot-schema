@@ -14,6 +14,8 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'types.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'types.pbenum.dart';
@@ -94,6 +96,91 @@ class ErrorDetail extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(3)
   $pb.PbMap<$core.String, $core.String> get metadata => $_getMap(2);
+}
+
+/// A connector's backend health, as both legs carry it: connector to gateway inside
+/// connector.v1.BackendHealthReport, and gateway to app on webrtc.v1.ConnectorDescriptor.
+///
+/// Deliberately state and category only. A connector's free-text detail travels beside this,
+/// on the connector leg alone, and is for the gateway's logs: it may name hosts, addresses or
+/// accounts, and it never reaches the app or the cloud. Carrying only this type on the app
+/// leg is what keeps it there.
+class BackendHealth extends $pb.GeneratedMessage {
+  factory BackendHealth({
+    BackendHealthState? state,
+    BackendFailureReason? reason,
+  }) {
+    final result = create();
+    if (state != null) result.state = state;
+    if (reason != null) result.reason = reason;
+    return result;
+  }
+
+  BackendHealth._();
+
+  factory BackendHealth.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BackendHealth.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BackendHealth',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.common.v1'),
+      createEmptyInstance: create)
+    ..e<BackendHealthState>(
+        1, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE,
+        defaultOrMaker: BackendHealthState.BACKEND_HEALTH_STATE_UNSPECIFIED,
+        valueOf: BackendHealthState.valueOf,
+        enumValues: BackendHealthState.values)
+    ..e<BackendFailureReason>(
+        2, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OE,
+        defaultOrMaker: BackendFailureReason.BACKEND_FAILURE_REASON_UNSPECIFIED,
+        valueOf: BackendFailureReason.valueOf,
+        enumValues: BackendFailureReason.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BackendHealth clone() => BackendHealth()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BackendHealth copyWith(void Function(BackendHealth) updates) =>
+      super.copyWith((message) => updates(message as BackendHealth))
+          as BackendHealth;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BackendHealth create() => BackendHealth._();
+  @$core.override
+  BackendHealth createEmptyInstance() => create();
+  static $pb.PbList<BackendHealth> createRepeated() =>
+      $pb.PbList<BackendHealth>();
+  @$core.pragma('dart2js:noInline')
+  static BackendHealth getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BackendHealth>(create);
+  static BackendHealth? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  BackendHealthState get state => $_getN(0);
+  @$pb.TagNumber(1)
+  set state(BackendHealthState value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasState() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearState() => $_clearField(1);
+
+  /// Why, when state is FAILING. UNSPECIFIED otherwise, and ignored when state is not FAILING.
+  @$pb.TagNumber(2)
+  BackendFailureReason get reason => $_getN(1);
+  @$pb.TagNumber(2)
+  set reason(BackendFailureReason value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasReason() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReason() => $_clearField(2);
 }
 
 const $core.bool _omitFieldNames =

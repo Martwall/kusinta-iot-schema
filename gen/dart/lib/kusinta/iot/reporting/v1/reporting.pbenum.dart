@@ -50,7 +50,12 @@ class ProblemKind extends $pb.ProtobufEnum {
       ProblemKind._(6, _omitEnumNames ? '' : 'PROBLEM_KIND_CONNECTOR_OFFLINE');
 
   /// A connector is connected, but the backend it drives is failing: a central it cannot
-  /// reach, a network server answering with errors.
+  /// reach, a network server answering with errors. Open while the connector's latest
+  /// connector.v1.BackendHealthReport says FAILING, cleared with CLEAR_REASON_RECOVERED when
+  /// one says otherwise; a connector that never reports its backend never raises it. When the
+  /// connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
+  /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
+  /// handshake decides it afresh. Nothing of the connector's own detail is reported.
   static const ProblemKind PROBLEM_KIND_CONNECTOR_ERROR =
       ProblemKind._(7, _omitEnumNames ? '' : 'PROBLEM_KIND_CONNECTOR_ERROR');
 
@@ -108,7 +113,8 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_DEVICE_REMOVED =
       ClearReason._(3, _omitEnumNames ? '' : 'CLEAR_REASON_DEVICE_REMOVED');
 
-  /// The connector behind the device went offline; see PROBLEM_KIND_CONNECTOR_OFFLINE.
+  /// The connector behind the device went offline — or, for a CONNECTOR_ERROR, the connector
+  /// itself; see PROBLEM_KIND_CONNECTOR_OFFLINE.
   static const ClearReason CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE =
       ClearReason._(4,
           _omitEnumNames ? '' : 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE');

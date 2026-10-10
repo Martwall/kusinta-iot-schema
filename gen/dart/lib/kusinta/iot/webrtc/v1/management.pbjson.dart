@@ -934,6 +934,26 @@ final $typed_data.Uint8List getApartmentClimateSummaryDescriptor = $convert.base
     'bWUSMwoHdG9fdGltZRgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBnRvVGltZQ'
     '==');
 
+@$core.Deprecated('Use reconnectConnectorDescriptor instead')
+const ReconnectConnector$json = {
+  '1': 'ReconnectConnector',
+  '2': [
+    {
+      '1': 'connector_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.ConnectorId',
+      '10': 'connectorId'
+    },
+  ],
+};
+
+/// Descriptor for `ReconnectConnector`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reconnectConnectorDescriptor = $convert.base64Decode(
+    'ChJSZWNvbm5lY3RDb25uZWN0b3ISRwoMY29ubmVjdG9yX2lkGAEgASgLMiQua3VzaW50YS5pb3'
+    'QuaWRlbnRpdHkudjEuQ29ubmVjdG9ySWRSC2Nvbm5lY3Rvcklk');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -1136,6 +1156,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'getApartmentClimateSummary'
     },
+    {
+      '1': 'reconnect_connector',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ReconnectConnector',
+      '9': 0,
+      '10': 'reconnectConnector'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1179,4 +1208,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'YnJ0Yy52MS5HZXRQcml2YWN5RGlzY2xvc3VyZUgAUhRnZXRQcml2YWN5RGlzY2xvc3VyZRJ2Ch'
     '1nZXRfYXBhcnRtZW50X2NsaW1hdGVfc3VtbWFyeRgWIAEoCzIxLmt1c2ludGEuaW90LndlYnJ0'
     'Yy52MS5HZXRBcGFydG1lbnRDbGltYXRlU3VtbWFyeUgAUhpnZXRBcGFydG1lbnRDbGltYXRlU3'
-    'VtbWFyeUIJCgdyZXF1ZXN0');
+    'VtbWFyeRJcChNyZWNvbm5lY3RfY29ubmVjdG9yGBcgASgLMikua3VzaW50YS5pb3Qud2VicnRj'
+    'LnYxLlJlY29ubmVjdENvbm5lY3RvckgAUhJyZWNvbm5lY3RDb25uZWN0b3JCCQoHcmVxdWVzdA'
+    '==');

@@ -744,7 +744,12 @@ export enum ProblemKind {
 
   /**
    * A connector is connected, but the backend it drives is failing: a central it cannot
-   * reach, a network server answering with errors.
+   * reach, a network server answering with errors. Open while the connector's latest
+   * connector.v1.BackendHealthReport says FAILING, cleared with CLEAR_REASON_RECOVERED when
+   * one says otherwise; a connector that never reports its backend never raises it. When the
+   * connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
+   * CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
+   * handshake decides it afresh. Nothing of the connector's own detail is reported.
    *
    * @generated from enum value: PROBLEM_KIND_CONNECTOR_ERROR = 7;
    */
@@ -811,7 +816,8 @@ export enum ClearReason {
   DEVICE_REMOVED = 3,
 
   /**
-   * The connector behind the device went offline; see PROBLEM_KIND_CONNECTOR_OFFLINE.
+   * The connector behind the device went offline — or, for a CONNECTOR_ERROR, the connector
+   * itself; see PROBLEM_KIND_CONNECTOR_OFFLINE.
    *
    * @generated from enum value: CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE = 4;
    */

@@ -181,7 +181,7 @@ class LinkChanged(_message.Message):
     def __init__(self, link: _Optional[_Union[_link_pb2.DeviceLink, _Mapping]] = ..., removed: _Optional[bool] = ...) -> None: ...
 
 class ConnectorDescriptor(_message.Message):
-    __slots__ = ("connector_id", "display_name", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description")
+    __slots__ = ("connector_id", "display_name", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description", "backend_health", "supports_backend_reinitialize")
     CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
     SUPPORTED_DEVICE_TYPE_IDS_FIELD_NUMBER: _ClassVar[int]
@@ -190,6 +190,8 @@ class ConnectorDescriptor(_message.Message):
     BROKERS_LINKS_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_BACKEND_REINITIALIZE_FIELD_NUMBER: _ClassVar[int]
     connector_id: _identity_pb2.ConnectorId
     display_name: str
     supported_device_type_ids: _containers.RepeatedScalarFieldContainer[int]
@@ -198,7 +200,9 @@ class ConnectorDescriptor(_message.Message):
     brokers_links: bool
     kind: _types_pb2.ConnectorKind
     description: str
-    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ...) -> None: ...
+    backend_health: _types_pb2.BackendHealth
+    supports_backend_reinitialize: bool
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ..., backend_health: _Optional[_Union[_types_pb2.BackendHealth, _Mapping]] = ..., supports_backend_reinitialize: _Optional[bool] = ...) -> None: ...
 
 class ConnectorsAnnounced(_message.Message):
     __slots__ = ("connectors",)

@@ -1063,6 +1063,61 @@ export declare type GetApartmentClimateSummary = Message<"kusinta.iot.webrtc.v1.
 export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentClimateSummary>;
 
 /**
+ * Asks the gateway to have a connector re-initialise its backend connection: reconnect to
+ * its radio central or network server. Meant to be offered while a
+ * reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR is open for the connector — its
+ * ConnectorDescriptor.backend_health is FAILING — but accepted at any time, since
+ * re-initialising a healthy backend is harmless.
+ *
+ * Authorized against the caller's role alone, as StartPairing is: a connector is not a
+ * target the caller reaches the way a space is. ROLE_TECHNICIAN and ROLE_GATEWAY_ADMIN may
+ * ask; anyone else is refused as NOT_ENTITLED, before the connector is looked up, so the
+ * refusal says nothing of which connectors exist.
+ *
+ * The gateway forwards it as connector.v1.ReinitializeBackend and answers once the
+ * connector has: with ManagementAck when the attempt was made. That says the attempt
+ * finished, not that it worked. Whether it worked is the connector's backend health, and
+ * when that changed the gateway pushes it in ConnectorsAnnounced before the ack. One
+ * request at a time per connector.
+ *
+ * A refusal is a GatewayError whose metadata "reason" says which, as CommandError.metadata
+ * describes, and whose "detail" is a sentence the app may show:
+ *   "UNKNOWN_CONNECTOR"    INVALID_REQUEST. The gateway holds no connector by that id.
+ *   "CONNECTOR_OFFLINE"    UNAVAILABLE. Its stream to the gateway is down, before or while
+ *                          the request was outstanding; that is CONNECTOR_OFFLINE, and a
+ *                          reconnect of its backend cannot help it.
+ *   "NOT_SUPPORTED"        INVALID_REQUEST. The connector does not declare
+ *                          ConnectorDescriptor.supports_backend_reinitialize, or answered
+ *                          that it has nothing to re-initialise. Do not retry.
+ *   "ALREADY_IN_PROGRESS"  UNAVAILABLE. A reconnect of this connector is outstanding, from
+ *                          this caller or another. Retry once it is answered.
+ *   "TIMED_OUT"            UNAVAILABLE. The connector did not answer within the gateway's
+ *                          deadline. The attempt may still finish, and its outcome still
+ *                          arrives as backend health.
+ *   "REINITIALIZE_FAILED"  INTERNAL. The connector could not attempt it. metadata
+ *                          "backend_failure" carries the common.v1.BackendFailureReason by
+ *                          its enum name, e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED".
+ * The connector's own detail is never in a refusal; GatewayError.message is the gateway's.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ReconnectConnector
+ */
+export declare type ReconnectConnector = Message<"kusinta.iot.webrtc.v1.ReconnectConnector"> & {
+  /**
+   * As ConnectorDescriptor.connector_id, and the id a CONNECTOR_ERROR problem's subject
+   * names (reporting.v1.ProblemSubject.connector_id).
+   *
+   * @generated from field: kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+   */
+  connectorId?: ConnectorId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ReconnectConnector.
+ * Use `create(ReconnectConnectorSchema)` to create a new message.
+ */
+export declare const ReconnectConnectorSchema: GenMessage<ReconnectConnector>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
  */
 export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.ManagementRequest"> & {
@@ -1201,6 +1256,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: GetApartmentClimateSummary;
     case: "getApartmentClimateSummary";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ReconnectConnector reconnect_connector = 23;
+     */
+    value: ReconnectConnector;
+    case: "reconnectConnector";
   } | { case: undefined; value?: undefined };
 };
 

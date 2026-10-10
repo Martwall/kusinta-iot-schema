@@ -548,6 +548,21 @@ const ConnectorDescriptor$json = {
       '10': 'kind'
     },
     {'1': 'description', '3': 8, '4': 1, '5': 9, '10': 'description'},
+    {
+      '1': 'backend_health',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.BackendHealth',
+      '10': 'backendHealth'
+    },
+    {
+      '1': 'supports_backend_reinitialize',
+      '3': 10,
+      '4': 1,
+      '5': 8,
+      '10': 'supportsBackendReinitialize'
+    },
   ],
 };
 
@@ -560,7 +575,10 @@ final $typed_data.Uint8List connectorDescriptorDescriptor = $convert.base64Decod
     'dHNQYWlyaW5nEjMKFXN1cHBvcnRzX3Byb3Zpc2lvbmluZxgFIAEoCFIUc3VwcG9ydHNQcm92aX'
     'Npb25pbmcSIwoNYnJva2Vyc19saW5rcxgGIAEoCFIMYnJva2Vyc0xpbmtzEjgKBGtpbmQYByAB'
     'KA4yJC5rdXNpbnRhLmlvdC5jb21tb24udjEuQ29ubmVjdG9yS2luZFIEa2luZBIgCgtkZXNjcm'
-    'lwdGlvbhgIIAEoCVILZGVzY3JpcHRpb24=');
+    'lwdGlvbhgIIAEoCVILZGVzY3JpcHRpb24SSwoOYmFja2VuZF9oZWFsdGgYCSABKAsyJC5rdXNp'
+    'bnRhLmlvdC5jb21tb24udjEuQmFja2VuZEhlYWx0aFINYmFja2VuZEhlYWx0aBJCCh1zdXBwb3'
+    'J0c19iYWNrZW5kX3JlaW5pdGlhbGl6ZRgKIAEoCFIbc3VwcG9ydHNCYWNrZW5kUmVpbml0aWFs'
+    'aXpl');
 
 @$core.Deprecated('Use connectorsAnnouncedDescriptor instead')
 const ConnectorsAnnounced$json = {

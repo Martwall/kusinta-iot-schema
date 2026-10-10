@@ -100,6 +100,43 @@ final $typed_data.Uint8List connectorKindDescriptor = $convert.base64Decode(
     'Cg1Db25uZWN0b3JLaW5kEh4KGkNPTk5FQ1RPUl9LSU5EX1VOU1BFQ0lGSUVEEAASHwobQ09OTk'
     'VDVE9SX0tJTkRfSE9NRU1BVElDX0lQEAESGgoWQ09OTkVDVE9SX0tJTkRfTE9SQVdBThAC');
 
+@$core.Deprecated('Use backendHealthStateDescriptor instead')
+const BackendHealthState$json = {
+  '1': 'BackendHealthState',
+  '2': [
+    {'1': 'BACKEND_HEALTH_STATE_UNSPECIFIED', '2': 0},
+    {'1': 'BACKEND_HEALTH_STATE_OK', '2': 1},
+    {'1': 'BACKEND_HEALTH_STATE_FAILING', '2': 2},
+  ],
+};
+
+/// Descriptor for `BackendHealthState`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List backendHealthStateDescriptor = $convert.base64Decode(
+    'ChJCYWNrZW5kSGVhbHRoU3RhdGUSJAogQkFDS0VORF9IRUFMVEhfU1RBVEVfVU5TUEVDSUZJRU'
+    'QQABIbChdCQUNLRU5EX0hFQUxUSF9TVEFURV9PSxABEiAKHEJBQ0tFTkRfSEVBTFRIX1NUQVRF'
+    'X0ZBSUxJTkcQAg==');
+
+@$core.Deprecated('Use backendFailureReasonDescriptor instead')
+const BackendFailureReason$json = {
+  '1': 'BackendFailureReason',
+  '2': [
+    {'1': 'BACKEND_FAILURE_REASON_UNSPECIFIED', '2': 0},
+    {'1': 'BACKEND_FAILURE_REASON_UNREACHABLE', '2': 1},
+    {'1': 'BACKEND_FAILURE_REASON_AUTH_FAILED', '2': 2},
+    {'1': 'BACKEND_FAILURE_REASON_BACKEND_ERROR', '2': 3},
+    {'1': 'BACKEND_FAILURE_REASON_MISCONFIGURED', '2': 4},
+    {'1': 'BACKEND_FAILURE_REASON_INTERNAL', '2': 5},
+  ],
+};
+
+/// Descriptor for `BackendFailureReason`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List backendFailureReasonDescriptor = $convert.base64Decode(
+    'ChRCYWNrZW5kRmFpbHVyZVJlYXNvbhImCiJCQUNLRU5EX0ZBSUxVUkVfUkVBU09OX1VOU1BFQ0'
+    'lGSUVEEAASJgoiQkFDS0VORF9GQUlMVVJFX1JFQVNPTl9VTlJFQUNIQUJMRRABEiYKIkJBQ0tF'
+    'TkRfRkFJTFVSRV9SRUFTT05fQVVUSF9GQUlMRUQQAhIoCiRCQUNLRU5EX0ZBSUxVUkVfUkVBU0'
+    '9OX0JBQ0tFTkRfRVJST1IQAxIoCiRCQUNLRU5EX0ZBSUxVUkVfUkVBU09OX01JU0NPTkZJR1VS'
+    'RUQQBBIjCh9CQUNLRU5EX0ZBSUxVUkVfUkVBU09OX0lOVEVSTkFMEAU=');
+
 @$core.Deprecated('Use errorDetailDescriptor instead')
 const ErrorDetail$json = {
   '1': 'ErrorDetail',
@@ -134,3 +171,32 @@ final $typed_data.Uint8List errorDetailDescriptor = $convert.base64Decode(
     'NhZ2USTAoIbWV0YWRhdGEYAyADKAsyMC5rdXNpbnRhLmlvdC5jb21tb24udjEuRXJyb3JEZXRh'
     'aWwuTWV0YWRhdGFFbnRyeVIIbWV0YWRhdGEaOwoNTWV0YWRhdGFFbnRyeRIQCgNrZXkYASABKA'
     'lSA2tleRIUCgV2YWx1ZRgCIAEoCVIFdmFsdWU6AjgB');
+
+@$core.Deprecated('Use backendHealthDescriptor instead')
+const BackendHealth$json = {
+  '1': 'BackendHealth',
+  '2': [
+    {
+      '1': 'state',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.BackendHealthState',
+      '10': 'state'
+    },
+    {
+      '1': 'reason',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.BackendFailureReason',
+      '10': 'reason'
+    },
+  ],
+};
+
+/// Descriptor for `BackendHealth`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List backendHealthDescriptor = $convert.base64Decode(
+    'Cg1CYWNrZW5kSGVhbHRoEj8KBXN0YXRlGAEgASgOMikua3VzaW50YS5pb3QuY29tbW9uLnYxLk'
+    'JhY2tlbmRIZWFsdGhTdGF0ZVIFc3RhdGUSQwoGcmVhc29uGAIgASgOMisua3VzaW50YS5pb3Qu'
+    'Y29tbW9uLnYxLkJhY2tlbmRGYWlsdXJlUmVhc29uUgZyZWFzb24=');

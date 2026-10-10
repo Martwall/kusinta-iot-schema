@@ -163,6 +163,25 @@ A refused command or write says why in `CommandError`. `code` is the closed voca
 device's room), and `detail` is a sentence the app may show. `message` is for logs only and
 is never rendered to a user.
 
+## Connector backend health
+
+A connector can be connected to the gateway while the backend it drives — a radio central, a
+network server — is failing. The two are kept apart: `CONNECTOR_OFFLINE` is the
+gateway↔connector stream down, `CONNECTOR_ERROR` is the stream up and the backend failing.
+
+The connector states its backend's health as a `common.v1.BackendHealth` — a state (`OK`,
+`FAILING`) and a coarse `BackendFailureReason` — in its handshake and in a
+`BackendHealthReport` whenever either changes. A connector that never sends one is read as
+`OK`. The report's free-text `detail` is for the gateway's logs; the app is given only the
+`BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud only the problem.
+
+The gateway can ask a connector that declares `supports_backend_reinitialize` to
+re-initialise its backend connection (`ReinitializeBackend`, answered by
+`ReinitializeBackendResult`); `DONE` means the attempt finished, and whether it worked is the
+health report sent just before it. A technician or the gateway's administrator asks for this
+from the app with `ReconnectConnector`, whose refusals name a `reason` in
+`GatewayError.metadata`, as listed on the message.
+
 ## Room climate
 
 A person controls a **room's** temperature, not a device's. `climate/v1/climate.proto`

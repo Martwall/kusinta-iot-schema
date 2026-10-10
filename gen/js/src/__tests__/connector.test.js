@@ -10,13 +10,21 @@ import {
   DeviceRemovalSchema,
   ConnectorInfoSchema,
 } from '../kusinta/iot/connector/v1/connector_pb.js'
-import { ConnectorTransport, ConnectorKind } from '../kusinta/iot/common/v1/types_pb.js'
+import {
+  ConnectorTransport,
+  ConnectorKind,
+  BackendHealthState,
+  BackendFailureReason,
+} from '../kusinta/iot/common/v1/types_pb.js'
 import {
   DeviceCommandSchema,
   CommandErrorCode,
   CommandResultSchema,
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
-import { ConnectorCommandResultSchema } from '../kusinta/iot/connector/v1/connector_pb.js'
+import {
+  ConnectorCommandResultSchema,
+  ReinitializeOutcome,
+} from '../kusinta/iot/connector/v1/connector_pb.js'
 
 describe('ConnectorHandshake', () => {
   it('round-trips with known_devices', () => {
@@ -272,5 +280,60 @@ describe('ConnectorInfo capabilities', () => {
     expect(decoded.supportsProvisioning).toBe(false)
     expect(decoded.brokersLinks).toBe(false)
     expect(decoded.kind).toBe(ConnectorKind.UNSPECIFIED)
+  })
+})
+
+describe('backend health and re-initialise', () => {
+  it('leaves the health unset on a handshake that states none', () => {
+    const decoded = fromBinary(
+      ConnectorHandshakeSchema,
+      toBinary(ConnectorHandshakeSchema, create(ConnectorHandshakeSchema, {})),
+    )
+    expect(decoded.backendHealth).toBeUndefined()
+  })
+
+  it('carries a failing backend and its log detail on the session', () => {
+    const msg = create(SessionRequestSchema, {
+      payload: {
+        case: 'backendHealth',
+        value: {
+          health: { state: BackendHealthState.FAILING, reason: BackendFailureReason.AUTH_FAILED },
+          detail: 'network server answered 401',
+        },
+      },
+    })
+    const decoded = fromBinary(SessionRequestSchema, toBinary(SessionRequestSchema, msg))
+    expect(decoded.payload).toMatchObject({
+      case: 'backendHealth',
+      value: {
+        health: { state: BackendHealthState.FAILING, reason: BackendFailureReason.AUTH_FAILED },
+        detail: 'network server answered 401',
+      },
+    })
+  })
+
+  it('round-trips a re-initialise request and its result', () => {
+    const request = create(SessionResponseSchema, {
+      payload: { case: 'reinitializeBackend', value: { requestId: 'reinit-1' } },
+    })
+    const result = create(SessionRequestSchema, {
+      payload: {
+        case: 'reinitializeBackendResult',
+        value: { requestId: 'reinit-1', outcome: ReinitializeOutcome.DONE },
+      },
+    })
+    const decodedRequest = fromBinary(SessionResponseSchema, toBinary(SessionResponseSchema, request))
+    const decodedResult = fromBinary(SessionRequestSchema, toBinary(SessionRequestSchema, result))
+    expect(decodedRequest.payload).toMatchObject({ case: 'reinitializeBackend', value: { requestId: 'reinit-1' } })
+    expect(decodedResult.payload).toMatchObject({
+      case: 'reinitializeBackendResult',
+      value: { requestId: 'reinit-1', outcome: ReinitializeOutcome.DONE },
+    })
+  })
+
+  it('declares the re-initialise capability on the connector info', () => {
+    const info = create(ConnectorInfoSchema, { supportsBackendReinitialize: true })
+    const decoded = fromBinary(ConnectorInfoSchema, toBinary(ConnectorInfoSchema, info))
+    expect(decoded.supportsBackendReinitialize).toBe(true)
   })
 })

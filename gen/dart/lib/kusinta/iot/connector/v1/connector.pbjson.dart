@@ -14,6 +14,23 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use reinitializeOutcomeDescriptor instead')
+const ReinitializeOutcome$json = {
+  '1': 'ReinitializeOutcome',
+  '2': [
+    {'1': 'REINITIALIZE_OUTCOME_UNSPECIFIED', '2': 0},
+    {'1': 'REINITIALIZE_OUTCOME_DONE', '2': 1},
+    {'1': 'REINITIALIZE_OUTCOME_FAILED', '2': 2},
+    {'1': 'REINITIALIZE_OUTCOME_NOT_SUPPORTED', '2': 3},
+  ],
+};
+
+/// Descriptor for `ReinitializeOutcome`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List reinitializeOutcomeDescriptor = $convert.base64Decode(
+    'ChNSZWluaXRpYWxpemVPdXRjb21lEiQKIFJFSU5JVElBTElaRV9PVVRDT01FX1VOU1BFQ0lGSU'
+    'VEEAASHQoZUkVJTklUSUFMSVpFX09VVENPTUVfRE9ORRABEh8KG1JFSU5JVElBTElaRV9PVVRD'
+    'T01FX0ZBSUxFRBACEiYKIlJFSU5JVElBTElaRV9PVVRDT01FX05PVF9TVVBQT1JURUQQAw==');
+
 @$core.Deprecated('Use connectorInfoDescriptor instead')
 const ConnectorInfo$json = {
   '1': 'ConnectorInfo',
@@ -62,6 +79,13 @@ const ConnectorInfo$json = {
       '10': 'kind'
     },
     {'1': 'description', '3': 11, '4': 1, '5': 9, '10': 'description'},
+    {
+      '1': 'supports_backend_reinitialize',
+      '3': 12,
+      '4': 1,
+      '5': 8,
+      '10': 'supportsBackendReinitialize'
+    },
   ],
 };
 
@@ -76,7 +100,8 @@ final $typed_data.Uint8List connectorInfoDescriptor = $convert.base64Decode(
     'KAhSD3N1cHBvcnRzUGFpcmluZxIzChVzdXBwb3J0c19wcm92aXNpb25pbmcYCCABKAhSFHN1cH'
     'BvcnRzUHJvdmlzaW9uaW5nEiMKDWJyb2tlcnNfbGlua3MYCSABKAhSDGJyb2tlcnNMaW5rcxI4'
     'CgRraW5kGAogASgOMiQua3VzaW50YS5pb3QuY29tbW9uLnYxLkNvbm5lY3RvcktpbmRSBGtpbm'
-    'QSIAoLZGVzY3JpcHRpb24YCyABKAlSC2Rlc2NyaXB0aW9u');
+    'QSIAoLZGVzY3JpcHRpb24YCyABKAlSC2Rlc2NyaXB0aW9uEkIKHXN1cHBvcnRzX2JhY2tlbmRf'
+    'cmVpbml0aWFsaXplGAwgASgIUhtzdXBwb3J0c0JhY2tlbmRSZWluaXRpYWxpemU=');
 
 @$core.Deprecated('Use connectorHandshakeDescriptor instead')
 const ConnectorHandshake$json = {
@@ -106,6 +131,14 @@ const ConnectorHandshake$json = {
       '6': '.kusinta.iot.link.v1.DeviceLink',
       '10': 'knownLinks'
     },
+    {
+      '1': 'backend_health',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.BackendHealthReport',
+      '10': 'backendHealth'
+    },
   ],
 };
 
@@ -114,7 +147,75 @@ final $typed_data.Uint8List connectorHandshakeDescriptor = $convert.base64Decode
     'ChJDb25uZWN0b3JIYW5kc2hha2USOwoEaW5mbxgBIAEoCzInLmt1c2ludGEuaW90LmNvbm5lY3'
     'Rvci52MS5Db25uZWN0b3JJbmZvUgRpbmZvEkIKDWtub3duX2RldmljZXMYAiADKAsyHS5rdXNp'
     'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlUgxrbm93bkRldmljZXMSQAoLa25vd25fbGlua3MYAy'
-    'ADKAsyHy5rdXNpbnRhLmlvdC5saW5rLnYxLkRldmljZUxpbmtSCmtub3duTGlua3M=');
+    'ADKAsyHy5rdXNpbnRhLmlvdC5saW5rLnYxLkRldmljZUxpbmtSCmtub3duTGlua3MSVAoOYmFj'
+    'a2VuZF9oZWFsdGgYBCABKAsyLS5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuQmFja2VuZEhlYW'
+    'x0aFJlcG9ydFINYmFja2VuZEhlYWx0aA==');
+
+@$core.Deprecated('Use backendHealthReportDescriptor instead')
+const BackendHealthReport$json = {
+  '1': 'BackendHealthReport',
+  '2': [
+    {
+      '1': 'health',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.BackendHealth',
+      '10': 'health'
+    },
+    {'1': 'detail', '3': 2, '4': 1, '5': 9, '10': 'detail'},
+  ],
+};
+
+/// Descriptor for `BackendHealthReport`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List backendHealthReportDescriptor = $convert.base64Decode(
+    'ChNCYWNrZW5kSGVhbHRoUmVwb3J0EjwKBmhlYWx0aBgBIAEoCzIkLmt1c2ludGEuaW90LmNvbW'
+    '1vbi52MS5CYWNrZW5kSGVhbHRoUgZoZWFsdGgSFgoGZGV0YWlsGAIgASgJUgZkZXRhaWw=');
+
+@$core.Deprecated('Use reinitializeBackendDescriptor instead')
+const ReinitializeBackend$json = {
+  '1': 'ReinitializeBackend',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+  ],
+};
+
+/// Descriptor for `ReinitializeBackend`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reinitializeBackendDescriptor = $convert.base64Decode(
+    'ChNSZWluaXRpYWxpemVCYWNrZW5kEh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZA==');
+
+@$core.Deprecated('Use reinitializeBackendResultDescriptor instead')
+const ReinitializeBackendResult$json = {
+  '1': 'ReinitializeBackendResult',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'outcome',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.connector.v1.ReinitializeOutcome',
+      '10': 'outcome'
+    },
+    {
+      '1': 'reason',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.BackendFailureReason',
+      '10': 'reason'
+    },
+    {'1': 'detail', '3': 4, '4': 1, '5': 9, '10': 'detail'},
+  ],
+};
+
+/// Descriptor for `ReinitializeBackendResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reinitializeBackendResultDescriptor = $convert.base64Decode(
+    'ChlSZWluaXRpYWxpemVCYWNrZW5kUmVzdWx0Eh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3'
+    'RJZBJHCgdvdXRjb21lGAIgASgOMi0ua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLlJlaW5pdGlh'
+    'bGl6ZU91dGNvbWVSB291dGNvbWUSQwoGcmVhc29uGAMgASgOMisua3VzaW50YS5pb3QuY29tbW'
+    '9uLnYxLkJhY2tlbmRGYWlsdXJlUmVhc29uUgZyZWFzb24SFgoGZGV0YWlsGAQgASgJUgZkZXRh'
+    'aWw=');
 
 @$core.Deprecated('Use createLinkDescriptor instead')
 const CreateLink$json = {
@@ -642,6 +743,24 @@ const SessionRequest$json = {
       '9': 0,
       '10': 'linksReported'
     },
+    {
+      '1': 'backend_health',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.BackendHealthReport',
+      '9': 0,
+      '10': 'backendHealth'
+    },
+    {
+      '1': 'reinitialize_backend_result',
+      '3': 15,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.ReinitializeBackendResult',
+      '9': 0,
+      '10': 'reinitializeBackendResult'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -668,7 +787,11 @@ final $typed_data.Uint8List sessionRequestDescriptor = $convert.base64Decode(
     'JpbmdNb2RlRW5kZWRIAFIQcGFpcmluZ01vZGVFbmRlZBJHCgtsaW5rX3Jlc3VsdBgMIAEoCzIk'
     'Lmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5MaW5rUmVzdWx0SABSCmxpbmtSZXN1bHQSUAoObG'
     'lua3NfcmVwb3J0ZWQYDSABKAsyJy5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuTGlua3NSZXBv'
-    'cnRlZEgAUg1saW5rc1JlcG9ydGVkQgkKB3BheWxvYWQ=');
+    'cnRlZEgAUg1saW5rc1JlcG9ydGVkElYKDmJhY2tlbmRfaGVhbHRoGA4gASgLMi0ua3VzaW50YS'
+    '5pb3QuY29ubmVjdG9yLnYxLkJhY2tlbmRIZWFsdGhSZXBvcnRIAFINYmFja2VuZEhlYWx0aBJ1'
+    'ChtyZWluaXRpYWxpemVfYmFja2VuZF9yZXN1bHQYDyABKAsyMy5rdXNpbnRhLmlvdC5jb25uZW'
+    'N0b3IudjEuUmVpbml0aWFsaXplQmFja2VuZFJlc3VsdEgAUhlyZWluaXRpYWxpemVCYWNrZW5k'
+    'UmVzdWx0QgkKB3BheWxvYWQ=');
 
 @$core.Deprecated('Use sessionResponseDescriptor instead')
 const SessionResponse$json = {
@@ -773,6 +896,15 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'listLinks'
     },
+    {
+      '1': 'reinitialize_backend',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.ReinitializeBackend',
+      '9': 0,
+      '10': 'reinitializeBackend'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -800,4 +932,6 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'IudjEuQ3JlYXRlTGlua0gAUgpjcmVhdGVMaW5rEkcKC3JlbW92ZV9saW5rGAwgASgLMiQua3Vz'
     'aW50YS5pb3QuY29ubmVjdG9yLnYxLlJlbW92ZUxpbmtIAFIKcmVtb3ZlTGluaxJECgpsaXN0X2'
     'xpbmtzGA0gASgLMiMua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkxpc3RMaW5rc0gAUglsaXN0'
-    'TGlua3NCCQoHcGF5bG9hZEoECAQQBQ==');
+    'TGlua3MSYgoUcmVpbml0aWFsaXplX2JhY2tlbmQYDiABKAsyLS5rdXNpbnRhLmlvdC5jb25uZW'
+    'N0b3IudjEuUmVpbml0aWFsaXplQmFja2VuZEgAUhNyZWluaXRpYWxpemVCYWNrZW5kQgkKB3Bh'
+    'eWxvYWRKBAgEEAU=');

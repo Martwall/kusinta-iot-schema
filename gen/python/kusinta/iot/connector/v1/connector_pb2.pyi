@@ -10,6 +10,7 @@ from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.link.v1 import link_pb2 as _link_pb2
 from kusinta.iot.webrtc.v1 import command_pb2 as _command_pb2
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from collections.abc import Iterable as _Iterable, Mapping as _Mapping
@@ -17,8 +18,19 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class ReinitializeOutcome(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    REINITIALIZE_OUTCOME_UNSPECIFIED: _ClassVar[ReinitializeOutcome]
+    REINITIALIZE_OUTCOME_DONE: _ClassVar[ReinitializeOutcome]
+    REINITIALIZE_OUTCOME_FAILED: _ClassVar[ReinitializeOutcome]
+    REINITIALIZE_OUTCOME_NOT_SUPPORTED: _ClassVar[ReinitializeOutcome]
+REINITIALIZE_OUTCOME_UNSPECIFIED: ReinitializeOutcome
+REINITIALIZE_OUTCOME_DONE: ReinitializeOutcome
+REINITIALIZE_OUTCOME_FAILED: ReinitializeOutcome
+REINITIALIZE_OUTCOME_NOT_SUPPORTED: ReinitializeOutcome
+
 class ConnectorInfo(_message.Message):
-    __slots__ = ("connector_id", "display_name", "version", "transport", "endpoint", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description")
+    __slots__ = ("connector_id", "display_name", "version", "transport", "endpoint", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description", "supports_backend_reinitialize")
     CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
     VERSION_FIELD_NUMBER: _ClassVar[int]
@@ -30,6 +42,7 @@ class ConnectorInfo(_message.Message):
     BROKERS_LINKS_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    SUPPORTS_BACKEND_REINITIALIZE_FIELD_NUMBER: _ClassVar[int]
     connector_id: _identity_pb2.ConnectorId
     display_name: str
     version: str
@@ -41,17 +54,46 @@ class ConnectorInfo(_message.Message):
     brokers_links: bool
     kind: _types_pb2.ConnectorKind
     description: str
-    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., version: _Optional[str] = ..., transport: _Optional[_Union[_types_pb2.ConnectorTransport, str]] = ..., endpoint: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ...) -> None: ...
+    supports_backend_reinitialize: bool
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., version: _Optional[str] = ..., transport: _Optional[_Union[_types_pb2.ConnectorTransport, str]] = ..., endpoint: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ..., supports_backend_reinitialize: _Optional[bool] = ...) -> None: ...
 
 class ConnectorHandshake(_message.Message):
-    __slots__ = ("info", "known_devices", "known_links")
+    __slots__ = ("info", "known_devices", "known_links", "backend_health")
     INFO_FIELD_NUMBER: _ClassVar[int]
     KNOWN_DEVICES_FIELD_NUMBER: _ClassVar[int]
     KNOWN_LINKS_FIELD_NUMBER: _ClassVar[int]
+    BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
     info: ConnectorInfo
     known_devices: _containers.RepeatedCompositeFieldContainer[_device_pb2.Device]
     known_links: _containers.RepeatedCompositeFieldContainer[_link_pb2.DeviceLink]
-    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., known_links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ...) -> None: ...
+    backend_health: BackendHealthReport
+    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., known_links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ...) -> None: ...
+
+class BackendHealthReport(_message.Message):
+    __slots__ = ("health", "detail")
+    HEALTH_FIELD_NUMBER: _ClassVar[int]
+    DETAIL_FIELD_NUMBER: _ClassVar[int]
+    health: _types_pb2.BackendHealth
+    detail: str
+    def __init__(self, health: _Optional[_Union[_types_pb2.BackendHealth, _Mapping]] = ..., detail: _Optional[str] = ...) -> None: ...
+
+class ReinitializeBackend(_message.Message):
+    __slots__ = ("request_id",)
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    def __init__(self, request_id: _Optional[str] = ...) -> None: ...
+
+class ReinitializeBackendResult(_message.Message):
+    __slots__ = ("request_id", "outcome", "reason", "detail")
+    REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    OUTCOME_FIELD_NUMBER: _ClassVar[int]
+    REASON_FIELD_NUMBER: _ClassVar[int]
+    DETAIL_FIELD_NUMBER: _ClassVar[int]
+    request_id: str
+    outcome: ReinitializeOutcome
+    reason: _types_pb2.BackendFailureReason
+    detail: str
+    def __init__(self, request_id: _Optional[str] = ..., outcome: _Optional[_Union[ReinitializeOutcome, str]] = ..., reason: _Optional[_Union[_types_pb2.BackendFailureReason, str]] = ..., detail: _Optional[str] = ...) -> None: ...
 
 class CreateLink(_message.Message):
     __slots__ = ("link_id", "sender", "receiver", "function")
@@ -198,7 +240,7 @@ class PairingModeEnded(_message.Message):
     def __init__(self, request_id: _Optional[str] = ..., devices_attributed: _Optional[int] = ..., error: _Optional[_Union[_pairing_pb2.PairingErrorDetail, _Mapping]] = ...) -> None: ...
 
 class SessionRequest(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake", "property_update", "device_announced", "device_removed", "command_result", "heartbeat", "device_events", "pairing_mode_result", "pairing_mode_ended", "link_result", "links_reported")
+    __slots__ = ("message_id", "sent_at", "handshake", "property_update", "device_announced", "device_removed", "command_result", "heartbeat", "device_events", "pairing_mode_result", "pairing_mode_ended", "link_result", "links_reported", "backend_health", "reinitialize_backend_result")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_FIELD_NUMBER: _ClassVar[int]
@@ -212,6 +254,8 @@ class SessionRequest(_message.Message):
     PAIRING_MODE_ENDED_FIELD_NUMBER: _ClassVar[int]
     LINK_RESULT_FIELD_NUMBER: _ClassVar[int]
     LINKS_REPORTED_FIELD_NUMBER: _ClassVar[int]
+    BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
+    REINITIALIZE_BACKEND_RESULT_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake: ConnectorHandshake
@@ -225,10 +269,12 @@ class SessionRequest(_message.Message):
     pairing_mode_ended: PairingModeEnded
     link_result: LinkResult
     links_reported: LinksReported
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[ConnectorCommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_mode_result: _Optional[_Union[PairingModeResult, _Mapping]] = ..., pairing_mode_ended: _Optional[_Union[PairingModeEnded, _Mapping]] = ..., link_result: _Optional[_Union[LinkResult, _Mapping]] = ..., links_reported: _Optional[_Union[LinksReported, _Mapping]] = ...) -> None: ...
+    backend_health: BackendHealthReport
+    reinitialize_backend_result: ReinitializeBackendResult
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[ConnectorCommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_mode_result: _Optional[_Union[PairingModeResult, _Mapping]] = ..., pairing_mode_ended: _Optional[_Union[PairingModeEnded, _Mapping]] = ..., link_result: _Optional[_Union[LinkResult, _Mapping]] = ..., links_reported: _Optional[_Union[LinksReported, _Mapping]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ..., reinitialize_backend_result: _Optional[_Union[ReinitializeBackendResult, _Mapping]] = ...) -> None: ...
 
 class SessionResponse(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command", "execute_attribute_write", "enter_pairing_mode", "create_link", "remove_link", "list_links")
+    __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command", "execute_attribute_write", "enter_pairing_mode", "create_link", "remove_link", "list_links", "reinitialize_backend")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_ACK_FIELD_NUMBER: _ClassVar[int]
@@ -241,6 +287,7 @@ class SessionResponse(_message.Message):
     CREATE_LINK_FIELD_NUMBER: _ClassVar[int]
     REMOVE_LINK_FIELD_NUMBER: _ClassVar[int]
     LIST_LINKS_FIELD_NUMBER: _ClassVar[int]
+    REINITIALIZE_BACKEND_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake_ack: HandshakeAck
@@ -253,4 +300,5 @@ class SessionResponse(_message.Message):
     create_link: CreateLink
     remove_link: RemoveLink
     list_links: ListLinks
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake_ack: _Optional[_Union[HandshakeAck, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevice, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevice, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., execute_command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., execute_attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ..., enter_pairing_mode: _Optional[_Union[EnterPairingMode, _Mapping]] = ..., create_link: _Optional[_Union[CreateLink, _Mapping]] = ..., remove_link: _Optional[_Union[RemoveLink, _Mapping]] = ..., list_links: _Optional[_Union[ListLinks, _Mapping]] = ...) -> None: ...
+    reinitialize_backend: ReinitializeBackend
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake_ack: _Optional[_Union[HandshakeAck, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevice, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevice, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., execute_command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., execute_attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ..., enter_pairing_mode: _Optional[_Union[EnterPairingMode, _Mapping]] = ..., create_link: _Optional[_Union[CreateLink, _Mapping]] = ..., remove_link: _Optional[_Union[RemoveLink, _Mapping]] = ..., list_links: _Optional[_Union[ListLinks, _Mapping]] = ..., reinitialize_backend: _Optional[_Union[ReinitializeBackend, _Mapping]] = ...) -> None: ...

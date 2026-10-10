@@ -16,17 +16,18 @@ import 'dart:typed_data' as $typed_data;
 
 import '../../../../google/protobuf/timestamp.pbjson.dart' as $1;
 import '../../access/v1/acl.pbjson.dart' as $7;
-import '../../common/v1/pairing.pbjson.dart' as $13;
+import '../../common/v1/pairing.pbjson.dart' as $14;
+import '../../common/v1/types.pbjson.dart' as $10;
 import '../../device/v1/cluster_state.pbjson.dart' as $9;
 import '../../device/v1/descriptor.pbjson.dart' as $4;
 import '../../device/v1/device.pbjson.dart' as $3;
-import '../../device/v1/device_event.pbjson.dart' as $12;
+import '../../device/v1/device_event.pbjson.dart' as $13;
 import '../../device/v1/properties.pbjson.dart' as $8;
-import '../../device/v1/property_update.pbjson.dart' as $10;
+import '../../device/v1/property_update.pbjson.dart' as $11;
 import '../../identity/v1/identity.pbjson.dart' as $2;
 import '../../link/v1/link.pbjson.dart' as $6;
 import '../../vendor/homematic/v1/homematic.pbjson.dart' as $5;
-import '../../webrtc/v1/command.pbjson.dart' as $11;
+import '../../webrtc/v1/command.pbjson.dart' as $12;
 import 'connector.pbjson.dart' as $0;
 
 const $core.Map<$core.String, $core.dynamic> ConnectorGatewayServiceBase$json =
@@ -101,44 +102,49 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.link.v1.DeviceLink': $6.DeviceLink$json,
   '.kusinta.iot.link.v1.LinkSettings': $6.LinkSettings$json,
   '.kusinta.iot.link.v1.ClimateLeadSettings': $6.ClimateLeadSettings$json,
-  '.kusinta.iot.device.v1.PropertyUpdateBatch': $10.PropertyUpdateBatch$json,
-  '.kusinta.iot.device.v1.PropertyUpdate': $10.PropertyUpdate$json,
+  '.kusinta.iot.connector.v1.BackendHealthReport': $0.BackendHealthReport$json,
+  '.kusinta.iot.common.v1.BackendHealth': $10.BackendHealth$json,
+  '.kusinta.iot.device.v1.PropertyUpdateBatch': $11.PropertyUpdateBatch$json,
+  '.kusinta.iot.device.v1.PropertyUpdate': $11.PropertyUpdate$json,
   '.kusinta.iot.connector.v1.DeviceAnnouncement': $0.DeviceAnnouncement$json,
   '.kusinta.iot.connector.v1.DeviceRemoval': $0.DeviceRemoval$json,
   '.kusinta.iot.connector.v1.ConnectorCommandResult':
       $0.ConnectorCommandResult$json,
-  '.kusinta.iot.webrtc.v1.CommandError': $11.CommandError$json,
+  '.kusinta.iot.webrtc.v1.CommandError': $12.CommandError$json,
   '.kusinta.iot.webrtc.v1.CommandError.MetadataEntry':
-      $11.CommandError_MetadataEntry$json,
+      $12.CommandError_MetadataEntry$json,
   '.kusinta.iot.connector.v1.HeartBeat': $0.HeartBeat$json,
-  '.kusinta.iot.device.v1.DeviceEventBatch': $12.DeviceEventBatch$json,
-  '.kusinta.iot.device.v1.DeviceEvent': $12.DeviceEvent$json,
+  '.kusinta.iot.device.v1.DeviceEventBatch': $13.DeviceEventBatch$json,
+  '.kusinta.iot.device.v1.DeviceEvent': $13.DeviceEvent$json,
   '.kusinta.iot.connector.v1.PairingModeResult': $0.PairingModeResult$json,
-  '.kusinta.iot.common.v1.PairingErrorDetail': $13.PairingErrorDetail$json,
+  '.kusinta.iot.common.v1.PairingErrorDetail': $14.PairingErrorDetail$json,
   '.kusinta.iot.connector.v1.PairingModeEnded': $0.PairingModeEnded$json,
   '.kusinta.iot.connector.v1.LinkResult': $0.LinkResult$json,
   '.kusinta.iot.connector.v1.LinksReported': $0.LinksReported$json,
+  '.kusinta.iot.connector.v1.ReinitializeBackendResult':
+      $0.ReinitializeBackendResult$json,
   '.kusinta.iot.connector.v1.SessionResponse': $0.SessionResponse$json,
   '.kusinta.iot.connector.v1.HandshakeAck': $0.HandshakeAck$json,
   '.kusinta.iot.identity.v1.GatewayId': $2.GatewayId$json,
   '.kusinta.iot.connector.v1.SubscribeDevice': $0.SubscribeDevice$json,
   '.kusinta.iot.connector.v1.UnsubscribeDevice': $0.UnsubscribeDevice$json,
   '.kusinta.iot.connector.v1.GatewayError': $0.GatewayError$json,
-  '.kusinta.iot.webrtc.v1.DeviceCommand': $11.DeviceCommand$json,
+  '.kusinta.iot.webrtc.v1.DeviceCommand': $12.DeviceCommand$json,
   '.kusinta.iot.webrtc.v1.ThermostatSetpointParams':
-      $11.ThermostatSetpointParams$json,
-  '.kusinta.iot.webrtc.v1.LevelControlParams': $11.LevelControlParams$json,
-  '.kusinta.iot.webrtc.v1.OnOffParams': $11.OnOffParams$json,
+      $12.ThermostatSetpointParams$json,
+  '.kusinta.iot.webrtc.v1.LevelControlParams': $12.LevelControlParams$json,
+  '.kusinta.iot.webrtc.v1.OnOffParams': $12.OnOffParams$json,
   '.kusinta.iot.webrtc.v1.WindowCoveringLiftParams':
-      $11.WindowCoveringLiftParams$json,
-  '.kusinta.iot.webrtc.v1.DoorLockParams': $11.DoorLockParams$json,
+      $12.WindowCoveringLiftParams$json,
+  '.kusinta.iot.webrtc.v1.DoorLockParams': $12.DoorLockParams$json,
   '.kusinta.iot.webrtc.v1.AttributeWriteRequest':
-      $11.AttributeWriteRequest$json,
+      $12.AttributeWriteRequest$json,
   '.kusinta.iot.connector.v1.EnterPairingMode': $0.EnterPairingMode$json,
-  '.kusinta.iot.common.v1.PairingWindow': $13.PairingWindow$json,
+  '.kusinta.iot.common.v1.PairingWindow': $14.PairingWindow$json,
   '.kusinta.iot.connector.v1.CreateLink': $0.CreateLink$json,
   '.kusinta.iot.connector.v1.RemoveLink': $0.RemoveLink$json,
   '.kusinta.iot.connector.v1.ListLinks': $0.ListLinks$json,
+  '.kusinta.iot.connector.v1.ReinitializeBackend': $0.ReinitializeBackend$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

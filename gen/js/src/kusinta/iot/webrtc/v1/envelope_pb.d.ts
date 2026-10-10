@@ -11,7 +11,7 @@ import type { ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceTree } f
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
-import type { ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
+import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport, ServiceStatusChanged } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
@@ -639,6 +639,26 @@ export declare type ConnectorDescriptor = Message<"kusinta.iot.webrtc.v1.Connect
    * @generated from field: string description = 8;
    */
   description: string;
+
+  /**
+   * Whether the backend the connector drives is working, as the connector last reported it
+   * (see connector.v1.BackendHealthReport): state and category only — the connector's own
+   * detail stays in the gateway's logs. Unset when the connector has stated nothing, which
+   * reads as OK. FAILING is what opens a reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR, and
+   * while it holds the app may offer ReconnectConnector.
+   *
+   * @generated from field: kusinta.iot.common.v1.BackendHealth backend_health = 9;
+   */
+  backendHealth?: BackendHealth | undefined;
+
+  /**
+   * The connector can re-initialise its backend on request: ReconnectConnector is
+   * refused for any connector without it. Copied from the handshake, as the other
+   * capabilities are.
+   *
+   * @generated from field: bool supports_backend_reinitialize = 10;
+   */
+  supportsBackendReinitialize: boolean;
 };
 
 /**
@@ -653,9 +673,9 @@ export declare const ConnectorDescriptorSchema: GenMessage<ConnectorDescriptor>;
  * A push, not a ManagementResult arm: a new result-oneof member is a compile error
  * in a consumer whose match on the result is exhaustive, whereas a new push case is
  * absorbed by that switch's default. Sent on connect and whenever the set changes —
- * a connector arriving, leaving, or revising its capabilities — and replaces the
- * app's whole picture each time rather than being a delta, so a client that missed
- * one re-syncs from the next.
+ * a connector arriving, leaving, revising its capabilities, or its backend health
+ * changing — and replaces the app's whole picture each time rather than being a delta,
+ * so a client that missed one re-syncs from the next.
  *
  * @generated from message kusinta.iot.webrtc.v1.ConnectorsAnnounced
  */

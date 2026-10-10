@@ -2,10 +2,10 @@
 // @generated from file kusinta/iot/connector/v1/connector.proto (package kusinta.iot.connector.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identity_pb.js";
-import type { ConnectorKind, ConnectorTransport } from "../../common/v1/types_pb.js";
+import type { BackendFailureReason, BackendHealth, ConnectorKind, ConnectorTransport } from "../../common/v1/types_pb.js";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { DeviceLink, LinkFunction, LinkState } from "../../link/v1/link_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -106,6 +106,17 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
    * @generated from field: string description = 11;
    */
   description: string;
+
+  /**
+   * The connector answers ReinitializeBackend: it can drop and re-establish its connection
+   * to its backend on request. The gateway sends ReinitializeBackend only to a connector
+   * that declares this, and refuses a reconnect for any other without asking it — a
+   * connector whose schema predates the message would ignore it, and the gateway would wait
+   * out its deadline for nothing.
+   *
+   * @generated from field: bool supports_backend_reinitialize = 12;
+   */
+  supportsBackendReinitialize: boolean;
 };
 
 /**
@@ -143,6 +154,20 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
    * @generated from field: repeated kusinta.iot.link.v1.DeviceLink known_links = 3;
    */
   knownLinks: DeviceLink[];
+
+  /**
+   * The backend's health as the connector handshakes, so the gateway starts every session
+   * from the current state rather than from whatever it held before the stream dropped.
+   * From then on, changes arrive as BackendHealthReport on the session.
+   *
+   * Unset states nothing, and the gateway reads it as OK: a connector that predates backend
+   * health never sends it, and is never taken to be failing. A connector still making its
+   * first attempt at its backend when it handshakes leaves it unset and sends a report once
+   * that attempt has settled.
+   *
+   * @generated from field: kusinta.iot.connector.v1.BackendHealthReport backend_health = 4;
+   */
+  backendHealth?: BackendHealthReport | undefined;
 };
 
 /**
@@ -150,6 +175,125 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
  * Use `create(ConnectorHandshakeSchema)` to create a new message.
  */
 export declare const ConnectorHandshakeSchema: GenMessage<ConnectorHandshake>;
+
+/**
+ * The health of the backend the connector drives, connector to gateway: whether the radio
+ * central or network server behind it is working. See common.v1.BackendHealth.
+ *
+ * Sent in the handshake (ConnectorHandshake.backend_health), then whenever state or reason
+ * changes, and once after every re-initialisation attempt, changed or not, before the
+ * result that answers it. Not sent for a change of detail alone. Each report replaces the
+ * last. The gateway applies no debounce of its own, so a connector reports FAILING only
+ * once a fault has outlasted its own retries, never for a single failed call.
+ *
+ * The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while the
+ * latest report is FAILING, and clears it when one is anything else. A connector that never
+ * sends one is OK throughout. CONNECTOR_OFFLINE is the other problem and is not this one:
+ * that is the stream to the gateway down, this is the stream up and the backend failing.
+ *
+ * @generated from message kusinta.iot.connector.v1.BackendHealthReport
+ */
+export declare type BackendHealthReport = Message<"kusinta.iot.connector.v1.BackendHealthReport"> & {
+  /**
+   * @generated from field: kusinta.iot.common.v1.BackendHealth health = 1;
+   */
+  health?: BackendHealth | undefined;
+
+  /**
+   * What went wrong, in the connector's words — an error message, the host it could not
+   * reach. For the gateway's logs only. The gateway never forwards it: not to the app, not
+   * to the cloud, not into a problem report. Empty when there is nothing to add.
+   *
+   * @generated from field: string detail = 2;
+   */
+  detail: string;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.BackendHealthReport.
+ * Use `create(BackendHealthReportSchema)` to create a new message.
+ */
+export declare const BackendHealthReportSchema: GenMessage<BackendHealthReport>;
+
+/**
+ * Asks the connector to re-initialise its backend connection, gateway to connector: drop
+ * the connection to its radio central or network server and establish it again, as it would
+ * at startup. Sent only to a connector that declares
+ * ConnectorInfo.supports_backend_reinitialize.
+ *
+ * Idempotent. Re-initialising a healthy backend is harmless, and asking twice is the same as
+ * asking once: a ReinitializeBackend that arrives while one is running starts nothing new,
+ * and is answered with the running one's outcome when it finishes. The gateway sends at most
+ * one at a time per connector and refuses a second request from above while one is
+ * outstanding; the connector's coalescing covers the case where the gateway gave up waiting
+ * and asked again.
+ *
+ * Answered once, by ReinitializeBackendResult with the same request_id. The connector
+ * bounds its attempt so that it answers within 30 seconds of receiving this; the gateway
+ * waits at least 45 seconds before it treats the request as timed out. A result arriving
+ * after the gateway has given up is ignored, but the health report sent before it still
+ * applies.
+ *
+ * @generated from message kusinta.iot.connector.v1.ReinitializeBackend
+ */
+export declare type ReinitializeBackend = Message<"kusinta.iot.connector.v1.ReinitializeBackend"> & {
+  /**
+   * minted by the gateway, echoed in the result
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.ReinitializeBackend.
+ * Use `create(ReinitializeBackendSchema)` to create a new message.
+ */
+export declare const ReinitializeBackendSchema: GenMessage<ReinitializeBackend>;
+
+/**
+ * What became of a ReinitializeBackend, connector to gateway.
+ *
+ * DONE means the attempt was made and has finished — not that it succeeded. Whether the
+ * backend works now is stated by the BackendHealthReport the connector sends after every
+ * attempt, before this result, so a gateway reading DONE already holds the outcome. Keeping
+ * the two apart means there is one place that says whether a backend is healthy, and a
+ * result cannot contradict it.
+ *
+ * @generated from message kusinta.iot.connector.v1.ReinitializeBackendResult
+ */
+export declare type ReinitializeBackendResult = Message<"kusinta.iot.connector.v1.ReinitializeBackendResult"> & {
+  /**
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * @generated from field: kusinta.iot.connector.v1.ReinitializeOutcome outcome = 2;
+   */
+  outcome: ReinitializeOutcome;
+
+  /**
+   * Why it could not be attempted, when outcome is FAILED: typically MISCONFIGURED or
+   * INTERNAL. UNSPECIFIED otherwise.
+   *
+   * @generated from field: kusinta.iot.common.v1.BackendFailureReason reason = 3;
+   */
+  reason: BackendFailureReason;
+
+  /**
+   * For the gateway's logs only, as BackendHealthReport.detail; never forwarded.
+   *
+   * @generated from field: string detail = 4;
+   */
+  detail: string;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.ReinitializeBackendResult.
+ * Use `create(ReinitializeBackendResultSchema)` to create a new message.
+ */
+export declare const ReinitializeBackendResultSchema: GenMessage<ReinitializeBackendResult>;
 
 /**
  * Asks the connector to make a link, gateway to connector.
@@ -759,6 +903,20 @@ export declare type SessionRequest = Message<"kusinta.iot.connector.v1.SessionRe
      */
     value: LinksReported;
     case: "linksReported";
+  } | {
+    /**
+     * The backend's health; see BackendHealthReport.
+     *
+     * @generated from field: kusinta.iot.connector.v1.BackendHealthReport backend_health = 14;
+     */
+    value: BackendHealthReport;
+    case: "backendHealth";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.ReinitializeBackendResult reinitialize_backend_result = 15;
+     */
+    value: ReinitializeBackendResult;
+    case: "reinitializeBackendResult";
   } | { case: undefined; value?: undefined };
 };
 
@@ -854,6 +1012,14 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
      */
     value: ListLinks;
     case: "listLinks";
+  } | {
+    /**
+     * See ReinitializeBackend.
+     *
+     * @generated from field: kusinta.iot.connector.v1.ReinitializeBackend reinitialize_backend = 14;
+     */
+    value: ReinitializeBackend;
+    case: "reinitializeBackend";
   } | { case: undefined; value?: undefined };
 };
 
@@ -862,4 +1028,45 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
  * Use `create(SessionResponseSchema)` to create a new message.
  */
 export declare const SessionResponseSchema: GenMessage<SessionResponse>;
+
+/**
+ * @generated from enum kusinta.iot.connector.v1.ReinitializeOutcome
+ */
+export enum ReinitializeOutcome {
+  /**
+   * Not stated, or a value this gateway's schema does not know. Read as FAILED.
+   *
+   * @generated from enum value: REINITIALIZE_OUTCOME_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The connection was dropped and an attempt to establish it again has finished. Its
+   * outcome is the BackendHealthReport sent just before.
+   *
+   * @generated from enum value: REINITIALIZE_OUTCOME_DONE = 1;
+   */
+  DONE = 1,
+
+  /**
+   * The connector could not attempt it at all — no configuration to reconnect with, a fault
+   * of its own. Health is unchanged and no report precedes this.
+   *
+   * @generated from enum value: REINITIALIZE_OUTCOME_FAILED = 2;
+   */
+  FAILED = 2,
+
+  /**
+   * The connector has no backend connection it can re-initialise. A connector that answers
+   * this should not declare supports_backend_reinitialize, but the gateway must handle it.
+   *
+   * @generated from enum value: REINITIALIZE_OUTCOME_NOT_SUPPORTED = 3;
+   */
+  NOT_SUPPORTED = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.connector.v1.ReinitializeOutcome.
+ */
+export declare const ReinitializeOutcomeSchema: GenEnum<ReinitializeOutcome>;
 

@@ -21,8 +21,15 @@ import {
   GatewayMessageSchema,
   ManagementResultSchema,
   GatewayErrorCode,
+  ConnectorDescriptorSchema,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
-import { SpaceType, DeviceOwnershipType, ConnectorKind } from '../kusinta/iot/common/v1/types_pb.js'
+import {
+  SpaceType,
+  DeviceOwnershipType,
+  ConnectorKind,
+  BackendHealthState,
+  BackendFailureReason,
+} from '../kusinta/iot/common/v1/types_pb.js'
 import { LorawanProvisioningSchema } from '../kusinta/iot/vendor/lorawan/v1/lorawan_pb.js'
 
 /**
@@ -394,5 +401,41 @@ describe('ConnectorsAnnounced', () => {
       expect(lora.supportsPairing).toBe(false)
       expect(lora.kind).toBe(ConnectorKind.LORAWAN)
     }
+  })
+})
+
+describe('ReconnectConnector', () => {
+  it('names the connector by its id', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'reconnectConnector', value: { connectorId: { value: 'lorawan' } } },
+    })
+    expect(decoded.request).toMatchObject({
+      case: 'reconnectConnector',
+      value: { connectorId: { value: 'lorawan' } },
+    })
+  })
+
+  it('is offered from the descriptor: failing health and the capability', () => {
+    const decoded = onTheWire(ConnectorDescriptorSchema, {
+      connectorId: { value: 'lorawan' },
+      backendHealth: { state: BackendHealthState.FAILING, reason: BackendFailureReason.UNREACHABLE },
+      supportsBackendReinitialize: true,
+    })
+    expect(decoded.backendHealth).toMatchObject({
+      state: BackendHealthState.FAILING,
+      reason: BackendFailureReason.UNREACHABLE,
+    })
+    expect(decoded.supportsBackendReinitialize).toBe(true)
+  })
+
+  it('carries a refusal reason in metadata', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: {
+        case: 'error',
+        value: { code: GatewayErrorCode.UNAVAILABLE, metadata: { reason: 'TIMED_OUT' } },
+      },
+    })
+    expect(decoded.result).toMatchObject({ case: 'error', value: { metadata: { reason: 'TIMED_OUT' } } })
   })
 })

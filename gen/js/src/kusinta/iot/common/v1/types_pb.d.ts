@@ -37,6 +37,37 @@ export declare type ErrorDetail = Message<"kusinta.iot.common.v1.ErrorDetail"> &
 export declare const ErrorDetailSchema: GenMessage<ErrorDetail>;
 
 /**
+ * A connector's backend health, as both legs carry it: connector to gateway inside
+ * connector.v1.BackendHealthReport, and gateway to app on webrtc.v1.ConnectorDescriptor.
+ *
+ * Deliberately state and category only. A connector's free-text detail travels beside this,
+ * on the connector leg alone, and is for the gateway's logs: it may name hosts, addresses or
+ * accounts, and it never reaches the app or the cloud. Carrying only this type on the app
+ * leg is what keeps it there.
+ *
+ * @generated from message kusinta.iot.common.v1.BackendHealth
+ */
+export declare type BackendHealth = Message<"kusinta.iot.common.v1.BackendHealth"> & {
+  /**
+   * @generated from field: kusinta.iot.common.v1.BackendHealthState state = 1;
+   */
+  state: BackendHealthState;
+
+  /**
+   * Why, when state is FAILING. UNSPECIFIED otherwise, and ignored when state is not FAILING.
+   *
+   * @generated from field: kusinta.iot.common.v1.BackendFailureReason reason = 2;
+   */
+  reason: BackendFailureReason;
+};
+
+/**
+ * Describes the message kusinta.iot.common.v1.BackendHealth.
+ * Use `create(BackendHealthSchema)` to create a new message.
+ */
+export declare const BackendHealthSchema: GenMessage<BackendHealth>;
+
+/**
  * @generated from enum kusinta.iot.common.v1.SpaceType
  */
 export enum SpaceType {
@@ -194,4 +225,110 @@ export enum ConnectorKind {
  * Describes the enum kusinta.iot.common.v1.ConnectorKind.
  */
 export declare const ConnectorKindSchema: GenEnum<ConnectorKind>;
+
+/**
+ * Whether the backend a connector drives is working: the radio central, the network server,
+ * whatever the connector talks to on the far side from the gateway. Distinct from whether
+ * the connector itself is connected — that is the gateway↔connector stream, and a connector
+ * whose stream is down states nothing at all.
+ *
+ * Open, like every proto3 enum: a reader given a value its schema predates holds the number.
+ * Every reader treats anything but FAILING as healthy, so a state added later must be one an
+ * older reader may safely take for OK. A new way of failing is a new BackendFailureReason
+ * under FAILING, never a new state.
+ *
+ * @generated from enum kusinta.iot.common.v1.BackendHealthState
+ */
+export enum BackendHealthState {
+  /**
+   * No statement. Read as OK: a connector that predates backend health, or one still making
+   * its first attempt, has said nothing is wrong.
+   *
+   * @generated from enum value: BACKEND_HEALTH_STATE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The backend is reachable and answering.
+   *
+   * @generated from enum value: BACKEND_HEALTH_STATE_OK = 1;
+   */
+  OK = 1,
+
+  /**
+   * The backend is failing, and not for a single dropped call: the connector has retried as
+   * its own policy says and is still failing. The connector stays connected to the gateway.
+   *
+   * @generated from enum value: BACKEND_HEALTH_STATE_FAILING = 2;
+   */
+  FAILING = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.common.v1.BackendHealthState.
+ */
+export declare const BackendHealthStateSchema: GenEnum<BackendHealthState>;
+
+/**
+ * Why a backend is failing, or why a re-initialisation could not be attempted. Coarse on
+ * purpose: each value answers "what should someone do now?", and the specifics belong in a
+ * connector's log-only detail, never here.
+ *
+ * Shared rather than mirrored, for the reason PairingError gives: the connector produces it
+ * and the gateway passes it through unchanged.
+ *
+ * @generated from enum kusinta.iot.common.v1.BackendFailureReason
+ */
+export enum BackendFailureReason {
+  /**
+   * Not stated, or a value this reader's schema does not know. Read as BACKEND_ERROR.
+   *
+   * @generated from enum value: BACKEND_FAILURE_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The backend cannot be reached: no route, connection refused, no answer. Often a power or
+   * network fault at the backend's side; a re-initialisation may help once that is fixed.
+   *
+   * @generated from enum value: BACKEND_FAILURE_REASON_UNREACHABLE = 1;
+   */
+  UNREACHABLE = 1,
+
+  /**
+   * The backend answered and refused the connector's credentials. Retrying the same
+   * credentials will not help; someone must change them.
+   *
+   * @generated from enum value: BACKEND_FAILURE_REASON_AUTH_FAILED = 2;
+   */
+  AUTH_FAILED = 2,
+
+  /**
+   * The backend is reached and authenticated, but answers with errors or not as the connector
+   * expects: a fault on the backend's side, or a version the connector does not understand.
+   *
+   * @generated from enum value: BACKEND_FAILURE_REASON_BACKEND_ERROR = 3;
+   */
+  BACKEND_ERROR = 3,
+
+  /**
+   * The connector lacks what it needs to reach the backend at all: an address, credentials.
+   * Needs an installer, not a retry.
+   *
+   * @generated from enum value: BACKEND_FAILURE_REASON_MISCONFIGURED = 4;
+   */
+  MISCONFIGURED = 4,
+
+  /**
+   * A fault in the connector itself, not in the backend.
+   *
+   * @generated from enum value: BACKEND_FAILURE_REASON_INTERNAL = 5;
+   */
+  INTERNAL = 5,
+}
+
+/**
+ * Describes the enum kusinta.iot.common.v1.BackendFailureReason.
+ */
+export declare const BackendFailureReasonSchema: GenEnum<BackendFailureReason>;
 

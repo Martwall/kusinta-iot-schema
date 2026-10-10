@@ -8,7 +8,7 @@ import { enumDesc, fileDesc, messageDesc, tsEnum } from "@bufbuild/protobuf/code
  * Describes the file kusinta/iot/common/v1/types.proto.
  */
 export const file_kusinta_iot_common_v1_types = /*@__PURE__*/
-  fileDesc("CiFrdXNpbnRhL2lvdC9jb21tb24vdjEvdHlwZXMucHJvdG8SFWt1c2ludGEuaW90LmNvbW1vbi52MSKhAQoLRXJyb3JEZXRhaWwSDAoEY29kZRgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEkIKCG1ldGFkYXRhGAMgAygLMjAua3VzaW50YS5pb3QuY29tbW9uLnYxLkVycm9yRGV0YWlsLk1ldGFkYXRhRW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBKqEBCglTcGFjZVR5cGUSGgoWU1BBQ0VfVFlQRV9VTlNQRUNJRklFRBAAEhcKE1NQQUNFX1RZUEVfQlVJTERJTkcQARIUChBTUEFDRV9UWVBFX0ZMT09SEAISGAoUU1BBQ0VfVFlQRV9BUEFSVE1FTlQQAxITCg9TUEFDRV9UWVBFX1JPT00QBBIaChZTUEFDRV9UWVBFX0NPTU1PTl9BUkVBEAUqgwEKE0RldmljZU93bmVyc2hpcFR5cGUSJQohREVWSUNFX09XTkVSU0hJUF9UWVBFX1VOU1BFQ0lGSUVEEAASIQodREVWSUNFX09XTkVSU0hJUF9UWVBFX0NPTVBBTlkQARIiCh5ERVZJQ0VfT1dORVJTSElQX1RZUEVfUkVTSURFTlQQAirhAQoURGV2aWNlTGlmZWN5Y2xlU3RhdGUSJgoiREVWSUNFX0xJRkVDWUNMRV9TVEFURV9VTlNQRUNJRklFRBAAEigKJERFVklDRV9MSUZFQ1lDTEVfU1RBVEVfUEVORElOR19DTEFJTRABEiAKHERFVklDRV9MSUZFQ1lDTEVfU1RBVEVfT1dORUQQAhIrCidERVZJQ0VfTElGRUNZQ0xFX1NUQVRFX1BFTkRJTkdfVFJBTlNGRVIQAxIoCiRERVZJQ0VfTElGRUNZQ0xFX1NUQVRFX0JVSUxESU5HX1BPT0wQBCqAAQoSQ29ubmVjdG9yVHJhbnNwb3J0EiMKH0NPTk5FQ1RPUl9UUkFOU1BPUlRfVU5TUEVDSUZJRUQQABIjCh9DT05ORUNUT1JfVFJBTlNQT1JUX1VOSVhfU09DS0VUEAESIAocQ09OTkVDVE9SX1RSQU5TUE9SVF9NVExTX1RDUBACKmwKDUNvbm5lY3RvcktpbmQSHgoaQ09OTkVDVE9SX0tJTkRfVU5TUEVDSUZJRUQQABIfChtDT05ORUNUT1JfS0lORF9IT01FTUFUSUNfSVAQARIaChZDT05ORUNUT1JfS0lORF9MT1JBV0FOEAJCAkgBYgZwcm90bzM");
+  fileDesc("CiFrdXNpbnRhL2lvdC9jb21tb24vdjEvdHlwZXMucHJvdG8SFWt1c2ludGEuaW90LmNvbW1vbi52MSKhAQoLRXJyb3JEZXRhaWwSDAoEY29kZRgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEkIKCG1ldGFkYXRhGAMgAygLMjAua3VzaW50YS5pb3QuY29tbW9uLnYxLkVycm9yRGV0YWlsLk1ldGFkYXRhRW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIoYBCg1CYWNrZW5kSGVhbHRoEjgKBXN0YXRlGAEgASgOMikua3VzaW50YS5pb3QuY29tbW9uLnYxLkJhY2tlbmRIZWFsdGhTdGF0ZRI7CgZyZWFzb24YAiABKA4yKy5rdXNpbnRhLmlvdC5jb21tb24udjEuQmFja2VuZEZhaWx1cmVSZWFzb24qoQEKCVNwYWNlVHlwZRIaChZTUEFDRV9UWVBFX1VOU1BFQ0lGSUVEEAASFwoTU1BBQ0VfVFlQRV9CVUlMRElORxABEhQKEFNQQUNFX1RZUEVfRkxPT1IQAhIYChRTUEFDRV9UWVBFX0FQQVJUTUVOVBADEhMKD1NQQUNFX1RZUEVfUk9PTRAEEhoKFlNQQUNFX1RZUEVfQ09NTU9OX0FSRUEQBSqDAQoTRGV2aWNlT3duZXJzaGlwVHlwZRIlCiFERVZJQ0VfT1dORVJTSElQX1RZUEVfVU5TUEVDSUZJRUQQABIhCh1ERVZJQ0VfT1dORVJTSElQX1RZUEVfQ09NUEFOWRABEiIKHkRFVklDRV9PV05FUlNISVBfVFlQRV9SRVNJREVOVBACKuEBChREZXZpY2VMaWZlY3ljbGVTdGF0ZRImCiJERVZJQ0VfTElGRUNZQ0xFX1NUQVRFX1VOU1BFQ0lGSUVEEAASKAokREVWSUNFX0xJRkVDWUNMRV9TVEFURV9QRU5ESU5HX0NMQUlNEAESIAocREVWSUNFX0xJRkVDWUNMRV9TVEFURV9PV05FRBACEisKJ0RFVklDRV9MSUZFQ1lDTEVfU1RBVEVfUEVORElOR19UUkFOU0ZFUhADEigKJERFVklDRV9MSUZFQ1lDTEVfU1RBVEVfQlVJTERJTkdfUE9PTBAEKoABChJDb25uZWN0b3JUcmFuc3BvcnQSIwofQ09OTkVDVE9SX1RSQU5TUE9SVF9VTlNQRUNJRklFRBAAEiMKH0NPTk5FQ1RPUl9UUkFOU1BPUlRfVU5JWF9TT0NLRVQQARIgChxDT05ORUNUT1JfVFJBTlNQT1JUX01UTFNfVENQEAIqbAoNQ29ubmVjdG9yS2luZBIeChpDT05ORUNUT1JfS0lORF9VTlNQRUNJRklFRBAAEh8KG0NPTk5FQ1RPUl9LSU5EX0hPTUVNQVRJQ19JUBABEhoKFkNPTk5FQ1RPUl9LSU5EX0xPUkFXQU4QAip5ChJCYWNrZW5kSGVhbHRoU3RhdGUSJAogQkFDS0VORF9IRUFMVEhfU1RBVEVfVU5TUEVDSUZJRUQQABIbChdCQUNLRU5EX0hFQUxUSF9TVEFURV9PSxABEiAKHEJBQ0tFTkRfSEVBTFRIX1NUQVRFX0ZBSUxJTkcQAiqHAgoUQmFja2VuZEZhaWx1cmVSZWFzb24SJgoiQkFDS0VORF9GQUlMVVJFX1JFQVNPTl9VTlNQRUNJRklFRBAAEiYKIkJBQ0tFTkRfRkFJTFVSRV9SRUFTT05fVU5SRUFDSEFCTEUQARImCiJCQUNLRU5EX0ZBSUxVUkVfUkVBU09OX0FVVEhfRkFJTEVEEAISKAokQkFDS0VORF9GQUlMVVJFX1JFQVNPTl9CQUNLRU5EX0VSUk9SEAMSKAokQkFDS0VORF9GQUlMVVJFX1JFQVNPTl9NSVNDT05GSUdVUkVEEAQSIwofQkFDS0VORF9GQUlMVVJFX1JFQVNPTl9JTlRFUk5BTBAFQgJIAWIGcHJvdG8z");
 
 /**
  * Describes the message kusinta.iot.common.v1.ErrorDetail.
@@ -16,6 +16,13 @@ export const file_kusinta_iot_common_v1_types = /*@__PURE__*/
  */
 export const ErrorDetailSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_common_v1_types, 0);
+
+/**
+ * Describes the message kusinta.iot.common.v1.BackendHealth.
+ * Use `create(BackendHealthSchema)` to create a new message.
+ */
+export const BackendHealthSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_common_v1_types, 1);
 
 /**
  * Describes the enum kusinta.iot.common.v1.SpaceType.
@@ -85,4 +92,45 @@ export const ConnectorKindSchema = /*@__PURE__*/
  */
 export const ConnectorKind = /*@__PURE__*/
   tsEnum(ConnectorKindSchema);
+
+/**
+ * Describes the enum kusinta.iot.common.v1.BackendHealthState.
+ */
+export const BackendHealthStateSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_common_v1_types, 5);
+
+/**
+ * Whether the backend a connector drives is working: the radio central, the network server,
+ * whatever the connector talks to on the far side from the gateway. Distinct from whether
+ * the connector itself is connected — that is the gateway↔connector stream, and a connector
+ * whose stream is down states nothing at all.
+ *
+ * Open, like every proto3 enum: a reader given a value its schema predates holds the number.
+ * Every reader treats anything but FAILING as healthy, so a state added later must be one an
+ * older reader may safely take for OK. A new way of failing is a new BackendFailureReason
+ * under FAILING, never a new state.
+ *
+ * @generated from enum kusinta.iot.common.v1.BackendHealthState
+ */
+export const BackendHealthState = /*@__PURE__*/
+  tsEnum(BackendHealthStateSchema);
+
+/**
+ * Describes the enum kusinta.iot.common.v1.BackendFailureReason.
+ */
+export const BackendFailureReasonSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_common_v1_types, 6);
+
+/**
+ * Why a backend is failing, or why a re-initialisation could not be attempted. Coarse on
+ * purpose: each value answers "what should someone do now?", and the specifics belong in a
+ * connector's log-only detail, never here.
+ *
+ * Shared rather than mirrored, for the reason PairingError gives: the connector produces it
+ * and the gateway passes it through unchanged.
+ *
+ * @generated from enum kusinta.iot.common.v1.BackendFailureReason
+ */
+export const BackendFailureReason = /*@__PURE__*/
+  tsEnum(BackendFailureReasonSchema);
 

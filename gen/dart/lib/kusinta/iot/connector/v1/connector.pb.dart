@@ -14,31 +14,35 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $3;
-import '../../common/v1/pairing.pb.dart' as $5;
-import '../../common/v1/types.pbenum.dart' as $8;
+import '../../../../google/protobuf/timestamp.pb.dart' as $4;
+import '../../common/v1/pairing.pb.dart' as $6;
+import '../../common/v1/types.pb.dart' as $3;
 import '../../device/v1/device.pb.dart' as $1;
-import '../../device/v1/device_event.pb.dart' as $7;
-import '../../device/v1/property_update.pb.dart' as $6;
+import '../../device/v1/device_event.pb.dart' as $8;
+import '../../device/v1/property_update.pb.dart' as $7;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $2;
-import '../../webrtc/v1/command.pb.dart' as $4;
+import '../../webrtc/v1/command.pb.dart' as $5;
+import 'connector.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'connector.pbenum.dart';
 
 class ConnectorInfo extends $pb.GeneratedMessage {
   factory ConnectorInfo({
     $0.ConnectorId? connectorId,
     $core.String? displayName,
     $core.String? version,
-    $8.ConnectorTransport? transport,
+    $3.ConnectorTransport? transport,
     $core.String? endpoint,
     $core.Iterable<$core.int>? supportedDeviceTypeIds,
     $core.bool? supportsPairing,
     $core.bool? supportsProvisioning,
     $core.bool? brokersLinks,
-    $8.ConnectorKind? kind,
+    $3.ConnectorKind? kind,
     $core.String? description,
+    $core.bool? supportsBackendReinitialize,
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
@@ -54,6 +58,8 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     if (brokersLinks != null) result.brokersLinks = brokersLinks;
     if (kind != null) result.kind = kind;
     if (description != null) result.description = description;
+    if (supportsBackendReinitialize != null)
+      result.supportsBackendReinitialize = supportsBackendReinitialize;
     return result;
   }
 
@@ -75,22 +81,23 @@ class ConnectorInfo extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..aOS(3, _omitFieldNames ? '' : 'version')
-    ..e<$8.ConnectorTransport>(
+    ..e<$3.ConnectorTransport>(
         4, _omitFieldNames ? '' : 'transport', $pb.PbFieldType.OE,
-        defaultOrMaker: $8.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
-        valueOf: $8.ConnectorTransport.valueOf,
-        enumValues: $8.ConnectorTransport.values)
+        defaultOrMaker: $3.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
+        valueOf: $3.ConnectorTransport.valueOf,
+        enumValues: $3.ConnectorTransport.values)
     ..aOS(5, _omitFieldNames ? '' : 'endpoint')
     ..p<$core.int>(
         6, _omitFieldNames ? '' : 'supportedDeviceTypeIds', $pb.PbFieldType.KU3)
     ..aOB(7, _omitFieldNames ? '' : 'supportsPairing')
     ..aOB(8, _omitFieldNames ? '' : 'supportsProvisioning')
     ..aOB(9, _omitFieldNames ? '' : 'brokersLinks')
-    ..e<$8.ConnectorKind>(10, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $8.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
-        valueOf: $8.ConnectorKind.valueOf,
-        enumValues: $8.ConnectorKind.values)
+    ..e<$3.ConnectorKind>(10, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $3.ConnectorKind.valueOf,
+        enumValues: $3.ConnectorKind.values)
     ..aOS(11, _omitFieldNames ? '' : 'description')
+    ..aOB(12, _omitFieldNames ? '' : 'supportsBackendReinitialize')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -147,9 +154,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $8.ConnectorTransport get transport => $_getN(3);
+  $3.ConnectorTransport get transport => $_getN(3);
   @$pb.TagNumber(4)
-  set transport($8.ConnectorTransport value) => $_setField(4, value);
+  set transport($3.ConnectorTransport value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTransport() => $_has(3);
   @$pb.TagNumber(4)
@@ -209,9 +216,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   /// Presentation only — an icon or a phrase; see common.v1.ConnectorKind for why it
   /// never gates behaviour. Unset is CONNECTOR_KIND_UNSPECIFIED, a generic hub.
   @$pb.TagNumber(10)
-  $8.ConnectorKind get kind => $_getN(9);
+  $3.ConnectorKind get kind => $_getN(9);
   @$pb.TagNumber(10)
-  set kind($8.ConnectorKind value) => $_setField(10, value);
+  set kind($3.ConnectorKind value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasKind() => $_has(9);
   @$pb.TagNumber(10)
@@ -229,6 +236,20 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   $core.bool hasDescription() => $_has(10);
   @$pb.TagNumber(11)
   void clearDescription() => $_clearField(11);
+
+  /// The connector answers ReinitializeBackend: it can drop and re-establish its connection
+  /// to its backend on request. The gateway sends ReinitializeBackend only to a connector
+  /// that declares this, and refuses a reconnect for any other without asking it — a
+  /// connector whose schema predates the message would ignore it, and the gateway would wait
+  /// out its deadline for nothing.
+  @$pb.TagNumber(12)
+  $core.bool get supportsBackendReinitialize => $_getBF(11);
+  @$pb.TagNumber(12)
+  set supportsBackendReinitialize($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasSupportsBackendReinitialize() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearSupportsBackendReinitialize() => $_clearField(12);
 }
 
 class ConnectorHandshake extends $pb.GeneratedMessage {
@@ -236,11 +257,13 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
     ConnectorInfo? info,
     $core.Iterable<$1.Device>? knownDevices,
     $core.Iterable<$2.DeviceLink>? knownLinks,
+    BackendHealthReport? backendHealth,
   }) {
     final result = create();
     if (info != null) result.info = info;
     if (knownDevices != null) result.knownDevices.addAll(knownDevices);
     if (knownLinks != null) result.knownLinks.addAll(knownLinks);
+    if (backendHealth != null) result.backendHealth = backendHealth;
     return result;
   }
 
@@ -266,6 +289,8 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
     ..pc<$2.DeviceLink>(
         3, _omitFieldNames ? '' : 'knownLinks', $pb.PbFieldType.PM,
         subBuilder: $2.DeviceLink.create)
+    ..aOM<BackendHealthReport>(4, _omitFieldNames ? '' : 'backendHealth',
+        subBuilder: BackendHealthReport.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -315,6 +340,301 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   /// asserting that no links exist.
   @$pb.TagNumber(3)
   $pb.PbList<$2.DeviceLink> get knownLinks => $_getList(2);
+
+  /// The backend's health as the connector handshakes, so the gateway starts every session
+  /// from the current state rather than from whatever it held before the stream dropped.
+  /// From then on, changes arrive as BackendHealthReport on the session.
+  ///
+  /// Unset states nothing, and the gateway reads it as OK: a connector that predates backend
+  /// health never sends it, and is never taken to be failing. A connector still making its
+  /// first attempt at its backend when it handshakes leaves it unset and sends a report once
+  /// that attempt has settled.
+  @$pb.TagNumber(4)
+  BackendHealthReport get backendHealth => $_getN(3);
+  @$pb.TagNumber(4)
+  set backendHealth(BackendHealthReport value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBackendHealth() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBackendHealth() => $_clearField(4);
+  @$pb.TagNumber(4)
+  BackendHealthReport ensureBackendHealth() => $_ensure(3);
+}
+
+/// The health of the backend the connector drives, connector to gateway: whether the radio
+/// central or network server behind it is working. See common.v1.BackendHealth.
+///
+/// Sent in the handshake (ConnectorHandshake.backend_health), then whenever state or reason
+/// changes, and once after every re-initialisation attempt, changed or not, before the
+/// result that answers it. Not sent for a change of detail alone. Each report replaces the
+/// last. The gateway applies no debounce of its own, so a connector reports FAILING only
+/// once a fault has outlasted its own retries, never for a single failed call.
+///
+/// The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while the
+/// latest report is FAILING, and clears it when one is anything else. A connector that never
+/// sends one is OK throughout. CONNECTOR_OFFLINE is the other problem and is not this one:
+/// that is the stream to the gateway down, this is the stream up and the backend failing.
+class BackendHealthReport extends $pb.GeneratedMessage {
+  factory BackendHealthReport({
+    $3.BackendHealth? health,
+    $core.String? detail,
+  }) {
+    final result = create();
+    if (health != null) result.health = health;
+    if (detail != null) result.detail = detail;
+    return result;
+  }
+
+  BackendHealthReport._();
+
+  factory BackendHealthReport.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BackendHealthReport.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BackendHealthReport',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
+      createEmptyInstance: create)
+    ..aOM<$3.BackendHealth>(1, _omitFieldNames ? '' : 'health',
+        subBuilder: $3.BackendHealth.create)
+    ..aOS(2, _omitFieldNames ? '' : 'detail')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BackendHealthReport clone() => BackendHealthReport()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BackendHealthReport copyWith(void Function(BackendHealthReport) updates) =>
+      super.copyWith((message) => updates(message as BackendHealthReport))
+          as BackendHealthReport;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BackendHealthReport create() => BackendHealthReport._();
+  @$core.override
+  BackendHealthReport createEmptyInstance() => create();
+  static $pb.PbList<BackendHealthReport> createRepeated() =>
+      $pb.PbList<BackendHealthReport>();
+  @$core.pragma('dart2js:noInline')
+  static BackendHealthReport getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BackendHealthReport>(create);
+  static BackendHealthReport? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $3.BackendHealth get health => $_getN(0);
+  @$pb.TagNumber(1)
+  set health($3.BackendHealth value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHealth() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHealth() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $3.BackendHealth ensureHealth() => $_ensure(0);
+
+  /// What went wrong, in the connector's words — an error message, the host it could not
+  /// reach. For the gateway's logs only. The gateway never forwards it: not to the app, not
+  /// to the cloud, not into a problem report. Empty when there is nothing to add.
+  @$pb.TagNumber(2)
+  $core.String get detail => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set detail($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDetail() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDetail() => $_clearField(2);
+}
+
+/// Asks the connector to re-initialise its backend connection, gateway to connector: drop
+/// the connection to its radio central or network server and establish it again, as it would
+/// at startup. Sent only to a connector that declares
+/// ConnectorInfo.supports_backend_reinitialize.
+///
+/// Idempotent. Re-initialising a healthy backend is harmless, and asking twice is the same as
+/// asking once: a ReinitializeBackend that arrives while one is running starts nothing new,
+/// and is answered with the running one's outcome when it finishes. The gateway sends at most
+/// one at a time per connector and refuses a second request from above while one is
+/// outstanding; the connector's coalescing covers the case where the gateway gave up waiting
+/// and asked again.
+///
+/// Answered once, by ReinitializeBackendResult with the same request_id. The connector
+/// bounds its attempt so that it answers within 30 seconds of receiving this; the gateway
+/// waits at least 45 seconds before it treats the request as timed out. A result arriving
+/// after the gateway has given up is ignored, but the health report sent before it still
+/// applies.
+class ReinitializeBackend extends $pb.GeneratedMessage {
+  factory ReinitializeBackend({
+    $core.String? requestId,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    return result;
+  }
+
+  ReinitializeBackend._();
+
+  factory ReinitializeBackend.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReinitializeBackend.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReinitializeBackend',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReinitializeBackend clone() => ReinitializeBackend()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReinitializeBackend copyWith(void Function(ReinitializeBackend) updates) =>
+      super.copyWith((message) => updates(message as ReinitializeBackend))
+          as ReinitializeBackend;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReinitializeBackend create() => ReinitializeBackend._();
+  @$core.override
+  ReinitializeBackend createEmptyInstance() => create();
+  static $pb.PbList<ReinitializeBackend> createRepeated() =>
+      $pb.PbList<ReinitializeBackend>();
+  @$core.pragma('dart2js:noInline')
+  static ReinitializeBackend getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReinitializeBackend>(create);
+  static ReinitializeBackend? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+}
+
+/// What became of a ReinitializeBackend, connector to gateway.
+///
+/// DONE means the attempt was made and has finished — not that it succeeded. Whether the
+/// backend works now is stated by the BackendHealthReport the connector sends after every
+/// attempt, before this result, so a gateway reading DONE already holds the outcome. Keeping
+/// the two apart means there is one place that says whether a backend is healthy, and a
+/// result cannot contradict it.
+class ReinitializeBackendResult extends $pb.GeneratedMessage {
+  factory ReinitializeBackendResult({
+    $core.String? requestId,
+    ReinitializeOutcome? outcome,
+    $3.BackendFailureReason? reason,
+    $core.String? detail,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (outcome != null) result.outcome = outcome;
+    if (reason != null) result.reason = reason;
+    if (detail != null) result.detail = detail;
+    return result;
+  }
+
+  ReinitializeBackendResult._();
+
+  factory ReinitializeBackendResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReinitializeBackendResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReinitializeBackendResult',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..e<ReinitializeOutcome>(
+        2, _omitFieldNames ? '' : 'outcome', $pb.PbFieldType.OE,
+        defaultOrMaker: ReinitializeOutcome.REINITIALIZE_OUTCOME_UNSPECIFIED,
+        valueOf: ReinitializeOutcome.valueOf,
+        enumValues: ReinitializeOutcome.values)
+    ..e<$3.BackendFailureReason>(
+        3, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $3.BackendFailureReason.BACKEND_FAILURE_REASON_UNSPECIFIED,
+        valueOf: $3.BackendFailureReason.valueOf,
+        enumValues: $3.BackendFailureReason.values)
+    ..aOS(4, _omitFieldNames ? '' : 'detail')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReinitializeBackendResult clone() =>
+      ReinitializeBackendResult()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReinitializeBackendResult copyWith(
+          void Function(ReinitializeBackendResult) updates) =>
+      super.copyWith((message) => updates(message as ReinitializeBackendResult))
+          as ReinitializeBackendResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReinitializeBackendResult create() => ReinitializeBackendResult._();
+  @$core.override
+  ReinitializeBackendResult createEmptyInstance() => create();
+  static $pb.PbList<ReinitializeBackendResult> createRepeated() =>
+      $pb.PbList<ReinitializeBackendResult>();
+  @$core.pragma('dart2js:noInline')
+  static ReinitializeBackendResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReinitializeBackendResult>(create);
+  static ReinitializeBackendResult? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  ReinitializeOutcome get outcome => $_getN(1);
+  @$pb.TagNumber(2)
+  set outcome(ReinitializeOutcome value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutcome() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutcome() => $_clearField(2);
+
+  /// Why it could not be attempted, when outcome is FAILED: typically MISCONFIGURED or
+  /// INTERNAL. UNSPECIFIED otherwise.
+  @$pb.TagNumber(3)
+  $3.BackendFailureReason get reason => $_getN(2);
+  @$pb.TagNumber(3)
+  set reason($3.BackendFailureReason value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReason() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReason() => $_clearField(3);
+
+  /// For the gateway's logs only, as BackendHealthReport.detail; never forwarded.
+  @$pb.TagNumber(4)
+  $core.String get detail => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set detail($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDetail() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDetail() => $_clearField(4);
 }
 
 /// Asks the connector to make a link, gateway to connector.
@@ -1248,9 +1568,9 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   factory ConnectorCommandResult({
     $core.String? requestId,
     $core.bool? success,
-    $3.Timestamp? completedAt,
-    $4.CommandError? error,
-    $3.Timestamp? settlesBy,
+    $4.Timestamp? completedAt,
+    $5.CommandError? error,
+    $4.Timestamp? settlesBy,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -1277,12 +1597,12 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOB(2, _omitFieldNames ? '' : 'success')
-    ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'completedAt',
-        subBuilder: $3.Timestamp.create)
-    ..aOM<$4.CommandError>(5, _omitFieldNames ? '' : 'error',
-        subBuilder: $4.CommandError.create)
-    ..aOM<$3.Timestamp>(6, _omitFieldNames ? '' : 'settlesBy',
-        subBuilder: $3.Timestamp.create)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'completedAt',
+        subBuilder: $4.Timestamp.create)
+    ..aOM<$5.CommandError>(5, _omitFieldNames ? '' : 'error',
+        subBuilder: $5.CommandError.create)
+    ..aOM<$4.Timestamp>(6, _omitFieldNames ? '' : 'settlesBy',
+        subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1329,15 +1649,15 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   void clearSuccess() => $_clearField(2);
 
   @$pb.TagNumber(4)
-  $3.Timestamp get completedAt => $_getN(2);
+  $4.Timestamp get completedAt => $_getN(2);
   @$pb.TagNumber(4)
-  set completedAt($3.Timestamp value) => $_setField(4, value);
+  set completedAt($4.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCompletedAt() => $_has(2);
   @$pb.TagNumber(4)
   void clearCompletedAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Timestamp ensureCompletedAt() => $_ensure(2);
+  $4.Timestamp ensureCompletedAt() => $_ensure(2);
 
   /// Why it failed, in the same closed vocabulary the app is eventually given. The gateway
   /// forwards this into webrtc.v1.CommandResult.error unchanged; it does not translate.
@@ -1356,15 +1676,15 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   /// gateway reads UNSPECIFIED. Set success = false with no code and the meaning is "it
   /// failed, reason unstated" — which is what the string codes amounted to anyway.
   @$pb.TagNumber(5)
-  $4.CommandError get error => $_getN(3);
+  $5.CommandError get error => $_getN(3);
   @$pb.TagNumber(5)
-  set error($4.CommandError value) => $_setField(5, value);
+  set error($5.CommandError value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasError() => $_has(3);
   @$pb.TagNumber(5)
   void clearError() => $_clearField(5);
   @$pb.TagNumber(5)
-  $4.CommandError ensureError() => $_ensure(3);
+  $5.CommandError ensureError() => $_ensure(3);
 
   /// When this connector's own optimistic window closes: by this time the value has either
   /// been confirmed by the device or restored, and either way the connector will have
@@ -1383,15 +1703,15 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   /// This bounds the wait; it does not label the values that arrive. Which update was the
   /// optimistic one is device.v1.PropertyUpdate.provenance.
   @$pb.TagNumber(6)
-  $3.Timestamp get settlesBy => $_getN(4);
+  $4.Timestamp get settlesBy => $_getN(4);
   @$pb.TagNumber(6)
-  set settlesBy($3.Timestamp value) => $_setField(6, value);
+  set settlesBy($4.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasSettlesBy() => $_has(4);
   @$pb.TagNumber(6)
   void clearSettlesBy() => $_clearField(6);
   @$pb.TagNumber(6)
-  $3.Timestamp ensureSettlesBy() => $_ensure(4);
+  $4.Timestamp ensureSettlesBy() => $_ensure(4);
 }
 
 /// Tells a connector to accept new devices for a while, gateway → connector.
@@ -1402,7 +1722,7 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
 class EnterPairingMode extends $pb.GeneratedMessage {
   factory EnterPairingMode({
     $core.String? requestId,
-    $5.PairingWindow? window,
+    $6.PairingWindow? window,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -1425,8 +1745,8 @@ class EnterPairingMode extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOM<$5.PairingWindow>(2, _omitFieldNames ? '' : 'window',
-        subBuilder: $5.PairingWindow.create)
+    ..aOM<$6.PairingWindow>(2, _omitFieldNames ? '' : 'window',
+        subBuilder: $6.PairingWindow.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1463,15 +1783,15 @@ class EnterPairingMode extends $pb.GeneratedMessage {
   /// A connector is the last thing standing between a number on the wire and a radio that
   /// accepts anything nearby for that long.
   @$pb.TagNumber(2)
-  $5.PairingWindow get window => $_getN(1);
+  $6.PairingWindow get window => $_getN(1);
   @$pb.TagNumber(2)
-  set window($5.PairingWindow value) => $_setField(2, value);
+  set window($6.PairingWindow value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasWindow() => $_has(1);
   @$pb.TagNumber(2)
   void clearWindow() => $_clearField(2);
   @$pb.TagNumber(2)
-  $5.PairingWindow ensureWindow() => $_ensure(1);
+  $6.PairingWindow ensureWindow() => $_ensure(1);
 }
 
 /// A connector's answer to EnterPairingMode: whether the window opened, and nothing more.
@@ -1483,8 +1803,8 @@ class PairingModeResult extends $pb.GeneratedMessage {
   factory PairingModeResult({
     $core.String? requestId,
     $core.bool? accepted,
-    $5.PairingErrorDetail? error,
-    $3.Timestamp? expiresAt,
+    $6.PairingErrorDetail? error,
+    $4.Timestamp? expiresAt,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -1510,10 +1830,10 @@ class PairingModeResult extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOB(2, _omitFieldNames ? '' : 'accepted')
-    ..aOM<$5.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: $5.PairingErrorDetail.create)
-    ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'expiresAt',
-        subBuilder: $3.Timestamp.create)
+    ..aOM<$6.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
+        subBuilder: $6.PairingErrorDetail.create)
+    ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'expiresAt',
+        subBuilder: $4.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1559,28 +1879,28 @@ class PairingModeResult extends $pb.GeneratedMessage {
   /// CONNECTOR_UNAVAILABLE, INTERNAL. NOT_ENTITLED and ALREADY_IN_PROGRESS are the gateway's,
   /// decided before this message is sent, and a connector must not claim them.
   @$pb.TagNumber(3)
-  $5.PairingErrorDetail get error => $_getN(2);
+  $6.PairingErrorDetail get error => $_getN(2);
   @$pb.TagNumber(3)
-  set error($5.PairingErrorDetail value) => $_setField(3, value);
+  set error($6.PairingErrorDetail value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.PairingErrorDetail ensureError() => $_ensure(2);
+  $6.PairingErrorDetail ensureError() => $_ensure(2);
 
   /// When the window closes, if it opened. Lets the gateway expire its own record against the
   /// connector's clock rather than a guess — the connector is the party that clamped it.
   @$pb.TagNumber(4)
-  $3.Timestamp get expiresAt => $_getN(3);
+  $4.Timestamp get expiresAt => $_getN(3);
   @$pb.TagNumber(4)
-  set expiresAt($3.Timestamp value) => $_setField(4, value);
+  set expiresAt($4.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasExpiresAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearExpiresAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $3.Timestamp ensureExpiresAt() => $_ensure(3);
+  $4.Timestamp ensureExpiresAt() => $_ensure(3);
 }
 
 /// What the window produced, connector → gateway, sent once when it closes.
@@ -1597,7 +1917,7 @@ class PairingModeEnded extends $pb.GeneratedMessage {
   factory PairingModeEnded({
     $core.String? requestId,
     $core.int? devicesAttributed,
-    $5.PairingErrorDetail? error,
+    $6.PairingErrorDetail? error,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -1623,8 +1943,8 @@ class PairingModeEnded extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..a<$core.int>(
         2, _omitFieldNames ? '' : 'devicesAttributed', $pb.PbFieldType.OU3)
-    ..aOM<$5.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: $5.PairingErrorDetail.create)
+    ..aOM<$6.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
+        subBuilder: $6.PairingErrorDetail.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1672,15 +1992,15 @@ class PairingModeEnded extends $pb.GeneratedMessage {
   /// and WRONG_DEVICE are reported here and should name the device in the message, since that
   /// is the only place a user learns which device is now sitting on their hub.
   @$pb.TagNumber(3)
-  $5.PairingErrorDetail get error => $_getN(2);
+  $6.PairingErrorDetail get error => $_getN(2);
   @$pb.TagNumber(3)
-  set error($5.PairingErrorDetail value) => $_setField(3, value);
+  set error($6.PairingErrorDetail value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.PairingErrorDetail ensureError() => $_ensure(2);
+  $6.PairingErrorDetail ensureError() => $_ensure(2);
 }
 
 enum SessionRequest_Payload {
@@ -1695,24 +2015,28 @@ enum SessionRequest_Payload {
   pairingModeEnded,
   linkResult,
   linksReported,
+  backendHealth,
+  reinitializeBackendResult,
   notSet
 }
 
 class SessionRequest extends $pb.GeneratedMessage {
   factory SessionRequest({
     $core.String? messageId,
-    $3.Timestamp? sentAt,
+    $4.Timestamp? sentAt,
     ConnectorHandshake? handshake,
-    $6.PropertyUpdateBatch? propertyUpdate,
+    $7.PropertyUpdateBatch? propertyUpdate,
     DeviceAnnouncement? deviceAnnounced,
     DeviceRemoval? deviceRemoved,
     ConnectorCommandResult? commandResult,
     HeartBeat? heartbeat,
-    $7.DeviceEventBatch? deviceEvents,
+    $8.DeviceEventBatch? deviceEvents,
     PairingModeResult? pairingModeResult,
     PairingModeEnded? pairingModeEnded,
     LinkResult? linkResult,
     LinksReported? linksReported,
+    BackendHealthReport? backendHealth,
+    ReinitializeBackendResult? reinitializeBackendResult,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1728,6 +2052,9 @@ class SessionRequest extends $pb.GeneratedMessage {
     if (pairingModeEnded != null) result.pairingModeEnded = pairingModeEnded;
     if (linkResult != null) result.linkResult = linkResult;
     if (linksReported != null) result.linksReported = linksReported;
+    if (backendHealth != null) result.backendHealth = backendHealth;
+    if (reinitializeBackendResult != null)
+      result.reinitializeBackendResult = reinitializeBackendResult;
     return result;
   }
 
@@ -1753,6 +2080,8 @@ class SessionRequest extends $pb.GeneratedMessage {
     11: SessionRequest_Payload.pairingModeEnded,
     12: SessionRequest_Payload.linkResult,
     13: SessionRequest_Payload.linksReported,
+    14: SessionRequest_Payload.backendHealth,
+    15: SessionRequest_Payload.reinitializeBackendResult,
     0: SessionRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1760,14 +2089,14 @@ class SessionRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    ..oo(0, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $3.Timestamp.create)
+    ..aOM<$4.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $4.Timestamp.create)
     ..aOM<ConnectorHandshake>(3, _omitFieldNames ? '' : 'handshake',
         subBuilder: ConnectorHandshake.create)
-    ..aOM<$6.PropertyUpdateBatch>(4, _omitFieldNames ? '' : 'propertyUpdate',
-        subBuilder: $6.PropertyUpdateBatch.create)
+    ..aOM<$7.PropertyUpdateBatch>(4, _omitFieldNames ? '' : 'propertyUpdate',
+        subBuilder: $7.PropertyUpdateBatch.create)
     ..aOM<DeviceAnnouncement>(5, _omitFieldNames ? '' : 'deviceAnnounced',
         subBuilder: DeviceAnnouncement.create)
     ..aOM<DeviceRemoval>(6, _omitFieldNames ? '' : 'deviceRemoved',
@@ -1776,8 +2105,8 @@ class SessionRequest extends $pb.GeneratedMessage {
         subBuilder: ConnectorCommandResult.create)
     ..aOM<HeartBeat>(8, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
-    ..aOM<$7.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
-        subBuilder: $7.DeviceEventBatch.create)
+    ..aOM<$8.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
+        subBuilder: $8.DeviceEventBatch.create)
     ..aOM<PairingModeResult>(10, _omitFieldNames ? '' : 'pairingModeResult',
         subBuilder: PairingModeResult.create)
     ..aOM<PairingModeEnded>(11, _omitFieldNames ? '' : 'pairingModeEnded',
@@ -1786,6 +2115,11 @@ class SessionRequest extends $pb.GeneratedMessage {
         subBuilder: LinkResult.create)
     ..aOM<LinksReported>(13, _omitFieldNames ? '' : 'linksReported',
         subBuilder: LinksReported.create)
+    ..aOM<BackendHealthReport>(14, _omitFieldNames ? '' : 'backendHealth',
+        subBuilder: BackendHealthReport.create)
+    ..aOM<ReinitializeBackendResult>(
+        15, _omitFieldNames ? '' : 'reinitializeBackendResult',
+        subBuilder: ReinitializeBackendResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1823,15 +2157,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Timestamp get sentAt => $_getN(1);
+  $4.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($3.Timestamp value) => $_setField(2, value);
+  set sentAt($4.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Timestamp ensureSentAt() => $_ensure(1);
+  $4.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
   ConnectorHandshake get handshake => $_getN(2);
@@ -1845,15 +2179,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   ConnectorHandshake ensureHandshake() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $6.PropertyUpdateBatch get propertyUpdate => $_getN(3);
+  $7.PropertyUpdateBatch get propertyUpdate => $_getN(3);
   @$pb.TagNumber(4)
-  set propertyUpdate($6.PropertyUpdateBatch value) => $_setField(4, value);
+  set propertyUpdate($7.PropertyUpdateBatch value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasPropertyUpdate() => $_has(3);
   @$pb.TagNumber(4)
   void clearPropertyUpdate() => $_clearField(4);
   @$pb.TagNumber(4)
-  $6.PropertyUpdateBatch ensurePropertyUpdate() => $_ensure(3);
+  $7.PropertyUpdateBatch ensurePropertyUpdate() => $_ensure(3);
 
   @$pb.TagNumber(5)
   DeviceAnnouncement get deviceAnnounced => $_getN(4);
@@ -1900,15 +2234,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   HeartBeat ensureHeartbeat() => $_ensure(7);
 
   @$pb.TagNumber(9)
-  $7.DeviceEventBatch get deviceEvents => $_getN(8);
+  $8.DeviceEventBatch get deviceEvents => $_getN(8);
   @$pb.TagNumber(9)
-  set deviceEvents($7.DeviceEventBatch value) => $_setField(9, value);
+  set deviceEvents($8.DeviceEventBatch value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasDeviceEvents() => $_has(8);
   @$pb.TagNumber(9)
   void clearDeviceEvents() => $_clearField(9);
   @$pb.TagNumber(9)
-  $7.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
+  $8.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
 
   @$pb.TagNumber(10)
   PairingModeResult get pairingModeResult => $_getN(9);
@@ -1953,6 +2287,30 @@ class SessionRequest extends $pb.GeneratedMessage {
   void clearLinksReported() => $_clearField(13);
   @$pb.TagNumber(13)
   LinksReported ensureLinksReported() => $_ensure(12);
+
+  /// The backend's health; see BackendHealthReport.
+  @$pb.TagNumber(14)
+  BackendHealthReport get backendHealth => $_getN(13);
+  @$pb.TagNumber(14)
+  set backendHealth(BackendHealthReport value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasBackendHealth() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearBackendHealth() => $_clearField(14);
+  @$pb.TagNumber(14)
+  BackendHealthReport ensureBackendHealth() => $_ensure(13);
+
+  @$pb.TagNumber(15)
+  ReinitializeBackendResult get reinitializeBackendResult => $_getN(14);
+  @$pb.TagNumber(15)
+  set reinitializeBackendResult(ReinitializeBackendResult value) =>
+      $_setField(15, value);
+  @$pb.TagNumber(15)
+  $core.bool hasReinitializeBackendResult() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearReinitializeBackendResult() => $_clearField(15);
+  @$pb.TagNumber(15)
+  ReinitializeBackendResult ensureReinitializeBackendResult() => $_ensure(14);
 }
 
 enum SessionResponse_Payload {
@@ -1966,23 +2324,25 @@ enum SessionResponse_Payload {
   createLink,
   removeLink,
   listLinks,
+  reinitializeBackend,
   notSet
 }
 
 class SessionResponse extends $pb.GeneratedMessage {
   factory SessionResponse({
     $core.String? messageId,
-    $3.Timestamp? sentAt,
+    $4.Timestamp? sentAt,
     HandshakeAck? handshakeAck,
     SubscribeDevice? subscribe,
     UnsubscribeDevice? unsubscribe,
     GatewayError? error,
-    $4.DeviceCommand? executeCommand,
-    $4.AttributeWriteRequest? executeAttributeWrite,
+    $5.DeviceCommand? executeCommand,
+    $5.AttributeWriteRequest? executeAttributeWrite,
     EnterPairingMode? enterPairingMode,
     CreateLink? createLink,
     RemoveLink? removeLink,
     ListLinks? listLinks,
+    ReinitializeBackend? reinitializeBackend,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1998,6 +2358,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     if (createLink != null) result.createLink = createLink;
     if (removeLink != null) result.removeLink = removeLink;
     if (listLinks != null) result.listLinks = listLinks;
+    if (reinitializeBackend != null)
+      result.reinitializeBackend = reinitializeBackend;
     return result;
   }
 
@@ -2022,6 +2384,7 @@ class SessionResponse extends $pb.GeneratedMessage {
     11: SessionResponse_Payload.createLink,
     12: SessionResponse_Payload.removeLink,
     13: SessionResponse_Payload.listLinks,
+    14: SessionResponse_Payload.reinitializeBackend,
     0: SessionResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2029,10 +2392,10 @@ class SessionResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    ..oo(0, [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $3.Timestamp.create)
+    ..aOM<$4.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $4.Timestamp.create)
     ..aOM<HandshakeAck>(3, _omitFieldNames ? '' : 'handshakeAck',
         subBuilder: HandshakeAck.create)
     ..aOM<SubscribeDevice>(5, _omitFieldNames ? '' : 'subscribe',
@@ -2041,11 +2404,11 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: UnsubscribeDevice.create)
     ..aOM<GatewayError>(7, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
-    ..aOM<$4.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
-        subBuilder: $4.DeviceCommand.create)
-    ..aOM<$4.AttributeWriteRequest>(
+    ..aOM<$5.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
+        subBuilder: $5.DeviceCommand.create)
+    ..aOM<$5.AttributeWriteRequest>(
         9, _omitFieldNames ? '' : 'executeAttributeWrite',
-        subBuilder: $4.AttributeWriteRequest.create)
+        subBuilder: $5.AttributeWriteRequest.create)
     ..aOM<EnterPairingMode>(10, _omitFieldNames ? '' : 'enterPairingMode',
         subBuilder: EnterPairingMode.create)
     ..aOM<CreateLink>(11, _omitFieldNames ? '' : 'createLink',
@@ -2054,6 +2417,8 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: RemoveLink.create)
     ..aOM<ListLinks>(13, _omitFieldNames ? '' : 'listLinks',
         subBuilder: ListLinks.create)
+    ..aOM<ReinitializeBackend>(14, _omitFieldNames ? '' : 'reinitializeBackend',
+        subBuilder: ReinitializeBackend.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2091,15 +2456,15 @@ class SessionResponse extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $3.Timestamp get sentAt => $_getN(1);
+  $4.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($3.Timestamp value) => $_setField(2, value);
+  set sentAt($4.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.Timestamp ensureSentAt() => $_ensure(1);
+  $4.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
   HandshakeAck get handshakeAck => $_getN(2);
@@ -2146,29 +2511,29 @@ class SessionResponse extends $pb.GeneratedMessage {
   GatewayError ensureError() => $_ensure(5);
 
   @$pb.TagNumber(8)
-  $4.DeviceCommand get executeCommand => $_getN(6);
+  $5.DeviceCommand get executeCommand => $_getN(6);
   @$pb.TagNumber(8)
-  set executeCommand($4.DeviceCommand value) => $_setField(8, value);
+  set executeCommand($5.DeviceCommand value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasExecuteCommand() => $_has(6);
   @$pb.TagNumber(8)
   void clearExecuteCommand() => $_clearField(8);
   @$pb.TagNumber(8)
-  $4.DeviceCommand ensureExecuteCommand() => $_ensure(6);
+  $5.DeviceCommand ensureExecuteCommand() => $_ensure(6);
 
   /// The connector-leg half of PERMISSION_ACTION_WRITE. A sibling case rather than another
   /// meaning overloaded onto execute_command, which is the mistake this replaces.
   @$pb.TagNumber(9)
-  $4.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
+  $5.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
   @$pb.TagNumber(9)
-  set executeAttributeWrite($4.AttributeWriteRequest value) =>
+  set executeAttributeWrite($5.AttributeWriteRequest value) =>
       $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasExecuteAttributeWrite() => $_has(7);
   @$pb.TagNumber(9)
   void clearExecuteAttributeWrite() => $_clearField(9);
   @$pb.TagNumber(9)
-  $4.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
+  $5.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
 
   /// The connector-leg half of the pairing flow. See EnterPairingMode.
   @$pb.TagNumber(10)
@@ -2217,6 +2582,18 @@ class SessionResponse extends $pb.GeneratedMessage {
   void clearListLinks() => $_clearField(13);
   @$pb.TagNumber(13)
   ListLinks ensureListLinks() => $_ensure(11);
+
+  /// See ReinitializeBackend.
+  @$pb.TagNumber(14)
+  ReinitializeBackend get reinitializeBackend => $_getN(12);
+  @$pb.TagNumber(14)
+  set reinitializeBackend(ReinitializeBackend value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasReinitializeBackend() => $_has(12);
+  @$pb.TagNumber(14)
+  void clearReinitializeBackend() => $_clearField(14);
+  @$pb.TagNumber(14)
+  ReinitializeBackend ensureReinitializeBackend() => $_ensure(12);
 }
 
 const $core.bool _omitFieldNames =

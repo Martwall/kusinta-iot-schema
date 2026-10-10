@@ -52,3 +52,69 @@ message ErrorDetail {
   string message = 2;
   map<string, string> metadata = 3;
 }
+
+// Whether the backend a connector drives is working: the radio central, the network server,
+// whatever the connector talks to on the far side from the gateway. Distinct from whether
+// the connector itself is connected — that is the gateway↔connector stream, and a connector
+// whose stream is down states nothing at all.
+//
+// Open, like every proto3 enum: a reader given a value its schema predates holds the number.
+// Every reader treats anything but FAILING as healthy, so a state added later must be one an
+// older reader may safely take for OK. A new way of failing is a new BackendFailureReason
+// under FAILING, never a new state.
+enum BackendHealthState {
+  // No statement. Read as OK: a connector that predates backend health, or one still making
+  // its first attempt, has said nothing is wrong.
+  BACKEND_HEALTH_STATE_UNSPECIFIED = 0;
+
+  // The backend is reachable and answering.
+  BACKEND_HEALTH_STATE_OK = 1;
+
+  // The backend is failing, and not for a single dropped call: the connector has retried as
+  // its own policy says and is still failing. The connector stays connected to the gateway.
+  BACKEND_HEALTH_STATE_FAILING = 2;
+}
+
+// Why a backend is failing, or why a re-initialisation could not be attempted. Coarse on
+// purpose: each value answers "what should someone do now?", and the specifics belong in a
+// connector's log-only detail, never here.
+//
+// Shared rather than mirrored, for the reason PairingError gives: the connector produces it
+// and the gateway passes it through unchanged.
+enum BackendFailureReason {
+  // Not stated, or a value this reader's schema does not know. Read as BACKEND_ERROR.
+  BACKEND_FAILURE_REASON_UNSPECIFIED = 0;
+
+  // The backend cannot be reached: no route, connection refused, no answer. Often a power or
+  // network fault at the backend's side; a re-initialisation may help once that is fixed.
+  BACKEND_FAILURE_REASON_UNREACHABLE = 1;
+
+  // The backend answered and refused the connector's credentials. Retrying the same
+  // credentials will not help; someone must change them.
+  BACKEND_FAILURE_REASON_AUTH_FAILED = 2;
+
+  // The backend is reached and authenticated, but answers with errors or not as the connector
+  // expects: a fault on the backend's side, or a version the connector does not understand.
+  BACKEND_FAILURE_REASON_BACKEND_ERROR = 3;
+
+  // The connector lacks what it needs to reach the backend at all: an address, credentials.
+  // Needs an installer, not a retry.
+  BACKEND_FAILURE_REASON_MISCONFIGURED = 4;
+
+  // A fault in the connector itself, not in the backend.
+  BACKEND_FAILURE_REASON_INTERNAL = 5;
+}
+
+// A connector's backend health, as both legs carry it: connector to gateway inside
+// connector.v1.BackendHealthReport, and gateway to app on webrtc.v1.ConnectorDescriptor.
+//
+// Deliberately state and category only. A connector's free-text detail travels beside this,
+// on the connector leg alone, and is for the gateway's logs: it may name hosts, addresses or
+// accounts, and it never reaches the app or the cloud. Carrying only this type on the app
+// leg is what keeps it there.
+message BackendHealth {
+  BackendHealthState state = 1;
+
+  // Why, when state is FAILING. UNSPECIFIED otherwise, and ignored when state is not FAILING.
+  BackendFailureReason reason = 2;
+}
