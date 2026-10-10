@@ -52,6 +52,7 @@ const ClearReason$json = {
     {'1': 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE', '2': 4},
     {'1': 'CLEAR_REASON_NO_LONGER_REPORTED', '2': 5},
     {'1': 'CLEAR_REASON_MOVED', '2': 6},
+    {'1': 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR', '2': 7},
   ],
 };
 
@@ -61,7 +62,8 @@ final $typed_data.Uint8List clearReasonDescriptor = $convert.base64Decode(
     'FTT05fUkVDT1ZFUkVEEAESFgoSQ0xFQVJfUkVBU09OX0ZJTEVEEAISHwobQ0xFQVJfUkVBU09O'
     'X0RFVklDRV9SRU1PVkVEEAMSMAosQ0xFQVJfUkVBU09OX1NVUEVSU0VERURfQllfQ09OTkVDVE'
     '9SX09GRkxJTkUQBBIjCh9DTEVBUl9SRUFTT05fTk9fTE9OR0VSX1JFUE9SVEVEEAUSFgoSQ0xF'
-    'QVJfUkVBU09OX01PVkVEEAY=');
+    'QVJfUkVBU09OX01PVkVEEAYSLgoqQ0xFQVJfUkVBU09OX1NVUEVSU0VERURfQllfQ09OTkVDVE'
+    '9SX0VSUk9SEAc=');
 
 @$core.Deprecated('Use ackStatusDescriptor instead')
 const AckStatus$json = {
@@ -188,6 +190,14 @@ const Problem$json = {
       '17': true
     },
     {'1': 'device_count', '3': 7, '4': 1, '5': 13, '10': 'deviceCount'},
+    {
+      '1': 'backend_failure',
+      '3': 8,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.BackendFailureReason',
+      '10': 'backendFailure'
+    },
   ],
   '8': [
     {'1': '_battery_percent'},
@@ -202,7 +212,8 @@ final $typed_data.Uint8List problemDescriptor = $convert.base64Decode(
     '90LmlkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSNwoJb3BlbmVkX2F0GAUgASgLMhouZ29v'
     'Z2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIb3BlbmVkQXQSLAoPYmF0dGVyeV9wZXJjZW50GAYgAS'
     'gNSABSDmJhdHRlcnlQZXJjZW50iAEBEiEKDGRldmljZV9jb3VudBgHIAEoDVILZGV2aWNlQ291'
-    'bnRCEgoQX2JhdHRlcnlfcGVyY2VudA==');
+    'bnQSVAoPYmFja2VuZF9mYWlsdXJlGAggASgOMisua3VzaW50YS5pb3QuY29tbW9uLnYxLkJhY2'
+    'tlbmRGYWlsdXJlUmVhc29uUg5iYWNrZW5kRmFpbHVyZUISChBfYmF0dGVyeV9wZXJjZW50');
 
 @$core.Deprecated('Use problemClearedDescriptor instead')
 const ProblemCleared$json = {

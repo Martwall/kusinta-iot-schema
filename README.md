@@ -173,7 +173,9 @@ The connector states its backend's health as a `common.v1.BackendHealth` — a s
 `FAILING`) and a coarse `BackendFailureReason` — in its handshake and in a
 `BackendHealthReport` whenever either changes. A connector that never sends one is read as
 `OK`. The report's free-text `detail` is for the gateway's logs; the app is given only the
-`BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud only the problem.
+`BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud only the problem and
+its `backend_failure` category. While `CONNECTOR_ERROR` is open, the devices behind that
+connector raise no `DEVICE_OFFLINE` of their own, as under `CONNECTOR_OFFLINE`.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by

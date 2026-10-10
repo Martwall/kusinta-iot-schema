@@ -6,7 +6,7 @@ import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2"
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { SpaceType } from "../../common/v1/types_pb.js";
+import type { BackendFailureReason, SpaceType } from "../../common/v1/types_pb.js";
 
 /**
  * Describes the file kusinta/iot/reporting/v1/reporting.proto.
@@ -192,6 +192,17 @@ export declare type Problem = Message<"kusinta.iot.reporting.v1.Problem"> & {
    * @generated from field: uint32 device_count = 7;
    */
   deviceCount: number;
+
+  /**
+   * CONNECTOR_ERROR: why the connector's backend is failing, as the connector's latest
+   * connector.v1.BackendHealthReport states it. A category, not a message: the connector's
+   * free-text detail is never reported, here or anywhere else. UNSPECIFIED for every other
+   * kind, and for a connector that stated no reason. A change of reason while the problem is
+   * open is sent as a change of the problem.
+   *
+   * @generated from field: kusinta.iot.common.v1.BackendFailureReason backend_failure = 8;
+   */
+  backendFailure: BackendFailureReason;
 };
 
 /**
@@ -269,7 +280,7 @@ export declare type ProblemTransition = Message<"kusinta.iot.reporting.v1.Proble
   change: {
     /**
      * The problem opened, or something it carries changed while open (a battery level, a
-     * device count, the space it is filed in). Carries the whole problem, not a delta: the
+     * device count, the space it is filed in, a backend failure reason). Carries the whole problem, not a delta: the
      * same problem_id, the next seq and the original opened_at.
      *
      * @generated from field: kusinta.iot.reporting.v1.Problem open = 3;
@@ -749,7 +760,18 @@ export enum ProblemKind {
    * one says otherwise; a connector that never reports its backend never raises it. When the
    * connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
    * CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
-   * handshake decides it afresh. Nothing of the connector's own detail is reported.
+   * handshake decides it afresh. Nothing of the connector's own detail is reported; the
+   * problem carries only the category, in backend_failure.
+   *
+   * While it is open, the gateway raises no DEVICE_OFFLINE for the devices behind that
+   * connector, as for CONNECTOR_OFFLINE: one problem rather than one per device. A
+   * DEVICE_OFFLINE open when the backend starts failing closes with
+   * CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
+   * When it clears as recovered, the next quarter-hour evaluation judges each device afresh,
+   * and a device still unheard opens a new DEVICE_OFFLINE stamped with that quarter hour;
+   * when CONNECTOR_OFFLINE supersedes it, that problem holds the devices' DEVICE_OFFLINE back
+   * instead. For a device in a home the clear, like any, waits for the quarter hour (see
+   * Problem).
    *
    * @generated from enum value: PROBLEM_KIND_CONNECTOR_ERROR = 7;
    */
@@ -839,6 +861,14 @@ export enum ClearReason {
    * @generated from enum value: CLEAR_REASON_MOVED = 6;
    */
   MOVED = 6,
+
+  /**
+   * The backend of the connector behind the device started failing; see
+   * PROBLEM_KIND_CONNECTOR_ERROR.
+   *
+   * @generated from enum value: CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR = 7;
+   */
+  SUPERSEDED_BY_CONNECTOR_ERROR = 7,
 }
 
 /**

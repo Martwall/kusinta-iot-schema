@@ -274,6 +274,7 @@ class Problem extends $pb.GeneratedMessage {
     $1.Timestamp? openedAt,
     $core.int? batteryPercent,
     $core.int? deviceCount,
+    $2.BackendFailureReason? backendFailure,
   }) {
     final result = create();
     if (kind != null) result.kind = kind;
@@ -282,6 +283,7 @@ class Problem extends $pb.GeneratedMessage {
     if (openedAt != null) result.openedAt = openedAt;
     if (batteryPercent != null) result.batteryPercent = batteryPercent;
     if (deviceCount != null) result.deviceCount = deviceCount;
+    if (backendFailure != null) result.backendFailure = backendFailure;
     return result;
   }
 
@@ -312,6 +314,12 @@ class Problem extends $pb.GeneratedMessage {
     ..a<$core.int>(
         6, _omitFieldNames ? '' : 'batteryPercent', $pb.PbFieldType.OU3)
     ..a<$core.int>(7, _omitFieldNames ? '' : 'deviceCount', $pb.PbFieldType.OU3)
+    ..e<$2.BackendFailureReason>(
+        8, _omitFieldNames ? '' : 'backendFailure', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $2.BackendFailureReason.BACKEND_FAILURE_REASON_UNSPECIFIED,
+        valueOf: $2.BackendFailureReason.valueOf,
+        enumValues: $2.BackendFailureReason.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -414,6 +422,20 @@ class Problem extends $pb.GeneratedMessage {
   $core.bool hasDeviceCount() => $_has(5);
   @$pb.TagNumber(7)
   void clearDeviceCount() => $_clearField(7);
+
+  /// CONNECTOR_ERROR: why the connector's backend is failing, as the connector's latest
+  /// connector.v1.BackendHealthReport states it. A category, not a message: the connector's
+  /// free-text detail is never reported, here or anywhere else. UNSPECIFIED for every other
+  /// kind, and for a connector that stated no reason. A change of reason while the problem is
+  /// open is sent as a change of the problem.
+  @$pb.TagNumber(8)
+  $2.BackendFailureReason get backendFailure => $_getN(6);
+  @$pb.TagNumber(8)
+  set backendFailure($2.BackendFailureReason value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasBackendFailure() => $_has(6);
+  @$pb.TagNumber(8)
+  void clearBackendFailure() => $_clearField(8);
 }
 
 /// A problem closing.
@@ -605,7 +627,7 @@ class ProblemTransition extends $pb.GeneratedMessage {
   void clearSeq() => $_clearField(2);
 
   /// The problem opened, or something it carries changed while open (a battery level, a
-  /// device count, the space it is filed in). Carries the whole problem, not a delta: the
+  /// device count, the space it is filed in, a backend failure reason). Carries the whole problem, not a delta: the
   /// same problem_id, the next seq and the original opened_at.
   @$pb.TagNumber(3)
   Problem get open => $_getN(2);

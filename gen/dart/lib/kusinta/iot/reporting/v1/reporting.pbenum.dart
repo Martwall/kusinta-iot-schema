@@ -55,7 +55,18 @@ class ProblemKind extends $pb.ProtobufEnum {
   /// one says otherwise; a connector that never reports its backend never raises it. When the
   /// connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
   /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
-  /// handshake decides it afresh. Nothing of the connector's own detail is reported.
+  /// handshake decides it afresh. Nothing of the connector's own detail is reported; the
+  /// problem carries only the category, in backend_failure.
+  ///
+  /// While it is open, the gateway raises no DEVICE_OFFLINE for the devices behind that
+  /// connector, as for CONNECTOR_OFFLINE: one problem rather than one per device. A
+  /// DEVICE_OFFLINE open when the backend starts failing closes with
+  /// CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR, and no new one opens while the error lasts.
+  /// When it clears as recovered, the next quarter-hour evaluation judges each device afresh,
+  /// and a device still unheard opens a new DEVICE_OFFLINE stamped with that quarter hour;
+  /// when CONNECTOR_OFFLINE supersedes it, that problem holds the devices' DEVICE_OFFLINE back
+  /// instead. For a device in a home the clear, like any, waits for the quarter hour (see
+  /// Problem).
   static const ProblemKind PROBLEM_KIND_CONNECTOR_ERROR =
       ProblemKind._(7, _omitEnumNames ? '' : 'PROBLEM_KIND_CONNECTOR_ERROR');
 
@@ -130,6 +141,12 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_MOVED =
       ClearReason._(6, _omitEnumNames ? '' : 'CLEAR_REASON_MOVED');
 
+  /// The backend of the connector behind the device started failing; see
+  /// PROBLEM_KIND_CONNECTOR_ERROR.
+  static const ClearReason CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR =
+      ClearReason._(7,
+          _omitEnumNames ? '' : 'CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR');
+
   static const $core.List<ClearReason> values = <ClearReason>[
     CLEAR_REASON_UNSPECIFIED,
     CLEAR_REASON_RECOVERED,
@@ -138,10 +155,11 @@ class ClearReason extends $pb.ProtobufEnum {
     CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE,
     CLEAR_REASON_NO_LONGER_REPORTED,
     CLEAR_REASON_MOVED,
+    CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR,
   ];
 
   static final $core.List<ClearReason?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static ClearReason? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

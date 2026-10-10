@@ -34,6 +34,7 @@ class ClearReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE: _ClassVar[ClearReason]
     CLEAR_REASON_NO_LONGER_REPORTED: _ClassVar[ClearReason]
     CLEAR_REASON_MOVED: _ClassVar[ClearReason]
+    CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR: _ClassVar[ClearReason]
 
 class AckStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -59,6 +60,7 @@ CLEAR_REASON_DEVICE_REMOVED: ClearReason
 CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE: ClearReason
 CLEAR_REASON_NO_LONGER_REPORTED: ClearReason
 CLEAR_REASON_MOVED: ClearReason
+CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR: ClearReason
 ACK_STATUS_UNSPECIFIED: AckStatus
 ACK_STATUS_APPLIED: AckStatus
 ACK_STATUS_DUPLICATE: AckStatus
@@ -88,20 +90,22 @@ class ProblemSubject(_message.Message):
     def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., gateway: _Optional[bool] = ...) -> None: ...
 
 class Problem(_message.Message):
-    __slots__ = ("kind", "subject", "space_id", "opened_at", "battery_percent", "device_count")
+    __slots__ = ("kind", "subject", "space_id", "opened_at", "battery_percent", "device_count", "backend_failure")
     KIND_FIELD_NUMBER: _ClassVar[int]
     SUBJECT_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     OPENED_AT_FIELD_NUMBER: _ClassVar[int]
     BATTERY_PERCENT_FIELD_NUMBER: _ClassVar[int]
     DEVICE_COUNT_FIELD_NUMBER: _ClassVar[int]
+    BACKEND_FAILURE_FIELD_NUMBER: _ClassVar[int]
     kind: ProblemKind
     subject: ProblemSubject
     space_id: _identity_pb2.SpaceId
     opened_at: _timestamp_pb2.Timestamp
     battery_percent: int
     device_count: int
-    def __init__(self, kind: _Optional[_Union[ProblemKind, str]] = ..., subject: _Optional[_Union[ProblemSubject, _Mapping]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., opened_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., battery_percent: _Optional[int] = ..., device_count: _Optional[int] = ...) -> None: ...
+    backend_failure: _types_pb2.BackendFailureReason
+    def __init__(self, kind: _Optional[_Union[ProblemKind, str]] = ..., subject: _Optional[_Union[ProblemSubject, _Mapping]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., opened_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., battery_percent: _Optional[int] = ..., device_count: _Optional[int] = ..., backend_failure: _Optional[_Union[_types_pb2.BackendFailureReason, str]] = ...) -> None: ...
 
 class ProblemCleared(_message.Message):
     __slots__ = ("cleared_at", "reason")

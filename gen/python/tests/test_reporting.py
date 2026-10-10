@@ -255,3 +255,33 @@ def test_each_response_can_ask_the_gateway_to_resync():
     ]
 
     assert [r.resync_required for r in responses] == [True, True, True]
+
+
+# --- connector error ------------------------------------------------------------------
+
+
+def test_a_connector_error_carries_the_backend_failure_category():
+    problem = _round_trip(
+        reporting_pb2.Problem(
+            kind=reporting_pb2.PROBLEM_KIND_CONNECTOR_ERROR,
+            backend_failure=types_pb2.BACKEND_FAILURE_REASON_AUTH_FAILED,
+        )
+    )
+
+    assert problem.backend_failure == types_pb2.BACKEND_FAILURE_REASON_AUTH_FAILED
+
+
+def test_a_problem_has_no_field_for_the_connector_free_text_detail():
+    fields = [f.name for f in reporting_pb2.Problem.DESCRIPTOR.fields]
+
+    assert "detail" not in fields
+
+
+def test_a_device_offline_closes_when_its_connector_backend_fails():
+    cleared = _round_trip(
+        reporting_pb2.ProblemCleared(
+            reason=reporting_pb2.CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR
+        )
+    )
+
+    assert cleared.reason == reporting_pb2.CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR
