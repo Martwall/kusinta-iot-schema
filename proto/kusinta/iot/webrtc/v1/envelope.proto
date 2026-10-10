@@ -125,7 +125,9 @@ enum GatewayErrorCode {
   // a change on the receiving side — a capability the target lacks, configuration only a
   // person can fix. Do not retry as is. Distinct from INVALID_REQUEST, which is the app's
   // bug, and from UNAVAILABLE, which clears on its own. GatewayError.metadata says which
-  // precondition failed where the operation documents one.
+  // precondition failed where the operation documents one. Sent only in answer to a request
+  // whose operation documents it, never as a session-level error that refuses or ends a
+  // session.
   //
   // Rollout note: a client whose schema predates this value decodes it as UNSPECIFIED,
   // which is retryable by design, so it may offer a retry that fails the same way again.

@@ -261,7 +261,9 @@ class ProblemSubject extends $pb.GeneratedMessage {
 ///
 /// When a transition for a device in a home is sent matters as much as what it carries: the
 /// gateway evaluates such a device's problems only at quarter hours, so a condition that comes
-/// and goes between two of them — a connector outage included — changes nothing, and it sends a
+/// and goes between two of them changes nothing — a connector problem that comes and goes so
+/// sends nothing about the device, though it leaves the device held after it (see
+/// ClearReason) — and it sends a
 /// transition only at that evaluation, as ServiceStatus changes are pushed,
 /// never on the device report that prompted it. That holds for every transition of such a
 /// device, a clear for its removal or a SUPERSEDED_* clear included: each is sent, and

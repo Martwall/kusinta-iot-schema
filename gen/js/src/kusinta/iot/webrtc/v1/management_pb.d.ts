@@ -1107,7 +1107,10 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  *                          and answered that it has nothing to re-initialise. Not a client
  *                          bug, and not worth retrying as is.
  *   "ALREADY_IN_PROGRESS"  UNAVAILABLE. A reconnect of this connector is outstanding, from
- *                          this caller or another. Retry once it is answered.
+ *                          this caller or another. It ends within 60 seconds of being
+ *                          asked, answered or timed out; retry after that. Only the caller
+ *                          who asked is answered, but a change of health it causes reaches
+ *                          every session in ConnectorsAnnounced.
  *   "TIMED_OUT"            UNAVAILABLE. The connector did not answer within the gateway's
  *                          deadline. The attempt may still finish, and its outcome still
  *                          arrives as backend health.

@@ -257,10 +257,9 @@ export declare const BackendHealthReportSchema: GenMessage<BackendHealthReport>;
  * Sent only by a gateway that sets HandshakeAck.supports_backend_health, so a connector
  * that receives it may answer. Answered once, by ReinitializeBackendResult with the same
  * request_id. The connector bounds its attempt so that it answers within 30 seconds of
- * receiving this; the gateway waits at least 45 seconds before it treats the request as
- * timed out. A result arriving
- * after the gateway has given up is ignored, but the health report sent before it still
- * applies.
+ * receiving this; the gateway waits at least 45 and at most 60 seconds before it treats the
+ * request as timed out. A result arriving after the gateway has given up is ignored, but the
+ * health report sent before it still applies.
  *
  * @generated from message kusinta.iot.connector.v1.ReinitializeBackend
  */

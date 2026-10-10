@@ -177,12 +177,21 @@ The connector states its backend's health as a `common.v1.BackendHealth` — a s
 connector works as before. The report's free-text `detail` is for the gateway's logs; the
 app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
 only the problem and its `backend_failure` category. While either connector problem is open,
-no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open is not
-closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason if, and
-only if, its device is still reported and not removed, and a connector problem is still open
-as the gateway closes it (for a home device, at the quarter hour; a queued clear keeps its
-reason); otherwise as any `DEVICE_OFFLINE`. A removed device always closes with `DEVICE_REMOVED`;
+no `DEVICE_OFFLINE` opens for the devices behind that connector, and each one open closes
+with a `SUPERSEDED_*` reason: at once outside a home, at the next quarter hour for a home
+device, so a receiver may briefly see both. A `DEVICE_OFFLINE` takes a `SUPERSEDED_*`
+reason if, and only if, the device is still reported and not removed, and a connector problem is still open as the
+gateway closes it (a queued clear keeps its reason); a connector problem that came and went
+before the quarter hour leaves the `DEVICE_OFFLINE` open. After a connector problem ends,
+the devices stay held until the gateway judges them afresh, once they have had time to
+report again: while held, no `DEVICE_OFFLINE` opens, and one open is neither closed nor
+opened again for the device's condition, though a move (`MOVED`), a removal or leaving what
+is reported still closes it. A removed device always closes with `DEVICE_REMOVED`;
 any other subject that stops being reported always closes with `NO_LONGER_REPORTED`.
+`CONNECTOR_OFFLINE` closes `RECOVERED` on reconnect; `CONNECTOR_ERROR` closes `RECOVERED`
+when health is no longer `FAILING`, or `SUPERSEDED_BY_CONNECTOR_OFFLINE` when the
+connector's stream drops; either closes `NO_LONGER_REPORTED` when the gateway stops
+tracking the connector.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by

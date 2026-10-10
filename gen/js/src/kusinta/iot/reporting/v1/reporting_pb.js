@@ -144,13 +144,24 @@ export const ClearReasonSchema = /*@__PURE__*/
  * Why a problem closed.
  *
  * A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
- * connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
- * devices behind that connector. One already open is not closed at once, so a receiver may
- * hold both open for a while. The DEVICE_OFFLINE of a device still reported closes with a
- * SUPERSEDED_* reason when a connector problem of its connector is open as the gateway
- * closes it, the reason naming that problem; otherwise it closes, or stays open, as any
- * DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
- * the gateway judges. The gateway closes a problem when it decides the clear — for a device in
+ * connector at a time: one problem rather than one per device. While one is open, no
+ * DEVICE_OFFLINE opens, or opens again, for the devices behind that connector, and the gateway
+ * closes each DEVICE_OFFLINE of a device still reported behind it with the SUPERSEDED_* reason
+ * naming the connector problem open as it closes it: at once for a device outside any home;
+ * for a device in a home at the next quarter hour, so a receiver may hold both open until
+ * then. If no connector problem is open by that quarter hour — it came and went — nothing is
+ * sent, and the DEVICE_OFFLINE stays open, its device held as below.
+ *
+ * A connector's devices are held from the start of a connector problem until the gateway
+ * judges them afresh after it ends, once the connector and its devices have had time to
+ * report again; when is the gateway's own policy. While they are held, no DEVICE_OFFLINE
+ * opens for them, and once no connector problem is open, one still open is neither closed
+ * nor opened again for the device's condition, so a connector problem that ends leaves it as
+ * it was. A move, a removal or leaving what the gateway reports still closes it: a move with
+ * CLEAR_REASON_MOVED, its condition taken to still hold, and it opens again only when the
+ * devices are judged afresh, stamped as Problem says for its new place.
+ *
+ * The gateway closes a problem when it decides the clear — for a device in
  * a home, at the quarter hour — and a clear queued or sent again keeps the reason it was
  * given then. Times are as for any transition (see Problem): a device in a home is
  * stamped only with quarter hours, and no time crosses a home's boundary.
