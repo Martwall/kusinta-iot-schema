@@ -176,22 +176,40 @@ The connector states its backend's health as a `common.v1.BackendHealth` — a s
 `HandshakeAck.supports_backend_health`; an older gateway is sent nothing new, and the
 connector works as before. The report's free-text `detail` is for the gateway's logs; the
 app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
-only the problem and its `backend_failure` category. While either connector problem is open,
-no `DEVICE_OFFLINE` opens for the devices behind that connector, and each one open closes
-with a `SUPERSEDED_*` reason: at once outside a home, at the next quarter hour for a home
-device, so a receiver may briefly see both. A `DEVICE_OFFLINE` takes a `SUPERSEDED_*`
-reason if, and only if, the device is still reported and not removed, and a connector problem is still open as the
-gateway closes it (a queued clear keeps its reason); a connector problem that came and went
-before the quarter hour leaves the `DEVICE_OFFLINE` open. After a connector problem ends,
-the devices stay held until the gateway judges them afresh, once they have had time to
-report again: while held, no `DEVICE_OFFLINE` opens, and one open is neither closed nor
-opened again for the device's condition, though a move (`MOVED`), a removal or leaving what
-is reported still closes it. A removed device always closes with `DEVICE_REMOVED`;
-any other subject that stops being reported always closes with `NO_LONGER_REPORTED`.
-`CONNECTOR_OFFLINE` closes `RECOVERED` on reconnect; `CONNECTOR_ERROR` closes `RECOVERED`
-when health is no longer `FAILING`, or `SUPERSEDED_BY_CONNECTOR_OFFLINE` when the
-connector's stream drops; either closes `NO_LONGER_REPORTED` when the gateway stops
-tracking the connector.
+only the problem and its `backend_failure` category. `connector.v1.BackendHealthReport` has
+the full rules; in short:
+
+- **Backend in doubt.** From connecting to the gateway, a failed backend call or a
+  re-initialisation the connector attempts, until the backend answers again. While in
+  doubt the connector reports no device unreachable. It reports `FAILING` once the backend
+  has been in doubt for 60 seconds within the last 120, sooner when its own
+  retries are used up, and a requested re-initialisation's (`ReinitializeBackend`) outcome
+  at once. An outage it rides out within 60 seconds opens no problem, and what the backend
+  then says of its devices is reported as it is.
+- **Re-report.** Within 30 seconds of the doubt ending, the connector reports every device's
+  reachability, reachable ones included; if doubt comes back first, it still reports the ones
+  it knows to be reachable, and the rest once the doubt ends.
+- **Superseding.** While either connector problem is open, no `DEVICE_OFFLINE` opens for its
+  devices, and each one open closes with a `SUPERSEDED_*` reason: at once outside a home, at
+  the next quarter hour for a home device, so a receiver may briefly see both. A
+  `DEVICE_OFFLINE` takes a `SUPERSEDED_*` reason if, and only if, its device is still
+  reported and not removed, and a connector problem is still open as the gateway closes it
+  (a queued clear keeps its reason). A connector problem that came and went before the
+  quarter hour leaves the `DEVICE_OFFLINE` open.
+- **Settling.** After a connector problem ends, the gateway lets the connector settle, for at
+  least 2 and at most 5 minutes as it chooses; no `DEVICE_OFFLINE` opens meanwhile. Then its
+  devices are judged afresh, on what the gateway last heard of each, and one still
+  unreachable without a `DEVICE_OFFLINE` open opens one.
+- **Closing.** An open `DEVICE_OFFLINE` closes `RECOVERED` only when the connector reports the
+  device reachable again, never for the mere absence of a report; a move, a removal or
+  leaving what is reported closes it as for any problem. A removed device always closes
+  with `DEVICE_REMOVED`; any other subject that stops being reported always closes with
+  `NO_LONGER_REPORTED`.
+- **Connector problems.** `CONNECTOR_OFFLINE` closes `RECOVERED` on reconnect;
+  `CONNECTOR_ERROR` closes `RECOVERED` when health is no longer `FAILING`, or
+  `SUPERSEDED_BY_CONNECTOR_OFFLINE` when the connector's stream drops, with
+  `CONNECTOR_OFFLINE` opening in the same step; either closes
+  `NO_LONGER_REPORTED` when the gateway stops tracking the connector.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by

@@ -88,18 +88,19 @@ message ConnectorHandshake {
   // From then on, changes arrive as BackendHealthReport on the session.
   //
   // Unset states nothing, and the gateway reads it as OK: a connector that predates backend
-  // health never sends it, and is never taken to be failing. A connector still making its
-  // first attempt at its backend when it handshakes leaves it unset.
+  // health never sends it, and is never taken to be failing. A connector whose backend has
+  // not answered a call since it connected to the gateway — its backend is still in
+  // doubt — leaves it unset, or states FAILING only where BackendHealthReport's rules for
+  // FAILING already hold; never OK.
   //
   // After connecting to a gateway that sets HandshakeAck.supports_backend_health, a
-  // connector that reports backend health states its first settled state — OK or FAILING —
-  // within 60 seconds, or sooner: here, or in a BackendHealthReport. Settled means its first
-  // attempt at the backend succeeded, or its own retries for that attempt are used up; one
-  // still trying at 60 seconds reports FAILING then, which counts as its first settled state,
-  // with the reason of its latest failed call, or UNREACHABLE when no call has failed yet.
-  // Until it has stated a settled state it reports none of its devices as unreachable, by
-  // whatever its technology uses to say so. Toward a gateway that does not set it, neither
-  // rule applies: the connector reports its devices as it did before backend health existed.
+  // connector that reports backend health follows the rules on BackendHealthReport: its
+  // backend is in doubt from connecting to the gateway until it first answers, so the
+  // connector states OK (once it has answered) or FAILING within 60 seconds, here or in a
+  // BackendHealthReport, reports none of its devices as unreachable while its backend is in
+  // doubt, and re-reports them once it is not, as BackendHealthReport says. Toward a gateway
+  // that does not set it, none of those rules applies: the connector reports its devices as
+  // it did before backend health existed.
   //
   // Safe to set whatever the gateway: the handshake goes before the connector knows which
   // gateway it reached, and a gateway that predates backend health skips the field as
@@ -118,14 +119,35 @@ message ConnectorHandshake {
 // then only in its own logs.
 //
 // Sent in the handshake (ConnectorHandshake.backend_health), then whenever state or reason
-// changes, and once after every re-initialisation attempt, changed or not, before the
+// changes, and once after every requested re-initialisation (ReinitializeBackend) it
+// attempts, changed or not, before the
 // result that answers it. Not sent for a change of detail alone. Each report replaces the
-// last. The gateway applies no debounce of its own, so for a fault it finds by itself a
-// connector reports FAILING only once the fault has outlasted its own retries, never for a
-// single failed call. There are two exceptions: a first attempt still running 60 seconds
-// after connecting is reported FAILING then (see ConnectorHandshake.backend_health); and after
-// a ReinitializeBackend it reports the attempt's true outcome at once, FAILING included, or
-// OK, before the result: the request is the retry a person asked for.
+// last.
+//
+// The connector's backend is in doubt from when the connector connects to the gateway (each
+// session, whether or not the backend kept answering meanwhile), from any failed call
+// to the backend, and from a re-initialisation the connector attempts, until the backend
+// answers a call again; OK
+// is stated only once it has. While it is in doubt the
+// connector reports none of its devices as unreachable, by whatever its technology uses to
+// say so: a device it cannot reach then may be the backend's fault. The gateway applies no
+// debounce of its own, so the connector never reports FAILING for a single failed call: it
+// reports FAILING once its backend has been in doubt for 60 seconds in all within the last
+// 120 — so a backend that hangs, or answers only now and then, reaches it, and brief failures
+// between answers do not — or sooner when its own
+// retries are used up, with the reason of its latest failed call, or UNREACHABLE when none
+// has failed yet. After a ReinitializeBackend it reports the attempt's true outcome at once,
+// FAILING included, or OK, before the result: the request is the retry a person asked for.
+// A backend outage the connector rides out within 60 seconds opens no problem, and what the
+// backend then says of its devices is reported as it is.
+//
+// When its backend stops being in doubt, whatever started it, the connector reports, within
+// 30 seconds, the current reachability of every device it knows, reachable ones included. If
+// doubt comes back before it is done, it still reports the devices it knows to be reachable,
+// and the rest once the doubt ends. The gateway closes
+// a device's offline problem as recovered only on a report that the device is reachable —
+// this one or any later one — never on silence; it closes for other reasons as reporting.v1
+// says.
 //
 // The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while its
 // stream is up and the latest report is FAILING, and clears it when one is anything else; a

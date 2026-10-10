@@ -150,16 +150,24 @@ export const ClearReasonSchema = /*@__PURE__*/
  * naming the connector problem open as it closes it: at once for a device outside any home;
  * for a device in a home at the next quarter hour, so a receiver may hold both open until
  * then. If no connector problem is open by that quarter hour — it came and went — nothing is
- * sent, and the DEVICE_OFFLINE stays open, its device held as below.
+ * sent, and the DEVICE_OFFLINE stays open, closing as below.
  *
- * A connector's devices are held from the start of a connector problem until the gateway
- * judges them afresh after it ends, once the connector and its devices have had time to
- * report again; when is the gateway's own policy. While they are held, no DEVICE_OFFLINE
- * opens for them, and once no connector problem is open, one still open is neither closed
- * nor opened again for the device's condition, so a connector problem that ends leaves it as
- * it was. A move, a removal or leaving what the gateway reports still closes it: a move with
- * CLEAR_REASON_MOVED, its condition taken to still hold, and it opens again only when the
- * devices are judged afresh, stamped as Problem says for its new place.
+ * A connector is settling while a connector problem of it is open, and for a settling time
+ * after one ends, in which the connector and its devices report again; how long is the
+ * gateway's own policy, but at least 2 minutes and at most 5 minutes after the connector
+ * problem ended: time for the connector to state its health and report its devices'
+ * reachability again (see connector.v1.BackendHealthReport). A device the connector has not
+ * reported reachable by then is judged on what the gateway last heard of it. While it is
+ * settling, no DEVICE_OFFLINE opens, or opens again, for its devices; a connector whose
+ * problems keep recurring within its settling time keeps them from opening, and its connector
+ * problems are what is reported. A DEVICE_OFFLINE closes CLEAR_REASON_RECOVERED only once the
+ * connector reports the device reachable again, never for the mere absence of a report; it
+ * closes with a SUPERSEDED_* reason as said above, and on a move, a removal or leaving what the
+ * gateway reports as for any problem. Once its connector is no longer settling, the gateway
+ * judges its devices afresh: a device still unreachable that has no DEVICE_OFFLINE open — one
+ * closed as superseded or moved, one that started being reported or went unreachable meanwhile
+ * — opens one, stamped as Problem says. So a device outside a home that stays unreachable
+ * through an outage has its DEVICE_OFFLINE closed as superseded and a new one opened after it.
  *
  * The gateway closes a problem when it decides the clear — for a device in
  * a home, at the quarter hour — and a clear queued or sent again keeps the reason it was

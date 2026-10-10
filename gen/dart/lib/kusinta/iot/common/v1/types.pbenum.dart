@@ -168,8 +168,9 @@ class ConnectorKind extends $pb.ProtobufEnum {
 /// older reader may safely take for OK. A new way of failing is a new BackendFailureReason
 /// under FAILING, never a new state.
 class BackendHealthState extends $pb.ProtobufEnum {
-  /// No statement. Read as OK: a connector that predates backend health, or one still making
-  /// its first attempt, has said nothing is wrong.
+  /// No statement. Read as OK: a connector that predates backend health, or one whose backend
+  /// is still in doubt as it handshakes (see connector.v1.BackendHealthReport), has said
+  /// nothing is wrong.
   static const BackendHealthState BACKEND_HEALTH_STATE_UNSPECIFIED =
       BackendHealthState._(
           0, _omitEnumNames ? '' : 'BACKEND_HEALTH_STATE_UNSPECIFIED');
@@ -178,11 +179,11 @@ class BackendHealthState extends $pb.ProtobufEnum {
   static const BackendHealthState BACKEND_HEALTH_STATE_OK =
       BackendHealthState._(1, _omitEnumNames ? '' : 'BACKEND_HEALTH_STATE_OK');
 
-  /// The backend is failing, and not for a single dropped call: the connector has retried as
-  /// its own policy says and is still failing — save for the two exceptions
-  /// connector.v1.BackendHealthReport names: a first attempt still running 60 seconds after
-  /// connecting, and the outcome of a requested re-initialisation, each reported at once. The
-  /// connector stays connected to the gateway.
+  /// The backend is failing, and not for a single dropped call: it has been in doubt for 60
+  /// seconds within the last 120 (see connector.v1.BackendHealthReport), or the connector's own
+  /// retries are used up, or a requested re-initialisation
+  /// left it failing (see connector.v1.BackendHealthReport). The connector stays connected to
+  /// the gateway.
   static const BackendHealthState BACKEND_HEALTH_STATE_FAILING =
       BackendHealthState._(
           2, _omitEnumNames ? '' : 'BACKEND_HEALTH_STATE_FAILING');

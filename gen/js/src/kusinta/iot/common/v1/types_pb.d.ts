@@ -241,8 +241,9 @@ export declare const ConnectorKindSchema: GenEnum<ConnectorKind>;
  */
 export enum BackendHealthState {
   /**
-   * No statement. Read as OK: a connector that predates backend health, or one still making
-   * its first attempt, has said nothing is wrong.
+   * No statement. Read as OK: a connector that predates backend health, or one whose backend
+   * is still in doubt as it handshakes (see connector.v1.BackendHealthReport), has said
+   * nothing is wrong.
    *
    * @generated from enum value: BACKEND_HEALTH_STATE_UNSPECIFIED = 0;
    */
@@ -256,11 +257,11 @@ export enum BackendHealthState {
   OK = 1,
 
   /**
-   * The backend is failing, and not for a single dropped call: the connector has retried as
-   * its own policy says and is still failing — save for the two exceptions
-   * connector.v1.BackendHealthReport names: a first attempt still running 60 seconds after
-   * connecting, and the outcome of a requested re-initialisation, each reported at once. The
-   * connector stays connected to the gateway.
+   * The backend is failing, and not for a single dropped call: it has been in doubt for 60
+   * seconds within the last 120 (see connector.v1.BackendHealthReport), or the connector's own
+   * retries are used up, or a requested re-initialisation
+   * left it failing (see connector.v1.BackendHealthReport). The connector stays connected to
+   * the gateway.
    *
    * @generated from enum value: BACKEND_HEALTH_STATE_FAILING = 2;
    */
