@@ -1093,7 +1093,8 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  * A refusal is a GatewayError whose metadata "reason" says which, as CommandError.metadata
  * describes, and whose "detail" is a sentence the app may show. The app branches on
  * "reason" for this operation; the code is only the fallback for a reason it does not know,
- * since GatewayErrorCode is too coarse to say what to do here:
+ * since GatewayErrorCode is too coarse to say what to do here. The role refusal above is
+ * the code NOT_ENTITLED alone, with no "reason"; the reasons are for a caller who may ask:
  *   "UNKNOWN_CONNECTOR"    UNAVAILABLE. The gateway does not track a connector by that id:
  *                          it never had one, or has stopped tracking it. Not a client bug:
  *                          the list the app holds may be stale.

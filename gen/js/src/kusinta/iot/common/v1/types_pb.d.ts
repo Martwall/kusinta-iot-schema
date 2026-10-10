@@ -257,7 +257,10 @@ export enum BackendHealthState {
 
   /**
    * The backend is failing, and not for a single dropped call: the connector has retried as
-   * its own policy says and is still failing. The connector stays connected to the gateway.
+   * its own policy says and is still failing — save for the two exceptions
+   * connector.v1.BackendHealthReport names: a first attempt still running 60 seconds after
+   * connecting, and the outcome of a requested re-initialisation, each reported at once. The
+   * connector stays connected to the gateway.
    *
    * @generated from enum value: BACKEND_HEALTH_STATE_FAILING = 2;
    */

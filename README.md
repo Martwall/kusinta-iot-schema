@@ -178,19 +178,20 @@ connector works as before. The report's free-text `detail` is for the gateway's 
 app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
 only the problem and its `backend_failure` category. While either connector problem is open,
 no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open is not
-closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason if, and only
-if, its device is still reported and a connector problem is still open as the gateway closes
-it (for a home device, at the quarter hour; a queued clear keeps its reason);
-otherwise as any `DEVICE_OFFLINE`. A removed device always closes with `DEVICE_REMOVED`;
+closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason if, and
+only if, its device is still reported and not removed, and a connector problem is still open
+as the gateway closes it (for a home device, at the quarter hour; a queued clear keeps its
+reason); otherwise as any `DEVICE_OFFLINE`. A removed device always closes with `DEVICE_REMOVED`;
 any other subject that stops being reported always closes with `NO_LONGER_REPORTED`.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by
 `ReinitializeBackendResult`); `DONE` means the attempt finished, and whether it worked is the
 health report sent just before it. A technician or the gateway's administrator asks for this
-from the app with `ReconnectConnector`, whose refusals name a `reason` in
-`GatewayError.metadata`, as listed on the message; the app branches on that `reason`, with
-the code only as a fallback.
+from the app with `ReconnectConnector`. Anyone else is refused with the code `NOT_ENTITLED`
+alone; a refusal to a caller who may ask names a `reason` in `GatewayError.metadata`, as
+listed on the message, and the app branches on that `reason`, with the code only as a
+fallback.
 
 ## Room climate
 

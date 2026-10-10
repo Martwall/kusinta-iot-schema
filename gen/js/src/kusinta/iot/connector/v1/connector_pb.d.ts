@@ -168,10 +168,11 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
    * connector that reports backend health states its first settled state — OK or FAILING —
    * within 60 seconds, or sooner: here, or in a BackendHealthReport. Settled means its first
    * attempt at the backend succeeded, or its own retries for that attempt are used up; one
-   * still trying at 60 seconds reports FAILING then. Until it has stated a settled state it
-   * reports none of its devices as unreachable, by whatever its technology uses to say so.
-   * Toward a gateway that does not set it, neither rule applies: the connector reports its
-   * devices as it did before backend health existed.
+   * still trying at 60 seconds reports FAILING then, which counts as its first settled state,
+   * with the reason of its latest failed call, or UNREACHABLE when no call has failed yet.
+   * Until it has stated a settled state it reports none of its devices as unreachable, by
+   * whatever its technology uses to say so. Toward a gateway that does not set it, neither
+   * rule applies: the connector reports its devices as it did before backend health existed.
    *
    * Safe to set whatever the gateway: the handshake goes before the connector knows which
    * gateway it reached, and a gateway that predates backend health skips the field as
@@ -204,9 +205,10 @@ export declare const ConnectorHandshakeSchema: GenMessage<ConnectorHandshake>;
  * result that answers it. Not sent for a change of detail alone. Each report replaces the
  * last. The gateway applies no debounce of its own, so for a fault it finds by itself a
  * connector reports FAILING only once the fault has outlasted its own retries, never for a
- * single failed call. After a ReinitializeBackend it reports the attempt's true outcome at
- * once, FAILING included, or OK, before the result: the request is the retry a person
- * asked for.
+ * single failed call. There are two exceptions: a first attempt still running 60 seconds
+ * after connecting is reported FAILING then (see ConnectorHandshake.backend_health); and after
+ * a ReinitializeBackend it reports the attempt's true outcome at once, FAILING included, or
+ * OK, before the result: the request is the retry a person asked for.
  *
  * The gateway raises reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR for this connector while its
  * stream is up and the latest report is FAILING, and clears it when one is anything else; a
