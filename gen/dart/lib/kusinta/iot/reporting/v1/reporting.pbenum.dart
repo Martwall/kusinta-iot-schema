@@ -105,10 +105,13 @@ class ProblemKind extends $pb.ProtobufEnum {
 /// DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
 /// device. The same rules hold for both:
 ///
-///   * A DEVICE_OFFLINE open when a connector problem begins closes with the matching
-///     superseded reason, SUPERSEDED_BY_CONNECTOR_OFFLINE or SUPERSEDED_BY_CONNECTOR_ERROR,
-///     and no new one opens while any connector problem is open for that connector — a
-///     CONNECTOR_ERROR followed by CONNECTOR_OFFLINE, or the reverse, included. For a device
+///   * A DEVICE_OFFLINE open when a connector problem begins closes as superseded, and no new
+///     one opens while any connector problem is open for that connector — a CONNECTOR_ERROR
+///     followed by CONNECTOR_OFFLINE, or the reverse, is one span. The reason names the
+///     connector problem that began the span: SUPERSEDED_BY_CONNECTOR_ERROR for a span that
+///     began with CONNECTOR_ERROR, even if CONNECTOR_OFFLINE is open by the quarter hour the
+///     clear is sent at, and SUPERSEDED_BY_CONNECTOR_OFFLINE for one that began with
+///     CONNECTOR_OFFLINE, even if CONNECTOR_ERROR is open by then. For a device
 ///     in a home that clear, like any, is sent and stamped at the next quarter hour; a
 ///     connector problem that comes and goes between two of them changes nothing for it, and
 ///     its DEVICE_OFFLINE stays open.
@@ -137,7 +140,8 @@ class ClearReason extends $pb.ProtobufEnum {
   static const ClearReason CLEAR_REASON_FILED =
       ClearReason._(2, _omitEnumNames ? '' : 'CLEAR_REASON_FILED');
 
-  /// The device was removed from the gateway. Every problem open on it closes with this.
+  /// The device was removed from the gateway. Every problem open on it closes with this —
+  /// except a DEVICE_OFFLINE superseded under a connector problem; see above.
   static const ClearReason CLEAR_REASON_DEVICE_REMOVED =
       ClearReason._(3, _omitEnumNames ? '' : 'CLEAR_REASON_DEVICE_REMOVED');
 
@@ -149,13 +153,13 @@ class ClearReason extends $pb.ProtobufEnum {
 
   /// The problem's subject left what the gateway reports, though the condition may hold: a
   /// device now owned by a resident, a room moved into a home. Sent, and stamped, at the next
-  /// quarter hour.
+  /// quarter hour — except a DEVICE_OFFLINE superseded under a connector problem; see above.
   static const ClearReason CLEAR_REASON_NO_LONGER_REPORTED =
       ClearReason._(5, _omitEnumNames ? '' : 'CLEAR_REASON_NO_LONGER_REPORTED');
 
   /// The subject moved into or out of a home. A problem that still holds opens again as a new
-  /// one at the same quarter hour — except a DEVICE_OFFLINE while a connector problem is open
-  /// for the device's connector, which is superseded instead (see above).
+  /// one at the same quarter hour — except a DEVICE_OFFLINE superseded under a connector
+  /// problem; see above.
   static const ClearReason CLEAR_REASON_MOVED =
       ClearReason._(6, _omitEnumNames ? '' : 'CLEAR_REASON_MOVED');
 
