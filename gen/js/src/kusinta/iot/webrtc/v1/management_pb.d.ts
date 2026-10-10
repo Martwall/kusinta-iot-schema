@@ -1089,23 +1089,24 @@ export declare const GetApartmentClimateSummarySchema: GenMessage<GetApartmentCl
  *   "CONNECTOR_OFFLINE"    UNAVAILABLE. Its stream to the gateway is down, before or while
  *                          the request was outstanding; that is CONNECTOR_OFFLINE, and a
  *                          reconnect of its backend cannot help it.
- *   "NOT_SUPPORTED"        UNSPECIFIED. The connector does not declare
+ *   "NOT_SUPPORTED"        FAILED_PRECONDITION. The connector does not declare
  *                          ConnectorDescriptor.supports_backend_reinitialize, or declared it
  *                          and answered that it has nothing to re-initialise. Not a client
- *                          bug, and not worth retrying; no code says that, so none is set.
+ *                          bug, and not worth retrying as is.
  *   "ALREADY_IN_PROGRESS"  UNAVAILABLE. A reconnect of this connector is outstanding, from
  *                          this caller or another. Retry once it is answered.
  *   "TIMED_OUT"            UNAVAILABLE. The connector did not answer within the gateway's
  *                          deadline. The attempt may still finish, and its outcome still
  *                          arrives as backend health.
- *   "REINITIALIZE_FAILED"  UNSPECIFIED. The connector could not attempt it. Whether a retry
- *                          can help depends on why — MISCONFIGURED and AUTH_FAILED need a
- *                          person, not a retry — so no code is set and the app reads
- *                          "backend_failure": the common.v1.BackendFailureReason by its enum
- *                          name, e.g. "BACKEND_FAILURE_REASON_MISCONFIGURED". The key is
- *                          omitted when the reason is UNSPECIFIED or a value the gateway's
- *                          schema does not know, there being no name to write; the app then
- *                          shows a generic failure.
+ *   "REINITIALIZE_FAILED"  FAILED_PRECONDITION. The connector could not attempt it, and
+ *                          asking again as is will fail the same way — MISCONFIGURED and
+ *                          AUTH_FAILED need a person. metadata "backend_failure" is always
+ *                          set: the common.v1.BackendFailureReason by its enum name, e.g.
+ *                          "BACKEND_FAILURE_REASON_MISCONFIGURED". A reason that is
+ *                          UNSPECIFIED, or a value the gateway's schema does not know, is
+ *                          sent as "BACKEND_FAILURE_REASON_BACKEND_ERROR", as
+ *                          BackendFailureReason has it; an app reading a name its own
+ *                          schema does not know treats it as BACKEND_ERROR too.
  * The connector's own detail is never in a refusal; GatewayError.message is the gateway's.
  *
  * @generated from message kusinta.iot.webrtc.v1.ReconnectConnector

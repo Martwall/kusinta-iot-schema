@@ -1033,6 +1033,21 @@ export enum GatewayErrorCode {
    * @generated from enum value: GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED = 5;
    */
   SESSION_LIMIT_REACHED = 5,
+
+  /**
+   * The request was well formed and the caller may make it, but it will not succeed without
+   * a change on the receiving side — a capability the target lacks, configuration only a
+   * person can fix. Do not retry as is. Distinct from INVALID_REQUEST, which is the app's
+   * bug, and from UNAVAILABLE, which clears on its own. GatewayError.metadata says which
+   * precondition failed where the operation documents one.
+   *
+   * Rollout note: a client whose schema predates this value decodes it as UNSPECIFIED,
+   * which is retryable by design, so it may offer a retry that fails the same way again.
+   * Harmless, but client handling should ship before or with the gateway that emits it.
+   *
+   * @generated from enum value: GATEWAY_ERROR_CODE_FAILED_PRECONDITION = 6;
+   */
+  FAILED_PRECONDITION = 6,
 }
 
 /**

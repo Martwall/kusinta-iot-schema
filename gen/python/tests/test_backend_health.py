@@ -155,3 +155,18 @@ def test_a_refused_reconnect_says_why_in_metadata():
     )
 
     assert _round_trip(result).error.metadata["reason"] == "ALREADY_IN_PROGRESS"
+
+
+def test_a_reconnect_that_cannot_be_attempted_is_a_failed_precondition_with_its_category():
+    result = envelope_pb2.ManagementResult(
+        in_reply_to="m-1",
+        error=envelope_pb2.GatewayError(
+            code=envelope_pb2.GATEWAY_ERROR_CODE_FAILED_PRECONDITION,
+            metadata={
+                "reason": "REINITIALIZE_FAILED",
+                "backend_failure": "BACKEND_FAILURE_REASON_MISCONFIGURED",
+            },
+        ),
+    )
+
+    assert _round_trip(result).error == result.error

@@ -63,6 +63,19 @@ class GatewayErrorCode extends $pb.ProtobufEnum {
       GatewayErrorCode._(
           5, _omitEnumNames ? '' : 'GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED');
 
+  /// The request was well formed and the caller may make it, but it will not succeed without
+  /// a change on the receiving side — a capability the target lacks, configuration only a
+  /// person can fix. Do not retry as is. Distinct from INVALID_REQUEST, which is the app's
+  /// bug, and from UNAVAILABLE, which clears on its own. GatewayError.metadata says which
+  /// precondition failed where the operation documents one.
+  ///
+  /// Rollout note: a client whose schema predates this value decodes it as UNSPECIFIED,
+  /// which is retryable by design, so it may offer a retry that fails the same way again.
+  /// Harmless, but client handling should ship before or with the gateway that emits it.
+  static const GatewayErrorCode GATEWAY_ERROR_CODE_FAILED_PRECONDITION =
+      GatewayErrorCode._(
+          6, _omitEnumNames ? '' : 'GATEWAY_ERROR_CODE_FAILED_PRECONDITION');
+
   static const $core.List<GatewayErrorCode> values = <GatewayErrorCode>[
     GATEWAY_ERROR_CODE_UNSPECIFIED,
     GATEWAY_ERROR_CODE_NOT_ENTITLED,
@@ -70,10 +83,11 @@ class GatewayErrorCode extends $pb.ProtobufEnum {
     GATEWAY_ERROR_CODE_UNAVAILABLE,
     GATEWAY_ERROR_CODE_INTERNAL,
     GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED,
+    GATEWAY_ERROR_CODE_FAILED_PRECONDITION,
   ];
 
   static final $core.List<GatewayErrorCode?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 5);
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
   static GatewayErrorCode? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
