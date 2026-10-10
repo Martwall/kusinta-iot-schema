@@ -264,8 +264,8 @@ class ProblemSubject extends $pb.GeneratedMessage {
 /// and goes between two of them — a connector outage included — changes nothing, and it sends a
 /// transition only at that evaluation, as ServiceStatus changes are pushed,
 /// never on the device report that prompted it. That holds for every transition of such a
-/// device, a clear for its removal or for its connector going offline included: each is sent,
-/// and stamped, at the next quarter hour.
+/// device, a clear for its removal or for a connector problem beginning (see ClearReason)
+/// included: each is sent, and stamped, at the next quarter hour.
 class Problem extends $pb.GeneratedMessage {
   factory Problem({
     ProblemKind? kind,

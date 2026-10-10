@@ -131,8 +131,8 @@ export declare const ProblemSubjectSchema: GenMessage<ProblemSubject>;
  * and goes between two of them — a connector outage included — changes nothing, and it sends a
  * transition only at that evaluation, as ServiceStatus changes are pushed,
  * never on the device report that prompted it. That holds for every transition of such a
- * device, a clear for its removal or for its connector going offline included: each is sent,
- * and stamped, at the next quarter hour.
+ * device, a clear for its removal or for a connector problem beginning (see ClearReason)
+ * included: each is sent, and stamped, at the next quarter hour.
  *
  * @generated from message kusinta.iot.reporting.v1.Problem
  */
@@ -709,7 +709,8 @@ export enum ProblemKind {
   UNSPECIFIED = 0,
 
   /**
-   * The device cannot be heard, as its connector judges it.
+   * The device cannot be heard, as its connector judges it. Never raised while a connector
+   * problem is open for its connector; see ClearReason.
    *
    * @generated from enum value: PROBLEM_KIND_DEVICE_OFFLINE = 1;
    */

@@ -75,8 +75,9 @@ option optimize_for = SPEED;
 // included, is a move too. A space retyped into or out of being a home (access.v1 has a home
 // start or end there) moves everything within it, as if each subject had been carried in or
 // out. A subject that starts being reported — a device handed back by a resident, a room moved
-// out of a home — opens any problem that holds at that quarter hour, stamped with it. Any
-// other change of a problem's space_id (a device refiled outside any home) is sent as a change
+// out of a home — opens any problem that holds at that quarter hour, stamped with it —
+// except a DEVICE_OFFLINE while a connector problem is open for its connector; see
+// ClearReason. Any other change of a problem's space_id (a device refiled outside any home) is sent as a change
 // of the problem.
 //
 // Moves are judged from one quarter hour to the next: the gateway compares where a subject
@@ -142,7 +143,8 @@ message SnapshotPart {
 enum ProblemKind {
   PROBLEM_KIND_UNSPECIFIED = 0;
 
-  // The device cannot be heard, as its connector judges it.
+  // The device cannot be heard, as its connector judges it. Never raised while a connector
+  // problem is open for its connector; see ClearReason.
   PROBLEM_KIND_DEVICE_OFFLINE = 1;
 
   // The device reports its battery low or critical.
@@ -284,8 +286,8 @@ message ProblemSubject {
 // and goes between two of them — a connector outage included — changes nothing, and it sends a
 // transition only at that evaluation, as ServiceStatus changes are pushed,
 // never on the device report that prompted it. That holds for every transition of such a
-// device, a clear for its removal or for its connector going offline included: each is sent,
-// and stamped, at the next quarter hour.
+// device, a clear for its removal or for a connector problem beginning (see ClearReason)
+// included: each is sent, and stamped, at the next quarter hour.
 message Problem {
   ProblemKind kind = 2;
 

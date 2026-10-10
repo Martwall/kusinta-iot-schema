@@ -21,7 +21,8 @@ class ProblemKind extends $pb.ProtobufEnum {
   static const ProblemKind PROBLEM_KIND_UNSPECIFIED =
       ProblemKind._(0, _omitEnumNames ? '' : 'PROBLEM_KIND_UNSPECIFIED');
 
-  /// The device cannot be heard, as its connector judges it.
+  /// The device cannot be heard, as its connector judges it. Never raised while a connector
+  /// problem is open for its connector; see ClearReason.
   static const ProblemKind PROBLEM_KIND_DEVICE_OFFLINE =
       ProblemKind._(1, _omitEnumNames ? '' : 'PROBLEM_KIND_DEVICE_OFFLINE');
 
