@@ -2616,8 +2616,9 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
 /// its radio central or network server. Meant to be offered while a
 /// reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR is open for the connector — its
 /// ConnectorDescriptor.backend_health is FAILING — and only for a connector listed in
-/// ConnectorsAnnounced, but accepted at any time, since re-initialising a healthy backend is
-/// harmless.
+/// ConnectorsAnnounced. A request for a connector that is not listed is refused, as
+/// CONNECTOR_OFFLINE or UNKNOWN_CONNECTOR below. For a listed one it is accepted whatever its
+/// health, since re-initialising a healthy backend is harmless.
 ///
 /// Authorized against the caller's role alone, as StartPairing is: a connector is not a
 /// target the caller reaches the way a space is. ROLE_TECHNICIAN and ROLE_GATEWAY_ADMIN may
@@ -2642,13 +2643,13 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
 /// describes, and whose "detail" is a sentence the app may show. The app branches on
 /// "reason" for this operation; the code is only the fallback for a reason it does not know,
 /// since GatewayErrorCode is too coarse to say what to do here:
-///   "UNKNOWN_CONNECTOR"    UNAVAILABLE. The gateway has known no connector by that id since
-///                          it started — one it has stopped tracking included. Not a client
-///                          bug: the list the app holds may be stale.
-///   "CONNECTOR_OFFLINE"    UNAVAILABLE. A connector the gateway has known since it started,
-///                          whose stream to the gateway is down now, before or while the
-///                          request was outstanding; that is CONNECTOR_OFFLINE, and a
-///                          reconnect of its backend cannot help it.
+///   "UNKNOWN_CONNECTOR"    UNAVAILABLE. The gateway does not track a connector by that id:
+///                          it never had one, or has stopped tracking it. Not a client bug:
+///                          the list the app holds may be stale.
+///   "CONNECTOR_OFFLINE"    UNAVAILABLE. A connector the gateway tracks, whose stream to the
+///                          gateway is down now, before or while the request was
+///                          outstanding; that is CONNECTOR_OFFLINE, and a reconnect of its
+///                          backend cannot help it.
 ///   "NOT_SUPPORTED"        FAILED_PRECONDITION. The connector does not declare
 ///                          ConnectorDescriptor.supports_backend_reinitialize, or declared it
 ///                          and answered that it has nothing to re-initialise. Not a client

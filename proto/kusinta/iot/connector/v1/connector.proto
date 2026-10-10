@@ -89,14 +89,14 @@ message ConnectorHandshake {
   //
   // Unset states nothing, and the gateway reads it as OK: a connector that predates backend
   // health never sends it, and is never taken to be failing. A connector still making its
-  // first attempt at its backend when it handshakes leaves it unset and sends a report once
-  // that attempt has settled.
+  // first attempt at its backend when it handshakes leaves it unset.
   //
-  // Until its first backend attempt since connecting has settled, a connector judges no
-  // device: it reports none of its devices unreachable, and none reachable again either, by
-  // whatever its technology uses to say so. Its devices are not judged meanwhile, so no
-  // DEVICE_OFFLINE opens for them and none closes as recovered, and a reconnect that ends
-  // in a FAILING report leaves no gap in which they are judged one by one.
+  // After connecting, a connector that reports backend health states its first settled
+  // state — OK or FAILING — within 60 seconds, or sooner: here, or in a BackendHealthReport
+  // to a gateway that sets HandshakeAck.supports_backend_health. Settled means its first
+  // attempt at the backend succeeded, or its own retries for that attempt are used up; one
+  // still trying at 60 seconds reports FAILING then. Until it has stated a settled state it
+  // reports none of its devices as unreachable, by whatever its technology uses to say so.
   //
   // Safe to set whatever the gateway: the handshake goes before the connector knows which
   // gateway it reached, and a gateway that predates backend health skips the field as

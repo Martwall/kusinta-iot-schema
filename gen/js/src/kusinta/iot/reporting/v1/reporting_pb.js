@@ -143,39 +143,17 @@ export const ClearReasonSchema = /*@__PURE__*/
 /**
  * Why a problem closed.
  *
- * A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
- * DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
- * device. At most one is open for a connector at a time: a connector cannot be offline and
- * failing at once, and CONNECTOR_OFFLINE supersedes a CONNECTOR_ERROR. A reconnect whose
- * handshake reports FAILING closes CONNECTOR_OFFLINE, with RECOVERED, and opens a new
- * CONNECTOR_ERROR in the same step, with no gap between. The same rules hold for both:
+ * A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
+ * connector at a time. While one is open, the gateway reports no DEVICE_OFFLINE for the
+ * devices behind that connector. A DEVICE_OFFLINE open when a connector problem begins
+ * closes with the matching SUPERSEDED_* reason, which names the connector problem open when
+ * the clear is sent. After the connector problem ends, a DEVICE_OFFLINE may open again as the
+ * gateway judges. Times are as for any transition (see Problem): a device in a home is
+ * stamped only with quarter hours, and no time crosses a home's boundary.
  *
- *   * No DEVICE_OFFLINE opens for a device while a connector problem is open for its
- *     connector, and a device that moved is not reopened then.
- *   * A clear of an open DEVICE_OFFLINE is judged when it is sent: for a device in a home at
- *     the next quarter hour, for any other at once. If a connector problem is open for its
- *     connector then, it closes with the superseded reason naming that problem,
- *     SUPERSEDED_BY_CONNECTOR_OFFLINE or SUPERSEDED_BY_CONNECTOR_ERROR, even where a reason
- *     of the device's own — RECOVERED, MOVED, NO_LONGER_REPORTED, DEVICE_REMOVED — also
- *     holds. If none is open, it closes with the device's own reason where one holds. Only
- *     when neither holds — a connector problem that came and went between two quarter hours,
- *     the device still judged offline and still where it was — is nothing sent, and its
- *     DEVICE_OFFLINE stays open. So a device in a home removed at 10:07, while its connector
- *     was offline from 10:05 to 10:10, closes with DEVICE_REMOVED at 10:15.
- *   * A connector judges no device until its first backend attempt since connecting has
- *     settled (see connector.v1.ConnectorHandshake.backend_health). Until then no
- *     DEVICE_OFFLINE of its devices opens and none closes as RECOVERED, so the handover from
- *     CONNECTOR_OFFLINE to CONNECTOR_ERROR leaves no gap in which devices are judged one by
- *     one.
- *   * Once no connector problem is open for the connector — it is back, its first backend
- *     attempt has settled and its backend is not failing, or the gateway has stopped
- *     tracking it — the devices behind it are judged afresh as Problem has it, on their
- *     connector's own judgement, or on the gateway's for a connector it no longer tracks. A
- *     device with no DEVICE_OFFLINE open opens one if judged offline: a device in a home at
- *     the next quarter hour, stamped with it; any other device at once. One judged online
- *     opens nothing, and a device removed meanwhile has nothing to open. A device whose
- *     DEVICE_OFFLINE is still open keeps it, and it closes only as any DEVICE_OFFLINE does.
- *     A device in a home is never stamped off the quarter hour.
+ * When the gateway stops tracking a connector — when is the gateway's own policy — the
+ * connector and the devices behind it stop being reported, and their open problems close
+ * with NO_LONGER_REPORTED.
  *
  * @generated from enum kusinta.iot.reporting.v1.ClearReason
  */

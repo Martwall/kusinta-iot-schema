@@ -78,25 +78,17 @@ option optimize_for = SPEED;
 // other change of a problem's space_id (a device refiled outside any home) is sent as a change
 // of the problem.
 //
-// For a device's DEVICE_OFFLINE, a connector problem open for its connector when a clear is
-// sent changes two things only (see ClearReason): the reason, which is then the superseded
-// one rather than NO_LONGER_REPORTED, MOVED or RECOVERED, and whether it opens, which it
-// does not until the connector problem ends. With no connector problem open then, the rules
-// above apply unchanged. The times hold without exception: no time from while a device was
-// in a home follows it out, none from before follows it in, and a device in a home is
-// stamped only with quarter hours.
-//
 // Moves are judged from one quarter hour to the next: the gateway compares where a subject
 // was, and who owned it, at the last quarter hour with where it is now. A move undone in
 // between is no move, and keeps its problems as they are. A subject the gateway stops
 // reporting always closes with CLEAR_REASON_NO_LONGER_REPORTED, whatever its condition; of any
 // other moved subject, a problem that no longer holds closes as CLEAR_REASON_RECOVERED and one
-// that still holds as CLEAR_REASON_MOVED; for a DEVICE_OFFLINE under a connector problem the
-// reason differs, and it does not open again until the connector problem ends; the times are
-// unchanged (see above). Between a move and the quarter hour that reports it, the subject is
-// treated as in a home whichever way it moved: nothing about it leaves the gateway with a
-// time finer than that quarter hour, and what it may raise is judged by its new place from
-// then on.
+// that still holds as CLEAR_REASON_MOVED. A DEVICE_OFFLINE may close with a SUPERSEDED_*
+// reason instead where a connector problem for its connector has begun (see ClearReason);
+// the times are the same either way. Between a move and the quarter hour that reports it,
+// the subject is treated as in a home whichever way it moved: nothing about it leaves the
+// gateway with a time finer than that quarter hour, and what it may raise is judged by its new
+// place from then on.
 //
 // The one exception is reach into a home taken away by a change to the member — a membership
 // ended, or a relation changing from service to resident — which is sent at once, since it
@@ -150,9 +142,8 @@ message SnapshotPart {
 enum ProblemKind {
   PROBLEM_KIND_UNSPECIFIED = 0;
 
-  // The device cannot be heard, as its connector judges it — or the gateway, for a connector
-  // it no longer tracks. Never raised while a connector problem is open for its connector, or
-  // before the connector has judged it; see ClearReason.
+  // The device cannot be heard, as its connector judges it. Not reported while a connector
+  // problem is open for its connector; see ClearReason.
   PROBLEM_KIND_DEVICE_OFFLINE = 1;
 
   // The device reports its battery low or critical.
@@ -167,30 +158,21 @@ enum ProblemKind {
   // The device reports being tampered with: a casing opened, a mount removed.
   PROBLEM_KIND_DEVICE_TAMPER = 5;
 
-  // A connector's stream to the gateway is down. A connector problem: while it is open, it
-  // stands in for the DEVICE_OFFLINE of every device behind that connector, one problem
-  // rather than one per device, and none of theirs opens until it ends (see ClearReason).
-  // Closes with CLEAR_REASON_RECOVERED when the stream comes back, also when the handshake
-  // reports the backend FAILING: the CONNECTOR_ERROR that opens in the same step is a
-  // separate problem. When the gateway stops tracking the connector — an administrator
-  // removes it, or the gateway's own retention lets it go; when is the gateway's policy —
-  // it closes at once with CLEAR_REASON_NO_LONGER_REPORTED, and its devices' DEVICE_OFFLINE
-  // are no longer held for it.
+  // A connector's stream to the gateway is down. A connector problem (see ClearReason): while
+  // it is open, the gateway reports no DEVICE_OFFLINE for the devices behind that connector,
+  // one problem rather than one per device. Closes with CLEAR_REASON_RECOVERED when the
+  // connector reconnects, or CLEAR_REASON_NO_LONGER_REPORTED when the gateway stops tracking
+  // the connector.
   PROBLEM_KIND_CONNECTOR_OFFLINE = 6;
 
   // A connector is connected, but the backend it drives is failing: a central it cannot
-  // reach, a network server answering with errors. Open while the connector's latest
-  // connector.v1.BackendHealthReport says FAILING, cleared with CLEAR_REASON_RECOVERED when
-  // one says otherwise; a connector that never reports its backend never raises it. When the
-  // connector's stream goes down, CONNECTOR_OFFLINE supersedes it, and it closes with
-  // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE; the health in the connector's next
-  // handshake decides it afresh: a FAILING one opens a new CONNECTOR_ERROR in the same step
-  // as CONNECTOR_OFFLINE closes with CLEAR_REASON_RECOVERED. Nothing of the connector's own
-  // detail is reported; the problem carries only the category, in backend_failure.
-  //
-  // A connector problem, as CONNECTOR_OFFLINE is: while it is open, it stands in for the
-  // DEVICE_OFFLINE of every device behind that connector, and none of theirs opens until it
-  // ends (see ClearReason).
+  // reach, a network server answering with errors. Raised from the connector's own health
+  // reports (connector.v1.BackendHealthReport); backend_failure carries the category, never
+  // the connector's own detail. A connector problem, as CONNECTOR_OFFLINE is: while it is
+  // open, the gateway reports no DEVICE_OFFLINE for the devices behind that connector. Closes
+  // with CLEAR_REASON_RECOVERED when the health is no longer FAILING,
+  // CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE when the connector's stream drops, or
+  // CLEAR_REASON_NO_LONGER_REPORTED when the gateway stops tracking the connector.
   PROBLEM_KIND_CONNECTOR_ERROR = 7;
 
   // Company-owned devices are paired with the gateway but filed in no space. A device a
@@ -209,39 +191,17 @@ enum ProblemKind {
 
 // Why a problem closed.
 //
-// A connector problem — CONNECTOR_OFFLINE or CONNECTOR_ERROR — stands in for the
-// DEVICE_OFFLINE of every device behind its connector, one problem rather than one per
-// device. At most one is open for a connector at a time: a connector cannot be offline and
-// failing at once, and CONNECTOR_OFFLINE supersedes a CONNECTOR_ERROR. A reconnect whose
-// handshake reports FAILING closes CONNECTOR_OFFLINE, with RECOVERED, and opens a new
-// CONNECTOR_ERROR in the same step, with no gap between. The same rules hold for both:
+// A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
+// connector at a time. While one is open, the gateway reports no DEVICE_OFFLINE for the
+// devices behind that connector. A DEVICE_OFFLINE open when a connector problem begins
+// closes with the matching SUPERSEDED_* reason, which names the connector problem open when
+// the clear is sent. After the connector problem ends, a DEVICE_OFFLINE may open again as the
+// gateway judges. Times are as for any transition (see Problem): a device in a home is
+// stamped only with quarter hours, and no time crosses a home's boundary.
 //
-//   * No DEVICE_OFFLINE opens for a device while a connector problem is open for its
-//     connector, and a device that moved is not reopened then.
-//   * A clear of an open DEVICE_OFFLINE is judged when it is sent: for a device in a home at
-//     the next quarter hour, for any other at once. If a connector problem is open for its
-//     connector then, it closes with the superseded reason naming that problem,
-//     SUPERSEDED_BY_CONNECTOR_OFFLINE or SUPERSEDED_BY_CONNECTOR_ERROR, even where a reason
-//     of the device's own — RECOVERED, MOVED, NO_LONGER_REPORTED, DEVICE_REMOVED — also
-//     holds. If none is open, it closes with the device's own reason where one holds. Only
-//     when neither holds — a connector problem that came and went between two quarter hours,
-//     the device still judged offline and still where it was — is nothing sent, and its
-//     DEVICE_OFFLINE stays open. So a device in a home removed at 10:07, while its connector
-//     was offline from 10:05 to 10:10, closes with DEVICE_REMOVED at 10:15.
-//   * A connector judges no device until its first backend attempt since connecting has
-//     settled (see connector.v1.ConnectorHandshake.backend_health). Until then no
-//     DEVICE_OFFLINE of its devices opens and none closes as RECOVERED, so the handover from
-//     CONNECTOR_OFFLINE to CONNECTOR_ERROR leaves no gap in which devices are judged one by
-//     one.
-//   * Once no connector problem is open for the connector — it is back, its first backend
-//     attempt has settled and its backend is not failing, or the gateway has stopped
-//     tracking it — the devices behind it are judged afresh as Problem has it, on their
-//     connector's own judgement, or on the gateway's for a connector it no longer tracks. A
-//     device with no DEVICE_OFFLINE open opens one if judged offline: a device in a home at
-//     the next quarter hour, stamped with it; any other device at once. One judged online
-//     opens nothing, and a device removed meanwhile has nothing to open. A device whose
-//     DEVICE_OFFLINE is still open keeps it, and it closes only as any DEVICE_OFFLINE does.
-//     A device in a home is never stamped off the quarter hour.
+// When the gateway stops tracking a connector — when is the gateway's own policy — the
+// connector and the devices behind it stop being reported, and their open problems close
+// with NO_LONGER_REPORTED.
 enum ClearReason {
   CLEAR_REASON_UNSPECIFIED = 0;
 
@@ -252,34 +212,30 @@ enum ClearReason {
   // The unfiled devices were filed.
   CLEAR_REASON_FILED = 2;
 
-  // The device was removed from the gateway. Every problem open on it closes with this, for a
-  // device in a home sent and stamped at the next quarter hour — save a DEVICE_OFFLINE whose
-  // connector has a connector problem open when the clear is sent, which takes the
-  // superseded reason at that same time (see above).
+  // The device was removed from the gateway. Every problem open on it closes with this; a
+  // DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see above).
   CLEAR_REASON_DEVICE_REMOVED = 3;
 
-  // The connector behind the device went offline. For a device's DEVICE_OFFLINE only — no
-  // other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER and the rest stay as they
-  // are — see the connector problem rules above. Also for a CONNECTOR_ERROR, whose
-  // connector's stream went down. Never for a CONNECTOR_OFFLINE, which closes with RECOVERED.
+  // The connector behind the device went offline. For a DEVICE_OFFLINE, and for a
+  // CONNECTOR_ERROR whose connector's stream dropped; no other problem is superseded. See
+  // above.
   CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_OFFLINE = 4;
 
   // The problem's subject left what the gateway reports, though the condition may hold: a
   // device now owned by a resident, a room moved into a home, a connector the gateway has
-  // stopped tracking. Sent, and stamped, at the next quarter hour — at once for a connector,
-  // which is in no home — save a DEVICE_OFFLINE whose connector has a connector problem open
-  // then, which takes the superseded reason at that same time (see above).
+  // stopped tracking and the devices behind it. A device or room leaving with a move is sent,
+  // and stamped, at the next quarter hour; anything else as Problem says for its subject. A
+  // DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see above).
   CLEAR_REASON_NO_LONGER_REPORTED = 5;
 
   // The subject moved into or out of a home. A problem that still holds opens again as a new
-  // one at the same quarter hour — save a DEVICE_OFFLINE whose connector has a connector
-  // problem open then, which takes the superseded reason at that same time and does not
-  // open again until the connector problem ends (see above).
+  // one at the same quarter hour — a DEVICE_OFFLINE only while no connector problem is open
+  // for its connector. A DEVICE_OFFLINE may close with a SUPERSEDED_* reason instead (see
+  // above).
   CLEAR_REASON_MOVED = 6;
 
-  // The backend of the connector behind the device started failing. For a device's
-  // DEVICE_OFFLINE only — no other device problem is superseded: BATTERY_LOW, DEVICE_TAMPER
-  // and the rest stay as they are. See the connector problem rules above.
+  // The backend of the connector behind the device is failing. For a DEVICE_OFFLINE only; no
+  // other problem is superseded. See above.
   CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR = 7;
 }
 
@@ -316,8 +272,8 @@ message ProblemSubject {
 // and goes between two of them — a connector outage included — changes nothing, and it sends a
 // transition only at that evaluation, as ServiceStatus changes are pushed,
 // never on the device report that prompted it. That holds for every transition of such a
-// device, a clear for its removal or for a connector problem beginning (see ClearReason)
-// included: each is sent, and stamped, at the next quarter hour.
+// device, a clear for its removal or for a connector problem beginning included: each is
+// sent, and stamped, at the next quarter hour.
 message Problem {
   ProblemKind kind = 2;
 
