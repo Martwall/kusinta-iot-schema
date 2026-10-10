@@ -177,8 +177,9 @@ The connector states its backend's health as a `common.v1.BackendHealth` — a s
 connector works as before. The report's free-text `detail` is for the gateway's logs; the
 app is given only the `BackendHealth` on `ConnectorDescriptor.backend_health`, and the cloud
 only the problem and its `backend_failure` category. While either connector problem is open,
-no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open closes at
-the time `Problem` gives, so a receiver may briefly see both.
+no `DEVICE_OFFLINE` opens for the devices behind that connector; one already open is not
+closed at once, so a receiver may see both. It closes with a `SUPERSEDED_*` reason only if a
+connector problem is still open when its clear is sent; otherwise as any `DEVICE_OFFLINE`.
 
 The gateway can ask a connector that declares `supports_backend_reinitialize` to
 re-initialise its backend connection (`ReinitializeBackend`, answered by

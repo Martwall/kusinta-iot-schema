@@ -145,8 +145,8 @@ export const ClearReasonSchema = /*@__PURE__*/
  *
  * A connector problem is CONNECTOR_OFFLINE or CONNECTOR_ERROR, and at most one is open for a
  * connector at a time. While one is open, no DEVICE_OFFLINE opens, or opens again, for the
- * devices behind that connector. One already open closes at the time Problem gives for its
- * subject, so a receiver may hold both open for a while. A DEVICE_OFFLINE closes with a
+ * devices behind that connector. One already open is not closed at once, so a receiver may
+ * hold both open for a while. A DEVICE_OFFLINE closes with a
  * SUPERSEDED_* reason when a connector problem of its connector is open at the time the
  * clear is sent, the reason naming that problem; otherwise it closes, or stays open, as any
  * DEVICE_OFFLINE does. After the connector problem ends, a DEVICE_OFFLINE may open again as
