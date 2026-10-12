@@ -53,8 +53,23 @@ pipeline {
 
     stage('Breaking Check') {
       when { not { branch 'main' } }
+      // The checkout leaves no local `main` — at most a remote-tracking ref, and only
+      // if the refspec happened to cover it — and `.git#branch=main` looks for
+      // refs/heads/main, so it fails with "couldn't find remote ref main". Fetch main
+      // explicitly and compare against the ref just fetched, so the baseline is the
+      // current main and not whatever a reused workspace last saw.
+      //
+      // Authenticated for the same reason as Checkout: GitHub refuses anonymous
+      // upload-pack from the agent. The helper is passed with -c for this one command,
+      // so nothing is written to .git/config and a failed fetch leaves nothing behind.
       steps {
-        sh 'buf breaking --against ".git#branch=main"'
+        withCredentials([usernamePassword(credentialsId: 'iot-schema-github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+          sh '''
+            git -c credential.helper='!f() { echo "username=$GIT_USER"; echo "password=$GIT_TOKEN"; }; f' \
+              fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          '''
+        }
+        sh 'buf breaking --against ".git#ref=refs/remotes/origin/main"'
       }
     }
 
