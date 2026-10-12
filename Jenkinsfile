@@ -16,9 +16,14 @@ pipeline {
         checkout([
           $class: 'GitSCM',
           branches: [[name: env.BRANCH_NAME ?: env.TAG_NAME]],
+          // Every branch, so refs/remotes/origin/main is here for Breaking Check. Stated
+          // rather than left to the plugin's default: that stage depends on it, and
+          // fetching main there instead would put the PAT in a stage that runs after
+          // the branch's own code (npm ci, scripts) has had the workspace.
           userRemoteConfigs: [[
             url: 'https://github.com/Martwall/kusinta-iot-schema.git',
-            credentialsId: 'iot-schema-github-pat'
+            credentialsId: 'iot-schema-github-pat',
+            refspec: '+refs/heads/*:refs/remotes/origin/*'
           ]]
         ])
       }
@@ -53,22 +58,13 @@ pipeline {
 
     stage('Breaking Check') {
       when { not { branch 'main' } }
-      // The checkout leaves no local `main` — at most a remote-tracking ref, and only
-      // if the refspec happened to cover it — and `.git#branch=main` looks for
-      // refs/heads/main, so it fails with "couldn't find remote ref main". Fetch main
-      // explicitly and compare against the ref just fetched, so the baseline is the
-      // current main and not whatever a reused workspace last saw.
-      //
-      // Authenticated for the same reason as Checkout: GitHub refuses anonymous
-      // upload-pack from the agent. The helper is passed with -c for this one command,
-      // so nothing is written to .git/config and a failed fetch leaves nothing behind.
+      // The checkout creates no local `main`, and `.git#branch=main` looks for
+      // refs/heads/main, so it failed with "couldn't find remote ref main". Compare
+      // against the remote-tracking ref Checkout fetched, which is current main as of
+      // this build. No credentials here: this runs after the branch's own code, so the
+      // PAT stays in Checkout and in the main-only stages. If the ref is missing, buf
+      // fails the build rather than passing it.
       steps {
-        withCredentials([usernamePassword(credentialsId: 'iot-schema-github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
-          sh '''
-            git -c credential.helper='!f() { echo "username=$GIT_USER"; echo "password=$GIT_TOKEN"; }; f' \
-              fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
-          '''
-        }
         sh 'buf breaking --against ".git#ref=refs/remotes/origin/main"'
       }
     }
