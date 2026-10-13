@@ -16,6 +16,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
+import '../../access/v1/roles.pbenum.dart' as $3;
 import '../../common/v1/types.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'reporting.pbenum.dart';
@@ -1599,6 +1600,315 @@ class ReportServedSpacesResponse extends $pb.GeneratedMessage {
   static ReportServedSpacesResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<ReportServedSpacesResponse>(create);
   static ReportServedSpacesResponse? _defaultInstance;
+
+  /// As ReportServiceReachResponse.applied_seq.
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get appliedSeq => $_getI64(0);
+  @$pb.TagNumber(1)
+  set appliedSeq($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAppliedSeq() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAppliedSeq() => $_clearField(1);
+
+  /// As ReportServiceReachResponse.resync_required.
+  @$pb.TagNumber(2)
+  $core.bool get resyncRequired => $_getBF(1);
+  @$pb.TagNumber(2)
+  set resyncRequired($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasResyncRequired() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearResyncRequired() => $_clearField(2);
+}
+
+/// One member of this gateway: a user the gateway holds a role (access.v1.Role) or a space
+/// membership for, either. Whom the api-server lets connect to the gateway, and in which
+/// capacity. A user filed somewhere with no role is a member all the same: what they may do
+/// there is the gateway's to decide, and they cannot connect to find out unless reported.
+///
+/// roles carries a member's service roles alone: ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER and
+/// ROLE_GATEWAY_ADMIN. An empty list means no service role: a resident, or someone filed with
+/// no role. The gateway MUST NOT
+/// send ROLE_RESIDENT or ROLE_UNSPECIFIED here, and the api-server keeps no role but the
+/// three, each once. An entry, in members or removed_user_ids, with no user id is malformed,
+/// and the api-server skips it.
+///
+/// What the api-server learns of a member with no service role is that they belong to this
+/// gateway, and from when to when — never which home, nor anything else ServiceReach
+/// withholds. A member's changes are sent at once, both ways, since joining is what lets a
+/// person connect and leaving is what revokes them. Roles do not follow relations
+/// (access.v1.MembershipRelation): a relation changing alone changes nothing reported here.
+///
+/// Who registered the gateway is the api-server's own record, not the gateway's. The
+/// administration that came with registering it is never taken away by this report — not by
+/// its absence from a snapshot, not by removed_user_ids — and ends only with a change of who
+/// is registered as the gateway's administrator at the api-server. Any other administrator is
+/// a member reported with ROLE_GATEWAY_ADMIN, whom the api-server gives what it gives the
+/// registering one, from administrator_since (see ServiceReach). Where the registering
+/// administrator is also reported so, the api-server's record governs: their administration
+/// counts from the earlier of its own start and administrator_since.
+class GatewayMember extends $pb.GeneratedMessage {
+  factory GatewayMember({
+    $0.UserId? userId,
+    $core.Iterable<$3.Role>? roles,
+    $1.Timestamp? administratorSince,
+  }) {
+    final result = create();
+    if (userId != null) result.userId = userId;
+    if (roles != null) result.roles.addAll(roles);
+    if (administratorSince != null)
+      result.administratorSince = administratorSince;
+    return result;
+  }
+
+  GatewayMember._();
+
+  factory GatewayMember.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GatewayMember.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GatewayMember',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'userId',
+        subBuilder: $0.UserId.create)
+    ..pc<$3.Role>(2, _omitFieldNames ? '' : 'roles', $pb.PbFieldType.KE,
+        valueOf: $3.Role.valueOf,
+        enumValues: $3.Role.values,
+        defaultEnumValue: $3.Role.ROLE_UNSPECIFIED)
+    ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'administratorSince',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayMember clone() => GatewayMember()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayMember copyWith(void Function(GatewayMember) updates) =>
+      super.copyWith((message) => updates(message as GatewayMember))
+          as GatewayMember;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GatewayMember create() => GatewayMember._();
+  @$core.override
+  GatewayMember createEmptyInstance() => create();
+  static $pb.PbList<GatewayMember> createRepeated() =>
+      $pb.PbList<GatewayMember>();
+  @$core.pragma('dart2js:noInline')
+  static GatewayMember getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GatewayMember>(create);
+  static GatewayMember? _defaultInstance;
+
+  /// As the token issuer mints it: the sub of the member's token.
+  @$pb.TagNumber(1)
+  $0.UserId get userId => $_getN(0);
+  @$pb.TagNumber(1)
+  set userId($0.UserId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.UserId ensureUserId() => $_ensure(0);
+
+  /// The member's service roles, each once; empty for a resident.
+  @$pb.TagNumber(2)
+  $pb.PbList<$3.Role> get roles => $_getList(1);
+
+  /// Set exactly when roles holds ROLE_GATEWAY_ADMIN: the quarter hour, rounded up, from
+  /// which the member's administration of the gateway has been unbroken, as the gateway counts
+  /// it. Given by the gateway, which saw any break, as ReachedSpace.since is. An administrator
+  /// reported without it counts from the quarter hour, rounded up, at which the api-server
+  /// applied the report, never earlier.
+  @$pb.TagNumber(3)
+  $1.Timestamp get administratorSince => $_getN(2);
+  @$pb.TagNumber(3)
+  set administratorSince($1.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAdministratorSince() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAdministratorSince() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.Timestamp ensureAdministratorSince() => $_ensure(2);
+}
+
+class ReportMembersRequest extends $pb.GeneratedMessage {
+  factory ReportMembersRequest({
+    $core.String? streamId,
+    $core.Iterable<$core.String>? previousStreamIds,
+    $fixnum.Int64? seq,
+    $core.Iterable<GatewayMember>? members,
+    $core.Iterable<$0.UserId>? removedUserIds,
+    SnapshotPart? snapshot,
+  }) {
+    final result = create();
+    if (streamId != null) result.streamId = streamId;
+    if (previousStreamIds != null)
+      result.previousStreamIds.addAll(previousStreamIds);
+    if (seq != null) result.seq = seq;
+    if (members != null) result.members.addAll(members);
+    if (removedUserIds != null) result.removedUserIds.addAll(removedUserIds);
+    if (snapshot != null) result.snapshot = snapshot;
+    return result;
+  }
+
+  ReportMembersRequest._();
+
+  factory ReportMembersRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportMembersRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportMembersRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'streamId')
+    ..pPS(2, _omitFieldNames ? '' : 'previousStreamIds')
+    ..a<$fixnum.Int64>(3, _omitFieldNames ? '' : 'seq', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..pc<GatewayMember>(4, _omitFieldNames ? '' : 'members', $pb.PbFieldType.PM,
+        subBuilder: GatewayMember.create)
+    ..pc<$0.UserId>(
+        5, _omitFieldNames ? '' : 'removedUserIds', $pb.PbFieldType.PM,
+        subBuilder: $0.UserId.create)
+    ..aOM<SnapshotPart>(6, _omitFieldNames ? '' : 'snapshot',
+        subBuilder: SnapshotPart.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportMembersRequest clone() =>
+      ReportMembersRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportMembersRequest copyWith(void Function(ReportMembersRequest) updates) =>
+      super.copyWith((message) => updates(message as ReportMembersRequest))
+          as ReportMembersRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportMembersRequest create() => ReportMembersRequest._();
+  @$core.override
+  ReportMembersRequest createEmptyInstance() => create();
+  static $pb.PbList<ReportMembersRequest> createRepeated() =>
+      $pb.PbList<ReportMembersRequest>();
+  @$core.pragma('dart2js:noInline')
+  static ReportMembersRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportMembersRequest>(create);
+  static ReportMembersRequest? _defaultInstance;
+
+  /// This concern's stream; see SnapshotPart.
+  @$pb.TagNumber(1)
+  $core.String get streamId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set streamId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStreamId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStreamId() => $_clearField(1);
+
+  /// The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get previousStreamIds => $_getList(1);
+
+  /// As ReportServiceReachRequest.seq, on this concern's own stream: applied in order,
+  /// exactly once, so a late retry cannot restore a member since removed.
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get seq => $_getI64(2);
+  @$pb.TagNumber(3)
+  set seq($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSeq() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSeq() => $_clearField(3);
+
+  /// Added or changed. Each replaces what the api-server held for that member on this gateway.
+  @$pb.TagNumber(4)
+  $pb.PbList<GatewayMember> get members => $_getList(3);
+
+  /// No longer members of this gateway. A user named here and in members is removed.
+  @$pb.TagNumber(5)
+  $pb.PbList<$0.UserId> get removedUserIds => $_getList(4);
+
+  /// Set when this request is part of a snapshot of every member; users absent from a whole
+  /// snapshot are members no more.
+  @$pb.TagNumber(6)
+  SnapshotPart get snapshot => $_getN(5);
+  @$pb.TagNumber(6)
+  set snapshot(SnapshotPart value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSnapshot() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSnapshot() => $_clearField(6);
+  @$pb.TagNumber(6)
+  SnapshotPart ensureSnapshot() => $_ensure(5);
+}
+
+class ReportMembersResponse extends $pb.GeneratedMessage {
+  factory ReportMembersResponse({
+    $fixnum.Int64? appliedSeq,
+    $core.bool? resyncRequired,
+  }) {
+    final result = create();
+    if (appliedSeq != null) result.appliedSeq = appliedSeq;
+    if (resyncRequired != null) result.resyncRequired = resyncRequired;
+    return result;
+  }
+
+  ReportMembersResponse._();
+
+  factory ReportMembersResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportMembersResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportMembersResponse',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..a<$fixnum.Int64>(
+        1, _omitFieldNames ? '' : 'appliedSeq', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(2, _omitFieldNames ? '' : 'resyncRequired')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportMembersResponse clone() =>
+      ReportMembersResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportMembersResponse copyWith(
+          void Function(ReportMembersResponse) updates) =>
+      super.copyWith((message) => updates(message as ReportMembersResponse))
+          as ReportMembersResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportMembersResponse create() => ReportMembersResponse._();
+  @$core.override
+  ReportMembersResponse createEmptyInstance() => create();
+  static $pb.PbList<ReportMembersResponse> createRepeated() =>
+      $pb.PbList<ReportMembersResponse>();
+  @$core.pragma('dart2js:noInline')
+  static ReportMembersResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportMembersResponse>(create);
+  static ReportMembersResponse? _defaultInstance;
 
   /// As ReportServiceReachResponse.applied_seq.
   @$pb.TagNumber(1)

@@ -37,6 +37,11 @@ const $core.Map<$core.String, $core.dynamic> GatewayReportingServiceBase$json =
       '2': '.kusinta.iot.reporting.v1.ReportServedSpacesRequest',
       '3': '.kusinta.iot.reporting.v1.ReportServedSpacesResponse'
     },
+    {
+      '1': 'ReportMembers',
+      '2': '.kusinta.iot.reporting.v1.ReportMembersRequest',
+      '3': '.kusinta.iot.reporting.v1.ReportMembersResponse'
+    },
   ],
 };
 
@@ -69,6 +74,11 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.reporting.v1.ServedSpace': $0.ServedSpace$json,
   '.kusinta.iot.reporting.v1.ReportServedSpacesResponse':
       $0.ReportServedSpacesResponse$json,
+  '.kusinta.iot.reporting.v1.ReportMembersRequest':
+      $0.ReportMembersRequest$json,
+  '.kusinta.iot.reporting.v1.GatewayMember': $0.GatewayMember$json,
+  '.kusinta.iot.reporting.v1.ReportMembersResponse':
+      $0.ReportMembersResponse$json,
 };
 
 /// Descriptor for `GatewayReportingService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
@@ -80,4 +90,6 @@ final $typed_data.Uint8List gatewayReportingServiceDescriptor = $convert.base64D
     'c2ludGEuaW90LnJlcG9ydGluZy52MS5SZXBvcnRTZXJ2aWNlUmVhY2hSZXNwb25zZRJ/ChJSZX'
     'BvcnRTZXJ2ZWRTcGFjZXMSMy5rdXNpbnRhLmlvdC5yZXBvcnRpbmcudjEuUmVwb3J0U2VydmVk'
     'U3BhY2VzUmVxdWVzdBo0Lmt1c2ludGEuaW90LnJlcG9ydGluZy52MS5SZXBvcnRTZXJ2ZWRTcG'
-    'FjZXNSZXNwb25zZQ==');
+    'FjZXNSZXNwb25zZRJwCg1SZXBvcnRNZW1iZXJzEi4ua3VzaW50YS5pb3QucmVwb3J0aW5nLnYx'
+    'LlJlcG9ydE1lbWJlcnNSZXF1ZXN0Gi8ua3VzaW50YS5pb3QucmVwb3J0aW5nLnYxLlJlcG9ydE'
+    '1lbWJlcnNSZXNwb25zZQ==');

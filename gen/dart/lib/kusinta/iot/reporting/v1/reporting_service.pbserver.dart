@@ -27,6 +27,8 @@ abstract class GatewayReportingServiceBase extends $pb.GeneratedService {
       $pb.ServerContext ctx, $0.ReportServiceReachRequest request);
   $async.Future<$0.ReportServedSpacesResponse> reportServedSpaces(
       $pb.ServerContext ctx, $0.ReportServedSpacesRequest request);
+  $async.Future<$0.ReportMembersResponse> reportMembers(
+      $pb.ServerContext ctx, $0.ReportMembersRequest request);
 
   $pb.GeneratedMessage createRequest($core.String methodName) {
     switch (methodName) {
@@ -36,6 +38,8 @@ abstract class GatewayReportingServiceBase extends $pb.GeneratedService {
         return $0.ReportServiceReachRequest();
       case 'ReportServedSpaces':
         return $0.ReportServedSpacesRequest();
+      case 'ReportMembers':
+        return $0.ReportMembersRequest();
       default:
         throw $core.ArgumentError('Unknown method: $methodName');
     }
@@ -50,6 +54,8 @@ abstract class GatewayReportingServiceBase extends $pb.GeneratedService {
         return reportServiceReach(ctx, request as $0.ReportServiceReachRequest);
       case 'ReportServedSpaces':
         return reportServedSpaces(ctx, request as $0.ReportServedSpacesRequest);
+      case 'ReportMembers':
+        return reportMembers(ctx, request as $0.ReportMembersRequest);
       default:
         throw $core.ArgumentError('Unknown method: $methodName');
     }

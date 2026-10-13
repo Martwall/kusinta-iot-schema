@@ -7,8 +7,8 @@ import "package:connectrpc/connect.dart" as connect;
 import "reporting.pb.dart" as kusintaiotreportingv1reporting;
 
 /// The building-server gateway's reports to the api-server, over the gateway's client
-/// certificate: which gateway is reporting comes from the certificate. Three unary calls, one
-/// per concern, each with its own stream of reports, so a slow call for one never holds back
+/// certificate: which gateway is reporting comes from the certificate. One unary call per
+/// concern, each with its own stream of reports, so a slow call for one never holds back
 /// another.
 abstract final class GatewayReportingService {
   /// Fully-qualified name of the GatewayReportingService service.
@@ -33,5 +33,12 @@ abstract final class GatewayReportingService {
     connect.StreamType.unary,
     kusintaiotreportingv1reporting.ReportServedSpacesRequest.new,
     kusintaiotreportingv1reporting.ReportServedSpacesResponse.new,
+  );
+
+  static const reportMembers = connect.Spec(
+    '/$name/ReportMembers',
+    connect.StreamType.unary,
+    kusintaiotreportingv1reporting.ReportMembersRequest.new,
+    kusintaiotreportingv1reporting.ReportMembersResponse.new,
   );
 }

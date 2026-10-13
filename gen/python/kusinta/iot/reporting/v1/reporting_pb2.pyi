@@ -1,6 +1,7 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
@@ -234,6 +235,40 @@ class ReportServedSpacesRequest(_message.Message):
     def __init__(self, stream_id: _Optional[str] = ..., previous_stream_ids: _Optional[_Iterable[str]] = ..., seq: _Optional[int] = ..., spaces: _Optional[_Iterable[_Union[ServedSpace, _Mapping]]] = ..., removed_space_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., snapshot: _Optional[_Union[SnapshotPart, _Mapping]] = ...) -> None: ...
 
 class ReportServedSpacesResponse(_message.Message):
+    __slots__ = ("applied_seq", "resync_required")
+    APPLIED_SEQ_FIELD_NUMBER: _ClassVar[int]
+    RESYNC_REQUIRED_FIELD_NUMBER: _ClassVar[int]
+    applied_seq: int
+    resync_required: bool
+    def __init__(self, applied_seq: _Optional[int] = ..., resync_required: _Optional[bool] = ...) -> None: ...
+
+class GatewayMember(_message.Message):
+    __slots__ = ("user_id", "roles", "administrator_since")
+    USER_ID_FIELD_NUMBER: _ClassVar[int]
+    ROLES_FIELD_NUMBER: _ClassVar[int]
+    ADMINISTRATOR_SINCE_FIELD_NUMBER: _ClassVar[int]
+    user_id: _identity_pb2.UserId
+    roles: _containers.RepeatedScalarFieldContainer[_roles_pb2.Role]
+    administrator_since: _timestamp_pb2.Timestamp
+    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., roles: _Optional[_Iterable[_Union[_roles_pb2.Role, str]]] = ..., administrator_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class ReportMembersRequest(_message.Message):
+    __slots__ = ("stream_id", "previous_stream_ids", "seq", "members", "removed_user_ids", "snapshot")
+    STREAM_ID_FIELD_NUMBER: _ClassVar[int]
+    PREVIOUS_STREAM_IDS_FIELD_NUMBER: _ClassVar[int]
+    SEQ_FIELD_NUMBER: _ClassVar[int]
+    MEMBERS_FIELD_NUMBER: _ClassVar[int]
+    REMOVED_USER_IDS_FIELD_NUMBER: _ClassVar[int]
+    SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
+    stream_id: str
+    previous_stream_ids: _containers.RepeatedScalarFieldContainer[str]
+    seq: int
+    members: _containers.RepeatedCompositeFieldContainer[GatewayMember]
+    removed_user_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.UserId]
+    snapshot: SnapshotPart
+    def __init__(self, stream_id: _Optional[str] = ..., previous_stream_ids: _Optional[_Iterable[str]] = ..., seq: _Optional[int] = ..., members: _Optional[_Iterable[_Union[GatewayMember, _Mapping]]] = ..., removed_user_ids: _Optional[_Iterable[_Union[_identity_pb2.UserId, _Mapping]]] = ..., snapshot: _Optional[_Union[SnapshotPart, _Mapping]] = ...) -> None: ...
+
+class ReportMembersResponse(_message.Message):
     __slots__ = ("applied_seq", "resync_required")
     APPLIED_SEQ_FIELD_NUMBER: _ClassVar[int]
     RESYNC_REQUIRED_FIELD_NUMBER: _ClassVar[int]
