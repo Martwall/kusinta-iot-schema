@@ -1622,17 +1622,20 @@ class ReportServedSpacesResponse extends $pb.GeneratedMessage {
   void clearResyncRequired() => $_clearField(2);
 }
 
-/// One member of this gateway: a user the gateway holds a role for (access.v1.Role). Whom
-/// the api-server lets connect to the gateway, and in which capacity.
+/// One member of this gateway: a user the gateway holds a role (access.v1.Role) or a space
+/// membership for, either. Whom the api-server lets connect to the gateway, and in which
+/// capacity. A user filed somewhere with no role is a member all the same: what they may do
+/// there is the gateway's to decide, and they cannot connect to find out unless reported.
 ///
 /// roles carries a member's service roles alone: ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER and
-/// ROLE_GATEWAY_ADMIN. A resident is a member with no role reported. The gateway MUST NOT
+/// ROLE_GATEWAY_ADMIN. An empty list means no service role: a resident, or someone filed with
+/// no role. The gateway MUST NOT
 /// send ROLE_RESIDENT or ROLE_UNSPECIFIED here, and the api-server keeps no role but the
 /// three, each once. An entry, in members or removed_user_ids, with no user id is malformed,
 /// and the api-server skips it.
 ///
-/// What the api-server learns of a resident is that they belong to this gateway without a
-/// service role, and from when to when — never which home, nor anything else ServiceReach
+/// What the api-server learns of a member with no service role is that they belong to this
+/// gateway, and from when to when — never which home, nor anything else ServiceReach
 /// withholds. A member's changes are sent at once, both ways, since joining is what lets a
 /// person connect and leaving is what revokes them. Roles do not follow relations
 /// (access.v1.MembershipRelation): a relation changing alone changes nothing reported here.
