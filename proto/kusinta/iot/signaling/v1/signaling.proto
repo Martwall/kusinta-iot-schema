@@ -139,8 +139,8 @@ message GatewayConnectResponse {
 // The one request on this stream that the gateway answers, with a
 // RedeemInviteResult carrying the same request_id.
 //
-// The api-server sends it only to the gateway whose open invites hold the
-// secret's hash (reporting.v1.ReportOpenInvitesRequest), and only for a user
+// The api-server sends it only to the gateway whose invite routes hold the
+// secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user
 // whose account has a verified email: it answers a user without one itself,
 // before routing. A hash held by more than one gateway routes nowhere and is
 // answered as INVALID.
@@ -174,10 +174,12 @@ message RedeemInvite {
 
 // What redeeming an invite did, as the gateway decided it.
 //
-// A redeem is idempotent for its user: redeemed again by the same user, a used
-// invite answers as it did the first time — for as long as its secret would have
-// lasted unused — and to anyone else as INVALID. So a user who never saw the
-// first answer can safely try again.
+// A redeem is idempotent for its user: redeemed again by the same user, for as
+// long as its secret would have lasted unused, a used invite answers JOINED if
+// the user is filed on its space by then, and otherwise as it did the first time
+// — so a denied request still answers PENDING_APPROVAL. To anyone else it
+// answers INVALID. So a user who never saw the first answer can safely try
+// again.
 enum RedeemOutcome {
   REDEEM_OUTCOME_UNSPECIFIED = 0;
 

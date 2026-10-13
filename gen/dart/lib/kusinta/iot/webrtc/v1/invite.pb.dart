@@ -929,9 +929,11 @@ class JoinRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $1.Timestamp ensureExpiresAt() => $_ensure(7);
 
-  /// The verified email address of the account asking (signaling.v1.RedeemInvite). A
-  /// display name is whatever the person chose; this is what lets an approver tell who is
-  /// really asking. Kept only while the request is pending.
+  /// The verified email address of the account asking (signaling.v1.RedeemInvite), shown to
+  /// whoever may approve the request, a resident approver included. A display name is
+  /// whatever the person chose; this is what lets an approver tell who is really asking. The
+  /// app tells a person redeeming that their address will be shown so. Kept only while the
+  /// request is pending.
   @$pb.TagNumber(9)
   $core.String get email => $_getSZ(8);
   @$pb.TagNumber(9)

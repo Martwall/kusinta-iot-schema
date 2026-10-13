@@ -746,8 +746,8 @@ enum RedeemInvite_Secret { token, code, notSet }
 /// The one request on this stream that the gateway answers, with a
 /// RedeemInviteResult carrying the same request_id.
 ///
-/// The api-server sends it only to the gateway whose open invites hold the
-/// secret's hash (reporting.v1.ReportOpenInvitesRequest), and only for a user
+/// The api-server sends it only to the gateway whose invite routes hold the
+/// secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user
 /// whose account has a verified email: it answers a user without one itself,
 /// before routing. A hash held by more than one gateway routes nowhere and is
 /// answered as INVALID.

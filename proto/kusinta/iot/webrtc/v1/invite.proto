@@ -16,7 +16,7 @@ option optimize_for = SPEED;
 // code shown on a phone, a shared link, a letter, or an email the api-server sends. The
 // person redeems either secret through the api-server, which routes the redeem to the
 // gateway (signaling.v1.RedeemInvite) by the hashes the gateway reports to it
-// (reporting.v1.ReportOpenInvitesRequest). Nothing here grants anything until the gateway
+// (reporting.v1.ReportInviteRoutesRequest). Nothing here grants anything until the gateway
 // itself has checked the redeem.
 //
 // The gateway is the authority on every invite: who may create one where, what it may
@@ -42,6 +42,10 @@ option optimize_for = SPEED;
 // A code is compared normalised: letters upper-cased, hyphens and whitespace dropped, "I"
 // and "L" read as "1", "O" read as "0". Anything else outside the Crockford alphabet makes
 // it no code at all. The token is compared exactly.
+//
+// When each secret expires is the gateway's choice, told in Invite. A code SHOULD expire
+// much sooner than a token (say 72 hours against 14 days): it is few enough bits to guess
+// at, and a short life keeps the window small whatever limits stand in front of it.
 //
 // Each secret is known by a hash, which is all the gateway keeps and all the api-server is
 // told: SHA-256 over the UTF-8 bytes of "kusinta-invite-token:" followed by the token, or
@@ -176,9 +180,11 @@ message JoinRequest {
   // When the request lapses unanswered, and the gateway drops it as if denied.
   google.protobuf.Timestamp expires_at = 8;
 
-  // The verified email address of the account asking (signaling.v1.RedeemInvite). A
-  // display name is whatever the person chose; this is what lets an approver tell who is
-  // really asking. Kept only while the request is pending.
+  // The verified email address of the account asking (signaling.v1.RedeemInvite), shown to
+  // whoever may approve the request, a resident approver included. A display name is
+  // whatever the person chose; this is what lets an approver tell who is really asking. The
+  // app tells a person redeeming that their address will be shown so. Kept only while the
+  // request is pending.
   string email = 9;
 }
 

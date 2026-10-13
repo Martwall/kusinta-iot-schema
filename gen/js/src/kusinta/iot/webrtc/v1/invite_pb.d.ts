@@ -341,9 +341,11 @@ export declare type JoinRequest = Message<"kusinta.iot.webrtc.v1.JoinRequest"> &
   expiresAt?: Timestamp | undefined;
 
   /**
-   * The verified email address of the account asking (signaling.v1.RedeemInvite). A
-   * display name is whatever the person chose; this is what lets an approver tell who is
-   * really asking. Kept only while the request is pending.
+   * The verified email address of the account asking (signaling.v1.RedeemInvite), shown to
+   * whoever may approve the request, a resident approver included. A display name is
+   * whatever the person chose; this is what lets an approver tell who is really asking. The
+   * app tells a person redeeming that their address will be shown so. Kept only while the
+   * request is pending.
    *
    * @generated from field: string email = 9;
    */

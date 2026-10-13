@@ -1938,9 +1938,11 @@ class ReportMembersResponse extends $pb.GeneratedMessage {
 /// of the secret.
 ///
 /// A secret's hash is reported from when the secret is issued until it expires, used or not,
-/// so that a user who redeemed it can redeem again and be told what the first redeem did
-/// (signaling.v1.RedeemOutcome). It is removed early when the invite is revoked, and the old
-/// secrets' hashes are removed when it is resent. Changes are sent at once.
+/// so that a user who redeemed it can redeem again and be told what came of it
+/// (signaling.v1.RedeemOutcome). A revoke, and a resend for the old secrets, removes them at
+/// once; an expiry removes them at or soon after the moment, not necessarily to the second,
+/// and the gateway still answers INVALID for an expired secret meanwhile. Changes are sent
+/// at once.
 ///
 /// The api-server keeps the hashes of a gateway's current snapshot and changes only, drops
 /// them all with the gateway, and routes no redeem by a hash it does not hold.
