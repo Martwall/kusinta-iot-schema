@@ -1626,18 +1626,25 @@ class ReportServedSpacesResponse extends $pb.GeneratedMessage {
 /// the api-server lets connect to the gateway, and in which capacity.
 ///
 /// roles carries a member's service roles alone: ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER and
-/// ROLE_GATEWAY_ADMIN. A resident is a member with no role reported: where people live stays
-/// on the gateway, as it does for ServiceReach. The gateway MUST NOT send ROLE_RESIDENT or
-/// ROLE_UNSPECIFIED here, and the api-server keeps no role but the three.
+/// ROLE_GATEWAY_ADMIN. A resident is a member with no role reported. The gateway MUST NOT
+/// send ROLE_RESIDENT or ROLE_UNSPECIFIED here, and the api-server keeps no role but the
+/// three, each once. An entry, in members or removed_user_ids, with no user id is malformed,
+/// and the api-server skips it.
 ///
-/// A member's changes are sent at once, both ways — joining, leaving and a role changing.
-/// They say nothing about a home: neither where a member lives nor where they serve.
+/// What the api-server learns of a resident is that they belong to this gateway without a
+/// service role, and from when to when — never which home, nor anything else ServiceReach
+/// withholds. A member's changes are sent at once, both ways, since joining is what lets a
+/// person connect and leaving is what revokes them. Roles do not follow relations
+/// (access.v1.MembershipRelation): a relation changing alone changes nothing reported here.
 ///
-/// Who registered the gateway is the api-server's own record, not the gateway's: the
-/// administration that came with registering it is not reported here, and is never taken
-/// away by this report — not by its absence from a snapshot, not by removed_user_ids. Any
-/// other administrator is a member reported with ROLE_GATEWAY_ADMIN, and the api-server gives
-/// them what it gives the registering one, from administrator_since (see ServiceReach).
+/// Who registered the gateway is the api-server's own record, not the gateway's. The
+/// administration that came with registering it is never taken away by this report — not by
+/// its absence from a snapshot, not by removed_user_ids — and ends only with a change of who
+/// is registered as the gateway's administrator at the api-server. Any other administrator is
+/// a member reported with ROLE_GATEWAY_ADMIN, whom the api-server gives what it gives the
+/// registering one, from administrator_since (see ServiceReach). Where the registering
+/// administrator is also reported so, the api-server's record governs: their administration
+/// counts from the earlier of its own start and administrator_since.
 class GatewayMember extends $pb.GeneratedMessage {
   factory GatewayMember({
     $0.UserId? userId,
@@ -1713,9 +1720,11 @@ class GatewayMember extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $pb.PbList<$3.Role> get roles => $_getList(1);
 
-  /// Set exactly when roles holds ROLE_GATEWAY_ADMIN: the moment from which the member's
-  /// administration of the gateway has been unbroken, as the gateway counts it. Given by the
-  /// gateway, which saw any break, as ReachedSpace.since is.
+  /// Set exactly when roles holds ROLE_GATEWAY_ADMIN: the quarter hour, rounded up, from
+  /// which the member's administration of the gateway has been unbroken, as the gateway counts
+  /// it. Given by the gateway, which saw any break, as ReachedSpace.since is. An administrator
+  /// reported without it counts from the quarter hour, rounded up, at which the api-server
+  /// applied the report, never earlier.
   @$pb.TagNumber(3)
   $1.Timestamp get administratorSince => $_getN(2);
   @$pb.TagNumber(3)
