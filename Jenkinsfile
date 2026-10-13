@@ -16,9 +16,14 @@ pipeline {
         checkout([
           $class: 'GitSCM',
           branches: [[name: env.BRANCH_NAME ?: env.TAG_NAME]],
+          // Every branch, so refs/remotes/origin/main is here for Breaking Check. Stated
+          // rather than left to the plugin's default: that stage depends on it, and
+          // fetching main there instead would put the PAT in a stage that runs after
+          // the branch's own code (npm ci, scripts) has had the workspace.
           userRemoteConfigs: [[
             url: 'https://github.com/Martwall/kusinta-iot-schema.git',
-            credentialsId: 'iot-schema-github-pat'
+            credentialsId: 'iot-schema-github-pat',
+            refspec: '+refs/heads/*:refs/remotes/origin/*'
           ]]
         ])
       }
@@ -53,8 +58,14 @@ pipeline {
 
     stage('Breaking Check') {
       when { not { branch 'main' } }
+      // The checkout creates no local `main`, and `.git#branch=main` looks for
+      // refs/heads/main, so it failed with "couldn't find remote ref main". Compare
+      // against the remote-tracking ref Checkout fetched, which is current main as of
+      // this build. No credentials here: this runs after the branch's own code, so the
+      // PAT stays in Checkout and in the main-only stages. If the ref is missing, buf
+      // fails the build rather than passing it.
       steps {
-        sh 'buf breaking --against ".git#branch=main"'
+        sh 'buf breaking --against ".git#ref=refs/remotes/origin/main"'
       }
     }
 
