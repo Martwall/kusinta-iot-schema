@@ -29,11 +29,20 @@ message AppTokenClaims {
   google.protobuf.Timestamp exp = 5; // expiry     (JWT NumericDate on the wire)
 
   // Custom claims.
-  // A user may hold several roles at once (e.g. resident + gateway admin), so
-  // this is a list. Carried in the JWT as an array of enum NAME strings
-  // (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]), matching proto3 canonical
-  // JSON enum encoding — not integer values. This keeps the claim
-  // self-describing and aligns with text-typed role storage on the api-server.
+  // The roles the api-server holds for the user on this gateway: the service
+  // roles the gateway reported (reporting.v1.GatewayMember), and
+  // ROLE_GATEWAY_ADMIN for whoever registered the gateway. A resident's token
+  // names none, so the claim may be an empty list; it is never absent.
+  // Carried in the JWT as an array of enum NAME strings (e.g.
+  // ["ROLE_TECHNICIAN"]), matching proto3 canonical JSON enum encoding — not
+  // integer values.
+  //
+  // The gateway authorises from the roles it holds itself, and takes from
+  // this claim ROLE_GATEWAY_ADMIN alone. So the api-server MUST set
+  // ROLE_GATEWAY_ADMIN here only for the administrator who registered the
+  // gateway, never for one the gateway reported: the gateway holds those
+  // itself, and a copy in a token would outlive their demotion until the
+  // token expired.
   repeated kusinta.iot.access.v1.Role roles = 6;
 
   // RFC 7800 confirmation claim. Binds the token to the DTLS certificate of the

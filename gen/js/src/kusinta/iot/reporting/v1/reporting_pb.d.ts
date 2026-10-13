@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { BackendFailureReason, SpaceType } from "../../common/v1/types_pb.js";
+import type { Role } from "../../access/v1/roles_pb.js";
 
 /**
  * Describes the file kusinta/iot/reporting/v1/reporting.proto.
@@ -696,6 +697,137 @@ export declare type ReportServedSpacesResponse = Message<"kusinta.iot.reporting.
  * Use `create(ReportServedSpacesResponseSchema)` to create a new message.
  */
 export declare const ReportServedSpacesResponseSchema: GenMessage<ReportServedSpacesResponse>;
+
+/**
+ * One member of this gateway: a user the gateway holds a role for (access.v1.Role). Whom
+ * the api-server lets connect to the gateway, and in which capacity.
+ *
+ * roles carries a member's service roles alone: ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER and
+ * ROLE_GATEWAY_ADMIN. A resident is a member with no role reported: where people live stays
+ * on the gateway, as it does for ServiceReach. The gateway MUST NOT send ROLE_RESIDENT or
+ * ROLE_UNSPECIFIED here, and the api-server keeps no role but the three.
+ *
+ * A member's changes are sent at once, both ways — joining, leaving and a role changing.
+ * They say nothing about a home: neither where a member lives nor where they serve.
+ *
+ * Who registered the gateway is the api-server's own record, not the gateway's: the
+ * administration that came with registering it is not reported here, and is never taken
+ * away by this report — not by its absence from a snapshot, not by removed_user_ids. Any
+ * other administrator is a member reported with ROLE_GATEWAY_ADMIN, and the api-server gives
+ * them what it gives the registering one, from administrator_since (see ServiceReach).
+ *
+ * @generated from message kusinta.iot.reporting.v1.GatewayMember
+ */
+export declare type GatewayMember = Message<"kusinta.iot.reporting.v1.GatewayMember"> & {
+  /**
+   * As the token issuer mints it: the sub of the member's token.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId user_id = 1;
+   */
+  userId?: UserId | undefined;
+
+  /**
+   * The member's service roles, each once; empty for a resident.
+   *
+   * @generated from field: repeated kusinta.iot.access.v1.Role roles = 2;
+   */
+  roles: Role[];
+
+  /**
+   * Set exactly when roles holds ROLE_GATEWAY_ADMIN: the moment from which the member's
+   * administration of the gateway has been unbroken, as the gateway counts it. Given by the
+   * gateway, which saw any break, as ReachedSpace.since is.
+   *
+   * @generated from field: google.protobuf.Timestamp administrator_since = 3;
+   */
+  administratorSince?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.GatewayMember.
+ * Use `create(GatewayMemberSchema)` to create a new message.
+ */
+export declare const GatewayMemberSchema: GenMessage<GatewayMember>;
+
+/**
+ * @generated from message kusinta.iot.reporting.v1.ReportMembersRequest
+ */
+export declare type ReportMembersRequest = Message<"kusinta.iot.reporting.v1.ReportMembersRequest"> & {
+  /**
+   * This concern's stream; see SnapshotPart.
+   *
+   * @generated from field: string stream_id = 1;
+   */
+  streamId: string;
+
+  /**
+   * The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+   *
+   * @generated from field: repeated string previous_stream_ids = 2;
+   */
+  previousStreamIds: string[];
+
+  /**
+   * As ReportServiceReachRequest.seq, on this concern's own stream: applied in order,
+   * exactly once, so a late retry cannot restore a member since removed.
+   *
+   * @generated from field: uint64 seq = 3;
+   */
+  seq: bigint;
+
+  /**
+   * Added or changed. Each replaces what the api-server held for that member on this gateway.
+   *
+   * @generated from field: repeated kusinta.iot.reporting.v1.GatewayMember members = 4;
+   */
+  members: GatewayMember[];
+
+  /**
+   * No longer members of this gateway. A user named here and in members is removed.
+   *
+   * @generated from field: repeated kusinta.iot.identity.v1.UserId removed_user_ids = 5;
+   */
+  removedUserIds: UserId[];
+
+  /**
+   * Set when this request is part of a snapshot of every member; users absent from a whole
+   * snapshot are members no more.
+   *
+   * @generated from field: kusinta.iot.reporting.v1.SnapshotPart snapshot = 6;
+   */
+  snapshot?: SnapshotPart | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.ReportMembersRequest.
+ * Use `create(ReportMembersRequestSchema)` to create a new message.
+ */
+export declare const ReportMembersRequestSchema: GenMessage<ReportMembersRequest>;
+
+/**
+ * @generated from message kusinta.iot.reporting.v1.ReportMembersResponse
+ */
+export declare type ReportMembersResponse = Message<"kusinta.iot.reporting.v1.ReportMembersResponse"> & {
+  /**
+   * As ReportServiceReachResponse.applied_seq.
+   *
+   * @generated from field: uint64 applied_seq = 1;
+   */
+  appliedSeq: bigint;
+
+  /**
+   * As ReportServiceReachResponse.resync_required.
+   *
+   * @generated from field: bool resync_required = 2;
+   */
+  resyncRequired: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.ReportMembersResponse.
+ * Use `create(ReportMembersResponseSchema)` to create a new message.
+ */
+export declare const ReportMembersResponseSchema: GenMessage<ReportMembersResponse>;
 
 /**
  * What kind of problem is open. The device kinds mirror what service staff are given of a

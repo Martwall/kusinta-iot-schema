@@ -6,13 +6,15 @@
   * a battery level is optional: absent is not zero
   * service reach says, for each space, since when it has been unbroken
   * reach and served spaces are ordered by a seq the api-server can refuse to go back on
+  * a member carries its service roles alone; a resident is a member with none
 """
 
 from google.protobuf import timestamp_pb2
 
+from kusinta.iot.access.v1 import roles_pb2
 from kusinta.iot.common.v1 import types_pb2
 from kusinta.iot.identity.v1 import identity_pb2
-from kusinta.iot.reporting.v1 import reporting_pb2
+from kusinta.iot.reporting.v1 import reporting_pb2, reporting_service_pb2
 
 VALVE = identity_pb2.DeviceId(value="hm:eTRV-42")
 BEDROOM = identity_pb2.SpaceId(value="bed")
@@ -285,3 +287,101 @@ def test_a_device_offline_closes_when_its_connector_backend_fails():
     )
 
     assert cleared.reason == reporting_pb2.CLEAR_REASON_SUPERSEDED_BY_CONNECTOR_ERROR
+
+
+# --- members ---------------------------------------------------------------------------
+
+
+def test_a_member_carries_its_service_roles():
+    member = _round_trip(
+        reporting_pb2.GatewayMember(
+            user_id=identity_pb2.UserId(value="tekniker"),
+            roles=[roles_pb2.ROLE_TECHNICIAN, roles_pb2.ROLE_PROPERTY_OWNER],
+        )
+    )
+
+    assert (member.user_id.value, list(member.roles)) == (
+        "tekniker",
+        [roles_pb2.ROLE_TECHNICIAN, roles_pb2.ROLE_PROPERTY_OWNER],
+    )
+
+
+def test_a_resident_is_a_member_with_no_role():
+    member = _round_trip(
+        reporting_pb2.GatewayMember(user_id=identity_pb2.UserId(value="anna"))
+    )
+
+    assert list(member.roles) == []
+
+
+def test_an_administrator_says_since_when():
+    member = _round_trip(
+        reporting_pb2.GatewayMember(
+            user_id=identity_pb2.UserId(value="förvaltare"),
+            roles=[roles_pb2.ROLE_GATEWAY_ADMIN],
+            administrator_since=QUARTER,
+        )
+    )
+
+    assert member.administrator_since.seconds == QUARTER.seconds
+
+
+def test_a_member_who_is_no_administrator_has_no_since():
+    member = _round_trip(
+        reporting_pb2.GatewayMember(user_id=identity_pb2.UserId(value="anna"))
+    )
+
+    assert not member.HasField("administrator_since")
+
+
+def test_members_name_the_stream_their_seq_counts_on():
+    request = _round_trip(
+        reporting_pb2.ReportMembersRequest(
+            stream_id="s-1", previous_stream_ids=["s-0"], seq=4
+        )
+    )
+
+    assert (request.stream_id, list(request.previous_stream_ids), request.seq) == (
+        "s-1",
+        ["s-0"],
+        4,
+    )
+
+
+def test_members_name_the_users_no_longer_members():
+    request = _round_trip(
+        reporting_pb2.ReportMembersRequest(
+            removed_user_ids=[identity_pb2.UserId(value="flyttat")]
+        )
+    )
+
+    assert [u.value for u in request.removed_user_ids] == ["flyttat"]
+
+
+def test_members_can_be_part_of_a_snapshot():
+    request = _round_trip(
+        reporting_pb2.ReportMembersRequest(
+            snapshot=reporting_pb2.SnapshotPart(snapshot_id="m-1", part=0, last=True)
+        )
+    )
+
+    assert request.snapshot.last
+
+
+def test_the_api_server_says_how_far_it_has_applied_members():
+    response = _round_trip(
+        reporting_pb2.ReportMembersResponse(applied_seq=4, resync_required=True)
+    )
+
+    assert (response.applied_seq, response.resync_required) == (4, True)
+
+
+def test_the_reporting_service_takes_members():
+    methods = [
+        m.name
+        for m in reporting_service_pb2.DESCRIPTOR.services_by_name[
+            "GatewayReportingService"
+        ].methods
+    ]
+
+    assert "ReportMembers" in methods

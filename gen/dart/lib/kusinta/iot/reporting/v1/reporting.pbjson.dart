@@ -595,3 +595,104 @@ final $typed_data.Uint8List reportServedSpacesResponseDescriptor =
     $convert.base64Decode(
         'ChpSZXBvcnRTZXJ2ZWRTcGFjZXNSZXNwb25zZRIfCgthcHBsaWVkX3NlcRgBIAEoBFIKYXBwbG'
         'llZFNlcRInCg9yZXN5bmNfcmVxdWlyZWQYAiABKAhSDnJlc3luY1JlcXVpcmVk');
+
+@$core.Deprecated('Use gatewayMemberDescriptor instead')
+const GatewayMember$json = {
+  '1': 'GatewayMember',
+  '2': [
+    {
+      '1': 'user_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'userId'
+    },
+    {
+      '1': 'roles',
+      '3': 2,
+      '4': 3,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'roles'
+    },
+    {
+      '1': 'administrator_since',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'administratorSince'
+    },
+  ],
+};
+
+/// Descriptor for `GatewayMember`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List gatewayMemberDescriptor = $convert.base64Decode(
+    'Cg1HYXRld2F5TWVtYmVyEjgKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS'
+    '52MS5Vc2VySWRSBnVzZXJJZBIxCgVyb2xlcxgCIAMoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52'
+    'MS5Sb2xlUgVyb2xlcxJLChNhZG1pbmlzdHJhdG9yX3NpbmNlGAMgASgLMhouZ29vZ2xlLnByb3'
+    'RvYnVmLlRpbWVzdGFtcFISYWRtaW5pc3RyYXRvclNpbmNl');
+
+@$core.Deprecated('Use reportMembersRequestDescriptor instead')
+const ReportMembersRequest$json = {
+  '1': 'ReportMembersRequest',
+  '2': [
+    {'1': 'stream_id', '3': 1, '4': 1, '5': 9, '10': 'streamId'},
+    {
+      '1': 'previous_stream_ids',
+      '3': 2,
+      '4': 3,
+      '5': 9,
+      '10': 'previousStreamIds'
+    },
+    {'1': 'seq', '3': 3, '4': 1, '5': 4, '10': 'seq'},
+    {
+      '1': 'members',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.reporting.v1.GatewayMember',
+      '10': 'members'
+    },
+    {
+      '1': 'removed_user_ids',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'removedUserIds'
+    },
+    {
+      '1': 'snapshot',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.reporting.v1.SnapshotPart',
+      '10': 'snapshot'
+    },
+  ],
+};
+
+/// Descriptor for `ReportMembersRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportMembersRequestDescriptor = $convert.base64Decode(
+    'ChRSZXBvcnRNZW1iZXJzUmVxdWVzdBIbCglzdHJlYW1faWQYASABKAlSCHN0cmVhbUlkEi4KE3'
+    'ByZXZpb3VzX3N0cmVhbV9pZHMYAiADKAlSEXByZXZpb3VzU3RyZWFtSWRzEhAKA3NlcRgDIAEo'
+    'BFIDc2VxEkEKB21lbWJlcnMYBCADKAsyJy5rdXNpbnRhLmlvdC5yZXBvcnRpbmcudjEuR2F0ZX'
+    'dheU1lbWJlclIHbWVtYmVycxJJChByZW1vdmVkX3VzZXJfaWRzGAUgAygLMh8ua3VzaW50YS5p'
+    'b3QuaWRlbnRpdHkudjEuVXNlcklkUg5yZW1vdmVkVXNlcklkcxJCCghzbmFwc2hvdBgGIAEoCz'
+    'ImLmt1c2ludGEuaW90LnJlcG9ydGluZy52MS5TbmFwc2hvdFBhcnRSCHNuYXBzaG90');
+
+@$core.Deprecated('Use reportMembersResponseDescriptor instead')
+const ReportMembersResponse$json = {
+  '1': 'ReportMembersResponse',
+  '2': [
+    {'1': 'applied_seq', '3': 1, '4': 1, '5': 4, '10': 'appliedSeq'},
+    {'1': 'resync_required', '3': 2, '4': 1, '5': 8, '10': 'resyncRequired'},
+  ],
+};
+
+/// Descriptor for `ReportMembersResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportMembersResponseDescriptor = $convert.base64Decode(
+    'ChVSZXBvcnRNZW1iZXJzUmVzcG9uc2USHwoLYXBwbGllZF9zZXEYASABKARSCmFwcGxpZWRTZX'
+    'ESJwoPcmVzeW5jX3JlcXVpcmVkGAIgASgIUg5yZXN5bmNSZXF1aXJlZA==');

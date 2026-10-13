@@ -28,10 +28,12 @@ export const RoleSchema = /*@__PURE__*/
  * The gateway resolves the two together into DeviceAcl.allowed_actions, per device. A
  * role narrows what may appear there; it does not put anything there on its own.
  *
- * Carried in the app's token as webrtc.v1.AppTokenClaims.roles, as an array of proto3
- * canonical enum NAME strings (e.g. ["ROLE_RESIDENT", "ROLE_GATEWAY_ADMIN"]) rather than
- * integers, so the claim stays self-describing. A user may hold several at once and the
- * effective ceiling is their union.
+ * The building-server gateway holds each user's roles itself and authorises from what it
+ * holds. The one role it cannot know is the administration of whoever registered it, which
+ * the api-server records: that one it takes from the app's token
+ * (webrtc.v1.AppTokenClaims.roles). The api-server learns the rest from the gateway
+ * (reporting.v1.GatewayMember). A user may hold several at once and the effective ceiling is
+ * their union.
  *
  * UNORDERED. These are categories, not levels: a technician is not "more than" a
  * resident, and there is no >= comparison to make between them. Anything needing a graded

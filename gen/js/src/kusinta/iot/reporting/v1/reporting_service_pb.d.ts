@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import type { GenFile, GenService } from "@bufbuild/protobuf/codegenv2";
-import type { ReportProblemsRequestSchema, ReportProblemsResponseSchema, ReportServedSpacesRequestSchema, ReportServedSpacesResponseSchema, ReportServiceReachRequestSchema, ReportServiceReachResponseSchema } from "./reporting_pb.js";
+import type { ReportMembersRequestSchema, ReportMembersResponseSchema, ReportProblemsRequestSchema, ReportProblemsResponseSchema, ReportServedSpacesRequestSchema, ReportServedSpacesResponseSchema, ReportServiceReachRequestSchema, ReportServiceReachResponseSchema } from "./reporting_pb.js";
 
 /**
  * Describes the file kusinta/iot/reporting/v1/reporting_service.proto.
@@ -12,8 +12,8 @@ export declare const file_kusinta_iot_reporting_v1_reporting_service: GenFile;
 
 /**
  * The building-server gateway's reports to the api-server, over the gateway's client
- * certificate: which gateway is reporting comes from the certificate. Three unary calls, one
- * per concern, each with its own stream of reports, so a slow call for one never holds back
+ * certificate: which gateway is reporting comes from the certificate. One unary call per
+ * concern, each with its own stream of reports, so a slow call for one never holds back
  * another.
  *
  * @generated from service kusinta.iot.reporting.v1.GatewayReportingService
@@ -42,6 +42,14 @@ export declare const GatewayReportingService: GenService<{
     methodKind: "unary";
     input: typeof ReportServedSpacesRequestSchema;
     output: typeof ReportServedSpacesResponseSchema;
+  },
+  /**
+   * @generated from rpc kusinta.iot.reporting.v1.GatewayReportingService.ReportMembers
+   */
+  reportMembers: {
+    methodKind: "unary";
+    input: typeof ReportMembersRequestSchema;
+    output: typeof ReportMembersResponseSchema;
   },
 }>;
 

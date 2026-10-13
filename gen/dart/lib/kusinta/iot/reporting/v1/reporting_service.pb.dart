@@ -20,8 +20,8 @@ import 'reporting.pb.dart' as $0;
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 /// The building-server gateway's reports to the api-server, over the gateway's client
-/// certificate: which gateway is reporting comes from the certificate. Three unary calls, one
-/// per concern, each with its own stream of reports, so a slow call for one never holds back
+/// certificate: which gateway is reporting comes from the certificate. One unary call per
+/// concern, each with its own stream of reports, so a slow call for one never holds back
 /// another.
 class GatewayReportingServiceApi {
   final $pb.RpcClient _client;
@@ -48,4 +48,8 @@ class GatewayReportingServiceApi {
           'ReportServedSpaces',
           request,
           $0.ReportServedSpacesResponse());
+  $async.Future<$0.ReportMembersResponse> reportMembers(
+          $pb.ClientContext? ctx, $0.ReportMembersRequest request) =>
+      _client.invoke<$0.ReportMembersResponse>(ctx, 'GatewayReportingService',
+          'ReportMembers', request, $0.ReportMembersResponse());
 }

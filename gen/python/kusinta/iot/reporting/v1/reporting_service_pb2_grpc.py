@@ -7,8 +7,8 @@ from kusinta.iot.reporting.v1 import reporting_pb2 as kusinta_dot_iot_dot_report
 
 class GatewayReportingServiceStub(object):
     """The building-server gateway's reports to the api-server, over the gateway's client
-    certificate: which gateway is reporting comes from the certificate. Three unary calls, one
-    per concern, each with its own stream of reports, so a slow call for one never holds back
+    certificate: which gateway is reporting comes from the certificate. One unary call per
+    concern, each with its own stream of reports, so a slow call for one never holds back
     another.
     """
 
@@ -33,12 +33,17 @@ class GatewayReportingServiceStub(object):
                 request_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesRequest.SerializeToString,
                 response_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesResponse.FromString,
                 _registered_method=True)
+        self.ReportMembers = channel.unary_unary(
+                '/kusinta.iot.reporting.v1.GatewayReportingService/ReportMembers',
+                request_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest.SerializeToString,
+                response_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse.FromString,
+                _registered_method=True)
 
 
 class GatewayReportingServiceServicer(object):
     """The building-server gateway's reports to the api-server, over the gateway's client
-    certificate: which gateway is reporting comes from the certificate. Three unary calls, one
-    per concern, each with its own stream of reports, so a slow call for one never holds back
+    certificate: which gateway is reporting comes from the certificate. One unary call per
+    concern, each with its own stream of reports, so a slow call for one never holds back
     another.
     """
 
@@ -55,6 +60,12 @@ class GatewayReportingServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ReportServedSpaces(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ReportMembers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -78,6 +89,11 @@ def add_GatewayReportingServiceServicer_to_server(servicer, server):
                     request_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesRequest.FromString,
                     response_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesResponse.SerializeToString,
             ),
+            'ReportMembers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReportMembers,
+                    request_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest.FromString,
+                    response_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
             'kusinta.iot.reporting.v1.GatewayReportingService', rpc_method_handlers)
@@ -88,8 +104,8 @@ def add_GatewayReportingServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class GatewayReportingService(object):
     """The building-server gateway's reports to the api-server, over the gateway's client
-    certificate: which gateway is reporting comes from the certificate. Three unary calls, one
-    per concern, each with its own stream of reports, so a slow call for one never holds back
+    certificate: which gateway is reporting comes from the certificate. One unary call per
+    concern, each with its own stream of reports, so a slow call for one never holds back
     another.
     """
 
@@ -164,6 +180,33 @@ class GatewayReportingService(object):
             '/kusinta.iot.reporting.v1.GatewayReportingService/ReportServedSpaces',
             kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesRequest.SerializeToString,
             kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReportMembers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/kusinta.iot.reporting.v1.GatewayReportingService/ReportMembers',
+            kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest.SerializeToString,
+            kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse.FromString,
             options,
             channel_credentials,
             insecure,

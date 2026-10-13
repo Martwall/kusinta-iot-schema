@@ -3,17 +3,19 @@ syntax = "proto3";
 package kusinta.iot.reporting.v1;
 
 import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
 
 // What the building-server gateway reports to the api-server about the building it serves:
-// the problems open there, who among service staff reaches which spaces, and which spaces it
-// serves. The api-server keeps these so it can say what needs attention across properties,
-// to the right people, while a gateway is offline.
+// the problems open there, who among service staff reaches which spaces, which spaces it
+// serves, and who its members are. The api-server keeps these so it can say what needs
+// attention across properties, to the right people, while a gateway is offline, and so it
+// knows whom to let connect to the gateway at all.
 //
-// The gateway is the source of truth for all three. Delivery is at least once: the gateway
+// The gateway is the source of truth for all four. Delivery is at least once: the gateway
 // sends a report again until the api-server acknowledges it, across its own restarts and
 // offline spells, and the api-server makes a repeat harmless. Which gateway is reporting
 // comes from its client certificate, never from a message field.
@@ -45,16 +47,16 @@ option optimize_for = SPEED;
 // reinstalled, carry on: it never speaks on a stream the api-server has counts for, and its
 // snapshot is authoritative whatever the api-server held.
 //
-// How a stream opens: for service reach and served spaces, with the snapshot — anything
-// queued from before is superseded by it. For problems, transitions are history as well as
+// How a stream opens: for service reach, served spaces and members, with the snapshot —
+// anything queued from before is superseded by it. For problems, transitions are history as well as
 // state (a problem may have opened and cleared while the gateway was offline), so the stream
 // opens with the transitions still queued, and the snapshot follows, settling every problem
 // to its state at the last evaluation.
 //
 // The api-server sets resync_required in a response when it will not apply the request's
 // stream at all: a stream superseded by one seen later, a seq more than one above the last
-// applied, a reach or spaces stream whose first request is not part 0 of a snapshot. The
-// gateway then starts a new stream.
+// applied, a reach, spaces or members stream whose first request is not part 0 of a
+// snapshot. The gateway then starts a new stream.
 //
 // Changes that concern a home wait for the next quarter hour, as problems of its devices do.
 // This is data minimisation: the api-server keeps only a quarter-hour-coarse record of moves
@@ -102,8 +104,11 @@ option optimize_for = SPEED;
 // timing of a loss cannot tell the api-server that a member became a resident. A loss that
 // follows from a home change (a home removed, a room moved into one) waits with that change.
 //
-// The three concerns are otherwise not ordered against each other, with one rule at a quarter
-// hour: the gateway sends that quarter hour's problem transitions only once its reach and
+// Members are not ordered against the other concerns, and none of their changes waits for a
+// quarter hour (see GatewayMember).
+//
+// The other three concerns are otherwise not ordered against each other, with one rule at a
+// quarter hour: the gateway sends that quarter hour's problem transitions only once its reach and
 // served-space changes have been applied, so that a problem moved into a home is never shown
 // by reach the api-server has not yet lost. If reach or spaces cannot get through, problems
 // wait for them. On new streams the same holds: the problems stream sends nothing, its queued
@@ -570,6 +575,65 @@ message ReportServedSpacesRequest {
 }
 
 message ReportServedSpacesResponse {
+  // As ReportServiceReachResponse.applied_seq.
+  uint64 applied_seq = 1;
+
+  // As ReportServiceReachResponse.resync_required.
+  bool resync_required = 2;
+}
+
+// One member of this gateway: a user the gateway holds a role for (access.v1.Role). Whom
+// the api-server lets connect to the gateway, and in which capacity.
+//
+// roles carries a member's service roles alone: ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER and
+// ROLE_GATEWAY_ADMIN. A resident is a member with no role reported: where people live stays
+// on the gateway, as it does for ServiceReach. The gateway MUST NOT send ROLE_RESIDENT or
+// ROLE_UNSPECIFIED here, and the api-server keeps no role but the three.
+//
+// A member's changes are sent at once, both ways — joining, leaving and a role changing.
+// They say nothing about a home: neither where a member lives nor where they serve.
+//
+// Who registered the gateway is the api-server's own record, not the gateway's: the
+// administration that came with registering it is not reported here, and is never taken
+// away by this report — not by its absence from a snapshot, not by removed_user_ids. Any
+// other administrator is a member reported with ROLE_GATEWAY_ADMIN, and the api-server gives
+// them what it gives the registering one, from administrator_since (see ServiceReach).
+message GatewayMember {
+  // As the token issuer mints it: the sub of the member's token.
+  kusinta.iot.identity.v1.UserId user_id = 1;
+
+  // The member's service roles, each once; empty for a resident.
+  repeated kusinta.iot.access.v1.Role roles = 2;
+
+  // Set exactly when roles holds ROLE_GATEWAY_ADMIN: the moment from which the member's
+  // administration of the gateway has been unbroken, as the gateway counts it. Given by the
+  // gateway, which saw any break, as ReachedSpace.since is.
+  google.protobuf.Timestamp administrator_since = 3;
+}
+
+message ReportMembersRequest {
+  // This concern's stream; see SnapshotPart.
+  string stream_id = 1;
+
+  // The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  repeated string previous_stream_ids = 2;
+
+  // As ReportServiceReachRequest.seq, on this concern's own stream: applied in order,
+  // exactly once, so a late retry cannot restore a member since removed.
+  uint64 seq = 3;
+
+  // Added or changed. Each replaces what the api-server held for that member on this gateway.
+  repeated GatewayMember members = 4;
+
+  // No longer members of this gateway. A user named here and in members is removed.
+  repeated kusinta.iot.identity.v1.UserId removed_user_ids = 5;
+
+  // Set when this request is part of a snapshot of every member; users absent from a whole
+  // snapshot are members no more.
+  SnapshotPart snapshot = 6;
+}
+
+message ReportMembersResponse {
   // As ReportServiceReachResponse.applied_seq.
   uint64 applied_seq = 1;
 
