@@ -385,3 +385,27 @@ def test_the_reporting_service_takes_members():
     ]
 
     assert "ReportMembers" in methods
+
+
+def test_invite_routes_carry_secret_hashes_added_and_removed():
+    request = _round_trip(
+        reporting_pb2.ReportInviteRoutesRequest(
+            stream_id="s-1",
+            seq=2,
+            secret_hashes=[b"\x01" * 32],
+            removed_secret_hashes=[b"\x02" * 32],
+        )
+    )
+
+    assert (request.secret_hashes[0][0], request.removed_secret_hashes[0][0]) == (1, 2)
+
+
+def test_the_reporting_service_takes_invite_routes():
+    methods = [
+        m.name
+        for m in reporting_service_pb2.DESCRIPTOR.services_by_name[
+            "GatewayReportingService"
+        ].methods
+    ]
+
+    assert "ReportInviteRoutes" in methods

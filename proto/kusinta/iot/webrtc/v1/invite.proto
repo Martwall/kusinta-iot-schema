@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+package kusinta.iot.webrtc.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/roles.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// Invites: how a person is put on a space without anyone typing their user id.
+//
+// A member of a space who may put people on it creates an invite there. The gateway
+// answers with two secrets for the same invite, a link token and a short code, and keeps
+// only their hashes. The secrets reach the invited person outside this protocol — a QR
+// code shown on a phone, a shared link, a letter, or an email the api-server sends. The
+// person redeems either secret through the api-server, which routes the redeem to the
+// gateway (signaling.v1.RedeemInvite) by the hashes the gateway reports to it
+// (reporting.v1.ReportOpenInvitesRequest). Nothing here grants anything until the gateway
+// itself has checked the redeem.
+//
+// The gateway is the authority on every invite: who may create one where, what it may
+// carry, when it expires and what redeeming it does. The app's choices are a convenience;
+// the gateway checks each request as if the app had not.
+//
+// What redeeming does depends on the invite:
+//   * bound to an email address (CreateInvite.email): the person is filed on the space at
+//     once, if the verified address of their account matches;
+//   * otherwise: a join request is made, and the person is filed only once it is approved
+//     (ApproveJoinRequest). An intercepted link or code then gets nobody in on its own.
+//
+// Requests are ManagementRequest arms and answered by ManagementResult, as filing is. A
+// target the caller cannot reach is refused as NOT_ENTITLED whether or not it exists.
+
+// The secrets of an invite, in the forms the gateway mints them.
+//
+//   * token: 128 random bits, base64url without padding (22 characters). Carried in a
+//     link and its QR code.
+//   * code: 40 random bits as 8 characters of Crockford base32, shown as two groups of
+//     four ("K7QM-4RXD"). Typed by a person.
+//
+// A code is compared normalised: letters upper-cased, hyphens and whitespace dropped, "I"
+// and "L" read as "1", "O" read as "0". Anything else outside the Crockford alphabet makes
+// it no code at all. The token is compared exactly.
+//
+// Each secret is known by a hash, which is all the gateway keeps and all the api-server is
+// told: SHA-256 over the UTF-8 bytes of "kusinta-invite-token:" followed by the token, or
+// "kusinta-invite-code:" followed by the normalised code. The prefixes keep a token and a
+// code from ever sharing a hash.
+
+// Creates an invite on a space.
+//
+// relation is RESIDENT or SERVICE and nothing else, and it decides the role the person
+// will hold: a resident for RESIDENT, a technician for SERVICE. RESIDENT is refused
+// anywhere but a home (access.v1.MembershipRelation). No invite ever makes anyone a
+// gateway administrator or a property owner: those come only by promotion of someone
+// already a member, and any other relation is refused as INVALID_REQUEST.
+//
+// Who may create one is the gateway's decision, as for AssignUserToSpace. The gateway may
+// let a home's residents invite residents into their own home only, within a limit per
+// home. A caller over that limit is refused as FAILED_PRECONDITION with metadata
+// {"reason": "household_full"}.
+//
+// Answered with IssuedInvite.
+message CreateInvite {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.access.v1.MembershipRelation relation = 2;
+
+  // When set, the invite is bound to this address: only an account whose verified email
+  // is this address can redeem it (see RedeemInvite). Compared trimmed and
+  // case-insensitively over the whole address, with no other folding.
+  //
+  // One pending invite per space and address: a second for the same address on the same
+  // space is refused as FAILED_PRECONDITION with metadata {"reason": "already_invited",
+  // "invite_id": <the pending one>}, so the app can offer to resend that one instead.
+  //
+  // The gateway keeps the address only while the invite is pending, and drops it once the
+  // invite is redeemed, revoked or expired.
+  string email = 3;
+}
+
+// Gives a pending invite new secrets. The old token and code stop working at once, so
+// only the newest link, code or email does. Both expiries restart from now. Answered
+// with IssuedInvite. An invite's bound address cannot be changed: revoke it and create
+// another.
+message ResendInvite {
+  string invite_id = 1;
+}
+
+// Ends a pending invite: neither secret works from now on. Answered with ManagementAck.
+message RevokeInvite {
+  string invite_id = 1;
+}
+
+// Records that the email carrying this invite's newest secrets was sent, so the list can
+// say whether it ever left. Sent by the app after the api-server has accepted the email,
+// and again after each resend. Only the time is kept. Answered with ManagementAck.
+message MarkInviteEmailSent {
+  string invite_id = 1;
+}
+
+// The pending invites and join requests of a space. Answered with SpaceInvites. Listed
+// only to a caller who may create invites on the space; anyone else is refused as
+// NOT_ENTITLED.
+message ListSpaceInvites {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+}
+
+// Files the person who made a join request on its space, with its relation, and the role
+// that relation gives. Answered with ManagementAck.
+//
+// Who may approve is the gateway's decision: whoever may put people on that space, and,
+// for a request that came from an invite a resident created, a resident of that home.
+message ApproveJoinRequest {
+  string request_id = 1;
+}
+
+// Drops a join request. The person is told nothing beyond never being let in. Answered
+// with ManagementAck.
+message DenyJoinRequest {
+  string request_id = 1;
+}
+
+// A pending invite, as listed. Never carries a secret: the gateway does not keep them.
+message Invite {
+  // Minted by the gateway, opaque.
+  string invite_id = 1;
+
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
+  kusinta.iot.access.v1.MembershipRelation relation = 3;
+
+  // Who created it, and when. A resend changes neither.
+  kusinta.iot.identity.v1.UserId created_by = 4;
+  google.protobuf.Timestamp created_at = 5;
+
+  // Until when each secret can be redeemed. The app shows them in local time and never
+  // works them out itself. Once both have passed the invite is gone: it is not listed, and
+  // the gateway drops it with its address.
+  google.protobuf.Timestamp token_expires_at = 6;
+  google.protobuf.Timestamp code_expires_at = 7;
+
+  // The address it is bound to; empty when it is bound to none.
+  string email = 8;
+
+  // When the email with the newest secrets was sent (MarkInviteEmailSent). Unset when no
+  // email was sent since the last resend.
+  google.protobuf.Timestamp email_sent_at = 9;
+}
+
+// A new invite or a resent one, with its secrets. This is the only time they are told:
+// the gateway keeps only their hashes, and the app does not keep them beyond handing them
+// over.
+message IssuedInvite {
+  Invite invite = 1;
+  string token = 2;
+  string code = 3;
+}
+
+// A person who redeemed an invite that needs approval, waiting for it.
+message JoinRequest {
+  // Minted by the gateway, opaque.
+  string request_id = 1;
+
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
+  kusinta.iot.access.v1.MembershipRelation relation = 3;
+
+  // Who is asking to join, and the display name their account gave when they redeemed.
+  kusinta.iot.identity.v1.UserId user_id = 4;
+  string display_name = 5;
+
+  // Who created the invite that was redeemed.
+  kusinta.iot.identity.v1.UserId invited_by = 6;
+
+  google.protobuf.Timestamp requested_at = 7;
+
+  // When the request lapses unanswered, and the gateway drops it as if denied.
+  google.protobuf.Timestamp expires_at = 8;
+
+  // The verified email address of the account asking (signaling.v1.RedeemInvite). A
+  // display name is whatever the person chose; this is what lets an approver tell who is
+  // really asking. Kept only while the request is pending.
+  string email = 9;
+}
+
+// What a space is waiting on: its pending invites and its join requests.
+//
+// The answer to ListSpaceInvites, and pushed as GatewayMessage.space_invites whenever
+// either list changes — a create, resend, revoke, redeem, approval, denial or expiry — to
+// every session that may list it, so the app shows the change without reloading. A push
+// always carries the whole of both lists for its space.
+message SpaceInvites {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  repeated Invite invites = 2;
+  repeated JoinRequest join_requests = 3;
+}

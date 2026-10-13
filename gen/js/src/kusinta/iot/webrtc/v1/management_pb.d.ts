@@ -13,6 +13,7 @@ import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
+import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -1295,6 +1296,50 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ReconnectConnector;
     case: "reconnectConnector";
+  } | {
+    /**
+     * Invites; see invite.proto.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.CreateInvite create_invite = 24;
+     */
+    value: CreateInvite;
+    case: "createInvite";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ResendInvite resend_invite = 25;
+     */
+    value: ResendInvite;
+    case: "resendInvite";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.RevokeInvite revoke_invite = 26;
+     */
+    value: RevokeInvite;
+    case: "revokeInvite";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.MarkInviteEmailSent mark_invite_email_sent = 27;
+     */
+    value: MarkInviteEmailSent;
+    case: "markInviteEmailSent";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListSpaceInvites list_space_invites = 28;
+     */
+    value: ListSpaceInvites;
+    case: "listSpaceInvites";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ApproveJoinRequest approve_join_request = 29;
+     */
+    value: ApproveJoinRequest;
+    case: "approveJoinRequest";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.DenyJoinRequest deny_join_request = 30;
+     */
+    value: DenyJoinRequest;
+    case: "denyJoinRequest";
   } | { case: undefined; value?: undefined };
 };
 

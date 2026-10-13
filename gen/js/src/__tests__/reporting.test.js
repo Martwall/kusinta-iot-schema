@@ -6,6 +6,7 @@ import {
   GatewayMemberSchema,
   ReportMembersRequestSchema,
   ReportMembersResponseSchema,
+  ReportInviteRoutesRequestSchema,
 } from '../kusinta/iot/reporting/v1/reporting_pb.js'
 import { GatewayReportingService } from '../kusinta/iot/reporting/v1/reporting_service_pb.js'
 
@@ -61,5 +62,22 @@ describe('ReportMembers', () => {
 
   it('is a method of the reporting service', () => {
     expect(GatewayReportingService.method.reportMembers.name).toBe('ReportMembers')
+  })
+})
+
+describe('ReportInviteRoutes', () => {
+  it('carries secret hashes added and removed', () => {
+    const request = create(ReportInviteRoutesRequestSchema, {
+      streamId: 's-1',
+      seq: 2n,
+      secretHashes: [new Uint8Array(32).fill(1)],
+      removedSecretHashes: [new Uint8Array(32).fill(2)],
+    })
+    const decoded = fromBinary(ReportInviteRoutesRequestSchema, toBinary(ReportInviteRoutesRequestSchema, request))
+    expect([decoded.secretHashes[0][0], decoded.removedSecretHashes[0][0]]).toEqual([1, 2])
+  })
+
+  it('is a method of the reporting service', () => {
+    expect(GatewayReportingService.method.reportInviteRoutes.name).toBe('ReportInviteRoutes')
   })
 })

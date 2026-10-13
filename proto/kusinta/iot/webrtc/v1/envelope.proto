@@ -13,6 +13,7 @@ import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 import "kusinta/iot/webrtc/v1/device_state.proto";
+import "kusinta/iot/webrtc/v1/invite.proto";
 import "kusinta/iot/webrtc/v1/management.proto";
 import "kusinta/iot/webrtc/v1/permission_push.proto";
 
@@ -167,6 +168,8 @@ message ManagementResult {
     PrivacyDisclosure privacy_disclosure = 9; // get_privacy_disclosure
     // get_apartment_climate_summary
     kusinta.iot.climate.v1.ApartmentClimateSummary apartment_climate_summary = 10;
+    IssuedInvite issued_invite = 11; // create_invite, resend_invite
+    SpaceInvites space_invites = 12; // list_space_invites
   }
 }
 
@@ -399,6 +402,8 @@ message GatewayMessage {
     RoomClimateChanged room_climate_changed = 21;
     ClimateModeChanged climate_mode_changed = 22;
     ServiceStatusChanged service_status_changed = 23;
+    // A space's pending invites and join requests changed; see SpaceInvites.
+    SpaceInvites space_invites = 24;
   }
 }
 

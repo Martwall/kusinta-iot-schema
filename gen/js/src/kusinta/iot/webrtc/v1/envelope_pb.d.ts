@@ -10,6 +10,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
+import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -360,6 +361,22 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: ApartmentClimateSummary;
     case: "apartmentClimateSummary";
+  } | {
+    /**
+     * create_invite, resend_invite
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.IssuedInvite issued_invite = 11;
+     */
+    value: IssuedInvite;
+    case: "issuedInvite";
+  } | {
+    /**
+     * list_space_invites
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SpaceInvites space_invites = 12;
+     */
+    value: SpaceInvites;
+    case: "spaceInvites";
   } | { case: undefined; value?: undefined };
 };
 
@@ -881,6 +898,14 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: ServiceStatusChanged;
     case: "serviceStatusChanged";
+  } | {
+    /**
+     * A space's pending invites and join requests changed; see SpaceInvites.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SpaceInvites space_invites = 24;
+     */
+    value: SpaceInvites;
+    case: "spaceInvites";
   } | { case: undefined; value?: undefined };
 };
 

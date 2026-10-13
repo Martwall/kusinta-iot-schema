@@ -1165,6 +1165,69 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'reconnectConnector'
     },
+    {
+      '1': 'create_invite',
+      '3': 24,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.CreateInvite',
+      '9': 0,
+      '10': 'createInvite'
+    },
+    {
+      '1': 'resend_invite',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ResendInvite',
+      '9': 0,
+      '10': 'resendInvite'
+    },
+    {
+      '1': 'revoke_invite',
+      '3': 26,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RevokeInvite',
+      '9': 0,
+      '10': 'revokeInvite'
+    },
+    {
+      '1': 'mark_invite_email_sent',
+      '3': 27,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.MarkInviteEmailSent',
+      '9': 0,
+      '10': 'markInviteEmailSent'
+    },
+    {
+      '1': 'list_space_invites',
+      '3': 28,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListSpaceInvites',
+      '9': 0,
+      '10': 'listSpaceInvites'
+    },
+    {
+      '1': 'approve_join_request',
+      '3': 29,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ApproveJoinRequest',
+      '9': 0,
+      '10': 'approveJoinRequest'
+    },
+    {
+      '1': 'deny_join_request',
+      '3': 30,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.DenyJoinRequest',
+      '9': 0,
+      '10': 'denyJoinRequest'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1209,5 +1272,15 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     '1nZXRfYXBhcnRtZW50X2NsaW1hdGVfc3VtbWFyeRgWIAEoCzIxLmt1c2ludGEuaW90LndlYnJ0'
     'Yy52MS5HZXRBcGFydG1lbnRDbGltYXRlU3VtbWFyeUgAUhpnZXRBcGFydG1lbnRDbGltYXRlU3'
     'VtbWFyeRJcChNyZWNvbm5lY3RfY29ubmVjdG9yGBcgASgLMikua3VzaW50YS5pb3Qud2VicnRj'
-    'LnYxLlJlY29ubmVjdENvbm5lY3RvckgAUhJyZWNvbm5lY3RDb25uZWN0b3JCCQoHcmVxdWVzdA'
-    '==');
+    'LnYxLlJlY29ubmVjdENvbm5lY3RvckgAUhJyZWNvbm5lY3RDb25uZWN0b3ISSgoNY3JlYXRlX2'
+    'ludml0ZRgYIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5DcmVhdGVJbnZpdGVIAFIMY3Jl'
+    'YXRlSW52aXRlEkoKDXJlc2VuZF9pbnZpdGUYGSABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudj'
+    'EuUmVzZW5kSW52aXRlSABSDHJlc2VuZEludml0ZRJKCg1yZXZva2VfaW52aXRlGBogASgLMiMu'
+    'a3VzaW50YS5pb3Qud2VicnRjLnYxLlJldm9rZUludml0ZUgAUgxyZXZva2VJbnZpdGUSYQoWbW'
+    'Fya19pbnZpdGVfZW1haWxfc2VudBgbIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NYXJr'
+    'SW52aXRlRW1haWxTZW50SABSE21hcmtJbnZpdGVFbWFpbFNlbnQSVwoSbGlzdF9zcGFjZV9pbn'
+    'ZpdGVzGBwgASgLMicua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpc3RTcGFjZUludml0ZXNIAFIQ'
+    'bGlzdFNwYWNlSW52aXRlcxJdChRhcHByb3ZlX2pvaW5fcmVxdWVzdBgdIAEoCzIpLmt1c2ludG'
+    'EuaW90LndlYnJ0Yy52MS5BcHByb3ZlSm9pblJlcXVlc3RIAFISYXBwcm92ZUpvaW5SZXF1ZXN0'
+    'ElQKEWRlbnlfam9pbl9yZXF1ZXN0GB4gASgLMiYua3VzaW50YS5pb3Qud2VicnRjLnYxLkRlbn'
+    'lKb2luUmVxdWVzdEgAUg9kZW55Sm9pblJlcXVlc3RCCQoHcmVxdWVzdA==');

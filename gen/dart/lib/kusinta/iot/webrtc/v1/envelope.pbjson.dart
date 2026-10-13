@@ -359,6 +359,24 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'apartmentClimateSummary'
     },
+    {
+      '1': 'issued_invite',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.IssuedInvite',
+      '9': 0,
+      '10': 'issuedInvite'
+    },
+    {
+      '1': 'space_invites',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SpaceInvites',
+      '9': 0,
+      '10': 'spaceInvites'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -379,7 +397,10 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'N0b3J5ElkKEnByaXZhY3lfZGlzY2xvc3VyZRgJIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52'
     'MS5Qcml2YWN5RGlzY2xvc3VyZUgAUhFwcml2YWN5RGlzY2xvc3VyZRJtChlhcGFydG1lbnRfY2'
     'xpbWF0ZV9zdW1tYXJ5GAogASgLMi8ua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5BcGFydG1lbnRD'
-    'bGltYXRlU3VtbWFyeUgAUhdhcGFydG1lbnRDbGltYXRlU3VtbWFyeUIICgZyZXN1bHQ=');
+    'bGltYXRlU3VtbWFyeUgAUhdhcGFydG1lbnRDbGltYXRlU3VtbWFyeRJKCg1pc3N1ZWRfaW52aX'
+    'RlGAsgASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLklzc3VlZEludml0ZUgAUgxpc3N1ZWRJ'
+    'bnZpdGUSSgoNc3BhY2VfaW52aXRlcxgMIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TcG'
+    'FjZUludml0ZXNIAFIMc3BhY2VJbnZpdGVzQggKBnJlc3VsdA==');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -827,6 +848,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'serviceStatusChanged'
     },
+    {
+      '1': 'space_invites',
+      '3': 24,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SpaceInvites',
+      '9': 0,
+      '10': 'spaceInvites'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -870,8 +900,9 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     '5nZWQYFiABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuQ2xpbWF0ZU1vZGVDaGFuZ2VkSABS'
     'EmNsaW1hdGVNb2RlQ2hhbmdlZBJjChZzZXJ2aWNlX3N0YXR1c19jaGFuZ2VkGBcgASgLMisua3'
     'VzaW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VTdGF0dXNDaGFuZ2VkSABSFHNlcnZpY2VTdGF0'
-    'dXNDaGFuZ2VkQgkKB3BheWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cml0ZV9yZXN1bH'
-    'RSDnByb3BlcnR5X2V2ZW50');
+    'dXNDaGFuZ2VkEkoKDXNwYWNlX2ludml0ZXMYGCABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudj'
+    'EuU3BhY2VJbnZpdGVzSABSDHNwYWNlSW52aXRlc0IJCgdwYXlsb2FkSgQIDxAQSgQIBxAIUhZh'
+    'dHRyaWJ1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

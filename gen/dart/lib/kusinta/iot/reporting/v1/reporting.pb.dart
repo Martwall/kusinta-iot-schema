@@ -1931,6 +1931,212 @@ class ReportMembersResponse extends $pb.GeneratedMessage {
   void clearResyncRequired() => $_clearField(2);
 }
 
+/// Which invite secrets this gateway answers for, by hash alone (webrtc.v1 invite.proto
+/// gives the hash), so the api-server can route a redeem (signaling.v1.RedeemInvite) to the
+/// one gateway that can decide it. Nothing else of an invite leaves the gateway here — not
+/// its space, relation, address, creator or expiry — and the hash of a secret says nothing
+/// of the secret.
+///
+/// A secret's hash is reported from when the secret is issued until it expires, used or not,
+/// so that a user who redeemed it can redeem again and be told what the first redeem did
+/// (signaling.v1.RedeemOutcome). It is removed early when the invite is revoked, and the old
+/// secrets' hashes are removed when it is resent. Changes are sent at once.
+///
+/// The api-server keeps the hashes of a gateway's current snapshot and changes only, drops
+/// them all with the gateway, and routes no redeem by a hash it does not hold.
+class ReportInviteRoutesRequest extends $pb.GeneratedMessage {
+  factory ReportInviteRoutesRequest({
+    $core.String? streamId,
+    $core.Iterable<$core.String>? previousStreamIds,
+    $fixnum.Int64? seq,
+    $core.Iterable<$core.List<$core.int>>? secretHashes,
+    $core.Iterable<$core.List<$core.int>>? removedSecretHashes,
+    SnapshotPart? snapshot,
+  }) {
+    final result = create();
+    if (streamId != null) result.streamId = streamId;
+    if (previousStreamIds != null)
+      result.previousStreamIds.addAll(previousStreamIds);
+    if (seq != null) result.seq = seq;
+    if (secretHashes != null) result.secretHashes.addAll(secretHashes);
+    if (removedSecretHashes != null)
+      result.removedSecretHashes.addAll(removedSecretHashes);
+    if (snapshot != null) result.snapshot = snapshot;
+    return result;
+  }
+
+  ReportInviteRoutesRequest._();
+
+  factory ReportInviteRoutesRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportInviteRoutesRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportInviteRoutesRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'streamId')
+    ..pPS(2, _omitFieldNames ? '' : 'previousStreamIds')
+    ..a<$fixnum.Int64>(3, _omitFieldNames ? '' : 'seq', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..p<$core.List<$core.int>>(
+        4, _omitFieldNames ? '' : 'secretHashes', $pb.PbFieldType.PY)
+    ..p<$core.List<$core.int>>(
+        5, _omitFieldNames ? '' : 'removedSecretHashes', $pb.PbFieldType.PY)
+    ..aOM<SnapshotPart>(6, _omitFieldNames ? '' : 'snapshot',
+        subBuilder: SnapshotPart.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportInviteRoutesRequest clone() =>
+      ReportInviteRoutesRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportInviteRoutesRequest copyWith(
+          void Function(ReportInviteRoutesRequest) updates) =>
+      super.copyWith((message) => updates(message as ReportInviteRoutesRequest))
+          as ReportInviteRoutesRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportInviteRoutesRequest create() => ReportInviteRoutesRequest._();
+  @$core.override
+  ReportInviteRoutesRequest createEmptyInstance() => create();
+  static $pb.PbList<ReportInviteRoutesRequest> createRepeated() =>
+      $pb.PbList<ReportInviteRoutesRequest>();
+  @$core.pragma('dart2js:noInline')
+  static ReportInviteRoutesRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportInviteRoutesRequest>(create);
+  static ReportInviteRoutesRequest? _defaultInstance;
+
+  /// This concern's stream; see SnapshotPart.
+  @$pb.TagNumber(1)
+  $core.String get streamId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set streamId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStreamId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStreamId() => $_clearField(1);
+
+  /// The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get previousStreamIds => $_getList(1);
+
+  /// As ReportServiceReachRequest.seq, on this concern's own stream.
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get seq => $_getI64(2);
+  @$pb.TagNumber(3)
+  set seq($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSeq() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSeq() => $_clearField(3);
+
+  /// Secret hashes (32 bytes each) this gateway answers for from now.
+  @$pb.TagNumber(4)
+  $pb.PbList<$core.List<$core.int>> get secretHashes => $_getList(3);
+
+  /// Secret hashes it no longer answers for. A hash named here and in secret_hashes is
+  /// removed.
+  @$pb.TagNumber(5)
+  $pb.PbList<$core.List<$core.int>> get removedSecretHashes => $_getList(4);
+
+  /// Set when this request is part of a snapshot of every hash; hashes absent from a whole
+  /// snapshot are routed here no more.
+  @$pb.TagNumber(6)
+  SnapshotPart get snapshot => $_getN(5);
+  @$pb.TagNumber(6)
+  set snapshot(SnapshotPart value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSnapshot() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSnapshot() => $_clearField(6);
+  @$pb.TagNumber(6)
+  SnapshotPart ensureSnapshot() => $_ensure(5);
+}
+
+class ReportInviteRoutesResponse extends $pb.GeneratedMessage {
+  factory ReportInviteRoutesResponse({
+    $fixnum.Int64? appliedSeq,
+    $core.bool? resyncRequired,
+  }) {
+    final result = create();
+    if (appliedSeq != null) result.appliedSeq = appliedSeq;
+    if (resyncRequired != null) result.resyncRequired = resyncRequired;
+    return result;
+  }
+
+  ReportInviteRoutesResponse._();
+
+  factory ReportInviteRoutesResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportInviteRoutesResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportInviteRoutesResponse',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..a<$fixnum.Int64>(
+        1, _omitFieldNames ? '' : 'appliedSeq', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(2, _omitFieldNames ? '' : 'resyncRequired')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportInviteRoutesResponse clone() =>
+      ReportInviteRoutesResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportInviteRoutesResponse copyWith(
+          void Function(ReportInviteRoutesResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as ReportInviteRoutesResponse))
+          as ReportInviteRoutesResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportInviteRoutesResponse create() => ReportInviteRoutesResponse._();
+  @$core.override
+  ReportInviteRoutesResponse createEmptyInstance() => create();
+  static $pb.PbList<ReportInviteRoutesResponse> createRepeated() =>
+      $pb.PbList<ReportInviteRoutesResponse>();
+  @$core.pragma('dart2js:noInline')
+  static ReportInviteRoutesResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportInviteRoutesResponse>(create);
+  static ReportInviteRoutesResponse? _defaultInstance;
+
+  /// As ReportServiceReachResponse.applied_seq.
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get appliedSeq => $_getI64(0);
+  @$pb.TagNumber(1)
+  set appliedSeq($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAppliedSeq() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAppliedSeq() => $_clearField(1);
+
+  /// As ReportServiceReachResponse.resync_required.
+  @$pb.TagNumber(2)
+  $core.bool get resyncRequired => $_getBF(1);
+  @$pb.TagNumber(2)
+  set resyncRequired($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasResyncRequired() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearResyncRequired() => $_clearField(2);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

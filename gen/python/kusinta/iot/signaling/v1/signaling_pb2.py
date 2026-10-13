@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/signaling/v1/signaling.proto\x12\x18kusinta.iot.signaling.v1\x1a&kusinta/iot/identity/v1/identity.proto\"\x1c\n\x08SdpOffer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"\x1d\n\tSdpAnswer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"m\n\x0cIceCandidate\x12\x1c\n\tcandidate\x18\x01 \x01(\tR\tcandidate\x12\x17\n\x07sdp_mid\x18\x02 \x01(\tR\x06sdpMid\x12&\n\x0fsdp_mline_index\x18\x03 \x01(\x05R\rsdpMlineIndex\"\x0b\n\tHeartBeat\"_\n\rUserHandshake\x12N\n\x11target_gateway_id\x18\x01 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\x0ftargetGatewayId\"z\n\x10UserHandshakeAck\x12\x1a\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08R\x08\x61\x63\x63\x65pted\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\x12\x32\n\x15heartbeat_interval_ms\x18\x03 \x01(\rR\x13heartbeatIntervalMs\"\xdb\x02\n\x15GatewayConnectRequest\x12\x45\n\x0etarget_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0ctargetUserId\x12\x1d\n\nsession_id\x18\x05 \x01(\tR\tsessionId\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x04 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeatB\t\n\x07payload\"\x90\x02\n\x16GatewayConnectResponse\x12\x41\n\x0c\x66rom_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\nfromUserId\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payload\"\x92\x02\n\x12UserConnectRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12G\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeH\x00R\thandshake\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payload\"\xe5\x02\n\x13UserConnectResponse\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12Q\n\rhandshake_ack\x18\x01 \x01(\x0b\x32*.kusinta.iot.signaling.v1.UserHandshakeAckH\x00R\x0chandshakeAck\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x05 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeatB\t\n\x07payload\"\x85\x01\n\x11UserListenRequest\x12\x45\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeR\thandshake\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionIdJ\x04\x08\x02\x10\x03J\x04\x08\x03\x10\x04\"_\n\x12UserListenResponse\x12I\n\x08response\x18\x01 \x01(\x0b\x32-.kusinta.iot.signaling.v1.UserConnectResponseR\x08response\"\xd7\x01\n\x0fUserSendRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payloadJ\x04\x08\x01\x10\x02R\thandshake\"\x12\n\x10UserSendResponseB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/signaling/v1/signaling.proto\x12\x18kusinta.iot.signaling.v1\x1a&kusinta/iot/identity/v1/identity.proto\"\x1c\n\x08SdpOffer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"\x1d\n\tSdpAnswer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"m\n\x0cIceCandidate\x12\x1c\n\tcandidate\x18\x01 \x01(\tR\tcandidate\x12\x17\n\x07sdp_mid\x18\x02 \x01(\tR\x06sdpMid\x12&\n\x0fsdp_mline_index\x18\x03 \x01(\x05R\rsdpMlineIndex\"\x0b\n\tHeartBeat\"_\n\rUserHandshake\x12N\n\x11target_gateway_id\x18\x01 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\x0ftargetGatewayId\"z\n\x10UserHandshakeAck\x12\x1a\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08R\x08\x61\x63\x63\x65pted\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\x12\x32\n\x15heartbeat_interval_ms\x18\x03 \x01(\rR\x13heartbeatIntervalMs\"\xbd\x03\n\x15GatewayConnectRequest\x12\x45\n\x0etarget_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0ctargetUserId\x12\x1d\n\nsession_id\x18\x05 \x01(\tR\tsessionId\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x04 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeat\x12`\n\x14redeem_invite_result\x18\x06 \x01(\x0b\x32,.kusinta.iot.signaling.v1.RedeemInviteResultH\x00R\x12redeemInviteResultB\t\n\x07payload\"\xdf\x02\n\x16GatewayConnectResponse\x12\x41\n\x0c\x66rom_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\nfromUserId\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12M\n\rredeem_invite\x18\x05 \x01(\x0b\x32&.kusinta.iot.signaling.v1.RedeemInviteH\x00R\x0credeemInviteB\t\n\x07payload\"\xaf\x01\n\x0cRedeemInvite\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x16\n\x05token\x18\x02 \x01(\tH\x00R\x05token\x12\x14\n\x04\x63ode\x18\x03 \x01(\tH\x00R\x04\x63ode\x12!\n\x0c\x64isplay_name\x18\x04 \x01(\tR\x0b\x64isplayName\x12%\n\x0everified_email\x18\x05 \x01(\tR\rverifiedEmailB\x08\n\x06secret\"v\n\x12RedeemInviteResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x41\n\x07outcome\x18\x02 \x01(\x0e\x32\'.kusinta.iot.signaling.v1.RedeemOutcomeR\x07outcome\"\x92\x02\n\x12UserConnectRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12G\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeH\x00R\thandshake\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payload\"\xe5\x02\n\x13UserConnectResponse\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12Q\n\rhandshake_ack\x18\x01 \x01(\x0b\x32*.kusinta.iot.signaling.v1.UserHandshakeAckH\x00R\x0chandshakeAck\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x05 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeatB\t\n\x07payload\"\x85\x01\n\x11UserListenRequest\x12\x45\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeR\thandshake\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionIdJ\x04\x08\x02\x10\x03J\x04\x08\x03\x10\x04\"_\n\x12UserListenResponse\x12I\n\x08response\x18\x01 \x01(\x0b\x32-.kusinta.iot.signaling.v1.UserConnectResponseR\x08response\"\xd7\x01\n\x0fUserSendRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payloadJ\x04\x08\x01\x10\x02R\thandshake\"\x12\n\x10UserSendResponse*\xad\x01\n\rRedeemOutcome\x12\x1e\n\x1aREDEEM_OUTCOME_UNSPECIFIED\x10\x00\x12\x19\n\x15REDEEM_OUTCOME_JOINED\x10\x01\x12#\n\x1fREDEEM_OUTCOME_PENDING_APPROVAL\x10\x02\x12\x1a\n\x16REDEEM_OUTCOME_INVALID\x10\x03\x12 \n\x1cREDEEM_OUTCOME_WRONG_ACCOUNT\x10\x04\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,6 +33,8 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.signaling.v1.si
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
+  _globals['_REDEEMOUTCOME']._serialized_start=2725
+  _globals['_REDEEMOUTCOME']._serialized_end=2898
   _globals['_SDPOFFER']._serialized_start=110
   _globals['_SDPOFFER']._serialized_end=138
   _globals['_SDPANSWER']._serialized_start=140
@@ -46,19 +48,23 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_USERHANDSHAKEACK']._serialized_start=392
   _globals['_USERHANDSHAKEACK']._serialized_end=514
   _globals['_GATEWAYCONNECTREQUEST']._serialized_start=517
-  _globals['_GATEWAYCONNECTREQUEST']._serialized_end=864
-  _globals['_GATEWAYCONNECTRESPONSE']._serialized_start=867
-  _globals['_GATEWAYCONNECTRESPONSE']._serialized_end=1139
-  _globals['_USERCONNECTREQUEST']._serialized_start=1142
-  _globals['_USERCONNECTREQUEST']._serialized_end=1416
-  _globals['_USERCONNECTRESPONSE']._serialized_start=1419
-  _globals['_USERCONNECTRESPONSE']._serialized_end=1776
-  _globals['_USERLISTENREQUEST']._serialized_start=1779
-  _globals['_USERLISTENREQUEST']._serialized_end=1912
-  _globals['_USERLISTENRESPONSE']._serialized_start=1914
-  _globals['_USERLISTENRESPONSE']._serialized_end=2009
-  _globals['_USERSENDREQUEST']._serialized_start=2012
-  _globals['_USERSENDREQUEST']._serialized_end=2227
-  _globals['_USERSENDRESPONSE']._serialized_start=2229
-  _globals['_USERSENDRESPONSE']._serialized_end=2247
+  _globals['_GATEWAYCONNECTREQUEST']._serialized_end=962
+  _globals['_GATEWAYCONNECTRESPONSE']._serialized_start=965
+  _globals['_GATEWAYCONNECTRESPONSE']._serialized_end=1316
+  _globals['_REDEEMINVITE']._serialized_start=1319
+  _globals['_REDEEMINVITE']._serialized_end=1494
+  _globals['_REDEEMINVITERESULT']._serialized_start=1496
+  _globals['_REDEEMINVITERESULT']._serialized_end=1614
+  _globals['_USERCONNECTREQUEST']._serialized_start=1617
+  _globals['_USERCONNECTREQUEST']._serialized_end=1891
+  _globals['_USERCONNECTRESPONSE']._serialized_start=1894
+  _globals['_USERCONNECTRESPONSE']._serialized_end=2251
+  _globals['_USERLISTENREQUEST']._serialized_start=2254
+  _globals['_USERLISTENREQUEST']._serialized_end=2387
+  _globals['_USERLISTENRESPONSE']._serialized_start=2389
+  _globals['_USERLISTENRESPONSE']._serialized_end=2484
+  _globals['_USERSENDREQUEST']._serialized_start=2487
+  _globals['_USERSENDREQUEST']._serialized_end=2702
+  _globals['_USERSENDRESPONSE']._serialized_start=2704
+  _globals['_USERSENDRESPONSE']._serialized_end=2722
 # @@protoc_insertion_point(module_scope)

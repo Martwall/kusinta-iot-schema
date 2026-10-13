@@ -275,3 +275,27 @@ class ReportMembersResponse(_message.Message):
     applied_seq: int
     resync_required: bool
     def __init__(self, applied_seq: _Optional[int] = ..., resync_required: _Optional[bool] = ...) -> None: ...
+
+class ReportInviteRoutesRequest(_message.Message):
+    __slots__ = ("stream_id", "previous_stream_ids", "seq", "secret_hashes", "removed_secret_hashes", "snapshot")
+    STREAM_ID_FIELD_NUMBER: _ClassVar[int]
+    PREVIOUS_STREAM_IDS_FIELD_NUMBER: _ClassVar[int]
+    SEQ_FIELD_NUMBER: _ClassVar[int]
+    SECRET_HASHES_FIELD_NUMBER: _ClassVar[int]
+    REMOVED_SECRET_HASHES_FIELD_NUMBER: _ClassVar[int]
+    SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
+    stream_id: str
+    previous_stream_ids: _containers.RepeatedScalarFieldContainer[str]
+    seq: int
+    secret_hashes: _containers.RepeatedScalarFieldContainer[bytes]
+    removed_secret_hashes: _containers.RepeatedScalarFieldContainer[bytes]
+    snapshot: SnapshotPart
+    def __init__(self, stream_id: _Optional[str] = ..., previous_stream_ids: _Optional[_Iterable[str]] = ..., seq: _Optional[int] = ..., secret_hashes: _Optional[_Iterable[bytes]] = ..., removed_secret_hashes: _Optional[_Iterable[bytes]] = ..., snapshot: _Optional[_Union[SnapshotPart, _Mapping]] = ...) -> None: ...
+
+class ReportInviteRoutesResponse(_message.Message):
+    __slots__ = ("applied_seq", "resync_required")
+    APPLIED_SEQ_FIELD_NUMBER: _ClassVar[int]
+    RESYNC_REQUIRED_FIELD_NUMBER: _ClassVar[int]
+    applied_seq: int
+    resync_required: bool
+    def __init__(self, applied_seq: _Optional[int] = ..., resync_required: _Optional[bool] = ...) -> None: ...

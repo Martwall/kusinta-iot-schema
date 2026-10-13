@@ -79,4 +79,21 @@ extension type GatewayReportingServiceClient (connect.Transport _transport) {
       onTrailer: onTrailer,
     );
   }
+
+  Future<kusintaiotreportingv1reporting.ReportInviteRoutesResponse> reportInviteRoutes(
+    kusintaiotreportingv1reporting.ReportInviteRoutesRequest input, {
+    connect.Headers? headers,
+    connect.AbortSignal? signal,
+    Function(connect.Headers)? onHeader,
+    Function(connect.Headers)? onTrailer,
+  }) {
+    return connect.Client(_transport).unary(
+      specs.GatewayReportingService.reportInviteRoutes,
+      input,
+      signal: signal,
+      headers: headers,
+      onHeader: onHeader,
+      onTrailer: onTrailer,
+    );
+  }
 }

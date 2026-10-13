@@ -66,6 +66,8 @@ export 'kusinta/iot/webrtc/v1/device_state.pb.dart';
 export 'kusinta/iot/webrtc/v1/device_state.pbenum.dart';
 export 'kusinta/iot/webrtc/v1/envelope.pb.dart';
 export 'kusinta/iot/webrtc/v1/envelope.pbenum.dart';
+export 'kusinta/iot/webrtc/v1/invite.pb.dart';
+export 'kusinta/iot/webrtc/v1/invite.pbenum.dart';
 export 'kusinta/iot/webrtc/v1/management.pb.dart';
 export 'kusinta/iot/webrtc/v1/management.pbenum.dart';
 export 'kusinta/iot/webrtc/v1/permission_push.pb.dart';

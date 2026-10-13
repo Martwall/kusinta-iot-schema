@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import type { GenFile, GenService } from "@bufbuild/protobuf/codegenv2";
-import type { ReportMembersRequestSchema, ReportMembersResponseSchema, ReportProblemsRequestSchema, ReportProblemsResponseSchema, ReportServedSpacesRequestSchema, ReportServedSpacesResponseSchema, ReportServiceReachRequestSchema, ReportServiceReachResponseSchema } from "./reporting_pb.js";
+import type { ReportInviteRoutesRequestSchema, ReportInviteRoutesResponseSchema, ReportMembersRequestSchema, ReportMembersResponseSchema, ReportProblemsRequestSchema, ReportProblemsResponseSchema, ReportServedSpacesRequestSchema, ReportServedSpacesResponseSchema, ReportServiceReachRequestSchema, ReportServiceReachResponseSchema } from "./reporting_pb.js";
 
 /**
  * Describes the file kusinta/iot/reporting/v1/reporting_service.proto.
@@ -50,6 +50,14 @@ export declare const GatewayReportingService: GenService<{
     methodKind: "unary";
     input: typeof ReportMembersRequestSchema;
     output: typeof ReportMembersResponseSchema;
+  },
+  /**
+   * @generated from rpc kusinta.iot.reporting.v1.GatewayReportingService.ReportInviteRoutes
+   */
+  reportInviteRoutes: {
+    methodKind: "unary";
+    input: typeof ReportInviteRoutesRequestSchema;
+    output: typeof ReportInviteRoutesResponseSchema;
   },
 }>;
 

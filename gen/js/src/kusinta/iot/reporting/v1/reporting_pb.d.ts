@@ -842,6 +842,100 @@ export declare type ReportMembersResponse = Message<"kusinta.iot.reporting.v1.Re
 export declare const ReportMembersResponseSchema: GenMessage<ReportMembersResponse>;
 
 /**
+ * Which invite secrets this gateway answers for, by hash alone (webrtc.v1 invite.proto
+ * gives the hash), so the api-server can route a redeem (signaling.v1.RedeemInvite) to the
+ * one gateway that can decide it. Nothing else of an invite leaves the gateway here — not
+ * its space, relation, address, creator or expiry — and the hash of a secret says nothing
+ * of the secret.
+ *
+ * A secret's hash is reported from when the secret is issued until it expires, used or not,
+ * so that a user who redeemed it can redeem again and be told what the first redeem did
+ * (signaling.v1.RedeemOutcome). It is removed early when the invite is revoked, and the old
+ * secrets' hashes are removed when it is resent. Changes are sent at once.
+ *
+ * The api-server keeps the hashes of a gateway's current snapshot and changes only, drops
+ * them all with the gateway, and routes no redeem by a hash it does not hold.
+ *
+ * @generated from message kusinta.iot.reporting.v1.ReportInviteRoutesRequest
+ */
+export declare type ReportInviteRoutesRequest = Message<"kusinta.iot.reporting.v1.ReportInviteRoutesRequest"> & {
+  /**
+   * This concern's stream; see SnapshotPart.
+   *
+   * @generated from field: string stream_id = 1;
+   */
+  streamId: string;
+
+  /**
+   * The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+   *
+   * @generated from field: repeated string previous_stream_ids = 2;
+   */
+  previousStreamIds: string[];
+
+  /**
+   * As ReportServiceReachRequest.seq, on this concern's own stream.
+   *
+   * @generated from field: uint64 seq = 3;
+   */
+  seq: bigint;
+
+  /**
+   * Secret hashes (32 bytes each) this gateway answers for from now.
+   *
+   * @generated from field: repeated bytes secret_hashes = 4;
+   */
+  secretHashes: Uint8Array[];
+
+  /**
+   * Secret hashes it no longer answers for. A hash named here and in secret_hashes is
+   * removed.
+   *
+   * @generated from field: repeated bytes removed_secret_hashes = 5;
+   */
+  removedSecretHashes: Uint8Array[];
+
+  /**
+   * Set when this request is part of a snapshot of every hash; hashes absent from a whole
+   * snapshot are routed here no more.
+   *
+   * @generated from field: kusinta.iot.reporting.v1.SnapshotPart snapshot = 6;
+   */
+  snapshot?: SnapshotPart | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.ReportInviteRoutesRequest.
+ * Use `create(ReportInviteRoutesRequestSchema)` to create a new message.
+ */
+export declare const ReportInviteRoutesRequestSchema: GenMessage<ReportInviteRoutesRequest>;
+
+/**
+ * @generated from message kusinta.iot.reporting.v1.ReportInviteRoutesResponse
+ */
+export declare type ReportInviteRoutesResponse = Message<"kusinta.iot.reporting.v1.ReportInviteRoutesResponse"> & {
+  /**
+   * As ReportServiceReachResponse.applied_seq.
+   *
+   * @generated from field: uint64 applied_seq = 1;
+   */
+  appliedSeq: bigint;
+
+  /**
+   * As ReportServiceReachResponse.resync_required.
+   *
+   * @generated from field: bool resync_required = 2;
+   */
+  resyncRequired: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.ReportInviteRoutesResponse.
+ * Use `create(ReportInviteRoutesResponseSchema)` to create a new message.
+ */
+export declare const ReportInviteRoutesResponseSchema: GenMessage<ReportInviteRoutesResponse>;
+
+/**
  * What kind of problem is open. The device kinds mirror what service staff are given of a
  * device (webrtc.v1.ServiceStatus: reachability, the battery flags, the ServiceFault values);
  * a device signal added there is added here too.

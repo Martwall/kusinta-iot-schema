@@ -15,6 +15,7 @@ import {
   UserListenRequestSchema,
   UserListenResponseSchema,
   UserSendRequestSchema,
+  RedeemOutcome,
 } from '../kusinta/iot/signaling/v1/signaling_pb.js'
 
 describe('SdpOffer / SdpAnswer / IceCandidate', () => {
@@ -339,5 +340,28 @@ describe('UserListen / UserSend (half-duplex app leg)', () => {
     expect(decoded.payload.case).toBe('iceCandidate')
     expect(decoded.payload.value?.sdpMid).toBe('1')
     expect(decoded.payload.value?.sdpMlineIndex).toBe(1)
+  })
+})
+
+describe('RedeemInvite / RedeemInviteResult', () => {
+  it('routes a redeem to the gateway, naming who redeems and no session', () => {
+    const response = create(GatewayConnectResponseSchema, {
+      fromUserId: { value: 'anna' },
+      payload: {
+        case: 'redeemInvite',
+        value: { requestId: 'r-1', secret: { case: 'code', value: 'K7QM-4RXD' }, verifiedEmail: 'anna@example.com' },
+      },
+    })
+    const decoded = fromBinary(GatewayConnectResponseSchema, toBinary(GatewayConnectResponseSchema, response))
+    expect(decoded.payload.case === 'redeemInvite' && decoded.payload.value.secret.case).toBe('code')
+  })
+
+  it('answers a redeem by its request id', () => {
+    const request = create(GatewayConnectRequestSchema, {
+      targetUserId: { value: 'anna' },
+      payload: { case: 'redeemInviteResult', value: { requestId: 'r-1', outcome: RedeemOutcome.PENDING_APPROVAL } },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, request))
+    expect(decoded.payload.case === 'redeemInviteResult' && decoded.payload.value.outcome).toBe(RedeemOutcome.PENDING_APPROVAL)
   })
 })
