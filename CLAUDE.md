@@ -79,6 +79,13 @@ The same applies to **issues and pull requests**. Never cross-link one to a priv
 
 Public device vendors and OSS libraries are fine, and appear in package and message names as well as comments. They name an ecosystem, not an internal repo.
 
+### Comments state the contract, never the deployment
+A proto comment says what each side MUST do. It never says what a side currently does, has not shipped yet, or gets wrong. "The validator MUST reject a token without `cnf`" is a contract; "the gateway does not enforce `cnf` yet" is a target list, and it ships to three public registries like every other comment.
+
+- **Rollout order is fine; rollout status is not.** Saying which side must deploy first is part of the contract. Saying where a rollout has got to belongs in the private tracker.
+- **A known weakness is a security report, not a comment.** Raise it as described in `SECURITY.md`. Once fixed, the comment states the rule that closes it.
+- **The same goes for commit messages, issues and pull requests.** "Fix: gateway accepted tokens without cnf" names a hole that older deployments may still have.
+
 ### Reserved fields
 Always mark removed or skipped field numbers with `reserved` so they are never accidentally reused:
 ```proto

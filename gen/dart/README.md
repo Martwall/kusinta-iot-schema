@@ -4,16 +4,26 @@ Generated protobuf types for the Kusinta building automation platform.
 
 ## Install
 
-Add to your `pubspec.yaml`, pinned to a release tag:
+Add to your `pubspec.yaml`, pinned to the commit a release tag points at:
 
 ```yaml
 dependencies:
   kusinta_iot_schema:
     git:
       url: https://github.com/Martwall/kusinta-iot-schema.git
-      ref: <TAG>
+      ref: <COMMIT_SHA>  # v<VERSION>
       path: gen/dart
 ```
+
+Pin the full commit SHA, not the tag name. A tag can be moved to a different commit after
+the fact, and `pub get` would follow it without a word; a SHA cannot. Look it up with:
+
+```bash
+git ls-remote https://github.com/Martwall/kusinta-iot-schema.git 'refs/tags/v<VERSION>'
+```
+
+Commit `pubspec.lock` as well — it records the resolved commit, so a CI build resolves
+exactly what was reviewed.
 
 ## Usage
 
