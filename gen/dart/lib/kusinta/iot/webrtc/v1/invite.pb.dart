@@ -313,7 +313,8 @@ class MarkInviteEmailSent extends $pb.GeneratedMessage {
 
 /// The pending invites and join requests of a space. Answered with SpaceInvites. Listed
 /// only to a caller who may create invites on the space; anyone else is refused as
-/// NOT_ENTITLED.
+/// NOT_ENTITLED. A resident is listed only the invites a resident of their home made,
+/// and the join requests those made: nothing they cannot act on.
 class ListSpaceInvites extends $pb.GeneratedMessage {
   factory ListSpaceInvites({
     $0.SpaceId? spaceId,
@@ -949,7 +950,8 @@ class JoinRequest extends $pb.GeneratedMessage {
 /// The answer to ListSpaceInvites, and pushed as GatewayMessage.space_invites whenever
 /// either list changes — a create, resend, revoke, redeem, approval, denial or expiry — to
 /// every session that may list it, so the app shows the change without reloading. A push
-/// always carries the whole of both lists for its space.
+/// always carries the whole of both lists for its space, as ListSpaceInvites would list
+/// them to that session.
 class SpaceInvites extends $pb.GeneratedMessage {
   factory SpaceInvites({
     $0.SpaceId? spaceId,

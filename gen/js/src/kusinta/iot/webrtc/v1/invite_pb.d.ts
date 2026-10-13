@@ -127,7 +127,8 @@ export declare const MarkInviteEmailSentSchema: GenMessage<MarkInviteEmailSent>;
 /**
  * The pending invites and join requests of a space. Answered with SpaceInvites. Listed
  * only to a caller who may create invites on the space; anyone else is refused as
- * NOT_ENTITLED.
+ * NOT_ENTITLED. A resident is listed only the invites a resident of their home made,
+ * and the join requests those made: nothing they cannot act on.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListSpaceInvites
  */
@@ -364,7 +365,8 @@ export declare const JoinRequestSchema: GenMessage<JoinRequest>;
  * The answer to ListSpaceInvites, and pushed as GatewayMessage.space_invites whenever
  * either list changes — a create, resend, revoke, redeem, approval, denial or expiry — to
  * every session that may list it, so the app shows the change without reloading. A push
- * always carries the whole of both lists for its space.
+ * always carries the whole of both lists for its space, as ListSpaceInvites would list
+ * them to that session.
  *
  * @generated from message kusinta.iot.webrtc.v1.SpaceInvites
  */

@@ -19,9 +19,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// A redeem is idempotent for its user: redeemed again by the same user, for as
 /// long as its secret would have lasted unused, a used invite answers JOINED if
 /// the user is filed on its space by then, and otherwise as it did the first time
-/// — so a denied request still answers PENDING_APPROVAL. To anyone else it
-/// answers INVALID. So a user who never saw the first answer can safely try
-/// again.
+/// — so a denied request still answers PENDING_APPROVAL — except that one which
+/// filed the user, who has left that space since, answers INVALID. To anyone
+/// else it answers INVALID. So a user who never saw the first answer can safely
+/// try again.
 class RedeemOutcome extends $pb.ProtobufEnum {
   static const RedeemOutcome REDEEM_OUTCOME_UNSPECIFIED =
       RedeemOutcome._(0, _omitEnumNames ? '' : 'REDEEM_OUTCOME_UNSPECIFIED');
