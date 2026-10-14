@@ -858,6 +858,9 @@ export declare const ReportMembersResponseSchema: GenMessage<ReportMembersRespon
  * The api-server keeps the hashes of a gateway's current snapshot and changes only, drops
  * them all with the gateway, and routes no redeem by a hash it does not hold.
  *
+ * A gateway MUST NOT report more than 10000 hashes at once (two for each of the at most
+ * 5000 invites webrtc.v1 CreateInvite allows). The api-server MAY ignore hashes past that.
+ *
  * @generated from message kusinta.iot.reporting.v1.ReportInviteRoutesRequest
  */
 export declare type ReportInviteRoutesRequest = Message<"kusinta.iot.reporting.v1.ReportInviteRoutesRequest"> & {

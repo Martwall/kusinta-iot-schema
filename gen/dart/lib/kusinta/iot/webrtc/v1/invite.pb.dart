@@ -33,6 +33,11 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// home. A caller over that limit is refused as FAILED_PRECONDITION with metadata
 /// {"reason": "household_full"}.
 ///
+/// A gateway holds at most 5000 invites whose secrets it reports
+/// (reporting.v1.ReportInviteRoutesRequest), used ones included until their secrets
+/// expire. Past that, CreateInvite MUST be refused as FAILED_PRECONDITION with metadata
+/// {"reason": "too_many_invites"}, so no invite exists that the api-server cannot route.
+///
 /// Answered with IssuedInvite.
 class CreateInvite extends $pb.GeneratedMessage {
   factory CreateInvite({
