@@ -118,7 +118,7 @@ export declare const RemoveFromGatewaySchema: GenMessage<RemoveFromGateway>;
  * app chooses it, typically the end of a chosen day where the building is. Within a quarter
  * of an hour after it, the gateway takes away the member's ROLE_TECHNICIAN and every SERVICE
  * membership they hold, as an administrator would, and nothing else: a home they live in
- * stays theirs.
+ * stays theirs, and their ROLE_TECHNICIAN goes all the same.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetAccessUntil
  */

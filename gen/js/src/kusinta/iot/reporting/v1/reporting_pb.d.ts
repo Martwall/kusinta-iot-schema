@@ -726,6 +726,12 @@ export declare const ReportServedSpacesResponseSchema: GenMessage<ReportServedSp
  * administrator is also reported so, the api-server's record governs: their administration
  * counts from the earlier of its own start and administrator_since.
  *
+ * A member here is a user the gateway holds a membership or a role for, and no one else. The
+ * registering administrator is reported only when the gateway holds one of those for them —
+ * a membership, or ROLE_PROPERTY_OWNER they were given — and never with the
+ * ROLE_GATEWAY_ADMIN their token carries. That the gateway recognises them otherwise
+ * (webrtc.v1.MemberDetail.registering_admin) does not make them a member of this report.
+ *
  * @generated from message kusinta.iot.reporting.v1.GatewayMember
  */
 export declare type GatewayMember = Message<"kusinta.iot.reporting.v1.GatewayMember"> & {

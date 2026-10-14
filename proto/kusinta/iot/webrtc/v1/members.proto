@@ -19,7 +19,8 @@ option optimize_for = SPEED;
 //
 // A member is anyone the gateway holds a membership or a role for, and the registering
 // administrator as last seen (MemberDetail.registering_admin). Every rule below that says
-// "a member" means exactly that set.
+// "a member" means exactly that set. It is wider than what the gateway reports to the
+// api-server (reporting.v1.GatewayMember), which keeps its own definition.
 //
 // Requests are ManagementRequest arms and answered by ManagementResult, as filing is. They
 // are checked in this order, and the first that fails answers:
@@ -32,8 +33,9 @@ option optimize_for = SPEED;
 //        "registering_admin"  FAILED_PRECONDITION. The request would change the
 //                             administration of the registering administrator, which
 //                             comes from their token and cannot be changed on the gateway.
-//        "not_a_technician"   FAILED_PRECONDITION. SetAccessUntil named a member who holds
-//                             ROLE_TECHNICIAN and no other role but ROLE_RESIDENT.
+//        "not_a_technician"   FAILED_PRECONDITION. SetAccessUntil named a member who does
+//                             not hold ROLE_TECHNICIAN, or holds a role other than
+//                             ROLE_RESIDENT besides it.
 //   4. the caller against the user named: NOT_ENTITLED with no reason, as each request says.
 //      Only callers who may list every member reach this step, so it tells them nothing
 //      they cannot read.
@@ -97,7 +99,7 @@ message RemoveFromGateway {
 // app chooses it, typically the end of a chosen day where the building is. Within a quarter
 // of an hour after it, the gateway takes away the member's ROLE_TECHNICIAN and every SERVICE
 // membership they hold, as an administrator would, and nothing else: a home they live in
-// stays theirs.
+// stays theirs, and their ROLE_TECHNICIAN goes all the same.
 message SetAccessUntil {
   kusinta.iot.identity.v1.UserId user_id = 1;
 
