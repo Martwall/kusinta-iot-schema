@@ -117,6 +117,20 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
    * @generated from field: kusinta.iot.webrtc.v1.Confirmation cnf = 7;
    */
   cnf?: Confirmation | undefined;
+
+  /**
+   * The user's display name as the identity provider holds it, or empty. The issuer MUST
+   * take it from the provider's display-name claim alone and send it empty rather than
+   * fall back to a username, an email address or any other field, since a username is an
+   * email address wherever accounts log in by email. The gateway records it only to name the
+   * user to the people who may see who they are (MemberDetail.name, ServiceParty.names),
+   * and treats it as self-chosen: it removes control and format characters (bidirectional
+   * overrides among them) and keeps at most 80 Unicode code points. A validator accepts a
+   * token without it. Carried in the JWT as "name".
+   *
+   * @generated from field: string name = 8;
+   */
+  name: string;
 };
 
 /**

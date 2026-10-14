@@ -1,6 +1,6 @@
 {
   "name": "@kusinta/iot-schema",
-  "version": "0.2.0-beta.26",
+  "version": "0.2.0-beta.27",
   "type": "module",
   "license": "MIT",
   "files": ["src"],
@@ -34,6 +34,7 @@
     "./webrtc/command":         "./src/kusinta/iot/webrtc/v1/command_pb.js",
     "./webrtc/device-state":    "./src/kusinta/iot/webrtc/v1/device_state_pb.js",
     "./webrtc/invite":          "./src/kusinta/iot/webrtc/v1/invite_pb.js",
+    "./webrtc/members":         "./src/kusinta/iot/webrtc/v1/members_pb.js",
     "./webrtc/management":      "./src/kusinta/iot/webrtc/v1/management_pb.js",
     "./webrtc/permission-push": "./src/kusinta/iot/webrtc/v1/permission_push_pb.js",
     "./webrtc/setpoint-mode":   "./src/kusinta/iot/webrtc/v1/setpoint_mode_pb.js",

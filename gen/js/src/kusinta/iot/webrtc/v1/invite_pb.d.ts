@@ -62,6 +62,20 @@ export declare type CreateInvite = Message<"kusinta.iot.webrtc.v1.CreateInvite">
    * @generated from field: string email = 3;
    */
   email: string;
+
+  /**
+   * When the technician's access ends, as SetAccessUntil describes it. SERVICE only: set
+   * on a RESIDENT invite it is INVALID_REQUEST, as is a time not after now. Unset for no
+   * end. Both secrets expire no later than it.
+   *
+   * It reaches only someone the redeem makes a technician: a user who held no role but
+   * ROLE_RESIDENT before. For anyone else redeeming the invite it is ignored, so an invite
+   * can neither shorten nor lengthen a member's access, nor put an end on a property owner
+   * or an administrator.
+   *
+   * @generated from field: google.protobuf.Timestamp access_until = 4;
+   */
+  accessUntil?: Timestamp | undefined;
 };
 
 /**
@@ -254,6 +268,13 @@ export declare type Invite = Message<"kusinta.iot.webrtc.v1.Invite"> & {
    * @generated from field: google.protobuf.Timestamp email_sent_at = 9;
    */
   emailSentAt?: Timestamp | undefined;
+
+  /**
+   * As CreateInvite.access_until.
+   *
+   * @generated from field: google.protobuf.Timestamp access_until = 10;
+   */
+  accessUntil?: Timestamp | undefined;
 };
 
 /**

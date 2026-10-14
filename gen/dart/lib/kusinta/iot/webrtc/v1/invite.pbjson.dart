@@ -35,6 +35,14 @@ const CreateInvite$json = {
       '10': 'relation'
     },
     {'1': 'email', '3': 3, '4': 1, '5': 9, '10': 'email'},
+    {
+      '1': 'access_until',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'accessUntil'
+    },
   ],
 };
 
@@ -43,7 +51,8 @@ final $typed_data.Uint8List createInviteDescriptor = $convert.base64Decode(
     'CgxDcmVhdGVJbnZpdGUSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
     '52MS5TcGFjZUlkUgdzcGFjZUlkEkUKCHJlbGF0aW9uGAIgASgOMikua3VzaW50YS5pb3QuYWNj'
     'ZXNzLnYxLk1lbWJlcnNoaXBSZWxhdGlvblIIcmVsYXRpb24SFAoFZW1haWwYAyABKAlSBWVtYW'
-    'ls');
+    'lsEj0KDGFjY2Vzc191bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2Fj'
+    'Y2Vzc1VudGls');
 
 @$core.Deprecated('Use resendInviteDescriptor instead')
 const ResendInvite$json = {
@@ -189,6 +198,14 @@ const Invite$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'emailSentAt'
     },
+    {
+      '1': 'access_until',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'accessUntil'
+    },
   ],
 };
 
@@ -203,7 +220,8 @@ final $typed_data.Uint8List inviteDescriptor = $convert.base64Decode(
     'YnVmLlRpbWVzdGFtcFIOdG9rZW5FeHBpcmVzQXQSQgoPY29kZV9leHBpcmVzX2F0GAcgASgLMh'
     'ouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFINY29kZUV4cGlyZXNBdBIUCgVlbWFpbBgIIAEo'
     'CVIFZW1haWwSPgoNZW1haWxfc2VudF9hdBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3'
-    'RhbXBSC2VtYWlsU2VudEF0');
+    'RhbXBSC2VtYWlsU2VudEF0Ej0KDGFjY2Vzc191bnRpbBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1'
+    'Zi5UaW1lc3RhbXBSC2FjY2Vzc1VudGls');
 
 @$core.Deprecated('Use issuedInviteDescriptor instead')
 const IssuedInvite$json = {

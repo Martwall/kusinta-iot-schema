@@ -44,11 +44,13 @@ class CreateInvite extends $pb.GeneratedMessage {
     $0.SpaceId? spaceId,
     $2.MembershipRelation? relation,
     $core.String? email,
+    $1.Timestamp? accessUntil,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
     if (relation != null) result.relation = relation;
     if (email != null) result.email = email;
+    if (accessUntil != null) result.accessUntil = accessUntil;
     return result;
   }
 
@@ -74,6 +76,8 @@ class CreateInvite extends $pb.GeneratedMessage {
         valueOf: $2.MembershipRelation.valueOf,
         enumValues: $2.MembershipRelation.values)
     ..aOS(3, _omitFieldNames ? '' : 'email')
+    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'accessUntil',
+        subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -135,6 +139,25 @@ class CreateInvite extends $pb.GeneratedMessage {
   $core.bool hasEmail() => $_has(2);
   @$pb.TagNumber(3)
   void clearEmail() => $_clearField(3);
+
+  /// When the technician's access ends, as SetAccessUntil describes it. SERVICE only: set
+  /// on a RESIDENT invite it is INVALID_REQUEST, as is a time not after now. Unset for no
+  /// end. Both secrets expire no later than it.
+  ///
+  /// It reaches only someone the redeem makes a technician: a user who held no role but
+  /// ROLE_RESIDENT before. For anyone else redeeming the invite it is ignored, so an invite
+  /// can neither shorten nor lengthen a member's access, nor put an end on a property owner
+  /// or an administrator.
+  @$pb.TagNumber(4)
+  $1.Timestamp get accessUntil => $_getN(3);
+  @$pb.TagNumber(4)
+  set accessUntil($1.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAccessUntil() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAccessUntil() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.Timestamp ensureAccessUntil() => $_ensure(3);
 }
 
 /// Gives a pending invite new secrets. The old token and code stop working at once, so
@@ -513,6 +536,7 @@ class Invite extends $pb.GeneratedMessage {
     $1.Timestamp? codeExpiresAt,
     $core.String? email,
     $1.Timestamp? emailSentAt,
+    $1.Timestamp? accessUntil,
   }) {
     final result = create();
     if (inviteId != null) result.inviteId = inviteId;
@@ -524,6 +548,7 @@ class Invite extends $pb.GeneratedMessage {
     if (codeExpiresAt != null) result.codeExpiresAt = codeExpiresAt;
     if (email != null) result.email = email;
     if (emailSentAt != null) result.emailSentAt = emailSentAt;
+    if (accessUntil != null) result.accessUntil = accessUntil;
     return result;
   }
 
@@ -559,6 +584,8 @@ class Invite extends $pb.GeneratedMessage {
         subBuilder: $1.Timestamp.create)
     ..aOS(8, _omitFieldNames ? '' : 'email')
     ..aOM<$1.Timestamp>(9, _omitFieldNames ? '' : 'emailSentAt',
+        subBuilder: $1.Timestamp.create)
+    ..aOM<$1.Timestamp>(10, _omitFieldNames ? '' : 'accessUntil',
         subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
@@ -681,6 +708,18 @@ class Invite extends $pb.GeneratedMessage {
   void clearEmailSentAt() => $_clearField(9);
   @$pb.TagNumber(9)
   $1.Timestamp ensureEmailSentAt() => $_ensure(8);
+
+  /// As CreateInvite.access_until.
+  @$pb.TagNumber(10)
+  $1.Timestamp get accessUntil => $_getN(9);
+  @$pb.TagNumber(10)
+  set accessUntil($1.Timestamp value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAccessUntil() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAccessUntil() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $1.Timestamp ensureAccessUntil() => $_ensure(9);
 }
 
 /// A new invite or a resent one, with its secrets. This is the only time they are told:

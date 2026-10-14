@@ -39,6 +39,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     $0.Timestamp? exp,
     $core.Iterable<$1.Role>? roles,
     Confirmation? cnf,
+    $core.String? name,
   }) {
     final result = create();
     if (iss != null) result.iss = iss;
@@ -48,6 +49,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     if (exp != null) result.exp = exp;
     if (roles != null) result.roles.addAll(roles);
     if (cnf != null) result.cnf = cnf;
+    if (name != null) result.name = name;
     return result;
   }
 
@@ -78,6 +80,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
         defaultEnumValue: $1.Role.ROLE_UNSPECIFIED)
     ..aOM<Confirmation>(7, _omitFieldNames ? '' : 'cnf',
         subBuilder: Confirmation.create)
+    ..aOS(8, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -207,6 +210,23 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   void clearCnf() => $_clearField(7);
   @$pb.TagNumber(7)
   Confirmation ensureCnf() => $_ensure(6);
+
+  /// The user's display name as the identity provider holds it, or empty. The issuer MUST
+  /// take it from the provider's display-name claim alone and send it empty rather than
+  /// fall back to a username, an email address or any other field, since a username is an
+  /// email address wherever accounts log in by email. The gateway records it only to name the
+  /// user to the people who may see who they are (MemberDetail.name, ServiceParty.names),
+  /// and treats it as self-chosen: it removes control and format characters (bidirectional
+  /// overrides among them) and keeps at most 80 Unicode code points. A validator accepts a
+  /// token without it. Carried in the JWT as "name".
+  @$pb.TagNumber(8)
+  $core.String get name => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set name($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasName() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearName() => $_clearField(8);
 }
 
 /// RFC 7800 confirmation, the value of the "cnf" claim. A separate message

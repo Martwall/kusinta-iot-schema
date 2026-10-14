@@ -108,7 +108,7 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
    *     live with, and anyone filed on their home as service, since being filed on a home
    *     is an act on it its residents should see. Service reach from a building or floor
    *     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
-   *     hold it, without naming anyone;
+   *     hold it, and who, without saying where anyone lives;
    *   * anyone else sees none, residents of a building or floor included.
    *
    * @generated from field: repeated kusinta.iot.space.v1.SpaceMember members = 13;

@@ -53,6 +53,7 @@ const AppTokenClaims$json = {
       '6': '.kusinta.iot.webrtc.v1.Confirmation',
       '10': 'cnf'
     },
+    {'1': 'name', '3': 8, '4': 1, '5': 9, '10': 'name'},
   ],
 };
 
@@ -62,7 +63,8 @@ final $typed_data.Uint8List appTokenClaimsDescriptor = $convert.base64Decode(
     'NzdWIYAyABKAlSA3N1YhIsCgNpYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w'
     'UgNpYXQSLAoDZXhwGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIDZXhwEjEKBX'
     'JvbGVzGAYgAygOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGVSBXJvbGVzEjUKA2NuZhgH'
-    'IAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db25maXJtYXRpb25SA2NuZg==');
+    'IAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db25maXJtYXRpb25SA2NuZhISCgRuYW1lGA'
+    'ggASgJUgRuYW1l');
 
 @$core.Deprecated('Use confirmationDescriptor instead')
 const Confirmation$json = {

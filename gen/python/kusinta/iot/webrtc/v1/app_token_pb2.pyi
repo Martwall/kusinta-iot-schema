@@ -11,7 +11,7 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class AppTokenClaims(_message.Message):
-    __slots__ = ("iss", "aud", "sub", "iat", "exp", "roles", "cnf")
+    __slots__ = ("iss", "aud", "sub", "iat", "exp", "roles", "cnf", "name")
     ISS_FIELD_NUMBER: _ClassVar[int]
     AUD_FIELD_NUMBER: _ClassVar[int]
     SUB_FIELD_NUMBER: _ClassVar[int]
@@ -19,6 +19,7 @@ class AppTokenClaims(_message.Message):
     EXP_FIELD_NUMBER: _ClassVar[int]
     ROLES_FIELD_NUMBER: _ClassVar[int]
     CNF_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
     iss: str
     aud: str
     sub: str
@@ -26,7 +27,8 @@ class AppTokenClaims(_message.Message):
     exp: _timestamp_pb2.Timestamp
     roles: _containers.RepeatedScalarFieldContainer[_roles_pb2.Role]
     cnf: Confirmation
-    def __init__(self, iss: _Optional[str] = ..., aud: _Optional[str] = ..., sub: _Optional[str] = ..., iat: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., exp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., roles: _Optional[_Iterable[_Union[_roles_pb2.Role, str]]] = ..., cnf: _Optional[_Union[Confirmation, _Mapping]] = ...) -> None: ...
+    name: str
+    def __init__(self, iss: _Optional[str] = ..., aud: _Optional[str] = ..., sub: _Optional[str] = ..., iat: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., exp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., roles: _Optional[_Iterable[_Union[_roles_pb2.Role, str]]] = ..., cnf: _Optional[_Union[Confirmation, _Mapping]] = ..., name: _Optional[str] = ...) -> None: ...
 
 class Confirmation(_message.Message):
     __slots__ = ("x5t_s256",)
