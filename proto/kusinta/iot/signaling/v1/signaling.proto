@@ -163,8 +163,9 @@ message RedeemInvite {
     string code = 3;
   }
 
-  // The display name the user's token carries, for the join request it may make.
-  // May be empty.
+  // The display name the user's token carries, for the join request it may make, by the
+  // same rule as webrtc.v1.AppTokenClaims.name: the identity provider's display-name claim
+  // alone, never a username or an email address. May be empty.
   string display_name = 4;
 
   // The verified email address of the user's account, as their token states it.

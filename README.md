@@ -272,13 +272,15 @@ request that someone who may file there approves. A Technician invite may carry 
 
 ## Members
 
-`webrtc/v1/members.proto` is how an administrator manages people once they are on the
-gateway: list them (`ListGatewayMembers`), make one a property owner or an administrator
+`webrtc/v1/members.proto` is how administrators and property owners manage people once they
+are on the gateway: list them (`ListGatewayMembers`), make one a property owner or an administrator
 or take that away (`SetMemberRole`, promotion only, never by invite), remove one from every
 space at once (`RemoveFromGateway`), move a technician's end date (`SetAccessUntil`) and
-record the organisation that owns the property (`SetOwnerOrganisation`). A resident's
+record the organisation that owns the property (`SetOwnerOrganisation`). An end date only
+ever takes away a technician's role and service memberships. A resident's
 `PrivacyDisclosure` names the people counted under each role, by the name they gave
-(`AppTokenClaims.name`); it never names a resident.
+(`AppTokenClaims.name`), without saying where anyone lives; a technician asking gets the
+kinds of party alone.
 
 ## Residents and service: what a home discloses
 
@@ -324,8 +326,8 @@ How it shows on the wire:
   to drop what it held of it and read it again.
 - Changing who belongs to a home, or what is filed in it, is guarded by the gateway. Every
   change to a home's members shows in `Space.members`, which its residents see.
-- `GetPrivacyDisclosure` tells a resident who can see what in their home, per kind of party —
-  never by name.
+- `GetPrivacyDisclosure` tells a resident who can see what in their home, per kind of party
+  and by name.
 
 ## Events, and how they differ from property updates
 

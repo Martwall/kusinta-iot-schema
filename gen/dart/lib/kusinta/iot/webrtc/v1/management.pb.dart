@@ -23,8 +23,8 @@ import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $3;
 import '../../space/v1/space.pb.dart' as $2;
 import '../../vendor/lorawan/v1/lorawan.pb.dart' as $1;
-import 'invite.pb.dart' as $6;
-import 'members.pb.dart' as $5;
+import 'invite.pb.dart' as $5;
+import 'members.pb.dart' as $6;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -2248,20 +2248,23 @@ class GetRoomHistory extends $pb.GeneratedMessage {
 ///
 /// It states the policy, the kinds of party it applies to now and the people counted under
 /// each (ServiceParty.names): a resident learns which technicians can see the battery of
-/// their radiator valve. It never names a resident.
+/// their radiator valve. The names say who has reach, never where anyone lives.
 class PrivacyDisclosure extends $pb.GeneratedMessage {
   factory PrivacyDisclosure({
     $0.SpaceId? spaceId,
     $9.ClimateSummaryPeriod? climateSummaryPeriod,
     $core.Iterable<ServiceParty>? serviceParties,
-    $5.OwnerOrganisation? ownerOrganisation,
+    $core.String? ownerOrganisationName,
+    $core.bool? namesWithheld,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
     if (climateSummaryPeriod != null)
       result.climateSummaryPeriod = climateSummaryPeriod;
     if (serviceParties != null) result.serviceParties.addAll(serviceParties);
-    if (ownerOrganisation != null) result.ownerOrganisation = ownerOrganisation;
+    if (ownerOrganisationName != null)
+      result.ownerOrganisationName = ownerOrganisationName;
+    if (namesWithheld != null) result.namesWithheld = namesWithheld;
     return result;
   }
 
@@ -2290,8 +2293,8 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
     ..pc<ServiceParty>(
         5, _omitFieldNames ? '' : 'serviceParties', $pb.PbFieldType.PM,
         subBuilder: ServiceParty.create)
-    ..aOM<$5.OwnerOrganisation>(6, _omitFieldNames ? '' : 'ownerOrganisation',
-        subBuilder: $5.OwnerOrganisation.create)
+    ..aOS(6, _omitFieldNames ? '' : 'ownerOrganisationName')
+    ..aOB(7, _omitFieldNames ? '' : 'namesWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2346,24 +2349,37 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// through another membership, were they not its residents — each role once, with what
   /// that role brings here. Each party is listed under every role it holds other than
   /// ROLE_RESIDENT, and sees what its entries say together; one with no other role, or whose
-  /// role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. The gateway's
-  /// administrator is always listed. So the list reads the same whether or not anyone lives
-  /// in the home, and never understates who has reach or what they see. Devices a resident
+  /// role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. ROLE_GATEWAY_ADMIN is
+  /// always listed, and ROLE_PROPERTY_OWNER whenever anyone holds it, wherever they are
+  /// filed: both may file themselves on the home. So the list reads the same whether or not
+  /// anyone lives in the home, and never understates who has reach or what they see. Devices a resident
   /// owns are not shown to service at all.
   @$pb.TagNumber(5)
   $pb.PbList<ServiceParty> get serviceParties => $_getList(2);
 
-  /// The organisation that owns the property, when one is recorded (SetOwnerOrganisation).
+  /// The name of the organisation that owns the property, when one is recorded
+  /// (SetOwnerOrganisation). Its organisation number is not given here.
   @$pb.TagNumber(6)
-  $5.OwnerOrganisation get ownerOrganisation => $_getN(3);
+  $core.String get ownerOrganisationName => $_getSZ(3);
   @$pb.TagNumber(6)
-  set ownerOrganisation($5.OwnerOrganisation value) => $_setField(6, value);
+  set ownerOrganisationName($core.String value) => $_setString(3, value);
   @$pb.TagNumber(6)
-  $core.bool hasOwnerOrganisation() => $_has(3);
+  $core.bool hasOwnerOrganisationName() => $_has(3);
   @$pb.TagNumber(6)
-  void clearOwnerOrganisation() => $_clearField(6);
-  @$pb.TagNumber(6)
-  $5.OwnerOrganisation ensureOwnerOrganisation() => $_ensure(3);
+  void clearOwnerOrganisationName() => $_clearField(6);
+
+  /// Set when ServiceParty.names are not given to this caller, so that empty lists are not
+  /// read as nobody being named. Names are given to the home's own residents and to a
+  /// caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER, and withheld from anyone
+  /// else: a technician who reaches the home learns the kinds of party, not who they are.
+  @$pb.TagNumber(7)
+  $core.bool get namesWithheld => $_getBF(4);
+  @$pb.TagNumber(7)
+  set namesWithheld($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(7)
+  $core.bool hasNamesWithheld() => $_has(4);
+  @$pb.TagNumber(7)
+  void clearNamesWithheld() => $_clearField(7);
 }
 
 /// One kind of party with service reach of a home, and what it sees there. Every service
@@ -2444,12 +2460,13 @@ class ServiceParty extends $pb.GeneratedMessage {
   $pb.PbList<$10.ServiceSignal> get signals => $_getList(1);
 
   /// Each person counted under this role, by the name they gave their account
-  /// (MemberDetail.name), once each: the administrators and property owners of the gateway
-  /// wherever they are filed, and everyone else counted here by the SERVICE membership that
-  /// reaches the home. The registering administrator is named once the gateway has seen
-  /// their token. An empty string stands for a person whose name the gateway has not learnt,
-  /// so the list is as long as the number of people. Self-chosen, so the app shows it as the
-  /// name they gave rather than as a verified identity.
+  /// (MemberDetail.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
+  /// ROLE_PROPERTY_OWNER, the registering administrator included once the gateway has seen
+  /// their token, and everyone else counted here by a SERVICE membership. A person counted
+  /// under several roles is named under each. An empty string stands for a person whose name
+  /// the gateway has not learnt, so the list is as long as the number of people. Self-chosen,
+  /// so the app shows it as the name they gave rather than as a verified identity. Empty for
+  /// every party when PrivacyDisclosure.names_withheld is set.
   @$pb.TagNumber(3)
   $pb.PbList<$core.String> get names => $_getList(2);
 }
@@ -2836,18 +2853,18 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetPrivacyDisclosure? getPrivacyDisclosure,
     GetApartmentClimateSummary? getApartmentClimateSummary,
     ReconnectConnector? reconnectConnector,
-    $6.CreateInvite? createInvite,
-    $6.ResendInvite? resendInvite,
-    $6.RevokeInvite? revokeInvite,
-    $6.MarkInviteEmailSent? markInviteEmailSent,
-    $6.ListSpaceInvites? listSpaceInvites,
-    $6.ApproveJoinRequest? approveJoinRequest,
-    $6.DenyJoinRequest? denyJoinRequest,
-    $5.ListGatewayMembers? listGatewayMembers,
-    $5.SetMemberRole? setMemberRole,
-    $5.RemoveFromGateway? removeFromGateway,
-    $5.SetAccessUntil? setAccessUntil,
-    $5.SetOwnerOrganisation? setOwnerOrganisation,
+    $5.CreateInvite? createInvite,
+    $5.ResendInvite? resendInvite,
+    $5.RevokeInvite? revokeInvite,
+    $5.MarkInviteEmailSent? markInviteEmailSent,
+    $5.ListSpaceInvites? listSpaceInvites,
+    $5.ApproveJoinRequest? approveJoinRequest,
+    $5.DenyJoinRequest? denyJoinRequest,
+    $6.ListGatewayMembers? listGatewayMembers,
+    $6.SetMemberRole? setMemberRole,
+    $6.RemoveFromGateway? removeFromGateway,
+    $6.SetAccessUntil? setAccessUntil,
+    $6.SetOwnerOrganisation? setOwnerOrganisation,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -3039,34 +3056,34 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: GetApartmentClimateSummary.create)
     ..aOM<ReconnectConnector>(23, _omitFieldNames ? '' : 'reconnectConnector',
         subBuilder: ReconnectConnector.create)
-    ..aOM<$6.CreateInvite>(24, _omitFieldNames ? '' : 'createInvite',
-        subBuilder: $6.CreateInvite.create)
-    ..aOM<$6.ResendInvite>(25, _omitFieldNames ? '' : 'resendInvite',
-        subBuilder: $6.ResendInvite.create)
-    ..aOM<$6.RevokeInvite>(26, _omitFieldNames ? '' : 'revokeInvite',
-        subBuilder: $6.RevokeInvite.create)
-    ..aOM<$6.MarkInviteEmailSent>(
+    ..aOM<$5.CreateInvite>(24, _omitFieldNames ? '' : 'createInvite',
+        subBuilder: $5.CreateInvite.create)
+    ..aOM<$5.ResendInvite>(25, _omitFieldNames ? '' : 'resendInvite',
+        subBuilder: $5.ResendInvite.create)
+    ..aOM<$5.RevokeInvite>(26, _omitFieldNames ? '' : 'revokeInvite',
+        subBuilder: $5.RevokeInvite.create)
+    ..aOM<$5.MarkInviteEmailSent>(
         27, _omitFieldNames ? '' : 'markInviteEmailSent',
-        subBuilder: $6.MarkInviteEmailSent.create)
-    ..aOM<$6.ListSpaceInvites>(28, _omitFieldNames ? '' : 'listSpaceInvites',
-        subBuilder: $6.ListSpaceInvites.create)
-    ..aOM<$6.ApproveJoinRequest>(
+        subBuilder: $5.MarkInviteEmailSent.create)
+    ..aOM<$5.ListSpaceInvites>(28, _omitFieldNames ? '' : 'listSpaceInvites',
+        subBuilder: $5.ListSpaceInvites.create)
+    ..aOM<$5.ApproveJoinRequest>(
         29, _omitFieldNames ? '' : 'approveJoinRequest',
-        subBuilder: $6.ApproveJoinRequest.create)
-    ..aOM<$6.DenyJoinRequest>(30, _omitFieldNames ? '' : 'denyJoinRequest',
-        subBuilder: $6.DenyJoinRequest.create)
-    ..aOM<$5.ListGatewayMembers>(
+        subBuilder: $5.ApproveJoinRequest.create)
+    ..aOM<$5.DenyJoinRequest>(30, _omitFieldNames ? '' : 'denyJoinRequest',
+        subBuilder: $5.DenyJoinRequest.create)
+    ..aOM<$6.ListGatewayMembers>(
         31, _omitFieldNames ? '' : 'listGatewayMembers',
-        subBuilder: $5.ListGatewayMembers.create)
-    ..aOM<$5.SetMemberRole>(32, _omitFieldNames ? '' : 'setMemberRole',
-        subBuilder: $5.SetMemberRole.create)
-    ..aOM<$5.RemoveFromGateway>(33, _omitFieldNames ? '' : 'removeFromGateway',
-        subBuilder: $5.RemoveFromGateway.create)
-    ..aOM<$5.SetAccessUntil>(34, _omitFieldNames ? '' : 'setAccessUntil',
-        subBuilder: $5.SetAccessUntil.create)
-    ..aOM<$5.SetOwnerOrganisation>(
+        subBuilder: $6.ListGatewayMembers.create)
+    ..aOM<$6.SetMemberRole>(32, _omitFieldNames ? '' : 'setMemberRole',
+        subBuilder: $6.SetMemberRole.create)
+    ..aOM<$6.RemoveFromGateway>(33, _omitFieldNames ? '' : 'removeFromGateway',
+        subBuilder: $6.RemoveFromGateway.create)
+    ..aOM<$6.SetAccessUntil>(34, _omitFieldNames ? '' : 'setAccessUntil',
+        subBuilder: $6.SetAccessUntil.create)
+    ..aOM<$6.SetOwnerOrganisation>(
         35, _omitFieldNames ? '' : 'setOwnerOrganisation',
-        subBuilder: $5.SetOwnerOrganisation.create)
+        subBuilder: $6.SetOwnerOrganisation.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3351,139 +3368,139 @@ class ManagementRequest extends $pb.GeneratedMessage {
 
   /// Invites; see invite.proto.
   @$pb.TagNumber(24)
-  $6.CreateInvite get createInvite => $_getN(23);
+  $5.CreateInvite get createInvite => $_getN(23);
   @$pb.TagNumber(24)
-  set createInvite($6.CreateInvite value) => $_setField(24, value);
+  set createInvite($5.CreateInvite value) => $_setField(24, value);
   @$pb.TagNumber(24)
   $core.bool hasCreateInvite() => $_has(23);
   @$pb.TagNumber(24)
   void clearCreateInvite() => $_clearField(24);
   @$pb.TagNumber(24)
-  $6.CreateInvite ensureCreateInvite() => $_ensure(23);
+  $5.CreateInvite ensureCreateInvite() => $_ensure(23);
 
   @$pb.TagNumber(25)
-  $6.ResendInvite get resendInvite => $_getN(24);
+  $5.ResendInvite get resendInvite => $_getN(24);
   @$pb.TagNumber(25)
-  set resendInvite($6.ResendInvite value) => $_setField(25, value);
+  set resendInvite($5.ResendInvite value) => $_setField(25, value);
   @$pb.TagNumber(25)
   $core.bool hasResendInvite() => $_has(24);
   @$pb.TagNumber(25)
   void clearResendInvite() => $_clearField(25);
   @$pb.TagNumber(25)
-  $6.ResendInvite ensureResendInvite() => $_ensure(24);
+  $5.ResendInvite ensureResendInvite() => $_ensure(24);
 
   @$pb.TagNumber(26)
-  $6.RevokeInvite get revokeInvite => $_getN(25);
+  $5.RevokeInvite get revokeInvite => $_getN(25);
   @$pb.TagNumber(26)
-  set revokeInvite($6.RevokeInvite value) => $_setField(26, value);
+  set revokeInvite($5.RevokeInvite value) => $_setField(26, value);
   @$pb.TagNumber(26)
   $core.bool hasRevokeInvite() => $_has(25);
   @$pb.TagNumber(26)
   void clearRevokeInvite() => $_clearField(26);
   @$pb.TagNumber(26)
-  $6.RevokeInvite ensureRevokeInvite() => $_ensure(25);
+  $5.RevokeInvite ensureRevokeInvite() => $_ensure(25);
 
   @$pb.TagNumber(27)
-  $6.MarkInviteEmailSent get markInviteEmailSent => $_getN(26);
+  $5.MarkInviteEmailSent get markInviteEmailSent => $_getN(26);
   @$pb.TagNumber(27)
-  set markInviteEmailSent($6.MarkInviteEmailSent value) =>
+  set markInviteEmailSent($5.MarkInviteEmailSent value) =>
       $_setField(27, value);
   @$pb.TagNumber(27)
   $core.bool hasMarkInviteEmailSent() => $_has(26);
   @$pb.TagNumber(27)
   void clearMarkInviteEmailSent() => $_clearField(27);
   @$pb.TagNumber(27)
-  $6.MarkInviteEmailSent ensureMarkInviteEmailSent() => $_ensure(26);
+  $5.MarkInviteEmailSent ensureMarkInviteEmailSent() => $_ensure(26);
 
   @$pb.TagNumber(28)
-  $6.ListSpaceInvites get listSpaceInvites => $_getN(27);
+  $5.ListSpaceInvites get listSpaceInvites => $_getN(27);
   @$pb.TagNumber(28)
-  set listSpaceInvites($6.ListSpaceInvites value) => $_setField(28, value);
+  set listSpaceInvites($5.ListSpaceInvites value) => $_setField(28, value);
   @$pb.TagNumber(28)
   $core.bool hasListSpaceInvites() => $_has(27);
   @$pb.TagNumber(28)
   void clearListSpaceInvites() => $_clearField(28);
   @$pb.TagNumber(28)
-  $6.ListSpaceInvites ensureListSpaceInvites() => $_ensure(27);
+  $5.ListSpaceInvites ensureListSpaceInvites() => $_ensure(27);
 
   @$pb.TagNumber(29)
-  $6.ApproveJoinRequest get approveJoinRequest => $_getN(28);
+  $5.ApproveJoinRequest get approveJoinRequest => $_getN(28);
   @$pb.TagNumber(29)
-  set approveJoinRequest($6.ApproveJoinRequest value) => $_setField(29, value);
+  set approveJoinRequest($5.ApproveJoinRequest value) => $_setField(29, value);
   @$pb.TagNumber(29)
   $core.bool hasApproveJoinRequest() => $_has(28);
   @$pb.TagNumber(29)
   void clearApproveJoinRequest() => $_clearField(29);
   @$pb.TagNumber(29)
-  $6.ApproveJoinRequest ensureApproveJoinRequest() => $_ensure(28);
+  $5.ApproveJoinRequest ensureApproveJoinRequest() => $_ensure(28);
 
   @$pb.TagNumber(30)
-  $6.DenyJoinRequest get denyJoinRequest => $_getN(29);
+  $5.DenyJoinRequest get denyJoinRequest => $_getN(29);
   @$pb.TagNumber(30)
-  set denyJoinRequest($6.DenyJoinRequest value) => $_setField(30, value);
+  set denyJoinRequest($5.DenyJoinRequest value) => $_setField(30, value);
   @$pb.TagNumber(30)
   $core.bool hasDenyJoinRequest() => $_has(29);
   @$pb.TagNumber(30)
   void clearDenyJoinRequest() => $_clearField(30);
   @$pb.TagNumber(30)
-  $6.DenyJoinRequest ensureDenyJoinRequest() => $_ensure(29);
+  $5.DenyJoinRequest ensureDenyJoinRequest() => $_ensure(29);
 
   /// Members; see members.proto.
   @$pb.TagNumber(31)
-  $5.ListGatewayMembers get listGatewayMembers => $_getN(30);
+  $6.ListGatewayMembers get listGatewayMembers => $_getN(30);
   @$pb.TagNumber(31)
-  set listGatewayMembers($5.ListGatewayMembers value) => $_setField(31, value);
+  set listGatewayMembers($6.ListGatewayMembers value) => $_setField(31, value);
   @$pb.TagNumber(31)
   $core.bool hasListGatewayMembers() => $_has(30);
   @$pb.TagNumber(31)
   void clearListGatewayMembers() => $_clearField(31);
   @$pb.TagNumber(31)
-  $5.ListGatewayMembers ensureListGatewayMembers() => $_ensure(30);
+  $6.ListGatewayMembers ensureListGatewayMembers() => $_ensure(30);
 
   @$pb.TagNumber(32)
-  $5.SetMemberRole get setMemberRole => $_getN(31);
+  $6.SetMemberRole get setMemberRole => $_getN(31);
   @$pb.TagNumber(32)
-  set setMemberRole($5.SetMemberRole value) => $_setField(32, value);
+  set setMemberRole($6.SetMemberRole value) => $_setField(32, value);
   @$pb.TagNumber(32)
   $core.bool hasSetMemberRole() => $_has(31);
   @$pb.TagNumber(32)
   void clearSetMemberRole() => $_clearField(32);
   @$pb.TagNumber(32)
-  $5.SetMemberRole ensureSetMemberRole() => $_ensure(31);
+  $6.SetMemberRole ensureSetMemberRole() => $_ensure(31);
 
   @$pb.TagNumber(33)
-  $5.RemoveFromGateway get removeFromGateway => $_getN(32);
+  $6.RemoveFromGateway get removeFromGateway => $_getN(32);
   @$pb.TagNumber(33)
-  set removeFromGateway($5.RemoveFromGateway value) => $_setField(33, value);
+  set removeFromGateway($6.RemoveFromGateway value) => $_setField(33, value);
   @$pb.TagNumber(33)
   $core.bool hasRemoveFromGateway() => $_has(32);
   @$pb.TagNumber(33)
   void clearRemoveFromGateway() => $_clearField(33);
   @$pb.TagNumber(33)
-  $5.RemoveFromGateway ensureRemoveFromGateway() => $_ensure(32);
+  $6.RemoveFromGateway ensureRemoveFromGateway() => $_ensure(32);
 
   @$pb.TagNumber(34)
-  $5.SetAccessUntil get setAccessUntil => $_getN(33);
+  $6.SetAccessUntil get setAccessUntil => $_getN(33);
   @$pb.TagNumber(34)
-  set setAccessUntil($5.SetAccessUntil value) => $_setField(34, value);
+  set setAccessUntil($6.SetAccessUntil value) => $_setField(34, value);
   @$pb.TagNumber(34)
   $core.bool hasSetAccessUntil() => $_has(33);
   @$pb.TagNumber(34)
   void clearSetAccessUntil() => $_clearField(34);
   @$pb.TagNumber(34)
-  $5.SetAccessUntil ensureSetAccessUntil() => $_ensure(33);
+  $6.SetAccessUntil ensureSetAccessUntil() => $_ensure(33);
 
   @$pb.TagNumber(35)
-  $5.SetOwnerOrganisation get setOwnerOrganisation => $_getN(34);
+  $6.SetOwnerOrganisation get setOwnerOrganisation => $_getN(34);
   @$pb.TagNumber(35)
-  set setOwnerOrganisation($5.SetOwnerOrganisation value) =>
+  set setOwnerOrganisation($6.SetOwnerOrganisation value) =>
       $_setField(35, value);
   @$pb.TagNumber(35)
   $core.bool hasSetOwnerOrganisation() => $_has(34);
   @$pb.TagNumber(35)
   void clearSetOwnerOrganisation() => $_clearField(35);
   @$pb.TagNumber(35)
-  $5.SetOwnerOrganisation ensureSetOwnerOrganisation() => $_ensure(34);
+  $6.SetOwnerOrganisation ensureSetOwnerOrganisation() => $_ensure(34);
 }
 
 const $core.bool _omitFieldNames =

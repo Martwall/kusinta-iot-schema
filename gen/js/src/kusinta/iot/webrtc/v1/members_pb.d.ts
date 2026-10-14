@@ -18,6 +18,11 @@ export declare const file_kusinta_iot_webrtc_v1_members: GenFile;
  * holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER; anyone else is refused as
  * NOT_ENTITLED.
  *
+ * This is the one place the gateway says who lives where without the caller reaching the
+ * home: those two roles answer for the whole property, and a resident who moves out is
+ * removed by them (RemoveFromGateway), so they are shown every member and every membership.
+ * Seeing into a home's life — its devices, readings and history — still takes filing on it.
+ *
  * @generated from message kusinta.iot.webrtc.v1.ListGatewayMembers
  */
 export declare type ListGatewayMembers = Message<"kusinta.iot.webrtc.v1.ListGatewayMembers"> & {
@@ -36,11 +41,18 @@ export declare const ListGatewayMembersSchema: GenMessage<ListGatewayMembers>;
  *
  * Granting a role already held, or taking away one not held, changes nothing and is
  * acknowledged. A caller may take a role away from themselves: the registering
- * administrator always remains, so the gateway cannot be left without one.
+ * administrator always remains, so the gateway cannot be left without one. Naming
+ * ROLE_GATEWAY_ADMIN for the registering administrator, either way, is refused as
+ * "registering_admin"; ROLE_PROPERTY_OWNER may be given to them and taken away as to
+ * anyone.
  *
- * Taking either role away also ends the pending invites the user created, unless they keep
- * the other of the two. Their join requests stay, since another administrator may still
- * answer them. The change reaches the user's open sessions at once.
+ * Granting either role clears any end to the member's access (MemberDetail.access_until):
+ * a property owner or an administrator is not there for a job.
+ *
+ * Taking either role away also ends the pending invites the user created while holding one,
+ * unless they keep the other; invites they created as a resident of a home follow their
+ * residency, as they always do. The join requests those invites made stay, since another
+ * administrator may still answer them. The change reaches the user's open sessions at once.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetMemberRole
  */
@@ -70,14 +82,16 @@ export declare type SetMemberRole = Message<"kusinta.iot.webrtc.v1.SetMemberRole
 export declare const SetMemberRoleSchema: GenMessage<SetMemberRole>;
 
 /**
- * Removes a member from the whole gateway in one step: every membership they hold and every
- * role the gateway holds for them, and the pending invites they created. Answered with
- * ManagementAck. Their open sessions end, and the api-server drops them from the gateway.
+ * Removes a member from the whole gateway in one step: every membership they hold, every
+ * role the gateway holds for them, every pending invite they created and every join request
+ * of their own. Answered with ManagementAck. Their open sessions end, and the api-server drops
+ * them from the gateway. Join requests made through their invites end where those were
+ * invites a resident made, as when a residency ends, and stay otherwise.
  *
- * A caller holding ROLE_GATEWAY_ADMIN may remove anyone but the registering administrator.
- * A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN, may remove only a member
- * who holds neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN; anyone else is refused
- * NOT_ENTITLED.
+ * A caller holding ROLE_GATEWAY_ADMIN may remove anyone but the registering administrator
+ * ("registering_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
+ * may remove only a member who holds neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN;
+ * anyone else, the registering administrator included, is refused NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveFromGateway
  */
@@ -95,12 +109,16 @@ export declare type RemoveFromGateway = Message<"kusinta.iot.webrtc.v1.RemoveFro
 export declare const RemoveFromGatewaySchema: GenMessage<RemoveFromGateway>;
 
 /**
- * Sets, moves or clears the date a technician's access ends. Answered with ManagementAck.
- * A caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER may.
+ * Sets, moves or clears when a technician's access ends. Answered with ManagementAck. A
+ * caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER may. Only for a member holding
+ * ROLE_TECHNICIAN and no other role but ROLE_RESIDENT ("not_a_technician" otherwise): an end
+ * date never reaches a property owner or an administrator.
  *
- * The access runs to the end of that day in the building's time zone (space.v1.Space
- * time_zone); within a quarter of an hour after, the gateway removes the technician as
- * RemoveFromGateway would. A date before today is INVALID_REQUEST.
+ * access_until is the instant the access ends; a time not after now is INVALID_REQUEST. The
+ * app chooses it, typically the end of a chosen day where the building is. Within a quarter
+ * of an hour after it, the gateway takes away the member's ROLE_TECHNICIAN and every SERVICE
+ * membership they hold, as an administrator would, and nothing else: a home they live in
+ * stays theirs.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetAccessUntil
  */
@@ -111,7 +129,7 @@ export declare type SetAccessUntil = Message<"kusinta.iot.webrtc.v1.SetAccessUnt
   userId?: UserId | undefined;
 
   /**
-   * Unset clears it: the access lasts until someone removes them.
+   * Unset clears it: the access lasts until someone takes it away.
    *
    * @generated from field: google.protobuf.Timestamp access_until = 2;
    */
@@ -125,8 +143,9 @@ export declare type SetAccessUntil = Message<"kusinta.iot.webrtc.v1.SetAccessUnt
 export declare const SetAccessUntilSchema: GenMessage<SetAccessUntil>;
 
 /**
- * Sets the organisation that owns the property, or clears it when both fields are empty.
- * Answered with ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may.
+ * Records the organisation that owns the property, or clears it when unset or when both
+ * fields are empty. An organisation number without a name is INVALID_REQUEST. Answered with
+ * ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetOwnerOrganisation
  */
@@ -156,7 +175,9 @@ export declare type OwnerOrganisation = Message<"kusinta.iot.webrtc.v1.OwnerOrga
   name: string;
 
   /**
-   * As the organisation's national register gives it; the gateway does not check it.
+   * As the organisation's national register gives it; the gateway does not check it. For a
+   * sole trader it can be a personal identity number, so it is shown only where
+   * GatewayMembers is, never to residents (PrivacyDisclosure carries the name alone).
    *
    * @generated from field: string organisation_number = 2;
    */
@@ -206,8 +227,10 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
   userId?: UserId | undefined;
 
   /**
-   * The name they gave their account (AppTokenClaims.name) as the gateway last saw it.
-   * Self-chosen, so the app shows it as such. Empty when the gateway has not learnt one.
+   * The name they gave their account, as the gateway last learnt it: from AppTokenClaims.name
+   * when they connect, or from signaling.v1.RedeemInvite.display_name when they redeem with
+   * none learnt yet. Self-chosen, so the app shows it as such. Empty when none is learnt. The
+   * gateway keeps it only while they are a member, and drops it when they stop being one.
    *
    * @generated from field: string name = 2;
    */
@@ -235,8 +258,8 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
 
   /**
    * Whether they are the administrator who registered the gateway, as the gateway last saw
-   * from their token. Grants nothing on its own; it says that SetMemberRole and
-   * RemoveFromGateway will refuse them.
+   * from a token. Grants nothing on its own; it says that their ROLE_GATEWAY_ADMIN cannot be
+   * changed here and that RemoveFromGateway will refuse them.
    *
    * @generated from field: bool registering_admin = 6;
    */

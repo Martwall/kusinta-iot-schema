@@ -328,8 +328,9 @@ export declare type RedeemInvite = Message<"kusinta.iot.signaling.v1.RedeemInvit
   } | { case: undefined; value?: undefined };
 
   /**
-   * The display name the user's token carries, for the join request it may make.
-   * May be empty.
+   * The display name the user's token carries, for the join request it may make, by the
+   * same rule as webrtc.v1.AppTokenClaims.name: the identity provider's display-name claim
+   * alone, never a username or an email address. May be empty.
    *
    * @generated from field: string display_name = 4;
    */

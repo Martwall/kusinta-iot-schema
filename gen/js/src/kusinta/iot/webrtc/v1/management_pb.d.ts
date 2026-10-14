@@ -12,9 +12,9 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { ListGatewayMembers, OwnerOrganisation, RemoveFromGateway, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
+import type { ListGatewayMembers, RemoveFromGateway, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -925,7 +925,7 @@ export declare const GetRoomHistorySchema: GenMessage<GetRoomHistory>;
  *
  * It states the policy, the kinds of party it applies to now and the people counted under
  * each (ServiceParty.names): a resident learns which technicians can see the battery of
- * their radiator valve. It never names a resident.
+ * their radiator valve. The names say who has reach, never where anyone lives.
  *
  * @generated from message kusinta.iot.webrtc.v1.PrivacyDisclosure
  */
@@ -942,9 +942,10 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
    * through another membership, were they not its residents — each role once, with what
    * that role brings here. Each party is listed under every role it holds other than
    * ROLE_RESIDENT, and sees what its entries say together; one with no other role, or whose
-   * role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. The gateway's
-   * administrator is always listed. So the list reads the same whether or not anyone lives
-   * in the home, and never understates who has reach or what they see. Devices a resident
+   * role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. ROLE_GATEWAY_ADMIN is
+   * always listed, and ROLE_PROPERTY_OWNER whenever anyone holds it, wherever they are
+   * filed: both may file themselves on the home. So the list reads the same whether or not
+   * anyone lives in the home, and never understates who has reach or what they see. Devices a resident
    * owns are not shown to service at all.
    *
    * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceParty service_parties = 5;
@@ -963,11 +964,22 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
   climateSummaryPeriod: ClimateSummaryPeriod;
 
   /**
-   * The organisation that owns the property, when one is recorded (SetOwnerOrganisation).
+   * The name of the organisation that owns the property, when one is recorded
+   * (SetOwnerOrganisation). Its organisation number is not given here.
    *
-   * @generated from field: kusinta.iot.webrtc.v1.OwnerOrganisation owner_organisation = 6;
+   * @generated from field: string owner_organisation_name = 6;
    */
-  ownerOrganisation?: OwnerOrganisation | undefined;
+  ownerOrganisationName: string;
+
+  /**
+   * Set when ServiceParty.names are not given to this caller, so that empty lists are not
+   * read as nobody being named. Names are given to the home's own residents and to a
+   * caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER, and withheld from anyone
+   * else: a technician who reaches the home learns the kinds of party, not who they are.
+   *
+   * @generated from field: bool names_withheld = 7;
+   */
+  namesWithheld: boolean;
 };
 
 /**
@@ -998,12 +1010,13 @@ export declare type ServiceParty = Message<"kusinta.iot.webrtc.v1.ServiceParty">
 
   /**
    * Each person counted under this role, by the name they gave their account
-   * (MemberDetail.name), once each: the administrators and property owners of the gateway
-   * wherever they are filed, and everyone else counted here by the SERVICE membership that
-   * reaches the home. The registering administrator is named once the gateway has seen
-   * their token. An empty string stands for a person whose name the gateway has not learnt,
-   * so the list is as long as the number of people. Self-chosen, so the app shows it as the
-   * name they gave rather than as a verified identity.
+   * (MemberDetail.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
+   * ROLE_PROPERTY_OWNER, the registering administrator included once the gateway has seen
+   * their token, and everyone else counted here by a SERVICE membership. A person counted
+   * under several roles is named under each. An empty string stands for a person whose name
+   * the gateway has not learnt, so the list is as long as the number of people. Self-chosen,
+   * so the app shows it as the name they gave rather than as a verified identity. Empty for
+   * every party when PrivacyDisclosure.names_withheld is set.
    *
    * @generated from field: repeated string names = 3;
    */

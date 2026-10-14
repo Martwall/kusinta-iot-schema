@@ -238,16 +238,18 @@ class GetRoomHistory(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., from_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., to_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class PrivacyDisclosure(_message.Message):
-    __slots__ = ("space_id", "service_parties", "climate_summary_period", "owner_organisation")
+    __slots__ = ("space_id", "service_parties", "climate_summary_period", "owner_organisation_name", "names_withheld")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     SERVICE_PARTIES_FIELD_NUMBER: _ClassVar[int]
     CLIMATE_SUMMARY_PERIOD_FIELD_NUMBER: _ClassVar[int]
-    OWNER_ORGANISATION_FIELD_NUMBER: _ClassVar[int]
+    OWNER_ORGANISATION_NAME_FIELD_NUMBER: _ClassVar[int]
+    NAMES_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     service_parties: _containers.RepeatedCompositeFieldContainer[ServiceParty]
     climate_summary_period: _climate_pb2.ClimateSummaryPeriod
-    owner_organisation: _members_pb2.OwnerOrganisation
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ..., owner_organisation: _Optional[_Union[_members_pb2.OwnerOrganisation, _Mapping]] = ...) -> None: ...
+    owner_organisation_name: str
+    names_withheld: bool
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ..., owner_organisation_name: _Optional[str] = ..., names_withheld: _Optional[bool] = ...) -> None: ...
 
 class ServiceParty(_message.Message):
     __slots__ = ("role", "signals", "names")

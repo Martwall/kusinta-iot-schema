@@ -173,7 +173,9 @@ enum PermissionAction {
 // who service the building get the service view above and no more. It does not keep the
 // property owner or the administrator out by force — they hold the building's filing
 // authority and the gateway itself — but it makes their seeing in a deliberate act on the
-// home, such as filing themselves on it, rather than something handed out by default.
+// home, such as filing themselves on it, rather than something handed out by default. Who
+// lives where is the exception: they are shown every member and membership
+// (webrtc.v1.ListGatewayMembers), since they remove a resident who moves out.
 //
 // A membership recorded with no relation, made before relations existed, sees no more than
 // either relation would where it is held: on an apartment or a room, a home as service; on a

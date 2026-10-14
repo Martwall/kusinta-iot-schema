@@ -101,10 +101,20 @@ describe('named service parties', () => {
     expect(decoded.serviceParties[0].names).toEqual(['Tek', ''])
   })
 
-  it('tells a resident the owner organisation', () => {
-    const disclosure = create(PrivacyDisclosureSchema, { ownerOrganisation: { name: 'Brf Ek' } })
+  it('tells a resident the name of the owner organisation', () => {
+    const disclosure = create(PrivacyDisclosureSchema, { ownerOrganisationName: 'Brf Ek' })
     const decoded = fromBinary(PrivacyDisclosureSchema, toBinary(PrivacyDisclosureSchema, disclosure))
-    expect(decoded.ownerOrganisation?.name).toBe('Brf Ek')
+    expect(decoded.ownerOrganisationName).toBe('Brf Ek')
+  })
+
+  it('has no field for the owner organisation number in a disclosure', () => {
+    expect(PrivacyDisclosureSchema.fields.map((f) => f.name)).not.toContain('owner_organisation')
+  })
+
+  it('says when names are withheld from the caller', () => {
+    const disclosure = create(PrivacyDisclosureSchema, { namesWithheld: true })
+    const decoded = fromBinary(PrivacyDisclosureSchema, toBinary(PrivacyDisclosureSchema, disclosure))
+    expect(decoded.namesWithheld).toBe(true)
   })
 })
 

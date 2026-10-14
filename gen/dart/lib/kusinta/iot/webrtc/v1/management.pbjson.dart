@@ -823,13 +823,13 @@ const PrivacyDisclosure$json = {
       '10': 'climateSummaryPeriod'
     },
     {
-      '1': 'owner_organisation',
+      '1': 'owner_organisation_name',
       '3': 6,
       '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.webrtc.v1.OwnerOrganisation',
-      '10': 'ownerOrganisation'
+      '5': 9,
+      '10': 'ownerOrganisationName'
     },
+    {'1': 'names_withheld', '3': 7, '4': 1, '5': 8, '10': 'namesWithheld'},
   ],
   '9': [
     {'1': 2, '2': 3},
@@ -843,9 +843,9 @@ final $typed_data.Uint8List privacyDisclosureDescriptor = $convert.base64Decode(
     '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSTAoPc2VydmljZV9wYXJ0aWVzGAUgAygLMiMua3Vz'
     'aW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VQYXJ0eVIOc2VydmljZVBhcnRpZXMSYgoWY2xpbW'
     'F0ZV9zdW1tYXJ5X3BlcmlvZBgEIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0'
-    'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kElcKEm93bmVyX29yZ2FuaXNhdG'
-    'lvbhgGIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Pd25lck9yZ2FuaXNhdGlvblIRb3du'
-    'ZXJPcmdhbmlzYXRpb25KBAgCEANKBAgDEAQ=');
+    'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kEjYKF293bmVyX29yZ2FuaXNhdG'
+    'lvbl9uYW1lGAYgASgJUhVvd25lck9yZ2FuaXNhdGlvbk5hbWUSJQoObmFtZXNfd2l0aGhlbGQY'
+    'ByABKAhSDW5hbWVzV2l0aGhlbGRKBAgCEANKBAgDEAQ=');
 
 @$core.Deprecated('Use servicePartyDescriptor instead')
 const ServiceParty$json = {

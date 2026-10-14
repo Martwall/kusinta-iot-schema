@@ -857,8 +857,9 @@ class RedeemInvite extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearCode() => $_clearField(3);
 
-  /// The display name the user's token carries, for the join request it may make.
-  /// May be empty.
+  /// The display name the user's token carries, for the join request it may make, by the
+  /// same rule as webrtc.v1.AppTokenClaims.name: the identity provider's display-name claim
+  /// alone, never a username or an email address. May be empty.
   @$pb.TagNumber(4)
   $core.String get displayName => $_getSZ(3);
   @$pb.TagNumber(4)

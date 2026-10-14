@@ -211,11 +211,14 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   Confirmation ensureCnf() => $_ensure(6);
 
-  /// The user's display name as the identity provider holds it. May be empty; never an email
-  /// address. The gateway records it only to name the user to the people who may see who they
-  /// are (MemberDetail.name, ServiceParty.names), and treats it as self-chosen: it strips
-  /// control and bidirectional formatting characters and limits its length before keeping
-  /// it. A validator accepts a token without it. Carried in the JWT as "name".
+  /// The user's display name as the identity provider holds it, or empty. The issuer MUST
+  /// take it from the provider's display-name claim alone and send it empty rather than
+  /// fall back to a username, an email address or any other field, since a username is an
+  /// email address wherever accounts log in by email. The gateway records it only to name the
+  /// user to the people who may see who they are (MemberDetail.name, ServiceParty.names),
+  /// and treats it as self-chosen: it removes control and format characters (bidirectional
+  /// overrides among them) and keeps at most 80 Unicode code points. A validator accepts a
+  /// token without it. Carried in the JWT as "name".
   @$pb.TagNumber(8)
   $core.String get name => $_getSZ(7);
   @$pb.TagNumber(8)

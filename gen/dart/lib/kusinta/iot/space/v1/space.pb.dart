@@ -248,7 +248,7 @@ class Space extends $pb.GeneratedMessage {
   ///     live with, and anyone filed on their home as service, since being filed on a home
   ///     is an act on it its residents should see. Service reach from a building or floor
   ///     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
-  ///     hold it, without naming anyone;
+  ///     hold it, and who, without saying where anyone lives;
   ///   * anyone else sees none, residents of a building or floor included.
   @$pb.TagNumber(13)
   $pb.PbList<SpaceMember> get members => $_getList(12);

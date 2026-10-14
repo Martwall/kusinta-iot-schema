@@ -140,10 +140,14 @@ class CreateInvite extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearEmail() => $_clearField(3);
 
-  /// When the technician's access ends, as SetAccessUntil sets it once they have joined.
-  /// SERVICE only: set on a RESIDENT invite it is INVALID_REQUEST, as is a date before today.
-  /// Unset for no end. Redeeming an invite without one never clears an end date a member
-  /// already has.
+  /// When the technician's access ends, as SetAccessUntil describes it. SERVICE only: set
+  /// on a RESIDENT invite it is INVALID_REQUEST, as is a time not after now. Unset for no
+  /// end. Both secrets expire no later than it.
+  ///
+  /// It reaches only someone the redeem makes a technician: a user who held no role but
+  /// ROLE_RESIDENT before. For anyone else redeeming the invite it is ignored, so an invite
+  /// can neither shorten nor lengthen a member's access, nor put an end on a property owner
+  /// or an administrator.
   @$pb.TagNumber(4)
   $1.Timestamp get accessUntil => $_getN(3);
   @$pb.TagNumber(4)

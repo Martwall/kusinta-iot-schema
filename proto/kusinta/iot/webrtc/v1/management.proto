@@ -461,7 +461,7 @@ message GetRoomHistory {
 //
 // It states the policy, the kinds of party it applies to now and the people counted under
 // each (ServiceParty.names): a resident learns which technicians can see the battery of
-// their radiator valve. It never names a resident.
+// their radiator valve. The names say who has reach, never where anyone lives.
 message PrivacyDisclosure {
   // An apartment, or a room in one.
   kusinta.iot.identity.v1.SpaceId space_id = 1;
@@ -472,9 +472,10 @@ message PrivacyDisclosure {
   // through another membership, were they not its residents — each role once, with what
   // that role brings here. Each party is listed under every role it holds other than
   // ROLE_RESIDENT, and sees what its entries say together; one with no other role, or whose
-  // role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. The gateway's
-  // administrator is always listed. So the list reads the same whether or not anyone lives
-  // in the home, and never understates who has reach or what they see. Devices a resident
+  // role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. ROLE_GATEWAY_ADMIN is
+  // always listed, and ROLE_PROPERTY_OWNER whenever anyone holds it, wherever they are
+  // filed: both may file themselves on the home. So the list reads the same whether or not
+  // anyone lives in the home, and never understates who has reach or what they see. Devices a resident
   // owns are not shown to service at all.
   repeated ServiceParty service_parties = 5;
 
@@ -485,8 +486,15 @@ message PrivacyDisclosure {
   // no period that opened before the last change.
   kusinta.iot.climate.v1.ClimateSummaryPeriod climate_summary_period = 4;
 
-  // The organisation that owns the property, when one is recorded (SetOwnerOrganisation).
-  OwnerOrganisation owner_organisation = 6;
+  // The name of the organisation that owns the property, when one is recorded
+  // (SetOwnerOrganisation). Its organisation number is not given here.
+  string owner_organisation_name = 6;
+
+  // Set when ServiceParty.names are not given to this caller, so that empty lists are not
+  // read as nobody being named. Names are given to the home's own residents and to a
+  // caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER, and withheld from anyone
+  // else: a technician who reaches the home learns the kinds of party, not who they are.
+  bool names_withheld = 7;
 }
 
 // One kind of party with service reach of a home, and what it sees there. Every service
@@ -499,12 +507,13 @@ message ServiceParty {
   repeated kusinta.iot.access.v1.ServiceSignal signals = 2;
 
   // Each person counted under this role, by the name they gave their account
-  // (MemberDetail.name), once each: the administrators and property owners of the gateway
-  // wherever they are filed, and everyone else counted here by the SERVICE membership that
-  // reaches the home. The registering administrator is named once the gateway has seen
-  // their token. An empty string stands for a person whose name the gateway has not learnt,
-  // so the list is as long as the number of people. Self-chosen, so the app shows it as the
-  // name they gave rather than as a verified identity.
+  // (MemberDetail.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
+  // ROLE_PROPERTY_OWNER, the registering administrator included once the gateway has seen
+  // their token, and everyone else counted here by a SERVICE membership. A person counted
+  // under several roles is named under each. An empty string stands for a person whose name
+  // the gateway has not learnt, so the list is as long as the number of people. Self-chosen,
+  // so the app shows it as the name they gave rather than as a verified identity. Empty for
+  // every party when PrivacyDisclosure.names_withheld is set.
   repeated string names = 3;
 }
 
