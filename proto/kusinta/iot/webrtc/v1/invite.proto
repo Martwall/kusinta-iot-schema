@@ -86,6 +86,12 @@ message CreateInvite {
   // The gateway keeps the address only while the invite is pending, and drops it once the
   // invite is redeemed, revoked or expired.
   string email = 3;
+
+  // When the technician's access ends, as SetAccessUntil sets it once they have joined.
+  // SERVICE only: set on a RESIDENT invite it is INVALID_REQUEST, as is a date before today.
+  // Unset for no end. Redeeming an invite without one never clears an end date a member
+  // already has.
+  google.protobuf.Timestamp access_until = 4;
 }
 
 // Gives a pending invite new secrets. The old token and code stop working at once, so
@@ -155,6 +161,9 @@ message Invite {
   // When the email with the newest secrets was sent (MarkInviteEmailSent). Unset when no
   // email was sent since the last resend.
   google.protobuf.Timestamp email_sent_at = 9;
+
+  // As CreateInvite.access_until.
+  google.protobuf.Timestamp access_until = 10;
 }
 
 // A new invite or a resent one, with its secrets. This is the only time they are told:

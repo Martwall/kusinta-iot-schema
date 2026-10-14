@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+package kusinta.iot.webrtc.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/access/v1/roles.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// The people on a gateway, and what an administrator may change about them once they are
+// there.
+//
+// People join by invite (invite.proto), as a resident or a technician. A property owner or
+// an administrator is made only here, by promotion of someone already a member, so a
+// leaked invite can never hand over the building. The gateway holds every role itself,
+// except the administration of whoever registered it, which it takes from the app's token
+// (AppTokenClaims.roles) and which nothing here can grant or take away.
+//
+// A member is anyone the gateway holds a membership or a role for: the people it reports
+// to the api-server (reporting.v1.GatewayMember). Every rule below that says "a member"
+// means exactly that set.
+//
+// Requests are ManagementRequest arms and answered by ManagementResult, as filing is. A
+// refusal is a GatewayError, and where a reason is given it is in metadata "reason":
+//   "not_a_member"       FAILED_PRECONDITION. The user named is not a member.
+//   "registering_admin"  FAILED_PRECONDITION. The user named is the registering
+//                        administrator as last seen (MemberDetail.registering_admin), whose
+//                        administration comes from their token and cannot be changed on the
+//                        gateway.
+//   "not_a_technician"   FAILED_PRECONDITION. SetAccessUntil named a member who holds no
+//                        ROLE_TECHNICIAN.
+// A caller who may not make the request at all is refused as NOT_ENTITLED with no reason,
+// before the user named is looked up, so the refusal says nothing of who is a member.
+
+// Lists every member of the gateway. Answered with GatewayMembers. Listed to a caller
+// holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER; anyone else is refused as
+// NOT_ENTITLED.
+message ListGatewayMembers {}
+
+// Gives a member ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, or takes it away. Answered with
+// ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may; any other role named is
+// INVALID_REQUEST.
+//
+// Granting a role already held, or taking away one not held, changes nothing and is
+// acknowledged. A caller may take a role away from themselves: the registering
+// administrator always remains, so the gateway cannot be left without one.
+//
+// Taking either role away also ends the pending invites the user created, unless they keep
+// the other of the two. Their join requests stay, since another administrator may still
+// answer them. The change reaches the user's open sessions at once.
+message SetMemberRole {
+  kusinta.iot.identity.v1.UserId user_id = 1;
+  kusinta.iot.access.v1.Role role = 2;
+
+  // true grants the role; false takes it away.
+  bool held = 3;
+}
+
+// Removes a member from the whole gateway in one step: every membership they hold and every
+// role the gateway holds for them, and the pending invites they created. Answered with
+// ManagementAck. Their open sessions end, and the api-server drops them from the gateway.
+//
+// A caller holding ROLE_GATEWAY_ADMIN may remove anyone but the registering administrator.
+// A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN, may remove only a member
+// who holds neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN; anyone else is refused
+// NOT_ENTITLED.
+message RemoveFromGateway {
+  kusinta.iot.identity.v1.UserId user_id = 1;
+}
+
+// Sets, moves or clears the date a technician's access ends. Answered with ManagementAck.
+// A caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER may.
+//
+// The access runs to the end of that day in the building's time zone (space.v1.Space
+// time_zone); within a quarter of an hour after, the gateway removes the technician as
+// RemoveFromGateway would. A date before today is INVALID_REQUEST.
+message SetAccessUntil {
+  kusinta.iot.identity.v1.UserId user_id = 1;
+
+  // Unset clears it: the access lasts until someone removes them.
+  google.protobuf.Timestamp access_until = 2;
+}
+
+// Sets the organisation that owns the property, or clears it when both fields are empty.
+// Answered with ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may.
+message SetOwnerOrganisation {
+  OwnerOrganisation organisation = 1;
+}
+
+// The organisation that owns the property. The people who act for it each hold
+// ROLE_PROPERTY_OWNER themselves; this only says whom they act for.
+message OwnerOrganisation {
+  string name = 1;
+
+  // As the organisation's national register gives it; the gateway does not check it.
+  string organisation_number = 2;
+}
+
+// Every member of the gateway, in answer to ListGatewayMembers.
+message GatewayMembers {
+  repeated MemberDetail members = 1;
+
+  // Unset when none is recorded.
+  OwnerOrganisation owner_organisation = 2;
+}
+
+// One member, as an administrator or a property owner sees them.
+message MemberDetail {
+  kusinta.iot.identity.v1.UserId user_id = 1;
+
+  // The name they gave their account (AppTokenClaims.name) as the gateway last saw it.
+  // Self-chosen, so the app shows it as such. Empty when the gateway has not learnt one.
+  string name = 2;
+
+  // Every role they hold here, the registering administrator's ROLE_GATEWAY_ADMIN included,
+  // each once.
+  repeated kusinta.iot.access.v1.Role roles = 3;
+
+  repeated MemberSpace memberships = 4;
+
+  // When a technician's access ends (SetAccessUntil). Unset for no end.
+  google.protobuf.Timestamp access_until = 5;
+
+  // Whether they are the administrator who registered the gateway, as the gateway last saw
+  // from their token. Grants nothing on its own; it says that SetMemberRole and
+  // RemoveFromGateway will refuse them.
+  bool registering_admin = 6;
+}
+
+// One space a member is filed on, and how they stand to it.
+message MemberSpace {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  kusinta.iot.access.v1.MembershipRelation relation = 2;
+}

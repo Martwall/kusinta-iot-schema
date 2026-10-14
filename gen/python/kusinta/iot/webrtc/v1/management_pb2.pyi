@@ -10,6 +10,7 @@ from kusinta.iot.link.v1 import link_pb2 as _link_pb2
 from kusinta.iot.space.v1 import space_pb2 as _space_pb2
 from kusinta.iot.vendor.lorawan.v1 import lorawan_pb2 as _lorawan_pb2
 from kusinta.iot.webrtc.v1 import invite_pb2 as _invite_pb2
+from kusinta.iot.webrtc.v1 import members_pb2 as _members_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -237,22 +238,26 @@ class GetRoomHistory(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., from_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., to_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class PrivacyDisclosure(_message.Message):
-    __slots__ = ("space_id", "service_parties", "climate_summary_period")
+    __slots__ = ("space_id", "service_parties", "climate_summary_period", "owner_organisation")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     SERVICE_PARTIES_FIELD_NUMBER: _ClassVar[int]
     CLIMATE_SUMMARY_PERIOD_FIELD_NUMBER: _ClassVar[int]
+    OWNER_ORGANISATION_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     service_parties: _containers.RepeatedCompositeFieldContainer[ServiceParty]
     climate_summary_period: _climate_pb2.ClimateSummaryPeriod
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ...) -> None: ...
+    owner_organisation: _members_pb2.OwnerOrganisation
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ..., owner_organisation: _Optional[_Union[_members_pb2.OwnerOrganisation, _Mapping]] = ...) -> None: ...
 
 class ServiceParty(_message.Message):
-    __slots__ = ("role", "signals")
+    __slots__ = ("role", "signals", "names")
     ROLE_FIELD_NUMBER: _ClassVar[int]
     SIGNALS_FIELD_NUMBER: _ClassVar[int]
+    NAMES_FIELD_NUMBER: _ClassVar[int]
     role: _roles_pb2.Role
     signals: _containers.RepeatedScalarFieldContainer[_acl_pb2.ServiceSignal]
-    def __init__(self, role: _Optional[_Union[_roles_pb2.Role, str]] = ..., signals: _Optional[_Iterable[_Union[_acl_pb2.ServiceSignal, str]]] = ...) -> None: ...
+    names: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, role: _Optional[_Union[_roles_pb2.Role, str]] = ..., signals: _Optional[_Iterable[_Union[_acl_pb2.ServiceSignal, str]]] = ..., names: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class GetPrivacyDisclosure(_message.Message):
     __slots__ = ("space_id",)
@@ -279,7 +284,7 @@ class ReconnectConnector(_message.Message):
     def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ...) -> None: ...
 
 class ManagementRequest(_message.Message):
-    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request")
+    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request", "list_gateway_members", "set_member_role", "remove_from_gateway", "set_access_until", "set_owner_organisation")
     CREATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     UPDATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     DELETE_SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -310,6 +315,11 @@ class ManagementRequest(_message.Message):
     LIST_SPACE_INVITES_FIELD_NUMBER: _ClassVar[int]
     APPROVE_JOIN_REQUEST_FIELD_NUMBER: _ClassVar[int]
     DENY_JOIN_REQUEST_FIELD_NUMBER: _ClassVar[int]
+    LIST_GATEWAY_MEMBERS_FIELD_NUMBER: _ClassVar[int]
+    SET_MEMBER_ROLE_FIELD_NUMBER: _ClassVar[int]
+    REMOVE_FROM_GATEWAY_FIELD_NUMBER: _ClassVar[int]
+    SET_ACCESS_UNTIL_FIELD_NUMBER: _ClassVar[int]
+    SET_OWNER_ORGANISATION_FIELD_NUMBER: _ClassVar[int]
     create_space: CreateSpace
     update_space: UpdateSpace
     delete_space: DeleteSpace
@@ -340,4 +350,9 @@ class ManagementRequest(_message.Message):
     list_space_invites: _invite_pb2.ListSpaceInvites
     approve_join_request: _invite_pb2.ApproveJoinRequest
     deny_join_request: _invite_pb2.DenyJoinRequest
-    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ..., reconnect_connector: _Optional[_Union[ReconnectConnector, _Mapping]] = ..., create_invite: _Optional[_Union[_invite_pb2.CreateInvite, _Mapping]] = ..., resend_invite: _Optional[_Union[_invite_pb2.ResendInvite, _Mapping]] = ..., revoke_invite: _Optional[_Union[_invite_pb2.RevokeInvite, _Mapping]] = ..., mark_invite_email_sent: _Optional[_Union[_invite_pb2.MarkInviteEmailSent, _Mapping]] = ..., list_space_invites: _Optional[_Union[_invite_pb2.ListSpaceInvites, _Mapping]] = ..., approve_join_request: _Optional[_Union[_invite_pb2.ApproveJoinRequest, _Mapping]] = ..., deny_join_request: _Optional[_Union[_invite_pb2.DenyJoinRequest, _Mapping]] = ...) -> None: ...
+    list_gateway_members: _members_pb2.ListGatewayMembers
+    set_member_role: _members_pb2.SetMemberRole
+    remove_from_gateway: _members_pb2.RemoveFromGateway
+    set_access_until: _members_pb2.SetAccessUntil
+    set_owner_organisation: _members_pb2.SetOwnerOrganisation
+    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ..., reconnect_connector: _Optional[_Union[ReconnectConnector, _Mapping]] = ..., create_invite: _Optional[_Union[_invite_pb2.CreateInvite, _Mapping]] = ..., resend_invite: _Optional[_Union[_invite_pb2.ResendInvite, _Mapping]] = ..., revoke_invite: _Optional[_Union[_invite_pb2.RevokeInvite, _Mapping]] = ..., mark_invite_email_sent: _Optional[_Union[_invite_pb2.MarkInviteEmailSent, _Mapping]] = ..., list_space_invites: _Optional[_Union[_invite_pb2.ListSpaceInvites, _Mapping]] = ..., approve_join_request: _Optional[_Union[_invite_pb2.ApproveJoinRequest, _Mapping]] = ..., deny_join_request: _Optional[_Union[_invite_pb2.DenyJoinRequest, _Mapping]] = ..., list_gateway_members: _Optional[_Union[_members_pb2.ListGatewayMembers, _Mapping]] = ..., set_member_role: _Optional[_Union[_members_pb2.SetMemberRole, _Mapping]] = ..., remove_from_gateway: _Optional[_Union[_members_pb2.RemoveFromGateway, _Mapping]] = ..., set_access_until: _Optional[_Union[_members_pb2.SetAccessUntil, _Mapping]] = ..., set_owner_organisation: _Optional[_Union[_members_pb2.SetOwnerOrganisation, _Mapping]] = ...) -> None: ...

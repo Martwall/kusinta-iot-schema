@@ -15,15 +15,16 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $4;
-import '../../access/v1/acl.pbenum.dart' as $9;
-import '../../access/v1/roles.pbenum.dart' as $7;
-import '../../climate/v1/climate.pbenum.dart' as $8;
-import '../../common/v1/types.pbenum.dart' as $6;
+import '../../access/v1/acl.pbenum.dart' as $10;
+import '../../access/v1/roles.pbenum.dart' as $8;
+import '../../climate/v1/climate.pbenum.dart' as $9;
+import '../../common/v1/types.pbenum.dart' as $7;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $3;
 import '../../space/v1/space.pb.dart' as $2;
 import '../../vendor/lorawan/v1/lorawan.pb.dart' as $1;
-import 'invite.pb.dart' as $5;
+import 'invite.pb.dart' as $6;
+import 'members.pb.dart' as $5;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -36,7 +37,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// refuse it.
 class CreateSpace extends $pb.GeneratedMessage {
   factory CreateSpace({
-    $6.SpaceType? spaceType,
+    $7.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -67,10 +68,10 @@ class CreateSpace extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..e<$6.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $6.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $6.SpaceType.valueOf,
-        enumValues: $6.SpaceType.values)
+    ..e<$7.SpaceType>(1, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $7.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $7.SpaceType.valueOf,
+        enumValues: $7.SpaceType.values)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOS(3, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(4, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -100,9 +101,9 @@ class CreateSpace extends $pb.GeneratedMessage {
   static CreateSpace? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $6.SpaceType get spaceType => $_getN(0);
+  $7.SpaceType get spaceType => $_getN(0);
   @$pb.TagNumber(1)
-  set spaceType($6.SpaceType value) => $_setField(1, value);
+  set spaceType($7.SpaceType value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasSpaceType() => $_has(0);
   @$pb.TagNumber(1)
@@ -178,7 +179,7 @@ enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 class UpdateSpace extends $pb.GeneratedMessage {
   factory UpdateSpace({
     $0.SpaceId? spaceId,
-    $6.SpaceType? spaceType,
+    $7.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -221,10 +222,10 @@ class UpdateSpace extends $pb.GeneratedMessage {
     ..oo(0, [6, 7])
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$6.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $6.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $6.SpaceType.valueOf,
-        enumValues: $6.SpaceType.values)
+    ..e<$7.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $7.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $7.SpaceType.valueOf,
+        enumValues: $7.SpaceType.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(5, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -270,9 +271,9 @@ class UpdateSpace extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $6.SpaceType get spaceType => $_getN(1);
+  $7.SpaceType get spaceType => $_getN(1);
   @$pb.TagNumber(2)
-  set spaceType($6.SpaceType value) => $_setField(2, value);
+  set spaceType($7.SpaceType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSpaceType() => $_has(1);
   @$pb.TagNumber(2)
@@ -427,7 +428,7 @@ class AssignUserToSpace extends $pb.GeneratedMessage {
   factory AssignUserToSpace({
     $0.SpaceId? spaceId,
     $0.UserId? userId,
-    $7.MembershipRelation? relation,
+    $8.MembershipRelation? relation,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -454,11 +455,11 @@ class AssignUserToSpace extends $pb.GeneratedMessage {
         subBuilder: $0.SpaceId.create)
     ..aOM<$0.UserId>(2, _omitFieldNames ? '' : 'userId',
         subBuilder: $0.UserId.create)
-    ..e<$7.MembershipRelation>(
+    ..e<$8.MembershipRelation>(
         4, _omitFieldNames ? '' : 'relation', $pb.PbFieldType.OE,
-        defaultOrMaker: $7.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
-        valueOf: $7.MembershipRelation.valueOf,
-        enumValues: $7.MembershipRelation.values)
+        defaultOrMaker: $8.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
+        valueOf: $8.MembershipRelation.valueOf,
+        enumValues: $8.MembershipRelation.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -508,9 +509,9 @@ class AssignUserToSpace extends $pb.GeneratedMessage {
   /// building. Required: UNSPECIFIED is refused, never defaulted. See
   /// access.v1.MembershipRelation for what each lets a member see of a home.
   @$pb.TagNumber(4)
-  $7.MembershipRelation get relation => $_getN(2);
+  $8.MembershipRelation get relation => $_getN(2);
   @$pb.TagNumber(4)
-  set relation($7.MembershipRelation value) => $_setField(4, value);
+  set relation($8.MembershipRelation value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasRelation() => $_has(2);
   @$pb.TagNumber(4)
@@ -772,7 +773,7 @@ class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
 class ClaimDevice extends $pb.GeneratedMessage {
   factory ClaimDevice({
     $0.DeviceId? deviceId,
-    $6.DeviceOwnershipType? ownership,
+    $7.DeviceOwnershipType? ownership,
     $0.SpaceId? initialSpaceId,
     $core.String? possessionProof,
   }) {
@@ -800,12 +801,12 @@ class ClaimDevice extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
-    ..e<$6.DeviceOwnershipType>(
+    ..e<$7.DeviceOwnershipType>(
         2, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $6.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
-        valueOf: $6.DeviceOwnershipType.valueOf,
-        enumValues: $6.DeviceOwnershipType.values)
+            $7.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $7.DeviceOwnershipType.valueOf,
+        enumValues: $7.DeviceOwnershipType.values)
     ..aOM<$0.SpaceId>(3, _omitFieldNames ? '' : 'initialSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOS(4, _omitFieldNames ? '' : 'possessionProof')
@@ -843,9 +844,9 @@ class ClaimDevice extends $pb.GeneratedMessage {
   $0.DeviceId ensureDeviceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $6.DeviceOwnershipType get ownership => $_getN(1);
+  $7.DeviceOwnershipType get ownership => $_getN(1);
   @$pb.TagNumber(2)
-  set ownership($6.DeviceOwnershipType value) => $_setField(2, value);
+  set ownership($7.DeviceOwnershipType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasOwnership() => $_has(1);
   @$pb.TagNumber(2)
@@ -1957,7 +1958,7 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
 class SetClimateMode extends $pb.GeneratedMessage {
   factory SetClimateMode({
     $0.SpaceId? spaceId,
-    $8.ClimateModeKind? kind,
+    $9.ClimateModeKind? kind,
     $core.int? setbackCentidegrees,
     $4.Timestamp? startsAt,
     $4.Timestamp? endsAt,
@@ -1988,11 +1989,11 @@ class SetClimateMode extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$8.ClimateModeKind>(
+    ..e<$9.ClimateModeKind>(
         2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $8.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
-        valueOf: $8.ClimateModeKind.valueOf,
-        enumValues: $8.ClimateModeKind.values)
+        defaultOrMaker: $9.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
+        valueOf: $9.ClimateModeKind.valueOf,
+        enumValues: $9.ClimateModeKind.values)
     ..a<$core.int>(
         3, _omitFieldNames ? '' : 'setbackCentidegrees', $pb.PbFieldType.OS3)
     ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'startsAt',
@@ -2034,9 +2035,9 @@ class SetClimateMode extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $8.ClimateModeKind get kind => $_getN(1);
+  $9.ClimateModeKind get kind => $_getN(1);
   @$pb.TagNumber(2)
-  set kind($8.ClimateModeKind value) => $_setField(2, value);
+  set kind($9.ClimateModeKind value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasKind() => $_has(1);
   @$pb.TagNumber(2)
@@ -2245,21 +2246,22 @@ class GetRoomHistory extends $pb.GeneratedMessage {
 /// What the parties who do not live in a private space learn of it — the answer to a
 /// resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
 ///
-/// It states the policy and the kinds of party it applies to now. It NAMES NOBODY: a resident
-/// learns that a technician can see the battery of their radiator valve, not which
-/// technician. Those filed on the home itself are named to its residents in Space.members;
-/// service reach from a building or floor above is not.
+/// It states the policy, the kinds of party it applies to now and the people counted under
+/// each (ServiceParty.names): a resident learns which technicians can see the battery of
+/// their radiator valve. It never names a resident.
 class PrivacyDisclosure extends $pb.GeneratedMessage {
   factory PrivacyDisclosure({
     $0.SpaceId? spaceId,
-    $8.ClimateSummaryPeriod? climateSummaryPeriod,
+    $9.ClimateSummaryPeriod? climateSummaryPeriod,
     $core.Iterable<ServiceParty>? serviceParties,
+    $5.OwnerOrganisation? ownerOrganisation,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
     if (climateSummaryPeriod != null)
       result.climateSummaryPeriod = climateSummaryPeriod;
     if (serviceParties != null) result.serviceParties.addAll(serviceParties);
+    if (ownerOrganisation != null) result.ownerOrganisation = ownerOrganisation;
     return result;
   }
 
@@ -2279,15 +2281,17 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$8.ClimateSummaryPeriod>(
+    ..e<$9.ClimateSummaryPeriod>(
         4, _omitFieldNames ? '' : 'climateSummaryPeriod', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $8.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
-        valueOf: $8.ClimateSummaryPeriod.valueOf,
-        enumValues: $8.ClimateSummaryPeriod.values)
+            $9.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: $9.ClimateSummaryPeriod.valueOf,
+        enumValues: $9.ClimateSummaryPeriod.values)
     ..pc<ServiceParty>(
         5, _omitFieldNames ? '' : 'serviceParties', $pb.PbFieldType.PM,
         subBuilder: ServiceParty.create)
+    ..aOM<$5.OwnerOrganisation>(6, _omitFieldNames ? '' : 'ownerOrganisation',
+        subBuilder: $5.OwnerOrganisation.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2329,9 +2333,9 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// contract changes it. A change applies to periods that open after it: service is given
   /// no period that opened before the last change.
   @$pb.TagNumber(4)
-  $8.ClimateSummaryPeriod get climateSummaryPeriod => $_getN(1);
+  $9.ClimateSummaryPeriod get climateSummaryPeriod => $_getN(1);
   @$pb.TagNumber(4)
-  set climateSummaryPeriod($8.ClimateSummaryPeriod value) =>
+  set climateSummaryPeriod($9.ClimateSummaryPeriod value) =>
       $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasClimateSummaryPeriod() => $_has(1);
@@ -2348,6 +2352,18 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// owns are not shown to service at all.
   @$pb.TagNumber(5)
   $pb.PbList<ServiceParty> get serviceParties => $_getList(2);
+
+  /// The organisation that owns the property, when one is recorded (SetOwnerOrganisation).
+  @$pb.TagNumber(6)
+  $5.OwnerOrganisation get ownerOrganisation => $_getN(3);
+  @$pb.TagNumber(6)
+  set ownerOrganisation($5.OwnerOrganisation value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasOwnerOrganisation() => $_has(3);
+  @$pb.TagNumber(6)
+  void clearOwnerOrganisation() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $5.OwnerOrganisation ensureOwnerOrganisation() => $_ensure(3);
 }
 
 /// One kind of party with service reach of a home, and what it sees there. Every service
@@ -2357,12 +2373,14 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
 /// not say.
 class ServiceParty extends $pb.GeneratedMessage {
   factory ServiceParty({
-    $7.Role? role,
-    $core.Iterable<$9.ServiceSignal>? signals,
+    $8.Role? role,
+    $core.Iterable<$10.ServiceSignal>? signals,
+    $core.Iterable<$core.String>? names,
   }) {
     final result = create();
     if (role != null) result.role = role;
     if (signals != null) result.signals.addAll(signals);
+    if (names != null) result.names.addAll(names);
     return result;
   }
 
@@ -2380,15 +2398,16 @@ class ServiceParty extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..e<$7.Role>(1, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
-        defaultOrMaker: $7.Role.ROLE_UNSPECIFIED,
-        valueOf: $7.Role.valueOf,
-        enumValues: $7.Role.values)
-    ..pc<$9.ServiceSignal>(
+    ..e<$8.Role>(1, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $8.Role.ROLE_UNSPECIFIED,
+        valueOf: $8.Role.valueOf,
+        enumValues: $8.Role.values)
+    ..pc<$10.ServiceSignal>(
         2, _omitFieldNames ? '' : 'signals', $pb.PbFieldType.KE,
-        valueOf: $9.ServiceSignal.valueOf,
-        enumValues: $9.ServiceSignal.values,
-        defaultEnumValue: $9.ServiceSignal.SERVICE_SIGNAL_UNSPECIFIED)
+        valueOf: $10.ServiceSignal.valueOf,
+        enumValues: $10.ServiceSignal.values,
+        defaultEnumValue: $10.ServiceSignal.SERVICE_SIGNAL_UNSPECIFIED)
+    ..pPS(3, _omitFieldNames ? '' : 'names')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2413,16 +2432,26 @@ class ServiceParty extends $pb.GeneratedMessage {
   static ServiceParty? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $7.Role get role => $_getN(0);
+  $8.Role get role => $_getN(0);
   @$pb.TagNumber(1)
-  set role($7.Role value) => $_setField(1, value);
+  set role($8.Role value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasRole() => $_has(0);
   @$pb.TagNumber(1)
   void clearRole() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$9.ServiceSignal> get signals => $_getList(1);
+  $pb.PbList<$10.ServiceSignal> get signals => $_getList(1);
+
+  /// Each person counted under this role, by the name they gave their account
+  /// (MemberDetail.name), once each: the administrators and property owners of the gateway
+  /// wherever they are filed, and everyone else counted here by the SERVICE membership that
+  /// reaches the home. The registering administrator is named once the gateway has seen
+  /// their token. An empty string stands for a person whose name the gateway has not learnt,
+  /// so the list is as long as the number of people. Self-chosen, so the app shows it as the
+  /// name they gave rather than as a verified identity.
+  @$pb.TagNumber(3)
+  $pb.PbList<$core.String> get names => $_getList(2);
 }
 
 /// Asks what the parties who do not live in a space learn of it, answered with a
@@ -2501,7 +2530,7 @@ class GetPrivacyDisclosure extends $pb.GeneratedMessage {
 class GetApartmentClimateSummary extends $pb.GeneratedMessage {
   factory GetApartmentClimateSummary({
     $0.SpaceId? apartmentId,
-    $8.ClimateSummaryPeriod? period,
+    $9.ClimateSummaryPeriod? period,
     $4.Timestamp? fromTime,
     $4.Timestamp? toTime,
   }) {
@@ -2529,12 +2558,12 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'apartmentId',
         subBuilder: $0.SpaceId.create)
-    ..e<$8.ClimateSummaryPeriod>(
+    ..e<$9.ClimateSummaryPeriod>(
         2, _omitFieldNames ? '' : 'period', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $8.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
-        valueOf: $8.ClimateSummaryPeriod.valueOf,
-        enumValues: $8.ClimateSummaryPeriod.values)
+            $9.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: $9.ClimateSummaryPeriod.valueOf,
+        enumValues: $9.ClimateSummaryPeriod.values)
     ..aOM<$4.Timestamp>(3, _omitFieldNames ? '' : 'fromTime',
         subBuilder: $4.Timestamp.create)
     ..aOM<$4.Timestamp>(4, _omitFieldNames ? '' : 'toTime',
@@ -2582,9 +2611,9 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
   /// any other or when it names none. Its residents may ask for any, and are given only
   /// periods that began in their current residency.
   @$pb.TagNumber(2)
-  $8.ClimateSummaryPeriod get period => $_getN(1);
+  $9.ClimateSummaryPeriod get period => $_getN(1);
   @$pb.TagNumber(2)
-  set period($8.ClimateSummaryPeriod value) => $_setField(2, value);
+  set period($9.ClimateSummaryPeriod value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPeriod() => $_has(1);
   @$pb.TagNumber(2)
@@ -2774,6 +2803,11 @@ enum ManagementRequest_Request {
   listSpaceInvites,
   approveJoinRequest,
   denyJoinRequest,
+  listGatewayMembers,
+  setMemberRole,
+  removeFromGateway,
+  setAccessUntil,
+  setOwnerOrganisation,
   notSet
 }
 
@@ -2802,13 +2836,18 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetPrivacyDisclosure? getPrivacyDisclosure,
     GetApartmentClimateSummary? getApartmentClimateSummary,
     ReconnectConnector? reconnectConnector,
-    $5.CreateInvite? createInvite,
-    $5.ResendInvite? resendInvite,
-    $5.RevokeInvite? revokeInvite,
-    $5.MarkInviteEmailSent? markInviteEmailSent,
-    $5.ListSpaceInvites? listSpaceInvites,
-    $5.ApproveJoinRequest? approveJoinRequest,
-    $5.DenyJoinRequest? denyJoinRequest,
+    $6.CreateInvite? createInvite,
+    $6.ResendInvite? resendInvite,
+    $6.RevokeInvite? revokeInvite,
+    $6.MarkInviteEmailSent? markInviteEmailSent,
+    $6.ListSpaceInvites? listSpaceInvites,
+    $6.ApproveJoinRequest? approveJoinRequest,
+    $6.DenyJoinRequest? denyJoinRequest,
+    $5.ListGatewayMembers? listGatewayMembers,
+    $5.SetMemberRole? setMemberRole,
+    $5.RemoveFromGateway? removeFromGateway,
+    $5.SetAccessUntil? setAccessUntil,
+    $5.SetOwnerOrganisation? setOwnerOrganisation,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -2850,6 +2889,13 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (approveJoinRequest != null)
       result.approveJoinRequest = approveJoinRequest;
     if (denyJoinRequest != null) result.denyJoinRequest = denyJoinRequest;
+    if (listGatewayMembers != null)
+      result.listGatewayMembers = listGatewayMembers;
+    if (setMemberRole != null) result.setMemberRole = setMemberRole;
+    if (removeFromGateway != null) result.removeFromGateway = removeFromGateway;
+    if (setAccessUntil != null) result.setAccessUntil = setAccessUntil;
+    if (setOwnerOrganisation != null)
+      result.setOwnerOrganisation = setOwnerOrganisation;
     return result;
   }
 
@@ -2894,6 +2940,11 @@ class ManagementRequest extends $pb.GeneratedMessage {
     28: ManagementRequest_Request.listSpaceInvites,
     29: ManagementRequest_Request.approveJoinRequest,
     30: ManagementRequest_Request.denyJoinRequest,
+    31: ManagementRequest_Request.listGatewayMembers,
+    32: ManagementRequest_Request.setMemberRole,
+    33: ManagementRequest_Request.removeFromGateway,
+    34: ManagementRequest_Request.setAccessUntil,
+    35: ManagementRequest_Request.setOwnerOrganisation,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2931,7 +2982,12 @@ class ManagementRequest extends $pb.GeneratedMessage {
       27,
       28,
       29,
-      30
+      30,
+      31,
+      32,
+      33,
+      34,
+      35
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -2983,22 +3039,34 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: GetApartmentClimateSummary.create)
     ..aOM<ReconnectConnector>(23, _omitFieldNames ? '' : 'reconnectConnector',
         subBuilder: ReconnectConnector.create)
-    ..aOM<$5.CreateInvite>(24, _omitFieldNames ? '' : 'createInvite',
-        subBuilder: $5.CreateInvite.create)
-    ..aOM<$5.ResendInvite>(25, _omitFieldNames ? '' : 'resendInvite',
-        subBuilder: $5.ResendInvite.create)
-    ..aOM<$5.RevokeInvite>(26, _omitFieldNames ? '' : 'revokeInvite',
-        subBuilder: $5.RevokeInvite.create)
-    ..aOM<$5.MarkInviteEmailSent>(
+    ..aOM<$6.CreateInvite>(24, _omitFieldNames ? '' : 'createInvite',
+        subBuilder: $6.CreateInvite.create)
+    ..aOM<$6.ResendInvite>(25, _omitFieldNames ? '' : 'resendInvite',
+        subBuilder: $6.ResendInvite.create)
+    ..aOM<$6.RevokeInvite>(26, _omitFieldNames ? '' : 'revokeInvite',
+        subBuilder: $6.RevokeInvite.create)
+    ..aOM<$6.MarkInviteEmailSent>(
         27, _omitFieldNames ? '' : 'markInviteEmailSent',
-        subBuilder: $5.MarkInviteEmailSent.create)
-    ..aOM<$5.ListSpaceInvites>(28, _omitFieldNames ? '' : 'listSpaceInvites',
-        subBuilder: $5.ListSpaceInvites.create)
-    ..aOM<$5.ApproveJoinRequest>(
+        subBuilder: $6.MarkInviteEmailSent.create)
+    ..aOM<$6.ListSpaceInvites>(28, _omitFieldNames ? '' : 'listSpaceInvites',
+        subBuilder: $6.ListSpaceInvites.create)
+    ..aOM<$6.ApproveJoinRequest>(
         29, _omitFieldNames ? '' : 'approveJoinRequest',
-        subBuilder: $5.ApproveJoinRequest.create)
-    ..aOM<$5.DenyJoinRequest>(30, _omitFieldNames ? '' : 'denyJoinRequest',
-        subBuilder: $5.DenyJoinRequest.create)
+        subBuilder: $6.ApproveJoinRequest.create)
+    ..aOM<$6.DenyJoinRequest>(30, _omitFieldNames ? '' : 'denyJoinRequest',
+        subBuilder: $6.DenyJoinRequest.create)
+    ..aOM<$5.ListGatewayMembers>(
+        31, _omitFieldNames ? '' : 'listGatewayMembers',
+        subBuilder: $5.ListGatewayMembers.create)
+    ..aOM<$5.SetMemberRole>(32, _omitFieldNames ? '' : 'setMemberRole',
+        subBuilder: $5.SetMemberRole.create)
+    ..aOM<$5.RemoveFromGateway>(33, _omitFieldNames ? '' : 'removeFromGateway',
+        subBuilder: $5.RemoveFromGateway.create)
+    ..aOM<$5.SetAccessUntil>(34, _omitFieldNames ? '' : 'setAccessUntil',
+        subBuilder: $5.SetAccessUntil.create)
+    ..aOM<$5.SetOwnerOrganisation>(
+        35, _omitFieldNames ? '' : 'setOwnerOrganisation',
+        subBuilder: $5.SetOwnerOrganisation.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3283,82 +3351,139 @@ class ManagementRequest extends $pb.GeneratedMessage {
 
   /// Invites; see invite.proto.
   @$pb.TagNumber(24)
-  $5.CreateInvite get createInvite => $_getN(23);
+  $6.CreateInvite get createInvite => $_getN(23);
   @$pb.TagNumber(24)
-  set createInvite($5.CreateInvite value) => $_setField(24, value);
+  set createInvite($6.CreateInvite value) => $_setField(24, value);
   @$pb.TagNumber(24)
   $core.bool hasCreateInvite() => $_has(23);
   @$pb.TagNumber(24)
   void clearCreateInvite() => $_clearField(24);
   @$pb.TagNumber(24)
-  $5.CreateInvite ensureCreateInvite() => $_ensure(23);
+  $6.CreateInvite ensureCreateInvite() => $_ensure(23);
 
   @$pb.TagNumber(25)
-  $5.ResendInvite get resendInvite => $_getN(24);
+  $6.ResendInvite get resendInvite => $_getN(24);
   @$pb.TagNumber(25)
-  set resendInvite($5.ResendInvite value) => $_setField(25, value);
+  set resendInvite($6.ResendInvite value) => $_setField(25, value);
   @$pb.TagNumber(25)
   $core.bool hasResendInvite() => $_has(24);
   @$pb.TagNumber(25)
   void clearResendInvite() => $_clearField(25);
   @$pb.TagNumber(25)
-  $5.ResendInvite ensureResendInvite() => $_ensure(24);
+  $6.ResendInvite ensureResendInvite() => $_ensure(24);
 
   @$pb.TagNumber(26)
-  $5.RevokeInvite get revokeInvite => $_getN(25);
+  $6.RevokeInvite get revokeInvite => $_getN(25);
   @$pb.TagNumber(26)
-  set revokeInvite($5.RevokeInvite value) => $_setField(26, value);
+  set revokeInvite($6.RevokeInvite value) => $_setField(26, value);
   @$pb.TagNumber(26)
   $core.bool hasRevokeInvite() => $_has(25);
   @$pb.TagNumber(26)
   void clearRevokeInvite() => $_clearField(26);
   @$pb.TagNumber(26)
-  $5.RevokeInvite ensureRevokeInvite() => $_ensure(25);
+  $6.RevokeInvite ensureRevokeInvite() => $_ensure(25);
 
   @$pb.TagNumber(27)
-  $5.MarkInviteEmailSent get markInviteEmailSent => $_getN(26);
+  $6.MarkInviteEmailSent get markInviteEmailSent => $_getN(26);
   @$pb.TagNumber(27)
-  set markInviteEmailSent($5.MarkInviteEmailSent value) =>
+  set markInviteEmailSent($6.MarkInviteEmailSent value) =>
       $_setField(27, value);
   @$pb.TagNumber(27)
   $core.bool hasMarkInviteEmailSent() => $_has(26);
   @$pb.TagNumber(27)
   void clearMarkInviteEmailSent() => $_clearField(27);
   @$pb.TagNumber(27)
-  $5.MarkInviteEmailSent ensureMarkInviteEmailSent() => $_ensure(26);
+  $6.MarkInviteEmailSent ensureMarkInviteEmailSent() => $_ensure(26);
 
   @$pb.TagNumber(28)
-  $5.ListSpaceInvites get listSpaceInvites => $_getN(27);
+  $6.ListSpaceInvites get listSpaceInvites => $_getN(27);
   @$pb.TagNumber(28)
-  set listSpaceInvites($5.ListSpaceInvites value) => $_setField(28, value);
+  set listSpaceInvites($6.ListSpaceInvites value) => $_setField(28, value);
   @$pb.TagNumber(28)
   $core.bool hasListSpaceInvites() => $_has(27);
   @$pb.TagNumber(28)
   void clearListSpaceInvites() => $_clearField(28);
   @$pb.TagNumber(28)
-  $5.ListSpaceInvites ensureListSpaceInvites() => $_ensure(27);
+  $6.ListSpaceInvites ensureListSpaceInvites() => $_ensure(27);
 
   @$pb.TagNumber(29)
-  $5.ApproveJoinRequest get approveJoinRequest => $_getN(28);
+  $6.ApproveJoinRequest get approveJoinRequest => $_getN(28);
   @$pb.TagNumber(29)
-  set approveJoinRequest($5.ApproveJoinRequest value) => $_setField(29, value);
+  set approveJoinRequest($6.ApproveJoinRequest value) => $_setField(29, value);
   @$pb.TagNumber(29)
   $core.bool hasApproveJoinRequest() => $_has(28);
   @$pb.TagNumber(29)
   void clearApproveJoinRequest() => $_clearField(29);
   @$pb.TagNumber(29)
-  $5.ApproveJoinRequest ensureApproveJoinRequest() => $_ensure(28);
+  $6.ApproveJoinRequest ensureApproveJoinRequest() => $_ensure(28);
 
   @$pb.TagNumber(30)
-  $5.DenyJoinRequest get denyJoinRequest => $_getN(29);
+  $6.DenyJoinRequest get denyJoinRequest => $_getN(29);
   @$pb.TagNumber(30)
-  set denyJoinRequest($5.DenyJoinRequest value) => $_setField(30, value);
+  set denyJoinRequest($6.DenyJoinRequest value) => $_setField(30, value);
   @$pb.TagNumber(30)
   $core.bool hasDenyJoinRequest() => $_has(29);
   @$pb.TagNumber(30)
   void clearDenyJoinRequest() => $_clearField(30);
   @$pb.TagNumber(30)
-  $5.DenyJoinRequest ensureDenyJoinRequest() => $_ensure(29);
+  $6.DenyJoinRequest ensureDenyJoinRequest() => $_ensure(29);
+
+  /// Members; see members.proto.
+  @$pb.TagNumber(31)
+  $5.ListGatewayMembers get listGatewayMembers => $_getN(30);
+  @$pb.TagNumber(31)
+  set listGatewayMembers($5.ListGatewayMembers value) => $_setField(31, value);
+  @$pb.TagNumber(31)
+  $core.bool hasListGatewayMembers() => $_has(30);
+  @$pb.TagNumber(31)
+  void clearListGatewayMembers() => $_clearField(31);
+  @$pb.TagNumber(31)
+  $5.ListGatewayMembers ensureListGatewayMembers() => $_ensure(30);
+
+  @$pb.TagNumber(32)
+  $5.SetMemberRole get setMemberRole => $_getN(31);
+  @$pb.TagNumber(32)
+  set setMemberRole($5.SetMemberRole value) => $_setField(32, value);
+  @$pb.TagNumber(32)
+  $core.bool hasSetMemberRole() => $_has(31);
+  @$pb.TagNumber(32)
+  void clearSetMemberRole() => $_clearField(32);
+  @$pb.TagNumber(32)
+  $5.SetMemberRole ensureSetMemberRole() => $_ensure(31);
+
+  @$pb.TagNumber(33)
+  $5.RemoveFromGateway get removeFromGateway => $_getN(32);
+  @$pb.TagNumber(33)
+  set removeFromGateway($5.RemoveFromGateway value) => $_setField(33, value);
+  @$pb.TagNumber(33)
+  $core.bool hasRemoveFromGateway() => $_has(32);
+  @$pb.TagNumber(33)
+  void clearRemoveFromGateway() => $_clearField(33);
+  @$pb.TagNumber(33)
+  $5.RemoveFromGateway ensureRemoveFromGateway() => $_ensure(32);
+
+  @$pb.TagNumber(34)
+  $5.SetAccessUntil get setAccessUntil => $_getN(33);
+  @$pb.TagNumber(34)
+  set setAccessUntil($5.SetAccessUntil value) => $_setField(34, value);
+  @$pb.TagNumber(34)
+  $core.bool hasSetAccessUntil() => $_has(33);
+  @$pb.TagNumber(34)
+  void clearSetAccessUntil() => $_clearField(34);
+  @$pb.TagNumber(34)
+  $5.SetAccessUntil ensureSetAccessUntil() => $_ensure(33);
+
+  @$pb.TagNumber(35)
+  $5.SetOwnerOrganisation get setOwnerOrganisation => $_getN(34);
+  @$pb.TagNumber(35)
+  set setOwnerOrganisation($5.SetOwnerOrganisation value) =>
+      $_setField(35, value);
+  @$pb.TagNumber(35)
+  $core.bool hasSetOwnerOrganisation() => $_has(34);
+  @$pb.TagNumber(35)
+  void clearSetOwnerOrganisation() => $_clearField(35);
+  @$pb.TagNumber(35)
+  $5.SetOwnerOrganisation ensureSetOwnerOrganisation() => $_ensure(34);
 }
 
 const $core.bool _omitFieldNames =

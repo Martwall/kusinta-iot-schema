@@ -822,6 +822,14 @@ const PrivacyDisclosure$json = {
       '6': '.kusinta.iot.climate.v1.ClimateSummaryPeriod',
       '10': 'climateSummaryPeriod'
     },
+    {
+      '1': 'owner_organisation',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.OwnerOrganisation',
+      '10': 'ownerOrganisation'
+    },
   ],
   '9': [
     {'1': 2, '2': 3},
@@ -835,7 +843,9 @@ final $typed_data.Uint8List privacyDisclosureDescriptor = $convert.base64Decode(
     '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSTAoPc2VydmljZV9wYXJ0aWVzGAUgAygLMiMua3Vz'
     'aW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VQYXJ0eVIOc2VydmljZVBhcnRpZXMSYgoWY2xpbW'
     'F0ZV9zdW1tYXJ5X3BlcmlvZBgEIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0'
-    'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kSgQIAhADSgQIAxAE');
+    'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kElcKEm93bmVyX29yZ2FuaXNhdG'
+    'lvbhgGIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Pd25lck9yZ2FuaXNhdGlvblIRb3du'
+    'ZXJPcmdhbmlzYXRpb25KBAgCEANKBAgDEAQ=');
 
 @$core.Deprecated('Use servicePartyDescriptor instead')
 const ServiceParty$json = {
@@ -857,6 +867,7 @@ const ServiceParty$json = {
       '6': '.kusinta.iot.access.v1.ServiceSignal',
       '10': 'signals'
     },
+    {'1': 'names', '3': 3, '4': 3, '5': 9, '10': 'names'},
   ],
 };
 
@@ -864,7 +875,7 @@ const ServiceParty$json = {
 final $typed_data.Uint8List servicePartyDescriptor = $convert.base64Decode(
     'CgxTZXJ2aWNlUGFydHkSLwoEcm9sZRgBIAEoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2'
     'xlUgRyb2xlEj4KB3NpZ25hbHMYAiADKA4yJC5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuU2Vydmlj'
-    'ZVNpZ25hbFIHc2lnbmFscw==');
+    'ZVNpZ25hbFIHc2lnbmFscxIUCgVuYW1lcxgDIAMoCVIFbmFtZXM=');
 
 @$core.Deprecated('Use getPrivacyDisclosureDescriptor instead')
 const GetPrivacyDisclosure$json = {
@@ -1228,6 +1239,51 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'denyJoinRequest'
     },
+    {
+      '1': 'list_gateway_members',
+      '3': 31,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListGatewayMembers',
+      '9': 0,
+      '10': 'listGatewayMembers'
+    },
+    {
+      '1': 'set_member_role',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetMemberRole',
+      '9': 0,
+      '10': 'setMemberRole'
+    },
+    {
+      '1': 'remove_from_gateway',
+      '3': 33,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RemoveFromGateway',
+      '9': 0,
+      '10': 'removeFromGateway'
+    },
+    {
+      '1': 'set_access_until',
+      '3': 34,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetAccessUntil',
+      '9': 0,
+      '10': 'setAccessUntil'
+    },
+    {
+      '1': 'set_owner_organisation',
+      '3': 35,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetOwnerOrganisation',
+      '9': 0,
+      '10': 'setOwnerOrganisation'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1283,4 +1339,12 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'bGlzdFNwYWNlSW52aXRlcxJdChRhcHByb3ZlX2pvaW5fcmVxdWVzdBgdIAEoCzIpLmt1c2ludG'
     'EuaW90LndlYnJ0Yy52MS5BcHByb3ZlSm9pblJlcXVlc3RIAFISYXBwcm92ZUpvaW5SZXF1ZXN0'
     'ElQKEWRlbnlfam9pbl9yZXF1ZXN0GB4gASgLMiYua3VzaW50YS5pb3Qud2VicnRjLnYxLkRlbn'
-    'lKb2luUmVxdWVzdEgAUg9kZW55Sm9pblJlcXVlc3RCCQoHcmVxdWVzdA==');
+    'lKb2luUmVxdWVzdEgAUg9kZW55Sm9pblJlcXVlc3QSXQoUbGlzdF9nYXRld2F5X21lbWJlcnMY'
+    'HyABKAsyKS5rdXNpbnRhLmlvdC53ZWJydGMudjEuTGlzdEdhdGV3YXlNZW1iZXJzSABSEmxpc3'
+    'RHYXRld2F5TWVtYmVycxJOCg9zZXRfbWVtYmVyX3JvbGUYICABKAsyJC5rdXNpbnRhLmlvdC53'
+    'ZWJydGMudjEuU2V0TWVtYmVyUm9sZUgAUg1zZXRNZW1iZXJSb2xlEloKE3JlbW92ZV9mcm9tX2'
+    'dhdGV3YXkYISABKAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUmVtb3ZlRnJvbUdhdGV3YXlI'
+    'AFIRcmVtb3ZlRnJvbUdhdGV3YXkSUQoQc2V0X2FjY2Vzc191bnRpbBgiIAEoCzIlLmt1c2ludG'
+    'EuaW90LndlYnJ0Yy52MS5TZXRBY2Nlc3NVbnRpbEgAUg5zZXRBY2Nlc3NVbnRpbBJjChZzZXRf'
+    'b3duZXJfb3JnYW5pc2F0aW9uGCMgASgLMisua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldE93bm'
+    'VyT3JnYW5pc2F0aW9uSABSFHNldE93bmVyT3JnYW5pc2F0aW9uQgkKB3JlcXVlc3Q=');

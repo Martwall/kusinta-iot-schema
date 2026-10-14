@@ -267,7 +267,18 @@ an invite is Resident (a home only) or Technician, never an administrator or pro
 owner. The app redeems a secret through the api-server, which routes it to the one gateway
 reporting that hash (`ReportInviteRoutes`) as a `RedeemInvite` on the signaling stream. An
 invite bound to an email address files its verified owner at once; any other makes a join
-request that someone who may file there approves.
+request that someone who may file there approves. A Technician invite may carry an end date
+(`access_until`).
+
+## Members
+
+`webrtc/v1/members.proto` is how an administrator manages people once they are on the
+gateway: list them (`ListGatewayMembers`), make one a property owner or an administrator
+or take that away (`SetMemberRole`, promotion only, never by invite), remove one from every
+space at once (`RemoveFromGateway`), move a technician's end date (`SetAccessUntil`) and
+record the organisation that owns the property (`SetOwnerOrganisation`). A resident's
+`PrivacyDisclosure` names the people counted under each role, by the name they gave
+(`AppTokenClaims.name`); it never names a resident.
 
 ## Residents and service: what a home discloses
 

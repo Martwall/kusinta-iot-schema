@@ -377,6 +377,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'spaceInvites'
     },
+    {
+      '1': 'gateway_members',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GatewayMembers',
+      '9': 0,
+      '10': 'gatewayMembers'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -400,7 +409,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'bGltYXRlU3VtbWFyeUgAUhdhcGFydG1lbnRDbGltYXRlU3VtbWFyeRJKCg1pc3N1ZWRfaW52aX'
     'RlGAsgASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLklzc3VlZEludml0ZUgAUgxpc3N1ZWRJ'
     'bnZpdGUSSgoNc3BhY2VfaW52aXRlcxgMIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TcG'
-    'FjZUludml0ZXNIAFIMc3BhY2VJbnZpdGVzQggKBnJlc3VsdA==');
+    'FjZUludml0ZXNIAFIMc3BhY2VJbnZpdGVzElAKD2dhdGV3YXlfbWVtYmVycxgNIAEoCzIlLmt1'
+    'c2ludGEuaW90LndlYnJ0Yy52MS5HYXRld2F5TWVtYmVyc0gAUg5nYXRld2F5TWVtYmVyc0IICg'
+    'ZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

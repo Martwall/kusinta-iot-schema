@@ -12,6 +12,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { ListGatewayMembers, OwnerOrganisation, RemoveFromGateway, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 
@@ -922,10 +923,9 @@ export declare const GetRoomHistorySchema: GenMessage<GetRoomHistory>;
  * What the parties who do not live in a private space learn of it — the answer to a
  * resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
  *
- * It states the policy and the kinds of party it applies to now. It NAMES NOBODY: a resident
- * learns that a technician can see the battery of their radiator valve, not which
- * technician. Those filed on the home itself are named to its residents in Space.members;
- * service reach from a building or floor above is not.
+ * It states the policy, the kinds of party it applies to now and the people counted under
+ * each (ServiceParty.names): a resident learns which technicians can see the battery of
+ * their radiator valve. It never names a resident.
  *
  * @generated from message kusinta.iot.webrtc.v1.PrivacyDisclosure
  */
@@ -961,6 +961,13 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
    * @generated from field: kusinta.iot.climate.v1.ClimateSummaryPeriod climate_summary_period = 4;
    */
   climateSummaryPeriod: ClimateSummaryPeriod;
+
+  /**
+   * The organisation that owns the property, when one is recorded (SetOwnerOrganisation).
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.OwnerOrganisation owner_organisation = 6;
+   */
+  ownerOrganisation?: OwnerOrganisation | undefined;
 };
 
 /**
@@ -988,6 +995,19 @@ export declare type ServiceParty = Message<"kusinta.iot.webrtc.v1.ServiceParty">
    * @generated from field: repeated kusinta.iot.access.v1.ServiceSignal signals = 2;
    */
   signals: ServiceSignal[];
+
+  /**
+   * Each person counted under this role, by the name they gave their account
+   * (MemberDetail.name), once each: the administrators and property owners of the gateway
+   * wherever they are filed, and everyone else counted here by the SERVICE membership that
+   * reaches the home. The registering administrator is named once the gateway has seen
+   * their token. An empty string stands for a person whose name the gateway has not learnt,
+   * so the list is as long as the number of people. Self-chosen, so the app shows it as the
+   * name they gave rather than as a verified identity.
+   *
+   * @generated from field: repeated string names = 3;
+   */
+  names: string[];
 };
 
 /**
@@ -1340,6 +1360,38 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: DenyJoinRequest;
     case: "denyJoinRequest";
+  } | {
+    /**
+     * Members; see members.proto.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.ListGatewayMembers list_gateway_members = 31;
+     */
+    value: ListGatewayMembers;
+    case: "listGatewayMembers";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetMemberRole set_member_role = 32;
+     */
+    value: SetMemberRole;
+    case: "setMemberRole";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.RemoveFromGateway remove_from_gateway = 33;
+     */
+    value: RemoveFromGateway;
+    case: "removeFromGateway";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetAccessUntil set_access_until = 34;
+     */
+    value: SetAccessUntil;
+    case: "setAccessUntil";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetOwnerOrganisation set_owner_organisation = 35;
+     */
+    value: SetOwnerOrganisation;
+    case: "setOwnerOrganisation";
   } | { case: undefined; value?: undefined };
 };
 

@@ -12,14 +12,16 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class CreateInvite(_message.Message):
-    __slots__ = ("space_id", "relation", "email")
+    __slots__ = ("space_id", "relation", "email", "access_until")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RELATION_FIELD_NUMBER: _ClassVar[int]
     EMAIL_FIELD_NUMBER: _ClassVar[int]
+    ACCESS_UNTIL_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     relation: _roles_pb2.MembershipRelation
     email: str
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., email: _Optional[str] = ...) -> None: ...
+    access_until: _timestamp_pb2.Timestamp
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., email: _Optional[str] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class ResendInvite(_message.Message):
     __slots__ = ("invite_id",)
@@ -58,7 +60,7 @@ class DenyJoinRequest(_message.Message):
     def __init__(self, request_id: _Optional[str] = ...) -> None: ...
 
 class Invite(_message.Message):
-    __slots__ = ("invite_id", "space_id", "relation", "created_by", "created_at", "token_expires_at", "code_expires_at", "email", "email_sent_at")
+    __slots__ = ("invite_id", "space_id", "relation", "created_by", "created_at", "token_expires_at", "code_expires_at", "email", "email_sent_at", "access_until")
     INVITE_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RELATION_FIELD_NUMBER: _ClassVar[int]
@@ -68,6 +70,7 @@ class Invite(_message.Message):
     CODE_EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
     EMAIL_FIELD_NUMBER: _ClassVar[int]
     EMAIL_SENT_AT_FIELD_NUMBER: _ClassVar[int]
+    ACCESS_UNTIL_FIELD_NUMBER: _ClassVar[int]
     invite_id: str
     space_id: _identity_pb2.SpaceId
     relation: _roles_pb2.MembershipRelation
@@ -77,7 +80,8 @@ class Invite(_message.Message):
     code_expires_at: _timestamp_pb2.Timestamp
     email: str
     email_sent_at: _timestamp_pb2.Timestamp
-    def __init__(self, invite_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., created_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., token_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., code_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., email: _Optional[str] = ..., email_sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    access_until: _timestamp_pb2.Timestamp
+    def __init__(self, invite_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., created_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., token_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., code_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., email: _Optional[str] = ..., email_sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class IssuedInvite(_message.Message):
     __slots__ = ("invite", "token", "code")

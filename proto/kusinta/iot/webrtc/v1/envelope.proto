@@ -15,6 +15,7 @@ import "kusinta/iot/webrtc/v1/command.proto";
 import "kusinta/iot/webrtc/v1/device_state.proto";
 import "kusinta/iot/webrtc/v1/invite.proto";
 import "kusinta/iot/webrtc/v1/management.proto";
+import "kusinta/iot/webrtc/v1/members.proto";
 import "kusinta/iot/webrtc/v1/permission_push.proto";
 
 option optimize_for = SPEED;
@@ -170,6 +171,7 @@ message ManagementResult {
     kusinta.iot.climate.v1.ApartmentClimateSummary apartment_climate_summary = 10;
     IssuedInvite issued_invite = 11; // create_invite, resend_invite
     SpaceInvites space_invites = 12; // list_space_invites
+    GatewayMembers gateway_members = 13; // list_gateway_members
   }
 }
 

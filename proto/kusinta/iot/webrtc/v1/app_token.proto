@@ -73,7 +73,14 @@ message AppTokenClaims {
   // only exceed one token lifetime.
   Confirmation cnf = 7;
 
-  // Field numbers 8+ reserved for future custom claims.
+  // The user's display name as the identity provider holds it. May be empty; never an email
+  // address. The gateway records it only to name the user to the people who may see who they
+  // are (MemberDetail.name, ServiceParty.names), and treats it as self-chosen: it strips
+  // control and bidirectional formatting characters and limits its length before keeping
+  // it. A validator accepts a token without it. Carried in the JWT as "name".
+  string name = 8;
+
+  // Field numbers 9+ reserved for future custom claims.
 }
 
 // RFC 7800 confirmation, the value of the "cnf" claim. A separate message
