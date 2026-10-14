@@ -15,4 +15,5 @@ service GatewayReportingService {
   rpc ReportServiceReach(ReportServiceReachRequest) returns (ReportServiceReachResponse);
   rpc ReportServedSpaces(ReportServedSpacesRequest) returns (ReportServedSpacesResponse);
   rpc ReportMembers(ReportMembersRequest) returns (ReportMembersResponse);
+  rpc ReportInviteRoutes(ReportInviteRoutesRequest) returns (ReportInviteRoutesResponse);
 }

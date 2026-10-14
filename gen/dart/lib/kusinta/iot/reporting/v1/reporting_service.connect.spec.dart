@@ -41,4 +41,11 @@ abstract final class GatewayReportingService {
     kusintaiotreportingv1reporting.ReportMembersRequest.new,
     kusintaiotreportingv1reporting.ReportMembersResponse.new,
   );
+
+  static const reportInviteRoutes = connect.Spec(
+    '/$name/ReportInviteRoutes',
+    connect.StreamType.unary,
+    kusintaiotreportingv1reporting.ReportInviteRoutesRequest.new,
+    kusintaiotreportingv1reporting.ReportInviteRoutesResponse.new,
+  );
 }

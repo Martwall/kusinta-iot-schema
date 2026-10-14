@@ -14,6 +14,25 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use redeemOutcomeDescriptor instead')
+const RedeemOutcome$json = {
+  '1': 'RedeemOutcome',
+  '2': [
+    {'1': 'REDEEM_OUTCOME_UNSPECIFIED', '2': 0},
+    {'1': 'REDEEM_OUTCOME_JOINED', '2': 1},
+    {'1': 'REDEEM_OUTCOME_PENDING_APPROVAL', '2': 2},
+    {'1': 'REDEEM_OUTCOME_INVALID', '2': 3},
+    {'1': 'REDEEM_OUTCOME_WRONG_ACCOUNT', '2': 4},
+  ],
+};
+
+/// Descriptor for `RedeemOutcome`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List redeemOutcomeDescriptor = $convert.base64Decode(
+    'Cg1SZWRlZW1PdXRjb21lEh4KGlJFREVFTV9PVVRDT01FX1VOU1BFQ0lGSUVEEAASGQoVUkVERU'
+    'VNX09VVENPTUVfSk9JTkVEEAESIwofUkVERUVNX09VVENPTUVfUEVORElOR19BUFBST1ZBTBAC'
+    'EhoKFlJFREVFTV9PVVRDT01FX0lOVkFMSUQQAxIgChxSRURFRU1fT1VUQ09NRV9XUk9OR19BQ0'
+    'NPVU5UEAQ=');
+
 @$core.Deprecated('Use sdpOfferDescriptor instead')
 const SdpOffer$json = {
   '1': 'SdpOffer',
@@ -144,6 +163,15 @@ const GatewayConnectRequest$json = {
       '9': 0,
       '10': 'heartbeat'
     },
+    {
+      '1': 'redeem_invite_result',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.RedeemInviteResult',
+      '9': 0,
+      '10': 'redeemInviteResult'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -158,7 +186,9 @@ final $typed_data.Uint8List gatewayConnectRequestDescriptor = $convert.base64Dec
     'YxLlNkcEFuc3dlckgAUgZhbnN3ZXISTQoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEu'
     'aW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlEkMKCWhlYXJ0Ym'
     'VhdBgEIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5IZWFydEJlYXRIAFIJaGVhcnRi'
-    'ZWF0QgkKB3BheWxvYWQ=');
+    'ZWF0EmAKFHJlZGVlbV9pbnZpdGVfcmVzdWx0GAYgASgLMiwua3VzaW50YS5pb3Quc2lnbmFsaW'
+    '5nLnYxLlJlZGVlbUludml0ZVJlc3VsdEgAUhJyZWRlZW1JbnZpdGVSZXN1bHRCCQoHcGF5bG9h'
+    'ZA==');
 
 @$core.Deprecated('Use gatewayConnectResponseDescriptor instead')
 const GatewayConnectResponse$json = {
@@ -191,6 +221,15 @@ const GatewayConnectResponse$json = {
       '9': 0,
       '10': 'iceCandidate'
     },
+    {
+      '1': 'redeem_invite',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.RedeemInvite',
+      '9': 0,
+      '10': 'redeemInvite'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -203,7 +242,53 @@ final $typed_data.Uint8List gatewayConnectResponseDescriptor = $convert.base64De
     'EuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIKZnJvbVVzZXJJZBIdCgpzZXNzaW9uX2lkGAQgASgJ'
     'UglzZXNzaW9uSWQSOgoFb2ZmZXIYAiABKAsyIi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2'
     'RwT2ZmZXJIAFIFb2ZmZXISTQoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNp'
-    'Z25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlQgkKB3BheWxvYWQ=');
+    'Z25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlEk0KDXJlZGVlbV9pbnZpdG'
+    'UYBSABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuUmVkZWVtSW52aXRlSABSDHJlZGVl'
+    'bUludml0ZUIJCgdwYXlsb2Fk');
+
+@$core.Deprecated('Use redeemInviteDescriptor instead')
+const RedeemInvite$json = {
+  '1': 'RedeemInvite',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {'1': 'token', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'token'},
+    {'1': 'code', '3': 3, '4': 1, '5': 9, '9': 0, '10': 'code'},
+    {'1': 'display_name', '3': 4, '4': 1, '5': 9, '10': 'displayName'},
+    {'1': 'verified_email', '3': 5, '4': 1, '5': 9, '10': 'verifiedEmail'},
+  ],
+  '8': [
+    {'1': 'secret'},
+  ],
+};
+
+/// Descriptor for `RedeemInvite`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List redeemInviteDescriptor = $convert.base64Decode(
+    'CgxSZWRlZW1JbnZpdGUSHQoKcmVxdWVzdF9pZBgBIAEoCVIJcmVxdWVzdElkEhYKBXRva2VuGA'
+    'IgASgJSABSBXRva2VuEhQKBGNvZGUYAyABKAlIAFIEY29kZRIhCgxkaXNwbGF5X25hbWUYBCAB'
+    'KAlSC2Rpc3BsYXlOYW1lEiUKDnZlcmlmaWVkX2VtYWlsGAUgASgJUg12ZXJpZmllZEVtYWlsQg'
+    'gKBnNlY3JldA==');
+
+@$core.Deprecated('Use redeemInviteResultDescriptor instead')
+const RedeemInviteResult$json = {
+  '1': 'RedeemInviteResult',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'outcome',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.signaling.v1.RedeemOutcome',
+      '10': 'outcome'
+    },
+  ],
+};
+
+/// Descriptor for `RedeemInviteResult`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List redeemInviteResultDescriptor = $convert.base64Decode(
+    'ChJSZWRlZW1JbnZpdGVSZXN1bHQSHQoKcmVxdWVzdF9pZBgBIAEoCVIJcmVxdWVzdElkEkEKB2'
+    '91dGNvbWUYAiABKA4yJy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuUmVkZWVtT3V0Y29tZVIH'
+    'b3V0Y29tZQ==');
 
 @$core.Deprecated('Use userConnectRequestDescriptor instead')
 const UserConnectRequest$json = {

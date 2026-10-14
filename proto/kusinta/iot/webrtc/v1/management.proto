@@ -11,6 +11,7 @@ import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/vendor/lorawan/v1/lorawan.proto";
+import "kusinta/iot/webrtc/v1/invite.proto";
 
 option optimize_for = SPEED;
 
@@ -624,5 +625,13 @@ message ManagementRequest {
     GetPrivacyDisclosure get_privacy_disclosure = 21;
     GetApartmentClimateSummary get_apartment_climate_summary = 22;
     ReconnectConnector reconnect_connector = 23;
+    // Invites; see invite.proto.
+    CreateInvite create_invite = 24;
+    ResendInvite resend_invite = 25;
+    RevokeInvite revoke_invite = 26;
+    MarkInviteEmailSent mark_invite_email_sent = 27;
+    ListSpaceInvites list_space_invites = 28;
+    ApproveJoinRequest approve_join_request = 29;
+    DenyJoinRequest deny_join_request = 30;
   }
 }

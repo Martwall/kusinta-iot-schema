@@ -30,6 +30,9 @@ class GatewayReportingService(Protocol):
     async def report_members(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
+    async def report_invite_routes(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+
 
 class GatewayReportingServiceASGIApplication(ConnectASGIApplication[GatewayReportingService]):
     def __init__(self, service: GatewayReportingService | AsyncGenerator[GatewayReportingService], *, interceptors: Iterable[Interceptor]=(), read_max_bytes: int | None = None, compressions: Iterable[Compression] | None = None, codecs: Iterable[Codec] | None = None) -> None:
@@ -75,6 +78,16 @@ class GatewayReportingServiceASGIApplication(ConnectASGIApplication[GatewayRepor
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
                     function=svc.report_members,
+                ),
+                "/kusinta.iot.reporting.v1.GatewayReportingService/ReportInviteRoutes": Endpoint.unary(
+                    method=MethodInfo(
+                        name="ReportInviteRoutes",
+                        service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                        input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
+                        output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=svc.report_invite_routes,
                 ),
             },
             interceptors=interceptors,
@@ -170,6 +183,26 @@ class GatewayReportingServiceClient(ConnectClient):
             timeout_ms=timeout_ms,
         )
 
+    async def report_invite_routes(
+        self,
+        request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse:
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="ReportInviteRoutes",
+                service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
+                output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
 
 
 
@@ -182,6 +215,8 @@ class GatewayReportingServiceSync(Protocol):
     def report_served_spaces(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportServedSpacesResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
     def report_members(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+    def report_invite_routes(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
 
@@ -228,6 +263,16 @@ class GatewayReportingServiceWSGIApplication(ConnectWSGIApplication):
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
                     function=service.report_members,
+                ),
+                "/kusinta.iot.reporting.v1.GatewayReportingService/ReportInviteRoutes": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="ReportInviteRoutes",
+                        service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                        input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
+                        output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=service.report_invite_routes,
                 ),
             },
             interceptors=interceptors,
@@ -317,6 +362,26 @@ class GatewayReportingServiceClientSync(ConnectClientSync):
                 service_name="kusinta.iot.reporting.v1.GatewayReportingService",
                 input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest,
                 output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
+    def report_invite_routes(
+        self,
+        request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse:
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="ReportInviteRoutes",
+                service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
+                output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
             ),
             headers=headers,

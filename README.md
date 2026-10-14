@@ -16,7 +16,8 @@ proto/
   device/          # DeviceDescriptor, per-type Properties messages, Device/Endpoint, PropertyUpdate
   space/           # Space (building hierarchy)
   access/          # Role, PermissionAction, DeviceAcl, EffectivePermissions
-  reporting/       # gateway → api-server reports: open problems, service reach, served spaces
+  reporting/       # gateway → api-server reports: open problems, service reach, served spaces,
+                   #   members, invite routes
   connector/       # ConnectorToGatewayMessage, GatewayToConnectorMessage, gRPC service
   webrtc/          # GatewayMessage, AppMessage, DeviceCommand, DeviceStateSnapshot, …
   vendor/
@@ -257,6 +258,16 @@ pushed as `RoomClimateChanged` and `ClimateModeChanged`.
 
 Device links (`link/v1`) remain, but as the mechanism underneath a room rather than something
 a person sets a temperature on.
+
+## Invites
+
+People are put on a space by invite rather than by user id (`webrtc/v1/invite.proto`). The
+gateway mints a link token and a short code for each invite and keeps only their hashes;
+an invite is Resident (a home only) or Technician, never an administrator or property
+owner. The app redeems a secret through the api-server, which routes it to the one gateway
+reporting that hash (`ReportInviteRoutes`) as a `RedeemInvite` on the signaling stream. An
+invite bound to an email address files its verified owner at once; any other makes a join
+request that someone who may file there approves.
 
 ## Residents and service: what a home discloses
 

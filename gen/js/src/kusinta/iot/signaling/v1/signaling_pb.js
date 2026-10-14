@@ -2,14 +2,14 @@
 // @generated from file kusinta/iot/signaling/v1/signaling.proto (package kusinta.iot.signaling.v1, syntax proto3)
 /* eslint-disable */
 
-import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
 import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 
 /**
  * Describes the file kusinta/iot/signaling/v1/signaling.proto.
  */
 export const file_kusinta_iot_signaling_v1_signaling = /*@__PURE__*/
-  fileDesc("CihrdXNpbnRhL2lvdC9zaWduYWxpbmcvdjEvc2lnbmFsaW5nLnByb3RvEhhrdXNpbnRhLmlvdC5zaWduYWxpbmcudjEiFwoIU2RwT2ZmZXISCwoDc2RwGAEgASgJIhgKCVNkcEFuc3dlchILCgNzZHAYASABKAkiSwoMSWNlQ2FuZGlkYXRlEhEKCWNhbmRpZGF0ZRgBIAEoCRIPCgdzZHBfbWlkGAIgASgJEhcKD3NkcF9tbGluZV9pbmRleBgDIAEoBSILCglIZWFydEJlYXQiTgoNVXNlckhhbmRzaGFrZRI9ChF0YXJnZXRfZ2F0ZXdheV9pZBgBIAEoCzIiLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkdhdGV3YXlJZCJTChBVc2VySGFuZHNoYWtlQWNrEhAKCGFjY2VwdGVkGAEgASgIEg4KBnJlYXNvbhgCIAEoCRIdChVoZWFydGJlYXRfaW50ZXJ2YWxfbXMYAyABKA0ioQIKFUdhdGV3YXlDb25uZWN0UmVxdWVzdBI3Cg50YXJnZXRfdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBISCgpzZXNzaW9uX2lkGAUgASgJEjUKBmFuc3dlchgCIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBBbnN3ZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAEjgKCWhlYXJ0YmVhdBgEIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5IZWFydEJlYXRIAEIJCgdwYXlsb2FkIuQBChZHYXRld2F5Q29ubmVjdFJlc3BvbnNlEjUKDGZyb21fdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBISCgpzZXNzaW9uX2lkGAQgASgJEjMKBW9mZmVyGAIgASgLMiIua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcE9mZmVySAASPwoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIAEIJCgdwYXlsb2FkIucBChJVc2VyQ29ubmVjdFJlcXVlc3QSEgoKc2Vzc2lvbl9pZBgEIAEoCRI8CgloYW5kc2hha2UYASABKAsyJy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckhhbmRzaGFrZUgAEjMKBW9mZmVyGAIgASgLMiIua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcE9mZmVySAASPwoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIAEIJCgdwYXlsb2FkIqsCChNVc2VyQ29ubmVjdFJlc3BvbnNlEhIKCnNlc3Npb25faWQYBCABKAkSQwoNaGFuZHNoYWtlX2FjaxgBIAEoCzIqLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5Vc2VySGFuZHNoYWtlQWNrSAASNQoGYW5zd2VyGAIgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcEFuc3dlckgAEj8KDWljZV9jYW5kaWRhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSAASOAoJaGVhcnRiZWF0GAUgASgLMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkhlYXJ0QmVhdEgAQgkKB3BheWxvYWQibwoRVXNlckxpc3RlblJlcXVlc3QSOgoJaGFuZHNoYWtlGAEgASgLMicua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlVzZXJIYW5kc2hha2USEgoKc2Vzc2lvbl9pZBgEIAEoCUoECAIQA0oECAMQBCJVChJVc2VyTGlzdGVuUmVzcG9uc2USPwoIcmVzcG9uc2UYASABKAsyLS5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckNvbm5lY3RSZXNwb25zZSK3AQoPVXNlclNlbmRSZXF1ZXN0EhIKCnNlc3Npb25faWQYBCABKAkSMwoFb2ZmZXIYAiABKAsyIi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwT2ZmZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAQgkKB3BheWxvYWRKBAgBEAJSCWhhbmRzaGFrZSISChBVc2VyU2VuZFJlc3BvbnNlQgJIAWIGcHJvdG8z", [file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CihrdXNpbnRhL2lvdC9zaWduYWxpbmcvdjEvc2lnbmFsaW5nLnByb3RvEhhrdXNpbnRhLmlvdC5zaWduYWxpbmcudjEiFwoIU2RwT2ZmZXISCwoDc2RwGAEgASgJIhgKCVNkcEFuc3dlchILCgNzZHAYASABKAkiSwoMSWNlQ2FuZGlkYXRlEhEKCWNhbmRpZGF0ZRgBIAEoCRIPCgdzZHBfbWlkGAIgASgJEhcKD3NkcF9tbGluZV9pbmRleBgDIAEoBSILCglIZWFydEJlYXQiTgoNVXNlckhhbmRzaGFrZRI9ChF0YXJnZXRfZ2F0ZXdheV9pZBgBIAEoCzIiLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkdhdGV3YXlJZCJTChBVc2VySGFuZHNoYWtlQWNrEhAKCGFjY2VwdGVkGAEgASgIEg4KBnJlYXNvbhgCIAEoCRIdChVoZWFydGJlYXRfaW50ZXJ2YWxfbXMYAyABKA0i7wIKFUdhdGV3YXlDb25uZWN0UmVxdWVzdBI3Cg50YXJnZXRfdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBISCgpzZXNzaW9uX2lkGAUgASgJEjUKBmFuc3dlchgCIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBBbnN3ZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAEjgKCWhlYXJ0YmVhdBgEIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5IZWFydEJlYXRIABJMChRyZWRlZW1faW52aXRlX3Jlc3VsdBgGIAEoCzIsLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5SZWRlZW1JbnZpdGVSZXN1bHRIAEIJCgdwYXlsb2FkIqUCChZHYXRld2F5Q29ubmVjdFJlc3BvbnNlEjUKDGZyb21fdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBISCgpzZXNzaW9uX2lkGAQgASgJEjMKBW9mZmVyGAIgASgLMiIua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlNkcE9mZmVySAASPwoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIABI/Cg1yZWRlZW1faW52aXRlGAUgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlJlZGVlbUludml0ZUgAQgkKB3BheWxvYWQiewoMUmVkZWVtSW52aXRlEhIKCnJlcXVlc3RfaWQYASABKAkSDwoFdG9rZW4YAiABKAlIABIOCgRjb2RlGAMgASgJSAASFAoMZGlzcGxheV9uYW1lGAQgASgJEhYKDnZlcmlmaWVkX2VtYWlsGAUgASgJQggKBnNlY3JldCJiChJSZWRlZW1JbnZpdGVSZXN1bHQSEgoKcmVxdWVzdF9pZBgBIAEoCRI4CgdvdXRjb21lGAIgASgOMicua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlJlZGVlbU91dGNvbWUi5wEKElVzZXJDb25uZWN0UmVxdWVzdBISCgpzZXNzaW9uX2lkGAQgASgJEjwKCWhhbmRzaGFrZRgBIAEoCzInLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5Vc2VySGFuZHNoYWtlSAASMwoFb2ZmZXIYAiABKAsyIi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwT2ZmZXJIABI/Cg1pY2VfY2FuZGlkYXRlGAMgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkljZUNhbmRpZGF0ZUgAQgkKB3BheWxvYWQiqwIKE1VzZXJDb25uZWN0UmVzcG9uc2USEgoKc2Vzc2lvbl9pZBgEIAEoCRJDCg1oYW5kc2hha2VfYWNrGAEgASgLMioua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlVzZXJIYW5kc2hha2VBY2tIABI1CgZhbnN3ZXIYAiABKAsyIy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuU2RwQW5zd2VySAASPwoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIABI4CgloZWFydGJlYXQYBSABKAsyIy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSGVhcnRCZWF0SABCCQoHcGF5bG9hZCJvChFVc2VyTGlzdGVuUmVxdWVzdBI6CgloYW5kc2hha2UYASABKAsyJy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuVXNlckhhbmRzaGFrZRISCgpzZXNzaW9uX2lkGAQgASgJSgQIAhADSgQIAxAEIlUKElVzZXJMaXN0ZW5SZXNwb25zZRI/CghyZXNwb25zZRgBIAEoCzItLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5Vc2VyQ29ubmVjdFJlc3BvbnNlIrcBCg9Vc2VyU2VuZFJlcXVlc3QSEgoKc2Vzc2lvbl9pZBgEIAEoCRIzCgVvZmZlchgCIAEoCzIiLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5TZHBPZmZlckgAEj8KDWljZV9jYW5kaWRhdGUYAyABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuSWNlQ2FuZGlkYXRlSABCCQoHcGF5bG9hZEoECAEQAlIJaGFuZHNoYWtlIhIKEFVzZXJTZW5kUmVzcG9uc2UqrQEKDVJlZGVlbU91dGNvbWUSHgoaUkVERUVNX09VVENPTUVfVU5TUEVDSUZJRUQQABIZChVSRURFRU1fT1VUQ09NRV9KT0lORUQQARIjCh9SRURFRU1fT1VUQ09NRV9QRU5ESU5HX0FQUFJPVkFMEAISGgoWUkVERUVNX09VVENPTUVfSU5WQUxJRBADEiAKHFJFREVFTV9PVVRDT01FX1dST05HX0FDQ09VTlQQBEICSAFiBnByb3RvMw", [file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.SdpOffer.
@@ -68,44 +68,80 @@ export const GatewayConnectResponseSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_signaling_v1_signaling, 7);
 
 /**
+ * Describes the message kusinta.iot.signaling.v1.RedeemInvite.
+ * Use `create(RedeemInviteSchema)` to create a new message.
+ */
+export const RedeemInviteSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 8);
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.RedeemInviteResult.
+ * Use `create(RedeemInviteResultSchema)` to create a new message.
+ */
+export const RedeemInviteResultSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 9);
+
+/**
  * Describes the message kusinta.iot.signaling.v1.UserConnectRequest.
  * Use `create(UserConnectRequestSchema)` to create a new message.
  */
 export const UserConnectRequestSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 8);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 10);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserConnectResponse.
  * Use `create(UserConnectResponseSchema)` to create a new message.
  */
 export const UserConnectResponseSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 9);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 11);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserListenRequest.
  * Use `create(UserListenRequestSchema)` to create a new message.
  */
 export const UserListenRequestSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 10);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 12);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserListenResponse.
  * Use `create(UserListenResponseSchema)` to create a new message.
  */
 export const UserListenResponseSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 11);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 13);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserSendRequest.
  * Use `create(UserSendRequestSchema)` to create a new message.
  */
 export const UserSendRequestSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 12);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 14);
 
 /**
  * Describes the message kusinta.iot.signaling.v1.UserSendResponse.
  * Use `create(UserSendResponseSchema)` to create a new message.
  */
 export const UserSendResponseSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_signaling_v1_signaling, 13);
+  messageDesc(file_kusinta_iot_signaling_v1_signaling, 15);
+
+/**
+ * Describes the enum kusinta.iot.signaling.v1.RedeemOutcome.
+ */
+export const RedeemOutcomeSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_signaling_v1_signaling, 0);
+
+/**
+ * What redeeming an invite did, as the gateway decided it.
+ *
+ * A redeem is idempotent for its user: redeemed again by the same user, for as
+ * long as its secret would have lasted unused, a used invite answers JOINED if
+ * the user is filed on its space by then, and otherwise as it did the first time
+ * — so a denied request still answers PENDING_APPROVAL — except that one which
+ * filed the user, who has left that space since, answers INVALID. To anyone
+ * else it answers INVALID. So a user who never saw the first answer can safely
+ * try again.
+ *
+ * @generated from enum kusinta.iot.signaling.v1.RedeemOutcome
+ */
+export const RedeemOutcome = /*@__PURE__*/
+  tsEnum(RedeemOutcomeSchema);
 

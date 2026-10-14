@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/signaling/v1/signaling.proto (package kusinta.iot.signaling.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { GatewayId, UserId } from "../../identity/v1/identity_pb.js";
 
@@ -174,13 +174,16 @@ export declare const UserHandshakeAckSchema: GenMessage<UserHandshakeAck>;
  */
 export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.GatewayConnectRequest"> & {
   /**
+   * On redeem_invite_result, the user who redeemed (RedeemInvite).
+   *
    * @generated from field: kusinta.iot.identity.v1.UserId target_user_id = 1;
    */
   targetUserId?: UserId | undefined;
 
   /**
    * The session of target_user_id this message answers. See the contract above.
-   * Ignored on a heartbeat, which carries no routing target at all.
+   * Ignored on a heartbeat, which carries no routing target at all, and on
+   * redeem_invite_result, which belongs to no session.
    *
    * @generated from field: string session_id = 5;
    */
@@ -207,6 +210,12 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
      */
     value: HeartBeat;
     case: "heartbeat";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.RedeemInviteResult redeem_invite_result = 6;
+     */
+    value: RedeemInviteResult;
+    case: "redeemInviteResult";
   } | { case: undefined; value?: undefined };
 };
 
@@ -223,6 +232,9 @@ export declare const GatewayConnectRequestSchema: GenMessage<GatewayConnectReque
  */
 export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.GatewayConnectResponse"> & {
   /**
+   * On redeem_invite, the user redeeming: the sub of the token the api-server
+   * verified, and never a value the user supplied.
+   *
    * @generated from field: kusinta.iot.identity.v1.UserId from_user_id = 1;
    */
   fromUserId?: UserId | undefined;
@@ -230,7 +242,7 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
   /**
    * The session of from_user_id this message originates from — the value the
    * gateway must echo on the GatewayConnectRequest that answers it. See the
-   * contract above.
+   * contract above. Unset on redeem_invite, which belongs to no session.
    *
    * @generated from field: string session_id = 4;
    */
@@ -251,6 +263,12 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
      */
     value: IceCandidate;
     case: "iceCandidate";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.RedeemInvite redeem_invite = 5;
+     */
+    value: RedeemInvite;
+    case: "redeemInvite";
   } | { case: undefined; value?: undefined };
 };
 
@@ -259,6 +277,103 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
  * Use `create(GatewayConnectResponseSchema)` to create a new message.
  */
 export declare const GatewayConnectResponseSchema: GenMessage<GatewayConnectResponse>;
+
+/**
+ * A person redeeming an invite (webrtc.v1 CreateInvite), api-server → gateway.
+ * The one request on this stream that the gateway answers, with a
+ * RedeemInviteResult carrying the same request_id.
+ *
+ * The api-server sends it only to the gateway whose invite routes hold the
+ * secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user
+ * whose account has a verified email: it answers a user without one itself,
+ * before routing. A hash held by more than one gateway routes nowhere and is
+ * answered as INVALID.
+ *
+ * A code is 40 bits, few enough to guess at. The api-server limits how often each
+ * user, and each client address, may redeem, and answers past that limit itself.
+ *
+ * The api-server waits at least 30 seconds for the result. With no result by
+ * then, or no stream to send on, it tells the user to try again later; the redeem
+ * may or may not have been done. Trying again is safe: a redeem is idempotent for
+ * its user (see RedeemOutcome).
+ *
+ * @generated from message kusinta.iot.signaling.v1.RedeemInvite
+ */
+export declare type RedeemInvite = Message<"kusinta.iot.signaling.v1.RedeemInvite"> & {
+  /**
+   * Minted by the api-server, opaque, unique among its redeems in flight.
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * The secret as the user gave it: the token from a link, or the code as typed.
+   * The gateway hashes and normalises as webrtc.v1 invite.proto says.
+   *
+   * @generated from oneof kusinta.iot.signaling.v1.RedeemInvite.secret
+   */
+  secret: {
+    /**
+     * @generated from field: string token = 2;
+     */
+    value: string;
+    case: "token";
+  } | {
+    /**
+     * @generated from field: string code = 3;
+     */
+    value: string;
+    case: "code";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * The display name the user's token carries, for the join request it may make.
+   * May be empty.
+   *
+   * @generated from field: string display_name = 4;
+   */
+  displayName: string;
+
+  /**
+   * The verified email address of the user's account, as their token states it.
+   * Never an address the token does not mark verified.
+   *
+   * @generated from field: string verified_email = 5;
+   */
+  verifiedEmail: string;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.RedeemInvite.
+ * Use `create(RedeemInviteSchema)` to create a new message.
+ */
+export declare const RedeemInviteSchema: GenMessage<RedeemInvite>;
+
+/**
+ * The answer to a RedeemInvite, gateway → api-server.
+ *
+ * @generated from message kusinta.iot.signaling.v1.RedeemInviteResult
+ */
+export declare type RedeemInviteResult = Message<"kusinta.iot.signaling.v1.RedeemInviteResult"> & {
+  /**
+   * As RedeemInvite.request_id.
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * @generated from field: kusinta.iot.signaling.v1.RedeemOutcome outcome = 2;
+   */
+  outcome: RedeemOutcome;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.RedeemInviteResult.
+ * Use `create(RedeemInviteResultSchema)` to create a new message.
+ */
+export declare const RedeemInviteResultSchema: GenMessage<RedeemInviteResult>;
 
 /**
  * Messages sent by the app (GatewaySignalingService.UserConnect stream).
@@ -490,4 +605,69 @@ export declare type UserSendResponse = Message<"kusinta.iot.signaling.v1.UserSen
  * Use `create(UserSendResponseSchema)` to create a new message.
  */
 export declare const UserSendResponseSchema: GenMessage<UserSendResponse>;
+
+/**
+ * What redeeming an invite did, as the gateway decided it.
+ *
+ * A redeem is idempotent for its user: redeemed again by the same user, for as
+ * long as its secret would have lasted unused, a used invite answers JOINED if
+ * the user is filed on its space by then, and otherwise as it did the first time
+ * — so a denied request still answers PENDING_APPROVAL — except that one which
+ * filed the user, who has left that space since, answers INVALID. To anyone
+ * else it answers INVALID. So a user who never saw the first answer can safely
+ * try again.
+ *
+ * @generated from enum kusinta.iot.signaling.v1.RedeemOutcome
+ */
+export enum RedeemOutcome {
+  /**
+   * @generated from enum value: REDEEM_OUTCOME_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The user is a member of the invite's space. Answered only once the
+   * api-server has applied the member report that names them
+   * (reporting.v1.GatewayMember), so the user can connect as soon as they are
+   * told. Also the answer for a user already filed on that space: the invite is
+   * used up, and their membership is left exactly as it was.
+   *
+   * @generated from enum value: REDEEM_OUTCOME_JOINED = 1;
+   */
+  JOINED = 1,
+
+  /**
+   * A join request was made (webrtc.v1.JoinRequest); the user becomes a member
+   * once it is approved. Also the answer for a user who already has one on that
+   * space.
+   *
+   * @generated from enum value: REDEEM_OUTCOME_PENDING_APPROVAL = 2;
+   */
+  PENDING_APPROVAL = 2,
+
+  /**
+   * No invite: unknown, expired, revoked, already used by someone else, a code
+   * for an invite bound to another address, or anything else that is not a
+   * live invite. One answer for all of them, so a redeem tells nothing about
+   * which secrets exist.
+   *
+   * @generated from enum value: REDEEM_OUTCOME_INVALID = 3;
+   */
+  INVALID = 3,
+
+  /**
+   * The invite is bound to an address (webrtc.v1.CreateInvite.email) that is not
+   * the user's verified one. Answered only to a token, which cannot be guessed;
+   * a code bound to another address answers INVALID. Never says which address
+   * it is bound to, and leaves the invite pending.
+   *
+   * @generated from enum value: REDEEM_OUTCOME_WRONG_ACCOUNT = 4;
+   */
+  WRONG_ACCOUNT = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.signaling.v1.RedeemOutcome.
+ */
+export declare const RedeemOutcomeSchema: GenEnum<RedeemOutcome>;
 

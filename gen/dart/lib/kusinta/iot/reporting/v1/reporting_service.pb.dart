@@ -52,4 +52,12 @@ class GatewayReportingServiceApi {
           $pb.ClientContext? ctx, $0.ReportMembersRequest request) =>
       _client.invoke<$0.ReportMembersResponse>(ctx, 'GatewayReportingService',
           'ReportMembers', request, $0.ReportMembersResponse());
+  $async.Future<$0.ReportInviteRoutesResponse> reportInviteRoutes(
+          $pb.ClientContext? ctx, $0.ReportInviteRoutesRequest request) =>
+      _client.invoke<$0.ReportInviteRoutesResponse>(
+          ctx,
+          'GatewayReportingService',
+          'ReportInviteRoutes',
+          request,
+          $0.ReportInviteRoutesResponse());
 }

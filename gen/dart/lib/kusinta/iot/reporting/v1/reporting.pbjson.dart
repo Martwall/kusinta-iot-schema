@@ -696,3 +696,59 @@ const ReportMembersResponse$json = {
 final $typed_data.Uint8List reportMembersResponseDescriptor = $convert.base64Decode(
     'ChVSZXBvcnRNZW1iZXJzUmVzcG9uc2USHwoLYXBwbGllZF9zZXEYASABKARSCmFwcGxpZWRTZX'
     'ESJwoPcmVzeW5jX3JlcXVpcmVkGAIgASgIUg5yZXN5bmNSZXF1aXJlZA==');
+
+@$core.Deprecated('Use reportInviteRoutesRequestDescriptor instead')
+const ReportInviteRoutesRequest$json = {
+  '1': 'ReportInviteRoutesRequest',
+  '2': [
+    {'1': 'stream_id', '3': 1, '4': 1, '5': 9, '10': 'streamId'},
+    {
+      '1': 'previous_stream_ids',
+      '3': 2,
+      '4': 3,
+      '5': 9,
+      '10': 'previousStreamIds'
+    },
+    {'1': 'seq', '3': 3, '4': 1, '5': 4, '10': 'seq'},
+    {'1': 'secret_hashes', '3': 4, '4': 3, '5': 12, '10': 'secretHashes'},
+    {
+      '1': 'removed_secret_hashes',
+      '3': 5,
+      '4': 3,
+      '5': 12,
+      '10': 'removedSecretHashes'
+    },
+    {
+      '1': 'snapshot',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.reporting.v1.SnapshotPart',
+      '10': 'snapshot'
+    },
+  ],
+};
+
+/// Descriptor for `ReportInviteRoutesRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportInviteRoutesRequestDescriptor = $convert.base64Decode(
+    'ChlSZXBvcnRJbnZpdGVSb3V0ZXNSZXF1ZXN0EhsKCXN0cmVhbV9pZBgBIAEoCVIIc3RyZWFtSW'
+    'QSLgoTcHJldmlvdXNfc3RyZWFtX2lkcxgCIAMoCVIRcHJldmlvdXNTdHJlYW1JZHMSEAoDc2Vx'
+    'GAMgASgEUgNzZXESIwoNc2VjcmV0X2hhc2hlcxgEIAMoDFIMc2VjcmV0SGFzaGVzEjIKFXJlbW'
+    '92ZWRfc2VjcmV0X2hhc2hlcxgFIAMoDFITcmVtb3ZlZFNlY3JldEhhc2hlcxJCCghzbmFwc2hv'
+    'dBgGIAEoCzImLmt1c2ludGEuaW90LnJlcG9ydGluZy52MS5TbmFwc2hvdFBhcnRSCHNuYXBzaG'
+    '90');
+
+@$core.Deprecated('Use reportInviteRoutesResponseDescriptor instead')
+const ReportInviteRoutesResponse$json = {
+  '1': 'ReportInviteRoutesResponse',
+  '2': [
+    {'1': 'applied_seq', '3': 1, '4': 1, '5': 4, '10': 'appliedSeq'},
+    {'1': 'resync_required', '3': 2, '4': 1, '5': 8, '10': 'resyncRequired'},
+  ],
+};
+
+/// Descriptor for `ReportInviteRoutesResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportInviteRoutesResponseDescriptor =
+    $convert.base64Decode(
+        'ChpSZXBvcnRJbnZpdGVSb3V0ZXNSZXNwb25zZRIfCgthcHBsaWVkX3NlcRgBIAEoBFIKYXBwbG'
+        'llZFNlcRInCg9yZXN5bmNfcmVxdWlyZWQYAiABKAhSDnJlc3luY1JlcXVpcmVk');

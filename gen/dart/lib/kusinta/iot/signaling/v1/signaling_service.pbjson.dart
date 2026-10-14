@@ -58,9 +58,11 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.signaling.v1.SdpAnswer': $0.SdpAnswer$json,
   '.kusinta.iot.signaling.v1.IceCandidate': $0.IceCandidate$json,
   '.kusinta.iot.signaling.v1.HeartBeat': $0.HeartBeat$json,
+  '.kusinta.iot.signaling.v1.RedeemInviteResult': $0.RedeemInviteResult$json,
   '.kusinta.iot.signaling.v1.GatewayConnectResponse':
       $0.GatewayConnectResponse$json,
   '.kusinta.iot.signaling.v1.SdpOffer': $0.SdpOffer$json,
+  '.kusinta.iot.signaling.v1.RedeemInvite': $0.RedeemInvite$json,
   '.kusinta.iot.signaling.v1.UserConnectRequest': $0.UserConnectRequest$json,
   '.kusinta.iot.signaling.v1.UserHandshake': $0.UserHandshake$json,
   '.kusinta.iot.identity.v1.GatewayId': $1.GatewayId$json,

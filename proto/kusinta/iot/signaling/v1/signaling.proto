@@ -97,33 +97,123 @@ message UserHandshakeAck {
 //     endpoint must accept that rather than refuse the message — on the app
 //     leg's downstream, refusing it would break the keepalive for the stream it
 //     is keeping alive.
+//   - And except on an invite redeem and its result, which belong to no session:
+//     they pass between the api-server and the gateway, and name the redeeming
+//     user only to say who redeemed. Both leave the field unset.
 
 // Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
 // Auth: x-client-cert-fingerprint metadata header, set from the client
 // certificate by the mTLS-terminating proxy in front of this service.
 message GatewayConnectRequest {
+  // On redeem_invite_result, the user who redeemed (RedeemInvite).
   kusinta.iot.identity.v1.UserId target_user_id = 1;
   // The session of target_user_id this message answers. See the contract above.
-  // Ignored on a heartbeat, which carries no routing target at all.
+  // Ignored on a heartbeat, which carries no routing target at all, and on
+  // redeem_invite_result, which belongs to no session.
   string session_id = 5;
   oneof payload {
     SdpAnswer answer = 2;
     IceCandidate ice_candidate = 3;
     HeartBeat heartbeat = 4;
+    RedeemInviteResult redeem_invite_result = 6;
   }
 }
 
 // Messages sent by the api-server to the building-server gateway.
 message GatewayConnectResponse {
+  // On redeem_invite, the user redeeming: the sub of the token the api-server
+  // verified, and never a value the user supplied.
   kusinta.iot.identity.v1.UserId from_user_id = 1;
   // The session of from_user_id this message originates from — the value the
   // gateway must echo on the GatewayConnectRequest that answers it. See the
-  // contract above.
+  // contract above. Unset on redeem_invite, which belongs to no session.
   string session_id = 4;
   oneof payload {
     SdpOffer offer = 2;
     IceCandidate ice_candidate = 3;
+    RedeemInvite redeem_invite = 5;
   }
+}
+
+// A person redeeming an invite (webrtc.v1 CreateInvite), api-server → gateway.
+// The one request on this stream that the gateway answers, with a
+// RedeemInviteResult carrying the same request_id.
+//
+// The api-server sends it only to the gateway whose invite routes hold the
+// secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user
+// whose account has a verified email: it answers a user without one itself,
+// before routing. A hash held by more than one gateway routes nowhere and is
+// answered as INVALID.
+//
+// A code is 40 bits, few enough to guess at. The api-server limits how often each
+// user, and each client address, may redeem, and answers past that limit itself.
+//
+// The api-server waits at least 30 seconds for the result. With no result by
+// then, or no stream to send on, it tells the user to try again later; the redeem
+// may or may not have been done. Trying again is safe: a redeem is idempotent for
+// its user (see RedeemOutcome).
+message RedeemInvite {
+  // Minted by the api-server, opaque, unique among its redeems in flight.
+  string request_id = 1;
+
+  // The secret as the user gave it: the token from a link, or the code as typed.
+  // The gateway hashes and normalises as webrtc.v1 invite.proto says.
+  oneof secret {
+    string token = 2;
+    string code = 3;
+  }
+
+  // The display name the user's token carries, for the join request it may make.
+  // May be empty.
+  string display_name = 4;
+
+  // The verified email address of the user's account, as their token states it.
+  // Never an address the token does not mark verified.
+  string verified_email = 5;
+}
+
+// What redeeming an invite did, as the gateway decided it.
+//
+// A redeem is idempotent for its user: redeemed again by the same user, for as
+// long as its secret would have lasted unused, a used invite answers JOINED if
+// the user is filed on its space by then, and otherwise as it did the first time
+// — so a denied request still answers PENDING_APPROVAL — except that one which
+// filed the user, who has left that space since, answers INVALID. To anyone
+// else it answers INVALID. So a user who never saw the first answer can safely
+// try again.
+enum RedeemOutcome {
+  REDEEM_OUTCOME_UNSPECIFIED = 0;
+
+  // The user is a member of the invite's space. Answered only once the
+  // api-server has applied the member report that names them
+  // (reporting.v1.GatewayMember), so the user can connect as soon as they are
+  // told. Also the answer for a user already filed on that space: the invite is
+  // used up, and their membership is left exactly as it was.
+  REDEEM_OUTCOME_JOINED = 1;
+
+  // A join request was made (webrtc.v1.JoinRequest); the user becomes a member
+  // once it is approved. Also the answer for a user who already has one on that
+  // space.
+  REDEEM_OUTCOME_PENDING_APPROVAL = 2;
+
+  // No invite: unknown, expired, revoked, already used by someone else, a code
+  // for an invite bound to another address, or anything else that is not a
+  // live invite. One answer for all of them, so a redeem tells nothing about
+  // which secrets exist.
+  REDEEM_OUTCOME_INVALID = 3;
+
+  // The invite is bound to an address (webrtc.v1.CreateInvite.email) that is not
+  // the user's verified one. Answered only to a token, which cannot be guessed;
+  // a code bound to another address answers INVALID. Never says which address
+  // it is bound to, and leaves the invite pending.
+  REDEEM_OUTCOME_WRONG_ACCOUNT = 4;
+}
+
+// The answer to a RedeemInvite, gateway → api-server.
+message RedeemInviteResult {
+  // As RedeemInvite.request_id.
+  string request_id = 1;
+  RedeemOutcome outcome = 2;
 }
 
 // Messages sent by the app (GatewaySignalingService.UserConnect stream).

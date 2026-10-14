@@ -15,8 +15,11 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../identity/v1/identity.pb.dart' as $0;
+import 'signaling.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'signaling.pbenum.dart';
 
 class SdpOffer extends $pb.GeneratedMessage {
   factory SdpOffer({
@@ -430,7 +433,13 @@ class UserHandshakeAck extends $pb.GeneratedMessage {
   void clearHeartbeatIntervalMs() => $_clearField(3);
 }
 
-enum GatewayConnectRequest_Payload { answer, iceCandidate, heartbeat, notSet }
+enum GatewayConnectRequest_Payload {
+  answer,
+  iceCandidate,
+  heartbeat,
+  redeemInviteResult,
+  notSet
+}
 
 /// Messages sent by the building-server gateway (GatewaySignalingService.GatewayConnect stream).
 /// Auth: x-client-cert-fingerprint metadata header, set from the client
@@ -442,6 +451,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     IceCandidate? iceCandidate,
     HeartBeat? heartbeat,
     $core.String? sessionId,
+    RedeemInviteResult? redeemInviteResult,
   }) {
     final result = create();
     if (targetUserId != null) result.targetUserId = targetUserId;
@@ -449,6 +459,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
     if (heartbeat != null) result.heartbeat = heartbeat;
     if (sessionId != null) result.sessionId = sessionId;
+    if (redeemInviteResult != null)
+      result.redeemInviteResult = redeemInviteResult;
     return result;
   }
 
@@ -466,6 +478,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     2: GatewayConnectRequest_Payload.answer,
     3: GatewayConnectRequest_Payload.iceCandidate,
     4: GatewayConnectRequest_Payload.heartbeat,
+    6: GatewayConnectRequest_Payload.redeemInviteResult,
     0: GatewayConnectRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -473,7 +486,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4])
+    ..oo(0, [2, 3, 4, 6])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'targetUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpAnswer>(2, _omitFieldNames ? '' : 'answer',
@@ -483,6 +496,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     ..aOM<HeartBeat>(4, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
     ..aOS(5, _omitFieldNames ? '' : 'sessionId')
+    ..aOM<RedeemInviteResult>(6, _omitFieldNames ? '' : 'redeemInviteResult',
+        subBuilder: RedeemInviteResult.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -512,6 +527,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       _GatewayConnectRequest_PayloadByTag[$_whichOneof(0)]!;
   void clearPayload() => $_clearField($_whichOneof(0));
 
+  /// On redeem_invite_result, the user who redeemed (RedeemInvite).
   @$pb.TagNumber(1)
   $0.UserId get targetUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -557,7 +573,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   HeartBeat ensureHeartbeat() => $_ensure(3);
 
   /// The session of target_user_id this message answers. See the contract above.
-  /// Ignored on a heartbeat, which carries no routing target at all.
+  /// Ignored on a heartbeat, which carries no routing target at all, and on
+  /// redeem_invite_result, which belongs to no session.
   @$pb.TagNumber(5)
   $core.String get sessionId => $_getSZ(4);
   @$pb.TagNumber(5)
@@ -566,9 +583,25 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   $core.bool hasSessionId() => $_has(4);
   @$pb.TagNumber(5)
   void clearSessionId() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  RedeemInviteResult get redeemInviteResult => $_getN(5);
+  @$pb.TagNumber(6)
+  set redeemInviteResult(RedeemInviteResult value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRedeemInviteResult() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRedeemInviteResult() => $_clearField(6);
+  @$pb.TagNumber(6)
+  RedeemInviteResult ensureRedeemInviteResult() => $_ensure(5);
 }
 
-enum GatewayConnectResponse_Payload { offer, iceCandidate, notSet }
+enum GatewayConnectResponse_Payload {
+  offer,
+  iceCandidate,
+  redeemInvite,
+  notSet
+}
 
 /// Messages sent by the api-server to the building-server gateway.
 class GatewayConnectResponse extends $pb.GeneratedMessage {
@@ -577,12 +610,14 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     SdpOffer? offer,
     IceCandidate? iceCandidate,
     $core.String? sessionId,
+    RedeemInvite? redeemInvite,
   }) {
     final result = create();
     if (fromUserId != null) result.fromUserId = fromUserId;
     if (offer != null) result.offer = offer;
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
     if (sessionId != null) result.sessionId = sessionId;
+    if (redeemInvite != null) result.redeemInvite = redeemInvite;
     return result;
   }
 
@@ -599,6 +634,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
       _GatewayConnectResponse_PayloadByTag = {
     2: GatewayConnectResponse_Payload.offer,
     3: GatewayConnectResponse_Payload.iceCandidate,
+    5: GatewayConnectResponse_Payload.redeemInvite,
     0: GatewayConnectResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -606,7 +642,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3])
+    ..oo(0, [2, 3, 5])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'fromUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpOffer>(2, _omitFieldNames ? '' : 'offer',
@@ -614,6 +650,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     ..aOM<IceCandidate>(3, _omitFieldNames ? '' : 'iceCandidate',
         subBuilder: IceCandidate.create)
     ..aOS(4, _omitFieldNames ? '' : 'sessionId')
+    ..aOM<RedeemInvite>(5, _omitFieldNames ? '' : 'redeemInvite',
+        subBuilder: RedeemInvite.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -643,6 +681,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
       _GatewayConnectResponse_PayloadByTag[$_whichOneof(0)]!;
   void clearPayload() => $_clearField($_whichOneof(0));
 
+  /// On redeem_invite, the user redeeming: the sub of the token the api-server
+  /// verified, and never a value the user supplied.
   @$pb.TagNumber(1)
   $0.UserId get fromUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -678,7 +718,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
 
   /// The session of from_user_id this message originates from — the value the
   /// gateway must echo on the GatewayConnectRequest that answers it. See the
-  /// contract above.
+  /// contract above. Unset on redeem_invite, which belongs to no session.
   @$pb.TagNumber(4)
   $core.String get sessionId => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -687,6 +727,231 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   $core.bool hasSessionId() => $_has(3);
   @$pb.TagNumber(4)
   void clearSessionId() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  RedeemInvite get redeemInvite => $_getN(4);
+  @$pb.TagNumber(5)
+  set redeemInvite(RedeemInvite value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRedeemInvite() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRedeemInvite() => $_clearField(5);
+  @$pb.TagNumber(5)
+  RedeemInvite ensureRedeemInvite() => $_ensure(4);
+}
+
+enum RedeemInvite_Secret { token, code, notSet }
+
+/// A person redeeming an invite (webrtc.v1 CreateInvite), api-server → gateway.
+/// The one request on this stream that the gateway answers, with a
+/// RedeemInviteResult carrying the same request_id.
+///
+/// The api-server sends it only to the gateway whose invite routes hold the
+/// secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user
+/// whose account has a verified email: it answers a user without one itself,
+/// before routing. A hash held by more than one gateway routes nowhere and is
+/// answered as INVALID.
+///
+/// A code is 40 bits, few enough to guess at. The api-server limits how often each
+/// user, and each client address, may redeem, and answers past that limit itself.
+///
+/// The api-server waits at least 30 seconds for the result. With no result by
+/// then, or no stream to send on, it tells the user to try again later; the redeem
+/// may or may not have been done. Trying again is safe: a redeem is idempotent for
+/// its user (see RedeemOutcome).
+class RedeemInvite extends $pb.GeneratedMessage {
+  factory RedeemInvite({
+    $core.String? requestId,
+    $core.String? token,
+    $core.String? code,
+    $core.String? displayName,
+    $core.String? verifiedEmail,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (token != null) result.token = token;
+    if (code != null) result.code = code;
+    if (displayName != null) result.displayName = displayName;
+    if (verifiedEmail != null) result.verifiedEmail = verifiedEmail;
+    return result;
+  }
+
+  RedeemInvite._();
+
+  factory RedeemInvite.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RedeemInvite.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, RedeemInvite_Secret>
+      _RedeemInvite_SecretByTag = {
+    2: RedeemInvite_Secret.token,
+    3: RedeemInvite_Secret.code,
+    0: RedeemInvite_Secret.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RedeemInvite',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2, 3])
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'token')
+    ..aOS(3, _omitFieldNames ? '' : 'code')
+    ..aOS(4, _omitFieldNames ? '' : 'displayName')
+    ..aOS(5, _omitFieldNames ? '' : 'verifiedEmail')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RedeemInvite clone() => RedeemInvite()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RedeemInvite copyWith(void Function(RedeemInvite) updates) =>
+      super.copyWith((message) => updates(message as RedeemInvite))
+          as RedeemInvite;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RedeemInvite create() => RedeemInvite._();
+  @$core.override
+  RedeemInvite createEmptyInstance() => create();
+  static $pb.PbList<RedeemInvite> createRepeated() =>
+      $pb.PbList<RedeemInvite>();
+  @$core.pragma('dart2js:noInline')
+  static RedeemInvite getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RedeemInvite>(create);
+  static RedeemInvite? _defaultInstance;
+
+  RedeemInvite_Secret whichSecret() =>
+      _RedeemInvite_SecretByTag[$_whichOneof(0)]!;
+  void clearSecret() => $_clearField($_whichOneof(0));
+
+  /// Minted by the api-server, opaque, unique among its redeems in flight.
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get token => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set token($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasToken() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearToken() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get code => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set code($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCode() => $_clearField(3);
+
+  /// The display name the user's token carries, for the join request it may make.
+  /// May be empty.
+  @$pb.TagNumber(4)
+  $core.String get displayName => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set displayName($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDisplayName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDisplayName() => $_clearField(4);
+
+  /// The verified email address of the user's account, as their token states it.
+  /// Never an address the token does not mark verified.
+  @$pb.TagNumber(5)
+  $core.String get verifiedEmail => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set verifiedEmail($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasVerifiedEmail() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearVerifiedEmail() => $_clearField(5);
+}
+
+/// The answer to a RedeemInvite, gateway → api-server.
+class RedeemInviteResult extends $pb.GeneratedMessage {
+  factory RedeemInviteResult({
+    $core.String? requestId,
+    RedeemOutcome? outcome,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (outcome != null) result.outcome = outcome;
+    return result;
+  }
+
+  RedeemInviteResult._();
+
+  factory RedeemInviteResult.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RedeemInviteResult.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RedeemInviteResult',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..e<RedeemOutcome>(2, _omitFieldNames ? '' : 'outcome', $pb.PbFieldType.OE,
+        defaultOrMaker: RedeemOutcome.REDEEM_OUTCOME_UNSPECIFIED,
+        valueOf: RedeemOutcome.valueOf,
+        enumValues: RedeemOutcome.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RedeemInviteResult clone() => RedeemInviteResult()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RedeemInviteResult copyWith(void Function(RedeemInviteResult) updates) =>
+      super.copyWith((message) => updates(message as RedeemInviteResult))
+          as RedeemInviteResult;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RedeemInviteResult create() => RedeemInviteResult._();
+  @$core.override
+  RedeemInviteResult createEmptyInstance() => create();
+  static $pb.PbList<RedeemInviteResult> createRepeated() =>
+      $pb.PbList<RedeemInviteResult>();
+  @$core.pragma('dart2js:noInline')
+  static RedeemInviteResult getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RedeemInviteResult>(create);
+  static RedeemInviteResult? _defaultInstance;
+
+  /// As RedeemInvite.request_id.
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  RedeemOutcome get outcome => $_getN(1);
+  @$pb.TagNumber(2)
+  set outcome(RedeemOutcome value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutcome() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutcome() => $_clearField(2);
 }
 
 enum UserConnectRequest_Payload { handshake, offer, iceCandidate, notSet }

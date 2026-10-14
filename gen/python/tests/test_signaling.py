@@ -321,3 +321,24 @@ def test_user_send_request_carries_the_ice_media_section_binding():
     assert decoded.WhichOneof("payload") == "ice_candidate"
     assert decoded.ice_candidate.sdp_mid == "1"
     assert decoded.ice_candidate.sdp_mline_index == 1
+
+
+def test_redeem_invite_routes_a_code_naming_who_redeems():
+    response = signaling_pb2.GatewayConnectResponse(
+        from_user_id=identity_pb2.UserId(value="anna"),
+        redeem_invite=signaling_pb2.RedeemInvite(request_id="r-1", code="K7QM-4RXD"),
+    )
+    decoded = signaling_pb2.GatewayConnectResponse()
+    decoded.ParseFromString(response.SerializeToString())
+    assert decoded.redeem_invite.WhichOneof("secret") == "code"
+
+
+def test_redeem_invite_result_answers_by_request_id():
+    request = signaling_pb2.GatewayConnectRequest(
+        redeem_invite_result=signaling_pb2.RedeemInviteResult(
+            request_id="r-1", outcome=signaling_pb2.REDEEM_OUTCOME_WRONG_ACCOUNT
+        )
+    )
+    decoded = signaling_pb2.GatewayConnectRequest()
+    decoded.ParseFromString(request.SerializeToString())
+    assert decoded.redeem_invite_result.outcome == signaling_pb2.REDEEM_OUTCOME_WRONG_ACCOUNT

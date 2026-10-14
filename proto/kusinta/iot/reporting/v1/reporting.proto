@@ -11,11 +11,11 @@ option optimize_for = SPEED;
 
 // What the building-server gateway reports to the api-server about the building it serves:
 // the problems open there, who among service staff reaches which spaces, which spaces it
-// serves, and who its members are. The api-server keeps these so it can say what needs
+// serves, who its members are, and which invite secrets it answers for. The api-server keeps these so it can say what needs
 // attention across properties, to the right people, while a gateway is offline, and so it
 // knows whom to let connect to the gateway at all.
 //
-// The gateway is the source of truth for all four. Delivery is at least once: the gateway
+// The gateway is the source of truth for all five. Delivery is at least once: the gateway
 // sends a report again until the api-server acknowledges it, across its own restarts and
 // offline spells, and the api-server makes a repeat harmless. Which gateway is reporting
 // comes from its client certificate, never from a message field.
@@ -47,7 +47,7 @@ option optimize_for = SPEED;
 // reinstalled, carry on: it never speaks on a stream the api-server has counts for, and its
 // snapshot is authoritative whatever the api-server held.
 //
-// How a stream opens: for service reach, served spaces and members, with the snapshot —
+// How a stream opens: for service reach, served spaces, members and invite routes, with the snapshot —
 // anything queued from before is superseded by it. For problems, transitions are history as well as
 // state (a problem may have opened and cleared while the gateway was offline), so the stream
 // opens with the transitions still queued, and the snapshot follows, settling every problem
@@ -55,8 +55,8 @@ option optimize_for = SPEED;
 //
 // The api-server sets resync_required in a response when it will not apply the request's
 // stream at all: a stream superseded by one seen later, a seq more than one above the last
-// applied, a reach, spaces or members stream whose first request is not part 0 of a
-// snapshot. The gateway then starts a new stream.
+// applied, a reach, spaces, members or invite-routes stream whose first request is not
+// part 0 of a snapshot. The gateway then starts a new stream.
 //
 // Changes that concern a home wait for the next quarter hour, as problems of its devices do.
 // This is data minimisation: the api-server keeps only a quarter-hour-coarse record of moves
@@ -104,8 +104,8 @@ option optimize_for = SPEED;
 // timing of a loss cannot tell the api-server that a member became a resident. A loss that
 // follows from a home change (a home removed, a room moved into one) waits with that change.
 //
-// Members are not ordered against the other concerns, and none of their changes waits for a
-// quarter hour (see GatewayMember).
+// Members and invite routes are not ordered against the other concerns, and none of their
+// changes waits for a quarter hour (see GatewayMember, ReportInviteRoutesRequest).
 //
 // The other three concerns are otherwise not ordered against each other, with one rule at a
 // quarter hour: the gateway sends that quarter hour's problem transitions only once its reach and
@@ -646,6 +646,54 @@ message ReportMembersRequest {
 }
 
 message ReportMembersResponse {
+  // As ReportServiceReachResponse.applied_seq.
+  uint64 applied_seq = 1;
+
+  // As ReportServiceReachResponse.resync_required.
+  bool resync_required = 2;
+}
+
+// Which invite secrets this gateway answers for, by hash alone (webrtc.v1 invite.proto
+// gives the hash), so the api-server can route a redeem (signaling.v1.RedeemInvite) to the
+// one gateway that can decide it. Nothing else of an invite leaves the gateway here — not
+// its space, relation, address, creator or expiry — and the hash of a secret says nothing
+// of the secret.
+//
+// A secret's hash is reported from when the secret is issued until it expires, used or not,
+// so that a user who redeemed it can redeem again and be told what came of it
+// (signaling.v1.RedeemOutcome). A revoke, and a resend for the old secrets, removes them at
+// once; an expiry removes them at or soon after the moment, not necessarily to the second,
+// and the gateway still answers INVALID for an expired secret meanwhile. Changes are sent
+// at once.
+//
+// The api-server keeps the hashes of a gateway's current snapshot and changes only, drops
+// them all with the gateway, and routes no redeem by a hash it does not hold.
+//
+// A gateway MUST NOT report more than 10000 hashes at once (two for each of the at most
+// 5000 invites webrtc.v1 CreateInvite allows). The api-server MAY ignore hashes past that.
+message ReportInviteRoutesRequest {
+  // This concern's stream; see SnapshotPart.
+  string stream_id = 1;
+
+  // The streams this one replaced; see SnapshotPart. Empty on the gateway's first.
+  repeated string previous_stream_ids = 2;
+
+  // As ReportServiceReachRequest.seq, on this concern's own stream.
+  uint64 seq = 3;
+
+  // Secret hashes (32 bytes each) this gateway answers for from now.
+  repeated bytes secret_hashes = 4;
+
+  // Secret hashes it no longer answers for. A hash named here and in secret_hashes is
+  // removed.
+  repeated bytes removed_secret_hashes = 5;
+
+  // Set when this request is part of a snapshot of every hash; hashes absent from a whole
+  // snapshot are routed here no more.
+  SnapshotPart snapshot = 6;
+}
+
+message ReportInviteRoutesResponse {
   // As ReportServiceReachResponse.applied_seq.
   uint64 applied_seq = 1;
 
