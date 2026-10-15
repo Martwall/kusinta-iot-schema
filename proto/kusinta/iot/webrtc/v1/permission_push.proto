@@ -3,6 +3,7 @@ syntax = "proto3";
 package kusinta.iot.webrtc.v1;
 
 import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
@@ -41,4 +42,21 @@ message LivePermissionUpdate {
   // Each is sent as the change happens: a loss, a wider view as a resident and a home newly
   // seen as service alike.
   repeated kusinta.iot.identity.v1.SpaceId reset_spaces = 5;
+
+  // The roles the session holds once this change has taken effect, as in
+  // DeviceStateSnapshot.session_roles. Set on every update, a change of role alone included,
+  // so that a promotion or demotion reaches an open app at once.
+  SessionRoles session_roles = 6;
+}
+
+// The roles the gateway holds for a session's user: those it records for them, together
+// with administration their token vouches for. The app MUST prefer these, while the session
+// is up, over any other source of the user's roles on this gateway. They decide only what
+// the app offers; the gateway still decides every request on its own.
+//
+// A gateway that sends them sets the field on every DeviceStateSnapshot and
+// LivePermissionUpdate, so an unset field means a gateway that does not, and an empty list
+// means the user holds no role.
+message SessionRoles {
+  repeated kusinta.iot.access.v1.Role roles = 1;
 }

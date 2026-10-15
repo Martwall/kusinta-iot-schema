@@ -27,6 +27,7 @@ import {
   DeviceRemovedSchema,
 } from '../kusinta/iot/webrtc/v1/device_state_pb.js'
 import { LivePermissionUpdateSchema } from '../kusinta/iot/webrtc/v1/permission_push_pb.js'
+import { Role } from '../kusinta/iot/access/v1/roles_pb.js'
 
 describe('AppHandshake', () => {
   it('round-trips jwt and subscribe_device_ids', () => {
@@ -233,6 +234,22 @@ describe('DeviceStateSnapshot', () => {
   })
 })
 
+describe('DeviceStateSnapshot session roles', () => {
+  it('carries the roles the gateway holds for the session', () => {
+    const snap = create(DeviceStateSnapshotSchema, {
+      sessionRoles: { roles: [Role.PROPERTY_OWNER, Role.RESIDENT] },
+    })
+    const decoded = fromBinary(DeviceStateSnapshotSchema, toBinary(DeviceStateSnapshotSchema, snap))
+    expect(decoded.sessionRoles?.roles).toEqual([Role.PROPERTY_OWNER, Role.RESIDENT])
+  })
+
+  it('tells no role apart from no roles sent', () => {
+    const snap = create(DeviceStateSnapshotSchema, { sessionRoles: { roles: [] } })
+    const decoded = fromBinary(DeviceStateSnapshotSchema, toBinary(DeviceStateSnapshotSchema, snap))
+    expect(decoded.sessionRoles).toBeDefined()
+  })
+})
+
 describe('PropertyReport', () => {
   it('round-trips a property update event', () => {
     const event = create(PropertyReportSchema, {
@@ -262,6 +279,16 @@ describe('LivePermissionUpdate', () => {
     expect(decoded.addedDevices[0].value).toBe('dev-new-1')
     expect(decoded.removedDevices).toHaveLength(1)
     expect(decoded.changeReason).toBe('DEVICE_ASSIGNED')
+  })
+})
+
+describe('LivePermissionUpdate session roles', () => {
+  it('carries the roles after the change', () => {
+    const update = create(LivePermissionUpdateSchema, {
+      sessionRoles: { roles: [Role.GATEWAY_ADMIN] },
+    })
+    const decoded = fromBinary(LivePermissionUpdateSchema, toBinary(LivePermissionUpdateSchema, update))
+    expect(decoded.sessionRoles?.roles).toEqual([Role.GATEWAY_ADMIN])
   })
 })
 

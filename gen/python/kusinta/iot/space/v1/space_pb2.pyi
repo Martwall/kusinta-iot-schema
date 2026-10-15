@@ -42,9 +42,11 @@ class Space(_message.Message):
     def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., sub_space_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., resident_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., tenant_id: _Optional[_Union[_identity_pb2.TenantId, _Mapping]] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., time_zone: _Optional[str] = ..., members: _Optional[_Iterable[_Union[SpaceMember, _Mapping]]] = ..., members_withheld: _Optional[bool] = ...) -> None: ...
 
 class SpaceMember(_message.Message):
-    __slots__ = ("user_id", "relation")
+    __slots__ = ("user_id", "relation", "name")
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     RELATION_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
     user_id: _identity_pb2.UserId
     relation: _roles_pb2.MembershipRelation
-    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ...) -> None: ...
+    name: str
+    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., name: _Optional[str] = ...) -> None: ...

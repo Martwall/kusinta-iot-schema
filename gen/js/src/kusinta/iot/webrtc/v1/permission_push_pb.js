@@ -4,13 +4,14 @@
 
 import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
 import { file_kusinta_iot_access_v1_acl } from "../../access/v1/acl_pb.js";
+import { file_kusinta_iot_access_v1_roles } from "../../access/v1/roles_pb.js";
 import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/permission_push.proto.
  */
 export const file_kusinta_iot_webrtc_v1_permission_push = /*@__PURE__*/
-  fileDesc("CitrdXNpbnRhL2lvdC93ZWJydGMvdjEvcGVybWlzc2lvbl9wdXNoLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEioQIKFExpdmVQZXJtaXNzaW9uVXBkYXRlEkQKD25ld19wZXJtaXNzaW9ucxgBIAEoCzIrLmt1c2ludGEuaW90LmFjY2Vzcy52MS5FZmZlY3RpdmVQZXJtaXNzaW9ucxI4Cg1hZGRlZF9kZXZpY2VzGAIgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSOgoPcmVtb3ZlZF9kZXZpY2VzGAMgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSFQoNY2hhbmdlX3JlYXNvbhgEIAEoCRI2CgxyZXNldF9zcGFjZXMYBSADKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkQgJIAWIGcHJvdG8z", [file_kusinta_iot_access_v1_acl, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CitrdXNpbnRhL2lvdC93ZWJydGMvdjEvcGVybWlzc2lvbl9wdXNoLnByb3RvEhVrdXNpbnRhLmlvdC53ZWJydGMudjEi3QIKFExpdmVQZXJtaXNzaW9uVXBkYXRlEkQKD25ld19wZXJtaXNzaW9ucxgBIAEoCzIrLmt1c2ludGEuaW90LmFjY2Vzcy52MS5FZmZlY3RpdmVQZXJtaXNzaW9ucxI4Cg1hZGRlZF9kZXZpY2VzGAIgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSOgoPcmVtb3ZlZF9kZXZpY2VzGAMgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSFQoNY2hhbmdlX3JlYXNvbhgEIAEoCRI2CgxyZXNldF9zcGFjZXMYBSADKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkEjoKDXNlc3Npb25fcm9sZXMYBiABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudjEuU2Vzc2lvblJvbGVzIjoKDFNlc3Npb25Sb2xlcxIqCgVyb2xlcxgBIAMoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2xlQgJIAWIGcHJvdG8z", [file_kusinta_iot_access_v1_acl, file_kusinta_iot_access_v1_roles, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.LivePermissionUpdate.
@@ -18,4 +19,11 @@ export const file_kusinta_iot_webrtc_v1_permission_push = /*@__PURE__*/
  */
 export const LivePermissionUpdateSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_permission_push, 0);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SessionRoles.
+ * Use `create(SessionRolesSchema)` to create a new message.
+ */
+export const SessionRolesSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_permission_push, 1);
 

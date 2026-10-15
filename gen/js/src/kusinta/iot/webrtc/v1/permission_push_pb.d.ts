@@ -6,6 +6,7 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { EffectivePermissions } from "../../access/v1/acl_pb.js";
 import type { DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
+import type { Role } from "../../access/v1/roles_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/permission_push.proto.
@@ -71,6 +72,15 @@ export declare type LivePermissionUpdate = Message<"kusinta.iot.webrtc.v1.LivePe
    * @generated from field: repeated kusinta.iot.identity.v1.SpaceId reset_spaces = 5;
    */
   resetSpaces: SpaceId[];
+
+  /**
+   * The roles the session holds once this change has taken effect, as in
+   * DeviceStateSnapshot.session_roles. Set on every update, a change of role alone included,
+   * so that a promotion or demotion reaches an open app at once.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.SessionRoles session_roles = 6;
+   */
+  sessionRoles?: SessionRoles | undefined;
 };
 
 /**
@@ -78,4 +88,29 @@ export declare type LivePermissionUpdate = Message<"kusinta.iot.webrtc.v1.LivePe
  * Use `create(LivePermissionUpdateSchema)` to create a new message.
  */
 export declare const LivePermissionUpdateSchema: GenMessage<LivePermissionUpdate>;
+
+/**
+ * The roles the gateway holds for a session's user: those it records for them, together
+ * with administration their token vouches for. The app MUST prefer these, while the session
+ * is up, over any other source of the user's roles on this gateway. They decide only what
+ * the app offers; the gateway still decides every request on its own.
+ *
+ * A gateway that sends them sets the field on every DeviceStateSnapshot and
+ * LivePermissionUpdate, so an unset field means a gateway that does not, and an empty list
+ * means the user holds no role.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SessionRoles
+ */
+export declare type SessionRoles = Message<"kusinta.iot.webrtc.v1.SessionRoles"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.access.v1.Role roles = 1;
+   */
+  roles: Role[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SessionRoles.
+ * Use `create(SessionRolesSchema)` to create a new message.
+ */
+export declare const SessionRolesSchema: GenMessage<SessionRoles>;
 

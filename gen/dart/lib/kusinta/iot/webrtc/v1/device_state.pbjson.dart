@@ -65,6 +65,14 @@ const DeviceStateSnapshot$json = {
       '6': '.kusinta.iot.webrtc.v1.ServiceStatus',
       '10': 'serviceStatuses'
     },
+    {
+      '1': 'session_roles',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SessionRoles',
+      '10': 'sessionRoles'
+    },
   ],
 };
 
@@ -75,7 +83,8 @@ final $typed_data.Uint8List deviceStateSnapshotDescriptor = $convert.base64Decod
     'b3QuYWNjZXNzLnYxLkVmZmVjdGl2ZVBlcm1pc3Npb25zUgtwZXJtaXNzaW9ucxJBCg5zbmFwc2'
     'hvdHRlZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSDXNuYXBzaG90dGVk'
     'QXQSTwoQc2VydmljZV9zdGF0dXNlcxgEIAMoCzIkLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZX'
-    'J2aWNlU3RhdHVzUg9zZXJ2aWNlU3RhdHVzZXM=');
+    'J2aWNlU3RhdHVzUg9zZXJ2aWNlU3RhdHVzZXMSSAoNc2Vzc2lvbl9yb2xlcxgFIAEoCzIjLmt1'
+    'c2ludGEuaW90LndlYnJ0Yy52MS5TZXNzaW9uUm9sZXNSDHNlc3Npb25Sb2xlcw==');
 
 @$core.Deprecated('Use serviceStatusDescriptor instead')
 const ServiceStatus$json = {

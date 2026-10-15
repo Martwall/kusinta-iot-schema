@@ -280,7 +280,10 @@ record the organisation that owns the property (`SetOwnerOrganisation`). An end 
 ever takes away a technician's role and service memberships. A resident's
 `PrivacyDisclosure` names the people counted under each role, by the name they gave
 (`AppTokenClaims.name`), without saying where anyone lives; a technician asking gets the
-kinds of party alone.
+kinds of party alone. The residents of a home see the people they live with by name too
+(`SpaceMember.name`), and no one else sees a resident's name. The roles a session holds come
+with its snapshot and every `LivePermissionUpdate` (`SessionRoles`), so a promotion or
+demotion reaches an open app at once.
 
 ## Residents and service: what a home discloses
 

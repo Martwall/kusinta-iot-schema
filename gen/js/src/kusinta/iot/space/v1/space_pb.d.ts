@@ -145,6 +145,20 @@ export declare type SpaceMember = Message<"kusinta.iot.space.v1.SpaceMember"> & 
    * @generated from field: kusinta.iot.access.v1.MembershipRelation relation = 2;
    */
   relation: MembershipRelation;
+
+  /**
+   * The name the member gave, self-chosen and not verified, so the app shows it as the name
+   * they gave rather than as an identity. Given only to a caller who is a resident of the
+   * apartment the member is filed on, or on one of its rooms: the people they live with,
+   * and anyone filed on their home as service, whom webrtc.v1.PrivacyDisclosure already
+   * names to them. Empty for every other caller — a property owner, an administrator,
+   * service, and residents of any other home — and for a member whose name the gateway has
+   * not learnt. A caller who is a resident of the home reads an empty name as not known;
+   * anyone else is given none. Residents are never named anywhere else.
+   *
+   * @generated from field: string name = 3;
+   */
+  name: string;
 };
 
 /**

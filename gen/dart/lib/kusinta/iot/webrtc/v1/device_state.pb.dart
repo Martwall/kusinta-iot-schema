@@ -17,9 +17,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../access/v1/acl.pb.dart' as $1;
 import '../../device/v1/device.pb.dart' as $0;
-import '../../device/v1/property_update.pb.dart' as $4;
-import '../../identity/v1/identity.pb.dart' as $3;
+import '../../device/v1/property_update.pb.dart' as $5;
+import '../../identity/v1/identity.pb.dart' as $4;
 import 'device_state.pbenum.dart';
+import 'permission_push.pb.dart' as $3;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -34,12 +35,14 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
     $1.EffectivePermissions? permissions,
     $2.Timestamp? snapshottedAt,
     $core.Iterable<ServiceStatus>? serviceStatuses,
+    $3.SessionRoles? sessionRoles,
   }) {
     final result = create();
     if (devices != null) result.devices.addAll(devices);
     if (permissions != null) result.permissions = permissions;
     if (snapshottedAt != null) result.snapshottedAt = snapshottedAt;
     if (serviceStatuses != null) result.serviceStatuses.addAll(serviceStatuses);
+    if (sessionRoles != null) result.sessionRoles = sessionRoles;
     return result;
   }
 
@@ -66,6 +69,8 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
     ..pc<ServiceStatus>(
         4, _omitFieldNames ? '' : 'serviceStatuses', $pb.PbFieldType.PM,
         subBuilder: ServiceStatus.create)
+    ..aOM<$3.SessionRoles>(5, _omitFieldNames ? '' : 'sessionRoles',
+        subBuilder: $3.SessionRoles.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -119,6 +124,19 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
   /// resident — has none until the next.
   @$pb.TagNumber(4)
   $pb.PbList<ServiceStatus> get serviceStatuses => $_getList(3);
+
+  /// The roles the gateway holds for the session as it opens (see SessionRoles). Every
+  /// LivePermissionUpdate after it carries them again.
+  @$pb.TagNumber(5)
+  $3.SessionRoles get sessionRoles => $_getN(4);
+  @$pb.TagNumber(5)
+  set sessionRoles($3.SessionRoles value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSessionRoles() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSessionRoles() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $3.SessionRoles ensureSessionRoles() => $_ensure(4);
 }
 
 /// What keeps a device working, as the gateway judges it, and nothing that describes the
@@ -135,7 +153,7 @@ class DeviceStateSnapshot extends $pb.GeneratedMessage {
 /// change still says the device was heard within that quarter hour, and nothing finer.
 class ServiceStatus extends $pb.GeneratedMessage {
   factory ServiceStatus({
-    $3.DeviceId? deviceId,
+    $4.DeviceId? deviceId,
     $2.Timestamp? asOf,
     $core.bool? reachable,
     $2.Timestamp? unreachableSince,
@@ -173,8 +191,8 @@ class ServiceStatus extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$3.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
-        subBuilder: $3.DeviceId.create)
+    ..aOM<$4.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $4.DeviceId.create)
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'asOf',
         subBuilder: $2.Timestamp.create)
     ..aOB(3, _omitFieldNames ? '' : 'reachable')
@@ -214,15 +232,15 @@ class ServiceStatus extends $pb.GeneratedMessage {
   static ServiceStatus? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.DeviceId get deviceId => $_getN(0);
+  $4.DeviceId get deviceId => $_getN(0);
   @$pb.TagNumber(1)
-  set deviceId($3.DeviceId value) => $_setField(1, value);
+  set deviceId($4.DeviceId value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDeviceId() => $_has(0);
   @$pb.TagNumber(1)
   void clearDeviceId() => $_clearField(1);
   @$pb.TagNumber(1)
-  $3.DeviceId ensureDeviceId() => $_ensure(0);
+  $4.DeviceId ensureDeviceId() => $_ensure(0);
 
   /// Always set. The quarter hour at which the status took its current value, but never
   /// earlier than the start of the recipient's current, unbroken stretch of seeing the
@@ -383,7 +401,7 @@ class ServiceStatusChanged extends $pb.GeneratedMessage {
 /// wins, order does not matter, and a missed one is corrected by the next.
 class PropertyReport extends $pb.GeneratedMessage {
   factory PropertyReport({
-    $4.PropertyUpdate? update,
+    $5.PropertyUpdate? update,
     $2.Timestamp? gatewayProcessedAt,
   }) {
     final result = create();
@@ -407,8 +425,8 @@ class PropertyReport extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$4.PropertyUpdate>(1, _omitFieldNames ? '' : 'update',
-        subBuilder: $4.PropertyUpdate.create)
+    ..aOM<$5.PropertyUpdate>(1, _omitFieldNames ? '' : 'update',
+        subBuilder: $5.PropertyUpdate.create)
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'gatewayProcessedAt',
         subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
@@ -435,15 +453,15 @@ class PropertyReport extends $pb.GeneratedMessage {
   static PropertyReport? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $4.PropertyUpdate get update => $_getN(0);
+  $5.PropertyUpdate get update => $_getN(0);
   @$pb.TagNumber(1)
-  set update($4.PropertyUpdate value) => $_setField(1, value);
+  set update($5.PropertyUpdate value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasUpdate() => $_has(0);
   @$pb.TagNumber(1)
   void clearUpdate() => $_clearField(1);
   @$pb.TagNumber(1)
-  $4.PropertyUpdate ensureUpdate() => $_ensure(0);
+  $5.PropertyUpdate ensureUpdate() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $2.Timestamp get gatewayProcessedAt => $_getN(1);
@@ -545,7 +563,7 @@ class DeviceAdded extends $pb.GeneratedMessage {
 /// may be unset.
 class DeviceRemoved extends $pb.GeneratedMessage {
   factory DeviceRemoved({
-    $3.DeviceId? deviceId,
+    $4.DeviceId? deviceId,
     $core.String? reason,
   }) {
     final result = create();
@@ -568,8 +586,8 @@ class DeviceRemoved extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$3.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
-        subBuilder: $3.DeviceId.create)
+    ..aOM<$4.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $4.DeviceId.create)
     ..aOS(2, _omitFieldNames ? '' : 'reason')
     ..hasRequiredFields = false;
 
@@ -595,15 +613,15 @@ class DeviceRemoved extends $pb.GeneratedMessage {
   static DeviceRemoved? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $3.DeviceId get deviceId => $_getN(0);
+  $4.DeviceId get deviceId => $_getN(0);
   @$pb.TagNumber(1)
-  set deviceId($3.DeviceId value) => $_setField(1, value);
+  set deviceId($4.DeviceId value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasDeviceId() => $_has(0);
   @$pb.TagNumber(1)
   void clearDeviceId() => $_clearField(1);
   @$pb.TagNumber(1)
-  $3.DeviceId ensureDeviceId() => $_ensure(0);
+  $4.DeviceId ensureDeviceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.String get reason => $_getSZ(1);
