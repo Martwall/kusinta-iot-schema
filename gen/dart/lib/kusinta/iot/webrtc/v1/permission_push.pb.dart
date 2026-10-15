@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../access/v1/acl.pb.dart' as $0;
+import '../../access/v1/roles.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $1;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -41,6 +42,7 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
     $core.Iterable<$1.DeviceId>? removedDevices,
     $core.String? changeReason,
     $core.Iterable<$1.SpaceId>? resetSpaces,
+    SessionRoles? sessionRoles,
   }) {
     final result = create();
     if (newPermissions != null) result.newPermissions = newPermissions;
@@ -48,6 +50,7 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
     if (removedDevices != null) result.removedDevices.addAll(removedDevices);
     if (changeReason != null) result.changeReason = changeReason;
     if (resetSpaces != null) result.resetSpaces.addAll(resetSpaces);
+    if (sessionRoles != null) result.sessionRoles = sessionRoles;
     return result;
   }
 
@@ -77,6 +80,8 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
     ..pc<$1.SpaceId>(
         5, _omitFieldNames ? '' : 'resetSpaces', $pb.PbFieldType.PM,
         subBuilder: $1.SpaceId.create)
+    ..aOM<SessionRoles>(6, _omitFieldNames ? '' : 'sessionRoles',
+        subBuilder: SessionRoles.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -141,6 +146,82 @@ class LivePermissionUpdate extends $pb.GeneratedMessage {
   /// seen as service alike.
   @$pb.TagNumber(5)
   $pb.PbList<$1.SpaceId> get resetSpaces => $_getList(4);
+
+  /// The roles the session holds once this change has taken effect, as in
+  /// DeviceStateSnapshot.session_roles. Set on every update, a change of role alone included,
+  /// so that a promotion or demotion reaches an open app at once.
+  @$pb.TagNumber(6)
+  SessionRoles get sessionRoles => $_getN(5);
+  @$pb.TagNumber(6)
+  set sessionRoles(SessionRoles value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSessionRoles() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSessionRoles() => $_clearField(6);
+  @$pb.TagNumber(6)
+  SessionRoles ensureSessionRoles() => $_ensure(5);
+}
+
+/// The roles the gateway holds for a session's user: those it records for them, together
+/// with administration their token vouches for. The app MUST prefer these, while the session
+/// is up, over any other source of the user's roles on this gateway. They decide only what
+/// the app offers; the gateway still decides every request on its own.
+///
+/// A gateway that sends them sets the field on every DeviceStateSnapshot and
+/// LivePermissionUpdate, so an unset field means a gateway that does not, and an empty list
+/// means the user holds no role.
+class SessionRoles extends $pb.GeneratedMessage {
+  factory SessionRoles({
+    $core.Iterable<$2.Role>? roles,
+  }) {
+    final result = create();
+    if (roles != null) result.roles.addAll(roles);
+    return result;
+  }
+
+  SessionRoles._();
+
+  factory SessionRoles.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SessionRoles.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SessionRoles',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<$2.Role>(1, _omitFieldNames ? '' : 'roles', $pb.PbFieldType.KE,
+        valueOf: $2.Role.valueOf,
+        enumValues: $2.Role.values,
+        defaultEnumValue: $2.Role.ROLE_UNSPECIFIED)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SessionRoles clone() => SessionRoles()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SessionRoles copyWith(void Function(SessionRoles) updates) =>
+      super.copyWith((message) => updates(message as SessionRoles))
+          as SessionRoles;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SessionRoles create() => SessionRoles._();
+  @$core.override
+  SessionRoles createEmptyInstance() => create();
+  static $pb.PbList<SessionRoles> createRepeated() =>
+      $pb.PbList<SessionRoles>();
+  @$core.pragma('dart2js:noInline')
+  static SessionRoles getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SessionRoles>(create);
+  static SessionRoles? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$2.Role> get roles => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

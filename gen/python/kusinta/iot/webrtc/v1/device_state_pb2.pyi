@@ -5,6 +5,7 @@ from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
 from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.device.v1 import property_update_pb2 as _property_update_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
+from kusinta.iot.webrtc.v1 import permission_push_pb2 as _permission_push_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -24,16 +25,18 @@ SERVICE_FAULT_ERROR: ServiceFault
 SERVICE_FAULT_TAMPER: ServiceFault
 
 class DeviceStateSnapshot(_message.Message):
-    __slots__ = ("devices", "permissions", "snapshotted_at", "service_statuses")
+    __slots__ = ("devices", "permissions", "snapshotted_at", "service_statuses", "session_roles")
     DEVICES_FIELD_NUMBER: _ClassVar[int]
     PERMISSIONS_FIELD_NUMBER: _ClassVar[int]
     SNAPSHOTTED_AT_FIELD_NUMBER: _ClassVar[int]
     SERVICE_STATUSES_FIELD_NUMBER: _ClassVar[int]
+    SESSION_ROLES_FIELD_NUMBER: _ClassVar[int]
     devices: _containers.RepeatedCompositeFieldContainer[_device_pb2.Device]
     permissions: _acl_pb2.EffectivePermissions
     snapshotted_at: _timestamp_pb2.Timestamp
     service_statuses: _containers.RepeatedCompositeFieldContainer[ServiceStatus]
-    def __init__(self, devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., permissions: _Optional[_Union[_acl_pb2.EffectivePermissions, _Mapping]] = ..., snapshotted_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., service_statuses: _Optional[_Iterable[_Union[ServiceStatus, _Mapping]]] = ...) -> None: ...
+    session_roles: _permission_push_pb2.SessionRoles
+    def __init__(self, devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., permissions: _Optional[_Union[_acl_pb2.EffectivePermissions, _Mapping]] = ..., snapshotted_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., service_statuses: _Optional[_Iterable[_Union[ServiceStatus, _Mapping]]] = ..., session_roles: _Optional[_Union[_permission_push_pb2.SessionRoles, _Mapping]] = ...) -> None: ...
 
 class ServiceStatus(_message.Message):
     __slots__ = ("device_id", "as_of", "reachable", "unreachable_since", "battery_percent", "battery_low", "battery_replacement_needed", "radio_quality", "faults")

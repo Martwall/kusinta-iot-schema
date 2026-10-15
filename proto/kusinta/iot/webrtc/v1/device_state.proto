@@ -7,6 +7,7 @@ import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/device/v1/property_update.proto";
 import "kusinta/iot/identity/v1/identity.proto";
+import "kusinta/iot/webrtc/v1/permission_push.proto";
 
 option optimize_for = SPEED;
 
@@ -22,6 +23,10 @@ message DeviceStateSnapshot {
   // the recipient began to see since the last quarter hour — or began to see as its
   // resident — has none until the next.
   repeated ServiceStatus service_statuses = 4;
+
+  // The roles the gateway holds for the session as it opens (see SessionRoles). Every
+  // LivePermissionUpdate after it carries them again.
+  SessionRoles session_roles = 5;
 }
 
 // What keeps a device working, as the gateway judges it, and nothing that describes the

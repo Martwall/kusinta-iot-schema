@@ -67,4 +67,13 @@ describe('Space', () => {
     const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, building))
     expect(decoded.timeZone).toBe('Europe/Stockholm')
   })
+
+  it('names a member as they gave their name', () => {
+    const home = create(SpaceSchema, {
+      spaceId: { value: 'lgh-1102' },
+      members: [{ userId: { value: 'anna' }, name: 'Anna' }],
+    })
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, home))
+    expect(decoded.members[0].name).toBe('Anna')
+  })
 })

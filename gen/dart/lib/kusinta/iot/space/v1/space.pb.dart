@@ -270,10 +270,12 @@ class SpaceMember extends $pb.GeneratedMessage {
   factory SpaceMember({
     $0.UserId? userId,
     $2.MembershipRelation? relation,
+    $core.String? name,
   }) {
     final result = create();
     if (userId != null) result.userId = userId;
     if (relation != null) result.relation = relation;
+    if (name != null) result.name = name;
     return result;
   }
 
@@ -298,6 +300,7 @@ class SpaceMember extends $pb.GeneratedMessage {
         defaultOrMaker: $2.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
         valueOf: $2.MembershipRelation.valueOf,
         enumValues: $2.MembershipRelation.values)
+    ..aOS(3, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -339,6 +342,23 @@ class SpaceMember extends $pb.GeneratedMessage {
   $core.bool hasRelation() => $_has(1);
   @$pb.TagNumber(2)
   void clearRelation() => $_clearField(2);
+
+  /// The name the member gave, self-chosen and not verified, so the app shows it as the name
+  /// they gave rather than as an identity. Given only to a caller who is a resident of the
+  /// apartment the member is filed on, or on one of its rooms: the people they live with,
+  /// and anyone filed on their home as service, whom webrtc.v1.PrivacyDisclosure already
+  /// names to them. Empty for every other caller — a property owner, an administrator,
+  /// service, and residents of any other home — and for a member whose name the gateway has
+  /// not learnt. A caller who is a resident of the home reads an empty name as not known;
+  /// anyone else is given none. Residents are never named anywhere else.
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
 }
 
 const $core.bool _omitFieldNames =

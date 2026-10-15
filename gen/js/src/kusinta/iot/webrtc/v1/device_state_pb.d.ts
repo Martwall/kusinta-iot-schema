@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { EffectivePermissions } from "../../access/v1/acl_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { SessionRoles } from "./permission_push_pb.js";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
 import type { PropertyUpdate } from "../../device/v1/property_update_pb.js";
 
@@ -46,6 +47,14 @@ export declare type DeviceStateSnapshot = Message<"kusinta.iot.webrtc.v1.DeviceS
    * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceStatus service_statuses = 4;
    */
   serviceStatuses: ServiceStatus[];
+
+  /**
+   * The roles the gateway holds for the session as it opens (see SessionRoles). Every
+   * LivePermissionUpdate after it carries them again.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.SessionRoles session_roles = 5;
+   */
+  sessionRoles?: SessionRoles | undefined;
 };
 
 /**

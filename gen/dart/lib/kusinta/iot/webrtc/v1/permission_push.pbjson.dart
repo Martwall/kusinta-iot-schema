@@ -51,6 +51,14 @@ const LivePermissionUpdate$json = {
       '6': '.kusinta.iot.identity.v1.SpaceId',
       '10': 'resetSpaces'
     },
+    {
+      '1': 'session_roles',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SessionRoles',
+      '10': 'sessionRoles'
+    },
   ],
 };
 
@@ -62,4 +70,25 @@ final $typed_data.Uint8List livePermissionUpdateDescriptor = $convert.base64Deco
     'IMYWRkZWREZXZpY2VzEkoKD3JlbW92ZWRfZGV2aWNlcxgDIAMoCzIhLmt1c2ludGEuaW90Lmlk'
     'ZW50aXR5LnYxLkRldmljZUlkUg5yZW1vdmVkRGV2aWNlcxIjCg1jaGFuZ2VfcmVhc29uGAQgAS'
     'gJUgxjaGFuZ2VSZWFzb24SQwoMcmVzZXRfc3BhY2VzGAUgAygLMiAua3VzaW50YS5pb3QuaWRl'
-    'bnRpdHkudjEuU3BhY2VJZFILcmVzZXRTcGFjZXM=');
+    'bnRpdHkudjEuU3BhY2VJZFILcmVzZXRTcGFjZXMSSAoNc2Vzc2lvbl9yb2xlcxgGIAEoCzIjLm'
+    't1c2ludGEuaW90LndlYnJ0Yy52MS5TZXNzaW9uUm9sZXNSDHNlc3Npb25Sb2xlcw==');
+
+@$core.Deprecated('Use sessionRolesDescriptor instead')
+const SessionRoles$json = {
+  '1': 'SessionRoles',
+  '2': [
+    {
+      '1': 'roles',
+      '3': 1,
+      '4': 3,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'roles'
+    },
+  ],
+};
+
+/// Descriptor for `SessionRoles`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sessionRolesDescriptor = $convert.base64Decode(
+    'CgxTZXNzaW9uUm9sZXMSMQoFcm9sZXMYASADKA4yGy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuUm'
+    '9sZVIFcm9sZXM=');

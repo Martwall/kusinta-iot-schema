@@ -136,6 +136,7 @@ const SpaceMember$json = {
       '6': '.kusinta.iot.access.v1.MembershipRelation',
       '10': 'relation'
     },
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
   ],
 };
 
@@ -143,4 +144,4 @@ const SpaceMember$json = {
 final $typed_data.Uint8List spaceMemberDescriptor = $convert.base64Decode(
     'CgtTcGFjZU1lbWJlchI4Cgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
     'EuVXNlcklkUgZ1c2VySWQSRQoIcmVsYXRpb24YAiABKA4yKS5rdXNpbnRhLmlvdC5hY2Nlc3Mu'
-    'djEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbg==');
+    'djEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbhISCgRuYW1lGAMgASgJUgRuYW1l');
