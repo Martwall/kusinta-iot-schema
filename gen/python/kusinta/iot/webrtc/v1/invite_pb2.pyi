@@ -94,7 +94,7 @@ class IssuedInvite(_message.Message):
     def __init__(self, invite: _Optional[_Union[Invite, _Mapping]] = ..., token: _Optional[str] = ..., code: _Optional[str] = ...) -> None: ...
 
 class JoinRequest(_message.Message):
-    __slots__ = ("request_id", "space_id", "relation", "user_id", "display_name", "invited_by", "requested_at", "expires_at", "email")
+    __slots__ = ("request_id", "space_id", "relation", "user_id", "display_name", "invited_by", "requested_at", "expires_at", "email", "access_until")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RELATION_FIELD_NUMBER: _ClassVar[int]
@@ -104,6 +104,7 @@ class JoinRequest(_message.Message):
     REQUESTED_AT_FIELD_NUMBER: _ClassVar[int]
     EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
     EMAIL_FIELD_NUMBER: _ClassVar[int]
+    ACCESS_UNTIL_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     space_id: _identity_pb2.SpaceId
     relation: _roles_pb2.MembershipRelation
@@ -113,7 +114,8 @@ class JoinRequest(_message.Message):
     requested_at: _timestamp_pb2.Timestamp
     expires_at: _timestamp_pb2.Timestamp
     email: str
-    def __init__(self, request_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., display_name: _Optional[str] = ..., invited_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., requested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., email: _Optional[str] = ...) -> None: ...
+    access_until: _timestamp_pb2.Timestamp
+    def __init__(self, request_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., display_name: _Optional[str] = ..., invited_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., requested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., email: _Optional[str] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class SpaceInvites(_message.Message):
     __slots__ = ("space_id", "invites", "join_requests")

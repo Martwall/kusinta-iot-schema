@@ -268,7 +268,7 @@ owner. The app redeems a secret through the api-server, which routes it to the o
 reporting that hash (`ReportInviteRoutes`) as a `RedeemInvite` on the signaling stream. An
 invite bound to an email address files its verified owner at once; any other makes a join
 request that someone who may file there approves. A Technician invite may carry an end date
-(`access_until`).
+(`access_until`), which its join request carries too, so the approver sees it.
 
 ## Members
 

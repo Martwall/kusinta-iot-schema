@@ -144,10 +144,11 @@ class CreateInvite extends $pb.GeneratedMessage {
   /// on a RESIDENT invite it is INVALID_REQUEST, as is a time not after now. Unset for no
   /// end. Both secrets expire no later than it.
   ///
-  /// It reaches only someone the redeem makes a technician: a user who held no role but
-  /// ROLE_RESIDENT before. For anyone else redeeming the invite it is ignored, so an invite
-  /// can neither shorten nor lengthen a member's access, nor put an end on a property owner
-  /// or an administrator.
+  /// It reaches only someone the redeem, or the approval of the join request it makes, makes
+  /// a technician: a user who held no role but ROLE_RESIDENT before and is not the
+  /// registering administrator. For anyone else it is ignored, so an invite can neither
+  /// shorten nor lengthen a member's access, nor put an end on a property owner or an
+  /// administrator. A join request the invite makes expires no later than it.
   @$pb.TagNumber(4)
   $1.Timestamp get accessUntil => $_getN(3);
   @$pb.TagNumber(4)
@@ -820,6 +821,7 @@ class JoinRequest extends $pb.GeneratedMessage {
     $1.Timestamp? requestedAt,
     $1.Timestamp? expiresAt,
     $core.String? email,
+    $1.Timestamp? accessUntil,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -831,6 +833,7 @@ class JoinRequest extends $pb.GeneratedMessage {
     if (requestedAt != null) result.requestedAt = requestedAt;
     if (expiresAt != null) result.expiresAt = expiresAt;
     if (email != null) result.email = email;
+    if (accessUntil != null) result.accessUntil = accessUntil;
     return result;
   }
 
@@ -866,6 +869,8 @@ class JoinRequest extends $pb.GeneratedMessage {
     ..aOM<$1.Timestamp>(8, _omitFieldNames ? '' : 'expiresAt',
         subBuilder: $1.Timestamp.create)
     ..aOS(9, _omitFieldNames ? '' : 'email')
+    ..aOM<$1.Timestamp>(10, _omitFieldNames ? '' : 'accessUntil',
+        subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -987,6 +992,20 @@ class JoinRequest extends $pb.GeneratedMessage {
   $core.bool hasEmail() => $_has(8);
   @$pb.TagNumber(9)
   void clearEmail() => $_clearField(9);
+
+  /// The end of access the request asks for: CreateInvite.access_until of the invite that
+  /// was redeemed, which the approval gives as that field says. Unset for none. The request
+  /// expires no later than it, so it is never approved once the end has passed.
+  @$pb.TagNumber(10)
+  $1.Timestamp get accessUntil => $_getN(9);
+  @$pb.TagNumber(10)
+  set accessUntil($1.Timestamp value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAccessUntil() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAccessUntil() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $1.Timestamp ensureAccessUntil() => $_ensure(9);
 }
 
 /// What a space is waiting on: its pending invites and its join requests.

@@ -68,10 +68,11 @@ export declare type CreateInvite = Message<"kusinta.iot.webrtc.v1.CreateInvite">
    * on a RESIDENT invite it is INVALID_REQUEST, as is a time not after now. Unset for no
    * end. Both secrets expire no later than it.
    *
-   * It reaches only someone the redeem makes a technician: a user who held no role but
-   * ROLE_RESIDENT before. For anyone else redeeming the invite it is ignored, so an invite
-   * can neither shorten nor lengthen a member's access, nor put an end on a property owner
-   * or an administrator.
+   * It reaches only someone the redeem, or the approval of the join request it makes, makes
+   * a technician: a user who held no role but ROLE_RESIDENT before and is not the
+   * registering administrator. For anyone else it is ignored, so an invite can neither
+   * shorten nor lengthen a member's access, nor put an end on a property owner or an
+   * administrator. A join request the invite makes expires no later than it.
    *
    * @generated from field: google.protobuf.Timestamp access_until = 4;
    */
@@ -377,6 +378,15 @@ export declare type JoinRequest = Message<"kusinta.iot.webrtc.v1.JoinRequest"> &
    * @generated from field: string email = 9;
    */
   email: string;
+
+  /**
+   * The end of access the request asks for: CreateInvite.access_until of the invite that
+   * was redeemed, which the approval gives as that field says. Unset for none. The request
+   * expires no later than it, so it is never approved once the end has passed.
+   *
+   * @generated from field: google.protobuf.Timestamp access_until = 10;
+   */
+  accessUntil?: Timestamp | undefined;
 };
 
 /**

@@ -49,6 +49,15 @@ describe('invites over the session', () => {
     expect(decoded.joinRequests.map((r) => r.displayName)).toEqual(['Anna'])
   })
 
+  it('lists a join request with the access end it asks for', () => {
+    const invites = create(SpaceInvitesSchema, {
+      spaceId: { value: 'bbv-29' },
+      joinRequests: [{ requestId: 'jr-1', accessUntil: { seconds: 1_800_000_000n } }],
+    })
+    const decoded = fromBinary(SpaceInvitesSchema, toBinary(SpaceInvitesSchema, invites))
+    expect(decoded.joinRequests[0].accessUntil?.seconds).toBe(1_800_000_000n)
+  })
+
   it('pushes a space whose invites changed', () => {
     const message = create(GatewayMessageSchema, {
       messageId: 'g-1',
