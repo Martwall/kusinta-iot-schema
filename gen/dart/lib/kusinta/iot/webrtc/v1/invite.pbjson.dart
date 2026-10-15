@@ -300,6 +300,14 @@ const JoinRequest$json = {
       '10': 'expiresAt'
     },
     {'1': 'email', '3': 9, '4': 1, '5': 9, '10': 'email'},
+    {
+      '1': 'access_until',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'accessUntil'
+    },
   ],
 };
 
@@ -313,7 +321,8 @@ final $typed_data.Uint8List joinRequestDescriptor = $convert.base64Decode(
     'RlZF9ieRgGIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIJaW52aXRlZEJ5'
     'Ej0KDHJlcXVlc3RlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC3JlcX'
     'Vlc3RlZEF0EjkKCmV4cGlyZXNfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w'
-    'UglleHBpcmVzQXQSFAoFZW1haWwYCSABKAlSBWVtYWls');
+    'UglleHBpcmVzQXQSFAoFZW1haWwYCSABKAlSBWVtYWlsEj0KDGFjY2Vzc191bnRpbBgKIAEoCz'
+    'IaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2FjY2Vzc1VudGls');
 
 @$core.Deprecated('Use spaceInvitesDescriptor instead')
 const SpaceInvites$json = {
