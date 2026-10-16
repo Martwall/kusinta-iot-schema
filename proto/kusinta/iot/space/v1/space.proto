@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package kusinta.iot.space.v1;
 
+import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/identity/v1/identity.proto";
@@ -39,13 +40,19 @@ message Space {
   // Filled according to who asks, since a membership list says who lives where:
   //
   //   * a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN who reaches the space
-  //     sees every member, in a home they see as service too, as the members change;
+  //     sees every member save as below, in a home they see as service too, as the
+  //     members change;
   //   * a resident of an apartment sees every member filed on it or on its rooms — who they
   //     live with, and anyone filed on their home as service, since being filed on a home
   //     is an act on it its residents should see. Service reach from a building or floor
   //     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
   //     hold it, and who, without saying where anyone lives;
   //   * anyone else sees none, residents of a building or floor included.
+  //
+  // Whoever it is listed to, a member who is staff (access.v1.Role, STAFF) and lives in a
+  // home has that RESIDENT membership left out for every caller who does not live in that
+  // home, a property owner and an administrator included: a staff member's residency is
+  // told only to its household. Their SERVICE memberships are listed as any member's.
   repeated SpaceMember members = 13;
 
   // Set when members are not listed to this caller, so that an empty list is not read as
@@ -59,12 +66,19 @@ message SpaceMember {
   kusinta.iot.access.v1.MembershipRelation relation = 2;
 
   // The name the member gave, self-chosen and not verified, so the app shows it as the name
-  // they gave rather than as an identity. Given only to a caller who is a resident of the
+  // they gave rather than as an identity. Given to a caller who is a resident of the
   // apartment the member is filed on, or on one of its rooms: the people they live with,
   // and anyone filed on their home as service, whom webrtc.v1.PrivacyDisclosure already
-  // names to them. Empty for every other caller — a property owner, an administrator,
-  // service, and residents of any other home — and for a member whose name the gateway has
-  // not learnt. A caller who is a resident of the home reads an empty name as not known;
-  // anyone else is given none. Residents are never named anywhere else.
+  // names to them. Given also, for a member who is staff (access.v1.Role, STAFF), to a
+  // caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, as webrtc.v1.MemberDetail.name
+  // names them. Empty for every other caller — service, residents of any other home, and a
+  // property owner or an administrator for a member who is not staff — and for a member
+  // whose name the gateway has not learnt. A caller given names reads an empty one as not
+  // known; anyone else is given none. Residents are named only to their own home.
   string name = 3;
+
+  // As webrtc.v1.MemberSpace.since: the start of the day, in the building's time zone, on
+  // which this membership began; for a resident, the current unbroken residency. Never finer
+  // than a day. Unset where the gateway holds no record of it.
+  google.protobuf.Timestamp since = 4;
 }

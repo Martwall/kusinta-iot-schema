@@ -24,9 +24,14 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER; anyone else is refused as
 /// NOT_ENTITLED.
 ///
-/// This is the one place the gateway says who lives where without the caller reaching the
-/// home: those two roles answer for the whole property, and a resident who moves out is
-/// removed by them (RemoveFromGateway), so they are shown every member and every membership.
+/// Those two roles answer for the whole property, and a resident who moves out is removed by
+/// them (RemoveFromGateway), so every member is listed to them. Each is told apart as the rule
+/// for staff allows (access.v1.Role, STAFF):
+///   * a resident by their memberships — the homes they live in, and since when
+///     (MemberSpace.since) — never by name or address;
+///   * staff by name and email address (MemberDetail.name, MemberDetail.email), and by their
+///     memberships save where they live: a staff member's residency is left out of every
+///     entry but the caller's own, since a residency is told only to its household.
 /// Seeing into a home's life — its devices, readings and history — still takes filing on it.
 class ListGatewayMembers extends $pb.GeneratedMessage {
   factory ListGatewayMembers() => create();
@@ -548,6 +553,7 @@ class MemberDetail extends $pb.GeneratedMessage {
     $core.Iterable<MemberSpace>? memberships,
     $1.Timestamp? accessUntil,
     $core.bool? registeringAdmin,
+    $core.String? email,
   }) {
     final result = create();
     if (userId != null) result.userId = userId;
@@ -556,6 +562,7 @@ class MemberDetail extends $pb.GeneratedMessage {
     if (memberships != null) result.memberships.addAll(memberships);
     if (accessUntil != null) result.accessUntil = accessUntil;
     if (registeringAdmin != null) result.registeringAdmin = registeringAdmin;
+    if (email != null) result.email = email;
     return result;
   }
 
@@ -586,6 +593,7 @@ class MemberDetail extends $pb.GeneratedMessage {
     ..aOM<$1.Timestamp>(5, _omitFieldNames ? '' : 'accessUntil',
         subBuilder: $1.Timestamp.create)
     ..aOB(6, _omitFieldNames ? '' : 'registeringAdmin')
+    ..aOS(7, _omitFieldNames ? '' : 'email')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -622,8 +630,10 @@ class MemberDetail extends $pb.GeneratedMessage {
 
   /// The name they gave their account, as the gateway last learnt it: from AppTokenClaims.name
   /// when they connect, or from signaling.v1.RedeemInvite.display_name when they redeem with
-  /// none learnt yet. Self-chosen, so the app shows it as such. Empty when none is learnt. The
-  /// gateway keeps it only while they are a member, and drops it when they stop being one.
+  /// none learnt yet. Self-chosen, so the app shows it as such. Given only for a member who is
+  /// staff (access.v1.Role, STAFF), and on the caller's own entry; empty for every other
+  /// resident, and when none is learnt. The gateway keeps it only while they are a member,
+  /// and drops it when they stop being one.
   @$pb.TagNumber(2)
   $core.String get name => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -638,6 +648,8 @@ class MemberDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $pb.PbList<$2.Role> get roles => $_getList(2);
 
+  /// Every space they are filed on, save that a staff member's RESIDENT memberships are left
+  /// out of every entry but the caller's own. A member with none left is still listed.
   @$pb.TagNumber(4)
   $pb.PbList<MemberSpace> get memberships => $_getList(3);
 
@@ -664,6 +676,19 @@ class MemberDetail extends $pb.GeneratedMessage {
   $core.bool hasRegisteringAdmin() => $_has(5);
   @$pb.TagNumber(6)
   void clearRegisteringAdmin() => $_clearField(6);
+
+  /// Their verified email address, as AppTokenClaims.email last gave it, so that staff who
+  /// gave the same name can be told apart. Given only for a member who is staff; empty for a
+  /// resident, and when none is learnt. The gateway keeps it only while they hold a staff
+  /// role.
+  @$pb.TagNumber(7)
+  $core.String get email => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set email($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasEmail() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearEmail() => $_clearField(7);
 }
 
 /// One space a member is filed on, and how they stand to it.
@@ -671,10 +696,12 @@ class MemberSpace extends $pb.GeneratedMessage {
   factory MemberSpace({
     $0.SpaceId? spaceId,
     $2.MembershipRelation? relation,
+    $1.Timestamp? since,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
     if (relation != null) result.relation = relation;
+    if (since != null) result.since = since;
     return result;
   }
 
@@ -699,6 +726,8 @@ class MemberSpace extends $pb.GeneratedMessage {
         defaultOrMaker: $2.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
         valueOf: $2.MembershipRelation.valueOf,
         enumValues: $2.MembershipRelation.values)
+    ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'since',
+        subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -740,6 +769,21 @@ class MemberSpace extends $pb.GeneratedMessage {
   $core.bool hasRelation() => $_has(1);
   @$pb.TagNumber(2)
   void clearRelation() => $_clearField(2);
+
+  /// The start of the day, in the building's time zone (space.v1.Space.time_zone), on which
+  /// the current membership began; for a resident, the current unbroken residency
+  /// (access.v1.MembershipRelation). Never finer than a day. Unset where the gateway holds no
+  /// record of it.
+  @$pb.TagNumber(3)
+  $1.Timestamp get since => $_getN(2);
+  @$pb.TagNumber(3)
+  set since($1.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSince() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSince() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.Timestamp ensureSince() => $_ensure(2);
 }
 
 const $core.bool _omitFieldNames =

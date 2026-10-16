@@ -18,9 +18,14 @@ export declare const file_kusinta_iot_webrtc_v1_members: GenFile;
  * holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER; anyone else is refused as
  * NOT_ENTITLED.
  *
- * This is the one place the gateway says who lives where without the caller reaching the
- * home: those two roles answer for the whole property, and a resident who moves out is
- * removed by them (RemoveFromGateway), so they are shown every member and every membership.
+ * Those two roles answer for the whole property, and a resident who moves out is removed by
+ * them (RemoveFromGateway), so every member is listed to them. Each is told apart as the rule
+ * for staff allows (access.v1.Role, STAFF):
+ *   * a resident by their memberships — the homes they live in, and since when
+ *     (MemberSpace.since) — never by name or address;
+ *   * staff by name and email address (MemberDetail.name, MemberDetail.email), and by their
+ *     memberships save where they live: a staff member's residency is left out of every
+ *     entry but the caller's own, since a residency is told only to its household.
  * Seeing into a home's life — its devices, readings and history — still takes filing on it.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListGatewayMembers
@@ -229,8 +234,10 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
   /**
    * The name they gave their account, as the gateway last learnt it: from AppTokenClaims.name
    * when they connect, or from signaling.v1.RedeemInvite.display_name when they redeem with
-   * none learnt yet. Self-chosen, so the app shows it as such. Empty when none is learnt. The
-   * gateway keeps it only while they are a member, and drops it when they stop being one.
+   * none learnt yet. Self-chosen, so the app shows it as such. Given only for a member who is
+   * staff (access.v1.Role, STAFF), and on the caller's own entry; empty for every other
+   * resident, and when none is learnt. The gateway keeps it only while they are a member,
+   * and drops it when they stop being one.
    *
    * @generated from field: string name = 2;
    */
@@ -245,6 +252,9 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
   roles: Role[];
 
   /**
+   * Every space they are filed on, save that a staff member's RESIDENT memberships are left
+   * out of every entry but the caller's own. A member with none left is still listed.
+   *
    * @generated from field: repeated kusinta.iot.webrtc.v1.MemberSpace memberships = 4;
    */
   memberships: MemberSpace[];
@@ -264,6 +274,16 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
    * @generated from field: bool registering_admin = 6;
    */
   registeringAdmin: boolean;
+
+  /**
+   * Their verified email address, as AppTokenClaims.email last gave it, so that staff who
+   * gave the same name can be told apart. Given only for a member who is staff; empty for a
+   * resident, and when none is learnt. The gateway keeps it only while they hold a staff
+   * role.
+   *
+   * @generated from field: string email = 7;
+   */
+  email: string;
 };
 
 /**
@@ -287,6 +307,16 @@ export declare type MemberSpace = Message<"kusinta.iot.webrtc.v1.MemberSpace"> &
    * @generated from field: kusinta.iot.access.v1.MembershipRelation relation = 2;
    */
   relation: MembershipRelation;
+
+  /**
+   * The start of the day, in the building's time zone (space.v1.Space.time_zone), on which
+   * the current membership began; for a resident, the current unbroken residency
+   * (access.v1.MembershipRelation). Never finer than a day. Unset where the gateway holds no
+   * record of it.
+   *
+   * @generated from field: google.protobuf.Timestamp since = 3;
+   */
+  since?: Timestamp | undefined;
 };
 
 /**

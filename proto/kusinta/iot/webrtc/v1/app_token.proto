@@ -83,7 +83,17 @@ message AppTokenClaims {
   // token without it. Carried in the JWT as "name".
   string name = 8;
 
-  // Field numbers 9+ reserved for future custom claims.
+  // The verified email address of the account, or empty. The issuer sets it for a user who
+  // is staff (access.v1.Role, STAFF) on the token's gateway as the member report stands
+  // (reporting.v1.GatewayMember), the registering administrator included, when the identity
+  // provider marks their address verified. It MUST be empty for anyone else, and for an
+  // address not marked verified. The gateway MUST keep it only while the user holds a
+  // staff role, and use it only to tell staff apart to whoever may list every member
+  // (MemberDetail.email). A validator accepts a token without it. Carried in the JWT as
+  // "email".
+  string email = 9;
+
+  // Field numbers 10+ reserved for future custom claims.
 }
 
 // RFC 7800 confirmation, the value of the "cnf" claim. A separate message

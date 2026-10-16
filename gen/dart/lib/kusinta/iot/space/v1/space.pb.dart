@@ -14,8 +14,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../access/v1/roles.pbenum.dart' as $2;
-import '../../common/v1/types.pbenum.dart' as $1;
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
+import '../../access/v1/roles.pbenum.dart' as $3;
+import '../../common/v1/types.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -23,7 +24,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 class Space extends $pb.GeneratedMessage {
   factory Space({
     $0.SpaceId? spaceId,
-    $1.SpaceType? spaceType,
+    $2.SpaceType? spaceType,
     $core.String? name,
     $core.String? description,
     $core.int? floor,
@@ -71,10 +72,10 @@ class Space extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$1.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
-        defaultOrMaker: $1.SpaceType.SPACE_TYPE_UNSPECIFIED,
-        valueOf: $1.SpaceType.valueOf,
-        enumValues: $1.SpaceType.values)
+    ..e<$2.SpaceType>(2, _omitFieldNames ? '' : 'spaceType', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.SpaceType.SPACE_TYPE_UNSPECIFIED,
+        valueOf: $2.SpaceType.valueOf,
+        enumValues: $2.SpaceType.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
     ..aOS(4, _omitFieldNames ? '' : 'description')
     ..a<$core.int>(5, _omitFieldNames ? '' : 'floor', $pb.PbFieldType.O3)
@@ -128,9 +129,9 @@ class Space extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $1.SpaceType get spaceType => $_getN(1);
+  $2.SpaceType get spaceType => $_getN(1);
   @$pb.TagNumber(2)
-  set spaceType($1.SpaceType value) => $_setField(2, value);
+  set spaceType($2.SpaceType value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSpaceType() => $_has(1);
   @$pb.TagNumber(2)
@@ -243,13 +244,19 @@ class Space extends $pb.GeneratedMessage {
   /// Filled according to who asks, since a membership list says who lives where:
   ///
   ///   * a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN who reaches the space
-  ///     sees every member, in a home they see as service too, as the members change;
+  ///     sees every member save as below, in a home they see as service too, as the
+  ///     members change;
   ///   * a resident of an apartment sees every member filed on it or on its rooms — who they
   ///     live with, and anyone filed on their home as service, since being filed on a home
   ///     is an act on it its residents should see. Service reach from a building or floor
   ///     above is not listed; webrtc.v1.PrivacyDisclosure tells them what kinds of party
   ///     hold it, and who, without saying where anyone lives;
   ///   * anyone else sees none, residents of a building or floor included.
+  ///
+  /// Whoever it is listed to, a member who is staff (access.v1.Role, STAFF) and lives in a
+  /// home has that RESIDENT membership left out for every caller who does not live in that
+  /// home, a property owner and an administrator included: a staff member's residency is
+  /// told only to its household. Their SERVICE memberships are listed as any member's.
   @$pb.TagNumber(13)
   $pb.PbList<SpaceMember> get members => $_getList(12);
 
@@ -269,13 +276,15 @@ class Space extends $pb.GeneratedMessage {
 class SpaceMember extends $pb.GeneratedMessage {
   factory SpaceMember({
     $0.UserId? userId,
-    $2.MembershipRelation? relation,
+    $3.MembershipRelation? relation,
     $core.String? name,
+    $1.Timestamp? since,
   }) {
     final result = create();
     if (userId != null) result.userId = userId;
     if (relation != null) result.relation = relation;
     if (name != null) result.name = name;
+    if (since != null) result.since = since;
     return result;
   }
 
@@ -295,12 +304,14 @@ class SpaceMember extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'userId',
         subBuilder: $0.UserId.create)
-    ..e<$2.MembershipRelation>(
+    ..e<$3.MembershipRelation>(
         2, _omitFieldNames ? '' : 'relation', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
-        valueOf: $2.MembershipRelation.valueOf,
-        enumValues: $2.MembershipRelation.values)
+        defaultOrMaker: $3.MembershipRelation.MEMBERSHIP_RELATION_UNSPECIFIED,
+        valueOf: $3.MembershipRelation.valueOf,
+        enumValues: $3.MembershipRelation.values)
     ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'since',
+        subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -335,22 +346,24 @@ class SpaceMember extends $pb.GeneratedMessage {
   $0.UserId ensureUserId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $2.MembershipRelation get relation => $_getN(1);
+  $3.MembershipRelation get relation => $_getN(1);
   @$pb.TagNumber(2)
-  set relation($2.MembershipRelation value) => $_setField(2, value);
+  set relation($3.MembershipRelation value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasRelation() => $_has(1);
   @$pb.TagNumber(2)
   void clearRelation() => $_clearField(2);
 
   /// The name the member gave, self-chosen and not verified, so the app shows it as the name
-  /// they gave rather than as an identity. Given only to a caller who is a resident of the
+  /// they gave rather than as an identity. Given to a caller who is a resident of the
   /// apartment the member is filed on, or on one of its rooms: the people they live with,
   /// and anyone filed on their home as service, whom webrtc.v1.PrivacyDisclosure already
-  /// names to them. Empty for every other caller — a property owner, an administrator,
-  /// service, and residents of any other home — and for a member whose name the gateway has
-  /// not learnt. A caller who is a resident of the home reads an empty name as not known;
-  /// anyone else is given none. Residents are never named anywhere else.
+  /// names to them. Given also, for a member who is staff (access.v1.Role, STAFF), to a
+  /// caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, as webrtc.v1.MemberDetail.name
+  /// names them. Empty for every other caller — service, residents of any other home, and a
+  /// property owner or an administrator for a member who is not staff — and for a member
+  /// whose name the gateway has not learnt. A caller given names reads an empty one as not
+  /// known; anyone else is given none. Residents are named only to their own home.
   @$pb.TagNumber(3)
   $core.String get name => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -359,6 +372,20 @@ class SpaceMember extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(2);
   @$pb.TagNumber(3)
   void clearName() => $_clearField(3);
+
+  /// As webrtc.v1.MemberSpace.since: the start of the day, in the building's time zone, on
+  /// which this membership began; for a resident, the current unbroken residency. Never finer
+  /// than a day. Unset where the gateway holds no record of it.
+  @$pb.TagNumber(4)
+  $1.Timestamp get since => $_getN(3);
+  @$pb.TagNumber(4)
+  set since($1.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSince() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSince() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.Timestamp ensureSince() => $_ensure(3);
 }
 
 const $core.bool _omitFieldNames =

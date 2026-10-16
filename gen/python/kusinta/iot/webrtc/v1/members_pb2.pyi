@@ -62,25 +62,29 @@ class GatewayMembers(_message.Message):
     def __init__(self, members: _Optional[_Iterable[_Union[MemberDetail, _Mapping]]] = ..., owner_organisation: _Optional[_Union[OwnerOrganisation, _Mapping]] = ...) -> None: ...
 
 class MemberDetail(_message.Message):
-    __slots__ = ("user_id", "name", "roles", "memberships", "access_until", "registering_admin")
+    __slots__ = ("user_id", "name", "roles", "memberships", "access_until", "registering_admin", "email")
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     ROLES_FIELD_NUMBER: _ClassVar[int]
     MEMBERSHIPS_FIELD_NUMBER: _ClassVar[int]
     ACCESS_UNTIL_FIELD_NUMBER: _ClassVar[int]
     REGISTERING_ADMIN_FIELD_NUMBER: _ClassVar[int]
+    EMAIL_FIELD_NUMBER: _ClassVar[int]
     user_id: _identity_pb2.UserId
     name: str
     roles: _containers.RepeatedScalarFieldContainer[_roles_pb2.Role]
     memberships: _containers.RepeatedCompositeFieldContainer[MemberSpace]
     access_until: _timestamp_pb2.Timestamp
     registering_admin: bool
-    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., name: _Optional[str] = ..., roles: _Optional[_Iterable[_Union[_roles_pb2.Role, str]]] = ..., memberships: _Optional[_Iterable[_Union[MemberSpace, _Mapping]]] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., registering_admin: _Optional[bool] = ...) -> None: ...
+    email: str
+    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., name: _Optional[str] = ..., roles: _Optional[_Iterable[_Union[_roles_pb2.Role, str]]] = ..., memberships: _Optional[_Iterable[_Union[MemberSpace, _Mapping]]] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., registering_admin: _Optional[bool] = ..., email: _Optional[str] = ...) -> None: ...
 
 class MemberSpace(_message.Message):
-    __slots__ = ("space_id", "relation")
+    __slots__ = ("space_id", "relation", "since")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RELATION_FIELD_NUMBER: _ClassVar[int]
+    SINCE_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     relation: _roles_pb2.MembershipRelation
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ...) -> None: ...
+    since: _timestamp_pb2.Timestamp
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...

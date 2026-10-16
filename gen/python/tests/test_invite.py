@@ -46,3 +46,36 @@ def test_a_space_whose_invites_changed_is_pushed():
     )
 
     assert message.WhichOneof("payload") == "space_invites"
+
+
+# --- what redeeming does --------------------------------------------------------------
+
+
+def test_an_invite_leaves_its_admission_unspecified_when_not_said():
+    invite = invite_pb2.Invite(invite_id="inv-1")
+
+    assert _round_trip(invite).admission == invite_pb2.INVITE_ADMISSION_UNSPECIFIED
+
+
+def test_a_home_key_is_listed_as_admitting_on_redeem():
+    invite = invite_pb2.Invite(
+        invite_id="inv-1", admission=invite_pb2.INVITE_ADMISSION_ON_REDEEM
+    )
+
+    assert _round_trip(invite).admission == invite_pb2.INVITE_ADMISSION_ON_REDEEM
+
+
+def test_an_invite_bound_to_an_address_is_listed_as_admitting_on_an_email_match():
+    invite = invite_pb2.Invite(
+        invite_id="inv-1", admission=invite_pb2.INVITE_ADMISSION_ON_EMAIL_MATCH
+    )
+
+    assert _round_trip(invite).admission == invite_pb2.INVITE_ADMISSION_ON_EMAIL_MATCH
+
+
+def test_an_invite_making_a_join_request_is_listed_as_admitting_on_approval():
+    invite = invite_pb2.Invite(
+        invite_id="inv-1", admission=invite_pb2.INVITE_ADMISSION_ON_APPROVAL
+    )
+
+    assert _round_trip(invite).admission == invite_pb2.INVITE_ADMISSION_ON_APPROVAL

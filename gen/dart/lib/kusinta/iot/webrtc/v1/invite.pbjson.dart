@@ -14,6 +14,23 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use inviteAdmissionDescriptor instead')
+const InviteAdmission$json = {
+  '1': 'InviteAdmission',
+  '2': [
+    {'1': 'INVITE_ADMISSION_UNSPECIFIED', '2': 0},
+    {'1': 'INVITE_ADMISSION_ON_EMAIL_MATCH', '2': 1},
+    {'1': 'INVITE_ADMISSION_ON_REDEEM', '2': 2},
+    {'1': 'INVITE_ADMISSION_ON_APPROVAL', '2': 3},
+  ],
+};
+
+/// Descriptor for `InviteAdmission`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List inviteAdmissionDescriptor = $convert.base64Decode(
+    'Cg9JbnZpdGVBZG1pc3Npb24SIAocSU5WSVRFX0FETUlTU0lPTl9VTlNQRUNJRklFRBAAEiMKH0'
+    'lOVklURV9BRE1JU1NJT05fT05fRU1BSUxfTUFUQ0gQARIeChpJTlZJVEVfQURNSVNTSU9OX09O'
+    'X1JFREVFTRACEiAKHElOVklURV9BRE1JU1NJT05fT05fQVBQUk9WQUwQAw==');
+
 @$core.Deprecated('Use createInviteDescriptor instead')
 const CreateInvite$json = {
   '1': 'CreateInvite',
@@ -206,6 +223,14 @@ const Invite$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'accessUntil'
     },
+    {
+      '1': 'admission',
+      '3': 11,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.InviteAdmission',
+      '10': 'admission'
+    },
   ],
 };
 
@@ -221,7 +246,8 @@ final $typed_data.Uint8List inviteDescriptor = $convert.base64Decode(
     'ouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFINY29kZUV4cGlyZXNBdBIUCgVlbWFpbBgIIAEo'
     'CVIFZW1haWwSPgoNZW1haWxfc2VudF9hdBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3'
     'RhbXBSC2VtYWlsU2VudEF0Ej0KDGFjY2Vzc191bnRpbBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1'
-    'Zi5UaW1lc3RhbXBSC2FjY2Vzc1VudGls');
+    'Zi5UaW1lc3RhbXBSC2FjY2Vzc1VudGlsEkQKCWFkbWlzc2lvbhgLIAEoDjImLmt1c2ludGEuaW'
+    '90LndlYnJ0Yy52MS5JbnZpdGVBZG1pc3Npb25SCWFkbWlzc2lvbg==');
 
 @$core.Deprecated('Use issuedInviteDescriptor instead')
 const IssuedInvite$json = {

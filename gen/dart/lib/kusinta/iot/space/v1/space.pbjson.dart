@@ -137,6 +137,14 @@ const SpaceMember$json = {
       '10': 'relation'
     },
     {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
+    {
+      '1': 'since',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'since'
+    },
   ],
 };
 
@@ -144,4 +152,5 @@ const SpaceMember$json = {
 final $typed_data.Uint8List spaceMemberDescriptor = $convert.base64Decode(
     'CgtTcGFjZU1lbWJlchI4Cgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
     'EuVXNlcklkUgZ1c2VySWQSRQoIcmVsYXRpb24YAiABKA4yKS5rdXNpbnRhLmlvdC5hY2Nlc3Mu'
-    'djEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbhISCgRuYW1lGAMgASgJUgRuYW1l');
+    'djEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbhISCgRuYW1lGAMgASgJUgRuYW1lEjAKBX'
+    'NpbmNlGAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIFc2luY2U=');

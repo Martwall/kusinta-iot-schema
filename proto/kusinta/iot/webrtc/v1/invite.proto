@@ -23,11 +23,26 @@ option optimize_for = SPEED;
 // carry, when it expires and what redeeming it does. The app's choices are a convenience;
 // the gateway checks each request as if the app had not.
 //
-// What redeeming does depends on the invite:
-//   * bound to an email address (CreateInvite.email): the person is filed on the space at
-//     once, if the verified address of their account matches;
-//   * otherwise: a join request is made, and the person is filed only once it is approved
-//     (ApproveJoinRequest). An intercepted link or code then gets nobody in on its own.
+// What redeeming does depends on the kind of invite. The gateway decides the kind when the
+// invite is created, from its relation, its address and who created it (CreateInvite), and
+// tells it in Invite.admission:
+//   * email-bound — bound to an email address (CreateInvite.email), of either relation: the
+//     person is filed on the space at once, if the verified address of their account
+//     matches (INVITE_ADMISSION_ON_EMAIL_MATCH);
+//   * home key — a RESIDENT invite with no address, created by a property owner or an
+//     administrator: the person is filed on the home at once, on redeem, and no join request
+//     is made (INVITE_ADMISSION_ON_REDEEM);
+//   * household invite — a RESIDENT invite with no address, created by a resident of the
+//     home: a join request is made, listed to and approved by that household alone
+//     (INVITE_ADMISSION_ON_APPROVAL);
+//   * SERVICE with no address: a join request is made, approved by whoever may put people on
+//     the space (INVITE_ADMISSION_ON_APPROVAL).
+//
+// An intercepted link or code of an invite that makes a join request gets nobody in on its
+// own. A home key does let in whoever redeems it first, so it is bounded otherwise: it is
+// single use, as every invite is; its secrets are short-lived (see below); it admits to one
+// home and nothing else; and the property owner or administrator who created it can end
+// the residency it made (RemoveUserFromSpace).
 //
 // Requests are ManagementRequest arms and answered by ManagementResult, as filing is. A
 // target the caller cannot reach is refused as NOT_ENTITLED whether or not it exists.
@@ -45,7 +60,10 @@ option optimize_for = SPEED;
 //
 // When each secret expires is the gateway's choice, told in Invite. A code SHOULD expire
 // much sooner than a token (say 72 hours against 14 days): it is few enough bits to guess
-// at, and a short life keeps the window small whatever limits stand in front of it.
+// at, and a short life keeps the window small whatever limits stand in front of it. A home
+// key's secrets SHOULD expire sooner than those of an invite that makes a join request (say
+// 7 days for its token, and no more than 72 hours for its code): redeeming one admits with
+// nobody's approval, so how long its secrets live is how long an intercepted one is good for.
 //
 // Each secret is known by a hash, which is all the gateway keeps and all the api-server is
 // told: SHA-256 over the UTF-8 bytes of "kusinta-invite-token:" followed by the token, or
@@ -64,6 +82,11 @@ option optimize_for = SPEED;
 // let a home's residents invite residents into their own home only, within a limit per
 // home. A caller over that limit is refused as FAILED_PRECONDITION with metadata
 // {"reason": "household_full"}.
+//
+// Whether a RESIDENT invite with no address is a home key or a household invite (see the
+// file header) is decided by who creates it, never asked for: a home key when the caller
+// holds ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, whether or not they live in the home; a
+// household invite when the caller creates it as a resident of the home.
 //
 // A gateway holds at most 5000 invites whose secrets it reports
 // (reporting.v1.ReportInviteRoutesRequest), used ones included until their secrets
@@ -123,6 +146,10 @@ message MarkInviteEmailSent {
 // only to a caller who may create invites on the space; anyone else is refused as
 // NOT_ENTITLED. A resident is listed only the invites a resident of their home made,
 // and the join requests those made: nothing they cannot act on.
+//
+// A household invite, and the join requests it made, are listed only to the residents of
+// that home, a property owner or an administrator included only if they live there:
+// otherwise Invite.created_by and JoinRequest.invited_by would say where its maker lives.
 message ListSpaceInvites {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
 }
@@ -130,16 +157,37 @@ message ListSpaceInvites {
 // Files the person who made a join request on its space, with its relation, and the role
 // that relation gives. Answered with ManagementAck.
 //
-// Who may approve is the gateway's decision: whoever may put people on that space, and,
-// for a request that came from an invite a resident created, a resident of that home.
+// Who may approve is the gateway's decision, by the kind of invite the request came from
+// (see the file header): for a household invite, a resident of that home alone, and not a
+// property owner or an administrator who does not live there; for a SERVICE invite with no
+// address, whoever may put people on that space. Anyone else is refused as NOT_ENTITLED.
 message ApproveJoinRequest {
   string request_id = 1;
 }
 
 // Drops a join request. The person is told nothing beyond never being let in. Answered
-// with ManagementAck.
+// with ManagementAck. Who may deny is who may approve (ApproveJoinRequest).
 message DenyJoinRequest {
   string request_id = 1;
+}
+
+// What redeeming an invite does, by its kind (see the file header). Decided by the gateway
+// when the invite is created and told in Invite.admission, so the app can say what
+// redeeming will do before the invite is shared.
+enum InviteAdmission {
+  // Not told. The app reads it as not known, never as any value below.
+  INVITE_ADMISSION_UNSPECIFIED = 0;
+
+  // Bound to an address: files the person at once if the verified address of their account
+  // matches (CreateInvite.email).
+  INVITE_ADMISSION_ON_EMAIL_MATCH = 1;
+
+  // A home key: files whoever redeems it on the home at once, with no join request.
+  INVITE_ADMISSION_ON_REDEEM = 2;
+
+  // Makes a join request, and the person is filed only once it is approved
+  // (ApproveJoinRequest).
+  INVITE_ADMISSION_ON_APPROVAL = 3;
 }
 
 // A pending invite, as listed. Never carries a secret: the gateway does not keep them.
@@ -169,6 +217,10 @@ message Invite {
 
   // As CreateInvite.access_until.
   google.protobuf.Timestamp access_until = 10;
+
+  // What redeeming it does, as the gateway decided when it was created. The gateway MUST
+  // set it on every invite it lists or issues.
+  InviteAdmission admission = 11;
 }
 
 // A new invite or a resent one, with its secrets. This is the only time they are told:
@@ -201,7 +253,8 @@ message JoinRequest {
   google.protobuf.Timestamp expires_at = 8;
 
   // The verified email address of the account asking (signaling.v1.RedeemInvite), shown to
-  // whoever may approve the request, a resident approver included. A display name is
+  // whoever may approve the request (ApproveJoinRequest): the household for a household
+  // invite, and otherwise those who may put people on the space. A display name is
   // whatever the person chose; this is what lets an approver tell who is really asking. The
   // app tells a person redeeming that their address will be shown so. Kept only while the
   // request is pending.
@@ -219,7 +272,8 @@ message JoinRequest {
 // either list changes — a create, resend, revoke, redeem, approval, denial or expiry — to
 // every session that may list it, so the app shows the change without reloading. A push
 // always carries the whole of both lists for its space, as ListSpaceInvites would list
-// them to that session.
+// them to that session: a household invite and its join requests reach only the sessions
+// of that home's residents.
 message SpaceInvites {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
   repeated Invite invites = 2;

@@ -40,6 +40,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     $core.Iterable<$1.Role>? roles,
     Confirmation? cnf,
     $core.String? name,
+    $core.String? email,
   }) {
     final result = create();
     if (iss != null) result.iss = iss;
@@ -50,6 +51,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     if (roles != null) result.roles.addAll(roles);
     if (cnf != null) result.cnf = cnf;
     if (name != null) result.name = name;
+    if (email != null) result.email = email;
     return result;
   }
 
@@ -81,6 +83,7 @@ class AppTokenClaims extends $pb.GeneratedMessage {
     ..aOM<Confirmation>(7, _omitFieldNames ? '' : 'cnf',
         subBuilder: Confirmation.create)
     ..aOS(8, _omitFieldNames ? '' : 'name')
+    ..aOS(9, _omitFieldNames ? '' : 'email')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -227,6 +230,23 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   $core.bool hasName() => $_has(7);
   @$pb.TagNumber(8)
   void clearName() => $_clearField(8);
+
+  /// The verified email address of the account, or empty. The issuer sets it for a user who
+  /// is staff (access.v1.Role, STAFF) on the token's gateway as the member report stands
+  /// (reporting.v1.GatewayMember), the registering administrator included, when the identity
+  /// provider marks their address verified. It MUST be empty for anyone else, and for an
+  /// address not marked verified. The gateway MUST keep it only while the user holds a
+  /// staff role, and use it only to tell staff apart to whoever may list every member
+  /// (MemberDetail.email). A validator accepts a token without it. Carried in the JWT as
+  /// "email".
+  @$pb.TagNumber(9)
+  $core.String get email => $_getSZ(8);
+  @$pb.TagNumber(9)
+  set email($core.String value) => $_setString(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasEmail() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEmail() => $_clearField(9);
 }
 
 /// RFC 7800 confirmation, the value of the "cnf" claim. A separate message
