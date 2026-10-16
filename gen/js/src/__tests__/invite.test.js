@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
 import { MembershipRelation } from '../kusinta/iot/access/v1/roles_pb.js'
 import {
+  InviteAdmission,
   InviteSchema,
   SpaceInvitesSchema,
 } from '../kusinta/iot/webrtc/v1/invite_pb.js'
@@ -69,5 +70,27 @@ describe('invites over the session', () => {
 
   it('has no field for a secret on a listed invite', () => {
     expect(InviteSchema.fields.map((f) => f.name)).not.toContain('token')
+  })
+})
+
+describe('what redeeming an invite does', () => {
+  it('leaves the admission unspecified when the gateway does not say', () => {
+    const invite = create(InviteSchema, { inviteId: 'inv-1' })
+    expect(fromBinary(InviteSchema, toBinary(InviteSchema, invite)).admission).toBe(InviteAdmission.UNSPECIFIED)
+  })
+
+  it('lists a home key as admitting on redeem', () => {
+    const invite = create(InviteSchema, { inviteId: 'inv-1', admission: InviteAdmission.ON_REDEEM })
+    expect(fromBinary(InviteSchema, toBinary(InviteSchema, invite)).admission).toBe(InviteAdmission.ON_REDEEM)
+  })
+
+  it('lists an invite bound to an address as admitting on an email match', () => {
+    const invite = create(InviteSchema, { inviteId: 'inv-1', admission: InviteAdmission.ON_EMAIL_MATCH })
+    expect(fromBinary(InviteSchema, toBinary(InviteSchema, invite)).admission).toBe(InviteAdmission.ON_EMAIL_MATCH)
+  })
+
+  it('lists an invite that makes a join request as admitting on approval', () => {
+    const invite = create(InviteSchema, { inviteId: 'inv-1', admission: InviteAdmission.ON_APPROVAL })
+    expect(fromBinary(InviteSchema, toBinary(InviteSchema, invite)).admission).toBe(InviteAdmission.ON_APPROVAL)
   })
 })

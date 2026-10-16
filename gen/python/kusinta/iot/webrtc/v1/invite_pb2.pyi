@@ -4,12 +4,24 @@ from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from collections.abc import Iterable as _Iterable, Mapping as _Mapping
 from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
+
+class InviteAdmission(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    INVITE_ADMISSION_UNSPECIFIED: _ClassVar[InviteAdmission]
+    INVITE_ADMISSION_ON_EMAIL_MATCH: _ClassVar[InviteAdmission]
+    INVITE_ADMISSION_ON_REDEEM: _ClassVar[InviteAdmission]
+    INVITE_ADMISSION_ON_APPROVAL: _ClassVar[InviteAdmission]
+INVITE_ADMISSION_UNSPECIFIED: InviteAdmission
+INVITE_ADMISSION_ON_EMAIL_MATCH: InviteAdmission
+INVITE_ADMISSION_ON_REDEEM: InviteAdmission
+INVITE_ADMISSION_ON_APPROVAL: InviteAdmission
 
 class CreateInvite(_message.Message):
     __slots__ = ("space_id", "relation", "email", "access_until")
@@ -60,7 +72,7 @@ class DenyJoinRequest(_message.Message):
     def __init__(self, request_id: _Optional[str] = ...) -> None: ...
 
 class Invite(_message.Message):
-    __slots__ = ("invite_id", "space_id", "relation", "created_by", "created_at", "token_expires_at", "code_expires_at", "email", "email_sent_at", "access_until")
+    __slots__ = ("invite_id", "space_id", "relation", "created_by", "created_at", "token_expires_at", "code_expires_at", "email", "email_sent_at", "access_until", "admission")
     INVITE_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RELATION_FIELD_NUMBER: _ClassVar[int]
@@ -71,6 +83,7 @@ class Invite(_message.Message):
     EMAIL_FIELD_NUMBER: _ClassVar[int]
     EMAIL_SENT_AT_FIELD_NUMBER: _ClassVar[int]
     ACCESS_UNTIL_FIELD_NUMBER: _ClassVar[int]
+    ADMISSION_FIELD_NUMBER: _ClassVar[int]
     invite_id: str
     space_id: _identity_pb2.SpaceId
     relation: _roles_pb2.MembershipRelation
@@ -81,7 +94,8 @@ class Invite(_message.Message):
     email: str
     email_sent_at: _timestamp_pb2.Timestamp
     access_until: _timestamp_pb2.Timestamp
-    def __init__(self, invite_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., created_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., token_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., code_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., email: _Optional[str] = ..., email_sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    admission: InviteAdmission
+    def __init__(self, invite_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., relation: _Optional[_Union[_roles_pb2.MembershipRelation, str]] = ..., created_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., token_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., code_expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., email: _Optional[str] = ..., email_sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., access_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., admission: _Optional[_Union[InviteAdmission, str]] = ...) -> None: ...
 
 class IssuedInvite(_message.Message):
     __slots__ = ("invite", "token", "code")

@@ -17,8 +17,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../access/v1/roles.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
+import 'invite.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'invite.pbenum.dart';
 
 /// Creates an invite on a space.
 ///
@@ -32,6 +35,11 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// let a home's residents invite residents into their own home only, within a limit per
 /// home. A caller over that limit is refused as FAILED_PRECONDITION with metadata
 /// {"reason": "household_full"}.
+///
+/// Whether a RESIDENT invite with no address is a home key or a household invite (see the
+/// file header) is decided by who creates it, never asked for: a home key when the caller
+/// holds ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, whether or not they live in the home; a
+/// household invite when the caller creates it as a resident of the home.
 ///
 /// A gateway holds at most 5000 invites whose secrets it reports
 /// (reporting.v1.ReportInviteRoutesRequest), used ones included until their secrets
@@ -344,6 +352,10 @@ class MarkInviteEmailSent extends $pb.GeneratedMessage {
 /// only to a caller who may create invites on the space; anyone else is refused as
 /// NOT_ENTITLED. A resident is listed only the invites a resident of their home made,
 /// and the join requests those made: nothing they cannot act on.
+///
+/// A household invite, and the join requests it made, are listed only to the residents of
+/// that home, a property owner or an administrator included only if they live there:
+/// otherwise Invite.created_by and JoinRequest.invited_by would say where its maker lives.
 class ListSpaceInvites extends $pb.GeneratedMessage {
   factory ListSpaceInvites({
     $0.SpaceId? spaceId,
@@ -407,8 +419,10 @@ class ListSpaceInvites extends $pb.GeneratedMessage {
 /// Files the person who made a join request on its space, with its relation, and the role
 /// that relation gives. Answered with ManagementAck.
 ///
-/// Who may approve is the gateway's decision: whoever may put people on that space, and,
-/// for a request that came from an invite a resident created, a resident of that home.
+/// Who may approve is the gateway's decision, by the kind of invite the request came from
+/// (see the file header): for a household invite, a resident of that home alone, and not a
+/// property owner or an administrator who does not live there; for a SERVICE invite with no
+/// address, whoever may put people on that space. Anyone else is refused as NOT_ENTITLED.
 class ApproveJoinRequest extends $pb.GeneratedMessage {
   factory ApproveJoinRequest({
     $core.String? requestId,
@@ -467,7 +481,7 @@ class ApproveJoinRequest extends $pb.GeneratedMessage {
 }
 
 /// Drops a join request. The person is told nothing beyond never being let in. Answered
-/// with ManagementAck.
+/// with ManagementAck. Who may deny is who may approve (ApproveJoinRequest).
 class DenyJoinRequest extends $pb.GeneratedMessage {
   factory DenyJoinRequest({
     $core.String? requestId,
@@ -538,6 +552,7 @@ class Invite extends $pb.GeneratedMessage {
     $core.String? email,
     $1.Timestamp? emailSentAt,
     $1.Timestamp? accessUntil,
+    InviteAdmission? admission,
   }) {
     final result = create();
     if (inviteId != null) result.inviteId = inviteId;
@@ -550,6 +565,7 @@ class Invite extends $pb.GeneratedMessage {
     if (email != null) result.email = email;
     if (emailSentAt != null) result.emailSentAt = emailSentAt;
     if (accessUntil != null) result.accessUntil = accessUntil;
+    if (admission != null) result.admission = admission;
     return result;
   }
 
@@ -588,6 +604,11 @@ class Invite extends $pb.GeneratedMessage {
         subBuilder: $1.Timestamp.create)
     ..aOM<$1.Timestamp>(10, _omitFieldNames ? '' : 'accessUntil',
         subBuilder: $1.Timestamp.create)
+    ..e<InviteAdmission>(
+        11, _omitFieldNames ? '' : 'admission', $pb.PbFieldType.OE,
+        defaultOrMaker: InviteAdmission.INVITE_ADMISSION_UNSPECIFIED,
+        valueOf: InviteAdmission.valueOf,
+        enumValues: InviteAdmission.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -721,6 +742,17 @@ class Invite extends $pb.GeneratedMessage {
   void clearAccessUntil() => $_clearField(10);
   @$pb.TagNumber(10)
   $1.Timestamp ensureAccessUntil() => $_ensure(9);
+
+  /// What redeeming it does, as the gateway decided when it was created. The gateway MUST
+  /// set it on every invite it lists or issues.
+  @$pb.TagNumber(11)
+  InviteAdmission get admission => $_getN(10);
+  @$pb.TagNumber(11)
+  set admission(InviteAdmission value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasAdmission() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearAdmission() => $_clearField(11);
 }
 
 /// A new invite or a resent one, with its secrets. This is the only time they are told:
@@ -980,7 +1012,8 @@ class JoinRequest extends $pb.GeneratedMessage {
   $1.Timestamp ensureExpiresAt() => $_ensure(7);
 
   /// The verified email address of the account asking (signaling.v1.RedeemInvite), shown to
-  /// whoever may approve the request, a resident approver included. A display name is
+  /// whoever may approve the request (ApproveJoinRequest): the household for a household
+  /// invite, and otherwise those who may put people on the space. A display name is
   /// whatever the person chose; this is what lets an approver tell who is really asking. The
   /// app tells a person redeeming that their address will be shown so. Kept only while the
   /// request is pending.
@@ -1014,7 +1047,8 @@ class JoinRequest extends $pb.GeneratedMessage {
 /// either list changes — a create, resend, revoke, redeem, approval, denial or expiry — to
 /// every session that may list it, so the app shows the change without reloading. A push
 /// always carries the whole of both lists for its space, as ListSpaceInvites would list
-/// them to that session.
+/// them to that session: a household invite and its join requests reach only the sessions
+/// of that home's residents.
 class SpaceInvites extends $pb.GeneratedMessage {
   factory SpaceInvites({
     $0.SpaceId? spaceId,

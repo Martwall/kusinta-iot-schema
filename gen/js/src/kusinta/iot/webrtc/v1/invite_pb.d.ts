@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/webrtc/v1/invite.proto (package kusinta.iot.webrtc.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { MembershipRelation } from "../../access/v1/roles_pb.js";
@@ -26,6 +26,11 @@ export declare const file_kusinta_iot_webrtc_v1_invite: GenFile;
  * let a home's residents invite residents into their own home only, within a limit per
  * home. A caller over that limit is refused as FAILED_PRECONDITION with metadata
  * {"reason": "household_full"}.
+ *
+ * Whether a RESIDENT invite with no address is a home key or a household invite (see the
+ * file header) is decided by who creates it, never asked for: a home key when the caller
+ * holds ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, whether or not they live in the home; a
+ * household invite when the caller creates it as a resident of the home.
  *
  * A gateway holds at most 5000 invites whose secrets it reports
  * (reporting.v1.ReportInviteRoutesRequest), used ones included until their secrets
@@ -150,6 +155,10 @@ export declare const MarkInviteEmailSentSchema: GenMessage<MarkInviteEmailSent>;
  * NOT_ENTITLED. A resident is listed only the invites a resident of their home made,
  * and the join requests those made: nothing they cannot act on.
  *
+ * A household invite, and the join requests it made, are listed only to the residents of
+ * that home, a property owner or an administrator included only if they live there:
+ * otherwise Invite.created_by and JoinRequest.invited_by would say where its maker lives.
+ *
  * @generated from message kusinta.iot.webrtc.v1.ListSpaceInvites
  */
 export declare type ListSpaceInvites = Message<"kusinta.iot.webrtc.v1.ListSpaceInvites"> & {
@@ -169,8 +178,10 @@ export declare const ListSpaceInvitesSchema: GenMessage<ListSpaceInvites>;
  * Files the person who made a join request on its space, with its relation, and the role
  * that relation gives. Answered with ManagementAck.
  *
- * Who may approve is the gateway's decision: whoever may put people on that space, and,
- * for a request that came from an invite a resident created, a resident of that home.
+ * Who may approve is the gateway's decision, by the kind of invite the request came from
+ * (see the file header): for a household invite, a resident of that home alone, and not a
+ * property owner or an administrator who does not live there; for a SERVICE invite with no
+ * address, whoever may put people on that space. Anyone else is refused as NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.ApproveJoinRequest
  */
@@ -189,7 +200,7 @@ export declare const ApproveJoinRequestSchema: GenMessage<ApproveJoinRequest>;
 
 /**
  * Drops a join request. The person is told nothing beyond never being let in. Answered
- * with ManagementAck.
+ * with ManagementAck. Who may deny is who may approve (ApproveJoinRequest).
  *
  * @generated from message kusinta.iot.webrtc.v1.DenyJoinRequest
  */
@@ -276,6 +287,14 @@ export declare type Invite = Message<"kusinta.iot.webrtc.v1.Invite"> & {
    * @generated from field: google.protobuf.Timestamp access_until = 10;
    */
   accessUntil?: Timestamp | undefined;
+
+  /**
+   * What redeeming it does, as the gateway decided when it was created. The gateway MUST
+   * set it on every invite it lists or issues.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.InviteAdmission admission = 11;
+   */
+  admission: InviteAdmission;
 };
 
 /**
@@ -370,7 +389,8 @@ export declare type JoinRequest = Message<"kusinta.iot.webrtc.v1.JoinRequest"> &
 
   /**
    * The verified email address of the account asking (signaling.v1.RedeemInvite), shown to
-   * whoever may approve the request, a resident approver included. A display name is
+   * whoever may approve the request (ApproveJoinRequest): the household for a household
+   * invite, and otherwise those who may put people on the space. A display name is
    * whatever the person chose; this is what lets an approver tell who is really asking. The
    * app tells a person redeeming that their address will be shown so. Kept only while the
    * request is pending.
@@ -402,7 +422,8 @@ export declare const JoinRequestSchema: GenMessage<JoinRequest>;
  * either list changes — a create, resend, revoke, redeem, approval, denial or expiry — to
  * every session that may list it, so the app shows the change without reloading. A push
  * always carries the whole of both lists for its space, as ListSpaceInvites would list
- * them to that session.
+ * them to that session: a household invite and its join requests reach only the sessions
+ * of that home's residents.
  *
  * @generated from message kusinta.iot.webrtc.v1.SpaceInvites
  */
@@ -428,4 +449,48 @@ export declare type SpaceInvites = Message<"kusinta.iot.webrtc.v1.SpaceInvites">
  * Use `create(SpaceInvitesSchema)` to create a new message.
  */
 export declare const SpaceInvitesSchema: GenMessage<SpaceInvites>;
+
+/**
+ * What redeeming an invite does, by its kind (see the file header). Decided by the gateway
+ * when the invite is created and told in Invite.admission, so the app can say what
+ * redeeming will do before the invite is shared.
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.InviteAdmission
+ */
+export enum InviteAdmission {
+  /**
+   * Not told. The app reads it as not known, never as any value below.
+   *
+   * @generated from enum value: INVITE_ADMISSION_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Bound to an address: files the person at once if the verified address of their account
+   * matches (CreateInvite.email).
+   *
+   * @generated from enum value: INVITE_ADMISSION_ON_EMAIL_MATCH = 1;
+   */
+  ON_EMAIL_MATCH = 1,
+
+  /**
+   * A home key: files whoever redeems it on the home at once, with no join request.
+   *
+   * @generated from enum value: INVITE_ADMISSION_ON_REDEEM = 2;
+   */
+  ON_REDEEM = 2,
+
+  /**
+   * Makes a join request, and the person is filed only once it is approved
+   * (ApproveJoinRequest).
+   *
+   * @generated from enum value: INVITE_ADMISSION_ON_APPROVAL = 3;
+   */
+  ON_APPROVAL = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.InviteAdmission.
+ */
+export declare const InviteAdmissionSchema: GenEnum<InviteAdmission>;
 
