@@ -424,6 +424,10 @@ class DeleteSpace extends $pb.GeneratedMessage {
 ///
 /// Who may change who belongs to a home is restricted by the gateway; a caller not allowed is
 /// refused as NOT_ENTITLED. Residents see who is filed on their home in Space.members.
+///
+/// A membership the caller is not told of (a staff member's residency, to anyone outside
+/// its household: access.v1.Role, STAFF) is never changed by them: assigning onto it is
+/// refused as NOT_ENTITLED, and RemoveUserFromSpace answers as for one that does not exist.
 class AssignUserToSpace extends $pb.GeneratedMessage {
   factory AssignUserToSpace({
     $0.SpaceId? spaceId,
@@ -521,7 +525,8 @@ class AssignUserToSpace extends $pb.GeneratedMessage {
 /// Removes a user's membership of a space. Losing reach also drops whatever the
 /// user was streaming from it, announced by LivePermissionUpdate.
 ///
-/// Removing someone else from a home is guarded as assigning is.
+/// Removing someone else from a home is guarded as assigning is. A membership the caller is
+/// not told of (see AssignUserToSpace) is answered as one that does not exist, and stays.
 class RemoveUserFromSpace extends $pb.GeneratedMessage {
   factory RemoveUserFromSpace({
     $0.SpaceId? spaceId,
