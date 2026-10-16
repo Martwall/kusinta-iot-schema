@@ -77,8 +77,8 @@ class WipeScope extends $pb.ProtobufEnum {
   static const WipeScope WIPE_SCOPE_UNSPECIFIED =
       WipeScope._(0, _omitEnumNames ? '' : 'WIPE_SCOPE_UNSPECIFIED');
 
-  /// Decommissioning: people and their history go and the building's setup stays
-  /// (GatewayDeleted, WIPE).
+  /// Decommissioning: people and their history go, every space is given a generic name, and the
+  /// rest of the building's setup stays (GatewayDeleted, WIPE).
   static const WipeScope WIPE_SCOPE_PEOPLE_AND_HISTORY =
       WipeScope._(1, _omitEnumNames ? '' : 'WIPE_SCOPE_PEOPLE_AND_HISTORY');
 

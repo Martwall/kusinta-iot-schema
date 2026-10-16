@@ -326,7 +326,8 @@ new only at the first registration after the gateway was deleted. The gateway le
 `RegistrationComplete` and from `GatewayStreamOpened`, the api-server's first message on its
 stream, and wipes people and history when it changes or when a connected gateway is told
 `GatewayDeleted` — keeping the building's setup (spaces, devices, filing, links, connectors),
-optionally renaming spaces generically, and reporting an empty member snapshot. A delete may ask
+always renaming every space generically ("Apartment 1") in the same step, and reporting an empty
+member snapshot. A delete may ask
 for a factory reset instead (`WipeScope`); a gateway that cannot do one says so in `GatewayWiped`.
 A revoke is not a delete: it keeps the owner and wipes nothing.
 

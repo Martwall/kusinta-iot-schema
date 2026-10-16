@@ -400,24 +400,22 @@ const GatewayStreamOpened$json = {
   '1': 'GatewayStreamOpened',
   '2': [
     {'1': 'ownership_epoch', '3': 1, '4': 1, '5': 9, '10': 'ownershipEpoch'},
-    {'1': 'clear_space_names', '3': 2, '4': 1, '5': 8, '10': 'clearSpaceNames'},
   ],
 };
 
 /// Descriptor for `GatewayStreamOpened`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayStreamOpenedDescriptor = $convert.base64Decode(
     'ChNHYXRld2F5U3RyZWFtT3BlbmVkEicKD293bmVyc2hpcF9lcG9jaBgBIAEoCVIOb3duZXJzaG'
-    'lwRXBvY2gSKgoRY2xlYXJfc3BhY2VfbmFtZXMYAiABKAhSD2NsZWFyU3BhY2VOYW1lcw==');
+    'lwRXBvY2g=');
 
 @$core.Deprecated('Use gatewayDeletedDescriptor instead')
 const GatewayDeleted$json = {
   '1': 'GatewayDeleted',
   '2': [
     {'1': 'ownership_epoch', '3': 1, '4': 1, '5': 9, '10': 'ownershipEpoch'},
-    {'1': 'clear_space_names', '3': 2, '4': 1, '5': 8, '10': 'clearSpaceNames'},
     {
       '1': 'scope',
-      '3': 3,
+      '3': 2,
       '4': 1,
       '5': 14,
       '6': '.kusinta.iot.signaling.v1.WipeScope',
@@ -429,8 +427,8 @@ const GatewayDeleted$json = {
 /// Descriptor for `GatewayDeleted`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List gatewayDeletedDescriptor = $convert.base64Decode(
     'Cg5HYXRld2F5RGVsZXRlZBInCg9vd25lcnNoaXBfZXBvY2gYASABKAlSDm93bmVyc2hpcEVwb2'
-    'NoEioKEWNsZWFyX3NwYWNlX25hbWVzGAIgASgIUg9jbGVhclNwYWNlTmFtZXMSOQoFc2NvcGUY'
-    'AyABKA4yIy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuV2lwZVNjb3BlUgVzY29wZQ==');
+    'NoEjkKBXNjb3BlGAIgASgOMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLldpcGVTY29wZVIF'
+    'c2NvcGU=');
 
 @$core.Deprecated('Use gatewayWipedDescriptor instead')
 const GatewayWiped$json = {
@@ -446,15 +444,8 @@ const GatewayWiped$json = {
       '10': 'scope'
     },
     {
-      '1': 'space_names_cleared',
-      '3': 3,
-      '4': 1,
-      '5': 8,
-      '10': 'spaceNamesCleared'
-    },
-    {
       '1': 'left_behind',
-      '3': 4,
+      '3': 3,
       '4': 3,
       '5': 11,
       '6': '.kusinta.iot.signaling.v1.PairingsLeftBehind',
@@ -467,9 +458,8 @@ const GatewayWiped$json = {
 final $typed_data.Uint8List gatewayWipedDescriptor = $convert.base64Decode(
     'CgxHYXRld2F5V2lwZWQSJwoPb3duZXJzaGlwX2Vwb2NoGAEgASgJUg5vd25lcnNoaXBFcG9jaB'
     'I5CgVzY29wZRgCIAEoDjIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5XaXBlU2NvcGVSBXNj'
-    'b3BlEi4KE3NwYWNlX25hbWVzX2NsZWFyZWQYAyABKAhSEXNwYWNlTmFtZXNDbGVhcmVkEk0KC2'
-    'xlZnRfYmVoaW5kGAQgAygLMiwua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlBhaXJpbmdzTGVm'
-    'dEJlaGluZFIKbGVmdEJlaGluZA==');
+    'b3BlEk0KC2xlZnRfYmVoaW5kGAMgAygLMiwua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlBhaX'
+    'JpbmdzTGVmdEJlaGluZFIKbGVmdEJlaGluZA==');
 
 @$core.Deprecated('Use pairingsLeftBehindDescriptor instead')
 const PairingsLeftBehind$json = {

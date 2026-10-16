@@ -29,11 +29,6 @@ message RegistrationComplete {
   // organisation, after a revoke included, answers the epoch the gateway holds and wipes
   // nothing.
   string ownership_epoch = 3;
-
-  // As signaling.v1.GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for
-  // the wipe a new epoch makes. Applies only when ownership_epoch is not the one the gateway
-  // holds.
-  bool clear_space_names = 4;
 }
 
 message RegistrationError {

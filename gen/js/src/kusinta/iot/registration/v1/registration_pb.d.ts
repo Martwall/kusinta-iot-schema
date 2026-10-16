@@ -83,15 +83,6 @@ export declare type RegistrationComplete = Message<"kusinta.iot.registration.v1.
    * @generated from field: string ownership_epoch = 3;
    */
   ownershipEpoch: string;
-
-  /**
-   * As signaling.v1.GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for
-   * the wipe a new epoch makes. Applies only when ownership_epoch is not the one the gateway
-   * holds.
-   *
-   * @generated from field: bool clear_space_names = 4;
-   */
-  clearSpaceNames: boolean;
 };
 
 /**

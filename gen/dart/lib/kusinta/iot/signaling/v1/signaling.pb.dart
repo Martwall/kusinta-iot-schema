@@ -1109,9 +1109,8 @@ class RedeemInviteResult extends $pb.GeneratedMessage {
 /// app hands over, the registration token included. It keeps the epoch it holds across restarts.
 ///
 /// Given an epoch other than the one it holds, the gateway wipes people and history (see
-/// GatewayDeleted, WIPE), giving its spaces generic names too where clear_space_names says so,
-/// before it admits any session or applies anything else from that registration or stream, and
-/// then holds the new epoch. A gateway holding no epoch takes the first it is given and wipes nothing. The
+/// GatewayDeleted, WIPE), space names included, before it admits any session or applies anything
+/// else from that registration or stream, and then holds the new epoch. A gateway holding no epoch takes the first it is given and wipes nothing. The
 /// epoch it holds, given again, changes nothing, so the same epoch twice wipes once.
 ///
 /// A gateway that holds an epoch treats a stream on which anything arrives before this message,
@@ -1121,11 +1120,9 @@ class RedeemInviteResult extends $pb.GeneratedMessage {
 class GatewayStreamOpened extends $pb.GeneratedMessage {
   factory GatewayStreamOpened({
     $core.String? ownershipEpoch,
-    $core.bool? clearSpaceNames,
   }) {
     final result = create();
     if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
-    if (clearSpaceNames != null) result.clearSpaceNames = clearSpaceNames;
     return result;
   }
 
@@ -1144,7 +1141,6 @@ class GatewayStreamOpened extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'ownershipEpoch')
-    ..aOB(2, _omitFieldNames ? '' : 'clearSpaceNames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1176,24 +1172,13 @@ class GatewayStreamOpened extends $pb.GeneratedMessage {
   $core.bool hasOwnershipEpoch() => $_has(0);
   @$pb.TagNumber(1)
   void clearOwnershipEpoch() => $_clearField(1);
-
-  /// As GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for the wipe a new
-  /// epoch makes. Applies only when ownership_epoch is not the one the gateway holds.
-  @$pb.TagNumber(2)
-  $core.bool get clearSpaceNames => $_getBF(1);
-  @$pb.TagNumber(2)
-  set clearSpaceNames($core.bool value) => $_setBool(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasClearSpaceNames() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearClearSpaceNames() => $_clearField(2);
 }
 
 /// The gateway was deleted at the api-server, api-server → gateway: the owner record with
 /// ownership_epoch has ended, and the gateway decommissions at once. Sent to a connected gateway
 /// before the api-server ends its stream, and answered with GatewayWiped. A gateway offline when
 /// it is deleted learns it from the new epoch at its next registration instead
-/// (GatewayStreamOpened, OWNERSHIP EPOCH), which carries clear_space_names with it.
+/// (GatewayStreamOpened, OWNERSHIP EPOCH), and wipes then just as it would have now.
 ///
 /// A delete is not a revoke. A revoke ends the gateway's certificate and keeps its owner: it sends
 /// no notice and wipes nothing, and a revoked gateway registered again by the owning organisation
@@ -1207,9 +1192,9 @@ class GatewayStreamOpened extends $pb.GeneratedMessage {
 /// ignored.
 ///
 /// WIPE. A wipe of people and history (WIPE_SCOPE_PEOPLE_AND_HISTORY) keeps the building's setup:
-/// its spaces, with their structure, types and names; its devices and how they are filed; device
-/// links; connector configuration; the building's time zone; and the gateway's own credentials
-/// and the settings that are not about people. Everything about people goes: every user, role,
+/// its spaces, with their structure and types; its devices and how they are filed; device links;
+/// connector configuration; the building's time zone; and the gateway's own credentials and the
+/// settings that are not about people. Everything about people goes: every user, role,
 /// membership and residency, with its residency id; every invite, join request and promotion
 /// request; every name and email address; the vouched administrators and their version; every end
 /// of access; every device's ownership, an owned device staying filed where it is, released, as
@@ -1217,18 +1202,25 @@ class GatewayStreamOpened extends $pb.GeneratedMessage {
 /// climate summaries, events, targets, modes and routines. Every open session ends, and none is
 /// admitted until the wipe is done.
 ///
+/// It always renames every space too, since a name can name a person ("Ilse's room"): each gets a
+/// generic name, its type and its number among the spaces of that type under the same parent,
+/// counted from 1 in the order the gateway lists them — "Apartment 1", "Floor 2", "Room 3". In
+/// English, as here, since nothing on the gateway knows the building's language. The renaming is
+/// part of the wipe: done in the same step, all of it or none, and keyed by the same epoch, so it
+/// is done once per epoch as the rest is.
+/// No space is removed or moved by it; each keeps its type, its place in the structure, its
+/// devices, its filing and its links.
+///
 /// The gateway then reports as a gateway starting afresh does: on new streams, a snapshot with no
 /// members (reporting.v1.ReportMembersRequest), no service reach and no invite routes, so the
 /// api-server's record of who belongs to the gateway empties too.
 class GatewayDeleted extends $pb.GeneratedMessage {
   factory GatewayDeleted({
     $core.String? ownershipEpoch,
-    $core.bool? clearSpaceNames,
     WipeScope? scope,
   }) {
     final result = create();
     if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
-    if (clearSpaceNames != null) result.clearSpaceNames = clearSpaceNames;
     if (scope != null) result.scope = scope;
     return result;
   }
@@ -1248,8 +1240,7 @@ class GatewayDeleted extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'ownershipEpoch')
-    ..aOB(2, _omitFieldNames ? '' : 'clearSpaceNames')
-    ..e<WipeScope>(3, _omitFieldNames ? '' : 'scope', $pb.PbFieldType.OE,
+    ..e<WipeScope>(2, _omitFieldNames ? '' : 'scope', $pb.PbFieldType.OE,
         defaultOrMaker: WipeScope.WIPE_SCOPE_UNSPECIFIED,
         valueOf: WipeScope.valueOf,
         enumValues: WipeScope.values)
@@ -1285,29 +1276,14 @@ class GatewayDeleted extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearOwnershipEpoch() => $_clearField(1);
 
-  /// Also gives every space a generic name, since a name can name a person ("Ilse's room"): its
-  /// type and its number among the spaces of that type under the same parent, counted from 1 in
-  /// the order the gateway lists them — "Apartment 1", "Floor 2", "Room 3". In English, as here,
-  /// since nothing on the gateway knows the building's language. Every space stays, with its
-  /// type, its filing, its devices and links. Applied in the same step as the wipe, and only with
-  /// WIPE_SCOPE_PEOPLE_AND_HISTORY, since a factory reset leaves no space to name.
   @$pb.TagNumber(2)
-  $core.bool get clearSpaceNames => $_getBF(1);
+  WipeScope get scope => $_getN(1);
   @$pb.TagNumber(2)
-  set clearSpaceNames($core.bool value) => $_setBool(1, value);
+  set scope(WipeScope value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasClearSpaceNames() => $_has(1);
+  $core.bool hasScope() => $_has(1);
   @$pb.TagNumber(2)
-  void clearClearSpaceNames() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  WipeScope get scope => $_getN(2);
-  @$pb.TagNumber(3)
-  set scope(WipeScope value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasScope() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearScope() => $_clearField(3);
+  void clearScope() => $_clearField(2);
 }
 
 /// The gateway's acknowledgement of a GatewayDeleted, gateway → api-server: what it wiped.
@@ -1320,13 +1296,11 @@ class GatewayWiped extends $pb.GeneratedMessage {
   factory GatewayWiped({
     $core.String? ownershipEpoch,
     WipeScope? scope,
-    $core.bool? spaceNamesCleared,
     $core.Iterable<PairingsLeftBehind>? leftBehind,
   }) {
     final result = create();
     if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
     if (scope != null) result.scope = scope;
-    if (spaceNamesCleared != null) result.spaceNamesCleared = spaceNamesCleared;
     if (leftBehind != null) result.leftBehind.addAll(leftBehind);
     return result;
   }
@@ -1350,9 +1324,8 @@ class GatewayWiped extends $pb.GeneratedMessage {
         defaultOrMaker: WipeScope.WIPE_SCOPE_UNSPECIFIED,
         valueOf: WipeScope.valueOf,
         enumValues: WipeScope.values)
-    ..aOB(3, _omitFieldNames ? '' : 'spaceNamesCleared')
     ..pc<PairingsLeftBehind>(
-        4, _omitFieldNames ? '' : 'leftBehind', $pb.PbFieldType.PM,
+        3, _omitFieldNames ? '' : 'leftBehind', $pb.PbFieldType.PM,
         subBuilder: PairingsLeftBehind.create)
     ..hasRequiredFields = false;
 
@@ -1398,20 +1371,10 @@ class GatewayWiped extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearScope() => $_clearField(2);
 
-  /// Whether every space was given a generic name (GatewayDeleted.clear_space_names).
-  @$pb.TagNumber(3)
-  $core.bool get spaceNamesCleared => $_getBF(2);
-  @$pb.TagNumber(3)
-  set spaceNamesCleared($core.bool value) => $_setBool(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasSpaceNamesCleared() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearSpaceNamesCleared() => $_clearField(3);
-
   /// With WIPE_SCOPE_FACTORY_RESET: each piece of other hardware that still holds pairings the
   /// reset could not reach, for the person who asked to reset it by hand. Empty otherwise.
-  @$pb.TagNumber(4)
-  $pb.PbList<PairingsLeftBehind> get leftBehind => $_getList(3);
+  @$pb.TagNumber(3)
+  $pb.PbList<PairingsLeftBehind> get leftBehind => $_getList(2);
 }
 
 /// Hardware a connector drives that keeps its own pairings through a factory reset.

@@ -164,13 +164,11 @@ class RegistrationComplete extends $pb.GeneratedMessage {
     $core.String? certificatePem,
     $core.String? caBundlePem,
     $core.String? ownershipEpoch,
-    $core.bool? clearSpaceNames,
   }) {
     final result = create();
     if (certificatePem != null) result.certificatePem = certificatePem;
     if (caBundlePem != null) result.caBundlePem = caBundlePem;
     if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
-    if (clearSpaceNames != null) result.clearSpaceNames = clearSpaceNames;
     return result;
   }
 
@@ -191,7 +189,6 @@ class RegistrationComplete extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'certificatePem')
     ..aOS(2, _omitFieldNames ? '' : 'caBundlePem')
     ..aOS(3, _omitFieldNames ? '' : 'ownershipEpoch')
-    ..aOB(4, _omitFieldNames ? '' : 'clearSpaceNames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -249,18 +246,6 @@ class RegistrationComplete extends $pb.GeneratedMessage {
   $core.bool hasOwnershipEpoch() => $_has(2);
   @$pb.TagNumber(3)
   void clearOwnershipEpoch() => $_clearField(3);
-
-  /// As signaling.v1.GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for
-  /// the wipe a new epoch makes. Applies only when ownership_epoch is not the one the gateway
-  /// holds.
-  @$pb.TagNumber(4)
-  $core.bool get clearSpaceNames => $_getBF(3);
-  @$pb.TagNumber(4)
-  set clearSpaceNames($core.bool value) => $_setBool(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasClearSpaceNames() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearClearSpaceNames() => $_clearField(4);
 }
 
 class RegistrationError extends $pb.GeneratedMessage {

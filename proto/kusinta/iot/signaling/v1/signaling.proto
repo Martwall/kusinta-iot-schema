@@ -254,9 +254,8 @@ message RedeemInviteResult {
 // app hands over, the registration token included. It keeps the epoch it holds across restarts.
 //
 // Given an epoch other than the one it holds, the gateway wipes people and history (see
-// GatewayDeleted, WIPE), giving its spaces generic names too where clear_space_names says so,
-// before it admits any session or applies anything else from that registration or stream, and
-// then holds the new epoch. A gateway holding no epoch takes the first it is given and wipes nothing. The
+// GatewayDeleted, WIPE), space names included, before it admits any session or applies anything
+// else from that registration or stream, and then holds the new epoch. A gateway holding no epoch takes the first it is given and wipes nothing. The
 // epoch it holds, given again, changes nothing, so the same epoch twice wipes once.
 //
 // A gateway that holds an epoch treats a stream on which anything arrives before this message,
@@ -265,17 +264,13 @@ message RedeemInviteResult {
 // requires it is deployed.
 message GatewayStreamOpened {
   string ownership_epoch = 1;
-
-  // As GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for the wipe a new
-  // epoch makes. Applies only when ownership_epoch is not the one the gateway holds.
-  bool clear_space_names = 2;
 }
 
 // The gateway was deleted at the api-server, api-server → gateway: the owner record with
 // ownership_epoch has ended, and the gateway decommissions at once. Sent to a connected gateway
 // before the api-server ends its stream, and answered with GatewayWiped. A gateway offline when
 // it is deleted learns it from the new epoch at its next registration instead
-// (GatewayStreamOpened, OWNERSHIP EPOCH), which carries clear_space_names with it.
+// (GatewayStreamOpened, OWNERSHIP EPOCH), and wipes then just as it would have now.
 //
 // A delete is not a revoke. A revoke ends the gateway's certificate and keeps its owner: it sends
 // no notice and wipes nothing, and a revoked gateway registered again by the owning organisation
@@ -289,9 +284,9 @@ message GatewayStreamOpened {
 // ignored.
 //
 // WIPE. A wipe of people and history (WIPE_SCOPE_PEOPLE_AND_HISTORY) keeps the building's setup:
-// its spaces, with their structure, types and names; its devices and how they are filed; device
-// links; connector configuration; the building's time zone; and the gateway's own credentials
-// and the settings that are not about people. Everything about people goes: every user, role,
+// its spaces, with their structure and types; its devices and how they are filed; device links;
+// connector configuration; the building's time zone; and the gateway's own credentials and the
+// settings that are not about people. Everything about people goes: every user, role,
 // membership and residency, with its residency id; every invite, join request and promotion
 // request; every name and email address; the vouched administrators and their version; every end
 // of access; every device's ownership, an owned device staying filed where it is, released, as
@@ -299,21 +294,21 @@ message GatewayStreamOpened {
 // climate summaries, events, targets, modes and routines. Every open session ends, and none is
 // admitted until the wipe is done.
 //
+// It always renames every space too, since a name can name a person ("Ilse's room"): each gets a
+// generic name, its type and its number among the spaces of that type under the same parent,
+// counted from 1 in the order the gateway lists them — "Apartment 1", "Floor 2", "Room 3". In
+// English, as here, since nothing on the gateway knows the building's language. The renaming is
+// part of the wipe: done in the same step, all of it or none, and keyed by the same epoch, so it
+// is done once per epoch as the rest is.
+// No space is removed or moved by it; each keeps its type, its place in the structure, its
+// devices, its filing and its links.
+//
 // The gateway then reports as a gateway starting afresh does: on new streams, a snapshot with no
 // members (reporting.v1.ReportMembersRequest), no service reach and no invite routes, so the
 // api-server's record of who belongs to the gateway empties too.
 message GatewayDeleted {
   string ownership_epoch = 1;
-
-  // Also gives every space a generic name, since a name can name a person ("Ilse's room"): its
-  // type and its number among the spaces of that type under the same parent, counted from 1 in
-  // the order the gateway lists them — "Apartment 1", "Floor 2", "Room 3". In English, as here,
-  // since nothing on the gateway knows the building's language. Every space stays, with its
-  // type, its filing, its devices and links. Applied in the same step as the wipe, and only with
-  // WIPE_SCOPE_PEOPLE_AND_HISTORY, since a factory reset leaves no space to name.
-  bool clear_space_names = 2;
-
-  WipeScope scope = 3;
+  WipeScope scope = 2;
 }
 
 // How much a wipe takes (GatewayDeleted).
@@ -321,8 +316,8 @@ enum WipeScope {
   // Not stated. Read as PEOPLE_AND_HISTORY, as is any value the gateway does not know.
   WIPE_SCOPE_UNSPECIFIED = 0;
 
-  // Decommissioning: people and their history go and the building's setup stays
-  // (GatewayDeleted, WIPE).
+  // Decommissioning: people and their history go, every space is given a generic name, and the
+  // rest of the building's setup stays (GatewayDeleted, WIPE).
   WIPE_SCOPE_PEOPLE_AND_HISTORY = 1;
 
   // Out of the box, for a gateway that is to be used anywhere else: everything the gateway holds
@@ -351,12 +346,9 @@ message GatewayWiped {
   // when it was asked for a factory reset it does not perform.
   WipeScope scope = 2;
 
-  // Whether every space was given a generic name (GatewayDeleted.clear_space_names).
-  bool space_names_cleared = 3;
-
   // With WIPE_SCOPE_FACTORY_RESET: each piece of other hardware that still holds pairings the
   // reset could not reach, for the person who asked to reset it by hand. Empty otherwise.
-  repeated PairingsLeftBehind left_behind = 4;
+  repeated PairingsLeftBehind left_behind = 3;
 }
 
 // Hardware a connector drives that keeps its own pairings through a factory reset.

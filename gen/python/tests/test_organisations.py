@@ -95,10 +95,26 @@ def test_a_delete_notice_with_no_scope_states_none():
     assert _round_trip(notice).scope == signaling_pb2.WIPE_SCOPE_UNSPECIFIED
 
 
-def test_a_delete_notice_can_clear_space_names():
-    notice = signaling_pb2.GatewayDeleted(ownership_epoch="ep-2", clear_space_names=True)
+def test_a_delete_notice_has_no_option_for_keeping_space_names():
+    fields = signaling_pb2.GatewayDeleted.DESCRIPTOR.fields
 
-    assert _round_trip(notice).clear_space_names is True
+    assert [(f.name, f.number) for f in fields] == [("ownership_epoch", 1), ("scope", 2)]
+
+
+def test_the_stream_opens_with_the_epoch_alone():
+    fields = signaling_pb2.GatewayStreamOpened.DESCRIPTOR.fields
+
+    assert [f.name for f in fields] == ["ownership_epoch"]
+
+
+def test_a_wipe_is_acknowledged_with_no_word_on_space_names():
+    fields = signaling_pb2.GatewayWiped.DESCRIPTOR.fields
+
+    assert [(f.name, f.number) for f in fields] == [
+        ("ownership_epoch", 1),
+        ("scope", 2),
+        ("left_behind", 3),
+    ]
 
 
 def test_the_gateway_acknowledges_a_wipe_with_the_scope_it_applied():
@@ -120,12 +136,10 @@ def test_a_factory_reset_says_which_pairings_it_left_behind():
     assert _round_trip(wiped).left_behind[0].display_name == "CCU3"
 
 
-def test_a_registration_carries_the_space_name_choice():
-    complete = registration_pb2.RegistrationComplete(
-        ownership_epoch="ep-3", clear_space_names=True
-    )
+def test_a_registration_completes_with_no_space_name_choice():
+    fields = registration_pb2.RegistrationComplete.DESCRIPTOR.fields
 
-    assert _round_trip(complete).clear_space_names is True
+    assert [f.name for f in fields] == ["certificate_pem", "ca_bundle_pem", "ownership_epoch"]
 
 
 def test_a_registration_completes_with_the_ownership_epoch():

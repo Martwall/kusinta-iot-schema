@@ -6,6 +6,8 @@ import {
   GatewayConnectRequestSchema,
   GatewayConnectResponseSchema,
   GatewayDeletedSchema,
+  GatewayStreamOpenedSchema,
+  GatewayWipedSchema,
   OutgoingChoiceSchema,
   OutgoingStaffChoice,
   VouchedAdministratorsSchema,
@@ -158,9 +160,23 @@ describe('ownership epoch', () => {
     expect(payload.case === 'gatewayDeleted' && payload.value.ownershipEpoch).toBe('ep-2')
   })
 
-  it('asks a deleted gateway to give its spaces generic names', () => {
-    const payload = toGateway({ case: 'gatewayDeleted', value: { clearSpaceNames: true } })
-    expect(payload.case === 'gatewayDeleted' && payload.value.clearSpaceNames).toBe(true)
+  it('has no option on a delete notice for keeping space names', () => {
+    expect(GatewayDeletedSchema.fields.map((f) => [f.name, f.number])).toEqual([
+      ['ownership_epoch', 1],
+      ['scope', 2],
+    ])
+  })
+
+  it('opens the stream with the epoch alone', () => {
+    expect(GatewayStreamOpenedSchema.fields.map((f) => f.name)).toEqual(['ownership_epoch'])
+  })
+
+  it('acknowledges a wipe with no word on space names', () => {
+    expect(GatewayWipedSchema.fields.map((f) => [f.name, f.number])).toEqual([
+      ['ownership_epoch', 1],
+      ['scope', 2],
+      ['left_behind', 3],
+    ])
   })
 
   it('asks a deleted gateway for a factory reset', () => {
@@ -191,12 +207,12 @@ describe('ownership epoch', () => {
     expect(payload.case === 'wiped' && payload.value.leftBehind[0].displayName).toBe('CCU3')
   })
 
-  it('carries the space-name choice with the epoch at registration', () => {
-    const complete = create(RegistrationCompleteSchema, { ownershipEpoch: 'ep-3', clearSpaceNames: true })
-    expect(
-      fromBinary(RegistrationCompleteSchema, toBinary(RegistrationCompleteSchema, complete))
-        .clearSpaceNames,
-    ).toBe(true)
+  it('completes a registration with no space-name choice', () => {
+    expect(RegistrationCompleteSchema.fields.map((f) => f.name)).toEqual([
+      'certificate_pem',
+      'ca_bundle_pem',
+      'ownership_epoch',
+    ])
   })
 
   it('completes a registration with the epoch of the owner record', () => {

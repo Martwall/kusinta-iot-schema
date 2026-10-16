@@ -152,34 +152,28 @@ class RedeemInviteResult(_message.Message):
     def __init__(self, request_id: _Optional[str] = ..., outcome: _Optional[_Union[RedeemOutcome, str]] = ...) -> None: ...
 
 class GatewayStreamOpened(_message.Message):
-    __slots__ = ("ownership_epoch", "clear_space_names")
+    __slots__ = ("ownership_epoch",)
     OWNERSHIP_EPOCH_FIELD_NUMBER: _ClassVar[int]
-    CLEAR_SPACE_NAMES_FIELD_NUMBER: _ClassVar[int]
     ownership_epoch: str
-    clear_space_names: bool
-    def __init__(self, ownership_epoch: _Optional[str] = ..., clear_space_names: _Optional[bool] = ...) -> None: ...
+    def __init__(self, ownership_epoch: _Optional[str] = ...) -> None: ...
 
 class GatewayDeleted(_message.Message):
-    __slots__ = ("ownership_epoch", "clear_space_names", "scope")
+    __slots__ = ("ownership_epoch", "scope")
     OWNERSHIP_EPOCH_FIELD_NUMBER: _ClassVar[int]
-    CLEAR_SPACE_NAMES_FIELD_NUMBER: _ClassVar[int]
     SCOPE_FIELD_NUMBER: _ClassVar[int]
     ownership_epoch: str
-    clear_space_names: bool
     scope: WipeScope
-    def __init__(self, ownership_epoch: _Optional[str] = ..., clear_space_names: _Optional[bool] = ..., scope: _Optional[_Union[WipeScope, str]] = ...) -> None: ...
+    def __init__(self, ownership_epoch: _Optional[str] = ..., scope: _Optional[_Union[WipeScope, str]] = ...) -> None: ...
 
 class GatewayWiped(_message.Message):
-    __slots__ = ("ownership_epoch", "scope", "space_names_cleared", "left_behind")
+    __slots__ = ("ownership_epoch", "scope", "left_behind")
     OWNERSHIP_EPOCH_FIELD_NUMBER: _ClassVar[int]
     SCOPE_FIELD_NUMBER: _ClassVar[int]
-    SPACE_NAMES_CLEARED_FIELD_NUMBER: _ClassVar[int]
     LEFT_BEHIND_FIELD_NUMBER: _ClassVar[int]
     ownership_epoch: str
     scope: WipeScope
-    space_names_cleared: bool
     left_behind: _containers.RepeatedCompositeFieldContainer[PairingsLeftBehind]
-    def __init__(self, ownership_epoch: _Optional[str] = ..., scope: _Optional[_Union[WipeScope, str]] = ..., space_names_cleared: _Optional[bool] = ..., left_behind: _Optional[_Iterable[_Union[PairingsLeftBehind, _Mapping]]] = ...) -> None: ...
+    def __init__(self, ownership_epoch: _Optional[str] = ..., scope: _Optional[_Union[WipeScope, str]] = ..., left_behind: _Optional[_Iterable[_Union[PairingsLeftBehind, _Mapping]]] = ...) -> None: ...
 
 class PairingsLeftBehind(_message.Message):
     __slots__ = ("kind", "display_name")
