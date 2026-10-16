@@ -462,10 +462,11 @@ export enum ServiceSignal {
   LINKS = 8,
 
   /**
-   * Who is filed on the home, and how: every membership of it — residents, service, and
-   * those recorded with no relation — by user id. Shown to the property owner and the
-   * gateway administrator only, not to every party with service reach (see
-   * space.v1.Space.members).
+   * Who is filed on the home, and how, as space.v1.Space.members tells it to a caller who
+   * does not live there: each residency under its own residency id and since when, never
+   * who holds it (MembershipRelation, RESIDENCY IDS); service, and memberships recorded
+   * with no relation, by user id, and staff among them by name. Shown to the property owner
+   * and the gateway administrator only, not to every party with service reach.
    *
    * @generated from enum value: SERVICE_SIGNAL_RESIDENTS = 9;
    */
