@@ -231,11 +231,11 @@ class AppTokenClaims extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearName() => $_clearField(8);
 
-  /// The verified email address of the account, or empty. The issuer MUST set it only for a
-  /// user who is staff (access.v1.Role) on the token's gateway as the member report stands
-  /// (reporting.v1.GatewayMember), the registering administrator included, and only for an
-  /// address the identity provider marks verified; for anyone else, and for an unverified
-  /// address, it MUST send it empty. The gateway MUST keep it only while the user holds a
+  /// The verified email address of the account, or empty. The issuer sets it for a user who
+  /// is staff (access.v1.Role, STAFF) on the token's gateway as the member report stands
+  /// (reporting.v1.GatewayMember), the registering administrator included, when the identity
+  /// provider marks their address verified. It MUST be empty for anyone else, and for an
+  /// address not marked verified. The gateway MUST keep it only while the user holds a
   /// staff role, and use it only to tell staff apart to whoever may list every member
   /// (MemberDetail.email). A validator accepts a token without it. Carried in the JWT as
   /// "email".

@@ -2460,7 +2460,7 @@ class ServiceParty extends $pb.GeneratedMessage {
   $pb.PbList<$10.ServiceSignal> get signals => $_getList(1);
 
   /// Each person counted under this role, by the name they gave their account
-  /// (MemberDetail.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
+  /// (AppTokenClaims.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
   /// ROLE_PROPERTY_OWNER, the registering administrator included once the gateway has seen
   /// their token, and everyone else counted here by a SERVICE membership. A person counted
   /// under several roles is named under each. An empty string stands for a person whose name
