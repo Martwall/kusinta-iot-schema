@@ -155,8 +155,8 @@ class CreateInvite extends $pb.GeneratedMessage {
   /// end. Both secrets expire no later than it.
   ///
   /// It reaches only someone the redeem, or the approval of the join request it makes, makes
-  /// a technician: a user who held no role but ROLE_RESIDENT before and is not the
-  /// registering administrator. For anyone else it is ignored, so an invite can neither
+  /// a technician: a user who held no role but ROLE_RESIDENT before and is not a vouched
+  /// administrator. For anyone else it is ignored, so an invite can neither
   /// shorten nor lengthen a member's access, nor put an end on a property owner or an
   /// administrator. A join request the invite makes expires no later than it.
   @$pb.TagNumber(4)

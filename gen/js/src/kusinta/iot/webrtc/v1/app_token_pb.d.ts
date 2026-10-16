@@ -69,18 +69,21 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
    * Custom claims.
    * The roles the api-server holds for the user on this gateway: the service
    * roles the gateway reported (reporting.v1.GatewayMember) other than
-   * ROLE_GATEWAY_ADMIN, and ROLE_GATEWAY_ADMIN for whoever registered the
-   * gateway. A resident's token names none. Carried in the JWT as an array of
+   * ROLE_GATEWAY_ADMIN, and ROLE_GATEWAY_ADMIN for each administrator of the
+   * organisation that owns the gateway. A resident's token names none. Carried in the JWT as an array of
    * enum NAME strings (e.g. ["ROLE_TECHNICIAN"]), not integer values. The
    * issuer writes the claim even when it names no role ([]), and a validator
    * refuses a token without it.
    *
    * The gateway authorises from the roles it holds itself, and takes from
    * this claim ROLE_GATEWAY_ADMIN alone. So the api-server MUST set
-   * ROLE_GATEWAY_ADMIN here only for the administrator who registered the
-   * gateway, never because the gateway reported someone as one: the gateway
-   * holds those itself, and a copy in a token would outlive their demotion
-   * until the token expired. A gateway that holds roles itself must be
+   * ROLE_GATEWAY_ADMIN here only for an administrator of the organisation that
+   * owns the gateway as it stands when the token is minted, never because the
+   * gateway reported someone as one: the gateway holds those itself, and a copy
+   * in a token would outlive their demotion until the token expired. The same
+   * administrators are told to the gateway as the vouched set
+   * (signaling.v1.VouchedAdministrators), which ends the administration of a
+   * session whose user it no longer names, and of a token issued before it. A gateway that holds roles itself must be
    * deployed before an api-server issues tokens under this rule, since a
    * gateway that authorised from this claim would find residents and
    * reported service roles missing.
@@ -135,7 +138,7 @@ export declare type AppTokenClaims = Message<"kusinta.iot.webrtc.v1.AppTokenClai
   /**
    * The verified email address of the account, or empty. The issuer sets it for a user who
    * is staff (access.v1.Role, STAFF) on the token's gateway as the member report stands
-   * (reporting.v1.GatewayMember), the registering administrator included, when the identity
+   * (reporting.v1.GatewayMember), every administrator of the owning organisation included, when the identity
    * provider marks their address verified. It MUST be empty for anyone else, and for an
    * address not marked verified. The gateway MUST keep it only while the user holds a
    * staff role, and use it only to tell staff apart to whoever may list every member

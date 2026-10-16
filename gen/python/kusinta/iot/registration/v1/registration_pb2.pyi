@@ -22,12 +22,14 @@ class RegistrationProgress(_message.Message):
     def __init__(self, step: _Optional[str] = ...) -> None: ...
 
 class RegistrationComplete(_message.Message):
-    __slots__ = ("certificate_pem", "ca_bundle_pem")
+    __slots__ = ("certificate_pem", "ca_bundle_pem", "ownership_epoch")
     CERTIFICATE_PEM_FIELD_NUMBER: _ClassVar[int]
     CA_BUNDLE_PEM_FIELD_NUMBER: _ClassVar[int]
+    OWNERSHIP_EPOCH_FIELD_NUMBER: _ClassVar[int]
     certificate_pem: str
     ca_bundle_pem: str
-    def __init__(self, certificate_pem: _Optional[str] = ..., ca_bundle_pem: _Optional[str] = ...) -> None: ...
+    ownership_epoch: str
+    def __init__(self, certificate_pem: _Optional[str] = ..., ca_bundle_pem: _Optional[str] = ..., ownership_epoch: _Optional[str] = ...) -> None: ...
 
 class RegistrationError(_message.Message):
     __slots__ = ("code", "message")

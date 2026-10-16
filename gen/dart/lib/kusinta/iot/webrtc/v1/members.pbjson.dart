@@ -53,6 +53,138 @@ final $typed_data.Uint8List setMemberRoleDescriptor = $convert.base64Decode(
     '52MS5Vc2VySWRSBnVzZXJJZBIvCgRyb2xlGAIgASgOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYx'
     'LlJvbGVSBHJvbGUSEgoEaGVsZBgDIAEoCFIEaGVsZA==');
 
+@$core.Deprecated('Use requestPromotionDescriptor instead')
+const RequestPromotion$json = {
+  '1': 'RequestPromotion',
+  '2': [
+    {
+      '1': 'user_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'userId'
+    },
+    {
+      '1': 'role',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'role'
+    },
+  ],
+};
+
+/// Descriptor for `RequestPromotion`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List requestPromotionDescriptor = $convert.base64Decode(
+    'ChBSZXF1ZXN0UHJvbW90aW9uEjgKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudG'
+    'l0eS52MS5Vc2VySWRSBnVzZXJJZBIvCgRyb2xlGAIgASgOMhsua3VzaW50YS5pb3QuYWNjZXNz'
+    'LnYxLlJvbGVSBHJvbGU=');
+
+@$core.Deprecated('Use answerPromotionDescriptor instead')
+const AnswerPromotion$json = {
+  '1': 'AnswerPromotion',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {'1': 'accept', '3': 2, '4': 1, '5': 8, '10': 'accept'},
+  ],
+};
+
+/// Descriptor for `AnswerPromotion`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List answerPromotionDescriptor = $convert.base64Decode(
+    'Cg9BbnN3ZXJQcm9tb3Rpb24SHQoKcmVxdWVzdF9pZBgBIAEoCVIJcmVxdWVzdElkEhYKBmFjY2'
+    'VwdBgCIAEoCFIGYWNjZXB0');
+
+@$core.Deprecated('Use listPromotionRequestsDescriptor instead')
+const ListPromotionRequests$json = {
+  '1': 'ListPromotionRequests',
+};
+
+/// Descriptor for `ListPromotionRequests`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPromotionRequestsDescriptor =
+    $convert.base64Decode('ChVMaXN0UHJvbW90aW9uUmVxdWVzdHM=');
+
+@$core.Deprecated('Use promotionRequestDescriptor instead')
+const PromotionRequest$json = {
+  '1': 'PromotionRequest',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'user_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'userId'
+    },
+    {
+      '1': 'role',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'role'
+    },
+    {
+      '1': 'requested_by',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'requestedBy'
+    },
+    {'1': 'requested_by_name', '3': 5, '4': 1, '5': 9, '10': 'requestedByName'},
+    {
+      '1': 'requested_at',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'requestedAt'
+    },
+    {
+      '1': 'expires_at',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'expiresAt'
+    },
+  ],
+};
+
+/// Descriptor for `PromotionRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List promotionRequestDescriptor = $convert.base64Decode(
+    'ChBQcm9tb3Rpb25SZXF1ZXN0Eh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZBI4Cgd1c2'
+    'VyX2lkGAIgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkUgZ1c2VySWQSLwoE'
+    'cm9sZRgDIAEoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2xlUgRyb2xlEkIKDHJlcXVlc3'
+    'RlZF9ieRgEIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFILcmVxdWVzdGVk'
+    'QnkSKgoRcmVxdWVzdGVkX2J5X25hbWUYBSABKAlSD3JlcXVlc3RlZEJ5TmFtZRI9CgxyZXF1ZX'
+    'N0ZWRfYXQYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtyZXF1ZXN0ZWRBdBI5'
+    'CgpleHBpcmVzX2F0GAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0'
+    'F0');
+
+@$core.Deprecated('Use promotionRequestsDescriptor instead')
+const PromotionRequests$json = {
+  '1': 'PromotionRequests',
+  '2': [
+    {
+      '1': 'requests',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PromotionRequest',
+      '10': 'requests'
+    },
+  ],
+};
+
+/// Descriptor for `PromotionRequests`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List promotionRequestsDescriptor = $convert.base64Decode(
+    'ChFQcm9tb3Rpb25SZXF1ZXN0cxJDCghyZXF1ZXN0cxgBIAMoCzInLmt1c2ludGEuaW90LndlYn'
+    'J0Yy52MS5Qcm9tb3Rpb25SZXF1ZXN0UghyZXF1ZXN0cw==');
+
 @$core.Deprecated('Use removeFromGatewayDescriptor instead')
 const RemoveFromGateway$json = {
   '1': 'RemoveFromGateway',
@@ -132,15 +264,16 @@ const OwnerOrganisation$json = {
       '3': 2,
       '4': 1,
       '5': 9,
-      '10': 'organisationNumber'
+      '8': {'3': true},
+      '10': 'organisationNumber',
     },
   ],
 };
 
 /// Descriptor for `OwnerOrganisation`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List ownerOrganisationDescriptor = $convert.base64Decode(
-    'ChFPd25lck9yZ2FuaXNhdGlvbhISCgRuYW1lGAEgASgJUgRuYW1lEi8KE29yZ2FuaXNhdGlvbl'
-    '9udW1iZXIYAiABKAlSEm9yZ2FuaXNhdGlvbk51bWJlcg==');
+    'ChFPd25lck9yZ2FuaXNhdGlvbhISCgRuYW1lGAEgASgJUgRuYW1lEjMKE29yZ2FuaXNhdGlvbl'
+    '9udW1iZXIYAiABKAlCAhgBUhJvcmdhbmlzYXRpb25OdW1iZXI=');
 
 @$core.Deprecated('Use gatewayMembersDescriptor instead')
 const GatewayMembers$json = {
@@ -214,9 +347,11 @@ const MemberDetail$json = {
       '3': 6,
       '4': 1,
       '5': 8,
-      '10': 'registeringAdmin'
+      '8': {'3': true},
+      '10': 'registeringAdmin',
     },
     {'1': 'email', '3': 7, '4': 1, '5': 9, '10': 'email'},
+    {'1': 'vouched_admin', '3': 8, '4': 1, '5': 8, '10': 'vouchedAdmin'},
   ],
 };
 
@@ -227,8 +362,8 @@ final $typed_data.Uint8List memberDetailDescriptor = $convert.base64Decode(
     'dXNpbnRhLmlvdC5hY2Nlc3MudjEuUm9sZVIFcm9sZXMSRAoLbWVtYmVyc2hpcHMYBCADKAsyIi'
     '5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWVtYmVyU3BhY2VSC21lbWJlcnNoaXBzEj0KDGFjY2Vz'
     'c191bnRpbBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2FjY2Vzc1VudGlsEi'
-    'sKEXJlZ2lzdGVyaW5nX2FkbWluGAYgASgIUhByZWdpc3RlcmluZ0FkbWluEhQKBWVtYWlsGAcg'
-    'ASgJUgVlbWFpbA==');
+    '8KEXJlZ2lzdGVyaW5nX2FkbWluGAYgASgIQgIYAVIQcmVnaXN0ZXJpbmdBZG1pbhIUCgVlbWFp'
+    'bBgHIAEoCVIFZW1haWwSIwoNdm91Y2hlZF9hZG1pbhgIIAEoCFIMdm91Y2hlZEFkbWlu');
 
 @$core.Deprecated('Use memberSpaceDescriptor instead')
 const MemberSpace$json = {

@@ -54,13 +54,15 @@ const RegistrationComplete$json = {
   '2': [
     {'1': 'certificate_pem', '3': 1, '4': 1, '5': 9, '10': 'certificatePem'},
     {'1': 'ca_bundle_pem', '3': 2, '4': 1, '5': 9, '10': 'caBundlePem'},
+    {'1': 'ownership_epoch', '3': 3, '4': 1, '5': 9, '10': 'ownershipEpoch'},
   ],
 };
 
 /// Descriptor for `RegistrationComplete`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List registrationCompleteDescriptor = $convert.base64Decode(
     'ChRSZWdpc3RyYXRpb25Db21wbGV0ZRInCg9jZXJ0aWZpY2F0ZV9wZW0YASABKAlSDmNlcnRpZm'
-    'ljYXRlUGVtEiIKDWNhX2J1bmRsZV9wZW0YAiABKAlSC2NhQnVuZGxlUGVt');
+    'ljYXRlUGVtEiIKDWNhX2J1bmRsZV9wZW0YAiABKAlSC2NhQnVuZGxlUGVtEicKD293bmVyc2hp'
+    'cF9lcG9jaBgDIAEoCVIOb3duZXJzaGlwRXBvY2g=');
 
 @$core.Deprecated('Use registrationErrorDescriptor instead')
 const RegistrationError$json = {

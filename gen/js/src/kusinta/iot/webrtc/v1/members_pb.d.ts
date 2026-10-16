@@ -43,29 +43,24 @@ export declare type ListGatewayMembers = Message<"kusinta.iot.webrtc.v1.ListGate
 export declare const ListGatewayMembersSchema: GenMessage<ListGatewayMembers>;
 
 /**
- * Gives a member ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, or takes it away. Answered with
+ * Takes ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN away from a member, at once. Answered with
  * ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may; any other role named is
- * INVALID_REQUEST.
+ * INVALID_REQUEST. Granting is a request the person accepts (RequestPromotion), so held set
+ * to true is INVALID_REQUEST and grants nothing.
  *
  * user_id is never a residency id (INVALID_REQUEST): the member's entry would then appear
- * under their user id, named, and tie the residency to them. A resident becomes staff by
- * an act of their own — redeeming a SERVICE invite (invite.proto) — and is promoted from
- * the entry that gives.
+ * under their user id, named, and tie the residency to them.
  *
- * Granting a role already held, or taking away one not held, changes nothing and is
- * acknowledged. A caller may take a role away from themselves: the registering
- * administrator always remains, so the gateway cannot be left without one. Naming
- * ROLE_GATEWAY_ADMIN for the registering administrator, either way, is refused as
- * "registering_admin"; ROLE_PROPERTY_OWNER may be given to them and taken away as to
- * anyone.
- *
- * Granting either role clears any end to the member's access (MemberDetail.access_until):
- * a property owner or an administrator is not there for a job.
+ * Taking away a role not held changes nothing and is acknowledged. A caller may take a role
+ * away from themselves: the vouched administrators always remain, so the gateway cannot be
+ * left without an administrator. Naming ROLE_GATEWAY_ADMIN for a vouched administrator is
+ * refused as "vouched_admin"; ROLE_PROPERTY_OWNER is taken away from them as from anyone.
  *
  * Taking either role away also ends the pending invites the user created while holding one,
  * unless they keep the other; invites they created as a resident of a home follow their
  * residency, as they always do. The join requests those invites made stay, since another
- * administrator may still answer them. The change reaches the user's open sessions at once.
+ * administrator may still answer them. Taking away ROLE_GATEWAY_ADMIN ends the promotion
+ * requests the user made. The change reaches the user's open sessions at once.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetMemberRole
  */
@@ -81,7 +76,7 @@ export declare type SetMemberRole = Message<"kusinta.iot.webrtc.v1.SetMemberRole
   role: Role;
 
   /**
-   * true grants the role; false takes it away.
+   * false takes the role away. true is INVALID_REQUEST: see RequestPromotion.
    *
    * @generated from field: bool held = 3;
    */
@@ -95,6 +90,185 @@ export declare type SetMemberRole = Message<"kusinta.iot.webrtc.v1.SetMemberRole
 export declare const SetMemberRoleSchema: GenMessage<SetMemberRole>;
 
 /**
+ * Asks a member to accept ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN. Answered with
+ * ManagementAck once the request is made; the role is granted only when the person asked
+ * accepts it (AnswerPromotion). Only a caller holding ROLE_GATEWAY_ADMIN may; any other role
+ * named is INVALID_REQUEST. The caller may ask themselves, as anyone.
+ *
+ * user_id is never a residency id (INVALID_REQUEST), as for SetMemberRole: a resident becomes
+ * staff by an act of their own — redeeming a SERVICE invite (invite.proto) — and is asked from
+ * the entry that gives. A user id the caller is told nothing of under it is "not_a_member".
+ * Naming ROLE_GATEWAY_ADMIN for a vouched administrator is refused as "vouched_admin";
+ * ROLE_PROPERTY_OWNER may be asked of them as of anyone.
+ *
+ * Asking for a role the member already holds, or one a pending request already asks of them,
+ * changes nothing and is acknowledged: one request per member and role, whoever asked.
+ *
+ * A request is pending for at most 7 days from when it was made (PromotionRequest.expires_at),
+ * and then lapses as if declined. It ends sooner when it is answered, when the member stops
+ * being a member, when they come to hold the role otherwise, and when its asker no longer holds
+ * ROLE_GATEWAY_ADMIN — an outgoing administrator of a transfer included
+ * (signaling.v1.TransferOutcome) — since no administrator then stands behind it.
+ *
+ * The app shows the person asked, before they answer, that accepting makes their name and email
+ * address shown to property owners and administrators (MemberDetail.name, MemberDetail.email),
+ * and to residents by name (PrivacyDisclosure).
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RequestPromotion
+ */
+export declare type RequestPromotion = Message<"kusinta.iot.webrtc.v1.RequestPromotion"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.UserId user_id = 1;
+   */
+  userId?: UserId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.access.v1.Role role = 2;
+   */
+  role: Role;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RequestPromotion.
+ * Use `create(RequestPromotionSchema)` to create a new message.
+ */
+export declare const RequestPromotionSchema: GenMessage<RequestPromotion>;
+
+/**
+ * Accepts or declines a promotion request. Answered with ManagementAck. Only the person asked
+ * may, from a session of their own; a request_id that is not pending for the caller — someone
+ * else's, one the caller made of another, unknown, answered or lapsed — is refused as
+ * NOT_ENTITLED, so that no request id can be probed.
+ *
+ * Accepting grants the role at once, and clears any end to the person's access
+ * (MemberDetail.access_until): a property owner or an administrator is not there for a job. The
+ * change reaches their open sessions at once. Declining ends the request and grants nothing; the
+ * asker learns only that it is no longer pending.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.AnswerPromotion
+ */
+export declare type AnswerPromotion = Message<"kusinta.iot.webrtc.v1.AnswerPromotion"> & {
+  /**
+   * As PromotionRequest.request_id.
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * true accepts; false declines.
+   *
+   * @generated from field: bool accept = 2;
+   */
+  accept: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.AnswerPromotion.
+ * Use `create(AnswerPromotionSchema)` to create a new message.
+ */
+export declare const AnswerPromotionSchema: GenMessage<AnswerPromotion>;
+
+/**
+ * Lists the pending promotion requests the caller made or was asked to accept, answered with
+ * PromotionRequests. Anyone may ask; nobody is refused. A request is listed to those two people
+ * alone: other administrators do not see it, and nor does anyone else.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListPromotionRequests
+ */
+export declare type ListPromotionRequests = Message<"kusinta.iot.webrtc.v1.ListPromotionRequests"> & {
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListPromotionRequests.
+ * Use `create(ListPromotionRequestsSchema)` to create a new message.
+ */
+export declare const ListPromotionRequestsSchema: GenMessage<ListPromotionRequests>;
+
+/**
+ * One pending promotion request, as listed to the person asked or the asker.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PromotionRequest
+ */
+export declare type PromotionRequest = Message<"kusinta.iot.webrtc.v1.PromotionRequest"> & {
+  /**
+   * Minted by the gateway, opaque.
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * The person asked.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId user_id = 2;
+   */
+  userId?: UserId | undefined;
+
+  /**
+   * ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN.
+   *
+   * @generated from field: kusinta.iot.access.v1.Role role = 3;
+   */
+  role: Role;
+
+  /**
+   * Who asked, and the name they gave their account (AppTokenClaims.name) as the gateway last
+   * learnt it, so the person asked knows who asks; empty when none is learnt. Self-chosen, as
+   * MemberDetail.name is.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId requested_by = 4;
+   */
+  requestedBy?: UserId | undefined;
+
+  /**
+   * @generated from field: string requested_by_name = 5;
+   */
+  requestedByName: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp requested_at = 6;
+   */
+  requestedAt?: Timestamp | undefined;
+
+  /**
+   * When the request lapses unanswered: 7 days after requested_at.
+   *
+   * @generated from field: google.protobuf.Timestamp expires_at = 7;
+   */
+  expiresAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PromotionRequest.
+ * Use `create(PromotionRequestSchema)` to create a new message.
+ */
+export declare const PromotionRequestSchema: GenMessage<PromotionRequest>;
+
+/**
+ * The pending promotion requests a session's user made or was asked to accept.
+ *
+ * The answer to ListPromotionRequests, and pushed as GatewayMessage.promotion_requests to every
+ * session of the person asked and of the asker whenever a request they are listed changes — made,
+ * answered, lapsed or ended — so the person asked sees a request without reloading. A push always
+ * carries the whole list, as ListPromotionRequests would list it to that session.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PromotionRequests
+ */
+export declare type PromotionRequests = Message<"kusinta.iot.webrtc.v1.PromotionRequests"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.webrtc.v1.PromotionRequest requests = 1;
+   */
+  requests: PromotionRequest[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PromotionRequests.
+ * Use `create(PromotionRequestsSchema)` to create a new message.
+ */
+export declare const PromotionRequestsSchema: GenMessage<PromotionRequests>;
+
+/**
  * Removes a member from the gateway in one step: every membership they hold, every role the
  * gateway holds for them, every pending invite they created and every join request of their
  * own. Answered with ManagementAck. Their open sessions end, and the api-server drops them
@@ -106,10 +280,10 @@ export declare const SetMemberRoleSchema: GenMessage<SetMemberRole>;
  * then stays a member, a resident of it. By a residency id, it ends that residency alone, as
  * RemoveUserFromSpace would, with the invites the holder made as its resident.
  *
- * A caller holding ROLE_GATEWAY_ADMIN may remove anyone but the registering administrator
- * ("registering_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
+ * A caller holding ROLE_GATEWAY_ADMIN may remove anyone but a vouched administrator
+ * ("vouched_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
  * may remove only a member who holds neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN;
- * anyone else, the registering administrator included, is refused NOT_ENTITLED. A residency
+ * anyone else, a vouched administrator included, is refused NOT_ENTITLED. A residency
  * id is never refused for its holder's roles, since it tells none.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveFromGateway
@@ -163,9 +337,10 @@ export declare type SetAccessUntil = Message<"kusinta.iot.webrtc.v1.SetAccessUnt
 export declare const SetAccessUntilSchema: GenMessage<SetAccessUntil>;
 
 /**
- * Records the organisation that owns the property, or clears it when unset or when both
- * fields are empty. An organisation number without a name is INVALID_REQUEST. Answered with
- * ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may.
+ * Superseded: the organisation that owns the property is the one that owns the gateway, and its
+ * name comes with the vouched set (signaling.v1.VouchedAdministrators.organisation_name). A
+ * gateway refuses this request as INVALID_REQUEST, whoever asks, and records nothing from it, so
+ * that no one believes they set the name. Kept so that an older app's request still decodes.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetOwnerOrganisation
  */
@@ -183,23 +358,26 @@ export declare type SetOwnerOrganisation = Message<"kusinta.iot.webrtc.v1.SetOwn
 export declare const SetOwnerOrganisationSchema: GenMessage<SetOwnerOrganisation>;
 
 /**
- * The organisation that owns the property. The people who act for it each hold
- * ROLE_PROPERTY_OWNER themselves; this only says whom they act for.
+ * The organisation that owns the property: the one that owns the gateway. The people who act
+ * for it in the building each hold ROLE_PROPERTY_OWNER themselves; this only says whom they
+ * act for.
  *
  * @generated from message kusinta.iot.webrtc.v1.OwnerOrganisation
  */
 export declare type OwnerOrganisation = Message<"kusinta.iot.webrtc.v1.OwnerOrganisation"> & {
   /**
+   * As the vouched set gives it (signaling.v1.VouchedAdministrators.organisation_name).
+   *
    * @generated from field: string name = 1;
    */
   name: string;
 
   /**
-   * As the organisation's national register gives it; the gateway does not check it. For a
-   * sole trader it can be a personal identity number, so it is shown only where
-   * GatewayMembers is, never to residents (PrivacyDisclosure carries the name alone).
+   * Always empty: the api-server never gives the gateway an organisation number, and the
+   * gateway keeps none. Once read from SetOwnerOrganisation, which is superseded.
    *
-   * @generated from field: string organisation_number = 2;
+   * @generated from field: string organisation_number = 2 [deprecated = true];
+   * @deprecated
    */
   organisationNumber: string;
 };
@@ -222,7 +400,7 @@ export declare type GatewayMembers = Message<"kusinta.iot.webrtc.v1.GatewayMembe
   members: MemberDetail[];
 
   /**
-   * Unset when none is recorded.
+   * The owning organisation, by name. Unset while the gateway holds no vouched set.
    *
    * @generated from field: kusinta.iot.webrtc.v1.OwnerOrganisation owner_organisation = 2;
    */
@@ -262,7 +440,7 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
   name: string;
 
   /**
-   * Every role they hold here, the registering administrator's ROLE_GATEWAY_ADMIN included,
+   * Every role they hold here, a vouched administrator's ROLE_GATEWAY_ADMIN included,
    * each once — save that ROLE_RESIDENT is left out of every entry but the caller's own,
    * since it would say they live in the building. None on a residency's entry.
    *
@@ -287,11 +465,11 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
   accessUntil?: Timestamp | undefined;
 
   /**
-   * Whether they are the administrator who registered the gateway, as the gateway last saw
-   * from a token. Grants nothing on its own; it says that their ROLE_GATEWAY_ADMIN cannot be
-   * changed here and that RemoveFromGateway will refuse them.
+   * Set exactly as vouched_admin, for readers older than it; a reader that knows vouched_admin
+   * reads that instead. To be reserved once no reader needs it.
    *
-   * @generated from field: bool registering_admin = 6;
+   * @generated from field: bool registering_admin = 6 [deprecated = true];
+   * @deprecated
    */
   registeringAdmin: boolean;
 
@@ -304,6 +482,17 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
    * @generated from field: string email = 7;
    */
   email: string;
+
+  /**
+   * Whether they are a vouched administrator: named in the vouched set the gateway holds
+   * (signaling.v1.VouchedAdministrators), whether or not the gateway has seen them connect. Grants
+   * nothing on its own; it says that their ROLE_GATEWAY_ADMIN cannot be changed here and that
+   * RemoveFromGateway will refuse them. Their name and email address are empty until the gateway
+   * learns them from their own token.
+   *
+   * @generated from field: bool vouched_admin = 8;
+   */
+  vouchedAdmin: boolean;
 };
 
 /**

@@ -172,6 +172,7 @@ message ManagementResult {
     IssuedInvite issued_invite = 11; // create_invite, resend_invite
     SpaceInvites space_invites = 12; // list_space_invites
     GatewayMembers gateway_members = 13; // list_gateway_members
+    PromotionRequests promotion_requests = 14; // list_promotion_requests
   }
 }
 
@@ -406,6 +407,9 @@ message GatewayMessage {
     ServiceStatusChanged service_status_changed = 23;
     // A space's pending invites and join requests changed; see SpaceInvites.
     SpaceInvites space_invites = 24;
+    // The promotion requests the session's user made or was asked to accept changed; see
+    // PromotionRequests.
+    PromotionRequests promotion_requests = 25;
   }
 }
 

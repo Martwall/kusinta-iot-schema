@@ -2369,8 +2369,10 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $pb.PbList<ServiceParty> get serviceParties => $_getList(2);
 
-  /// The name of the organisation that owns the property, when one is recorded
-  /// (SetOwnerOrganisation). Its organisation number is not given here.
+  /// The name of the organisation that owns the gateway, and so the property, as the vouched
+  /// set gives it (signaling.v1.VouchedAdministrators.organisation_name); empty while the
+  /// gateway holds no vouched set. Never its organisation number. SetOwnerOrganisation, which
+  /// once set it, is superseded.
   @$pb.TagNumber(6)
   $core.String get ownerOrganisationName => $_getSZ(3);
   @$pb.TagNumber(6)
@@ -2473,8 +2475,8 @@ class ServiceParty extends $pb.GeneratedMessage {
 
   /// Each person counted under this role, by the name they gave their account
   /// (AppTokenClaims.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
-  /// ROLE_PROPERTY_OWNER, the registering administrator included once the gateway has seen
-  /// their token, and everyone else counted here by a SERVICE membership. A person counted
+  /// ROLE_PROPERTY_OWNER, every vouched administrator included whether or not the gateway has
+  /// seen their token, and everyone else counted here by a SERVICE membership. A person counted
   /// under several roles is named under each. An empty string stands for a person whose name
   /// the gateway has not learnt, so the list is as long as the number of people. Self-chosen,
   /// so the app shows it as the name they gave rather than as a verified identity. Empty for
@@ -2837,6 +2839,9 @@ enum ManagementRequest_Request {
   removeFromGateway,
   setAccessUntil,
   setOwnerOrganisation,
+  requestPromotion,
+  answerPromotion,
+  listPromotionRequests,
   notSet
 }
 
@@ -2876,7 +2881,11 @@ class ManagementRequest extends $pb.GeneratedMessage {
     $6.SetMemberRole? setMemberRole,
     $6.RemoveFromGateway? removeFromGateway,
     $6.SetAccessUntil? setAccessUntil,
+    @$core.Deprecated('This field is deprecated.')
     $6.SetOwnerOrganisation? setOwnerOrganisation,
+    $6.RequestPromotion? requestPromotion,
+    $6.AnswerPromotion? answerPromotion,
+    $6.ListPromotionRequests? listPromotionRequests,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -2925,6 +2934,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (setAccessUntil != null) result.setAccessUntil = setAccessUntil;
     if (setOwnerOrganisation != null)
       result.setOwnerOrganisation = setOwnerOrganisation;
+    if (requestPromotion != null) result.requestPromotion = requestPromotion;
+    if (answerPromotion != null) result.answerPromotion = answerPromotion;
+    if (listPromotionRequests != null)
+      result.listPromotionRequests = listPromotionRequests;
     return result;
   }
 
@@ -2974,6 +2987,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     33: ManagementRequest_Request.removeFromGateway,
     34: ManagementRequest_Request.setAccessUntil,
     35: ManagementRequest_Request.setOwnerOrganisation,
+    36: ManagementRequest_Request.requestPromotion,
+    37: ManagementRequest_Request.answerPromotion,
+    38: ManagementRequest_Request.listPromotionRequests,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -3016,7 +3032,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
       32,
       33,
       34,
-      35
+      35,
+      36,
+      37,
+      38
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -3096,6 +3115,13 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<$6.SetOwnerOrganisation>(
         35, _omitFieldNames ? '' : 'setOwnerOrganisation',
         subBuilder: $6.SetOwnerOrganisation.create)
+    ..aOM<$6.RequestPromotion>(36, _omitFieldNames ? '' : 'requestPromotion',
+        subBuilder: $6.RequestPromotion.create)
+    ..aOM<$6.AnswerPromotion>(37, _omitFieldNames ? '' : 'answerPromotion',
+        subBuilder: $6.AnswerPromotion.create)
+    ..aOM<$6.ListPromotionRequests>(
+        38, _omitFieldNames ? '' : 'listPromotionRequests',
+        subBuilder: $6.ListPromotionRequests.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3502,17 +3528,58 @@ class ManagementRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   $6.SetAccessUntil ensureSetAccessUntil() => $_ensure(33);
 
+  /// Superseded, and refused as INVALID_REQUEST; see SetOwnerOrganisation.
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(35)
   $6.SetOwnerOrganisation get setOwnerOrganisation => $_getN(34);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(35)
   set setOwnerOrganisation($6.SetOwnerOrganisation value) =>
       $_setField(35, value);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(35)
   $core.bool hasSetOwnerOrganisation() => $_has(34);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(35)
   void clearSetOwnerOrganisation() => $_clearField(35);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(35)
   $6.SetOwnerOrganisation ensureSetOwnerOrganisation() => $_ensure(34);
+
+  /// Promotion requests; see members.proto.
+  @$pb.TagNumber(36)
+  $6.RequestPromotion get requestPromotion => $_getN(35);
+  @$pb.TagNumber(36)
+  set requestPromotion($6.RequestPromotion value) => $_setField(36, value);
+  @$pb.TagNumber(36)
+  $core.bool hasRequestPromotion() => $_has(35);
+  @$pb.TagNumber(36)
+  void clearRequestPromotion() => $_clearField(36);
+  @$pb.TagNumber(36)
+  $6.RequestPromotion ensureRequestPromotion() => $_ensure(35);
+
+  @$pb.TagNumber(37)
+  $6.AnswerPromotion get answerPromotion => $_getN(36);
+  @$pb.TagNumber(37)
+  set answerPromotion($6.AnswerPromotion value) => $_setField(37, value);
+  @$pb.TagNumber(37)
+  $core.bool hasAnswerPromotion() => $_has(36);
+  @$pb.TagNumber(37)
+  void clearAnswerPromotion() => $_clearField(37);
+  @$pb.TagNumber(37)
+  $6.AnswerPromotion ensureAnswerPromotion() => $_ensure(36);
+
+  @$pb.TagNumber(38)
+  $6.ListPromotionRequests get listPromotionRequests => $_getN(37);
+  @$pb.TagNumber(38)
+  set listPromotionRequests($6.ListPromotionRequests value) =>
+      $_setField(38, value);
+  @$pb.TagNumber(38)
+  $core.bool hasListPromotionRequests() => $_has(37);
+  @$pb.TagNumber(38)
+  void clearListPromotionRequests() => $_clearField(38);
+  @$pb.TagNumber(38)
+  $6.ListPromotionRequests ensureListPromotionRequests() => $_ensure(37);
 }
 
 const $core.bool _omitFieldNames =

@@ -71,5 +71,75 @@ class RedeemOutcome extends $pb.ProtobufEnum {
   const RedeemOutcome._(super.value, super.name);
 }
 
+/// How much a wipe takes (GatewayDeleted).
+class WipeScope extends $pb.ProtobufEnum {
+  /// Not stated. Read as PEOPLE_AND_HISTORY, as is any value the gateway does not know.
+  static const WipeScope WIPE_SCOPE_UNSPECIFIED =
+      WipeScope._(0, _omitEnumNames ? '' : 'WIPE_SCOPE_UNSPECIFIED');
+
+  /// Decommissioning: people and their history go, every space is given a generic name, and the
+  /// rest of the building's setup stays (GatewayDeleted, WIPE).
+  static const WipeScope WIPE_SCOPE_PEOPLE_AND_HISTORY =
+      WipeScope._(1, _omitEnumNames ? '' : 'WIPE_SCOPE_PEOPLE_AND_HISTORY');
+
+  /// Out of the box, for a gateway that is to be used anywhere else: everything the gateway holds
+  /// goes — what a wipe of people and history takes and also the building's setup, the gateway's
+  /// certificates, keys and registration, connector configuration, the readings connectors store
+  /// on the gateway, and the log files it keeps itself (not the host's system log: see WIPE, Logs).
+  /// What is held in other hardware is not reached: devices paired
+  /// to a radio central the gateway drives stay paired there until that is reset too, and the
+  /// gateway says so (GatewayWiped.left_behind).
+  ///
+  /// A gateway that does not perform a factory reset wipes people and history instead, and says
+  /// so in GatewayWiped.scope.
+  static const WipeScope WIPE_SCOPE_FACTORY_RESET =
+      WipeScope._(2, _omitEnumNames ? '' : 'WIPE_SCOPE_FACTORY_RESET');
+
+  static const $core.List<WipeScope> values = <WipeScope>[
+    WIPE_SCOPE_UNSPECIFIED,
+    WIPE_SCOPE_PEOPLE_AND_HISTORY,
+    WIPE_SCOPE_FACTORY_RESET,
+  ];
+
+  static final $core.List<WipeScope?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static WipeScope? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const WipeScope._(super.value, super.name);
+}
+
+/// Whether an outgoing staff member leaves the gateway or stays on it as a technician. Chosen
+/// per person by the sending organisation's administrator who offered the transfer.
+class OutgoingStaffChoice extends $pb.ProtobufEnum {
+  /// No choice stated. Read as LEAVE, as is any value the gateway does not know.
+  static const OutgoingStaffChoice OUTGOING_STAFF_CHOICE_UNSPECIFIED =
+      OutgoingStaffChoice._(
+          0, _omitEnumNames ? '' : 'OUTGOING_STAFF_CHOICE_UNSPECIFIED');
+
+  /// Leaves: every staff role and SERVICE membership goes, and no residency.
+  static const OutgoingStaffChoice OUTGOING_STAFF_CHOICE_LEAVE =
+      OutgoingStaffChoice._(
+          1, _omitEnumNames ? '' : 'OUTGOING_STAFF_CHOICE_LEAVE');
+
+  /// Stays as a technician, with access_until as its end.
+  static const OutgoingStaffChoice OUTGOING_STAFF_CHOICE_STAY_AS_TECHNICIAN =
+      OutgoingStaffChoice._(
+          2, _omitEnumNames ? '' : 'OUTGOING_STAFF_CHOICE_STAY_AS_TECHNICIAN');
+
+  static const $core.List<OutgoingStaffChoice> values = <OutgoingStaffChoice>[
+    OUTGOING_STAFF_CHOICE_UNSPECIFIED,
+    OUTGOING_STAFF_CHOICE_LEAVE,
+    OUTGOING_STAFF_CHOICE_STAY_AS_TECHNICIAN,
+  ];
+
+  static final $core.List<OutgoingStaffChoice?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static OutgoingStaffChoice? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const OutgoingStaffChoice._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

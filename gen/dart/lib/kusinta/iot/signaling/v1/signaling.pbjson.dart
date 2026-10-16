@@ -33,6 +33,37 @@ final $typed_data.Uint8List redeemOutcomeDescriptor = $convert.base64Decode(
     'EhoKFlJFREVFTV9PVVRDT01FX0lOVkFMSUQQAxIgChxSRURFRU1fT1VUQ09NRV9XUk9OR19BQ0'
     'NPVU5UEAQ=');
 
+@$core.Deprecated('Use wipeScopeDescriptor instead')
+const WipeScope$json = {
+  '1': 'WipeScope',
+  '2': [
+    {'1': 'WIPE_SCOPE_UNSPECIFIED', '2': 0},
+    {'1': 'WIPE_SCOPE_PEOPLE_AND_HISTORY', '2': 1},
+    {'1': 'WIPE_SCOPE_FACTORY_RESET', '2': 2},
+  ],
+};
+
+/// Descriptor for `WipeScope`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List wipeScopeDescriptor = $convert.base64Decode(
+    'CglXaXBlU2NvcGUSGgoWV0lQRV9TQ09QRV9VTlNQRUNJRklFRBAAEiEKHVdJUEVfU0NPUEVfUE'
+    'VPUExFX0FORF9ISVNUT1JZEAESHAoYV0lQRV9TQ09QRV9GQUNUT1JZX1JFU0VUEAI=');
+
+@$core.Deprecated('Use outgoingStaffChoiceDescriptor instead')
+const OutgoingStaffChoice$json = {
+  '1': 'OutgoingStaffChoice',
+  '2': [
+    {'1': 'OUTGOING_STAFF_CHOICE_UNSPECIFIED', '2': 0},
+    {'1': 'OUTGOING_STAFF_CHOICE_LEAVE', '2': 1},
+    {'1': 'OUTGOING_STAFF_CHOICE_STAY_AS_TECHNICIAN', '2': 2},
+  ],
+};
+
+/// Descriptor for `OutgoingStaffChoice`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List outgoingStaffChoiceDescriptor = $convert.base64Decode(
+    'ChNPdXRnb2luZ1N0YWZmQ2hvaWNlEiUKIU9VVEdPSU5HX1NUQUZGX0NIT0lDRV9VTlNQRUNJRk'
+    'lFRBAAEh8KG09VVEdPSU5HX1NUQUZGX0NIT0lDRV9MRUFWRRABEiwKKE9VVEdPSU5HX1NUQUZG'
+    'X0NIT0lDRV9TVEFZX0FTX1RFQ0hOSUNJQU4QAg==');
+
 @$core.Deprecated('Use sdpOfferDescriptor instead')
 const SdpOffer$json = {
   '1': 'SdpOffer',
@@ -172,6 +203,33 @@ const GatewayConnectRequest$json = {
       '9': 0,
       '10': 'redeemInviteResult'
     },
+    {
+      '1': 'vouched_administrators_applied',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.VouchedAdministratorsApplied',
+      '9': 0,
+      '10': 'vouchedAdministratorsApplied'
+    },
+    {
+      '1': 'transfer_outcome_applied',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.TransferOutcomeApplied',
+      '9': 0,
+      '10': 'transferOutcomeApplied'
+    },
+    {
+      '1': 'wiped',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.GatewayWiped',
+      '9': 0,
+      '10': 'wiped'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -187,8 +245,13 @@ final $typed_data.Uint8List gatewayConnectRequestDescriptor = $convert.base64Dec
     'aW90LnNpZ25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlEkMKCWhlYXJ0Ym'
     'VhdBgEIAEoCzIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5IZWFydEJlYXRIAFIJaGVhcnRi'
     'ZWF0EmAKFHJlZGVlbV9pbnZpdGVfcmVzdWx0GAYgASgLMiwua3VzaW50YS5pb3Quc2lnbmFsaW'
-    '5nLnYxLlJlZGVlbUludml0ZVJlc3VsdEgAUhJyZWRlZW1JbnZpdGVSZXN1bHRCCQoHcGF5bG9h'
-    'ZA==');
+    '5nLnYxLlJlZGVlbUludml0ZVJlc3VsdEgAUhJyZWRlZW1JbnZpdGVSZXN1bHQSfgoedm91Y2hl'
+    'ZF9hZG1pbmlzdHJhdG9yc19hcHBsaWVkGAcgASgLMjYua3VzaW50YS5pb3Quc2lnbmFsaW5nLn'
+    'YxLlZvdWNoZWRBZG1pbmlzdHJhdG9yc0FwcGxpZWRIAFIcdm91Y2hlZEFkbWluaXN0cmF0b3Jz'
+    'QXBwbGllZBJsChh0cmFuc2Zlcl9vdXRjb21lX2FwcGxpZWQYCCABKAsyMC5rdXNpbnRhLmlvdC'
+    '5zaWduYWxpbmcudjEuVHJhbnNmZXJPdXRjb21lQXBwbGllZEgAUhZ0cmFuc2Zlck91dGNvbWVB'
+    'cHBsaWVkEj4KBXdpcGVkGAkgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkdhdGV3YX'
+    'lXaXBlZEgAUgV3aXBlZEIJCgdwYXlsb2Fk');
 
 @$core.Deprecated('Use gatewayConnectResponseDescriptor instead')
 const GatewayConnectResponse$json = {
@@ -230,6 +293,42 @@ const GatewayConnectResponse$json = {
       '9': 0,
       '10': 'redeemInvite'
     },
+    {
+      '1': 'vouched_administrators',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.VouchedAdministrators',
+      '9': 0,
+      '10': 'vouchedAdministrators'
+    },
+    {
+      '1': 'transfer_outcome',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.TransferOutcome',
+      '9': 0,
+      '10': 'transferOutcome'
+    },
+    {
+      '1': 'stream_opened',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.GatewayStreamOpened',
+      '9': 0,
+      '10': 'streamOpened'
+    },
+    {
+      '1': 'gateway_deleted',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.GatewayDeleted',
+      '9': 0,
+      '10': 'gatewayDeleted'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -244,7 +343,13 @@ final $typed_data.Uint8List gatewayConnectResponseDescriptor = $convert.base64De
     'RwT2ZmZXJIAFIFb2ZmZXISTQoNaWNlX2NhbmRpZGF0ZRgDIAEoCzImLmt1c2ludGEuaW90LnNp'
     'Z25hbGluZy52MS5JY2VDYW5kaWRhdGVIAFIMaWNlQ2FuZGlkYXRlEk0KDXJlZGVlbV9pbnZpdG'
     'UYBSABKAsyJi5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuUmVkZWVtSW52aXRlSABSDHJlZGVl'
-    'bUludml0ZUIJCgdwYXlsb2Fk');
+    'bUludml0ZRJoChZ2b3VjaGVkX2FkbWluaXN0cmF0b3JzGAYgASgLMi8ua3VzaW50YS5pb3Quc2'
+    'lnbmFsaW5nLnYxLlZvdWNoZWRBZG1pbmlzdHJhdG9yc0gAUhV2b3VjaGVkQWRtaW5pc3RyYXRv'
+    'cnMSVgoQdHJhbnNmZXJfb3V0Y29tZRgHIAEoCzIpLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS'
+    '5UcmFuc2Zlck91dGNvbWVIAFIPdHJhbnNmZXJPdXRjb21lElQKDXN0cmVhbV9vcGVuZWQYCCAB'
+    'KAsyLS5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuR2F0ZXdheVN0cmVhbU9wZW5lZEgAUgxzdH'
+    'JlYW1PcGVuZWQSUwoPZ2F0ZXdheV9kZWxldGVkGAkgASgLMigua3VzaW50YS5pb3Quc2lnbmFs'
+    'aW5nLnYxLkdhdGV3YXlEZWxldGVkSABSDmdhdGV3YXlEZWxldGVkQgkKB3BheWxvYWQ=');
 
 @$core.Deprecated('Use redeemInviteDescriptor instead')
 const RedeemInvite$json = {
@@ -289,6 +394,230 @@ final $typed_data.Uint8List redeemInviteResultDescriptor = $convert.base64Decode
     'ChJSZWRlZW1JbnZpdGVSZXN1bHQSHQoKcmVxdWVzdF9pZBgBIAEoCVIJcmVxdWVzdElkEkEKB2'
     '91dGNvbWUYAiABKA4yJy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuUmVkZWVtT3V0Y29tZVIH'
     'b3V0Y29tZQ==');
+
+@$core.Deprecated('Use gatewayStreamOpenedDescriptor instead')
+const GatewayStreamOpened$json = {
+  '1': 'GatewayStreamOpened',
+  '2': [
+    {'1': 'ownership_epoch', '3': 1, '4': 1, '5': 9, '10': 'ownershipEpoch'},
+  ],
+};
+
+/// Descriptor for `GatewayStreamOpened`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List gatewayStreamOpenedDescriptor = $convert.base64Decode(
+    'ChNHYXRld2F5U3RyZWFtT3BlbmVkEicKD293bmVyc2hpcF9lcG9jaBgBIAEoCVIOb3duZXJzaG'
+    'lwRXBvY2g=');
+
+@$core.Deprecated('Use gatewayDeletedDescriptor instead')
+const GatewayDeleted$json = {
+  '1': 'GatewayDeleted',
+  '2': [
+    {'1': 'ownership_epoch', '3': 1, '4': 1, '5': 9, '10': 'ownershipEpoch'},
+    {
+      '1': 'scope',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.signaling.v1.WipeScope',
+      '10': 'scope'
+    },
+  ],
+};
+
+/// Descriptor for `GatewayDeleted`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List gatewayDeletedDescriptor = $convert.base64Decode(
+    'Cg5HYXRld2F5RGVsZXRlZBInCg9vd25lcnNoaXBfZXBvY2gYASABKAlSDm93bmVyc2hpcEVwb2'
+    'NoEjkKBXNjb3BlGAIgASgOMiMua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLldpcGVTY29wZVIF'
+    'c2NvcGU=');
+
+@$core.Deprecated('Use gatewayWipedDescriptor instead')
+const GatewayWiped$json = {
+  '1': 'GatewayWiped',
+  '2': [
+    {'1': 'ownership_epoch', '3': 1, '4': 1, '5': 9, '10': 'ownershipEpoch'},
+    {
+      '1': 'scope',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.signaling.v1.WipeScope',
+      '10': 'scope'
+    },
+    {
+      '1': 'left_behind',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.PairingsLeftBehind',
+      '10': 'leftBehind'
+    },
+  ],
+};
+
+/// Descriptor for `GatewayWiped`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List gatewayWipedDescriptor = $convert.base64Decode(
+    'CgxHYXRld2F5V2lwZWQSJwoPb3duZXJzaGlwX2Vwb2NoGAEgASgJUg5vd25lcnNoaXBFcG9jaB'
+    'I5CgVzY29wZRgCIAEoDjIjLmt1c2ludGEuaW90LnNpZ25hbGluZy52MS5XaXBlU2NvcGVSBXNj'
+    'b3BlEk0KC2xlZnRfYmVoaW5kGAMgAygLMiwua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLlBhaX'
+    'JpbmdzTGVmdEJlaGluZFIKbGVmdEJlaGluZA==');
+
+@$core.Deprecated('Use pairingsLeftBehindDescriptor instead')
+const PairingsLeftBehind$json = {
+  '1': 'PairingsLeftBehind',
+  '2': [
+    {
+      '1': 'kind',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.ConnectorKind',
+      '10': 'kind'
+    },
+    {'1': 'display_name', '3': 2, '4': 1, '5': 9, '10': 'displayName'},
+  ],
+};
+
+/// Descriptor for `PairingsLeftBehind`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List pairingsLeftBehindDescriptor = $convert.base64Decode(
+    'ChJQYWlyaW5nc0xlZnRCZWhpbmQSOAoEa2luZBgBIAEoDjIkLmt1c2ludGEuaW90LmNvbW1vbi'
+    '52MS5Db25uZWN0b3JLaW5kUgRraW5kEiEKDGRpc3BsYXlfbmFtZRgCIAEoCVILZGlzcGxheU5h'
+    'bWU=');
+
+@$core.Deprecated('Use vouchedAdministratorsDescriptor instead')
+const VouchedAdministrators$json = {
+  '1': 'VouchedAdministrators',
+  '2': [
+    {'1': 'version', '3': 1, '4': 1, '5': 4, '10': 'version'},
+    {
+      '1': 'administrators',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'administrators'
+    },
+    {
+      '1': 'organisation_name',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '10': 'organisationName'
+    },
+    {
+      '1': 'issued_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'issuedAt'
+    },
+  ],
+};
+
+/// Descriptor for `VouchedAdministrators`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List vouchedAdministratorsDescriptor = $convert.base64Decode(
+    'ChVWb3VjaGVkQWRtaW5pc3RyYXRvcnMSGAoHdmVyc2lvbhgBIAEoBFIHdmVyc2lvbhJHCg5hZG'
+    '1pbmlzdHJhdG9ycxgCIAMoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIOYWRt'
+    'aW5pc3RyYXRvcnMSKwoRb3JnYW5pc2F0aW9uX25hbWUYAyABKAlSEG9yZ2FuaXNhdGlvbk5hbW'
+    'USNwoJaXNzdWVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIaXNzdWVk'
+    'QXQ=');
+
+@$core.Deprecated('Use vouchedAdministratorsAppliedDescriptor instead')
+const VouchedAdministratorsApplied$json = {
+  '1': 'VouchedAdministratorsApplied',
+  '2': [
+    {'1': 'version', '3': 1, '4': 1, '5': 4, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `VouchedAdministratorsApplied`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List vouchedAdministratorsAppliedDescriptor =
+    $convert.base64Decode(
+        'ChxWb3VjaGVkQWRtaW5pc3RyYXRvcnNBcHBsaWVkEhgKB3ZlcnNpb24YASABKARSB3ZlcnNpb2'
+        '4=');
+
+@$core.Deprecated('Use transferOutcomeDescriptor instead')
+const TransferOutcome$json = {
+  '1': 'TransferOutcome',
+  '2': [
+    {'1': 'transfer_id', '3': 1, '4': 1, '5': 9, '10': 'transferId'},
+    {
+      '1': 'administrators',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.VouchedAdministrators',
+      '10': 'administrators'
+    },
+    {
+      '1': 'outgoing',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.OutgoingChoice',
+      '10': 'outgoing'
+    },
+  ],
+};
+
+/// Descriptor for `TransferOutcome`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List transferOutcomeDescriptor = $convert.base64Decode(
+    'Cg9UcmFuc2Zlck91dGNvbWUSHwoLdHJhbnNmZXJfaWQYASABKAlSCnRyYW5zZmVySWQSVwoOYW'
+    'RtaW5pc3RyYXRvcnMYAiABKAsyLy5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuVm91Y2hlZEFk'
+    'bWluaXN0cmF0b3JzUg5hZG1pbmlzdHJhdG9ycxJECghvdXRnb2luZxgDIAMoCzIoLmt1c2ludG'
+    'EuaW90LnNpZ25hbGluZy52MS5PdXRnb2luZ0Nob2ljZVIIb3V0Z29pbmc=');
+
+@$core.Deprecated('Use outgoingChoiceDescriptor instead')
+const OutgoingChoice$json = {
+  '1': 'OutgoingChoice',
+  '2': [
+    {
+      '1': 'user_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'userId'
+    },
+    {
+      '1': 'choice',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.signaling.v1.OutgoingStaffChoice',
+      '10': 'choice'
+    },
+    {
+      '1': 'access_until',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'accessUntil'
+    },
+  ],
+};
+
+/// Descriptor for `OutgoingChoice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List outgoingChoiceDescriptor = $convert.base64Decode(
+    'Cg5PdXRnb2luZ0Nob2ljZRI4Cgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdH'
+    'kudjEuVXNlcklkUgZ1c2VySWQSRQoGY2hvaWNlGAIgASgOMi0ua3VzaW50YS5pb3Quc2lnbmFs'
+    'aW5nLnYxLk91dGdvaW5nU3RhZmZDaG9pY2VSBmNob2ljZRI9CgxhY2Nlc3NfdW50aWwYAyABKA'
+    'syGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgthY2Nlc3NVbnRpbA==');
+
+@$core.Deprecated('Use transferOutcomeAppliedDescriptor instead')
+const TransferOutcomeApplied$json = {
+  '1': 'TransferOutcomeApplied',
+  '2': [
+    {'1': 'transfer_id', '3': 1, '4': 1, '5': 9, '10': 'transferId'},
+  ],
+};
+
+/// Descriptor for `TransferOutcomeApplied`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List transferOutcomeAppliedDescriptor =
+    $convert.base64Decode(
+        'ChZUcmFuc2Zlck91dGNvbWVBcHBsaWVkEh8KC3RyYW5zZmVyX2lkGAEgASgJUgp0cmFuc2Zlck'
+        'lk');
 
 @$core.Deprecated('Use userConnectRequestDescriptor instead')
 const UserConnectRequest$json = {

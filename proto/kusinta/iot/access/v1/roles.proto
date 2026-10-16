@@ -16,9 +16,10 @@ option optimize_for = SPEED;
 // role narrows what may appear there; it does not put anything there on its own.
 //
 // The building-server gateway holds each user's roles itself and authorises from what it
-// holds. The one role it cannot know is the administration of whoever registered it, which
-// the api-server records: that one it takes from the app's token
-// (webrtc.v1.AppTokenClaims.roles). The api-server learns the rest from the gateway
+// holds. The one role it cannot know is the administration of the organisation that owns it,
+// which the api-server keeps: that one it takes from the app's token
+// (webrtc.v1.AppTokenClaims.roles), and the api-server tells it who those administrators are
+// (signaling.v1.VouchedAdministrators), which can end that administration but never grant it. The api-server learns the rest from the gateway
 // (reporting.v1.GatewayMember). A user may hold several at once and the effective ceiling is
 // their union.
 //
@@ -35,7 +36,7 @@ option optimize_for = SPEED;
 // STAFF. A user who holds ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN on a
 // gateway is staff there: they serve the building rather than live in it. Wherever this
 // schema says "staff" or "a staff member" it means exactly that, as the gateway holds roles,
-// the registering administrator included; holding ROLE_RESIDENT besides changes nothing. The
+// every vouched administrator included; holding ROLE_RESIDENT besides changes nothing. The
 // term carries one rule about people: staff are named to whoever may list every member; a
 // resident is named only to the people they live with; and where anyone lives is told by
 // user id only to their own household, and to anyone else only under a residency id

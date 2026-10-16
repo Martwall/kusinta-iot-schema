@@ -702,6 +702,7 @@ enum ManagementResult_Result {
   issuedInvite,
   spaceInvites,
   gatewayMembers,
+  promotionRequests,
   notSet
 }
 
@@ -729,6 +730,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $6.IssuedInvite? issuedInvite,
     $6.SpaceInvites? spaceInvites,
     $7.GatewayMembers? gatewayMembers,
+    $7.PromotionRequests? promotionRequests,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -745,6 +747,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (issuedInvite != null) result.issuedInvite = issuedInvite;
     if (spaceInvites != null) result.spaceInvites = spaceInvites;
     if (gatewayMembers != null) result.gatewayMembers = gatewayMembers;
+    if (promotionRequests != null) result.promotionRequests = promotionRequests;
     return result;
   }
 
@@ -771,6 +774,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     11: ManagementResult_Result.issuedInvite,
     12: ManagementResult_Result.spaceInvites,
     13: ManagementResult_Result.gatewayMembers,
+    14: ManagementResult_Result.promotionRequests,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -778,7 +782,7 @@ class ManagementResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -805,6 +809,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $6.SpaceInvites.create)
     ..aOM<$7.GatewayMembers>(13, _omitFieldNames ? '' : 'gatewayMembers',
         subBuilder: $7.GatewayMembers.create)
+    ..aOM<$7.PromotionRequests>(14, _omitFieldNames ? '' : 'promotionRequests',
+        subBuilder: $7.PromotionRequests.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -974,6 +980,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearGatewayMembers() => $_clearField(13);
   @$pb.TagNumber(13)
   $7.GatewayMembers ensureGatewayMembers() => $_ensure(12);
+
+  @$pb.TagNumber(14)
+  $7.PromotionRequests get promotionRequests => $_getN(13);
+  @$pb.TagNumber(14)
+  set promotionRequests($7.PromotionRequests value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasPromotionRequests() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearPromotionRequests() => $_clearField(14);
+  @$pb.TagNumber(14)
+  $7.PromotionRequests ensurePromotionRequests() => $_ensure(13);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the
@@ -1829,6 +1846,7 @@ enum GatewayMessage_Payload {
   climateModeChanged,
   serviceStatusChanged,
   spaceInvites,
+  promotionRequests,
   notSet
 }
 
@@ -1856,6 +1874,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     ClimateModeChanged? climateModeChanged,
     $11.ServiceStatusChanged? serviceStatusChanged,
     $6.SpaceInvites? spaceInvites,
+    $7.PromotionRequests? promotionRequests,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -1884,6 +1903,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (serviceStatusChanged != null)
       result.serviceStatusChanged = serviceStatusChanged;
     if (spaceInvites != null) result.spaceInvites = spaceInvites;
+    if (promotionRequests != null) result.promotionRequests = promotionRequests;
     return result;
   }
 
@@ -1918,6 +1938,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     22: GatewayMessage_Payload.climateModeChanged,
     23: GatewayMessage_Payload.serviceStatusChanged,
     24: GatewayMessage_Payload.spaceInvites,
+    25: GatewayMessage_Payload.promotionRequests,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1945,7 +1966,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
       21,
       22,
       23,
-      24
+      24,
+      25
     ])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$9.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
@@ -1991,6 +2013,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: $11.ServiceStatusChanged.create)
     ..aOM<$6.SpaceInvites>(24, _omitFieldNames ? '' : 'spaceInvites',
         subBuilder: $6.SpaceInvites.create)
+    ..aOM<$7.PromotionRequests>(25, _omitFieldNames ? '' : 'promotionRequests',
+        subBuilder: $7.PromotionRequests.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2263,6 +2287,19 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearSpaceInvites() => $_clearField(24);
   @$pb.TagNumber(24)
   $6.SpaceInvites ensureSpaceInvites() => $_ensure(21);
+
+  /// The promotion requests the session's user made or was asked to accept changed; see
+  /// PromotionRequests.
+  @$pb.TagNumber(25)
+  $7.PromotionRequests get promotionRequests => $_getN(22);
+  @$pb.TagNumber(25)
+  set promotionRequests($7.PromotionRequests value) => $_setField(25, value);
+  @$pb.TagNumber(25)
+  $core.bool hasPromotionRequests() => $_has(22);
+  @$pb.TagNumber(25)
+  void clearPromotionRequests() => $_clearField(25);
+  @$pb.TagNumber(25)
+  $7.PromotionRequests ensurePromotionRequests() => $_ensure(22);
 }
 
 enum AppMessage_Payload {

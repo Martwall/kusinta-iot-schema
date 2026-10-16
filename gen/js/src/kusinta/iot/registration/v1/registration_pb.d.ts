@@ -15,6 +15,11 @@ export declare const file_kusinta_iot_registration_v1_registration: GenFile;
  */
 export declare type RegistrationRequest = Message<"kusinta.iot.registration.v1.RegistrationRequest"> & {
   /**
+   * The one-time token an administrator of the owning organisation obtained from the
+   * api-server and handed to the gateway. Opaque to the gateway: it is signed with a key only
+   * the api-server holds, and the gateway passes it on unread. Nothing the gateway acts on is
+   * taken from it; what the registration settles comes back in RegistrationComplete.
+   *
    * @generated from field: string registration_token = 1;
    */
   registrationToken: string;
@@ -65,6 +70,19 @@ export declare type RegistrationComplete = Message<"kusinta.iot.registration.v1.
    * @generated from field: string ca_bundle_pem = 2;
    */
   caBundlePem: string;
+
+  /**
+   * The ownership epoch of the gateway's owner record (signaling.v1.GatewayStreamOpened,
+   * OWNERSHIP EPOCH), from the api-server's answer to the registration the gateway made over
+   * its own connection to it, which is what makes it trusted. Never empty. An epoch other than
+   * the one the gateway holds makes it wipe (signaling.v1.GatewayDeleted, WIPE) before it
+   * installs the certificate or admits any session. A registration again by the owning
+   * organisation, after a revoke included, answers the epoch the gateway holds and wipes
+   * nothing.
+   *
+   * @generated from field: string ownership_epoch = 3;
+   */
+  ownershipEpoch: string;
 };
 
 /**

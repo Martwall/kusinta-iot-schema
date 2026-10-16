@@ -12,8 +12,11 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $1;
+import '../../common/v1/types.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'signaling.pbenum.dart';
 
@@ -438,6 +441,9 @@ enum GatewayConnectRequest_Payload {
   iceCandidate,
   heartbeat,
   redeemInviteResult,
+  vouchedAdministratorsApplied,
+  transferOutcomeApplied,
+  wiped,
   notSet
 }
 
@@ -452,6 +458,9 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     HeartBeat? heartbeat,
     $core.String? sessionId,
     RedeemInviteResult? redeemInviteResult,
+    VouchedAdministratorsApplied? vouchedAdministratorsApplied,
+    TransferOutcomeApplied? transferOutcomeApplied,
+    GatewayWiped? wiped,
   }) {
     final result = create();
     if (targetUserId != null) result.targetUserId = targetUserId;
@@ -461,6 +470,11 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     if (sessionId != null) result.sessionId = sessionId;
     if (redeemInviteResult != null)
       result.redeemInviteResult = redeemInviteResult;
+    if (vouchedAdministratorsApplied != null)
+      result.vouchedAdministratorsApplied = vouchedAdministratorsApplied;
+    if (transferOutcomeApplied != null)
+      result.transferOutcomeApplied = transferOutcomeApplied;
+    if (wiped != null) result.wiped = wiped;
     return result;
   }
 
@@ -479,6 +493,9 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     3: GatewayConnectRequest_Payload.iceCandidate,
     4: GatewayConnectRequest_Payload.heartbeat,
     6: GatewayConnectRequest_Payload.redeemInviteResult,
+    7: GatewayConnectRequest_Payload.vouchedAdministratorsApplied,
+    8: GatewayConnectRequest_Payload.transferOutcomeApplied,
+    9: GatewayConnectRequest_Payload.wiped,
     0: GatewayConnectRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -486,7 +503,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 6])
+    ..oo(0, [2, 3, 4, 6, 7, 8, 9])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'targetUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpAnswer>(2, _omitFieldNames ? '' : 'answer',
@@ -498,6 +515,14 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     ..aOS(5, _omitFieldNames ? '' : 'sessionId')
     ..aOM<RedeemInviteResult>(6, _omitFieldNames ? '' : 'redeemInviteResult',
         subBuilder: RedeemInviteResult.create)
+    ..aOM<VouchedAdministratorsApplied>(
+        7, _omitFieldNames ? '' : 'vouchedAdministratorsApplied',
+        subBuilder: VouchedAdministratorsApplied.create)
+    ..aOM<TransferOutcomeApplied>(
+        8, _omitFieldNames ? '' : 'transferOutcomeApplied',
+        subBuilder: TransferOutcomeApplied.create)
+    ..aOM<GatewayWiped>(9, _omitFieldNames ? '' : 'wiped',
+        subBuilder: GatewayWiped.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -527,7 +552,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       _GatewayConnectRequest_PayloadByTag[$_whichOneof(0)]!;
   void clearPayload() => $_clearField($_whichOneof(0));
 
-  /// On redeem_invite_result, the user who redeemed (RedeemInvite).
+  /// On redeem_invite_result, the user who redeemed (RedeemInvite). Unset on an
+  /// acknowledgement, which is to no user.
   @$pb.TagNumber(1)
   $0.UserId get targetUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -574,7 +600,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
 
   /// The session of target_user_id this message answers. See the contract above.
   /// Ignored on a heartbeat, which carries no routing target at all, and on
-  /// redeem_invite_result, which belongs to no session.
+  /// redeem_invite_result and the acknowledgements, which belong to no session.
   @$pb.TagNumber(5)
   $core.String get sessionId => $_getSZ(4);
   @$pb.TagNumber(5)
@@ -594,12 +620,52 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   void clearRedeemInviteResult() => $_clearField(6);
   @$pb.TagNumber(6)
   RedeemInviteResult ensureRedeemInviteResult() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  VouchedAdministratorsApplied get vouchedAdministratorsApplied => $_getN(6);
+  @$pb.TagNumber(7)
+  set vouchedAdministratorsApplied(VouchedAdministratorsApplied value) =>
+      $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasVouchedAdministratorsApplied() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearVouchedAdministratorsApplied() => $_clearField(7);
+  @$pb.TagNumber(7)
+  VouchedAdministratorsApplied ensureVouchedAdministratorsApplied() =>
+      $_ensure(6);
+
+  @$pb.TagNumber(8)
+  TransferOutcomeApplied get transferOutcomeApplied => $_getN(7);
+  @$pb.TagNumber(8)
+  set transferOutcomeApplied(TransferOutcomeApplied value) =>
+      $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasTransferOutcomeApplied() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearTransferOutcomeApplied() => $_clearField(8);
+  @$pb.TagNumber(8)
+  TransferOutcomeApplied ensureTransferOutcomeApplied() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  GatewayWiped get wiped => $_getN(8);
+  @$pb.TagNumber(9)
+  set wiped(GatewayWiped value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasWiped() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearWiped() => $_clearField(9);
+  @$pb.TagNumber(9)
+  GatewayWiped ensureWiped() => $_ensure(8);
 }
 
 enum GatewayConnectResponse_Payload {
   offer,
   iceCandidate,
   redeemInvite,
+  vouchedAdministrators,
+  transferOutcome,
+  streamOpened,
+  gatewayDeleted,
   notSet
 }
 
@@ -611,6 +677,10 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     IceCandidate? iceCandidate,
     $core.String? sessionId,
     RedeemInvite? redeemInvite,
+    VouchedAdministrators? vouchedAdministrators,
+    TransferOutcome? transferOutcome,
+    GatewayStreamOpened? streamOpened,
+    GatewayDeleted? gatewayDeleted,
   }) {
     final result = create();
     if (fromUserId != null) result.fromUserId = fromUserId;
@@ -618,6 +688,11 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     if (iceCandidate != null) result.iceCandidate = iceCandidate;
     if (sessionId != null) result.sessionId = sessionId;
     if (redeemInvite != null) result.redeemInvite = redeemInvite;
+    if (vouchedAdministrators != null)
+      result.vouchedAdministrators = vouchedAdministrators;
+    if (transferOutcome != null) result.transferOutcome = transferOutcome;
+    if (streamOpened != null) result.streamOpened = streamOpened;
+    if (gatewayDeleted != null) result.gatewayDeleted = gatewayDeleted;
     return result;
   }
 
@@ -635,6 +710,10 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     2: GatewayConnectResponse_Payload.offer,
     3: GatewayConnectResponse_Payload.iceCandidate,
     5: GatewayConnectResponse_Payload.redeemInvite,
+    6: GatewayConnectResponse_Payload.vouchedAdministrators,
+    7: GatewayConnectResponse_Payload.transferOutcome,
+    8: GatewayConnectResponse_Payload.streamOpened,
+    9: GatewayConnectResponse_Payload.gatewayDeleted,
     0: GatewayConnectResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -642,7 +721,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5])
+    ..oo(0, [2, 3, 5, 6, 7, 8, 9])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'fromUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpOffer>(2, _omitFieldNames ? '' : 'offer',
@@ -652,6 +731,15 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     ..aOS(4, _omitFieldNames ? '' : 'sessionId')
     ..aOM<RedeemInvite>(5, _omitFieldNames ? '' : 'redeemInvite',
         subBuilder: RedeemInvite.create)
+    ..aOM<VouchedAdministrators>(
+        6, _omitFieldNames ? '' : 'vouchedAdministrators',
+        subBuilder: VouchedAdministrators.create)
+    ..aOM<TransferOutcome>(7, _omitFieldNames ? '' : 'transferOutcome',
+        subBuilder: TransferOutcome.create)
+    ..aOM<GatewayStreamOpened>(8, _omitFieldNames ? '' : 'streamOpened',
+        subBuilder: GatewayStreamOpened.create)
+    ..aOM<GatewayDeleted>(9, _omitFieldNames ? '' : 'gatewayDeleted',
+        subBuilder: GatewayDeleted.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -682,7 +770,9 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   void clearPayload() => $_clearField($_whichOneof(0));
 
   /// On redeem_invite, the user redeeming: the sub of the token the api-server
-  /// verified, and never a value the user supplied.
+  /// verified, and never a value the user supplied. Unset on what concerns the
+  /// gateway itself (stream_opened, vouched_administrators, transfer_outcome,
+  /// gateway_deleted), which is from no user.
   @$pb.TagNumber(1)
   $0.UserId get fromUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -718,7 +808,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
 
   /// The session of from_user_id this message originates from — the value the
   /// gateway must echo on the GatewayConnectRequest that answers it. See the
-  /// contract above. Unset on redeem_invite, which belongs to no session.
+  /// contract above. Unset on redeem_invite and on what concerns the gateway
+  /// itself, which belong to no session.
   @$pb.TagNumber(4)
   $core.String get sessionId => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -738,6 +829,51 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   void clearRedeemInvite() => $_clearField(5);
   @$pb.TagNumber(5)
   RedeemInvite ensureRedeemInvite() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  VouchedAdministrators get vouchedAdministrators => $_getN(5);
+  @$pb.TagNumber(6)
+  set vouchedAdministrators(VouchedAdministrators value) =>
+      $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasVouchedAdministrators() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearVouchedAdministrators() => $_clearField(6);
+  @$pb.TagNumber(6)
+  VouchedAdministrators ensureVouchedAdministrators() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  TransferOutcome get transferOutcome => $_getN(6);
+  @$pb.TagNumber(7)
+  set transferOutcome(TransferOutcome value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasTransferOutcome() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearTransferOutcome() => $_clearField(7);
+  @$pb.TagNumber(7)
+  TransferOutcome ensureTransferOutcome() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  GatewayStreamOpened get streamOpened => $_getN(7);
+  @$pb.TagNumber(8)
+  set streamOpened(GatewayStreamOpened value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasStreamOpened() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearStreamOpened() => $_clearField(8);
+  @$pb.TagNumber(8)
+  GatewayStreamOpened ensureStreamOpened() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  GatewayDeleted get gatewayDeleted => $_getN(8);
+  @$pb.TagNumber(9)
+  set gatewayDeleted(GatewayDeleted value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasGatewayDeleted() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearGatewayDeleted() => $_clearField(9);
+  @$pb.TagNumber(9)
+  GatewayDeleted ensureGatewayDeleted() => $_ensure(8);
 }
 
 enum RedeemInvite_Secret { token, code, notSet }
@@ -953,6 +1089,843 @@ class RedeemInviteResult extends $pb.GeneratedMessage {
   $core.bool hasOutcome() => $_has(1);
   @$pb.TagNumber(2)
   void clearOutcome() => $_clearField(2);
+}
+
+/// The api-server's first message on every GatewayConnect stream, sent before any other. It
+/// carries the ownership epoch of the gateway's owner record.
+///
+/// OWNER OF RECORD. A gateway is owned by an organisation, which the api-server keeps; the
+/// organisation's administrators are the gateway's vouched administrators. The api-server
+/// vouches for them twice: in the token of each session one of them opens
+/// (webrtc.v1.AppTokenClaims.roles), and to the gateway, as the whole set
+/// (VouchedAdministrators). Neither can be changed on the gateway. A gateway moves to another
+/// organisation only by a transfer the receiving organisation accepted (TransferOutcome).
+///
+/// OWNERSHIP EPOCH. An opaque id the api-server gives each owner record of a gateway. It is new
+/// at the first registration after the gateway was deleted, and only then: a revoke, a
+/// re-registration by the owning organisation and a transfer all keep it. The gateway takes it
+/// from the api-server's answer to its own registration (registration.v1.RegistrationComplete)
+/// and from this message, and from nowhere else: never from an app session, nor from anything an
+/// app hands over, the registration token included. It keeps the epoch it holds across restarts.
+///
+/// Given an epoch other than the one it holds, the gateway wipes people and history (see
+/// GatewayDeleted, WIPE), space names included, before it admits any session or applies anything
+/// else from that registration or stream, and then holds the new epoch. A gateway holding no epoch takes the first it is given and wipes nothing. The
+/// epoch it holds, given again, changes nothing, so the same epoch twice wipes once.
+///
+/// A gateway that holds an epoch treats a stream on which anything arrives before this message,
+/// or this message with an empty epoch, as not open: it applies nothing from it and closes it.
+/// So the api-server must send this message first on every stream before a gateway that
+/// requires it is deployed.
+class GatewayStreamOpened extends $pb.GeneratedMessage {
+  factory GatewayStreamOpened({
+    $core.String? ownershipEpoch,
+  }) {
+    final result = create();
+    if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
+    return result;
+  }
+
+  GatewayStreamOpened._();
+
+  factory GatewayStreamOpened.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GatewayStreamOpened.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GatewayStreamOpened',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'ownershipEpoch')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayStreamOpened clone() => GatewayStreamOpened()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayStreamOpened copyWith(void Function(GatewayStreamOpened) updates) =>
+      super.copyWith((message) => updates(message as GatewayStreamOpened))
+          as GatewayStreamOpened;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GatewayStreamOpened create() => GatewayStreamOpened._();
+  @$core.override
+  GatewayStreamOpened createEmptyInstance() => create();
+  static $pb.PbList<GatewayStreamOpened> createRepeated() =>
+      $pb.PbList<GatewayStreamOpened>();
+  @$core.pragma('dart2js:noInline')
+  static GatewayStreamOpened getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GatewayStreamOpened>(create);
+  static GatewayStreamOpened? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get ownershipEpoch => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ownershipEpoch($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOwnershipEpoch() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOwnershipEpoch() => $_clearField(1);
+}
+
+/// The gateway was deleted at the api-server, api-server → gateway: the owner record with
+/// ownership_epoch has ended, and the gateway decommissions at once. Sent to a connected gateway
+/// before the api-server ends its stream, and answered with GatewayWiped. A gateway offline when
+/// it is deleted learns it from the new epoch at its next registration instead
+/// (GatewayStreamOpened, OWNERSHIP EPOCH), and wipes then just as it would have now.
+///
+/// A delete is not a revoke. A revoke ends the gateway's certificate and keeps its owner: it sends
+/// no notice and wipes nothing, and a revoked gateway registered again by the owning organisation
+/// keeps everything. A delete ends the owner record itself, so the gateway starts empty for
+/// whoever registers it next, and nothing about people is carried to an organisation that did not
+/// choose it.
+///
+/// A notice naming the epoch the gateway holds makes it wipe at once, in the scope asked and
+/// before it applies anything else, and then hold no epoch. A repeat of the notice it last applied
+/// is acknowledged again as before and changes nothing; a notice naming any other epoch is
+/// ignored.
+///
+/// WIPE. A wipe of people and history (WIPE_SCOPE_PEOPLE_AND_HISTORY) keeps the building's setup:
+/// its spaces, with their structure and types; its devices and how they are filed; device links;
+/// connector configuration; the building's time zone; and the gateway's own credentials and the
+/// settings that are not about people. Everything about people goes: every user, role,
+/// membership and residency, with its residency id; every invite, join request and promotion
+/// request; every name and email address; the vouched administrators and their version; every end
+/// of access; every device's ownership, an owned device staying filed where it is, released, as
+/// one of the building's own; every contact; and everything recorded per home — room history,
+/// climate summaries, events, targets, modes and routines — including what is still queued for the
+/// api-server about any of them, and the gateway's own records of who did what. Every open session
+/// ends, and none is admitted until the wipe is done.
+///
+/// Logs. A wipe takes what the gateway itself keeps; the operating system's log of the host it
+/// runs on is not the gateway's to erase, and what it holds stays until the host's own retention
+/// drops it. A gateway SHOULD NOT write user ids or names to that log in normal operation, so that
+/// nothing about people outlives a wipe there.
+///
+/// It always renames every space too, since a name can name a person ("Ilse's room"): each gets a
+/// generic name, its type and its number among the spaces of that type under the same parent,
+/// counted from 1 in the order the gateway lists them — "Apartment 1", "Floor 2", "Room 3". In
+/// English, as here, since nothing on the gateway knows the building's language. The renaming is
+/// part of the wipe: done in the same step, all of it or none, and keyed by the same epoch, so it
+/// is done once per epoch as the rest is.
+/// No space is removed or moved by it; each keeps its type, its place in the structure, its
+/// devices, its filing and its links.
+///
+/// The gateway then reports as a gateway starting afresh does: on new streams, a snapshot with no
+/// members (reporting.v1.ReportMembersRequest), no service reach and no invite routes, so the
+/// api-server's record of who belongs to the gateway empties too.
+class GatewayDeleted extends $pb.GeneratedMessage {
+  factory GatewayDeleted({
+    $core.String? ownershipEpoch,
+    WipeScope? scope,
+  }) {
+    final result = create();
+    if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
+    if (scope != null) result.scope = scope;
+    return result;
+  }
+
+  GatewayDeleted._();
+
+  factory GatewayDeleted.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GatewayDeleted.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GatewayDeleted',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'ownershipEpoch')
+    ..e<WipeScope>(2, _omitFieldNames ? '' : 'scope', $pb.PbFieldType.OE,
+        defaultOrMaker: WipeScope.WIPE_SCOPE_UNSPECIFIED,
+        valueOf: WipeScope.valueOf,
+        enumValues: WipeScope.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayDeleted clone() => GatewayDeleted()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayDeleted copyWith(void Function(GatewayDeleted) updates) =>
+      super.copyWith((message) => updates(message as GatewayDeleted))
+          as GatewayDeleted;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GatewayDeleted create() => GatewayDeleted._();
+  @$core.override
+  GatewayDeleted createEmptyInstance() => create();
+  static $pb.PbList<GatewayDeleted> createRepeated() =>
+      $pb.PbList<GatewayDeleted>();
+  @$core.pragma('dart2js:noInline')
+  static GatewayDeleted getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GatewayDeleted>(create);
+  static GatewayDeleted? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get ownershipEpoch => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ownershipEpoch($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOwnershipEpoch() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOwnershipEpoch() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  WipeScope get scope => $_getN(1);
+  @$pb.TagNumber(2)
+  set scope(WipeScope value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasScope() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearScope() => $_clearField(2);
+}
+
+/// The gateway's acknowledgement of a GatewayDeleted, gateway → api-server: what it wiped.
+///
+/// For WIPE_SCOPE_PEOPLE_AND_HISTORY, sent once the wipe is done. For WIPE_SCOPE_FACTORY_RESET,
+/// sent once everything but the gateway's credentials is gone and before it erases those, since
+/// sending needs them; the credentials go at once after. The api-server then revokes the gateway's
+/// certificate.
+class GatewayWiped extends $pb.GeneratedMessage {
+  factory GatewayWiped({
+    $core.String? ownershipEpoch,
+    WipeScope? scope,
+    $core.Iterable<PairingsLeftBehind>? leftBehind,
+  }) {
+    final result = create();
+    if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
+    if (scope != null) result.scope = scope;
+    if (leftBehind != null) result.leftBehind.addAll(leftBehind);
+    return result;
+  }
+
+  GatewayWiped._();
+
+  factory GatewayWiped.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GatewayWiped.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GatewayWiped',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'ownershipEpoch')
+    ..e<WipeScope>(2, _omitFieldNames ? '' : 'scope', $pb.PbFieldType.OE,
+        defaultOrMaker: WipeScope.WIPE_SCOPE_UNSPECIFIED,
+        valueOf: WipeScope.valueOf,
+        enumValues: WipeScope.values)
+    ..pc<PairingsLeftBehind>(
+        3, _omitFieldNames ? '' : 'leftBehind', $pb.PbFieldType.PM,
+        subBuilder: PairingsLeftBehind.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayWiped clone() => GatewayWiped()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GatewayWiped copyWith(void Function(GatewayWiped) updates) =>
+      super.copyWith((message) => updates(message as GatewayWiped))
+          as GatewayWiped;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GatewayWiped create() => GatewayWiped._();
+  @$core.override
+  GatewayWiped createEmptyInstance() => create();
+  static $pb.PbList<GatewayWiped> createRepeated() =>
+      $pb.PbList<GatewayWiped>();
+  @$core.pragma('dart2js:noInline')
+  static GatewayWiped getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GatewayWiped>(create);
+  static GatewayWiped? _defaultInstance;
+
+  /// As GatewayDeleted.ownership_epoch.
+  @$pb.TagNumber(1)
+  $core.String get ownershipEpoch => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set ownershipEpoch($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOwnershipEpoch() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOwnershipEpoch() => $_clearField(1);
+
+  /// The scope the gateway applied: WIPE_SCOPE_PEOPLE_AND_HISTORY when it was asked for that, and
+  /// when it was asked for a factory reset it does not perform.
+  @$pb.TagNumber(2)
+  WipeScope get scope => $_getN(1);
+  @$pb.TagNumber(2)
+  set scope(WipeScope value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasScope() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearScope() => $_clearField(2);
+
+  /// With WIPE_SCOPE_FACTORY_RESET: each piece of other hardware that still holds pairings the
+  /// reset could not reach, for the person who asked to reset it by hand. Empty otherwise.
+  @$pb.TagNumber(3)
+  $pb.PbList<PairingsLeftBehind> get leftBehind => $_getList(2);
+}
+
+/// Hardware a connector drives that keeps its own pairings through a factory reset.
+class PairingsLeftBehind extends $pb.GeneratedMessage {
+  factory PairingsLeftBehind({
+    $2.ConnectorKind? kind,
+    $core.String? displayName,
+  }) {
+    final result = create();
+    if (kind != null) result.kind = kind;
+    if (displayName != null) result.displayName = displayName;
+    return result;
+  }
+
+  PairingsLeftBehind._();
+
+  factory PairingsLeftBehind.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PairingsLeftBehind.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PairingsLeftBehind',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..e<$2.ConnectorKind>(1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $2.ConnectorKind.valueOf,
+        enumValues: $2.ConnectorKind.values)
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PairingsLeftBehind clone() => PairingsLeftBehind()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PairingsLeftBehind copyWith(void Function(PairingsLeftBehind) updates) =>
+      super.copyWith((message) => updates(message as PairingsLeftBehind))
+          as PairingsLeftBehind;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PairingsLeftBehind create() => PairingsLeftBehind._();
+  @$core.override
+  PairingsLeftBehind createEmptyInstance() => create();
+  static $pb.PbList<PairingsLeftBehind> createRepeated() =>
+      $pb.PbList<PairingsLeftBehind>();
+  @$core.pragma('dart2js:noInline')
+  static PairingsLeftBehind getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PairingsLeftBehind>(create);
+  static PairingsLeftBehind? _defaultInstance;
+
+  /// As the connector described itself (webrtc.v1.ConnectorDescriptor): what kind of hardware,
+  /// and its name, for a person.
+  @$pb.TagNumber(1)
+  $2.ConnectorKind get kind => $_getN(0);
+  @$pb.TagNumber(1)
+  set kind($2.ConnectorKind value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasKind() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKind() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get displayName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set displayName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisplayName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisplayName() => $_clearField(2);
+}
+
+/// The administrators of the organisation that owns the gateway, api-server → gateway: the whole
+/// set each time, never a change to it.
+///
+/// The api-server sends it on every stream, after GatewayStreamOpened and any unacknowledged
+/// TransferOutcome, and again whenever the set or the organisation's name changes. It sends the
+/// newest set again on every stream until the gateway acknowledges its version
+/// (VouchedAdministratorsApplied).
+///
+/// It grants nothing on its own. A session holds ROLE_GATEWAY_ADMIN as a vouched administrator
+/// only when the token it opened with carries it (webrtc.v1.AppTokenClaims.roles); a user named
+/// here who connects with a token that does not is no administrator in that session. What the set
+/// says is who the administrators are between their tokens:
+///   * every user it names is a member of the gateway, listed as a vouched administrator
+///     (webrtc.v1.MemberDetail.vouched_admin) and counted under ROLE_GATEWAY_ADMIN, whether or not
+///     the gateway has seen them connect. Their name and email address are learnt from their own
+///     tokens, and are unknown until then;
+///   * their administration cannot be changed on the gateway (webrtc.v1 members.proto,
+///     "vouched_admin");
+///   * when a set the gateway applies drops a user, the gateway ends the administration of every
+///     open session of theirs at once, without waiting for them to reconnect: the session loses
+///     ROLE_GATEWAY_ADMIN as any change of role reaches it (webrtc.v1.LivePermissionUpdate,
+///     session_roles), unless the gateway holds that role for them itself;
+///   * a token issued (AppTokenClaims.iat, in whole seconds) no later than the second in which
+///     the set the gateway holds was issued, for a user that set does not name, vouches for no
+///     administration, so a token minted before a user was dropped cannot bring it back. A token
+///     issued later is honoured whether or not the set names its user, since the set may lag
+///     behind it.
+///
+/// Safe to lose, repeat and reorder: the gateway applies a set only when its version is above the
+/// one it holds, ignores any other, and acknowledges each with the version it then holds. It keeps
+/// the set it holds, with its version and issued_at, across restarts, so a restart forgets nothing
+/// before the stream opens again. A wipe drops it, version included (GatewayDeleted, WIPE), so the
+/// versions of a new owner record start afresh.
+class VouchedAdministrators extends $pb.GeneratedMessage {
+  factory VouchedAdministrators({
+    $fixnum.Int64? version,
+    $core.Iterable<$0.UserId>? administrators,
+    $core.String? organisationName,
+    $1.Timestamp? issuedAt,
+  }) {
+    final result = create();
+    if (version != null) result.version = version;
+    if (administrators != null) result.administrators.addAll(administrators);
+    if (organisationName != null) result.organisationName = organisationName;
+    if (issuedAt != null) result.issuedAt = issuedAt;
+    return result;
+  }
+
+  VouchedAdministrators._();
+
+  factory VouchedAdministrators.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VouchedAdministrators.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VouchedAdministrators',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, _omitFieldNames ? '' : 'version', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..pc<$0.UserId>(
+        2, _omitFieldNames ? '' : 'administrators', $pb.PbFieldType.PM,
+        subBuilder: $0.UserId.create)
+    ..aOS(3, _omitFieldNames ? '' : 'organisationName')
+    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'issuedAt',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VouchedAdministrators clone() =>
+      VouchedAdministrators()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VouchedAdministrators copyWith(
+          void Function(VouchedAdministrators) updates) =>
+      super.copyWith((message) => updates(message as VouchedAdministrators))
+          as VouchedAdministrators;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VouchedAdministrators create() => VouchedAdministrators._();
+  @$core.override
+  VouchedAdministrators createEmptyInstance() => create();
+  static $pb.PbList<VouchedAdministrators> createRepeated() =>
+      $pb.PbList<VouchedAdministrators>();
+  @$core.pragma('dart2js:noInline')
+  static VouchedAdministrators getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VouchedAdministrators>(create);
+  static VouchedAdministrators? _defaultInstance;
+
+  /// Above that of every set the api-server sent before under the same ownership epoch. Never zero.
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get version => $_getI64(0);
+  @$pb.TagNumber(1)
+  set version($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVersion() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVersion() => $_clearField(1);
+
+  /// Each administrator of the owning organisation, once. Never empty, since an organisation
+  /// always has one. The set carries no one's name or email address.
+  @$pb.TagNumber(2)
+  $pb.PbList<$0.UserId> get administrators => $_getList(1);
+
+  /// The owning organisation's name, as its administrators set it: what
+  /// webrtc.v1.PrivacyDisclosure.owner_organisation_name tells. Never its organisation number.
+  @$pb.TagNumber(3)
+  $core.String get organisationName => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set organisationName($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOrganisationName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOrganisationName() => $_clearField(3);
+
+  /// When the api-server made this set, on the clock that sets AppTokenClaims.iat, so the two
+  /// compare. Never earlier than an earlier version's.
+  @$pb.TagNumber(4)
+  $1.Timestamp get issuedAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set issuedAt($1.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasIssuedAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearIssuedAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.Timestamp ensureIssuedAt() => $_ensure(3);
+}
+
+/// The gateway's acknowledgement of a VouchedAdministrators, gateway → api-server.
+class VouchedAdministratorsApplied extends $pb.GeneratedMessage {
+  factory VouchedAdministratorsApplied({
+    $fixnum.Int64? version,
+  }) {
+    final result = create();
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  VouchedAdministratorsApplied._();
+
+  factory VouchedAdministratorsApplied.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory VouchedAdministratorsApplied.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'VouchedAdministratorsApplied',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, _omitFieldNames ? '' : 'version', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VouchedAdministratorsApplied clone() =>
+      VouchedAdministratorsApplied()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  VouchedAdministratorsApplied copyWith(
+          void Function(VouchedAdministratorsApplied) updates) =>
+      super.copyWith(
+              (message) => updates(message as VouchedAdministratorsApplied))
+          as VouchedAdministratorsApplied;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static VouchedAdministratorsApplied create() =>
+      VouchedAdministratorsApplied._();
+  @$core.override
+  VouchedAdministratorsApplied createEmptyInstance() => create();
+  static $pb.PbList<VouchedAdministratorsApplied> createRepeated() =>
+      $pb.PbList<VouchedAdministratorsApplied>();
+  @$core.pragma('dart2js:noInline')
+  static VouchedAdministratorsApplied getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<VouchedAdministratorsApplied>(create);
+  static VouchedAdministratorsApplied? _defaultInstance;
+
+  /// The version the gateway holds once it has applied or ignored the set, which may be above
+  /// the one acknowledged. The api-server sends no set at or below it again.
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get version => $_getI64(0);
+  @$pb.TagNumber(1)
+  set version($fixnum.Int64 value) => $_setInt64(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasVersion() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearVersion() => $_clearField(1);
+}
+
+/// A transfer of the gateway to another organisation, accepted by an administrator of the
+/// receiving one, api-server → gateway. It carries the receiving organisation's vouched set and
+/// what becomes of each outgoing staff member, and the gateway applies the two in one step — all
+/// of it or none — before anything after it on the stream. The ownership epoch is kept: residents,
+/// technicians, spaces and devices stay as they are.
+///
+/// The api-server keeps an outcome until the gateway acknowledges it (TransferOutcomeApplied),
+/// through the gateway's offline spells, and sends it on every stream right after
+/// GatewayStreamOpened. While one is unacknowledged it sends the vouched set only inside it, as
+/// administrators, the newest set. Applying is idempotent by transfer_id: an outcome already
+/// applied is acknowledged again, its outgoing choices are not applied again, and its set is
+/// applied as any VouchedAdministrators is, by version.
+///
+/// The outgoing staff are everyone named in outgoing and everyone holding ROLE_GATEWAY_ADMIN or
+/// ROLE_PROPERTY_OWNER on the gateway as the outcome is applied — save anyone the new set names,
+/// who is of the receiving organisation and is left as they are. The api-server names in outgoing
+/// every administrator of the sending organisation, and everyone it holds as reported with
+/// ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER (reporting.v1.GatewayMember). Each outgoing staff
+/// member either:
+///   * leaves: their choice is LEAVE, UNSPECIFIED or a value the gateway does not know, or they
+///     are not named in outgoing at all, so a transfer keeps no one by omission. The gateway takes
+///     every role it holds for them and every SERVICE membership, with the pending invites they
+///     made as staff, as RemoveFromGateway by user id does from a caller who lives in none of
+///     their homes. It never ends a residency, nor the invites they made as its resident;
+///   * or stays as a technician: STAY_AS_TECHNICIAN. The gateway takes ROLE_GATEWAY_ADMIN and
+///     ROLE_PROPERTY_OWNER as webrtc.v1.SetMemberRole taking them away does, gives
+///     ROLE_TECHNICIAN, keeps their SERVICE memberships, files them SERVICE on every top-level
+///     space they are not filed on, and sets access_until as webrtc.v1.SetAccessUntil does. One
+///     whose access_until is not after the moment the outcome is applied leaves instead.
+/// Every change reaches the outgoing staff's open sessions at once, as a change of role does.
+class TransferOutcome extends $pb.GeneratedMessage {
+  factory TransferOutcome({
+    $core.String? transferId,
+    VouchedAdministrators? administrators,
+    $core.Iterable<OutgoingChoice>? outgoing,
+  }) {
+    final result = create();
+    if (transferId != null) result.transferId = transferId;
+    if (administrators != null) result.administrators = administrators;
+    if (outgoing != null) result.outgoing.addAll(outgoing);
+    return result;
+  }
+
+  TransferOutcome._();
+
+  factory TransferOutcome.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TransferOutcome.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TransferOutcome',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'transferId')
+    ..aOM<VouchedAdministrators>(2, _omitFieldNames ? '' : 'administrators',
+        subBuilder: VouchedAdministrators.create)
+    ..pc<OutgoingChoice>(
+        3, _omitFieldNames ? '' : 'outgoing', $pb.PbFieldType.PM,
+        subBuilder: OutgoingChoice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TransferOutcome clone() => TransferOutcome()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TransferOutcome copyWith(void Function(TransferOutcome) updates) =>
+      super.copyWith((message) => updates(message as TransferOutcome))
+          as TransferOutcome;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TransferOutcome create() => TransferOutcome._();
+  @$core.override
+  TransferOutcome createEmptyInstance() => create();
+  static $pb.PbList<TransferOutcome> createRepeated() =>
+      $pb.PbList<TransferOutcome>();
+  @$core.pragma('dart2js:noInline')
+  static TransferOutcome getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TransferOutcome>(create);
+  static TransferOutcome? _defaultInstance;
+
+  /// Minted by the api-server, opaque, unique among the gateway's transfers.
+  @$pb.TagNumber(1)
+  $core.String get transferId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set transferId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTransferId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTransferId() => $_clearField(1);
+
+  /// The receiving organisation's vouched set, as it stands.
+  @$pb.TagNumber(2)
+  VouchedAdministrators get administrators => $_getN(1);
+  @$pb.TagNumber(2)
+  set administrators(VouchedAdministrators value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAdministrators() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAdministrators() => $_clearField(2);
+  @$pb.TagNumber(2)
+  VouchedAdministrators ensureAdministrators() => $_ensure(1);
+
+  /// What becomes of each outgoing staff member, once each.
+  @$pb.TagNumber(3)
+  $pb.PbList<OutgoingChoice> get outgoing => $_getList(2);
+}
+
+/// What a transfer does with one outgoing staff member (TransferOutcome).
+class OutgoingChoice extends $pb.GeneratedMessage {
+  factory OutgoingChoice({
+    $0.UserId? userId,
+    OutgoingStaffChoice? choice,
+    $1.Timestamp? accessUntil,
+  }) {
+    final result = create();
+    if (userId != null) result.userId = userId;
+    if (choice != null) result.choice = choice;
+    if (accessUntil != null) result.accessUntil = accessUntil;
+    return result;
+  }
+
+  OutgoingChoice._();
+
+  factory OutgoingChoice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OutgoingChoice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OutgoingChoice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'userId',
+        subBuilder: $0.UserId.create)
+    ..e<OutgoingStaffChoice>(
+        2, _omitFieldNames ? '' : 'choice', $pb.PbFieldType.OE,
+        defaultOrMaker: OutgoingStaffChoice.OUTGOING_STAFF_CHOICE_UNSPECIFIED,
+        valueOf: OutgoingStaffChoice.valueOf,
+        enumValues: OutgoingStaffChoice.values)
+    ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'accessUntil',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OutgoingChoice clone() => OutgoingChoice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OutgoingChoice copyWith(void Function(OutgoingChoice) updates) =>
+      super.copyWith((message) => updates(message as OutgoingChoice))
+          as OutgoingChoice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OutgoingChoice create() => OutgoingChoice._();
+  @$core.override
+  OutgoingChoice createEmptyInstance() => create();
+  static $pb.PbList<OutgoingChoice> createRepeated() =>
+      $pb.PbList<OutgoingChoice>();
+  @$core.pragma('dart2js:noInline')
+  static OutgoingChoice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OutgoingChoice>(create);
+  static OutgoingChoice? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.UserId get userId => $_getN(0);
+  @$pb.TagNumber(1)
+  set userId($0.UserId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.UserId ensureUserId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  OutgoingStaffChoice get choice => $_getN(1);
+  @$pb.TagNumber(2)
+  set choice(OutgoingStaffChoice value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasChoice() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearChoice() => $_clearField(2);
+
+  /// When their access as a technician ends; unset for no end. Only with STAY_AS_TECHNICIAN, and
+  /// ignored with any other choice.
+  @$pb.TagNumber(3)
+  $1.Timestamp get accessUntil => $_getN(2);
+  @$pb.TagNumber(3)
+  set accessUntil($1.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAccessUntil() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAccessUntil() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.Timestamp ensureAccessUntil() => $_ensure(2);
+}
+
+/// The gateway's acknowledgement of a TransferOutcome, gateway → api-server: applied now or
+/// before. It acknowledges the outcome's vouched set too. The api-server sends the outcome no
+/// more.
+class TransferOutcomeApplied extends $pb.GeneratedMessage {
+  factory TransferOutcomeApplied({
+    $core.String? transferId,
+  }) {
+    final result = create();
+    if (transferId != null) result.transferId = transferId;
+    return result;
+  }
+
+  TransferOutcomeApplied._();
+
+  factory TransferOutcomeApplied.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TransferOutcomeApplied.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TransferOutcomeApplied',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'transferId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TransferOutcomeApplied clone() =>
+      TransferOutcomeApplied()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TransferOutcomeApplied copyWith(
+          void Function(TransferOutcomeApplied) updates) =>
+      super.copyWith((message) => updates(message as TransferOutcomeApplied))
+          as TransferOutcomeApplied;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TransferOutcomeApplied create() => TransferOutcomeApplied._();
+  @$core.override
+  TransferOutcomeApplied createEmptyInstance() => create();
+  static $pb.PbList<TransferOutcomeApplied> createRepeated() =>
+      $pb.PbList<TransferOutcomeApplied>();
+  @$core.pragma('dart2js:noInline')
+  static TransferOutcomeApplied getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TransferOutcomeApplied>(create);
+  static TransferOutcomeApplied? _defaultInstance;
+
+  /// As TransferOutcome.transfer_id.
+  @$pb.TagNumber(1)
+  $core.String get transferId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set transferId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTransferId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTransferId() => $_clearField(1);
 }
 
 enum UserConnectRequest_Payload { handshake, offer, iceCandidate, notSet }

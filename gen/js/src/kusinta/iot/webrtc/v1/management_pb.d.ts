@@ -14,7 +14,7 @@ import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/cli
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
-import type { ListGatewayMembers, RemoveFromGateway, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
+import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/management.proto.
@@ -976,8 +976,10 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
   climateSummaryPeriod: ClimateSummaryPeriod;
 
   /**
-   * The name of the organisation that owns the property, when one is recorded
-   * (SetOwnerOrganisation). Its organisation number is not given here.
+   * The name of the organisation that owns the gateway, and so the property, as the vouched
+   * set gives it (signaling.v1.VouchedAdministrators.organisation_name); empty while the
+   * gateway holds no vouched set. Never its organisation number. SetOwnerOrganisation, which
+   * once set it, is superseded.
    *
    * @generated from field: string owner_organisation_name = 6;
    */
@@ -1023,8 +1025,8 @@ export declare type ServiceParty = Message<"kusinta.iot.webrtc.v1.ServiceParty">
   /**
    * Each person counted under this role, by the name they gave their account
    * (AppTokenClaims.name), once each: everyone holding ROLE_GATEWAY_ADMIN or
-   * ROLE_PROPERTY_OWNER, the registering administrator included once the gateway has seen
-   * their token, and everyone else counted here by a SERVICE membership. A person counted
+   * ROLE_PROPERTY_OWNER, every vouched administrator included whether or not the gateway has
+   * seen their token, and everyone else counted here by a SERVICE membership. A person counted
    * under several roles is named under each. An empty string stands for a person whose name
    * the gateway has not learnt, so the list is as long as the number of people. Self-chosen,
    * so the app shows it as the name they gave rather than as a verified identity. Empty for
@@ -1413,10 +1415,33 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
     case: "setAccessUntil";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.SetOwnerOrganisation set_owner_organisation = 35;
+     * Superseded, and refused as INVALID_REQUEST; see SetOwnerOrganisation.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SetOwnerOrganisation set_owner_organisation = 35 [deprecated = true];
+     * @deprecated
      */
     value: SetOwnerOrganisation;
     case: "setOwnerOrganisation";
+  } | {
+    /**
+     * Promotion requests; see members.proto.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.RequestPromotion request_promotion = 36;
+     */
+    value: RequestPromotion;
+    case: "requestPromotion";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.AnswerPromotion answer_promotion = 37;
+     */
+    value: AnswerPromotion;
+    case: "answerPromotion";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListPromotionRequests list_promotion_requests = 38;
+     */
+    value: ListPromotionRequests;
+    case: "listPromotionRequests";
   } | { case: undefined; value?: undefined };
 };
 

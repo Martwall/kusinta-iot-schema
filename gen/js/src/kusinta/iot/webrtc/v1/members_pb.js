@@ -11,7 +11,7 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/webrtc/v1/members.proto.
  */
 export const file_kusinta_iot_webrtc_v1_members = /*@__PURE__*/
-  fileDesc("CiNrdXNpbnRhL2lvdC93ZWJydGMvdjEvbWVtYmVycy5wcm90bxIVa3VzaW50YS5pb3Qud2VicnRjLnYxIhQKEkxpc3RHYXRld2F5TWVtYmVycyJ6Cg1TZXRNZW1iZXJSb2xlEjAKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSKQoEcm9sZRgCIAEoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2xlEgwKBGhlbGQYAyABKAgiRQoRUmVtb3ZlRnJvbUdhdGV3YXkSMAoHdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZCJ0Cg5TZXRBY2Nlc3NVbnRpbBIwCgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkEjAKDGFjY2Vzc191bnRpbBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiVgoUU2V0T3duZXJPcmdhbmlzYXRpb24SPgoMb3JnYW5pc2F0aW9uGAEgASgLMigua3VzaW50YS5pb3Qud2VicnRjLnYxLk93bmVyT3JnYW5pc2F0aW9uIj4KEU93bmVyT3JnYW5pc2F0aW9uEgwKBG5hbWUYASABKAkSGwoTb3JnYW5pc2F0aW9uX251bWJlchgCIAEoCSKMAQoOR2F0ZXdheU1lbWJlcnMSNAoHbWVtYmVycxgBIAMoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NZW1iZXJEZXRhaWwSRAoSb3duZXJfb3JnYW5pc2F0aW9uGAIgASgLMigua3VzaW50YS5pb3Qud2VicnRjLnYxLk93bmVyT3JnYW5pc2F0aW9uIo8CCgxNZW1iZXJEZXRhaWwSMAoHdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBIMCgRuYW1lGAIgASgJEioKBXJvbGVzGAMgAygOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGUSNwoLbWVtYmVyc2hpcHMYBCADKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWVtYmVyU3BhY2USMAoMYWNjZXNzX3VudGlsGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIZChFyZWdpc3RlcmluZ19hZG1pbhgGIAEoCBINCgVlbWFpbBgHIAEoCSKpAQoLTWVtYmVyU3BhY2USMgoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkEjsKCHJlbGF0aW9uGAIgASgOMikua3VzaW50YS5pb3QuYWNjZXNzLnYxLk1lbWJlcnNoaXBSZWxhdGlvbhIpCgVzaW5jZRgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCAkgBYgZwcm90bzM", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_roles, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CiNrdXNpbnRhL2lvdC93ZWJydGMvdjEvbWVtYmVycy5wcm90bxIVa3VzaW50YS5pb3Qud2VicnRjLnYxIhQKEkxpc3RHYXRld2F5TWVtYmVycyJ6Cg1TZXRNZW1iZXJSb2xlEjAKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSKQoEcm9sZRgCIAEoDjIbLmt1c2ludGEuaW90LmFjY2Vzcy52MS5Sb2xlEgwKBGhlbGQYAyABKAgibwoQUmVxdWVzdFByb21vdGlvbhIwCgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkEikKBHJvbGUYAiABKA4yGy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuUm9sZSI1Cg9BbnN3ZXJQcm9tb3Rpb24SEgoKcmVxdWVzdF9pZBgBIAEoCRIOCgZhY2NlcHQYAiABKAgiFwoVTGlzdFByb21vdGlvblJlcXVlc3RzIrcCChBQcm9tb3Rpb25SZXF1ZXN0EhIKCnJlcXVlc3RfaWQYASABKAkSMAoHdXNlcl9pZBgCIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBIpCgRyb2xlGAMgASgOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGUSNQoMcmVxdWVzdGVkX2J5GAQgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkEhkKEXJlcXVlc3RlZF9ieV9uYW1lGAUgASgJEjAKDHJlcXVlc3RlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoKZXhwaXJlc19hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiTgoRUHJvbW90aW9uUmVxdWVzdHMSOQoIcmVxdWVzdHMYASADKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvbW90aW9uUmVxdWVzdCJFChFSZW1vdmVGcm9tR2F0ZXdheRIwCgd1c2VyX2lkGAEgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkInQKDlNldEFjY2Vzc1VudGlsEjAKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWQSMAoMYWNjZXNzX3VudGlsGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJWChRTZXRPd25lck9yZ2FuaXNhdGlvbhI+CgxvcmdhbmlzYXRpb24YASABKAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuT3duZXJPcmdhbmlzYXRpb24iQgoRT3duZXJPcmdhbmlzYXRpb24SDAoEbmFtZRgBIAEoCRIfChNvcmdhbmlzYXRpb25fbnVtYmVyGAIgASgJQgIYASKMAQoOR2F0ZXdheU1lbWJlcnMSNAoHbWVtYmVycxgBIAMoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5NZW1iZXJEZXRhaWwSRAoSb3duZXJfb3JnYW5pc2F0aW9uGAIgASgLMigua3VzaW50YS5pb3Qud2VicnRjLnYxLk93bmVyT3JnYW5pc2F0aW9uIqoCCgxNZW1iZXJEZXRhaWwSMAoHdXNlcl9pZBgBIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZBIMCgRuYW1lGAIgASgJEioKBXJvbGVzGAMgAygOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGUSNwoLbWVtYmVyc2hpcHMYBCADKAsyIi5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWVtYmVyU3BhY2USMAoMYWNjZXNzX3VudGlsGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIdChFyZWdpc3RlcmluZ19hZG1pbhgGIAEoCEICGAESDQoFZW1haWwYByABKAkSFQoNdm91Y2hlZF9hZG1pbhgIIAEoCCKpAQoLTWVtYmVyU3BhY2USMgoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkEjsKCHJlbGF0aW9uGAIgASgOMikua3VzaW50YS5pb3QuYWNjZXNzLnYxLk1lbWJlcnNoaXBSZWxhdGlvbhIpCgVzaW5jZRgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBCAkgBYgZwcm90bzM", [file_google_protobuf_timestamp, file_kusinta_iot_access_v1_roles, file_kusinta_iot_identity_v1_identity]);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.ListGatewayMembers.
@@ -28,51 +28,86 @@ export const SetMemberRoleSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_webrtc_v1_members, 1);
 
 /**
+ * Describes the message kusinta.iot.webrtc.v1.RequestPromotion.
+ * Use `create(RequestPromotionSchema)` to create a new message.
+ */
+export const RequestPromotionSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 2);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.AnswerPromotion.
+ * Use `create(AnswerPromotionSchema)` to create a new message.
+ */
+export const AnswerPromotionSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 3);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListPromotionRequests.
+ * Use `create(ListPromotionRequestsSchema)` to create a new message.
+ */
+export const ListPromotionRequestsSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 4);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PromotionRequest.
+ * Use `create(PromotionRequestSchema)` to create a new message.
+ */
+export const PromotionRequestSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 5);
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PromotionRequests.
+ * Use `create(PromotionRequestsSchema)` to create a new message.
+ */
+export const PromotionRequestsSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 6);
+
+/**
  * Describes the message kusinta.iot.webrtc.v1.RemoveFromGateway.
  * Use `create(RemoveFromGatewaySchema)` to create a new message.
  */
 export const RemoveFromGatewaySchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 2);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 7);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.SetAccessUntil.
  * Use `create(SetAccessUntilSchema)` to create a new message.
  */
 export const SetAccessUntilSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 3);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 8);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.SetOwnerOrganisation.
  * Use `create(SetOwnerOrganisationSchema)` to create a new message.
  */
 export const SetOwnerOrganisationSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 4);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 9);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.OwnerOrganisation.
  * Use `create(OwnerOrganisationSchema)` to create a new message.
  */
 export const OwnerOrganisationSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 5);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 10);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.GatewayMembers.
  * Use `create(GatewayMembersSchema)` to create a new message.
  */
 export const GatewayMembersSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 6);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 11);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.MemberDetail.
  * Use `create(MemberDetailSchema)` to create a new message.
  */
 export const MemberDetailSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 7);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 12);
 
 /**
  * Describes the message kusinta.iot.webrtc.v1.MemberSpace.
  * Use `create(MemberSpaceSchema)` to create a new message.
  */
 export const MemberSpaceSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_webrtc_v1_members, 8);
+  messageDesc(file_kusinta_iot_webrtc_v1_members, 13);
 
