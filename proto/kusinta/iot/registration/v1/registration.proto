@@ -4,6 +4,10 @@ package kusinta.iot.registration.v1;
 option optimize_for = SPEED;
 
 message RegistrationRequest {
+  // The one-time token an administrator of the owning organisation obtained from the
+  // api-server and handed to the gateway. Opaque to the gateway: it is signed with a key only
+  // the api-server holds, and the gateway passes it on unread. Nothing the gateway acts on is
+  // taken from it; what the registration settles comes back in RegistrationComplete.
   string registration_token = 1;
   string external_ip = 2;
   string csr_pem = 3;
@@ -16,6 +20,20 @@ message RegistrationProgress {
 message RegistrationComplete {
   string certificate_pem = 1;
   string ca_bundle_pem = 2;
+
+  // The ownership epoch of the gateway's owner record (signaling.v1.GatewayStreamOpened,
+  // OWNERSHIP EPOCH), from the api-server's answer to the registration the gateway made over
+  // its own connection to it, which is what makes it trusted. Never empty. An epoch other than
+  // the one the gateway holds makes it wipe (signaling.v1.GatewayDeleted, WIPE) before it
+  // installs the certificate or admits any session. A registration again by the owning
+  // organisation, after a revoke included, answers the epoch the gateway holds and wipes
+  // nothing.
+  string ownership_epoch = 3;
+
+  // As signaling.v1.GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for
+  // the wipe a new epoch makes. Applies only when ownership_epoch is not the one the gateway
+  // holds.
+  bool clear_space_names = 4;
 }
 
 message RegistrationError {

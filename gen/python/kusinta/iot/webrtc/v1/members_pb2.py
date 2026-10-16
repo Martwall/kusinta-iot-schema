@@ -27,7 +27,7 @@ from kusinta.iot.access.v1 import roles_pb2 as kusinta_dot_iot_dot_access_dot_v1
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/webrtc/v1/members.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!kusinta/iot/access/v1/roles.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x14\n\x12ListGatewayMembers\"\x8e\x01\n\rSetMemberRole\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12/\n\x04role\x18\x02 \x01(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x04role\x12\x12\n\x04held\x18\x03 \x01(\x08R\x04held\"M\n\x11RemoveFromGateway\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\"\x89\x01\n\x0eSetAccessUntil\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12=\n\x0c\x61\x63\x63\x65ss_until\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x61\x63\x63\x65ssUntil\"d\n\x14SetOwnerOrganisation\x12L\n\x0corganisation\x18\x01 \x01(\x0b\x32(.kusinta.iot.webrtc.v1.OwnerOrganisationR\x0corganisation\"X\n\x11OwnerOrganisation\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12/\n\x13organisation_number\x18\x02 \x01(\tR\x12organisationNumber\"\xa8\x01\n\x0eGatewayMembers\x12=\n\x07members\x18\x01 \x03(\x0b\x32#.kusinta.iot.webrtc.v1.MemberDetailR\x07members\x12W\n\x12owner_organisation\x18\x02 \x01(\x0b\x32(.kusinta.iot.webrtc.v1.OwnerOrganisationR\x11ownerOrganisation\"\xd7\x02\n\x0cMemberDetail\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x31\n\x05roles\x18\x03 \x03(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x05roles\x12\x44\n\x0bmemberships\x18\x04 \x03(\x0b\x32\".kusinta.iot.webrtc.v1.MemberSpaceR\x0bmemberships\x12=\n\x0c\x61\x63\x63\x65ss_until\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x61\x63\x63\x65ssUntil\x12+\n\x11registering_admin\x18\x06 \x01(\x08R\x10registeringAdmin\x12\x14\n\x05\x65mail\x18\x07 \x01(\tR\x05\x65mail\"\xc3\x01\n\x0bMemberSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x45\n\x08relation\x18\x02 \x01(\x0e\x32).kusinta.iot.access.v1.MembershipRelationR\x08relation\x12\x30\n\x05since\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x05sinceB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n#kusinta/iot/webrtc/v1/members.proto\x12\x15kusinta.iot.webrtc.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!kusinta/iot/access/v1/roles.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x14\n\x12ListGatewayMembers\"\x8e\x01\n\rSetMemberRole\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12/\n\x04role\x18\x02 \x01(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x04role\x12\x12\n\x04held\x18\x03 \x01(\x08R\x04held\"}\n\x10RequestPromotion\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12/\n\x04role\x18\x02 \x01(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x04role\"H\n\x0f\x41nswerPromotion\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x16\n\x06\x61\x63\x63\x65pt\x18\x02 \x01(\x08R\x06\x61\x63\x63\x65pt\"\x17\n\x15ListPromotionRequests\"\x86\x03\n\x10PromotionRequest\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x38\n\x07user_id\x18\x02 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12/\n\x04role\x18\x03 \x01(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x04role\x12\x42\n\x0crequested_by\x18\x04 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0brequestedBy\x12*\n\x11requested_by_name\x18\x05 \x01(\tR\x0frequestedByName\x12=\n\x0crequested_at\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0brequestedAt\x12\x39\n\nexpires_at\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\texpiresAt\"X\n\x11PromotionRequests\x12\x43\n\x08requests\x18\x01 \x03(\x0b\x32\'.kusinta.iot.webrtc.v1.PromotionRequestR\x08requests\"M\n\x11RemoveFromGateway\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\"\x89\x01\n\x0eSetAccessUntil\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12=\n\x0c\x61\x63\x63\x65ss_until\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x61\x63\x63\x65ssUntil\"d\n\x14SetOwnerOrganisation\x12L\n\x0corganisation\x18\x01 \x01(\x0b\x32(.kusinta.iot.webrtc.v1.OwnerOrganisationR\x0corganisation\"\\\n\x11OwnerOrganisation\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12\x33\n\x13organisation_number\x18\x02 \x01(\tB\x02\x18\x01R\x12organisationNumber\"\xa8\x01\n\x0eGatewayMembers\x12=\n\x07members\x18\x01 \x03(\x0b\x32#.kusinta.iot.webrtc.v1.MemberDetailR\x07members\x12W\n\x12owner_organisation\x18\x02 \x01(\x0b\x32(.kusinta.iot.webrtc.v1.OwnerOrganisationR\x11ownerOrganisation\"\x80\x03\n\x0cMemberDetail\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x31\n\x05roles\x18\x03 \x03(\x0e\x32\x1b.kusinta.iot.access.v1.RoleR\x05roles\x12\x44\n\x0bmemberships\x18\x04 \x03(\x0b\x32\".kusinta.iot.webrtc.v1.MemberSpaceR\x0bmemberships\x12=\n\x0c\x61\x63\x63\x65ss_until\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x61\x63\x63\x65ssUntil\x12/\n\x11registering_admin\x18\x06 \x01(\x08\x42\x02\x18\x01R\x10registeringAdmin\x12\x14\n\x05\x65mail\x18\x07 \x01(\tR\x05\x65mail\x12#\n\rvouched_admin\x18\x08 \x01(\x08R\x0cvouchedAdmin\"\xc3\x01\n\x0bMemberSpace\x12;\n\x08space_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x45\n\x08relation\x18\x02 \x01(\x0e\x32).kusinta.iot.access.v1.MembershipRelationR\x08relation\x12\x30\n\x05since\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x05sinceB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,22 +35,36 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.webrtc.v1.membe
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
+  _globals['_OWNERORGANISATION'].fields_by_name['organisation_number']._loaded_options = None
+  _globals['_OWNERORGANISATION'].fields_by_name['organisation_number']._serialized_options = b'\030\001'
+  _globals['_MEMBERDETAIL'].fields_by_name['registering_admin']._loaded_options = None
+  _globals['_MEMBERDETAIL'].fields_by_name['registering_admin']._serialized_options = b'\030\001'
   _globals['_LISTGATEWAYMEMBERS']._serialized_start=170
   _globals['_LISTGATEWAYMEMBERS']._serialized_end=190
   _globals['_SETMEMBERROLE']._serialized_start=193
   _globals['_SETMEMBERROLE']._serialized_end=335
-  _globals['_REMOVEFROMGATEWAY']._serialized_start=337
-  _globals['_REMOVEFROMGATEWAY']._serialized_end=414
-  _globals['_SETACCESSUNTIL']._serialized_start=417
-  _globals['_SETACCESSUNTIL']._serialized_end=554
-  _globals['_SETOWNERORGANISATION']._serialized_start=556
-  _globals['_SETOWNERORGANISATION']._serialized_end=656
-  _globals['_OWNERORGANISATION']._serialized_start=658
-  _globals['_OWNERORGANISATION']._serialized_end=746
-  _globals['_GATEWAYMEMBERS']._serialized_start=749
-  _globals['_GATEWAYMEMBERS']._serialized_end=917
-  _globals['_MEMBERDETAIL']._serialized_start=920
-  _globals['_MEMBERDETAIL']._serialized_end=1263
-  _globals['_MEMBERSPACE']._serialized_start=1266
-  _globals['_MEMBERSPACE']._serialized_end=1461
+  _globals['_REQUESTPROMOTION']._serialized_start=337
+  _globals['_REQUESTPROMOTION']._serialized_end=462
+  _globals['_ANSWERPROMOTION']._serialized_start=464
+  _globals['_ANSWERPROMOTION']._serialized_end=536
+  _globals['_LISTPROMOTIONREQUESTS']._serialized_start=538
+  _globals['_LISTPROMOTIONREQUESTS']._serialized_end=561
+  _globals['_PROMOTIONREQUEST']._serialized_start=564
+  _globals['_PROMOTIONREQUEST']._serialized_end=954
+  _globals['_PROMOTIONREQUESTS']._serialized_start=956
+  _globals['_PROMOTIONREQUESTS']._serialized_end=1044
+  _globals['_REMOVEFROMGATEWAY']._serialized_start=1046
+  _globals['_REMOVEFROMGATEWAY']._serialized_end=1123
+  _globals['_SETACCESSUNTIL']._serialized_start=1126
+  _globals['_SETACCESSUNTIL']._serialized_end=1263
+  _globals['_SETOWNERORGANISATION']._serialized_start=1265
+  _globals['_SETOWNERORGANISATION']._serialized_end=1365
+  _globals['_OWNERORGANISATION']._serialized_start=1367
+  _globals['_OWNERORGANISATION']._serialized_end=1459
+  _globals['_GATEWAYMEMBERS']._serialized_start=1462
+  _globals['_GATEWAYMEMBERS']._serialized_end=1630
+  _globals['_MEMBERDETAIL']._serialized_start=1633
+  _globals['_MEMBERDETAIL']._serialized_end=2017
+  _globals['_MEMBERSPACE']._serialized_start=2020
+  _globals['_MEMBERSPACE']._serialized_end=2215
 # @@protoc_insertion_point(module_scope)

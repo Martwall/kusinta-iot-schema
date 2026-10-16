@@ -22,10 +22,12 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+from kusinta.iot.common.v1 import types_pb2 as kusinta_dot_iot_dot_common_dot_v1_dot_types__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/signaling/v1/signaling.proto\x12\x18kusinta.iot.signaling.v1\x1a&kusinta/iot/identity/v1/identity.proto\"\x1c\n\x08SdpOffer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"\x1d\n\tSdpAnswer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"m\n\x0cIceCandidate\x12\x1c\n\tcandidate\x18\x01 \x01(\tR\tcandidate\x12\x17\n\x07sdp_mid\x18\x02 \x01(\tR\x06sdpMid\x12&\n\x0fsdp_mline_index\x18\x03 \x01(\x05R\rsdpMlineIndex\"\x0b\n\tHeartBeat\"_\n\rUserHandshake\x12N\n\x11target_gateway_id\x18\x01 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\x0ftargetGatewayId\"z\n\x10UserHandshakeAck\x12\x1a\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08R\x08\x61\x63\x63\x65pted\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\x12\x32\n\x15heartbeat_interval_ms\x18\x03 \x01(\rR\x13heartbeatIntervalMs\"\xbd\x03\n\x15GatewayConnectRequest\x12\x45\n\x0etarget_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0ctargetUserId\x12\x1d\n\nsession_id\x18\x05 \x01(\tR\tsessionId\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x04 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeat\x12`\n\x14redeem_invite_result\x18\x06 \x01(\x0b\x32,.kusinta.iot.signaling.v1.RedeemInviteResultH\x00R\x12redeemInviteResultB\t\n\x07payload\"\xdf\x02\n\x16GatewayConnectResponse\x12\x41\n\x0c\x66rom_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\nfromUserId\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12M\n\rredeem_invite\x18\x05 \x01(\x0b\x32&.kusinta.iot.signaling.v1.RedeemInviteH\x00R\x0credeemInviteB\t\n\x07payload\"\xaf\x01\n\x0cRedeemInvite\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x16\n\x05token\x18\x02 \x01(\tH\x00R\x05token\x12\x14\n\x04\x63ode\x18\x03 \x01(\tH\x00R\x04\x63ode\x12!\n\x0c\x64isplay_name\x18\x04 \x01(\tR\x0b\x64isplayName\x12%\n\x0everified_email\x18\x05 \x01(\tR\rverifiedEmailB\x08\n\x06secret\"v\n\x12RedeemInviteResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x41\n\x07outcome\x18\x02 \x01(\x0e\x32\'.kusinta.iot.signaling.v1.RedeemOutcomeR\x07outcome\"\x92\x02\n\x12UserConnectRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12G\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeH\x00R\thandshake\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payload\"\xe5\x02\n\x13UserConnectResponse\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12Q\n\rhandshake_ack\x18\x01 \x01(\x0b\x32*.kusinta.iot.signaling.v1.UserHandshakeAckH\x00R\x0chandshakeAck\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x05 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeatB\t\n\x07payload\"\x85\x01\n\x11UserListenRequest\x12\x45\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeR\thandshake\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionIdJ\x04\x08\x02\x10\x03J\x04\x08\x03\x10\x04\"_\n\x12UserListenResponse\x12I\n\x08response\x18\x01 \x01(\x0b\x32-.kusinta.iot.signaling.v1.UserConnectResponseR\x08response\"\xd7\x01\n\x0fUserSendRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payloadJ\x04\x08\x01\x10\x02R\thandshake\"\x12\n\x10UserSendResponse*\xad\x01\n\rRedeemOutcome\x12\x1e\n\x1aREDEEM_OUTCOME_UNSPECIFIED\x10\x00\x12\x19\n\x15REDEEM_OUTCOME_JOINED\x10\x01\x12#\n\x1fREDEEM_OUTCOME_PENDING_APPROVAL\x10\x02\x12\x1a\n\x16REDEEM_OUTCOME_INVALID\x10\x03\x12 \n\x1cREDEEM_OUTCOME_WRONG_ACCOUNT\x10\x04\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(kusinta/iot/signaling/v1/signaling.proto\x12\x18kusinta.iot.signaling.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a!kusinta/iot/common/v1/types.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x1c\n\x08SdpOffer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"\x1d\n\tSdpAnswer\x12\x10\n\x03sdp\x18\x01 \x01(\tR\x03sdp\"m\n\x0cIceCandidate\x12\x1c\n\tcandidate\x18\x01 \x01(\tR\tcandidate\x12\x17\n\x07sdp_mid\x18\x02 \x01(\tR\x06sdpMid\x12&\n\x0fsdp_mline_index\x18\x03 \x01(\x05R\rsdpMlineIndex\"\x0b\n\tHeartBeat\"_\n\rUserHandshake\x12N\n\x11target_gateway_id\x18\x01 \x01(\x0b\x32\".kusinta.iot.identity.v1.GatewayIdR\x0ftargetGatewayId\"z\n\x10UserHandshakeAck\x12\x1a\n\x08\x61\x63\x63\x65pted\x18\x01 \x01(\x08R\x08\x61\x63\x63\x65pted\x12\x16\n\x06reason\x18\x02 \x01(\tR\x06reason\x12\x32\n\x15heartbeat_interval_ms\x18\x03 \x01(\rR\x13heartbeatIntervalMs\"\xeb\x05\n\x15GatewayConnectRequest\x12\x45\n\x0etarget_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0ctargetUserId\x12\x1d\n\nsession_id\x18\x05 \x01(\tR\tsessionId\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x04 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeat\x12`\n\x14redeem_invite_result\x18\x06 \x01(\x0b\x32,.kusinta.iot.signaling.v1.RedeemInviteResultH\x00R\x12redeemInviteResult\x12~\n\x1evouched_administrators_applied\x18\x07 \x01(\x0b\x32\x36.kusinta.iot.signaling.v1.VouchedAdministratorsAppliedH\x00R\x1cvouchedAdministratorsApplied\x12l\n\x18transfer_outcome_applied\x18\x08 \x01(\x0b\x32\x30.kusinta.iot.signaling.v1.TransferOutcomeAppliedH\x00R\x16transferOutcomeApplied\x12>\n\x05wiped\x18\t \x01(\x0b\x32&.kusinta.iot.signaling.v1.GatewayWipedH\x00R\x05wipedB\t\n\x07payload\"\xcc\x05\n\x16GatewayConnectResponse\x12\x41\n\x0c\x66rom_user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\nfromUserId\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12M\n\rredeem_invite\x18\x05 \x01(\x0b\x32&.kusinta.iot.signaling.v1.RedeemInviteH\x00R\x0credeemInvite\x12h\n\x16vouched_administrators\x18\x06 \x01(\x0b\x32/.kusinta.iot.signaling.v1.VouchedAdministratorsH\x00R\x15vouchedAdministrators\x12V\n\x10transfer_outcome\x18\x07 \x01(\x0b\x32).kusinta.iot.signaling.v1.TransferOutcomeH\x00R\x0ftransferOutcome\x12T\n\rstream_opened\x18\x08 \x01(\x0b\x32-.kusinta.iot.signaling.v1.GatewayStreamOpenedH\x00R\x0cstreamOpened\x12S\n\x0fgateway_deleted\x18\t \x01(\x0b\x32(.kusinta.iot.signaling.v1.GatewayDeletedH\x00R\x0egatewayDeletedB\t\n\x07payload\"\xaf\x01\n\x0cRedeemInvite\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x16\n\x05token\x18\x02 \x01(\tH\x00R\x05token\x12\x14\n\x04\x63ode\x18\x03 \x01(\tH\x00R\x04\x63ode\x12!\n\x0c\x64isplay_name\x18\x04 \x01(\tR\x0b\x64isplayName\x12%\n\x0everified_email\x18\x05 \x01(\tR\rverifiedEmailB\x08\n\x06secret\"v\n\x12RedeemInviteResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x41\n\x07outcome\x18\x02 \x01(\x0e\x32\'.kusinta.iot.signaling.v1.RedeemOutcomeR\x07outcome\"j\n\x13GatewayStreamOpened\x12\'\n\x0fownership_epoch\x18\x01 \x01(\tR\x0eownershipEpoch\x12*\n\x11\x63lear_space_names\x18\x02 \x01(\x08R\x0f\x63learSpaceNames\"\xa0\x01\n\x0eGatewayDeleted\x12\'\n\x0fownership_epoch\x18\x01 \x01(\tR\x0eownershipEpoch\x12*\n\x11\x63lear_space_names\x18\x02 \x01(\x08R\x0f\x63learSpaceNames\x12\x39\n\x05scope\x18\x03 \x01(\x0e\x32#.kusinta.iot.signaling.v1.WipeScopeR\x05scope\"\xf1\x01\n\x0cGatewayWiped\x12\'\n\x0fownership_epoch\x18\x01 \x01(\tR\x0eownershipEpoch\x12\x39\n\x05scope\x18\x02 \x01(\x0e\x32#.kusinta.iot.signaling.v1.WipeScopeR\x05scope\x12.\n\x13space_names_cleared\x18\x03 \x01(\x08R\x11spaceNamesCleared\x12M\n\x0bleft_behind\x18\x04 \x03(\x0b\x32,.kusinta.iot.signaling.v1.PairingsLeftBehindR\nleftBehind\"q\n\x12PairingsLeftBehind\x12\x38\n\x04kind\x18\x01 \x01(\x0e\x32$.kusinta.iot.common.v1.ConnectorKindR\x04kind\x12!\n\x0c\x64isplay_name\x18\x02 \x01(\tR\x0b\x64isplayName\"\xe0\x01\n\x15VouchedAdministrators\x12\x18\n\x07version\x18\x01 \x01(\x04R\x07version\x12G\n\x0e\x61\x64ministrators\x18\x02 \x03(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x0e\x61\x64ministrators\x12+\n\x11organisation_name\x18\x03 \x01(\tR\x10organisationName\x12\x37\n\tissued_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x08issuedAt\"8\n\x1cVouchedAdministratorsApplied\x12\x18\n\x07version\x18\x01 \x01(\x04R\x07version\"\xd1\x01\n\x0fTransferOutcome\x12\x1f\n\x0btransfer_id\x18\x01 \x01(\tR\ntransferId\x12W\n\x0e\x61\x64ministrators\x18\x02 \x01(\x0b\x32/.kusinta.iot.signaling.v1.VouchedAdministratorsR\x0e\x61\x64ministrators\x12\x44\n\x08outgoing\x18\x03 \x03(\x0b\x32(.kusinta.iot.signaling.v1.OutgoingChoiceR\x08outgoing\"\xd0\x01\n\x0eOutgoingChoice\x12\x38\n\x07user_id\x18\x01 \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\x06userId\x12\x45\n\x06\x63hoice\x18\x02 \x01(\x0e\x32-.kusinta.iot.signaling.v1.OutgoingStaffChoiceR\x06\x63hoice\x12=\n\x0c\x61\x63\x63\x65ss_until\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0b\x61\x63\x63\x65ssUntil\"9\n\x16TransferOutcomeApplied\x12\x1f\n\x0btransfer_id\x18\x01 \x01(\tR\ntransferId\"\x92\x02\n\x12UserConnectRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12G\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeH\x00R\thandshake\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payload\"\xe5\x02\n\x13UserConnectResponse\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12Q\n\rhandshake_ack\x18\x01 \x01(\x0b\x32*.kusinta.iot.signaling.v1.UserHandshakeAckH\x00R\x0chandshakeAck\x12=\n\x06\x61nswer\x18\x02 \x01(\x0b\x32#.kusinta.iot.signaling.v1.SdpAnswerH\x00R\x06\x61nswer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidate\x12\x43\n\theartbeat\x18\x05 \x01(\x0b\x32#.kusinta.iot.signaling.v1.HeartBeatH\x00R\theartbeatB\t\n\x07payload\"\x85\x01\n\x11UserListenRequest\x12\x45\n\thandshake\x18\x01 \x01(\x0b\x32\'.kusinta.iot.signaling.v1.UserHandshakeR\thandshake\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionIdJ\x04\x08\x02\x10\x03J\x04\x08\x03\x10\x04\"_\n\x12UserListenResponse\x12I\n\x08response\x18\x01 \x01(\x0b\x32-.kusinta.iot.signaling.v1.UserConnectResponseR\x08response\"\xd7\x01\n\x0fUserSendRequest\x12\x1d\n\nsession_id\x18\x04 \x01(\tR\tsessionId\x12:\n\x05offer\x18\x02 \x01(\x0b\x32\".kusinta.iot.signaling.v1.SdpOfferH\x00R\x05offer\x12M\n\rice_candidate\x18\x03 \x01(\x0b\x32&.kusinta.iot.signaling.v1.IceCandidateH\x00R\x0ciceCandidateB\t\n\x07payloadJ\x04\x08\x01\x10\x02R\thandshake\"\x12\n\x10UserSendResponse*\xad\x01\n\rRedeemOutcome\x12\x1e\n\x1aREDEEM_OUTCOME_UNSPECIFIED\x10\x00\x12\x19\n\x15REDEEM_OUTCOME_JOINED\x10\x01\x12#\n\x1fREDEEM_OUTCOME_PENDING_APPROVAL\x10\x02\x12\x1a\n\x16REDEEM_OUTCOME_INVALID\x10\x03\x12 \n\x1cREDEEM_OUTCOME_WRONG_ACCOUNT\x10\x04*h\n\tWipeScope\x12\x1a\n\x16WIPE_SCOPE_UNSPECIFIED\x10\x00\x12!\n\x1dWIPE_SCOPE_PEOPLE_AND_HISTORY\x10\x01\x12\x1c\n\x18WIPE_SCOPE_FACTORY_RESET\x10\x02*\x8b\x01\n\x13OutgoingStaffChoice\x12%\n!OUTGOING_STAFF_CHOICE_UNSPECIFIED\x10\x00\x12\x1f\n\x1bOUTGOING_STAFF_CHOICE_LEAVE\x10\x01\x12,\n(OUTGOING_STAFF_CHOICE_STAY_AS_TECHNICIAN\x10\x02\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,38 +35,60 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.signaling.v1.si
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_REDEEMOUTCOME']._serialized_start=2725
-  _globals['_REDEEMOUTCOME']._serialized_end=2898
-  _globals['_SDPOFFER']._serialized_start=110
-  _globals['_SDPOFFER']._serialized_end=138
-  _globals['_SDPANSWER']._serialized_start=140
-  _globals['_SDPANSWER']._serialized_end=169
-  _globals['_ICECANDIDATE']._serialized_start=171
-  _globals['_ICECANDIDATE']._serialized_end=280
-  _globals['_HEARTBEAT']._serialized_start=282
-  _globals['_HEARTBEAT']._serialized_end=293
-  _globals['_USERHANDSHAKE']._serialized_start=295
-  _globals['_USERHANDSHAKE']._serialized_end=390
-  _globals['_USERHANDSHAKEACK']._serialized_start=392
-  _globals['_USERHANDSHAKEACK']._serialized_end=514
-  _globals['_GATEWAYCONNECTREQUEST']._serialized_start=517
-  _globals['_GATEWAYCONNECTREQUEST']._serialized_end=962
-  _globals['_GATEWAYCONNECTRESPONSE']._serialized_start=965
-  _globals['_GATEWAYCONNECTRESPONSE']._serialized_end=1316
-  _globals['_REDEEMINVITE']._serialized_start=1319
-  _globals['_REDEEMINVITE']._serialized_end=1494
-  _globals['_REDEEMINVITERESULT']._serialized_start=1496
-  _globals['_REDEEMINVITERESULT']._serialized_end=1614
-  _globals['_USERCONNECTREQUEST']._serialized_start=1617
-  _globals['_USERCONNECTREQUEST']._serialized_end=1891
-  _globals['_USERCONNECTRESPONSE']._serialized_start=1894
-  _globals['_USERCONNECTRESPONSE']._serialized_end=2251
-  _globals['_USERLISTENREQUEST']._serialized_start=2254
-  _globals['_USERLISTENREQUEST']._serialized_end=2387
-  _globals['_USERLISTENRESPONSE']._serialized_start=2389
-  _globals['_USERLISTENRESPONSE']._serialized_end=2484
-  _globals['_USERSENDREQUEST']._serialized_start=2487
-  _globals['_USERSENDREQUEST']._serialized_end=2702
-  _globals['_USERSENDRESPONSE']._serialized_start=2704
-  _globals['_USERSENDRESPONSE']._serialized_end=2722
+  _globals['_REDEEMOUTCOME']._serialized_start=4857
+  _globals['_REDEEMOUTCOME']._serialized_end=5030
+  _globals['_WIPESCOPE']._serialized_start=5032
+  _globals['_WIPESCOPE']._serialized_end=5136
+  _globals['_OUTGOINGSTAFFCHOICE']._serialized_start=5139
+  _globals['_OUTGOINGSTAFFCHOICE']._serialized_end=5278
+  _globals['_SDPOFFER']._serialized_start=178
+  _globals['_SDPOFFER']._serialized_end=206
+  _globals['_SDPANSWER']._serialized_start=208
+  _globals['_SDPANSWER']._serialized_end=237
+  _globals['_ICECANDIDATE']._serialized_start=239
+  _globals['_ICECANDIDATE']._serialized_end=348
+  _globals['_HEARTBEAT']._serialized_start=350
+  _globals['_HEARTBEAT']._serialized_end=361
+  _globals['_USERHANDSHAKE']._serialized_start=363
+  _globals['_USERHANDSHAKE']._serialized_end=458
+  _globals['_USERHANDSHAKEACK']._serialized_start=460
+  _globals['_USERHANDSHAKEACK']._serialized_end=582
+  _globals['_GATEWAYCONNECTREQUEST']._serialized_start=585
+  _globals['_GATEWAYCONNECTREQUEST']._serialized_end=1332
+  _globals['_GATEWAYCONNECTRESPONSE']._serialized_start=1335
+  _globals['_GATEWAYCONNECTRESPONSE']._serialized_end=2051
+  _globals['_REDEEMINVITE']._serialized_start=2054
+  _globals['_REDEEMINVITE']._serialized_end=2229
+  _globals['_REDEEMINVITERESULT']._serialized_start=2231
+  _globals['_REDEEMINVITERESULT']._serialized_end=2349
+  _globals['_GATEWAYSTREAMOPENED']._serialized_start=2351
+  _globals['_GATEWAYSTREAMOPENED']._serialized_end=2457
+  _globals['_GATEWAYDELETED']._serialized_start=2460
+  _globals['_GATEWAYDELETED']._serialized_end=2620
+  _globals['_GATEWAYWIPED']._serialized_start=2623
+  _globals['_GATEWAYWIPED']._serialized_end=2864
+  _globals['_PAIRINGSLEFTBEHIND']._serialized_start=2866
+  _globals['_PAIRINGSLEFTBEHIND']._serialized_end=2979
+  _globals['_VOUCHEDADMINISTRATORS']._serialized_start=2982
+  _globals['_VOUCHEDADMINISTRATORS']._serialized_end=3206
+  _globals['_VOUCHEDADMINISTRATORSAPPLIED']._serialized_start=3208
+  _globals['_VOUCHEDADMINISTRATORSAPPLIED']._serialized_end=3264
+  _globals['_TRANSFEROUTCOME']._serialized_start=3267
+  _globals['_TRANSFEROUTCOME']._serialized_end=3476
+  _globals['_OUTGOINGCHOICE']._serialized_start=3479
+  _globals['_OUTGOINGCHOICE']._serialized_end=3687
+  _globals['_TRANSFEROUTCOMEAPPLIED']._serialized_start=3689
+  _globals['_TRANSFEROUTCOMEAPPLIED']._serialized_end=3746
+  _globals['_USERCONNECTREQUEST']._serialized_start=3749
+  _globals['_USERCONNECTREQUEST']._serialized_end=4023
+  _globals['_USERCONNECTRESPONSE']._serialized_start=4026
+  _globals['_USERCONNECTRESPONSE']._serialized_end=4383
+  _globals['_USERLISTENREQUEST']._serialized_start=4386
+  _globals['_USERLISTENREQUEST']._serialized_end=4519
+  _globals['_USERLISTENRESPONSE']._serialized_start=4521
+  _globals['_USERLISTENRESPONSE']._serialized_end=4616
+  _globals['_USERSENDREQUEST']._serialized_start=4619
+  _globals['_USERSENDREQUEST']._serialized_end=4834
+  _globals['_USERSENDRESPONSE']._serialized_start=4836
+  _globals['_USERSENDRESPONSE']._serialized_end=4854
 # @@protoc_insertion_point(module_scope)

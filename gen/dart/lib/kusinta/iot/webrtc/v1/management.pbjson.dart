@@ -1281,8 +1281,36 @@ const ManagementRequest$json = {
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.webrtc.v1.SetOwnerOrganisation',
+      '8': {'3': true},
       '9': 0,
-      '10': 'setOwnerOrganisation'
+      '10': 'setOwnerOrganisation',
+    },
+    {
+      '1': 'request_promotion',
+      '3': 36,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RequestPromotion',
+      '9': 0,
+      '10': 'requestPromotion'
+    },
+    {
+      '1': 'answer_promotion',
+      '3': 37,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.AnswerPromotion',
+      '9': 0,
+      '10': 'answerPromotion'
+    },
+    {
+      '1': 'list_promotion_requests',
+      '3': 38,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListPromotionRequests',
+      '9': 0,
+      '10': 'listPromotionRequests'
     },
   ],
   '8': [
@@ -1345,6 +1373,11 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'ZWJydGMudjEuU2V0TWVtYmVyUm9sZUgAUg1zZXRNZW1iZXJSb2xlEloKE3JlbW92ZV9mcm9tX2'
     'dhdGV3YXkYISABKAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUmVtb3ZlRnJvbUdhdGV3YXlI'
     'AFIRcmVtb3ZlRnJvbUdhdGV3YXkSUQoQc2V0X2FjY2Vzc191bnRpbBgiIAEoCzIlLmt1c2ludG'
-    'EuaW90LndlYnJ0Yy52MS5TZXRBY2Nlc3NVbnRpbEgAUg5zZXRBY2Nlc3NVbnRpbBJjChZzZXRf'
+    'EuaW90LndlYnJ0Yy52MS5TZXRBY2Nlc3NVbnRpbEgAUg5zZXRBY2Nlc3NVbnRpbBJnChZzZXRf'
     'b3duZXJfb3JnYW5pc2F0aW9uGCMgASgLMisua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldE93bm'
-    'VyT3JnYW5pc2F0aW9uSABSFHNldE93bmVyT3JnYW5pc2F0aW9uQgkKB3JlcXVlc3Q=');
+    'VyT3JnYW5pc2F0aW9uQgIYAUgAUhRzZXRPd25lck9yZ2FuaXNhdGlvbhJWChFyZXF1ZXN0X3By'
+    'b21vdGlvbhgkIAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5SZXF1ZXN0UHJvbW90aW9uSA'
+    'BSEHJlcXVlc3RQcm9tb3Rpb24SUwoQYW5zd2VyX3Byb21vdGlvbhglIAEoCzImLmt1c2ludGEu'
+    'aW90LndlYnJ0Yy52MS5BbnN3ZXJQcm9tb3Rpb25IAFIPYW5zd2VyUHJvbW90aW9uEmYKF2xpc3'
+    'RfcHJvbW90aW9uX3JlcXVlc3RzGCYgASgLMiwua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpc3RQ'
+    'cm9tb3Rpb25SZXF1ZXN0c0gAUhVsaXN0UHJvbW90aW9uUmVxdWVzdHNCCQoHcmVxdWVzdA==');

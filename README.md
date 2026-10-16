@@ -277,11 +277,12 @@ can tell the person what redeeming will do. A Technician invite may carry an end
 ## Members
 
 `webrtc/v1/members.proto` is how administrators and property owners manage people once they
-are on the gateway: list them (`ListGatewayMembers`), make one a property owner or an administrator
-or take that away (`SetMemberRole`, promotion only, never by invite), remove one from every
-space at once (`RemoveFromGateway`), move a technician's end date (`SetAccessUntil`) and
-record the organisation that owns the property (`SetOwnerOrganisation`). An end date only
-ever takes away a technician's role and service memberships. Staff — technicians, property
+are on the gateway: list them (`ListGatewayMembers`), ask one to become a property owner or an
+administrator (`RequestPromotion`, never by invite) or take that away at once (`SetMemberRole`),
+remove one from every space at once (`RemoveFromGateway`) and move a technician's end date
+(`SetAccessUntil`). An end date only ever takes away a technician's role and service
+memberships. `SetOwnerOrganisation` is superseded and refused: the owner's name comes with the
+vouched administrators (below). Staff — technicians, property
 owners and administrators — are listed by name and verified email (`AppTokenClaims.email`);
 each residency as an entry of its own under a residency id the gateway mints for it, with
 its home and since when (`MemberSpace.since`), never by name and never tied to the person's
@@ -295,6 +296,39 @@ kinds of party alone. The residents of a home see the people they live with by n
 staff there by name. The roles a session holds come
 with its snapshot and every `LivePermissionUpdate` (`SessionRoles`), so a promotion or
 demotion reaches an open app at once.
+
+## Organisations
+
+A gateway's owner of record is an organisation the api-server keeps, with one or more
+administrators; the gateway never decides who they are. Each of them gets `ROLE_GATEWAY_ADMIN`
+in their app token, and the api-server tells the gateway the whole set on its signaling stream
+(`signaling/v1` `VouchedAdministrators`): a snapshot when the stream opens and again on every
+change, versioned so a lost, repeated or late set is harmless, and kept across restarts. The set
+grants nothing alone — administration still needs the token — but it lists every one of them in
+Members (`MemberDetail.vouched_admin`; `registering_admin` repeats it for older readers), gives
+the disclosure the organisation's name, and ends the administration of open sessions of anyone it
+drops, at once.
+
+**Transfers.** An administrator of the owning organisation offers the gateway to another, whose
+administrator accepts. The gateway then gets a `TransferOutcome`: the new set, and for each
+outgoing staff member — the sending organisation's administrators and anyone holding a promoted
+admin or property-owner role — leave (the default) or stay as a technician with an optional end.
+Leaving takes staff roles and service memberships, never a residency. Outcomes are queued while
+the gateway is offline, applied once by `transfer_id`, and acknowledged.
+
+**Promotion requests.** Becoming a property owner or an administrator on a gateway is a request
+the person accepts or declines in their own session (`RequestPromotion`, `AnswerPromotion`),
+pending at most 7 days and listed only to them and to whoever asked (`ListPromotionRequests`,
+pushed as `PromotionRequests`). Taking a role away stays immediate.
+
+**Delete, revoke and the ownership epoch.** Every owner record has an opaque ownership epoch,
+new only at the first registration after the gateway was deleted. The gateway learns it from
+`RegistrationComplete` and from `GatewayStreamOpened`, the api-server's first message on its
+stream, and wipes people and history when it changes or when a connected gateway is told
+`GatewayDeleted` — keeping the building's setup (spaces, devices, filing, links, connectors),
+optionally renaming spaces generically, and reporting an empty member snapshot. A delete may ask
+for a factory reset instead (`WipeScope`); a gateway that cannot do one says so in `GatewayWiped`.
+A revoke is not a delete: it keeps the owner and wipes nothing.
 
 ## Residents and service: what a home discloses
 

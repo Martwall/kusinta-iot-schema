@@ -386,6 +386,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'gatewayMembers'
     },
+    {
+      '1': 'promotion_requests',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PromotionRequests',
+      '9': 0,
+      '10': 'promotionRequests'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -410,8 +419,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'RlGAsgASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLklzc3VlZEludml0ZUgAUgxpc3N1ZWRJ'
     'bnZpdGUSSgoNc3BhY2VfaW52aXRlcxgMIAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TcG'
     'FjZUludml0ZXNIAFIMc3BhY2VJbnZpdGVzElAKD2dhdGV3YXlfbWVtYmVycxgNIAEoCzIlLmt1'
-    'c2ludGEuaW90LndlYnJ0Yy52MS5HYXRld2F5TWVtYmVyc0gAUg5nYXRld2F5TWVtYmVyc0IICg'
-    'ZyZXN1bHQ=');
+    'c2ludGEuaW90LndlYnJ0Yy52MS5HYXRld2F5TWVtYmVyc0gAUg5nYXRld2F5TWVtYmVycxJZCh'
+    'Jwcm9tb3Rpb25fcmVxdWVzdHMYDiABKAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvbW90'
+    'aW9uUmVxdWVzdHNIAFIRcHJvbW90aW9uUmVxdWVzdHNCCAoGcmVzdWx0');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -868,6 +878,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'spaceInvites'
     },
+    {
+      '1': 'promotion_requests',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PromotionRequests',
+      '9': 0,
+      '10': 'promotionRequests'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -912,8 +931,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'EmNsaW1hdGVNb2RlQ2hhbmdlZBJjChZzZXJ2aWNlX3N0YXR1c19jaGFuZ2VkGBcgASgLMisua3'
     'VzaW50YS5pb3Qud2VicnRjLnYxLlNlcnZpY2VTdGF0dXNDaGFuZ2VkSABSFHNlcnZpY2VTdGF0'
     'dXNDaGFuZ2VkEkoKDXNwYWNlX2ludml0ZXMYGCABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudj'
-    'EuU3BhY2VJbnZpdGVzSABSDHNwYWNlSW52aXRlc0IJCgdwYXlsb2FkSgQIDxAQSgQIBxAIUhZh'
-    'dHRyaWJ1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA==');
+    'EuU3BhY2VJbnZpdGVzSABSDHNwYWNlSW52aXRlcxJZChJwcm9tb3Rpb25fcmVxdWVzdHMYGSAB'
+    'KAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvbW90aW9uUmVxdWVzdHNIAFIRcHJvbW90aW'
+    '9uUmVxdWVzdHNCCQoHcGF5bG9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3Vs'
+    'dFIOcHJvcGVydHlfZXZlbnQ=');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

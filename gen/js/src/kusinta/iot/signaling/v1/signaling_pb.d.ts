@@ -5,6 +5,8 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { GatewayId, UserId } from "../../identity/v1/identity_pb.js";
+import type { ConnectorKind } from "../../common/v1/types_pb.js";
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
  * Describes the file kusinta/iot/signaling/v1/signaling.proto.
@@ -174,7 +176,8 @@ export declare const UserHandshakeAckSchema: GenMessage<UserHandshakeAck>;
  */
 export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.GatewayConnectRequest"> & {
   /**
-   * On redeem_invite_result, the user who redeemed (RedeemInvite).
+   * On redeem_invite_result, the user who redeemed (RedeemInvite). Unset on an
+   * acknowledgement, which is to no user.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId target_user_id = 1;
    */
@@ -183,7 +186,7 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
   /**
    * The session of target_user_id this message answers. See the contract above.
    * Ignored on a heartbeat, which carries no routing target at all, and on
-   * redeem_invite_result, which belongs to no session.
+   * redeem_invite_result and the acknowledgements, which belong to no session.
    *
    * @generated from field: string session_id = 5;
    */
@@ -216,6 +219,24 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
      */
     value: RedeemInviteResult;
     case: "redeemInviteResult";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.VouchedAdministratorsApplied vouched_administrators_applied = 7;
+     */
+    value: VouchedAdministratorsApplied;
+    case: "vouchedAdministratorsApplied";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.TransferOutcomeApplied transfer_outcome_applied = 8;
+     */
+    value: TransferOutcomeApplied;
+    case: "transferOutcomeApplied";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.GatewayWiped wiped = 9;
+     */
+    value: GatewayWiped;
+    case: "wiped";
   } | { case: undefined; value?: undefined };
 };
 
@@ -233,7 +254,9 @@ export declare const GatewayConnectRequestSchema: GenMessage<GatewayConnectReque
 export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.GatewayConnectResponse"> & {
   /**
    * On redeem_invite, the user redeeming: the sub of the token the api-server
-   * verified, and never a value the user supplied.
+   * verified, and never a value the user supplied. Unset on what concerns the
+   * gateway itself (stream_opened, vouched_administrators, transfer_outcome,
+   * gateway_deleted), which is from no user.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId from_user_id = 1;
    */
@@ -242,7 +265,8 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
   /**
    * The session of from_user_id this message originates from — the value the
    * gateway must echo on the GatewayConnectRequest that answers it. See the
-   * contract above. Unset on redeem_invite, which belongs to no session.
+   * contract above. Unset on redeem_invite and on what concerns the gateway
+   * itself, which belong to no session.
    *
    * @generated from field: string session_id = 4;
    */
@@ -269,6 +293,30 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
      */
     value: RedeemInvite;
     case: "redeemInvite";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.VouchedAdministrators vouched_administrators = 6;
+     */
+    value: VouchedAdministrators;
+    case: "vouchedAdministrators";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.TransferOutcome transfer_outcome = 7;
+     */
+    value: TransferOutcome;
+    case: "transferOutcome";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.GatewayStreamOpened stream_opened = 8;
+     */
+    value: GatewayStreamOpened;
+    case: "streamOpened";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.GatewayDeleted gateway_deleted = 9;
+     */
+    value: GatewayDeleted;
+    case: "gatewayDeleted";
   } | { case: undefined; value?: undefined };
 };
 
@@ -375,6 +423,410 @@ export declare type RedeemInviteResult = Message<"kusinta.iot.signaling.v1.Redee
  * Use `create(RedeemInviteResultSchema)` to create a new message.
  */
 export declare const RedeemInviteResultSchema: GenMessage<RedeemInviteResult>;
+
+/**
+ * The api-server's first message on every GatewayConnect stream, sent before any other. It
+ * carries the ownership epoch of the gateway's owner record.
+ *
+ * OWNER OF RECORD. A gateway is owned by an organisation, which the api-server keeps; the
+ * organisation's administrators are the gateway's vouched administrators. The api-server
+ * vouches for them twice: in the token of each session one of them opens
+ * (webrtc.v1.AppTokenClaims.roles), and to the gateway, as the whole set
+ * (VouchedAdministrators). Neither can be changed on the gateway. A gateway moves to another
+ * organisation only by a transfer the receiving organisation accepted (TransferOutcome).
+ *
+ * OWNERSHIP EPOCH. An opaque id the api-server gives each owner record of a gateway. It is new
+ * at the first registration after the gateway was deleted, and only then: a revoke, a
+ * re-registration by the owning organisation and a transfer all keep it. The gateway takes it
+ * from the api-server's answer to its own registration (registration.v1.RegistrationComplete)
+ * and from this message, and from nowhere else: never from an app session, nor from anything an
+ * app hands over, the registration token included. It keeps the epoch it holds across restarts.
+ *
+ * Given an epoch other than the one it holds, the gateway wipes people and history (see
+ * GatewayDeleted, WIPE), giving its spaces generic names too where clear_space_names says so,
+ * before it admits any session or applies anything else from that registration or stream, and
+ * then holds the new epoch. A gateway holding no epoch takes the first it is given and wipes nothing. The
+ * epoch it holds, given again, changes nothing, so the same epoch twice wipes once.
+ *
+ * A gateway that holds an epoch treats a stream on which anything arrives before this message,
+ * or this message with an empty epoch, as not open: it applies nothing from it and closes it.
+ * So the api-server must send this message first on every stream before a gateway that
+ * requires it is deployed.
+ *
+ * @generated from message kusinta.iot.signaling.v1.GatewayStreamOpened
+ */
+export declare type GatewayStreamOpened = Message<"kusinta.iot.signaling.v1.GatewayStreamOpened"> & {
+  /**
+   * @generated from field: string ownership_epoch = 1;
+   */
+  ownershipEpoch: string;
+
+  /**
+   * As GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for the wipe a new
+   * epoch makes. Applies only when ownership_epoch is not the one the gateway holds.
+   *
+   * @generated from field: bool clear_space_names = 2;
+   */
+  clearSpaceNames: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.GatewayStreamOpened.
+ * Use `create(GatewayStreamOpenedSchema)` to create a new message.
+ */
+export declare const GatewayStreamOpenedSchema: GenMessage<GatewayStreamOpened>;
+
+/**
+ * The gateway was deleted at the api-server, api-server → gateway: the owner record with
+ * ownership_epoch has ended, and the gateway decommissions at once. Sent to a connected gateway
+ * before the api-server ends its stream, and answered with GatewayWiped. A gateway offline when
+ * it is deleted learns it from the new epoch at its next registration instead
+ * (GatewayStreamOpened, OWNERSHIP EPOCH), which carries clear_space_names with it.
+ *
+ * A delete is not a revoke. A revoke ends the gateway's certificate and keeps its owner: it sends
+ * no notice and wipes nothing, and a revoked gateway registered again by the owning organisation
+ * keeps everything. A delete ends the owner record itself, so the gateway starts empty for
+ * whoever registers it next, and nothing about people is carried to an organisation that did not
+ * choose it.
+ *
+ * A notice naming the epoch the gateway holds makes it wipe at once, in the scope asked and
+ * before it applies anything else, and then hold no epoch. A repeat of the notice it last applied
+ * is acknowledged again as before and changes nothing; a notice naming any other epoch is
+ * ignored.
+ *
+ * WIPE. A wipe of people and history (WIPE_SCOPE_PEOPLE_AND_HISTORY) keeps the building's setup:
+ * its spaces, with their structure, types and names; its devices and how they are filed; device
+ * links; connector configuration; the building's time zone; and the gateway's own credentials
+ * and the settings that are not about people. Everything about people goes: every user, role,
+ * membership and residency, with its residency id; every invite, join request and promotion
+ * request; every name and email address; the vouched administrators and their version; every end
+ * of access; every device's ownership, an owned device staying filed where it is, released, as
+ * one of the building's own; every contact; and everything recorded per home — room history,
+ * climate summaries, events, targets, modes and routines. Every open session ends, and none is
+ * admitted until the wipe is done.
+ *
+ * The gateway then reports as a gateway starting afresh does: on new streams, a snapshot with no
+ * members (reporting.v1.ReportMembersRequest), no service reach and no invite routes, so the
+ * api-server's record of who belongs to the gateway empties too.
+ *
+ * @generated from message kusinta.iot.signaling.v1.GatewayDeleted
+ */
+export declare type GatewayDeleted = Message<"kusinta.iot.signaling.v1.GatewayDeleted"> & {
+  /**
+   * @generated from field: string ownership_epoch = 1;
+   */
+  ownershipEpoch: string;
+
+  /**
+   * Also gives every space a generic name, since a name can name a person ("Ilse's room"): its
+   * type and its number among the spaces of that type under the same parent, counted from 1 in
+   * the order the gateway lists them — "Apartment 1", "Floor 2", "Room 3". In English, as here,
+   * since nothing on the gateway knows the building's language. Every space stays, with its
+   * type, its filing, its devices and links. Applied in the same step as the wipe, and only with
+   * WIPE_SCOPE_PEOPLE_AND_HISTORY, since a factory reset leaves no space to name.
+   *
+   * @generated from field: bool clear_space_names = 2;
+   */
+  clearSpaceNames: boolean;
+
+  /**
+   * @generated from field: kusinta.iot.signaling.v1.WipeScope scope = 3;
+   */
+  scope: WipeScope;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.GatewayDeleted.
+ * Use `create(GatewayDeletedSchema)` to create a new message.
+ */
+export declare const GatewayDeletedSchema: GenMessage<GatewayDeleted>;
+
+/**
+ * The gateway's acknowledgement of a GatewayDeleted, gateway → api-server: what it wiped.
+ *
+ * For WIPE_SCOPE_PEOPLE_AND_HISTORY, sent once the wipe is done. For WIPE_SCOPE_FACTORY_RESET,
+ * sent once everything but the gateway's credentials is gone and before it erases those, since
+ * sending needs them; the credentials go at once after. The api-server then revokes the gateway's
+ * certificate.
+ *
+ * @generated from message kusinta.iot.signaling.v1.GatewayWiped
+ */
+export declare type GatewayWiped = Message<"kusinta.iot.signaling.v1.GatewayWiped"> & {
+  /**
+   * As GatewayDeleted.ownership_epoch.
+   *
+   * @generated from field: string ownership_epoch = 1;
+   */
+  ownershipEpoch: string;
+
+  /**
+   * The scope the gateway applied: WIPE_SCOPE_PEOPLE_AND_HISTORY when it was asked for that, and
+   * when it was asked for a factory reset it does not perform.
+   *
+   * @generated from field: kusinta.iot.signaling.v1.WipeScope scope = 2;
+   */
+  scope: WipeScope;
+
+  /**
+   * Whether every space was given a generic name (GatewayDeleted.clear_space_names).
+   *
+   * @generated from field: bool space_names_cleared = 3;
+   */
+  spaceNamesCleared: boolean;
+
+  /**
+   * With WIPE_SCOPE_FACTORY_RESET: each piece of other hardware that still holds pairings the
+   * reset could not reach, for the person who asked to reset it by hand. Empty otherwise.
+   *
+   * @generated from field: repeated kusinta.iot.signaling.v1.PairingsLeftBehind left_behind = 4;
+   */
+  leftBehind: PairingsLeftBehind[];
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.GatewayWiped.
+ * Use `create(GatewayWipedSchema)` to create a new message.
+ */
+export declare const GatewayWipedSchema: GenMessage<GatewayWiped>;
+
+/**
+ * Hardware a connector drives that keeps its own pairings through a factory reset.
+ *
+ * @generated from message kusinta.iot.signaling.v1.PairingsLeftBehind
+ */
+export declare type PairingsLeftBehind = Message<"kusinta.iot.signaling.v1.PairingsLeftBehind"> & {
+  /**
+   * As the connector described itself (webrtc.v1.ConnectorDescriptor): what kind of hardware,
+   * and its name, for a person.
+   *
+   * @generated from field: kusinta.iot.common.v1.ConnectorKind kind = 1;
+   */
+  kind: ConnectorKind;
+
+  /**
+   * @generated from field: string display_name = 2;
+   */
+  displayName: string;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.PairingsLeftBehind.
+ * Use `create(PairingsLeftBehindSchema)` to create a new message.
+ */
+export declare const PairingsLeftBehindSchema: GenMessage<PairingsLeftBehind>;
+
+/**
+ * The administrators of the organisation that owns the gateway, api-server → gateway: the whole
+ * set each time, never a change to it.
+ *
+ * The api-server sends it on every stream, after GatewayStreamOpened and any unacknowledged
+ * TransferOutcome, and again whenever the set or the organisation's name changes. It sends the
+ * newest set again on every stream until the gateway acknowledges its version
+ * (VouchedAdministratorsApplied).
+ *
+ * It grants nothing on its own. A session holds ROLE_GATEWAY_ADMIN as a vouched administrator
+ * only when the token it opened with carries it (webrtc.v1.AppTokenClaims.roles); a user named
+ * here who connects with a token that does not is no administrator in that session. What the set
+ * says is who the administrators are between their tokens:
+ *   * every user it names is a member of the gateway, listed as a vouched administrator
+ *     (webrtc.v1.MemberDetail.vouched_admin) and counted under ROLE_GATEWAY_ADMIN, whether or not
+ *     the gateway has seen them connect. Their name and email address are learnt from their own
+ *     tokens, and are unknown until then;
+ *   * their administration cannot be changed on the gateway (webrtc.v1 members.proto,
+ *     "vouched_admin");
+ *   * when a set the gateway applies drops a user, the gateway ends the administration of every
+ *     open session of theirs at once, without waiting for them to reconnect: the session loses
+ *     ROLE_GATEWAY_ADMIN as any change of role reaches it (webrtc.v1.LivePermissionUpdate,
+ *     session_roles), unless the gateway holds that role for them itself;
+ *   * a token issued (AppTokenClaims.iat, in whole seconds) no later than the second in which
+ *     the set the gateway holds was issued, for a user that set does not name, vouches for no
+ *     administration, so a token minted before a user was dropped cannot bring it back. A token
+ *     issued later is honoured whether or not the set names its user, since the set may lag
+ *     behind it.
+ *
+ * Safe to lose, repeat and reorder: the gateway applies a set only when its version is above the
+ * one it holds, ignores any other, and acknowledges each with the version it then holds. It keeps
+ * the set it holds, with its version and issued_at, across restarts, so a restart forgets nothing
+ * before the stream opens again. A wipe drops it, version included (GatewayDeleted, WIPE), so the
+ * versions of a new owner record start afresh.
+ *
+ * @generated from message kusinta.iot.signaling.v1.VouchedAdministrators
+ */
+export declare type VouchedAdministrators = Message<"kusinta.iot.signaling.v1.VouchedAdministrators"> & {
+  /**
+   * Above that of every set the api-server sent before under the same ownership epoch. Never zero.
+   *
+   * @generated from field: uint64 version = 1;
+   */
+  version: bigint;
+
+  /**
+   * Each administrator of the owning organisation, once. Never empty, since an organisation
+   * always has one. The set carries no one's name or email address.
+   *
+   * @generated from field: repeated kusinta.iot.identity.v1.UserId administrators = 2;
+   */
+  administrators: UserId[];
+
+  /**
+   * The owning organisation's name, as its administrators set it: what
+   * webrtc.v1.PrivacyDisclosure.owner_organisation_name tells. Never its organisation number.
+   *
+   * @generated from field: string organisation_name = 3;
+   */
+  organisationName: string;
+
+  /**
+   * When the api-server made this set, on the clock that sets AppTokenClaims.iat, so the two
+   * compare. Never earlier than an earlier version's.
+   *
+   * @generated from field: google.protobuf.Timestamp issued_at = 4;
+   */
+  issuedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.VouchedAdministrators.
+ * Use `create(VouchedAdministratorsSchema)` to create a new message.
+ */
+export declare const VouchedAdministratorsSchema: GenMessage<VouchedAdministrators>;
+
+/**
+ * The gateway's acknowledgement of a VouchedAdministrators, gateway → api-server.
+ *
+ * @generated from message kusinta.iot.signaling.v1.VouchedAdministratorsApplied
+ */
+export declare type VouchedAdministratorsApplied = Message<"kusinta.iot.signaling.v1.VouchedAdministratorsApplied"> & {
+  /**
+   * The version the gateway holds once it has applied or ignored the set, which may be above
+   * the one acknowledged. The api-server sends no set at or below it again.
+   *
+   * @generated from field: uint64 version = 1;
+   */
+  version: bigint;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.VouchedAdministratorsApplied.
+ * Use `create(VouchedAdministratorsAppliedSchema)` to create a new message.
+ */
+export declare const VouchedAdministratorsAppliedSchema: GenMessage<VouchedAdministratorsApplied>;
+
+/**
+ * A transfer of the gateway to another organisation, accepted by an administrator of the
+ * receiving one, api-server → gateway. It carries the receiving organisation's vouched set and
+ * what becomes of each outgoing staff member, and the gateway applies the two in one step — all
+ * of it or none — before anything after it on the stream. The ownership epoch is kept: residents,
+ * technicians, spaces and devices stay as they are.
+ *
+ * The api-server keeps an outcome until the gateway acknowledges it (TransferOutcomeApplied),
+ * through the gateway's offline spells, and sends it on every stream right after
+ * GatewayStreamOpened. While one is unacknowledged it sends the vouched set only inside it, as
+ * administrators, the newest set. Applying is idempotent by transfer_id: an outcome already
+ * applied is acknowledged again, its outgoing choices are not applied again, and its set is
+ * applied as any VouchedAdministrators is, by version.
+ *
+ * The outgoing staff are everyone named in outgoing and everyone holding ROLE_GATEWAY_ADMIN or
+ * ROLE_PROPERTY_OWNER on the gateway as the outcome is applied — save anyone the new set names,
+ * who is of the receiving organisation and is left as they are. The api-server names in outgoing
+ * every administrator of the sending organisation, and everyone it holds as reported with
+ * ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER (reporting.v1.GatewayMember). Each outgoing staff
+ * member either:
+ *   * leaves: their choice is LEAVE, UNSPECIFIED or a value the gateway does not know, or they
+ *     are not named in outgoing at all, so a transfer keeps no one by omission. The gateway takes
+ *     every role it holds for them and every SERVICE membership, with the pending invites they
+ *     made as staff, as RemoveFromGateway by user id does from a caller who lives in none of
+ *     their homes. It never ends a residency, nor the invites they made as its resident;
+ *   * or stays as a technician: STAY_AS_TECHNICIAN. The gateway takes ROLE_GATEWAY_ADMIN and
+ *     ROLE_PROPERTY_OWNER as webrtc.v1.SetMemberRole taking them away does, gives
+ *     ROLE_TECHNICIAN, keeps their SERVICE memberships, files them SERVICE on every top-level
+ *     space they are not filed on, and sets access_until as webrtc.v1.SetAccessUntil does. One
+ *     whose access_until is not after the moment the outcome is applied leaves instead.
+ * Every change reaches the outgoing staff's open sessions at once, as a change of role does.
+ *
+ * @generated from message kusinta.iot.signaling.v1.TransferOutcome
+ */
+export declare type TransferOutcome = Message<"kusinta.iot.signaling.v1.TransferOutcome"> & {
+  /**
+   * Minted by the api-server, opaque, unique among the gateway's transfers.
+   *
+   * @generated from field: string transfer_id = 1;
+   */
+  transferId: string;
+
+  /**
+   * The receiving organisation's vouched set, as it stands.
+   *
+   * @generated from field: kusinta.iot.signaling.v1.VouchedAdministrators administrators = 2;
+   */
+  administrators?: VouchedAdministrators | undefined;
+
+  /**
+   * What becomes of each outgoing staff member, once each.
+   *
+   * @generated from field: repeated kusinta.iot.signaling.v1.OutgoingChoice outgoing = 3;
+   */
+  outgoing: OutgoingChoice[];
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.TransferOutcome.
+ * Use `create(TransferOutcomeSchema)` to create a new message.
+ */
+export declare const TransferOutcomeSchema: GenMessage<TransferOutcome>;
+
+/**
+ * What a transfer does with one outgoing staff member (TransferOutcome).
+ *
+ * @generated from message kusinta.iot.signaling.v1.OutgoingChoice
+ */
+export declare type OutgoingChoice = Message<"kusinta.iot.signaling.v1.OutgoingChoice"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.UserId user_id = 1;
+   */
+  userId?: UserId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.signaling.v1.OutgoingStaffChoice choice = 2;
+   */
+  choice: OutgoingStaffChoice;
+
+  /**
+   * When their access as a technician ends; unset for no end. Only with STAY_AS_TECHNICIAN, and
+   * ignored with any other choice.
+   *
+   * @generated from field: google.protobuf.Timestamp access_until = 3;
+   */
+  accessUntil?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.OutgoingChoice.
+ * Use `create(OutgoingChoiceSchema)` to create a new message.
+ */
+export declare const OutgoingChoiceSchema: GenMessage<OutgoingChoice>;
+
+/**
+ * The gateway's acknowledgement of a TransferOutcome, gateway → api-server: applied now or
+ * before. It acknowledges the outcome's vouched set too. The api-server sends the outcome no
+ * more.
+ *
+ * @generated from message kusinta.iot.signaling.v1.TransferOutcomeApplied
+ */
+export declare type TransferOutcomeApplied = Message<"kusinta.iot.signaling.v1.TransferOutcomeApplied"> & {
+  /**
+   * As TransferOutcome.transfer_id.
+   *
+   * @generated from field: string transfer_id = 1;
+   */
+  transferId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.TransferOutcomeApplied.
+ * Use `create(TransferOutcomeAppliedSchema)` to create a new message.
+ */
+export declare const TransferOutcomeAppliedSchema: GenMessage<TransferOutcomeApplied>;
 
 /**
  * Messages sent by the app (GatewaySignalingService.UserConnect stream).
@@ -671,4 +1123,80 @@ export enum RedeemOutcome {
  * Describes the enum kusinta.iot.signaling.v1.RedeemOutcome.
  */
 export declare const RedeemOutcomeSchema: GenEnum<RedeemOutcome>;
+
+/**
+ * How much a wipe takes (GatewayDeleted).
+ *
+ * @generated from enum kusinta.iot.signaling.v1.WipeScope
+ */
+export enum WipeScope {
+  /**
+   * Not stated. Read as PEOPLE_AND_HISTORY, as is any value the gateway does not know.
+   *
+   * @generated from enum value: WIPE_SCOPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Decommissioning: people and their history go and the building's setup stays
+   * (GatewayDeleted, WIPE).
+   *
+   * @generated from enum value: WIPE_SCOPE_PEOPLE_AND_HISTORY = 1;
+   */
+  PEOPLE_AND_HISTORY = 1,
+
+  /**
+   * Out of the box, for a gateway that is to be used anywhere else: everything the gateway holds
+   * goes — what a wipe of people and history takes and also the building's setup, the gateway's
+   * certificates, keys and registration, connector configuration, the readings connectors store
+   * on the gateway, and its logs. What is held in other hardware is not reached: devices paired
+   * to a radio central the gateway drives stay paired there until that is reset too, and the
+   * gateway says so (GatewayWiped.left_behind).
+   *
+   * A gateway that does not perform a factory reset wipes people and history instead, and says
+   * so in GatewayWiped.scope.
+   *
+   * @generated from enum value: WIPE_SCOPE_FACTORY_RESET = 2;
+   */
+  FACTORY_RESET = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.signaling.v1.WipeScope.
+ */
+export declare const WipeScopeSchema: GenEnum<WipeScope>;
+
+/**
+ * Whether an outgoing staff member leaves the gateway or stays on it as a technician. Chosen
+ * per person by the sending organisation's administrator who offered the transfer.
+ *
+ * @generated from enum kusinta.iot.signaling.v1.OutgoingStaffChoice
+ */
+export enum OutgoingStaffChoice {
+  /**
+   * No choice stated. Read as LEAVE, as is any value the gateway does not know.
+   *
+   * @generated from enum value: OUTGOING_STAFF_CHOICE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Leaves: every staff role and SERVICE membership goes, and no residency.
+   *
+   * @generated from enum value: OUTGOING_STAFF_CHOICE_LEAVE = 1;
+   */
+  LEAVE = 1,
+
+  /**
+   * Stays as a technician, with access_until as its end.
+   *
+   * @generated from enum value: OUTGOING_STAFF_CHOICE_STAY_AS_TECHNICIAN = 2;
+   */
+  STAY_AS_TECHNICIAN = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.signaling.v1.OutgoingStaffChoice.
+ */
+export declare const OutgoingStaffChoiceSchema: GenEnum<OutgoingStaffChoice>;
 

@@ -11,7 +11,7 @@ import type { ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceTree } f
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
-import type { GatewayMembers } from "./members_pb.js";
+import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -386,6 +386,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: GatewayMembers;
     case: "gatewayMembers";
+  } | {
+    /**
+     * list_promotion_requests
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.PromotionRequests promotion_requests = 14;
+     */
+    value: PromotionRequests;
+    case: "promotionRequests";
   } | { case: undefined; value?: undefined };
 };
 
@@ -915,6 +923,15 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: SpaceInvites;
     case: "spaceInvites";
+  } | {
+    /**
+     * The promotion requests the session's user made or was asked to accept changed; see
+     * PromotionRequests.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.PromotionRequests promotion_requests = 25;
+     */
+    value: PromotionRequests;
+    case: "promotionRequests";
   } | { case: undefined; value?: undefined };
 };
 

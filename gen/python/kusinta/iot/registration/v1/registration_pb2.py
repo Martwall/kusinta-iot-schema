@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.kusinta/iot/registration/v1/registration.proto\x12\x1bkusinta.iot.registration.v1\"~\n\x13RegistrationRequest\x12-\n\x12registration_token\x18\x01 \x01(\tR\x11registrationToken\x12\x1f\n\x0b\x65xternal_ip\x18\x02 \x01(\tR\nexternalIp\x12\x17\n\x07\x63sr_pem\x18\x03 \x01(\tR\x06\x63srPem\"*\n\x14RegistrationProgress\x12\x12\n\x04step\x18\x01 \x01(\tR\x04step\"c\n\x14RegistrationComplete\x12\'\n\x0f\x63\x65rtificate_pem\x18\x01 \x01(\tR\x0e\x63\x65rtificatePem\x12\"\n\rca_bundle_pem\x18\x02 \x01(\tR\x0b\x63\x61\x42undlePem\"A\n\x11RegistrationError\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\"\x89\x02\n\x14RegistrationResponse\x12O\n\x08progress\x18\x01 \x01(\x0b\x32\x31.kusinta.iot.registration.v1.RegistrationProgressH\x00R\x08progress\x12O\n\x08\x63omplete\x18\x02 \x01(\x0b\x32\x31.kusinta.iot.registration.v1.RegistrationCompleteH\x00R\x08\x63omplete\x12\x46\n\x05\x65rror\x18\x03 \x01(\x0b\x32..kusinta.iot.registration.v1.RegistrationErrorH\x00R\x05\x65rrorB\x07\n\x05\x65vent\"-\n\x12\x43\x65rtRenewalRequest\x12\x17\n\x07\x63sr_pem\x18\x01 \x01(\tR\x06\x63srPem\"b\n\x13\x43\x65rtRenewalResponse\x12\'\n\x0f\x63\x65rtificate_pem\x18\x01 \x01(\tR\x0e\x63\x65rtificatePem\x12\"\n\rca_bundle_pem\x18\x02 \x01(\tR\x0b\x63\x61\x42undlePemB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.kusinta/iot/registration/v1/registration.proto\x12\x1bkusinta.iot.registration.v1\"~\n\x13RegistrationRequest\x12-\n\x12registration_token\x18\x01 \x01(\tR\x11registrationToken\x12\x1f\n\x0b\x65xternal_ip\x18\x02 \x01(\tR\nexternalIp\x12\x17\n\x07\x63sr_pem\x18\x03 \x01(\tR\x06\x63srPem\"*\n\x14RegistrationProgress\x12\x12\n\x04step\x18\x01 \x01(\tR\x04step\"\xb8\x01\n\x14RegistrationComplete\x12\'\n\x0f\x63\x65rtificate_pem\x18\x01 \x01(\tR\x0e\x63\x65rtificatePem\x12\"\n\rca_bundle_pem\x18\x02 \x01(\tR\x0b\x63\x61\x42undlePem\x12\'\n\x0fownership_epoch\x18\x03 \x01(\tR\x0eownershipEpoch\x12*\n\x11\x63lear_space_names\x18\x04 \x01(\x08R\x0f\x63learSpaceNames\"A\n\x11RegistrationError\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\"\x89\x02\n\x14RegistrationResponse\x12O\n\x08progress\x18\x01 \x01(\x0b\x32\x31.kusinta.iot.registration.v1.RegistrationProgressH\x00R\x08progress\x12O\n\x08\x63omplete\x18\x02 \x01(\x0b\x32\x31.kusinta.iot.registration.v1.RegistrationCompleteH\x00R\x08\x63omplete\x12\x46\n\x05\x65rror\x18\x03 \x01(\x0b\x32..kusinta.iot.registration.v1.RegistrationErrorH\x00R\x05\x65rrorB\x07\n\x05\x65vent\"-\n\x12\x43\x65rtRenewalRequest\x12\x17\n\x07\x63sr_pem\x18\x01 \x01(\tR\x06\x63srPem\"b\n\x13\x43\x65rtRenewalResponse\x12\'\n\x0f\x63\x65rtificate_pem\x18\x01 \x01(\tR\x0e\x63\x65rtificatePem\x12\"\n\rca_bundle_pem\x18\x02 \x01(\tR\x0b\x63\x61\x42undlePemB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,14 +36,14 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_REGISTRATIONREQUEST']._serialized_end=205
   _globals['_REGISTRATIONPROGRESS']._serialized_start=207
   _globals['_REGISTRATIONPROGRESS']._serialized_end=249
-  _globals['_REGISTRATIONCOMPLETE']._serialized_start=251
-  _globals['_REGISTRATIONCOMPLETE']._serialized_end=350
-  _globals['_REGISTRATIONERROR']._serialized_start=352
-  _globals['_REGISTRATIONERROR']._serialized_end=417
-  _globals['_REGISTRATIONRESPONSE']._serialized_start=420
-  _globals['_REGISTRATIONRESPONSE']._serialized_end=685
-  _globals['_CERTRENEWALREQUEST']._serialized_start=687
-  _globals['_CERTRENEWALREQUEST']._serialized_end=732
-  _globals['_CERTRENEWALRESPONSE']._serialized_start=734
-  _globals['_CERTRENEWALRESPONSE']._serialized_end=832
+  _globals['_REGISTRATIONCOMPLETE']._serialized_start=252
+  _globals['_REGISTRATIONCOMPLETE']._serialized_end=436
+  _globals['_REGISTRATIONERROR']._serialized_start=438
+  _globals['_REGISTRATIONERROR']._serialized_end=503
+  _globals['_REGISTRATIONRESPONSE']._serialized_start=506
+  _globals['_REGISTRATIONRESPONSE']._serialized_end=771
+  _globals['_CERTRENEWALREQUEST']._serialized_start=773
+  _globals['_CERTRENEWALREQUEST']._serialized_end=818
+  _globals['_CERTRENEWALRESPONSE']._serialized_start=820
+  _globals['_CERTRENEWALRESPONSE']._serialized_end=918
 # @@protoc_insertion_point(module_scope)

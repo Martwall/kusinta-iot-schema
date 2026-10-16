@@ -69,6 +69,10 @@ class RegistrationRequest extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<RegistrationRequest>(create);
   static RegistrationRequest? _defaultInstance;
 
+  /// The one-time token an administrator of the owning organisation obtained from the
+  /// api-server and handed to the gateway. Opaque to the gateway: it is signed with a key only
+  /// the api-server holds, and the gateway passes it on unread. Nothing the gateway acts on is
+  /// taken from it; what the registration settles comes back in RegistrationComplete.
   @$pb.TagNumber(1)
   $core.String get registrationToken => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -159,10 +163,14 @@ class RegistrationComplete extends $pb.GeneratedMessage {
   factory RegistrationComplete({
     $core.String? certificatePem,
     $core.String? caBundlePem,
+    $core.String? ownershipEpoch,
+    $core.bool? clearSpaceNames,
   }) {
     final result = create();
     if (certificatePem != null) result.certificatePem = certificatePem;
     if (caBundlePem != null) result.caBundlePem = caBundlePem;
+    if (ownershipEpoch != null) result.ownershipEpoch = ownershipEpoch;
+    if (clearSpaceNames != null) result.clearSpaceNames = clearSpaceNames;
     return result;
   }
 
@@ -182,6 +190,8 @@ class RegistrationComplete extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'certificatePem')
     ..aOS(2, _omitFieldNames ? '' : 'caBundlePem')
+    ..aOS(3, _omitFieldNames ? '' : 'ownershipEpoch')
+    ..aOB(4, _omitFieldNames ? '' : 'clearSpaceNames')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -223,6 +233,34 @@ class RegistrationComplete extends $pb.GeneratedMessage {
   $core.bool hasCaBundlePem() => $_has(1);
   @$pb.TagNumber(2)
   void clearCaBundlePem() => $_clearField(2);
+
+  /// The ownership epoch of the gateway's owner record (signaling.v1.GatewayStreamOpened,
+  /// OWNERSHIP EPOCH), from the api-server's answer to the registration the gateway made over
+  /// its own connection to it, which is what makes it trusted. Never empty. An epoch other than
+  /// the one the gateway holds makes it wipe (signaling.v1.GatewayDeleted, WIPE) before it
+  /// installs the certificate or admits any session. A registration again by the owning
+  /// organisation, after a revoke included, answers the epoch the gateway holds and wipes
+  /// nothing.
+  @$pb.TagNumber(3)
+  $core.String get ownershipEpoch => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set ownershipEpoch($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOwnershipEpoch() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOwnershipEpoch() => $_clearField(3);
+
+  /// As signaling.v1.GatewayDeleted.clear_space_names, chosen when the gateway was deleted, for
+  /// the wipe a new epoch makes. Applies only when ownership_epoch is not the one the gateway
+  /// holds.
+  @$pb.TagNumber(4)
+  $core.bool get clearSpaceNames => $_getBF(3);
+  @$pb.TagNumber(4)
+  set clearSpaceNames($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasClearSpaceNames() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearClearSpaceNames() => $_clearField(4);
 }
 
 class RegistrationError extends $pb.GeneratedMessage {

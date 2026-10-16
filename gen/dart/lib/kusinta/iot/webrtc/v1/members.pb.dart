@@ -77,29 +77,24 @@ class ListGatewayMembers extends $pb.GeneratedMessage {
   static ListGatewayMembers? _defaultInstance;
 }
 
-/// Gives a member ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, or takes it away. Answered with
+/// Takes ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN away from a member, at once. Answered with
 /// ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may; any other role named is
-/// INVALID_REQUEST.
+/// INVALID_REQUEST. Granting is a request the person accepts (RequestPromotion), so held set
+/// to true is INVALID_REQUEST and grants nothing.
 ///
 /// user_id is never a residency id (INVALID_REQUEST): the member's entry would then appear
-/// under their user id, named, and tie the residency to them. A resident becomes staff by
-/// an act of their own — redeeming a SERVICE invite (invite.proto) — and is promoted from
-/// the entry that gives.
+/// under their user id, named, and tie the residency to them.
 ///
-/// Granting a role already held, or taking away one not held, changes nothing and is
-/// acknowledged. A caller may take a role away from themselves: the registering
-/// administrator always remains, so the gateway cannot be left without one. Naming
-/// ROLE_GATEWAY_ADMIN for the registering administrator, either way, is refused as
-/// "registering_admin"; ROLE_PROPERTY_OWNER may be given to them and taken away as to
-/// anyone.
-///
-/// Granting either role clears any end to the member's access (MemberDetail.access_until):
-/// a property owner or an administrator is not there for a job.
+/// Taking away a role not held changes nothing and is acknowledged. A caller may take a role
+/// away from themselves: the vouched administrators always remain, so the gateway cannot be
+/// left without an administrator. Naming ROLE_GATEWAY_ADMIN for a vouched administrator is
+/// refused as "vouched_admin"; ROLE_PROPERTY_OWNER is taken away from them as from anyone.
 ///
 /// Taking either role away also ends the pending invites the user created while holding one,
 /// unless they keep the other; invites they created as a resident of a home follow their
 /// residency, as they always do. The join requests those invites made stay, since another
-/// administrator may still answer them. The change reaches the user's open sessions at once.
+/// administrator may still answer them. Taking away ROLE_GATEWAY_ADMIN ends the promotion
+/// requests the user made. The change reaches the user's open sessions at once.
 class SetMemberRole extends $pb.GeneratedMessage {
   factory SetMemberRole({
     $0.UserId? userId,
@@ -177,7 +172,7 @@ class SetMemberRole extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearRole() => $_clearField(2);
 
-  /// true grants the role; false takes it away.
+  /// false takes the role away. true is INVALID_REQUEST: see RequestPromotion.
   @$pb.TagNumber(3)
   $core.bool get held => $_getBF(2);
   @$pb.TagNumber(3)
@@ -186,6 +181,441 @@ class SetMemberRole extends $pb.GeneratedMessage {
   $core.bool hasHeld() => $_has(2);
   @$pb.TagNumber(3)
   void clearHeld() => $_clearField(3);
+}
+
+/// Asks a member to accept ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN. Answered with
+/// ManagementAck once the request is made; the role is granted only when the person asked
+/// accepts it (AnswerPromotion). Only a caller holding ROLE_GATEWAY_ADMIN may; any other role
+/// named is INVALID_REQUEST. The caller may ask themselves, as anyone.
+///
+/// user_id is never a residency id (INVALID_REQUEST), as for SetMemberRole: a resident becomes
+/// staff by an act of their own — redeeming a SERVICE invite (invite.proto) — and is asked from
+/// the entry that gives. A user id the caller is told nothing of under it is "not_a_member".
+/// Naming ROLE_GATEWAY_ADMIN for a vouched administrator is refused as "vouched_admin";
+/// ROLE_PROPERTY_OWNER may be asked of them as of anyone.
+///
+/// Asking for a role the member already holds, or one a pending request already asks of them,
+/// changes nothing and is acknowledged: one request per member and role, whoever asked.
+///
+/// A request is pending for at most 7 days from when it was made (PromotionRequest.expires_at),
+/// and then lapses as if declined. It ends sooner when it is answered, when the member stops
+/// being a member, when they come to hold the role otherwise, and when its asker no longer holds
+/// ROLE_GATEWAY_ADMIN — an outgoing administrator of a transfer included
+/// (signaling.v1.TransferOutcome) — since no administrator then stands behind it.
+///
+/// The app shows the person asked, before they answer, that accepting makes their name and email
+/// address shown to property owners and administrators (MemberDetail.name, MemberDetail.email),
+/// and to residents by name (PrivacyDisclosure).
+class RequestPromotion extends $pb.GeneratedMessage {
+  factory RequestPromotion({
+    $0.UserId? userId,
+    $2.Role? role,
+  }) {
+    final result = create();
+    if (userId != null) result.userId = userId;
+    if (role != null) result.role = role;
+    return result;
+  }
+
+  RequestPromotion._();
+
+  factory RequestPromotion.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RequestPromotion.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RequestPromotion',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'userId',
+        subBuilder: $0.UserId.create)
+    ..e<$2.Role>(2, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.Role.ROLE_UNSPECIFIED,
+        valueOf: $2.Role.valueOf,
+        enumValues: $2.Role.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RequestPromotion clone() => RequestPromotion()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RequestPromotion copyWith(void Function(RequestPromotion) updates) =>
+      super.copyWith((message) => updates(message as RequestPromotion))
+          as RequestPromotion;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RequestPromotion create() => RequestPromotion._();
+  @$core.override
+  RequestPromotion createEmptyInstance() => create();
+  static $pb.PbList<RequestPromotion> createRepeated() =>
+      $pb.PbList<RequestPromotion>();
+  @$core.pragma('dart2js:noInline')
+  static RequestPromotion getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RequestPromotion>(create);
+  static RequestPromotion? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.UserId get userId => $_getN(0);
+  @$pb.TagNumber(1)
+  set userId($0.UserId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.UserId ensureUserId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $2.Role get role => $_getN(1);
+  @$pb.TagNumber(2)
+  set role($2.Role value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRole() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRole() => $_clearField(2);
+}
+
+/// Accepts or declines a promotion request. Answered with ManagementAck. Only the person asked
+/// may, from a session of their own; a request_id that is not pending for the caller — someone
+/// else's, one the caller made of another, unknown, answered or lapsed — is refused as
+/// NOT_ENTITLED, so that no request id can be probed.
+///
+/// Accepting grants the role at once, and clears any end to the person's access
+/// (MemberDetail.access_until): a property owner or an administrator is not there for a job. The
+/// change reaches their open sessions at once. Declining ends the request and grants nothing; the
+/// asker learns only that it is no longer pending.
+class AnswerPromotion extends $pb.GeneratedMessage {
+  factory AnswerPromotion({
+    $core.String? requestId,
+    $core.bool? accept,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (accept != null) result.accept = accept;
+    return result;
+  }
+
+  AnswerPromotion._();
+
+  factory AnswerPromotion.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AnswerPromotion.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AnswerPromotion',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOB(2, _omitFieldNames ? '' : 'accept')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AnswerPromotion clone() => AnswerPromotion()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AnswerPromotion copyWith(void Function(AnswerPromotion) updates) =>
+      super.copyWith((message) => updates(message as AnswerPromotion))
+          as AnswerPromotion;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AnswerPromotion create() => AnswerPromotion._();
+  @$core.override
+  AnswerPromotion createEmptyInstance() => create();
+  static $pb.PbList<AnswerPromotion> createRepeated() =>
+      $pb.PbList<AnswerPromotion>();
+  @$core.pragma('dart2js:noInline')
+  static AnswerPromotion getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AnswerPromotion>(create);
+  static AnswerPromotion? _defaultInstance;
+
+  /// As PromotionRequest.request_id.
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// true accepts; false declines.
+  @$pb.TagNumber(2)
+  $core.bool get accept => $_getBF(1);
+  @$pb.TagNumber(2)
+  set accept($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAccept() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAccept() => $_clearField(2);
+}
+
+/// Lists the pending promotion requests the caller made or was asked to accept, answered with
+/// PromotionRequests. Anyone may ask; nobody is refused. A request is listed to those two people
+/// alone: other administrators do not see it, and nor does anyone else.
+class ListPromotionRequests extends $pb.GeneratedMessage {
+  factory ListPromotionRequests() => create();
+
+  ListPromotionRequests._();
+
+  factory ListPromotionRequests.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListPromotionRequests.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPromotionRequests',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPromotionRequests clone() =>
+      ListPromotionRequests()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPromotionRequests copyWith(
+          void Function(ListPromotionRequests) updates) =>
+      super.copyWith((message) => updates(message as ListPromotionRequests))
+          as ListPromotionRequests;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListPromotionRequests create() => ListPromotionRequests._();
+  @$core.override
+  ListPromotionRequests createEmptyInstance() => create();
+  static $pb.PbList<ListPromotionRequests> createRepeated() =>
+      $pb.PbList<ListPromotionRequests>();
+  @$core.pragma('dart2js:noInline')
+  static ListPromotionRequests getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPromotionRequests>(create);
+  static ListPromotionRequests? _defaultInstance;
+}
+
+/// One pending promotion request, as listed to the person asked or the asker.
+class PromotionRequest extends $pb.GeneratedMessage {
+  factory PromotionRequest({
+    $core.String? requestId,
+    $0.UserId? userId,
+    $2.Role? role,
+    $0.UserId? requestedBy,
+    $core.String? requestedByName,
+    $1.Timestamp? requestedAt,
+    $1.Timestamp? expiresAt,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (userId != null) result.userId = userId;
+    if (role != null) result.role = role;
+    if (requestedBy != null) result.requestedBy = requestedBy;
+    if (requestedByName != null) result.requestedByName = requestedByName;
+    if (requestedAt != null) result.requestedAt = requestedAt;
+    if (expiresAt != null) result.expiresAt = expiresAt;
+    return result;
+  }
+
+  PromotionRequest._();
+
+  factory PromotionRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PromotionRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PromotionRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOM<$0.UserId>(2, _omitFieldNames ? '' : 'userId',
+        subBuilder: $0.UserId.create)
+    ..e<$2.Role>(3, _omitFieldNames ? '' : 'role', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.Role.ROLE_UNSPECIFIED,
+        valueOf: $2.Role.valueOf,
+        enumValues: $2.Role.values)
+    ..aOM<$0.UserId>(4, _omitFieldNames ? '' : 'requestedBy',
+        subBuilder: $0.UserId.create)
+    ..aOS(5, _omitFieldNames ? '' : 'requestedByName')
+    ..aOM<$1.Timestamp>(6, _omitFieldNames ? '' : 'requestedAt',
+        subBuilder: $1.Timestamp.create)
+    ..aOM<$1.Timestamp>(7, _omitFieldNames ? '' : 'expiresAt',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PromotionRequest clone() => PromotionRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PromotionRequest copyWith(void Function(PromotionRequest) updates) =>
+      super.copyWith((message) => updates(message as PromotionRequest))
+          as PromotionRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PromotionRequest create() => PromotionRequest._();
+  @$core.override
+  PromotionRequest createEmptyInstance() => create();
+  static $pb.PbList<PromotionRequest> createRepeated() =>
+      $pb.PbList<PromotionRequest>();
+  @$core.pragma('dart2js:noInline')
+  static PromotionRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PromotionRequest>(create);
+  static PromotionRequest? _defaultInstance;
+
+  /// Minted by the gateway, opaque.
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// The person asked.
+  @$pb.TagNumber(2)
+  $0.UserId get userId => $_getN(1);
+  @$pb.TagNumber(2)
+  set userId($0.UserId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserId() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.UserId ensureUserId() => $_ensure(1);
+
+  /// ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN.
+  @$pb.TagNumber(3)
+  $2.Role get role => $_getN(2);
+  @$pb.TagNumber(3)
+  set role($2.Role value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRole() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRole() => $_clearField(3);
+
+  /// Who asked, and the name they gave their account (AppTokenClaims.name) as the gateway last
+  /// learnt it, so the person asked knows who asks; empty when none is learnt. Self-chosen, as
+  /// MemberDetail.name is.
+  @$pb.TagNumber(4)
+  $0.UserId get requestedBy => $_getN(3);
+  @$pb.TagNumber(4)
+  set requestedBy($0.UserId value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRequestedBy() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRequestedBy() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.UserId ensureRequestedBy() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  $core.String get requestedByName => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set requestedByName($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRequestedByName() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRequestedByName() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $1.Timestamp get requestedAt => $_getN(5);
+  @$pb.TagNumber(6)
+  set requestedAt($1.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRequestedAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRequestedAt() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $1.Timestamp ensureRequestedAt() => $_ensure(5);
+
+  /// When the request lapses unanswered: 7 days after requested_at.
+  @$pb.TagNumber(7)
+  $1.Timestamp get expiresAt => $_getN(6);
+  @$pb.TagNumber(7)
+  set expiresAt($1.Timestamp value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasExpiresAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearExpiresAt() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $1.Timestamp ensureExpiresAt() => $_ensure(6);
+}
+
+/// The pending promotion requests a session's user made or was asked to accept.
+///
+/// The answer to ListPromotionRequests, and pushed as GatewayMessage.promotion_requests to every
+/// session of the person asked and of the asker whenever a request they are listed changes — made,
+/// answered, lapsed or ended — so the person asked sees a request without reloading. A push always
+/// carries the whole list, as ListPromotionRequests would list it to that session.
+class PromotionRequests extends $pb.GeneratedMessage {
+  factory PromotionRequests({
+    $core.Iterable<PromotionRequest>? requests,
+  }) {
+    final result = create();
+    if (requests != null) result.requests.addAll(requests);
+    return result;
+  }
+
+  PromotionRequests._();
+
+  factory PromotionRequests.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PromotionRequests.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PromotionRequests',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<PromotionRequest>(
+        1, _omitFieldNames ? '' : 'requests', $pb.PbFieldType.PM,
+        subBuilder: PromotionRequest.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PromotionRequests clone() => PromotionRequests()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PromotionRequests copyWith(void Function(PromotionRequests) updates) =>
+      super.copyWith((message) => updates(message as PromotionRequests))
+          as PromotionRequests;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PromotionRequests create() => PromotionRequests._();
+  @$core.override
+  PromotionRequests createEmptyInstance() => create();
+  static $pb.PbList<PromotionRequests> createRepeated() =>
+      $pb.PbList<PromotionRequests>();
+  @$core.pragma('dart2js:noInline')
+  static PromotionRequests getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PromotionRequests>(create);
+  static PromotionRequests? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<PromotionRequest> get requests => $_getList(0);
 }
 
 /// Removes a member from the gateway in one step: every membership they hold, every role the
@@ -199,10 +629,10 @@ class SetMemberRole extends $pb.GeneratedMessage {
 /// then stays a member, a resident of it. By a residency id, it ends that residency alone, as
 /// RemoveUserFromSpace would, with the invites the holder made as its resident.
 ///
-/// A caller holding ROLE_GATEWAY_ADMIN may remove anyone but the registering administrator
-/// ("registering_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
+/// A caller holding ROLE_GATEWAY_ADMIN may remove anyone but a vouched administrator
+/// ("vouched_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
 /// may remove only a member who holds neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN;
-/// anyone else, the registering administrator included, is refused NOT_ENTITLED. A residency
+/// anyone else, a vouched administrator included, is refused NOT_ENTITLED. A residency
 /// id is never refused for its holder's roles, since it tells none.
 class RemoveFromGateway extends $pb.GeneratedMessage {
   factory RemoveFromGateway({
@@ -351,9 +781,10 @@ class SetAccessUntil extends $pb.GeneratedMessage {
   $1.Timestamp ensureAccessUntil() => $_ensure(1);
 }
 
-/// Records the organisation that owns the property, or clears it when unset or when both
-/// fields are empty. An organisation number without a name is INVALID_REQUEST. Answered with
-/// ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may.
+/// Superseded: the organisation that owns the property is the one that owns the gateway, and its
+/// name comes with the vouched set (signaling.v1.VouchedAdministrators.organisation_name). A
+/// gateway refuses this request as INVALID_REQUEST, whoever asks, and records nothing from it, so
+/// that no one believes they set the name. Kept so that an older app's request still decodes.
 class SetOwnerOrganisation extends $pb.GeneratedMessage {
   factory SetOwnerOrganisation({
     OwnerOrganisation? organisation,
@@ -415,11 +846,13 @@ class SetOwnerOrganisation extends $pb.GeneratedMessage {
   OwnerOrganisation ensureOrganisation() => $_ensure(0);
 }
 
-/// The organisation that owns the property. The people who act for it each hold
-/// ROLE_PROPERTY_OWNER themselves; this only says whom they act for.
+/// The organisation that owns the property: the one that owns the gateway. The people who act
+/// for it in the building each hold ROLE_PROPERTY_OWNER themselves; this only says whom they
+/// act for.
 class OwnerOrganisation extends $pb.GeneratedMessage {
   factory OwnerOrganisation({
     $core.String? name,
+    @$core.Deprecated('This field is deprecated.')
     $core.String? organisationNumber,
   }) {
     final result = create();
@@ -468,6 +901,7 @@ class OwnerOrganisation extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<OwnerOrganisation>(create);
   static OwnerOrganisation? _defaultInstance;
 
+  /// As the vouched set gives it (signaling.v1.VouchedAdministrators.organisation_name).
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -477,15 +911,18 @@ class OwnerOrganisation extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearName() => $_clearField(1);
 
-  /// As the organisation's national register gives it; the gateway does not check it. For a
-  /// sole trader it can be a personal identity number, so it is shown only where
-  /// GatewayMembers is, never to residents (PrivacyDisclosure carries the name alone).
+  /// Always empty: the api-server never gives the gateway an organisation number, and the
+  /// gateway keeps none. Once read from SetOwnerOrganisation, which is superseded.
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   $core.String get organisationNumber => $_getSZ(1);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   set organisationNumber($core.String value) => $_setString(1, value);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   $core.bool hasOrganisationNumber() => $_has(1);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(2)
   void clearOrganisationNumber() => $_clearField(2);
 }
@@ -546,7 +983,7 @@ class GatewayMembers extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $pb.PbList<MemberDetail> get members => $_getList(0);
 
-  /// Unset when none is recorded.
+  /// The owning organisation, by name. Unset while the gateway holds no vouched set.
   @$pb.TagNumber(2)
   OwnerOrganisation get ownerOrganisation => $_getN(1);
   @$pb.TagNumber(2)
@@ -568,8 +1005,9 @@ class MemberDetail extends $pb.GeneratedMessage {
     $core.Iterable<$2.Role>? roles,
     $core.Iterable<MemberSpace>? memberships,
     $1.Timestamp? accessUntil,
-    $core.bool? registeringAdmin,
+    @$core.Deprecated('This field is deprecated.') $core.bool? registeringAdmin,
     $core.String? email,
+    $core.bool? vouchedAdmin,
   }) {
     final result = create();
     if (userId != null) result.userId = userId;
@@ -579,6 +1017,7 @@ class MemberDetail extends $pb.GeneratedMessage {
     if (accessUntil != null) result.accessUntil = accessUntil;
     if (registeringAdmin != null) result.registeringAdmin = registeringAdmin;
     if (email != null) result.email = email;
+    if (vouchedAdmin != null) result.vouchedAdmin = vouchedAdmin;
     return result;
   }
 
@@ -610,6 +1049,7 @@ class MemberDetail extends $pb.GeneratedMessage {
         subBuilder: $1.Timestamp.create)
     ..aOB(6, _omitFieldNames ? '' : 'registeringAdmin')
     ..aOS(7, _omitFieldNames ? '' : 'email')
+    ..aOB(8, _omitFieldNames ? '' : 'vouchedAdmin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -660,7 +1100,7 @@ class MemberDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearName() => $_clearField(2);
 
-  /// Every role they hold here, the registering administrator's ROLE_GATEWAY_ADMIN included,
+  /// Every role they hold here, a vouched administrator's ROLE_GATEWAY_ADMIN included,
   /// each once — save that ROLE_RESIDENT is left out of every entry but the caller's own,
   /// since it would say they live in the building. None on a residency's entry.
   @$pb.TagNumber(3)
@@ -684,15 +1124,18 @@ class MemberDetail extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $1.Timestamp ensureAccessUntil() => $_ensure(4);
 
-  /// Whether they are the administrator who registered the gateway, as the gateway last saw
-  /// from a token. Grants nothing on its own; it says that their ROLE_GATEWAY_ADMIN cannot be
-  /// changed here and that RemoveFromGateway will refuse them.
+  /// Set exactly as vouched_admin, for readers older than it; a reader that knows vouched_admin
+  /// reads that instead. To be reserved once no reader needs it.
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   $core.bool get registeringAdmin => $_getBF(5);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   set registeringAdmin($core.bool value) => $_setBool(5, value);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   $core.bool hasRegisteringAdmin() => $_has(5);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   void clearRegisteringAdmin() => $_clearField(6);
 
@@ -708,6 +1151,20 @@ class MemberDetail extends $pb.GeneratedMessage {
   $core.bool hasEmail() => $_has(6);
   @$pb.TagNumber(7)
   void clearEmail() => $_clearField(7);
+
+  /// Whether they are a vouched administrator: named in the vouched set the gateway holds
+  /// (signaling.v1.VouchedAdministrators), whether or not the gateway has seen them connect. Grants
+  /// nothing on its own; it says that their ROLE_GATEWAY_ADMIN cannot be changed here and that
+  /// RemoveFromGateway will refuse them. Their name and email address are empty until the gateway
+  /// learns them from their own token.
+  @$pb.TagNumber(8)
+  $core.bool get vouchedAdmin => $_getBF(7);
+  @$pb.TagNumber(8)
+  set vouchedAdmin($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasVouchedAdmin() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearVouchedAdmin() => $_clearField(8);
 }
 
 /// One space a member is filed on, and how they stand to it.

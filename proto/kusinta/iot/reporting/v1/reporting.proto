@@ -471,8 +471,9 @@ message ReportProblemsResponse {
 //
 // The administration of the gateway is not reported here; the administrator's own service
 // memberships, if any, are, like anyone's. The api-server records who administers a gateway
-// itself, and from when, and gives the administrator every space the gateway serves
-// from that moment, applying a change of administrator at once. A problem with no space the
+// itself — the administrators of the organisation that owns it — and from when, and gives each
+// administrator every space the gateway serves from that moment, applying a change of
+// administrator, or of owning organisation, at once. A problem with no space the
 // api-server holds — a device filed nowhere, a space not yet held or since removed — is shown
 // only to the administrator. A problem about a connector or the gateway itself concerns no
 // one's home, and is shown to the administrator and every member with any reach.
@@ -600,20 +601,25 @@ message ReportServedSpacesResponse {
 // person connect and leaving is what revokes them. Roles do not follow relations
 // (access.v1.MembershipRelation): a relation changing alone changes nothing reported here.
 //
-// Who registered the gateway is the api-server's own record, not the gateway's. The
-// administration that came with registering it is never taken away by this report — not by
-// its absence from a snapshot, not by removed_user_ids — and ends only with a change of who
-// is registered as the gateway's administrator at the api-server. Any other administrator is
-// a member reported with ROLE_GATEWAY_ADMIN, whom the api-server gives what it gives the
-// registering one, from administrator_since (see ServiceReach). Where the registering
-// administrator is also reported so, the api-server's record governs: their administration
-// counts from the earlier of its own start and administrator_since.
+// Which organisation owns the gateway, and who its administrators are, is the api-server's own
+// record, not the gateway's. The administration that comes with them is never taken away by this
+// report — not by absence from a snapshot, not by removed_user_ids — and ends only when the
+// person stops being an administrator of the owning organisation, or the gateway moves to
+// another (signaling.v1.TransferOutcome). Any other administrator is a member reported with
+// ROLE_GATEWAY_ADMIN, whom the api-server gives what it gives the organisation's, from
+// administrator_since (see ServiceReach). Where an administrator of the organisation is also
+// reported so, the api-server's record governs: their administration counts from the earlier of
+// its own start and administrator_since. The api-server's own start for an organisation's
+// administrator is never before the gateway came to that organisation, so a new owner learns
+// nothing from before a transfer.
 //
-// A member here is a user the gateway holds a membership or a role for, and no one else. The
-// registering administrator is reported only when the gateway holds one of those for them —
-// a membership, or ROLE_PROPERTY_OWNER they were given — and never with the
-// ROLE_GATEWAY_ADMIN their token carries. That the gateway recognises them otherwise
-// (webrtc.v1.MemberDetail.registering_admin) does not make them a member of this report.
+// A member here is a user the gateway holds a membership or a role for, and no one else. A
+// vouched administrator (signaling.v1.VouchedAdministrators) is reported only when the gateway
+// holds one of those for them — a membership, or ROLE_PROPERTY_OWNER they were given — and
+// never with the ROLE_GATEWAY_ADMIN the vouched set and their token give. That the gateway
+// lists them otherwise (webrtc.v1.MemberDetail.vouched_admin) does not make them a member of
+// this report. After a wipe (signaling.v1.GatewayDeleted, WIPE) the gateway reports a snapshot
+// with no members.
 message GatewayMember {
   // As the token issuer mints it: the sub of the member's token.
   kusinta.iot.identity.v1.UserId user_id = 1;

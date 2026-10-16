@@ -14,6 +14,7 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+import '../../../../google/protobuf/timestamp.pbjson.dart' as $2;
 import '../../identity/v1/identity.pbjson.dart' as $1;
 import 'signaling.pbjson.dart' as $0;
 
@@ -59,10 +60,23 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.signaling.v1.IceCandidate': $0.IceCandidate$json,
   '.kusinta.iot.signaling.v1.HeartBeat': $0.HeartBeat$json,
   '.kusinta.iot.signaling.v1.RedeemInviteResult': $0.RedeemInviteResult$json,
+  '.kusinta.iot.signaling.v1.VouchedAdministratorsApplied':
+      $0.VouchedAdministratorsApplied$json,
+  '.kusinta.iot.signaling.v1.TransferOutcomeApplied':
+      $0.TransferOutcomeApplied$json,
+  '.kusinta.iot.signaling.v1.GatewayWiped': $0.GatewayWiped$json,
+  '.kusinta.iot.signaling.v1.PairingsLeftBehind': $0.PairingsLeftBehind$json,
   '.kusinta.iot.signaling.v1.GatewayConnectResponse':
       $0.GatewayConnectResponse$json,
   '.kusinta.iot.signaling.v1.SdpOffer': $0.SdpOffer$json,
   '.kusinta.iot.signaling.v1.RedeemInvite': $0.RedeemInvite$json,
+  '.kusinta.iot.signaling.v1.VouchedAdministrators':
+      $0.VouchedAdministrators$json,
+  '.google.protobuf.Timestamp': $2.Timestamp$json,
+  '.kusinta.iot.signaling.v1.TransferOutcome': $0.TransferOutcome$json,
+  '.kusinta.iot.signaling.v1.OutgoingChoice': $0.OutgoingChoice$json,
+  '.kusinta.iot.signaling.v1.GatewayStreamOpened': $0.GatewayStreamOpened$json,
+  '.kusinta.iot.signaling.v1.GatewayDeleted': $0.GatewayDeleted$json,
   '.kusinta.iot.signaling.v1.UserConnectRequest': $0.UserConnectRequest$json,
   '.kusinta.iot.signaling.v1.UserHandshake': $0.UserHandshake$json,
   '.kusinta.iot.identity.v1.GatewayId': $1.GatewayId$json,
