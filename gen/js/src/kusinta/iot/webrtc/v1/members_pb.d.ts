@@ -19,13 +19,16 @@ export declare const file_kusinta_iot_webrtc_v1_members: GenFile;
  * NOT_ENTITLED.
  *
  * Those two roles answer for the whole property, and a resident who moves out is removed by
- * them (RemoveFromGateway), so every member is listed to them. Each is told apart as the rule
- * for staff allows (access.v1.Role, STAFF):
- *   * a resident by their memberships — the homes they live in, and since when
- *     (MemberSpace.since) — never by name or address;
- *   * staff by name and email address (MemberDetail.name, MemberDetail.email), and by their
- *     memberships save where they live: a staff member's residency is left out of every
- *     entry but the caller's own, since a residency is told only to its household.
+ * them (RemoveUserFromSpace or RemoveFromGateway), so every member is listed to them, as the
+ * rule for staff allows (access.v1.Role, STAFF):
+ *   * every residency as an entry of its own, under its residency id: the one RESIDENT
+ *     membership and since when (MemberSpace.since), with no name, no email and no roles;
+ *   * every user under their user id, while they hold a role or a membership other than a
+ *     residency: their roles save ROLE_RESIDENT, and those other memberships. Staff are
+ *     given by name and email address (MemberDetail.name, MemberDetail.email); anyone else
+ *     by neither;
+ *   * the caller themselves as one entry under their user id, with everything they hold.
+ * So becoming staff, or stopping, changes a user's entry and never a residency's.
  * Seeing into a home's life — its devices, readings and history — still takes filing on it.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListGatewayMembers
@@ -43,6 +46,9 @@ export declare const ListGatewayMembersSchema: GenMessage<ListGatewayMembers>;
  * Gives a member ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, or takes it away. Answered with
  * ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may; any other role named is
  * INVALID_REQUEST.
+ *
+ * user_id may be a residency id: the role is then the holder's, as a deliberate act on the
+ * resident the caller chose, and the residency keeps its id and its entry.
  *
  * Granting a role already held, or taking away one not held, changes nothing and is
  * acknowledged. A caller may take a role away from themselves: the registering
@@ -87,16 +93,22 @@ export declare type SetMemberRole = Message<"kusinta.iot.webrtc.v1.SetMemberRole
 export declare const SetMemberRoleSchema: GenMessage<SetMemberRole>;
 
 /**
- * Removes a member from the whole gateway in one step: every membership they hold, every
- * role the gateway holds for them, every pending invite they created and every join request
- * of their own. Answered with ManagementAck. Their open sessions end, and the api-server drops
- * them from the gateway. Join requests made through their invites end where those were
- * invites a resident made, as when a residency ends, and stay otherwise.
+ * Removes a member from the gateway in one step: every membership they hold, every role the
+ * gateway holds for them, every pending invite they created and every join request of their
+ * own. Answered with ManagementAck. Their open sessions end, and the api-server drops them
+ * from the gateway. Join requests made through their invites end where those were invites
+ * a resident made, as when a residency ends, and stay otherwise.
+ *
+ * What a caller is not told of under the id given stays: by a user id, a caller who does not
+ * live in a home they hold leaves that residency in place, and ends only the rest; the user
+ * then stays a member, a resident of it. By a residency id, it ends that residency alone, as
+ * RemoveUserFromSpace would, with the invites the holder made as its resident.
  *
  * A caller holding ROLE_GATEWAY_ADMIN may remove anyone but the registering administrator
  * ("registering_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
  * may remove only a member who holds neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN;
- * anyone else, the registering administrator included, is refused NOT_ENTITLED.
+ * anyone else, the registering administrator included, is refused NOT_ENTITLED. A residency
+ * id is never refused for its holder's roles, since it tells none.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveFromGateway
  */
@@ -116,8 +128,9 @@ export declare const RemoveFromGatewaySchema: GenMessage<RemoveFromGateway>;
 /**
  * Sets, moves or clears when a technician's access ends. Answered with ManagementAck. A
  * caller holding ROLE_GATEWAY_ADMIN or ROLE_PROPERTY_OWNER may. Only for a member holding
- * ROLE_TECHNICIAN and no other role but ROLE_RESIDENT ("not_a_technician" otherwise): an end
- * date never reaches a property owner or an administrator.
+ * ROLE_TECHNICIAN and no other role but ROLE_RESIDENT ("not_a_technician" otherwise, and for a
+ * residency id, which names no technician): an end date never reaches a property owner or
+ * an administrator.
  *
  * access_until is the instant the access ends; a time not after now is INVALID_REQUEST. The
  * app chooses it, typically the end of a chosen day where the building is. Within a quarter
@@ -221,12 +234,15 @@ export declare type GatewayMembers = Message<"kusinta.iot.webrtc.v1.GatewayMembe
 export declare const GatewayMembersSchema: GenMessage<GatewayMembers>;
 
 /**
- * One member, as an administrator or a property owner sees them.
+ * One member, as an administrator or a property owner sees them: a user, or a residency
+ * (ListGatewayMembers).
  *
  * @generated from message kusinta.iot.webrtc.v1.MemberDetail
  */
 export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail"> & {
   /**
+   * The user's id, or on a residency's entry its residency id.
+   *
    * @generated from field: kusinta.iot.identity.v1.UserId user_id = 1;
    */
   userId?: UserId | undefined;
@@ -235,8 +251,8 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
    * The name they gave their account, as the gateway last learnt it: from AppTokenClaims.name
    * when they connect, or from signaling.v1.RedeemInvite.display_name when they redeem with
    * none learnt yet. Self-chosen, so the app shows it as such. Given only for a member who is
-   * staff (access.v1.Role, STAFF), and on the caller's own entry; empty for every other
-   * resident, and when none is learnt. The gateway keeps it only while they are a member,
+   * staff (access.v1.Role, STAFF), and on the caller's own entry; empty for anyone else, on
+   * every residency's entry, and when none is learnt. The gateway keeps it only while they are a member,
    * and drops it when they stop being one.
    *
    * @generated from field: string name = 2;
@@ -245,16 +261,17 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
 
   /**
    * Every role they hold here, the registering administrator's ROLE_GATEWAY_ADMIN included,
-   * each once — save that a staff member's ROLE_RESIDENT is left out of every entry but the
-   * caller's own, since it would say they live in the building.
+   * each once — save that ROLE_RESIDENT is left out of every entry but the caller's own,
+   * since it would say they live in the building. None on a residency's entry.
    *
    * @generated from field: repeated kusinta.iot.access.v1.Role roles = 3;
    */
   roles: Role[];
 
   /**
-   * Every space they are filed on, save that a staff member's RESIDENT memberships are left
-   * out of every entry but the caller's own. A member with none left is still listed.
+   * Every space they are filed on but where they live, which is listed under each
+   * residency's id; on the caller's own entry, every one. On a residency's entry, that
+   * residency alone.
    *
    * @generated from field: repeated kusinta.iot.webrtc.v1.MemberSpace memberships = 4;
    */
@@ -278,8 +295,8 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
 
   /**
    * Their verified email address, as AppTokenClaims.email last gave it, so that staff who
-   * gave the same name can be told apart. Given only for a member who is staff; empty for a
-   * resident, and when none is learnt. The gateway keeps it only while they hold a staff
+   * gave the same name can be told apart. Given only for a member who is staff; empty for
+   * anyone else, on every residency's entry, and when none is learnt. The gateway keeps it only while they hold a staff
    * role.
    *
    * @generated from field: string email = 7;
