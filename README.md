@@ -266,8 +266,12 @@ gateway mints a link token and a short code for each invite and keeps only their
 an invite is Resident (a home only) or Technician, never an administrator or property
 owner. The app redeems a secret through the api-server, which routes it to the one gateway
 reporting that hash (`ReportInviteRoutes`) as a `RedeemInvite` on the signaling stream. An
-invite bound to an email address files its verified owner at once; any other makes a join
-request that someone who may file there approves. A Technician invite may carry an end date
+invite bound to an email address files its verified owner at once. A home key — a Resident
+invite with no address, made by a property owner or administrator — files whoever redeems it
+at once and its secrets live shorter. A household invite, made by a resident, makes a join
+request listed to and approved by that household alone; a Technician invite with no address
+makes one that someone who may file there approves. `Invite.admission` says which, so the app
+can tell the person what redeeming will do. A Technician invite may carry an end date
 (`access_until`), which its join request carries too, so the approver sees it.
 
 ## Members
@@ -277,11 +281,15 @@ are on the gateway: list them (`ListGatewayMembers`), make one a property owner 
 or take that away (`SetMemberRole`, promotion only, never by invite), remove one from every
 space at once (`RemoveFromGateway`), move a technician's end date (`SetAccessUntil`) and
 record the organisation that owns the property (`SetOwnerOrganisation`). An end date only
-ever takes away a technician's role and service memberships. A resident's
+ever takes away a technician's role and service memberships. Staff — technicians, property
+owners and administrators — are listed by name and verified email (`AppTokenClaims.email`);
+residents by their homes and since when (`MemberSpace.since`), never by name, and a staff
+member's own residency is told only to their household. A resident's
 `PrivacyDisclosure` names the people counted under each role, by the name they gave
 (`AppTokenClaims.name`), without saying where anyone lives; a technician asking gets the
 kinds of party alone. The residents of a home see the people they live with by name too
-(`SpaceMember.name`), and no one else sees a resident's name. The roles a session holds come
+(`SpaceMember.name`), and no one else sees a resident's name; owners and administrators see
+staff there by name. The roles a session holds come
 with its snapshot and every `LivePermissionUpdate` (`SessionRoles`), so a promotion or
 demotion reaches an open app at once.
 
