@@ -85,7 +85,8 @@ class WipeScope extends $pb.ProtobufEnum {
   /// Out of the box, for a gateway that is to be used anywhere else: everything the gateway holds
   /// goes — what a wipe of people and history takes and also the building's setup, the gateway's
   /// certificates, keys and registration, connector configuration, the readings connectors store
-  /// on the gateway, and its logs. What is held in other hardware is not reached: devices paired
+  /// on the gateway, and the log files it keeps itself (not the host's system log: see WIPE, Logs).
+  /// What is held in other hardware is not reached: devices paired
   /// to a radio central the gateway drives stay paired there until that is reset too, and the
   /// gateway says so (GatewayWiped.left_behind).
   ///

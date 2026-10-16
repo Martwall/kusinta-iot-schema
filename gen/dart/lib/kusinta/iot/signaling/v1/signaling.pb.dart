@@ -1199,8 +1199,14 @@ class GatewayStreamOpened extends $pb.GeneratedMessage {
 /// request; every name and email address; the vouched administrators and their version; every end
 /// of access; every device's ownership, an owned device staying filed where it is, released, as
 /// one of the building's own; every contact; and everything recorded per home — room history,
-/// climate summaries, events, targets, modes and routines. Every open session ends, and none is
-/// admitted until the wipe is done.
+/// climate summaries, events, targets, modes and routines — including what is still queued for the
+/// api-server about any of them, and the gateway's own records of who did what. Every open session
+/// ends, and none is admitted until the wipe is done.
+///
+/// Logs. A wipe takes what the gateway itself keeps; the operating system's log of the host it
+/// runs on is not the gateway's to erase, and what it holds stays until the host's own retention
+/// drops it. A gateway SHOULD NOT write user ids or names to that log in normal operation, so that
+/// nothing about people outlives a wipe there.
 ///
 /// It always renames every space too, since a name can name a person ("Ilse's room"): each gets a
 /// generic name, its type and its number among the spaces of that type under the same parent,
