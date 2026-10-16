@@ -245,7 +245,8 @@ export declare type MemberDetail = Message<"kusinta.iot.webrtc.v1.MemberDetail">
 
   /**
    * Every role they hold here, the registering administrator's ROLE_GATEWAY_ADMIN included,
-   * each once.
+   * each once — save that a staff member's ROLE_RESIDENT is left out of every entry but the
+   * caller's own, since it would say they live in the building.
    *
    * @generated from field: repeated kusinta.iot.access.v1.Role roles = 3;
    */

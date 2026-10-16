@@ -644,7 +644,8 @@ class MemberDetail extends $pb.GeneratedMessage {
   void clearName() => $_clearField(2);
 
   /// Every role they hold here, the registering administrator's ROLE_GATEWAY_ADMIN included,
-  /// each once.
+  /// each once — save that a staff member's ROLE_RESIDENT is left out of every entry but the
+  /// caller's own, since it would say they live in the building.
   @$pb.TagNumber(3)
   $pb.PbList<$2.Role> get roles => $_getList(2);
 

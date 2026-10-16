@@ -59,7 +59,9 @@ export declare type CreateInvite = Message<"kusinta.iot.webrtc.v1.CreateInvite">
    *
    * One pending invite per space and address: a second for the same address on the same
    * space is refused as FAILED_PRECONDITION with metadata {"reason": "already_invited",
-   * "invite_id": <the pending one>}, so the app can offer to resend that one instead.
+   * "invite_id": <the pending one>}, so the app can offer to resend that one instead. A
+   * household invite and one made by a property owner or an administrator are counted
+   * apart, so the refusal never names an invite the caller is not shown (ListSpaceInvites).
    *
    * The gateway keeps the address only while the invite is pending, and drops it once the
    * invite is redeemed, revoked or expired.
