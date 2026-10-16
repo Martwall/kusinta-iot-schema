@@ -113,10 +113,11 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
    *     hold it, and who, without saying where anyone lives;
    *   * anyone else sees none, residents of a building or floor included.
    *
-   * Whoever it is listed to, a member who is staff (access.v1.Role, STAFF) and lives in a
-   * home has that RESIDENT membership left out for every caller who does not live in that
-   * home, a property owner and an administrator included: a staff member's residency is
-   * told only to its household. Their SERVICE memberships are listed as any member's.
+   * To a caller who does not live in the home, a RESIDENT member is listed under the
+   * residency's id (access.v1.MembershipRelation, RESIDENCY IDS) and never by name, so that
+   * a home's residents are told apart from one another and from anyone's other memberships
+   * without saying who they are. The people of the home see one another under their user
+   * ids.
    *
    * @generated from field: repeated kusinta.iot.space.v1.SpaceMember members = 13;
    */
@@ -144,6 +145,9 @@ export declare const SpaceSchema: GenMessage<Space>;
  */
 export declare type SpaceMember = Message<"kusinta.iot.space.v1.SpaceMember"> & {
   /**
+   * The member's user id, or for a RESIDENT member listed to a caller who does not live in
+   * the home, the residency's id (Space.members).
+   *
    * @generated from field: kusinta.iot.identity.v1.UserId user_id = 1;
    */
   userId?: UserId | undefined;

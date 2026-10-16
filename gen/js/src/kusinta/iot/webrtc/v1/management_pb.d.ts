@@ -198,9 +198,10 @@ export declare const DeleteSpaceSchema: GenMessage<DeleteSpace>;
  * Who may change who belongs to a home is restricted by the gateway; a caller not allowed is
  * refused as NOT_ENTITLED. Residents see who is filed on their home in Space.members.
  *
- * A membership the caller is not told of (a staff member's residency, to anyone outside
- * its household: access.v1.Role, STAFF) is never changed by them: assigning onto it is
- * refused as NOT_ENTITLED, and RemoveUserFromSpace answers as for one that does not exist.
+ * A membership the caller is not told of under this user id (a residency, to anyone outside
+ * its household: access.v1.MembershipRelation, RESIDENCY IDS) is never changed through it:
+ * assigning onto it is refused as NOT_ENTITLED, and RemoveUserFromSpace answers as for one
+ * that does not exist. user_id is never a residency id.
  *
  * @generated from message kusinta.iot.webrtc.v1.AssignUserToSpace
  */
@@ -236,7 +237,13 @@ export declare const AssignUserToSpaceSchema: GenMessage<AssignUserToSpace>;
  * user was streaming from it, announced by LivePermissionUpdate.
  *
  * Removing someone else from a home is guarded as assigning is. A membership the caller is
- * not told of (see AssignUserToSpace) is answered as one that does not exist, and stays.
+ * not told of under the user id given (see AssignUserToSpace) is answered as one that does
+ * not exist, and stays.
+ *
+ * user_id may be a residency id (access.v1.MembershipRelation, RESIDENCY IDS): it then ends
+ * that residency, if space_id is its home, and answers as for one that does not exist
+ * otherwise. This is how a property owner or an administrator ends the residency of
+ * someone who moved out.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveUserFromSpace
  */

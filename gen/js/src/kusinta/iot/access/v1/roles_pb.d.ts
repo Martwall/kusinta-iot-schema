@@ -43,8 +43,9 @@ export declare const file_kusinta_iot_access_v1_roles: GenFile;
  * schema says "staff" or "a staff member" it means exactly that, as the gateway holds roles,
  * the registering administrator included; holding ROLE_RESIDENT besides changes nothing. The
  * term carries one rule about people: staff are named to whoever may list every member; a
- * resident is named only to the people they live with; and where anyone lives is told only
- * to their own household.
+ * resident is named only to the people they live with; and where anyone lives is told by
+ * user id only to their own household, and to anyone else only under a residency id
+ * (MembershipRelation, RESIDENCY IDS).
  *
  * @generated from enum kusinta.iot.access.v1.Role
  */
@@ -245,9 +246,19 @@ export declare const PermissionActionSchema: GenEnum<PermissionAction>;
  * property owner or the administrator out by force — they hold the building's filing
  * authority and the gateway itself — but it makes their seeing in a deliberate act on the
  * home, such as filing themselves on it, rather than something handed out by default. They
- * remove a resident who moves out, so they are shown each resident's homes, and since when
- * (webrtc.v1.ListGatewayMembers), but never a resident's name; and a staff member's own
- * residency is told only to the household they live in (see Role, STAFF).
+ * remove a resident who moves out, so they are shown every residency, and since when
+ * (webrtc.v1.ListGatewayMembers), but never who holds it (see RESIDENCY IDS).
+ *
+ * RESIDENCY IDS. To a caller who does not live in the home, a RESIDENT membership is told
+ * only under its residency id: an id the gateway mints for that residency alone, when it
+ * begins, holds for as long as it lasts unbroken, and never reuses. It is opaque, begins
+ * with "residency:", and is never a user's id or derived from one, so nothing told under it
+ * ties the residency to a name, a role or another membership — and nothing changes it when
+ * the person who holds it becomes staff or stops being staff (Role, STAFF). A relation
+ * change, or the residency ending, ends its id. The people of the home see one another
+ * under their user ids. Where a request below names a member, it says whether a residency
+ * id may stand for one; a request that does not say so refuses one as INVALID_REQUEST, so
+ * that no user is ever made under one.
  *
  * A membership recorded with no relation, made before relations existed, sees no more than
  * either relation would where it is held: on an apartment or a room, a home as service; on a
