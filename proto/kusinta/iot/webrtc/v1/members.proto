@@ -34,7 +34,12 @@ option optimize_for = SPEED;
 //      says nothing of who is a member;
 //   2. the request itself: INVALID_REQUEST where a request below says so;
 //   3. the user named, as a GatewayError whose metadata "reason" says which:
-//        "not_a_member"       FAILED_PRECONDITION. The user named is not a member.
+//        "not_a_member"       FAILED_PRECONDITION. The user named is not a member — or,
+//                             named by user id, is one the caller is told nothing of
+//                             under that id: no entry under it in ListGatewayMembers as
+//                             listed to this caller. Their residencies are reached by
+//                             residency id alone, so a user id learnt elsewhere confirms
+//                             nothing and makes no one staff.
 //        "registering_admin"  FAILED_PRECONDITION. The request would change the
 //                             administration of the registering administrator, which
 //                             comes from their token and cannot be changed on the gateway.
