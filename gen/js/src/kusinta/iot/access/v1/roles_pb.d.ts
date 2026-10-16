@@ -38,6 +38,14 @@ export declare const file_kusinta_iot_access_v1_roles: GenFile;
  * gateway-wide role alone would not grant. That widening is the gateway's to apply and is
  * visible to the app only in the resolved DeviceAcl.
  *
+ * STAFF. A user who holds ROLE_TECHNICIAN, ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN on a
+ * gateway is staff there: they serve the building rather than live in it. Wherever this
+ * schema says "staff" or "a staff member" it means exactly that, as the gateway holds roles,
+ * the registering administrator included; holding ROLE_RESIDENT besides changes nothing. The
+ * term carries one rule about people: staff are named to whoever may list every member; a
+ * resident is named only to the people they live with; and where anyone lives is told only
+ * to their own household.
+ *
  * @generated from enum kusinta.iot.access.v1.Role
  */
 export enum Role {
@@ -236,9 +244,10 @@ export declare const PermissionActionSchema: GenEnum<PermissionAction>;
  * who service the building get the service view above and no more. It does not keep the
  * property owner or the administrator out by force — they hold the building's filing
  * authority and the gateway itself — but it makes their seeing in a deliberate act on the
- * home, such as filing themselves on it, rather than something handed out by default. Who
- * lives where is the exception: they are shown every member and membership
- * (webrtc.v1.ListGatewayMembers), since they remove a resident who moves out.
+ * home, such as filing themselves on it, rather than something handed out by default. They
+ * remove a resident who moves out, so they are shown each resident's homes, and since when
+ * (webrtc.v1.ListGatewayMembers), but never a resident's name; and a staff member's own
+ * residency is told only to the household they live in (see Role, STAFF).
  *
  * A membership recorded with no relation, made before relations existed, sees no more than
  * either relation would where it is held: on an apartment or a room, a home as service; on a

@@ -54,6 +54,7 @@ const AppTokenClaims$json = {
       '10': 'cnf'
     },
     {'1': 'name', '3': 8, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'email', '3': 9, '4': 1, '5': 9, '10': 'email'},
   ],
 };
 
@@ -64,7 +65,7 @@ final $typed_data.Uint8List appTokenClaimsDescriptor = $convert.base64Decode(
     'UgNpYXQSLAoDZXhwGAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIDZXhwEjEKBX'
     'JvbGVzGAYgAygOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGVSBXJvbGVzEjUKA2NuZhgH'
     'IAEoCzIjLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Db25maXJtYXRpb25SA2NuZhISCgRuYW1lGA'
-    'ggASgJUgRuYW1l');
+    'ggASgJUgRuYW1lEhQKBWVtYWlsGAkgASgJUgVlbWFpbA==');
 
 @$core.Deprecated('Use confirmationDescriptor instead')
 const Confirmation$json = {

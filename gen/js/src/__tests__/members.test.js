@@ -135,7 +135,34 @@ describe('the name in an app token', () => {
     expect(AppTokenClaimsSchema.fields.map((f) => f.name)).toContain('name')
   })
 
-  it('has no email claim', () => {
-    expect(AppTokenClaimsSchema.fields.map((f) => f.name)).not.toContain('email')
+  it('carries a staff member\'s verified email address', () => {
+    const claims = create(AppTokenClaimsSchema, { email: 'tek@example.com' })
+    expect(fromBinary(AppTokenClaimsSchema, toBinary(AppTokenClaimsSchema, claims)).email).toBe('tek@example.com')
+  })
+
+  it('leaves the email claim empty for a token that names no address', () => {
+    const claims = create(AppTokenClaimsSchema, { sub: 'anna' })
+    expect(fromBinary(AppTokenClaimsSchema, toBinary(AppTokenClaimsSchema, claims)).email).toBe('')
+  })
+})
+
+describe('staff named, residents not', () => {
+  it('lists a staff member with their email address', () => {
+    const member = create(MemberDetailSchema, { userId: { value: 'tek' }, email: 'tek@example.com' })
+    expect(fromBinary(MemberDetailSchema, toBinary(MemberDetailSchema, member)).email).toBe('tek@example.com')
+  })
+
+  it('leaves a resident\'s email empty', () => {
+    const member = create(MemberDetailSchema, { userId: { value: 'anna' } })
+    expect(fromBinary(MemberDetailSchema, toBinary(MemberDetailSchema, member)).email).toBe('')
+  })
+
+  it('says since when a member holds a membership', () => {
+    const member = create(MemberDetailSchema, {
+      userId: { value: 'anna' },
+      memberships: [{ spaceId: { value: 'lgh-1102' }, since: { seconds: 1_790_000_000n } }],
+    })
+    const decoded = fromBinary(MemberDetailSchema, toBinary(MemberDetailSchema, member))
+    expect(decoded.memberships[0].since?.seconds).toBe(1_790_000_000n)
   })
 })

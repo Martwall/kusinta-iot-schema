@@ -216,6 +216,7 @@ const MemberDetail$json = {
       '5': 8,
       '10': 'registeringAdmin'
     },
+    {'1': 'email', '3': 7, '4': 1, '5': 9, '10': 'email'},
   ],
 };
 
@@ -226,7 +227,8 @@ final $typed_data.Uint8List memberDetailDescriptor = $convert.base64Decode(
     'dXNpbnRhLmlvdC5hY2Nlc3MudjEuUm9sZVIFcm9sZXMSRAoLbWVtYmVyc2hpcHMYBCADKAsyIi'
     '5rdXNpbnRhLmlvdC53ZWJydGMudjEuTWVtYmVyU3BhY2VSC21lbWJlcnNoaXBzEj0KDGFjY2Vz'
     'c191bnRpbBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2FjY2Vzc1VudGlsEi'
-    'sKEXJlZ2lzdGVyaW5nX2FkbWluGAYgASgIUhByZWdpc3RlcmluZ0FkbWlu');
+    'sKEXJlZ2lzdGVyaW5nX2FkbWluGAYgASgIUhByZWdpc3RlcmluZ0FkbWluEhQKBWVtYWlsGAcg'
+    'ASgJUgVlbWFpbA==');
 
 @$core.Deprecated('Use memberSpaceDescriptor instead')
 const MemberSpace$json = {
@@ -248,6 +250,14 @@ const MemberSpace$json = {
       '6': '.kusinta.iot.access.v1.MembershipRelation',
       '10': 'relation'
     },
+    {
+      '1': 'since',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'since'
+    },
   ],
 };
 
@@ -255,4 +265,5 @@ const MemberSpace$json = {
 final $typed_data.Uint8List memberSpaceDescriptor = $convert.base64Decode(
     'CgtNZW1iZXJTcGFjZRI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5Ln'
     'YxLlNwYWNlSWRSB3NwYWNlSWQSRQoIcmVsYXRpb24YAiABKA4yKS5rdXNpbnRhLmlvdC5hY2Nl'
-    'c3MudjEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbg==');
+    'c3MudjEuTWVtYmVyc2hpcFJlbGF0aW9uUghyZWxhdGlvbhIwCgVzaW5jZRgDIAEoCzIaLmdvb2'
+    'dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBXNpbmNl');
