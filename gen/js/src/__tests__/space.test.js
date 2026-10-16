@@ -76,4 +76,13 @@ describe('Space', () => {
     const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, home))
     expect(decoded.members[0].name).toBe('Anna')
   })
+
+  it('says since when a member holds their membership', () => {
+    const home = create(SpaceSchema, {
+      spaceId: { value: 'lgh-1102' },
+      members: [{ userId: { value: 'anna' }, since: { seconds: 1_790_000_000n } }],
+    })
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, home))
+    expect(decoded.members[0].since?.seconds).toBe(1_790_000_000n)
+  })
 })

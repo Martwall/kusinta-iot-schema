@@ -2,7 +2,10 @@
 
   * a space's time zone is an IANA name, and empty means unknown — not UTC
   * a request that leaves the time zone alone differs from one that clears it
+  * a member says since when they hold their membership
 """
+
+from google.protobuf import timestamp_pb2
 
 from kusinta.iot.common.v1 import types_pb2
 from kusinta.iot.identity.v1 import identity_pb2
@@ -70,3 +73,20 @@ def test_an_update_sets_a_time_zone():
     )
 
     assert _round_trip(request).time_zone == "Europe/Helsinki"
+
+
+# --- members --------------------------------------------------------------------------
+
+
+def test_a_member_says_since_when_they_hold_their_membership():
+    home = space_pb2.Space(
+        space_id=identity_pb2.SpaceId(value="lgh-1102"),
+        members=[
+            space_pb2.SpaceMember(
+                user_id=identity_pb2.UserId(value="anna"),
+                since=timestamp_pb2.Timestamp(seconds=1_790_000_000),
+            )
+        ],
+    )
+
+    assert _round_trip(home).members[0].since.seconds == 1_790_000_000
