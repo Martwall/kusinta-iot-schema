@@ -81,8 +81,10 @@ class ListGatewayMembers extends $pb.GeneratedMessage {
 /// ManagementAck. Only a caller holding ROLE_GATEWAY_ADMIN may; any other role named is
 /// INVALID_REQUEST.
 ///
-/// user_id may be a residency id: the role is then the holder's, as a deliberate act on the
-/// resident the caller chose, and the residency keeps its id and its entry.
+/// user_id is never a residency id (INVALID_REQUEST): the member's entry would then appear
+/// under their user id, named, and tie the residency to them. A resident becomes staff by
+/// an act of their own — redeeming a SERVICE invite (invite.proto) — and is promoted from
+/// the entry that gives.
 ///
 /// Granting a role already held, or taking away one not held, changes nothing and is
 /// acknowledged. A caller may take a role away from themselves: the registering

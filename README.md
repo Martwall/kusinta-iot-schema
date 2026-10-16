@@ -286,7 +286,8 @@ owners and administrators — are listed by name and verified email (`AppTokenCl
 each residency as an entry of its own under a residency id the gateway mints for it, with
 its home and since when (`MemberSpace.since`), never by name and never tied to the person's
 user id, so becoming or stopping being staff ties no name to a home. A residency id may
-stand for the member in `RemoveUserFromSpace`, `RemoveFromGateway` and `SetMemberRole`. A resident's
+stand for the member in `RemoveUserFromSpace` and `RemoveFromGateway`, never in
+`SetMemberRole`: a resident becomes staff only by redeeming a Technician invite themselves. A resident's
 `PrivacyDisclosure` names the people counted under each role, by the name they gave
 (`AppTokenClaims.name`), without saying where anyone lives; a technician asking gets the
 kinds of party alone. The residents of a home see the people they live with by name too
