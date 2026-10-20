@@ -82,8 +82,46 @@ class RoomClimateCondition extends $pb.ProtobufEnum {
   const RoomClimateCondition._(super.value, super.name);
 }
 
-/// Why a room is where it is. A closed list of kinds: the gateway sends a kind, never a
-/// sentence, and the app names each kind in its user's language.
+/// Whether a plan steers a room: one that looks ahead at prices, weather and the heat
+/// source and moves the room within its comfort band. A standing state of the room, not a
+/// reason, so it is a field of its own rather than an explanation.
+class RoomPlanning extends $pb.ProtobufEnum {
+  /// Not stated.
+  static const RoomPlanning ROOM_PLANNING_UNSPECIFIED =
+      RoomPlanning._(0, _omitEnumNames ? '' : 'ROOM_PLANNING_UNSPECIFIED');
+
+  /// A plan steers the room. Its explanations say what it is doing.
+  static const RoomPlanning ROOM_PLANNING_PLANNED =
+      RoomPlanning._(1, _omitEnumNames ? '' : 'ROOM_PLANNING_PLANNED');
+
+  /// No plan steers the room: planning is switched off for it, or was never set up. The
+  /// room follows its target and schedule.
+  static const RoomPlanning ROOM_PLANNING_NOT_PLANNED =
+      RoomPlanning._(2, _omitEnumNames ? '' : 'ROOM_PLANNING_NOT_PLANNED');
+
+  /// A plan would steer the room but cannot be made — prices or a forecast are missing —
+  /// so the room follows its target and schedule until one can.
+  static const RoomPlanning ROOM_PLANNING_UNAVAILABLE =
+      RoomPlanning._(3, _omitEnumNames ? '' : 'ROOM_PLANNING_UNAVAILABLE');
+
+  static const $core.List<RoomPlanning> values = <RoomPlanning>[
+    ROOM_PLANNING_UNSPECIFIED,
+    ROOM_PLANNING_PLANNED,
+    ROOM_PLANNING_NOT_PLANNED,
+    ROOM_PLANNING_UNAVAILABLE,
+  ];
+
+  static final $core.List<RoomPlanning?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static RoomPlanning? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const RoomPlanning._(super.value, super.name);
+}
+
+/// What held a room, or a part of its heating, where it is. A closed list of causes: the
+/// gateway sends a kind, never a sentence, and the app names each kind in its user's
+/// language. What the cause acts on is ClimateExplanation.subject.
 ///
 /// No kind identifies another household or anything about one. Where a limit is shared —
 /// a building's power, a shared heat source — the explanation says that this room was
@@ -95,84 +133,65 @@ class ClimateExplanationKind extends $pb.ProtobufEnum {
       ClimateExplanationKind._(
           0, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_UNSPECIFIED');
 
-  /// Heating ahead of a dearer or colder period, within the comfort band, so less is needed
+  /// Heated ahead of a dearer or colder period, within the comfort band, so less is needed
   /// then.
   static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_PRE_HEAT =
       ClimateExplanationKind._(
           1, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PRE_HEAT');
 
-  /// Heating held back while the room's stored heat carries it, within the comfort band.
+  /// Held back while stored heat carries the room, within the comfort band.
   static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_COASTING =
       ClimateExplanationKind._(
           2, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_COASTING');
 
-  /// Heating reduced while energy is expensive, within the comfort band.
+  /// Held back while energy is expensive, within the comfort band.
   static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_PRICE_HIGH =
       ClimateExplanationKind._(
           3, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PRICE_HIGH');
 
-  /// Heating, or a heat source's add-on heater, held back to keep power below a peak limit
-  /// the home or building is charged for.
+  /// Held back to keep the home's own electricity use below a peak it is charged for.
   static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_PEAK_GUARD =
       ClimateExplanationKind._(
           4, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PEAK_GUARD');
 
-  /// Space heating paused while the heat source heats domestic hot water.
+  /// Paused while the heat source heats domestic hot water.
   static const ClimateExplanationKind
       CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY = ClimateExplanationKind._(5,
           _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY');
 
-  /// No plan applies: the room follows its target and schedule only, because planning is
-  /// switched off for it or was never set up.
+  /// Held back to keep electricity that several homes share — a building's connection, a
+  /// shared heat source — within its limit.
   static const ClimateExplanationKind
-      CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE = ClimateExplanationKind._(6,
-          _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE');
-
-  /// A plan could not be made — prices or a forecast are missing — so the room follows its
-  /// target and schedule until one can.
-  static const ClimateExplanationKind
-      CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE = ClimateExplanationKind._(
-          7, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE');
-
-  /// Heating limited by a power budget shared with other homes.
-  static const ClimateExplanationKind
-      CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = ClimateExplanationKind._(8,
+      CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = ClimateExplanationKind._(6,
           _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET');
 
-  /// Heating held back to keep a district-heating connection below its charged peak.
+  /// Held back to keep a district-heating connection below its charged peak.
   static const ClimateExplanationKind
       CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK = ClimateExplanationKind._(
-          9,
+          7,
           _omitEnumNames
               ? ''
               : 'CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK');
 
-  /// A floor zone heating this room is switched off. Why is floor_zone_off_reason.
-  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF =
-      ClimateExplanationKind._(
-          10, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF');
-
-  /// A floor zone heating this room is run on a cautious fixed share of the time because
-  /// the reading that steers it has gone quiet.
-  static const ClimateExplanationKind
-      CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING = ClimateExplanationKind._(
-          11,
-          _omitEnumNames
-              ? ''
-              : 'CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING');
-
-  /// A comfort load in the room — a heated floor kept warm for comfort, a towel heater — is
-  /// off because it is outside its time window.
-  static const ClimateExplanationKind
-      CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW = ClimateExplanationKind._(
-          12,
-          _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW');
-
-  /// The room is at the top of its comfort band, so it is not heated further even though
+  /// Not heated further because the room is at the top of its comfort band, even though
   /// energy is cheap.
   static const ClimateExplanationKind
-      CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = ClimateExplanationKind._(13,
+      CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = ClimateExplanationKind._(8,
           _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING');
+
+  /// Run on a cautious fixed share of the time because the reading that steers it has gone
+  /// quiet. With subject FLOOR_ZONE it is sent in every room the zone heats, including the
+  /// one whose own sensor went quiet: there condition says the sensor is lost, and this says
+  /// what the zone does about it.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_NO_READING =
+      ClimateExplanationKind._(
+          9, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_NO_READING');
+
+  /// Off because it is outside its time window — a heated floor kept warm for comfort, a
+  /// towel heater.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW =
+      ClimateExplanationKind._(
+          10, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW');
 
   static const $core.List<ClimateExplanationKind> values =
       <ClimateExplanationKind>[
@@ -182,59 +201,57 @@ class ClimateExplanationKind extends $pb.ProtobufEnum {
     CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
     CLIMATE_EXPLANATION_KIND_PEAK_GUARD,
     CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY,
-    CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE,
-    CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE,
     CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET,
     CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK,
-    CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF,
-    CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING,
-    CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW,
     CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING,
+    CLIMATE_EXPLANATION_KIND_NO_READING,
+    CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW,
   ];
 
   static final $core.List<ClimateExplanationKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 13);
+      $pb.ProtobufEnum.$_initByValueList(values, 10);
   static ClimateExplanationKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const ClimateExplanationKind._(super.value, super.name);
 }
 
-/// Why a floor zone is off, beside CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF.
-class FloorZoneOffReason extends $pb.ProtobufEnum {
-  /// Not stated, or not a FLOOR_ZONE_OFF explanation.
-  static const FloorZoneOffReason FLOOR_ZONE_OFF_REASON_UNSPECIFIED =
-      FloorZoneOffReason._(
-          0, _omitEnumNames ? '' : 'FLOOR_ZONE_OFF_REASON_UNSPECIFIED');
+/// What a cause acts on, when that is not the room's heating as a whole.
+class ClimateExplanationSubject extends $pb.ProtobufEnum {
+  /// The room's heating as a whole.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED = ClimateExplanationSubject._(
+          0, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED');
 
-  /// Off while energy is expensive.
-  static const FloorZoneOffReason FLOOR_ZONE_OFF_REASON_PRICE =
-      FloorZoneOffReason._(
-          1, _omitEnumNames ? '' : 'FLOOR_ZONE_OFF_REASON_PRICE');
+  /// A floor zone heating this room.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = ClimateExplanationSubject._(
+          1, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE');
 
-  /// Off because the floor was heated ahead and holds enough heat.
-  static const FloorZoneOffReason FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE =
-      FloorZoneOffReason._(
-          2, _omitEnumNames ? '' : 'FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE');
+  /// A comfort load in the room: a heated floor kept warm for comfort, a towel heater.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = ClimateExplanationSubject._(
+          2, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD');
 
-  /// Off because the room has reached the top of its comfort band.
-  static const FloorZoneOffReason FLOOR_ZONE_OFF_REASON_BAND_REACHED =
-      FloorZoneOffReason._(
-          3, _omitEnumNames ? '' : 'FLOOR_ZONE_OFF_REASON_BAND_REACHED');
+  /// The heat source's add-on heater.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = ClimateExplanationSubject._(
+          3, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER');
 
-  static const $core.List<FloorZoneOffReason> values = <FloorZoneOffReason>[
-    FLOOR_ZONE_OFF_REASON_UNSPECIFIED,
-    FLOOR_ZONE_OFF_REASON_PRICE,
-    FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE,
-    FLOOR_ZONE_OFF_REASON_BAND_REACHED,
+  static const $core.List<ClimateExplanationSubject> values =
+      <ClimateExplanationSubject>[
+    CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED,
+    CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE,
+    CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD,
+    CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER,
   ];
 
-  static final $core.List<FloorZoneOffReason?> _byValue =
+  static final $core.List<ClimateExplanationSubject?> _byValue =
       $pb.ProtobufEnum.$_initByValueList(values, 3);
-  static FloorZoneOffReason? valueOf($core.int value) =>
+  static ClimateExplanationSubject? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
-  const FloorZoneOffReason._(super.value, super.name);
+  const ClimateExplanationSubject._(super.value, super.name);
 }
 
 /// A setback that applies to every room in a space while it is on.

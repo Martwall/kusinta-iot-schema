@@ -17,6 +17,7 @@ import {
   CommandResultSchema,
   CommandErrorCode,
   ThermostatSetpointParamsSchema,
+  AttributeWriteRequestSchema,
 } from '../kusinta/iot/webrtc/v1/command_pb.js'
 import { SetpointAdjustMode } from '../kusinta/iot/webrtc/v1/setpoint_mode_pb.js'
 import { LinkState } from '../kusinta/iot/link/v1/link_pb.js'
@@ -722,6 +723,16 @@ describe('AttributeWriteRequest — the WRITE carrier', () => {
     const cases = DeviceCommandSchema.oneofs.find((o) => o.name === 'parameters').fields.map((f) => f.name)
     expect(cases).not.toContain('thermostat_setpoint_write')
     expect(cases).toContain('thermostat_setpoint')
+  })
+
+  it('carries how long a leased write holds', () => {
+    const req = create(AttributeWriteRequestSchema, { requestId: 'w-1', leaseSeconds: 1800 })
+    const decoded = fromBinary(AttributeWriteRequestSchema, toBinary(AttributeWriteRequestSchema, req))
+    expect(decoded.leaseSeconds).toBe(1800)
+  })
+
+  it('leaves the lease absent on a plain write', () => {
+    expect(create(AttributeWriteRequestSchema, { requestId: 'w-2' }).leaseSeconds).toBeUndefined()
   })
 })
 

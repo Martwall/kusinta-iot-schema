@@ -14,7 +14,12 @@ import {
   EnergySensorPropertiesSchema,
 } from '../kusinta/iot/device/v1/properties_pb.js'
 import { DeviceSchema, EndpointSchema } from '../kusinta/iot/device/v1/device_pb.js'
-import { AttributeValueSchema, ClusterStateSchema } from '../kusinta/iot/device/v1/cluster_state_pb.js'
+import {
+  AttributeValueSchema,
+  ClusterStateSchema,
+  LeasedWriteSchema,
+  ReadLatency,
+} from '../kusinta/iot/device/v1/cluster_state_pb.js'
 import { PropertyUpdateSchema, PropertyUpdateBatchSchema, ValueProvenance } from '../kusinta/iot/device/v1/property_update_pb.js'
 
 describe('DeviceDescriptor', () => {
@@ -423,5 +428,110 @@ describe('attribute steps', () => {
 
   it('is empty rather than a step of zero when the producer does not say', () => {
     expect(create(ClusterStateSchema, { clusterId: 0x0201 }).attributeSteps).toEqual({})
+  })
+})
+
+describe('attribute behaviour', () => {
+  const ON_OFF = 0x0000
+
+  /** @param {import('@bufbuild/protobuf').MessageInitShape<typeof ClusterStateSchema>} init */
+  const onTheWire = (init) =>
+    fromBinary(ClusterStateSchema, toBinary(ClusterStateSchema, create(ClusterStateSchema, init)))
+
+  it('is not stated rather than sticky or leased when the producer says nothing', () => {
+    expect(create(ClusterStateSchema, { clusterId: 0x0006 }).attributeBehaviours).toEqual({})
+  })
+
+  it('states a write the device holds until written again', () => {
+    const decoded = onTheWire({
+      clusterId: 0x0201,
+      attributeBehaviours: { [0x0012]: { write: { case: 'sticky', value: {} } } },
+    })
+    expect(decoded.attributeBehaviours[0x0012].write.case).toBe('sticky')
+  })
+
+  it('states a lease the device keeps itself, with its bounds', () => {
+    const decoded = onTheWire({
+      clusterId: 0x0006,
+      attributeBehaviours: {
+        [ON_OFF]: { write: { case: 'leased', value: { minLeaseSeconds: 60, maxLeaseSeconds: 7200 } } },
+      },
+    })
+    expect(decoded.attributeBehaviours[ON_OFF].write).toMatchObject({
+      case: 'leased',
+      value: { minLeaseSeconds: 60, maxLeaseSeconds: 7200 },
+    })
+  })
+
+  it('says whether a write before the lease runs out restarts it', () => {
+    const decoded = onTheWire({
+      clusterId: 0x0006,
+      attributeBehaviours: { [ON_OFF]: { write: { case: 'leased', value: { renewalRestartsLease: true } } } },
+    })
+    expect(decoded.attributeBehaviours[ON_OFF].write.value).toMatchObject({ renewalRestartsLease: true })
+  })
+
+  it('states the value the attribute returns to when a lease runs out', () => {
+    const decoded = onTheWire({
+      clusterId: 0x0006,
+      attributeBehaviours: {
+        [ON_OFF]: {
+          write: { case: 'leased', value: { lapseValue: { value: { case: 'boolValue', value: true } } } },
+        },
+      },
+    })
+    expect(decoded.attributeBehaviours[ON_OFF].write.value).toMatchObject({
+      lapseValue: { value: { case: 'boolValue', value: true } },
+    })
+  })
+
+  it('leaves both lease bounds absent rather than zero when not stated', () => {
+    const leased = create(LeasedWriteSchema, {})
+    expect([leased.minLeaseSeconds, leased.maxLeaseSeconds]).toEqual([undefined, undefined])
+  })
+
+  it('states the value an attribute with no startup attribute takes at power-on', () => {
+    const decoded = onTheWire({
+      clusterId: 0x0006,
+      attributeBehaviours: { [ON_OFF]: { powerOnValue: { value: { case: 'boolValue', value: false } } } },
+    })
+    expect(decoded.attributeBehaviours[ON_OFF].powerOnValue?.value).toEqual({ case: 'boolValue', value: false })
+  })
+
+  it('states that a reading arrives late', () => {
+    const decoded = onTheWire({
+      clusterId: 0x0201,
+      attributeBehaviours: { [0x0000]: { readLatency: ReadLatency.DELAYED } },
+    })
+    expect(decoded.attributeBehaviours[0x0000].readLatency).toBe(ReadLatency.DELAYED)
+  })
+})
+
+describe('vendor attribute behaviour', () => {
+  it('states a vendor parameter’s behaviour by its vendor name', () => {
+    const endpoint = create(EndpointSchema, {
+      endpointId: 1,
+      vendorAttributeBehaviours: {
+        BOOST_MODE: { write: { case: 'leased', value: { minLeaseSeconds: 300, maxLeaseSeconds: 1800 } } },
+      },
+    })
+    const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, endpoint))
+    expect(decoded.vendorAttributeBehaviours.BOOST_MODE.write.case).toBe('leased')
+  })
+
+  it('is not stated when the producer says nothing', () => {
+    expect(create(EndpointSchema, { endpointId: 1 }).vendorAttributeBehaviours).toEqual({})
+  })
+})
+
+describe('device write interval', () => {
+  it('states the fewest seconds the device needs between two writes', () => {
+    const device = create(DeviceSchema, { minWriteIntervalSeconds: 120 })
+    const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, device))
+    expect(decoded.minWriteIntervalSeconds).toBe(120)
+  })
+
+  it('is absent rather than zero when not stated', () => {
+    expect(create(DeviceSchema, {}).minWriteIntervalSeconds).toBeUndefined()
   })
 })

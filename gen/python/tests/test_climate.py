@@ -305,30 +305,37 @@ def test_explanations_keep_their_order_most_significant_first():
     ]
 
 
-def test_an_explanation_carries_until_when_it_holds():
+def test_an_explanation_names_a_floor_zone_it_holds_back():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+        subject=climate_pb2.CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE,
+    )
+
+    assert _round_trip(explanation).subject == climate_pb2.CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE
+
+
+def test_an_explanation_carries_when_it_ends():
     explanation = climate_pb2.ClimateExplanation(
         kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRE_HEAT,
-        valid_until=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+        ends_at=timestamp_pb2.Timestamp(seconds=1_800_000_000),
     )
 
-    assert _round_trip(explanation).valid_until.seconds == 1_800_000_000
+    assert _round_trip(explanation).ends_at.seconds == 1_800_000_000
 
 
-def test_an_explanation_band_is_absent_rather_than_zero():
-    explanation = climate_pb2.ClimateExplanation(
-        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING
-    )
+def test_a_room_says_it_is_not_planned_for():
+    room = climate_pb2.RoomClimate(space_id=_ROOM, planning=climate_pb2.ROOM_PLANNING_NOT_PLANNED)
 
-    assert not _round_trip(explanation).HasField("band_high_centidegrees")
+    assert _round_trip(room).planning == climate_pb2.ROOM_PLANNING_NOT_PLANNED
 
 
-def test_a_floor_zone_off_says_why():
-    explanation = climate_pb2.ClimateExplanation(
-        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF,
-        floor_zone_off_reason=climate_pb2.FLOOR_ZONE_OFF_REASON_PRICE,
-    )
+def test_a_room_comfort_band_is_absent_rather_than_zero():
+    decoded = _round_trip(climate_pb2.RoomClimate(space_id=_ROOM))
 
-    assert _round_trip(explanation).floor_zone_off_reason == climate_pb2.FLOOR_ZONE_OFF_REASON_PRICE
+    assert (
+        decoded.HasField("comfort_band_low_centidegrees"),
+        decoded.HasField("comfort_band_high_centidegrees"),
+    ) == (False, False)
 
 
 def test_a_persons_target_says_until_when_it_holds():

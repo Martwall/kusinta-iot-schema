@@ -123,6 +123,12 @@ message Endpoint {
   // alone cannot, and for SABOTAGE the difference is a safety claim. A connector fills it
   // at announcement from the parameter description its upstream system already holds.
   repeated string vendor_attribute_names = 17;
+
+  // What a write to each vendor parameter leaves behind, and how late its reports arrive,
+  // keyed by the parameter's vendor name as vendor_attribute_names spells it. The vendor
+  // mirror of ClusterState.attribute_behaviours, with the same rules: an absent key is
+  // "not stated", and not stated is read as the worst case.
+  map<string, AttributeBehaviour> vendor_attribute_behaviours = 18;
 }
 
 // Device is a DeviceDescriptor plus the endpoints it presents.
@@ -146,8 +152,15 @@ message Device {
   reserved 2 to 13, 50;
   reserved "thermostat", "temperature_sensor", "humidity_sensor", "occupancy_sensor", "contact_sensor", "window_covering", "door_lock", "on_off_light", "dimmable_light", "color_temp_light", "energy_sensor", "pressure_sensor", "homematic";
 
-  // 15-19 are free; 20+ is the timestamp band.
+  // 16-19 are free; 20+ is the timestamp band.
   repeated Endpoint endpoints = 14;
+
+  // The fewest seconds this device needs between two writes, to any of its attributes on
+  // any endpoint, without dropping one: a radio limited to a share of airtime, a battery
+  // device that wakes on a schedule. A device-wide budget rather than a per-attribute one,
+  // because two attributes each written at their own pace still share one radio. Stated by
+  // the producer at announcement. Absent: not stated, never zero.
+  optional uint32 min_write_interval_seconds = 15;
 
   // When the gateway last had evidence this device itself — the
   // most recent PropertyUpdate (wheter or not the property changed) or command

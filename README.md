@@ -261,16 +261,24 @@ a person sets a temperature on.
 
 When a room is held somewhere other than plainly at its target, `RoomClimate.explanations`
 says why, most significant first: heating ahead of an expensive hour, coasting on stored
-heat, the heat source busy with hot water, a floor zone switched off, the room already at
-the top of its comfort band. Each is a `ClimateExplanationKind` from a closed list — the
-gateway sends a kind, the app names it in its user's language — with a validity window and
-the comfort band in force. No kind identifies another household: a limit shared with other
-homes is told as "this room was limited", never by whom. An app shows no explanation past its
-`valid_until`, including while it cannot reach the gateway. What `condition` and
-`target_change` already say (a window, a lost sensor, who set the target) is never repeated
-there; how long a person's target holds before the gateway moves it again is
-`target_held_until`. In a home, explanations are withheld from service along with the rest
-of the room's state.
+heat, the heat source busy with hot water, the room already at the top of its comfort band.
+Each is a cause from a closed list (`ClimateExplanationKind`): the gateway sends a kind and
+the app names it in its user's language. A `subject` says when the cause acts on a part of
+the room's heating rather than the whole, so "price high" on a floor zone reads as the floor
+zone held back for price. An optional `ends_at` closes it, and an app shows no explanation
+past that, including while it cannot reach the gateway. No kind identifies another
+household: a limit shared with other homes is told as "this room was limited", never by
+whom.
+
+Three facts sit beside the list rather than in it, because they are states of the room and
+not reasons:
+- `planning`: whether a plan steers the room, none does, or one cannot be made right now.
+- `comfort_band_low/high_centidegrees`: the band a plan may move the room within.
+- `target_held_until`: how long a person's target holds before the gateway moves it again.
+
+What `condition` and `target_change` already say (a window, a lost sensor, who set the
+target) is never repeated in the list. In a home, all of this is withheld from service along
+with the rest of the room's state.
 
 ## Invites
 
@@ -512,28 +520,38 @@ is "not stated", never "implements nothing".
 ## What a write leaves behind
 
 A fourth question sits beside those three: once written, how long does a value stay? A
-producer states it per attribute, per endpoint, in `ClusterState.attribute_write_behaviours`:
+producer states it per attribute in an `AttributeBehaviour`. For a cluster attribute it goes
+in `ClusterState.attribute_behaviours`, per endpoint. For a vendor parameter it goes in
+`Endpoint.vendor_attribute_behaviours`, keyed by vendor name. The `write` oneof is one of:
 
-- **`STICKY`** — the device holds the value until something writes it again, through the
-  writer's absence and (unless `rest_value` says otherwise) a restart.
-- **`LEASED`** — the device itself returns the attribute to `rest_value` when the write's
-  lease runs out, whether or not anything is still talking to it. The lease is the device's
-  own timer or link watchdog; a value that lapses only because its writer keeps re-sending is
-  sticky to anyone who must plan for the writer failing. A leased write carries its length in
-  `AttributeWriteRequest.lease_seconds`, within the stated bounds, and the producer refuses a
-  mismatch (no lease on a leased attribute, a lease on a sticky one, a lease out of bounds)
-  as `INVALID_COMMAND`.
+- **`sticky`**: the device holds the value until something writes it again, through the
+  writer's absence and a lost network.
+- **`leased`**: the device itself returns the attribute to `lapse_value` when the write's
+  lease runs out, whether or not anything is still talking to it.
+  - The lease is the device's own timer or link watchdog. A value that lapses only because
+    its writer keeps re-sending is sticky to anyone who must plan for the writer failing.
+  - A leased write carries its length in `AttributeWriteRequest.lease_seconds`, within the
+    stated bounds.
+  - The producer refuses a mismatch as `INVALID_COMMAND`: no lease on a leased attribute, a
+    lease on any other attribute, or a lease out of bounds.
 
-`rest_value` is what a site falls back to whenever its writer is gone — after a lapsed lease,
-after power returns, before the first write. `min_write_interval_seconds` says how often the
-device can take a write without dropping one. An absent key is "not stated", and a consumer
-treats it as sticky when it decides what a write leaves behind if the consumer goes quiet.
+`lapse_value` is what a site falls back to whenever its writer is gone. `power_on_value`
+says what the attribute takes when power returns, but only where the cluster has no startup
+attribute of its own (such as `StartUpOnOff`) to say it.
 
-`ClusterState.attribute_read_latencies` answers the matching question for reads: whether a
-reported value reaches the producer within minutes (`REAL_TIME`) or late enough that acting
-on it as current would be wrong (`DELAYED`, e.g. values a vendor's service hands on in
-batches). A consumer never treats a value of unstated latency as real-time when it acts on it
-without a person in the loop.
+How often a device can take a write without dropping one is a device-wide budget, because
+two attributes still share one radio. It goes in `Device.min_write_interval_seconds`.
+
+`read_latency` answers the matching question for reads. `REAL_TIME` means a reported value
+reaches the producer within minutes. `DELAYED` means it arrives late enough that acting on
+it as current would be wrong, such as values a vendor's service hands on in batches.
+
+Not stated is read as the worst case:
+- A write of unstated kind is held as if sticky.
+- A reading of unstated latency is never treated as real-time.
+- A gateway refuses to drive a heat source, heating circuit or floor zone through an
+  attribute whose write kind is not stated. This is the opposite default to `attribute_ids`
+  or `known_links`, where not stated only means not known.
 
 ## Field presence in properties
 

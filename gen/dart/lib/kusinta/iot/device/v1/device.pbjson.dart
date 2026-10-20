@@ -201,11 +201,37 @@ const Endpoint$json = {
       '5': 9,
       '10': 'vendorAttributeNames'
     },
+    {
+      '1': 'vendor_attribute_behaviours',
+      '3': 18,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.Endpoint.VendorAttributeBehavioursEntry',
+      '10': 'vendorAttributeBehaviours'
+    },
   ],
+  '3': [Endpoint_VendorAttributeBehavioursEntry$json],
   '8': [
     {'1': 'matter_properties'},
     {'1': 'vendor_properties'},
   ],
+};
+
+@$core.Deprecated('Use endpointDescriptor instead')
+const Endpoint_VendorAttributeBehavioursEntry$json = {
+  '1': 'VendorAttributeBehavioursEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.AttributeBehaviour',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `Endpoint`. Decode as a `google.protobuf.DescriptorProto`.
@@ -239,7 +265,12 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'aW5rGDQgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJhZGlvTGlua1IJcmFkaW9MaW5rEj'
     '8KCGNsdXN0ZXJzGBAgAygLMiMua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNsdXN0ZXJTdGF0ZVII'
     'Y2x1c3RlcnMSNAoWdmVuZG9yX2F0dHJpYnV0ZV9uYW1lcxgRIAMoCVIUdmVuZG9yQXR0cmlidX'
-    'RlTmFtZXNCEwoRbWF0dGVyX3Byb3BlcnRpZXNCEwoRdmVuZG9yX3Byb3BlcnRpZXM=');
+    'RlTmFtZXMSfgobdmVuZG9yX2F0dHJpYnV0ZV9iZWhhdmlvdXJzGBIgAygLMj4ua3VzaW50YS5p'
+    'b3QuZGV2aWNlLnYxLkVuZHBvaW50LlZlbmRvckF0dHJpYnV0ZUJlaGF2aW91cnNFbnRyeVIZdm'
+    'VuZG9yQXR0cmlidXRlQmVoYXZpb3Vycxp3Ch5WZW5kb3JBdHRyaWJ1dGVCZWhhdmlvdXJzRW50'
+    'cnkSEAoDa2V5GAEgASgJUgNrZXkSPwoFdmFsdWUYAiABKAsyKS5rdXNpbnRhLmlvdC5kZXZpY2'
+    'UudjEuQXR0cmlidXRlQmVoYXZpb3VyUgV2YWx1ZToCOAFCEwoRbWF0dGVyX3Byb3BlcnRpZXNC'
+    'EwoRdmVuZG9yX3Byb3BlcnRpZXM=');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {
@@ -262,6 +293,15 @@ const Device$json = {
       '10': 'endpoints'
     },
     {
+      '1': 'min_write_interval_seconds',
+      '3': 15,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'minWriteIntervalSeconds',
+      '17': true
+    },
+    {
       '1': 'last_seen',
       '3': 20,
       '4': 1,
@@ -277,6 +317,9 @@ const Device$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'lastUpdated'
     },
+  ],
+  '8': [
+    {'1': '_min_write_interval_seconds'},
   ],
   '9': [
     {'1': 2, '2': 14},
@@ -303,13 +346,15 @@ const Device$json = {
 final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode(
     'CgZEZXZpY2USRwoKZGVzY3JpcHRvchgBIAEoCzInLmt1c2ludGEuaW90LmRldmljZS52MS5EZX'
     'ZpY2VEZXNjcmlwdG9yUgpkZXNjcmlwdG9yEj0KCWVuZHBvaW50cxgOIAMoCzIfLmt1c2ludGEu'
-    'aW90LmRldmljZS52MS5FbmRwb2ludFIJZW5kcG9pbnRzEjcKCWxhc3Rfc2VlbhgUIAEoCzIaLm'
-    'dvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGxhc3RTZWVuEj0KDGxhc3RfdXBkYXRlZBgVIAEo'
-    'CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdGVkSgQIAhAOSgQIMhAzUg'
-    'p0aGVybW9zdGF0UhJ0ZW1wZXJhdHVyZV9zZW5zb3JSD2h1bWlkaXR5X3NlbnNvclIQb2NjdXBh'
-    'bmN5X3NlbnNvclIOY29udGFjdF9zZW5zb3JSD3dpbmRvd19jb3ZlcmluZ1IJZG9vcl9sb2NrUg'
-    'xvbl9vZmZfbGlnaHRSDmRpbW1hYmxlX2xpZ2h0UhBjb2xvcl90ZW1wX2xpZ2h0Ug1lbmVyZ3lf'
-    'c2Vuc29yUg9wcmVzc3VyZV9zZW5zb3JSCWhvbWVtYXRpYw==');
+    'aW90LmRldmljZS52MS5FbmRwb2ludFIJZW5kcG9pbnRzEkAKGm1pbl93cml0ZV9pbnRlcnZhbF'
+    '9zZWNvbmRzGA8gASgNSABSF21pbldyaXRlSW50ZXJ2YWxTZWNvbmRziAEBEjcKCWxhc3Rfc2Vl'
+    'bhgUIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGxhc3RTZWVuEj0KDGxhc3RfdX'
+    'BkYXRlZBgVIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdGVkQh0K'
+    'G19taW5fd3JpdGVfaW50ZXJ2YWxfc2Vjb25kc0oECAIQDkoECDIQM1IKdGhlcm1vc3RhdFISdG'
+    'VtcGVyYXR1cmVfc2Vuc29yUg9odW1pZGl0eV9zZW5zb3JSEG9jY3VwYW5jeV9zZW5zb3JSDmNv'
+    'bnRhY3Rfc2Vuc29yUg93aW5kb3dfY292ZXJpbmdSCWRvb3JfbG9ja1IMb25fb2ZmX2xpZ2h0Ug'
+    '5kaW1tYWJsZV9saWdodFIQY29sb3JfdGVtcF9saWdodFINZW5lcmd5X3NlbnNvclIPcHJlc3N1'
+    'cmVfc2Vuc29yUglob21lbWF0aWM=');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

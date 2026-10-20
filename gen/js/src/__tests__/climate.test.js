@@ -8,6 +8,9 @@ import {
   RoomClimateCondition,
   ClimateModeSchema,
   RoomHistorySampleSchema,
+  ClimateExplanationKind,
+  ClimateExplanationSubject,
+  RoomPlanning,
 } from '../kusinta/iot/climate/v1/climate_pb.js'
 import {
   ConfigureRoomClimateSchema,
@@ -83,6 +86,70 @@ describe('room climate', () => {
     })
     const decoded = fromBinary(ClimateModeSchema, toBinary(ClimateModeSchema, mode))
     expect(decoded.warmFrom?.seconds).toBe(1_800_589_200n)
+  })
+})
+
+describe('why a room is where it is', () => {
+  /** @param {import('@bufbuild/protobuf').MessageInitShape<typeof RoomClimateSchema>} init */
+  const onTheWire = (init) =>
+    fromBinary(RoomClimateSchema, toBinary(RoomClimateSchema, create(RoomClimateSchema, init)))
+
+  it('has no explanations when nothing beyond the target needs explaining', () => {
+    expect(create(RoomClimateSchema, { spaceId: ROOM }).explanations).toEqual([])
+  })
+
+  it('keeps explanations in the order sent, most significant first', () => {
+    const decoded = onTheWire({
+      spaceId: ROOM,
+      explanations: [
+        { kind: ClimateExplanationKind.HOT_WATER_PRIORITY },
+        { kind: ClimateExplanationKind.PRICE_HIGH },
+      ],
+    })
+    expect(decoded.explanations.map((e) => e.kind)).toEqual([
+      ClimateExplanationKind.HOT_WATER_PRIORITY,
+      ClimateExplanationKind.PRICE_HIGH,
+    ])
+  })
+
+  it('names what a cause holds back when it is not the room’s heating as a whole', () => {
+    const decoded = onTheWire({
+      spaceId: ROOM,
+      explanations: [{ kind: ClimateExplanationKind.PRICE_HIGH, subject: ClimateExplanationSubject.FLOOR_ZONE }],
+    })
+    expect(decoded.explanations[0].subject).toBe(ClimateExplanationSubject.FLOOR_ZONE)
+  })
+
+  it('carries when an explanation ends', () => {
+    const decoded = onTheWire({
+      spaceId: ROOM,
+      explanations: [{ kind: ClimateExplanationKind.PRE_HEAT, endsAt: timestampFromMs(1_800_000_000_000) }],
+    })
+    expect(decoded.explanations[0].endsAt?.seconds).toBe(1_800_000_000n)
+  })
+
+  it('says the room is not planned for', () => {
+    const decoded = onTheWire({ spaceId: ROOM, planning: RoomPlanning.NOT_PLANNED })
+    expect(decoded.planning).toBe(RoomPlanning.NOT_PLANNED)
+  })
+
+  it('carries the comfort band in centidegrees', () => {
+    const decoded = onTheWire({ spaceId: ROOM, comfortBandLowCentidegrees: 2000, comfortBandHighCentidegrees: 2250 })
+    expect([decoded.comfortBandLowCentidegrees, decoded.comfortBandHighCentidegrees]).toEqual([2000, 2250])
+  })
+
+  it('leaves the comfort band absent rather than 0 °C when there is none', () => {
+    const room = create(RoomClimateSchema, { spaceId: ROOM })
+    expect([room.comfortBandLowCentidegrees, room.comfortBandHighCentidegrees]).toEqual([undefined, undefined])
+  })
+
+  it('says until when a person’s target holds', () => {
+    const decoded = onTheWire({ spaceId: ROOM, targetHeldUntil: timestampFromMs(1_800_000_000_000) })
+    expect(decoded.targetHeldUntil?.seconds).toBe(1_800_000_000n)
+  })
+
+  it('leaves the hold absent when the target holds until somebody changes it', () => {
+    expect(create(RoomClimateSchema, { spaceId: ROOM }).targetHeldUntil).toBeUndefined()
   })
 })
 

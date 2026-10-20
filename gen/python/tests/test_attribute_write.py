@@ -206,3 +206,15 @@ def test_subscribe_replaced_observe():
     assert "PERMISSION_ACTION_SUBSCRIBE" in names
     assert "PERMISSION_ACTION_OBSERVE" not in names
     assert roles_pb2.PERMISSION_ACTION_SUBSCRIBE == 3  # same number, renamed only
+
+
+def test_a_leased_write_carries_its_lease_length():
+    req = command_pb2.AttributeWriteRequest(request_id="w-1", lease_seconds=1800)
+    decoded = command_pb2.AttributeWriteRequest()
+    decoded.ParseFromString(req.SerializeToString())
+
+    assert decoded.lease_seconds == 1800
+
+
+def test_a_plain_write_has_no_lease():
+    assert not command_pb2.AttributeWriteRequest(request_id="w-2").HasField("lease_seconds")

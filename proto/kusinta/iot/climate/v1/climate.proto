@@ -164,27 +164,62 @@ message RoomClimate {
   // the sensors service may see are still sent, since setting a room up is service work.
   // Its climate over time is available to service only as an ApartmentClimateSummary.
   //
-  // explanations and target_held_until are withheld in the same way.
+  // explanations, target_held_until, planning and the comfort band are withheld in the
+  // same way.
   bool state_withheld = 15;
 
   // Why the room is being held where it is, when that differs from simply holding its
   // target: a plan heating ahead of an expensive hour, the heat source busy with hot water,
-  // a floor zone switched off. Most significant first; an app that shows one shows the
-  // first. Empty: nothing beyond the target and condition needs explaining.
+  // a floor zone held back. Most significant first; an app that shows one shows the first.
+  // Empty: nothing beyond the target and condition needs explaining.
   //
   // A window, a lost sensor and the rest of RoomClimateCondition are told by condition and
-  // never repeated here, and a target a person set is told by target_change and
-  // target_held_until — one fact, one place.
+  // never repeated here; a target a person set is told by target_change and
+  // target_held_until; whether the room is planned for at all is told by planning — one
+  // fact, one place.
+  //
+  // Sent with the room, so a replaced room replaces its list: an explanation absent from
+  // the latest RoomClimate no longer holds.
   repeated ClimateExplanation explanations = 16;
 
   // When a target a person set will next be moved by the gateway on its own — a schedule
   // step, a plan taking over again. Unset: it holds until somebody changes it. Told so that
   // a person is not surprised when their change ends.
   google.protobuf.Timestamp target_held_until = 17;
+
+  // Whether a plan steers the room. See RoomPlanning.
+  RoomPlanning planning = 18;
+
+  // The comfort band the room's residents set, in centidegrees: the lowest and highest a
+  // plan may hold the room at while it heats ahead, coasts or saves on dear energy. Within
+  // [min_centidegrees, max_centidegrees] where those are set. Absent: no band, and a plan
+  // holds the room at its target — never 0 °C.
+  optional sint32 comfort_band_low_centidegrees = 19;
+  optional sint32 comfort_band_high_centidegrees = 20;
 }
 
-// Why a room is where it is. A closed list of kinds: the gateway sends a kind, never a
-// sentence, and the app names each kind in its user's language.
+// Whether a plan steers a room: one that looks ahead at prices, weather and the heat
+// source and moves the room within its comfort band. A standing state of the room, not a
+// reason, so it is a field of its own rather than an explanation.
+enum RoomPlanning {
+  // Not stated.
+  ROOM_PLANNING_UNSPECIFIED = 0;
+
+  // A plan steers the room. Its explanations say what it is doing.
+  ROOM_PLANNING_PLANNED = 1;
+
+  // No plan steers the room: planning is switched off for it, or was never set up. The
+  // room follows its target and schedule.
+  ROOM_PLANNING_NOT_PLANNED = 2;
+
+  // A plan would steer the room but cannot be made — prices or a forecast are missing —
+  // so the room follows its target and schedule until one can.
+  ROOM_PLANNING_UNAVAILABLE = 3;
+}
+
+// What held a room, or a part of its heating, where it is. A closed list of causes: the
+// gateway sends a kind, never a sentence, and the app names each kind in its user's
+// language. What the cause acts on is ClimateExplanation.subject.
 //
 // No kind identifies another household or anything about one. Where a limit is shared —
 // a building's power, a shared heat source — the explanation says that this room was
@@ -194,87 +229,72 @@ enum ClimateExplanationKind {
   // shows nothing for it rather than guessing.
   CLIMATE_EXPLANATION_KIND_UNSPECIFIED = 0;
 
-  // Heating ahead of a dearer or colder period, within the comfort band, so less is needed
+  // Heated ahead of a dearer or colder period, within the comfort band, so less is needed
   // then.
   CLIMATE_EXPLANATION_KIND_PRE_HEAT = 1;
 
-  // Heating held back while the room's stored heat carries it, within the comfort band.
+  // Held back while stored heat carries the room, within the comfort band.
   CLIMATE_EXPLANATION_KIND_COASTING = 2;
 
-  // Heating reduced while energy is expensive, within the comfort band.
+  // Held back while energy is expensive, within the comfort band.
   CLIMATE_EXPLANATION_KIND_PRICE_HIGH = 3;
 
-  // Heating, or a heat source's add-on heater, held back to keep power below a peak limit
-  // the home or building is charged for.
+  // Held back to keep the home's own electricity use below a peak it is charged for.
   CLIMATE_EXPLANATION_KIND_PEAK_GUARD = 4;
 
-  // Space heating paused while the heat source heats domestic hot water.
+  // Paused while the heat source heats domestic hot water.
   CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY = 5;
 
-  // No plan applies: the room follows its target and schedule only, because planning is
-  // switched off for it or was never set up.
-  CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE = 6;
+  // Held back to keep electricity that several homes share — a building's connection, a
+  // shared heat source — within its limit.
+  CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = 6;
 
-  // A plan could not be made — prices or a forecast are missing — so the room follows its
-  // target and schedule until one can.
-  CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE = 7;
+  // Held back to keep a district-heating connection below its charged peak.
+  CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK = 7;
 
-  // Heating limited by a power budget shared with other homes.
-  CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = 8;
-
-  // Heating held back to keep a district-heating connection below its charged peak.
-  CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK = 9;
-
-  // A floor zone heating this room is switched off. Why is floor_zone_off_reason.
-  CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF = 10;
-
-  // A floor zone heating this room is run on a cautious fixed share of the time because
-  // the reading that steers it has gone quiet.
-  CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING = 11;
-
-  // A comfort load in the room — a heated floor kept warm for comfort, a towel heater — is
-  // off because it is outside its time window.
-  CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW = 12;
-
-  // The room is at the top of its comfort band, so it is not heated further even though
+  // Not heated further because the room is at the top of its comfort band, even though
   // energy is cheap.
-  CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = 13;
+  CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = 8;
+
+  // Run on a cautious fixed share of the time because the reading that steers it has gone
+  // quiet. With subject FLOOR_ZONE it is sent in every room the zone heats, including the
+  // one whose own sensor went quiet: there condition says the sensor is lost, and this says
+  // what the zone does about it.
+  CLIMATE_EXPLANATION_KIND_NO_READING = 9;
+
+  // Off because it is outside its time window — a heated floor kept warm for comfort, a
+  // towel heater.
+  CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW = 10;
 }
 
-// Why a floor zone is off, beside CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF.
-enum FloorZoneOffReason {
-  // Not stated, or not a FLOOR_ZONE_OFF explanation.
-  FLOOR_ZONE_OFF_REASON_UNSPECIFIED = 0;
+// What a cause acts on, when that is not the room's heating as a whole.
+enum ClimateExplanationSubject {
+  // The room's heating as a whole.
+  CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED = 0;
 
-  // Off while energy is expensive.
-  FLOOR_ZONE_OFF_REASON_PRICE = 1;
+  // A floor zone heating this room.
+  CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = 1;
 
-  // Off because the floor was heated ahead and holds enough heat.
-  FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE = 2;
+  // A comfort load in the room: a heated floor kept warm for comfort, a towel heater.
+  CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = 2;
 
-  // Off because the room has reached the top of its comfort band.
-  FLOOR_ZONE_OFF_REASON_BAND_REACHED = 3;
+  // The heat source's add-on heater.
+  CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = 3;
 }
 
-// One reason a room is where it is.
+// One reason a room, or a part of its heating, is where it is.
 message ClimateExplanation {
   ClimateExplanationKind kind = 1;
 
-  // Set only with CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF.
-  FloorZoneOffReason floor_zone_off_reason = 2;
+  // What the cause acts on. An app that does not know the subject shows nothing for the
+  // explanation rather than presenting it as the room's.
+  ClimateExplanationSubject subject = 2;
 
-  // When the explanation began to hold, and when it stops. valid_until unset: until the
-  // room is sent again. An app MUST NOT show an explanation past its valid_until, also
-  // while it cannot reach the gateway: an explanation that outlives its window is a claim
-  // about the room nobody is making any more.
-  google.protobuf.Timestamp valid_from = 3;
-  google.protobuf.Timestamp valid_until = 4;
-
-  // The comfort band in force for the room when the explanation was made, in centidegrees:
-  // the lowest and highest the room may be held at for this reason. Absent: no band
-  // applies, never 0 °C.
-  optional sint32 band_low_centidegrees = 5;
-  optional sint32 band_high_centidegrees = 6;
+  // When the explanation stops holding. Unset: while the room's latest RoomClimate carries
+  // it. An app MUST NOT show an explanation past its ends_at, also while it cannot reach
+  // the gateway: an explanation that outlives its window is a claim about the room nobody
+  // is making any more.
+  google.protobuf.Timestamp ends_at = 3;
 }
 
 // A setback that applies to every room in a space while it is on.

@@ -207,7 +207,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * the sensors service may see are still sent, since setting a room up is service work.
    * Its climate over time is available to service only as an ApartmentClimateSummary.
    *
-   * explanations and target_held_until are withheld in the same way.
+   * explanations, target_held_until, planning and the comfort band are withheld in the
+   * same way.
    *
    * @generated from field: bool state_withheld = 15;
    */
@@ -216,12 +217,16 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   /**
    * Why the room is being held where it is, when that differs from simply holding its
    * target: a plan heating ahead of an expensive hour, the heat source busy with hot water,
-   * a floor zone switched off. Most significant first; an app that shows one shows the
-   * first. Empty: nothing beyond the target and condition needs explaining.
+   * a floor zone held back. Most significant first; an app that shows one shows the first.
+   * Empty: nothing beyond the target and condition needs explaining.
    *
    * A window, a lost sensor and the rest of RoomClimateCondition are told by condition and
-   * never repeated here, and a target a person set is told by target_change and
-   * target_held_until — one fact, one place.
+   * never repeated here; a target a person set is told by target_change and
+   * target_held_until; whether the room is planned for at all is told by planning — one
+   * fact, one place.
+   *
+   * Sent with the room, so a replaced room replaces its list: an explanation absent from
+   * the latest RoomClimate no longer holds.
    *
    * @generated from field: repeated kusinta.iot.climate.v1.ClimateExplanation explanations = 16;
    */
@@ -235,6 +240,28 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * @generated from field: google.protobuf.Timestamp target_held_until = 17;
    */
   targetHeldUntil?: Timestamp | undefined;
+
+  /**
+   * Whether a plan steers the room. See RoomPlanning.
+   *
+   * @generated from field: kusinta.iot.climate.v1.RoomPlanning planning = 18;
+   */
+  planning: RoomPlanning;
+
+  /**
+   * The comfort band the room's residents set, in centidegrees: the lowest and highest a
+   * plan may hold the room at while it heats ahead, coasts or saves on dear energy. Within
+   * [min_centidegrees, max_centidegrees] where those are set. Absent: no band, and a plan
+   * holds the room at its target — never 0 °C.
+   *
+   * @generated from field: optional sint32 comfort_band_low_centidegrees = 19;
+   */
+  comfortBandLowCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 comfort_band_high_centidegrees = 20;
+   */
+  comfortBandHighCentidegrees?: number | undefined;
 };
 
 /**
@@ -244,7 +271,7 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 export declare const RoomClimateSchema: GenMessage<RoomClimate>;
 
 /**
- * One reason a room is where it is.
+ * One reason a room, or a part of its heating, is where it is.
  *
  * @generated from message kusinta.iot.climate.v1.ClimateExplanation
  */
@@ -255,40 +282,22 @@ export declare type ClimateExplanation = Message<"kusinta.iot.climate.v1.Climate
   kind: ClimateExplanationKind;
 
   /**
-   * Set only with CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF.
+   * What the cause acts on. An app that does not know the subject shows nothing for the
+   * explanation rather than presenting it as the room's.
    *
-   * @generated from field: kusinta.iot.climate.v1.FloorZoneOffReason floor_zone_off_reason = 2;
+   * @generated from field: kusinta.iot.climate.v1.ClimateExplanationSubject subject = 2;
    */
-  floorZoneOffReason: FloorZoneOffReason;
+  subject: ClimateExplanationSubject;
 
   /**
-   * When the explanation began to hold, and when it stops. valid_until unset: until the
-   * room is sent again. An app MUST NOT show an explanation past its valid_until, also
-   * while it cannot reach the gateway: an explanation that outlives its window is a claim
-   * about the room nobody is making any more.
+   * When the explanation stops holding. Unset: while the room's latest RoomClimate carries
+   * it. An app MUST NOT show an explanation past its ends_at, also while it cannot reach
+   * the gateway: an explanation that outlives its window is a claim about the room nobody
+   * is making any more.
    *
-   * @generated from field: google.protobuf.Timestamp valid_from = 3;
+   * @generated from field: google.protobuf.Timestamp ends_at = 3;
    */
-  validFrom?: Timestamp | undefined;
-
-  /**
-   * @generated from field: google.protobuf.Timestamp valid_until = 4;
-   */
-  validUntil?: Timestamp | undefined;
-
-  /**
-   * The comfort band in force for the room when the explanation was made, in centidegrees:
-   * the lowest and highest the room may be held at for this reason. Absent: no band
-   * applies, never 0 °C.
-   *
-   * @generated from field: optional sint32 band_low_centidegrees = 5;
-   */
-  bandLowCentidegrees?: number | undefined;
-
-  /**
-   * @generated from field: optional sint32 band_high_centidegrees = 6;
-   */
-  bandHighCentidegrees?: number | undefined;
+  endsAt?: Timestamp | undefined;
 };
 
 /**
@@ -699,8 +708,53 @@ export enum RoomClimateCondition {
 export declare const RoomClimateConditionSchema: GenEnum<RoomClimateCondition>;
 
 /**
- * Why a room is where it is. A closed list of kinds: the gateway sends a kind, never a
- * sentence, and the app names each kind in its user's language.
+ * Whether a plan steers a room: one that looks ahead at prices, weather and the heat
+ * source and moves the room within its comfort band. A standing state of the room, not a
+ * reason, so it is a field of its own rather than an explanation.
+ *
+ * @generated from enum kusinta.iot.climate.v1.RoomPlanning
+ */
+export enum RoomPlanning {
+  /**
+   * Not stated.
+   *
+   * @generated from enum value: ROOM_PLANNING_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A plan steers the room. Its explanations say what it is doing.
+   *
+   * @generated from enum value: ROOM_PLANNING_PLANNED = 1;
+   */
+  PLANNED = 1,
+
+  /**
+   * No plan steers the room: planning is switched off for it, or was never set up. The
+   * room follows its target and schedule.
+   *
+   * @generated from enum value: ROOM_PLANNING_NOT_PLANNED = 2;
+   */
+  NOT_PLANNED = 2,
+
+  /**
+   * A plan would steer the room but cannot be made — prices or a forecast are missing —
+   * so the room follows its target and schedule until one can.
+   *
+   * @generated from enum value: ROOM_PLANNING_UNAVAILABLE = 3;
+   */
+  UNAVAILABLE = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.climate.v1.RoomPlanning.
+ */
+export declare const RoomPlanningSchema: GenEnum<RoomPlanning>;
+
+/**
+ * What held a room, or a part of its heating, where it is. A closed list of causes: the
+ * gateway sends a kind, never a sentence, and the app names each kind in its user's
+ * language. What the cause acts on is ClimateExplanation.subject.
  *
  * No kind identifies another household or anything about one. Where a limit is shared —
  * a building's power, a shared heat source — the explanation says that this room was
@@ -718,7 +772,7 @@ export enum ClimateExplanationKind {
   UNSPECIFIED = 0,
 
   /**
-   * Heating ahead of a dearer or colder period, within the comfort band, so less is needed
+   * Heated ahead of a dearer or colder period, within the comfort band, so less is needed
    * then.
    *
    * @generated from enum value: CLIMATE_EXPLANATION_KIND_PRE_HEAT = 1;
@@ -726,94 +780,73 @@ export enum ClimateExplanationKind {
   PRE_HEAT = 1,
 
   /**
-   * Heating held back while the room's stored heat carries it, within the comfort band.
+   * Held back while stored heat carries the room, within the comfort band.
    *
    * @generated from enum value: CLIMATE_EXPLANATION_KIND_COASTING = 2;
    */
   COASTING = 2,
 
   /**
-   * Heating reduced while energy is expensive, within the comfort band.
+   * Held back while energy is expensive, within the comfort band.
    *
    * @generated from enum value: CLIMATE_EXPLANATION_KIND_PRICE_HIGH = 3;
    */
   PRICE_HIGH = 3,
 
   /**
-   * Heating, or a heat source's add-on heater, held back to keep power below a peak limit
-   * the home or building is charged for.
+   * Held back to keep the home's own electricity use below a peak it is charged for.
    *
    * @generated from enum value: CLIMATE_EXPLANATION_KIND_PEAK_GUARD = 4;
    */
   PEAK_GUARD = 4,
 
   /**
-   * Space heating paused while the heat source heats domestic hot water.
+   * Paused while the heat source heats domestic hot water.
    *
    * @generated from enum value: CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY = 5;
    */
   HOT_WATER_PRIORITY = 5,
 
   /**
-   * No plan applies: the room follows its target and schedule only, because planning is
-   * switched off for it or was never set up.
+   * Held back to keep electricity that several homes share — a building's connection, a
+   * shared heat source — within its limit.
    *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE = 6;
+   * @generated from enum value: CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = 6;
    */
-  FOLLOWING_SCHEDULE = 6,
+  SHARED_POWER_BUDGET = 6,
 
   /**
-   * A plan could not be made — prices or a forecast are missing — so the room follows its
-   * target and schedule until one can.
+   * Held back to keep a district-heating connection below its charged peak.
    *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE = 7;
+   * @generated from enum value: CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK = 7;
    */
-  PLAN_UNAVAILABLE = 7,
+  DISTRICT_HEATING_PEAK = 7,
 
   /**
-   * Heating limited by a power budget shared with other homes.
-   *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = 8;
-   */
-  SHARED_POWER_BUDGET = 8,
-
-  /**
-   * Heating held back to keep a district-heating connection below its charged peak.
-   *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK = 9;
-   */
-  DISTRICT_HEATING_PEAK = 9,
-
-  /**
-   * A floor zone heating this room is switched off. Why is floor_zone_off_reason.
-   *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF = 10;
-   */
-  FLOOR_ZONE_OFF = 10,
-
-  /**
-   * A floor zone heating this room is run on a cautious fixed share of the time because
-   * the reading that steers it has gone quiet.
-   *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING = 11;
-   */
-  FLOOR_ZONE_NO_READING = 11,
-
-  /**
-   * A comfort load in the room — a heated floor kept warm for comfort, a towel heater — is
-   * off because it is outside its time window.
-   *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW = 12;
-   */
-  COMFORT_LOAD_WINDOW = 12,
-
-  /**
-   * The room is at the top of its comfort band, so it is not heated further even though
+   * Not heated further because the room is at the top of its comfort band, even though
    * energy is cheap.
    *
-   * @generated from enum value: CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = 13;
+   * @generated from enum value: CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = 8;
    */
-  AT_COMFORT_CEILING = 13,
+  AT_COMFORT_CEILING = 8,
+
+  /**
+   * Run on a cautious fixed share of the time because the reading that steers it has gone
+   * quiet. With subject FLOOR_ZONE it is sent in every room the zone heats, including the
+   * one whose own sensor went quiet: there condition says the sensor is lost, and this says
+   * what the zone does about it.
+   *
+   * @generated from enum value: CLIMATE_EXPLANATION_KIND_NO_READING = 9;
+   */
+  NO_READING = 9,
+
+  /**
+   * Off because it is outside its time window — a heated floor kept warm for comfort, a
+   * towel heater.
+   *
+   * @generated from enum value: CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW = 10;
+   */
+  OUTSIDE_WINDOW = 10,
 }
 
 /**
@@ -822,44 +855,44 @@ export enum ClimateExplanationKind {
 export declare const ClimateExplanationKindSchema: GenEnum<ClimateExplanationKind>;
 
 /**
- * Why a floor zone is off, beside CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF.
+ * What a cause acts on, when that is not the room's heating as a whole.
  *
- * @generated from enum kusinta.iot.climate.v1.FloorZoneOffReason
+ * @generated from enum kusinta.iot.climate.v1.ClimateExplanationSubject
  */
-export enum FloorZoneOffReason {
+export enum ClimateExplanationSubject {
   /**
-   * Not stated, or not a FLOOR_ZONE_OFF explanation.
+   * The room's heating as a whole.
    *
-   * @generated from enum value: FLOOR_ZONE_OFF_REASON_UNSPECIFIED = 0;
+   * @generated from enum value: CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * Off while energy is expensive.
+   * A floor zone heating this room.
    *
-   * @generated from enum value: FLOOR_ZONE_OFF_REASON_PRICE = 1;
+   * @generated from enum value: CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = 1;
    */
-  PRICE = 1,
+  FLOOR_ZONE = 1,
 
   /**
-   * Off because the floor was heated ahead and holds enough heat.
+   * A comfort load in the room: a heated floor kept warm for comfort, a towel heater.
    *
-   * @generated from enum value: FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE = 2;
+   * @generated from enum value: CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = 2;
    */
-  PRE_HEAT_DONE = 2,
+  COMFORT_LOAD = 2,
 
   /**
-   * Off because the room has reached the top of its comfort band.
+   * The heat source's add-on heater.
    *
-   * @generated from enum value: FLOOR_ZONE_OFF_REASON_BAND_REACHED = 3;
+   * @generated from enum value: CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = 3;
    */
-  BAND_REACHED = 3,
+  ADD_ON_HEATER = 3,
 }
 
 /**
- * Describes the enum kusinta.iot.climate.v1.FloorZoneOffReason.
+ * Describes the enum kusinta.iot.climate.v1.ClimateExplanationSubject.
  */
-export declare const FloorZoneOffReasonSchema: GenEnum<FloorZoneOffReason>;
+export declare const ClimateExplanationSubjectSchema: GenEnum<ClimateExplanationSubject>;
 
 /**
  * A setback that applies to every room in a space while it is on.

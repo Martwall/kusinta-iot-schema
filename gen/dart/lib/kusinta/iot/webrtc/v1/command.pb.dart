@@ -998,14 +998,13 @@ class AttributeWriteRequest extends $pb.GeneratedMessage {
   $3.AttributeValue ensureValue() => $_ensure(3);
 
   /// How long, in seconds, the written value holds before the device itself returns the
-  /// attribute to its rest value — for an attribute the producer states as LEASED
-  /// (device.v1.AttributeWriteBehaviour). Within the stated minimum and maximum.
+  /// attribute to its lapse value — for an attribute the producer states as leased
+  /// (device.v1.LeasedWrite, on the attribute's cluster or as a vendor parameter). Within the
+  /// stated minimum and maximum.
   ///
-  /// The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a LEASED
+  /// The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a leased
   /// attribute that carries no lease, a lease outside the stated bounds, and a lease on an
-  /// attribute it does not state as LEASED. A writer that believes a value will lapse when
-  /// it will not is exactly the failure a lease exists to prevent, so the mismatch is never
-  /// carried out silently.
+  /// attribute it does not state as leased.
   @$pb.TagNumber(5)
   $core.int get leaseSeconds => $_getIZ(4);
   @$pb.TagNumber(5)
