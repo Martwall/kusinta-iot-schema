@@ -126,13 +126,15 @@ class CommandResult(_message.Message):
     def __init__(self, request_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[CommandError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class AttributeWriteRequest(_message.Message):
-    __slots__ = ("request_id", "device_id", "target", "value")
+    __slots__ = ("request_id", "device_id", "target", "value", "lease_seconds")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     TARGET_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
+    LEASE_SECONDS_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     device_id: _identity_pb2.DeviceId
     target: _acl_pb2.AttributeRef
     value: _cluster_state_pb2.AttributeValue
-    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., target: _Optional[_Union[_acl_pb2.AttributeRef, _Mapping]] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ...) -> None: ...
+    lease_seconds: int
+    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., target: _Optional[_Union[_acl_pb2.AttributeRef, _Mapping]] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., lease_seconds: _Optional[int] = ...) -> None: ...

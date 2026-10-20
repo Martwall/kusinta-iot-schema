@@ -279,3 +279,67 @@ def test_a_history_answers_with_how_far_back_it_is_kept_and_its_samples():
         decoded.room_history.kept_from.seconds,
         [s.at.seconds for s in decoded.room_history.samples],
     ) == ("room_history", 1_799_000_000, [1_800_000_000, 1_800_000_900])
+
+
+# --- explanations: why a room is where it is -------------------------------------------
+
+
+def test_a_room_has_no_explanations_by_default():
+    room = climate_pb2.RoomClimate(space_id=_ROOM)
+
+    assert len(_round_trip(room).explanations) == 0
+
+
+def test_explanations_keep_their_order_most_significant_first():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM,
+        explanations=[
+            climate_pb2.ClimateExplanation(kind=climate_pb2.CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY),
+            climate_pb2.ClimateExplanation(kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH),
+        ],
+    )
+
+    assert [e.kind for e in _round_trip(room).explanations] == [
+        climate_pb2.CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY,
+        climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+    ]
+
+
+def test_an_explanation_carries_until_when_it_holds():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRE_HEAT,
+        valid_until=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+    )
+
+    assert _round_trip(explanation).valid_until.seconds == 1_800_000_000
+
+
+def test_an_explanation_band_is_absent_rather_than_zero():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING
+    )
+
+    assert not _round_trip(explanation).HasField("band_high_centidegrees")
+
+
+def test_a_floor_zone_off_says_why():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF,
+        floor_zone_off_reason=climate_pb2.FLOOR_ZONE_OFF_REASON_PRICE,
+    )
+
+    assert _round_trip(explanation).floor_zone_off_reason == climate_pb2.FLOOR_ZONE_OFF_REASON_PRICE
+
+
+def test_a_persons_target_says_until_when_it_holds():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM, target_held_until=timestamp_pb2.Timestamp(seconds=1_800_000_000)
+    )
+
+    assert _round_trip(room).target_held_until.seconds == 1_800_000_000
+
+
+def test_a_target_without_a_hold_has_no_hold_time():
+    room = climate_pb2.RoomClimate(space_id=_ROOM)
+
+    assert not _round_trip(room).HasField("target_held_until")

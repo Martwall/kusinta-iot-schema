@@ -39,6 +39,61 @@ final $typed_data.Uint8List roomClimateConditionDescriptor = $convert.base64Deco
     'RJT05fSEVBVElOR19VTlJFQUNIQUJMRRAGEiQKIFJPT01fQ0xJTUFURV9DT05ESVRJT05fTk9f'
     'U0VOU09SEAc=');
 
+@$core.Deprecated('Use climateExplanationKindDescriptor instead')
+const ClimateExplanationKind$json = {
+  '1': 'ClimateExplanationKind',
+  '2': [
+    {'1': 'CLIMATE_EXPLANATION_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PRE_HEAT', '2': 1},
+    {'1': 'CLIMATE_EXPLANATION_KIND_COASTING', '2': 2},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PRICE_HIGH', '2': 3},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PEAK_GUARD', '2': 4},
+    {'1': 'CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY', '2': 5},
+    {'1': 'CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE', '2': 6},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE', '2': 7},
+    {'1': 'CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET', '2': 8},
+    {'1': 'CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK', '2': 9},
+    {'1': 'CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF', '2': 10},
+    {'1': 'CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING', '2': 11},
+    {'1': 'CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW', '2': 12},
+    {'1': 'CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING', '2': 13},
+  ],
+};
+
+/// Descriptor for `ClimateExplanationKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List climateExplanationKindDescriptor = $convert.base64Decode(
+    'ChZDbGltYXRlRXhwbGFuYXRpb25LaW5kEigKJENMSU1BVEVfRVhQTEFOQVRJT05fS0lORF9VTl'
+    'NQRUNJRklFRBAAEiUKIUNMSU1BVEVfRVhQTEFOQVRJT05fS0lORF9QUkVfSEVBVBABEiUKIUNM'
+    'SU1BVEVfRVhQTEFOQVRJT05fS0lORF9DT0FTVElORxACEicKI0NMSU1BVEVfRVhQTEFOQVRJT0'
+    '5fS0lORF9QUklDRV9ISUdIEAMSJwojQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX1BFQUtfR1VB'
+    'UkQQBBIvCitDTElNQVRFX0VYUExBTkFUSU9OX0tJTkRfSE9UX1dBVEVSX1BSSU9SSVRZEAUSLw'
+    'orQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX0ZPTExPV0lOR19TQ0hFRFVMRRAGEi0KKUNMSU1B'
+    'VEVfRVhQTEFOQVRJT05fS0lORF9QTEFOX1VOQVZBSUxBQkxFEAcSMAosQ0xJTUFURV9FWFBMQU'
+    '5BVElPTl9LSU5EX1NIQVJFRF9QT1dFUl9CVURHRVQQCBIyCi5DTElNQVRFX0VYUExBTkFUSU9O'
+    'X0tJTkRfRElTVFJJQ1RfSEVBVElOR19QRUFLEAkSKwonQ0xJTUFURV9FWFBMQU5BVElPTl9LSU'
+    '5EX0ZMT09SX1pPTkVfT0ZGEAoSMgouQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX0ZMT09SX1pP'
+    'TkVfTk9fUkVBRElORxALEjAKLENMSU1BVEVfRVhQTEFOQVRJT05fS0lORF9DT01GT1JUX0xPQU'
+    'RfV0lORE9XEAwSLworQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX0FUX0NPTUZPUlRfQ0VJTElO'
+    'RxAN');
+
+@$core.Deprecated('Use floorZoneOffReasonDescriptor instead')
+const FloorZoneOffReason$json = {
+  '1': 'FloorZoneOffReason',
+  '2': [
+    {'1': 'FLOOR_ZONE_OFF_REASON_UNSPECIFIED', '2': 0},
+    {'1': 'FLOOR_ZONE_OFF_REASON_PRICE', '2': 1},
+    {'1': 'FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE', '2': 2},
+    {'1': 'FLOOR_ZONE_OFF_REASON_BAND_REACHED', '2': 3},
+  ],
+};
+
+/// Descriptor for `FloorZoneOffReason`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List floorZoneOffReasonDescriptor = $convert.base64Decode(
+    'ChJGbG9vclpvbmVPZmZSZWFzb24SJQohRkxPT1JfWk9ORV9PRkZfUkVBU09OX1VOU1BFQ0lGSU'
+    'VEEAASHwobRkxPT1JfWk9ORV9PRkZfUkVBU09OX1BSSUNFEAESJwojRkxPT1JfWk9ORV9PRkZf'
+    'UkVBU09OX1BSRV9IRUFUX0RPTkUQAhImCiJGTE9PUl9aT05FX09GRl9SRUFTT05fQkFORF9SRU'
+    'FDSEVEEAM=');
+
 @$core.Deprecated('Use climateModeKindDescriptor instead')
 const ClimateModeKind$json = {
   '1': 'ClimateModeKind',
@@ -241,6 +296,22 @@ const RoomClimate$json = {
       '10': 'lockDeviceControls'
     },
     {'1': 'state_withheld', '3': 15, '4': 1, '5': 8, '10': 'stateWithheld'},
+    {
+      '1': 'explanations',
+      '3': 16,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ClimateExplanation',
+      '10': 'explanations'
+    },
+    {
+      '1': 'target_held_until',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'targetHeldUntil'
+    },
   ],
   '8': [
     {'1': '_target_centidegrees'},
@@ -268,10 +339,85 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     'eRgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUgptZWFzdXJlZEJ5Ek'
     'oKCWNvbmRpdGlvbhgLIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbUNsaW1hdGVD'
     'b25kaXRpb25SCWNvbmRpdGlvbhIwChRsb2NrX2RldmljZV9jb250cm9scxgMIAEoCFISbG9ja0'
-    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkQhYK'
-    'FF90YXJnZXRfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlc0'
-    'ITChFfbWluX2NlbnRpZGVncmVlc0ITChFfbWF4X2NlbnRpZGVncmVlc0IYChZfbWVhc3VyZWRf'
-    'Y2VudGlkZWdyZWVz');
+    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkEk4K'
+    'DGV4cGxhbmF0aW9ucxgQIAMoCzIqLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0ZUV4cG'
+    'xhbmF0aW9uUgxleHBsYW5hdGlvbnMSRgoRdGFyZ2V0X2hlbGRfdW50aWwYESABKAsyGi5nb29n'
+    'bGUucHJvdG9idWYuVGltZXN0YW1wUg90YXJnZXRIZWxkVW50aWxCFgoUX3RhcmdldF9jZW50aW'
+    'RlZ3JlZXNCIAoeX2VmZmVjdGl2ZV90YXJnZXRfY2VudGlkZWdyZWVzQhMKEV9taW5fY2VudGlk'
+    'ZWdyZWVzQhMKEV9tYXhfY2VudGlkZWdyZWVzQhgKFl9tZWFzdXJlZF9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use climateExplanationDescriptor instead')
+const ClimateExplanation$json = {
+  '1': 'ClimateExplanation',
+  '2': [
+    {
+      '1': 'kind',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateExplanationKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'floor_zone_off_reason',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.FloorZoneOffReason',
+      '10': 'floorZoneOffReason'
+    },
+    {
+      '1': 'valid_from',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'validFrom'
+    },
+    {
+      '1': 'valid_until',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'validUntil'
+    },
+    {
+      '1': 'band_low_centidegrees',
+      '3': 5,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'bandLowCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'band_high_centidegrees',
+      '3': 6,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'bandHighCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_band_low_centidegrees'},
+    {'1': '_band_high_centidegrees'},
+  ],
+};
+
+/// Descriptor for `ClimateExplanation`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List climateExplanationDescriptor = $convert.base64Decode(
+    'ChJDbGltYXRlRXhwbGFuYXRpb24SQgoEa2luZBgBIAEoDjIuLmt1c2ludGEuaW90LmNsaW1hdG'
+    'UudjEuQ2xpbWF0ZUV4cGxhbmF0aW9uS2luZFIEa2luZBJdChVmbG9vcl96b25lX29mZl9yZWFz'
+    'b24YAiABKA4yKi5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLkZsb29yWm9uZU9mZlJlYXNvblISZm'
+    'xvb3Jab25lT2ZmUmVhc29uEjkKCnZhbGlkX2Zyb20YAyABKAsyGi5nb29nbGUucHJvdG9idWYu'
+    'VGltZXN0YW1wUgl2YWxpZEZyb20SOwoLdmFsaWRfdW50aWwYBCABKAsyGi5nb29nbGUucHJvdG'
+    '9idWYuVGltZXN0YW1wUgp2YWxpZFVudGlsEjcKFWJhbmRfbG93X2NlbnRpZGVncmVlcxgFIAEo'
+    'EUgAUhNiYW5kTG93Q2VudGlkZWdyZWVziAEBEjkKFmJhbmRfaGlnaF9jZW50aWRlZ3JlZXMYBi'
+    'ABKBFIAVIUYmFuZEhpZ2hDZW50aWRlZ3JlZXOIAQFCGAoWX2JhbmRfbG93X2NlbnRpZGVncmVl'
+    'c0IZChdfYmFuZF9oaWdoX2NlbnRpZGVncmVlcw==');
 
 @$core.Deprecated('Use climateModeDescriptor instead')
 const ClimateMode$json = {

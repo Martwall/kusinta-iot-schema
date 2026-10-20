@@ -15,7 +15,11 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'cluster_state.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'cluster_state.pbenum.dart';
 
 /// Matter null. Distinct from a field being absent: Matter types many attributes as
 /// nullable, where null is a reported value meaning "not currently known" — a thermostat
@@ -479,6 +483,10 @@ class ClusterState extends $pb.GeneratedMessage {
     $core.Iterable<$core.int>? acceptedCommandIds,
     $core.Iterable<$core.int>? attributeIds,
     $core.Iterable<$core.MapEntry<$core.int, $core.int>>? attributeSteps,
+    $core.Iterable<$core.MapEntry<$core.int, AttributeWriteBehaviour>>?
+        attributeWriteBehaviours,
+    $core.Iterable<$core.MapEntry<$core.int, ReadLatency>>?
+        attributeReadLatencies,
   }) {
     final result = create();
     if (clusterId != null) result.clusterId = clusterId;
@@ -490,6 +498,10 @@ class ClusterState extends $pb.GeneratedMessage {
     if (attributeIds != null) result.attributeIds.addAll(attributeIds);
     if (attributeSteps != null)
       result.attributeSteps.addEntries(attributeSteps);
+    if (attributeWriteBehaviours != null)
+      result.attributeWriteBehaviours.addEntries(attributeWriteBehaviours);
+    if (attributeReadLatencies != null)
+      result.attributeReadLatencies.addEntries(attributeReadLatencies);
     return result;
   }
 
@@ -522,6 +534,24 @@ class ClusterState extends $pb.GeneratedMessage {
         entryClassName: 'ClusterState.AttributeStepsEntry',
         keyFieldType: $pb.PbFieldType.OU3,
         valueFieldType: $pb.PbFieldType.OU3,
+        packageName: const $pb.PackageName('kusinta.iot.device.v1'))
+    ..m<$core.int, AttributeWriteBehaviour>(
+        8, _omitFieldNames ? '' : 'attributeWriteBehaviours',
+        entryClassName: 'ClusterState.AttributeWriteBehavioursEntry',
+        keyFieldType: $pb.PbFieldType.OU3,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: AttributeWriteBehaviour.create,
+        valueDefaultOrMaker: AttributeWriteBehaviour.getDefault,
+        packageName: const $pb.PackageName('kusinta.iot.device.v1'))
+    ..m<$core.int, ReadLatency>(
+        9, _omitFieldNames ? '' : 'attributeReadLatencies',
+        entryClassName: 'ClusterState.AttributeReadLatenciesEntry',
+        keyFieldType: $pb.PbFieldType.OU3,
+        valueFieldType: $pb.PbFieldType.OE,
+        valueOf: ReadLatency.valueOf,
+        enumValues: ReadLatency.values,
+        valueDefaultOrMaker: ReadLatency.READ_LATENCY_UNSPECIFIED,
+        defaultEnumValue: ReadLatency.READ_LATENCY_UNSPECIFIED,
         packageName: const $pb.PackageName('kusinta.iot.device.v1'))
     ..hasRequiredFields = false;
 
@@ -630,6 +660,174 @@ class ClusterState extends $pb.GeneratedMessage {
   /// back to its own default. A value of 0 means nothing and is treated as absent.
   @$pb.TagNumber(7)
   $pb.PbMap<$core.int, $core.int> get attributeSteps => $_getMap(6);
+
+  /// How a write to each writable attribute behaves on this endpoint, keyed by attribute
+  /// id. See AttributeWriteBehaviour.
+  ///
+  /// Per endpoint because a ClusterState belongs to one endpoint: a device with several
+  /// independently switched outputs states each output's behaviour on that output's
+  /// endpoint.
+  ///
+  /// Stated by the producer at announcement. An absent key is "not stated". A consumer
+  /// MUST treat an attribute whose behaviour is not stated as STICKY when it decides what a
+  /// write leaves behind if the consumer itself goes quiet, and MUST NOT rely on a lease
+  /// that is not stated here.
+  @$pb.TagNumber(8)
+  $pb.PbMap<$core.int, AttributeWriteBehaviour> get attributeWriteBehaviours =>
+      $_getMap(7);
+
+  /// How late a reported value of each attribute reaches the producer, keyed by attribute
+  /// id. An absent key is "not stated", and a consumer MUST NOT treat a value whose latency
+  /// is not stated as REAL_TIME when it acts on the value without a person in the loop.
+  @$pb.TagNumber(9)
+  $pb.PbMap<$core.int, ReadLatency> get attributeReadLatencies => $_getMap(8);
+}
+
+/// How a write to one attribute behaves. Stated per attribute, per endpoint, by the
+/// producer that knows the device.
+class AttributeWriteBehaviour extends $pb.GeneratedMessage {
+  factory AttributeWriteBehaviour({
+    WritePersistence? persistence,
+    $core.int? minLeaseSeconds,
+    $core.int? maxLeaseSeconds,
+    $core.bool? renewalRestartsLease,
+    AttributeValue? restValue,
+    $core.int? minWriteIntervalSeconds,
+  }) {
+    final result = create();
+    if (persistence != null) result.persistence = persistence;
+    if (minLeaseSeconds != null) result.minLeaseSeconds = minLeaseSeconds;
+    if (maxLeaseSeconds != null) result.maxLeaseSeconds = maxLeaseSeconds;
+    if (renewalRestartsLease != null)
+      result.renewalRestartsLease = renewalRestartsLease;
+    if (restValue != null) result.restValue = restValue;
+    if (minWriteIntervalSeconds != null)
+      result.minWriteIntervalSeconds = minWriteIntervalSeconds;
+    return result;
+  }
+
+  AttributeWriteBehaviour._();
+
+  factory AttributeWriteBehaviour.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AttributeWriteBehaviour.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AttributeWriteBehaviour',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
+      createEmptyInstance: create)
+    ..e<WritePersistence>(
+        1, _omitFieldNames ? '' : 'persistence', $pb.PbFieldType.OE,
+        defaultOrMaker: WritePersistence.WRITE_PERSISTENCE_UNSPECIFIED,
+        valueOf: WritePersistence.valueOf,
+        enumValues: WritePersistence.values)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'minLeaseSeconds', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'maxLeaseSeconds', $pb.PbFieldType.OU3)
+    ..aOB(4, _omitFieldNames ? '' : 'renewalRestartsLease')
+    ..aOM<AttributeValue>(5, _omitFieldNames ? '' : 'restValue',
+        subBuilder: AttributeValue.create)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'minWriteIntervalSeconds',
+        $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AttributeWriteBehaviour clone() =>
+      AttributeWriteBehaviour()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AttributeWriteBehaviour copyWith(
+          void Function(AttributeWriteBehaviour) updates) =>
+      super.copyWith((message) => updates(message as AttributeWriteBehaviour))
+          as AttributeWriteBehaviour;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AttributeWriteBehaviour create() => AttributeWriteBehaviour._();
+  @$core.override
+  AttributeWriteBehaviour createEmptyInstance() => create();
+  static $pb.PbList<AttributeWriteBehaviour> createRepeated() =>
+      $pb.PbList<AttributeWriteBehaviour>();
+  @$core.pragma('dart2js:noInline')
+  static AttributeWriteBehaviour getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AttributeWriteBehaviour>(create);
+  static AttributeWriteBehaviour? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  WritePersistence get persistence => $_getN(0);
+  @$pb.TagNumber(1)
+  set persistence(WritePersistence value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPersistence() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPersistence() => $_clearField(1);
+
+  /// LEASED only: the shortest and longest lease, in seconds, the device accepts. Absent:
+  /// not stated, never zero. A lease outside them is refused rather than clamped.
+  @$pb.TagNumber(2)
+  $core.int get minLeaseSeconds => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set minLeaseSeconds($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMinLeaseSeconds() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMinLeaseSeconds() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get maxLeaseSeconds => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set maxLeaseSeconds($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMaxLeaseSeconds() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMaxLeaseSeconds() => $_clearField(3);
+
+  /// LEASED only: whether a write that arrives before the lease runs out starts the lease
+  /// again from that write. False, or not stated: a writer MUST NOT assume that writing the
+  /// same value again extends how long it holds.
+  @$pb.TagNumber(4)
+  $core.bool get renewalRestartsLease => $_getBF(3);
+  @$pb.TagNumber(4)
+  set renewalRestartsLease($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRenewalRestartsLease() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRenewalRestartsLease() => $_clearField(4);
+
+  /// The value the attribute takes at rest: when a lease runs out, when the device's power
+  /// returns, and before anything has written it. Stated for every LEASED attribute; MAY be
+  /// stated for a STICKY one whose power-on value is known. Unset: not stated.
+  ///
+  /// It is the state a site falls back to whenever its writer is gone, so it is what an
+  /// installer checks first and what a consumer shows as "what happens if this stops".
+  @$pb.TagNumber(5)
+  AttributeValue get restValue => $_getN(4);
+  @$pb.TagNumber(5)
+  set restValue(AttributeValue value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRestValue() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRestValue() => $_clearField(5);
+  @$pb.TagNumber(5)
+  AttributeValue ensureRestValue() => $_ensure(4);
+
+  /// The fewest seconds the device needs between two writes to this attribute without
+  /// dropping one — a radio limited to a share of airtime, a battery device that wakes on
+  /// a schedule. Absent: not stated, never zero.
+  @$pb.TagNumber(6)
+  $core.int get minWriteIntervalSeconds => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set minWriteIntervalSeconds($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMinWriteIntervalSeconds() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMinWriteIntervalSeconds() => $_clearField(6);
 }
 
 const $core.bool _omitFieldNames =

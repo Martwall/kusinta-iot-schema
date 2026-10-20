@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/device/v1/cluster_state.proto (package kusinta.iot.device.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
@@ -272,6 +272,32 @@ export declare type ClusterState = Message<"kusinta.iot.device.v1.ClusterState">
    * @generated from field: map<uint32, uint32> attribute_steps = 7;
    */
   attributeSteps: { [key: number]: number };
+
+  /**
+   * How a write to each writable attribute behaves on this endpoint, keyed by attribute
+   * id. See AttributeWriteBehaviour.
+   *
+   * Per endpoint because a ClusterState belongs to one endpoint: a device with several
+   * independently switched outputs states each output's behaviour on that output's
+   * endpoint.
+   *
+   * Stated by the producer at announcement. An absent key is "not stated". A consumer
+   * MUST treat an attribute whose behaviour is not stated as STICKY when it decides what a
+   * write leaves behind if the consumer itself goes quiet, and MUST NOT rely on a lease
+   * that is not stated here.
+   *
+   * @generated from field: map<uint32, kusinta.iot.device.v1.AttributeWriteBehaviour> attribute_write_behaviours = 8;
+   */
+  attributeWriteBehaviours: { [key: number]: AttributeWriteBehaviour };
+
+  /**
+   * How late a reported value of each attribute reaches the producer, keyed by attribute
+   * id. An absent key is "not stated", and a consumer MUST NOT treat a value whose latency
+   * is not stated as REAL_TIME when it acts on the value without a person in the loop.
+   *
+   * @generated from field: map<uint32, kusinta.iot.device.v1.ReadLatency> attribute_read_latencies = 9;
+   */
+  attributeReadLatencies: { [key: number]: ReadLatency };
 };
 
 /**
@@ -279,4 +305,140 @@ export declare type ClusterState = Message<"kusinta.iot.device.v1.ClusterState">
  * Use `create(ClusterStateSchema)` to create a new message.
  */
 export declare const ClusterStateSchema: GenMessage<ClusterState>;
+
+/**
+ * How a write to one attribute behaves. Stated per attribute, per endpoint, by the
+ * producer that knows the device.
+ *
+ * @generated from message kusinta.iot.device.v1.AttributeWriteBehaviour
+ */
+export declare type AttributeWriteBehaviour = Message<"kusinta.iot.device.v1.AttributeWriteBehaviour"> & {
+  /**
+   * @generated from field: kusinta.iot.device.v1.WritePersistence persistence = 1;
+   */
+  persistence: WritePersistence;
+
+  /**
+   * LEASED only: the shortest and longest lease, in seconds, the device accepts. Absent:
+   * not stated, never zero. A lease outside them is refused rather than clamped.
+   *
+   * @generated from field: optional uint32 min_lease_seconds = 2;
+   */
+  minLeaseSeconds?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 max_lease_seconds = 3;
+   */
+  maxLeaseSeconds?: number | undefined;
+
+  /**
+   * LEASED only: whether a write that arrives before the lease runs out starts the lease
+   * again from that write. False, or not stated: a writer MUST NOT assume that writing the
+   * same value again extends how long it holds.
+   *
+   * @generated from field: bool renewal_restarts_lease = 4;
+   */
+  renewalRestartsLease: boolean;
+
+  /**
+   * The value the attribute takes at rest: when a lease runs out, when the device's power
+   * returns, and before anything has written it. Stated for every LEASED attribute; MAY be
+   * stated for a STICKY one whose power-on value is known. Unset: not stated.
+   *
+   * It is the state a site falls back to whenever its writer is gone, so it is what an
+   * installer checks first and what a consumer shows as "what happens if this stops".
+   *
+   * @generated from field: kusinta.iot.device.v1.AttributeValue rest_value = 5;
+   */
+  restValue?: AttributeValue | undefined;
+
+  /**
+   * The fewest seconds the device needs between two writes to this attribute without
+   * dropping one — a radio limited to a share of airtime, a battery device that wakes on
+   * a schedule. Absent: not stated, never zero.
+   *
+   * @generated from field: optional uint32 min_write_interval_seconds = 6;
+   */
+  minWriteIntervalSeconds?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.AttributeWriteBehaviour.
+ * Use `create(AttributeWriteBehaviourSchema)` to create a new message.
+ */
+export declare const AttributeWriteBehaviourSchema: GenMessage<AttributeWriteBehaviour>;
+
+/**
+ * Whether a written value outlives its writer's attention.
+ *
+ * @generated from enum kusinta.iot.device.v1.WritePersistence
+ */
+export enum WritePersistence {
+  /**
+   * Not stated. Treated as STICKY (see ClusterState.attribute_write_behaviours).
+   *
+   * @generated from enum value: WRITE_PERSISTENCE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The device holds a written value until something writes it again: through the
+   * writer's absence, a lost network and, unless rest_value says otherwise, a restart. A
+   * writer that may go quiet chooses a value it can live with being left in place.
+   *
+   * @generated from enum value: WRITE_PERSISTENCE_STICKY = 1;
+   */
+  STICKY = 1,
+
+  /**
+   * The device itself returns the attribute to rest_value when a write's lease runs out,
+   * whether or not anything is still talking to it. The lease is kept by the device — a
+   * timer, or a watchdog on the device's own link — never by the writer re-sending: a value
+   * that lapses only because its writer keeps renewing it is STICKY to anyone who has to
+   * plan for the writer failing.
+   *
+   * @generated from enum value: WRITE_PERSISTENCE_LEASED = 2;
+   */
+  LEASED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.WritePersistence.
+ */
+export declare const WritePersistenceSchema: GenEnum<WritePersistence>;
+
+/**
+ * How late a reported value reaches the producer after it changes at the device.
+ *
+ * @generated from enum kusinta.iot.device.v1.ReadLatency
+ */
+export enum ReadLatency {
+  /**
+   * Not stated. Never treated as REAL_TIME (see ClusterState.attribute_read_latencies).
+   *
+   * @generated from enum value: READ_LATENCY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Within a few minutes of the change, every time.
+   *
+   * @generated from enum value: READ_LATENCY_REAL_TIME = 1;
+   */
+  REAL_TIME = 1,
+
+  /**
+   * Late enough that acting on it as current would be wrong: values collected by a
+   * vendor's service and handed on in batches, hourly values made available the next day.
+   * Fit for records, models and reports; not for a decision that has to be made now.
+   *
+   * @generated from enum value: READ_LATENCY_DELAYED = 2;
+   */
+  DELAYED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.ReadLatency.
+ */
+export declare const ReadLatencySchema: GenEnum<ReadLatency>;
 

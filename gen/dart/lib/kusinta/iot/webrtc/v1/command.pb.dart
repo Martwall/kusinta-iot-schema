@@ -894,12 +894,14 @@ class AttributeWriteRequest extends $pb.GeneratedMessage {
     $0.DeviceId? deviceId,
     $2.AttributeRef? target,
     $3.AttributeValue? value,
+    $core.int? leaseSeconds,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
     if (deviceId != null) result.deviceId = deviceId;
     if (target != null) result.target = target;
     if (value != null) result.value = value;
+    if (leaseSeconds != null) result.leaseSeconds = leaseSeconds;
     return result;
   }
 
@@ -924,6 +926,8 @@ class AttributeWriteRequest extends $pb.GeneratedMessage {
         subBuilder: $2.AttributeRef.create)
     ..aOM<$3.AttributeValue>(4, _omitFieldNames ? '' : 'value',
         subBuilder: $3.AttributeValue.create)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'leaseSeconds', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -992,6 +996,24 @@ class AttributeWriteRequest extends $pb.GeneratedMessage {
   void clearValue() => $_clearField(4);
   @$pb.TagNumber(4)
   $3.AttributeValue ensureValue() => $_ensure(3);
+
+  /// How long, in seconds, the written value holds before the device itself returns the
+  /// attribute to its rest value — for an attribute the producer states as LEASED
+  /// (device.v1.AttributeWriteBehaviour). Within the stated minimum and maximum.
+  ///
+  /// The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a LEASED
+  /// attribute that carries no lease, a lease outside the stated bounds, and a lease on an
+  /// attribute it does not state as LEASED. A writer that believes a value will lapse when
+  /// it will not is exactly the failure a lease exists to prevent, so the mismatch is never
+  /// carried out silently.
+  @$pb.TagNumber(5)
+  $core.int get leaseSeconds => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set leaseSeconds($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasLeaseSeconds() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearLeaseSeconds() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =

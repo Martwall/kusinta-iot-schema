@@ -126,4 +126,83 @@ message ClusterState {
   // applies: an absent key is "not stated", never a step of zero, and a consumer falls
   // back to its own default. A value of 0 means nothing and is treated as absent.
   map<uint32, uint32> attribute_steps = 7;
+
+  // How a write to each writable attribute behaves on this endpoint, keyed by attribute
+  // id. See AttributeWriteBehaviour.
+  //
+  // Per endpoint because a ClusterState belongs to one endpoint: a device with several
+  // independently switched outputs states each output's behaviour on that output's
+  // endpoint.
+  //
+  // Stated by the producer at announcement. An absent key is "not stated". A consumer
+  // MUST treat an attribute whose behaviour is not stated as STICKY when it decides what a
+  // write leaves behind if the consumer itself goes quiet, and MUST NOT rely on a lease
+  // that is not stated here.
+  map<uint32, AttributeWriteBehaviour> attribute_write_behaviours = 8;
+
+  // How late a reported value of each attribute reaches the producer, keyed by attribute
+  // id. An absent key is "not stated", and a consumer MUST NOT treat a value whose latency
+  // is not stated as REAL_TIME when it acts on the value without a person in the loop.
+  map<uint32, ReadLatency> attribute_read_latencies = 9;
+}
+
+// Whether a written value outlives its writer's attention.
+enum WritePersistence {
+  // Not stated. Treated as STICKY (see ClusterState.attribute_write_behaviours).
+  WRITE_PERSISTENCE_UNSPECIFIED = 0;
+
+  // The device holds a written value until something writes it again: through the
+  // writer's absence, a lost network and, unless rest_value says otherwise, a restart. A
+  // writer that may go quiet chooses a value it can live with being left in place.
+  WRITE_PERSISTENCE_STICKY = 1;
+
+  // The device itself returns the attribute to rest_value when a write's lease runs out,
+  // whether or not anything is still talking to it. The lease is kept by the device — a
+  // timer, or a watchdog on the device's own link — never by the writer re-sending: a value
+  // that lapses only because its writer keeps renewing it is STICKY to anyone who has to
+  // plan for the writer failing.
+  WRITE_PERSISTENCE_LEASED = 2;
+}
+
+// How a write to one attribute behaves. Stated per attribute, per endpoint, by the
+// producer that knows the device.
+message AttributeWriteBehaviour {
+  WritePersistence persistence = 1;
+
+  // LEASED only: the shortest and longest lease, in seconds, the device accepts. Absent:
+  // not stated, never zero. A lease outside them is refused rather than clamped.
+  optional uint32 min_lease_seconds = 2;
+  optional uint32 max_lease_seconds = 3;
+
+  // LEASED only: whether a write that arrives before the lease runs out starts the lease
+  // again from that write. False, or not stated: a writer MUST NOT assume that writing the
+  // same value again extends how long it holds.
+  bool renewal_restarts_lease = 4;
+
+  // The value the attribute takes at rest: when a lease runs out, when the device's power
+  // returns, and before anything has written it. Stated for every LEASED attribute; MAY be
+  // stated for a STICKY one whose power-on value is known. Unset: not stated.
+  //
+  // It is the state a site falls back to whenever its writer is gone, so it is what an
+  // installer checks first and what a consumer shows as "what happens if this stops".
+  AttributeValue rest_value = 5;
+
+  // The fewest seconds the device needs between two writes to this attribute without
+  // dropping one — a radio limited to a share of airtime, a battery device that wakes on
+  // a schedule. Absent: not stated, never zero.
+  optional uint32 min_write_interval_seconds = 6;
+}
+
+// How late a reported value reaches the producer after it changes at the device.
+enum ReadLatency {
+  // Not stated. Never treated as REAL_TIME (see ClusterState.attribute_read_latencies).
+  READ_LATENCY_UNSPECIFIED = 0;
+
+  // Within a few minutes of the change, every time.
+  READ_LATENCY_REAL_TIME = 1;
+
+  // Late enough that acting on it as current would be wrong: values collected by a
+  // vendor's service and handed on in batches, hourly values made available the next day.
+  // Fit for records, models and reports; not for a decision that has to be made now.
+  READ_LATENCY_DELAYED = 2;
 }

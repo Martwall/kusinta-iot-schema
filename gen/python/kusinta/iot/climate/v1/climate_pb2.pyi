@@ -22,6 +22,30 @@ class RoomClimateCondition(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ROOM_CLIMATE_CONDITION_HEATING_UNREACHABLE: _ClassVar[RoomClimateCondition]
     ROOM_CLIMATE_CONDITION_NO_SENSOR: _ClassVar[RoomClimateCondition]
 
+class ClimateExplanationKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CLIMATE_EXPLANATION_KIND_UNSPECIFIED: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_PRE_HEAT: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_COASTING: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_PRICE_HIGH: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_PEAK_GUARD: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW: _ClassVar[ClimateExplanationKind]
+    CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING: _ClassVar[ClimateExplanationKind]
+
+class FloorZoneOffReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FLOOR_ZONE_OFF_REASON_UNSPECIFIED: _ClassVar[FloorZoneOffReason]
+    FLOOR_ZONE_OFF_REASON_PRICE: _ClassVar[FloorZoneOffReason]
+    FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE: _ClassVar[FloorZoneOffReason]
+    FLOOR_ZONE_OFF_REASON_BAND_REACHED: _ClassVar[FloorZoneOffReason]
+
 class ClimateModeKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     CLIMATE_MODE_KIND_UNSPECIFIED: _ClassVar[ClimateModeKind]
@@ -47,6 +71,24 @@ ROOM_CLIMATE_CONDITION_WINDOW_OPEN: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_NO_HEATING: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_HEATING_UNREACHABLE: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_NO_SENSOR: RoomClimateCondition
+CLIMATE_EXPLANATION_KIND_UNSPECIFIED: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_PRE_HEAT: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_COASTING: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_PRICE_HIGH: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_PEAK_GUARD: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_FOLLOWING_SCHEDULE: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_PLAN_UNAVAILABLE: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_OFF: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_FLOOR_ZONE_NO_READING: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_COMFORT_LOAD_WINDOW: ClimateExplanationKind
+CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING: ClimateExplanationKind
+FLOOR_ZONE_OFF_REASON_UNSPECIFIED: FloorZoneOffReason
+FLOOR_ZONE_OFF_REASON_PRICE: FloorZoneOffReason
+FLOOR_ZONE_OFF_REASON_PRE_HEAT_DONE: FloorZoneOffReason
+FLOOR_ZONE_OFF_REASON_BAND_REACHED: FloorZoneOffReason
 CLIMATE_MODE_KIND_UNSPECIFIED: ClimateModeKind
 CLIMATE_MODE_KIND_AWAY: ClimateModeKind
 CLIMATE_MODE_KIND_HOLIDAY: ClimateModeKind
@@ -68,7 +110,7 @@ class TargetChange(_message.Message):
     def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., user: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., device: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
 
 class RoomClimate(_message.Message):
-    __slots__ = ("space_id", "target_centidegrees", "target_change", "effective_target_centidegrees", "overrides_mode", "mode_space_id", "min_centidegrees", "max_centidegrees", "sensor_ids", "sensors_configured", "measured_centidegrees", "measured_by", "condition", "lock_device_controls", "state_withheld")
+    __slots__ = ("space_id", "target_centidegrees", "target_change", "effective_target_centidegrees", "overrides_mode", "mode_space_id", "min_centidegrees", "max_centidegrees", "sensor_ids", "sensors_configured", "measured_centidegrees", "measured_by", "condition", "lock_device_controls", "state_withheld", "explanations", "target_held_until")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     TARGET_CHANGE_FIELD_NUMBER: _ClassVar[int]
@@ -84,6 +126,8 @@ class RoomClimate(_message.Message):
     CONDITION_FIELD_NUMBER: _ClassVar[int]
     LOCK_DEVICE_CONTROLS_FIELD_NUMBER: _ClassVar[int]
     STATE_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    EXPLANATIONS_FIELD_NUMBER: _ClassVar[int]
+    TARGET_HELD_UNTIL_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     target_centidegrees: int
     target_change: TargetChange
@@ -99,7 +143,25 @@ class RoomClimate(_message.Message):
     condition: RoomClimateCondition
     lock_device_controls: bool
     state_withheld: bool
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ..., state_withheld: _Optional[bool] = ...) -> None: ...
+    explanations: _containers.RepeatedCompositeFieldContainer[ClimateExplanation]
+    target_held_until: _timestamp_pb2.Timestamp
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ..., state_withheld: _Optional[bool] = ..., explanations: _Optional[_Iterable[_Union[ClimateExplanation, _Mapping]]] = ..., target_held_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class ClimateExplanation(_message.Message):
+    __slots__ = ("kind", "floor_zone_off_reason", "valid_from", "valid_until", "band_low_centidegrees", "band_high_centidegrees")
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    FLOOR_ZONE_OFF_REASON_FIELD_NUMBER: _ClassVar[int]
+    VALID_FROM_FIELD_NUMBER: _ClassVar[int]
+    VALID_UNTIL_FIELD_NUMBER: _ClassVar[int]
+    BAND_LOW_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    BAND_HIGH_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    kind: ClimateExplanationKind
+    floor_zone_off_reason: FloorZoneOffReason
+    valid_from: _timestamp_pb2.Timestamp
+    valid_until: _timestamp_pb2.Timestamp
+    band_low_centidegrees: int
+    band_high_centidegrees: int
+    def __init__(self, kind: _Optional[_Union[ClimateExplanationKind, str]] = ..., floor_zone_off_reason: _Optional[_Union[FloorZoneOffReason, str]] = ..., valid_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., valid_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., band_low_centidegrees: _Optional[int] = ..., band_high_centidegrees: _Optional[int] = ...) -> None: ...
 
 class ClimateMode(_message.Message):
     __slots__ = ("space_id", "kind", "setback_centidegrees", "starts_at", "ends_at", "set_by", "warm_from")

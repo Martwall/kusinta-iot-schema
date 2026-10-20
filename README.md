@@ -259,6 +259,19 @@ pushed as `RoomClimateChanged` and `ClimateModeChanged`.
 Device links (`link/v1`) remain, but as the mechanism underneath a room rather than something
 a person sets a temperature on.
 
+When a room is held somewhere other than plainly at its target, `RoomClimate.explanations`
+says why, most significant first: heating ahead of an expensive hour, coasting on stored
+heat, the heat source busy with hot water, a floor zone switched off, the room already at
+the top of its comfort band. Each is a `ClimateExplanationKind` from a closed list — the
+gateway sends a kind, the app names it in its user's language — with a validity window and
+the comfort band in force. No kind identifies another household: a limit shared with other
+homes is told as "this room was limited", never by whom. An app shows no explanation past its
+`valid_until`, including while it cannot reach the gateway. What `condition` and
+`target_change` already say (a window, a lost sensor, who set the target) is never repeated
+there; how long a person's target holds before the gateway moves it again is
+`target_held_until`. In a home, explanations are withheld from service along with the rest
+of the room's state.
+
 ## Invites
 
 People are put on a space by invite rather than by user id (`webrtc/v1/invite.proto`). The
@@ -495,6 +508,32 @@ is indistinguishable from "this device has no such hardware" — and for a param
 the attribute in the implemented list with no value in the properties message says
 *implemented, not yet reported*; omitting it says *the device does not have it*. An empty list
 is "not stated", never "implements nothing".
+
+## What a write leaves behind
+
+A fourth question sits beside those three: once written, how long does a value stay? A
+producer states it per attribute, per endpoint, in `ClusterState.attribute_write_behaviours`:
+
+- **`STICKY`** — the device holds the value until something writes it again, through the
+  writer's absence and (unless `rest_value` says otherwise) a restart.
+- **`LEASED`** — the device itself returns the attribute to `rest_value` when the write's
+  lease runs out, whether or not anything is still talking to it. The lease is the device's
+  own timer or link watchdog; a value that lapses only because its writer keeps re-sending is
+  sticky to anyone who must plan for the writer failing. A leased write carries its length in
+  `AttributeWriteRequest.lease_seconds`, within the stated bounds, and the producer refuses a
+  mismatch (no lease on a leased attribute, a lease on a sticky one, a lease out of bounds)
+  as `INVALID_COMMAND`.
+
+`rest_value` is what a site falls back to whenever its writer is gone — after a lapsed lease,
+after power returns, before the first write. `min_write_interval_seconds` says how often the
+device can take a write without dropping one. An absent key is "not stated", and a consumer
+treats it as sticky when it decides what a write leaves behind if the consumer goes quiet.
+
+`ClusterState.attribute_read_latencies` answers the matching question for reads: whether a
+reported value reaches the producer within minutes (`REAL_TIME`) or late enough that acting
+on it as current would be wrong (`DELAYED`, e.g. values a vendor's service hands on in
+batches). A consumer never treats a value of unstated latency as real-time when it acts on it
+without a person in the loop.
 
 ## Field presence in properties
 

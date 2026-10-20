@@ -366,6 +366,18 @@ const AttributeWriteRequest$json = {
       '6': '.kusinta.iot.device.v1.AttributeValue',
       '10': 'value'
     },
+    {
+      '1': 'lease_seconds',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'leaseSeconds',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_lease_seconds'},
   ],
 };
 
@@ -375,4 +387,5 @@ final $typed_data.Uint8List attributeWriteRequestDescriptor = $convert.base64Dec
     '4KCWRldmljZV9pZBgCIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUghk'
     'ZXZpY2VJZBI7CgZ0YXJnZXQYAyABKAsyIy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuQXR0cmlidX'
     'RlUmVmUgZ0YXJnZXQSOwoFdmFsdWUYBCABKAsyJS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuQXR0'
-    'cmlidXRlVmFsdWVSBXZhbHVl');
+    'cmlidXRlVmFsdWVSBXZhbHVlEigKDWxlYXNlX3NlY29uZHMYBSABKA1IAFIMbGVhc2VTZWNvbm'
+    'RziAEBQhAKDl9sZWFzZV9zZWNvbmRz');

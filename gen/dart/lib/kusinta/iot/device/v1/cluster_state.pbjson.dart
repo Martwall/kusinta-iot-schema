@@ -14,6 +14,37 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use writePersistenceDescriptor instead')
+const WritePersistence$json = {
+  '1': 'WritePersistence',
+  '2': [
+    {'1': 'WRITE_PERSISTENCE_UNSPECIFIED', '2': 0},
+    {'1': 'WRITE_PERSISTENCE_STICKY', '2': 1},
+    {'1': 'WRITE_PERSISTENCE_LEASED', '2': 2},
+  ],
+};
+
+/// Descriptor for `WritePersistence`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List writePersistenceDescriptor = $convert.base64Decode(
+    'ChBXcml0ZVBlcnNpc3RlbmNlEiEKHVdSSVRFX1BFUlNJU1RFTkNFX1VOU1BFQ0lGSUVEEAASHA'
+    'oYV1JJVEVfUEVSU0lTVEVOQ0VfU1RJQ0tZEAESHAoYV1JJVEVfUEVSU0lTVEVOQ0VfTEVBU0VE'
+    'EAI=');
+
+@$core.Deprecated('Use readLatencyDescriptor instead')
+const ReadLatency$json = {
+  '1': 'ReadLatency',
+  '2': [
+    {'1': 'READ_LATENCY_UNSPECIFIED', '2': 0},
+    {'1': 'READ_LATENCY_REAL_TIME', '2': 1},
+    {'1': 'READ_LATENCY_DELAYED', '2': 2},
+  ],
+};
+
+/// Descriptor for `ReadLatency`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List readLatencyDescriptor = $convert.base64Decode(
+    'CgtSZWFkTGF0ZW5jeRIcChhSRUFEX0xBVEVOQ1lfVU5TUEVDSUZJRUQQABIaChZSRUFEX0xBVE'
+    'VOQ1lfUkVBTF9USU1FEAESGAoUUkVBRF9MQVRFTkNZX0RFTEFZRUQQAg==');
+
 @$core.Deprecated('Use nullValueDescriptor instead')
 const NullValue$json = {
   '1': 'NullValue',
@@ -207,8 +238,28 @@ const ClusterState$json = {
       '6': '.kusinta.iot.device.v1.ClusterState.AttributeStepsEntry',
       '10': 'attributeSteps'
     },
+    {
+      '1': 'attribute_write_behaviours',
+      '3': 8,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.ClusterState.AttributeWriteBehavioursEntry',
+      '10': 'attributeWriteBehaviours'
+    },
+    {
+      '1': 'attribute_read_latencies',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.ClusterState.AttributeReadLatenciesEntry',
+      '10': 'attributeReadLatencies'
+    },
   ],
-  '3': [ClusterState_AttributeStepsEntry$json],
+  '3': [
+    ClusterState_AttributeStepsEntry$json,
+    ClusterState_AttributeWriteBehavioursEntry$json,
+    ClusterState_AttributeReadLatenciesEntry$json
+  ],
   '8': [
     {'1': '_cluster_revision'},
     {'1': '_feature_map'},
@@ -225,6 +276,40 @@ const ClusterState_AttributeStepsEntry$json = {
   '7': {'7': true},
 };
 
+@$core.Deprecated('Use clusterStateDescriptor instead')
+const ClusterState_AttributeWriteBehavioursEntry$json = {
+  '1': 'AttributeWriteBehavioursEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 13, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.AttributeWriteBehaviour',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
+@$core.Deprecated('Use clusterStateDescriptor instead')
+const ClusterState_AttributeReadLatenciesEntry$json = {
+  '1': 'AttributeReadLatenciesEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 13, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.device.v1.ReadLatency',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
+};
+
 /// Descriptor for `ClusterState`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List clusterStateDescriptor = $convert.base64Decode(
     'CgxDbHVzdGVyU3RhdGUSHQoKY2x1c3Rlcl9pZBgBIAEoDVIJY2x1c3RlcklkEi4KEGNsdXN0ZX'
@@ -233,6 +318,89 @@ final $typed_data.Uint8List clusterStateDescriptor = $convert.base64Decode(
     'RldmljZS52MS5BdHRyaWJ1dGVTdGF0ZVIKYXR0cmlidXRlcxIwChRhY2NlcHRlZF9jb21tYW5k'
     'X2lkcxgFIAMoDVISYWNjZXB0ZWRDb21tYW5kSWRzEiMKDWF0dHJpYnV0ZV9pZHMYBiADKA1SDG'
     'F0dHJpYnV0ZUlkcxJgCg9hdHRyaWJ1dGVfc3RlcHMYByADKAsyNy5rdXNpbnRhLmlvdC5kZXZp'
-    'Y2UudjEuQ2x1c3RlclN0YXRlLkF0dHJpYnV0ZVN0ZXBzRW50cnlSDmF0dHJpYnV0ZVN0ZXBzGk'
-    'EKE0F0dHJpYnV0ZVN0ZXBzRW50cnkSEAoDa2V5GAEgASgNUgNrZXkSFAoFdmFsdWUYAiABKA1S'
-    'BXZhbHVlOgI4AUITChFfY2x1c3Rlcl9yZXZpc2lvbkIOCgxfZmVhdHVyZV9tYXA=');
+    'Y2UudjEuQ2x1c3RlclN0YXRlLkF0dHJpYnV0ZVN0ZXBzRW50cnlSDmF0dHJpYnV0ZVN0ZXBzEn'
+    '8KGmF0dHJpYnV0ZV93cml0ZV9iZWhhdmlvdXJzGAggAygLMkEua3VzaW50YS5pb3QuZGV2aWNl'
+    'LnYxLkNsdXN0ZXJTdGF0ZS5BdHRyaWJ1dGVXcml0ZUJlaGF2aW91cnNFbnRyeVIYYXR0cmlidX'
+    'RlV3JpdGVCZWhhdmlvdXJzEnkKGGF0dHJpYnV0ZV9yZWFkX2xhdGVuY2llcxgJIAMoCzI/Lmt1'
+    'c2ludGEuaW90LmRldmljZS52MS5DbHVzdGVyU3RhdGUuQXR0cmlidXRlUmVhZExhdGVuY2llc0'
+    'VudHJ5UhZhdHRyaWJ1dGVSZWFkTGF0ZW5jaWVzGkEKE0F0dHJpYnV0ZVN0ZXBzRW50cnkSEAoD'
+    'a2V5GAEgASgNUgNrZXkSFAoFdmFsdWUYAiABKA1SBXZhbHVlOgI4ARp7Ch1BdHRyaWJ1dGVXcm'
+    'l0ZUJlaGF2aW91cnNFbnRyeRIQCgNrZXkYASABKA1SA2tleRJECgV2YWx1ZRgCIAEoCzIuLmt1'
+    'c2ludGEuaW90LmRldmljZS52MS5BdHRyaWJ1dGVXcml0ZUJlaGF2aW91clIFdmFsdWU6AjgBGm'
+    '0KG0F0dHJpYnV0ZVJlYWRMYXRlbmNpZXNFbnRyeRIQCgNrZXkYASABKA1SA2tleRI4CgV2YWx1'
+    'ZRgCIAEoDjIiLmt1c2ludGEuaW90LmRldmljZS52MS5SZWFkTGF0ZW5jeVIFdmFsdWU6AjgBQh'
+    'MKEV9jbHVzdGVyX3JldmlzaW9uQg4KDF9mZWF0dXJlX21hcA==');
+
+@$core.Deprecated('Use attributeWriteBehaviourDescriptor instead')
+const AttributeWriteBehaviour$json = {
+  '1': 'AttributeWriteBehaviour',
+  '2': [
+    {
+      '1': 'persistence',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.device.v1.WritePersistence',
+      '10': 'persistence'
+    },
+    {
+      '1': 'min_lease_seconds',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'minLeaseSeconds',
+      '17': true
+    },
+    {
+      '1': 'max_lease_seconds',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'maxLeaseSeconds',
+      '17': true
+    },
+    {
+      '1': 'renewal_restarts_lease',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '10': 'renewalRestartsLease'
+    },
+    {
+      '1': 'rest_value',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.AttributeValue',
+      '10': 'restValue'
+    },
+    {
+      '1': 'min_write_interval_seconds',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '9': 2,
+      '10': 'minWriteIntervalSeconds',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_min_lease_seconds'},
+    {'1': '_max_lease_seconds'},
+    {'1': '_min_write_interval_seconds'},
+  ],
+};
+
+/// Descriptor for `AttributeWriteBehaviour`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List attributeWriteBehaviourDescriptor = $convert.base64Decode(
+    'ChdBdHRyaWJ1dGVXcml0ZUJlaGF2aW91chJJCgtwZXJzaXN0ZW5jZRgBIAEoDjInLmt1c2ludG'
+    'EuaW90LmRldmljZS52MS5Xcml0ZVBlcnNpc3RlbmNlUgtwZXJzaXN0ZW5jZRIvChFtaW5fbGVh'
+    'c2Vfc2Vjb25kcxgCIAEoDUgAUg9taW5MZWFzZVNlY29uZHOIAQESLwoRbWF4X2xlYXNlX3NlY2'
+    '9uZHMYAyABKA1IAVIPbWF4TGVhc2VTZWNvbmRziAEBEjQKFnJlbmV3YWxfcmVzdGFydHNfbGVh'
+    'c2UYBCABKAhSFHJlbmV3YWxSZXN0YXJ0c0xlYXNlEkQKCnJlc3RfdmFsdWUYBSABKAsyJS5rdX'
+    'NpbnRhLmlvdC5kZXZpY2UudjEuQXR0cmlidXRlVmFsdWVSCXJlc3RWYWx1ZRJAChptaW5fd3Jp'
+    'dGVfaW50ZXJ2YWxfc2Vjb25kcxgGIAEoDUgCUhdtaW5Xcml0ZUludGVydmFsU2Vjb25kc4gBAU'
+    'IUChJfbWluX2xlYXNlX3NlY29uZHNCFAoSX21heF9sZWFzZV9zZWNvbmRzQh0KG19taW5fd3Jp'
+    'dGVfaW50ZXJ2YWxfc2Vjb25kcw==');
