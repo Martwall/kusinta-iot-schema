@@ -119,11 +119,18 @@ export const ClimateExplanationKindSchema = /*@__PURE__*/
 /**
  * What held a room, or a part of its heating, where it is. A closed list of causes: the
  * gateway sends a kind, never a sentence, and the app names each kind in its user's
- * language. What the cause acts on is ClimateExplanation.subject.
+ * language. What the cause acts on is ClimateExplanation.subject, and each kind lists the
+ * subjects it may carry. A pair a kind does not list is shown as nothing, so a pair added
+ * later reaches an older app as nothing rather than as a guess.
  *
- * No kind identifies another household or anything about one. Where a limit is shared —
- * a building's power, a shared heat source — the explanation says that this room was
- * limited, never by whom or because of whom.
+ * No kind identifies another household or anything about one, its activity included.
+ * Where a limit is shared — a building's power, a shared heat source — the explanation
+ * says that this room was limited, never by whom or because of whom. A kind that a source
+ * or limit shared with other homes drives — HOT_WATER_PRIORITY on a shared heat source,
+ * SHARED_POWER_BUDGET, DISTRICT_HEATING_PEAK on a shared connection — is sent only where at
+ * least three homes share that source or limit, in rooms in homes and outside them alike.
+ * Below that, its onset and end would track another home's use as it happens, and the
+ * room carries no explanation for it.
  *
  * @generated from enum kusinta.iot.climate.v1.ClimateExplanationKind
  */

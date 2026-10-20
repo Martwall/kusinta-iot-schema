@@ -25,6 +25,7 @@ class CommandErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMMAND_ERROR_CODE_TIMEOUT: _ClassVar[CommandErrorCode]
     COMMAND_ERROR_CODE_REJECTED_BY_DEVICE: _ClassVar[CommandErrorCode]
     COMMAND_ERROR_CODE_INTERNAL: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_HELD_BY_GATEWAY: _ClassVar[CommandErrorCode]
 COMMAND_ERROR_CODE_UNSPECIFIED: CommandErrorCode
 COMMAND_ERROR_CODE_NOT_ENTITLED: CommandErrorCode
 COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED: CommandErrorCode
@@ -33,6 +34,7 @@ COMMAND_ERROR_CODE_UNREACHABLE: CommandErrorCode
 COMMAND_ERROR_CODE_TIMEOUT: CommandErrorCode
 COMMAND_ERROR_CODE_REJECTED_BY_DEVICE: CommandErrorCode
 COMMAND_ERROR_CODE_INTERNAL: CommandErrorCode
+COMMAND_ERROR_CODE_HELD_BY_GATEWAY: CommandErrorCode
 
 class ThermostatSetpointParams(_message.Message):
     __slots__ = ("mode", "amount")

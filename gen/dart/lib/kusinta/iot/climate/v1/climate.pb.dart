@@ -468,9 +468,9 @@ class RoomClimate extends $pb.GeneratedMessage {
 
   /// Why the room is being held where it is, when that differs from simply holding its
   /// target: a plan heating ahead of an expensive hour, the heat source busy with hot water,
-  /// a floor zone held back. Most significant first; an app that shows one shows the first
-  /// it can show.
-  /// Empty: nothing beyond the target and condition needs explaining.
+  /// a floor zone held back. Most significant first. An app that shows one shows the first
+  /// it can show: a kind and subject it knows, a pair that kind lists, and not past its
+  /// ends_at. Empty: nothing beyond the target and condition needs explaining.
   ///
   /// A window, a lost sensor and the rest of RoomClimateCondition are told by condition and
   /// never repeated here; a target a person set is told by target_change and
@@ -484,7 +484,8 @@ class RoomClimate extends $pb.GeneratedMessage {
 
   /// When a target a person set will next be moved by the gateway on its own — a schedule
   /// step, a plan taking over again. Unset: it holds until somebody changes it. Told so that
-  /// a person is not surprised when their change ends.
+  /// a person is not surprised when their change ends. Unset whenever target_change is
+  /// withheld from the recipient, for the same reasons: it describes the same change.
   @$pb.TagNumber(17)
   $0.Timestamp get targetHeldUntil => $_getN(16);
   @$pb.TagNumber(17)
@@ -619,8 +620,10 @@ class ClimateExplanation extends $pb.GeneratedMessage {
 
   /// When the explanation stops holding. Unset: while the room's latest RoomClimate carries
   /// it. An app MUST NOT show an explanation past its ends_at, also while it cannot reach
-  /// the gateway: an explanation that outlives its window is a claim about the room nobody
-  /// is making any more.
+  /// the gateway, and while it cannot reach the gateway it shows none without an ends_at:
+  /// an explanation that outlives its window is a claim about the room nobody is making any
+  /// more. An explanation that holds because of a leased write ends no later than that
+  /// lease, after which the output is back at its lapse value whatever the gateway does.
   @$pb.TagNumber(3)
   $0.Timestamp get endsAt => $_getN(2);
   @$pb.TagNumber(3)

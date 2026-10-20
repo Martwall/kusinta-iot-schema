@@ -265,10 +265,13 @@ heat, the heat source busy with hot water, the room already at the top of its co
 Each is a cause from a closed list (`ClimateExplanationKind`): the gateway sends a kind and
 the app names it in its user's language. A `subject` says what the cause acts on: the room
 as a whole, or a part of its heating, so "price high" on a floor zone reads as the floor zone
-held back for price. An unknown or unset subject is shown as nothing, never as the room. An optional `ends_at` closes it, and an app shows no explanation
+held back for price. Each kind lists the subjects it may carry. A pair the kind does not
+list, or an unknown or unset subject, is shown as nothing, never as the room. An optional `ends_at` closes it, and an app shows no explanation
 past that, including while it cannot reach the gateway. No kind identifies another
-household: a limit shared with other homes is told as "this room was limited", never by
-whom.
+household or its activity. A limit shared with other homes is told as "this room was
+limited", never by whom. A kind driven by a source or limit shared with other homes is sent
+only where at least three homes share it, because otherwise its onset would track a
+neighbour's use. Offline, an app shows no explanation without an `ends_at`.
 
 Three facts sit beside the list rather than in it, because they are states of the room and
 not reasons:
@@ -537,6 +540,11 @@ in `ClusterState.attribute_behaviours`, per endpoint. For a vendor parameter it 
   - The producer refuses a mismatch as `INVALID_COMMAND`: no lease on a leased attribute, a
     lease on any other attribute, or a lease of zero or out of bounds. Writers send leases
     before producers state attributes as leased.
+  - Only the gateway sets a lease. It refuses a lease from an app (`INVALID_COMMAND`), and
+    an app's write or command to a leased attribute (`HELD_BY_GATEWAY`): a person changes
+    such an output through the room's target and comfort band.
+  - A device whose timer returns the output to whatever it held before is leased only if
+    its producer keeps that earlier value fixed; otherwise it is stated sticky.
 
 `lapse_value` is what a site falls back to whenever its writer is gone. `power_on_value`
 says what the attribute takes when power returns, but only where the cluster has no startup

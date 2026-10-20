@@ -735,6 +735,12 @@ describe('AttributeWriteRequest — the WRITE carrier', () => {
     expect(create(AttributeWriteRequestSchema, { requestId: 'w-2' }).leaseSeconds).toBeUndefined()
   })
 
+  it('refuses a person’s write to a gateway-held attribute with a code of its own', () => {
+    const result = create(CommandResultSchema, { requestId: 'w-3', error: { code: CommandErrorCode.HELD_BY_GATEWAY } })
+    const decoded = fromBinary(CommandResultSchema, toBinary(CommandResultSchema, result))
+    expect(decoded.error?.code).toBe(CommandErrorCode.HELD_BY_GATEWAY)
+  })
+
   it('carries a lease on a command that sets a leased attribute', () => {
     const cmd = create(DeviceCommandSchema, {
       requestId: 'c-1',

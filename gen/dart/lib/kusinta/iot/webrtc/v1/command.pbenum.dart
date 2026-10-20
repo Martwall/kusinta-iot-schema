@@ -66,6 +66,14 @@ class CommandErrorCode extends $pb.ProtobufEnum {
       CommandErrorCode._(
           7, _omitEnumNames ? '' : 'COMMAND_ERROR_CODE_INTERNAL');
 
+  /// The attribute is one the gateway drives under a lease — a floor zone, a heat source's
+  /// add-on heater block — and a person changes it through the room's target and comfort
+  /// band, not directly. Permanent for this attribute: do not retry; tell the user where to
+  /// change it instead.
+  static const CommandErrorCode COMMAND_ERROR_CODE_HELD_BY_GATEWAY =
+      CommandErrorCode._(
+          8, _omitEnumNames ? '' : 'COMMAND_ERROR_CODE_HELD_BY_GATEWAY');
+
   static const $core.List<CommandErrorCode> values = <CommandErrorCode>[
     COMMAND_ERROR_CODE_UNSPECIFIED,
     COMMAND_ERROR_CODE_NOT_ENTITLED,
@@ -75,10 +83,11 @@ class CommandErrorCode extends $pb.ProtobufEnum {
     COMMAND_ERROR_CODE_TIMEOUT,
     COMMAND_ERROR_CODE_REJECTED_BY_DEVICE,
     COMMAND_ERROR_CODE_INTERNAL,
+    COMMAND_ERROR_CODE_HELD_BY_GATEWAY,
   ];
 
   static final $core.List<CommandErrorCode?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 7);
+      $pb.ProtobufEnum.$_initByValueList(values, 8);
   static CommandErrorCode? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

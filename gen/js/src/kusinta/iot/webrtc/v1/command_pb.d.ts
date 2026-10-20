@@ -456,6 +456,11 @@ export declare type AttributeWriteRequest = Message<"kusinta.iot.webrtc.v1.Attri
    * lease on an attribute it does not state as leased. Rollout order: a writer sends a
    * lease for an attribute before the attribute's producer states it as leased.
    *
+   * Set only by the gateway, towards a producer: a leased attribute is written by the
+   * gateway alone. A gateway MUST refuse a request from an app that carries a lease, with
+   * COMMAND_ERROR_CODE_INVALID_COMMAND, and an app's write or command to an attribute its
+   * producer states as leased, with COMMAND_ERROR_CODE_HELD_BY_GATEWAY.
+   *
    * @generated from field: optional uint32 lease_seconds = 5;
    */
   leaseSeconds?: number | undefined;
@@ -539,6 +544,16 @@ export enum CommandErrorCode {
    * @generated from enum value: COMMAND_ERROR_CODE_INTERNAL = 7;
    */
   INTERNAL = 7,
+
+  /**
+   * The attribute is one the gateway drives under a lease — a floor zone, a heat source's
+   * add-on heater block — and a person changes it through the room's target and comfort
+   * band, not directly. Permanent for this attribute: do not retry; tell the user where to
+   * change it instead.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_HELD_BY_GATEWAY = 8;
+   */
+  HELD_BY_GATEWAY = 8,
 }
 
 /**

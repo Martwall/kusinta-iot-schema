@@ -942,6 +942,11 @@ class LeasedWrite extends $pb.GeneratedMessage {
   /// falls back to whenever its writer is gone, so it is what an installer checks first and
   /// what a consumer shows as "what happens if this stops". A producer always states it; a
   /// consumer reads a lease without it as a write kind not stated.
+  ///
+  /// A fixed value. A device whose timer returns the output to whatever it held before the
+  /// write is leased only if its producer holds that earlier value fixed — writes the lapse
+  /// value, untimed, before each leased write and lets nothing else write it — and is
+  /// otherwise stated sticky.
   @$pb.TagNumber(4)
   AttributeValue get lapseValue => $_getN(3);
   @$pb.TagNumber(4)

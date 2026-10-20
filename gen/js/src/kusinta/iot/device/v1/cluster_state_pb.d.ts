@@ -411,6 +411,11 @@ export declare type LeasedWrite = Message<"kusinta.iot.device.v1.LeasedWrite"> &
    * what a consumer shows as "what happens if this stops". A producer always states it; a
    * consumer reads a lease without it as a write kind not stated.
    *
+   * A fixed value. A device whose timer returns the output to whatever it held before the
+   * write is leased only if its producer holds that earlier value fixed — writes the lapse
+   * value, untimed, before each leased write and lets nothing else write it — and is
+   * otherwise stated sticky.
+   *
    * @generated from field: kusinta.iot.device.v1.AttributeValue lapse_value = 4;
    */
   lapseValue?: AttributeValue | undefined;
