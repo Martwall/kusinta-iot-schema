@@ -186,3 +186,13 @@ def test_constraint_violation_is_distinct_from_not_entitled():
         command_pb2.COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED
         != command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED
     )
+
+
+def test_a_command_that_sets_a_leased_attribute_carries_its_lease():
+    cmd = command_pb2.DeviceCommand(
+        request_id="c-1", cluster_id=0x0006, on_off=command_pb2.OnOffParams(), lease_seconds=900
+    )
+    decoded = command_pb2.DeviceCommand()
+    decoded.ParseFromString(cmd.SerializeToString())
+
+    assert decoded.lease_seconds == 900

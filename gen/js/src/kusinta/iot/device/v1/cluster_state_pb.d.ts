@@ -307,7 +307,9 @@ export declare const ClusterStateSchema: GenMessage<ClusterState>;
  * A gateway MUST NOT drive a heat source, a heating circuit or a floor zone through an
  * attribute whose write kind is not stated here: it refuses the write. This is the
  * opposite default to attribute_ids or a connector's known_links, where not stated only
- * means not known; for an output that heats a home, not stated means no.
+ * means not known; for an output that heats a home, not stated means no. Rollout order: a
+ * producer that carries such outputs states their behaviour before a gateway that drives
+ * them takes the release that enforces this.
  *
  * @generated from message kusinta.iot.device.v1.AttributeBehaviour
  */
@@ -382,8 +384,8 @@ export declare const StickyWriteSchema: GenMessage<StickyWrite>;
  */
 export declare type LeasedWrite = Message<"kusinta.iot.device.v1.LeasedWrite"> & {
   /**
-   * The shortest and longest lease, in seconds, the device accepts. Absent: not stated,
-   * never zero. A lease outside them is refused rather than clamped.
+   * The shortest and longest lease, in seconds, the device accepts. Absent: no bound on
+   * that side, never zero. A lease outside them is refused rather than clamped.
    *
    * @generated from field: optional uint32 min_lease_seconds = 1;
    */
@@ -396,17 +398,18 @@ export declare type LeasedWrite = Message<"kusinta.iot.device.v1.LeasedWrite"> &
 
   /**
    * Whether a write that arrives before the lease runs out starts the lease again from
-   * that write. False: a writer MUST NOT assume that writing the same value again extends
-   * how long it holds.
+   * that write. False or unset (not stated): a writer MUST NOT assume that writing the
+   * same value again extends how long it holds.
    *
-   * @generated from field: bool renewal_restarts_lease = 3;
+   * @generated from field: optional bool renewal_restarts_lease = 3;
    */
-  renewalRestartsLease: boolean;
+  renewalRestartsLease?: boolean | undefined;
 
   /**
    * The value the attribute returns to when the lease runs out. It is the state a site
    * falls back to whenever its writer is gone, so it is what an installer checks first and
-   * what a consumer shows as "what happens if this stops". Always stated.
+   * what a consumer shows as "what happens if this stops". A producer always states it; a
+   * consumer reads a lease without it as a write kind not stated.
    *
    * @generated from field: kusinta.iot.device.v1.AttributeValue lapse_value = 4;
    */

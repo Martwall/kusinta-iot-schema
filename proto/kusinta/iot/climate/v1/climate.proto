@@ -170,7 +170,8 @@ message RoomClimate {
 
   // Why the room is being held where it is, when that differs from simply holding its
   // target: a plan heating ahead of an expensive hour, the heat source busy with hot water,
-  // a floor zone held back. Most significant first; an app that shows one shows the first.
+  // a floor zone held back. Most significant first; an app that shows one shows the first
+  // it can show.
   // Empty: nothing beyond the target and condition needs explaining.
   //
   // A window, a lost sensor and the rest of RoomClimateCondition are told by condition and
@@ -190,10 +191,10 @@ message RoomClimate {
   // Whether a plan steers the room. See RoomPlanning.
   RoomPlanning planning = 18;
 
-  // The comfort band the room's residents set, in centidegrees: the lowest and highest a
-  // plan may hold the room at while it heats ahead, coasts or saves on dear energy. Within
-  // [min_centidegrees, max_centidegrees] where those are set. Absent: no band, and a plan
-  // holds the room at its target — never 0 °C.
+  // The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
+  // room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
+  // no higher than high, and within [min_centidegrees, max_centidegrees] where those are
+  // set. Absent: no band, and a plan holds the room at its target — never 0 °C.
   optional sint32 comfort_band_low_centidegrees = 19;
   optional sint32 comfort_band_high_centidegrees = 20;
 }
@@ -267,27 +268,32 @@ enum ClimateExplanationKind {
   CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW = 10;
 }
 
-// What a cause acts on, when that is not the room's heating as a whole.
+// What a cause acts on.
 enum ClimateExplanationSubject {
-  // The room's heating as a whole.
+  // Sender did not set a subject, or sent one this client's schema does not know — some
+  // decoders read an unknown value as this one. Never the room as a whole.
   CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED = 0;
 
+  // The room's heating as a whole.
+  CLIMATE_EXPLANATION_SUBJECT_ROOM = 1;
+
   // A floor zone heating this room.
-  CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = 1;
+  CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = 2;
 
   // A comfort load in the room: a heated floor kept warm for comfort, a towel heater.
-  CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = 2;
+  CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = 3;
 
   // The heat source's add-on heater.
-  CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = 3;
+  CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = 4;
 }
 
 // One reason a room, or a part of its heating, is where it is.
 message ClimateExplanation {
   ClimateExplanationKind kind = 1;
 
-  // What the cause acts on. An app that does not know the subject shows nothing for the
-  // explanation rather than presenting it as the room's.
+  // What the cause acts on. The gateway always sets it. An app shows nothing for an
+  // explanation whose subject is unspecified or unknown to it, rather than presenting it
+  // as the room's.
   ClimateExplanationSubject subject = 2;
 
   // When the explanation stops holding. Unset: while the room's latest RoomClimate carries

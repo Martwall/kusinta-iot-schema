@@ -216,38 +216,45 @@ class ClimateExplanationKind extends $pb.ProtobufEnum {
   const ClimateExplanationKind._(super.value, super.name);
 }
 
-/// What a cause acts on, when that is not the room's heating as a whole.
+/// What a cause acts on.
 class ClimateExplanationSubject extends $pb.ProtobufEnum {
-  /// The room's heating as a whole.
+  /// Sender did not set a subject, or sent one this client's schema does not know — some
+  /// decoders read an unknown value as this one. Never the room as a whole.
   static const ClimateExplanationSubject
       CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED = ClimateExplanationSubject._(
           0, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED');
 
+  /// The room's heating as a whole.
+  static const ClimateExplanationSubject CLIMATE_EXPLANATION_SUBJECT_ROOM =
+      ClimateExplanationSubject._(
+          1, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_ROOM');
+
   /// A floor zone heating this room.
   static const ClimateExplanationSubject
       CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = ClimateExplanationSubject._(
-          1, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE');
+          2, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE');
 
   /// A comfort load in the room: a heated floor kept warm for comfort, a towel heater.
   static const ClimateExplanationSubject
       CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = ClimateExplanationSubject._(
-          2, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD');
+          3, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD');
 
   /// The heat source's add-on heater.
   static const ClimateExplanationSubject
       CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = ClimateExplanationSubject._(
-          3, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER');
+          4, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER');
 
   static const $core.List<ClimateExplanationSubject> values =
       <ClimateExplanationSubject>[
     CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED,
+    CLIMATE_EXPLANATION_SUBJECT_ROOM,
     CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE,
     CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD,
     CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER,
   ];
 
   static final $core.List<ClimateExplanationSubject?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
   static ClimateExplanationSubject? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

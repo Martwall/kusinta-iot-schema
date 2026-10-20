@@ -120,6 +120,14 @@ describe('why a room is where it is', () => {
     expect(decoded.explanations[0].subject).toBe(ClimateExplanationSubject.FLOOR_ZONE)
   })
 
+  it('names the room’s heating as a whole as a subject of its own, not the default', () => {
+    const decoded = onTheWire({
+      spaceId: ROOM,
+      explanations: [{ kind: ClimateExplanationKind.PRICE_HIGH, subject: ClimateExplanationSubject.ROOM }],
+    })
+    expect(decoded.explanations[0].subject).toBe(ClimateExplanationSubject.ROOM)
+  })
+
   it('carries when an explanation ends', () => {
     const decoded = onTheWire({
       spaceId: ROOM,

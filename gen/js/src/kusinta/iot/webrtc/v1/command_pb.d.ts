@@ -281,6 +281,16 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
     value: Uint8Array;
     case: "rawTlv";
   } | { case: undefined; value?: undefined };
+
+  /**
+   * How long, in seconds, the value the command sets holds, for a command that sets an
+   * attribute the producer states as leased: OnOff is set by the On and Off commands, not
+   * by a write. The same rules as AttributeWriteRequest.lease_seconds, applied to the
+   * attribute the command sets.
+   *
+   * @generated from field: optional uint32 lease_seconds = 14;
+   */
+  leaseSeconds?: number | undefined;
 };
 
 /**
@@ -438,12 +448,13 @@ export declare type AttributeWriteRequest = Message<"kusinta.iot.webrtc.v1.Attri
   /**
    * How long, in seconds, the written value holds before the device itself returns the
    * attribute to its lapse value — for an attribute the producer states as leased
-   * (device.v1.LeasedWrite, on the attribute's cluster or as a vendor parameter). Within the
-   * stated minimum and maximum.
+   * (device.v1.LeasedWrite, on the attribute's cluster or as a vendor parameter). At least
+   * one second, and within the stated minimum and maximum.
    *
    * The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a leased
-   * attribute that carries no lease, a lease outside the stated bounds, and a lease on an
-   * attribute it does not state as leased.
+   * attribute that carries no lease, a lease of zero or outside the stated bounds, and a
+   * lease on an attribute it does not state as leased. Rollout order: a writer sends a
+   * lease for an attribute before the attribute's producer states it as leased.
    *
    * @generated from field: optional uint32 lease_seconds = 5;
    */

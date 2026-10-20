@@ -734,6 +734,17 @@ describe('AttributeWriteRequest — the WRITE carrier', () => {
   it('leaves the lease absent on a plain write', () => {
     expect(create(AttributeWriteRequestSchema, { requestId: 'w-2' }).leaseSeconds).toBeUndefined()
   })
+
+  it('carries a lease on a command that sets a leased attribute', () => {
+    const cmd = create(DeviceCommandSchema, {
+      requestId: 'c-1',
+      clusterId: 0x0006,
+      parameters: { case: 'onOff', value: {} },
+      leaseSeconds: 900,
+    })
+    const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
+    expect(decoded.leaseSeconds).toBe(900)
+  })
 })
 
 describe('DeviceCommand — numeric command addressing', () => {

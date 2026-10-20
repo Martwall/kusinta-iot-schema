@@ -263,9 +263,9 @@ When a room is held somewhere other than plainly at its target, `RoomClimate.exp
 says why, most significant first: heating ahead of an expensive hour, coasting on stored
 heat, the heat source busy with hot water, the room already at the top of its comfort band.
 Each is a cause from a closed list (`ClimateExplanationKind`): the gateway sends a kind and
-the app names it in its user's language. A `subject` says when the cause acts on a part of
-the room's heating rather than the whole, so "price high" on a floor zone reads as the floor
-zone held back for price. An optional `ends_at` closes it, and an app shows no explanation
+the app names it in its user's language. A `subject` says what the cause acts on: the room
+as a whole, or a part of its heating, so "price high" on a floor zone reads as the floor zone
+held back for price. An unknown or unset subject is shown as nothing, never as the room. An optional `ends_at` closes it, and an app shows no explanation
 past that, including while it cannot reach the gateway. No kind identifies another
 household: a limit shared with other homes is told as "this room was limited", never by
 whom.
@@ -531,9 +531,12 @@ in `ClusterState.attribute_behaviours`, per endpoint. For a vendor parameter it 
   - The lease is the device's own timer or link watchdog. A value that lapses only because
     its writer keeps re-sending is sticky to anyone who must plan for the writer failing.
   - A leased write carries its length in `AttributeWriteRequest.lease_seconds`, within the
-    stated bounds.
+    stated bounds. A command that sets a leased attribute (On and Off set OnOff) carries it
+    in `DeviceCommand.lease_seconds`.
+  - A lease with no `lapse_value` is read as a write kind not stated.
   - The producer refuses a mismatch as `INVALID_COMMAND`: no lease on a leased attribute, a
-    lease on any other attribute, or a lease out of bounds.
+    lease on any other attribute, or a lease of zero or out of bounds. Writers send leases
+    before producers state attributes as leased.
 
 `lapse_value` is what a site falls back to whenever its writer is gone. `power_on_value`
 says what the attribute takes when power returns, but only where the cluster has no startup

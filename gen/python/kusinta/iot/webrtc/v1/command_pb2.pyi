@@ -67,7 +67,7 @@ class DoorLockParams(_message.Message):
     def __init__(self, pin_code: _Optional[str] = ...) -> None: ...
 
 class DeviceCommand(_message.Message):
-    __slots__ = ("request_id", "device_id", "command_name", "cluster_id", "matter_command_id", "endpoint_id", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "raw_tlv")
+    __slots__ = ("request_id", "device_id", "command_name", "cluster_id", "matter_command_id", "endpoint_id", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "raw_tlv", "lease_seconds")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     COMMAND_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -80,6 +80,7 @@ class DeviceCommand(_message.Message):
     WINDOW_COVERING_LIFT_FIELD_NUMBER: _ClassVar[int]
     DOOR_LOCK_FIELD_NUMBER: _ClassVar[int]
     RAW_TLV_FIELD_NUMBER: _ClassVar[int]
+    LEASE_SECONDS_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     device_id: _identity_pb2.DeviceId
     command_name: str
@@ -92,7 +93,8 @@ class DeviceCommand(_message.Message):
     window_covering_lift: WindowCoveringLiftParams
     door_lock: DoorLockParams
     raw_tlv: bytes
-    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
+    lease_seconds: int
+    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ..., lease_seconds: _Optional[int] = ...) -> None: ...
 
 class CommandError(_message.Message):
     __slots__ = ("message", "code", "metadata")

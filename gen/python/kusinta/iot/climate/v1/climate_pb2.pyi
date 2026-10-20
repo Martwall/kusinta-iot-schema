@@ -46,6 +46,7 @@ class ClimateExplanationKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
 class ClimateExplanationSubject(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED: _ClassVar[ClimateExplanationSubject]
+    CLIMATE_EXPLANATION_SUBJECT_ROOM: _ClassVar[ClimateExplanationSubject]
     CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE: _ClassVar[ClimateExplanationSubject]
     CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD: _ClassVar[ClimateExplanationSubject]
     CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER: _ClassVar[ClimateExplanationSubject]
@@ -91,6 +92,7 @@ CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING: ClimateExplanationKind
 CLIMATE_EXPLANATION_KIND_NO_READING: ClimateExplanationKind
 CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW: ClimateExplanationKind
 CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED: ClimateExplanationSubject
+CLIMATE_EXPLANATION_SUBJECT_ROOM: ClimateExplanationSubject
 CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE: ClimateExplanationSubject
 CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD: ClimateExplanationSubject
 CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER: ClimateExplanationSubject

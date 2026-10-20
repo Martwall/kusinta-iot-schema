@@ -373,7 +373,9 @@ const LeasedWrite$json = {
       '3': 3,
       '4': 1,
       '5': 8,
-      '10': 'renewalRestartsLease'
+      '9': 2,
+      '10': 'renewalRestartsLease',
+      '17': true
     },
     {
       '1': 'lapse_value',
@@ -387,6 +389,7 @@ const LeasedWrite$json = {
   '8': [
     {'1': '_min_lease_seconds'},
     {'1': '_max_lease_seconds'},
+    {'1': '_renewal_restarts_lease'},
   ],
 };
 
@@ -394,7 +397,7 @@ const LeasedWrite$json = {
 final $typed_data.Uint8List leasedWriteDescriptor = $convert.base64Decode(
     'CgtMZWFzZWRXcml0ZRIvChFtaW5fbGVhc2Vfc2Vjb25kcxgBIAEoDUgAUg9taW5MZWFzZVNlY2'
     '9uZHOIAQESLwoRbWF4X2xlYXNlX3NlY29uZHMYAiABKA1IAVIPbWF4TGVhc2VTZWNvbmRziAEB'
-    'EjQKFnJlbmV3YWxfcmVzdGFydHNfbGVhc2UYAyABKAhSFHJlbmV3YWxSZXN0YXJ0c0xlYXNlEk'
-    'YKC2xhcHNlX3ZhbHVlGAQgASgLMiUua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0dHJpYnV0ZVZh'
-    'bHVlUgpsYXBzZVZhbHVlQhQKEl9taW5fbGVhc2Vfc2Vjb25kc0IUChJfbWF4X2xlYXNlX3NlY2'
-    '9uZHM=');
+    'EjkKFnJlbmV3YWxfcmVzdGFydHNfbGVhc2UYAyABKAhIAlIUcmVuZXdhbFJlc3RhcnRzTGVhc2'
+    'WIAQESRgoLbGFwc2VfdmFsdWUYBCABKAsyJS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuQXR0cmli'
+    'dXRlVmFsdWVSCmxhcHNlVmFsdWVCFAoSX21pbl9sZWFzZV9zZWNvbmRzQhQKEl9tYXhfbGVhc2'
+    'Vfc2Vjb25kc0IZChdfcmVuZXdhbF9yZXN0YXJ0c19sZWFzZQ==');

@@ -394,6 +394,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     $core.int? endpointId,
     $core.int? clusterId,
     $core.int? matterCommandId,
+    $core.int? leaseSeconds,
     $core.List<$core.int>? rawTlv,
   }) {
     final result = create();
@@ -410,6 +411,7 @@ class DeviceCommand extends $pb.GeneratedMessage {
     if (endpointId != null) result.endpointId = endpointId;
     if (clusterId != null) result.clusterId = clusterId;
     if (matterCommandId != null) result.matterCommandId = matterCommandId;
+    if (leaseSeconds != null) result.leaseSeconds = leaseSeconds;
     if (rawTlv != null) result.rawTlv = rawTlv;
     return result;
   }
@@ -459,6 +461,8 @@ class DeviceCommand extends $pb.GeneratedMessage {
     ..a<$core.int>(12, _omitFieldNames ? '' : 'clusterId', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         13, _omitFieldNames ? '' : 'matterCommandId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        14, _omitFieldNames ? '' : 'leaseSeconds', $pb.PbFieldType.OU3)
     ..a<$core.List<$core.int>>(
         99, _omitFieldNames ? '' : 'rawTlv', $pb.PbFieldType.OY)
     ..hasRequiredFields = false;
@@ -635,12 +639,25 @@ class DeviceCommand extends $pb.GeneratedMessage {
   @$pb.TagNumber(13)
   void clearMatterCommandId() => $_clearField(13);
 
+  /// How long, in seconds, the value the command sets holds, for a command that sets an
+  /// attribute the producer states as leased: OnOff is set by the On and Off commands, not
+  /// by a write. The same rules as AttributeWriteRequest.lease_seconds, applied to the
+  /// attribute the command sets.
+  @$pb.TagNumber(14)
+  $core.int get leaseSeconds => $_getIZ(11);
+  @$pb.TagNumber(14)
+  set leaseSeconds($core.int value) => $_setUnsignedInt32(11, value);
+  @$pb.TagNumber(14)
+  $core.bool hasLeaseSeconds() => $_has(11);
+  @$pb.TagNumber(14)
+  void clearLeaseSeconds() => $_clearField(14);
+
   @$pb.TagNumber(99)
-  $core.List<$core.int> get rawTlv => $_getN(11);
+  $core.List<$core.int> get rawTlv => $_getN(12);
   @$pb.TagNumber(99)
-  set rawTlv($core.List<$core.int> value) => $_setBytes(11, value);
+  set rawTlv($core.List<$core.int> value) => $_setBytes(12, value);
   @$pb.TagNumber(99)
-  $core.bool hasRawTlv() => $_has(11);
+  $core.bool hasRawTlv() => $_has(12);
   @$pb.TagNumber(99)
   void clearRawTlv() => $_clearField(99);
 }
@@ -999,12 +1016,13 @@ class AttributeWriteRequest extends $pb.GeneratedMessage {
 
   /// How long, in seconds, the written value holds before the device itself returns the
   /// attribute to its lapse value — for an attribute the producer states as leased
-  /// (device.v1.LeasedWrite, on the attribute's cluster or as a vendor parameter). Within the
-  /// stated minimum and maximum.
+  /// (device.v1.LeasedWrite, on the attribute's cluster or as a vendor parameter). At least
+  /// one second, and within the stated minimum and maximum.
   ///
   /// The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a leased
-  /// attribute that carries no lease, a lease outside the stated bounds, and a lease on an
-  /// attribute it does not state as leased.
+  /// attribute that carries no lease, a lease of zero or outside the stated bounds, and a
+  /// lease on an attribute it does not state as leased. Rollout order: a writer sends a
+  /// lease for an attribute before the attribute's producer states it as leased.
   @$pb.TagNumber(5)
   $core.int get leaseSeconds => $_getIZ(4);
   @$pb.TagNumber(5)

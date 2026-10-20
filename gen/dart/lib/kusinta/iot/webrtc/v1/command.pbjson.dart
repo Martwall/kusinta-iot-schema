@@ -214,11 +214,21 @@ const DeviceCommand$json = {
       '10': 'doorLock'
     },
     {'1': 'raw_tlv', '3': 99, '4': 1, '5': 12, '9': 0, '10': 'rawTlv'},
+    {
+      '1': 'lease_seconds',
+      '3': 14,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'leaseSeconds',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'parameters'},
     {'1': '_matter_command_id'},
     {'1': '_endpoint_id'},
+    {'1': '_lease_seconds'},
   ],
   '9': [
     {'1': 3, '2': 4},
@@ -241,9 +251,10 @@ final $typed_data.Uint8List deviceCommandDescriptor = $convert.base64Decode(
     'IFb25PZmYSYwoUd2luZG93X2NvdmVyaW5nX2xpZnQYCCABKAsyLy5rdXNpbnRhLmlvdC53ZWJy'
     'dGMudjEuV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zSABSEndpbmRvd0NvdmVyaW5nTGlmdBJECg'
     'lkb29yX2xvY2sYCSABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuRG9vckxvY2tQYXJhbXNI'
-    'AFIIZG9vckxvY2sSGQoHcmF3X3RsdhhjIAEoDEgAUgZyYXdUbHZCDAoKcGFyYW1ldGVyc0IUCh'
-    'JfbWF0dGVyX2NvbW1hbmRfaWRCDgoMX2VuZHBvaW50X2lkSgQIAxAESgQIChALUg5jbHVzdGVy'
-    'X2lkX2hleFIZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZQ==');
+    'AFIIZG9vckxvY2sSGQoHcmF3X3RsdhhjIAEoDEgAUgZyYXdUbHYSKAoNbGVhc2Vfc2Vjb25kcx'
+    'gOIAEoDUgDUgxsZWFzZVNlY29uZHOIAQFCDAoKcGFyYW1ldGVyc0IUChJfbWF0dGVyX2NvbW1h'
+    'bmRfaWRCDgoMX2VuZHBvaW50X2lkQhAKDl9sZWFzZV9zZWNvbmRzSgQIAxAESgQIChALUg5jbH'
+    'VzdGVyX2lkX2hleFIZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZQ==');
 
 @$core.Deprecated('Use commandErrorDescriptor instead')
 const CommandError$json = {

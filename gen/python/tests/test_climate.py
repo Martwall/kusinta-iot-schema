@@ -314,6 +314,15 @@ def test_an_explanation_names_a_floor_zone_it_holds_back():
     assert _round_trip(explanation).subject == climate_pb2.CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE
 
 
+def test_an_explanation_names_the_room_as_a_whole_explicitly():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+        subject=climate_pb2.CLIMATE_EXPLANATION_SUBJECT_ROOM,
+    )
+
+    assert _round_trip(explanation).subject == climate_pb2.CLIMATE_EXPLANATION_SUBJECT_ROOM
+
+
 def test_an_explanation_carries_when_it_ends():
     explanation = climate_pb2.ClimateExplanation(
         kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRE_HEAT,

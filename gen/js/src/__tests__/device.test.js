@@ -485,6 +485,10 @@ describe('attribute behaviour', () => {
     })
   })
 
+  it('leaves renewal unstated rather than false when the producer does not know', () => {
+    expect(create(LeasedWriteSchema, {}).renewalRestartsLease).toBeUndefined()
+  })
+
   it('leaves both lease bounds absent rather than zero when not stated', () => {
     const leased = create(LeasedWriteSchema, {})
     expect([leased.minLeaseSeconds, leased.maxLeaseSeconds]).toEqual([undefined, undefined])
@@ -492,10 +496,10 @@ describe('attribute behaviour', () => {
 
   it('states the value an attribute with no startup attribute takes at power-on', () => {
     const decoded = onTheWire({
-      clusterId: 0x0006,
-      attributeBehaviours: { [ON_OFF]: { powerOnValue: { value: { case: 'boolValue', value: false } } } },
+      clusterId: 0x0201,
+      attributeBehaviours: { [0x0012]: { powerOnValue: { value: { case: 'intValue', value: 2000n } } } },
     })
-    expect(decoded.attributeBehaviours[ON_OFF].powerOnValue?.value).toEqual({ case: 'boolValue', value: false })
+    expect(decoded.attributeBehaviours[0x0012].powerOnValue?.value).toEqual({ case: 'intValue', value: 2000n })
   })
 
   it('states that a reading arrives late', () => {

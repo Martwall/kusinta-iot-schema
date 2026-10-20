@@ -468,7 +468,8 @@ class RoomClimate extends $pb.GeneratedMessage {
 
   /// Why the room is being held where it is, when that differs from simply holding its
   /// target: a plan heating ahead of an expensive hour, the heat source busy with hot water,
-  /// a floor zone held back. Most significant first; an app that shows one shows the first.
+  /// a floor zone held back. Most significant first; an app that shows one shows the first
+  /// it can show.
   /// Empty: nothing beyond the target and condition needs explaining.
   ///
   /// A window, a lost sensor and the rest of RoomClimateCondition are told by condition and
@@ -505,10 +506,10 @@ class RoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   void clearPlanning() => $_clearField(18);
 
-  /// The comfort band the room's residents set, in centidegrees: the lowest and highest a
-  /// plan may hold the room at while it heats ahead, coasts or saves on dear energy. Within
-  /// [min_centidegrees, max_centidegrees] where those are set. Absent: no band, and a plan
-  /// holds the room at its target — never 0 °C.
+  /// The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
+  /// room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
+  /// no higher than high, and within [min_centidegrees, max_centidegrees] where those are
+  /// set. Absent: no band, and a plan holds the room at its target — never 0 °C.
   @$pb.TagNumber(19)
   $core.int get comfortBandLowCentidegrees => $_getIZ(18);
   @$pb.TagNumber(19)
@@ -604,8 +605,9 @@ class ClimateExplanation extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearKind() => $_clearField(1);
 
-  /// What the cause acts on. An app that does not know the subject shows nothing for the
-  /// explanation rather than presenting it as the room's.
+  /// What the cause acts on. The gateway always sets it. An app shows nothing for an
+  /// explanation whose subject is unspecified or unknown to it, rather than presenting it
+  /// as the room's.
   @$pb.TagNumber(2)
   ClimateExplanationSubject get subject => $_getN(1);
   @$pb.TagNumber(2)
