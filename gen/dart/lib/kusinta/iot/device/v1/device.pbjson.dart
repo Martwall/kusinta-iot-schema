@@ -302,6 +302,15 @@ const Device$json = {
       '17': true
     },
     {
+      '1': 'max_write_delay_seconds',
+      '3': 16,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'maxWriteDelaySeconds',
+      '17': true
+    },
+    {
       '1': 'last_seen',
       '3': 20,
       '4': 1,
@@ -320,6 +329,7 @@ const Device$json = {
   ],
   '8': [
     {'1': '_min_write_interval_seconds'},
+    {'1': '_max_write_delay_seconds'},
   ],
   '9': [
     {'1': 2, '2': 14},
@@ -347,14 +357,15 @@ final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode(
     'CgZEZXZpY2USRwoKZGVzY3JpcHRvchgBIAEoCzInLmt1c2ludGEuaW90LmRldmljZS52MS5EZX'
     'ZpY2VEZXNjcmlwdG9yUgpkZXNjcmlwdG9yEj0KCWVuZHBvaW50cxgOIAMoCzIfLmt1c2ludGEu'
     'aW90LmRldmljZS52MS5FbmRwb2ludFIJZW5kcG9pbnRzEkAKGm1pbl93cml0ZV9pbnRlcnZhbF'
-    '9zZWNvbmRzGA8gASgNSABSF21pbldyaXRlSW50ZXJ2YWxTZWNvbmRziAEBEjcKCWxhc3Rfc2Vl'
-    'bhgUIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGxhc3RTZWVuEj0KDGxhc3RfdX'
-    'BkYXRlZBgVIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdGVkQh0K'
-    'G19taW5fd3JpdGVfaW50ZXJ2YWxfc2Vjb25kc0oECAIQDkoECDIQM1IKdGhlcm1vc3RhdFISdG'
-    'VtcGVyYXR1cmVfc2Vuc29yUg9odW1pZGl0eV9zZW5zb3JSEG9jY3VwYW5jeV9zZW5zb3JSDmNv'
-    'bnRhY3Rfc2Vuc29yUg93aW5kb3dfY292ZXJpbmdSCWRvb3JfbG9ja1IMb25fb2ZmX2xpZ2h0Ug'
-    '5kaW1tYWJsZV9saWdodFIQY29sb3JfdGVtcF9saWdodFINZW5lcmd5X3NlbnNvclIPcHJlc3N1'
-    'cmVfc2Vuc29yUglob21lbWF0aWM=');
+    '9zZWNvbmRzGA8gASgNSABSF21pbldyaXRlSW50ZXJ2YWxTZWNvbmRziAEBEjoKF21heF93cml0'
+    'ZV9kZWxheV9zZWNvbmRzGBAgASgNSAFSFG1heFdyaXRlRGVsYXlTZWNvbmRziAEBEjcKCWxhc3'
+    'Rfc2VlbhgUIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGxhc3RTZWVuEj0KDGxh'
+    'c3RfdXBkYXRlZBgVIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdG'
+    'VkQh0KG19taW5fd3JpdGVfaW50ZXJ2YWxfc2Vjb25kc0IaChhfbWF4X3dyaXRlX2RlbGF5X3Nl'
+    'Y29uZHNKBAgCEA5KBAgyEDNSCnRoZXJtb3N0YXRSEnRlbXBlcmF0dXJlX3NlbnNvclIPaHVtaW'
+    'RpdHlfc2Vuc29yUhBvY2N1cGFuY3lfc2Vuc29yUg5jb250YWN0X3NlbnNvclIPd2luZG93X2Nv'
+    'dmVyaW5nUglkb29yX2xvY2tSDG9uX29mZl9saWdodFIOZGltbWFibGVfbGlnaHRSEGNvbG9yX3'
+    'RlbXBfbGlnaHRSDWVuZXJneV9zZW5zb3JSD3ByZXNzdXJlX3NlbnNvclIJaG9tZW1hdGlj');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

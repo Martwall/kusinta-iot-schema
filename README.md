@@ -537,6 +537,11 @@ in `ClusterState.attribute_behaviours`, per endpoint. For a vendor parameter it 
     stated bounds. A command that sets a leased attribute (On and Off set OnOff) carries it
     in `DeviceCommand.lease_seconds`.
   - A lease with no `lapse_value` is read as a write kind not stated.
+  - Writing the `lapse_value` itself needs no lease and ends any lease running; that is
+    how a writer ends a lease early. A report of the lapse value after a lease runs out is
+    the lease ending, not a person's change.
+  - Where the device fixes the lease length itself (a configured boost time), the producer
+    states it as both bounds.
   - The producer refuses a mismatch as `INVALID_COMMAND`: no lease on a leased attribute, a
     lease on any other attribute, or a lease of zero or out of bounds. Writers send leases
     before producers state attributes as leased.
@@ -551,7 +556,11 @@ says what the attribute takes when power returns, but only where the cluster has
 attribute of its own (such as `StartUpOnOff`) to say it.
 
 How often a device can take a write without dropping one is a device-wide budget, because
-two attributes still share one radio. It goes in `Device.min_write_interval_seconds`.
+two attributes still share one radio. It goes in `Device.min_write_interval_seconds`, which
+is a lower bound: a shared radio gateway, hub or vendor account may need writes spaced
+further apart. `Device.max_write_delay_seconds` says how long a write can take to arrive (a
+device that listens only after its own report), and a writer renews a lease at least that
+long before it runs out.
 
 `read_latency` answers the matching question for reads. `REAL_TIME` means a reported value
 reaches the producer within minutes. `DELAYED` means it arrives late enough that acting on

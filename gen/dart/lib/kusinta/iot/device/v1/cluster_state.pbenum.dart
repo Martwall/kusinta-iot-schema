@@ -20,7 +20,8 @@ class ReadLatency extends $pb.ProtobufEnum {
   static const ReadLatency READ_LATENCY_UNSPECIFIED =
       ReadLatency._(0, _omitEnumNames ? '' : 'READ_LATENCY_UNSPECIFIED');
 
-  /// Within a few minutes of the change, every time.
+  /// Within a few minutes of the change, every time. A value relayed through a vendor's
+  /// service is not stated REAL_TIME unless that has been measured.
   static const ReadLatency READ_LATENCY_REAL_TIME =
       ReadLatency._(1, _omitEnumNames ? '' : 'READ_LATENCY_REAL_TIME');
 

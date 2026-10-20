@@ -907,7 +907,9 @@ class LeasedWrite extends $pb.GeneratedMessage {
   static LeasedWrite? _defaultInstance;
 
   /// The shortest and longest lease, in seconds, the device accepts. Absent: no bound on
-  /// that side, never zero. A lease outside them is refused rather than clamped.
+  /// that side, never zero. A lease outside them is refused rather than clamped. Where the
+  /// device fixes the length itself — a boost time set as a device parameter — the producer
+  /// states that length as both bounds, so it never accepts a lease it cannot keep.
   @$pb.TagNumber(1)
   $core.int get minLeaseSeconds => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -944,9 +946,17 @@ class LeasedWrite extends $pb.GeneratedMessage {
   /// consumer reads a lease without it as a write kind not stated.
   ///
   /// A fixed value. A device whose timer returns the output to whatever it held before the
-  /// write is leased only if its producer holds that earlier value fixed — writes the lapse
-  /// value, untimed, before each leased write and lets nothing else write it — and is
-  /// otherwise stated sticky.
+  /// write is leased only if its producer guarantees that earlier value is the lapse value
+  /// — by accepting timed writes only while the output is at its lapse value, or by
+  /// writing the lapse value untimed before each one — and is otherwise stated sticky.
+  ///
+  /// A write of the lapse value itself needs no lease: it ends any lease running, and a
+  /// lease carried on it is ignored rather than refused. That is how a writer ends a lease
+  /// early.
+  ///
+  /// A report of the lapse value after a lease has run out is the lease ending, not a
+  /// change from outside: a consumer that adopts values it did not write — a turned dial —
+  /// MUST NOT adopt that one as a person's.
   @$pb.TagNumber(4)
   AttributeValue get lapseValue => $_getN(3);
   @$pb.TagNumber(4)

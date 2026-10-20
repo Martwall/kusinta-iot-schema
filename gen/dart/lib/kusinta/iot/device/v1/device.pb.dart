@@ -466,7 +466,9 @@ class Endpoint extends $pb.GeneratedMessage {
   /// What a write to each vendor parameter leaves behind, and how late its reports arrive,
   /// keyed by the parameter's vendor name as vendor_attribute_names spells it. The vendor
   /// mirror of ClusterState.attribute_behaviours, with the same rules: an absent key is
-  /// "not stated", and not stated is read as the worst case.
+  /// "not stated", and not stated is read as the worst case. For a parameter reached through
+  /// a vendor's service, the name is the vendor's stable parameter id where it has one,
+  /// never a display name that is translated or renamed between firmware versions.
   @$pb.TagNumber(18)
   $pb.PbMap<$core.String, $1.AttributeBehaviour>
       get vendorAttributeBehaviours => $_getMap(17);
@@ -528,6 +530,7 @@ class Device extends $pb.GeneratedMessage {
     $3.DeviceDescriptor? descriptor,
     $core.Iterable<Endpoint>? endpoints,
     $core.int? minWriteIntervalSeconds,
+    $core.int? maxWriteDelaySeconds,
     $4.Timestamp? lastSeen,
     $4.Timestamp? lastUpdated,
   }) {
@@ -536,6 +539,8 @@ class Device extends $pb.GeneratedMessage {
     if (endpoints != null) result.endpoints.addAll(endpoints);
     if (minWriteIntervalSeconds != null)
       result.minWriteIntervalSeconds = minWriteIntervalSeconds;
+    if (maxWriteDelaySeconds != null)
+      result.maxWriteDelaySeconds = maxWriteDelaySeconds;
     if (lastSeen != null) result.lastSeen = lastSeen;
     if (lastUpdated != null) result.lastUpdated = lastUpdated;
     return result;
@@ -561,6 +566,8 @@ class Device extends $pb.GeneratedMessage {
         subBuilder: Endpoint.create)
     ..a<$core.int>(15, _omitFieldNames ? '' : 'minWriteIntervalSeconds',
         $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        16, _omitFieldNames ? '' : 'maxWriteDelaySeconds', $pb.PbFieldType.OU3)
     ..aOM<$4.Timestamp>(20, _omitFieldNames ? '' : 'lastSeen',
         subBuilder: $4.Timestamp.create)
     ..aOM<$4.Timestamp>(21, _omitFieldNames ? '' : 'lastUpdated',
@@ -597,7 +604,7 @@ class Device extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $3.DeviceDescriptor ensureDescriptor() => $_ensure(0);
 
-  /// 16-19 are free; 20+ is the timestamp band.
+  /// 17-19 are free; 20+ is the timestamp band.
   @$pb.TagNumber(14)
   $pb.PbList<Endpoint> get endpoints => $_getList(1);
 
@@ -606,6 +613,10 @@ class Device extends $pb.GeneratedMessage {
   /// device that wakes on a schedule. A device-wide budget rather than a per-attribute one,
   /// because two attributes each written at their own pace still share one radio. Stated by
   /// the producer at announcement. Absent: not stated, never zero.
+  ///
+  /// A lower bound, not the whole budget: devices behind one radio gateway or one hub share
+  /// its airtime, and a vendor's service limits an account rather than a device, so a writer
+  /// may have to space writes further apart than this says.
   @$pb.TagNumber(15)
   $core.int get minWriteIntervalSeconds => $_getIZ(2);
   @$pb.TagNumber(15)
@@ -614,6 +625,19 @@ class Device extends $pb.GeneratedMessage {
   $core.bool hasMinWriteIntervalSeconds() => $_has(2);
   @$pb.TagNumber(15)
   void clearMinWriteIntervalSeconds() => $_clearField(15);
+
+  /// The longest a write can take to reach the device: a device that listens only after
+  /// its own report takes a write at its next one. Stated by the producer at announcement.
+  /// Absent: not stated, never zero. A writer that renews a lease renews it this long, plus
+  /// a margin, before the lease runs out, or the output lapses between renewals.
+  @$pb.TagNumber(16)
+  $core.int get maxWriteDelaySeconds => $_getIZ(3);
+  @$pb.TagNumber(16)
+  set maxWriteDelaySeconds($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(16)
+  $core.bool hasMaxWriteDelaySeconds() => $_has(3);
+  @$pb.TagNumber(16)
+  void clearMaxWriteDelaySeconds() => $_clearField(16);
 
   /// When the gateway last had evidence this device itself — the
   /// most recent PropertyUpdate (wheter or not the property changed) or command
@@ -634,15 +658,15 @@ class Device extends $pb.GeneratedMessage {
   /// change would give away each opening and each turn of a knob. Service learns whether it
   /// is reachable from webrtc.v1.ServiceStatus.
   @$pb.TagNumber(20)
-  $4.Timestamp get lastSeen => $_getN(3);
+  $4.Timestamp get lastSeen => $_getN(4);
   @$pb.TagNumber(20)
   set lastSeen($4.Timestamp value) => $_setField(20, value);
   @$pb.TagNumber(20)
-  $core.bool hasLastSeen() => $_has(3);
+  $core.bool hasLastSeen() => $_has(4);
   @$pb.TagNumber(20)
   void clearLastSeen() => $_clearField(20);
   @$pb.TagNumber(20)
-  $4.Timestamp ensureLastSeen() => $_ensure(3);
+  $4.Timestamp ensureLastSeen() => $_ensure(4);
 
   /// When any field of this Device last changed value. Unset in a service view, for the
   /// reason last_seen is. Both are also unset when they date from before the recipient's
@@ -650,15 +674,15 @@ class Device extends $pb.GeneratedMessage {
   /// access.v1.MembershipRelation).
   /// Whether such a device is reachable is still told by its webrtc.v1.ServiceStatus.
   @$pb.TagNumber(21)
-  $4.Timestamp get lastUpdated => $_getN(4);
+  $4.Timestamp get lastUpdated => $_getN(5);
   @$pb.TagNumber(21)
   set lastUpdated($4.Timestamp value) => $_setField(21, value);
   @$pb.TagNumber(21)
-  $core.bool hasLastUpdated() => $_has(4);
+  $core.bool hasLastUpdated() => $_has(5);
   @$pb.TagNumber(21)
   void clearLastUpdated() => $_clearField(21);
   @$pb.TagNumber(21)
-  $4.Timestamp ensureLastUpdated() => $_ensure(4);
+  $4.Timestamp ensureLastUpdated() => $_ensure(5);
 }
 
 /// A device's radio link, as its connector reports it.

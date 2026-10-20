@@ -385,7 +385,9 @@ export declare const StickyWriteSchema: GenMessage<StickyWrite>;
 export declare type LeasedWrite = Message<"kusinta.iot.device.v1.LeasedWrite"> & {
   /**
    * The shortest and longest lease, in seconds, the device accepts. Absent: no bound on
-   * that side, never zero. A lease outside them is refused rather than clamped.
+   * that side, never zero. A lease outside them is refused rather than clamped. Where the
+   * device fixes the length itself — a boost time set as a device parameter — the producer
+   * states that length as both bounds, so it never accepts a lease it cannot keep.
    *
    * @generated from field: optional uint32 min_lease_seconds = 1;
    */
@@ -412,9 +414,17 @@ export declare type LeasedWrite = Message<"kusinta.iot.device.v1.LeasedWrite"> &
    * consumer reads a lease without it as a write kind not stated.
    *
    * A fixed value. A device whose timer returns the output to whatever it held before the
-   * write is leased only if its producer holds that earlier value fixed — writes the lapse
-   * value, untimed, before each leased write and lets nothing else write it — and is
-   * otherwise stated sticky.
+   * write is leased only if its producer guarantees that earlier value is the lapse value
+   * — by accepting timed writes only while the output is at its lapse value, or by
+   * writing the lapse value untimed before each one — and is otherwise stated sticky.
+   *
+   * A write of the lapse value itself needs no lease: it ends any lease running, and a
+   * lease carried on it is ignored rather than refused. That is how a writer ends a lease
+   * early.
+   *
+   * A report of the lapse value after a lease has run out is the lease ending, not a
+   * change from outside: a consumer that adopts values it did not write — a turned dial —
+   * MUST NOT adopt that one as a person's.
    *
    * @generated from field: kusinta.iot.device.v1.AttributeValue lapse_value = 4;
    */
@@ -441,7 +451,8 @@ export enum ReadLatency {
   UNSPECIFIED = 0,
 
   /**
-   * Within a few minutes of the change, every time.
+   * Within a few minutes of the change, every time. A value relayed through a vendor's
+   * service is not stated REAL_TIME unless that has been measured.
    *
    * @generated from enum value: READ_LATENCY_REAL_TIME = 1;
    */

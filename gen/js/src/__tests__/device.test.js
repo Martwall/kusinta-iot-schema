@@ -538,4 +538,14 @@ describe('device write interval', () => {
   it('is absent rather than zero when not stated', () => {
     expect(create(DeviceSchema, {}).minWriteIntervalSeconds).toBeUndefined()
   })
+
+  it('states how long a write can take to reach the device', () => {
+    const device = create(DeviceSchema, { maxWriteDelaySeconds: 600 })
+    const decoded = fromBinary(DeviceSchema, toBinary(DeviceSchema, device))
+    expect(decoded.maxWriteDelaySeconds).toBe(600)
+  })
+
+  it('leaves the write delay absent rather than zero when not stated', () => {
+    expect(create(DeviceSchema, {}).maxWriteDelaySeconds).toBeUndefined()
+  })
 })

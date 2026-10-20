@@ -861,6 +861,16 @@ def test_a_device_write_interval_is_absent_rather_than_zero():
     assert not device_pb2.Device().HasField("min_write_interval_seconds")
 
 
+def test_a_device_states_how_long_a_write_can_take_to_arrive():
+    device = device_pb2.Device(max_write_delay_seconds=600)
+
+    assert _round_trip(device).max_write_delay_seconds == 600
+
+
+def test_a_device_write_delay_is_absent_rather_than_zero():
+    assert not device_pb2.Device().HasField("max_write_delay_seconds")
+
+
 def test_endpoint_lists_the_vendor_parameters_this_device_implements():
     """The vendor mirror of AttributeList: vendor parameters have no cluster and so no
     ClusterState to carry it. Spelled as (vendor_attribute) is, byte for byte."""

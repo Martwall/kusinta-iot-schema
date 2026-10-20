@@ -235,7 +235,9 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
    * What a write to each vendor parameter leaves behind, and how late its reports arrive,
    * keyed by the parameter's vendor name as vendor_attribute_names spells it. The vendor
    * mirror of ClusterState.attribute_behaviours, with the same rules: an absent key is
-   * "not stated", and not stated is read as the worst case.
+   * "not stated", and not stated is read as the worst case. For a parameter reached through
+   * a vendor's service, the name is the vendor's stable parameter id where it has one,
+   * never a display name that is translated or renamed between firmware versions.
    *
    * @generated from field: map<string, kusinta.iot.device.v1.AttributeBehaviour> vendor_attribute_behaviours = 18;
    */
@@ -271,7 +273,7 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
   descriptor?: DeviceDescriptor | undefined;
 
   /**
-   * 16-19 are free; 20+ is the timestamp band.
+   * 17-19 are free; 20+ is the timestamp band.
    *
    * @generated from field: repeated kusinta.iot.device.v1.Endpoint endpoints = 14;
    */
@@ -284,9 +286,23 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
    * because two attributes each written at their own pace still share one radio. Stated by
    * the producer at announcement. Absent: not stated, never zero.
    *
+   * A lower bound, not the whole budget: devices behind one radio gateway or one hub share
+   * its airtime, and a vendor's service limits an account rather than a device, so a writer
+   * may have to space writes further apart than this says.
+   *
    * @generated from field: optional uint32 min_write_interval_seconds = 15;
    */
   minWriteIntervalSeconds?: number | undefined;
+
+  /**
+   * The longest a write can take to reach the device: a device that listens only after
+   * its own report takes a write at its next one. Stated by the producer at announcement.
+   * Absent: not stated, never zero. A writer that renews a lease renews it this long, plus
+   * a margin, before the lease runs out, or the output lapses between renewals.
+   *
+   * @generated from field: optional uint32 max_write_delay_seconds = 16;
+   */
+  maxWriteDelaySeconds?: number | undefined;
 
   /**
    * When the gateway last had evidence this device itself — the

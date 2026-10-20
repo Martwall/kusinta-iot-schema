@@ -453,7 +453,9 @@ export declare type AttributeWriteRequest = Message<"kusinta.iot.webrtc.v1.Attri
    *
    * The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a leased
    * attribute that carries no lease, a lease of zero or outside the stated bounds, and a
-   * lease on an attribute it does not state as leased. Rollout order: a writer sends a
+   * lease on an attribute it does not state as leased. A write of the attribute's lapse
+   * value is the exception: it needs no lease, ends any lease running, and a lease on it
+   * is ignored (device.v1.LeasedWrite.lapse_value). Rollout order: a writer sends a
    * lease for an attribute before the attribute's producer states it as leased.
    *
    * Set only by the gateway, towards a producer: a leased attribute is written by the
