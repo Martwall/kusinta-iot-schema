@@ -599,6 +599,15 @@ const RoomHistorySample$json = {
       '10': 'valveOpenSeconds',
       '17': true
     },
+    {
+      '1': 'floor_heating_seconds',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '9': 5,
+      '10': 'floorHeatingSeconds',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_measured_centidegrees'},
@@ -606,6 +615,7 @@ const RoomHistorySample$json = {
     {'1': '_effective_target_centidegrees'},
     {'1': '_valve_open_permille'},
     {'1': '_valve_open_seconds'},
+    {'1': '_floor_heating_seconds'},
   ],
 };
 
@@ -617,9 +627,11 @@ final $typed_data.Uint8List roomHistorySampleDescriptor = $convert.base64Decode(
     'VncmVlc4gBARJHCh1lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlcxgEIAEoEUgCUhtlZmZl'
     'Y3RpdmVUYXJnZXRDZW50aWRlZ3JlZXOIAQESMwoTdmFsdmVfb3Blbl9wZXJtaWxsZRgFIAEoDU'
     'gDUhF2YWx2ZU9wZW5QZXJtaWxsZYgBARIxChJ2YWx2ZV9vcGVuX3NlY29uZHMYBiABKA1IBFIQ'
-    'dmFsdmVPcGVuU2Vjb25kc4gBAUIYChZfbWVhc3VyZWRfY2VudGlkZWdyZWVzQhYKFF90YXJnZX'
-    'RfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlc0IWChRfdmFs'
-    'dmVfb3Blbl9wZXJtaWxsZUIVChNfdmFsdmVfb3Blbl9zZWNvbmRz');
+    'dmFsdmVPcGVuU2Vjb25kc4gBARI3ChVmbG9vcl9oZWF0aW5nX3NlY29uZHMYByABKA1IBVITZm'
+    'xvb3JIZWF0aW5nU2Vjb25kc4gBAUIYChZfbWVhc3VyZWRfY2VudGlkZWdyZWVzQhYKFF90YXJn'
+    'ZXRfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlc0IWChRfdm'
+    'FsdmVfb3Blbl9wZXJtaWxsZUIVChNfdmFsdmVfb3Blbl9zZWNvbmRzQhgKFl9mbG9vcl9oZWF0'
+    'aW5nX3NlY29uZHM=');
 
 @$core.Deprecated('Use roomHistoryDescriptor instead')
 const RoomHistory$json = {

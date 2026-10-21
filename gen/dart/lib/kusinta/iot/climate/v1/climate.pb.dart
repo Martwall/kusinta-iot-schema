@@ -885,6 +885,7 @@ class RoomHistorySample extends $pb.GeneratedMessage {
     $core.int? effectiveTargetCentidegrees,
     $core.int? valveOpenPermille,
     $core.int? valveOpenSeconds,
+    $core.int? floorHeatingSeconds,
   }) {
     final result = create();
     if (at != null) result.at = at;
@@ -896,6 +897,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
       result.effectiveTargetCentidegrees = effectiveTargetCentidegrees;
     if (valveOpenPermille != null) result.valveOpenPermille = valveOpenPermille;
     if (valveOpenSeconds != null) result.valveOpenSeconds = valveOpenSeconds;
+    if (floorHeatingSeconds != null)
+      result.floorHeatingSeconds = floorHeatingSeconds;
     return result;
   }
 
@@ -925,6 +928,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
         5, _omitFieldNames ? '' : 'valveOpenPermille', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         6, _omitFieldNames ? '' : 'valveOpenSeconds', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'floorHeatingSeconds', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1012,6 +1017,19 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   $core.bool hasValveOpenSeconds() => $_has(5);
   @$pb.TagNumber(6)
   void clearValveOpenSeconds() => $_clearField(6);
+
+  /// The seconds within the bucket during which any floor zone heating the room was heating
+  /// (heating.v1.FloorZone). Kept apart from the valve fields: a zone's duty and a valve's
+  /// opening are different controls with different time scales. Absent where no floor zone
+  /// heats the room.
+  @$pb.TagNumber(7)
+  $core.int get floorHeatingSeconds => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set floorHeatingSeconds($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFloorHeatingSeconds() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFloorHeatingSeconds() => $_clearField(7);
 }
 
 /// A room's history, in reply to GetRoomHistory.

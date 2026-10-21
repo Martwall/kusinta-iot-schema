@@ -223,4 +223,14 @@ describe('room history', () => {
     const decoded = fromBinary(ManagementResultSchema, toBinary(ManagementResultSchema, result))
     expect(decoded.result.case).toBe('roomHistory')
   })
+
+  it('keeps floor heating apart from valve opening, absent where no floor zone heats the room', () => {
+    const sample = create(RoomHistorySampleSchema, { valveOpenSeconds: 300 })
+    expect(sample.floorHeatingSeconds).toBeUndefined()
+  })
+
+  it('carries the seconds a floor zone heated the room', () => {
+    const sample = create(RoomHistorySampleSchema, { floorHeatingSeconds: 600 })
+    expect(fromBinary(RoomHistorySampleSchema, toBinary(RoomHistorySampleSchema, sample)).floorHeatingSeconds).toBe(600)
+  })
 })

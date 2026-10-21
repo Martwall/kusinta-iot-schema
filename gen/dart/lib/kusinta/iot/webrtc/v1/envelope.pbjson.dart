@@ -395,6 +395,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'promotionRequests'
     },
+    {
+      '1': 'heating_layout',
+      '3': 15,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatingLayout',
+      '9': 0,
+      '10': 'heatingLayout'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -421,7 +430,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'FjZUludml0ZXNIAFIMc3BhY2VJbnZpdGVzElAKD2dhdGV3YXlfbWVtYmVycxgNIAEoCzIlLmt1'
     'c2ludGEuaW90LndlYnJ0Yy52MS5HYXRld2F5TWVtYmVyc0gAUg5nYXRld2F5TWVtYmVycxJZCh'
     'Jwcm9tb3Rpb25fcmVxdWVzdHMYDiABKAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvbW90'
-    'aW9uUmVxdWVzdHNIAFIRcHJvbW90aW9uUmVxdWVzdHNCCAoGcmVzdWx0');
+    'aW9uUmVxdWVzdHNIAFIRcHJvbW90aW9uUmVxdWVzdHMSTgoOaGVhdGluZ19sYXlvdXQYDyABKA'
+    'syJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRpbmdMYXlvdXRIAFINaGVhdGluZ0xheW91'
+    'dEIICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

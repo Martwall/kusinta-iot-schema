@@ -16,6 +16,8 @@ proto/
   device/          # DeviceDescriptor, per-type Properties messages, Device/Endpoint, PropertyUpdate
   space/           # Space (building hierarchy)
   access/          # Role, PermissionAction, DeviceAcl, EffectivePermissions
+  climate/         # RoomClimate, ClimateMode, room history, apartment summaries
+  heating/         # HeatingPlant, circuits, floor zones, comfort loads, contact bindings
   reporting/       # gateway → api-server reports: open problems, service reach, served spaces,
                    #   members, invite routes
   connector/       # ConnectorToGatewayMessage, GatewayToConnectorMessage, gRPC service
@@ -282,6 +284,44 @@ not reasons:
 What `condition` and `target_change` already say (a window, a lost sensor, who set the
 target) is never repeated in the list. In a home, all of this is withheld from service along
 with the rest of the room's state.
+
+## Heating records
+
+`heating/v1/heating.proto` says what heats a space and which device outputs the gateway may
+drive to steer it. A device is nothing to the heating for being filed in a room: a record
+binds one of its outputs to a role, by name.
+
+- **Plant:** one heat source, its read-only readings device, its meter, its circuits, and the
+  contacts the gateway drives: the two **SG Ready** inputs (named by what each means closed
+  alone) and the **add-on heat block**. Both SG Ready inputs and the block rest open, so the
+  heat source runs normally whenever the gateway stops.
+- **Circuit:** radiator or floor. A floor circuit has its own mixing, supply cap and supply and
+  return probes, and carries the **floor zones** on its manifold.
+- **Floor zone:** one output on the wiring centre's thermostat input; it rests closed, so the
+  zone heats when the gateway is gone. A zone may heat several rooms and a room may have
+  several zones. Each zone has area shares summing to 1000 and exactly one **control room**,
+  whose error, sensor and window alone steer it.
+- **Comfort load:** a heated bathroom floor or towel heater, run in **time windows** (minutes
+  of the building's local day) rather than to a target. Residents set the windows
+  (`SetComfortWindows`); the binding is changed apart from them.
+
+Every role is a **`ContactBinding`**: a device, the output written, and `closed_value`, the
+output value with which the contact is closed. That is a wiring fact, not a device fact: a
+relay wired through its normally closed contact closes it with the channel off. The gateway
+reads every state of a role through it. It refuses a binding:
+- whose output is not stated as leased;
+- whose lapse value, read through `closed_value`, does not leave the contact where the role
+  rests.
+
+The gateway sets `commissioning` on each binding and never drives one that has not passed
+its commissioning test. Changing a binding's device or output, replacing the device, or
+changing a zone's rooms or control room returns it to `NOT_TESTED`. Changing area shares
+does not.
+
+Plants are replaced whole (`PutHeatingPlant`), naming the `revision` they replace. In a home
+the records are given only to its residents and to an installer under a commissioning grant,
+never to service. Room history keeps a zone's heating in its own field
+(`floor_heating_seconds`), apart from valve opening.
 
 ## Invites
 

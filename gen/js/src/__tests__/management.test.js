@@ -439,3 +439,45 @@ describe('ReconnectConnector', () => {
     expect(decoded.result).toMatchObject({ case: 'error', value: { metadata: { reason: 'TIMED_OUT' } } })
   })
 })
+
+describe('heating records', () => {
+  it('lists the heating under a space', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'listHeating', value: { rootSpaceId: { value: 'home-15' } } },
+    })
+    expect(decoded.request.case).toBe('listHeating')
+  })
+
+  it('replaces a plant whole, naming the revision it replaces', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'putHeatingPlant', value: { plant: { plantId: 'plant-1', revision: 3n } } },
+    })
+    expect(decoded.request.case === 'putHeatingPlant' && decoded.request.value.plant?.revision).toBe(3n)
+  })
+
+  it('removes a plant by its id', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'removeHeatingPlant', value: { plantId: 'plant-1' } },
+    })
+    expect(decoded.request.case).toBe('removeHeatingPlant')
+  })
+
+  it('sets a comfort load’s windows apart from its binding', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'setComfortWindows',
+        value: { comfortLoadId: 'load-1', windows: [{ weekdays: 0b1111111, startMinute: 300, endMinute: 420 }] },
+      },
+    })
+    expect(decoded.request.case === 'setComfortWindows' && decoded.request.value.windows.length).toBe(1)
+  })
+
+  it('answers with the heating layout', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: { case: 'heatingLayout', value: { plants: [{ plantId: 'plant-1' }] } },
+    })
+    expect(decoded.result.case === 'heatingLayout' && decoded.result.value.plants[0].plantId).toBe('plant-1')
+  })
+})
+

@@ -7,6 +7,7 @@ import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/common/v1/types.proto";
+import "kusinta/iot/heating/v1/heating.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
@@ -635,6 +636,68 @@ message ReconnectConnector {
   kusinta.iot.identity.v1.ConnectorId connector_id = 1;
 }
 
+// Lists the heating records (heating.v1) a caller may see under a space: unset
+// root_space_id lists every one the caller can reach. Answered with a HeatingLayout. A
+// home's records are left out for a caller who reaches it as service (see heating.v1).
+message ListHeating {
+  kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+}
+
+// Creates a plant (empty plant_id) or replaces one whole, with its circuits and zones.
+// Answered with a HeatingLayout holding the plant as stored. The gateway assigns the ids
+// left empty and keeps those given.
+//
+// Refused as INVALID_REQUEST, with metadata "reason":
+//   "ZONE_CONTROL_ROOM"    a floor zone with no control room, or more than one.
+//   "ZONE_AREA_SHARES"     a floor zone whose rooms' shares do not sum to 1000.
+//   "ROOM_OUTSIDE_PLANT"   a zone room that is not a room within the plant's space.
+//   "ZONES_ON_RADIATOR"    zones on a circuit that is not FLOOR.
+//   "SG_READY_HALF_BOUND"  one SG Ready input bound without the other.
+//   "OUTPUT_BOUND_TWICE"   one output bound in two roles, here or in another record.
+// Refused as FAILED_PRECONDITION, with metadata "reason":
+//   "STALE_REVISION"       the plant changed since the revision the request names.
+//   "OUTPUT_NOT_LEASED"    an output whose write its producer does not state as leased.
+//   "REST_STATE"           an output whose lapse value, read through closed_value, does
+//                          not leave the contact where its role rests.
+// A device or output the caller cannot reach is refused as NOT_ENTITLED, as it is
+// everywhere.
+//
+// Commissioning (heating.v1.CommissioningState) is the gateway's: given in a request it is
+// ignored. A binding keeps its state while its device and output are unchanged; a floor
+// zone whose rooms or control room change returns to NOT_TESTED, and the app warns before
+// it saves such a change.
+message PutHeatingPlant {
+  kusinta.iot.heating.v1.HeatingPlant plant = 1;
+}
+
+// Removes a plant and everything under it. Its outputs are left at rest, since the gateway
+// stops driving them. Acked.
+message RemoveHeatingPlant {
+  string plant_id = 1;
+}
+
+// Creates a comfort load (empty comfort_load_id) or replaces its room, name and output.
+// Its windows are kept: they are set with SetComfortWindows. Answered with a HeatingLayout
+// holding the comfort load as stored. Refused as PutHeatingPlant refuses an output
+// ("OUTPUT_BOUND_TWICE", "OUTPUT_NOT_LEASED", "REST_STATE").
+message PutComfortLoad {
+  kusinta.iot.heating.v1.ComfortLoad comfort_load = 1;
+}
+
+// Removes a comfort load; its output is left at rest. Acked.
+message RemoveComfortLoad {
+  string comfort_load_id = 1;
+}
+
+// Replaces a comfort load's windows: a resident's setting, apart from the binding. An
+// empty list leaves the load to heat only when the plan allows it for price. Refused as
+// INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or no weekday.
+// Acked.
+message SetComfortWindows {
+  string comfort_load_id = 1;
+  repeated kusinta.iot.heating.v1.ComfortWindow windows = 2;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -679,5 +742,12 @@ message ManagementRequest {
     RequestPromotion request_promotion = 36;
     AnswerPromotion answer_promotion = 37;
     ListPromotionRequests list_promotion_requests = 38;
+    // Heating records; see heating.v1.
+    ListHeating list_heating = 39;
+    PutHeatingPlant put_heating_plant = 40;
+    RemoveHeatingPlant remove_heating_plant = 41;
+    PutComfortLoad put_comfort_load = 42;
+    RemoveComfortLoad remove_comfort_load = 43;
+    SetComfortWindows set_comfort_windows = 44;
   }
 }

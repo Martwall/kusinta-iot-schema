@@ -8,6 +8,7 @@ import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/common/v1/pairing.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/device/v1/device_event.proto";
+import "kusinta/iot/heating/v1/heating.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
@@ -173,6 +174,8 @@ message ManagementResult {
     SpaceInvites space_invites = 12; // list_space_invites
     GatewayMembers gateway_members = 13; // list_gateway_members
     PromotionRequests promotion_requests = 14; // list_promotion_requests
+    // list_heating, put_heating_plant, put_comfort_load
+    kusinta.iot.heating.v1.HeatingLayout heating_layout = 15;
   }
 }
 
