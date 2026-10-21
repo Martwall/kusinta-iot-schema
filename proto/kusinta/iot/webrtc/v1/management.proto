@@ -5,6 +5,7 @@ package kusinta.iot.webrtc.v1;
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/access/v1/roles.proto";
+import "kusinta/iot/accountlink/v1/account_link.proto";
 import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/heating/v1/heating.proto";
@@ -721,6 +722,16 @@ message SetComfortWindows {
   optional uint64 windows_revision = 3;
 }
 
+// Asks for a nonce to link one home's account at a third-party service
+// (accountlink.v1.AccountLinkNonce). Only a household admin of the home — the resident
+// relation that governs a home's own settings — is issued one; anyone else is refused as
+// NOT_ENTITLED, as is a home the caller cannot reach. A service this gateway does not
+// support is refused as INVALID_REQUEST.
+message RequestAccountLinkNonce {
+  kusinta.iot.identity.v1.SpaceId home_id = 1;
+  kusinta.iot.accountlink.v1.LinkedService service = 2;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -773,5 +784,6 @@ message ManagementRequest {
     PutComfortLoad put_comfort_load = 43;
     RemoveHeatingRecord remove_heating_record = 44;
     SetComfortWindows set_comfort_windows = 45;
+    RequestAccountLinkNonce request_account_link_nonce = 46;
   }
 }

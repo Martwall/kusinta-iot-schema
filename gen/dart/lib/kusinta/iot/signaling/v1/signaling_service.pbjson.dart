@@ -14,7 +14,9 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-import '../../../../google/protobuf/timestamp.pbjson.dart' as $2;
+import '../../../../google/protobuf/duration.pbjson.dart' as $4;
+import '../../../../google/protobuf/timestamp.pbjson.dart' as $3;
+import '../../accountlink/v1/account_link.pbjson.dart' as $2;
 import '../../identity/v1/identity.pbjson.dart' as $1;
 import 'signaling.pbjson.dart' as $0;
 
@@ -66,17 +68,28 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
       $0.TransferOutcomeApplied$json,
   '.kusinta.iot.signaling.v1.GatewayWiped': $0.GatewayWiped$json,
   '.kusinta.iot.signaling.v1.PairingsLeftBehind': $0.PairingsLeftBehind$json,
+  '.kusinta.iot.accountlink.v1.AccountLinkResult': $2.AccountLinkResult$json,
+  '.kusinta.iot.accountlink.v1.RefreshToken': $2.RefreshToken$json,
+  '.kusinta.iot.accountlink.v1.RevokeToken': $2.RevokeToken$json,
   '.kusinta.iot.signaling.v1.GatewayConnectResponse':
       $0.GatewayConnectResponse$json,
   '.kusinta.iot.signaling.v1.SdpOffer': $0.SdpOffer$json,
   '.kusinta.iot.signaling.v1.RedeemInvite': $0.RedeemInvite$json,
   '.kusinta.iot.signaling.v1.VouchedAdministrators':
       $0.VouchedAdministrators$json,
-  '.google.protobuf.Timestamp': $2.Timestamp$json,
+  '.google.protobuf.Timestamp': $3.Timestamp$json,
   '.kusinta.iot.signaling.v1.TransferOutcome': $0.TransferOutcome$json,
   '.kusinta.iot.signaling.v1.OutgoingChoice': $0.OutgoingChoice$json,
   '.kusinta.iot.signaling.v1.GatewayStreamOpened': $0.GatewayStreamOpened$json,
   '.kusinta.iot.signaling.v1.GatewayDeleted': $0.GatewayDeleted$json,
+  '.kusinta.iot.accountlink.v1.AccountLinked': $2.AccountLinked$json,
+  '.kusinta.iot.accountlink.v1.TokenGrant': $2.TokenGrant$json,
+  '.kusinta.iot.accountlink.v1.AccessGrant': $2.AccessGrant$json,
+  '.kusinta.iot.accountlink.v1.TokenRefreshed': $2.TokenRefreshed$json,
+  '.google.protobuf.Duration': $4.Duration$json,
+  '.kusinta.iot.accountlink.v1.TokenRevoked': $2.TokenRevoked$json,
+  '.kusinta.iot.accountlink.v1.AccountLinkCancelled':
+      $2.AccountLinkCancelled$json,
   '.kusinta.iot.signaling.v1.UserConnectRequest': $0.UserConnectRequest$json,
   '.kusinta.iot.signaling.v1.UserHandshake': $0.UserHandshake$json,
   '.kusinta.iot.identity.v1.GatewayId': $1.GatewayId$json,

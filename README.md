@@ -325,6 +325,17 @@ commissioning grant, never to service.
 Room history keeps a zone's heating in its own field (`floor_heating_seconds`), apart from
 valve opening.
 
+## Linking a third-party account
+
+`accountlink/v1/account_link.proto` links a home to its account at a third-party cloud
+service (myUplink first), so the gateway can read through it. The tokens live on the
+gateway, and the api-server is a confidential OAuth client that keeps nothing. The gateway
+signs a single-use nonce (`RequestAccountLinkNonce`, claims in `AccountLinkNonceClaims`) that
+the app passes as the OAuth `state`. The api-server verifies it, exchanges the code and hands
+the grant to that gateway over its stream (`AccountLinked`). Refresh and revocation go back
+the same way (`RefreshToken`, `RevokeToken`), because only the api-server holds the client
+secret. The proto file states the full flow.
+
 ## Invites
 
 People are put on a space by invite rather than by user id (`webrtc/v1/invite.proto`). The

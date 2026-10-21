@@ -17,6 +17,7 @@ import {
   UserSendRequestSchema,
   RedeemOutcome,
 } from '../kusinta/iot/signaling/v1/signaling_pb.js'
+import { AccountLinkOutcome, LinkedService } from '../kusinta/iot/accountlink/v1/account_link_pb.js'
 
 describe('SdpOffer / SdpAnswer / IceCandidate', () => {
   it('round-trips SdpOffer', () => {
@@ -363,5 +364,50 @@ describe('RedeemInvite / RedeemInviteResult', () => {
     })
     const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, request))
     expect(decoded.payload.case === 'redeemInviteResult' && decoded.payload.value.outcome).toBe(RedeemOutcome.PENDING_APPROVAL)
+  })
+})
+
+describe('a linked account on the gateway stream', () => {
+  it('hands the gateway the grant with the nonce the app passed as state', () => {
+    const response = create(GatewayConnectResponseSchema, {
+      payload: {
+        case: 'accountLinked',
+        value: { requestId: 'r-1', nonce: 'eyJ.nonce.sig', grant: { access: { accessToken: 'a' }, refreshToken: 'r' } },
+      },
+    })
+    const decoded = fromBinary(GatewayConnectResponseSchema, toBinary(GatewayConnectResponseSchema, response))
+    expect(decoded.payload).toMatchObject({ case: 'accountLinked', value: { nonce: 'eyJ.nonce.sig' } })
+  })
+
+  it('answers the link with an outcome of its own', () => {
+    const request = create(GatewayConnectRequestSchema, {
+      payload: { case: 'accountLinkResult', value: { requestId: 'r-1', outcome: AccountLinkOutcome.REJECTED } },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, request))
+    expect(decoded.payload).toMatchObject({ case: 'accountLinkResult', value: { outcome: AccountLinkOutcome.REJECTED } })
+  })
+
+  it('cancels a link the gateway did not answer in time', () => {
+    const response = create(GatewayConnectResponseSchema, {
+      payload: { case: 'accountLinkCancelled', value: { requestId: 'r-1' } },
+    })
+    const decoded = fromBinary(GatewayConnectResponseSchema, toBinary(GatewayConnectResponseSchema, response))
+    expect(decoded.payload).toMatchObject({ case: 'accountLinkCancelled', value: { requestId: 'r-1' } })
+  })
+
+  it('carries the gateway’s refresh request upstream', () => {
+    const request = create(GatewayConnectRequestSchema, {
+      payload: { case: 'refreshToken', value: { requestId: 'r-2', service: LinkedService.MYUPLINK, refreshToken: 'r' } },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, request))
+    expect(decoded.payload).toMatchObject({ case: 'refreshToken', value: { service: LinkedService.MYUPLINK } })
+  })
+
+  it('carries the gateway’s revoke request upstream', () => {
+    const request = create(GatewayConnectRequestSchema, {
+      payload: { case: 'revokeToken', value: { requestId: 'r-3', service: LinkedService.MYUPLINK, refreshToken: 'r' } },
+    })
+    const decoded = fromBinary(GatewayConnectRequestSchema, toBinary(GatewayConnectRequestSchema, request))
+    expect(decoded.payload).toMatchObject({ case: 'revokeToken', value: { refreshToken: 'r' } })
   })
 })

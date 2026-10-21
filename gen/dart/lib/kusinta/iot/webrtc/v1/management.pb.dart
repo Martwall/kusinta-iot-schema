@@ -18,6 +18,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../../google/protobuf/timestamp.pb.dart' as $4;
 import '../../access/v1/acl.pbenum.dart' as $11;
 import '../../access/v1/roles.pbenum.dart' as $9;
+import '../../accountlink/v1/account_link.pbenum.dart' as $12;
 import '../../climate/v1/climate.pbenum.dart' as $10;
 import '../../common/v1/types.pbenum.dart' as $8;
 import '../../heating/v1/heating.pb.dart' as $5;
@@ -3307,6 +3308,89 @@ class SetComfortWindows extends $pb.GeneratedMessage {
   void clearWindowsRevision() => $_clearField(3);
 }
 
+/// Asks for a nonce to link one home's account at a third-party service
+/// (accountlink.v1.AccountLinkNonce). Only a household admin of the home — the resident
+/// relation that governs a home's own settings — is issued one; anyone else is refused as
+/// NOT_ENTITLED, as is a home the caller cannot reach. A service this gateway does not
+/// support is refused as INVALID_REQUEST.
+class RequestAccountLinkNonce extends $pb.GeneratedMessage {
+  factory RequestAccountLinkNonce({
+    $0.SpaceId? homeId,
+    $12.LinkedService? service,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (service != null) result.service = service;
+    return result;
+  }
+
+  RequestAccountLinkNonce._();
+
+  factory RequestAccountLinkNonce.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RequestAccountLinkNonce.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RequestAccountLinkNonce',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$12.LinkedService>(
+        2, _omitFieldNames ? '' : 'service', $pb.PbFieldType.OE,
+        defaultOrMaker: $12.LinkedService.LINKED_SERVICE_UNSPECIFIED,
+        valueOf: $12.LinkedService.valueOf,
+        enumValues: $12.LinkedService.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RequestAccountLinkNonce clone() =>
+      RequestAccountLinkNonce()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RequestAccountLinkNonce copyWith(
+          void Function(RequestAccountLinkNonce) updates) =>
+      super.copyWith((message) => updates(message as RequestAccountLinkNonce))
+          as RequestAccountLinkNonce;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RequestAccountLinkNonce create() => RequestAccountLinkNonce._();
+  @$core.override
+  RequestAccountLinkNonce createEmptyInstance() => create();
+  static $pb.PbList<RequestAccountLinkNonce> createRepeated() =>
+      $pb.PbList<RequestAccountLinkNonce>();
+  @$core.pragma('dart2js:noInline')
+  static RequestAccountLinkNonce getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RequestAccountLinkNonce>(create);
+  static RequestAccountLinkNonce? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $12.LinkedService get service => $_getN(1);
+  @$pb.TagNumber(2)
+  set service($12.LinkedService value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasService() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearService() => $_clearField(2);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -3353,6 +3437,7 @@ enum ManagementRequest_Request {
   putComfortLoad,
   removeHeatingRecord,
   setComfortWindows,
+  requestAccountLinkNonce,
   notSet
 }
 
@@ -3404,6 +3489,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     PutComfortLoad? putComfortLoad,
     RemoveHeatingRecord? removeHeatingRecord,
     SetComfortWindows? setComfortWindows,
+    RequestAccountLinkNonce? requestAccountLinkNonce,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -3464,6 +3550,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (removeHeatingRecord != null)
       result.removeHeatingRecord = removeHeatingRecord;
     if (setComfortWindows != null) result.setComfortWindows = setComfortWindows;
+    if (requestAccountLinkNonce != null)
+      result.requestAccountLinkNonce = requestAccountLinkNonce;
     return result;
   }
 
@@ -3523,6 +3611,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     43: ManagementRequest_Request.putComfortLoad,
     44: ManagementRequest_Request.removeHeatingRecord,
     45: ManagementRequest_Request.setComfortWindows,
+    46: ManagementRequest_Request.requestAccountLinkNonce,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -3575,7 +3664,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       42,
       43,
       44,
-      45
+      45,
+      46
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -3676,6 +3766,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: RemoveHeatingRecord.create)
     ..aOM<SetComfortWindows>(45, _omitFieldNames ? '' : 'setComfortWindows',
         subBuilder: SetComfortWindows.create)
+    ..aOM<RequestAccountLinkNonce>(
+        46, _omitFieldNames ? '' : 'requestAccountLinkNonce',
+        subBuilder: RequestAccountLinkNonce.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4212,6 +4305,18 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearSetComfortWindows() => $_clearField(45);
   @$pb.TagNumber(45)
   SetComfortWindows ensureSetComfortWindows() => $_ensure(44);
+
+  @$pb.TagNumber(46)
+  RequestAccountLinkNonce get requestAccountLinkNonce => $_getN(45);
+  @$pb.TagNumber(46)
+  set requestAccountLinkNonce(RequestAccountLinkNonce value) =>
+      $_setField(46, value);
+  @$pb.TagNumber(46)
+  $core.bool hasRequestAccountLinkNonce() => $_has(45);
+  @$pb.TagNumber(46)
+  void clearRequestAccountLinkNonce() => $_clearField(46);
+  @$pb.TagNumber(46)
+  RequestAccountLinkNonce ensureRequestAccountLinkNonce() => $_ensure(45);
 }
 
 const $core.bool _omitFieldNames =

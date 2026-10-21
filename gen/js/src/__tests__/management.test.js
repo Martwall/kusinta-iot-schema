@@ -16,6 +16,7 @@ import {
   SpaceTreeSchema,
   ManagementAckSchema,
 } from '../kusinta/iot/webrtc/v1/management_pb.js'
+import { LinkedService } from '../kusinta/iot/accountlink/v1/account_link_pb.js'
 import {
   AppMessageSchema,
   GatewayMessageSchema,
@@ -493,5 +494,22 @@ describe('heating records', () => {
       result: { case: 'heatingLayout', value: { floorZones: [{ zoneId: 'zone-1' }] } },
     })
     expect(decoded.result).toMatchObject({ case: 'heatingLayout', value: { floorZones: [{ zoneId: 'zone-1' }] } })
+  })
+})
+
+describe('account linking', () => {
+  it('asks the gateway for a link nonce for one home', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'requestAccountLinkNonce', value: { homeId: { value: 'home-15' }, service: LinkedService.MYUPLINK } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'requestAccountLinkNonce', value: { service: LinkedService.MYUPLINK } })
+  })
+
+  it('answers with the nonce', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: { case: 'accountLinkNonce', value: { nonce: 'eyJ.nonce.sig' } },
+    })
+    expect(decoded.result).toMatchObject({ case: 'accountLinkNonce', value: { nonce: 'eyJ.nonce.sig' } })
   })
 })

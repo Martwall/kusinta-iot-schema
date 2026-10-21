@@ -15,8 +15,9 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $1;
-import '../../common/v1/types.pbenum.dart' as $2;
+import '../../../../google/protobuf/timestamp.pb.dart' as $2;
+import '../../accountlink/v1/account_link.pb.dart' as $1;
+import '../../common/v1/types.pbenum.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'signaling.pbenum.dart';
 
@@ -444,6 +445,9 @@ enum GatewayConnectRequest_Payload {
   vouchedAdministratorsApplied,
   transferOutcomeApplied,
   wiped,
+  accountLinkResult,
+  refreshToken,
+  revokeToken,
   notSet
 }
 
@@ -461,6 +465,9 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     VouchedAdministratorsApplied? vouchedAdministratorsApplied,
     TransferOutcomeApplied? transferOutcomeApplied,
     GatewayWiped? wiped,
+    $1.AccountLinkResult? accountLinkResult,
+    $1.RefreshToken? refreshToken,
+    $1.RevokeToken? revokeToken,
   }) {
     final result = create();
     if (targetUserId != null) result.targetUserId = targetUserId;
@@ -475,6 +482,9 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     if (transferOutcomeApplied != null)
       result.transferOutcomeApplied = transferOutcomeApplied;
     if (wiped != null) result.wiped = wiped;
+    if (accountLinkResult != null) result.accountLinkResult = accountLinkResult;
+    if (refreshToken != null) result.refreshToken = refreshToken;
+    if (revokeToken != null) result.revokeToken = revokeToken;
     return result;
   }
 
@@ -496,6 +506,9 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     7: GatewayConnectRequest_Payload.vouchedAdministratorsApplied,
     8: GatewayConnectRequest_Payload.transferOutcomeApplied,
     9: GatewayConnectRequest_Payload.wiped,
+    10: GatewayConnectRequest_Payload.accountLinkResult,
+    11: GatewayConnectRequest_Payload.refreshToken,
+    12: GatewayConnectRequest_Payload.revokeToken,
     0: GatewayConnectRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -503,7 +516,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 6, 7, 8, 9])
+    ..oo(0, [2, 3, 4, 6, 7, 8, 9, 10, 11, 12])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'targetUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpAnswer>(2, _omitFieldNames ? '' : 'answer',
@@ -523,6 +536,12 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
         subBuilder: TransferOutcomeApplied.create)
     ..aOM<GatewayWiped>(9, _omitFieldNames ? '' : 'wiped',
         subBuilder: GatewayWiped.create)
+    ..aOM<$1.AccountLinkResult>(10, _omitFieldNames ? '' : 'accountLinkResult',
+        subBuilder: $1.AccountLinkResult.create)
+    ..aOM<$1.RefreshToken>(11, _omitFieldNames ? '' : 'refreshToken',
+        subBuilder: $1.RefreshToken.create)
+    ..aOM<$1.RevokeToken>(12, _omitFieldNames ? '' : 'revokeToken',
+        subBuilder: $1.RevokeToken.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -553,7 +572,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   void clearPayload() => $_clearField($_whichOneof(0));
 
   /// On redeem_invite_result, the user who redeemed (RedeemInvite). Unset on an
-  /// acknowledgement, which is to no user.
+  /// acknowledgement and on the accountlink.v1 arms, which are to no user.
   @$pb.TagNumber(1)
   $0.UserId get targetUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -600,7 +619,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
 
   /// The session of target_user_id this message answers. See the contract above.
   /// Ignored on a heartbeat, which carries no routing target at all, and on
-  /// redeem_invite_result and the acknowledgements, which belong to no session.
+  /// redeem_invite_result, the acknowledgements and the accountlink.v1 arms, which
+  /// belong to no session.
   @$pb.TagNumber(5)
   $core.String get sessionId => $_getSZ(4);
   @$pb.TagNumber(5)
@@ -656,6 +676,39 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   void clearWiped() => $_clearField(9);
   @$pb.TagNumber(9)
   GatewayWiped ensureWiped() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $1.AccountLinkResult get accountLinkResult => $_getN(9);
+  @$pb.TagNumber(10)
+  set accountLinkResult($1.AccountLinkResult value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAccountLinkResult() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAccountLinkResult() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $1.AccountLinkResult ensureAccountLinkResult() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  $1.RefreshToken get refreshToken => $_getN(10);
+  @$pb.TagNumber(11)
+  set refreshToken($1.RefreshToken value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasRefreshToken() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearRefreshToken() => $_clearField(11);
+  @$pb.TagNumber(11)
+  $1.RefreshToken ensureRefreshToken() => $_ensure(10);
+
+  @$pb.TagNumber(12)
+  $1.RevokeToken get revokeToken => $_getN(11);
+  @$pb.TagNumber(12)
+  set revokeToken($1.RevokeToken value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasRevokeToken() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearRevokeToken() => $_clearField(12);
+  @$pb.TagNumber(12)
+  $1.RevokeToken ensureRevokeToken() => $_ensure(11);
 }
 
 enum GatewayConnectResponse_Payload {
@@ -666,6 +719,10 @@ enum GatewayConnectResponse_Payload {
   transferOutcome,
   streamOpened,
   gatewayDeleted,
+  accountLinked,
+  tokenRefreshed,
+  tokenRevoked,
+  accountLinkCancelled,
   notSet
 }
 
@@ -681,6 +738,10 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     TransferOutcome? transferOutcome,
     GatewayStreamOpened? streamOpened,
     GatewayDeleted? gatewayDeleted,
+    $1.AccountLinked? accountLinked,
+    $1.TokenRefreshed? tokenRefreshed,
+    $1.TokenRevoked? tokenRevoked,
+    $1.AccountLinkCancelled? accountLinkCancelled,
   }) {
     final result = create();
     if (fromUserId != null) result.fromUserId = fromUserId;
@@ -693,6 +754,11 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     if (transferOutcome != null) result.transferOutcome = transferOutcome;
     if (streamOpened != null) result.streamOpened = streamOpened;
     if (gatewayDeleted != null) result.gatewayDeleted = gatewayDeleted;
+    if (accountLinked != null) result.accountLinked = accountLinked;
+    if (tokenRefreshed != null) result.tokenRefreshed = tokenRefreshed;
+    if (tokenRevoked != null) result.tokenRevoked = tokenRevoked;
+    if (accountLinkCancelled != null)
+      result.accountLinkCancelled = accountLinkCancelled;
     return result;
   }
 
@@ -714,6 +780,10 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     7: GatewayConnectResponse_Payload.transferOutcome,
     8: GatewayConnectResponse_Payload.streamOpened,
     9: GatewayConnectResponse_Payload.gatewayDeleted,
+    10: GatewayConnectResponse_Payload.accountLinked,
+    11: GatewayConnectResponse_Payload.tokenRefreshed,
+    12: GatewayConnectResponse_Payload.tokenRevoked,
+    13: GatewayConnectResponse_Payload.accountLinkCancelled,
     0: GatewayConnectResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -721,7 +791,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5, 6, 7, 8, 9])
+    ..oo(0, [2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'fromUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpOffer>(2, _omitFieldNames ? '' : 'offer',
@@ -740,6 +810,15 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
         subBuilder: GatewayStreamOpened.create)
     ..aOM<GatewayDeleted>(9, _omitFieldNames ? '' : 'gatewayDeleted',
         subBuilder: GatewayDeleted.create)
+    ..aOM<$1.AccountLinked>(10, _omitFieldNames ? '' : 'accountLinked',
+        subBuilder: $1.AccountLinked.create)
+    ..aOM<$1.TokenRefreshed>(11, _omitFieldNames ? '' : 'tokenRefreshed',
+        subBuilder: $1.TokenRefreshed.create)
+    ..aOM<$1.TokenRevoked>(12, _omitFieldNames ? '' : 'tokenRevoked',
+        subBuilder: $1.TokenRevoked.create)
+    ..aOM<$1.AccountLinkCancelled>(
+        13, _omitFieldNames ? '' : 'accountLinkCancelled',
+        subBuilder: $1.AccountLinkCancelled.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -772,7 +851,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   /// On redeem_invite, the user redeeming: the sub of the token the api-server
   /// verified, and never a value the user supplied. Unset on what concerns the
   /// gateway itself (stream_opened, vouched_administrators, transfer_outcome,
-  /// gateway_deleted), which is from no user.
+  /// gateway_deleted) and on the accountlink.v1 arms, which are from no user.
   @$pb.TagNumber(1)
   $0.UserId get fromUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -808,8 +887,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
 
   /// The session of from_user_id this message originates from — the value the
   /// gateway must echo on the GatewayConnectRequest that answers it. See the
-  /// contract above. Unset on redeem_invite and on what concerns the gateway
-  /// itself, which belong to no session.
+  /// contract above. Unset on redeem_invite, on what concerns the gateway itself
+  /// and on the accountlink.v1 arms, which belong to no session.
   @$pb.TagNumber(4)
   $core.String get sessionId => $_getSZ(3);
   @$pb.TagNumber(4)
@@ -874,13 +953,57 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   void clearGatewayDeleted() => $_clearField(9);
   @$pb.TagNumber(9)
   GatewayDeleted ensureGatewayDeleted() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $1.AccountLinked get accountLinked => $_getN(9);
+  @$pb.TagNumber(10)
+  set accountLinked($1.AccountLinked value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAccountLinked() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAccountLinked() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $1.AccountLinked ensureAccountLinked() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  $1.TokenRefreshed get tokenRefreshed => $_getN(10);
+  @$pb.TagNumber(11)
+  set tokenRefreshed($1.TokenRefreshed value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasTokenRefreshed() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearTokenRefreshed() => $_clearField(11);
+  @$pb.TagNumber(11)
+  $1.TokenRefreshed ensureTokenRefreshed() => $_ensure(10);
+
+  @$pb.TagNumber(12)
+  $1.TokenRevoked get tokenRevoked => $_getN(11);
+  @$pb.TagNumber(12)
+  set tokenRevoked($1.TokenRevoked value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasTokenRevoked() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearTokenRevoked() => $_clearField(12);
+  @$pb.TagNumber(12)
+  $1.TokenRevoked ensureTokenRevoked() => $_ensure(11);
+
+  @$pb.TagNumber(13)
+  $1.AccountLinkCancelled get accountLinkCancelled => $_getN(12);
+  @$pb.TagNumber(13)
+  set accountLinkCancelled($1.AccountLinkCancelled value) =>
+      $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasAccountLinkCancelled() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearAccountLinkCancelled() => $_clearField(13);
+  @$pb.TagNumber(13)
+  $1.AccountLinkCancelled ensureAccountLinkCancelled() => $_ensure(12);
 }
 
 enum RedeemInvite_Secret { token, code, notSet }
 
 /// A person redeeming an invite (webrtc.v1 CreateInvite), api-server → gateway.
-/// The one request on this stream that the gateway answers, with a
-/// RedeemInviteResult carrying the same request_id.
+/// Answered with a RedeemInviteResult carrying the same request_id.
 ///
 /// The api-server sends it only to the gateway whose invite routes hold the
 /// secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user
@@ -1386,7 +1509,7 @@ class GatewayWiped extends $pb.GeneratedMessage {
 /// Hardware a connector drives that keeps its own pairings through a factory reset.
 class PairingsLeftBehind extends $pb.GeneratedMessage {
   factory PairingsLeftBehind({
-    $2.ConnectorKind? kind,
+    $3.ConnectorKind? kind,
     $core.String? displayName,
   }) {
     final result = create();
@@ -1409,10 +1532,10 @@ class PairingsLeftBehind extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..e<$2.ConnectorKind>(1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
-        valueOf: $2.ConnectorKind.valueOf,
-        enumValues: $2.ConnectorKind.values)
+    ..e<$3.ConnectorKind>(1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $3.ConnectorKind.valueOf,
+        enumValues: $3.ConnectorKind.values)
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..hasRequiredFields = false;
 
@@ -1440,9 +1563,9 @@ class PairingsLeftBehind extends $pb.GeneratedMessage {
   /// As the connector described itself (webrtc.v1.ConnectorDescriptor): what kind of hardware,
   /// and its name, for a person.
   @$pb.TagNumber(1)
-  $2.ConnectorKind get kind => $_getN(0);
+  $3.ConnectorKind get kind => $_getN(0);
   @$pb.TagNumber(1)
-  set kind($2.ConnectorKind value) => $_setField(1, value);
+  set kind($3.ConnectorKind value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasKind() => $_has(0);
   @$pb.TagNumber(1)
@@ -1496,7 +1619,7 @@ class VouchedAdministrators extends $pb.GeneratedMessage {
     $fixnum.Int64? version,
     $core.Iterable<$0.UserId>? administrators,
     $core.String? organisationName,
-    $1.Timestamp? issuedAt,
+    $2.Timestamp? issuedAt,
   }) {
     final result = create();
     if (version != null) result.version = version;
@@ -1526,8 +1649,8 @@ class VouchedAdministrators extends $pb.GeneratedMessage {
         2, _omitFieldNames ? '' : 'administrators', $pb.PbFieldType.PM,
         subBuilder: $0.UserId.create)
     ..aOS(3, _omitFieldNames ? '' : 'organisationName')
-    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'issuedAt',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'issuedAt',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1582,15 +1705,15 @@ class VouchedAdministrators extends $pb.GeneratedMessage {
   /// When the api-server made this set, on the clock that sets AppTokenClaims.iat, so the two
   /// compare. Never earlier than an earlier version's.
   @$pb.TagNumber(4)
-  $1.Timestamp get issuedAt => $_getN(3);
+  $2.Timestamp get issuedAt => $_getN(3);
   @$pb.TagNumber(4)
-  set issuedAt($1.Timestamp value) => $_setField(4, value);
+  set issuedAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasIssuedAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearIssuedAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Timestamp ensureIssuedAt() => $_ensure(3);
+  $2.Timestamp ensureIssuedAt() => $_ensure(3);
 }
 
 /// The gateway's acknowledgement of a VouchedAdministrators, gateway → api-server.
@@ -1776,7 +1899,7 @@ class OutgoingChoice extends $pb.GeneratedMessage {
   factory OutgoingChoice({
     $0.UserId? userId,
     OutgoingStaffChoice? choice,
-    $1.Timestamp? accessUntil,
+    $2.Timestamp? accessUntil,
   }) {
     final result = create();
     if (userId != null) result.userId = userId;
@@ -1806,8 +1929,8 @@ class OutgoingChoice extends $pb.GeneratedMessage {
         defaultOrMaker: OutgoingStaffChoice.OUTGOING_STAFF_CHOICE_UNSPECIFIED,
         valueOf: OutgoingStaffChoice.valueOf,
         enumValues: OutgoingStaffChoice.values)
-    ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'accessUntil',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'accessUntil',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1854,15 +1977,15 @@ class OutgoingChoice extends $pb.GeneratedMessage {
   /// When their access as a technician ends; unset for no end. Only with STAY_AS_TECHNICIAN, and
   /// ignored with any other choice.
   @$pb.TagNumber(3)
-  $1.Timestamp get accessUntil => $_getN(2);
+  $2.Timestamp get accessUntil => $_getN(2);
   @$pb.TagNumber(3)
-  set accessUntil($1.Timestamp value) => $_setField(3, value);
+  set accessUntil($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasAccessUntil() => $_has(2);
   @$pb.TagNumber(3)
   void clearAccessUntil() => $_clearField(3);
   @$pb.TagNumber(3)
-  $1.Timestamp ensureAccessUntil() => $_ensure(2);
+  $2.Timestamp ensureAccessUntil() => $_ensure(2);
 }
 
 /// The gateway's acknowledgement of a TransferOutcome, gateway → api-server: applied now or

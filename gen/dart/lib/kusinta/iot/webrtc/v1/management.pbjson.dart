@@ -1114,6 +1114,35 @@ final $typed_data.Uint8List setComfortWindowsDescriptor = $convert.base64Decode(
     'bmRvd1IHd2luZG93cxIuChB3aW5kb3dzX3JldmlzaW9uGAMgASgESABSD3dpbmRvd3NSZXZpc2'
     'lvbogBAUITChFfd2luZG93c19yZXZpc2lvbg==');
 
+@$core.Deprecated('Use requestAccountLinkNonceDescriptor instead')
+const RequestAccountLinkNonce$json = {
+  '1': 'RequestAccountLinkNonce',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {
+      '1': 'service',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'service'
+    },
+  ],
+};
+
+/// Descriptor for `RequestAccountLinkNonce`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List requestAccountLinkNonceDescriptor = $convert.base64Decode(
+    'ChdSZXF1ZXN0QWNjb3VudExpbmtOb25jZRI5Cgdob21lX2lkGAEgASgLMiAua3VzaW50YS5pb3'
+    'QuaWRlbnRpdHkudjEuU3BhY2VJZFIGaG9tZUlkEkMKB3NlcnZpY2UYAiABKA4yKS5rdXNpbnRh'
+    'LmlvdC5hY2NvdW50bGluay52MS5MaW5rZWRTZXJ2aWNlUgdzZXJ2aWNl');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -1524,6 +1553,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'setComfortWindows'
     },
+    {
+      '1': 'request_account_link_nonce',
+      '3': 46,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RequestAccountLinkNonce',
+      '9': 0,
+      '10': 'requestAccountLinkNonce'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1603,4 +1641,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'Zm9ydExvYWQSYAoVcmVtb3ZlX2hlYXRpbmdfcmVjb3JkGCwgASgLMioua3VzaW50YS5pb3Qud2'
     'VicnRjLnYxLlJlbW92ZUhlYXRpbmdSZWNvcmRIAFITcmVtb3ZlSGVhdGluZ1JlY29yZBJaChNz'
     'ZXRfY29tZm9ydF93aW5kb3dzGC0gASgLMigua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldENvbW'
-    'ZvcnRXaW5kb3dzSABSEXNldENvbWZvcnRXaW5kb3dzQgkKB3JlcXVlc3Q=');
+    'ZvcnRXaW5kb3dzSABSEXNldENvbWZvcnRXaW5kb3dzEm0KGnJlcXVlc3RfYWNjb3VudF9saW5r'
+    'X25vbmNlGC4gASgLMi4ua3VzaW50YS5pb3Qud2VicnRjLnYxLlJlcXVlc3RBY2NvdW50TGlua0'
+    '5vbmNlSABSF3JlcXVlc3RBY2NvdW50TGlua05vbmNlQgkKB3JlcXVlc3Q=');
