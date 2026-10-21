@@ -25,6 +25,7 @@ class CommandErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMMAND_ERROR_CODE_TIMEOUT: _ClassVar[CommandErrorCode]
     COMMAND_ERROR_CODE_REJECTED_BY_DEVICE: _ClassVar[CommandErrorCode]
     COMMAND_ERROR_CODE_INTERNAL: _ClassVar[CommandErrorCode]
+    COMMAND_ERROR_CODE_HELD_BY_GATEWAY: _ClassVar[CommandErrorCode]
 COMMAND_ERROR_CODE_UNSPECIFIED: CommandErrorCode
 COMMAND_ERROR_CODE_NOT_ENTITLED: CommandErrorCode
 COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED: CommandErrorCode
@@ -33,6 +34,7 @@ COMMAND_ERROR_CODE_UNREACHABLE: CommandErrorCode
 COMMAND_ERROR_CODE_TIMEOUT: CommandErrorCode
 COMMAND_ERROR_CODE_REJECTED_BY_DEVICE: CommandErrorCode
 COMMAND_ERROR_CODE_INTERNAL: CommandErrorCode
+COMMAND_ERROR_CODE_HELD_BY_GATEWAY: CommandErrorCode
 
 class ThermostatSetpointParams(_message.Message):
     __slots__ = ("mode", "amount")
@@ -67,7 +69,7 @@ class DoorLockParams(_message.Message):
     def __init__(self, pin_code: _Optional[str] = ...) -> None: ...
 
 class DeviceCommand(_message.Message):
-    __slots__ = ("request_id", "device_id", "command_name", "cluster_id", "matter_command_id", "endpoint_id", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "raw_tlv")
+    __slots__ = ("request_id", "device_id", "command_name", "cluster_id", "matter_command_id", "endpoint_id", "thermostat_setpoint", "level_control", "on_off", "window_covering_lift", "door_lock", "raw_tlv", "lease_seconds")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     COMMAND_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -80,6 +82,7 @@ class DeviceCommand(_message.Message):
     WINDOW_COVERING_LIFT_FIELD_NUMBER: _ClassVar[int]
     DOOR_LOCK_FIELD_NUMBER: _ClassVar[int]
     RAW_TLV_FIELD_NUMBER: _ClassVar[int]
+    LEASE_SECONDS_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     device_id: _identity_pb2.DeviceId
     command_name: str
@@ -92,7 +95,8 @@ class DeviceCommand(_message.Message):
     window_covering_lift: WindowCoveringLiftParams
     door_lock: DoorLockParams
     raw_tlv: bytes
-    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ...) -> None: ...
+    lease_seconds: int
+    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., command_name: _Optional[str] = ..., cluster_id: _Optional[int] = ..., matter_command_id: _Optional[int] = ..., endpoint_id: _Optional[int] = ..., thermostat_setpoint: _Optional[_Union[ThermostatSetpointParams, _Mapping]] = ..., level_control: _Optional[_Union[LevelControlParams, _Mapping]] = ..., on_off: _Optional[_Union[OnOffParams, _Mapping]] = ..., window_covering_lift: _Optional[_Union[WindowCoveringLiftParams, _Mapping]] = ..., door_lock: _Optional[_Union[DoorLockParams, _Mapping]] = ..., raw_tlv: _Optional[bytes] = ..., lease_seconds: _Optional[int] = ...) -> None: ...
 
 class CommandError(_message.Message):
     __slots__ = ("message", "code", "metadata")
@@ -126,13 +130,15 @@ class CommandResult(_message.Message):
     def __init__(self, request_id: _Optional[str] = ..., success: _Optional[bool] = ..., error: _Optional[_Union[CommandError, _Mapping]] = ..., completed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settles_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class AttributeWriteRequest(_message.Message):
-    __slots__ = ("request_id", "device_id", "target", "value")
+    __slots__ = ("request_id", "device_id", "target", "value", "lease_seconds")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     TARGET_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
+    LEASE_SECONDS_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     device_id: _identity_pb2.DeviceId
     target: _acl_pb2.AttributeRef
     value: _cluster_state_pb2.AttributeValue
-    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., target: _Optional[_Union[_acl_pb2.AttributeRef, _Mapping]] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ...) -> None: ...
+    lease_seconds: int
+    def __init__(self, request_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., target: _Optional[_Union[_acl_pb2.AttributeRef, _Mapping]] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., lease_seconds: _Optional[int] = ...) -> None: ...

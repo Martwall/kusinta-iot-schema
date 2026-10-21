@@ -259,6 +259,30 @@ pushed as `RoomClimateChanged` and `ClimateModeChanged`.
 Device links (`link/v1`) remain, but as the mechanism underneath a room rather than something
 a person sets a temperature on.
 
+When a room is held somewhere other than plainly at its target, `RoomClimate.explanations`
+says why, most significant first: heating ahead of an expensive hour, coasting on stored
+heat, the heat source busy with hot water, the room already at the top of its comfort band.
+Each is a cause from a closed list (`ClimateExplanationKind`): the gateway sends a kind and
+the app names it in its user's language. A `subject` says what the cause acts on: the room
+as a whole, or a part of its heating, so "price high" on a floor zone reads as the floor zone
+held back for price. Each kind lists the subjects it may carry. A pair the kind does not
+list, or an unknown or unset subject, is shown as nothing, never as the room. An optional `ends_at` closes it, and an app shows no explanation
+past that, including while it cannot reach the gateway. No kind identifies another
+household or its activity. A limit shared with other homes is told as "this room was
+limited", never by whom. A kind driven by a source or limit shared with other homes is sent
+only where at least three homes share it, because otherwise its onset would track a
+neighbour's use. Offline, an app shows no explanation without an `ends_at`.
+
+Three facts sit beside the list rather than in it, because they are states of the room and
+not reasons:
+- `planning`: whether a plan steers the room, none does, or one cannot be made right now.
+- `comfort_band_low/high_centidegrees`: the band a plan may move the room within.
+- `target_held_until`: how long a person's target holds before the gateway moves it again.
+
+What `condition` and `target_change` already say (a window, a lost sensor, who set the
+target) is never repeated in the list. In a home, all of this is withheld from service along
+with the rest of the room's state.
+
 ## Invites
 
 People are put on a space by invite rather than by user id (`webrtc/v1/invite.proto`). The
@@ -495,6 +519,59 @@ is indistinguishable from "this device has no such hardware" — and for a param
 the attribute in the implemented list with no value in the properties message says
 *implemented, not yet reported*; omitting it says *the device does not have it*. An empty list
 is "not stated", never "implements nothing".
+
+## What a write leaves behind
+
+A fourth question sits beside those three: once written, how long does a value stay? A
+producer states it per attribute in an `AttributeBehaviour`. For a cluster attribute it goes
+in `ClusterState.attribute_behaviours`, per endpoint. For a vendor parameter it goes in
+`Endpoint.vendor_attribute_behaviours`, keyed by vendor name. The `write` oneof is one of:
+
+- **`sticky`**: the device holds the value until something writes it again, through the
+  writer's absence and a lost network.
+- **`leased`**: the device itself returns the attribute to `lapse_value` when the write's
+  lease runs out, whether or not anything is still talking to it.
+  - The lease is the device's own timer or link watchdog. A value that lapses only because
+    its writer keeps re-sending is sticky to anyone who must plan for the writer failing.
+  - A leased write carries its length in `AttributeWriteRequest.lease_seconds`, within the
+    stated bounds. A command that sets a leased attribute (On and Off set OnOff) carries it
+    in `DeviceCommand.lease_seconds`.
+  - A lease with no `lapse_value` is read as a write kind not stated.
+  - Writing the `lapse_value` itself needs no lease and ends any lease running; that is
+    how a writer ends a lease early. A report of the lapse value after a lease runs out is
+    the lease ending, not a person's change.
+  - Where the device fixes the lease length itself (a configured boost time), the producer
+    states it as both bounds.
+  - The producer refuses a mismatch as `INVALID_COMMAND`: no lease on a leased attribute, a
+    lease on any other attribute, or a lease of zero or out of bounds. Writers send leases
+    before producers state attributes as leased.
+  - Only the gateway sets a lease. It refuses a lease from an app (`INVALID_COMMAND`), and
+    an app's write or command to a leased attribute (`HELD_BY_GATEWAY`): a person changes
+    such an output through the room's target and comfort band.
+  - A device whose timer returns the output to whatever it held before is leased only if
+    its producer keeps that earlier value fixed; otherwise it is stated sticky.
+
+`lapse_value` is what a site falls back to whenever its writer is gone. `power_on_value`
+says what the attribute takes when power returns, but only where the cluster has no startup
+attribute of its own (such as `StartUpOnOff`) to say it.
+
+How often a device can take a write without dropping one is a device-wide budget, because
+two attributes still share one radio. It goes in `Device.min_write_interval_seconds`, which
+is a lower bound: a shared radio gateway, hub or vendor account may need writes spaced
+further apart. `Device.max_write_delay_seconds` says how long a write can take to arrive (a
+device that listens only after its own report), and a writer renews a lease at least that
+long before it runs out.
+
+`read_latency` answers the matching question for reads. `REAL_TIME` means a reported value
+reaches the producer within minutes. `DELAYED` means it arrives late enough that acting on
+it as current would be wrong, such as values a vendor's service hands on in batches.
+
+Not stated is read as the worst case:
+- A write of unstated kind is held as if sticky.
+- A reading of unstated latency is never treated as real-time.
+- A gateway refuses to drive a heat source, heating circuit or floor zone through an
+  attribute whose write kind is not stated. This is the opposite default to `attribute_ids`
+  or `known_links`, where not stated only means not known.
 
 ## Field presence in properties
 

@@ -1,10 +1,20 @@
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from collections.abc import Iterable as _Iterable, Mapping as _Mapping
 from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
+
+class ReadLatency(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    READ_LATENCY_UNSPECIFIED: _ClassVar[ReadLatency]
+    READ_LATENCY_REAL_TIME: _ClassVar[ReadLatency]
+    READ_LATENCY_DELAYED: _ClassVar[ReadLatency]
+READ_LATENCY_UNSPECIFIED: ReadLatency
+READ_LATENCY_REAL_TIME: ReadLatency
+READ_LATENCY_DELAYED: ReadLatency
 
 class NullValue(_message.Message):
     __slots__ = ()
@@ -60,7 +70,7 @@ class AttributeState(_message.Message):
     def __init__(self, attribute_id: _Optional[int] = ..., value: _Optional[_Union[AttributeValue, _Mapping]] = ...) -> None: ...
 
 class ClusterState(_message.Message):
-    __slots__ = ("cluster_id", "cluster_revision", "feature_map", "attributes", "accepted_command_ids", "attribute_ids", "attribute_steps")
+    __slots__ = ("cluster_id", "cluster_revision", "feature_map", "attributes", "accepted_command_ids", "attribute_ids", "attribute_steps", "attribute_behaviours")
     class AttributeStepsEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -68,6 +78,13 @@ class ClusterState(_message.Message):
         key: int
         value: int
         def __init__(self, key: _Optional[int] = ..., value: _Optional[int] = ...) -> None: ...
+    class AttributeBehavioursEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: int
+        value: AttributeBehaviour
+        def __init__(self, key: _Optional[int] = ..., value: _Optional[_Union[AttributeBehaviour, _Mapping]] = ...) -> None: ...
     CLUSTER_ID_FIELD_NUMBER: _ClassVar[int]
     CLUSTER_REVISION_FIELD_NUMBER: _ClassVar[int]
     FEATURE_MAP_FIELD_NUMBER: _ClassVar[int]
@@ -75,6 +92,7 @@ class ClusterState(_message.Message):
     ACCEPTED_COMMAND_IDS_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_IDS_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_STEPS_FIELD_NUMBER: _ClassVar[int]
+    ATTRIBUTE_BEHAVIOURS_FIELD_NUMBER: _ClassVar[int]
     cluster_id: int
     cluster_revision: int
     feature_map: int
@@ -82,4 +100,33 @@ class ClusterState(_message.Message):
     accepted_command_ids: _containers.RepeatedScalarFieldContainer[int]
     attribute_ids: _containers.RepeatedScalarFieldContainer[int]
     attribute_steps: _containers.ScalarMap[int, int]
-    def __init__(self, cluster_id: _Optional[int] = ..., cluster_revision: _Optional[int] = ..., feature_map: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[AttributeState, _Mapping]]] = ..., accepted_command_ids: _Optional[_Iterable[int]] = ..., attribute_ids: _Optional[_Iterable[int]] = ..., attribute_steps: _Optional[_Mapping[int, int]] = ...) -> None: ...
+    attribute_behaviours: _containers.MessageMap[int, AttributeBehaviour]
+    def __init__(self, cluster_id: _Optional[int] = ..., cluster_revision: _Optional[int] = ..., feature_map: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[AttributeState, _Mapping]]] = ..., accepted_command_ids: _Optional[_Iterable[int]] = ..., attribute_ids: _Optional[_Iterable[int]] = ..., attribute_steps: _Optional[_Mapping[int, int]] = ..., attribute_behaviours: _Optional[_Mapping[int, AttributeBehaviour]] = ...) -> None: ...
+
+class AttributeBehaviour(_message.Message):
+    __slots__ = ("sticky", "leased", "power_on_value", "read_latency")
+    STICKY_FIELD_NUMBER: _ClassVar[int]
+    LEASED_FIELD_NUMBER: _ClassVar[int]
+    POWER_ON_VALUE_FIELD_NUMBER: _ClassVar[int]
+    READ_LATENCY_FIELD_NUMBER: _ClassVar[int]
+    sticky: StickyWrite
+    leased: LeasedWrite
+    power_on_value: AttributeValue
+    read_latency: ReadLatency
+    def __init__(self, sticky: _Optional[_Union[StickyWrite, _Mapping]] = ..., leased: _Optional[_Union[LeasedWrite, _Mapping]] = ..., power_on_value: _Optional[_Union[AttributeValue, _Mapping]] = ..., read_latency: _Optional[_Union[ReadLatency, str]] = ...) -> None: ...
+
+class StickyWrite(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class LeasedWrite(_message.Message):
+    __slots__ = ("min_lease_seconds", "max_lease_seconds", "renewal_restarts_lease", "lapse_value")
+    MIN_LEASE_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    MAX_LEASE_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    RENEWAL_RESTARTS_LEASE_FIELD_NUMBER: _ClassVar[int]
+    LAPSE_VALUE_FIELD_NUMBER: _ClassVar[int]
+    min_lease_seconds: int
+    max_lease_seconds: int
+    renewal_restarts_lease: bool
+    lapse_value: AttributeValue
+    def __init__(self, min_lease_seconds: _Optional[int] = ..., max_lease_seconds: _Optional[int] = ..., renewal_restarts_lease: _Optional[bool] = ..., lapse_value: _Optional[_Union[AttributeValue, _Mapping]] = ...) -> None: ...

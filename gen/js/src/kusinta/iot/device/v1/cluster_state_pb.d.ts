@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/device/v1/cluster_state.proto (package kusinta.iot.device.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
@@ -272,6 +272,21 @@ export declare type ClusterState = Message<"kusinta.iot.device.v1.ClusterState">
    * @generated from field: map<uint32, uint32> attribute_steps = 7;
    */
   attributeSteps: { [key: number]: number };
+
+  /**
+   * What a write to each attribute leaves behind, and how late its reports arrive, keyed by
+   * attribute id. See AttributeBehaviour. Its step stays in attribute_steps.
+   *
+   * Per endpoint because a ClusterState belongs to one endpoint: a device with several
+   * independently switched outputs states each output's behaviour on that output's
+   * endpoint. A vendor parameter, which has no cluster, states its behaviour in
+   * Endpoint.vendor_attribute_behaviours.
+   *
+   * Stated by the producer at announcement. An absent key is "not stated".
+   *
+   * @generated from field: map<uint32, kusinta.iot.device.v1.AttributeBehaviour> attribute_behaviours = 8;
+   */
+  attributeBehaviours: { [key: number]: AttributeBehaviour };
 };
 
 /**
@@ -279,4 +294,182 @@ export declare type ClusterState = Message<"kusinta.iot.device.v1.ClusterState">
  * Use `create(ClusterStateSchema)` to create a new message.
  */
 export declare const ClusterStateSchema: GenMessage<ClusterState>;
+
+/**
+ * What a write to one attribute leaves behind, and how late its reports arrive. Stated per
+ * attribute, per endpoint, by the producer that knows the device.
+ *
+ * A consumer that leaves a written value in place while it is gone — a gateway steering
+ * heat — needs to know what the device does on its own. Not stated is read as the worst
+ * case: a write whose kind is not stated is held as if sticky, and a reading whose latency
+ * is not stated is never treated as real-time.
+ *
+ * A gateway MUST NOT drive a heat source, a heating circuit or a floor zone through an
+ * attribute whose write kind is not stated here: it refuses the write. This is the
+ * opposite default to attribute_ids or a connector's known_links, where not stated only
+ * means not known; for an output that heats a home, not stated means no. Rollout order: a
+ * producer that carries such outputs states their behaviour before a gateway that drives
+ * them takes the release that enforces this.
+ *
+ * @generated from message kusinta.iot.device.v1.AttributeBehaviour
+ */
+export declare type AttributeBehaviour = Message<"kusinta.iot.device.v1.AttributeBehaviour"> & {
+  /**
+   * What a write leaves behind when its writer goes quiet. Unset: not stated.
+   *
+   * @generated from oneof kusinta.iot.device.v1.AttributeBehaviour.write
+   */
+  write: {
+    /**
+     * @generated from field: kusinta.iot.device.v1.StickyWrite sticky = 1;
+     */
+    value: StickyWrite;
+    case: "sticky";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.device.v1.LeasedWrite leased = 2;
+     */
+    value: LeasedWrite;
+    case: "leased";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * The value the attribute takes when the device's power returns. Stated only for an
+   * attribute whose cluster has no startup attribute of its own: where the cluster has one
+   * (OnOff's StartUpOnOff, Level Control's StartUpCurrentLevel), that attribute says it and
+   * this stays unset, so the value lives in one place. Unset: not stated.
+   *
+   * @generated from field: kusinta.iot.device.v1.AttributeValue power_on_value = 3;
+   */
+  powerOnValue?: AttributeValue | undefined;
+
+  /**
+   * How late a reported value reaches the producer. Unset: not stated, never REAL_TIME.
+   *
+   * @generated from field: kusinta.iot.device.v1.ReadLatency read_latency = 4;
+   */
+  readLatency: ReadLatency;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.AttributeBehaviour.
+ * Use `create(AttributeBehaviourSchema)` to create a new message.
+ */
+export declare const AttributeBehaviourSchema: GenMessage<AttributeBehaviour>;
+
+/**
+ * The device holds a written value until something writes it again: through the writer's
+ * absence and a lost network. A writer that may go quiet writes a value it can live with
+ * being left in place.
+ *
+ * @generated from message kusinta.iot.device.v1.StickyWrite
+ */
+export declare type StickyWrite = Message<"kusinta.iot.device.v1.StickyWrite"> & {
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.StickyWrite.
+ * Use `create(StickyWriteSchema)` to create a new message.
+ */
+export declare const StickyWriteSchema: GenMessage<StickyWrite>;
+
+/**
+ * The device itself returns the attribute to lapse_value when a write's lease runs out,
+ * whether or not anything is still talking to it. The lease is kept by the device — a
+ * timer, or a watchdog on the device's own link — never by the writer re-sending: a value
+ * that lapses only because its writer keeps renewing it is sticky to anyone who has to
+ * plan for the writer failing.
+ *
+ * @generated from message kusinta.iot.device.v1.LeasedWrite
+ */
+export declare type LeasedWrite = Message<"kusinta.iot.device.v1.LeasedWrite"> & {
+  /**
+   * The shortest and longest lease, in seconds, the device accepts. Absent: no bound on
+   * that side, never zero. A lease outside them is refused rather than clamped. Where the
+   * device fixes the length itself — a boost time set as a device parameter — the producer
+   * states that length as both bounds, so it never accepts a lease it cannot keep.
+   *
+   * @generated from field: optional uint32 min_lease_seconds = 1;
+   */
+  minLeaseSeconds?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 max_lease_seconds = 2;
+   */
+  maxLeaseSeconds?: number | undefined;
+
+  /**
+   * Whether a write that arrives before the lease runs out starts the lease again from
+   * that write. False or unset (not stated): a writer MUST NOT assume that writing the
+   * same value again extends how long it holds.
+   *
+   * @generated from field: optional bool renewal_restarts_lease = 3;
+   */
+  renewalRestartsLease?: boolean | undefined;
+
+  /**
+   * The value the attribute returns to when the lease runs out. It is the state a site
+   * falls back to whenever its writer is gone, so it is what an installer checks first and
+   * what a consumer shows as "what happens if this stops". A producer always states it; a
+   * consumer reads a lease without it as a write kind not stated.
+   *
+   * A fixed value. A device whose timer returns the output to whatever it held before the
+   * write is leased only if its producer guarantees that earlier value is the lapse value
+   * — by accepting timed writes only while the output is at its lapse value, or by
+   * writing the lapse value untimed before each one — and is otherwise stated sticky.
+   *
+   * A write of the lapse value itself needs no lease: it ends any lease running, and a
+   * lease carried on it is ignored rather than refused. That is how a writer ends a lease
+   * early.
+   *
+   * A report of the lapse value after a lease has run out is the lease ending, not a
+   * change from outside: a consumer that adopts values it did not write — a turned dial —
+   * MUST NOT adopt that one as a person's.
+   *
+   * @generated from field: kusinta.iot.device.v1.AttributeValue lapse_value = 4;
+   */
+  lapseValue?: AttributeValue | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.LeasedWrite.
+ * Use `create(LeasedWriteSchema)` to create a new message.
+ */
+export declare const LeasedWriteSchema: GenMessage<LeasedWrite>;
+
+/**
+ * How late a reported value reaches the producer after it changes at the device.
+ *
+ * @generated from enum kusinta.iot.device.v1.ReadLatency
+ */
+export enum ReadLatency {
+  /**
+   * Not stated. Never treated as REAL_TIME.
+   *
+   * @generated from enum value: READ_LATENCY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Within a few minutes of the change, every time. A value relayed through a vendor's
+   * service is not stated REAL_TIME unless that has been measured.
+   *
+   * @generated from enum value: READ_LATENCY_REAL_TIME = 1;
+   */
+  REAL_TIME = 1,
+
+  /**
+   * Late enough that acting on it as current would be wrong: values collected by a
+   * vendor's service and handed on in batches, hourly values made available the next day.
+   * Fit for records, models and reports; not for a decision that has to be made now.
+   *
+   * @generated from enum value: READ_LATENCY_DELAYED = 2;
+   */
+  DELAYED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.ReadLatency.
+ */
+export declare const ReadLatencySchema: GenEnum<ReadLatency>;
 

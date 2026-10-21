@@ -279,3 +279,83 @@ def test_a_history_answers_with_how_far_back_it_is_kept_and_its_samples():
         decoded.room_history.kept_from.seconds,
         [s.at.seconds for s in decoded.room_history.samples],
     ) == ("room_history", 1_799_000_000, [1_800_000_000, 1_800_000_900])
+
+
+# --- explanations: why a room is where it is -------------------------------------------
+
+
+def test_a_room_has_no_explanations_by_default():
+    room = climate_pb2.RoomClimate(space_id=_ROOM)
+
+    assert len(_round_trip(room).explanations) == 0
+
+
+def test_explanations_keep_their_order_most_significant_first():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM,
+        explanations=[
+            climate_pb2.ClimateExplanation(kind=climate_pb2.CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY),
+            climate_pb2.ClimateExplanation(kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH),
+        ],
+    )
+
+    assert [e.kind for e in _round_trip(room).explanations] == [
+        climate_pb2.CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY,
+        climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+    ]
+
+
+def test_an_explanation_names_a_floor_zone_it_holds_back():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+        subject=climate_pb2.CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE,
+    )
+
+    assert _round_trip(explanation).subject == climate_pb2.CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE
+
+
+def test_an_explanation_names_the_room_as_a_whole_explicitly():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+        subject=climate_pb2.CLIMATE_EXPLANATION_SUBJECT_ROOM,
+    )
+
+    assert _round_trip(explanation).subject == climate_pb2.CLIMATE_EXPLANATION_SUBJECT_ROOM
+
+
+def test_an_explanation_carries_when_it_ends():
+    explanation = climate_pb2.ClimateExplanation(
+        kind=climate_pb2.CLIMATE_EXPLANATION_KIND_PRE_HEAT,
+        ends_at=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+    )
+
+    assert _round_trip(explanation).ends_at.seconds == 1_800_000_000
+
+
+def test_a_room_says_it_is_not_planned_for():
+    room = climate_pb2.RoomClimate(space_id=_ROOM, planning=climate_pb2.ROOM_PLANNING_NOT_PLANNED)
+
+    assert _round_trip(room).planning == climate_pb2.ROOM_PLANNING_NOT_PLANNED
+
+
+def test_a_room_comfort_band_is_absent_rather_than_zero():
+    decoded = _round_trip(climate_pb2.RoomClimate(space_id=_ROOM))
+
+    assert (
+        decoded.HasField("comfort_band_low_centidegrees"),
+        decoded.HasField("comfort_band_high_centidegrees"),
+    ) == (False, False)
+
+
+def test_a_persons_target_says_until_when_it_holds():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM, target_held_until=timestamp_pb2.Timestamp(seconds=1_800_000_000)
+    )
+
+    assert _round_trip(room).target_held_until.seconds == 1_800_000_000
+
+
+def test_a_target_without_a_hold_has_no_hold_time():
+    room = climate_pb2.RoomClimate(space_id=_ROOM)
+
+    assert not _round_trip(room).HasField("target_held_until")

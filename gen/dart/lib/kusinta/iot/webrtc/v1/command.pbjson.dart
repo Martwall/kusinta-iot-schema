@@ -26,6 +26,7 @@ const CommandErrorCode$json = {
     {'1': 'COMMAND_ERROR_CODE_TIMEOUT', '2': 5},
     {'1': 'COMMAND_ERROR_CODE_REJECTED_BY_DEVICE', '2': 6},
     {'1': 'COMMAND_ERROR_CODE_INTERNAL', '2': 7},
+    {'1': 'COMMAND_ERROR_CODE_HELD_BY_GATEWAY', '2': 8},
   ],
 };
 
@@ -36,7 +37,8 @@ final $typed_data.Uint8List commandErrorCodeDescriptor = $convert.base64Decode(
     'REVfQ09OU1RSQUlOVF9WSU9MQVRFRBACEiYKIkNPTU1BTkRfRVJST1JfQ09ERV9JTlZBTElEX0'
     'NPTU1BTkQQAxIiCh5DT01NQU5EX0VSUk9SX0NPREVfVU5SRUFDSEFCTEUQBBIeChpDT01NQU5E'
     'X0VSUk9SX0NPREVfVElNRU9VVBAFEikKJUNPTU1BTkRfRVJST1JfQ09ERV9SRUpFQ1RFRF9CWV'
-    '9ERVZJQ0UQBhIfChtDT01NQU5EX0VSUk9SX0NPREVfSU5URVJOQUwQBw==');
+    '9ERVZJQ0UQBhIfChtDT01NQU5EX0VSUk9SX0NPREVfSU5URVJOQUwQBxImCiJDT01NQU5EX0VS'
+    'Uk9SX0NPREVfSEVMRF9CWV9HQVRFV0FZEAg=');
 
 @$core.Deprecated('Use thermostatSetpointParamsDescriptor instead')
 const ThermostatSetpointParams$json = {
@@ -214,11 +216,21 @@ const DeviceCommand$json = {
       '10': 'doorLock'
     },
     {'1': 'raw_tlv', '3': 99, '4': 1, '5': 12, '9': 0, '10': 'rawTlv'},
+    {
+      '1': 'lease_seconds',
+      '3': 14,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'leaseSeconds',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'parameters'},
     {'1': '_matter_command_id'},
     {'1': '_endpoint_id'},
+    {'1': '_lease_seconds'},
   ],
   '9': [
     {'1': 3, '2': 4},
@@ -241,9 +253,10 @@ final $typed_data.Uint8List deviceCommandDescriptor = $convert.base64Decode(
     'IFb25PZmYSYwoUd2luZG93X2NvdmVyaW5nX2xpZnQYCCABKAsyLy5rdXNpbnRhLmlvdC53ZWJy'
     'dGMudjEuV2luZG93Q292ZXJpbmdMaWZ0UGFyYW1zSABSEndpbmRvd0NvdmVyaW5nTGlmdBJECg'
     'lkb29yX2xvY2sYCSABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuRG9vckxvY2tQYXJhbXNI'
-    'AFIIZG9vckxvY2sSGQoHcmF3X3RsdhhjIAEoDEgAUgZyYXdUbHZCDAoKcGFyYW1ldGVyc0IUCh'
-    'JfbWF0dGVyX2NvbW1hbmRfaWRCDgoMX2VuZHBvaW50X2lkSgQIAxAESgQIChALUg5jbHVzdGVy'
-    'X2lkX2hleFIZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZQ==');
+    'AFIIZG9vckxvY2sSGQoHcmF3X3RsdhhjIAEoDEgAUgZyYXdUbHYSKAoNbGVhc2Vfc2Vjb25kcx'
+    'gOIAEoDUgDUgxsZWFzZVNlY29uZHOIAQFCDAoKcGFyYW1ldGVyc0IUChJfbWF0dGVyX2NvbW1h'
+    'bmRfaWRCDgoMX2VuZHBvaW50X2lkQhAKDl9sZWFzZV9zZWNvbmRzSgQIAxAESgQIChALUg5jbH'
+    'VzdGVyX2lkX2hleFIZdGhlcm1vc3RhdF9zZXRwb2ludF93cml0ZQ==');
 
 @$core.Deprecated('Use commandErrorDescriptor instead')
 const CommandError$json = {
@@ -366,6 +379,18 @@ const AttributeWriteRequest$json = {
       '6': '.kusinta.iot.device.v1.AttributeValue',
       '10': 'value'
     },
+    {
+      '1': 'lease_seconds',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'leaseSeconds',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_lease_seconds'},
   ],
 };
 
@@ -375,4 +400,5 @@ final $typed_data.Uint8List attributeWriteRequestDescriptor = $convert.base64Dec
     '4KCWRldmljZV9pZBgCIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUghk'
     'ZXZpY2VJZBI7CgZ0YXJnZXQYAyABKAsyIy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuQXR0cmlidX'
     'RlUmVmUgZ0YXJnZXQSOwoFdmFsdWUYBCABKAsyJS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuQXR0'
-    'cmlidXRlVmFsdWVSBXZhbHVl');
+    'cmlidXRlVmFsdWVSBXZhbHVlEigKDWxlYXNlX3NlY29uZHMYBSABKA1IAFIMbGVhc2VTZWNvbm'
+    'RziAEBQhAKDl9sZWFzZV9zZWNvbmRz');

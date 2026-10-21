@@ -154,6 +154,11 @@ class RoomClimate extends $pb.GeneratedMessage {
     $1.SpaceId? modeSpaceId,
     $core.bool? sensorsConfigured,
     $core.bool? stateWithheld,
+    $core.Iterable<ClimateExplanation>? explanations,
+    $0.Timestamp? targetHeldUntil,
+    RoomPlanning? planning,
+    $core.int? comfortBandLowCentidegrees,
+    $core.int? comfortBandHighCentidegrees,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -175,6 +180,13 @@ class RoomClimate extends $pb.GeneratedMessage {
     if (modeSpaceId != null) result.modeSpaceId = modeSpaceId;
     if (sensorsConfigured != null) result.sensorsConfigured = sensorsConfigured;
     if (stateWithheld != null) result.stateWithheld = stateWithheld;
+    if (explanations != null) result.explanations.addAll(explanations);
+    if (targetHeldUntil != null) result.targetHeldUntil = targetHeldUntil;
+    if (planning != null) result.planning = planning;
+    if (comfortBandLowCentidegrees != null)
+      result.comfortBandLowCentidegrees = comfortBandLowCentidegrees;
+    if (comfortBandHighCentidegrees != null)
+      result.comfortBandHighCentidegrees = comfortBandHighCentidegrees;
     return result;
   }
 
@@ -221,6 +233,19 @@ class RoomClimate extends $pb.GeneratedMessage {
         subBuilder: $1.SpaceId.create)
     ..aOB(14, _omitFieldNames ? '' : 'sensorsConfigured')
     ..aOB(15, _omitFieldNames ? '' : 'stateWithheld')
+    ..pc<ClimateExplanation>(
+        16, _omitFieldNames ? '' : 'explanations', $pb.PbFieldType.PM,
+        subBuilder: ClimateExplanation.create)
+    ..aOM<$0.Timestamp>(17, _omitFieldNames ? '' : 'targetHeldUntil',
+        subBuilder: $0.Timestamp.create)
+    ..e<RoomPlanning>(18, _omitFieldNames ? '' : 'planning', $pb.PbFieldType.OE,
+        defaultOrMaker: RoomPlanning.ROOM_PLANNING_UNSPECIFIED,
+        valueOf: RoomPlanning.valueOf,
+        enumValues: RoomPlanning.values)
+    ..a<$core.int>(19, _omitFieldNames ? '' : 'comfortBandLowCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(20, _omitFieldNames ? '' : 'comfortBandHighCentidegrees',
+        $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -429,6 +454,9 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// so that the timing of an update does not give away what was withheld. Its limits and
   /// the sensors service may see are still sent, since setting a room up is service work.
   /// Its climate over time is available to service only as an ApartmentClimateSummary.
+  ///
+  /// explanations, target_held_until, planning and the comfort band are withheld in the
+  /// same way.
   @$pb.TagNumber(15)
   $core.bool get stateWithheld => $_getBF(14);
   @$pb.TagNumber(15)
@@ -437,6 +465,175 @@ class RoomClimate extends $pb.GeneratedMessage {
   $core.bool hasStateWithheld() => $_has(14);
   @$pb.TagNumber(15)
   void clearStateWithheld() => $_clearField(15);
+
+  /// Why the room is being held where it is, when that differs from simply holding its
+  /// target: a plan heating ahead of an expensive hour, the heat source busy with hot water,
+  /// a floor zone held back. Most significant first. An app that shows one shows the first
+  /// it can show: a kind and subject it knows, a pair that kind lists, and not past its
+  /// ends_at. Empty: nothing beyond the target and condition needs explaining.
+  ///
+  /// A window, a lost sensor and the rest of RoomClimateCondition are told by condition and
+  /// never repeated here; a target a person set is told by target_change and
+  /// target_held_until; whether the room is planned for at all is told by planning — one
+  /// fact, one place.
+  ///
+  /// Sent with the room, so a replaced room replaces its list: an explanation absent from
+  /// the latest RoomClimate no longer holds.
+  @$pb.TagNumber(16)
+  $pb.PbList<ClimateExplanation> get explanations => $_getList(15);
+
+  /// When a target a person set will next be moved by the gateway on its own — a schedule
+  /// step, a plan taking over again. Unset: it holds until somebody changes it. Told so that
+  /// a person is not surprised when their change ends. Unset whenever target_change is
+  /// withheld from the recipient, for the same reasons: it describes the same change.
+  @$pb.TagNumber(17)
+  $0.Timestamp get targetHeldUntil => $_getN(16);
+  @$pb.TagNumber(17)
+  set targetHeldUntil($0.Timestamp value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasTargetHeldUntil() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearTargetHeldUntil() => $_clearField(17);
+  @$pb.TagNumber(17)
+  $0.Timestamp ensureTargetHeldUntil() => $_ensure(16);
+
+  /// Whether a plan steers the room. See RoomPlanning.
+  @$pb.TagNumber(18)
+  RoomPlanning get planning => $_getN(17);
+  @$pb.TagNumber(18)
+  set planning(RoomPlanning value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasPlanning() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearPlanning() => $_clearField(18);
+
+  /// The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
+  /// room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
+  /// no higher than high, and within [min_centidegrees, max_centidegrees] where those are
+  /// set. Absent: no band, and a plan holds the room at its target — never 0 °C.
+  @$pb.TagNumber(19)
+  $core.int get comfortBandLowCentidegrees => $_getIZ(18);
+  @$pb.TagNumber(19)
+  set comfortBandLowCentidegrees($core.int value) =>
+      $_setSignedInt32(18, value);
+  @$pb.TagNumber(19)
+  $core.bool hasComfortBandLowCentidegrees() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearComfortBandLowCentidegrees() => $_clearField(19);
+
+  @$pb.TagNumber(20)
+  $core.int get comfortBandHighCentidegrees => $_getIZ(19);
+  @$pb.TagNumber(20)
+  set comfortBandHighCentidegrees($core.int value) =>
+      $_setSignedInt32(19, value);
+  @$pb.TagNumber(20)
+  $core.bool hasComfortBandHighCentidegrees() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearComfortBandHighCentidegrees() => $_clearField(20);
+}
+
+/// One reason a room, or a part of its heating, is where it is.
+class ClimateExplanation extends $pb.GeneratedMessage {
+  factory ClimateExplanation({
+    ClimateExplanationKind? kind,
+    ClimateExplanationSubject? subject,
+    $0.Timestamp? endsAt,
+  }) {
+    final result = create();
+    if (kind != null) result.kind = kind;
+    if (subject != null) result.subject = subject;
+    if (endsAt != null) result.endsAt = endsAt;
+    return result;
+  }
+
+  ClimateExplanation._();
+
+  factory ClimateExplanation.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClimateExplanation.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClimateExplanation',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..e<ClimateExplanationKind>(
+        1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            ClimateExplanationKind.CLIMATE_EXPLANATION_KIND_UNSPECIFIED,
+        valueOf: ClimateExplanationKind.valueOf,
+        enumValues: ClimateExplanationKind.values)
+    ..e<ClimateExplanationSubject>(
+        2, _omitFieldNames ? '' : 'subject', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            ClimateExplanationSubject.CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED,
+        valueOf: ClimateExplanationSubject.valueOf,
+        enumValues: ClimateExplanationSubject.values)
+    ..aOM<$0.Timestamp>(3, _omitFieldNames ? '' : 'endsAt',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimateExplanation clone() => ClimateExplanation()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimateExplanation copyWith(void Function(ClimateExplanation) updates) =>
+      super.copyWith((message) => updates(message as ClimateExplanation))
+          as ClimateExplanation;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClimateExplanation create() => ClimateExplanation._();
+  @$core.override
+  ClimateExplanation createEmptyInstance() => create();
+  static $pb.PbList<ClimateExplanation> createRepeated() =>
+      $pb.PbList<ClimateExplanation>();
+  @$core.pragma('dart2js:noInline')
+  static ClimateExplanation getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClimateExplanation>(create);
+  static ClimateExplanation? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ClimateExplanationKind get kind => $_getN(0);
+  @$pb.TagNumber(1)
+  set kind(ClimateExplanationKind value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasKind() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKind() => $_clearField(1);
+
+  /// What the cause acts on. The gateway always sets it. An app shows nothing for an
+  /// explanation whose subject is unspecified or unknown to it, rather than presenting it
+  /// as the room's.
+  @$pb.TagNumber(2)
+  ClimateExplanationSubject get subject => $_getN(1);
+  @$pb.TagNumber(2)
+  set subject(ClimateExplanationSubject value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSubject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSubject() => $_clearField(2);
+
+  /// When the explanation stops holding. Unset: while the room's latest RoomClimate carries
+  /// it. An app MUST NOT show an explanation past its ends_at, also while it cannot reach
+  /// the gateway, and while it cannot reach the gateway it shows none without an ends_at:
+  /// an explanation that outlives its window is a claim about the room nobody is making any
+  /// more. An explanation that holds because of a leased write ends no later than that
+  /// lease, after which the output is back at its lapse value whatever the gateway does.
+  @$pb.TagNumber(3)
+  $0.Timestamp get endsAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set endsAt($0.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasEndsAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearEndsAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.Timestamp ensureEndsAt() => $_ensure(2);
 }
 
 /// A mode on a home ends when whoever switched it on stops being one of its residents: a new

@@ -39,6 +39,74 @@ final $typed_data.Uint8List roomClimateConditionDescriptor = $convert.base64Deco
     'RJT05fSEVBVElOR19VTlJFQUNIQUJMRRAGEiQKIFJPT01fQ0xJTUFURV9DT05ESVRJT05fTk9f'
     'U0VOU09SEAc=');
 
+@$core.Deprecated('Use roomPlanningDescriptor instead')
+const RoomPlanning$json = {
+  '1': 'RoomPlanning',
+  '2': [
+    {'1': 'ROOM_PLANNING_UNSPECIFIED', '2': 0},
+    {'1': 'ROOM_PLANNING_PLANNED', '2': 1},
+    {'1': 'ROOM_PLANNING_NOT_PLANNED', '2': 2},
+    {'1': 'ROOM_PLANNING_UNAVAILABLE', '2': 3},
+  ],
+};
+
+/// Descriptor for `RoomPlanning`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List roomPlanningDescriptor = $convert.base64Decode(
+    'CgxSb29tUGxhbm5pbmcSHQoZUk9PTV9QTEFOTklOR19VTlNQRUNJRklFRBAAEhkKFVJPT01fUE'
+    'xBTk5JTkdfUExBTk5FRBABEh0KGVJPT01fUExBTk5JTkdfTk9UX1BMQU5ORUQQAhIdChlST09N'
+    'X1BMQU5OSU5HX1VOQVZBSUxBQkxFEAM=');
+
+@$core.Deprecated('Use climateExplanationKindDescriptor instead')
+const ClimateExplanationKind$json = {
+  '1': 'ClimateExplanationKind',
+  '2': [
+    {'1': 'CLIMATE_EXPLANATION_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PRE_HEAT', '2': 1},
+    {'1': 'CLIMATE_EXPLANATION_KIND_COASTING', '2': 2},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PRICE_HIGH', '2': 3},
+    {'1': 'CLIMATE_EXPLANATION_KIND_PEAK_GUARD', '2': 4},
+    {'1': 'CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY', '2': 5},
+    {'1': 'CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET', '2': 6},
+    {'1': 'CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK', '2': 7},
+    {'1': 'CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING', '2': 8},
+    {'1': 'CLIMATE_EXPLANATION_KIND_NO_READING', '2': 9},
+    {'1': 'CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW', '2': 10},
+  ],
+};
+
+/// Descriptor for `ClimateExplanationKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List climateExplanationKindDescriptor = $convert.base64Decode(
+    'ChZDbGltYXRlRXhwbGFuYXRpb25LaW5kEigKJENMSU1BVEVfRVhQTEFOQVRJT05fS0lORF9VTl'
+    'NQRUNJRklFRBAAEiUKIUNMSU1BVEVfRVhQTEFOQVRJT05fS0lORF9QUkVfSEVBVBABEiUKIUNM'
+    'SU1BVEVfRVhQTEFOQVRJT05fS0lORF9DT0FTVElORxACEicKI0NMSU1BVEVfRVhQTEFOQVRJT0'
+    '5fS0lORF9QUklDRV9ISUdIEAMSJwojQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX1BFQUtfR1VB'
+    'UkQQBBIvCitDTElNQVRFX0VYUExBTkFUSU9OX0tJTkRfSE9UX1dBVEVSX1BSSU9SSVRZEAUSMA'
+    'osQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX1NIQVJFRF9QT1dFUl9CVURHRVQQBhIyCi5DTElN'
+    'QVRFX0VYUExBTkFUSU9OX0tJTkRfRElTVFJJQ1RfSEVBVElOR19QRUFLEAcSLworQ0xJTUFURV'
+    '9FWFBMQU5BVElPTl9LSU5EX0FUX0NPTUZPUlRfQ0VJTElORxAIEicKI0NMSU1BVEVfRVhQTEFO'
+    'QVRJT05fS0lORF9OT19SRUFESU5HEAkSKwonQ0xJTUFURV9FWFBMQU5BVElPTl9LSU5EX09VVF'
+    'NJREVfV0lORE9XEAo=');
+
+@$core.Deprecated('Use climateExplanationSubjectDescriptor instead')
+const ClimateExplanationSubject$json = {
+  '1': 'ClimateExplanationSubject',
+  '2': [
+    {'1': 'CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED', '2': 0},
+    {'1': 'CLIMATE_EXPLANATION_SUBJECT_ROOM', '2': 1},
+    {'1': 'CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE', '2': 2},
+    {'1': 'CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD', '2': 3},
+    {'1': 'CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER', '2': 4},
+  ],
+};
+
+/// Descriptor for `ClimateExplanationSubject`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List climateExplanationSubjectDescriptor = $convert.base64Decode(
+    'ChlDbGltYXRlRXhwbGFuYXRpb25TdWJqZWN0EisKJ0NMSU1BVEVfRVhQTEFOQVRJT05fU1VCSk'
+    'VDVF9VTlNQRUNJRklFRBAAEiQKIENMSU1BVEVfRVhQTEFOQVRJT05fU1VCSkVDVF9ST09NEAES'
+    'KgomQ0xJTUFURV9FWFBMQU5BVElPTl9TVUJKRUNUX0ZMT09SX1pPTkUQAhIsCihDTElNQVRFX0'
+    'VYUExBTkFUSU9OX1NVQkpFQ1RfQ09NRk9SVF9MT0FEEAMSLQopQ0xJTUFURV9FWFBMQU5BVElP'
+    'Tl9TVUJKRUNUX0FERF9PTl9IRUFURVIQBA==');
+
 @$core.Deprecated('Use climateModeKindDescriptor instead')
 const ClimateModeKind$json = {
   '1': 'ClimateModeKind',
@@ -241,6 +309,48 @@ const RoomClimate$json = {
       '10': 'lockDeviceControls'
     },
     {'1': 'state_withheld', '3': 15, '4': 1, '5': 8, '10': 'stateWithheld'},
+    {
+      '1': 'explanations',
+      '3': 16,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ClimateExplanation',
+      '10': 'explanations'
+    },
+    {
+      '1': 'target_held_until',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'targetHeldUntil'
+    },
+    {
+      '1': 'planning',
+      '3': 18,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.RoomPlanning',
+      '10': 'planning'
+    },
+    {
+      '1': 'comfort_band_low_centidegrees',
+      '3': 19,
+      '4': 1,
+      '5': 17,
+      '9': 5,
+      '10': 'comfortBandLowCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'comfort_band_high_centidegrees',
+      '3': 20,
+      '4': 1,
+      '5': 17,
+      '9': 6,
+      '10': 'comfortBandHighCentidegrees',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_target_centidegrees'},
@@ -248,6 +358,8 @@ const RoomClimate$json = {
     {'1': '_min_centidegrees'},
     {'1': '_max_centidegrees'},
     {'1': '_measured_centidegrees'},
+    {'1': '_comfort_band_low_centidegrees'},
+    {'1': '_comfort_band_high_centidegrees'},
   ],
 };
 
@@ -268,10 +380,56 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     'eRgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUgptZWFzdXJlZEJ5Ek'
     'oKCWNvbmRpdGlvbhgLIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbUNsaW1hdGVD'
     'b25kaXRpb25SCWNvbmRpdGlvbhIwChRsb2NrX2RldmljZV9jb250cm9scxgMIAEoCFISbG9ja0'
-    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkQhYK'
-    'FF90YXJnZXRfY2VudGlkZWdyZWVzQiAKHl9lZmZlY3RpdmVfdGFyZ2V0X2NlbnRpZGVncmVlc0'
-    'ITChFfbWluX2NlbnRpZGVncmVlc0ITChFfbWF4X2NlbnRpZGVncmVlc0IYChZfbWVhc3VyZWRf'
-    'Y2VudGlkZWdyZWVz');
+    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkEk4K'
+    'DGV4cGxhbmF0aW9ucxgQIAMoCzIqLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0ZUV4cG'
+    'xhbmF0aW9uUgxleHBsYW5hdGlvbnMSRgoRdGFyZ2V0X2hlbGRfdW50aWwYESABKAsyGi5nb29n'
+    'bGUucHJvdG9idWYuVGltZXN0YW1wUg90YXJnZXRIZWxkVW50aWwSQAoIcGxhbm5pbmcYEiABKA'
+    '4yJC5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21QbGFubmluZ1IIcGxhbm5pbmcSRgodY29t'
+    'Zm9ydF9iYW5kX2xvd19jZW50aWRlZ3JlZXMYEyABKBFIBVIaY29tZm9ydEJhbmRMb3dDZW50aW'
+    'RlZ3JlZXOIAQESSAoeY29tZm9ydF9iYW5kX2hpZ2hfY2VudGlkZWdyZWVzGBQgASgRSAZSG2Nv'
+    'bWZvcnRCYW5kSGlnaENlbnRpZGVncmVlc4gBAUIWChRfdGFyZ2V0X2NlbnRpZGVncmVlc0IgCh'
+    '5fZWZmZWN0aXZlX3RhcmdldF9jZW50aWRlZ3JlZXNCEwoRX21pbl9jZW50aWRlZ3JlZXNCEwoR'
+    'X21heF9jZW50aWRlZ3JlZXNCGAoWX21lYXN1cmVkX2NlbnRpZGVncmVlc0IgCh5fY29tZm9ydF'
+    '9iYW5kX2xvd19jZW50aWRlZ3JlZXNCIQofX2NvbWZvcnRfYmFuZF9oaWdoX2NlbnRpZGVncmVl'
+    'cw==');
+
+@$core.Deprecated('Use climateExplanationDescriptor instead')
+const ClimateExplanation$json = {
+  '1': 'ClimateExplanation',
+  '2': [
+    {
+      '1': 'kind',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateExplanationKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'subject',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateExplanationSubject',
+      '10': 'subject'
+    },
+    {
+      '1': 'ends_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'endsAt'
+    },
+  ],
+};
+
+/// Descriptor for `ClimateExplanation`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List climateExplanationDescriptor = $convert.base64Decode(
+    'ChJDbGltYXRlRXhwbGFuYXRpb24SQgoEa2luZBgBIAEoDjIuLmt1c2ludGEuaW90LmNsaW1hdG'
+    'UudjEuQ2xpbWF0ZUV4cGxhbmF0aW9uS2luZFIEa2luZBJLCgdzdWJqZWN0GAIgASgOMjEua3Vz'
+    'aW50YS5pb3QuY2xpbWF0ZS52MS5DbGltYXRlRXhwbGFuYXRpb25TdWJqZWN0UgdzdWJqZWN0Ej'
+    'MKB2VuZHNfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgZlbmRzQXQ=');
 
 @$core.Deprecated('Use climateModeDescriptor instead')
 const ClimateMode$json = {

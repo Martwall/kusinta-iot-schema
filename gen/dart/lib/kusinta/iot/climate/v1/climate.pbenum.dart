@@ -82,6 +82,201 @@ class RoomClimateCondition extends $pb.ProtobufEnum {
   const RoomClimateCondition._(super.value, super.name);
 }
 
+/// Whether a plan steers a room: one that looks ahead at prices, weather and the heat
+/// source and moves the room within its comfort band. A standing state of the room, not a
+/// reason, so it is a field of its own rather than an explanation.
+class RoomPlanning extends $pb.ProtobufEnum {
+  /// Not stated.
+  static const RoomPlanning ROOM_PLANNING_UNSPECIFIED =
+      RoomPlanning._(0, _omitEnumNames ? '' : 'ROOM_PLANNING_UNSPECIFIED');
+
+  /// A plan steers the room. Its explanations say what it is doing.
+  static const RoomPlanning ROOM_PLANNING_PLANNED =
+      RoomPlanning._(1, _omitEnumNames ? '' : 'ROOM_PLANNING_PLANNED');
+
+  /// No plan steers the room: planning is switched off for it, or was never set up. The
+  /// room follows its target and schedule.
+  static const RoomPlanning ROOM_PLANNING_NOT_PLANNED =
+      RoomPlanning._(2, _omitEnumNames ? '' : 'ROOM_PLANNING_NOT_PLANNED');
+
+  /// A plan would steer the room but cannot be made — prices or a forecast are missing —
+  /// so the room follows its target and schedule until one can.
+  static const RoomPlanning ROOM_PLANNING_UNAVAILABLE =
+      RoomPlanning._(3, _omitEnumNames ? '' : 'ROOM_PLANNING_UNAVAILABLE');
+
+  static const $core.List<RoomPlanning> values = <RoomPlanning>[
+    ROOM_PLANNING_UNSPECIFIED,
+    ROOM_PLANNING_PLANNED,
+    ROOM_PLANNING_NOT_PLANNED,
+    ROOM_PLANNING_UNAVAILABLE,
+  ];
+
+  static final $core.List<RoomPlanning?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static RoomPlanning? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const RoomPlanning._(super.value, super.name);
+}
+
+/// What held a room, or a part of its heating, where it is. A closed list of causes: the
+/// gateway sends a kind, never a sentence, and the app names each kind in its user's
+/// language. What the cause acts on is ClimateExplanation.subject, and each kind lists the
+/// subjects it may carry. A pair a kind does not list is shown as nothing, so a pair added
+/// later reaches an older app as nothing rather than as a guess.
+///
+/// No kind identifies another household or anything about one, its activity included.
+/// Where a limit is shared — a building's power, a shared heat source — the explanation
+/// says that this room was limited, never by whom or because of whom. A kind that a source
+/// or limit shared with other homes drives — HOT_WATER_PRIORITY on a shared heat source,
+/// SHARED_POWER_BUDGET, DISTRICT_HEATING_PEAK on a shared connection — is sent only where at
+/// least three homes share that source or limit, in rooms in homes and outside them alike.
+/// Below that, its onset and end would track another home's use as it happens, and the
+/// room carries no explanation for it.
+class ClimateExplanationKind extends $pb.ProtobufEnum {
+  /// Sender did not set a kind, or sent one this client's schema does not know. An app
+  /// shows nothing for it rather than guessing.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_UNSPECIFIED =
+      ClimateExplanationKind._(
+          0, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_UNSPECIFIED');
+
+  /// Heated ahead of a dearer or colder period, within the comfort band, so less is needed
+  /// then. Subjects: ROOM, FLOOR_ZONE.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_PRE_HEAT =
+      ClimateExplanationKind._(
+          1, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PRE_HEAT');
+
+  /// Held back while stored heat carries the room, within the comfort band. Subjects: ROOM,
+  /// FLOOR_ZONE.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_COASTING =
+      ClimateExplanationKind._(
+          2, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_COASTING');
+
+  /// Held back while energy is expensive, within the comfort band. Subjects: ROOM,
+  /// FLOOR_ZONE, COMFORT_LOAD, ADD_ON_HEATER.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_PRICE_HIGH =
+      ClimateExplanationKind._(
+          3, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PRICE_HIGH');
+
+  /// Held back to keep the home's own electricity use below a peak it is charged for.
+  /// Subjects: ROOM, FLOOR_ZONE, COMFORT_LOAD, ADD_ON_HEATER.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_PEAK_GUARD =
+      ClimateExplanationKind._(
+          4, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_PEAK_GUARD');
+
+  /// Paused while the heat source heats domestic hot water. Subjects: ROOM, FLOOR_ZONE.
+  static const ClimateExplanationKind
+      CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY = ClimateExplanationKind._(5,
+          _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY');
+
+  /// Held back to keep electricity that several homes share — a building's connection, a
+  /// shared heat source — within its limit. Subjects: ROOM, FLOOR_ZONE, COMFORT_LOAD,
+  /// ADD_ON_HEATER.
+  static const ClimateExplanationKind
+      CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET = ClimateExplanationKind._(6,
+          _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET');
+
+  /// Held back to keep a district-heating connection below its charged peak. Subjects:
+  /// ROOM, FLOOR_ZONE.
+  static const ClimateExplanationKind
+      CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK = ClimateExplanationKind._(
+          7,
+          _omitEnumNames
+              ? ''
+              : 'CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK');
+
+  /// Not heated further because the room is at the top of its comfort band, even though
+  /// energy is cheap. Subjects: ROOM, FLOOR_ZONE.
+  static const ClimateExplanationKind
+      CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING = ClimateExplanationKind._(8,
+          _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING');
+
+  /// Run on a cautious fixed share of the time because the reading that steers it has gone
+  /// quiet. Subjects: FLOOR_ZONE only — a room's own lost sensor is told by condition. In
+  /// the room whose sensor steers the zone, condition says the sensor is lost and this says
+  /// what the zone does about it.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_NO_READING =
+      ClimateExplanationKind._(
+          9, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_NO_READING');
+
+  /// Off because it is outside its time window — a heated floor kept warm for comfort, a
+  /// towel heater. Subjects: COMFORT_LOAD only.
+  static const ClimateExplanationKind CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW =
+      ClimateExplanationKind._(
+          10, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW');
+
+  static const $core.List<ClimateExplanationKind> values =
+      <ClimateExplanationKind>[
+    CLIMATE_EXPLANATION_KIND_UNSPECIFIED,
+    CLIMATE_EXPLANATION_KIND_PRE_HEAT,
+    CLIMATE_EXPLANATION_KIND_COASTING,
+    CLIMATE_EXPLANATION_KIND_PRICE_HIGH,
+    CLIMATE_EXPLANATION_KIND_PEAK_GUARD,
+    CLIMATE_EXPLANATION_KIND_HOT_WATER_PRIORITY,
+    CLIMATE_EXPLANATION_KIND_SHARED_POWER_BUDGET,
+    CLIMATE_EXPLANATION_KIND_DISTRICT_HEATING_PEAK,
+    CLIMATE_EXPLANATION_KIND_AT_COMFORT_CEILING,
+    CLIMATE_EXPLANATION_KIND_NO_READING,
+    CLIMATE_EXPLANATION_KIND_OUTSIDE_WINDOW,
+  ];
+
+  static final $core.List<ClimateExplanationKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 10);
+  static ClimateExplanationKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ClimateExplanationKind._(super.value, super.name);
+}
+
+/// What a cause acts on.
+class ClimateExplanationSubject extends $pb.ProtobufEnum {
+  /// Sender did not set a subject, or sent one this client's schema does not know — some
+  /// decoders read an unknown value as this one. Never the room as a whole.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED = ClimateExplanationSubject._(
+          0, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED');
+
+  /// The room's heating as a whole.
+  static const ClimateExplanationSubject CLIMATE_EXPLANATION_SUBJECT_ROOM =
+      ClimateExplanationSubject._(
+          1, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_ROOM');
+
+  /// A floor zone heating this room. A zone's explanation is sent only in rooms on the same
+  /// side of a home's boundary as the zone's control room: rooms in the same home as it, or
+  /// rooms outside homes when it is outside one. A zone that heats rooms on both sides
+  /// explains itself on its control room's side alone, so a fact withheld across that
+  /// boundary does not cross it here.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE = ClimateExplanationSubject._(
+          2, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE');
+
+  /// A comfort load in the room: a heated floor kept warm for comfort, a towel heater.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD = ClimateExplanationSubject._(
+          3, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD');
+
+  /// The heat source's add-on heater.
+  static const ClimateExplanationSubject
+      CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER = ClimateExplanationSubject._(
+          4, _omitEnumNames ? '' : 'CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER');
+
+  static const $core.List<ClimateExplanationSubject> values =
+      <ClimateExplanationSubject>[
+    CLIMATE_EXPLANATION_SUBJECT_UNSPECIFIED,
+    CLIMATE_EXPLANATION_SUBJECT_ROOM,
+    CLIMATE_EXPLANATION_SUBJECT_FLOOR_ZONE,
+    CLIMATE_EXPLANATION_SUBJECT_COMFORT_LOAD,
+    CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER,
+  ];
+
+  static final $core.List<ClimateExplanationSubject?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static ClimateExplanationSubject? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ClimateExplanationSubject._(super.value, super.name);
+}
+
 /// A setback that applies to every room in a space while it is on.
 class ClimateModeKind extends $pb.ProtobufEnum {
   /// No mode: every room at its own target.

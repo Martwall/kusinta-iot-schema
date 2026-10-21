@@ -201,11 +201,37 @@ const Endpoint$json = {
       '5': 9,
       '10': 'vendorAttributeNames'
     },
+    {
+      '1': 'vendor_attribute_behaviours',
+      '3': 18,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.Endpoint.VendorAttributeBehavioursEntry',
+      '10': 'vendorAttributeBehaviours'
+    },
   ],
+  '3': [Endpoint_VendorAttributeBehavioursEntry$json],
   '8': [
     {'1': 'matter_properties'},
     {'1': 'vendor_properties'},
   ],
+};
+
+@$core.Deprecated('Use endpointDescriptor instead')
+const Endpoint_VendorAttributeBehavioursEntry$json = {
+  '1': 'VendorAttributeBehavioursEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {
+      '1': 'value',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.AttributeBehaviour',
+      '10': 'value'
+    },
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `Endpoint`. Decode as a `google.protobuf.DescriptorProto`.
@@ -239,7 +265,12 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'aW5rGDQgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJhZGlvTGlua1IJcmFkaW9MaW5rEj'
     '8KCGNsdXN0ZXJzGBAgAygLMiMua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNsdXN0ZXJTdGF0ZVII'
     'Y2x1c3RlcnMSNAoWdmVuZG9yX2F0dHJpYnV0ZV9uYW1lcxgRIAMoCVIUdmVuZG9yQXR0cmlidX'
-    'RlTmFtZXNCEwoRbWF0dGVyX3Byb3BlcnRpZXNCEwoRdmVuZG9yX3Byb3BlcnRpZXM=');
+    'RlTmFtZXMSfgobdmVuZG9yX2F0dHJpYnV0ZV9iZWhhdmlvdXJzGBIgAygLMj4ua3VzaW50YS5p'
+    'b3QuZGV2aWNlLnYxLkVuZHBvaW50LlZlbmRvckF0dHJpYnV0ZUJlaGF2aW91cnNFbnRyeVIZdm'
+    'VuZG9yQXR0cmlidXRlQmVoYXZpb3Vycxp3Ch5WZW5kb3JBdHRyaWJ1dGVCZWhhdmlvdXJzRW50'
+    'cnkSEAoDa2V5GAEgASgJUgNrZXkSPwoFdmFsdWUYAiABKAsyKS5rdXNpbnRhLmlvdC5kZXZpY2'
+    'UudjEuQXR0cmlidXRlQmVoYXZpb3VyUgV2YWx1ZToCOAFCEwoRbWF0dGVyX3Byb3BlcnRpZXNC'
+    'EwoRdmVuZG9yX3Byb3BlcnRpZXM=');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {
@@ -262,6 +293,24 @@ const Device$json = {
       '10': 'endpoints'
     },
     {
+      '1': 'min_write_interval_seconds',
+      '3': 15,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'minWriteIntervalSeconds',
+      '17': true
+    },
+    {
+      '1': 'max_write_delay_seconds',
+      '3': 16,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'maxWriteDelaySeconds',
+      '17': true
+    },
+    {
       '1': 'last_seen',
       '3': 20,
       '4': 1,
@@ -277,6 +326,10 @@ const Device$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'lastUpdated'
     },
+  ],
+  '8': [
+    {'1': '_min_write_interval_seconds'},
+    {'1': '_max_write_delay_seconds'},
   ],
   '9': [
     {'1': 2, '2': 14},
@@ -303,13 +356,16 @@ const Device$json = {
 final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode(
     'CgZEZXZpY2USRwoKZGVzY3JpcHRvchgBIAEoCzInLmt1c2ludGEuaW90LmRldmljZS52MS5EZX'
     'ZpY2VEZXNjcmlwdG9yUgpkZXNjcmlwdG9yEj0KCWVuZHBvaW50cxgOIAMoCzIfLmt1c2ludGEu'
-    'aW90LmRldmljZS52MS5FbmRwb2ludFIJZW5kcG9pbnRzEjcKCWxhc3Rfc2VlbhgUIAEoCzIaLm'
-    'dvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGxhc3RTZWVuEj0KDGxhc3RfdXBkYXRlZBgVIAEo'
-    'CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdGVkSgQIAhAOSgQIMhAzUg'
-    'p0aGVybW9zdGF0UhJ0ZW1wZXJhdHVyZV9zZW5zb3JSD2h1bWlkaXR5X3NlbnNvclIQb2NjdXBh'
-    'bmN5X3NlbnNvclIOY29udGFjdF9zZW5zb3JSD3dpbmRvd19jb3ZlcmluZ1IJZG9vcl9sb2NrUg'
-    'xvbl9vZmZfbGlnaHRSDmRpbW1hYmxlX2xpZ2h0UhBjb2xvcl90ZW1wX2xpZ2h0Ug1lbmVyZ3lf'
-    'c2Vuc29yUg9wcmVzc3VyZV9zZW5zb3JSCWhvbWVtYXRpYw==');
+    'aW90LmRldmljZS52MS5FbmRwb2ludFIJZW5kcG9pbnRzEkAKGm1pbl93cml0ZV9pbnRlcnZhbF'
+    '9zZWNvbmRzGA8gASgNSABSF21pbldyaXRlSW50ZXJ2YWxTZWNvbmRziAEBEjoKF21heF93cml0'
+    'ZV9kZWxheV9zZWNvbmRzGBAgASgNSAFSFG1heFdyaXRlRGVsYXlTZWNvbmRziAEBEjcKCWxhc3'
+    'Rfc2VlbhgUIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGxhc3RTZWVuEj0KDGxh'
+    'c3RfdXBkYXRlZBgVIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xhc3RVcGRhdG'
+    'VkQh0KG19taW5fd3JpdGVfaW50ZXJ2YWxfc2Vjb25kc0IaChhfbWF4X3dyaXRlX2RlbGF5X3Nl'
+    'Y29uZHNKBAgCEA5KBAgyEDNSCnRoZXJtb3N0YXRSEnRlbXBlcmF0dXJlX3NlbnNvclIPaHVtaW'
+    'RpdHlfc2Vuc29yUhBvY2N1cGFuY3lfc2Vuc29yUg5jb250YWN0X3NlbnNvclIPd2luZG93X2Nv'
+    'dmVyaW5nUglkb29yX2xvY2tSDG9uX29mZl9saWdodFIOZGltbWFibGVfbGlnaHRSEGNvbG9yX3'
+    'RlbXBfbGlnaHRSDWVuZXJneV9zZW5zb3JSD3ByZXNzdXJlX3NlbnNvclIJaG9tZW1hdGlj');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

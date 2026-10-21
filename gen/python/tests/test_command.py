@@ -186,3 +186,24 @@ def test_constraint_violation_is_distinct_from_not_entitled():
         command_pb2.COMMAND_ERROR_CODE_CONSTRAINT_VIOLATED
         != command_pb2.COMMAND_ERROR_CODE_NOT_ENTITLED
     )
+
+
+def test_a_command_that_sets_a_leased_attribute_carries_its_lease():
+    cmd = command_pb2.DeviceCommand(
+        request_id="c-1", cluster_id=0x0006, on_off=command_pb2.OnOffParams(), lease_seconds=900
+    )
+    decoded = command_pb2.DeviceCommand()
+    decoded.ParseFromString(cmd.SerializeToString())
+
+    assert decoded.lease_seconds == 900
+
+
+def test_a_write_to_a_gateway_held_attribute_has_its_own_refusal():
+    result = command_pb2.CommandResult(
+        request_id="w-3",
+        error=command_pb2.CommandError(code=command_pb2.COMMAND_ERROR_CODE_HELD_BY_GATEWAY),
+    )
+    decoded = command_pb2.CommandResult()
+    decoded.ParseFromString(result.SerializeToString())
+
+    assert decoded.error.code == command_pb2.COMMAND_ERROR_CODE_HELD_BY_GATEWAY

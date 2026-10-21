@@ -110,6 +110,8 @@ class Endpoint extends $pb.GeneratedMessage {
     $0.PowerSourceProperties? powerSource,
     $core.Iterable<$1.ClusterState>? clusters,
     $core.Iterable<$core.String>? vendorAttributeNames,
+    $core.Iterable<$core.MapEntry<$core.String, $1.AttributeBehaviour>>?
+        vendorAttributeBehaviours,
     $2.HmThermostatProps? hmThermostat,
     $2.HmMaintenanceProps? hmMaintenance,
     RadioLink? radioLink,
@@ -134,6 +136,8 @@ class Endpoint extends $pb.GeneratedMessage {
     if (clusters != null) result.clusters.addAll(clusters);
     if (vendorAttributeNames != null)
       result.vendorAttributeNames.addAll(vendorAttributeNames);
+    if (vendorAttributeBehaviours != null)
+      result.vendorAttributeBehaviours.addEntries(vendorAttributeBehaviours);
     if (hmThermostat != null) result.hmThermostat = hmThermostat;
     if (hmMaintenance != null) result.hmMaintenance = hmMaintenance;
     if (radioLink != null) result.radioLink = radioLink;
@@ -219,6 +223,14 @@ class Endpoint extends $pb.GeneratedMessage {
         16, _omitFieldNames ? '' : 'clusters', $pb.PbFieldType.PM,
         subBuilder: $1.ClusterState.create)
     ..pPS(17, _omitFieldNames ? '' : 'vendorAttributeNames')
+    ..m<$core.String, $1.AttributeBehaviour>(
+        18, _omitFieldNames ? '' : 'vendorAttributeBehaviours',
+        entryClassName: 'Endpoint.VendorAttributeBehavioursEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OM,
+        valueCreator: $1.AttributeBehaviour.create,
+        valueDefaultOrMaker: $1.AttributeBehaviour.getDefault,
+        packageName: const $pb.PackageName('kusinta.iot.device.v1'))
     ..aOM<$2.HmThermostatProps>(50, _omitFieldNames ? '' : 'hmThermostat',
         subBuilder: $2.HmThermostatProps.create)
     ..aOM<$2.HmMaintenanceProps>(51, _omitFieldNames ? '' : 'hmMaintenance',
@@ -451,27 +463,37 @@ class Endpoint extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   $pb.PbList<$core.String> get vendorAttributeNames => $_getList(16);
 
+  /// What a write to each vendor parameter leaves behind, and how late its reports arrive,
+  /// keyed by the parameter's vendor name as vendor_attribute_names spells it. The vendor
+  /// mirror of ClusterState.attribute_behaviours, with the same rules: an absent key is
+  /// "not stated", and not stated is read as the worst case. For a parameter reached through
+  /// a vendor's service, the name is the vendor's stable parameter id where it has one,
+  /// never a display name that is translated or renamed between firmware versions.
+  @$pb.TagNumber(18)
+  $pb.PbMap<$core.String, $1.AttributeBehaviour>
+      get vendorAttributeBehaviours => $_getMap(17);
+
   @$pb.TagNumber(50)
-  $2.HmThermostatProps get hmThermostat => $_getN(17);
+  $2.HmThermostatProps get hmThermostat => $_getN(18);
   @$pb.TagNumber(50)
   set hmThermostat($2.HmThermostatProps value) => $_setField(50, value);
   @$pb.TagNumber(50)
-  $core.bool hasHmThermostat() => $_has(17);
+  $core.bool hasHmThermostat() => $_has(18);
   @$pb.TagNumber(50)
   void clearHmThermostat() => $_clearField(50);
   @$pb.TagNumber(50)
-  $2.HmThermostatProps ensureHmThermostat() => $_ensure(17);
+  $2.HmThermostatProps ensureHmThermostat() => $_ensure(18);
 
   @$pb.TagNumber(51)
-  $2.HmMaintenanceProps get hmMaintenance => $_getN(18);
+  $2.HmMaintenanceProps get hmMaintenance => $_getN(19);
   @$pb.TagNumber(51)
   set hmMaintenance($2.HmMaintenanceProps value) => $_setField(51, value);
   @$pb.TagNumber(51)
-  $core.bool hasHmMaintenance() => $_has(18);
+  $core.bool hasHmMaintenance() => $_has(19);
   @$pb.TagNumber(51)
   void clearHmMaintenance() => $_clearField(51);
   @$pb.TagNumber(51)
-  $2.HmMaintenanceProps ensureHmMaintenance() => $_ensure(18);
+  $2.HmMaintenanceProps ensureHmMaintenance() => $_ensure(19);
 
   /// How well this device's radio link is doing, on whichever endpoint its connector
   /// reports it. Outside vendor_properties on purpose: it is not a vendor's extension of
@@ -480,15 +502,15 @@ class Endpoint extends $pb.GeneratedMessage {
   /// Source endpoint, beside hm_maintenance. Selected by the vendor branch like a
   /// vendor_properties case, by its (vendor_extension) key "kusinta.radio".
   @$pb.TagNumber(52)
-  RadioLink get radioLink => $_getN(19);
+  RadioLink get radioLink => $_getN(20);
   @$pb.TagNumber(52)
   set radioLink(RadioLink value) => $_setField(52, value);
   @$pb.TagNumber(52)
-  $core.bool hasRadioLink() => $_has(19);
+  $core.bool hasRadioLink() => $_has(20);
   @$pb.TagNumber(52)
   void clearRadioLink() => $_clearField(52);
   @$pb.TagNumber(52)
-  RadioLink ensureRadioLink() => $_ensure(19);
+  RadioLink ensureRadioLink() => $_ensure(20);
 }
 
 /// Device is a DeviceDescriptor plus the endpoints it presents.
@@ -507,12 +529,18 @@ class Device extends $pb.GeneratedMessage {
   factory Device({
     $3.DeviceDescriptor? descriptor,
     $core.Iterable<Endpoint>? endpoints,
+    $core.int? minWriteIntervalSeconds,
+    $core.int? maxWriteDelaySeconds,
     $4.Timestamp? lastSeen,
     $4.Timestamp? lastUpdated,
   }) {
     final result = create();
     if (descriptor != null) result.descriptor = descriptor;
     if (endpoints != null) result.endpoints.addAll(endpoints);
+    if (minWriteIntervalSeconds != null)
+      result.minWriteIntervalSeconds = minWriteIntervalSeconds;
+    if (maxWriteDelaySeconds != null)
+      result.maxWriteDelaySeconds = maxWriteDelaySeconds;
     if (lastSeen != null) result.lastSeen = lastSeen;
     if (lastUpdated != null) result.lastUpdated = lastUpdated;
     return result;
@@ -536,6 +564,10 @@ class Device extends $pb.GeneratedMessage {
         subBuilder: $3.DeviceDescriptor.create)
     ..pc<Endpoint>(14, _omitFieldNames ? '' : 'endpoints', $pb.PbFieldType.PM,
         subBuilder: Endpoint.create)
+    ..a<$core.int>(15, _omitFieldNames ? '' : 'minWriteIntervalSeconds',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        16, _omitFieldNames ? '' : 'maxWriteDelaySeconds', $pb.PbFieldType.OU3)
     ..aOM<$4.Timestamp>(20, _omitFieldNames ? '' : 'lastSeen',
         subBuilder: $4.Timestamp.create)
     ..aOM<$4.Timestamp>(21, _omitFieldNames ? '' : 'lastUpdated',
@@ -572,9 +604,40 @@ class Device extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $3.DeviceDescriptor ensureDescriptor() => $_ensure(0);
 
-  /// 15-19 are free; 20+ is the timestamp band.
+  /// 17-19 are free; 20+ is the timestamp band.
   @$pb.TagNumber(14)
   $pb.PbList<Endpoint> get endpoints => $_getList(1);
+
+  /// The fewest seconds this device needs between two writes, to any of its attributes on
+  /// any endpoint, without dropping one: a radio limited to a share of airtime, a battery
+  /// device that wakes on a schedule. A device-wide budget rather than a per-attribute one,
+  /// because two attributes each written at their own pace still share one radio. Stated by
+  /// the producer at announcement. Absent: not stated, never zero.
+  ///
+  /// A lower bound, not the whole budget: devices behind one radio gateway or one hub share
+  /// its airtime, and a vendor's service limits an account rather than a device, so a writer
+  /// may have to space writes further apart than this says.
+  @$pb.TagNumber(15)
+  $core.int get minWriteIntervalSeconds => $_getIZ(2);
+  @$pb.TagNumber(15)
+  set minWriteIntervalSeconds($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(15)
+  $core.bool hasMinWriteIntervalSeconds() => $_has(2);
+  @$pb.TagNumber(15)
+  void clearMinWriteIntervalSeconds() => $_clearField(15);
+
+  /// The longest a write can take to reach the device: a device that listens only after
+  /// its own report takes a write at its next one. Stated by the producer at announcement.
+  /// Absent: not stated, never zero. A writer that renews a lease renews it this long, plus
+  /// a margin, before the lease runs out, or the output lapses between renewals.
+  @$pb.TagNumber(16)
+  $core.int get maxWriteDelaySeconds => $_getIZ(3);
+  @$pb.TagNumber(16)
+  set maxWriteDelaySeconds($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(16)
+  $core.bool hasMaxWriteDelaySeconds() => $_has(3);
+  @$pb.TagNumber(16)
+  void clearMaxWriteDelaySeconds() => $_clearField(16);
 
   /// When the gateway last had evidence this device itself — the
   /// most recent PropertyUpdate (wheter or not the property changed) or command
@@ -595,15 +658,15 @@ class Device extends $pb.GeneratedMessage {
   /// change would give away each opening and each turn of a knob. Service learns whether it
   /// is reachable from webrtc.v1.ServiceStatus.
   @$pb.TagNumber(20)
-  $4.Timestamp get lastSeen => $_getN(2);
+  $4.Timestamp get lastSeen => $_getN(4);
   @$pb.TagNumber(20)
   set lastSeen($4.Timestamp value) => $_setField(20, value);
   @$pb.TagNumber(20)
-  $core.bool hasLastSeen() => $_has(2);
+  $core.bool hasLastSeen() => $_has(4);
   @$pb.TagNumber(20)
   void clearLastSeen() => $_clearField(20);
   @$pb.TagNumber(20)
-  $4.Timestamp ensureLastSeen() => $_ensure(2);
+  $4.Timestamp ensureLastSeen() => $_ensure(4);
 
   /// When any field of this Device last changed value. Unset in a service view, for the
   /// reason last_seen is. Both are also unset when they date from before the recipient's
@@ -611,15 +674,15 @@ class Device extends $pb.GeneratedMessage {
   /// access.v1.MembershipRelation).
   /// Whether such a device is reachable is still told by its webrtc.v1.ServiceStatus.
   @$pb.TagNumber(21)
-  $4.Timestamp get lastUpdated => $_getN(3);
+  $4.Timestamp get lastUpdated => $_getN(5);
   @$pb.TagNumber(21)
   set lastUpdated($4.Timestamp value) => $_setField(21, value);
   @$pb.TagNumber(21)
-  $core.bool hasLastUpdated() => $_has(3);
+  $core.bool hasLastUpdated() => $_has(5);
   @$pb.TagNumber(21)
   void clearLastUpdated() => $_clearField(21);
   @$pb.TagNumber(21)
-  $4.Timestamp ensureLastUpdated() => $_ensure(3);
+  $4.Timestamp ensureLastUpdated() => $_ensure(5);
 }
 
 /// A device's radio link, as its connector reports it.

@@ -775,6 +775,102 @@ def test_an_unstated_step_is_absent_not_a_step_of_zero():
     assert 0x0012 not in cluster_state_pb2.ClusterState(cluster_id=0x0201).attribute_steps
 
 
+# --- what a write leaves behind, and how late a reading arrives ------------------------
+
+
+def _round_trip(message):
+    decoded = type(message)()
+    decoded.ParseFromString(message.SerializeToString())
+    return decoded
+
+
+def test_attribute_behaviour_is_not_stated_by_default():
+    assert len(cluster_state_pb2.ClusterState(cluster_id=0x0006).attribute_behaviours) == 0
+
+
+def test_a_sticky_attribute_says_so():
+    state = cluster_state_pb2.ClusterState(cluster_id=0x0201)
+    state.attribute_behaviours[0x0012].sticky.SetInParent()
+
+    assert _round_trip(state).attribute_behaviours[0x0012].WhichOneof("write") == "sticky"
+
+
+def test_a_leased_attribute_states_its_bounds():
+    state = cluster_state_pb2.ClusterState(cluster_id=0x0006)
+    state.attribute_behaviours[0x0000].leased.CopyFrom(
+        cluster_state_pb2.LeasedWrite(min_lease_seconds=60, max_lease_seconds=7200)
+    )
+
+    leased = _round_trip(state).attribute_behaviours[0x0000].leased
+    assert (leased.min_lease_seconds, leased.max_lease_seconds) == (60, 7200)
+
+
+def test_a_leased_attribute_states_whether_renewal_restarts_the_lease():
+    leased = cluster_state_pb2.LeasedWrite(renewal_restarts_lease=True)
+
+    assert _round_trip(leased).renewal_restarts_lease
+
+
+def test_renewal_is_unstated_rather_than_false_when_the_producer_does_not_know():
+    assert not _round_trip(cluster_state_pb2.LeasedWrite()).HasField("renewal_restarts_lease")
+
+
+def test_a_leased_attribute_states_the_value_it_lapses_to():
+    leased = cluster_state_pb2.LeasedWrite(lapse_value=cluster_state_pb2.AttributeValue(bool_value=True))
+
+    assert _round_trip(leased).lapse_value.bool_value
+
+
+def test_lease_bounds_are_absent_rather_than_zero_when_not_stated():
+    leased = _round_trip(cluster_state_pb2.LeasedWrite())
+
+    assert (leased.HasField("min_lease_seconds"), leased.HasField("max_lease_seconds")) == (False, False)
+
+
+def test_an_attribute_states_its_power_on_value():
+    behaviour = cluster_state_pb2.AttributeBehaviour(
+        power_on_value=cluster_state_pb2.AttributeValue(int_value=2000)
+    )
+
+    assert _round_trip(behaviour).HasField("power_on_value")
+
+
+def test_a_delayed_reading_is_stated_per_attribute():
+    state = cluster_state_pb2.ClusterState(cluster_id=0x0201)
+    state.attribute_behaviours[0x0000].read_latency = cluster_state_pb2.READ_LATENCY_DELAYED
+
+    assert _round_trip(state).attribute_behaviours[0x0000].read_latency == cluster_state_pb2.READ_LATENCY_DELAYED
+
+
+def test_a_vendor_parameter_states_its_behaviour_by_name():
+    endpoint = device_pb2.Endpoint(endpoint_id=1)
+    endpoint.vendor_attribute_behaviours["BOOST_MODE"].leased.CopyFrom(
+        cluster_state_pb2.LeasedWrite(min_lease_seconds=300, max_lease_seconds=1800)
+    )
+
+    assert _round_trip(endpoint).vendor_attribute_behaviours["BOOST_MODE"].WhichOneof("write") == "leased"
+
+
+def test_a_device_states_the_fewest_seconds_between_two_writes():
+    device = device_pb2.Device(min_write_interval_seconds=120)
+
+    assert _round_trip(device).min_write_interval_seconds == 120
+
+
+def test_a_device_write_interval_is_absent_rather_than_zero():
+    assert not device_pb2.Device().HasField("min_write_interval_seconds")
+
+
+def test_a_device_states_how_long_a_write_can_take_to_arrive():
+    device = device_pb2.Device(max_write_delay_seconds=600)
+
+    assert _round_trip(device).max_write_delay_seconds == 600
+
+
+def test_a_device_write_delay_is_absent_rather_than_zero():
+    assert not device_pb2.Device().HasField("max_write_delay_seconds")
+
+
 def test_endpoint_lists_the_vendor_parameters_this_device_implements():
     """The vendor mirror of AttributeList: vendor parameters have no cluster and so no
     ClusterState to carry it. Spelled as (vendor_attribute) is, byte for byte."""

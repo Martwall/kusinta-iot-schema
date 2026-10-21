@@ -281,6 +281,16 @@ export declare type DeviceCommand = Message<"kusinta.iot.webrtc.v1.DeviceCommand
     value: Uint8Array;
     case: "rawTlv";
   } | { case: undefined; value?: undefined };
+
+  /**
+   * How long, in seconds, the value the command sets holds, for a command that sets an
+   * attribute the producer states as leased: OnOff is set by the On and Off commands, not
+   * by a write. The same rules as AttributeWriteRequest.lease_seconds, applied to the
+   * attribute the command sets.
+   *
+   * @generated from field: optional uint32 lease_seconds = 14;
+   */
+  leaseSeconds?: number | undefined;
 };
 
 /**
@@ -434,6 +444,28 @@ export declare type AttributeWriteRequest = Message<"kusinta.iot.webrtc.v1.Attri
    * @generated from field: kusinta.iot.device.v1.AttributeValue value = 4;
    */
   value?: AttributeValue | undefined;
+
+  /**
+   * How long, in seconds, the written value holds before the device itself returns the
+   * attribute to its lapse value — for an attribute the producer states as leased
+   * (device.v1.LeasedWrite, on the attribute's cluster or as a vendor parameter). At least
+   * one second, and within the stated minimum and maximum.
+   *
+   * The producer MUST refuse, with COMMAND_ERROR_CODE_INVALID_COMMAND, a write to a leased
+   * attribute that carries no lease, a lease of zero or outside the stated bounds, and a
+   * lease on an attribute it does not state as leased. A write of the attribute's lapse
+   * value is the exception: it needs no lease, ends any lease running, and a lease on it
+   * is ignored (device.v1.LeasedWrite.lapse_value). Rollout order: a writer sends a
+   * lease for an attribute before the attribute's producer states it as leased.
+   *
+   * Set only by the gateway, towards a producer: a leased attribute is written by the
+   * gateway alone. A gateway MUST refuse a request from an app that carries a lease, with
+   * COMMAND_ERROR_CODE_INVALID_COMMAND, and an app's write or command to an attribute its
+   * producer states as leased, with COMMAND_ERROR_CODE_HELD_BY_GATEWAY.
+   *
+   * @generated from field: optional uint32 lease_seconds = 5;
+   */
+  leaseSeconds?: number | undefined;
 };
 
 /**
@@ -514,6 +546,16 @@ export enum CommandErrorCode {
    * @generated from enum value: COMMAND_ERROR_CODE_INTERNAL = 7;
    */
   INTERNAL = 7,
+
+  /**
+   * The attribute is one the gateway drives under a lease — a floor zone, a heat source's
+   * add-on heater block — and a person changes it through the room's target and comfort
+   * band, not directly. Permanent for this attribute: do not retry; tell the user where to
+   * change it instead.
+   *
+   * @generated from enum value: COMMAND_ERROR_CODE_HELD_BY_GATEWAY = 8;
+   */
+  HELD_BY_GATEWAY = 8,
 }
 
 /**
