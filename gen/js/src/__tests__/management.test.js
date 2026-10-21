@@ -445,21 +445,21 @@ describe('heating records', () => {
     const decoded = onTheWire(ManagementRequestSchema, {
       request: { case: 'listHeating', value: { rootSpaceId: { value: 'home-15' } } },
     })
-    expect(decoded.request.case).toBe('listHeating')
+    expect(decoded.request).toMatchObject({ case: 'listHeating', value: { rootSpaceId: { value: 'home-15' } } })
   })
 
-  it('replaces a plant whole, naming the revision it replaces', () => {
+  it('puts a floor zone on its own, naming the revision it replaces', () => {
     const decoded = onTheWire(ManagementRequestSchema, {
-      request: { case: 'putHeatingPlant', value: { plant: { plantId: 'plant-1', revision: 3n } } },
+      request: { case: 'putFloorZone', value: { zone: { zoneId: 'zone-1', circuitId: 'circuit-1', revision: 3n } } },
     })
-    expect(decoded.request.case === 'putHeatingPlant' && decoded.request.value.plant?.revision).toBe(3n)
+    expect(decoded.request).toMatchObject({ case: 'putFloorZone', value: { zone: { revision: 3n } } })
   })
 
-  it('removes a plant by its id', () => {
+  it('removes any heating record by its id', () => {
     const decoded = onTheWire(ManagementRequestSchema, {
-      request: { case: 'removeHeatingPlant', value: { plantId: 'plant-1' } },
+      request: { case: 'removeHeatingRecord', value: { id: 'circuit-1' } },
     })
-    expect(decoded.request.case).toBe('removeHeatingPlant')
+    expect(decoded.request).toMatchObject({ case: 'removeHeatingRecord', value: { id: 'circuit-1' } })
   })
 
   it('sets a comfort load’s windows apart from its binding', () => {
@@ -469,15 +469,22 @@ describe('heating records', () => {
         value: { comfortLoadId: 'load-1', windows: [{ weekdays: 0b1111111, startMinute: 300, endMinute: 420 }] },
       },
     })
-    expect(decoded.request.case === 'setComfortWindows' && decoded.request.value.windows.length).toBe(1)
+    expect(decoded.request).toMatchObject({ case: 'setComfortWindows', value: { windows: [{ startMinute: 300 }] } })
   })
 
-  it('answers with the heating layout', () => {
+  it('answers a put with the one record as stored', () => {
     const decoded = onTheWire(ManagementResultSchema, {
       inReplyTo: 'm-1',
-      result: { case: 'heatingLayout', value: { plants: [{ plantId: 'plant-1' }] } },
+      result: { case: 'heatingRecord', value: { record: { case: 'plant', value: { plantId: 'plant-1', revision: 1n } } } },
     })
-    expect(decoded.result.case === 'heatingLayout' && decoded.result.value.plants[0].plantId).toBe('plant-1')
+    expect(decoded.result).toMatchObject({ case: 'heatingRecord', value: { record: { case: 'plant' } } })
+  })
+
+  it('answers a listing with the layout', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-2',
+      result: { case: 'heatingLayout', value: { floorZones: [{ zoneId: 'zone-1' }] } },
+    })
+    expect(decoded.result).toMatchObject({ case: 'heatingLayout', value: { floorZones: [{ zoneId: 'zone-1' }] } })
   })
 })
-

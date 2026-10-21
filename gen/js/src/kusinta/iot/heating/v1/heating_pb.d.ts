@@ -14,6 +14,31 @@ import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
 export declare const file_kusinta_iot_heating_v1_heating: GenFile;
 
 /**
+ * One attribute of one device: what a role reads or writes. Endpoint_id is required on the
+ * Matter branch of the attribute here — an absent endpoint is refused, never read as the
+ * root node.
+ *
+ * @generated from message kusinta.iot.heating.v1.DeviceAttribute
+ */
+export declare type DeviceAttribute = Message<"kusinta.iot.heating.v1.DeviceAttribute"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.access.v1.AttributeRef attribute = 2;
+   */
+  attribute?: AttributeRef | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.DeviceAttribute.
+ * Use `create(DeviceAttributeSchema)` to create a new message.
+ */
+export declare const DeviceAttributeSchema: GenMessage<DeviceAttribute>;
+
+/**
  * One device output switching one contact on the heating side: a floor zone's thermostat
  * input, a heat-source input, a comfort load's supply.
  *
@@ -21,19 +46,11 @@ export declare const file_kusinta_iot_heating_v1_heating: GenFile;
  */
 export declare type ContactBinding = Message<"kusinta.iot.heating.v1.ContactBinding"> & {
   /**
-   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
-   */
-  deviceId?: DeviceId | undefined;
-
-  /**
-   * The attribute the gateway writes, on its endpoint: OnOff on a relay channel, or a
-   * vendor parameter. The producer states how a write to it behaves
-   * (device.v1.AttributeBehaviour); the gateway refuses to bind an output whose write is
-   * not stated as leased.
+   * OnOff on a relay channel, or a vendor parameter.
    *
-   * @generated from field: kusinta.iot.access.v1.AttributeRef output = 2;
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute output = 1;
    */
-  output?: AttributeRef | undefined;
+  output?: DeviceAttribute | undefined;
 
   /**
    * The value of the output with which the contact is closed. A wiring fact, not a device
@@ -43,19 +60,12 @@ export declare type ContactBinding = Message<"kusinta.iot.heating.v1.ContactBind
    * output's value alone.
    *
    * Each role has a fixed rest state (see the role), and the output's lapse value
-   * (device.v1.LeasedWrite.lapse_value) must give it: the gateway refuses a binding whose
-   * lapse value, read through this value, does not leave the contact where the role rests.
+   * (device.v1.LeasedWrite.lapse_value), read through this value, must leave the contact
+   * where the role rests.
    *
-   * @generated from field: kusinta.iot.device.v1.AttributeValue closed_value = 3;
+   * @generated from field: kusinta.iot.device.v1.AttributeValue closed_value = 2;
    */
   closedValue?: AttributeValue | undefined;
-
-  /**
-   * Set by the gateway, ignored in a request.
-   *
-   * @generated from field: kusinta.iot.heating.v1.CommissioningState commissioning = 4;
-   */
-  commissioning: CommissioningState;
 };
 
 /**
@@ -65,37 +75,13 @@ export declare type ContactBinding = Message<"kusinta.iot.heating.v1.ContactBind
 export declare const ContactBindingSchema: GenMessage<ContactBinding>;
 
 /**
- * A reading the heating depends on: a pipe probe, a meter.
- *
- * @generated from message kusinta.iot.heating.v1.ReadingBinding
- */
-export declare type ReadingBinding = Message<"kusinta.iot.heating.v1.ReadingBinding"> & {
-  /**
-   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
-   */
-  deviceId?: DeviceId | undefined;
-
-  /**
-   * @generated from field: kusinta.iot.access.v1.AttributeRef reading = 2;
-   */
-  reading?: AttributeRef | undefined;
-};
-
-/**
- * Describes the message kusinta.iot.heating.v1.ReadingBinding.
- * Use `create(ReadingBindingSchema)` to create a new message.
- */
-export declare const ReadingBindingSchema: GenMessage<ReadingBinding>;
-
-/**
- * One heat source and what the gateway reads and drives of it. Its circuits carry the heat
- * to the rooms.
+ * One heat source.
  *
  * @generated from message kusinta.iot.heating.v1.HeatingPlant
  */
 export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"> & {
   /**
-   * Assigned by the gateway; empty in a request that creates one.
+   * Assigned by the gateway, unique among heating records; empty when creating.
    *
    * @generated from field: string plant_id = 1;
    */
@@ -121,54 +107,36 @@ export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"
   /**
    * The device the heat source's own readings come from — its temperatures, compressor and
    * hot-water state — when it has one. Read only: the gateway drives a heat source through
-   * the contact bindings below, never through this device.
+   * the plant's control, never through this device.
    *
-   * @generated from field: kusinta.iot.identity.v1.DeviceId heat_source_device_id = 5;
+   * @generated from field: kusinta.iot.identity.v1.DeviceId readings_device_id = 5;
    */
-  heatSourceDeviceId?: DeviceId | undefined;
+  readingsDeviceId?: DeviceId | undefined;
 
   /**
-   * The heat source's SG Ready inputs, by what each means closed alone: sg_ready_block
-   * closed alone blocks the heat source, sg_ready_boost closed alone recommends running
-   * harder, both closed commands it to, and both open is normal operation. Both rest open,
-   * so a lapsed lease or a stopped gateway leaves the heat source running normally. Bound
-   * together or not at all.
+   * How the gateway steers the heat source. Unset: it does not; the plant is read only.
    *
-   * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_block = 6;
+   * @generated from oneof kusinta.iot.heating.v1.HeatingPlant.control
    */
-  sgReadyBlock?: ContactBinding | undefined;
-
-  /**
-   * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_boost = 7;
-   */
-  sgReadyBoost?: ContactBinding | undefined;
-
-  /**
-   * The heat source's input that blocks its add-on (electric) heat while closed. Rests
-   * open: add-on heat allowed.
-   *
-   * @generated from field: kusinta.iot.heating.v1.ContactBinding add_heat_block = 8;
-   */
-  addHeatBlock?: ContactBinding | undefined;
+  control: {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.HeatPumpControl heat_pump = 6;
+     */
+    value: HeatPumpControl;
+    case: "heatPump";
+  } | { case: undefined; value?: undefined };
 
   /**
    * The electricity or heat meter the plant is measured by.
    *
-   * @generated from field: kusinta.iot.heating.v1.ReadingBinding meter = 9;
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute meter = 7;
    */
-  meter?: ReadingBinding | undefined;
+  meter?: DeviceAttribute | undefined;
 
   /**
-   * @generated from field: repeated kusinta.iot.heating.v1.HeatingCircuit circuits = 10;
-   */
-  circuits: HeatingCircuit[];
-
-  /**
-   * Set by the gateway, and bumped by every change. A replacement names the revision it
-   * replaces and is refused as FAILED_PRECONDITION with metadata "reason"
-   * "STALE_REVISION" when the plant has changed since.
+   * See the file comment.
    *
-   * @generated from field: uint64 revision = 11;
+   * @generated from field: uint64 revision = 8;
    */
   revision: bigint;
 };
@@ -180,59 +148,88 @@ export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"
 export declare const HeatingPlantSchema: GenMessage<HeatingPlant>;
 
 /**
+ * A heat pump's control inputs.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatPumpControl
+ */
+export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpControl"> & {
+  /**
+   * The SG Ready inputs, by what each means closed alone: sg_ready_block closed alone
+   * blocks the heat pump, sg_ready_boost closed alone recommends running harder, both
+   * closed commands it to, and both open is normal operation. Both rest open, so a lapsed
+   * lease or a stopped gateway leaves the heat pump running normally. Bound together or not
+   * at all.
+   *
+   * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_block = 1;
+   */
+  sgReadyBlock?: ContactBinding | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_boost = 2;
+   */
+  sgReadyBoost?: ContactBinding | undefined;
+
+  /**
+   * The input that blocks the heat pump's add-on (electric) heater while closed. Rests
+   * open: the add-on heater is allowed.
+   *
+   * @generated from field: kusinta.iot.heating.v1.ContactBinding add_on_heater_block = 3;
+   */
+  addOnHeaterBlock?: ContactBinding | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatPumpControl.
+ * Use `create(HeatPumpControlSchema)` to create a new message.
+ */
+export declare const HeatPumpControlSchema: GenMessage<HeatPumpControl>;
+
+/**
  * One heating circuit of a plant. Supply temperature and its cap are per circuit.
  *
  * @generated from message kusinta.iot.heating.v1.HeatingCircuit
  */
 export declare type HeatingCircuit = Message<"kusinta.iot.heating.v1.HeatingCircuit"> & {
   /**
-   * Assigned by the gateway; empty for a new circuit in a plant replacement.
+   * Assigned by the gateway, unique among heating records; empty when creating.
    *
    * @generated from field: string circuit_id = 1;
    */
   circuitId: string;
 
   /**
-   * @generated from field: string name = 2;
+   * @generated from field: string plant_id = 2;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: string name = 3;
    */
   name: string;
 
   /**
-   * @generated from field: kusinta.iot.heating.v1.CircuitKind kind = 3;
+   * @generated from oneof kusinta.iot.heating.v1.HeatingCircuit.distribution
    */
-  kind: CircuitKind;
+  distribution: {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.RadiatorCircuit radiator = 4;
+     */
+    value: RadiatorCircuit;
+    case: "radiator";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.FloorCircuit floor = 5;
+     */
+    value: FloorCircuit;
+    case: "floor";
+  } | { case: undefined; value?: undefined };
 
   /**
-   * FLOOR only: whether a mixing valve feeds the circuit, and the supply temperature its
-   * self-acting limiter caps it at, in centidegrees. Absent: not known, never 0 °C.
+   * See the file comment.
    *
-   * @generated from field: bool mixing_valve = 4;
+   * @generated from field: uint64 revision = 6;
    */
-  mixingValve: boolean;
-
-  /**
-   * @generated from field: optional sint32 supply_cap_centidegrees = 5;
-   */
-  supplyCapCentidegrees?: number | undefined;
-
-  /**
-   * FLOOR only: probes on the circuit's supply (after mixing) and return.
-   *
-   * @generated from field: kusinta.iot.heating.v1.ReadingBinding supply_probe = 6;
-   */
-  supplyProbe?: ReadingBinding | undefined;
-
-  /**
-   * @generated from field: kusinta.iot.heating.v1.ReadingBinding return_probe = 7;
-   */
-  returnProbe?: ReadingBinding | undefined;
-
-  /**
-   * FLOOR only. A radiator circuit carries none; its valves belong to the rooms.
-   *
-   * @generated from field: repeated kusinta.iot.heating.v1.FloorZone zones = 8;
-   */
-  zones: FloorZone[];
+  revision: bigint;
 };
 
 /**
@@ -242,41 +239,116 @@ export declare type HeatingCircuit = Message<"kusinta.iot.heating.v1.HeatingCirc
 export declare const HeatingCircuitSchema: GenMessage<HeatingCircuit>;
 
 /**
+ * A radiator circuit. Its valves belong to the rooms (climate.v1.RoomClimate).
+ *
+ * @generated from message kusinta.iot.heating.v1.RadiatorCircuit
+ */
+export declare type RadiatorCircuit = Message<"kusinta.iot.heating.v1.RadiatorCircuit"> & {
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.RadiatorCircuit.
+ * Use `create(RadiatorCircuitSchema)` to create a new message.
+ */
+export declare const RadiatorCircuitSchema: GenMessage<RadiatorCircuit>;
+
+/**
+ * Hydronic floor heating: its own pump, mixing and supply cap, and the floor zones on its
+ * manifold.
+ *
+ * @generated from message kusinta.iot.heating.v1.FloorCircuit
+ */
+export declare type FloorCircuit = Message<"kusinta.iot.heating.v1.FloorCircuit"> & {
+  /**
+   * Whether a mixing valve feeds the circuit.
+   *
+   * @generated from field: bool mixing_valve = 1;
+   */
+  mixingValve: boolean;
+
+  /**
+   * The supply temperature its self-acting limiter caps it at, in centidegrees. Absent: not
+   * known, never 0 °C.
+   *
+   * @generated from field: optional sint32 supply_cap_centidegrees = 2;
+   */
+  supplyCapCentidegrees?: number | undefined;
+
+  /**
+   * Probes on the supply (after mixing) and the return.
+   *
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute supply_probe = 3;
+   */
+  supplyProbe?: DeviceAttribute | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute return_probe = 4;
+   */
+  returnProbe?: DeviceAttribute | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.FloorCircuit.
+ * Use `create(FloorCircuitSchema)` to create a new message.
+ */
+export declare const FloorCircuitSchema: GenMessage<FloorCircuit>;
+
+/**
  * One loop or group of loops on a floor circuit's manifold, switched by one output on its
- * wiring centre's thermostat input. The output's contact closed means the zone heats, and
- * it rests closed: when the gateway is gone the zone heats, capped only by the circuit's
- * supply limiter.
+ * wiring centre's thermostat input. The output's contact closed means the zone heats, and it
+ * rests closed: when the gateway is gone the zone heats, capped only by the circuit's supply
+ * limiter.
  *
  * @generated from message kusinta.iot.heating.v1.FloorZone
  */
 export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
   /**
-   * Assigned by the gateway; empty for a new zone.
+   * Assigned by the gateway, unique among heating records; empty when creating.
    *
    * @generated from field: string zone_id = 1;
    */
   zoneId: string;
 
   /**
+   * A FLOOR circuit.
+   *
+   * @generated from field: string circuit_id = 2;
+   */
+  circuitId: string;
+
+  /**
    * As marked on the manifold or the drawing ("SL 2").
    *
-   * @generated from field: string name = 2;
+   * @generated from field: string name = 3;
    */
   name: string;
 
   /**
-   * @generated from field: kusinta.iot.heating.v1.ContactBinding output = 3;
+   * @generated from field: kusinta.iot.heating.v1.ContactBinding output = 4;
    */
   output?: ContactBinding | undefined;
 
   /**
-   * The rooms the zone heats. A zone may heat several rooms and a room may be heated by
-   * several zones. Exactly one room is the zone's control room, and only its error, its
-   * sensor and its open window steer the zone; the shares of one zone sum to 1000.
+   * The rooms the zone heats, each a room within its plant's space, with shares summing to
+   * 1000. A zone may heat several rooms and a room may be heated by several zones.
    *
-   * @generated from field: repeated kusinta.iot.heating.v1.FloorZoneRoom rooms = 4;
+   * @generated from field: repeated kusinta.iot.heating.v1.FloorZoneRoom rooms = 5;
    */
   rooms: FloorZoneRoom[];
+
+  /**
+   * One of rooms. Only its error, its sensor and its open window steer the zone.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId control_room_id = 6;
+   */
+  controlRoomId?: SpaceId | undefined;
+
+  /**
+   * See the file comment.
+   *
+   * @generated from field: uint64 revision = 7;
+   */
+  revision: bigint;
 };
 
 /**
@@ -290,8 +362,6 @@ export declare const FloorZoneSchema: GenMessage<FloorZone>;
  */
 export declare type FloorZoneRoom = Message<"kusinta.iot.heating.v1.FloorZoneRoom"> & {
   /**
-   * A room within the plant's space.
-   *
    * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 1;
    */
   roomId?: SpaceId | undefined;
@@ -302,11 +372,6 @@ export declare type FloorZoneRoom = Message<"kusinta.iot.heating.v1.FloorZoneRoo
    * @generated from field: uint32 area_share_permille = 2;
    */
   areaSharePermille: number;
-
-  /**
-   * @generated from field: bool is_control = 3;
-   */
-  isControl: boolean;
 };
 
 /**
@@ -318,14 +383,14 @@ export declare const FloorZoneRoomSchema: GenMessage<FloorZoneRoom>;
 /**
  * An electric load kept warm for comfort rather than heating a room to a target — a heated
  * bathroom floor, a towel heater — run inside its time windows. Its output's contact closed
- * means the load may heat under its own thermostat, and it rests closed: when the gateway
- * is gone the load works as it did before.
+ * means the load may heat under its own thermostat, and it rests closed: when the gateway is
+ * gone the load works as it did before.
  *
  * @generated from message kusinta.iot.heating.v1.ComfortLoad
  */
 export declare type ComfortLoad = Message<"kusinta.iot.heating.v1.ComfortLoad"> & {
   /**
-   * Assigned by the gateway; empty in a request that creates one.
+   * Assigned by the gateway, unique among heating records; empty when creating.
    *
    * @generated from field: string comfort_load_id = 1;
    */
@@ -347,13 +412,19 @@ export declare type ComfortLoad = Message<"kusinta.iot.heating.v1.ComfortLoad"> 
   output?: ContactBinding | undefined;
 
   /**
-   * When the load may heat. Empty: at no time, beyond what the plan allows for price. Set
-   * by the room's residents with SetComfortWindows; a replacement of the comfort load
-   * keeps them.
+   * When the load may heat. Empty: only when the plan allows it for price. Set with
+   * SetComfortWindows; a put of the comfort load keeps them.
    *
    * @generated from field: repeated kusinta.iot.heating.v1.ComfortWindow windows = 5;
    */
   windows: ComfortWindow[];
+
+  /**
+   * See the file comment.
+   *
+   * @generated from field: uint64 revision = 6;
+   */
+  revision: bigint;
 };
 
 /**
@@ -369,7 +440,8 @@ export declare const ComfortLoadSchema: GenMessage<ComfortLoad>;
  */
 export declare type ComfortWindow = Message<"kusinta.iot.heating.v1.ComfortWindow"> & {
   /**
-   * The days it starts on: bit 0 Monday through bit 6 Sunday.
+   * The days it starts on: bit 0 Monday through bit 6 Sunday. Not Matter's day bitmap,
+   * which starts on Sunday.
    *
    * @generated from field: uint32 weekdays = 1;
    */
@@ -396,8 +468,7 @@ export declare type ComfortWindow = Message<"kusinta.iot.heating.v1.ComfortWindo
 export declare const ComfortWindowSchema: GenMessage<ComfortWindow>;
 
 /**
- * The heating records a caller may see under a space, in reply to ListHeating, and the one
- * record a put changed.
+ * The heating records a caller may see under a space, in reply to ListHeating.
  *
  * @generated from message kusinta.iot.heating.v1.HeatingLayout
  */
@@ -408,7 +479,17 @@ export declare type HeatingLayout = Message<"kusinta.iot.heating.v1.HeatingLayou
   plants: HeatingPlant[];
 
   /**
-   * @generated from field: repeated kusinta.iot.heating.v1.ComfortLoad comfort_loads = 2;
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatingCircuit circuits = 2;
+   */
+  circuits: HeatingCircuit[];
+
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.FloorZone floor_zones = 3;
+   */
+  floorZones: FloorZone[];
+
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.ComfortLoad comfort_loads = 4;
    */
   comfortLoads: ComfortLoad[];
 };
@@ -420,46 +501,46 @@ export declare type HeatingLayout = Message<"kusinta.iot.heating.v1.HeatingLayou
 export declare const HeatingLayoutSchema: GenMessage<HeatingLayout>;
 
 /**
- * Whether a binding has passed its commissioning test: the gateway drives the output away
- * from rest under a short lease and sees the contact report the change and return to rest
- * when the lease runs out.
+ * One heating record as stored, in reply to a put.
  *
- * A binding that has not passed is never driven. Binding a different device or output,
- * replacing the device, or changing what a floor zone heats (its rooms or its control
- * room) returns it to NOT_TESTED until it passes again. Changing area shares does not.
- *
- * @generated from enum kusinta.iot.heating.v1.CommissioningState
+ * @generated from message kusinta.iot.heating.v1.HeatingRecord
  */
-export enum CommissioningState {
+export declare type HeatingRecord = Message<"kusinta.iot.heating.v1.HeatingRecord"> & {
   /**
-   * Not stated.
-   *
-   * @generated from enum value: COMMISSIONING_STATE_UNSPECIFIED = 0;
+   * @generated from oneof kusinta.iot.heating.v1.HeatingRecord.record
    */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: COMMISSIONING_STATE_NOT_TESTED = 1;
-   */
-  NOT_TESTED = 1,
-
-  /**
-   * @generated from enum value: COMMISSIONING_STATE_PASSED = 2;
-   */
-  PASSED = 2,
-
-  /**
-   * The last test failed; the binding is not driven until one passes.
-   *
-   * @generated from enum value: COMMISSIONING_STATE_FAILED = 3;
-   */
-  FAILED = 3,
-}
+  record: {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.HeatingPlant plant = 1;
+     */
+    value: HeatingPlant;
+    case: "plant";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.HeatingCircuit circuit = 2;
+     */
+    value: HeatingCircuit;
+    case: "circuit";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.FloorZone floor_zone = 3;
+     */
+    value: FloorZone;
+    case: "floorZone";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.heating.v1.ComfortLoad comfort_load = 4;
+     */
+    value: ComfortLoad;
+    case: "comfortLoad";
+  } | { case: undefined; value?: undefined };
+};
 
 /**
- * Describes the enum kusinta.iot.heating.v1.CommissioningState.
+ * Describes the message kusinta.iot.heating.v1.HeatingRecord.
+ * Use `create(HeatingRecordSchema)` to create a new message.
  */
-export declare const CommissioningStateSchema: GenEnum<CommissioningState>;
+export declare const HeatingRecordSchema: GenMessage<HeatingRecord>;
 
 /**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
@@ -496,8 +577,6 @@ export enum HeatSourceKind {
   ELECTRIC_BOILER = 5,
 
   /**
-   * Oil or pellets.
-   *
    * @generated from enum value: HEAT_SOURCE_KIND_FUEL_BOILER = 6;
    */
   FUEL_BOILER = 6,
@@ -507,31 +586,4 @@ export enum HeatSourceKind {
  * Describes the enum kusinta.iot.heating.v1.HeatSourceKind.
  */
 export declare const HeatSourceKindSchema: GenEnum<HeatSourceKind>;
-
-/**
- * @generated from enum kusinta.iot.heating.v1.CircuitKind
- */
-export enum CircuitKind {
-  /**
-   * @generated from enum value: CIRCUIT_KIND_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: CIRCUIT_KIND_RADIATOR = 1;
-   */
-  RADIATOR = 1,
-
-  /**
-   * Hydronic floor heating, with its own pump, mixing and supply cap.
-   *
-   * @generated from enum value: CIRCUIT_KIND_FLOOR = 2;
-   */
-  FLOOR = 2,
-}
-
-/**
- * Describes the enum kusinta.iot.heating.v1.CircuitKind.
- */
-export declare const CircuitKindSchema: GenEnum<CircuitKind>;
 

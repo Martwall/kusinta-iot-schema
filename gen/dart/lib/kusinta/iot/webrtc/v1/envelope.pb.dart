@@ -705,6 +705,7 @@ enum ManagementResult_Result {
   gatewayMembers,
   promotionRequests,
   heatingLayout,
+  heatingRecord,
   notSet
 }
 
@@ -734,6 +735,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $7.GatewayMembers? gatewayMembers,
     $7.PromotionRequests? promotionRequests,
     $8.HeatingLayout? heatingLayout,
+    $8.HeatingRecord? heatingRecord,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -752,6 +754,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (gatewayMembers != null) result.gatewayMembers = gatewayMembers;
     if (promotionRequests != null) result.promotionRequests = promotionRequests;
     if (heatingLayout != null) result.heatingLayout = heatingLayout;
+    if (heatingRecord != null) result.heatingRecord = heatingRecord;
     return result;
   }
 
@@ -780,6 +783,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     13: ManagementResult_Result.gatewayMembers,
     14: ManagementResult_Result.promotionRequests,
     15: ManagementResult_Result.heatingLayout,
+    16: ManagementResult_Result.heatingRecord,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -787,7 +791,7 @@ class ManagementResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -818,6 +822,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $7.PromotionRequests.create)
     ..aOM<$8.HeatingLayout>(15, _omitFieldNames ? '' : 'heatingLayout',
         subBuilder: $8.HeatingLayout.create)
+    ..aOM<$8.HeatingRecord>(16, _omitFieldNames ? '' : 'heatingRecord',
+        subBuilder: $8.HeatingRecord.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -999,7 +1005,6 @@ class ManagementResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(14)
   $7.PromotionRequests ensurePromotionRequests() => $_ensure(13);
 
-  /// list_heating, put_heating_plant, put_comfort_load
   @$pb.TagNumber(15)
   $8.HeatingLayout get heatingLayout => $_getN(14);
   @$pb.TagNumber(15)
@@ -1010,6 +1015,18 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearHeatingLayout() => $_clearField(15);
   @$pb.TagNumber(15)
   $8.HeatingLayout ensureHeatingLayout() => $_ensure(14);
+
+  /// put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load
+  @$pb.TagNumber(16)
+  $8.HeatingRecord get heatingRecord => $_getN(15);
+  @$pb.TagNumber(16)
+  set heatingRecord($8.HeatingRecord value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasHeatingRecord() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearHeatingRecord() => $_clearField(16);
+  @$pb.TagNumber(16)
+  $8.HeatingRecord ensureHeatingRecord() => $_ensure(15);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

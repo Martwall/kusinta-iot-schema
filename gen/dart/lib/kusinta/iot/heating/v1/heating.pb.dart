@@ -24,20 +24,94 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'heating.pbenum.dart';
 
+/// One attribute of one device: what a role reads or writes. Endpoint_id is required on the
+/// Matter branch of the attribute here — an absent endpoint is refused, never read as the
+/// root node.
+class DeviceAttribute extends $pb.GeneratedMessage {
+  factory DeviceAttribute({
+    $0.DeviceId? deviceId,
+    $1.AttributeRef? attribute,
+  }) {
+    final result = create();
+    if (deviceId != null) result.deviceId = deviceId;
+    if (attribute != null) result.attribute = attribute;
+    return result;
+  }
+
+  DeviceAttribute._();
+
+  factory DeviceAttribute.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeviceAttribute.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeviceAttribute',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
+        subBuilder: $0.DeviceId.create)
+    ..aOM<$1.AttributeRef>(2, _omitFieldNames ? '' : 'attribute',
+        subBuilder: $1.AttributeRef.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceAttribute clone() => DeviceAttribute()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceAttribute copyWith(void Function(DeviceAttribute) updates) =>
+      super.copyWith((message) => updates(message as DeviceAttribute))
+          as DeviceAttribute;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeviceAttribute create() => DeviceAttribute._();
+  @$core.override
+  DeviceAttribute createEmptyInstance() => create();
+  static $pb.PbList<DeviceAttribute> createRepeated() =>
+      $pb.PbList<DeviceAttribute>();
+  @$core.pragma('dart2js:noInline')
+  static DeviceAttribute getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeviceAttribute>(create);
+  static DeviceAttribute? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.DeviceId get deviceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set deviceId($0.DeviceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDeviceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDeviceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.DeviceId ensureDeviceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $1.AttributeRef get attribute => $_getN(1);
+  @$pb.TagNumber(2)
+  set attribute($1.AttributeRef value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAttribute() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAttribute() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.AttributeRef ensureAttribute() => $_ensure(1);
+}
+
 /// One device output switching one contact on the heating side: a floor zone's thermostat
 /// input, a heat-source input, a comfort load's supply.
 class ContactBinding extends $pb.GeneratedMessage {
   factory ContactBinding({
-    $0.DeviceId? deviceId,
-    $1.AttributeRef? output,
+    DeviceAttribute? output,
     $2.AttributeValue? closedValue,
-    CommissioningState? commissioning,
   }) {
     final result = create();
-    if (deviceId != null) result.deviceId = deviceId;
     if (output != null) result.output = output;
     if (closedValue != null) result.closedValue = closedValue;
-    if (commissioning != null) result.commissioning = commissioning;
     return result;
   }
 
@@ -55,17 +129,10 @@ class ContactBinding extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
       createEmptyInstance: create)
-    ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
-        subBuilder: $0.DeviceId.create)
-    ..aOM<$1.AttributeRef>(2, _omitFieldNames ? '' : 'output',
-        subBuilder: $1.AttributeRef.create)
-    ..aOM<$2.AttributeValue>(3, _omitFieldNames ? '' : 'closedValue',
+    ..aOM<DeviceAttribute>(1, _omitFieldNames ? '' : 'output',
+        subBuilder: DeviceAttribute.create)
+    ..aOM<$2.AttributeValue>(2, _omitFieldNames ? '' : 'closedValue',
         subBuilder: $2.AttributeValue.create)
-    ..e<CommissioningState>(
-        4, _omitFieldNames ? '' : 'commissioning', $pb.PbFieldType.OE,
-        defaultOrMaker: CommissioningState.COMMISSIONING_STATE_UNSPECIFIED,
-        valueOf: CommissioningState.valueOf,
-        enumValues: CommissioningState.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -89,31 +156,17 @@ class ContactBinding extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ContactBinding>(create);
   static ContactBinding? _defaultInstance;
 
+  /// OnOff on a relay channel, or a vendor parameter.
   @$pb.TagNumber(1)
-  $0.DeviceId get deviceId => $_getN(0);
+  DeviceAttribute get output => $_getN(0);
   @$pb.TagNumber(1)
-  set deviceId($0.DeviceId value) => $_setField(1, value);
+  set output(DeviceAttribute value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasDeviceId() => $_has(0);
+  $core.bool hasOutput() => $_has(0);
   @$pb.TagNumber(1)
-  void clearDeviceId() => $_clearField(1);
+  void clearOutput() => $_clearField(1);
   @$pb.TagNumber(1)
-  $0.DeviceId ensureDeviceId() => $_ensure(0);
-
-  /// The attribute the gateway writes, on its endpoint: OnOff on a relay channel, or a
-  /// vendor parameter. The producer states how a write to it behaves
-  /// (device.v1.AttributeBehaviour); the gateway refuses to bind an output whose write is
-  /// not stated as leased.
-  @$pb.TagNumber(2)
-  $1.AttributeRef get output => $_getN(1);
-  @$pb.TagNumber(2)
-  set output($1.AttributeRef value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasOutput() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearOutput() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $1.AttributeRef ensureOutput() => $_ensure(1);
+  DeviceAttribute ensureOutput() => $_ensure(0);
 
   /// The value of the output with which the contact is closed. A wiring fact, not a device
   /// fact: a changeover relay wired through its normally closed contact closes it with the
@@ -122,120 +175,32 @@ class ContactBinding extends $pb.GeneratedMessage {
   /// output's value alone.
   ///
   /// Each role has a fixed rest state (see the role), and the output's lapse value
-  /// (device.v1.LeasedWrite.lapse_value) must give it: the gateway refuses a binding whose
-  /// lapse value, read through this value, does not leave the contact where the role rests.
-  @$pb.TagNumber(3)
-  $2.AttributeValue get closedValue => $_getN(2);
-  @$pb.TagNumber(3)
-  set closedValue($2.AttributeValue value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasClosedValue() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearClosedValue() => $_clearField(3);
-  @$pb.TagNumber(3)
-  $2.AttributeValue ensureClosedValue() => $_ensure(2);
-
-  /// Set by the gateway, ignored in a request.
-  @$pb.TagNumber(4)
-  CommissioningState get commissioning => $_getN(3);
-  @$pb.TagNumber(4)
-  set commissioning(CommissioningState value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasCommissioning() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearCommissioning() => $_clearField(4);
+  /// (device.v1.LeasedWrite.lapse_value), read through this value, must leave the contact
+  /// where the role rests.
+  @$pb.TagNumber(2)
+  $2.AttributeValue get closedValue => $_getN(1);
+  @$pb.TagNumber(2)
+  set closedValue($2.AttributeValue value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasClosedValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearClosedValue() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.AttributeValue ensureClosedValue() => $_ensure(1);
 }
 
-/// A reading the heating depends on: a pipe probe, a meter.
-class ReadingBinding extends $pb.GeneratedMessage {
-  factory ReadingBinding({
-    $0.DeviceId? deviceId,
-    $1.AttributeRef? reading,
-  }) {
-    final result = create();
-    if (deviceId != null) result.deviceId = deviceId;
-    if (reading != null) result.reading = reading;
-    return result;
-  }
+enum HeatingPlant_Control { heatPump, notSet }
 
-  ReadingBinding._();
-
-  factory ReadingBinding.fromBuffer($core.List<$core.int> data,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
-  factory ReadingBinding.fromJson($core.String json,
-          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
-
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'ReadingBinding',
-      package: const $pb.PackageName(
-          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
-      createEmptyInstance: create)
-    ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
-        subBuilder: $0.DeviceId.create)
-    ..aOM<$1.AttributeRef>(2, _omitFieldNames ? '' : 'reading',
-        subBuilder: $1.AttributeRef.create)
-    ..hasRequiredFields = false;
-
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ReadingBinding clone() => ReadingBinding()..mergeFromMessage(this);
-  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  ReadingBinding copyWith(void Function(ReadingBinding) updates) =>
-      super.copyWith((message) => updates(message as ReadingBinding))
-          as ReadingBinding;
-
-  @$core.override
-  $pb.BuilderInfo get info_ => _i;
-
-  @$core.pragma('dart2js:noInline')
-  static ReadingBinding create() => ReadingBinding._();
-  @$core.override
-  ReadingBinding createEmptyInstance() => create();
-  static $pb.PbList<ReadingBinding> createRepeated() =>
-      $pb.PbList<ReadingBinding>();
-  @$core.pragma('dart2js:noInline')
-  static ReadingBinding getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ReadingBinding>(create);
-  static ReadingBinding? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $0.DeviceId get deviceId => $_getN(0);
-  @$pb.TagNumber(1)
-  set deviceId($0.DeviceId value) => $_setField(1, value);
-  @$pb.TagNumber(1)
-  $core.bool hasDeviceId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDeviceId() => $_clearField(1);
-  @$pb.TagNumber(1)
-  $0.DeviceId ensureDeviceId() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  $1.AttributeRef get reading => $_getN(1);
-  @$pb.TagNumber(2)
-  set reading($1.AttributeRef value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasReading() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearReading() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $1.AttributeRef ensureReading() => $_ensure(1);
-}
-
-/// One heat source and what the gateway reads and drives of it. Its circuits carry the heat
-/// to the rooms.
+/// One heat source.
 class HeatingPlant extends $pb.GeneratedMessage {
   factory HeatingPlant({
     $core.String? plantId,
     $0.SpaceId? spaceId,
     $core.String? name,
     HeatSourceKind? source,
-    $0.DeviceId? heatSourceDeviceId,
-    ContactBinding? sgReadyBlock,
-    ContactBinding? sgReadyBoost,
-    ContactBinding? addHeatBlock,
-    ReadingBinding? meter,
-    $core.Iterable<HeatingCircuit>? circuits,
+    $0.DeviceId? readingsDeviceId,
+    HeatPumpControl? heatPump,
+    DeviceAttribute? meter,
     $fixnum.Int64? revision,
   }) {
     final result = create();
@@ -243,13 +208,9 @@ class HeatingPlant extends $pb.GeneratedMessage {
     if (spaceId != null) result.spaceId = spaceId;
     if (name != null) result.name = name;
     if (source != null) result.source = source;
-    if (heatSourceDeviceId != null)
-      result.heatSourceDeviceId = heatSourceDeviceId;
-    if (sgReadyBlock != null) result.sgReadyBlock = sgReadyBlock;
-    if (sgReadyBoost != null) result.sgReadyBoost = sgReadyBoost;
-    if (addHeatBlock != null) result.addHeatBlock = addHeatBlock;
+    if (readingsDeviceId != null) result.readingsDeviceId = readingsDeviceId;
+    if (heatPump != null) result.heatPump = heatPump;
     if (meter != null) result.meter = meter;
-    if (circuits != null) result.circuits.addAll(circuits);
     if (revision != null) result.revision = revision;
     return result;
   }
@@ -263,11 +224,17 @@ class HeatingPlant extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
+  static const $core.Map<$core.int, HeatingPlant_Control>
+      _HeatingPlant_ControlByTag = {
+    6: HeatingPlant_Control.heatPump,
+    0: HeatingPlant_Control.notSet
+  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'HeatingPlant',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
       createEmptyInstance: create)
+    ..oo(0, [6])
     ..aOS(1, _omitFieldNames ? '' : 'plantId')
     ..aOM<$0.SpaceId>(2, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
@@ -276,21 +243,14 @@ class HeatingPlant extends $pb.GeneratedMessage {
         defaultOrMaker: HeatSourceKind.HEAT_SOURCE_KIND_UNSPECIFIED,
         valueOf: HeatSourceKind.valueOf,
         enumValues: HeatSourceKind.values)
-    ..aOM<$0.DeviceId>(5, _omitFieldNames ? '' : 'heatSourceDeviceId',
+    ..aOM<$0.DeviceId>(5, _omitFieldNames ? '' : 'readingsDeviceId',
         subBuilder: $0.DeviceId.create)
-    ..aOM<ContactBinding>(6, _omitFieldNames ? '' : 'sgReadyBlock',
-        subBuilder: ContactBinding.create)
-    ..aOM<ContactBinding>(7, _omitFieldNames ? '' : 'sgReadyBoost',
-        subBuilder: ContactBinding.create)
-    ..aOM<ContactBinding>(8, _omitFieldNames ? '' : 'addHeatBlock',
-        subBuilder: ContactBinding.create)
-    ..aOM<ReadingBinding>(9, _omitFieldNames ? '' : 'meter',
-        subBuilder: ReadingBinding.create)
-    ..pc<HeatingCircuit>(
-        10, _omitFieldNames ? '' : 'circuits', $pb.PbFieldType.PM,
-        subBuilder: HeatingCircuit.create)
+    ..aOM<HeatPumpControl>(6, _omitFieldNames ? '' : 'heatPump',
+        subBuilder: HeatPumpControl.create)
+    ..aOM<DeviceAttribute>(7, _omitFieldNames ? '' : 'meter',
+        subBuilder: DeviceAttribute.create)
     ..a<$fixnum.Int64>(
-        11, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        8, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
@@ -315,7 +275,11 @@ class HeatingPlant extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<HeatingPlant>(create);
   static HeatingPlant? _defaultInstance;
 
-  /// Assigned by the gateway; empty in a request that creates one.
+  HeatingPlant_Control whichControl() =>
+      _HeatingPlant_ControlByTag[$_whichOneof(0)]!;
+  void clearControl() => $_clearField($_whichOneof(0));
+
+  /// Assigned by the gateway, unique among heating records; empty when creating.
   @$pb.TagNumber(1)
   $core.String get plantId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -357,108 +321,169 @@ class HeatingPlant extends $pb.GeneratedMessage {
 
   /// The device the heat source's own readings come from — its temperatures, compressor and
   /// hot-water state — when it has one. Read only: the gateway drives a heat source through
-  /// the contact bindings below, never through this device.
+  /// the plant's control, never through this device.
   @$pb.TagNumber(5)
-  $0.DeviceId get heatSourceDeviceId => $_getN(4);
+  $0.DeviceId get readingsDeviceId => $_getN(4);
   @$pb.TagNumber(5)
-  set heatSourceDeviceId($0.DeviceId value) => $_setField(5, value);
+  set readingsDeviceId($0.DeviceId value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasHeatSourceDeviceId() => $_has(4);
+  $core.bool hasReadingsDeviceId() => $_has(4);
   @$pb.TagNumber(5)
-  void clearHeatSourceDeviceId() => $_clearField(5);
+  void clearReadingsDeviceId() => $_clearField(5);
   @$pb.TagNumber(5)
-  $0.DeviceId ensureHeatSourceDeviceId() => $_ensure(4);
+  $0.DeviceId ensureReadingsDeviceId() => $_ensure(4);
 
-  /// The heat source's SG Ready inputs, by what each means closed alone: sg_ready_block
-  /// closed alone blocks the heat source, sg_ready_boost closed alone recommends running
-  /// harder, both closed commands it to, and both open is normal operation. Both rest open,
-  /// so a lapsed lease or a stopped gateway leaves the heat source running normally. Bound
-  /// together or not at all.
   @$pb.TagNumber(6)
-  ContactBinding get sgReadyBlock => $_getN(5);
+  HeatPumpControl get heatPump => $_getN(5);
   @$pb.TagNumber(6)
-  set sgReadyBlock(ContactBinding value) => $_setField(6, value);
+  set heatPump(HeatPumpControl value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasSgReadyBlock() => $_has(5);
+  $core.bool hasHeatPump() => $_has(5);
   @$pb.TagNumber(6)
-  void clearSgReadyBlock() => $_clearField(6);
+  void clearHeatPump() => $_clearField(6);
   @$pb.TagNumber(6)
-  ContactBinding ensureSgReadyBlock() => $_ensure(5);
-
-  @$pb.TagNumber(7)
-  ContactBinding get sgReadyBoost => $_getN(6);
-  @$pb.TagNumber(7)
-  set sgReadyBoost(ContactBinding value) => $_setField(7, value);
-  @$pb.TagNumber(7)
-  $core.bool hasSgReadyBoost() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearSgReadyBoost() => $_clearField(7);
-  @$pb.TagNumber(7)
-  ContactBinding ensureSgReadyBoost() => $_ensure(6);
-
-  /// The heat source's input that blocks its add-on (electric) heat while closed. Rests
-  /// open: add-on heat allowed.
-  @$pb.TagNumber(8)
-  ContactBinding get addHeatBlock => $_getN(7);
-  @$pb.TagNumber(8)
-  set addHeatBlock(ContactBinding value) => $_setField(8, value);
-  @$pb.TagNumber(8)
-  $core.bool hasAddHeatBlock() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearAddHeatBlock() => $_clearField(8);
-  @$pb.TagNumber(8)
-  ContactBinding ensureAddHeatBlock() => $_ensure(7);
+  HeatPumpControl ensureHeatPump() => $_ensure(5);
 
   /// The electricity or heat meter the plant is measured by.
-  @$pb.TagNumber(9)
-  ReadingBinding get meter => $_getN(8);
-  @$pb.TagNumber(9)
-  set meter(ReadingBinding value) => $_setField(9, value);
-  @$pb.TagNumber(9)
-  $core.bool hasMeter() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearMeter() => $_clearField(9);
-  @$pb.TagNumber(9)
-  ReadingBinding ensureMeter() => $_ensure(8);
+  @$pb.TagNumber(7)
+  DeviceAttribute get meter => $_getN(6);
+  @$pb.TagNumber(7)
+  set meter(DeviceAttribute value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasMeter() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMeter() => $_clearField(7);
+  @$pb.TagNumber(7)
+  DeviceAttribute ensureMeter() => $_ensure(6);
 
-  @$pb.TagNumber(10)
-  $pb.PbList<HeatingCircuit> get circuits => $_getList(9);
-
-  /// Set by the gateway, and bumped by every change. A replacement names the revision it
-  /// replaces and is refused as FAILED_PRECONDITION with metadata "reason"
-  /// "STALE_REVISION" when the plant has changed since.
-  @$pb.TagNumber(11)
-  $fixnum.Int64 get revision => $_getI64(10);
-  @$pb.TagNumber(11)
-  set revision($fixnum.Int64 value) => $_setInt64(10, value);
-  @$pb.TagNumber(11)
-  $core.bool hasRevision() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearRevision() => $_clearField(11);
+  /// See the file comment.
+  @$pb.TagNumber(8)
+  $fixnum.Int64 get revision => $_getI64(7);
+  @$pb.TagNumber(8)
+  set revision($fixnum.Int64 value) => $_setInt64(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasRevision() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearRevision() => $_clearField(8);
 }
+
+/// A heat pump's control inputs.
+class HeatPumpControl extends $pb.GeneratedMessage {
+  factory HeatPumpControl({
+    ContactBinding? sgReadyBlock,
+    ContactBinding? sgReadyBoost,
+    ContactBinding? addOnHeaterBlock,
+  }) {
+    final result = create();
+    if (sgReadyBlock != null) result.sgReadyBlock = sgReadyBlock;
+    if (sgReadyBoost != null) result.sgReadyBoost = sgReadyBoost;
+    if (addOnHeaterBlock != null) result.addOnHeaterBlock = addOnHeaterBlock;
+    return result;
+  }
+
+  HeatPumpControl._();
+
+  factory HeatPumpControl.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatPumpControl.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatPumpControl',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOM<ContactBinding>(1, _omitFieldNames ? '' : 'sgReadyBlock',
+        subBuilder: ContactBinding.create)
+    ..aOM<ContactBinding>(2, _omitFieldNames ? '' : 'sgReadyBoost',
+        subBuilder: ContactBinding.create)
+    ..aOM<ContactBinding>(3, _omitFieldNames ? '' : 'addOnHeaterBlock',
+        subBuilder: ContactBinding.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatPumpControl clone() => HeatPumpControl()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatPumpControl copyWith(void Function(HeatPumpControl) updates) =>
+      super.copyWith((message) => updates(message as HeatPumpControl))
+          as HeatPumpControl;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatPumpControl create() => HeatPumpControl._();
+  @$core.override
+  HeatPumpControl createEmptyInstance() => create();
+  static $pb.PbList<HeatPumpControl> createRepeated() =>
+      $pb.PbList<HeatPumpControl>();
+  @$core.pragma('dart2js:noInline')
+  static HeatPumpControl getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatPumpControl>(create);
+  static HeatPumpControl? _defaultInstance;
+
+  /// The SG Ready inputs, by what each means closed alone: sg_ready_block closed alone
+  /// blocks the heat pump, sg_ready_boost closed alone recommends running harder, both
+  /// closed commands it to, and both open is normal operation. Both rest open, so a lapsed
+  /// lease or a stopped gateway leaves the heat pump running normally. Bound together or not
+  /// at all.
+  @$pb.TagNumber(1)
+  ContactBinding get sgReadyBlock => $_getN(0);
+  @$pb.TagNumber(1)
+  set sgReadyBlock(ContactBinding value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSgReadyBlock() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSgReadyBlock() => $_clearField(1);
+  @$pb.TagNumber(1)
+  ContactBinding ensureSgReadyBlock() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ContactBinding get sgReadyBoost => $_getN(1);
+  @$pb.TagNumber(2)
+  set sgReadyBoost(ContactBinding value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSgReadyBoost() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSgReadyBoost() => $_clearField(2);
+  @$pb.TagNumber(2)
+  ContactBinding ensureSgReadyBoost() => $_ensure(1);
+
+  /// The input that blocks the heat pump's add-on (electric) heater while closed. Rests
+  /// open: the add-on heater is allowed.
+  @$pb.TagNumber(3)
+  ContactBinding get addOnHeaterBlock => $_getN(2);
+  @$pb.TagNumber(3)
+  set addOnHeaterBlock(ContactBinding value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAddOnHeaterBlock() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAddOnHeaterBlock() => $_clearField(3);
+  @$pb.TagNumber(3)
+  ContactBinding ensureAddOnHeaterBlock() => $_ensure(2);
+}
+
+enum HeatingCircuit_Distribution { radiator, floor, notSet }
 
 /// One heating circuit of a plant. Supply temperature and its cap are per circuit.
 class HeatingCircuit extends $pb.GeneratedMessage {
   factory HeatingCircuit({
     $core.String? circuitId,
+    $core.String? plantId,
     $core.String? name,
-    CircuitKind? kind,
-    $core.bool? mixingValve,
-    $core.int? supplyCapCentidegrees,
-    ReadingBinding? supplyProbe,
-    ReadingBinding? returnProbe,
-    $core.Iterable<FloorZone>? zones,
+    RadiatorCircuit? radiator,
+    FloorCircuit? floor,
+    $fixnum.Int64? revision,
   }) {
     final result = create();
     if (circuitId != null) result.circuitId = circuitId;
+    if (plantId != null) result.plantId = plantId;
     if (name != null) result.name = name;
-    if (kind != null) result.kind = kind;
-    if (mixingValve != null) result.mixingValve = mixingValve;
-    if (supplyCapCentidegrees != null)
-      result.supplyCapCentidegrees = supplyCapCentidegrees;
-    if (supplyProbe != null) result.supplyProbe = supplyProbe;
-    if (returnProbe != null) result.returnProbe = returnProbe;
-    if (zones != null) result.zones.addAll(zones);
+    if (radiator != null) result.radiator = radiator;
+    if (floor != null) result.floor = floor;
+    if (revision != null) result.revision = revision;
     return result;
   }
 
@@ -471,26 +496,28 @@ class HeatingCircuit extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
+  static const $core.Map<$core.int, HeatingCircuit_Distribution>
+      _HeatingCircuit_DistributionByTag = {
+    4: HeatingCircuit_Distribution.radiator,
+    5: HeatingCircuit_Distribution.floor,
+    0: HeatingCircuit_Distribution.notSet
+  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'HeatingCircuit',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
       createEmptyInstance: create)
+    ..oo(0, [4, 5])
     ..aOS(1, _omitFieldNames ? '' : 'circuitId')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..e<CircuitKind>(3, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: CircuitKind.CIRCUIT_KIND_UNSPECIFIED,
-        valueOf: CircuitKind.valueOf,
-        enumValues: CircuitKind.values)
-    ..aOB(4, _omitFieldNames ? '' : 'mixingValve')
-    ..a<$core.int>(
-        5, _omitFieldNames ? '' : 'supplyCapCentidegrees', $pb.PbFieldType.OS3)
-    ..aOM<ReadingBinding>(6, _omitFieldNames ? '' : 'supplyProbe',
-        subBuilder: ReadingBinding.create)
-    ..aOM<ReadingBinding>(7, _omitFieldNames ? '' : 'returnProbe',
-        subBuilder: ReadingBinding.create)
-    ..pc<FloorZone>(8, _omitFieldNames ? '' : 'zones', $pb.PbFieldType.PM,
-        subBuilder: FloorZone.create)
+    ..aOS(2, _omitFieldNames ? '' : 'plantId')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOM<RadiatorCircuit>(4, _omitFieldNames ? '' : 'radiator',
+        subBuilder: RadiatorCircuit.create)
+    ..aOM<FloorCircuit>(5, _omitFieldNames ? '' : 'floor',
+        subBuilder: FloorCircuit.create)
+    ..a<$fixnum.Int64>(
+        6, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -514,7 +541,11 @@ class HeatingCircuit extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<HeatingCircuit>(create);
   static HeatingCircuit? _defaultInstance;
 
-  /// Assigned by the gateway; empty for a new circuit in a plant replacement.
+  HeatingCircuit_Distribution whichDistribution() =>
+      _HeatingCircuit_DistributionByTag[$_whichOneof(0)]!;
+  void clearDistribution() => $_clearField($_whichOneof(0));
+
+  /// Assigned by the gateway, unique among heating records; empty when creating.
   @$pb.TagNumber(1)
   $core.String get circuitId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -525,87 +556,227 @@ class HeatingCircuit extends $pb.GeneratedMessage {
   void clearCircuitId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
+  $core.String get plantId => $_getSZ(1);
   @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
+  set plantId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
+  $core.bool hasPlantId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  void clearPlantId() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  CircuitKind get kind => $_getN(2);
+  $core.String get name => $_getSZ(2);
   @$pb.TagNumber(3)
-  set kind(CircuitKind value) => $_setField(3, value);
+  set name($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasKind() => $_has(2);
+  $core.bool hasName() => $_has(2);
   @$pb.TagNumber(3)
-  void clearKind() => $_clearField(3);
+  void clearName() => $_clearField(3);
 
-  /// FLOOR only: whether a mixing valve feeds the circuit, and the supply temperature its
-  /// self-acting limiter caps it at, in centidegrees. Absent: not known, never 0 °C.
   @$pb.TagNumber(4)
-  $core.bool get mixingValve => $_getBF(3);
+  RadiatorCircuit get radiator => $_getN(3);
   @$pb.TagNumber(4)
-  set mixingValve($core.bool value) => $_setBool(3, value);
+  set radiator(RadiatorCircuit value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasMixingValve() => $_has(3);
+  $core.bool hasRadiator() => $_has(3);
   @$pb.TagNumber(4)
-  void clearMixingValve() => $_clearField(4);
+  void clearRadiator() => $_clearField(4);
+  @$pb.TagNumber(4)
+  RadiatorCircuit ensureRadiator() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $core.int get supplyCapCentidegrees => $_getIZ(4);
+  FloorCircuit get floor => $_getN(4);
   @$pb.TagNumber(5)
-  set supplyCapCentidegrees($core.int value) => $_setSignedInt32(4, value);
+  set floor(FloorCircuit value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasSupplyCapCentidegrees() => $_has(4);
+  $core.bool hasFloor() => $_has(4);
   @$pb.TagNumber(5)
-  void clearSupplyCapCentidegrees() => $_clearField(5);
+  void clearFloor() => $_clearField(5);
+  @$pb.TagNumber(5)
+  FloorCircuit ensureFloor() => $_ensure(4);
 
-  /// FLOOR only: probes on the circuit's supply (after mixing) and return.
+  /// See the file comment.
   @$pb.TagNumber(6)
-  ReadingBinding get supplyProbe => $_getN(5);
+  $fixnum.Int64 get revision => $_getI64(5);
   @$pb.TagNumber(6)
-  set supplyProbe(ReadingBinding value) => $_setField(6, value);
+  set revision($fixnum.Int64 value) => $_setInt64(5, value);
   @$pb.TagNumber(6)
-  $core.bool hasSupplyProbe() => $_has(5);
+  $core.bool hasRevision() => $_has(5);
   @$pb.TagNumber(6)
-  void clearSupplyProbe() => $_clearField(6);
-  @$pb.TagNumber(6)
-  ReadingBinding ensureSupplyProbe() => $_ensure(5);
+  void clearRevision() => $_clearField(6);
+}
 
-  @$pb.TagNumber(7)
-  ReadingBinding get returnProbe => $_getN(6);
-  @$pb.TagNumber(7)
-  set returnProbe(ReadingBinding value) => $_setField(7, value);
-  @$pb.TagNumber(7)
-  $core.bool hasReturnProbe() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearReturnProbe() => $_clearField(7);
-  @$pb.TagNumber(7)
-  ReadingBinding ensureReturnProbe() => $_ensure(6);
+/// A radiator circuit. Its valves belong to the rooms (climate.v1.RoomClimate).
+class RadiatorCircuit extends $pb.GeneratedMessage {
+  factory RadiatorCircuit() => create();
 
-  /// FLOOR only. A radiator circuit carries none; its valves belong to the rooms.
-  @$pb.TagNumber(8)
-  $pb.PbList<FloorZone> get zones => $_getList(7);
+  RadiatorCircuit._();
+
+  factory RadiatorCircuit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RadiatorCircuit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RadiatorCircuit',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RadiatorCircuit clone() => RadiatorCircuit()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RadiatorCircuit copyWith(void Function(RadiatorCircuit) updates) =>
+      super.copyWith((message) => updates(message as RadiatorCircuit))
+          as RadiatorCircuit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RadiatorCircuit create() => RadiatorCircuit._();
+  @$core.override
+  RadiatorCircuit createEmptyInstance() => create();
+  static $pb.PbList<RadiatorCircuit> createRepeated() =>
+      $pb.PbList<RadiatorCircuit>();
+  @$core.pragma('dart2js:noInline')
+  static RadiatorCircuit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RadiatorCircuit>(create);
+  static RadiatorCircuit? _defaultInstance;
+}
+
+/// Hydronic floor heating: its own pump, mixing and supply cap, and the floor zones on its
+/// manifold.
+class FloorCircuit extends $pb.GeneratedMessage {
+  factory FloorCircuit({
+    $core.bool? mixingValve,
+    $core.int? supplyCapCentidegrees,
+    DeviceAttribute? supplyProbe,
+    DeviceAttribute? returnProbe,
+  }) {
+    final result = create();
+    if (mixingValve != null) result.mixingValve = mixingValve;
+    if (supplyCapCentidegrees != null)
+      result.supplyCapCentidegrees = supplyCapCentidegrees;
+    if (supplyProbe != null) result.supplyProbe = supplyProbe;
+    if (returnProbe != null) result.returnProbe = returnProbe;
+    return result;
+  }
+
+  FloorCircuit._();
+
+  factory FloorCircuit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FloorCircuit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FloorCircuit',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'mixingValve')
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'supplyCapCentidegrees', $pb.PbFieldType.OS3)
+    ..aOM<DeviceAttribute>(3, _omitFieldNames ? '' : 'supplyProbe',
+        subBuilder: DeviceAttribute.create)
+    ..aOM<DeviceAttribute>(4, _omitFieldNames ? '' : 'returnProbe',
+        subBuilder: DeviceAttribute.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FloorCircuit clone() => FloorCircuit()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FloorCircuit copyWith(void Function(FloorCircuit) updates) =>
+      super.copyWith((message) => updates(message as FloorCircuit))
+          as FloorCircuit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FloorCircuit create() => FloorCircuit._();
+  @$core.override
+  FloorCircuit createEmptyInstance() => create();
+  static $pb.PbList<FloorCircuit> createRepeated() =>
+      $pb.PbList<FloorCircuit>();
+  @$core.pragma('dart2js:noInline')
+  static FloorCircuit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FloorCircuit>(create);
+  static FloorCircuit? _defaultInstance;
+
+  /// Whether a mixing valve feeds the circuit.
+  @$pb.TagNumber(1)
+  $core.bool get mixingValve => $_getBF(0);
+  @$pb.TagNumber(1)
+  set mixingValve($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMixingValve() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMixingValve() => $_clearField(1);
+
+  /// The supply temperature its self-acting limiter caps it at, in centidegrees. Absent: not
+  /// known, never 0 °C.
+  @$pb.TagNumber(2)
+  $core.int get supplyCapCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set supplyCapCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSupplyCapCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSupplyCapCentidegrees() => $_clearField(2);
+
+  /// Probes on the supply (after mixing) and the return.
+  @$pb.TagNumber(3)
+  DeviceAttribute get supplyProbe => $_getN(2);
+  @$pb.TagNumber(3)
+  set supplyProbe(DeviceAttribute value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSupplyProbe() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSupplyProbe() => $_clearField(3);
+  @$pb.TagNumber(3)
+  DeviceAttribute ensureSupplyProbe() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  DeviceAttribute get returnProbe => $_getN(3);
+  @$pb.TagNumber(4)
+  set returnProbe(DeviceAttribute value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasReturnProbe() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearReturnProbe() => $_clearField(4);
+  @$pb.TagNumber(4)
+  DeviceAttribute ensureReturnProbe() => $_ensure(3);
 }
 
 /// One loop or group of loops on a floor circuit's manifold, switched by one output on its
-/// wiring centre's thermostat input. The output's contact closed means the zone heats, and
-/// it rests closed: when the gateway is gone the zone heats, capped only by the circuit's
-/// supply limiter.
+/// wiring centre's thermostat input. The output's contact closed means the zone heats, and it
+/// rests closed: when the gateway is gone the zone heats, capped only by the circuit's supply
+/// limiter.
 class FloorZone extends $pb.GeneratedMessage {
   factory FloorZone({
     $core.String? zoneId,
+    $core.String? circuitId,
     $core.String? name,
     ContactBinding? output,
     $core.Iterable<FloorZoneRoom>? rooms,
+    $0.SpaceId? controlRoomId,
+    $fixnum.Int64? revision,
   }) {
     final result = create();
     if (zoneId != null) result.zoneId = zoneId;
+    if (circuitId != null) result.circuitId = circuitId;
     if (name != null) result.name = name;
     if (output != null) result.output = output;
     if (rooms != null) result.rooms.addAll(rooms);
+    if (controlRoomId != null) result.controlRoomId = controlRoomId;
+    if (revision != null) result.revision = revision;
     return result;
   }
 
@@ -624,11 +795,17 @@ class FloorZone extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'zoneId')
-    ..aOS(2, _omitFieldNames ? '' : 'name')
-    ..aOM<ContactBinding>(3, _omitFieldNames ? '' : 'output',
+    ..aOS(2, _omitFieldNames ? '' : 'circuitId')
+    ..aOS(3, _omitFieldNames ? '' : 'name')
+    ..aOM<ContactBinding>(4, _omitFieldNames ? '' : 'output',
         subBuilder: ContactBinding.create)
-    ..pc<FloorZoneRoom>(4, _omitFieldNames ? '' : 'rooms', $pb.PbFieldType.PM,
+    ..pc<FloorZoneRoom>(5, _omitFieldNames ? '' : 'rooms', $pb.PbFieldType.PM,
         subBuilder: FloorZoneRoom.create)
+    ..aOM<$0.SpaceId>(6, _omitFieldNames ? '' : 'controlRoomId',
+        subBuilder: $0.SpaceId.create)
+    ..a<$fixnum.Int64>(
+        7, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -650,7 +827,7 @@ class FloorZone extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FloorZone>(create);
   static FloorZone? _defaultInstance;
 
-  /// Assigned by the gateway; empty for a new zone.
+  /// Assigned by the gateway, unique among heating records; empty when creating.
   @$pb.TagNumber(1)
   $core.String get zoneId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -660,44 +837,73 @@ class FloorZone extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearZoneId() => $_clearField(1);
 
+  /// A FLOOR circuit.
+  @$pb.TagNumber(2)
+  $core.String get circuitId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set circuitId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCircuitId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCircuitId() => $_clearField(2);
+
   /// As marked on the manifold or the drawing ("SL 2").
-  @$pb.TagNumber(2)
-  $core.String get name => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set name($core.String value) => $_setString(1, value);
-  @$pb.TagNumber(2)
-  $core.bool hasName() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearName() => $_clearField(2);
+  @$pb.TagNumber(3)
+  $core.String get name => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set name($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasName() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearName() => $_clearField(3);
 
-  @$pb.TagNumber(3)
-  ContactBinding get output => $_getN(2);
-  @$pb.TagNumber(3)
-  set output(ContactBinding value) => $_setField(3, value);
-  @$pb.TagNumber(3)
-  $core.bool hasOutput() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearOutput() => $_clearField(3);
-  @$pb.TagNumber(3)
-  ContactBinding ensureOutput() => $_ensure(2);
-
-  /// The rooms the zone heats. A zone may heat several rooms and a room may be heated by
-  /// several zones. Exactly one room is the zone's control room, and only its error, its
-  /// sensor and its open window steer the zone; the shares of one zone sum to 1000.
   @$pb.TagNumber(4)
-  $pb.PbList<FloorZoneRoom> get rooms => $_getList(3);
+  ContactBinding get output => $_getN(3);
+  @$pb.TagNumber(4)
+  set output(ContactBinding value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOutput() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOutput() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ContactBinding ensureOutput() => $_ensure(3);
+
+  /// The rooms the zone heats, each a room within its plant's space, with shares summing to
+  /// 1000. A zone may heat several rooms and a room may be heated by several zones.
+  @$pb.TagNumber(5)
+  $pb.PbList<FloorZoneRoom> get rooms => $_getList(4);
+
+  /// One of rooms. Only its error, its sensor and its open window steer the zone.
+  @$pb.TagNumber(6)
+  $0.SpaceId get controlRoomId => $_getN(5);
+  @$pb.TagNumber(6)
+  set controlRoomId($0.SpaceId value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasControlRoomId() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearControlRoomId() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $0.SpaceId ensureControlRoomId() => $_ensure(5);
+
+  /// See the file comment.
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get revision => $_getI64(6);
+  @$pb.TagNumber(7)
+  set revision($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasRevision() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearRevision() => $_clearField(7);
 }
 
 class FloorZoneRoom extends $pb.GeneratedMessage {
   factory FloorZoneRoom({
     $0.SpaceId? roomId,
     $core.int? areaSharePermille,
-    $core.bool? isControl,
   }) {
     final result = create();
     if (roomId != null) result.roomId = roomId;
     if (areaSharePermille != null) result.areaSharePermille = areaSharePermille;
-    if (isControl != null) result.isControl = isControl;
     return result;
   }
 
@@ -719,7 +925,6 @@ class FloorZoneRoom extends $pb.GeneratedMessage {
         subBuilder: $0.SpaceId.create)
     ..a<$core.int>(
         2, _omitFieldNames ? '' : 'areaSharePermille', $pb.PbFieldType.OU3)
-    ..aOB(3, _omitFieldNames ? '' : 'isControl')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -743,7 +948,6 @@ class FloorZoneRoom extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<FloorZoneRoom>(create);
   static FloorZoneRoom? _defaultInstance;
 
-  /// A room within the plant's space.
   @$pb.TagNumber(1)
   $0.SpaceId get roomId => $_getN(0);
   @$pb.TagNumber(1)
@@ -764,21 +968,12 @@ class FloorZoneRoom extends $pb.GeneratedMessage {
   $core.bool hasAreaSharePermille() => $_has(1);
   @$pb.TagNumber(2)
   void clearAreaSharePermille() => $_clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.bool get isControl => $_getBF(2);
-  @$pb.TagNumber(3)
-  set isControl($core.bool value) => $_setBool(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasIsControl() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearIsControl() => $_clearField(3);
 }
 
 /// An electric load kept warm for comfort rather than heating a room to a target — a heated
 /// bathroom floor, a towel heater — run inside its time windows. Its output's contact closed
-/// means the load may heat under its own thermostat, and it rests closed: when the gateway
-/// is gone the load works as it did before.
+/// means the load may heat under its own thermostat, and it rests closed: when the gateway is
+/// gone the load works as it did before.
 class ComfortLoad extends $pb.GeneratedMessage {
   factory ComfortLoad({
     $core.String? comfortLoadId,
@@ -786,6 +981,7 @@ class ComfortLoad extends $pb.GeneratedMessage {
     $core.String? name,
     ContactBinding? output,
     $core.Iterable<ComfortWindow>? windows,
+    $fixnum.Int64? revision,
   }) {
     final result = create();
     if (comfortLoadId != null) result.comfortLoadId = comfortLoadId;
@@ -793,6 +989,7 @@ class ComfortLoad extends $pb.GeneratedMessage {
     if (name != null) result.name = name;
     if (output != null) result.output = output;
     if (windows != null) result.windows.addAll(windows);
+    if (revision != null) result.revision = revision;
     return result;
   }
 
@@ -818,6 +1015,9 @@ class ComfortLoad extends $pb.GeneratedMessage {
         subBuilder: ContactBinding.create)
     ..pc<ComfortWindow>(5, _omitFieldNames ? '' : 'windows', $pb.PbFieldType.PM,
         subBuilder: ComfortWindow.create)
+    ..a<$fixnum.Int64>(
+        6, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -840,7 +1040,7 @@ class ComfortLoad extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ComfortLoad>(create);
   static ComfortLoad? _defaultInstance;
 
-  /// Assigned by the gateway; empty in a request that creates one.
+  /// Assigned by the gateway, unique among heating records; empty when creating.
   @$pb.TagNumber(1)
   $core.String get comfortLoadId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -881,11 +1081,20 @@ class ComfortLoad extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ContactBinding ensureOutput() => $_ensure(3);
 
-  /// When the load may heat. Empty: at no time, beyond what the plan allows for price. Set
-  /// by the room's residents with SetComfortWindows; a replacement of the comfort load
-  /// keeps them.
+  /// When the load may heat. Empty: only when the plan allows it for price. Set with
+  /// SetComfortWindows; a put of the comfort load keeps them.
   @$pb.TagNumber(5)
   $pb.PbList<ComfortWindow> get windows => $_getList(4);
+
+  /// See the file comment.
+  @$pb.TagNumber(6)
+  $fixnum.Int64 get revision => $_getI64(5);
+  @$pb.TagNumber(6)
+  set revision($fixnum.Int64 value) => $_setInt64(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRevision() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRevision() => $_clearField(6);
 }
 
 /// A recurring stretch of the building's local day (space.v1.Space.time_zone).
@@ -942,7 +1151,8 @@ class ComfortWindow extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ComfortWindow>(create);
   static ComfortWindow? _defaultInstance;
 
-  /// The days it starts on: bit 0 Monday through bit 6 Sunday.
+  /// The days it starts on: bit 0 Monday through bit 6 Sunday. Not Matter's day bitmap,
+  /// which starts on Sunday.
   @$pb.TagNumber(1)
   $core.int get weekdays => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -973,15 +1183,18 @@ class ComfortWindow extends $pb.GeneratedMessage {
   void clearEndMinute() => $_clearField(3);
 }
 
-/// The heating records a caller may see under a space, in reply to ListHeating, and the one
-/// record a put changed.
+/// The heating records a caller may see under a space, in reply to ListHeating.
 class HeatingLayout extends $pb.GeneratedMessage {
   factory HeatingLayout({
     $core.Iterable<HeatingPlant>? plants,
+    $core.Iterable<HeatingCircuit>? circuits,
+    $core.Iterable<FloorZone>? floorZones,
     $core.Iterable<ComfortLoad>? comfortLoads,
   }) {
     final result = create();
     if (plants != null) result.plants.addAll(plants);
+    if (circuits != null) result.circuits.addAll(circuits);
+    if (floorZones != null) result.floorZones.addAll(floorZones);
     if (comfortLoads != null) result.comfortLoads.addAll(comfortLoads);
     return result;
   }
@@ -1002,8 +1215,13 @@ class HeatingLayout extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..pc<HeatingPlant>(1, _omitFieldNames ? '' : 'plants', $pb.PbFieldType.PM,
         subBuilder: HeatingPlant.create)
+    ..pc<HeatingCircuit>(
+        2, _omitFieldNames ? '' : 'circuits', $pb.PbFieldType.PM,
+        subBuilder: HeatingCircuit.create)
+    ..pc<FloorZone>(3, _omitFieldNames ? '' : 'floorZones', $pb.PbFieldType.PM,
+        subBuilder: FloorZone.create)
     ..pc<ComfortLoad>(
-        2, _omitFieldNames ? '' : 'comfortLoads', $pb.PbFieldType.PM,
+        4, _omitFieldNames ? '' : 'comfortLoads', $pb.PbFieldType.PM,
         subBuilder: ComfortLoad.create)
     ..hasRequiredFields = false;
 
@@ -1032,7 +1250,134 @@ class HeatingLayout extends $pb.GeneratedMessage {
   $pb.PbList<HeatingPlant> get plants => $_getList(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<ComfortLoad> get comfortLoads => $_getList(1);
+  $pb.PbList<HeatingCircuit> get circuits => $_getList(1);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<FloorZone> get floorZones => $_getList(2);
+
+  @$pb.TagNumber(4)
+  $pb.PbList<ComfortLoad> get comfortLoads => $_getList(3);
+}
+
+enum HeatingRecord_Record { plant, circuit, floorZone, comfortLoad, notSet }
+
+/// One heating record as stored, in reply to a put.
+class HeatingRecord extends $pb.GeneratedMessage {
+  factory HeatingRecord({
+    HeatingPlant? plant,
+    HeatingCircuit? circuit,
+    FloorZone? floorZone,
+    ComfortLoad? comfortLoad,
+  }) {
+    final result = create();
+    if (plant != null) result.plant = plant;
+    if (circuit != null) result.circuit = circuit;
+    if (floorZone != null) result.floorZone = floorZone;
+    if (comfortLoad != null) result.comfortLoad = comfortLoad;
+    return result;
+  }
+
+  HeatingRecord._();
+
+  factory HeatingRecord.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatingRecord.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, HeatingRecord_Record>
+      _HeatingRecord_RecordByTag = {
+    1: HeatingRecord_Record.plant,
+    2: HeatingRecord_Record.circuit,
+    3: HeatingRecord_Record.floorZone,
+    4: HeatingRecord_Record.comfortLoad,
+    0: HeatingRecord_Record.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatingRecord',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4])
+    ..aOM<HeatingPlant>(1, _omitFieldNames ? '' : 'plant',
+        subBuilder: HeatingPlant.create)
+    ..aOM<HeatingCircuit>(2, _omitFieldNames ? '' : 'circuit',
+        subBuilder: HeatingCircuit.create)
+    ..aOM<FloorZone>(3, _omitFieldNames ? '' : 'floorZone',
+        subBuilder: FloorZone.create)
+    ..aOM<ComfortLoad>(4, _omitFieldNames ? '' : 'comfortLoad',
+        subBuilder: ComfortLoad.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatingRecord clone() => HeatingRecord()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatingRecord copyWith(void Function(HeatingRecord) updates) =>
+      super.copyWith((message) => updates(message as HeatingRecord))
+          as HeatingRecord;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatingRecord create() => HeatingRecord._();
+  @$core.override
+  HeatingRecord createEmptyInstance() => create();
+  static $pb.PbList<HeatingRecord> createRepeated() =>
+      $pb.PbList<HeatingRecord>();
+  @$core.pragma('dart2js:noInline')
+  static HeatingRecord getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatingRecord>(create);
+  static HeatingRecord? _defaultInstance;
+
+  HeatingRecord_Record whichRecord() =>
+      _HeatingRecord_RecordByTag[$_whichOneof(0)]!;
+  void clearRecord() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  HeatingPlant get plant => $_getN(0);
+  @$pb.TagNumber(1)
+  set plant(HeatingPlant value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlant() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlant() => $_clearField(1);
+  @$pb.TagNumber(1)
+  HeatingPlant ensurePlant() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  HeatingCircuit get circuit => $_getN(1);
+  @$pb.TagNumber(2)
+  set circuit(HeatingCircuit value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCircuit() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCircuit() => $_clearField(2);
+  @$pb.TagNumber(2)
+  HeatingCircuit ensureCircuit() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  FloorZone get floorZone => $_getN(2);
+  @$pb.TagNumber(3)
+  set floorZone(FloorZone value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFloorZone() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFloorZone() => $_clearField(3);
+  @$pb.TagNumber(3)
+  FloorZone ensureFloorZone() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ComfortLoad get comfortLoad => $_getN(3);
+  @$pb.TagNumber(4)
+  set comfortLoad(ComfortLoad value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasComfortLoad() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearComfortLoad() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ComfortLoad ensureComfortLoad() => $_ensure(3);
 }
 
 const $core.bool _omitFieldNames =

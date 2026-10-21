@@ -13,7 +13,7 @@ import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
-import type { ComfortLoad, ComfortWindow, HeatingPlant } from "../../heating/v1/heating_pb.js";
+import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 
@@ -1201,8 +1201,7 @@ export declare const ReconnectConnectorSchema: GenMessage<ReconnectConnector>;
 
 /**
  * Lists the heating records (heating.v1) a caller may see under a space: unset
- * root_space_id lists every one the caller can reach. Answered with a HeatingLayout. A
- * home's records are left out for a caller who reaches it as service (see heating.v1).
+ * root_space_id lists every one the caller can reach. Answered with a HeatingLayout.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListHeating
  */
@@ -1220,29 +1219,26 @@ export declare type ListHeating = Message<"kusinta.iot.webrtc.v1.ListHeating"> &
 export declare const ListHeatingSchema: GenMessage<ListHeating>;
 
 /**
- * Creates a plant (empty plant_id) or replaces one whole, with its circuits and zones.
- * Answered with a HeatingLayout holding the plant as stored. The gateway assigns the ids
- * left empty and keeps those given.
+ * Creates a plant (empty plant_id) or replaces one. Answered with the HeatingRecord as
+ * stored. The puts of heating records refuse, with metadata "reason":
  *
- * Refused as INVALID_REQUEST, with metadata "reason":
- *   "ZONE_CONTROL_ROOM"    a floor zone with no control room, or more than one.
- *   "ZONE_AREA_SHARES"     a floor zone whose rooms' shares do not sum to 1000.
- *   "ROOM_OUTSIDE_PLANT"   a zone room that is not a room within the plant's space.
- *   "ZONES_ON_RADIATOR"    zones on a circuit that is not FLOOR.
- *   "SG_READY_HALF_BOUND"  one SG Ready input bound without the other.
- *   "OUTPUT_BOUND_TWICE"   one output bound in two roles, here or in another record.
- * Refused as FAILED_PRECONDITION, with metadata "reason":
- *   "STALE_REVISION"       the plant changed since the revision the request names.
- *   "OUTPUT_NOT_LEASED"    an output whose write its producer does not state as leased.
- *   "REST_STATE"           an output whose lapse value, read through closed_value, does
- *                          not leave the contact where its role rests.
- * A device or output the caller cannot reach is refused as NOT_ENTITLED, as it is
+ *   INVALID_REQUEST
+ *   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
+ *   "ZONE_AREA_SHARES"      a floor zone whose rooms' shares do not sum to 1000.
+ *   "ROOM_OUTSIDE_PLANT"    a zone room or comfort-load room outside the plant's space.
+ *   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
+ *   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
+ *   "NO_ENDPOINT"           an attribute on the Matter branch with no endpoint_id.
+ *
+ *   FAILED_PRECONDITION
+ *   "STALE_REVISION"        the record changed since the revision the request names.
+ *   "OUTPUT_BOUND_TWICE"    an output already bound in another role or record.
+ *   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
+ *   "REST_STATE"            an output whose lapse value, read through closed_value, does not
+ *                           leave the contact where its role rests.
+ *
+ * A parent, device or room the caller cannot reach is refused as NOT_ENTITLED, as it is
  * everywhere.
- *
- * Commissioning (heating.v1.CommissioningState) is the gateway's: given in a request it is
- * ignored. A binding keeps its state while its device and output are unchanged; a floor
- * zone whose rooms or control room change returns to NOT_TESTED, and the app warns before
- * it saves such a change.
  *
  * @generated from message kusinta.iot.webrtc.v1.PutHeatingPlant
  */
@@ -1260,29 +1256,44 @@ export declare type PutHeatingPlant = Message<"kusinta.iot.webrtc.v1.PutHeatingP
 export declare const PutHeatingPlantSchema: GenMessage<PutHeatingPlant>;
 
 /**
- * Removes a plant and everything under it. Its outputs are left at rest, since the gateway
- * stops driving them. Acked.
+ * Creates or replaces a circuit of a plant; as PutHeatingPlant.
  *
- * @generated from message kusinta.iot.webrtc.v1.RemoveHeatingPlant
+ * @generated from message kusinta.iot.webrtc.v1.PutHeatingCircuit
  */
-export declare type RemoveHeatingPlant = Message<"kusinta.iot.webrtc.v1.RemoveHeatingPlant"> & {
+export declare type PutHeatingCircuit = Message<"kusinta.iot.webrtc.v1.PutHeatingCircuit"> & {
   /**
-   * @generated from field: string plant_id = 1;
+   * @generated from field: kusinta.iot.heating.v1.HeatingCircuit circuit = 1;
    */
-  plantId: string;
+  circuit?: HeatingCircuit | undefined;
 };
 
 /**
- * Describes the message kusinta.iot.webrtc.v1.RemoveHeatingPlant.
- * Use `create(RemoveHeatingPlantSchema)` to create a new message.
+ * Describes the message kusinta.iot.webrtc.v1.PutHeatingCircuit.
+ * Use `create(PutHeatingCircuitSchema)` to create a new message.
  */
-export declare const RemoveHeatingPlantSchema: GenMessage<RemoveHeatingPlant>;
+export declare const PutHeatingCircuitSchema: GenMessage<PutHeatingCircuit>;
 
 /**
- * Creates a comfort load (empty comfort_load_id) or replaces its room, name and output.
- * Its windows are kept: they are set with SetComfortWindows. Answered with a HeatingLayout
- * holding the comfort load as stored. Refused as PutHeatingPlant refuses an output
- * ("OUTPUT_BOUND_TWICE", "OUTPUT_NOT_LEASED", "REST_STATE").
+ * Creates or replaces a floor zone of a floor circuit; as PutHeatingPlant.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PutFloorZone
+ */
+export declare type PutFloorZone = Message<"kusinta.iot.webrtc.v1.PutFloorZone"> & {
+  /**
+   * @generated from field: kusinta.iot.heating.v1.FloorZone zone = 1;
+   */
+  zone?: FloorZone | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PutFloorZone.
+ * Use `create(PutFloorZoneSchema)` to create a new message.
+ */
+export declare const PutFloorZoneSchema: GenMessage<PutFloorZone>;
+
+/**
+ * Creates or replaces a comfort load's room, name and output, keeping its windows; as
+ * PutHeatingPlant.
  *
  * @generated from message kusinta.iot.webrtc.v1.PutComfortLoad
  */
@@ -1300,28 +1311,29 @@ export declare type PutComfortLoad = Message<"kusinta.iot.webrtc.v1.PutComfortLo
 export declare const PutComfortLoadSchema: GenMessage<PutComfortLoad>;
 
 /**
- * Removes a comfort load; its output is left at rest. Acked.
+ * Removes a heating record by its id, with what lies under it: a plant's circuits, a
+ * circuit's zones. Outputs no longer bound are left at rest, since the gateway stops
+ * driving them. Acked.
  *
- * @generated from message kusinta.iot.webrtc.v1.RemoveComfortLoad
+ * @generated from message kusinta.iot.webrtc.v1.RemoveHeatingRecord
  */
-export declare type RemoveComfortLoad = Message<"kusinta.iot.webrtc.v1.RemoveComfortLoad"> & {
+export declare type RemoveHeatingRecord = Message<"kusinta.iot.webrtc.v1.RemoveHeatingRecord"> & {
   /**
-   * @generated from field: string comfort_load_id = 1;
+   * @generated from field: string id = 1;
    */
-  comfortLoadId: string;
+  id: string;
 };
 
 /**
- * Describes the message kusinta.iot.webrtc.v1.RemoveComfortLoad.
- * Use `create(RemoveComfortLoadSchema)` to create a new message.
+ * Describes the message kusinta.iot.webrtc.v1.RemoveHeatingRecord.
+ * Use `create(RemoveHeatingRecordSchema)` to create a new message.
  */
-export declare const RemoveComfortLoadSchema: GenMessage<RemoveComfortLoad>;
+export declare const RemoveHeatingRecordSchema: GenMessage<RemoveHeatingRecord>;
 
 /**
- * Replaces a comfort load's windows: a resident's setting, apart from the binding. An
- * empty list leaves the load to heat only when the plan allows it for price. Refused as
- * INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or no weekday.
- * Acked.
+ * Replaces a comfort load's windows: a resident's setting, apart from the binding. Refused as
+ * INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or a window with
+ * no weekday. Acked.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetComfortWindows
  */
@@ -1603,25 +1615,31 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
     case: "putHeatingPlant";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.RemoveHeatingPlant remove_heating_plant = 41;
+     * @generated from field: kusinta.iot.webrtc.v1.PutHeatingCircuit put_heating_circuit = 41;
      */
-    value: RemoveHeatingPlant;
-    case: "removeHeatingPlant";
+    value: PutHeatingCircuit;
+    case: "putHeatingCircuit";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.PutComfortLoad put_comfort_load = 42;
+     * @generated from field: kusinta.iot.webrtc.v1.PutFloorZone put_floor_zone = 42;
+     */
+    value: PutFloorZone;
+    case: "putFloorZone";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PutComfortLoad put_comfort_load = 43;
      */
     value: PutComfortLoad;
     case: "putComfortLoad";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.RemoveComfortLoad remove_comfort_load = 43;
+     * @generated from field: kusinta.iot.webrtc.v1.RemoveHeatingRecord remove_heating_record = 44;
      */
-    value: RemoveComfortLoad;
-    case: "removeComfortLoad";
+    value: RemoveHeatingRecord;
+    case: "removeHeatingRecord";
   } | {
     /**
-     * @generated from field: kusinta.iot.webrtc.v1.SetComfortWindows set_comfort_windows = 44;
+     * @generated from field: kusinta.iot.webrtc.v1.SetComfortWindows set_comfort_windows = 45;
      */
     value: SetComfortWindows;
     case: "setComfortWindows";

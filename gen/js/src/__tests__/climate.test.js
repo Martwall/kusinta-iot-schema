@@ -186,7 +186,8 @@ describe('room history', () => {
       decoded.effectiveTargetCentidegrees,
       decoded.valveOpenPermille,
       decoded.valveOpenSeconds,
-    ]).toEqual([undefined, undefined, undefined, undefined, undefined])
+      decoded.floorHeatingSeconds,
+    ]).toEqual([undefined, undefined, undefined, undefined, undefined, undefined])
   })
 
   it('round-trips a bucket\'s readings', () => {
@@ -197,6 +198,7 @@ describe('room history', () => {
       effectiveTargetCentidegrees: 1700,
       valveOpenPermille: 420,
       valveOpenSeconds: 540,
+      floorHeatingSeconds: 600,
     })
     const decoded = fromBinary(RoomHistorySampleSchema, toBinary(RoomHistorySampleSchema, sample))
     expect([
@@ -205,7 +207,8 @@ describe('room history', () => {
       decoded.effectiveTargetCentidegrees,
       decoded.valveOpenPermille,
       decoded.valveOpenSeconds,
-    ]).toEqual([2087, 2100, 1700, 420, 540])
+      decoded.floorHeatingSeconds,
+    ]).toEqual([2087, 2100, 1700, 420, 540, 600])
   })
 
   it('answers with how far back it is kept and its samples', () => {
@@ -222,15 +225,5 @@ describe('room history', () => {
     })
     const decoded = fromBinary(ManagementResultSchema, toBinary(ManagementResultSchema, result))
     expect(decoded.result.case).toBe('roomHistory')
-  })
-
-  it('keeps floor heating apart from valve opening, absent where no floor zone heats the room', () => {
-    const sample = create(RoomHistorySampleSchema, { valveOpenSeconds: 300 })
-    expect(sample.floorHeatingSeconds).toBeUndefined()
-  })
-
-  it('carries the seconds a floor zone heated the room', () => {
-    const sample = create(RoomHistorySampleSchema, { floorHeatingSeconds: 600 })
-    expect(fromBinary(RoomHistorySampleSchema, toBinary(RoomHistorySampleSchema, sample)).floorHeatingSeconds).toBe(600)
   })
 })

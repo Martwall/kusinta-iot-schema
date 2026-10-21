@@ -289,39 +289,34 @@ with the rest of the room's state.
 
 `heating/v1/heating.proto` says what heats a space and which device outputs the gateway may
 drive to steer it. A device is nothing to the heating for being filed in a room: a record
-binds one of its outputs to a role, by name.
+binds one of its outputs to a role, by name. Records are flat, each naming its parent, and
+each is put (`PutHeatingPlant`, `PutHeatingCircuit`, `PutFloorZone`, `PutComfortLoad`) and
+revisioned on its own; any is removed with `RemoveHeatingRecord`.
 
-- **Plant:** one heat source, its read-only readings device, its meter, its circuits, and the
-  contacts the gateway drives: the two **SG Ready** inputs (named by what each means closed
-  alone) and the **add-on heat block**. Both SG Ready inputs and the block rest open, so the
-  heat source runs normally whenever the gateway stops.
-- **Circuit:** radiator or floor. A floor circuit has its own mixing, supply cap and supply and
-  return probes, and carries the **floor zones** on its manifold.
-- **Floor zone:** one output on the wiring centre's thermostat input; it rests closed, so the
-  zone heats when the gateway is gone. A zone may heat several rooms and a room may have
-  several zones. Each zone has area shares summing to 1000 and exactly one **control room**,
-  whose error, sensor and window alone steer it.
-- **Comfort load:** a heated bathroom floor or towel heater, run in **time windows** (minutes
-  of the building's local day) rather than to a target. Residents set the windows
-  (`SetComfortWindows`); the binding is changed apart from them.
+- **Plant:** one heat source, the device its own readings come from, its meter and its
+  `control`. A heat pump is steered through its two **SG Ready** inputs (named by what each
+  means closed alone) and its **add-on heater block**. All three rest open, so the heat pump
+  runs normally whenever the gateway stops. A plant without control is read only.
+- **Circuit:** a radiator or a floor circuit. A floor circuit has its own mixing, supply cap
+  and supply and return probes.
+- **Floor zone:** one output on the wiring centre's thermostat input of a floor circuit. It
+  rests closed, so the zone heats when the gateway is gone. A zone may heat several rooms and
+  a room may have several zones. Area shares sum to 1000, and one **control room** alone
+  steers the zone.
+- **Comfort load:** a heated bathroom floor or towel heater, run in **time windows**
+  (minutes of the building's local day) rather than to a target. Residents set the windows
+  (`SetComfortWindows`), apart from the binding.
 
-Every role is a **`ContactBinding`**: a device, the output written, and `closed_value`, the
-output value with which the contact is closed. That is a wiring fact, not a device fact: a
-relay wired through its normally closed contact closes it with the channel off. The gateway
-reads every state of a role through it. It refuses a binding:
-- whose output is not stated as leased;
-- whose lapse value, read through `closed_value`, does not leave the contact where the role
-  rests.
+Every role is a **`ContactBinding`**: an output and `closed_value`, the output value with
+which the contact is closed. That is a wiring fact, not a device fact: a relay wired through
+its normally closed contact closes it with the channel off. The gateway reads every state of
+a role through it, binds only outputs stated as leased whose lapse value leaves the contact
+where the role rests, and drives a binding only once it has passed its commissioning test.
+In a home the records are given only to its residents and to an installer under a
+commissioning grant, never to service.
 
-The gateway sets `commissioning` on each binding and never drives one that has not passed
-its commissioning test. Changing a binding's device or output, replacing the device, or
-changing a zone's rooms or control room returns it to `NOT_TESTED`. Changing area shares
-does not.
-
-Plants are replaced whole (`PutHeatingPlant`), naming the `revision` they replace. In a home
-the records are given only to its residents and to an installer under a commissioning grant,
-never to service. Room history keeps a zone's heating in its own field
-(`floor_heating_seconds`), apart from valve opening.
+Room history keeps a zone's heating in its own field (`floor_heating_seconds`), apart from
+valve opening.
 
 ## Invites
 
@@ -609,9 +604,9 @@ it as current would be wrong, such as values a vendor's service hands on in batc
 Not stated is read as the worst case:
 - A write of unstated kind is held as if sticky.
 - A reading of unstated latency is never treated as real-time.
-- A gateway refuses to drive a heat source, heating circuit or floor zone through an
-  attribute whose write kind is not stated. This is the opposite default to `attribute_ids`
-  or `known_links`, where not stated only means not known.
+- A consumer that drives outputs while it may go quiet refuses one whose behaviour is not
+  stated. This is the opposite default to `attribute_ids` or `known_links`, where not stated
+  only means not known. The heating records are one: they bind only outputs stated leased.
 
 ## Field presence in properties
 

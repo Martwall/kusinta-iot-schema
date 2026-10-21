@@ -174,8 +174,9 @@ message ManagementResult {
     SpaceInvites space_invites = 12; // list_space_invites
     GatewayMembers gateway_members = 13; // list_gateway_members
     PromotionRequests promotion_requests = 14; // list_promotion_requests
-    // list_heating, put_heating_plant, put_comfort_load
-    kusinta.iot.heating.v1.HeatingLayout heating_layout = 15;
+    kusinta.iot.heating.v1.HeatingLayout heating_layout = 15; // list_heating
+    // put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load
+    kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
   }
 }
 

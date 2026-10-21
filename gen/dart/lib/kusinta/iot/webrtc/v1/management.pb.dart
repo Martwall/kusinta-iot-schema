@@ -2805,8 +2805,7 @@ class ReconnectConnector extends $pb.GeneratedMessage {
 }
 
 /// Lists the heating records (heating.v1) a caller may see under a space: unset
-/// root_space_id lists every one the caller can reach. Answered with a HeatingLayout. A
-/// home's records are left out for a caller who reaches it as service (see heating.v1).
+/// root_space_id lists every one the caller can reach. Answered with a HeatingLayout.
 class ListHeating extends $pb.GeneratedMessage {
   factory ListHeating({
     $0.SpaceId? rootSpaceId,
@@ -2866,29 +2865,26 @@ class ListHeating extends $pb.GeneratedMessage {
   $0.SpaceId ensureRootSpaceId() => $_ensure(0);
 }
 
-/// Creates a plant (empty plant_id) or replaces one whole, with its circuits and zones.
-/// Answered with a HeatingLayout holding the plant as stored. The gateway assigns the ids
-/// left empty and keeps those given.
+/// Creates a plant (empty plant_id) or replaces one. Answered with the HeatingRecord as
+/// stored. The puts of heating records refuse, with metadata "reason":
 ///
-/// Refused as INVALID_REQUEST, with metadata "reason":
-///   "ZONE_CONTROL_ROOM"    a floor zone with no control room, or more than one.
-///   "ZONE_AREA_SHARES"     a floor zone whose rooms' shares do not sum to 1000.
-///   "ROOM_OUTSIDE_PLANT"   a zone room that is not a room within the plant's space.
-///   "ZONES_ON_RADIATOR"    zones on a circuit that is not FLOOR.
-///   "SG_READY_HALF_BOUND"  one SG Ready input bound without the other.
-///   "OUTPUT_BOUND_TWICE"   one output bound in two roles, here or in another record.
-/// Refused as FAILED_PRECONDITION, with metadata "reason":
-///   "STALE_REVISION"       the plant changed since the revision the request names.
-///   "OUTPUT_NOT_LEASED"    an output whose write its producer does not state as leased.
-///   "REST_STATE"           an output whose lapse value, read through closed_value, does
-///                          not leave the contact where its role rests.
-/// A device or output the caller cannot reach is refused as NOT_ENTITLED, as it is
+///   INVALID_REQUEST
+///   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
+///   "ZONE_AREA_SHARES"      a floor zone whose rooms' shares do not sum to 1000.
+///   "ROOM_OUTSIDE_PLANT"    a zone room or comfort-load room outside the plant's space.
+///   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
+///   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
+///   "NO_ENDPOINT"           an attribute on the Matter branch with no endpoint_id.
+///
+///   FAILED_PRECONDITION
+///   "STALE_REVISION"        the record changed since the revision the request names.
+///   "OUTPUT_BOUND_TWICE"    an output already bound in another role or record.
+///   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
+///   "REST_STATE"            an output whose lapse value, read through closed_value, does not
+///                           leave the contact where its role rests.
+///
+/// A parent, device or room the caller cannot reach is refused as NOT_ENTITLED, as it is
 /// everywhere.
-///
-/// Commissioning (heating.v1.CommissioningState) is the gateway's: given in a request it is
-/// ignored. A binding keeps its state while its device and output are unchanged; a floor
-/// zone whose rooms or control room change returns to NOT_TESTED, and the app warns before
-/// it saves such a change.
 class PutHeatingPlant extends $pb.GeneratedMessage {
   factory PutHeatingPlant({
     $5.HeatingPlant? plant,
@@ -2949,69 +2945,130 @@ class PutHeatingPlant extends $pb.GeneratedMessage {
   $5.HeatingPlant ensurePlant() => $_ensure(0);
 }
 
-/// Removes a plant and everything under it. Its outputs are left at rest, since the gateway
-/// stops driving them. Acked.
-class RemoveHeatingPlant extends $pb.GeneratedMessage {
-  factory RemoveHeatingPlant({
-    $core.String? plantId,
+/// Creates or replaces a circuit of a plant; as PutHeatingPlant.
+class PutHeatingCircuit extends $pb.GeneratedMessage {
+  factory PutHeatingCircuit({
+    $5.HeatingCircuit? circuit,
   }) {
     final result = create();
-    if (plantId != null) result.plantId = plantId;
+    if (circuit != null) result.circuit = circuit;
     return result;
   }
 
-  RemoveHeatingPlant._();
+  PutHeatingCircuit._();
 
-  factory RemoveHeatingPlant.fromBuffer($core.List<$core.int> data,
+  factory PutHeatingCircuit.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoveHeatingPlant.fromJson($core.String json,
+  factory PutHeatingCircuit.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoveHeatingPlant',
+      _omitMessageNames ? '' : 'PutHeatingCircuit',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOM<$5.HeatingCircuit>(1, _omitFieldNames ? '' : 'circuit',
+        subBuilder: $5.HeatingCircuit.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoveHeatingPlant clone() => RemoveHeatingPlant()..mergeFromMessage(this);
+  PutHeatingCircuit clone() => PutHeatingCircuit()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoveHeatingPlant copyWith(void Function(RemoveHeatingPlant) updates) =>
-      super.copyWith((message) => updates(message as RemoveHeatingPlant))
-          as RemoveHeatingPlant;
+  PutHeatingCircuit copyWith(void Function(PutHeatingCircuit) updates) =>
+      super.copyWith((message) => updates(message as PutHeatingCircuit))
+          as PutHeatingCircuit;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoveHeatingPlant create() => RemoveHeatingPlant._();
+  static PutHeatingCircuit create() => PutHeatingCircuit._();
   @$core.override
-  RemoveHeatingPlant createEmptyInstance() => create();
-  static $pb.PbList<RemoveHeatingPlant> createRepeated() =>
-      $pb.PbList<RemoveHeatingPlant>();
+  PutHeatingCircuit createEmptyInstance() => create();
+  static $pb.PbList<PutHeatingCircuit> createRepeated() =>
+      $pb.PbList<PutHeatingCircuit>();
   @$core.pragma('dart2js:noInline')
-  static RemoveHeatingPlant getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoveHeatingPlant>(create);
-  static RemoveHeatingPlant? _defaultInstance;
+  static PutHeatingCircuit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PutHeatingCircuit>(create);
+  static PutHeatingCircuit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get plantId => $_getSZ(0);
+  $5.HeatingCircuit get circuit => $_getN(0);
   @$pb.TagNumber(1)
-  set plantId($core.String value) => $_setString(0, value);
+  set circuit($5.HeatingCircuit value) => $_setField(1, value);
   @$pb.TagNumber(1)
-  $core.bool hasPlantId() => $_has(0);
+  $core.bool hasCircuit() => $_has(0);
   @$pb.TagNumber(1)
-  void clearPlantId() => $_clearField(1);
+  void clearCircuit() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $5.HeatingCircuit ensureCircuit() => $_ensure(0);
 }
 
-/// Creates a comfort load (empty comfort_load_id) or replaces its room, name and output.
-/// Its windows are kept: they are set with SetComfortWindows. Answered with a HeatingLayout
-/// holding the comfort load as stored. Refused as PutHeatingPlant refuses an output
-/// ("OUTPUT_BOUND_TWICE", "OUTPUT_NOT_LEASED", "REST_STATE").
+/// Creates or replaces a floor zone of a floor circuit; as PutHeatingPlant.
+class PutFloorZone extends $pb.GeneratedMessage {
+  factory PutFloorZone({
+    $5.FloorZone? zone,
+  }) {
+    final result = create();
+    if (zone != null) result.zone = zone;
+    return result;
+  }
+
+  PutFloorZone._();
+
+  factory PutFloorZone.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PutFloorZone.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PutFloorZone',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$5.FloorZone>(1, _omitFieldNames ? '' : 'zone',
+        subBuilder: $5.FloorZone.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PutFloorZone clone() => PutFloorZone()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PutFloorZone copyWith(void Function(PutFloorZone) updates) =>
+      super.copyWith((message) => updates(message as PutFloorZone))
+          as PutFloorZone;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PutFloorZone create() => PutFloorZone._();
+  @$core.override
+  PutFloorZone createEmptyInstance() => create();
+  static $pb.PbList<PutFloorZone> createRepeated() =>
+      $pb.PbList<PutFloorZone>();
+  @$core.pragma('dart2js:noInline')
+  static PutFloorZone getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PutFloorZone>(create);
+  static PutFloorZone? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $5.FloorZone get zone => $_getN(0);
+  @$pb.TagNumber(1)
+  set zone($5.FloorZone value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasZone() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearZone() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $5.FloorZone ensureZone() => $_ensure(0);
+}
+
+/// Creates or replaces a comfort load's room, name and output, keeping its windows; as
+/// PutHeatingPlant.
 class PutComfortLoad extends $pb.GeneratedMessage {
   factory PutComfortLoad({
     $5.ComfortLoad? comfortLoad,
@@ -3072,68 +3129,69 @@ class PutComfortLoad extends $pb.GeneratedMessage {
   $5.ComfortLoad ensureComfortLoad() => $_ensure(0);
 }
 
-/// Removes a comfort load; its output is left at rest. Acked.
-class RemoveComfortLoad extends $pb.GeneratedMessage {
-  factory RemoveComfortLoad({
-    $core.String? comfortLoadId,
+/// Removes a heating record by its id, with what lies under it: a plant's circuits, a
+/// circuit's zones. Outputs no longer bound are left at rest, since the gateway stops
+/// driving them. Acked.
+class RemoveHeatingRecord extends $pb.GeneratedMessage {
+  factory RemoveHeatingRecord({
+    $core.String? id,
   }) {
     final result = create();
-    if (comfortLoadId != null) result.comfortLoadId = comfortLoadId;
+    if (id != null) result.id = id;
     return result;
   }
 
-  RemoveComfortLoad._();
+  RemoveHeatingRecord._();
 
-  factory RemoveComfortLoad.fromBuffer($core.List<$core.int> data,
+  factory RemoveHeatingRecord.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromBuffer(data, registry);
-  factory RemoveComfortLoad.fromJson($core.String json,
+  factory RemoveHeatingRecord.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
-      _omitMessageNames ? '' : 'RemoveComfortLoad',
+      _omitMessageNames ? '' : 'RemoveHeatingRecord',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'comfortLoadId')
+    ..aOS(1, _omitFieldNames ? '' : 'id')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoveComfortLoad clone() => RemoveComfortLoad()..mergeFromMessage(this);
+  RemoveHeatingRecord clone() => RemoveHeatingRecord()..mergeFromMessage(this);
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
-  RemoveComfortLoad copyWith(void Function(RemoveComfortLoad) updates) =>
-      super.copyWith((message) => updates(message as RemoveComfortLoad))
-          as RemoveComfortLoad;
+  RemoveHeatingRecord copyWith(void Function(RemoveHeatingRecord) updates) =>
+      super.copyWith((message) => updates(message as RemoveHeatingRecord))
+          as RemoveHeatingRecord;
 
   @$core.override
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
-  static RemoveComfortLoad create() => RemoveComfortLoad._();
+  static RemoveHeatingRecord create() => RemoveHeatingRecord._();
   @$core.override
-  RemoveComfortLoad createEmptyInstance() => create();
-  static $pb.PbList<RemoveComfortLoad> createRepeated() =>
-      $pb.PbList<RemoveComfortLoad>();
+  RemoveHeatingRecord createEmptyInstance() => create();
+  static $pb.PbList<RemoveHeatingRecord> createRepeated() =>
+      $pb.PbList<RemoveHeatingRecord>();
   @$core.pragma('dart2js:noInline')
-  static RemoveComfortLoad getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RemoveComfortLoad>(create);
-  static RemoveComfortLoad? _defaultInstance;
+  static RemoveHeatingRecord getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RemoveHeatingRecord>(create);
+  static RemoveHeatingRecord? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get comfortLoadId => $_getSZ(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set comfortLoadId($core.String value) => $_setString(0, value);
+  set id($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasComfortLoadId() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearComfortLoadId() => $_clearField(1);
+  void clearId() => $_clearField(1);
 }
 
-/// Replaces a comfort load's windows: a resident's setting, apart from the binding. An
-/// empty list leaves the load to heat only when the plan allows it for price. Refused as
-/// INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or no weekday.
-/// Acked.
+/// Replaces a comfort load's windows: a resident's setting, apart from the binding. Refused as
+/// INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or a window with
+/// no weekday. Acked.
 class SetComfortWindows extends $pb.GeneratedMessage {
   factory SetComfortWindows({
     $core.String? comfortLoadId,
@@ -3240,9 +3298,10 @@ enum ManagementRequest_Request {
   listPromotionRequests,
   listHeating,
   putHeatingPlant,
-  removeHeatingPlant,
+  putHeatingCircuit,
+  putFloorZone,
   putComfortLoad,
-  removeComfortLoad,
+  removeHeatingRecord,
   setComfortWindows,
   notSet
 }
@@ -3290,9 +3349,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     $7.ListPromotionRequests? listPromotionRequests,
     ListHeating? listHeating,
     PutHeatingPlant? putHeatingPlant,
-    RemoveHeatingPlant? removeHeatingPlant,
+    PutHeatingCircuit? putHeatingCircuit,
+    PutFloorZone? putFloorZone,
     PutComfortLoad? putComfortLoad,
-    RemoveComfortLoad? removeComfortLoad,
+    RemoveHeatingRecord? removeHeatingRecord,
     SetComfortWindows? setComfortWindows,
   }) {
     final result = create();
@@ -3348,10 +3408,11 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.listPromotionRequests = listPromotionRequests;
     if (listHeating != null) result.listHeating = listHeating;
     if (putHeatingPlant != null) result.putHeatingPlant = putHeatingPlant;
-    if (removeHeatingPlant != null)
-      result.removeHeatingPlant = removeHeatingPlant;
+    if (putHeatingCircuit != null) result.putHeatingCircuit = putHeatingCircuit;
+    if (putFloorZone != null) result.putFloorZone = putFloorZone;
     if (putComfortLoad != null) result.putComfortLoad = putComfortLoad;
-    if (removeComfortLoad != null) result.removeComfortLoad = removeComfortLoad;
+    if (removeHeatingRecord != null)
+      result.removeHeatingRecord = removeHeatingRecord;
     if (setComfortWindows != null) result.setComfortWindows = setComfortWindows;
     return result;
   }
@@ -3407,10 +3468,11 @@ class ManagementRequest extends $pb.GeneratedMessage {
     38: ManagementRequest_Request.listPromotionRequests,
     39: ManagementRequest_Request.listHeating,
     40: ManagementRequest_Request.putHeatingPlant,
-    41: ManagementRequest_Request.removeHeatingPlant,
-    42: ManagementRequest_Request.putComfortLoad,
-    43: ManagementRequest_Request.removeComfortLoad,
-    44: ManagementRequest_Request.setComfortWindows,
+    41: ManagementRequest_Request.putHeatingCircuit,
+    42: ManagementRequest_Request.putFloorZone,
+    43: ManagementRequest_Request.putComfortLoad,
+    44: ManagementRequest_Request.removeHeatingRecord,
+    45: ManagementRequest_Request.setComfortWindows,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -3462,7 +3524,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       41,
       42,
       43,
-      44
+      44,
+      45
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -3553,13 +3616,15 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: ListHeating.create)
     ..aOM<PutHeatingPlant>(40, _omitFieldNames ? '' : 'putHeatingPlant',
         subBuilder: PutHeatingPlant.create)
-    ..aOM<RemoveHeatingPlant>(41, _omitFieldNames ? '' : 'removeHeatingPlant',
-        subBuilder: RemoveHeatingPlant.create)
-    ..aOM<PutComfortLoad>(42, _omitFieldNames ? '' : 'putComfortLoad',
+    ..aOM<PutHeatingCircuit>(41, _omitFieldNames ? '' : 'putHeatingCircuit',
+        subBuilder: PutHeatingCircuit.create)
+    ..aOM<PutFloorZone>(42, _omitFieldNames ? '' : 'putFloorZone',
+        subBuilder: PutFloorZone.create)
+    ..aOM<PutComfortLoad>(43, _omitFieldNames ? '' : 'putComfortLoad',
         subBuilder: PutComfortLoad.create)
-    ..aOM<RemoveComfortLoad>(43, _omitFieldNames ? '' : 'removeComfortLoad',
-        subBuilder: RemoveComfortLoad.create)
-    ..aOM<SetComfortWindows>(44, _omitFieldNames ? '' : 'setComfortWindows',
+    ..aOM<RemoveHeatingRecord>(44, _omitFieldNames ? '' : 'removeHeatingRecord',
+        subBuilder: RemoveHeatingRecord.create)
+    ..aOM<SetComfortWindows>(45, _omitFieldNames ? '' : 'setComfortWindows',
         subBuilder: SetComfortWindows.create)
     ..hasRequiredFields = false;
 
@@ -4044,48 +4109,59 @@ class ManagementRequest extends $pb.GeneratedMessage {
   PutHeatingPlant ensurePutHeatingPlant() => $_ensure(39);
 
   @$pb.TagNumber(41)
-  RemoveHeatingPlant get removeHeatingPlant => $_getN(40);
+  PutHeatingCircuit get putHeatingCircuit => $_getN(40);
   @$pb.TagNumber(41)
-  set removeHeatingPlant(RemoveHeatingPlant value) => $_setField(41, value);
+  set putHeatingCircuit(PutHeatingCircuit value) => $_setField(41, value);
   @$pb.TagNumber(41)
-  $core.bool hasRemoveHeatingPlant() => $_has(40);
+  $core.bool hasPutHeatingCircuit() => $_has(40);
   @$pb.TagNumber(41)
-  void clearRemoveHeatingPlant() => $_clearField(41);
+  void clearPutHeatingCircuit() => $_clearField(41);
   @$pb.TagNumber(41)
-  RemoveHeatingPlant ensureRemoveHeatingPlant() => $_ensure(40);
+  PutHeatingCircuit ensurePutHeatingCircuit() => $_ensure(40);
 
   @$pb.TagNumber(42)
-  PutComfortLoad get putComfortLoad => $_getN(41);
+  PutFloorZone get putFloorZone => $_getN(41);
   @$pb.TagNumber(42)
-  set putComfortLoad(PutComfortLoad value) => $_setField(42, value);
+  set putFloorZone(PutFloorZone value) => $_setField(42, value);
   @$pb.TagNumber(42)
-  $core.bool hasPutComfortLoad() => $_has(41);
+  $core.bool hasPutFloorZone() => $_has(41);
   @$pb.TagNumber(42)
-  void clearPutComfortLoad() => $_clearField(42);
+  void clearPutFloorZone() => $_clearField(42);
   @$pb.TagNumber(42)
-  PutComfortLoad ensurePutComfortLoad() => $_ensure(41);
+  PutFloorZone ensurePutFloorZone() => $_ensure(41);
 
   @$pb.TagNumber(43)
-  RemoveComfortLoad get removeComfortLoad => $_getN(42);
+  PutComfortLoad get putComfortLoad => $_getN(42);
   @$pb.TagNumber(43)
-  set removeComfortLoad(RemoveComfortLoad value) => $_setField(43, value);
+  set putComfortLoad(PutComfortLoad value) => $_setField(43, value);
   @$pb.TagNumber(43)
-  $core.bool hasRemoveComfortLoad() => $_has(42);
+  $core.bool hasPutComfortLoad() => $_has(42);
   @$pb.TagNumber(43)
-  void clearRemoveComfortLoad() => $_clearField(43);
+  void clearPutComfortLoad() => $_clearField(43);
   @$pb.TagNumber(43)
-  RemoveComfortLoad ensureRemoveComfortLoad() => $_ensure(42);
+  PutComfortLoad ensurePutComfortLoad() => $_ensure(42);
 
   @$pb.TagNumber(44)
-  SetComfortWindows get setComfortWindows => $_getN(43);
+  RemoveHeatingRecord get removeHeatingRecord => $_getN(43);
   @$pb.TagNumber(44)
-  set setComfortWindows(SetComfortWindows value) => $_setField(44, value);
+  set removeHeatingRecord(RemoveHeatingRecord value) => $_setField(44, value);
   @$pb.TagNumber(44)
-  $core.bool hasSetComfortWindows() => $_has(43);
+  $core.bool hasRemoveHeatingRecord() => $_has(43);
   @$pb.TagNumber(44)
-  void clearSetComfortWindows() => $_clearField(44);
+  void clearRemoveHeatingRecord() => $_clearField(44);
   @$pb.TagNumber(44)
-  SetComfortWindows ensureSetComfortWindows() => $_ensure(43);
+  RemoveHeatingRecord ensureRemoveHeatingRecord() => $_ensure(43);
+
+  @$pb.TagNumber(45)
+  SetComfortWindows get setComfortWindows => $_getN(44);
+  @$pb.TagNumber(45)
+  set setComfortWindows(SetComfortWindows value) => $_setField(45, value);
+  @$pb.TagNumber(45)
+  $core.bool hasSetComfortWindows() => $_has(44);
+  @$pb.TagNumber(45)
+  void clearSetComfortWindows() => $_clearField(45);
+  @$pb.TagNumber(45)
+  SetComfortWindows ensureSetComfortWindows() => $_ensure(44);
 }
 
 const $core.bool _omitFieldNames =

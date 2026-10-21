@@ -14,23 +14,6 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
-@$core.Deprecated('Use commissioningStateDescriptor instead')
-const CommissioningState$json = {
-  '1': 'CommissioningState',
-  '2': [
-    {'1': 'COMMISSIONING_STATE_UNSPECIFIED', '2': 0},
-    {'1': 'COMMISSIONING_STATE_NOT_TESTED', '2': 1},
-    {'1': 'COMMISSIONING_STATE_PASSED', '2': 2},
-    {'1': 'COMMISSIONING_STATE_FAILED', '2': 3},
-  ],
-};
-
-/// Descriptor for `CommissioningState`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List commissioningStateDescriptor = $convert.base64Decode(
-    'ChJDb21taXNzaW9uaW5nU3RhdGUSIwofQ09NTUlTU0lPTklOR19TVEFURV9VTlNQRUNJRklFRB'
-    'AAEiIKHkNPTU1JU1NJT05JTkdfU1RBVEVfTk9UX1RFU1RFRBABEh4KGkNPTU1JU1NJT05JTkdf'
-    'U1RBVEVfUEFTU0VEEAISHgoaQ09NTUlTU0lPTklOR19TVEFURV9GQUlMRUQQAw==');
-
 @$core.Deprecated('Use heatSourceKindDescriptor instead')
 const HeatSourceKind$json = {
   '1': 'HeatSourceKind',
@@ -54,97 +37,63 @@ final $typed_data.Uint8List heatSourceKindDescriptor = $convert.base64Decode(
     'JAogSEVBVF9TT1VSQ0VfS0lORF9FTEVDVFJJQ19CT0lMRVIQBRIgChxIRUFUX1NPVVJDRV9LSU'
     '5EX0ZVRUxfQk9JTEVSEAY=');
 
-@$core.Deprecated('Use circuitKindDescriptor instead')
-const CircuitKind$json = {
-  '1': 'CircuitKind',
+@$core.Deprecated('Use deviceAttributeDescriptor instead')
+const DeviceAttribute$json = {
+  '1': 'DeviceAttribute',
   '2': [
-    {'1': 'CIRCUIT_KIND_UNSPECIFIED', '2': 0},
-    {'1': 'CIRCUIT_KIND_RADIATOR', '2': 1},
-    {'1': 'CIRCUIT_KIND_FLOOR', '2': 2},
+    {
+      '1': 'device_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceId'
+    },
+    {
+      '1': 'attribute',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.access.v1.AttributeRef',
+      '10': 'attribute'
+    },
   ],
 };
 
-/// Descriptor for `CircuitKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List circuitKindDescriptor = $convert.base64Decode(
-    'CgtDaXJjdWl0S2luZBIcChhDSVJDVUlUX0tJTkRfVU5TUEVDSUZJRUQQABIZChVDSVJDVUlUX0'
-    'tJTkRfUkFESUFUT1IQARIWChJDSVJDVUlUX0tJTkRfRkxPT1IQAg==');
+/// Descriptor for `DeviceAttribute`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deviceAttributeDescriptor = $convert.base64Decode(
+    'Cg9EZXZpY2VBdHRyaWJ1dGUSPgoJZGV2aWNlX2lkGAEgASgLMiEua3VzaW50YS5pb3QuaWRlbn'
+    'RpdHkudjEuRGV2aWNlSWRSCGRldmljZUlkEkEKCWF0dHJpYnV0ZRgCIAEoCzIjLmt1c2ludGEu'
+    'aW90LmFjY2Vzcy52MS5BdHRyaWJ1dGVSZWZSCWF0dHJpYnV0ZQ==');
 
 @$core.Deprecated('Use contactBindingDescriptor instead')
 const ContactBinding$json = {
   '1': 'ContactBinding',
   '2': [
     {
-      '1': 'device_id',
+      '1': 'output',
       '3': 1,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.identity.v1.DeviceId',
-      '10': 'deviceId'
-    },
-    {
-      '1': 'output',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.access.v1.AttributeRef',
+      '6': '.kusinta.iot.heating.v1.DeviceAttribute',
       '10': 'output'
     },
     {
       '1': 'closed_value',
-      '3': 3,
+      '3': 2,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.AttributeValue',
       '10': 'closedValue'
-    },
-    {
-      '1': 'commissioning',
-      '3': 4,
-      '4': 1,
-      '5': 14,
-      '6': '.kusinta.iot.heating.v1.CommissioningState',
-      '10': 'commissioning'
     },
   ],
 };
 
 /// Descriptor for `ContactBinding`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List contactBindingDescriptor = $convert.base64Decode(
-    'Cg5Db250YWN0QmluZGluZxI+CglkZXZpY2VfaWQYASABKAsyIS5rdXNpbnRhLmlvdC5pZGVudG'
-    'l0eS52MS5EZXZpY2VJZFIIZGV2aWNlSWQSOwoGb3V0cHV0GAIgASgLMiMua3VzaW50YS5pb3Qu'
-    'YWNjZXNzLnYxLkF0dHJpYnV0ZVJlZlIGb3V0cHV0EkgKDGNsb3NlZF92YWx1ZRgDIAEoCzIlLm'
-    't1c2ludGEuaW90LmRldmljZS52MS5BdHRyaWJ1dGVWYWx1ZVILY2xvc2VkVmFsdWUSUAoNY29t'
-    'bWlzc2lvbmluZxgEIAEoDjIqLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tbWlzc2lvbmluZ1'
-    'N0YXRlUg1jb21taXNzaW9uaW5n');
-
-@$core.Deprecated('Use readingBindingDescriptor instead')
-const ReadingBinding$json = {
-  '1': 'ReadingBinding',
-  '2': [
-    {
-      '1': 'device_id',
-      '3': 1,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.identity.v1.DeviceId',
-      '10': 'deviceId'
-    },
-    {
-      '1': 'reading',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.access.v1.AttributeRef',
-      '10': 'reading'
-    },
-  ],
-};
-
-/// Descriptor for `ReadingBinding`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List readingBindingDescriptor = $convert.base64Decode(
-    'Cg5SZWFkaW5nQmluZGluZxI+CglkZXZpY2VfaWQYASABKAsyIS5rdXNpbnRhLmlvdC5pZGVudG'
-    'l0eS52MS5EZXZpY2VJZFIIZGV2aWNlSWQSPQoHcmVhZGluZxgCIAEoCzIjLmt1c2ludGEuaW90'
-    'LmFjY2Vzcy52MS5BdHRyaWJ1dGVSZWZSB3JlYWRpbmc=');
+    'Cg5Db250YWN0QmluZGluZxI/CgZvdXRwdXQYASABKAsyJy5rdXNpbnRhLmlvdC5oZWF0aW5nLn'
+    'YxLkRldmljZUF0dHJpYnV0ZVIGb3V0cHV0EkgKDGNsb3NlZF92YWx1ZRgCIAEoCzIlLmt1c2lu'
+    'dGEuaW90LmRldmljZS52MS5BdHRyaWJ1dGVWYWx1ZVILY2xvc2VkVmFsdWU=');
 
 @$core.Deprecated('Use heatingPlantDescriptor instead')
 const HeatingPlant$json = {
@@ -169,54 +118,34 @@ const HeatingPlant$json = {
       '10': 'source'
     },
     {
-      '1': 'heat_source_device_id',
+      '1': 'readings_device_id',
       '3': 5,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.identity.v1.DeviceId',
-      '10': 'heatSourceDeviceId'
+      '10': 'readingsDeviceId'
     },
     {
-      '1': 'sg_ready_block',
+      '1': 'heat_pump',
       '3': 6,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.heating.v1.ContactBinding',
-      '10': 'sgReadyBlock'
-    },
-    {
-      '1': 'sg_ready_boost',
-      '3': 7,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.heating.v1.ContactBinding',
-      '10': 'sgReadyBoost'
-    },
-    {
-      '1': 'add_heat_block',
-      '3': 8,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.heating.v1.ContactBinding',
-      '10': 'addHeatBlock'
+      '6': '.kusinta.iot.heating.v1.HeatPumpControl',
+      '9': 0,
+      '10': 'heatPump'
     },
     {
       '1': 'meter',
-      '3': 9,
+      '3': 7,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.heating.v1.ReadingBinding',
+      '6': '.kusinta.iot.heating.v1.DeviceAttribute',
       '10': 'meter'
     },
-    {
-      '1': 'circuits',
-      '3': 10,
-      '4': 3,
-      '5': 11,
-      '6': '.kusinta.iot.heating.v1.HeatingCircuit',
-      '10': 'circuits'
-    },
-    {'1': 'revision', '3': 11, '4': 1, '5': 4, '10': 'revision'},
+    {'1': 'revision', '3': 8, '4': 1, '5': 4, '10': 'revision'},
+  ],
+  '8': [
+    {'1': 'control'},
   ],
 };
 
@@ -225,34 +154,108 @@ final $typed_data.Uint8List heatingPlantDescriptor = $convert.base64Decode(
     'CgxIZWF0aW5nUGxhbnQSGQoIcGxhbnRfaWQYASABKAlSB3BsYW50SWQSOwoIc3BhY2VfaWQYAi'
     'ABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlkEhIKBG5hbWUY'
     'AyABKAlSBG5hbWUSPgoGc291cmNlGAQgASgOMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZW'
-    'F0U291cmNlS2luZFIGc291cmNlElQKFWhlYXRfc291cmNlX2RldmljZV9pZBgFIAEoCzIhLmt1'
-    'c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUhJoZWF0U291cmNlRGV2aWNlSWQSTAoOc2'
-    'dfcmVhZHlfYmxvY2sYBiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5k'
-    'aW5nUgxzZ1JlYWR5QmxvY2sSTAoOc2dfcmVhZHlfYm9vc3QYByABKAsyJi5rdXNpbnRhLmlvdC'
-    '5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nUgxzZ1JlYWR5Qm9vc3QSTAoOYWRkX2hlYXRfYmxv'
-    'Y2sYCCABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nUgxhZGRIZW'
-    'F0QmxvY2sSPAoFbWV0ZXIYCSABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlJlYWRpbmdC'
-    'aW5kaW5nUgVtZXRlchJCCghjaXJjdWl0cxgKIAMoCzImLmt1c2ludGEuaW90LmhlYXRpbmcudj'
-    'EuSGVhdGluZ0NpcmN1aXRSCGNpcmN1aXRzEhoKCHJldmlzaW9uGAsgASgEUghyZXZpc2lvbg==');
+    'F0U291cmNlS2luZFIGc291cmNlEk8KEnJlYWRpbmdzX2RldmljZV9pZBgFIAEoCzIhLmt1c2lu'
+    'dGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUhByZWFkaW5nc0RldmljZUlkEkYKCWhlYXRfcH'
+    'VtcBgGIAEoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdFB1bXBDb250cm9sSABSCGhl'
+    'YXRQdW1wEj0KBW1ldGVyGAcgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdH'
+    'RyaWJ1dGVSBW1ldGVyEhoKCHJldmlzaW9uGAggASgEUghyZXZpc2lvbkIJCgdjb250cm9s');
+
+@$core.Deprecated('Use heatPumpControlDescriptor instead')
+const HeatPumpControl$json = {
+  '1': 'HeatPumpControl',
+  '2': [
+    {
+      '1': 'sg_ready_block',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ContactBinding',
+      '10': 'sgReadyBlock'
+    },
+    {
+      '1': 'sg_ready_boost',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ContactBinding',
+      '10': 'sgReadyBoost'
+    },
+    {
+      '1': 'add_on_heater_block',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ContactBinding',
+      '10': 'addOnHeaterBlock'
+    },
+  ],
+};
+
+/// Descriptor for `HeatPumpControl`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatPumpControlDescriptor = $convert.base64Decode(
+    'Cg9IZWF0UHVtcENvbnRyb2wSTAoOc2dfcmVhZHlfYmxvY2sYASABKAsyJi5rdXNpbnRhLmlvdC'
+    '5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nUgxzZ1JlYWR5QmxvY2sSTAoOc2dfcmVhZHlfYm9v'
+    'c3QYAiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nUgxzZ1JlYW'
+    'R5Qm9vc3QSVQoTYWRkX29uX2hlYXRlcl9ibG9jaxgDIAEoCzImLmt1c2ludGEuaW90LmhlYXRp'
+    'bmcudjEuQ29udGFjdEJpbmRpbmdSEGFkZE9uSGVhdGVyQmxvY2s=');
 
 @$core.Deprecated('Use heatingCircuitDescriptor instead')
 const HeatingCircuit$json = {
   '1': 'HeatingCircuit',
   '2': [
     {'1': 'circuit_id', '3': 1, '4': 1, '5': 9, '10': 'circuitId'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'plant_id', '3': 2, '4': 1, '5': 9, '10': 'plantId'},
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
     {
-      '1': 'kind',
-      '3': 3,
+      '1': 'radiator',
+      '3': 4,
       '4': 1,
-      '5': 14,
-      '6': '.kusinta.iot.heating.v1.CircuitKind',
-      '10': 'kind'
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.RadiatorCircuit',
+      '9': 0,
+      '10': 'radiator'
     },
-    {'1': 'mixing_valve', '3': 4, '4': 1, '5': 8, '10': 'mixingValve'},
+    {
+      '1': 'floor',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorCircuit',
+      '9': 0,
+      '10': 'floor'
+    },
+    {'1': 'revision', '3': 6, '4': 1, '5': 4, '10': 'revision'},
+  ],
+  '8': [
+    {'1': 'distribution'},
+  ],
+};
+
+/// Descriptor for `HeatingCircuit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatingCircuitDescriptor = $convert.base64Decode(
+    'Cg5IZWF0aW5nQ2lyY3VpdBIdCgpjaXJjdWl0X2lkGAEgASgJUgljaXJjdWl0SWQSGQoIcGxhbn'
+    'RfaWQYAiABKAlSB3BsYW50SWQSEgoEbmFtZRgDIAEoCVIEbmFtZRJFCghyYWRpYXRvchgEIAEo'
+    'CzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuUmFkaWF0b3JDaXJjdWl0SABSCHJhZGlhdG9yEj'
+    'wKBWZsb29yGAUgASgLMiQua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vckNpcmN1aXRIAFIF'
+    'Zmxvb3ISGgoIcmV2aXNpb24YBiABKARSCHJldmlzaW9uQg4KDGRpc3RyaWJ1dGlvbg==');
+
+@$core.Deprecated('Use radiatorCircuitDescriptor instead')
+const RadiatorCircuit$json = {
+  '1': 'RadiatorCircuit',
+};
+
+/// Descriptor for `RadiatorCircuit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List radiatorCircuitDescriptor =
+    $convert.base64Decode('Cg9SYWRpYXRvckNpcmN1aXQ=');
+
+@$core.Deprecated('Use floorCircuitDescriptor instead')
+const FloorCircuit$json = {
+  '1': 'FloorCircuit',
+  '2': [
+    {'1': 'mixing_valve', '3': 1, '4': 1, '5': 8, '10': 'mixingValve'},
     {
       '1': 'supply_cap_centidegrees',
-      '3': 5,
+      '3': 2,
       '4': 1,
       '5': 17,
       '9': 0,
@@ -261,27 +264,19 @@ const HeatingCircuit$json = {
     },
     {
       '1': 'supply_probe',
-      '3': 6,
+      '3': 3,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.heating.v1.ReadingBinding',
+      '6': '.kusinta.iot.heating.v1.DeviceAttribute',
       '10': 'supplyProbe'
     },
     {
       '1': 'return_probe',
-      '3': 7,
+      '3': 4,
       '4': 1,
       '5': 11,
-      '6': '.kusinta.iot.heating.v1.ReadingBinding',
+      '6': '.kusinta.iot.heating.v1.DeviceAttribute',
       '10': 'returnProbe'
-    },
-    {
-      '1': 'zones',
-      '3': 8,
-      '4': 3,
-      '5': 11,
-      '6': '.kusinta.iot.heating.v1.FloorZone',
-      '10': 'zones'
     },
   ],
   '8': [
@@ -289,27 +284,25 @@ const HeatingCircuit$json = {
   ],
 };
 
-/// Descriptor for `HeatingCircuit`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List heatingCircuitDescriptor = $convert.base64Decode(
-    'Cg5IZWF0aW5nQ2lyY3VpdBIdCgpjaXJjdWl0X2lkGAEgASgJUgljaXJjdWl0SWQSEgoEbmFtZR'
-    'gCIAEoCVIEbmFtZRI3CgRraW5kGAMgASgOMiMua3VzaW50YS5pb3QuaGVhdGluZy52MS5DaXJj'
-    'dWl0S2luZFIEa2luZBIhCgxtaXhpbmdfdmFsdmUYBCABKAhSC21peGluZ1ZhbHZlEjsKF3N1cH'
-    'BseV9jYXBfY2VudGlkZWdyZWVzGAUgASgRSABSFXN1cHBseUNhcENlbnRpZGVncmVlc4gBARJJ'
-    'CgxzdXBwbHlfcHJvYmUYBiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlJlYWRpbmdCaW'
-    '5kaW5nUgtzdXBwbHlQcm9iZRJJCgxyZXR1cm5fcHJvYmUYByABKAsyJi5rdXNpbnRhLmlvdC5o'
-    'ZWF0aW5nLnYxLlJlYWRpbmdCaW5kaW5nUgtyZXR1cm5Qcm9iZRI3CgV6b25lcxgIIAMoCzIhLm'
-    't1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lUgV6b25lc0IaChhfc3VwcGx5X2NhcF9j'
-    'ZW50aWRlZ3JlZXM=');
+/// Descriptor for `FloorCircuit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List floorCircuitDescriptor = $convert.base64Decode(
+    'CgxGbG9vckNpcmN1aXQSIQoMbWl4aW5nX3ZhbHZlGAEgASgIUgttaXhpbmdWYWx2ZRI7ChdzdX'
+    'BwbHlfY2FwX2NlbnRpZGVncmVlcxgCIAEoEUgAUhVzdXBwbHlDYXBDZW50aWRlZ3JlZXOIAQES'
+    'SgoMc3VwcGx5X3Byb2JlGAMgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdH'
+    'RyaWJ1dGVSC3N1cHBseVByb2JlEkoKDHJldHVybl9wcm9iZRgEIAEoCzInLmt1c2ludGEuaW90'
+    'LmhlYXRpbmcudjEuRGV2aWNlQXR0cmlidXRlUgtyZXR1cm5Qcm9iZUIaChhfc3VwcGx5X2NhcF'
+    '9jZW50aWRlZ3JlZXM=');
 
 @$core.Deprecated('Use floorZoneDescriptor instead')
 const FloorZone$json = {
   '1': 'FloorZone',
   '2': [
     {'1': 'zone_id', '3': 1, '4': 1, '5': 9, '10': 'zoneId'},
-    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    {'1': 'circuit_id', '3': 2, '4': 1, '5': 9, '10': 'circuitId'},
+    {'1': 'name', '3': 3, '4': 1, '5': 9, '10': 'name'},
     {
       '1': 'output',
-      '3': 3,
+      '3': 4,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.heating.v1.ContactBinding',
@@ -317,21 +310,32 @@ const FloorZone$json = {
     },
     {
       '1': 'rooms',
-      '3': 4,
+      '3': 5,
       '4': 3,
       '5': 11,
       '6': '.kusinta.iot.heating.v1.FloorZoneRoom',
       '10': 'rooms'
     },
+    {
+      '1': 'control_room_id',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'controlRoomId'
+    },
+    {'1': 'revision', '3': 7, '4': 1, '5': 4, '10': 'revision'},
   ],
 };
 
 /// Descriptor for `FloorZone`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List floorZoneDescriptor = $convert.base64Decode(
-    'CglGbG9vclpvbmUSFwoHem9uZV9pZBgBIAEoCVIGem9uZUlkEhIKBG5hbWUYAiABKAlSBG5hbW'
-    'USPgoGb3V0cHV0GAMgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db250YWN0QmluZGlu'
-    'Z1IGb3V0cHV0EjsKBXJvb21zGAQgAygLMiUua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vcl'
-    'pvbmVSb29tUgVyb29tcw==');
+    'CglGbG9vclpvbmUSFwoHem9uZV9pZBgBIAEoCVIGem9uZUlkEh0KCmNpcmN1aXRfaWQYAiABKA'
+    'lSCWNpcmN1aXRJZBISCgRuYW1lGAMgASgJUgRuYW1lEj4KBm91dHB1dBgEIAEoCzImLmt1c2lu'
+    'dGEuaW90LmhlYXRpbmcudjEuQ29udGFjdEJpbmRpbmdSBm91dHB1dBI7CgVyb29tcxgFIAMoCz'
+    'IlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lUm9vbVIFcm9vbXMSSAoPY29udHJv'
+    'bF9yb29tX2lkGAYgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZFINY29udH'
+    'JvbFJvb21JZBIaCghyZXZpc2lvbhgHIAEoBFIIcmV2aXNpb24=');
 
 @$core.Deprecated('Use floorZoneRoomDescriptor instead')
 const FloorZoneRoom$json = {
@@ -352,7 +356,6 @@ const FloorZoneRoom$json = {
       '5': 13,
       '10': 'areaSharePermille'
     },
-    {'1': 'is_control', '3': 3, '4': 1, '5': 8, '10': 'isControl'},
   ],
 };
 
@@ -360,7 +363,7 @@ const FloorZoneRoom$json = {
 final $typed_data.Uint8List floorZoneRoomDescriptor = $convert.base64Decode(
     'Cg1GbG9vclpvbmVSb29tEjkKB3Jvb21faWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
     '52MS5TcGFjZUlkUgZyb29tSWQSLgoTYXJlYV9zaGFyZV9wZXJtaWxsZRgCIAEoDVIRYXJlYVNo'
-    'YXJlUGVybWlsbGUSHQoKaXNfY29udHJvbBgDIAEoCFIJaXNDb250cm9s');
+    'YXJlUGVybWlsbGU=');
 
 @$core.Deprecated('Use comfortLoadDescriptor instead')
 const ComfortLoad$json = {
@@ -392,6 +395,7 @@ const ComfortLoad$json = {
       '6': '.kusinta.iot.heating.v1.ComfortWindow',
       '10': 'windows'
     },
+    {'1': 'revision', '3': 6, '4': 1, '5': 4, '10': 'revision'},
   ],
 };
 
@@ -401,7 +405,8 @@ final $typed_data.Uint8List comfortLoadDescriptor = $convert.base64Decode(
     'oHcm9vbV9pZBgCIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSBnJvb21J'
     'ZBISCgRuYW1lGAMgASgJUgRuYW1lEj4KBm91dHB1dBgEIAEoCzImLmt1c2ludGEuaW90LmhlYX'
     'RpbmcudjEuQ29udGFjdEJpbmRpbmdSBm91dHB1dBI/Cgd3aW5kb3dzGAUgAygLMiUua3VzaW50'
-    'YS5pb3QuaGVhdGluZy52MS5Db21mb3J0V2luZG93Ugd3aW5kb3dz');
+    'YS5pb3QuaGVhdGluZy52MS5Db21mb3J0V2luZG93Ugd3aW5kb3dzEhoKCHJldmlzaW9uGAYgAS'
+    'gEUghyZXZpc2lvbg==');
 
 @$core.Deprecated('Use comfortWindowDescriptor instead')
 const ComfortWindow$json = {
@@ -431,8 +436,24 @@ const HeatingLayout$json = {
       '10': 'plants'
     },
     {
-      '1': 'comfort_loads',
+      '1': 'circuits',
       '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatingCircuit',
+      '10': 'circuits'
+    },
+    {
+      '1': 'floor_zones',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorZone',
+      '10': 'floorZones'
+    },
+    {
+      '1': 'comfort_loads',
+      '3': 4,
       '4': 3,
       '5': 11,
       '6': '.kusinta.iot.heating.v1.ComfortLoad',
@@ -444,5 +465,63 @@ const HeatingLayout$json = {
 /// Descriptor for `HeatingLayout`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List heatingLayoutDescriptor = $convert.base64Decode(
     'Cg1IZWF0aW5nTGF5b3V0EjwKBnBsYW50cxgBIAMoCzIkLmt1c2ludGEuaW90LmhlYXRpbmcudj'
-    'EuSGVhdGluZ1BsYW50UgZwbGFudHMSSAoNY29tZm9ydF9sb2FkcxgCIAMoCzIjLmt1c2ludGEu'
-    'aW90LmhlYXRpbmcudjEuQ29tZm9ydExvYWRSDGNvbWZvcnRMb2Fkcw==');
+    'EuSGVhdGluZ1BsYW50UgZwbGFudHMSQgoIY2lyY3VpdHMYAiADKAsyJi5rdXNpbnRhLmlvdC5o'
+    'ZWF0aW5nLnYxLkhlYXRpbmdDaXJjdWl0UghjaXJjdWl0cxJCCgtmbG9vcl96b25lcxgDIAMoCz'
+    'IhLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lUgpmbG9vclpvbmVzEkgKDWNvbWZv'
+    'cnRfbG9hZHMYBCADKAsyIy5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbWZvcnRMb2FkUgxjb2'
+    '1mb3J0TG9hZHM=');
+
+@$core.Deprecated('Use heatingRecordDescriptor instead')
+const HeatingRecord$json = {
+  '1': 'HeatingRecord',
+  '2': [
+    {
+      '1': 'plant',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatingPlant',
+      '9': 0,
+      '10': 'plant'
+    },
+    {
+      '1': 'circuit',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatingCircuit',
+      '9': 0,
+      '10': 'circuit'
+    },
+    {
+      '1': 'floor_zone',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorZone',
+      '9': 0,
+      '10': 'floorZone'
+    },
+    {
+      '1': 'comfort_load',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ComfortLoad',
+      '9': 0,
+      '10': 'comfortLoad'
+    },
+  ],
+  '8': [
+    {'1': 'record'},
+  ],
+};
+
+/// Descriptor for `HeatingRecord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatingRecordDescriptor = $convert.base64Decode(
+    'Cg1IZWF0aW5nUmVjb3JkEjwKBXBsYW50GAEgASgLMiQua3VzaW50YS5pb3QuaGVhdGluZy52MS'
+    '5IZWF0aW5nUGxhbnRIAFIFcGxhbnQSQgoHY2lyY3VpdBgCIAEoCzImLmt1c2ludGEuaW90Lmhl'
+    'YXRpbmcudjEuSGVhdGluZ0NpcmN1aXRIAFIHY2lyY3VpdBJCCgpmbG9vcl96b25lGAMgASgLMi'
+    'Eua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vclpvbmVIAFIJZmxvb3Jab25lEkgKDGNvbWZv'
+    'cnRfbG9hZBgEIAEoCzIjLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tZm9ydExvYWRIAFILY2'
+    '9tZm9ydExvYWRCCAoGcmVjb3Jk');

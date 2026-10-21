@@ -298,11 +298,17 @@ class PutHeatingPlant(_message.Message):
     plant: _heating_pb2.HeatingPlant
     def __init__(self, plant: _Optional[_Union[_heating_pb2.HeatingPlant, _Mapping]] = ...) -> None: ...
 
-class RemoveHeatingPlant(_message.Message):
-    __slots__ = ("plant_id",)
-    PLANT_ID_FIELD_NUMBER: _ClassVar[int]
-    plant_id: str
-    def __init__(self, plant_id: _Optional[str] = ...) -> None: ...
+class PutHeatingCircuit(_message.Message):
+    __slots__ = ("circuit",)
+    CIRCUIT_FIELD_NUMBER: _ClassVar[int]
+    circuit: _heating_pb2.HeatingCircuit
+    def __init__(self, circuit: _Optional[_Union[_heating_pb2.HeatingCircuit, _Mapping]] = ...) -> None: ...
+
+class PutFloorZone(_message.Message):
+    __slots__ = ("zone",)
+    ZONE_FIELD_NUMBER: _ClassVar[int]
+    zone: _heating_pb2.FloorZone
+    def __init__(self, zone: _Optional[_Union[_heating_pb2.FloorZone, _Mapping]] = ...) -> None: ...
 
 class PutComfortLoad(_message.Message):
     __slots__ = ("comfort_load",)
@@ -310,11 +316,11 @@ class PutComfortLoad(_message.Message):
     comfort_load: _heating_pb2.ComfortLoad
     def __init__(self, comfort_load: _Optional[_Union[_heating_pb2.ComfortLoad, _Mapping]] = ...) -> None: ...
 
-class RemoveComfortLoad(_message.Message):
-    __slots__ = ("comfort_load_id",)
-    COMFORT_LOAD_ID_FIELD_NUMBER: _ClassVar[int]
-    comfort_load_id: str
-    def __init__(self, comfort_load_id: _Optional[str] = ...) -> None: ...
+class RemoveHeatingRecord(_message.Message):
+    __slots__ = ("id",)
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    def __init__(self, id: _Optional[str] = ...) -> None: ...
 
 class SetComfortWindows(_message.Message):
     __slots__ = ("comfort_load_id", "windows")
@@ -325,7 +331,7 @@ class SetComfortWindows(_message.Message):
     def __init__(self, comfort_load_id: _Optional[str] = ..., windows: _Optional[_Iterable[_Union[_heating_pb2.ComfortWindow, _Mapping]]] = ...) -> None: ...
 
 class ManagementRequest(_message.Message):
-    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request", "list_gateway_members", "set_member_role", "remove_from_gateway", "set_access_until", "set_owner_organisation", "request_promotion", "answer_promotion", "list_promotion_requests", "list_heating", "put_heating_plant", "remove_heating_plant", "put_comfort_load", "remove_comfort_load", "set_comfort_windows")
+    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request", "list_gateway_members", "set_member_role", "remove_from_gateway", "set_access_until", "set_owner_organisation", "request_promotion", "answer_promotion", "list_promotion_requests", "list_heating", "put_heating_plant", "put_heating_circuit", "put_floor_zone", "put_comfort_load", "remove_heating_record", "set_comfort_windows")
     CREATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     UPDATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     DELETE_SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -366,9 +372,10 @@ class ManagementRequest(_message.Message):
     LIST_PROMOTION_REQUESTS_FIELD_NUMBER: _ClassVar[int]
     LIST_HEATING_FIELD_NUMBER: _ClassVar[int]
     PUT_HEATING_PLANT_FIELD_NUMBER: _ClassVar[int]
-    REMOVE_HEATING_PLANT_FIELD_NUMBER: _ClassVar[int]
+    PUT_HEATING_CIRCUIT_FIELD_NUMBER: _ClassVar[int]
+    PUT_FLOOR_ZONE_FIELD_NUMBER: _ClassVar[int]
     PUT_COMFORT_LOAD_FIELD_NUMBER: _ClassVar[int]
-    REMOVE_COMFORT_LOAD_FIELD_NUMBER: _ClassVar[int]
+    REMOVE_HEATING_RECORD_FIELD_NUMBER: _ClassVar[int]
     SET_COMFORT_WINDOWS_FIELD_NUMBER: _ClassVar[int]
     create_space: CreateSpace
     update_space: UpdateSpace
@@ -410,8 +417,9 @@ class ManagementRequest(_message.Message):
     list_promotion_requests: _members_pb2.ListPromotionRequests
     list_heating: ListHeating
     put_heating_plant: PutHeatingPlant
-    remove_heating_plant: RemoveHeatingPlant
+    put_heating_circuit: PutHeatingCircuit
+    put_floor_zone: PutFloorZone
     put_comfort_load: PutComfortLoad
-    remove_comfort_load: RemoveComfortLoad
+    remove_heating_record: RemoveHeatingRecord
     set_comfort_windows: SetComfortWindows
-    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ..., reconnect_connector: _Optional[_Union[ReconnectConnector, _Mapping]] = ..., create_invite: _Optional[_Union[_invite_pb2.CreateInvite, _Mapping]] = ..., resend_invite: _Optional[_Union[_invite_pb2.ResendInvite, _Mapping]] = ..., revoke_invite: _Optional[_Union[_invite_pb2.RevokeInvite, _Mapping]] = ..., mark_invite_email_sent: _Optional[_Union[_invite_pb2.MarkInviteEmailSent, _Mapping]] = ..., list_space_invites: _Optional[_Union[_invite_pb2.ListSpaceInvites, _Mapping]] = ..., approve_join_request: _Optional[_Union[_invite_pb2.ApproveJoinRequest, _Mapping]] = ..., deny_join_request: _Optional[_Union[_invite_pb2.DenyJoinRequest, _Mapping]] = ..., list_gateway_members: _Optional[_Union[_members_pb2.ListGatewayMembers, _Mapping]] = ..., set_member_role: _Optional[_Union[_members_pb2.SetMemberRole, _Mapping]] = ..., remove_from_gateway: _Optional[_Union[_members_pb2.RemoveFromGateway, _Mapping]] = ..., set_access_until: _Optional[_Union[_members_pb2.SetAccessUntil, _Mapping]] = ..., set_owner_organisation: _Optional[_Union[_members_pb2.SetOwnerOrganisation, _Mapping]] = ..., request_promotion: _Optional[_Union[_members_pb2.RequestPromotion, _Mapping]] = ..., answer_promotion: _Optional[_Union[_members_pb2.AnswerPromotion, _Mapping]] = ..., list_promotion_requests: _Optional[_Union[_members_pb2.ListPromotionRequests, _Mapping]] = ..., list_heating: _Optional[_Union[ListHeating, _Mapping]] = ..., put_heating_plant: _Optional[_Union[PutHeatingPlant, _Mapping]] = ..., remove_heating_plant: _Optional[_Union[RemoveHeatingPlant, _Mapping]] = ..., put_comfort_load: _Optional[_Union[PutComfortLoad, _Mapping]] = ..., remove_comfort_load: _Optional[_Union[RemoveComfortLoad, _Mapping]] = ..., set_comfort_windows: _Optional[_Union[SetComfortWindows, _Mapping]] = ...) -> None: ...
+    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ..., reconnect_connector: _Optional[_Union[ReconnectConnector, _Mapping]] = ..., create_invite: _Optional[_Union[_invite_pb2.CreateInvite, _Mapping]] = ..., resend_invite: _Optional[_Union[_invite_pb2.ResendInvite, _Mapping]] = ..., revoke_invite: _Optional[_Union[_invite_pb2.RevokeInvite, _Mapping]] = ..., mark_invite_email_sent: _Optional[_Union[_invite_pb2.MarkInviteEmailSent, _Mapping]] = ..., list_space_invites: _Optional[_Union[_invite_pb2.ListSpaceInvites, _Mapping]] = ..., approve_join_request: _Optional[_Union[_invite_pb2.ApproveJoinRequest, _Mapping]] = ..., deny_join_request: _Optional[_Union[_invite_pb2.DenyJoinRequest, _Mapping]] = ..., list_gateway_members: _Optional[_Union[_members_pb2.ListGatewayMembers, _Mapping]] = ..., set_member_role: _Optional[_Union[_members_pb2.SetMemberRole, _Mapping]] = ..., remove_from_gateway: _Optional[_Union[_members_pb2.RemoveFromGateway, _Mapping]] = ..., set_access_until: _Optional[_Union[_members_pb2.SetAccessUntil, _Mapping]] = ..., set_owner_organisation: _Optional[_Union[_members_pb2.SetOwnerOrganisation, _Mapping]] = ..., request_promotion: _Optional[_Union[_members_pb2.RequestPromotion, _Mapping]] = ..., answer_promotion: _Optional[_Union[_members_pb2.AnswerPromotion, _Mapping]] = ..., list_promotion_requests: _Optional[_Union[_members_pb2.ListPromotionRequests, _Mapping]] = ..., list_heating: _Optional[_Union[ListHeating, _Mapping]] = ..., put_heating_plant: _Optional[_Union[PutHeatingPlant, _Mapping]] = ..., put_heating_circuit: _Optional[_Union[PutHeatingCircuit, _Mapping]] = ..., put_floor_zone: _Optional[_Union[PutFloorZone, _Mapping]] = ..., put_comfort_load: _Optional[_Union[PutComfortLoad, _Mapping]] = ..., remove_heating_record: _Optional[_Union[RemoveHeatingRecord, _Mapping]] = ..., set_comfort_windows: _Optional[_Union[SetComfortWindows, _Mapping]] = ...) -> None: ...

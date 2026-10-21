@@ -11,20 +11,20 @@ import { file_kusinta_iot_identity_v1_identity } from "../../identity/v1/identit
  * Describes the file kusinta/iot/heating/v1/heating.proto.
  */
 export const file_kusinta_iot_heating_v1_heating = /*@__PURE__*/
-  fileDesc("CiRrdXNpbnRhL2lvdC9oZWF0aW5nL3YxL2hlYXRpbmcucHJvdG8SFmt1c2ludGEuaW90LmhlYXRpbmcudjEi+wEKDkNvbnRhY3RCaW5kaW5nEjQKCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEjMKBm91dHB1dBgCIAEoCzIjLmt1c2ludGEuaW90LmFjY2Vzcy52MS5BdHRyaWJ1dGVSZWYSOwoMY2xvc2VkX3ZhbHVlGAMgASgLMiUua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0dHJpYnV0ZVZhbHVlEkEKDWNvbW1pc3Npb25pbmcYBCABKA4yKi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbW1pc3Npb25pbmdTdGF0ZSJ8Cg5SZWFkaW5nQmluZGluZxI0CglkZXZpY2VfaWQYASABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZBI0CgdyZWFkaW5nGAIgASgLMiMua3VzaW50YS5pb3QuYWNjZXNzLnYxLkF0dHJpYnV0ZVJlZiKfBAoMSGVhdGluZ1BsYW50EhAKCHBsYW50X2lkGAEgASgJEjIKCHNwYWNlX2lkGAIgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZBIMCgRuYW1lGAMgASgJEjYKBnNvdXJjZRgEIAEoDjImLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdFNvdXJjZUtpbmQSQAoVaGVhdF9zb3VyY2VfZGV2aWNlX2lkGAUgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSPgoOc2dfcmVhZHlfYmxvY2sYBiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nEj4KDnNnX3JlYWR5X2Jvb3N0GAcgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db250YWN0QmluZGluZxI+Cg5hZGRfaGVhdF9ibG9jaxgIIAEoCzImLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29udGFjdEJpbmRpbmcSNQoFbWV0ZXIYCSABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlJlYWRpbmdCaW5kaW5nEjgKCGNpcmN1aXRzGAogAygLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0aW5nQ2lyY3VpdBIQCghyZXZpc2lvbhgLIAEoBCLrAgoOSGVhdGluZ0NpcmN1aXQSEgoKY2lyY3VpdF9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEjEKBGtpbmQYAyABKA4yIy5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNpcmN1aXRLaW5kEhQKDG1peGluZ192YWx2ZRgEIAEoCBIkChdzdXBwbHlfY2FwX2NlbnRpZGVncmVlcxgFIAEoEUgAiAEBEjwKDHN1cHBseV9wcm9iZRgGIAEoCzImLmt1c2ludGEuaW90LmhlYXRpbmcudjEuUmVhZGluZ0JpbmRpbmcSPAoMcmV0dXJuX3Byb2JlGAcgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5SZWFkaW5nQmluZGluZxIwCgV6b25lcxgIIAMoCzIhLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lQhoKGF9zdXBwbHlfY2FwX2NlbnRpZGVncmVlcyKYAQoJRmxvb3Jab25lEg8KB3pvbmVfaWQYASABKAkSDAoEbmFtZRgCIAEoCRI2CgZvdXRwdXQYAyABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nEjQKBXJvb21zGAQgAygLMiUua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vclpvbmVSb29tInMKDUZsb29yWm9uZVJvb20SMQoHcm9vbV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSGwoTYXJlYV9zaGFyZV9wZXJtaWxsZRgCIAEoDRISCgppc19jb250cm9sGAMgASgIItcBCgtDb21mb3J0TG9hZBIXCg9jb21mb3J0X2xvYWRfaWQYASABKAkSMQoHcm9vbV9pZBgCIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSDAoEbmFtZRgDIAEoCRI2CgZvdXRwdXQYBCABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nEjYKB3dpbmRvd3MYBSADKAsyJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbWZvcnRXaW5kb3ciSwoNQ29tZm9ydFdpbmRvdxIQCgh3ZWVrZGF5cxgBIAEoDRIUCgxzdGFydF9taW51dGUYAiABKA0SEgoKZW5kX21pbnV0ZRgDIAEoDSKBAQoNSGVhdGluZ0xheW91dBI0CgZwbGFudHMYASADKAsyJC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRpbmdQbGFudBI6Cg1jb21mb3J0X2xvYWRzGAIgAygLMiMua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db21mb3J0TG9hZCqdAQoSQ29tbWlzc2lvbmluZ1N0YXRlEiMKH0NPTU1JU1NJT05JTkdfU1RBVEVfVU5TUEVDSUZJRUQQABIiCh5DT01NSVNTSU9OSU5HX1NUQVRFX05PVF9URVNURUQQARIeChpDT01NSVNTSU9OSU5HX1NUQVRFX1BBU1NFRBACEh4KGkNPTU1JU1NJT05JTkdfU1RBVEVfRkFJTEVEEAMqpQIKDkhlYXRTb3VyY2VLaW5kEiAKHEhFQVRfU09VUkNFX0tJTkRfVU5TUEVDSUZJRUQQABIqCiZIRUFUX1NPVVJDRV9LSU5EX0VYSEFVU1RfQUlSX0hFQVRfUFVNUBABEiwKKEhFQVRfU09VUkNFX0tJTkRfR1JPVU5EX1NPVVJDRV9IRUFUX1BVTVAQAhIoCiRIRUFUX1NPVVJDRV9LSU5EX0FJUl9XQVRFUl9IRUFUX1BVTVAQAxIlCiFIRUFUX1NPVVJDRV9LSU5EX0RJU1RSSUNUX0hFQVRJTkcQBBIkCiBIRUFUX1NPVVJDRV9LSU5EX0VMRUNUUklDX0JPSUxFUhAFEiAKHEhFQVRfU09VUkNFX0tJTkRfRlVFTF9CT0lMRVIQBipeCgtDaXJjdWl0S2luZBIcChhDSVJDVUlUX0tJTkRfVU5TUEVDSUZJRUQQABIZChVDSVJDVUlUX0tJTkRfUkFESUFUT1IQARIWChJDSVJDVUlUX0tJTkRfRkxPT1IQAkICSAFiBnByb3RvMw", [file_kusinta_iot_access_v1_acl, file_kusinta_iot_device_v1_cluster_state, file_kusinta_iot_identity_v1_identity]);
+  fileDesc("CiRrdXNpbnRhL2lvdC9oZWF0aW5nL3YxL2hlYXRpbmcucHJvdG8SFmt1c2ludGEuaW90LmhlYXRpbmcudjEifwoPRGV2aWNlQXR0cmlidXRlEjQKCWRldmljZV9pZBgBIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkEjYKCWF0dHJpYnV0ZRgCIAEoCzIjLmt1c2ludGEuaW90LmFjY2Vzcy52MS5BdHRyaWJ1dGVSZWYihgEKDkNvbnRhY3RCaW5kaW5nEjcKBm91dHB1dBgBIAEoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRGV2aWNlQXR0cmlidXRlEjsKDGNsb3NlZF92YWx1ZRgCIAEoCzIlLmt1c2ludGEuaW90LmRldmljZS52MS5BdHRyaWJ1dGVWYWx1ZSLsAgoMSGVhdGluZ1BsYW50EhAKCHBsYW50X2lkGAEgASgJEjIKCHNwYWNlX2lkGAIgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZBIMCgRuYW1lGAMgASgJEjYKBnNvdXJjZRgEIAEoDjImLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdFNvdXJjZUtpbmQSPQoScmVhZGluZ3NfZGV2aWNlX2lkGAUgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWQSPAoJaGVhdF9wdW1wGAYgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0UHVtcENvbnRyb2xIABI2CgVtZXRlchgHIAEoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRGV2aWNlQXR0cmlidXRlEhAKCHJldmlzaW9uGAggASgEQgkKB2NvbnRyb2wi1gEKD0hlYXRQdW1wQ29udHJvbBI+Cg5zZ19yZWFkeV9ibG9jaxgBIAEoCzImLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29udGFjdEJpbmRpbmcSPgoOc2dfcmVhZHlfYm9vc3QYAiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nEkMKE2FkZF9vbl9oZWF0ZXJfYmxvY2sYAyABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nItoBCg5IZWF0aW5nQ2lyY3VpdBISCgpjaXJjdWl0X2lkGAEgASgJEhAKCHBsYW50X2lkGAIgASgJEgwKBG5hbWUYAyABKAkSOwoIcmFkaWF0b3IYBCABKAsyJy5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlJhZGlhdG9yQ2lyY3VpdEgAEjUKBWZsb29yGAUgASgLMiQua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vckNpcmN1aXRIABIQCghyZXZpc2lvbhgGIAEoBEIOCgxkaXN0cmlidXRpb24iEQoPUmFkaWF0b3JDaXJjdWl0IuQBCgxGbG9vckNpcmN1aXQSFAoMbWl4aW5nX3ZhbHZlGAEgASgIEiQKF3N1cHBseV9jYXBfY2VudGlkZWdyZWVzGAIgASgRSACIAQESPQoMc3VwcGx5X3Byb2JlGAMgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdHRyaWJ1dGUSPQoMcmV0dXJuX3Byb2JlGAQgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdHRyaWJ1dGVCGgoYX3N1cHBseV9jYXBfY2VudGlkZWdyZWVzIvkBCglGbG9vclpvbmUSDwoHem9uZV9pZBgBIAEoCRISCgpjaXJjdWl0X2lkGAIgASgJEgwKBG5hbWUYAyABKAkSNgoGb3V0cHV0GAQgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db250YWN0QmluZGluZxI0CgVyb29tcxgFIAMoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lUm9vbRI5Cg9jb250cm9sX3Jvb21faWQYBiABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkEhAKCHJldmlzaW9uGAcgASgEIl8KDUZsb29yWm9uZVJvb20SMQoHcm9vbV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWQSGwoTYXJlYV9zaGFyZV9wZXJtaWxsZRgCIAEoDSLpAQoLQ29tZm9ydExvYWQSFwoPY29tZm9ydF9sb2FkX2lkGAEgASgJEjEKB3Jvb21faWQYAiABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkEgwKBG5hbWUYAyABKAkSNgoGb3V0cHV0GAQgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db250YWN0QmluZGluZxI2Cgd3aW5kb3dzGAUgAygLMiUua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db21mb3J0V2luZG93EhAKCHJldmlzaW9uGAYgASgEIksKDUNvbWZvcnRXaW5kb3cSEAoId2Vla2RheXMYASABKA0SFAoMc3RhcnRfbWludXRlGAIgASgNEhIKCmVuZF9taW51dGUYAyABKA0i8wEKDUhlYXRpbmdMYXlvdXQSNAoGcGxhbnRzGAEgAygLMiQua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0aW5nUGxhbnQSOAoIY2lyY3VpdHMYAiADKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRpbmdDaXJjdWl0EjYKC2Zsb29yX3pvbmVzGAMgAygLMiEua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vclpvbmUSOgoNY29tZm9ydF9sb2FkcxgEIAMoCzIjLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tZm9ydExvYWQigQIKDUhlYXRpbmdSZWNvcmQSNQoFcGxhbnQYASABKAsyJC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRpbmdQbGFudEgAEjkKB2NpcmN1aXQYAiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRpbmdDaXJjdWl0SAASNwoKZmxvb3Jfem9uZRgDIAEoCzIhLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lSAASOwoMY29tZm9ydF9sb2FkGAQgASgLMiMua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db21mb3J0TG9hZEgAQggKBnJlY29yZCqlAgoOSGVhdFNvdXJjZUtpbmQSIAocSEVBVF9TT1VSQ0VfS0lORF9VTlNQRUNJRklFRBAAEioKJkhFQVRfU09VUkNFX0tJTkRfRVhIQVVTVF9BSVJfSEVBVF9QVU1QEAESLAooSEVBVF9TT1VSQ0VfS0lORF9HUk9VTkRfU09VUkNFX0hFQVRfUFVNUBACEigKJEhFQVRfU09VUkNFX0tJTkRfQUlSX1dBVEVSX0hFQVRfUFVNUBADEiUKIUhFQVRfU09VUkNFX0tJTkRfRElTVFJJQ1RfSEVBVElORxAEEiQKIEhFQVRfU09VUkNFX0tJTkRfRUxFQ1RSSUNfQk9JTEVSEAUSIAocSEVBVF9TT1VSQ0VfS0lORF9GVUVMX0JPSUxFUhAGQgJIAWIGcHJvdG8z", [file_kusinta_iot_access_v1_acl, file_kusinta_iot_device_v1_cluster_state, file_kusinta_iot_identity_v1_identity]);
+
+/**
+ * Describes the message kusinta.iot.heating.v1.DeviceAttribute.
+ * Use `create(DeviceAttributeSchema)` to create a new message.
+ */
+export const DeviceAttributeSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_heating_v1_heating, 0);
 
 /**
  * Describes the message kusinta.iot.heating.v1.ContactBinding.
  * Use `create(ContactBindingSchema)` to create a new message.
  */
 export const ContactBindingSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 0);
-
-/**
- * Describes the message kusinta.iot.heating.v1.ReadingBinding.
- * Use `create(ReadingBindingSchema)` to create a new message.
- */
-export const ReadingBindingSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_heating_v1_heating, 1);
 
 /**
@@ -35,88 +35,84 @@ export const HeatingPlantSchema = /*@__PURE__*/
   messageDesc(file_kusinta_iot_heating_v1_heating, 2);
 
 /**
+ * Describes the message kusinta.iot.heating.v1.HeatPumpControl.
+ * Use `create(HeatPumpControlSchema)` to create a new message.
+ */
+export const HeatPumpControlSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_heating_v1_heating, 3);
+
+/**
  * Describes the message kusinta.iot.heating.v1.HeatingCircuit.
  * Use `create(HeatingCircuitSchema)` to create a new message.
  */
 export const HeatingCircuitSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 3);
+  messageDesc(file_kusinta_iot_heating_v1_heating, 4);
+
+/**
+ * Describes the message kusinta.iot.heating.v1.RadiatorCircuit.
+ * Use `create(RadiatorCircuitSchema)` to create a new message.
+ */
+export const RadiatorCircuitSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_heating_v1_heating, 5);
+
+/**
+ * Describes the message kusinta.iot.heating.v1.FloorCircuit.
+ * Use `create(FloorCircuitSchema)` to create a new message.
+ */
+export const FloorCircuitSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_heating_v1_heating, 6);
 
 /**
  * Describes the message kusinta.iot.heating.v1.FloorZone.
  * Use `create(FloorZoneSchema)` to create a new message.
  */
 export const FloorZoneSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 4);
+  messageDesc(file_kusinta_iot_heating_v1_heating, 7);
 
 /**
  * Describes the message kusinta.iot.heating.v1.FloorZoneRoom.
  * Use `create(FloorZoneRoomSchema)` to create a new message.
  */
 export const FloorZoneRoomSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 5);
+  messageDesc(file_kusinta_iot_heating_v1_heating, 8);
 
 /**
  * Describes the message kusinta.iot.heating.v1.ComfortLoad.
  * Use `create(ComfortLoadSchema)` to create a new message.
  */
 export const ComfortLoadSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 6);
+  messageDesc(file_kusinta_iot_heating_v1_heating, 9);
 
 /**
  * Describes the message kusinta.iot.heating.v1.ComfortWindow.
  * Use `create(ComfortWindowSchema)` to create a new message.
  */
 export const ComfortWindowSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 7);
+  messageDesc(file_kusinta_iot_heating_v1_heating, 10);
 
 /**
  * Describes the message kusinta.iot.heating.v1.HeatingLayout.
  * Use `create(HeatingLayoutSchema)` to create a new message.
  */
 export const HeatingLayoutSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_heating_v1_heating, 8);
+  messageDesc(file_kusinta_iot_heating_v1_heating, 11);
 
 /**
- * Describes the enum kusinta.iot.heating.v1.CommissioningState.
+ * Describes the message kusinta.iot.heating.v1.HeatingRecord.
+ * Use `create(HeatingRecordSchema)` to create a new message.
  */
-export const CommissioningStateSchema = /*@__PURE__*/
-  enumDesc(file_kusinta_iot_heating_v1_heating, 0);
-
-/**
- * Whether a binding has passed its commissioning test: the gateway drives the output away
- * from rest under a short lease and sees the contact report the change and return to rest
- * when the lease runs out.
- *
- * A binding that has not passed is never driven. Binding a different device or output,
- * replacing the device, or changing what a floor zone heats (its rooms or its control
- * room) returns it to NOT_TESTED until it passes again. Changing area shares does not.
- *
- * @generated from enum kusinta.iot.heating.v1.CommissioningState
- */
-export const CommissioningState = /*@__PURE__*/
-  tsEnum(CommissioningStateSchema);
+export const HeatingRecordSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_heating_v1_heating, 12);
 
 /**
  * Describes the enum kusinta.iot.heating.v1.HeatSourceKind.
  */
 export const HeatSourceKindSchema = /*@__PURE__*/
-  enumDesc(file_kusinta_iot_heating_v1_heating, 1);
+  enumDesc(file_kusinta_iot_heating_v1_heating, 0);
 
 /**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
  */
 export const HeatSourceKind = /*@__PURE__*/
   tsEnum(HeatSourceKindSchema);
-
-/**
- * Describes the enum kusinta.iot.heating.v1.CircuitKind.
- */
-export const CircuitKindSchema = /*@__PURE__*/
-  enumDesc(file_kusinta_iot_heating_v1_heating, 2);
-
-/**
- * @generated from enum kusinta.iot.heating.v1.CircuitKind
- */
-export const CircuitKind = /*@__PURE__*/
-  tsEnum(CircuitKindSchema);
 

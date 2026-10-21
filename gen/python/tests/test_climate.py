@@ -237,7 +237,8 @@ def test_a_history_bucket_without_readings_leaves_them_absent_not_zero():
         decoded.HasField("effective_target_centidegrees"),
         decoded.HasField("valve_open_permille"),
         decoded.HasField("valve_open_seconds"),
-    ] == [False, False, False, False, False]
+        decoded.HasField("floor_heating_seconds"),
+    ] == [False, False, False, False, False, False]
 
 
 def test_a_history_bucket_carries_its_readings():
@@ -248,6 +249,7 @@ def test_a_history_bucket_carries_its_readings():
         effective_target_centidegrees=1700,
         valve_open_permille=420,
         valve_open_seconds=540,
+        floor_heating_seconds=600,
     )
 
     decoded = _round_trip(sample)
@@ -257,7 +259,8 @@ def test_a_history_bucket_carries_its_readings():
         decoded.effective_target_centidegrees,
         decoded.valve_open_permille,
         decoded.valve_open_seconds,
-    ) == (2087, 2100, 1700, 420, 540)
+        decoded.floor_heating_seconds,
+    ) == (2087, 2100, 1700, 420, 540, 600)
 
 
 def test_a_history_answers_with_how_far_back_it_is_kept_and_its_samples():

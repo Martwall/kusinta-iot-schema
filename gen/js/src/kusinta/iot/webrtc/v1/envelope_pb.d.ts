@@ -12,7 +12,7 @@ import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
-import type { HeatingLayout } from "../../heating/v1/heating_pb.js";
+import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -397,12 +397,20 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
     case: "promotionRequests";
   } | {
     /**
-     * list_heating, put_heating_plant, put_comfort_load
+     * list_heating
      *
      * @generated from field: kusinta.iot.heating.v1.HeatingLayout heating_layout = 15;
      */
     value: HeatingLayout;
     case: "heatingLayout";
+  } | {
+    /**
+     * put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
+     */
+    value: HeatingRecord;
+    case: "heatingRecord";
   } | { case: undefined; value?: undefined };
 };
 
