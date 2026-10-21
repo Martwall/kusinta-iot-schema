@@ -472,6 +472,13 @@ describe('heating records', () => {
     expect(decoded.request).toMatchObject({ case: 'setComfortWindows', value: { windows: [{ startMinute: 300 }] } })
   })
 
+  it('sets windows naming the windows revision they replace', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'setComfortWindows', value: { comfortLoadId: 'load-1', windowsRevision: 9n } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'setComfortWindows', value: { windowsRevision: 9n } })
+  })
+
   it('answers a put with the one record as stored', () => {
     const decoded = onTheWire(ManagementResultSchema, {
       inReplyTo: 'm-1',

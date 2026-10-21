@@ -107,4 +107,19 @@ describe('comfort load', () => {
   it('has no windows by default', () => {
     expect(create(ComfortLoadSchema, {}).windows).toEqual([])
   })
+
+  it('revisions its windows apart from the record', () => {
+    const decoded = onTheWire(ComfortLoadSchema, { revision: 4n, windowsRevision: 9n })
+    expect([decoded.revision, decoded.windowsRevision]).toEqual([4n, 9n])
+  })
+
+  it('says when its windows are withheld rather than empty', () => {
+    const decoded = onTheWire(ComfortLoadSchema, { windowsWithheld: true })
+    expect([decoded.windowsWithheld, decoded.windows]).toEqual([true, []])
+  })
+
+  it('takes a whole day as minute 0 to 1440', () => {
+    const decoded = onTheWire(ComfortLoadSchema, { windows: [{ weekdays: 0b1111111, startMinute: 0, endMinute: 1440 }] })
+    expect(decoded.windows).toMatchObject([{ startMinute: 0, endMinute: 1440 }])
+  })
 })

@@ -293,7 +293,8 @@ binds one of its outputs to a role, by name. Records are flat, each naming its p
 each is put (`PutHeatingPlant`, `PutHeatingCircuit`, `PutFloorZone`, `PutComfortLoad`) and
 revisioned on its own; any is removed with `RemoveHeatingRecord`, by revision, once nothing
 lies under it. Who may see a record goes by the rooms it names: a zone or comfort load in a
-home is that home's, whatever space its plant serves.
+home is that home's, whatever space its plant serves, and may name its parent as a bare id.
+A zone's rooms lie in one home, or all outside homes.
 
 - **Plant:** one heat source, the device its own readings come from, its meter and its
   `control`. A heat pump is steered through its two **SG Ready** inputs (named by what each
@@ -306,8 +307,10 @@ home is that home's, whatever space its plant serves.
   a room may have several zones. Area shares sum to 1000, and one **control room** alone
   steers the zone.
 - **Comfort load:** a heated bathroom floor or towel heater, run in **time windows**
-  (minutes of the building's local day) rather than to a target. Residents set the windows
-  (`SetComfortWindows`), apart from the binding.
+  (minutes of the building's local day, end exclusive, so 0–1440 is a whole day) rather
+  than to a target. Residents set the windows (`SetComfortWindows`) under their own
+  `windows_revision`, apart from the binding. An installer under a commissioning grant sees
+  the load without them (`windows_withheld`).
 
 Every role is a **`ContactBinding`**: an output and `closed_value`, the output value with
 which the contact is closed. That is a wiring fact, not a device fact: a relay wired through

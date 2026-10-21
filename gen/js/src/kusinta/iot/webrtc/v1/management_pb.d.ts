@@ -1224,9 +1224,11 @@ export declare const ListHeatingSchema: GenMessage<ListHeating>;
  *
  *   INVALID_REQUEST
  *   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
+ *   "ZONE_ROOMS_ACROSS_HOMES" a floor zone with rooms in two homes, or in a home and outside
+ *                           homes.
  *   "ZONE_AREA_SHARES"      a floor zone with a room listed twice, a share of 0, or shares
  *                           that do not sum to 1000.
- *   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space.
+ *   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space; metadata "room_id" names it.
  *   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
  *   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
  *   "CONTROL_EMPTY"         a plant control that binds no input.
@@ -1243,8 +1245,16 @@ export declare const ListHeatingSchema: GenMessage<ListHeating>;
  *   "REST_STATE"            an output whose lapse value, read through closed_value, does not
  *                           leave the contact where its role rests.
  *
- * A parent, device or room the caller cannot reach is refused as NOT_ENTITLED, as it is
- * everywhere.
+ * A refusal about one binding names it in metadata "field", by its proto field name:
+ * "sg_ready_block", "sg_ready_boost", "add_on_heater_block", "meter", "output",
+ * "supply_probe", "return_probe".
+ *
+ * A device or room the caller cannot reach, a parent it may not use (see heating.v1) and an
+ * id that does not exist are all refused as NOT_ENTITLED with the same metadata, so no answer
+ * tells one from another. HAS_CHILDREN, CHILDREN_INVALID and OUTPUT_BOUND_TWICE may count
+ * records the caller cannot see — a zone in a home under a circuit outside it. That one bit
+ * is accepted, as it is for the members listing; their metadata never names or counts such
+ * a record.
  *
  * @generated from message kusinta.iot.webrtc.v1.PutHeatingPlant
  */
@@ -1345,8 +1355,10 @@ export declare const RemoveHeatingRecordSchema: GenMessage<RemoveHeatingRecord>;
 
 /**
  * Replaces a comfort load's windows: a resident's setting, apart from the binding and its
- * revision; the last to set them wins. Refused as INVALID_REQUEST with metadata "reason"
- * "WINDOW" for a window that ComfortWindow does not allow. Acked.
+ * revision. Answered with the HeatingRecord as stored. Refused as FAILED_PRECONDITION
+ * "STALE_REVISION" when windows_revision is set and the windows changed since, and as
+ * INVALID_REQUEST "WINDOW" for a window that ComfortWindow does not allow or more than 16.
+ * From an installer under a commissioning grant, NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetComfortWindows
  */
@@ -1360,6 +1372,13 @@ export declare type SetComfortWindows = Message<"kusinta.iot.webrtc.v1.SetComfor
    * @generated from field: repeated kusinta.iot.heating.v1.ComfortWindow windows = 2;
    */
   windows: ComfortWindow[];
+
+  /**
+   * The ComfortLoad.windows_revision these windows replace. Unset: whatever is stored.
+   *
+   * @generated from field: optional uint64 windows_revision = 3;
+   */
+  windowsRevision?: bigint | undefined;
 };
 
 /**

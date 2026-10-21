@@ -1016,7 +1016,8 @@ class ManagementResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $8.HeatingLayout ensureHeatingLayout() => $_ensure(14);
 
-  /// put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load
+  /// put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load,
+  /// set_comfort_windows
   @$pb.TagNumber(16)
   $8.HeatingRecord get heatingRecord => $_getN(15);
   @$pb.TagNumber(16)

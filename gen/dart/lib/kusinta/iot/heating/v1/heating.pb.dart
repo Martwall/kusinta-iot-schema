@@ -983,6 +983,8 @@ class ComfortLoad extends $pb.GeneratedMessage {
     ContactBinding? output,
     $core.Iterable<ComfortWindow>? windows,
     $fixnum.Int64? revision,
+    $fixnum.Int64? windowsRevision,
+    $core.bool? windowsWithheld,
   }) {
     final result = create();
     if (comfortLoadId != null) result.comfortLoadId = comfortLoadId;
@@ -991,6 +993,8 @@ class ComfortLoad extends $pb.GeneratedMessage {
     if (output != null) result.output = output;
     if (windows != null) result.windows.addAll(windows);
     if (revision != null) result.revision = revision;
+    if (windowsRevision != null) result.windowsRevision = windowsRevision;
+    if (windowsWithheld != null) result.windowsWithheld = windowsWithheld;
     return result;
   }
 
@@ -1019,6 +1023,10 @@ class ComfortLoad extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         6, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(
+        7, _omitFieldNames ? '' : 'windowsRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOB(8, _omitFieldNames ? '' : 'windowsWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1082,8 +1090,10 @@ class ComfortLoad extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ContactBinding ensureOutput() => $_ensure(3);
 
-  /// When the load may heat. Empty: only when the plan allows it for price. Set with
-  /// SetComfortWindows, never in a put, which keeps them.
+  /// When the load may heat: the union of its windows, at most 16. Empty: only when the
+  /// plan allows it for price. Set with SetComfortWindows, never in a put, which keeps them.
+  /// While the building's time zone is not known (space.v1.Space.time_zone unset) no window
+  /// applies and the load is left at rest, heating under its own thermostat.
   @$pb.TagNumber(5)
   $pb.PbList<ComfortWindow> get windows => $_getList(4);
 
@@ -1096,6 +1106,27 @@ class ComfortLoad extends $pb.GeneratedMessage {
   $core.bool hasRevision() => $_has(5);
   @$pb.TagNumber(6)
   void clearRevision() => $_clearField(6);
+
+  /// Set by the gateway and bumped by every SetComfortWindows; see SetComfortWindows.
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get windowsRevision => $_getI64(6);
+  @$pb.TagNumber(7)
+  set windowsRevision($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasWindowsRevision() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearWindowsRevision() => $_clearField(7);
+
+  /// Set when windows is left out for the recipient — an installer under a commissioning
+  /// grant — so that an empty list is not read as "only when the plan allows it for price".
+  @$pb.TagNumber(8)
+  $core.bool get windowsWithheld => $_getBF(7);
+  @$pb.TagNumber(8)
+  set windowsWithheld($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasWindowsWithheld() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearWindowsWithheld() => $_clearField(8);
 }
 
 /// A recurring stretch of the building's local day (space.v1.Space.time_zone).
@@ -1163,8 +1194,13 @@ class ComfortWindow extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearWeekdays() => $_clearField(1);
 
-  /// Minutes after local midnight, 0–1439, start and end never equal. A window whose end is
-  /// before its start runs past midnight into the next day.
+  /// Minutes after local midnight: start 0–1439, end 1–1440 and exclusive, never equal, so 0
+  /// to 1440 is a whole day. A window whose end is before its start runs past midnight into
+  /// the next day.
+  ///
+  /// On a day that changes to or from daylight saving, minutes are local wall-clock time: a
+  /// start or end in the skipped hour falls at the first minute after it, and a repeated
+  /// hour counts once, at its first occurrence.
   @$pb.TagNumber(2)
   $core.int get startMinute => $_getIZ(1);
   @$pb.TagNumber(2)

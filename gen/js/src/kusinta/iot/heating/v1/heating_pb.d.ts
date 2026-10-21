@@ -414,8 +414,10 @@ export declare type ComfortLoad = Message<"kusinta.iot.heating.v1.ComfortLoad"> 
   output?: ContactBinding | undefined;
 
   /**
-   * When the load may heat. Empty: only when the plan allows it for price. Set with
-   * SetComfortWindows, never in a put, which keeps them.
+   * When the load may heat: the union of its windows, at most 16. Empty: only when the
+   * plan allows it for price. Set with SetComfortWindows, never in a put, which keeps them.
+   * While the building's time zone is not known (space.v1.Space.time_zone unset) no window
+   * applies and the load is left at rest, heating under its own thermostat.
    *
    * @generated from field: repeated kusinta.iot.heating.v1.ComfortWindow windows = 5;
    */
@@ -427,6 +429,21 @@ export declare type ComfortLoad = Message<"kusinta.iot.heating.v1.ComfortLoad"> 
    * @generated from field: uint64 revision = 6;
    */
   revision: bigint;
+
+  /**
+   * Set by the gateway and bumped by every SetComfortWindows; see SetComfortWindows.
+   *
+   * @generated from field: uint64 windows_revision = 7;
+   */
+  windowsRevision: bigint;
+
+  /**
+   * Set when windows is left out for the recipient — an installer under a commissioning
+   * grant — so that an empty list is not read as "only when the plan allows it for price".
+   *
+   * @generated from field: bool windows_withheld = 8;
+   */
+  windowsWithheld: boolean;
 };
 
 /**
@@ -450,8 +467,13 @@ export declare type ComfortWindow = Message<"kusinta.iot.heating.v1.ComfortWindo
   weekdays: number;
 
   /**
-   * Minutes after local midnight, 0–1439, start and end never equal. A window whose end is
-   * before its start runs past midnight into the next day.
+   * Minutes after local midnight: start 0–1439, end 1–1440 and exclusive, never equal, so 0
+   * to 1440 is a whole day. A window whose end is before its start runs past midnight into
+   * the next day.
+   *
+   * On a day that changes to or from daylight saving, minutes are local wall-clock time: a
+   * start or end in the skipped hour falls at the first minute after it, and a repeated
+   * hour counts once, at its first occurrence.
    *
    * @generated from field: uint32 start_minute = 2;
    */

@@ -132,20 +132,24 @@ class FloorZoneRoom(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., area_share_permille: _Optional[int] = ...) -> None: ...
 
 class ComfortLoad(_message.Message):
-    __slots__ = ("comfort_load_id", "room_id", "name", "output", "windows", "revision")
+    __slots__ = ("comfort_load_id", "room_id", "name", "output", "windows", "revision", "windows_revision", "windows_withheld")
     COMFORT_LOAD_ID_FIELD_NUMBER: _ClassVar[int]
     ROOM_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     OUTPUT_FIELD_NUMBER: _ClassVar[int]
     WINDOWS_FIELD_NUMBER: _ClassVar[int]
     REVISION_FIELD_NUMBER: _ClassVar[int]
+    WINDOWS_REVISION_FIELD_NUMBER: _ClassVar[int]
+    WINDOWS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     comfort_load_id: str
     room_id: _identity_pb2.SpaceId
     name: str
     output: ContactBinding
     windows: _containers.RepeatedCompositeFieldContainer[ComfortWindow]
     revision: int
-    def __init__(self, comfort_load_id: _Optional[str] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., output: _Optional[_Union[ContactBinding, _Mapping]] = ..., windows: _Optional[_Iterable[_Union[ComfortWindow, _Mapping]]] = ..., revision: _Optional[int] = ...) -> None: ...
+    windows_revision: int
+    windows_withheld: bool
+    def __init__(self, comfort_load_id: _Optional[str] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., output: _Optional[_Union[ContactBinding, _Mapping]] = ..., windows: _Optional[_Iterable[_Union[ComfortWindow, _Mapping]]] = ..., revision: _Optional[int] = ..., windows_revision: _Optional[int] = ..., windows_withheld: _Optional[bool] = ...) -> None: ...
 
 class ComfortWindow(_message.Message):
     __slots__ = ("weekdays", "start_minute", "end_minute")

@@ -396,6 +396,8 @@ const ComfortLoad$json = {
       '10': 'windows'
     },
     {'1': 'revision', '3': 6, '4': 1, '5': 4, '10': 'revision'},
+    {'1': 'windows_revision', '3': 7, '4': 1, '5': 4, '10': 'windowsRevision'},
+    {'1': 'windows_withheld', '3': 8, '4': 1, '5': 8, '10': 'windowsWithheld'},
   ],
 };
 
@@ -406,7 +408,8 @@ final $typed_data.Uint8List comfortLoadDescriptor = $convert.base64Decode(
     'ZBISCgRuYW1lGAMgASgJUgRuYW1lEj4KBm91dHB1dBgEIAEoCzImLmt1c2ludGEuaW90LmhlYX'
     'RpbmcudjEuQ29udGFjdEJpbmRpbmdSBm91dHB1dBI/Cgd3aW5kb3dzGAUgAygLMiUua3VzaW50'
     'YS5pb3QuaGVhdGluZy52MS5Db21mb3J0V2luZG93Ugd3aW5kb3dzEhoKCHJldmlzaW9uGAYgAS'
-    'gEUghyZXZpc2lvbg==');
+    'gEUghyZXZpc2lvbhIpChB3aW5kb3dzX3JldmlzaW9uGAcgASgEUg93aW5kb3dzUmV2aXNpb24S'
+    'KQoQd2luZG93c193aXRoaGVsZBgIIAEoCFIPd2luZG93c1dpdGhoZWxk');
 
 @$core.Deprecated('Use comfortWindowDescriptor instead')
 const ComfortWindow$json = {

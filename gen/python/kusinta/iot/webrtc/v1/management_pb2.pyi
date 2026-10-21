@@ -325,12 +325,14 @@ class RemoveHeatingRecord(_message.Message):
     def __init__(self, id: _Optional[str] = ..., revision: _Optional[int] = ...) -> None: ...
 
 class SetComfortWindows(_message.Message):
-    __slots__ = ("comfort_load_id", "windows")
+    __slots__ = ("comfort_load_id", "windows", "windows_revision")
     COMFORT_LOAD_ID_FIELD_NUMBER: _ClassVar[int]
     WINDOWS_FIELD_NUMBER: _ClassVar[int]
+    WINDOWS_REVISION_FIELD_NUMBER: _ClassVar[int]
     comfort_load_id: str
     windows: _containers.RepeatedCompositeFieldContainer[_heating_pb2.ComfortWindow]
-    def __init__(self, comfort_load_id: _Optional[str] = ..., windows: _Optional[_Iterable[_Union[_heating_pb2.ComfortWindow, _Mapping]]] = ...) -> None: ...
+    windows_revision: int
+    def __init__(self, comfort_load_id: _Optional[str] = ..., windows: _Optional[_Iterable[_Union[_heating_pb2.ComfortWindow, _Mapping]]] = ..., windows_revision: _Optional[int] = ...) -> None: ...
 
 class ManagementRequest(_message.Message):
     __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request", "list_gateway_members", "set_member_role", "remove_from_gateway", "set_access_until", "set_owner_organisation", "request_promotion", "answer_promotion", "list_promotion_requests", "list_heating", "put_heating_plant", "put_heating_circuit", "put_floor_zone", "put_comfort_load", "remove_heating_record", "set_comfort_windows")

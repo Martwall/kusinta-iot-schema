@@ -2871,9 +2871,11 @@ class ListHeating extends $pb.GeneratedMessage {
 ///
 ///   INVALID_REQUEST
 ///   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
+///   "ZONE_ROOMS_ACROSS_HOMES" a floor zone with rooms in two homes, or in a home and outside
+///                           homes.
 ///   "ZONE_AREA_SHARES"      a floor zone with a room listed twice, a share of 0, or shares
 ///                           that do not sum to 1000.
-///   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space.
+///   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space; metadata "room_id" names it.
 ///   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
 ///   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
 ///   "CONTROL_EMPTY"         a plant control that binds no input.
@@ -2890,8 +2892,16 @@ class ListHeating extends $pb.GeneratedMessage {
 ///   "REST_STATE"            an output whose lapse value, read through closed_value, does not
 ///                           leave the contact where its role rests.
 ///
-/// A parent, device or room the caller cannot reach is refused as NOT_ENTITLED, as it is
-/// everywhere.
+/// A refusal about one binding names it in metadata "field", by its proto field name:
+/// "sg_ready_block", "sg_ready_boost", "add_on_heater_block", "meter", "output",
+/// "supply_probe", "return_probe".
+///
+/// A device or room the caller cannot reach, a parent it may not use (see heating.v1) and an
+/// id that does not exist are all refused as NOT_ENTITLED with the same metadata, so no answer
+/// tells one from another. HAS_CHILDREN, CHILDREN_INVALID and OUTPUT_BOUND_TWICE may count
+/// records the caller cannot see — a zone in a home under a circuit outside it. That one bit
+/// is accepted, as it is for the members listing; their metadata never names or counts such
+/// a record.
 class PutHeatingPlant extends $pb.GeneratedMessage {
   factory PutHeatingPlant({
     $5.HeatingPlant? plant,
@@ -3213,16 +3223,20 @@ class RemoveHeatingRecord extends $pb.GeneratedMessage {
 }
 
 /// Replaces a comfort load's windows: a resident's setting, apart from the binding and its
-/// revision; the last to set them wins. Refused as INVALID_REQUEST with metadata "reason"
-/// "WINDOW" for a window that ComfortWindow does not allow. Acked.
+/// revision. Answered with the HeatingRecord as stored. Refused as FAILED_PRECONDITION
+/// "STALE_REVISION" when windows_revision is set and the windows changed since, and as
+/// INVALID_REQUEST "WINDOW" for a window that ComfortWindow does not allow or more than 16.
+/// From an installer under a commissioning grant, NOT_ENTITLED.
 class SetComfortWindows extends $pb.GeneratedMessage {
   factory SetComfortWindows({
     $core.String? comfortLoadId,
     $core.Iterable<$5.ComfortWindow>? windows,
+    $fixnum.Int64? windowsRevision,
   }) {
     final result = create();
     if (comfortLoadId != null) result.comfortLoadId = comfortLoadId;
     if (windows != null) result.windows.addAll(windows);
+    if (windowsRevision != null) result.windowsRevision = windowsRevision;
     return result;
   }
 
@@ -3244,6 +3258,9 @@ class SetComfortWindows extends $pb.GeneratedMessage {
     ..pc<$5.ComfortWindow>(
         2, _omitFieldNames ? '' : 'windows', $pb.PbFieldType.PM,
         subBuilder: $5.ComfortWindow.create)
+    ..a<$fixnum.Int64>(
+        3, _omitFieldNames ? '' : 'windowsRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3278,6 +3295,16 @@ class SetComfortWindows extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(2)
   $pb.PbList<$5.ComfortWindow> get windows => $_getList(1);
+
+  /// The ComfortLoad.windows_revision these windows replace. Unset: whatever is stored.
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get windowsRevision => $_getI64(2);
+  @$pb.TagNumber(3)
+  set windowsRevision($fixnum.Int64 value) => $_setInt64(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWindowsRevision() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWindowsRevision() => $_clearField(3);
 }
 
 enum ManagementRequest_Request {

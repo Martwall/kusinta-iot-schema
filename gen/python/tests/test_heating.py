@@ -134,3 +134,22 @@ def test_a_put_is_answered_with_the_one_record_as_stored():
     )
 
     assert _round_trip(result).heating_record.WhichOneof("record") == "plant"
+
+
+def test_comfort_windows_have_a_revision_of_their_own():
+    load = heating_pb2.ComfortLoad(revision=4, windows_revision=9)
+
+    decoded = _round_trip(load)
+    assert (decoded.revision, decoded.windows_revision) == (4, 9)
+
+
+def test_withheld_windows_are_told_apart_from_none():
+    decoded = _round_trip(heating_pb2.ComfortLoad(windows_withheld=True))
+
+    assert (decoded.windows_withheld, len(decoded.windows)) == (True, 0)
+
+
+def test_windows_are_set_naming_the_windows_revision_they_replace():
+    request = management_pb2.SetComfortWindows(comfort_load_id="load-1", windows_revision=9)
+
+    assert _round_trip(request).windows_revision == 9

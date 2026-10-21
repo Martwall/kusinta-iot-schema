@@ -1092,6 +1092,18 @@ const SetComfortWindows$json = {
       '6': '.kusinta.iot.heating.v1.ComfortWindow',
       '10': 'windows'
     },
+    {
+      '1': 'windows_revision',
+      '3': 3,
+      '4': 1,
+      '5': 4,
+      '9': 0,
+      '10': 'windowsRevision',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_windows_revision'},
   ],
 };
 
@@ -1099,7 +1111,8 @@ const SetComfortWindows$json = {
 final $typed_data.Uint8List setComfortWindowsDescriptor = $convert.base64Decode(
     'ChFTZXRDb21mb3J0V2luZG93cxImCg9jb21mb3J0X2xvYWRfaWQYASABKAlSDWNvbWZvcnRMb2'
     'FkSWQSPwoHd2luZG93cxgCIAMoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tZm9ydFdp'
-    'bmRvd1IHd2luZG93cw==');
+    'bmRvd1IHd2luZG93cxIuChB3aW5kb3dzX3JldmlzaW9uGAMgASgESABSD3dpbmRvd3NSZXZpc2'
+    'lvbogBAUITChFfd2luZG93c19yZXZpc2lvbg==');
 
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {

@@ -405,7 +405,8 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
     case: "heatingLayout";
   } | {
     /**
-     * put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load
+     * put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load,
+     * set_comfort_windows
      *
      * @generated from field: kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
      */
