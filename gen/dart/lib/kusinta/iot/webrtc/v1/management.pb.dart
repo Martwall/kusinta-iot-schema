@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $4;
@@ -2870,14 +2871,20 @@ class ListHeating extends $pb.GeneratedMessage {
 ///
 ///   INVALID_REQUEST
 ///   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
-///   "ZONE_AREA_SHARES"      a floor zone whose rooms' shares do not sum to 1000.
-///   "ROOM_OUTSIDE_PLANT"    a zone room or comfort-load room outside the plant's space.
+///   "ZONE_AREA_SHARES"      a floor zone with a room listed twice, a share of 0, or shares
+///                           that do not sum to 1000.
+///   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space.
 ///   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
 ///   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
+///   "CONTROL_EMPTY"         a plant control that binds no input.
 ///   "NO_ENDPOINT"           an attribute on the Matter branch with no endpoint_id.
+///   "WINDOWS_IN_PUT"        a comfort load put with windows (see SetComfortWindows).
 ///
 ///   FAILED_PRECONDITION
 ///   "STALE_REVISION"        the record changed since the revision the request names.
+///   "CHILDREN_INVALID"      a plant or circuit put that would leave a record under it
+///                           invalid: a circuit with zones no longer a floor circuit, or a
+///                           space or plant change leaving a zone's room outside its plant.
 ///   "OUTPUT_BOUND_TWICE"    an output already bound in another role or record.
 ///   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
 ///   "REST_STATE"            an output whose lapse value, read through closed_value, does not
@@ -3129,15 +3136,19 @@ class PutComfortLoad extends $pb.GeneratedMessage {
   $5.ComfortLoad ensureComfortLoad() => $_ensure(0);
 }
 
-/// Removes a heating record by its id, with what lies under it: a plant's circuits, a
-/// circuit's zones. Outputs no longer bound are left at rest, since the gateway stops
-/// driving them. Acked.
+/// Removes a heating record by its id, naming the revision it removes. Refused as
+/// FAILED_PRECONDITION with metadata "reason" "STALE_REVISION" when it changed since, and
+/// "HAS_CHILDREN" while records lie under it — a plant's circuits, a circuit's zones — so
+/// nothing is removed that the caller did not name. Its outputs are returned to rest at once
+/// (see heating.v1). Acked.
 class RemoveHeatingRecord extends $pb.GeneratedMessage {
   factory RemoveHeatingRecord({
     $core.String? id,
+    $fixnum.Int64? revision,
   }) {
     final result = create();
     if (id != null) result.id = id;
+    if (revision != null) result.revision = revision;
     return result;
   }
 
@@ -3156,6 +3167,9 @@ class RemoveHeatingRecord extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'id')
+    ..a<$fixnum.Int64>(
+        2, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3187,11 +3201,20 @@ class RemoveHeatingRecord extends $pb.GeneratedMessage {
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
   void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get revision => $_getI64(1);
+  @$pb.TagNumber(2)
+  set revision($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRevision() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRevision() => $_clearField(2);
 }
 
-/// Replaces a comfort load's windows: a resident's setting, apart from the binding. Refused as
-/// INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or a window with
-/// no weekday. Acked.
+/// Replaces a comfort load's windows: a resident's setting, apart from the binding and its
+/// revision; the last to set them wins. Refused as INVALID_REQUEST with metadata "reason"
+/// "WINDOW" for a window that ComfortWindow does not allow. Acked.
 class SetComfortWindows extends $pb.GeneratedMessage {
   factory SetComfortWindows({
     $core.String? comfortLoadId,

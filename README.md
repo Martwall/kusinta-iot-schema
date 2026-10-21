@@ -291,7 +291,9 @@ with the rest of the room's state.
 drive to steer it. A device is nothing to the heating for being filed in a room: a record
 binds one of its outputs to a role, by name. Records are flat, each naming its parent, and
 each is put (`PutHeatingPlant`, `PutHeatingCircuit`, `PutFloorZone`, `PutComfortLoad`) and
-revisioned on its own; any is removed with `RemoveHeatingRecord`.
+revisioned on its own; any is removed with `RemoveHeatingRecord`, by revision, once nothing
+lies under it. Who may see a record goes by the rooms it names: a zone or comfort load in a
+home is that home's, whatever space its plant serves.
 
 - **Plant:** one heat source, the device its own readings come from, its meter and its
   `control`. A heat pump is steered through its two **SG Ready** inputs (named by what each
@@ -310,8 +312,10 @@ revisioned on its own; any is removed with `RemoveHeatingRecord`.
 Every role is a **`ContactBinding`**: an output and `closed_value`, the output value with
 which the contact is closed. That is a wiring fact, not a device fact: a relay wired through
 its normally closed contact closes it with the channel off. The gateway reads every state of
-a role through it, binds only outputs stated as leased whose lapse value leaves the contact
-where the role rests, and drives a binding only once it has passed its commissioning test.
+a role through it. It drives an output only while its producer states it leased with a lapse
+value that leaves the contact where the role rests (checked at every drive, not only at
+binding), and only once it has passed its commissioning test. An output that stops being
+bound gets its lapse value written at once.
 In a home the records are given only to its residents and to an installer under a
 commissioning grant, never to service.
 

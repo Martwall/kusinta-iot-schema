@@ -868,8 +868,9 @@ class FloorZone extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   ContactBinding ensureOutput() => $_ensure(3);
 
-  /// The rooms the zone heats, each a room within its plant's space, with shares summing to
-  /// 1000. A zone may heat several rooms and a room may be heated by several zones.
+  /// The rooms the zone heats, each a room within its plant's space, listed once, with a
+  /// share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
+  /// be heated by several zones.
   @$pb.TagNumber(5)
   $pb.PbList<FloorZoneRoom> get rooms => $_getList(4);
 
@@ -1082,7 +1083,7 @@ class ComfortLoad extends $pb.GeneratedMessage {
   ContactBinding ensureOutput() => $_ensure(3);
 
   /// When the load may heat. Empty: only when the plan allows it for price. Set with
-  /// SetComfortWindows; a put of the comfort load keeps them.
+  /// SetComfortWindows, never in a put, which keeps them.
   @$pb.TagNumber(5)
   $pb.PbList<ComfortWindow> get windows => $_getList(4);
 
@@ -1151,8 +1152,8 @@ class ComfortWindow extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<ComfortWindow>(create);
   static ComfortWindow? _defaultInstance;
 
-  /// The days it starts on: bit 0 Monday through bit 6 Sunday. Not Matter's day bitmap,
-  /// which starts on Sunday.
+  /// The days it starts on: bit 0 Monday through bit 6 Sunday, at least one, no higher bit.
+  /// Not Matter's day bitmap, which starts on Sunday.
   @$pb.TagNumber(1)
   $core.int get weekdays => $_getIZ(0);
   @$pb.TagNumber(1)
@@ -1162,8 +1163,8 @@ class ComfortWindow extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearWeekdays() => $_clearField(1);
 
-  /// Minutes after local midnight, 0–1439. A window whose end is not after its start runs
-  /// past midnight into the next day.
+  /// Minutes after local midnight, 0–1439, start and end never equal. A window whose end is
+  /// before its start runs past midnight into the next day.
   @$pb.TagNumber(2)
   $core.int get startMinute => $_getIZ(1);
   @$pb.TagNumber(2)

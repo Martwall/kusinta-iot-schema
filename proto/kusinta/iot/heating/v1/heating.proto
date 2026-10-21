@@ -15,22 +15,29 @@ option optimize_for = SPEED;
 // No device is part of the heating by being filed in a room. A relay is nothing to the
 // heating until a record here binds one of its outputs to a role.
 //
-// Records are flat: each names its parent by id, and each is put, revisioned and
-// authorized on its own, so a zone mapping, a plant's inputs and a comfort load are edited
-// by whoever may edit that record without touching the others. Every record carries a
-// revision, set by the gateway and bumped by every change to it; a put that replaces a
-// record names the revision it replaces.
+// Records are flat: a circuit names its plant, a floor zone its circuit, a comfort load its
+// room. Each is put, revisioned and authorized on its own, so a zone mapping, a plant's
+// inputs and a comfort load are edited by whoever may edit that record without touching
+// the others. Every record carries a revision, set by the gateway and bumped by every
+// change to it except a comfort load's windows; a put that replaces a record, and a remove,
+// names the revision it acts on.
 //
-// Who may see and change them. In a home they are given only to its residents and to an
-// installer under a commissioning grant for that home; a caller who reaches the home as
-// service gets none of them, and a request naming one is refused as NOT_ENTITLED, however it
-// is named. A household admin of the home or an installer under a commissioning grant
-// changes the records; residents set a comfort load's windows. Outside homes, the property
-// owner and the gateway's administrators hold those rights.
+// Who may see and change them goes by the rooms a record names, not by the plant's space.
+// A floor zone or comfort load naming a room in a home is that home's: given only to its
+// residents and to an installer under a commissioning grant for that home, changed by a
+// household admin of the home or that installer, whatever space its plant serves. Residents
+// set a comfort load's windows. A caller who reaches the home as service gets none of them,
+// and a request naming one is refused as NOT_ENTITLED, however it is named. A plant and its
+// circuits are given to and changed by whoever holds those rights over the plant's space: in
+// a home as above; outside homes, the property owner and the gateway's administrators.
 //
 // The gateway drives a bound output only once it has passed its commissioning test, and
-// only through an output its producer states as leased (device.v1.LeasedWrite): an output
-// whose write is sticky or not stated is refused for every role here.
+// only while its producer states it as leased (device.v1.LeasedWrite) with a lapse value
+// that leaves the contact where its role rests. That is checked each time it drives, not
+// only when the output is bound: an output whose producer stops stating it so is not driven
+// until it does again. When an output stops being bound — its record removed, or a put
+// binding another output in its place — the gateway writes its lapse value, ending any
+// lease at once.
 
 // One attribute of one device: what a role reads or writes. Endpoint_id is required on the
 // Matter branch of the attribute here — an absent endpoint is refused, never read as the
@@ -84,7 +91,8 @@ message HeatingPlant {
   // the plant's control, never through this device.
   kusinta.iot.identity.v1.DeviceId readings_device_id = 5;
 
-  // How the gateway steers the heat source. Unset: it does not; the plant is read only.
+  // How the gateway steers the heat source. Unset: it does not; the plant is read only. A
+  // control set binds at least one input.
   oneof control {
     HeatPumpControl heat_pump = 6;
   }
@@ -162,8 +170,9 @@ message FloorZone {
 
   ContactBinding output = 4;
 
-  // The rooms the zone heats, each a room within its plant's space, with shares summing to
-  // 1000. A zone may heat several rooms and a room may be heated by several zones.
+  // The rooms the zone heats, each a room within its plant's space, listed once, with a
+  // share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
+  // be heated by several zones.
   repeated FloorZoneRoom rooms = 5;
 
   // One of rooms. Only its error, its sensor and its open window steer the zone.
@@ -193,7 +202,7 @@ message ComfortLoad {
   ContactBinding output = 4;
 
   // When the load may heat. Empty: only when the plan allows it for price. Set with
-  // SetComfortWindows; a put of the comfort load keeps them.
+  // SetComfortWindows, never in a put, which keeps them.
   repeated ComfortWindow windows = 5;
 
   // See the file comment.
@@ -202,12 +211,12 @@ message ComfortLoad {
 
 // A recurring stretch of the building's local day (space.v1.Space.time_zone).
 message ComfortWindow {
-  // The days it starts on: bit 0 Monday through bit 6 Sunday. Not Matter's day bitmap,
-  // which starts on Sunday.
+  // The days it starts on: bit 0 Monday through bit 6 Sunday, at least one, no higher bit.
+  // Not Matter's day bitmap, which starts on Sunday.
   uint32 weekdays = 1;
 
-  // Minutes after local midnight, 0–1439. A window whose end is not after its start runs
-  // past midnight into the next day.
+  // Minutes after local midnight, 0–1439, start and end never equal. A window whose end is
+  // before its start runs past midnight into the next day.
   uint32 start_minute = 2;
   uint32 end_minute = 3;
 }

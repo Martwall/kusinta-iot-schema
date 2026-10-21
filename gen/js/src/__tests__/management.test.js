@@ -455,11 +455,11 @@ describe('heating records', () => {
     expect(decoded.request).toMatchObject({ case: 'putFloorZone', value: { zone: { revision: 3n } } })
   })
 
-  it('removes any heating record by its id', () => {
+  it('removes any heating record by its id, naming the revision it removes', () => {
     const decoded = onTheWire(ManagementRequestSchema, {
-      request: { case: 'removeHeatingRecord', value: { id: 'circuit-1' } },
+      request: { case: 'removeHeatingRecord', value: { id: 'circuit-1', revision: 2n } },
     })
-    expect(decoded.request).toMatchObject({ case: 'removeHeatingRecord', value: { id: 'circuit-1' } })
+    expect(decoded.request).toMatchObject({ case: 'removeHeatingRecord', value: { id: 'circuit-1', revision: 2n } })
   })
 
   it('sets a comfort load’s windows apart from its binding', () => {

@@ -114,7 +114,8 @@ export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"
   readingsDeviceId?: DeviceId | undefined;
 
   /**
-   * How the gateway steers the heat source. Unset: it does not; the plant is read only.
+   * How the gateway steers the heat source. Unset: it does not; the plant is read only. A
+   * control set binds at least one input.
    *
    * @generated from oneof kusinta.iot.heating.v1.HeatingPlant.control
    */
@@ -329,8 +330,9 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
   output?: ContactBinding | undefined;
 
   /**
-   * The rooms the zone heats, each a room within its plant's space, with shares summing to
-   * 1000. A zone may heat several rooms and a room may be heated by several zones.
+   * The rooms the zone heats, each a room within its plant's space, listed once, with a
+   * share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
+   * be heated by several zones.
    *
    * @generated from field: repeated kusinta.iot.heating.v1.FloorZoneRoom rooms = 5;
    */
@@ -413,7 +415,7 @@ export declare type ComfortLoad = Message<"kusinta.iot.heating.v1.ComfortLoad"> 
 
   /**
    * When the load may heat. Empty: only when the plan allows it for price. Set with
-   * SetComfortWindows; a put of the comfort load keeps them.
+   * SetComfortWindows, never in a put, which keeps them.
    *
    * @generated from field: repeated kusinta.iot.heating.v1.ComfortWindow windows = 5;
    */
@@ -440,16 +442,16 @@ export declare const ComfortLoadSchema: GenMessage<ComfortLoad>;
  */
 export declare type ComfortWindow = Message<"kusinta.iot.heating.v1.ComfortWindow"> & {
   /**
-   * The days it starts on: bit 0 Monday through bit 6 Sunday. Not Matter's day bitmap,
-   * which starts on Sunday.
+   * The days it starts on: bit 0 Monday through bit 6 Sunday, at least one, no higher bit.
+   * Not Matter's day bitmap, which starts on Sunday.
    *
    * @generated from field: uint32 weekdays = 1;
    */
   weekdays: number;
 
   /**
-   * Minutes after local midnight, 0–1439. A window whose end is not after its start runs
-   * past midnight into the next day.
+   * Minutes after local midnight, 0–1439, start and end never equal. A window whose end is
+   * before its start runs past midnight into the next day.
    *
    * @generated from field: uint32 start_minute = 2;
    */

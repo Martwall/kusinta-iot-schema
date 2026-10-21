@@ -107,12 +107,13 @@ def test_a_floor_zone_is_put_on_its_own_naming_its_revision():
     assert _round_trip(request).put_floor_zone.zone.revision == 3
 
 
-def test_any_heating_record_is_removed_by_its_id():
+def test_any_heating_record_is_removed_by_its_id_naming_its_revision():
     request = management_pb2.ManagementRequest(
-        remove_heating_record=management_pb2.RemoveHeatingRecord(id="circuit-1")
+        remove_heating_record=management_pb2.RemoveHeatingRecord(id="circuit-1", revision=2)
     )
 
-    assert _round_trip(request).remove_heating_record.id == "circuit-1"
+    decoded = _round_trip(request).remove_heating_record
+    assert (decoded.id, decoded.revision) == ("circuit-1", 2)
 
 
 def test_comfort_windows_are_set_apart_from_the_binding():

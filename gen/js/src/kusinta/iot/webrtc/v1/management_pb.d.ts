@@ -1224,14 +1224,20 @@ export declare const ListHeatingSchema: GenMessage<ListHeating>;
  *
  *   INVALID_REQUEST
  *   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
- *   "ZONE_AREA_SHARES"      a floor zone whose rooms' shares do not sum to 1000.
- *   "ROOM_OUTSIDE_PLANT"    a zone room or comfort-load room outside the plant's space.
+ *   "ZONE_AREA_SHARES"      a floor zone with a room listed twice, a share of 0, or shares
+ *                           that do not sum to 1000.
+ *   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space.
  *   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
  *   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
+ *   "CONTROL_EMPTY"         a plant control that binds no input.
  *   "NO_ENDPOINT"           an attribute on the Matter branch with no endpoint_id.
+ *   "WINDOWS_IN_PUT"        a comfort load put with windows (see SetComfortWindows).
  *
  *   FAILED_PRECONDITION
  *   "STALE_REVISION"        the record changed since the revision the request names.
+ *   "CHILDREN_INVALID"      a plant or circuit put that would leave a record under it
+ *                           invalid: a circuit with zones no longer a floor circuit, or a
+ *                           space or plant change leaving a zone's room outside its plant.
  *   "OUTPUT_BOUND_TWICE"    an output already bound in another role or record.
  *   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
  *   "REST_STATE"            an output whose lapse value, read through closed_value, does not
@@ -1311,9 +1317,11 @@ export declare type PutComfortLoad = Message<"kusinta.iot.webrtc.v1.PutComfortLo
 export declare const PutComfortLoadSchema: GenMessage<PutComfortLoad>;
 
 /**
- * Removes a heating record by its id, with what lies under it: a plant's circuits, a
- * circuit's zones. Outputs no longer bound are left at rest, since the gateway stops
- * driving them. Acked.
+ * Removes a heating record by its id, naming the revision it removes. Refused as
+ * FAILED_PRECONDITION with metadata "reason" "STALE_REVISION" when it changed since, and
+ * "HAS_CHILDREN" while records lie under it — a plant's circuits, a circuit's zones — so
+ * nothing is removed that the caller did not name. Its outputs are returned to rest at once
+ * (see heating.v1). Acked.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveHeatingRecord
  */
@@ -1322,6 +1330,11 @@ export declare type RemoveHeatingRecord = Message<"kusinta.iot.webrtc.v1.RemoveH
    * @generated from field: string id = 1;
    */
   id: string;
+
+  /**
+   * @generated from field: uint64 revision = 2;
+   */
+  revision: bigint;
 };
 
 /**
@@ -1331,9 +1344,9 @@ export declare type RemoveHeatingRecord = Message<"kusinta.iot.webrtc.v1.RemoveH
 export declare const RemoveHeatingRecordSchema: GenMessage<RemoveHeatingRecord>;
 
 /**
- * Replaces a comfort load's windows: a resident's setting, apart from the binding. Refused as
- * INVALID_REQUEST with metadata "reason" "WINDOW" for a minute past 1439 or a window with
- * no weekday. Acked.
+ * Replaces a comfort load's windows: a resident's setting, apart from the binding and its
+ * revision; the last to set them wins. Refused as INVALID_REQUEST with metadata "reason"
+ * "WINDOW" for a window that ComfortWindow does not allow. Acked.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetComfortWindows
  */

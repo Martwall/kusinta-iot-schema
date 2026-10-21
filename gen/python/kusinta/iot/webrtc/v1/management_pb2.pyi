@@ -317,10 +317,12 @@ class PutComfortLoad(_message.Message):
     def __init__(self, comfort_load: _Optional[_Union[_heating_pb2.ComfortLoad, _Mapping]] = ...) -> None: ...
 
 class RemoveHeatingRecord(_message.Message):
-    __slots__ = ("id",)
+    __slots__ = ("id", "revision")
     ID_FIELD_NUMBER: _ClassVar[int]
+    REVISION_FIELD_NUMBER: _ClassVar[int]
     id: str
-    def __init__(self, id: _Optional[str] = ...) -> None: ...
+    revision: int
+    def __init__(self, id: _Optional[str] = ..., revision: _Optional[int] = ...) -> None: ...
 
 class SetComfortWindows(_message.Message):
     __slots__ = ("comfort_load_id", "windows")

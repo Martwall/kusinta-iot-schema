@@ -1070,12 +1070,14 @@ const RemoveHeatingRecord$json = {
   '1': 'RemoveHeatingRecord',
   '2': [
     {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'revision', '3': 2, '4': 1, '5': 4, '10': 'revision'},
   ],
 };
 
 /// Descriptor for `RemoveHeatingRecord`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List removeHeatingRecordDescriptor = $convert
-    .base64Decode('ChNSZW1vdmVIZWF0aW5nUmVjb3JkEg4KAmlkGAEgASgJUgJpZA==');
+final $typed_data.Uint8List removeHeatingRecordDescriptor = $convert.base64Decode(
+    'ChNSZW1vdmVIZWF0aW5nUmVjb3JkEg4KAmlkGAEgASgJUgJpZBIaCghyZXZpc2lvbhgCIAEoBF'
+    'IIcmV2aXNpb24=');
 
 @$core.Deprecated('Use setComfortWindowsDescriptor instead')
 const SetComfortWindows$json = {
