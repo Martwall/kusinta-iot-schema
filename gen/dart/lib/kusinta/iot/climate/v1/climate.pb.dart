@@ -1019,9 +1019,10 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   void clearValveOpenSeconds() => $_clearField(6);
 
   /// The seconds within the bucket during which any floor zone heating the room was heating
-  /// (heating.v1.FloorZone). Kept apart from the valve fields: a zone's duty and a valve's
-  /// opening are different controls with different time scales. Absent where no floor zone
-  /// heats the room.
+  /// (heating.v1.FloorZone), counted from the contact state the zone's output reports, read
+  /// through its closed_value, not from what was commanded. Kept apart from the valve
+  /// fields: a zone's duty and a valve's opening are different controls with different time
+  /// scales. Absent where no floor zone heats the room.
   @$pb.TagNumber(7)
   $core.int get floorHeatingSeconds => $_getIZ(6);
   @$pb.TagNumber(7)

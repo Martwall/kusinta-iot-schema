@@ -176,7 +176,8 @@ class ContactBinding extends $pb.GeneratedMessage {
   ///
   /// Each role has a fixed rest state (see the role), and the output's lapse value
   /// (device.v1.LeasedWrite.lapse_value), read through this value, must leave the contact
-  /// where the role rests.
+  /// where the role rests. Every comparison with this value matches type as well as value:
+  /// an int 0 is not a bool false.
   @$pb.TagNumber(2)
   $2.AttributeValue get closedValue => $_getN(1);
   @$pb.TagNumber(2)
@@ -429,6 +430,11 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   /// closed commands it to, and both open is normal operation. Both rest open, so a lapsed
   /// lease or a stopped gateway leaves the heat pump running normally. Bound together or not
   /// at all.
+  ///
+  /// They lapse separately, so their leases are ordered: while both are closed, the gateway
+  /// gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
+  /// through "blocked" on its way back to normal. In general, of two bound inputs, the one
+  /// whose half-state blocks heat never lapses last.
   @$pb.TagNumber(1)
   ContactBinding get sgReadyBlock => $_getN(0);
   @$pb.TagNumber(1)
@@ -857,6 +863,8 @@ class FloorZone extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearName() => $_clearField(3);
 
+  /// Where several zones share one device whose timer is device-wide (one delay for all its
+  /// channels), the gateway renews the leases of all those zones in one go.
   @$pb.TagNumber(4)
   ContactBinding get output => $_getN(3);
   @$pb.TagNumber(4)

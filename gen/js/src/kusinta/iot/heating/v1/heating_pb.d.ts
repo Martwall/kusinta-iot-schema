@@ -61,7 +61,8 @@ export declare type ContactBinding = Message<"kusinta.iot.heating.v1.ContactBind
    *
    * Each role has a fixed rest state (see the role), and the output's lapse value
    * (device.v1.LeasedWrite.lapse_value), read through this value, must leave the contact
-   * where the role rests.
+   * where the role rests. Every comparison with this value matches type as well as value:
+   * an int 0 is not a bool false.
    *
    * @generated from field: kusinta.iot.device.v1.AttributeValue closed_value = 2;
    */
@@ -160,6 +161,11 @@ export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpCo
    * closed commands it to, and both open is normal operation. Both rest open, so a lapsed
    * lease or a stopped gateway leaves the heat pump running normally. Bound together or not
    * at all.
+   *
+   * They lapse separately, so their leases are ordered: while both are closed, the gateway
+   * gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
+   * through "blocked" on its way back to normal. In general, of two bound inputs, the one
+   * whose half-state blocks heat never lapses last.
    *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_block = 1;
    */
@@ -325,6 +331,9 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
   name: string;
 
   /**
+   * Where several zones share one device whose timer is device-wide (one delay for all its
+   * channels), the gateway renews the leases of all those zones in one go.
+   *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding output = 4;
    */
   output?: ContactBinding | undefined;
