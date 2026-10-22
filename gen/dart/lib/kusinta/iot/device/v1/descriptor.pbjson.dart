@@ -87,6 +87,14 @@ const DeviceDescriptor$json = {
       '10': 'ownerUserId'
     },
     {
+      '1': 'asset_owner',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.AssetOwner',
+      '10': 'assetOwner'
+    },
+    {
       '1': 'claimed_at',
       '3': 16,
       '4': 1,
@@ -148,11 +156,12 @@ final $typed_data.Uint8List deviceDescriptorDescriptor = $convert.base64Decode(
     'b3QuY29tbW9uLnYxLkRldmljZU93bmVyc2hpcFR5cGVSCW93bmVyc2hpcBJJCglsaWZlY3ljbG'
     'UYDiABKA4yKy5rdXNpbnRhLmlvdC5jb21tb24udjEuRGV2aWNlTGlmZWN5Y2xlU3RhdGVSCWxp'
     'ZmVjeWNsZRJDCg1vd25lcl91c2VyX2lkGA8gASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
-    'EuVXNlcklkUgtvd25lclVzZXJJZBI5CgpjbGFpbWVkX2F0GBAgASgLMhouZ29vZ2xlLnByb3Rv'
-    'YnVmLlRpbWVzdGFtcFIJY2xhaW1lZEF0EkUKCmJyaWRnZWRfYnkYEyABKAsyIS5rdXNpbnRhLm'
-    'lvdC5pZGVudGl0eS52MS5EZXZpY2VJZEgBUglicmlkZ2VkQnmIAQESUAoRbGlua19jYXBhYmls'
-    'aXRpZXMYFCADKAsyIy5rdXNpbnRhLmlvdC5saW5rLnYxLkxpbmtDYXBhYmlsaXR5UhBsaW5rQ2'
-    'FwYWJpbGl0aWVzElgKCWhvbWVtYXRpYxgSIAEoCzI4Lmt1c2ludGEuaW90LnZlbmRvci5ob21l'
-    'bWF0aWMudjEuSG9tZW1hdGljRGV2aWNlSWRlbnRpdHlIAFIJaG9tZW1hdGljQhEKD3ZlbmRvcl'
-    '9pZGVudGl0eUINCgtfYnJpZGdlZF9ieUoECAIQA0oECBEQElIVbWF0dGVyX2RldmljZV90eXBl'
-    'X2lkUgllbmRwb2ludHM=');
+    'EuVXNlcklkUgtvd25lclVzZXJJZBJCCgthc3NldF9vd25lchgVIAEoCzIhLmt1c2ludGEuaW90'
+    'LmNvbW1vbi52MS5Bc3NldE93bmVyUgphc3NldE93bmVyEjkKCmNsYWltZWRfYXQYECABKAsyGi'
+    '5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgljbGFpbWVkQXQSRQoKYnJpZGdlZF9ieRgTIAEo'
+    'CzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkSAFSCWJyaWRnZWRCeYgBARJQCh'
+    'FsaW5rX2NhcGFiaWxpdGllcxgUIAMoCzIjLmt1c2ludGEuaW90LmxpbmsudjEuTGlua0NhcGFi'
+    'aWxpdHlSEGxpbmtDYXBhYmlsaXRpZXMSWAoJaG9tZW1hdGljGBIgASgLMjgua3VzaW50YS5pb3'
+    'QudmVuZG9yLmhvbWVtYXRpYy52MS5Ib21lbWF0aWNEZXZpY2VJZGVudGl0eUgAUglob21lbWF0'
+    'aWNCEQoPdmVuZG9yX2lkZW50aXR5Qg0KC19icmlkZ2VkX2J5SgQIAhADSgQIERASUhVtYXR0ZX'
+    'JfZGV2aWNlX3R5cGVfaWRSCWVuZHBvaW50cw==');

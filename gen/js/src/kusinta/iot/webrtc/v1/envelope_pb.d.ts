@@ -14,7 +14,8 @@ import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
 import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
 import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/account_link_pb.js";
-import type { CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
+import type { CommissioningGrant, CommissioningGrants, CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
+import type { HouseholdExport, HouseholdHandover, HouseholdHandovers } from "./household_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -455,6 +456,46 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: HomeSetups;
     case: "homeSetups";
+  } | {
+    /**
+     * request_commissioning_grant, answer_commissioning_grant (granted)
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.CommissioningGrant commissioning_grant = 22;
+     */
+    value: CommissioningGrant;
+    case: "commissioningGrant";
+  } | {
+    /**
+     * list_commissioning_grants
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.CommissioningGrants commissioning_grants = 23;
+     */
+    value: CommissioningGrants;
+    case: "commissioningGrants";
+  } | {
+    /**
+     * start_household_handover
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.HouseholdHandover household_handover = 24;
+     */
+    value: HouseholdHandover;
+    case: "householdHandover";
+  } | {
+    /**
+     * list_household_handovers
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.HouseholdHandovers household_handovers = 25;
+     */
+    value: HouseholdHandovers;
+    case: "householdHandovers";
+  } | {
+    /**
+     * export_household_data
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.HouseholdExport household_export = 26;
+     */
+    value: HouseholdExport;
+    case: "householdExport";
   } | { case: undefined; value?: undefined };
 };
 
@@ -1002,6 +1043,22 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: CommissioningTest;
     case: "commissioningTest";
+  } | {
+    /**
+     * The commissioning grants on a space changed; see commissioning.v1.CommissioningGrants.
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.CommissioningGrants commissioning_grants = 27;
+     */
+    value: CommissioningGrants;
+    case: "commissioningGrants";
+  } | {
+    /**
+     * A home's handover was started, cancelled or done; see HouseholdHandover.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.HouseholdHandover household_handover = 28;
+     */
+    value: HouseholdHandover;
+    case: "householdHandover";
   } | { case: undefined; value?: undefined };
 };
 

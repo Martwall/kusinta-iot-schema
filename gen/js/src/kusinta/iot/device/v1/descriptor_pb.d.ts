@@ -5,7 +5,7 @@
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
-import type { DeviceLifecycleState, DeviceOwnershipType } from "../../common/v1/types_pb.js";
+import type { AssetOwner, DeviceLifecycleState, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { LinkCapability } from "../../link/v1/link_pb.js";
 import type { HomematicDeviceIdentity } from "../../vendor/homematic/v1/homematic_pb.js";
@@ -21,8 +21,8 @@ export declare const file_kusinta_iot_device_v1_descriptor: GenFile;
  * Device.endpoints.
  *
  * Field bands: 1-2 identity, 3-10 Matter BasicInformation, 11-12 placement,
- * 13-16 ownership and lifecycle, 18-19 vendor identity and bridging.
- * 2 and 17 are burned; the next free number is 20.
+ * 13-16 and 21 ownership and lifecycle, 18-20 vendor identity, bridging and linking.
+ * 2 and 17 are burned; the next free number is 22.
  *
  * @generated from message kusinta.iot.device.v1.DeviceDescriptor
  */
@@ -100,6 +100,16 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
    * @generated from field: kusinta.iot.identity.v1.UserId owner_user_id = 15;
    */
   ownerUserId?: UserId | undefined;
+
+  /**
+   * Who owns it as an asset, where ownership is COMPANY: see common.v1.AssetOwner, which
+   * decides nobody's access. Set by the gateway from its own records (webrtc.v1.SetAssetOwner)
+   * and given to whoever is given the descriptor; a connector leaves it unset, and the gateway
+   * ignores it from one.
+   *
+   * @generated from field: kusinta.iot.common.v1.AssetOwner asset_owner = 21;
+   */
+  assetOwner?: AssetOwner | undefined;
 
   /**
    * Unset when it is withheld from the recipient: in a service view, and from anyone when

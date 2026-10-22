@@ -20,6 +20,7 @@ class RedeemOutcome(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     REDEEM_OUTCOME_PENDING_APPROVAL: _ClassVar[RedeemOutcome]
     REDEEM_OUTCOME_INVALID: _ClassVar[RedeemOutcome]
     REDEEM_OUTCOME_WRONG_ACCOUNT: _ClassVar[RedeemOutcome]
+    REDEEM_OUTCOME_NOT_ELIGIBLE: _ClassVar[RedeemOutcome]
 
 class WipeScope(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -37,6 +38,7 @@ REDEEM_OUTCOME_JOINED: RedeemOutcome
 REDEEM_OUTCOME_PENDING_APPROVAL: RedeemOutcome
 REDEEM_OUTCOME_INVALID: RedeemOutcome
 REDEEM_OUTCOME_WRONG_ACCOUNT: RedeemOutcome
+REDEEM_OUTCOME_NOT_ELIGIBLE: RedeemOutcome
 WIPE_SCOPE_UNSPECIFIED: WipeScope
 WIPE_SCOPE_PEOPLE_AND_HISTORY: WipeScope
 WIPE_SCOPE_FACTORY_RESET: WipeScope

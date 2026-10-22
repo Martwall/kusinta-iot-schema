@@ -23,6 +23,7 @@ const RedeemOutcome$json = {
     {'1': 'REDEEM_OUTCOME_PENDING_APPROVAL', '2': 2},
     {'1': 'REDEEM_OUTCOME_INVALID', '2': 3},
     {'1': 'REDEEM_OUTCOME_WRONG_ACCOUNT', '2': 4},
+    {'1': 'REDEEM_OUTCOME_NOT_ELIGIBLE', '2': 5},
   ],
 };
 
@@ -31,7 +32,7 @@ final $typed_data.Uint8List redeemOutcomeDescriptor = $convert.base64Decode(
     'Cg1SZWRlZW1PdXRjb21lEh4KGlJFREVFTV9PVVRDT01FX1VOU1BFQ0lGSUVEEAASGQoVUkVERU'
     'VNX09VVENPTUVfSk9JTkVEEAESIwofUkVERUVNX09VVENPTUVfUEVORElOR19BUFBST1ZBTBAC'
     'EhoKFlJFREVFTV9PVVRDT01FX0lOVkFMSUQQAxIgChxSRURFRU1fT1VUQ09NRV9XUk9OR19BQ0'
-    'NPVU5UEAQ=');
+    'NPVU5UEAQSHwobUkVERUVNX09VVENPTUVfTk9UX0VMSUdJQkxFEAU=');
 
 @$core.Deprecated('Use wipeScopeDescriptor instead')
 const WipeScope$json = {

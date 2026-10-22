@@ -4,7 +4,7 @@
 
 import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
+import type { AssetOwner, DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
@@ -12,6 +12,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { CancelHouseholdHandover, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
@@ -198,6 +199,12 @@ export declare const DeleteSpaceSchema: GenMessage<DeleteSpace>;
  * Assigning a user who is already a member changes their relation to the space.
  * RESIDENT is refused on a room; see access.v1.MembershipRelation.
  *
+ * Nobody is made a household admin through it: HOUSEHOLD_ADMIN is refused as
+ * INVALID_REQUEST, since that comes only by promotion or appointment (household.proto). A
+ * HOUSEHOLD_ADMIN membership is never changed through it either: assigning onto one is refused
+ * as FAILED_PRECONDITION with metadata {"reason": "household_admin"}; DemoteHouseholdAdmin and
+ * RemoveUserFromSpace are how it ends.
+ *
  * Who may change who belongs to a home is restricted by the gateway; a caller not allowed is
  * refused as NOT_ENTITLED. Residents see who is filed on their home in Space.members.
  *
@@ -239,9 +246,11 @@ export declare const AssignUserToSpaceSchema: GenMessage<AssignUserToSpace>;
  * Removes a user's membership of a space. Losing reach also drops whatever the
  * user was streaming from it, announced by LivePermissionUpdate.
  *
- * Removing someone else from a home is guarded as assigning is. A membership the caller is
- * not told of under the user id given (see AssignUserToSpace) is answered as one that does
- * not exist, and stays.
+ * Removing someone else from a home is guarded as assigning is: within the household, it is a
+ * household admin's (household.proto). Anyone may remove themselves, save the last household
+ * admin of a home that has other residents ("last_household_admin", household.proto). A
+ * membership the caller is not told of under the user id given (see AssignUserToSpace) is
+ * answered as one that does not exist, and stays.
  *
  * user_id may be a residency id (access.v1.MembershipRelation, RESIDENCY IDS): it then ends
  * that residency, if space_id is its home, and answers as for one that does not exist
@@ -274,7 +283,8 @@ export declare const RemoveUserFromSpaceSchema: GenMessage<RemoveUserFromSpace>;
  *
  * Into a home go only the building's own devices and devices its residents own, and a
  * device belongs to one home at most; filing into, out of or beside a home is guarded by
- * the gateway. A caller not allowed is refused as NOT_ENTITLED, and filing that would leave
+ * the gateway, and within the household it is a household admin's, save a device a resident
+ * owns, which its owner files (household.proto). A caller not allowed is refused as NOT_ENTITLED, and filing that would leave
  * a link the caller can see across a home's boundary is refused whatever the caller; one
  * they cannot see is removed instead.
  *
@@ -997,6 +1007,16 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
    * @generated from field: bool names_withheld = 7;
    */
   namesWithheld: boolean;
+
+  /**
+   * Each time a staff member made a resident of this home its household admin
+   * (household.proto, STAFF APPOINTMENT), since the start of the caller's current residency,
+   * oldest first. Given to the home's residents only, and so never to a caller who sees it as
+   * service: a client shows it to residents alone.
+   *
+   * @generated from field: repeated kusinta.iot.webrtc.v1.StaffAppointment staff_appointments = 8;
+   */
+  staffAppointments: StaffAppointment[];
 };
 
 /**
@@ -1391,8 +1411,8 @@ export declare const SetComfortWindowsSchema: GenMessage<SetComfortWindows>;
 
 /**
  * Asks for a nonce to link one home's account at a third-party service
- * (accountlink.v1.AccountLinkNonce). Only a household admin of the home — the resident
- * relation that governs a home's own settings — is issued one; anyone else is refused as
+ * (accountlink.v1.AccountLinkNonce). Only a household admin of the home
+ * (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
  * NOT_ENTITLED, as is a home the caller cannot reach. A service this gateway does not
  * support is refused as INVALID_REQUEST.
  *
@@ -1695,6 +1715,156 @@ export declare type ListHomeSetups = Message<"kusinta.iot.webrtc.v1.ListHomeSetu
  * Use `create(ListHomeSetupsSchema)` to create a new message.
  */
 export declare const ListHomeSetupsSchema: GenMessage<ListHomeSetups>;
+
+/**
+ * Asks for a commissioning grant on one space (commissioning.v1, GRANTS), answered with the
+ * CommissioningGrant, REQUESTED. From a caller holding ROLE_TECHNICIAN who reaches the space;
+ * anyone else, and a space they do not reach, is refused as NOT_ENTITLED. A room in a home is
+ * INVALID_REQUEST with metadata {"reason": "grant_space"}: a home is granted whole. Asking
+ * again while one of the caller's is requested or granted on the space answers that one.
+ *
+ * Accepted on any home the caller reaches, whether or not anyone could answer it: it lapses
+ * unanswered where nobody does, so the answer tells the installer nothing of whether anyone
+ * lives there.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RequestCommissioningGrant
+ */
+export declare type RequestCommissioningGrant = Message<"kusinta.iot.webrtc.v1.RequestCommissioningGrant"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RequestCommissioningGrant.
+ * Use `create(RequestCommissioningGrantSchema)` to create a new message.
+ */
+export declare const RequestCommissioningGrantSchema: GenMessage<RequestCommissioningGrant>;
+
+/**
+ * Answers a requested commissioning grant, answered with the CommissioningGrant as stored when
+ * granted, and with ManagementAck when declined, which ends it. From a household admin of the
+ * home, or for a space outside homes the property owner or a gateway administrator who reaches
+ * it; anyone else, and a grant_id that is not requested on a space the caller may answer for,
+ * is refused as NOT_ENTITLED, so that no grant id can be probed.
+ *
+ * Granting needs ends_at after starts_at, no more than 14 days after it, and starts_at no
+ * later than 30 days from now; otherwise INVALID_REQUEST with metadata
+ * {"reason": "grant_period"}. An answered grant is not answered again: to change its time,
+ * end it and let the installer ask anew.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.AnswerCommissioningGrant
+ */
+export declare type AnswerCommissioningGrant = Message<"kusinta.iot.webrtc.v1.AnswerCommissioningGrant"> & {
+  /**
+   * @generated from field: string grant_id = 1;
+   */
+  grantId: string;
+
+  /**
+   * true grants; false declines.
+   *
+   * @generated from field: bool accept = 2;
+   */
+  accept: boolean;
+
+  /**
+   * When it is active. Unset starts_at: now. Ignored when declining.
+   *
+   * @generated from field: google.protobuf.Timestamp starts_at = 3;
+   */
+  startsAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp ends_at = 4;
+   */
+  endsAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.AnswerCommissioningGrant.
+ * Use `create(AnswerCommissioningGrantSchema)` to create a new message.
+ */
+export declare const AnswerCommissioningGrantSchema: GenMessage<AnswerCommissioningGrant>;
+
+/**
+ * Ends a commissioning grant at once, requested or granted. Answered with ManagementAck. From
+ * the installer it names, from whoever may answer it, and from nobody else: anyone else, and a
+ * grant_id they are not listed, is refused as NOT_ENTITLED.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.EndCommissioningGrant
+ */
+export declare type EndCommissioningGrant = Message<"kusinta.iot.webrtc.v1.EndCommissioningGrant"> & {
+  /**
+   * @generated from field: string grant_id = 1;
+   */
+  grantId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.EndCommissioningGrant.
+ * Use `create(EndCommissioningGrantSchema)` to create a new message.
+ */
+export declare const EndCommissioningGrantSchema: GenMessage<EndCommissioningGrant>;
+
+/**
+ * Lists the commissioning grants requested or active on a space and those below it, answered
+ * with CommissioningGrants: a home's to its residents; one on a space outside homes to the
+ * property owner and the gateway administrators who reach it; to an installer, their own.
+ * Unset root_space_id lists every one the caller may be listed. Anyone may ask; nobody is
+ * refused, and a caller listed none gets none.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListCommissioningGrants
+ */
+export declare type ListCommissioningGrants = Message<"kusinta.iot.webrtc.v1.ListCommissioningGrants"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+   */
+  rootSpaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListCommissioningGrants.
+ * Use `create(ListCommissioningGrantsSchema)` to create a new message.
+ */
+export declare const ListCommissioningGrantsSchema: GenMessage<ListCommissioningGrants>;
+
+/**
+ * Sets who owns one of the building's own devices as an asset (common.v1.AssetOwner), and
+ * with it nobody's access. Answered with ManagementAck. From the property owner or a gateway
+ * administrator who reaches the device; anyone else is refused as NOT_ENTITLED. Unset
+ * asset_owner clears it.
+ *
+ * Refused as INVALID_REQUEST with metadata "reason":
+ *   "owned_by_resident"  a device a person owns outright (common.v1.DeviceOwnershipType
+ *                        RESIDENT), which has no asset owner.
+ *   "asset_owner"        owner_organisation false, or a household_home_id that is not an
+ *                        apartment.
+ *
+ * A household's asset keeps naming its home if the home's space is changed or deleted, until
+ * it is set again: who owns what after a home is split or merged is decided here, not by the
+ * change.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetAssetOwner
+ */
+export declare type SetAssetOwner = Message<"kusinta.iot.webrtc.v1.SetAssetOwner"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
+   */
+  deviceId?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.common.v1.AssetOwner asset_owner = 2;
+   */
+  assetOwner?: AssetOwner | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetAssetOwner.
+ * Use `create(SetAssetOwnerSchema)` to create a new message.
+ */
+export declare const SetAssetOwnerSchema: GenMessage<SetAssetOwner>;
 
 /**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
@@ -2052,6 +2222,76 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ListHomeSetups;
     case: "listHomeSetups";
+  } | {
+    /**
+     * Commissioning grants; see commissioning.v1, GRANTS.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.RequestCommissioningGrant request_commissioning_grant = 57;
+     */
+    value: RequestCommissioningGrant;
+    case: "requestCommissioningGrant";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.AnswerCommissioningGrant answer_commissioning_grant = 58;
+     */
+    value: AnswerCommissioningGrant;
+    case: "answerCommissioningGrant";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.EndCommissioningGrant end_commissioning_grant = 59;
+     */
+    value: EndCommissioningGrant;
+    case: "endCommissioningGrant";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListCommissioningGrants list_commissioning_grants = 60;
+     */
+    value: ListCommissioningGrants;
+    case: "listCommissioningGrants";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetAssetOwner set_asset_owner = 61;
+     */
+    value: SetAssetOwner;
+    case: "setAssetOwner";
+  } | {
+    /**
+     * The household; see household.proto.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.DemoteHouseholdAdmin demote_household_admin = 62;
+     */
+    value: DemoteHouseholdAdmin;
+    case: "demoteHouseholdAdmin";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.StartHouseholdHandover start_household_handover = 63;
+     */
+    value: StartHouseholdHandover;
+    case: "startHouseholdHandover";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ConfirmHouseholdHandover confirm_household_handover = 64;
+     */
+    value: ConfirmHouseholdHandover;
+    case: "confirmHouseholdHandover";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.CancelHouseholdHandover cancel_household_handover = 65;
+     */
+    value: CancelHouseholdHandover;
+    case: "cancelHouseholdHandover";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListHouseholdHandovers list_household_handovers = 66;
+     */
+    value: ListHouseholdHandovers;
+    case: "listHouseholdHandovers";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ExportHouseholdData export_household_data = 67;
+     */
+    value: ExportHouseholdData;
+    case: "exportHouseholdData";
   } | { case: undefined; value?: undefined };
 };
 

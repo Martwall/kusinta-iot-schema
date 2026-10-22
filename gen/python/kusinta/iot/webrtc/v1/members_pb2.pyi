@@ -26,12 +26,14 @@ class SetMemberRole(_message.Message):
     def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., held: _Optional[bool] = ...) -> None: ...
 
 class RequestPromotion(_message.Message):
-    __slots__ = ("user_id", "role")
+    __slots__ = ("user_id", "role", "home_id")
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
     user_id: _identity_pb2.UserId
     role: _roles_pb2.Role
-    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ...) -> None: ...
+    home_id: _identity_pb2.SpaceId
+    def __init__(self, user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
 
 class AnswerPromotion(_message.Message):
     __slots__ = ("request_id", "accept")
@@ -46,7 +48,7 @@ class ListPromotionRequests(_message.Message):
     def __init__(self) -> None: ...
 
 class PromotionRequest(_message.Message):
-    __slots__ = ("request_id", "user_id", "role", "requested_by", "requested_by_name", "requested_at", "expires_at")
+    __slots__ = ("request_id", "user_id", "role", "requested_by", "requested_by_name", "requested_at", "expires_at", "home_id")
     REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
@@ -54,6 +56,7 @@ class PromotionRequest(_message.Message):
     REQUESTED_BY_NAME_FIELD_NUMBER: _ClassVar[int]
     REQUESTED_AT_FIELD_NUMBER: _ClassVar[int]
     EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
     request_id: str
     user_id: _identity_pb2.UserId
     role: _roles_pb2.Role
@@ -61,7 +64,8 @@ class PromotionRequest(_message.Message):
     requested_by_name: str
     requested_at: _timestamp_pb2.Timestamp
     expires_at: _timestamp_pb2.Timestamp
-    def __init__(self, request_id: _Optional[str] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., requested_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., requested_by_name: _Optional[str] = ..., requested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    home_id: _identity_pb2.SpaceId
+    def __init__(self, request_id: _Optional[str] = ..., user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., role: _Optional[_Union[_roles_pb2.Role, str]] = ..., requested_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., requested_by_name: _Optional[str] = ..., requested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
 
 class PromotionRequests(_message.Message):
     __slots__ = ("requests",)

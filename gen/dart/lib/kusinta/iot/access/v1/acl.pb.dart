@@ -659,7 +659,8 @@ class DeviceAcl extends $pb.GeneratedMessage {
   /// description only: its endpoints with their device types and implemented lists, and no
   /// property value. What keeps it working comes as a webrtc.v1.ServiceStatus instead. An
   /// app should show its readings as withheld, not missing. RESIDENT: the user lives in the
-  /// home the device is filed in, whether or not they also own it. UNSPECIFIED: neither
+  /// home the device is filed in, whether or not they also own it; a household admin is given
+  /// RESIDENT here too, since they see the device as any resident does. UNSPECIFIED: neither
   /// applies — the device is not in a home, or the user reaches it only by owning it.
   ///
   /// Descriptive, like role: allowed_actions and the ref lists are what is enforced.

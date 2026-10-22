@@ -458,6 +458,51 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'homeSetups'
     },
+    {
+      '1': 'commissioning_grant',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningGrant',
+      '9': 0,
+      '10': 'commissioningGrant'
+    },
+    {
+      '1': 'commissioning_grants',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningGrants',
+      '9': 0,
+      '10': 'commissioningGrants'
+    },
+    {
+      '1': 'household_handover',
+      '3': 24,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.HouseholdHandover',
+      '9': 0,
+      '10': 'householdHandover'
+    },
+    {
+      '1': 'household_handovers',
+      '3': 25,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.HouseholdHandovers',
+      '9': 0,
+      '10': 'householdHandovers'
+    },
+    {
+      '1': 'household_export',
+      '3': 26,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.HouseholdExport',
+      '9': 0,
+      '10': 'householdExport'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -495,7 +540,16 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'cm9maWxlSABSFGNvbW1pc3Npb25pbmdQcm9maWxlEmYKFGNvbW1pc3Npb25pbmdfcmVjb3JkGB'
     'QgASgLMjEua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nUmVjb3Jk'
     'SABSE2NvbW1pc3Npb25pbmdSZWNvcmQSSwoLaG9tZV9zZXR1cHMYFSABKAsyKC5rdXNpbnRhLm'
-    'lvdC5jb21taXNzaW9uaW5nLnYxLkhvbWVTZXR1cHNIAFIKaG9tZVNldHVwc0IICgZyZXN1bHQ=');
+    'lvdC5jb21taXNzaW9uaW5nLnYxLkhvbWVTZXR1cHNIAFIKaG9tZVNldHVwcxJjChNjb21taXNz'
+    'aW9uaW5nX2dyYW50GBYgASgLMjAua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Db21taX'
+    'NzaW9uaW5nR3JhbnRIAFISY29tbWlzc2lvbmluZ0dyYW50EmYKFGNvbW1pc3Npb25pbmdfZ3Jh'
+    'bnRzGBcgASgLMjEua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nR3'
+    'JhbnRzSABSE2NvbW1pc3Npb25pbmdHcmFudHMSWQoSaG91c2Vob2xkX2hhbmRvdmVyGBggASgL'
+    'Migua3VzaW50YS5pb3Qud2VicnRjLnYxLkhvdXNlaG9sZEhhbmRvdmVySABSEWhvdXNlaG9sZE'
+    'hhbmRvdmVyElwKE2hvdXNlaG9sZF9oYW5kb3ZlcnMYGSABKAsyKS5rdXNpbnRhLmlvdC53ZWJy'
+    'dGMudjEuSG91c2Vob2xkSGFuZG92ZXJzSABSEmhvdXNlaG9sZEhhbmRvdmVycxJTChBob3VzZW'
+    'hvbGRfZXhwb3J0GBogASgLMiYua3VzaW50YS5pb3Qud2VicnRjLnYxLkhvdXNlaG9sZEV4cG9y'
+    'dEgAUg9ob3VzZWhvbGRFeHBvcnRCCAoGcmVzdWx0');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -970,6 +1024,24 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'commissioningTest'
     },
+    {
+      '1': 'commissioning_grants',
+      '3': 27,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningGrants',
+      '9': 0,
+      '10': 'commissioningGrants'
+    },
+    {
+      '1': 'household_handover',
+      '3': 28,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.HouseholdHandover',
+      '9': 0,
+      '10': 'householdHandover'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -1017,9 +1089,12 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'EuU3BhY2VJbnZpdGVzSABSDHNwYWNlSW52aXRlcxJZChJwcm9tb3Rpb25fcmVxdWVzdHMYGSAB'
     'KAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvbW90aW9uUmVxdWVzdHNIAFIRcHJvbW90aW'
     '9uUmVxdWVzdHMSYAoSY29tbWlzc2lvbmluZ190ZXN0GBogASgLMi8ua3VzaW50YS5pb3QuY29t'
-    'bWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nVGVzdEgAUhFjb21taXNzaW9uaW5nVGVzdEIJCg'
-    'dwYXlsb2FkSgQIDxAQSgQIBxAIUhZhdHRyaWJ1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9l'
-    'dmVudA==');
+    'bWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nVGVzdEgAUhFjb21taXNzaW9uaW5nVGVzdBJmCh'
+    'Rjb21taXNzaW9uaW5nX2dyYW50cxgbIAEoCzIxLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcu'
+    'djEuQ29tbWlzc2lvbmluZ0dyYW50c0gAUhNjb21taXNzaW9uaW5nR3JhbnRzElkKEmhvdXNlaG'
+    '9sZF9oYW5kb3ZlchgcIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Ib3VzZWhvbGRIYW5k'
+    'b3ZlckgAUhFob3VzZWhvbGRIYW5kb3ZlckIJCgdwYXlsb2FkSgQIDxAQSgQIBxAIUhZhdHRyaW'
+    'J1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

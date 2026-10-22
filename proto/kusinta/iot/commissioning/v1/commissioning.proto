@@ -68,10 +68,11 @@ option optimize_for = SPEED;
 //
 // WHO SEES AND CHANGES IT. A fact, test or feature about a home — its rooms, or a heating
 // record naming a room in it (heating.v1) — is given to the home's residents and to an
-// installer under a commissioning grant for the home. A fact is put by a household admin
-// of the home (HOUSEHOLD), or by that installer (INSTALLER). Facts about spaces outside
-// homes are given to and put by the property owner and the gateway's administrators
-// (OWNER_ORGANISATION), and by an installer under a grant naming the space. A caller who
+// installer under a commissioning grant on the home (GRANTS). A fact is put by a household
+// admin of the home (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN; HOUSEHOLD), or by that
+// installer (INSTALLER). Facts about spaces outside homes are given to and put by the
+// property owner and the gateway's administrators (OWNER_ORGANISATION), and by an installer
+// under a grant on the space or one above it. A caller who
 // reaches a home as service gets none of it, and is refused as NOT_ENTITLED. A fact of
 // FACT_TOPIC_COMFORT is the exception: it is given to and put by the home's residents only,
 // never under a commissioning grant, and no installer answers it.
@@ -97,15 +98,48 @@ option optimize_for = SPEED;
 //   * the device is replaced or re-paired, even under the same binding;
 //   * for a floor zone, its rooms or its control room change. Area shares may change
 //     freely.
+//
+// GRANTS. A commissioning grant (CommissioningGrant) lets one named installer commission one
+// space for a bounded time. The installer asks for it (webrtc.v1.RequestCommissioningGrant)
+// and whoever governs the space answers: for a home, a household admin of it; for a space
+// outside homes, the property owner or the gateway's administrators. The installer is a
+// member holding access.v1.ROLE_TECHNICIAN who reaches the space; nobody else is granted one.
+// A grant on a home covers the home and its rooms; a grant on a space outside homes covers it
+// and the spaces below it, save every home among them, which only a grant on that home
+// covers.
+//
+// A grant is active from starts_at until ends_at, and then ends on its own. While active it
+// covers, on the spaces it covers and nothing else:
+//   * the commissioning there, as INSTALLER: its facts — save FACT_TOPIC_COMFORT — tests and
+//     feature states, needs included;
+//   * the heating records there (heating.v1), comfort loads without their windows, and
+//     binding outputs on devices filed there;
+//   * running commissioning tests there, and concluding PUMP_ALL_ZONES_OFF;
+//   * while a test the installer started under it runs, the readings that test is judged by:
+//     the state of the output it drives and, for ZONE_EFFECT, its control room's temperature
+//     and the circuit's return probe, from the test's start to its end and none from before
+//     or after;
+//   * the photos a household shares for commissioning, those it shares and only while the
+//     grant is active.
+// It NEVER covers a home's history (room history, climate summaries), savings or comfort
+// settings (targets, modes, comfort-load windows, FACT_TOPIC_COMFORT), its device events, nor
+// who lives there. Outside what it covers the installer sees a home as service, as before.
+//
+// A grant ends at ends_at, when it is ended (webrtc.v1.EndCommissioningGrant), when the
+// installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home at its handover (webrtc.v1
+// household.proto). What it covered goes from the installer's sessions at once, and a test
+// they started under it is ABORTED. It is visible to the household while it is requested or
+// active: listed to every resident of the home (webrtc.v1.ListCommissioningGrants) and pushed
+// to them as it changes.
 
 // Who answers a fact, or ran or concluded a test.
 enum Party {
   PARTY_UNSPECIFIED = 0;
   // The property owner or the gateway's administrators.
   PARTY_OWNER_ORGANISATION = 1;
-  // A household admin of the home.
+  // A household admin of the home (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN).
   PARTY_HOUSEHOLD = 2;
-  // An installer under a commissioning grant.
+  // An installer under a commissioning grant (CommissioningGrant).
   PARTY_INSTALLER = 3;
   // The gateway, from a device, a connector or a measurement of its own.
   PARTY_AUTOMATIC = 4;
@@ -466,4 +500,65 @@ message CommissioningRecord {
     CommissioningTest test = 2;
     HouseTemplate template = 3;
   }
+}
+
+// Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no
+// state: it is listed no more.
+enum CommissioningGrantState {
+  // A state this schema does not know: read as REQUESTED, which covers nothing.
+  COMMISSIONING_GRANT_STATE_UNSPECIFIED = 0;
+
+  // Asked for by the installer and not yet answered. Covers nothing. Lapses unanswered at
+  // expires_at.
+  COMMISSIONING_GRANT_STATE_REQUESTED = 1;
+
+  // Granted. Active from starts_at until ends_at; before starts_at it covers nothing yet.
+  COMMISSIONING_GRANT_STATE_GRANTED = 2;
+}
+
+// One installer's grant to commission one space (see the file comment, GRANTS).
+message CommissioningGrant {
+  // Minted by the gateway, opaque.
+  string grant_id = 1;
+
+  // A home's apartment, or a space outside homes.
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
+
+  // The installer who asked for it, and the name they gave their account
+  // (webrtc.v1.AppTokenClaims.name) as the gateway last learnt it, so the household knows
+  // whom it lets in; empty when none is learnt. Self-chosen, as webrtc.v1.MemberDetail.name
+  // is.
+  kusinta.iot.identity.v1.UserId installer = 3;
+  string installer_name = 4;
+
+  CommissioningGrantState state = 5;
+
+  google.protobuf.Timestamp requested_at = 6;
+
+  // When a request lapses unanswered: 7 days after requested_at, as
+  // webrtc.v1.PromotionRequest.expires_at. REQUESTED only.
+  google.protobuf.Timestamp expires_at = 7;
+
+  // When it is active, as granted, within the bounds webrtc.v1.AnswerCommissioningGrant sets.
+  // GRANTED only.
+  google.protobuf.Timestamp starts_at = 8;
+  google.protobuf.Timestamp ends_at = 9;
+
+  // Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
+  // for a space outside homes to the property owner and the gateway's administrators; to the
+  // installer it is unset, since a resident's user id would tell them who lives in the home.
+  kusinta.iot.identity.v1.UserId granted_by = 10;
+  google.protobuf.Timestamp granted_at = 11;
+}
+
+// The grants requested or active on one space, as listed to one caller: the answer to
+// webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
+// .commissioning_grants to every session that may list them whenever one is requested,
+// answered or ended before its time — to the installer, their own grants alone. Nothing is
+// pushed when a grant starts, ends or lapses at the time it states: a client reads those from
+// starts_at, ends_at and expires_at.
+message CommissioningGrants {
+  // The space the grants are on, on a push; unset on a listing.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  repeated CommissioningGrant grants = 2;
 }

@@ -12,6 +12,7 @@ from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.link.v1 import link_pb2 as _link_pb2
 from kusinta.iot.space.v1 import space_pb2 as _space_pb2
 from kusinta.iot.vendor.lorawan.v1 import lorawan_pb2 as _lorawan_pb2
+from kusinta.iot.webrtc.v1 import household_pb2 as _household_pb2
 from kusinta.iot.webrtc.v1 import invite_pb2 as _invite_pb2
 from kusinta.iot.webrtc.v1 import members_pb2 as _members_pb2
 from google.protobuf.internal import containers as _containers
@@ -241,18 +242,20 @@ class GetRoomHistory(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., from_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., to_time: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class PrivacyDisclosure(_message.Message):
-    __slots__ = ("space_id", "service_parties", "climate_summary_period", "owner_organisation_name", "names_withheld")
+    __slots__ = ("space_id", "service_parties", "climate_summary_period", "owner_organisation_name", "names_withheld", "staff_appointments")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     SERVICE_PARTIES_FIELD_NUMBER: _ClassVar[int]
     CLIMATE_SUMMARY_PERIOD_FIELD_NUMBER: _ClassVar[int]
     OWNER_ORGANISATION_NAME_FIELD_NUMBER: _ClassVar[int]
     NAMES_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    STAFF_APPOINTMENTS_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     service_parties: _containers.RepeatedCompositeFieldContainer[ServiceParty]
     climate_summary_period: _climate_pb2.ClimateSummaryPeriod
     owner_organisation_name: str
     names_withheld: bool
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ..., owner_organisation_name: _Optional[str] = ..., names_withheld: _Optional[bool] = ...) -> None: ...
+    staff_appointments: _containers.RepeatedCompositeFieldContainer[_household_pb2.StaffAppointment]
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., service_parties: _Optional[_Iterable[_Union[ServiceParty, _Mapping]]] = ..., climate_summary_period: _Optional[_Union[_climate_pb2.ClimateSummaryPeriod, str]] = ..., owner_organisation_name: _Optional[str] = ..., names_withheld: _Optional[bool] = ..., staff_appointments: _Optional[_Iterable[_Union[_household_pb2.StaffAppointment, _Mapping]]] = ...) -> None: ...
 
 class ServiceParty(_message.Message):
     __slots__ = ("role", "signals", "names")
@@ -414,8 +417,46 @@ class ListHomeSetups(_message.Message):
     root_space_id: _identity_pb2.SpaceId
     def __init__(self, root_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
 
+class RequestCommissioningGrant(_message.Message):
+    __slots__ = ("space_id",)
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    space_id: _identity_pb2.SpaceId
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
+
+class AnswerCommissioningGrant(_message.Message):
+    __slots__ = ("grant_id", "accept", "starts_at", "ends_at")
+    GRANT_ID_FIELD_NUMBER: _ClassVar[int]
+    ACCEPT_FIELD_NUMBER: _ClassVar[int]
+    STARTS_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDS_AT_FIELD_NUMBER: _ClassVar[int]
+    grant_id: str
+    accept: bool
+    starts_at: _timestamp_pb2.Timestamp
+    ends_at: _timestamp_pb2.Timestamp
+    def __init__(self, grant_id: _Optional[str] = ..., accept: _Optional[bool] = ..., starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class EndCommissioningGrant(_message.Message):
+    __slots__ = ("grant_id",)
+    GRANT_ID_FIELD_NUMBER: _ClassVar[int]
+    grant_id: str
+    def __init__(self, grant_id: _Optional[str] = ...) -> None: ...
+
+class ListCommissioningGrants(_message.Message):
+    __slots__ = ("root_space_id",)
+    ROOT_SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    root_space_id: _identity_pb2.SpaceId
+    def __init__(self, root_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
+
+class SetAssetOwner(_message.Message):
+    __slots__ = ("device_id", "asset_owner")
+    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
+    ASSET_OWNER_FIELD_NUMBER: _ClassVar[int]
+    device_id: _identity_pb2.DeviceId
+    asset_owner: _types_pb2.AssetOwner
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., asset_owner: _Optional[_Union[_types_pb2.AssetOwner, _Mapping]] = ...) -> None: ...
+
 class ManagementRequest(_message.Message):
-    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request", "list_gateway_members", "set_member_role", "remove_from_gateway", "set_access_until", "set_owner_organisation", "request_promotion", "answer_promotion", "list_promotion_requests", "list_heating", "put_heating_plant", "put_heating_circuit", "put_floor_zone", "put_comfort_load", "remove_heating_record", "set_comfort_windows", "request_account_link_nonce", "list_account_links", "unlink_account", "list_commissioning", "put_commissioning_fact", "remove_commissioning_fact", "put_house_template", "set_home_template", "run_commissioning_test", "conclude_commissioning_test", "list_home_setups")
+    __slots__ = ("create_space", "update_space", "delete_space", "assign_user_to_space", "remove_user_from_space", "place_device_in_space", "remove_device_from_space", "claim_device", "release_device", "list_spaces", "create_device_link", "remove_device_link", "list_device_links", "update_device_link", "provision_device", "set_room_target", "configure_room_climate", "set_climate_mode", "list_room_climates", "get_room_history", "get_privacy_disclosure", "get_apartment_climate_summary", "reconnect_connector", "create_invite", "resend_invite", "revoke_invite", "mark_invite_email_sent", "list_space_invites", "approve_join_request", "deny_join_request", "list_gateway_members", "set_member_role", "remove_from_gateway", "set_access_until", "set_owner_organisation", "request_promotion", "answer_promotion", "list_promotion_requests", "list_heating", "put_heating_plant", "put_heating_circuit", "put_floor_zone", "put_comfort_load", "remove_heating_record", "set_comfort_windows", "request_account_link_nonce", "list_account_links", "unlink_account", "list_commissioning", "put_commissioning_fact", "remove_commissioning_fact", "put_house_template", "set_home_template", "run_commissioning_test", "conclude_commissioning_test", "list_home_setups", "request_commissioning_grant", "answer_commissioning_grant", "end_commissioning_grant", "list_commissioning_grants", "set_asset_owner", "demote_household_admin", "start_household_handover", "confirm_household_handover", "cancel_household_handover", "list_household_handovers", "export_household_data")
     CREATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     UPDATE_SPACE_FIELD_NUMBER: _ClassVar[int]
     DELETE_SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -472,6 +513,17 @@ class ManagementRequest(_message.Message):
     RUN_COMMISSIONING_TEST_FIELD_NUMBER: _ClassVar[int]
     CONCLUDE_COMMISSIONING_TEST_FIELD_NUMBER: _ClassVar[int]
     LIST_HOME_SETUPS_FIELD_NUMBER: _ClassVar[int]
+    REQUEST_COMMISSIONING_GRANT_FIELD_NUMBER: _ClassVar[int]
+    ANSWER_COMMISSIONING_GRANT_FIELD_NUMBER: _ClassVar[int]
+    END_COMMISSIONING_GRANT_FIELD_NUMBER: _ClassVar[int]
+    LIST_COMMISSIONING_GRANTS_FIELD_NUMBER: _ClassVar[int]
+    SET_ASSET_OWNER_FIELD_NUMBER: _ClassVar[int]
+    DEMOTE_HOUSEHOLD_ADMIN_FIELD_NUMBER: _ClassVar[int]
+    START_HOUSEHOLD_HANDOVER_FIELD_NUMBER: _ClassVar[int]
+    CONFIRM_HOUSEHOLD_HANDOVER_FIELD_NUMBER: _ClassVar[int]
+    CANCEL_HOUSEHOLD_HANDOVER_FIELD_NUMBER: _ClassVar[int]
+    LIST_HOUSEHOLD_HANDOVERS_FIELD_NUMBER: _ClassVar[int]
+    EXPORT_HOUSEHOLD_DATA_FIELD_NUMBER: _ClassVar[int]
     create_space: CreateSpace
     update_space: UpdateSpace
     delete_space: DeleteSpace
@@ -528,4 +580,15 @@ class ManagementRequest(_message.Message):
     run_commissioning_test: RunCommissioningTest
     conclude_commissioning_test: ConcludeCommissioningTest
     list_home_setups: ListHomeSetups
-    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ..., reconnect_connector: _Optional[_Union[ReconnectConnector, _Mapping]] = ..., create_invite: _Optional[_Union[_invite_pb2.CreateInvite, _Mapping]] = ..., resend_invite: _Optional[_Union[_invite_pb2.ResendInvite, _Mapping]] = ..., revoke_invite: _Optional[_Union[_invite_pb2.RevokeInvite, _Mapping]] = ..., mark_invite_email_sent: _Optional[_Union[_invite_pb2.MarkInviteEmailSent, _Mapping]] = ..., list_space_invites: _Optional[_Union[_invite_pb2.ListSpaceInvites, _Mapping]] = ..., approve_join_request: _Optional[_Union[_invite_pb2.ApproveJoinRequest, _Mapping]] = ..., deny_join_request: _Optional[_Union[_invite_pb2.DenyJoinRequest, _Mapping]] = ..., list_gateway_members: _Optional[_Union[_members_pb2.ListGatewayMembers, _Mapping]] = ..., set_member_role: _Optional[_Union[_members_pb2.SetMemberRole, _Mapping]] = ..., remove_from_gateway: _Optional[_Union[_members_pb2.RemoveFromGateway, _Mapping]] = ..., set_access_until: _Optional[_Union[_members_pb2.SetAccessUntil, _Mapping]] = ..., set_owner_organisation: _Optional[_Union[_members_pb2.SetOwnerOrganisation, _Mapping]] = ..., request_promotion: _Optional[_Union[_members_pb2.RequestPromotion, _Mapping]] = ..., answer_promotion: _Optional[_Union[_members_pb2.AnswerPromotion, _Mapping]] = ..., list_promotion_requests: _Optional[_Union[_members_pb2.ListPromotionRequests, _Mapping]] = ..., list_heating: _Optional[_Union[ListHeating, _Mapping]] = ..., put_heating_plant: _Optional[_Union[PutHeatingPlant, _Mapping]] = ..., put_heating_circuit: _Optional[_Union[PutHeatingCircuit, _Mapping]] = ..., put_floor_zone: _Optional[_Union[PutFloorZone, _Mapping]] = ..., put_comfort_load: _Optional[_Union[PutComfortLoad, _Mapping]] = ..., remove_heating_record: _Optional[_Union[RemoveHeatingRecord, _Mapping]] = ..., set_comfort_windows: _Optional[_Union[SetComfortWindows, _Mapping]] = ..., request_account_link_nonce: _Optional[_Union[RequestAccountLinkNonce, _Mapping]] = ..., list_account_links: _Optional[_Union[ListAccountLinks, _Mapping]] = ..., unlink_account: _Optional[_Union[UnlinkAccount, _Mapping]] = ..., list_commissioning: _Optional[_Union[ListCommissioning, _Mapping]] = ..., put_commissioning_fact: _Optional[_Union[PutCommissioningFact, _Mapping]] = ..., remove_commissioning_fact: _Optional[_Union[RemoveCommissioningFact, _Mapping]] = ..., put_house_template: _Optional[_Union[PutHouseTemplate, _Mapping]] = ..., set_home_template: _Optional[_Union[SetHomeTemplate, _Mapping]] = ..., run_commissioning_test: _Optional[_Union[RunCommissioningTest, _Mapping]] = ..., conclude_commissioning_test: _Optional[_Union[ConcludeCommissioningTest, _Mapping]] = ..., list_home_setups: _Optional[_Union[ListHomeSetups, _Mapping]] = ...) -> None: ...
+    request_commissioning_grant: RequestCommissioningGrant
+    answer_commissioning_grant: AnswerCommissioningGrant
+    end_commissioning_grant: EndCommissioningGrant
+    list_commissioning_grants: ListCommissioningGrants
+    set_asset_owner: SetAssetOwner
+    demote_household_admin: _household_pb2.DemoteHouseholdAdmin
+    start_household_handover: _household_pb2.StartHouseholdHandover
+    confirm_household_handover: _household_pb2.ConfirmHouseholdHandover
+    cancel_household_handover: _household_pb2.CancelHouseholdHandover
+    list_household_handovers: _household_pb2.ListHouseholdHandovers
+    export_household_data: _household_pb2.ExportHouseholdData
+    def __init__(self, create_space: _Optional[_Union[CreateSpace, _Mapping]] = ..., update_space: _Optional[_Union[UpdateSpace, _Mapping]] = ..., delete_space: _Optional[_Union[DeleteSpace, _Mapping]] = ..., assign_user_to_space: _Optional[_Union[AssignUserToSpace, _Mapping]] = ..., remove_user_from_space: _Optional[_Union[RemoveUserFromSpace, _Mapping]] = ..., place_device_in_space: _Optional[_Union[PlaceDeviceInSpace, _Mapping]] = ..., remove_device_from_space: _Optional[_Union[RemoveDeviceFromSpace, _Mapping]] = ..., claim_device: _Optional[_Union[ClaimDevice, _Mapping]] = ..., release_device: _Optional[_Union[ReleaseDevice, _Mapping]] = ..., list_spaces: _Optional[_Union[ListSpaces, _Mapping]] = ..., create_device_link: _Optional[_Union[CreateDeviceLink, _Mapping]] = ..., remove_device_link: _Optional[_Union[RemoveDeviceLink, _Mapping]] = ..., list_device_links: _Optional[_Union[ListDeviceLinks, _Mapping]] = ..., update_device_link: _Optional[_Union[UpdateDeviceLink, _Mapping]] = ..., provision_device: _Optional[_Union[ProvisionDevice, _Mapping]] = ..., set_room_target: _Optional[_Union[SetRoomTarget, _Mapping]] = ..., configure_room_climate: _Optional[_Union[ConfigureRoomClimate, _Mapping]] = ..., set_climate_mode: _Optional[_Union[SetClimateMode, _Mapping]] = ..., list_room_climates: _Optional[_Union[ListRoomClimates, _Mapping]] = ..., get_room_history: _Optional[_Union[GetRoomHistory, _Mapping]] = ..., get_privacy_disclosure: _Optional[_Union[GetPrivacyDisclosure, _Mapping]] = ..., get_apartment_climate_summary: _Optional[_Union[GetApartmentClimateSummary, _Mapping]] = ..., reconnect_connector: _Optional[_Union[ReconnectConnector, _Mapping]] = ..., create_invite: _Optional[_Union[_invite_pb2.CreateInvite, _Mapping]] = ..., resend_invite: _Optional[_Union[_invite_pb2.ResendInvite, _Mapping]] = ..., revoke_invite: _Optional[_Union[_invite_pb2.RevokeInvite, _Mapping]] = ..., mark_invite_email_sent: _Optional[_Union[_invite_pb2.MarkInviteEmailSent, _Mapping]] = ..., list_space_invites: _Optional[_Union[_invite_pb2.ListSpaceInvites, _Mapping]] = ..., approve_join_request: _Optional[_Union[_invite_pb2.ApproveJoinRequest, _Mapping]] = ..., deny_join_request: _Optional[_Union[_invite_pb2.DenyJoinRequest, _Mapping]] = ..., list_gateway_members: _Optional[_Union[_members_pb2.ListGatewayMembers, _Mapping]] = ..., set_member_role: _Optional[_Union[_members_pb2.SetMemberRole, _Mapping]] = ..., remove_from_gateway: _Optional[_Union[_members_pb2.RemoveFromGateway, _Mapping]] = ..., set_access_until: _Optional[_Union[_members_pb2.SetAccessUntil, _Mapping]] = ..., set_owner_organisation: _Optional[_Union[_members_pb2.SetOwnerOrganisation, _Mapping]] = ..., request_promotion: _Optional[_Union[_members_pb2.RequestPromotion, _Mapping]] = ..., answer_promotion: _Optional[_Union[_members_pb2.AnswerPromotion, _Mapping]] = ..., list_promotion_requests: _Optional[_Union[_members_pb2.ListPromotionRequests, _Mapping]] = ..., list_heating: _Optional[_Union[ListHeating, _Mapping]] = ..., put_heating_plant: _Optional[_Union[PutHeatingPlant, _Mapping]] = ..., put_heating_circuit: _Optional[_Union[PutHeatingCircuit, _Mapping]] = ..., put_floor_zone: _Optional[_Union[PutFloorZone, _Mapping]] = ..., put_comfort_load: _Optional[_Union[PutComfortLoad, _Mapping]] = ..., remove_heating_record: _Optional[_Union[RemoveHeatingRecord, _Mapping]] = ..., set_comfort_windows: _Optional[_Union[SetComfortWindows, _Mapping]] = ..., request_account_link_nonce: _Optional[_Union[RequestAccountLinkNonce, _Mapping]] = ..., list_account_links: _Optional[_Union[ListAccountLinks, _Mapping]] = ..., unlink_account: _Optional[_Union[UnlinkAccount, _Mapping]] = ..., list_commissioning: _Optional[_Union[ListCommissioning, _Mapping]] = ..., put_commissioning_fact: _Optional[_Union[PutCommissioningFact, _Mapping]] = ..., remove_commissioning_fact: _Optional[_Union[RemoveCommissioningFact, _Mapping]] = ..., put_house_template: _Optional[_Union[PutHouseTemplate, _Mapping]] = ..., set_home_template: _Optional[_Union[SetHomeTemplate, _Mapping]] = ..., run_commissioning_test: _Optional[_Union[RunCommissioningTest, _Mapping]] = ..., conclude_commissioning_test: _Optional[_Union[ConcludeCommissioningTest, _Mapping]] = ..., list_home_setups: _Optional[_Union[ListHomeSetups, _Mapping]] = ..., request_commissioning_grant: _Optional[_Union[RequestCommissioningGrant, _Mapping]] = ..., answer_commissioning_grant: _Optional[_Union[AnswerCommissioningGrant, _Mapping]] = ..., end_commissioning_grant: _Optional[_Union[EndCommissioningGrant, _Mapping]] = ..., list_commissioning_grants: _Optional[_Union[ListCommissioningGrants, _Mapping]] = ..., set_asset_owner: _Optional[_Union[SetAssetOwner, _Mapping]] = ..., demote_household_admin: _Optional[_Union[_household_pb2.DemoteHouseholdAdmin, _Mapping]] = ..., start_household_handover: _Optional[_Union[_household_pb2.StartHouseholdHandover, _Mapping]] = ..., confirm_household_handover: _Optional[_Union[_household_pb2.ConfirmHouseholdHandover, _Mapping]] = ..., cancel_household_handover: _Optional[_Union[_household_pb2.CancelHouseholdHandover, _Mapping]] = ..., list_household_handovers: _Optional[_Union[_household_pb2.ListHouseholdHandovers, _Mapping]] = ..., export_household_data: _Optional[_Union[_household_pb2.ExportHouseholdData, _Mapping]] = ...) -> None: ...

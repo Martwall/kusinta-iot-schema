@@ -215,6 +215,22 @@ final $typed_data.Uint8List testFailureDescriptor = $convert.base64Decode(
     'Q0hBQkxFEAUSGgoWVEVTVF9GQUlMVVJFX05PX0VGRkVDVBAGEhkKFVRFU1RfRkFJTFVSRV9PQl'
     'NFUlZFRBAH');
 
+@$core.Deprecated('Use commissioningGrantStateDescriptor instead')
+const CommissioningGrantState$json = {
+  '1': 'CommissioningGrantState',
+  '2': [
+    {'1': 'COMMISSIONING_GRANT_STATE_UNSPECIFIED', '2': 0},
+    {'1': 'COMMISSIONING_GRANT_STATE_REQUESTED', '2': 1},
+    {'1': 'COMMISSIONING_GRANT_STATE_GRANTED', '2': 2},
+  ],
+};
+
+/// Descriptor for `CommissioningGrantState`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List commissioningGrantStateDescriptor = $convert.base64Decode(
+    'ChdDb21taXNzaW9uaW5nR3JhbnRTdGF0ZRIpCiVDT01NSVNTSU9OSU5HX0dSQU5UX1NUQVRFX1'
+    'VOU1BFQ0lGSUVEEAASJwojQ09NTUlTU0lPTklOR19HUkFOVF9TVEFURV9SRVFVRVNURUQQARIl'
+    'CiFDT01NSVNTSU9OSU5HX0dSQU5UX1NUQVRFX0dSQU5URUQQAg==');
+
 @$core.Deprecated('Use provenanceDescriptor instead')
 const Provenance$json = {
   '1': 'Provenance',
@@ -870,3 +886,128 @@ final $typed_data.Uint8List commissioningRecordDescriptor = $convert.base64Decod
     'c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuQ29tbWlzc2lvbmluZ1Rlc3RIAFIEdGVzdBJJCg'
     'h0ZW1wbGF0ZRgDIAEoCzIrLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuSG91c2VUZW1w'
     'bGF0ZUgAUgh0ZW1wbGF0ZUIICgZyZWNvcmQ=');
+
+@$core.Deprecated('Use commissioningGrantDescriptor instead')
+const CommissioningGrant$json = {
+  '1': 'CommissioningGrant',
+  '2': [
+    {'1': 'grant_id', '3': 1, '4': 1, '5': 9, '10': 'grantId'},
+    {
+      '1': 'space_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'installer',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'installer'
+    },
+    {'1': 'installer_name', '3': 4, '4': 1, '5': 9, '10': 'installerName'},
+    {
+      '1': 'state',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningGrantState',
+      '10': 'state'
+    },
+    {
+      '1': 'requested_at',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'requestedAt'
+    },
+    {
+      '1': 'expires_at',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'expiresAt'
+    },
+    {
+      '1': 'starts_at',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'startsAt'
+    },
+    {
+      '1': 'ends_at',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'endsAt'
+    },
+    {
+      '1': 'granted_by',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'grantedBy'
+    },
+    {
+      '1': 'granted_at',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'grantedAt'
+    },
+  ],
+};
+
+/// Descriptor for `CommissioningGrant`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List commissioningGrantDescriptor = $convert.base64Decode(
+    'ChJDb21taXNzaW9uaW5nR3JhbnQSGQoIZ3JhbnRfaWQYASABKAlSB2dyYW50SWQSOwoIc3BhY2'
+    'VfaWQYAiABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlkEj0K'
+    'CWluc3RhbGxlchgDIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIJaW5zdG'
+    'FsbGVyEiUKDmluc3RhbGxlcl9uYW1lGAQgASgJUg1pbnN0YWxsZXJOYW1lEksKBXN0YXRlGAUg'
+    'ASgOMjUua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nR3JhbnRTdG'
+    'F0ZVIFc3RhdGUSPQoMcmVxdWVzdGVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVz'
+    'dGFtcFILcmVxdWVzdGVkQXQSOQoKZXhwaXJlc19hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi'
+    '5UaW1lc3RhbXBSCWV4cGlyZXNBdBI3CglzdGFydHNfYXQYCCABKAsyGi5nb29nbGUucHJvdG9i'
+    'dWYuVGltZXN0YW1wUghzdGFydHNBdBIzCgdlbmRzX2F0GAkgASgLMhouZ29vZ2xlLnByb3RvYn'
+    'VmLlRpbWVzdGFtcFIGZW5kc0F0Ej4KCmdyYW50ZWRfYnkYCiABKAsyHy5rdXNpbnRhLmlvdC5p'
+    'ZGVudGl0eS52MS5Vc2VySWRSCWdyYW50ZWRCeRI5CgpncmFudGVkX2F0GAsgASgLMhouZ29vZ2'
+    'xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZ3JhbnRlZEF0');
+
+@$core.Deprecated('Use commissioningGrantsDescriptor instead')
+const CommissioningGrants$json = {
+  '1': 'CommissioningGrants',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'grants',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningGrant',
+      '10': 'grants'
+    },
+  ],
+};
+
+/// Descriptor for `CommissioningGrants`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List commissioningGrantsDescriptor = $convert.base64Decode(
+    'ChNDb21taXNzaW9uaW5nR3JhbnRzEjsKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaW'
+    'RlbnRpdHkudjEuU3BhY2VJZFIHc3BhY2VJZBJICgZncmFudHMYAiADKAsyMC5rdXNpbnRhLmlv'
+    'dC5jb21taXNzaW9uaW5nLnYxLkNvbW1pc3Npb25pbmdHcmFudFIGZ3JhbnRz');

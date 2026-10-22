@@ -1147,6 +1147,19 @@ export enum RedeemOutcome {
    * @generated from enum value: REDEEM_OUTCOME_WRONG_ACCOUNT = 4;
    */
   WRONG_ACCOUNT = 4,
+
+  /**
+   * The invite appoints a household admin (webrtc.v1 household.proto, STAFF APPOINTMENT),
+   * and this user may not be appointed: they created it, or hold a staff role on the gateway.
+   * Leaves the invite pending, for the person it was meant for. Answered only to a user whose
+   * secret matched a live invite, so it tells nothing about which secrets exist. An
+   * appointment invite on a home that is no longer empty is no invite, and answers INVALID.
+   *
+   * Rollout order: the api-server handles it before a gateway sends it.
+   *
+   * @generated from enum value: REDEEM_OUTCOME_NOT_ELIGIBLE = 5;
+   */
+  NOT_ELIGIBLE = 5,
 }
 
 /**

@@ -90,12 +90,13 @@ export declare type SetMemberRole = Message<"kusinta.iot.webrtc.v1.SetMemberRole
 export declare const SetMemberRoleSchema: GenMessage<SetMemberRole>;
 
 /**
- * Asks a member to accept ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN. Answered with
+ * Asks a member to accept ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, or, with home_id, to
+ * become a household admin of a home (HOUSEHOLD PROMOTION, below). Answered with
  * ManagementAck once the request is made; the role is granted only when the person asked
- * accepts it (AnswerPromotion). Only a caller holding ROLE_GATEWAY_ADMIN may; any other role
- * named is INVALID_REQUEST. The caller may ask themselves, as anyone.
+ * accepts it (AnswerPromotion). Only a caller holding ROLE_GATEWAY_ADMIN may ask for a role;
+ * any other role named is INVALID_REQUEST. The caller may ask themselves, as anyone.
  *
- * user_id is never a residency id (INVALID_REQUEST), as for SetMemberRole: a resident becomes
+ * For a role, user_id is never a residency id (INVALID_REQUEST), as for SetMemberRole: a resident becomes
  * staff by an act of their own — redeeming a SERVICE invite (invite.proto) — and is asked from
  * the entry that gives. A user id the caller is told nothing of under it is "not_a_member".
  * Naming ROLE_GATEWAY_ADMIN for a vouched administrator is refused as "vouched_admin";
@@ -110,9 +111,26 @@ export declare const SetMemberRoleSchema: GenMessage<SetMemberRole>;
  * ROLE_GATEWAY_ADMIN — an outgoing administrator of a transfer included
  * (signaling.v1.TransferOutcome) — since no administrator then stands behind it.
  *
- * The app shows the person asked, before they answer, that accepting makes their name and email
- * address shown to property owners and administrators (MemberDetail.name, MemberDetail.email),
- * and to residents by name (PrivacyDisclosure).
+ * The app shows the person asked for a role, before they answer, that accepting makes their name
+ * and email address shown to property owners and administrators (MemberDetail.name,
+ * MemberDetail.email), and to residents by name (PrivacyDisclosure).
+ *
+ * HOUSEHOLD PROMOTION. With home_id set it asks a resident of that home to become its household
+ * admin (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN; household.proto) rather than for a
+ * role: role is then UNSPECIFIED, and anything else is INVALID_REQUEST, as is a home_id that is
+ * not an apartment. It is asked by:
+ *   * a household admin of the home, of a resident of it named by user id (household.proto,
+ *     PROMOTION);
+ *   * the property owner or a gateway administrator who reaches the home, while it is
+ *     admin-less, of one of its residents, named by residency id unless the caller lives there
+ *     (household.proto, STAFF APPOINTMENT). This is the one request here a residency id may
+ *     stand in; that section's refusals apply.
+ * Anyone else is refused as NOT_ENTITLED. Someone who is not a resident of the home is
+ * "not_a_member"; asking a household admin of it changes nothing and is acknowledged. One
+ * request per resident and home, whoever asked. Besides the ends above, it ends when the person
+ * asked stops being a resident of the home, when the asker stops being a household admin of
+ * it — or, having asked as staff, stops holding both ROLE_PROPERTY_OWNER and
+ * ROLE_GATEWAY_ADMIN — and when the home comes to have a household admin otherwise.
  *
  * @generated from message kusinta.iot.webrtc.v1.RequestPromotion
  */
@@ -126,6 +144,13 @@ export declare type RequestPromotion = Message<"kusinta.iot.webrtc.v1.RequestPro
    * @generated from field: kusinta.iot.access.v1.Role role = 2;
    */
   role: Role;
+
+  /**
+   * Set for a household promotion: the apartment of the home. Unset for a role.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 3;
+   */
+  homeId?: SpaceId | undefined;
 };
 
 /**
@@ -142,7 +167,10 @@ export declare const RequestPromotionSchema: GenMessage<RequestPromotion>;
  *
  * Accepting grants the role at once, and clears any end to the person's access
  * (MemberDetail.access_until): a property owner or an administrator is not there for a job. The
- * change reaches their open sessions at once. Declining ends the request and grants nothing; the
+ * change reaches their open sessions at once. Accepting a household promotion makes them a
+ * household admin of the home at once and changes nothing else — save that one staff asked is
+ * refused to a person holding a staff role, as "staff_appointee" (household.proto, STAFF
+ * APPOINTMENT), and ends. Declining ends the request and grants nothing; the
  * asker learns only that it is no longer pending.
  *
  * @generated from message kusinta.iot.webrtc.v1.AnswerPromotion
@@ -199,14 +227,15 @@ export declare type PromotionRequest = Message<"kusinta.iot.webrtc.v1.PromotionR
   requestId: string;
 
   /**
-   * The person asked.
+   * The person asked: to an asker who does not live in the home of a household promotion,
+   * the residency id they named.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId user_id = 2;
    */
   userId?: UserId | undefined;
 
   /**
-   * ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN.
+   * ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN; UNSPECIFIED for a household promotion.
    *
    * @generated from field: kusinta.iot.access.v1.Role role = 3;
    */
@@ -237,6 +266,14 @@ export declare type PromotionRequest = Message<"kusinta.iot.webrtc.v1.PromotionR
    * @generated from field: google.protobuf.Timestamp expires_at = 7;
    */
   expiresAt?: Timestamp | undefined;
+
+  /**
+   * Set for a household promotion: the home whose household admin the person is asked to
+   * become (RequestPromotion.home_id).
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 8;
+   */
+  homeId?: SpaceId | undefined;
 };
 
 /**

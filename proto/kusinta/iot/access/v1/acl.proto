@@ -179,7 +179,8 @@ message DeviceAcl {
   // description only: its endpoints with their device types and implemented lists, and no
   // property value. What keeps it working comes as a webrtc.v1.ServiceStatus instead. An
   // app should show its readings as withheld, not missing. RESIDENT: the user lives in the
-  // home the device is filed in, whether or not they also own it. UNSPECIFIED: neither
+  // home the device is filed in, whether or not they also own it; a household admin is given
+  // RESIDENT here too, since they see the device as any resident does. UNSPECIFIED: neither
   // applies — the device is not in a home, or the user reaches it only by owning it.
   //
   // Descriptive, like role: allowed_actions and the ref lists are what is enforced.
@@ -210,8 +211,8 @@ enum ServiceSignal {
   SERVICE_SIGNAL_FAULT = 5;
 
   // What the device is — its description, every field of device.v1.DeviceDescriptor but
-  // claimed_at: type, name, vendor, product, serial number, versions, ownership, lifecycle
-  // and connector; its endpoints and what each supports — and where it is filed. A
+  // claimed_at: type, name, vendor, product, serial number, versions, ownership, asset
+  // owner, lifecycle and connector; its endpoints and what each supports — and where it is filed. A
   // bridged_by naming a device the recipient may not see, such as a bridge a resident owns,
   // is unset. Always disclosed together with FIRMWARE, whose
   // version it carries. Not when it was claimed: the only times service is given of a

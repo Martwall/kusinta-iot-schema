@@ -137,6 +137,39 @@ final $typed_data.Uint8List backendFailureReasonDescriptor = $convert.base64Deco
     '9OX0JBQ0tFTkRfRVJST1IQAxIoCiRCQUNLRU5EX0ZBSUxVUkVfUkVBU09OX01JU0NPTkZJR1VS'
     'RUQQBBIjCh9CQUNLRU5EX0ZBSUxVUkVfUkVBU09OX0lOVEVSTkFMEAU=');
 
+@$core.Deprecated('Use assetOwnerDescriptor instead')
+const AssetOwner$json = {
+  '1': 'AssetOwner',
+  '2': [
+    {
+      '1': 'owner_organisation',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '9': 0,
+      '10': 'ownerOrganisation'
+    },
+    {
+      '1': 'household_home_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '9': 0,
+      '10': 'householdHomeId'
+    },
+  ],
+  '8': [
+    {'1': 'owner'},
+  ],
+};
+
+/// Descriptor for `AssetOwner`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List assetOwnerDescriptor = $convert.base64Decode(
+    'CgpBc3NldE93bmVyEi8KEm93bmVyX29yZ2FuaXNhdGlvbhgBIAEoCEgAUhFvd25lck9yZ2FuaX'
+    'NhdGlvbhJOChFob3VzZWhvbGRfaG9tZV9pZBgCIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5'
+    'LnYxLlNwYWNlSWRIAFIPaG91c2Vob2xkSG9tZUlkQgcKBW93bmVy');
+
 @$core.Deprecated('Use errorDetailDescriptor instead')
 const ErrorDetail$json = {
   '1': 'ErrorDetail',

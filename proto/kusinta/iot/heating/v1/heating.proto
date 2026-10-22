@@ -26,8 +26,9 @@ option optimize_for = SPEED;
 // Who may see and change them goes by the rooms a record names, not by the plant's space.
 // All of a floor zone's rooms lie in one home, or all lie outside homes. A floor zone or
 // comfort load naming a room in a home is that home's: given only to its residents and to
-// an installer under a commissioning grant for that home, changed by a household admin of
-// the home or that installer, whatever space its plant serves. Such a record may name a
+// an installer under a commissioning grant on that home (commissioning.v1.CommissioningGrant),
+// changed by a household admin of the home (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) or
+// that installer, whatever space its plant serves. Such a record may name a
 // parent the caller cannot see — a circuit of a central plant — as a bare id: a layout may
 // hold it without its parent, and a put of it needs no rights over the parent. Moving a
 // zone to another circuit does. Residents set a comfort load's windows; an installer under a
@@ -38,7 +39,8 @@ option optimize_for = SPEED;
 // plant's space: in a home as above; outside homes, the property owner and the gateway's
 // administrators. An output on a device the caller cannot reach — a zone relay at a central
 // manifold, outside the home — is bound by whoever can reach the device: the property owner,
-// the gateway's administrators, or an installer whose commissioning grant names it.
+// the gateway's administrators, or an installer whose commissioning grant covers a space it
+// is filed in.
 //
 // The gateway drives a bound output away from rest only while it holds a current pass of its
 // commissioning test (commissioning.v1, TEST_KIND_OUTPUT_LEASE), and only while its producer
