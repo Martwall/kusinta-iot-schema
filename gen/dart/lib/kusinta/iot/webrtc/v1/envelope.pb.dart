@@ -14,23 +14,24 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $10;
+import '../../../../google/protobuf/timestamp.pb.dart' as $11;
 import '../../access/v1/acl.pb.dart' as $1;
+import '../../accountlink/v1/account_link.pb.dart' as $9;
 import '../../climate/v1/climate.pb.dart' as $5;
-import '../../common/v1/pairing.pb.dart' as $9;
-import '../../common/v1/types.pb.dart' as $11;
-import '../../device/v1/device_event.pb.dart' as $15;
+import '../../common/v1/pairing.pb.dart' as $10;
+import '../../common/v1/types.pb.dart' as $12;
+import '../../device/v1/device_event.pb.dart' as $16;
 import '../../heating/v1/heating.pb.dart' as $8;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $4;
 import '../../space/v1/space.pb.dart' as $2;
-import 'command.pb.dart' as $14;
-import 'device_state.pb.dart' as $12;
+import 'command.pb.dart' as $15;
+import 'device_state.pb.dart' as $13;
 import 'envelope.pbenum.dart';
 import 'invite.pb.dart' as $6;
 import 'management.pb.dart' as $3;
 import 'members.pb.dart' as $7;
-import 'permission_push.pb.dart' as $13;
+import 'permission_push.pb.dart' as $14;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
@@ -706,6 +707,8 @@ enum ManagementResult_Result {
   promotionRequests,
   heatingLayout,
   heatingRecord,
+  accountLinkNonce,
+  accountLinks,
   notSet
 }
 
@@ -736,6 +739,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     $7.PromotionRequests? promotionRequests,
     $8.HeatingLayout? heatingLayout,
     $8.HeatingRecord? heatingRecord,
+    $9.AccountLinkNonce? accountLinkNonce,
+    $9.AccountLinks? accountLinks,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -755,6 +760,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (promotionRequests != null) result.promotionRequests = promotionRequests;
     if (heatingLayout != null) result.heatingLayout = heatingLayout;
     if (heatingRecord != null) result.heatingRecord = heatingRecord;
+    if (accountLinkNonce != null) result.accountLinkNonce = accountLinkNonce;
+    if (accountLinks != null) result.accountLinks = accountLinks;
     return result;
   }
 
@@ -784,6 +791,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     14: ManagementResult_Result.promotionRequests,
     15: ManagementResult_Result.heatingLayout,
     16: ManagementResult_Result.heatingRecord,
+    17: ManagementResult_Result.accountLinkNonce,
+    18: ManagementResult_Result.accountLinks,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -791,7 +800,7 @@ class ManagementResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -824,6 +833,10 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $8.HeatingLayout.create)
     ..aOM<$8.HeatingRecord>(16, _omitFieldNames ? '' : 'heatingRecord',
         subBuilder: $8.HeatingRecord.create)
+    ..aOM<$9.AccountLinkNonce>(17, _omitFieldNames ? '' : 'accountLinkNonce',
+        subBuilder: $9.AccountLinkNonce.create)
+    ..aOM<$9.AccountLinks>(18, _omitFieldNames ? '' : 'accountLinks',
+        subBuilder: $9.AccountLinks.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1028,6 +1041,29 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearHeatingRecord() => $_clearField(16);
   @$pb.TagNumber(16)
   $8.HeatingRecord ensureHeatingRecord() => $_ensure(15);
+
+  /// request_account_link_nonce
+  @$pb.TagNumber(17)
+  $9.AccountLinkNonce get accountLinkNonce => $_getN(16);
+  @$pb.TagNumber(17)
+  set accountLinkNonce($9.AccountLinkNonce value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasAccountLinkNonce() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearAccountLinkNonce() => $_clearField(17);
+  @$pb.TagNumber(17)
+  $9.AccountLinkNonce ensureAccountLinkNonce() => $_ensure(16);
+
+  @$pb.TagNumber(18)
+  $9.AccountLinks get accountLinks => $_getN(17);
+  @$pb.TagNumber(18)
+  set accountLinks($9.AccountLinks value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasAccountLinks() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearAccountLinks() => $_clearField(18);
+  @$pb.TagNumber(18)
+  $9.AccountLinks ensureAccountLinks() => $_ensure(17);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the
@@ -1046,9 +1082,9 @@ class ManagementResult extends $pb.GeneratedMessage {
 class StartPairing extends $pb.GeneratedMessage {
   factory StartPairing({
     $0.ConnectorId? connectorId,
-    $9.PairingWindow? window,
+    $10.PairingWindow? window,
     $0.SpaceId? initialSpaceId,
-    $11.DeviceOwnershipType? ownership,
+    $12.DeviceOwnershipType? ownership,
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
@@ -1074,16 +1110,16 @@ class StartPairing extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
         subBuilder: $0.ConnectorId.create)
-    ..aOM<$9.PairingWindow>(2, _omitFieldNames ? '' : 'window',
-        subBuilder: $9.PairingWindow.create)
+    ..aOM<$10.PairingWindow>(2, _omitFieldNames ? '' : 'window',
+        subBuilder: $10.PairingWindow.create)
     ..aOM<$0.SpaceId>(3, _omitFieldNames ? '' : 'initialSpaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$11.DeviceOwnershipType>(
+    ..e<$12.DeviceOwnershipType>(
         4, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $11.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
-        valueOf: $11.DeviceOwnershipType.valueOf,
-        enumValues: $11.DeviceOwnershipType.values)
+            $12.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $12.DeviceOwnershipType.valueOf,
+        enumValues: $12.DeviceOwnershipType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1127,15 +1163,15 @@ class StartPairing extends $pb.GeneratedMessage {
 
   /// How long, which device, how many. See PairingWindow.
   @$pb.TagNumber(2)
-  $9.PairingWindow get window => $_getN(1);
+  $10.PairingWindow get window => $_getN(1);
   @$pb.TagNumber(2)
-  set window($9.PairingWindow value) => $_setField(2, value);
+  set window($10.PairingWindow value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasWindow() => $_has(1);
   @$pb.TagNumber(2)
   void clearWindow() => $_clearField(2);
   @$pb.TagNumber(2)
-  $9.PairingWindow ensureWindow() => $_ensure(1);
+  $10.PairingWindow ensureWindow() => $_ensure(1);
 
   /// Where to file the device once it arrives. Into a home only as PlaceDeviceInSpace
   /// allows.
@@ -1164,9 +1200,9 @@ class StartPairing extends $pb.GeneratedMessage {
   /// for a third party — handing a device to someone else is a transfer, a separate operation
   /// with its own authority.
   @$pb.TagNumber(4)
-  $11.DeviceOwnershipType get ownership => $_getN(3);
+  $12.DeviceOwnershipType get ownership => $_getN(3);
   @$pb.TagNumber(4)
-  set ownership($11.DeviceOwnershipType value) => $_setField(4, value);
+  set ownership($12.DeviceOwnershipType value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasOwnership() => $_has(3);
   @$pb.TagNumber(4)
@@ -1178,8 +1214,8 @@ class StartPairing extends $pb.GeneratedMessage {
 class PairingStarted extends $pb.GeneratedMessage {
   factory PairingStarted({
     $core.String? inReplyTo,
-    $10.Timestamp? expiresAt,
-    $9.PairingErrorDetail? error,
+    $11.Timestamp? expiresAt,
+    $10.PairingErrorDetail? error,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -1203,10 +1239,10 @@ class PairingStarted extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
-    ..aOM<$10.Timestamp>(2, _omitFieldNames ? '' : 'expiresAt',
-        subBuilder: $10.Timestamp.create)
-    ..aOM<$9.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: $9.PairingErrorDetail.create)
+    ..aOM<$11.Timestamp>(2, _omitFieldNames ? '' : 'expiresAt',
+        subBuilder: $11.Timestamp.create)
+    ..aOM<$10.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
+        subBuilder: $10.PairingErrorDetail.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1243,27 +1279,27 @@ class PairingStarted extends $pb.GeneratedMessage {
   /// from — not the duration that was asked for, which both the gateway and the connector
   /// clamp. A countdown run on the request rather than on this one disagrees with the hub.
   @$pb.TagNumber(2)
-  $10.Timestamp get expiresAt => $_getN(1);
+  $11.Timestamp get expiresAt => $_getN(1);
   @$pb.TagNumber(2)
-  set expiresAt($10.Timestamp value) => $_setField(2, value);
+  set expiresAt($11.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasExpiresAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearExpiresAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $10.Timestamp ensureExpiresAt() => $_ensure(1);
+  $11.Timestamp ensureExpiresAt() => $_ensure(1);
 
   /// Why it did not open. Present instead of expires_at.
   @$pb.TagNumber(3)
-  $9.PairingErrorDetail get error => $_getN(2);
+  $10.PairingErrorDetail get error => $_getN(2);
   @$pb.TagNumber(3)
-  set error($9.PairingErrorDetail value) => $_setField(3, value);
+  set error($10.PairingErrorDetail value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
   @$pb.TagNumber(3)
-  $9.PairingErrorDetail ensureError() => $_ensure(2);
+  $10.PairingErrorDetail ensureError() => $_ensure(2);
 }
 
 /// What the pairing window produced, gateway → app. The second and last answer, sent once
@@ -1281,7 +1317,7 @@ class PairingFinished extends $pb.GeneratedMessage {
   factory PairingFinished({
     $core.String? inReplyTo,
     $core.Iterable<$0.DeviceId>? deviceIds,
-    $9.PairingErrorDetail? error,
+    $10.PairingErrorDetail? error,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -1307,8 +1343,8 @@ class PairingFinished extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..pc<$0.DeviceId>(2, _omitFieldNames ? '' : 'deviceIds', $pb.PbFieldType.PM,
         subBuilder: $0.DeviceId.create)
-    ..aOM<$9.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: $9.PairingErrorDetail.create)
+    ..aOM<$10.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
+        subBuilder: $10.PairingErrorDetail.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1348,15 +1384,15 @@ class PairingFinished extends $pb.GeneratedMessage {
   /// Note this is not always a failure of the request: a window that simply expired unused
   /// ends here too, and is the ordinary result of a user changing their mind.
   @$pb.TagNumber(3)
-  $9.PairingErrorDetail get error => $_getN(2);
+  $10.PairingErrorDetail get error => $_getN(2);
   @$pb.TagNumber(3)
-  set error($9.PairingErrorDetail value) => $_setField(3, value);
+  set error($10.PairingErrorDetail value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
   @$pb.TagNumber(3)
-  $9.PairingErrorDetail ensureError() => $_ensure(2);
+  $10.PairingErrorDetail ensureError() => $_ensure(2);
 }
 
 /// GatewayMessage: gateway → app
@@ -1474,9 +1510,9 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
     $core.bool? supportsPairing,
     $core.bool? supportsProvisioning,
     $core.bool? brokersLinks,
-    $11.ConnectorKind? kind,
+    $12.ConnectorKind? kind,
     $core.String? description,
-    $11.BackendHealth? backendHealth,
+    $12.BackendHealth? backendHealth,
     $core.bool? supportsBackendReinitialize,
   }) {
     final result = create();
@@ -1518,13 +1554,13 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
     ..aOB(4, _omitFieldNames ? '' : 'supportsPairing')
     ..aOB(5, _omitFieldNames ? '' : 'supportsProvisioning')
     ..aOB(6, _omitFieldNames ? '' : 'brokersLinks')
-    ..e<$11.ConnectorKind>(7, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $11.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
-        valueOf: $11.ConnectorKind.valueOf,
-        enumValues: $11.ConnectorKind.values)
+    ..e<$12.ConnectorKind>(7, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $12.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $12.ConnectorKind.valueOf,
+        enumValues: $12.ConnectorKind.values)
     ..aOS(8, _omitFieldNames ? '' : 'description')
-    ..aOM<$11.BackendHealth>(9, _omitFieldNames ? '' : 'backendHealth',
-        subBuilder: $11.BackendHealth.create)
+    ..aOM<$12.BackendHealth>(9, _omitFieldNames ? '' : 'backendHealth',
+        subBuilder: $12.BackendHealth.create)
     ..aOB(10, _omitFieldNames ? '' : 'supportsBackendReinitialize')
     ..hasRequiredFields = false;
 
@@ -1608,9 +1644,9 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
   /// Presentation only — an icon or an "unknown hub" fallback; see
   /// common.v1.ConnectorKind. Unset renders as a generic hub.
   @$pb.TagNumber(7)
-  $11.ConnectorKind get kind => $_getN(6);
+  $12.ConnectorKind get kind => $_getN(6);
   @$pb.TagNumber(7)
-  set kind($11.ConnectorKind value) => $_setField(7, value);
+  set kind($12.ConnectorKind value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasKind() => $_has(6);
   @$pb.TagNumber(7)
@@ -1632,15 +1668,15 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
   /// reads as OK. FAILING is what opens a reporting.v1.PROBLEM_KIND_CONNECTOR_ERROR, and
   /// while it holds the app may offer ReconnectConnector.
   @$pb.TagNumber(9)
-  $11.BackendHealth get backendHealth => $_getN(8);
+  $12.BackendHealth get backendHealth => $_getN(8);
   @$pb.TagNumber(9)
-  set backendHealth($11.BackendHealth value) => $_setField(9, value);
+  set backendHealth($12.BackendHealth value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasBackendHealth() => $_has(8);
   @$pb.TagNumber(9)
   void clearBackendHealth() => $_clearField(9);
   @$pb.TagNumber(9)
-  $11.BackendHealth ensureBackendHealth() => $_ensure(8);
+  $12.BackendHealth ensureBackendHealth() => $_ensure(8);
 
   /// The connector can re-initialise its backend on request: ReconnectConnector is
   /// refused for any connector without it. Copied from the handshake, as the other
@@ -1890,26 +1926,26 @@ enum GatewayMessage_Payload {
 class GatewayMessage extends $pb.GeneratedMessage {
   factory GatewayMessage({
     $core.String? messageId,
-    $10.Timestamp? sentAt,
-    $12.DeviceStateSnapshot? stateSnapshot,
-    $12.PropertyReport? propertyReport,
-    $13.LivePermissionUpdate? permissionUpdate,
-    $14.CommandResult? commandResult,
+    $11.Timestamp? sentAt,
+    $13.DeviceStateSnapshot? stateSnapshot,
+    $13.PropertyReport? propertyReport,
+    $14.LivePermissionUpdate? permissionUpdate,
+    $15.CommandResult? commandResult,
     Pong? pong,
     HandshakeRejected? handshakeRejected,
     GatewayError? error,
     SubscriptionAck? subscriptionAck,
-    $12.DeviceAdded? deviceAdded,
-    $12.DeviceRemoved? deviceRemoved,
+    $13.DeviceAdded? deviceAdded,
+    $13.DeviceRemoved? deviceRemoved,
     ManagementResult? managementResult,
-    $15.DeviceEventBatch? deviceEvents,
+    $16.DeviceEventBatch? deviceEvents,
     PairingStarted? pairingStarted,
     PairingFinished? pairingFinished,
     LinkChanged? linkChanged,
     ConnectorsAnnounced? connectorsAnnounced,
     RoomClimateChanged? roomClimateChanged,
     ClimateModeChanged? climateModeChanged,
-    $12.ServiceStatusChanged? serviceStatusChanged,
+    $13.ServiceStatusChanged? serviceStatusChanged,
     $6.SpaceInvites? spaceInvites,
     $7.PromotionRequests? promotionRequests,
   }) {
@@ -2007,17 +2043,17 @@ class GatewayMessage extends $pb.GeneratedMessage {
       25
     ])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$10.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $10.Timestamp.create)
-    ..aOM<$12.DeviceStateSnapshot>(3, _omitFieldNames ? '' : 'stateSnapshot',
-        subBuilder: $12.DeviceStateSnapshot.create)
-    ..aOM<$12.PropertyReport>(4, _omitFieldNames ? '' : 'propertyReport',
-        subBuilder: $12.PropertyReport.create)
-    ..aOM<$13.LivePermissionUpdate>(
+    ..aOM<$11.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $11.Timestamp.create)
+    ..aOM<$13.DeviceStateSnapshot>(3, _omitFieldNames ? '' : 'stateSnapshot',
+        subBuilder: $13.DeviceStateSnapshot.create)
+    ..aOM<$13.PropertyReport>(4, _omitFieldNames ? '' : 'propertyReport',
+        subBuilder: $13.PropertyReport.create)
+    ..aOM<$14.LivePermissionUpdate>(
         5, _omitFieldNames ? '' : 'permissionUpdate',
-        subBuilder: $13.LivePermissionUpdate.create)
-    ..aOM<$14.CommandResult>(6, _omitFieldNames ? '' : 'commandResult',
-        subBuilder: $14.CommandResult.create)
+        subBuilder: $14.LivePermissionUpdate.create)
+    ..aOM<$15.CommandResult>(6, _omitFieldNames ? '' : 'commandResult',
+        subBuilder: $15.CommandResult.create)
     ..aOM<Pong>(8, _omitFieldNames ? '' : 'pong', subBuilder: Pong.create)
     ..aOM<HandshakeRejected>(9, _omitFieldNames ? '' : 'handshakeRejected',
         subBuilder: HandshakeRejected.create)
@@ -2025,14 +2061,14 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: GatewayError.create)
     ..aOM<SubscriptionAck>(11, _omitFieldNames ? '' : 'subscriptionAck',
         subBuilder: SubscriptionAck.create)
-    ..aOM<$12.DeviceAdded>(12, _omitFieldNames ? '' : 'deviceAdded',
-        subBuilder: $12.DeviceAdded.create)
-    ..aOM<$12.DeviceRemoved>(13, _omitFieldNames ? '' : 'deviceRemoved',
-        subBuilder: $12.DeviceRemoved.create)
+    ..aOM<$13.DeviceAdded>(12, _omitFieldNames ? '' : 'deviceAdded',
+        subBuilder: $13.DeviceAdded.create)
+    ..aOM<$13.DeviceRemoved>(13, _omitFieldNames ? '' : 'deviceRemoved',
+        subBuilder: $13.DeviceRemoved.create)
     ..aOM<ManagementResult>(14, _omitFieldNames ? '' : 'managementResult',
         subBuilder: ManagementResult.create)
-    ..aOM<$15.DeviceEventBatch>(16, _omitFieldNames ? '' : 'deviceEvents',
-        subBuilder: $15.DeviceEventBatch.create)
+    ..aOM<$16.DeviceEventBatch>(16, _omitFieldNames ? '' : 'deviceEvents',
+        subBuilder: $16.DeviceEventBatch.create)
     ..aOM<PairingStarted>(17, _omitFieldNames ? '' : 'pairingStarted',
         subBuilder: PairingStarted.create)
     ..aOM<PairingFinished>(18, _omitFieldNames ? '' : 'pairingFinished',
@@ -2045,9 +2081,9 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: RoomClimateChanged.create)
     ..aOM<ClimateModeChanged>(22, _omitFieldNames ? '' : 'climateModeChanged',
         subBuilder: ClimateModeChanged.create)
-    ..aOM<$12.ServiceStatusChanged>(
+    ..aOM<$13.ServiceStatusChanged>(
         23, _omitFieldNames ? '' : 'serviceStatusChanged',
-        subBuilder: $12.ServiceStatusChanged.create)
+        subBuilder: $13.ServiceStatusChanged.create)
     ..aOM<$6.SpaceInvites>(24, _omitFieldNames ? '' : 'spaceInvites',
         subBuilder: $6.SpaceInvites.create)
     ..aOM<$7.PromotionRequests>(25, _omitFieldNames ? '' : 'promotionRequests',
@@ -2089,59 +2125,59 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $10.Timestamp get sentAt => $_getN(1);
+  $11.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($10.Timestamp value) => $_setField(2, value);
+  set sentAt($11.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $10.Timestamp ensureSentAt() => $_ensure(1);
+  $11.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $12.DeviceStateSnapshot get stateSnapshot => $_getN(2);
+  $13.DeviceStateSnapshot get stateSnapshot => $_getN(2);
   @$pb.TagNumber(3)
-  set stateSnapshot($12.DeviceStateSnapshot value) => $_setField(3, value);
+  set stateSnapshot($13.DeviceStateSnapshot value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasStateSnapshot() => $_has(2);
   @$pb.TagNumber(3)
   void clearStateSnapshot() => $_clearField(3);
   @$pb.TagNumber(3)
-  $12.DeviceStateSnapshot ensureStateSnapshot() => $_ensure(2);
+  $13.DeviceStateSnapshot ensureStateSnapshot() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $12.PropertyReport get propertyReport => $_getN(3);
+  $13.PropertyReport get propertyReport => $_getN(3);
   @$pb.TagNumber(4)
-  set propertyReport($12.PropertyReport value) => $_setField(4, value);
+  set propertyReport($13.PropertyReport value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasPropertyReport() => $_has(3);
   @$pb.TagNumber(4)
   void clearPropertyReport() => $_clearField(4);
   @$pb.TagNumber(4)
-  $12.PropertyReport ensurePropertyReport() => $_ensure(3);
+  $13.PropertyReport ensurePropertyReport() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $13.LivePermissionUpdate get permissionUpdate => $_getN(4);
+  $14.LivePermissionUpdate get permissionUpdate => $_getN(4);
   @$pb.TagNumber(5)
-  set permissionUpdate($13.LivePermissionUpdate value) => $_setField(5, value);
+  set permissionUpdate($14.LivePermissionUpdate value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasPermissionUpdate() => $_has(4);
   @$pb.TagNumber(5)
   void clearPermissionUpdate() => $_clearField(5);
   @$pb.TagNumber(5)
-  $13.LivePermissionUpdate ensurePermissionUpdate() => $_ensure(4);
+  $14.LivePermissionUpdate ensurePermissionUpdate() => $_ensure(4);
 
   @$pb.TagNumber(6)
-  $14.CommandResult get commandResult => $_getN(5);
+  $15.CommandResult get commandResult => $_getN(5);
   @$pb.TagNumber(6)
-  set commandResult($14.CommandResult value) => $_setField(6, value);
+  set commandResult($15.CommandResult value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasCommandResult() => $_has(5);
   @$pb.TagNumber(6)
   void clearCommandResult() => $_clearField(6);
   @$pb.TagNumber(6)
-  $14.CommandResult ensureCommandResult() => $_ensure(5);
+  $15.CommandResult ensureCommandResult() => $_ensure(5);
 
   @$pb.TagNumber(8)
   Pong get pong => $_getN(6);
@@ -2188,26 +2224,26 @@ class GatewayMessage extends $pb.GeneratedMessage {
   SubscriptionAck ensureSubscriptionAck() => $_ensure(9);
 
   @$pb.TagNumber(12)
-  $12.DeviceAdded get deviceAdded => $_getN(10);
+  $13.DeviceAdded get deviceAdded => $_getN(10);
   @$pb.TagNumber(12)
-  set deviceAdded($12.DeviceAdded value) => $_setField(12, value);
+  set deviceAdded($13.DeviceAdded value) => $_setField(12, value);
   @$pb.TagNumber(12)
   $core.bool hasDeviceAdded() => $_has(10);
   @$pb.TagNumber(12)
   void clearDeviceAdded() => $_clearField(12);
   @$pb.TagNumber(12)
-  $12.DeviceAdded ensureDeviceAdded() => $_ensure(10);
+  $13.DeviceAdded ensureDeviceAdded() => $_ensure(10);
 
   @$pb.TagNumber(13)
-  $12.DeviceRemoved get deviceRemoved => $_getN(11);
+  $13.DeviceRemoved get deviceRemoved => $_getN(11);
   @$pb.TagNumber(13)
-  set deviceRemoved($12.DeviceRemoved value) => $_setField(13, value);
+  set deviceRemoved($13.DeviceRemoved value) => $_setField(13, value);
   @$pb.TagNumber(13)
   $core.bool hasDeviceRemoved() => $_has(11);
   @$pb.TagNumber(13)
   void clearDeviceRemoved() => $_clearField(13);
   @$pb.TagNumber(13)
-  $12.DeviceRemoved ensureDeviceRemoved() => $_ensure(11);
+  $13.DeviceRemoved ensureDeviceRemoved() => $_ensure(11);
 
   @$pb.TagNumber(14)
   ManagementResult get managementResult => $_getN(12);
@@ -2225,15 +2261,15 @@ class GatewayMessage extends $pb.GeneratedMessage {
   /// device, not in how the gateway reports having done it, and request_id says which
   /// request is being answered either way.
   @$pb.TagNumber(16)
-  $15.DeviceEventBatch get deviceEvents => $_getN(13);
+  $16.DeviceEventBatch get deviceEvents => $_getN(13);
   @$pb.TagNumber(16)
-  set deviceEvents($15.DeviceEventBatch value) => $_setField(16, value);
+  set deviceEvents($16.DeviceEventBatch value) => $_setField(16, value);
   @$pb.TagNumber(16)
   $core.bool hasDeviceEvents() => $_has(13);
   @$pb.TagNumber(16)
   void clearDeviceEvents() => $_clearField(16);
   @$pb.TagNumber(16)
-  $15.DeviceEventBatch ensureDeviceEvents() => $_ensure(13);
+  $16.DeviceEventBatch ensureDeviceEvents() => $_ensure(13);
 
   @$pb.TagNumber(17)
   PairingStarted get pairingStarted => $_getN(14);
@@ -2302,16 +2338,16 @@ class GatewayMessage extends $pb.GeneratedMessage {
   ClimateModeChanged ensureClimateModeChanged() => $_ensure(19);
 
   @$pb.TagNumber(23)
-  $12.ServiceStatusChanged get serviceStatusChanged => $_getN(20);
+  $13.ServiceStatusChanged get serviceStatusChanged => $_getN(20);
   @$pb.TagNumber(23)
-  set serviceStatusChanged($12.ServiceStatusChanged value) =>
+  set serviceStatusChanged($13.ServiceStatusChanged value) =>
       $_setField(23, value);
   @$pb.TagNumber(23)
   $core.bool hasServiceStatusChanged() => $_has(20);
   @$pb.TagNumber(23)
   void clearServiceStatusChanged() => $_clearField(23);
   @$pb.TagNumber(23)
-  $12.ServiceStatusChanged ensureServiceStatusChanged() => $_ensure(20);
+  $13.ServiceStatusChanged ensureServiceStatusChanged() => $_ensure(20);
 
   /// A space's pending invites and join requests changed; see SpaceInvites.
   @$pb.TagNumber(24)
@@ -2356,15 +2392,15 @@ enum AppMessage_Payload {
 class AppMessage extends $pb.GeneratedMessage {
   factory AppMessage({
     $core.String? messageId,
-    $10.Timestamp? sentAt,
+    $11.Timestamp? sentAt,
     AppHandshake? handshake,
-    $14.DeviceCommand? command,
+    $15.DeviceCommand? command,
     PropertyReadRequest? readRequest,
     Ping? ping,
     SubscribeDevices? subscribe,
     UnsubscribeDevices? unsubscribe,
     $3.ManagementRequest? management,
-    $14.AttributeWriteRequest? attributeWrite,
+    $15.AttributeWriteRequest? attributeWrite,
     StartPairing? startPairing,
   }) {
     final result = create();
@@ -2411,12 +2447,12 @@ class AppMessage extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..oo(0, [3, 4, 5, 6, 7, 8, 9, 10, 11])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$10.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $10.Timestamp.create)
+    ..aOM<$11.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $11.Timestamp.create)
     ..aOM<AppHandshake>(3, _omitFieldNames ? '' : 'handshake',
         subBuilder: AppHandshake.create)
-    ..aOM<$14.DeviceCommand>(4, _omitFieldNames ? '' : 'command',
-        subBuilder: $14.DeviceCommand.create)
+    ..aOM<$15.DeviceCommand>(4, _omitFieldNames ? '' : 'command',
+        subBuilder: $15.DeviceCommand.create)
     ..aOM<PropertyReadRequest>(5, _omitFieldNames ? '' : 'readRequest',
         subBuilder: PropertyReadRequest.create)
     ..aOM<Ping>(6, _omitFieldNames ? '' : 'ping', subBuilder: Ping.create)
@@ -2426,9 +2462,9 @@ class AppMessage extends $pb.GeneratedMessage {
         subBuilder: UnsubscribeDevices.create)
     ..aOM<$3.ManagementRequest>(9, _omitFieldNames ? '' : 'management',
         subBuilder: $3.ManagementRequest.create)
-    ..aOM<$14.AttributeWriteRequest>(
+    ..aOM<$15.AttributeWriteRequest>(
         10, _omitFieldNames ? '' : 'attributeWrite',
-        subBuilder: $14.AttributeWriteRequest.create)
+        subBuilder: $15.AttributeWriteRequest.create)
     ..aOM<StartPairing>(11, _omitFieldNames ? '' : 'startPairing',
         subBuilder: StartPairing.create)
     ..hasRequiredFields = false;
@@ -2466,15 +2502,15 @@ class AppMessage extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $10.Timestamp get sentAt => $_getN(1);
+  $11.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($10.Timestamp value) => $_setField(2, value);
+  set sentAt($11.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $10.Timestamp ensureSentAt() => $_ensure(1);
+  $11.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
   AppHandshake get handshake => $_getN(2);
@@ -2488,15 +2524,15 @@ class AppMessage extends $pb.GeneratedMessage {
   AppHandshake ensureHandshake() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $14.DeviceCommand get command => $_getN(3);
+  $15.DeviceCommand get command => $_getN(3);
   @$pb.TagNumber(4)
-  set command($14.DeviceCommand value) => $_setField(4, value);
+  set command($15.DeviceCommand value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCommand() => $_has(3);
   @$pb.TagNumber(4)
   void clearCommand() => $_clearField(4);
   @$pb.TagNumber(4)
-  $14.DeviceCommand ensureCommand() => $_ensure(3);
+  $15.DeviceCommand ensureCommand() => $_ensure(3);
 
   @$pb.TagNumber(5)
   PropertyReadRequest get readRequest => $_getN(4);
@@ -2554,15 +2590,15 @@ class AppMessage extends $pb.GeneratedMessage {
   $3.ManagementRequest ensureManagement() => $_ensure(8);
 
   @$pb.TagNumber(10)
-  $14.AttributeWriteRequest get attributeWrite => $_getN(9);
+  $15.AttributeWriteRequest get attributeWrite => $_getN(9);
   @$pb.TagNumber(10)
-  set attributeWrite($14.AttributeWriteRequest value) => $_setField(10, value);
+  set attributeWrite($15.AttributeWriteRequest value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasAttributeWrite() => $_has(9);
   @$pb.TagNumber(10)
   void clearAttributeWrite() => $_clearField(10);
   @$pb.TagNumber(10)
-  $14.AttributeWriteRequest ensureAttributeWrite() => $_ensure(9);
+  $15.AttributeWriteRequest ensureAttributeWrite() => $_ensure(9);
 
   @$pb.TagNumber(11)
   StartPairing get startPairing => $_getN(10);

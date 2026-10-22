@@ -5,6 +5,7 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { GatewayId, UserId } from "../../identity/v1/identity_pb.js";
+import type { AccountLinkCancelled, AccountLinked, AccountLinkResult, RefreshToken, RevokeToken, TokenRefreshed, TokenRevoked } from "../../accountlink/v1/account_link_pb.js";
 import type { ConnectorKind } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
@@ -177,7 +178,7 @@ export declare const UserHandshakeAckSchema: GenMessage<UserHandshakeAck>;
 export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.GatewayConnectRequest"> & {
   /**
    * On redeem_invite_result, the user who redeemed (RedeemInvite). Unset on an
-   * acknowledgement, which is to no user.
+   * acknowledgement and on the accountlink.v1 arms, which are to no user.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId target_user_id = 1;
    */
@@ -186,7 +187,8 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
   /**
    * The session of target_user_id this message answers. See the contract above.
    * Ignored on a heartbeat, which carries no routing target at all, and on
-   * redeem_invite_result and the acknowledgements, which belong to no session.
+   * redeem_invite_result, the acknowledgements and the accountlink.v1 arms, which
+   * belong to no session.
    *
    * @generated from field: string session_id = 5;
    */
@@ -237,6 +239,24 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
      */
     value: GatewayWiped;
     case: "wiped";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.AccountLinkResult account_link_result = 10;
+     */
+    value: AccountLinkResult;
+    case: "accountLinkResult";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.RefreshToken refresh_token = 11;
+     */
+    value: RefreshToken;
+    case: "refreshToken";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.RevokeToken revoke_token = 12;
+     */
+    value: RevokeToken;
+    case: "revokeToken";
   } | { case: undefined; value?: undefined };
 };
 
@@ -256,7 +276,7 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
    * On redeem_invite, the user redeeming: the sub of the token the api-server
    * verified, and never a value the user supplied. Unset on what concerns the
    * gateway itself (stream_opened, vouched_administrators, transfer_outcome,
-   * gateway_deleted), which is from no user.
+   * gateway_deleted) and on the accountlink.v1 arms, which are from no user.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId from_user_id = 1;
    */
@@ -265,8 +285,8 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
   /**
    * The session of from_user_id this message originates from — the value the
    * gateway must echo on the GatewayConnectRequest that answers it. See the
-   * contract above. Unset on redeem_invite and on what concerns the gateway
-   * itself, which belong to no session.
+   * contract above. Unset on redeem_invite, on what concerns the gateway itself
+   * and on the accountlink.v1 arms, which belong to no session.
    *
    * @generated from field: string session_id = 4;
    */
@@ -317,6 +337,30 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
      */
     value: GatewayDeleted;
     case: "gatewayDeleted";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.AccountLinked account_linked = 10;
+     */
+    value: AccountLinked;
+    case: "accountLinked";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.TokenRefreshed token_refreshed = 11;
+     */
+    value: TokenRefreshed;
+    case: "tokenRefreshed";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.TokenRevoked token_revoked = 12;
+     */
+    value: TokenRevoked;
+    case: "tokenRevoked";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.accountlink.v1.AccountLinkCancelled account_link_cancelled = 13;
+     */
+    value: AccountLinkCancelled;
+    case: "accountLinkCancelled";
   } | { case: undefined; value?: undefined };
 };
 
@@ -328,8 +372,7 @@ export declare const GatewayConnectResponseSchema: GenMessage<GatewayConnectResp
 
 /**
  * A person redeeming an invite (webrtc.v1 CreateInvite), api-server → gateway.
- * The one request on this stream that the gateway answers, with a
- * RedeemInviteResult carrying the same request_id.
+ * Answered with a RedeemInviteResult carrying the same request_id.
  *
  * The api-server sends it only to the gateway whose invite routes hold the
  * secret's hash (reporting.v1.ReportInviteRoutesRequest), and only for a user

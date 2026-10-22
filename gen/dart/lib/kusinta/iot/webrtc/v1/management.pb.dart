@@ -18,6 +18,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 import '../../../../google/protobuf/timestamp.pb.dart' as $4;
 import '../../access/v1/acl.pbenum.dart' as $11;
 import '../../access/v1/roles.pbenum.dart' as $9;
+import '../../accountlink/v1/account_link.pbenum.dart' as $12;
 import '../../climate/v1/climate.pbenum.dart' as $10;
 import '../../common/v1/types.pbenum.dart' as $8;
 import '../../heating/v1/heating.pb.dart' as $5;
@@ -3307,6 +3308,230 @@ class SetComfortWindows extends $pb.GeneratedMessage {
   void clearWindowsRevision() => $_clearField(3);
 }
 
+/// Asks for a nonce to link one home's account at a third-party service
+/// (accountlink.v1.AccountLinkNonce). Only a household admin of the home — the resident
+/// relation that governs a home's own settings — is issued one; anyone else is refused as
+/// NOT_ENTITLED, as is a home the caller cannot reach. A service this gateway does not
+/// support is refused as INVALID_REQUEST.
+class RequestAccountLinkNonce extends $pb.GeneratedMessage {
+  factory RequestAccountLinkNonce({
+    $0.SpaceId? homeId,
+    $12.LinkedService? service,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (service != null) result.service = service;
+    return result;
+  }
+
+  RequestAccountLinkNonce._();
+
+  factory RequestAccountLinkNonce.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RequestAccountLinkNonce.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RequestAccountLinkNonce',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$12.LinkedService>(
+        2, _omitFieldNames ? '' : 'service', $pb.PbFieldType.OE,
+        defaultOrMaker: $12.LinkedService.LINKED_SERVICE_UNSPECIFIED,
+        valueOf: $12.LinkedService.valueOf,
+        enumValues: $12.LinkedService.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RequestAccountLinkNonce clone() =>
+      RequestAccountLinkNonce()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RequestAccountLinkNonce copyWith(
+          void Function(RequestAccountLinkNonce) updates) =>
+      super.copyWith((message) => updates(message as RequestAccountLinkNonce))
+          as RequestAccountLinkNonce;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RequestAccountLinkNonce create() => RequestAccountLinkNonce._();
+  @$core.override
+  RequestAccountLinkNonce createEmptyInstance() => create();
+  static $pb.PbList<RequestAccountLinkNonce> createRepeated() =>
+      $pb.PbList<RequestAccountLinkNonce>();
+  @$core.pragma('dart2js:noInline')
+  static RequestAccountLinkNonce getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RequestAccountLinkNonce>(create);
+  static RequestAccountLinkNonce? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $12.LinkedService get service => $_getN(1);
+  @$pb.TagNumber(2)
+  set service($12.LinkedService value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasService() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearService() => $_clearField(2);
+}
+
+/// Lists a home's linked accounts and their status, answered with an AccountLinks. Given to
+/// the home's residents; anyone else is refused as NOT_ENTITLED.
+class ListAccountLinks extends $pb.GeneratedMessage {
+  factory ListAccountLinks({
+    $0.SpaceId? homeId,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    return result;
+  }
+
+  ListAccountLinks._();
+
+  factory ListAccountLinks.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListAccountLinks.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListAccountLinks',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAccountLinks clone() => ListAccountLinks()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListAccountLinks copyWith(void Function(ListAccountLinks) updates) =>
+      super.copyWith((message) => updates(message as ListAccountLinks))
+          as ListAccountLinks;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListAccountLinks create() => ListAccountLinks._();
+  @$core.override
+  ListAccountLinks createEmptyInstance() => create();
+  static $pb.PbList<ListAccountLinks> createRepeated() =>
+      $pb.PbList<ListAccountLinks>();
+  @$core.pragma('dart2js:noInline')
+  static ListAccountLinks getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListAccountLinks>(create);
+  static ListAccountLinks? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+}
+
+/// Unlinks a home's account at one service: the gateway reads no more through it and revokes
+/// it (accountlink.v1.RevokeToken). A household admin of the home only; anyone else is refused
+/// as NOT_ENTITLED. A service with no link is acked all the same. Acked.
+class UnlinkAccount extends $pb.GeneratedMessage {
+  factory UnlinkAccount({
+    $0.SpaceId? homeId,
+    $12.LinkedService? service,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (service != null) result.service = service;
+    return result;
+  }
+
+  UnlinkAccount._();
+
+  factory UnlinkAccount.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UnlinkAccount.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UnlinkAccount',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$12.LinkedService>(
+        2, _omitFieldNames ? '' : 'service', $pb.PbFieldType.OE,
+        defaultOrMaker: $12.LinkedService.LINKED_SERVICE_UNSPECIFIED,
+        valueOf: $12.LinkedService.valueOf,
+        enumValues: $12.LinkedService.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UnlinkAccount clone() => UnlinkAccount()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UnlinkAccount copyWith(void Function(UnlinkAccount) updates) =>
+      super.copyWith((message) => updates(message as UnlinkAccount))
+          as UnlinkAccount;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UnlinkAccount create() => UnlinkAccount._();
+  @$core.override
+  UnlinkAccount createEmptyInstance() => create();
+  static $pb.PbList<UnlinkAccount> createRepeated() =>
+      $pb.PbList<UnlinkAccount>();
+  @$core.pragma('dart2js:noInline')
+  static UnlinkAccount getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UnlinkAccount>(create);
+  static UnlinkAccount? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $12.LinkedService get service => $_getN(1);
+  @$pb.TagNumber(2)
+  set service($12.LinkedService value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasService() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearService() => $_clearField(2);
+}
+
 enum ManagementRequest_Request {
   createSpace,
   updateSpace,
@@ -3353,6 +3578,9 @@ enum ManagementRequest_Request {
   putComfortLoad,
   removeHeatingRecord,
   setComfortWindows,
+  requestAccountLinkNonce,
+  listAccountLinks,
+  unlinkAccount,
   notSet
 }
 
@@ -3404,6 +3632,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     PutComfortLoad? putComfortLoad,
     RemoveHeatingRecord? removeHeatingRecord,
     SetComfortWindows? setComfortWindows,
+    RequestAccountLinkNonce? requestAccountLinkNonce,
+    ListAccountLinks? listAccountLinks,
+    UnlinkAccount? unlinkAccount,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -3464,6 +3695,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (removeHeatingRecord != null)
       result.removeHeatingRecord = removeHeatingRecord;
     if (setComfortWindows != null) result.setComfortWindows = setComfortWindows;
+    if (requestAccountLinkNonce != null)
+      result.requestAccountLinkNonce = requestAccountLinkNonce;
+    if (listAccountLinks != null) result.listAccountLinks = listAccountLinks;
+    if (unlinkAccount != null) result.unlinkAccount = unlinkAccount;
     return result;
   }
 
@@ -3523,6 +3758,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     43: ManagementRequest_Request.putComfortLoad,
     44: ManagementRequest_Request.removeHeatingRecord,
     45: ManagementRequest_Request.setComfortWindows,
+    46: ManagementRequest_Request.requestAccountLinkNonce,
+    47: ManagementRequest_Request.listAccountLinks,
+    48: ManagementRequest_Request.unlinkAccount,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -3575,7 +3813,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
       42,
       43,
       44,
-      45
+      45,
+      46,
+      47,
+      48
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -3676,6 +3917,13 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: RemoveHeatingRecord.create)
     ..aOM<SetComfortWindows>(45, _omitFieldNames ? '' : 'setComfortWindows',
         subBuilder: SetComfortWindows.create)
+    ..aOM<RequestAccountLinkNonce>(
+        46, _omitFieldNames ? '' : 'requestAccountLinkNonce',
+        subBuilder: RequestAccountLinkNonce.create)
+    ..aOM<ListAccountLinks>(47, _omitFieldNames ? '' : 'listAccountLinks',
+        subBuilder: ListAccountLinks.create)
+    ..aOM<UnlinkAccount>(48, _omitFieldNames ? '' : 'unlinkAccount',
+        subBuilder: UnlinkAccount.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4212,6 +4460,40 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearSetComfortWindows() => $_clearField(45);
   @$pb.TagNumber(45)
   SetComfortWindows ensureSetComfortWindows() => $_ensure(44);
+
+  @$pb.TagNumber(46)
+  RequestAccountLinkNonce get requestAccountLinkNonce => $_getN(45);
+  @$pb.TagNumber(46)
+  set requestAccountLinkNonce(RequestAccountLinkNonce value) =>
+      $_setField(46, value);
+  @$pb.TagNumber(46)
+  $core.bool hasRequestAccountLinkNonce() => $_has(45);
+  @$pb.TagNumber(46)
+  void clearRequestAccountLinkNonce() => $_clearField(46);
+  @$pb.TagNumber(46)
+  RequestAccountLinkNonce ensureRequestAccountLinkNonce() => $_ensure(45);
+
+  @$pb.TagNumber(47)
+  ListAccountLinks get listAccountLinks => $_getN(46);
+  @$pb.TagNumber(47)
+  set listAccountLinks(ListAccountLinks value) => $_setField(47, value);
+  @$pb.TagNumber(47)
+  $core.bool hasListAccountLinks() => $_has(46);
+  @$pb.TagNumber(47)
+  void clearListAccountLinks() => $_clearField(47);
+  @$pb.TagNumber(47)
+  ListAccountLinks ensureListAccountLinks() => $_ensure(46);
+
+  @$pb.TagNumber(48)
+  UnlinkAccount get unlinkAccount => $_getN(47);
+  @$pb.TagNumber(48)
+  set unlinkAccount(UnlinkAccount value) => $_setField(48, value);
+  @$pb.TagNumber(48)
+  $core.bool hasUnlinkAccount() => $_has(47);
+  @$pb.TagNumber(48)
+  void clearUnlinkAccount() => $_clearField(48);
+  @$pb.TagNumber(48)
+  UnlinkAccount ensureUnlinkAccount() => $_ensure(47);
 }
 
 const $core.bool _omitFieldNames =

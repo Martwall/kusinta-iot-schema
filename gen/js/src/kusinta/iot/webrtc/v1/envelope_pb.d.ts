@@ -13,6 +13,7 @@ import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
 import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
+import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/account_link_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -412,6 +413,22 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: HeatingRecord;
     case: "heatingRecord";
+  } | {
+    /**
+     * request_account_link_nonce
+     *
+     * @generated from field: kusinta.iot.accountlink.v1.AccountLinkNonce account_link_nonce = 17;
+     */
+    value: AccountLinkNonce;
+    case: "accountLinkNonce";
+  } | {
+    /**
+     * list_account_links
+     *
+     * @generated from field: kusinta.iot.accountlink.v1.AccountLinks account_links = 18;
+     */
+    value: AccountLinks;
+    case: "accountLinks";
   } | { case: undefined; value?: undefined };
 };
 

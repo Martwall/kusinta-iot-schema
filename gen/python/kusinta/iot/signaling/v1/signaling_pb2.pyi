@@ -1,6 +1,7 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.accountlink.v1 import account_link_pb2 as _account_link_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
@@ -86,7 +87,7 @@ class UserHandshakeAck(_message.Message):
     def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., heartbeat_interval_ms: _Optional[int] = ...) -> None: ...
 
 class GatewayConnectRequest(_message.Message):
-    __slots__ = ("target_user_id", "session_id", "answer", "ice_candidate", "heartbeat", "redeem_invite_result", "vouched_administrators_applied", "transfer_outcome_applied", "wiped")
+    __slots__ = ("target_user_id", "session_id", "answer", "ice_candidate", "heartbeat", "redeem_invite_result", "vouched_administrators_applied", "transfer_outcome_applied", "wiped", "account_link_result", "refresh_token", "revoke_token")
     TARGET_USER_ID_FIELD_NUMBER: _ClassVar[int]
     SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     ANSWER_FIELD_NUMBER: _ClassVar[int]
@@ -96,6 +97,9 @@ class GatewayConnectRequest(_message.Message):
     VOUCHED_ADMINISTRATORS_APPLIED_FIELD_NUMBER: _ClassVar[int]
     TRANSFER_OUTCOME_APPLIED_FIELD_NUMBER: _ClassVar[int]
     WIPED_FIELD_NUMBER: _ClassVar[int]
+    ACCOUNT_LINK_RESULT_FIELD_NUMBER: _ClassVar[int]
+    REFRESH_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    REVOKE_TOKEN_FIELD_NUMBER: _ClassVar[int]
     target_user_id: _identity_pb2.UserId
     session_id: str
     answer: SdpAnswer
@@ -105,10 +109,13 @@ class GatewayConnectRequest(_message.Message):
     vouched_administrators_applied: VouchedAdministratorsApplied
     transfer_outcome_applied: TransferOutcomeApplied
     wiped: GatewayWiped
-    def __init__(self, target_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., session_id: _Optional[str] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., redeem_invite_result: _Optional[_Union[RedeemInviteResult, _Mapping]] = ..., vouched_administrators_applied: _Optional[_Union[VouchedAdministratorsApplied, _Mapping]] = ..., transfer_outcome_applied: _Optional[_Union[TransferOutcomeApplied, _Mapping]] = ..., wiped: _Optional[_Union[GatewayWiped, _Mapping]] = ...) -> None: ...
+    account_link_result: _account_link_pb2.AccountLinkResult
+    refresh_token: _account_link_pb2.RefreshToken
+    revoke_token: _account_link_pb2.RevokeToken
+    def __init__(self, target_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., session_id: _Optional[str] = ..., answer: _Optional[_Union[SdpAnswer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., redeem_invite_result: _Optional[_Union[RedeemInviteResult, _Mapping]] = ..., vouched_administrators_applied: _Optional[_Union[VouchedAdministratorsApplied, _Mapping]] = ..., transfer_outcome_applied: _Optional[_Union[TransferOutcomeApplied, _Mapping]] = ..., wiped: _Optional[_Union[GatewayWiped, _Mapping]] = ..., account_link_result: _Optional[_Union[_account_link_pb2.AccountLinkResult, _Mapping]] = ..., refresh_token: _Optional[_Union[_account_link_pb2.RefreshToken, _Mapping]] = ..., revoke_token: _Optional[_Union[_account_link_pb2.RevokeToken, _Mapping]] = ...) -> None: ...
 
 class GatewayConnectResponse(_message.Message):
-    __slots__ = ("from_user_id", "session_id", "offer", "ice_candidate", "redeem_invite", "vouched_administrators", "transfer_outcome", "stream_opened", "gateway_deleted")
+    __slots__ = ("from_user_id", "session_id", "offer", "ice_candidate", "redeem_invite", "vouched_administrators", "transfer_outcome", "stream_opened", "gateway_deleted", "account_linked", "token_refreshed", "token_revoked", "account_link_cancelled")
     FROM_USER_ID_FIELD_NUMBER: _ClassVar[int]
     SESSION_ID_FIELD_NUMBER: _ClassVar[int]
     OFFER_FIELD_NUMBER: _ClassVar[int]
@@ -118,6 +125,10 @@ class GatewayConnectResponse(_message.Message):
     TRANSFER_OUTCOME_FIELD_NUMBER: _ClassVar[int]
     STREAM_OPENED_FIELD_NUMBER: _ClassVar[int]
     GATEWAY_DELETED_FIELD_NUMBER: _ClassVar[int]
+    ACCOUNT_LINKED_FIELD_NUMBER: _ClassVar[int]
+    TOKEN_REFRESHED_FIELD_NUMBER: _ClassVar[int]
+    TOKEN_REVOKED_FIELD_NUMBER: _ClassVar[int]
+    ACCOUNT_LINK_CANCELLED_FIELD_NUMBER: _ClassVar[int]
     from_user_id: _identity_pb2.UserId
     session_id: str
     offer: SdpOffer
@@ -127,7 +138,11 @@ class GatewayConnectResponse(_message.Message):
     transfer_outcome: TransferOutcome
     stream_opened: GatewayStreamOpened
     gateway_deleted: GatewayDeleted
-    def __init__(self, from_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., session_id: _Optional[str] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., redeem_invite: _Optional[_Union[RedeemInvite, _Mapping]] = ..., vouched_administrators: _Optional[_Union[VouchedAdministrators, _Mapping]] = ..., transfer_outcome: _Optional[_Union[TransferOutcome, _Mapping]] = ..., stream_opened: _Optional[_Union[GatewayStreamOpened, _Mapping]] = ..., gateway_deleted: _Optional[_Union[GatewayDeleted, _Mapping]] = ...) -> None: ...
+    account_linked: _account_link_pb2.AccountLinked
+    token_refreshed: _account_link_pb2.TokenRefreshed
+    token_revoked: _account_link_pb2.TokenRevoked
+    account_link_cancelled: _account_link_pb2.AccountLinkCancelled
+    def __init__(self, from_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., session_id: _Optional[str] = ..., offer: _Optional[_Union[SdpOffer, _Mapping]] = ..., ice_candidate: _Optional[_Union[IceCandidate, _Mapping]] = ..., redeem_invite: _Optional[_Union[RedeemInvite, _Mapping]] = ..., vouched_administrators: _Optional[_Union[VouchedAdministrators, _Mapping]] = ..., transfer_outcome: _Optional[_Union[TransferOutcome, _Mapping]] = ..., stream_opened: _Optional[_Union[GatewayStreamOpened, _Mapping]] = ..., gateway_deleted: _Optional[_Union[GatewayDeleted, _Mapping]] = ..., account_linked: _Optional[_Union[_account_link_pb2.AccountLinked, _Mapping]] = ..., token_refreshed: _Optional[_Union[_account_link_pb2.TokenRefreshed, _Mapping]] = ..., token_revoked: _Optional[_Union[_account_link_pb2.TokenRevoked, _Mapping]] = ..., account_link_cancelled: _Optional[_Union[_account_link_pb2.AccountLinkCancelled, _Mapping]] = ...) -> None: ...
 
 class RedeemInvite(_message.Message):
     __slots__ = ("request_id", "token", "code", "display_name", "verified_email")

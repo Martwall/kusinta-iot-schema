@@ -230,6 +230,33 @@ const GatewayConnectRequest$json = {
       '9': 0,
       '10': 'wiped'
     },
+    {
+      '1': 'account_link_result',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.AccountLinkResult',
+      '9': 0,
+      '10': 'accountLinkResult'
+    },
+    {
+      '1': 'refresh_token',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.RefreshToken',
+      '9': 0,
+      '10': 'refreshToken'
+    },
+    {
+      '1': 'revoke_token',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.RevokeToken',
+      '9': 0,
+      '10': 'revokeToken'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -251,7 +278,12 @@ final $typed_data.Uint8List gatewayConnectRequestDescriptor = $convert.base64Dec
     'QXBwbGllZBJsChh0cmFuc2Zlcl9vdXRjb21lX2FwcGxpZWQYCCABKAsyMC5rdXNpbnRhLmlvdC'
     '5zaWduYWxpbmcudjEuVHJhbnNmZXJPdXRjb21lQXBwbGllZEgAUhZ0cmFuc2Zlck91dGNvbWVB'
     'cHBsaWVkEj4KBXdpcGVkGAkgASgLMiYua3VzaW50YS5pb3Quc2lnbmFsaW5nLnYxLkdhdGV3YX'
-    'lXaXBlZEgAUgV3aXBlZEIJCgdwYXlsb2Fk');
+    'lXaXBlZEgAUgV3aXBlZBJfChNhY2NvdW50X2xpbmtfcmVzdWx0GAogASgLMi0ua3VzaW50YS5p'
+    'b3QuYWNjb3VudGxpbmsudjEuQWNjb3VudExpbmtSZXN1bHRIAFIRYWNjb3VudExpbmtSZXN1bH'
+    'QSTwoNcmVmcmVzaF90b2tlbhgLIAEoCzIoLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLlJl'
+    'ZnJlc2hUb2tlbkgAUgxyZWZyZXNoVG9rZW4STAoMcmV2b2tlX3Rva2VuGAwgASgLMicua3VzaW'
+    '50YS5pb3QuYWNjb3VudGxpbmsudjEuUmV2b2tlVG9rZW5IAFILcmV2b2tlVG9rZW5CCQoHcGF5'
+    'bG9hZA==');
 
 @$core.Deprecated('Use gatewayConnectResponseDescriptor instead')
 const GatewayConnectResponse$json = {
@@ -329,6 +361,42 @@ const GatewayConnectResponse$json = {
       '9': 0,
       '10': 'gatewayDeleted'
     },
+    {
+      '1': 'account_linked',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.AccountLinked',
+      '9': 0,
+      '10': 'accountLinked'
+    },
+    {
+      '1': 'token_refreshed',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.TokenRefreshed',
+      '9': 0,
+      '10': 'tokenRefreshed'
+    },
+    {
+      '1': 'token_revoked',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.TokenRevoked',
+      '9': 0,
+      '10': 'tokenRevoked'
+    },
+    {
+      '1': 'account_link_cancelled',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.AccountLinkCancelled',
+      '9': 0,
+      '10': 'accountLinkCancelled'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -349,7 +417,14 @@ final $typed_data.Uint8List gatewayConnectResponseDescriptor = $convert.base64De
     '5UcmFuc2Zlck91dGNvbWVIAFIPdHJhbnNmZXJPdXRjb21lElQKDXN0cmVhbV9vcGVuZWQYCCAB'
     'KAsyLS5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuR2F0ZXdheVN0cmVhbU9wZW5lZEgAUgxzdH'
     'JlYW1PcGVuZWQSUwoPZ2F0ZXdheV9kZWxldGVkGAkgASgLMigua3VzaW50YS5pb3Quc2lnbmFs'
-    'aW5nLnYxLkdhdGV3YXlEZWxldGVkSABSDmdhdGV3YXlEZWxldGVkQgkKB3BheWxvYWQ=');
+    'aW5nLnYxLkdhdGV3YXlEZWxldGVkSABSDmdhdGV3YXlEZWxldGVkElIKDmFjY291bnRfbGlua2'
+    'VkGAogASgLMikua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuQWNjb3VudExpbmtlZEgAUg1h'
+    'Y2NvdW50TGlua2VkElUKD3Rva2VuX3JlZnJlc2hlZBgLIAEoCzIqLmt1c2ludGEuaW90LmFjY2'
+    '91bnRsaW5rLnYxLlRva2VuUmVmcmVzaGVkSABSDnRva2VuUmVmcmVzaGVkEk8KDXRva2VuX3Jl'
+    'dm9rZWQYDCABKAsyKC5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5Ub2tlblJldm9rZWRIAF'
+    'IMdG9rZW5SZXZva2VkEmgKFmFjY291bnRfbGlua19jYW5jZWxsZWQYDSABKAsyMC5rdXNpbnRh'
+    'LmlvdC5hY2NvdW50bGluay52MS5BY2NvdW50TGlua0NhbmNlbGxlZEgAUhRhY2NvdW50TGlua0'
+    'NhbmNlbGxlZEIJCgdwYXlsb2Fk');
 
 @$core.Deprecated('Use redeemInviteDescriptor instead')
 const RedeemInvite$json = {

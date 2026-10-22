@@ -4,6 +4,7 @@ package kusinta.iot.webrtc.v1;
 
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/accountlink/v1/account_link.proto";
 import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/common/v1/pairing.proto";
 import "kusinta/iot/common/v1/types.proto";
@@ -178,6 +179,9 @@ message ManagementResult {
     // put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load,
     // set_comfort_windows
     kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
+    // request_account_link_nonce
+    kusinta.iot.accountlink.v1.AccountLinkNonce account_link_nonce = 17;
+    kusinta.iot.accountlink.v1.AccountLinks account_links = 18; // list_account_links
   }
 }
 

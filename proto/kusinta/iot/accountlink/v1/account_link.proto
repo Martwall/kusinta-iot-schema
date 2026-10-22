@@ -1,0 +1,242 @@
+syntax = "proto3";
+
+package kusinta.iot.accountlink.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+option optimize_for = SPEED;
+
+// Linking a home to its account at a third-party cloud service — a heat-pump maker's
+// service, first — so that the building-server gateway can read through it.
+//
+// The tokens belong on the gateway. The api-server is the confidential OAuth client, since
+// these services' token endpoints require the client secret, and it keeps nothing: it
+// exchanges the app's authorization code, hands the grant to the one gateway that asked for
+// it, and later refreshes or revokes it for that gateway, storing no token and no record of
+// one, and logging no code, verifier or token. The one exception is in memory and brief: a
+// refresh's answer, held as RefreshToken says. It requests only the scope configured for the
+// service, and hands on no grant wider than it requested: it revokes such a grant instead.
+//
+// 1. The app asks the gateway for a nonce for one home (webrtc.v1 RequestAccountLinkNonce),
+//    keeps it beside its PKCE verifier, and passes the service only its hash as the OAuth
+//    `state`: the unpadded base64url SHA-256 of the nonce. The service never sees the nonce.
+// 2. The service redirects to the app, which checks the state against the nonce it holds and
+//    posts the code, the nonce and its PKCE verifier to the api-server in the request body.
+// 3. The api-server verifies the nonce (AccountLinkNonceClaims) and that the gateway named
+//    by it has its stream open — failing the post at once otherwise, which leaves the code
+//    unspent — then exchanges the code and hands the grant to that gateway (AccountLinked).
+// 4. The gateway checks the nonce again, stores the grant encrypted and answers
+//    (AccountLinkResult); the api-server answers the app's post with that outcome.
+//
+// Refresh and revocation need the client secret too, so the gateway asks the api-server
+// (RefreshToken, RevokeToken). All of these travel on the gateway's signaling stream
+// (signaling.v1.GatewayConnect), outside any session.
+
+// A home's link at one service, as its residents see it: never its tokens or the account's
+// name.
+message AccountLink {
+  LinkedService service = 1;
+  AccountLinkStatus status = 2;
+  google.protobuf.Timestamp linked_since = 3;
+}
+
+enum AccountLinkStatus {
+  ACCOUNT_LINK_STATUS_UNSPECIFIED = 0;
+  ACCOUNT_LINK_STATUS_LINKED = 1;
+  // A refresh was REJECTED, or went unanswered past its retry window: the household links
+  // again.
+  ACCOUNT_LINK_STATUS_NEEDS_RELINK = 2;
+}
+
+// A home's links, in reply to ListAccountLinks. A service with no link is not listed.
+message AccountLinks {
+  repeated AccountLink links = 1;
+}
+
+// The services a home's account can be linked at. Each value names the fixed string that
+// stands for it in a nonce's "svc" claim, which never changes with the value's name.
+enum LinkedService {
+  LINKED_SERVICE_UNSPECIFIED = 0;
+  // NIBE's myUplink. Claim value "myuplink".
+  LINKED_SERVICE_MYUPLINK = 1;
+}
+
+// A single-use nonce for one home's link, in reply to RequestAccountLinkNonce: a compact JWS
+// carrying AccountLinkNonceClaims, signed by the gateway. It passes between the gateway, the
+// app and the api-server only; the service sees its hash (see the file comment). It names no
+// home: the gateway records which home each jti was issued for.
+message AccountLinkNonce {
+  string nonce = 1;
+  // As the claims' exp.
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+// The contract for the claims of AccountLinkNonce.nonce, shared by the gateway, which signs
+// it, and the api-server, which verifies it. NOT sent on the wire, like
+// webrtc.v1.AppTokenClaims: registered claims are flat JWT strings and NumericDates.
+//
+// Signed with the private key of the gateway's client certificate — the one it connects to
+// the api-server with, a P-256 key — as ES256. The JWS header carries "x5t#S256", the
+// thumbprint of that certificate, so the api-server finds it across a renewal. A verifier
+// MUST refuse any other "alg".
+//
+// Before it calls the service, the api-server MUST verify that the gateway named by iss is
+// registered and neither deleted nor wiped, that the certificate the thumbprint names is its
+// current certificate — or the one it replaced, for no more than 10 minutes after the
+// renewal — and the signature by it, aud, svc and exp, and that sub is the user posting the
+// code. When the grant comes back, the gateway MUST verify the signature by its own key —
+// its current one, or the one it replaced for no more than 10 minutes after the renewal —
+// that iss is itself, aud and exp, and then accept the nonce once, by its jti, for the home
+// it recorded for that jti, and only while that user is still a household admin of the
+// home. Both sides allow at most 60 seconds of clock skew on exp. A gateway that restarts
+// mid-link may have lost its jti record and answer REJECTED; the household links again.
+message AccountLinkNonceClaims {
+  // The gateway's id (identity.v1.GatewayId value).
+  string iss = 1;
+  // Always "account-link".
+  string aud = 2;
+  // The user it was issued to (identity.v1.UserId value).
+  string sub = 3;
+  google.protobuf.Timestamp iat = 4;
+  // No more than 10 minutes after iat.
+  google.protobuf.Timestamp exp = 5;
+  // Unique among the gateway's nonces, and not guessable.
+  string jti = 6;
+
+  // Was the home's space id; the gateway records it per jti instead.
+  reserved 7;
+  reserved "home";
+
+  // The service, by its claim value (see LinkedService).
+  string svc = 8;
+}
+
+// An access token and what it allows: all a reader of the service needs, without the means
+// to renew it.
+message AccessGrant {
+  string access_token = 1;
+  google.protobuf.Timestamp expires_at = 2;
+  // As granted, space-separated.
+  string scope = 3;
+}
+
+// A grant with its refresh token, which stays on the gateway.
+message TokenGrant {
+  AccessGrant access = 1;
+  string refresh_token = 2;
+}
+
+// A home's account linked, api-server → gateway. Answered with an AccountLinkResult carrying
+// the same request_id. With no answer within 30 seconds, the api-server sends an
+// AccountLinkCancelled, revokes the grant, and tells the app the link failed.
+message AccountLinked {
+  // Minted by the api-server, opaque, unique among its links in flight.
+  string request_id = 1;
+  // The nonce exactly as the app passed it as the OAuth state.
+  string nonce = 2;
+  TokenGrant grant = 3;
+}
+
+// The api-server gave up waiting for an AccountLinkResult, api-server → gateway. A gateway
+// that stored the grant for that request_id deletes it, and answers nothing.
+message AccountLinkCancelled {
+  // As AccountLinked.request_id.
+  string request_id = 1;
+}
+
+message AccountLinkResult {
+  // As AccountLinked.request_id.
+  string request_id = 1;
+  AccountLinkOutcome outcome = 2;
+}
+
+enum AccountLinkOutcome {
+  // Sender did not set an outcome, or sent one this schema does not know: read as REJECTED.
+  ACCOUNT_LINK_OUTCOME_UNSPECIFIED = 0;
+  // Stored. A link the home already had at the same service is replaced. The gateway keeps
+  // the replaced grant, unused, and revokes it (RevokeToken) only once 60 seconds have passed
+  // since this answer with no AccountLinkCancelled for its request_id; on a cancel within
+  // them, it deletes the new grant and restores the replaced one.
+  ACCOUNT_LINK_OUTCOME_LINKED = 1;
+  // The nonce failed the gateway's checks (AccountLinkNonceClaims). Nothing is stored, and
+  // the api-server revokes the grant.
+  ACCOUNT_LINK_OUTCOME_REJECTED = 2;
+}
+
+// Asks the api-server to refresh a grant, gateway → api-server. Answered with a TokenRefreshed
+// carrying the same request_id.
+//
+// The gateway refreshes only when it needs a current access token for a read — for a read
+// by a connector, while a connector session reading through the link is open — and not
+// before the access token is near its expiry, with a random margin, so that gateways do not
+// refresh together; and it has at most one refresh of a grant in flight. A gateway with no
+// answer asks again with the same request_id and refresh token, for up to 10 minutes; after
+// that it sends the old token no more, and the household links again.
+//
+// The api-server MUST keep its answer, keyed by the requesting gateway's identity and a hash
+// of the refresh token, for 10 minutes, and answer a repeated request from it without asking
+// the service: a service may rotate the refresh token, and a second exchange of the old one
+// would end the link. It is held in the memory of the process that answered — the one
+// holding the gateway's stream — and never shared, persisted or logged; it goes at the end of
+// the 10 minutes or of the process. A restart, or the stream moving to another process,
+// within them loses it, and a retry then exchanges the old token again: where the service
+// rotates refresh tokens the link ends and the household links again. That is accepted.
+message RefreshToken {
+  // Minted by the gateway, opaque, unique among its requests in flight.
+  string request_id = 1;
+  LinkedService service = 2;
+  string refresh_token = 3;
+}
+
+message TokenRefreshed {
+  // As RefreshToken.request_id.
+  string request_id = 1;
+  // OK: grant replaces the gateway's. REJECTED: the service refused the refresh token, the
+  // link is gone, and the household links again. UNAVAILABLE: ask again after retry_after.
+  TokenOutcome outcome = 2;
+  // OK only, and always whole: where the service issued no new refresh token, the api-server
+  // fills in the one it was sent.
+  TokenGrant grant = 3;
+  // See TokenOutcome.
+  google.protobuf.Duration retry_after = 4;
+}
+
+// Asks the api-server to revoke a grant, gateway → api-server: when a household unlinks or
+// hands its home over, or a link is replaced. Answered with a TokenRevoked carrying the same
+// request_id.
+//
+// The gateway reads no more through the grant once it asks. It keeps only the refresh token,
+// and only to ask again: after retry_after on UNAVAILABLE, until OK or REJECTED, and for no
+// more than 7 days. That pending revocation is stored encrypted, so it survives a restart,
+// and it outlives a household handover's wipe and a gateway-wide wipe, which delete the
+// grant itself: it is the only means left of ending the link at the service.
+message RevokeToken {
+  // Minted by the gateway, opaque, unique among its requests in flight.
+  string request_id = 1;
+  LinkedService service = 2;
+  string refresh_token = 3;
+}
+
+message TokenRevoked {
+  // As RevokeToken.request_id.
+  string request_id = 1;
+  // OK: revoked. REJECTED: the service no longer knew the token, which is as good.
+  // UNAVAILABLE: ask again after retry_after.
+  TokenOutcome outcome = 2;
+  // See TokenOutcome.
+  google.protobuf.Duration retry_after = 3;
+}
+
+// On UNAVAILABLE the api-server sets retry_after: the service's own wait where it gave one,
+// spread across the gateways asking. A gateway waits at least retry_after and at least 30
+// seconds, unset reading as 30, and doubles its wait on each further UNAVAILABLE for the
+// same token, up to an hour, with a random margin.
+enum TokenOutcome {
+  // Sender did not set an outcome, or sent one this schema does not know: read as
+  // UNAVAILABLE.
+  TOKEN_OUTCOME_UNSPECIFIED = 0;
+  TOKEN_OUTCOME_OK = 1;
+  TOKEN_OUTCOME_REJECTED = 2;
+  TOKEN_OUTCOME_UNAVAILABLE = 3;
+}

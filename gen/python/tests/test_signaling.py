@@ -1,3 +1,4 @@
+from kusinta.iot.accountlink.v1 import account_link_pb2
 from kusinta.iot.signaling.v1 import signaling_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 
@@ -342,3 +343,28 @@ def test_redeem_invite_result_answers_by_request_id():
     decoded = signaling_pb2.GatewayConnectRequest()
     decoded.ParseFromString(request.SerializeToString())
     assert decoded.redeem_invite_result.outcome == signaling_pb2.REDEEM_OUTCOME_WRONG_ACCOUNT
+
+
+# --- a linked account on the gateway stream ---------------------------------------------
+
+
+def test_the_gateway_is_handed_the_grant_with_the_nonce():
+    message = signaling_pb2.GatewayConnectResponse(
+        account_linked=account_link_pb2.AccountLinked(request_id="r-1", nonce="eyJ.nonce.sig")
+    )
+    decoded = signaling_pb2.GatewayConnectResponse()
+    decoded.ParseFromString(message.SerializeToString())
+
+    assert decoded.account_linked.nonce == "eyJ.nonce.sig"
+
+
+def test_the_gateway_asks_for_a_refresh_naming_the_service():
+    message = signaling_pb2.GatewayConnectRequest(
+        refresh_token=account_link_pb2.RefreshToken(
+            request_id="r-2", service=account_link_pb2.LINKED_SERVICE_MYUPLINK, refresh_token="r"
+        )
+    )
+    decoded = signaling_pb2.GatewayConnectRequest()
+    decoded.ParseFromString(message.SerializeToString())
+
+    assert decoded.refresh_token.service == account_link_pb2.LINKED_SERVICE_MYUPLINK
