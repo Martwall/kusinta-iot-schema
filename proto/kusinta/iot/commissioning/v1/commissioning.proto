@@ -126,11 +126,13 @@ option optimize_for = SPEED;
 // who lives there. Outside what it covers the installer sees a home as service, as before.
 //
 // A grant ends at ends_at, when it is ended (webrtc.v1.EndCommissioningGrant), when the
-// installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home at its handover (webrtc.v1
-// household.proto). What it covered goes from the installer's sessions at once, and a test
-// they started under it is ABORTED. It is visible to the household while it is requested or
-// active: listed to every resident of the home (webrtc.v1.ListCommissioningGrants) and pushed
-// to them as it changes.
+// installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home when it is
+// wiped, at its handover or when its last residency ends (webrtc.v1 household.proto, WIPE): a
+// grant never passes from one household to the next. What it covered goes from the
+// installer's sessions at once, and a test they started under it is ABORTED. Until it ends —
+// requested, or granted whether or not it has started — it is visible to the household:
+// listed to every resident of the home (webrtc.v1.ListCommissioningGrants), pushed to them as
+// it changes, and endable by its household admins.
 
 // Who answers a fact, or ran or concluded a test.
 enum Party {
@@ -551,7 +553,7 @@ message CommissioningGrant {
   google.protobuf.Timestamp granted_at = 11;
 }
 
-// The grants requested or active on one space, as listed to one caller: the answer to
+// The grants on one space that have not ended, as listed to one caller: the answer to
 // webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
 // .commissioning_grants to every session that may list them whenever one is requested,
 // answered or ended before its time — to the installer, their own grants alone. Nothing is

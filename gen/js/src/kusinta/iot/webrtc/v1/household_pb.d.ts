@@ -181,7 +181,7 @@ export declare const ListHouseholdHandoversSchema: GenMessage<ListHouseholdHando
  *
  * The answer to StartHouseholdHandover, and pushed as GatewayMessage.household_handover to
  * every session it is told to (ListHouseholdHandovers) whenever it is started, cancelled or
- * done: to the household, the notice. A DONE push reaches the household's sessions before
+ * done, or its staff_confirmable_from moves: to the household, the notice. A DONE push reaches the household's sessions before
  * they lose the home.
  *
  * @generated from message kusinta.iot.webrtc.v1.HouseholdHandover
@@ -234,7 +234,9 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
 
   /**
    * From when the property owner or a gateway administrator may confirm it: 7 days after
-   * started_at, or started_at itself on a home with no resident.
+   * started_at, or started_at itself on a home with no resident. A residency that starts while
+   * it is pending moves it to 7 days after that, and the handover is pushed again, so that a
+   * household that moves in during it has its notice too.
    *
    * @generated from field: google.protobuf.Timestamp staff_confirmable_from = 8;
    */
@@ -280,9 +282,9 @@ export declare const HouseholdHandoversSchema: GenMessage<HouseholdHandovers>;
  *
  * A part_token says where the next part starts. The gateway keeps nothing for it: it checks
  * the token it minted when it is used, against the caller's rights then, so an interrupted
- * export resumes where it stopped, at any later time. A token the gateway did not mint, or
- * minted for another caller or home, is refused as INVALID_REQUEST with metadata
- * {"reason": "part_token"}.
+ * export resumes where it stopped, within the caller's residency. A token the gateway did not
+ * mint, or minted for another caller, home or residency — one that has ended included — is
+ * refused as INVALID_REQUEST with metadata {"reason": "part_token"}.
  *
  * @generated from message kusinta.iot.webrtc.v1.ExportHouseholdData
  */

@@ -24,7 +24,8 @@ export declare const file_kusinta_iot_common_v1_types: GenFile;
  * household nothing beyond what living in the home gives it. Setting or changing an asset
  * owner changes no one's access.
  *
- * Unset: not recorded. Anything that depends on it reads an unset owner as owner_organisation.
+ * Unset: not recorded. On a device whose ownership is COMPANY, anything that depends on it
+ * reads an unset owner as owner_organisation; a device a person owns has none, and is theirs.
  *
  * @generated from message kusinta.iot.common.v1.AssetOwner
  */

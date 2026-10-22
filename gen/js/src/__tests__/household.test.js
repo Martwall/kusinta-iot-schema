@@ -285,7 +285,14 @@ describe('household handover', () => {
 })
 
 describe('household export', () => {
-  it('is asked part by part, the first with no token', () => {
+  it('is asked first with no token', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'exportHouseholdData', value: { homeId: { value: 'home-15' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'exportHouseholdData', value: { partToken: '' } })
+  })
+
+  it('asks each further part with the token of the part before', () => {
     const decoded = onTheWire(ManagementRequestSchema, {
       request: { case: 'exportHouseholdData', value: { homeId: { value: 'home-15' }, partToken: 'p-2' } },
     })

@@ -2415,10 +2415,11 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearNamesWithheld() => $_clearField(7);
 
-  /// Each time a staff member made a resident of this home its household admin
-  /// (household.proto, STAFF APPOINTMENT), since the start of the caller's current residency,
-  /// oldest first. Given to the home's residents only, and so never to a caller who sees it as
-  /// service: a client shows it to residents alone.
+  /// Each staff appointment (household.proto, STAFF APPOINTMENT) of a member who lives in this
+  /// home now, made during their current residency — the one that began at an appointment
+  /// invite's redeem included — oldest first: whoever joins the household later learns who put
+  /// its admins there. Given to the home's residents only, and so never to a caller who sees it
+  /// as service: a client shows it to residents alone.
   @$pb.TagNumber(8)
   $pb.PbList<$5.StaffAppointment> get staffAppointments => $_getList(5);
 }
@@ -4417,7 +4418,7 @@ class EndCommissioningGrant extends $pb.GeneratedMessage {
   void clearGrantId() => $_clearField(1);
 }
 
-/// Lists the commissioning grants requested or active on a space and those below it, answered
+/// Lists the commissioning grants that have not ended on a space and those below it, answered
 /// with CommissioningGrants: a home's to its residents; one on a space outside homes to the
 /// property owner and the gateway administrators who reach it; to an installer, their own.
 /// Unset root_space_id lists every one the caller may be listed. Anyone may ask; nobody is
@@ -4487,7 +4488,7 @@ class ListCommissioningGrants extends $pb.GeneratedMessage {
 /// Sets who owns one of the building's own devices as an asset (common.v1.AssetOwner), and
 /// with it nobody's access. Answered with ManagementAck. From the property owner or a gateway
 /// administrator who reaches the device; anyone else is refused as NOT_ENTITLED. Unset
-/// asset_owner clears it.
+/// asset_owner clears it, as does one with neither owner set.
 ///
 /// Refused as INVALID_REQUEST with metadata "reason":
 ///   "owned_by_resident"  a device a person owns outright (common.v1.DeviceOwnershipType

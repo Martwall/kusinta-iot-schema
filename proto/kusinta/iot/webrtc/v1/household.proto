@@ -50,8 +50,8 @@ option optimize_for = SPEED;
 // HOUSEHOLD_ADMIN.
 //
 // The last household admin of a home may not leave it, nor demote themselves, while it has
-// other residents: RemoveUserFromSpace and DemoteHouseholdAdmin naming themselves are then
-// refused as FAILED_PRECONDITION with metadata {"reason": "last_household_admin"}, so that
+// other residents: RemoveUserFromSpace, RemoveFromGateway and DemoteHouseholdAdmin naming
+// themselves are then refused as FAILED_PRECONDITION with metadata {"reason": "last_household_admin"}, so that
 // they ask another resident first. A home becomes admin-less only when staff end the residency
 // of its last household admin (RemoveUserFromSpace or RemoveFromGateway, by residency id); it
 // keeps everything else, and nothing is wiped.
@@ -111,9 +111,9 @@ option optimize_for = SPEED;
 //      by the property owner or a gateway administrator.
 //   4. On confirmation every membership on the home's apartment and its rooms ends, of every
 //      relation, SERVICE included, with every pending invite and join request on them, every
-//      promotion request for the home and every commissioning grant on it; the household's
-//      sessions lose the home at once (LivePermissionUpdate). The home is then wiped (WIPE),
-//      and nobody is filed on it again until the wipe is done.
+//      promotion request for the home; the household's sessions lose the home at once
+//      (LivePermissionUpdate). The home is then wiped (WIPE), and nobody is filed on it again
+//      until the wipe is done.
 // The same wipe follows whenever the last residency of a home ends, however it ends: a home
 // nobody lives in keeps nothing of the household that left. A handover pending then is DONE.
 //
@@ -123,7 +123,7 @@ option optimize_for = SPEED;
 //     models and plans for it. Climate summaries over spaces that include it are recomputed
 //     without it;
 //   * everything about its people: memberships, invites, join requests, promotion requests,
-//     names and email addresses, and the record of who did what in the home. What the gateway
+//     commissioning grants on the home (commissioning.v1, GRANTS), names and email addresses, and the record of who did what in the home. What the gateway
 //     keeps of a residency is its residency id with when it began and ended, and nothing tying
 //     it to a person, while a kept record cites it and for at most 25 months; acts of staff
 //     on the home are kept under that id, without names;
@@ -232,7 +232,7 @@ enum HouseholdHandoverState {
 //
 // The answer to StartHouseholdHandover, and pushed as GatewayMessage.household_handover to
 // every session it is told to (ListHouseholdHandovers) whenever it is started, cancelled or
-// done: to the household, the notice. A DONE push reaches the household's sessions before
+// done, or its staff_confirmable_from moves: to the household, the notice. A DONE push reaches the household's sessions before
 // they lose the home.
 message HouseholdHandover {
   // Minted by the gateway, opaque.
@@ -255,7 +255,9 @@ message HouseholdHandover {
   google.protobuf.Timestamp started_at = 7;
 
   // From when the property owner or a gateway administrator may confirm it: 7 days after
-  // started_at, or started_at itself on a home with no resident.
+  // started_at, or started_at itself on a home with no resident. A residency that starts while
+  // it is pending moves it to 7 days after that, and the handover is pushed again, so that a
+  // household that moves in during it has its notice too.
   google.protobuf.Timestamp staff_confirmable_from = 8;
 
   // When it was cancelled or done. Unset while pending.
@@ -274,9 +276,9 @@ message HouseholdHandovers {
 //
 // A part_token says where the next part starts. The gateway keeps nothing for it: it checks
 // the token it minted when it is used, against the caller's rights then, so an interrupted
-// export resumes where it stopped, at any later time. A token the gateway did not mint, or
-// minted for another caller or home, is refused as INVALID_REQUEST with metadata
-// {"reason": "part_token"}.
+// export resumes where it stopped, within the caller's residency. A token the gateway did not
+// mint, or minted for another caller, home or residency — one that has ended included — is
+// refused as INVALID_REQUEST with metadata {"reason": "part_token"}.
 message ExportHouseholdData {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   string part_token = 2;

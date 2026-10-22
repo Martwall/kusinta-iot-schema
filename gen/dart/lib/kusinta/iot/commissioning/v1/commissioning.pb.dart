@@ -1844,7 +1844,7 @@ class CommissioningGrant extends $pb.GeneratedMessage {
   $0.Timestamp ensureGrantedAt() => $_ensure(10);
 }
 
-/// The grants requested or active on one space, as listed to one caller: the answer to
+/// The grants on one space that have not ended, as listed to one caller: the answer to
 /// webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
 /// .commissioning_grants to every session that may list them whenever one is requested,
 /// answered or ended before its time — to the installer, their own grants alone. Nothing is

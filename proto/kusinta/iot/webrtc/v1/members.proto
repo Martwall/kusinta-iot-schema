@@ -134,7 +134,9 @@ message SetMemberRole {
 //   * the property owner or a gateway administrator who reaches the home, while it is
 //     admin-less, of one of its residents, named by residency id unless the caller lives there
 //     (household.proto, STAFF APPOINTMENT). This is the one request here a residency id may
-//     stand in; that section's refusals apply.
+//     stand in; that section's refusals apply. From a caller who does not live there, a
+//     user_id that is not a residency id is INVALID_REQUEST, refused before it is looked up,
+//     so that the answer never says whether that user lives in the home.
 // Anyone else is refused as NOT_ENTITLED. Someone who is not a resident of the home is
 // "not_a_member"; asking a household admin of it changes nothing and is acknowledged. One
 // request per resident and home, whoever asked. Besides the ends above, it ends when the person
@@ -222,6 +224,9 @@ message PromotionRequests {
 // live in a home they hold leaves that residency in place, and ends only the rest; the user
 // then stays a member, a resident of it. By a residency id, it ends that residency alone, as
 // RemoveUserFromSpace would, with the invites the holder made as its resident.
+//
+// The last household admin of a home with other residents naming themselves is refused as
+// "last_household_admin" (household.proto, ADMIN-LESS HOME), and nothing is removed.
 //
 // A caller holding ROLE_GATEWAY_ADMIN may remove anyone but a vouched administrator
 // ("vouched_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,
