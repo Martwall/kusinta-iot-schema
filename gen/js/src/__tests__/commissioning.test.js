@@ -17,6 +17,7 @@ import {
   TestState,
   TestFailure,
 } from '../kusinta/iot/commissioning/v1/commissioning_pb.js'
+import { AttributeValueSchema } from '../kusinta/iot/device/v1/cluster_state_pb.js'
 import { ManagementRequestSchema } from '../kusinta/iot/webrtc/v1/management_pb.js'
 import { GatewayMessageSchema, ManagementResultSchema } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
 
@@ -56,6 +57,12 @@ describe('commissioning fact', () => {
       answer: { case: 'unknown', value: true },
     })
     expect(decoded.answer).toEqual({ case: 'unknown', value: true })
+  })
+
+  it('takes a value in place of "don’t know"', () => {
+    const fact = create(CommissioningFactSchema, { answer: { case: 'unknown', value: true } })
+    fact.answer = { case: 'value', value: create(AttributeValueSchema, { value: { case: 'uintValue', value: 210n } }) }
+    expect(onTheWire(CommissioningFactSchema, fact).answer.case).toBe('value')
   })
 
   it('says who should answer it and how much it is needed', () => {
@@ -108,19 +115,19 @@ describe('feature status', () => {
       state: FeatureState.NEEDS,
       needs: [
         { what: { case: 'factKey', value: 'floor.max_zones_switching_on' }, binding: { recordId: 'circuit-1' }, answerer: Party.INSTALLER },
-        { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'zone-2' }, answerer: Party.INSTALLER },
+        { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'zone-2', field: 'output' }, answerer: Party.INSTALLER },
       ],
     })
     expect(decoded.needs).toMatchObject([
       { what: { case: 'factKey', value: 'floor.max_zones_switching_on' }, answerer: Party.INSTALLER },
-      { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'zone-2' } },
+      { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'zone-2', field: 'output' } },
     ])
   })
 
   it('says why a feature is blocked for safety, and on what', () => {
     const decoded = onTheWire(FeatureStatusSchema, {
       state: FeatureState.BLOCKED_FOR_SAFETY,
-      blocks: [{ reason: BlockReason.TEST_FAILED, binding: { recordId: 'zone-2' }, deviceId: { value: 'relay-1' } }],
+      blocks: [{ reason: BlockReason.TEST_FAILED, binding: { recordId: 'zone-2', field: 'output' }, deviceId: { value: 'relay-1' } }],
     })
     expect(decoded.blocks).toMatchObject([{ reason: BlockReason.TEST_FAILED, binding: { recordId: 'zone-2' } }])
   })

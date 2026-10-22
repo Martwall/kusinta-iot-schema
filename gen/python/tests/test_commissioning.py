@@ -8,6 +8,8 @@ These assert the decisions the shape encodes:
   * a commissioning test drives one binding of one heating record, and its pass can lapse
 """
 
+from google.protobuf import descriptor_pb2
+
 from kusinta.iot.commissioning.v1 import commissioning_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2
 from kusinta.iot.identity.v1 import identity_pb2
@@ -20,6 +22,34 @@ def _round_trip(message):
     decoded = type(message)()
     decoded.ParseFromString(message.SerializeToString())
     return decoded
+
+
+def _reserved_numbers(message_descriptor) -> list[tuple[int, int]]:
+    """Reserved ranges, which the Python descriptor exposes only via CopyToProto."""
+    proto = descriptor_pb2.DescriptorProto()
+    message_descriptor.CopyToProto(proto)
+    return [(r.start, r.end) for r in proto.reserved_range]
+
+
+def test_numbers_once_given_another_meaning_are_held():
+    """A peer built from an earlier draft must never have its fields read as new ones."""
+    assert {
+        "CommissioningFact": _reserved_numbers(c.CommissioningFact.DESCRIPTOR),
+        "TemplateFact": _reserved_numbers(c.TemplateFact.DESCRIPTOR),
+        "Need": _reserved_numbers(c.Need.DESCRIPTOR),
+        "FeatureBlock": _reserved_numbers(c.FeatureBlock.DESCRIPTOR),
+        "CommissioningTest": _reserved_numbers(c.CommissioningTest.DESCRIPTOR),
+        "CommissioningProfile": _reserved_numbers(c.CommissioningProfile.DESCRIPTOR),
+        "RunCommissioningTest": _reserved_numbers(management_pb2.RunCommissioningTest.DESCRIPTOR),
+    } == {
+        "CommissioningFact": [(11, 13), (14, 15)],
+        "TemplateFact": [(4, 5)],
+        "Need": [(4, 5), (6, 7)],
+        "FeatureBlock": [(2, 3), (4, 5)],
+        "CommissioningTest": [(3, 5)],
+        "CommissioningProfile": [(5, 6)],
+        "RunCommissioningTest": [(2, 4)],
+    }
 
 
 def test_a_fact_records_who_answered_it_and_how():
@@ -39,10 +69,23 @@ def test_a_fact_records_who_answered_it_and_how():
     )
 
 
-def test_dont_know_is_an_answer_with_no_value():
+def test_dont_know_is_an_answer_in_place_of_a_value():
     decoded = _round_trip(c.CommissioningFact(key="floor.actuator_travel_seconds", unknown=True))
 
     assert decoded.WhichOneof("answer") == "unknown"
+
+
+def test_a_value_replaces_dont_know():
+    fact = c.CommissioningFact(unknown=True)
+    fact.value.CopyFrom(cluster_state_pb2.AttributeValue(uint_value=210))
+
+    assert _round_trip(fact).WhichOneof("answer") == "value"
+
+
+def test_a_template_version_says_who_put_it():
+    template = c.HouseTemplate(provenance=c.Provenance(party=c.PARTY_OWNER_ORGANISATION, evidence=c.EVIDENCE_DRAWING))
+
+    assert _round_trip(template).provenance.evidence == c.EVIDENCE_DRAWING
 
 
 def test_a_fact_is_no_deviation_until_it_names_a_template():
@@ -67,7 +110,13 @@ def test_a_need_names_a_test_and_who_can_run_it():
     status = c.FeatureStatus(
         feature=c.FEATURE_FLOOR_ZONES,
         state=c.FEATURE_STATE_NEEDS,
-        needs=[c.Need(test=c.TEST_KIND_OUTPUT_LEASE, binding=c.BindingRef(record_id="zone-2"), answerer=c.PARTY_INSTALLER)],
+        needs=[
+            c.Need(
+                test=c.TEST_KIND_OUTPUT_LEASE,
+                binding=c.BindingRef(record_id="zone-2", field="output"),
+                answerer=c.PARTY_INSTALLER,
+            )
+        ],
     )
 
     need = _round_trip(status).needs[0]

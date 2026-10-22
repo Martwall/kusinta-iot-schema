@@ -50,9 +50,9 @@ export declare type Provenance = Message<"kusinta.iot.commissioning.v1.Provenanc
 export declare const ProvenanceSchema: GenMessage<Provenance>;
 
 /**
- * One binding of one heating record (heating.v1): an output, by its proto field name as
- * the heating record puts name it ("output", "sg_ready_block", ...). An empty field: the
- * record itself, or its only binding.
+ * One heating record (heating.v1), or one binding of it. An output is always named by its
+ * proto field name as the heating record puts name it ("output", "sg_ready_block", ...),
+ * even a record's only one; an empty field is the record itself, never an output.
  *
  * @generated from message kusinta.iot.commissioning.v1.BindingRef
  */
@@ -138,8 +138,8 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
     case: "value";
   } | {
     /**
-     * "Don't know", always true when set: an answer, which lists the fact as a need for the
-     * next party who can answer it.
+     * "Don't know": an answer, which lists the fact as a need for the next party who can
+     * answer it. Only true is sent; false is refused.
      *
      * @generated from field: bool unknown = 6;
      */
@@ -172,19 +172,20 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
   provenance?: Provenance | undefined;
 
   /**
-   * Set: this answer departs from that version of the home's template.
-   *
-   * @generated from field: kusinta.iot.commissioning.v1.TemplateRef deviates_from = 11;
-   */
-  deviatesFrom?: TemplateRef | undefined;
-
-  /**
    * Set by the gateway and bumped by every change; a put that replaces a fact, and a
    * remove, names the revision it acts on.
    *
-   * @generated from field: uint64 revision = 12;
+   * @generated from field: uint64 revision = 13;
    */
   revision: bigint;
+
+  /**
+   * Set: this answer departs from that version of a template, the home's when it was
+   * recorded.
+   *
+   * @generated from field: kusinta.iot.commissioning.v1.TemplateRef deviates_from = 15;
+   */
+  deviatesFrom?: TemplateRef | undefined;
 };
 
 /**
@@ -260,7 +261,8 @@ export declare type HouseTemplate = Message<"kusinta.iot.commissioning.v1.HouseT
   facts: TemplateFact[];
 
   /**
-   * Who put this version, set by the gateway; its evidence is DRAWING.
+   * Who put this version, set by the gateway; its evidence is DRAWING. provenance.by is
+   * given to the owner organisation only, and left unset for residents and installers.
    *
    * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 6;
    */
@@ -297,22 +299,22 @@ export declare type Need = Message<"kusinta.iot.commissioning.v1.Need"> & {
   } | { case: undefined; value?: undefined };
 
   /**
-   * What it is needed about, as CommissioningFact.space_id and record_id; for a test, the
-   * binding it runs on.
+   * What it is needed about. For a fact, CommissioningFact.space_id and record_id, with
+   * binding.field empty; for a test, what it runs on, as CommissioningTest.binding.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 3;
    */
   spaceId?: SpaceId | undefined;
 
   /**
-   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 4;
-   */
-  binding?: BindingRef | undefined;
-
-  /**
    * @generated from field: kusinta.iot.commissioning.v1.Party answerer = 5;
    */
   answerer: Party;
+
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 7;
+   */
+  binding?: BindingRef | undefined;
 };
 
 /**
@@ -333,14 +335,14 @@ export declare type FeatureBlock = Message<"kusinta.iot.commissioning.v1.Feature
   /**
    * The binding, and the device, it is blocked on.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 2;
-   */
-  binding?: BindingRef | undefined;
-
-  /**
    * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 3;
    */
   deviceId?: DeviceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 5;
+   */
+  binding?: BindingRef | undefined;
 };
 
 /**
@@ -403,57 +405,57 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
    * What it runs on: for OUTPUT_LEASE one binding; for ZONE_EFFECT and PUMP_ALL_ZONES_OFF
    * the record, field empty.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 3;
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 13;
    */
   binding?: BindingRef | undefined;
 
   /**
    * The device it ran on. Set by the gateway.
    *
-   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 4;
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 5;
    */
   deviceId?: DeviceId | undefined;
 
   /**
-   * @generated from field: kusinta.iot.commissioning.v1.TestState state = 5;
+   * @generated from field: kusinta.iot.commissioning.v1.TestState state = 6;
    */
   state: TestState;
 
   /**
    * FAILED only.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.TestFailure failure = 6;
+   * @generated from field: kusinta.iot.commissioning.v1.TestFailure failure = 7;
    */
   failure: TestFailure;
 
   /**
-   * @generated from field: google.protobuf.Timestamp started_at = 7;
+   * @generated from field: google.protobuf.Timestamp started_at = 8;
    */
   startedAt?: Timestamp | undefined;
 
   /**
    * The latest it ends, while it runs.
    *
-   * @generated from field: google.protobuf.Timestamp ends_at = 8;
+   * @generated from field: google.protobuf.Timestamp ends_at = 9;
    */
   endsAt?: Timestamp | undefined;
 
   /**
-   * @generated from field: google.protobuf.Timestamp finished_at = 9;
+   * @generated from field: google.protobuf.Timestamp finished_at = 10;
    */
   finishedAt?: Timestamp | undefined;
 
   /**
    * Who started it; for an installer's verdict, who concluded it.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 10;
+   * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 11;
    */
   provenance?: Provenance | undefined;
 
   /**
    * A pass that no longer holds; see the file comment.
    *
-   * @generated from field: bool superseded = 11;
+   * @generated from field: bool superseded = 12;
    */
   superseded: boolean;
 };
@@ -497,7 +499,7 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
   /**
    * The home's template, at its latest version. Unset: it follows none.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.HouseTemplate template = 5;
+   * @generated from field: kusinta.iot.commissioning.v1.HouseTemplate template = 6;
    */
   template?: HouseTemplate | undefined;
 
@@ -505,7 +507,7 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
    * Set when FeatureStatus.needs are left out for this caller, so that none listed is not
    * read as nothing missing.
    *
-   * @generated from field: bool needs_withheld = 6;
+   * @generated from field: bool needs_withheld = 7;
    */
   needsWithheld: boolean;
 };

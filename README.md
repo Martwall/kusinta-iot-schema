@@ -346,8 +346,8 @@ built, the tests the gateway has run on its outputs, and which features work bec
 - **Feature states:** per home, each feature works, **needs** a fact or a test from a named
   party, or is **blocked for safety** with a reason. Residents who are not a household admin
   see states and blocks, not to-dos.
-- **Tests:** the gateway runs them on one binding (`RunCommissioningTest`), every write
-  leased to end by the test's `ends_at`. **OUTPUT_LEASE** (C1) proves an output leaves rest,
+- **Tests:** the gateway runs them on one record or one binding of it
+  (`RunCommissioningTest`), every write leased to end by the test's `ends_at`. **OUTPUT_LEASE** (C1) proves an output leaves rest,
   holds through a renewal and returns to rest when the lease lapses, and an output is driven
   only while it holds a current pass. A pass ends when the binding or the device changes, or
   a floor zone's rooms or control room change. **ZONE_EFFECT** (C2) checks that a zone heats

@@ -832,8 +832,7 @@ const PrivacyDisclosure$json = {
     {'1': 'names_withheld', '3': 7, '4': 1, '5': 8, '10': 'namesWithheld'},
   ],
   '9': [
-    {'1': 2, '2': 3},
-    {'1': 3, '2': 4},
+    {'1': 2, '2': 4},
   ],
 };
 
@@ -845,7 +844,7 @@ final $typed_data.Uint8List privacyDisclosureDescriptor = $convert.base64Decode(
     'F0ZV9zdW1tYXJ5X3BlcmlvZBgEIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0'
     'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kEjYKF293bmVyX29yZ2FuaXNhdG'
     'lvbl9uYW1lGAYgASgJUhVvd25lck9yZ2FuaXNhdGlvbk5hbWUSJQoObmFtZXNfd2l0aGhlbGQY'
-    'ByABKAhSDW5hbWVzV2l0aGhlbGRKBAgCEANKBAgDEAQ=');
+    'ByABKAhSDW5hbWVzV2l0aGhlbGRKBAgCEAQ=');
 
 @$core.Deprecated('Use servicePartyDescriptor instead')
 const ServiceParty$json = {
@@ -1302,20 +1301,25 @@ const RunCommissioningTest$json = {
     },
     {
       '1': 'binding',
-      '3': 2,
+      '3': 4,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.commissioning.v1.BindingRef',
       '10': 'binding'
     },
   ],
+  '9': [
+    {'1': 2, '2': 4},
+  ],
+  '10': ['record_id', 'field'],
 };
 
 /// Descriptor for `RunCommissioningTest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List runCommissioningTestDescriptor = $convert.base64Decode(
     'ChRSdW5Db21taXNzaW9uaW5nVGVzdBI6CgRraW5kGAEgASgOMiYua3VzaW50YS5pb3QuY29tbW'
-    'lzc2lvbmluZy52MS5UZXN0S2luZFIEa2luZBJCCgdiaW5kaW5nGAIgASgLMigua3VzaW50YS5p'
-    'b3QuY29tbWlzc2lvbmluZy52MS5CaW5kaW5nUmVmUgdiaW5kaW5n');
+    'lzc2lvbmluZy52MS5UZXN0S2luZFIEa2luZBJCCgdiaW5kaW5nGAQgASgLMigua3VzaW50YS5p'
+    'b3QuY29tbWlzc2lvbmluZy52MS5CaW5kaW5nUmVmUgdiaW5kaW5nSgQIAhAEUglyZWNvcmRfaW'
+    'RSBWZpZWxk');
 
 @$core.Deprecated('Use concludeCommissioningTestDescriptor instead')
 const ConcludeCommissioningTest$json = {

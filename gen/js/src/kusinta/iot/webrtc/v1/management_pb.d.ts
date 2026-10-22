@@ -1488,14 +1488,17 @@ export declare const ListCommissioningSchema: GenMessage<ListCommissioning>;
  *
  *   INVALID_REQUEST
  *   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
- *   "VALUE_TYPE"        a value of another type than the key takes, or no answer.
+ *   "VALUE_TYPE"        a value of another type than the key takes, unknown false, or no
+ *                       answer.
  *   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
  *                       that is not about that kind of space or record.
  *   "ANSWERER"          a key the caller's party does not answer.
  *   "EVIDENCE"          evidence the caller's party may not give, or less than the key
  *                       requires.
- *   "TEMPLATE_VERSION"  a deviates_from naming a template or version the home's template
- *                       never was, or set on a home that follows no template.
+ *   "TEMPLATE_VERSION"  a new or changed deviates_from naming a template or version the
+ *                       home's template never was, or set on a home that follows no
+ *                       template. One carried over unchanged from the stored fact is kept,
+ *                       even after the home moved to another template.
  *
  *   FAILED_PRECONDITION
  *   "STALE_REVISION"    the fact changed since the revision the request names.
@@ -1606,7 +1609,8 @@ export declare const SetHomeTemplateSchema: GenMessage<SetHomeTemplate>;
  *
  *   INVALID_REQUEST
  *   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a
- *                       binding field that is not a bound output of it.
+ *                       binding field that is empty or not a bound output of it; for the
+ *                       other kinds, a binding field that is not empty.
  *
  *   FAILED_PRECONDITION
  *   "TEST_RUNNING"      a test already drives one of its outputs.
@@ -1628,7 +1632,7 @@ export declare type RunCommissioningTest = Message<"kusinta.iot.webrtc.v1.RunCom
   /**
    * binding.field for OUTPUT_LEASE only.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 2;
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 4;
    */
   binding?: BindingRef | undefined;
 };

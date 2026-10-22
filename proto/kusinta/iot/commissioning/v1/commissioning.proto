@@ -71,7 +71,8 @@ option optimize_for = SPEED;
 // to whoever can answer them. "Don't know" from the household lists the fact as a need
 // for the installer.
 //
-// TESTS. The gateway runs every test itself, on one binding (BindingRef). While a
+// TESTS. The gateway runs every test itself, on one heating record or one binding of it
+// (BindingRef). While a
 // test drives an output nothing else does, and every write it makes is leased
 // (device.v1.LeasedWrite) to end no later than the test's ends_at, so a gateway that stops
 // mid-test leaves the output to return to rest. A test ends at its ends_at at the latest,
@@ -131,9 +132,9 @@ message Provenance {
   kusinta.iot.identity.v1.UserId by = 4;
 }
 
-// One binding of one heating record (heating.v1): an output, by its proto field name as
-// the heating record puts name it ("output", "sg_ready_block", ...). An empty field: the
-// record itself, or its only binding.
+// One heating record (heating.v1), or one binding of it. An output is always named by its
+// proto field name as the heating record puts name it ("output", "sg_ready_block", ...),
+// even a record's only one; an empty field is the record itself, never an output.
 message BindingRef {
   string record_id = 1;
   string field = 2;
@@ -159,8 +160,8 @@ message CommissioningFact {
 
   oneof answer {
     kusinta.iot.device.v1.AttributeValue value = 5;
-    // "Don't know", always true when set: an answer, which lists the fact as a need for the
-    // next party who can answer it.
+    // "Don't know": an answer, which lists the fact as a need for the next party who can
+    // answer it. Only true is sent; false is refused.
     bool unknown = 6;
   }
 
@@ -172,12 +173,16 @@ message CommissioningFact {
 
   Provenance provenance = 10;
 
-  // Set: this answer departs from that version of the home's template.
-  TemplateRef deviates_from = 11;
-
   // Set by the gateway and bumped by every change; a put that replaces a fact, and a
   // remove, names the revision it acts on.
-  uint64 revision = 12;
+  uint64 revision = 13;
+
+  // Set: this answer departs from that version of a template, the home's when it was
+  // recorded.
+  TemplateRef deviates_from = 15;
+
+  reserved 11 to 12, 14;
+  reserved "scope", "template_version", "template_id";
 }
 
 // One answer in a house template.
@@ -186,6 +191,9 @@ message TemplateFact {
   // What it is about, as named on the drawing ("SL 2", "Bathroom"). Empty: the house.
   string subject_label = 2;
   kusinta.iot.device.v1.AttributeValue value = 3;
+
+  reserved 4;
+  reserved "provenance";
 }
 
 // One house type of a building, as built. The owner organisation's.
@@ -201,7 +209,8 @@ message HouseTemplate {
 
   repeated TemplateFact facts = 5;
 
-  // Who put this version, set by the gateway; its evidence is DRAWING.
+  // Who put this version, set by the gateway; its evidence is DRAWING. provenance.by is
+  // given to the owner organisation only, and left unset for residents and installers.
   Provenance provenance = 6;
 }
 
@@ -236,11 +245,14 @@ message Need {
     string fact_key = 1;
     TestKind test = 2;
   }
-  // What it is needed about, as CommissioningFact.space_id and record_id; for a test, the
-  // binding it runs on.
+  // What it is needed about. For a fact, CommissioningFact.space_id and record_id, with
+  // binding.field empty; for a test, what it runs on, as CommissioningTest.binding.
   kusinta.iot.identity.v1.SpaceId space_id = 3;
-  BindingRef binding = 4;
   Party answerer = 5;
+  BindingRef binding = 7;
+
+  reserved 4, 6;
+  reserved "record_id", "field";
 }
 
 enum BlockReason {
@@ -262,8 +274,11 @@ enum BlockReason {
 message FeatureBlock {
   BlockReason reason = 1;
   // The binding, and the device, it is blocked on.
-  BindingRef binding = 2;
   kusinta.iot.identity.v1.DeviceId device_id = 3;
+  BindingRef binding = 5;
+
+  reserved 2, 4;
+  reserved "record_id", "field";
 }
 
 // One feature of one home. WORKS when every heating record of the feature in the home may
@@ -329,25 +344,28 @@ message CommissioningTest {
 
   // What it runs on: for OUTPUT_LEASE one binding; for ZONE_EFFECT and PUMP_ALL_ZONES_OFF
   // the record, field empty.
-  BindingRef binding = 3;
+  BindingRef binding = 13;
 
   // The device it ran on. Set by the gateway.
-  kusinta.iot.identity.v1.DeviceId device_id = 4;
+  kusinta.iot.identity.v1.DeviceId device_id = 5;
 
-  TestState state = 5;
+  TestState state = 6;
   // FAILED only.
-  TestFailure failure = 6;
+  TestFailure failure = 7;
 
-  google.protobuf.Timestamp started_at = 7;
+  google.protobuf.Timestamp started_at = 8;
   // The latest it ends, while it runs.
-  google.protobuf.Timestamp ends_at = 8;
-  google.protobuf.Timestamp finished_at = 9;
+  google.protobuf.Timestamp ends_at = 9;
+  google.protobuf.Timestamp finished_at = 10;
 
   // Who started it; for an installer's verdict, who concluded it.
-  Provenance provenance = 10;
+  Provenance provenance = 11;
 
   // A pass that no longer holds; see the file comment.
-  bool superseded = 11;
+  bool superseded = 12;
+
+  reserved 3 to 4;
+  reserved "record_id", "field";
 }
 
 // A space's commissioning, in reply to ListCommissioning.
@@ -362,11 +380,14 @@ message CommissioningProfile {
   repeated FeatureStatus features = 4;
 
   // The home's template, at its latest version. Unset: it follows none.
-  HouseTemplate template = 5;
+  HouseTemplate template = 6;
 
   // Set when FeatureStatus.needs are left out for this caller, so that none listed is not
   // read as nothing missing.
-  bool needs_withheld = 6;
+  bool needs_withheld = 7;
+
+  reserved 5;
+  reserved "template_id";
 }
 
 // Whether a home is set up: every REQUIRED fact answered, and every output bound in it
