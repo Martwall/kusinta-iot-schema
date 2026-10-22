@@ -126,8 +126,11 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
    * connector_id it trusts for that service, only after accepting its handshake, and to
    * one live session at a time: a second session claiming the same service gets none, and
    * a session that ends loses its links with it. Trust is the gateway's own setting, made
-   * by its administrators; where none is made for a service, the gateway trusts the one
-   * accepted session that declares it, and none while two do.
+   * by its administrators, naming the connector_id per service; with none made for a
+   * service, the gateway sends its tokens to no connector. A connector_id counts only on a
+   * session the gateway's transport authenticated as that connector (a local socket only
+   * the gateway's connectors can open, or mutual TLS); claimed in a handshake alone, it
+   * earns nothing.
    *
    * @generated from field: repeated kusinta.iot.accountlink.v1.LinkedService consumes_credentials = 13;
    */
@@ -145,7 +148,8 @@ export declare const ConnectorInfoSchema: GenMessage<ConnectorInfo>;
  * service, handed to the connector that reads that home's devices there. The gateway holds
  * the token pair and refreshes it; only the short-lived access token crosses, never a
  * refresh token or a client secret. Neither side writes it to disk or a log, nor puts it in
- * BackendHealthReport.detail or an error message.
+ * BackendHealthReport.detail or an error message, and the connector sends it nowhere but
+ * in calls to that service's own API.
  *
  * Sent after every refresh, at least five minutes before the previous token's expires_at,
  * and for a link made while the session is up. After a handshake, every live link arrives
@@ -170,7 +174,9 @@ export declare type CredentialsUpdate = Message<"kusinta.iot.connector.v1.Creden
    * Opaque; it names no home, person or account. Stable for one home and service for as
    * long as the home has that service linked: replacing the link, relinking after it
    * needed relinking, or a cancelled replacement arrives as an update under the same id, so
-   * a device read through it keeps its id and its history. The gateway revokes a replaced
+   * a device read through it keeps its id and its history. A link made after the old one
+   * ended (unlinked, or the home handed over or wiped) has a new id, so nothing of the
+   * previous household's carries over. The gateway revokes a replaced
    * grant at the service itself. A device read through two links, as when two homes link
    * one account, has a distinct id per link. Not related to a device link's id
    * (CreateLink).
@@ -309,7 +315,9 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
    * For each device in known_devices read through an account link, that link's
    * account_link_id, keyed by the device's id: the handshake's form of
    * DeviceAnnouncement.account_link_id, so a reconnecting connector's linked devices are
-   * filed in their homes again. A known device absent here is read through no link.
+   * filed in their homes again. A known device absent here is read through no link. The
+   * map only restores a filing the gateway already recorded for that device and link, and
+   * only for a link it is sending this session; it never files a device anew.
    *
    * @generated from field: map<string, string> known_device_account_links = 5;
    */
@@ -717,7 +725,9 @@ export declare type DeviceAnnouncement = Message<"kusinta.iot.connector.v1.Devic
 
   /**
    * The account link (CredentialsUpdate) the device is read through, empty for a device
-   * that is not. The gateway files the device in that link's home and nowhere else. A
+   * that is not. The gateway files the device in that link's home and nowhere else, and
+   * accepts only an id it sent this session and has not revoked; a device naming any other
+   * is filed in no home, and the gateway logs the mismatch. A
    * device read through two links, as when two homes link the same account, is announced
    * once per link under distinct device ids, each in its own home; revoking one link
    * removes only that link's.
