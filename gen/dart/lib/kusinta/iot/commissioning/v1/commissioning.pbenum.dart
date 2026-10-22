@@ -1,0 +1,375 @@
+// This is a generated file - do not edit.
+//
+// Generated from kusinta/iot/commissioning/v1/commissioning.proto.
+
+// @dart = 3.3
+
+// ignore_for_file: annotate_overrides, camel_case_types, comment_references
+// ignore_for_file: constant_identifier_names
+// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:core' as $core;
+
+import 'package:protobuf/protobuf.dart' as $pb;
+
+/// Who answers a fact, or ran or concluded a test.
+class Party extends $pb.ProtobufEnum {
+  static const Party PARTY_UNSPECIFIED =
+      Party._(0, _omitEnumNames ? '' : 'PARTY_UNSPECIFIED');
+
+  /// The property owner or the gateway's administrators.
+  static const Party PARTY_OWNER_ORGANISATION =
+      Party._(1, _omitEnumNames ? '' : 'PARTY_OWNER_ORGANISATION');
+
+  /// A household admin of the home.
+  static const Party PARTY_HOUSEHOLD =
+      Party._(2, _omitEnumNames ? '' : 'PARTY_HOUSEHOLD');
+
+  /// An installer under a commissioning grant.
+  static const Party PARTY_INSTALLER =
+      Party._(3, _omitEnumNames ? '' : 'PARTY_INSTALLER');
+
+  /// The gateway, from a device, a connector or a measurement of its own.
+  static const Party PARTY_AUTOMATIC =
+      Party._(4, _omitEnumNames ? '' : 'PARTY_AUTOMATIC');
+
+  static const $core.List<Party> values = <Party>[
+    PARTY_UNSPECIFIED,
+    PARTY_OWNER_ORGANISATION,
+    PARTY_HOUSEHOLD,
+    PARTY_INSTALLER,
+    PARTY_AUTOMATIC,
+  ];
+
+  static final $core.List<Party?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static Party? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Party._(super.value, super.name);
+}
+
+/// How much a fact is needed.
+class Necessity extends $pb.ProtobufEnum {
+  static const Necessity NECESSITY_UNSPECIFIED =
+      Necessity._(0, _omitEnumNames ? '' : 'NECESSITY_UNSPECIFIED');
+
+  /// Before the home is set up (HomeSetup).
+  static const Necessity NECESSITY_REQUIRED =
+      Necessity._(1, _omitEnumNames ? '' : 'NECESSITY_REQUIRED');
+
+  /// Before its feature works (CommissioningFact.feature).
+  static const Necessity NECESSITY_FOR_FEATURE =
+      Necessity._(2, _omitEnumNames ? '' : 'NECESSITY_FOR_FEATURE');
+  static const Necessity NECESSITY_OPTIONAL =
+      Necessity._(3, _omitEnumNames ? '' : 'NECESSITY_OPTIONAL');
+
+  static const $core.List<Necessity> values = <Necessity>[
+    NECESSITY_UNSPECIFIED,
+    NECESSITY_REQUIRED,
+    NECESSITY_FOR_FEATURE,
+    NECESSITY_OPTIONAL,
+  ];
+
+  static final $core.List<Necessity?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static Necessity? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Necessity._(super.value, super.name);
+}
+
+/// How an answer was confirmed. A household answers STATED, PHOTO or DRAWING; INSPECTED and
+/// MEASURED are an installer's or the gateway's; DERIVED is the gateway's alone. A key may
+/// require more (see the file comment); less is refused.
+class Evidence extends $pb.ProtobufEnum {
+  static const Evidence EVIDENCE_UNSPECIFIED =
+      Evidence._(0, _omitEnumNames ? '' : 'EVIDENCE_UNSPECIFIED');
+  static const Evidence EVIDENCE_STATED =
+      Evidence._(1, _omitEnumNames ? '' : 'EVIDENCE_STATED');
+  static const Evidence EVIDENCE_PHOTO =
+      Evidence._(2, _omitEnumNames ? '' : 'EVIDENCE_PHOTO');
+  static const Evidence EVIDENCE_DRAWING =
+      Evidence._(3, _omitEnumNames ? '' : 'EVIDENCE_DRAWING');
+  static const Evidence EVIDENCE_INSPECTED =
+      Evidence._(4, _omitEnumNames ? '' : 'EVIDENCE_INSPECTED');
+  static const Evidence EVIDENCE_MEASURED =
+      Evidence._(5, _omitEnumNames ? '' : 'EVIDENCE_MEASURED');
+
+  /// From other facts, the address or a connector's declaration.
+  static const Evidence EVIDENCE_DERIVED =
+      Evidence._(6, _omitEnumNames ? '' : 'EVIDENCE_DERIVED');
+
+  static const $core.List<Evidence> values = <Evidence>[
+    EVIDENCE_UNSPECIFIED,
+    EVIDENCE_STATED,
+    EVIDENCE_PHOTO,
+    EVIDENCE_DRAWING,
+    EVIDENCE_INSPECTED,
+    EVIDENCE_MEASURED,
+    EVIDENCE_DERIVED,
+  ];
+
+  static final $core.List<Evidence?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
+  static Evidence? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Evidence._(super.value, super.name);
+}
+
+class FactScope extends $pb.ProtobufEnum {
+  static const FactScope FACT_SCOPE_UNSPECIFIED =
+      FactScope._(0, _omitEnumNames ? '' : 'FACT_SCOPE_UNSPECIFIED');
+  static const FactScope FACT_SCOPE_HOUSE =
+      FactScope._(1, _omitEnumNames ? '' : 'FACT_SCOPE_HOUSE');
+  static const FactScope FACT_SCOPE_HOUSEHOLD =
+      FactScope._(2, _omitEnumNames ? '' : 'FACT_SCOPE_HOUSEHOLD');
+
+  static const $core.List<FactScope> values = <FactScope>[
+    FACT_SCOPE_UNSPECIFIED,
+    FACT_SCOPE_HOUSE,
+    FACT_SCOPE_HOUSEHOLD,
+  ];
+
+  static final $core.List<FactScope?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static FactScope? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const FactScope._(super.value, super.name);
+}
+
+/// The heating features a home's commissioning unlocks.
+class Feature extends $pb.ProtobufEnum {
+  static const Feature FEATURE_UNSPECIFIED =
+      Feature._(0, _omitEnumNames ? '' : 'FEATURE_UNSPECIFIED');
+  static const Feature FEATURE_FLOOR_ZONES =
+      Feature._(1, _omitEnumNames ? '' : 'FEATURE_FLOOR_ZONES');
+
+  /// Steering the heat source (heating.v1.HeatingPlant.control).
+  static const Feature FEATURE_PLANT =
+      Feature._(2, _omitEnumNames ? '' : 'FEATURE_PLANT');
+  static const Feature FEATURE_COMFORT_LOADS =
+      Feature._(3, _omitEnumNames ? '' : 'FEATURE_COMFORT_LOADS');
+
+  /// Planning by electricity price and the home's grid tariff.
+  static const Feature FEATURE_COST =
+      Feature._(4, _omitEnumNames ? '' : 'FEATURE_COST');
+
+  /// Holding the home's load under a power peak, live.
+  static const Feature FEATURE_PEAK_GUARD =
+      Feature._(5, _omitEnumNames ? '' : 'FEATURE_PEAK_GUARD');
+
+  /// Planning by forecast, from the room models.
+  static const Feature FEATURE_PLANNING =
+      Feature._(6, _omitEnumNames ? '' : 'FEATURE_PLANNING');
+
+  static const $core.List<Feature> values = <Feature>[
+    FEATURE_UNSPECIFIED,
+    FEATURE_FLOOR_ZONES,
+    FEATURE_PLANT,
+    FEATURE_COMFORT_LOADS,
+    FEATURE_COST,
+    FEATURE_PEAK_GUARD,
+    FEATURE_PLANNING,
+  ];
+
+  static final $core.List<Feature?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
+  static Feature? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const Feature._(super.value, super.name);
+}
+
+class FeatureState extends $pb.ProtobufEnum {
+  /// A state this schema does not know: read as NEEDS.
+  static const FeatureState FEATURE_STATE_UNSPECIFIED =
+      FeatureState._(0, _omitEnumNames ? '' : 'FEATURE_STATE_UNSPECIFIED');
+  static const FeatureState FEATURE_STATE_WORKS =
+      FeatureState._(1, _omitEnumNames ? '' : 'FEATURE_STATE_WORKS');
+
+  /// Something it needs is missing (FeatureStatus.needs), and nothing blocks it.
+  static const FeatureState FEATURE_STATE_NEEDS =
+      FeatureState._(2, _omitEnumNames ? '' : 'FEATURE_STATE_NEEDS');
+
+  /// FeatureStatus.blocks says why. Takes precedence over NEEDS.
+  static const FeatureState FEATURE_STATE_BLOCKED_FOR_SAFETY = FeatureState._(
+      3, _omitEnumNames ? '' : 'FEATURE_STATE_BLOCKED_FOR_SAFETY');
+
+  static const $core.List<FeatureState> values = <FeatureState>[
+    FEATURE_STATE_UNSPECIFIED,
+    FEATURE_STATE_WORKS,
+    FEATURE_STATE_NEEDS,
+    FEATURE_STATE_BLOCKED_FOR_SAFETY,
+  ];
+
+  static final $core.List<FeatureState?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static FeatureState? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const FeatureState._(super.value, super.name);
+}
+
+class BlockReason extends $pb.ProtobufEnum {
+  static const BlockReason BLOCK_REASON_UNSPECIFIED =
+      BlockReason._(0, _omitEnumNames ? '' : 'BLOCK_REASON_UNSPECIFIED');
+
+  /// Its latest test failed, and has not passed since.
+  static const BlockReason BLOCK_REASON_TEST_FAILED =
+      BlockReason._(1, _omitEnumNames ? '' : 'BLOCK_REASON_TEST_FAILED');
+
+  /// Its producer no longer states the output's write as leased with a lapse value at rest
+  /// (heating.v1).
+  static const BlockReason BLOCK_REASON_OUTPUT_NOT_LEASED =
+      BlockReason._(2, _omitEnumNames ? '' : 'BLOCK_REASON_OUTPUT_NOT_LEASED');
+
+  /// The output's power-on value would leave the contact away from rest.
+  static const BlockReason BLOCK_REASON_POWER_ON_NOT_AT_REST = BlockReason._(
+      3, _omitEnumNames ? '' : 'BLOCK_REASON_POWER_ON_NOT_AT_REST');
+  static const BlockReason BLOCK_REASON_DEVICE_GONE =
+      BlockReason._(4, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_GONE');
+
+  /// A floor zone whose control room is deleted or outside its plant's space.
+  static const BlockReason BLOCK_REASON_CONTROL_ROOM_GONE =
+      BlockReason._(5, _omitEnumNames ? '' : 'BLOCK_REASON_CONTROL_ROOM_GONE');
+
+  static const $core.List<BlockReason> values = <BlockReason>[
+    BLOCK_REASON_UNSPECIFIED,
+    BLOCK_REASON_TEST_FAILED,
+    BLOCK_REASON_OUTPUT_NOT_LEASED,
+    BLOCK_REASON_POWER_ON_NOT_AT_REST,
+    BLOCK_REASON_DEVICE_GONE,
+    BLOCK_REASON_CONTROL_ROOM_GONE,
+  ];
+
+  static final $core.List<BlockReason?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
+  static BlockReason? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const BlockReason._(super.value, super.name);
+}
+
+class TestKind extends $pb.ProtobufEnum {
+  static const TestKind TEST_KIND_UNSPECIFIED =
+      TestKind._(0, _omitEnumNames ? '' : 'TEST_KIND_UNSPECIFIED');
+
+  /// On one bound output (heating.v1). The gateway checks that the output's power-on value,
+  /// where its producer states one, leaves the contact at rest; writes the value that takes
+  /// it away from rest under a short lease and sees the reported contact leave rest; renews
+  /// the lease before it ends and sees the contact hold past the first lease's end; then
+  /// lets it lapse and sees the contact return to rest within the read latency its producer
+  /// states. Judged by the gateway. Takes minutes.
+  static const TestKind TEST_KIND_OUTPUT_LEASE =
+      TestKind._(1, _omitEnumNames ? '' : 'TEST_KIND_OUTPUT_LEASE');
+
+  /// On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and
+  /// sees its control room's temperature and the circuit's return probe answer. Judged by
+  /// the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
+  static const TestKind TEST_KIND_ZONE_EFFECT =
+      TestKind._(2, _omitEnumNames ? '' : 'TEST_KIND_ZONE_EFFECT');
+
+  /// On one floor circuit whose every zone holds a current OUTPUT_LEASE pass. The gateway
+  /// holds every zone off for at most 15 minutes while the installer watches the pump, and
+  /// the installer concludes it (ConcludeCommissioningTest). Passed or failed, it sets
+  /// "floor.pump_tolerates_all_zones_off" as MEASURED, with the installer's provenance.
+  static const TestKind TEST_KIND_PUMP_ALL_ZONES_OFF =
+      TestKind._(3, _omitEnumNames ? '' : 'TEST_KIND_PUMP_ALL_ZONES_OFF');
+
+  static const $core.List<TestKind> values = <TestKind>[
+    TEST_KIND_UNSPECIFIED,
+    TEST_KIND_OUTPUT_LEASE,
+    TEST_KIND_ZONE_EFFECT,
+    TEST_KIND_PUMP_ALL_ZONES_OFF,
+  ];
+
+  static final $core.List<TestKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static TestKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const TestKind._(super.value, super.name);
+}
+
+class TestState extends $pb.ProtobufEnum {
+  static const TestState TEST_STATE_UNSPECIFIED =
+      TestState._(0, _omitEnumNames ? '' : 'TEST_STATE_UNSPECIFIED');
+  static const TestState TEST_STATE_RUNNING =
+      TestState._(1, _omitEnumNames ? '' : 'TEST_STATE_RUNNING');
+  static const TestState TEST_STATE_PASSED =
+      TestState._(2, _omitEnumNames ? '' : 'TEST_STATE_PASSED');
+  static const TestState TEST_STATE_FAILED =
+      TestState._(3, _omitEnumNames ? '' : 'TEST_STATE_FAILED');
+
+  /// Stopped by a caller, or ended at ends_at without a verdict. Proves nothing.
+  static const TestState TEST_STATE_ABORTED =
+      TestState._(4, _omitEnumNames ? '' : 'TEST_STATE_ABORTED');
+
+  static const $core.List<TestState> values = <TestState>[
+    TEST_STATE_UNSPECIFIED,
+    TEST_STATE_RUNNING,
+    TEST_STATE_PASSED,
+    TEST_STATE_FAILED,
+    TEST_STATE_ABORTED,
+  ];
+
+  static final $core.List<TestState?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static TestState? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const TestState._(super.value, super.name);
+}
+
+class TestFailure extends $pb.ProtobufEnum {
+  static const TestFailure TEST_FAILURE_UNSPECIFIED =
+      TestFailure._(0, _omitEnumNames ? '' : 'TEST_FAILURE_UNSPECIFIED');
+
+  /// OUTPUT_LEASE.
+  static const TestFailure TEST_FAILURE_POWER_ON_NOT_AT_REST = TestFailure._(
+      1, _omitEnumNames ? '' : 'TEST_FAILURE_POWER_ON_NOT_AT_REST');
+  static const TestFailure TEST_FAILURE_NO_STATE_CHANGE =
+      TestFailure._(2, _omitEnumNames ? '' : 'TEST_FAILURE_NO_STATE_CHANGE');
+  static const TestFailure TEST_FAILURE_LEASE_NOT_RENEWED =
+      TestFailure._(3, _omitEnumNames ? '' : 'TEST_FAILURE_LEASE_NOT_RENEWED');
+  static const TestFailure TEST_FAILURE_DID_NOT_RETURN_TO_REST = TestFailure._(
+      4, _omitEnumNames ? '' : 'TEST_FAILURE_DID_NOT_RETURN_TO_REST');
+
+  /// The device answered nothing within the test.
+  static const TestFailure TEST_FAILURE_DEVICE_UNREACHABLE =
+      TestFailure._(5, _omitEnumNames ? '' : 'TEST_FAILURE_DEVICE_UNREACHABLE');
+
+  /// ZONE_EFFECT: the control room and the return did not answer the zone.
+  static const TestFailure TEST_FAILURE_NO_EFFECT =
+      TestFailure._(6, _omitEnumNames ? '' : 'TEST_FAILURE_NO_EFFECT');
+
+  /// PUMP_ALL_ZONES_OFF: the installer's verdict.
+  static const TestFailure TEST_FAILURE_OBSERVED =
+      TestFailure._(7, _omitEnumNames ? '' : 'TEST_FAILURE_OBSERVED');
+
+  static const $core.List<TestFailure> values = <TestFailure>[
+    TEST_FAILURE_UNSPECIFIED,
+    TEST_FAILURE_POWER_ON_NOT_AT_REST,
+    TEST_FAILURE_NO_STATE_CHANGE,
+    TEST_FAILURE_LEASE_NOT_RENEWED,
+    TEST_FAILURE_DID_NOT_RETURN_TO_REST,
+    TEST_FAILURE_DEVICE_UNREACHABLE,
+    TEST_FAILURE_NO_EFFECT,
+    TEST_FAILURE_OBSERVED,
+  ];
+
+  static final $core.List<TestFailure?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
+  static TestFailure? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const TestFailure._(super.value, super.name);
+}
+
+const $core.bool _omitEnumNames =
+    $core.bool.fromEnvironment('protobuf.omit_enum_names');

@@ -1,0 +1,323 @@
+import datetime
+
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
+from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from collections.abc import Iterable as _Iterable, Mapping as _Mapping
+from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
+
+DESCRIPTOR: _descriptor.FileDescriptor
+
+class Party(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    PARTY_UNSPECIFIED: _ClassVar[Party]
+    PARTY_OWNER_ORGANISATION: _ClassVar[Party]
+    PARTY_HOUSEHOLD: _ClassVar[Party]
+    PARTY_INSTALLER: _ClassVar[Party]
+    PARTY_AUTOMATIC: _ClassVar[Party]
+
+class Necessity(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    NECESSITY_UNSPECIFIED: _ClassVar[Necessity]
+    NECESSITY_REQUIRED: _ClassVar[Necessity]
+    NECESSITY_FOR_FEATURE: _ClassVar[Necessity]
+    NECESSITY_OPTIONAL: _ClassVar[Necessity]
+
+class Evidence(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    EVIDENCE_UNSPECIFIED: _ClassVar[Evidence]
+    EVIDENCE_STATED: _ClassVar[Evidence]
+    EVIDENCE_PHOTO: _ClassVar[Evidence]
+    EVIDENCE_DRAWING: _ClassVar[Evidence]
+    EVIDENCE_INSPECTED: _ClassVar[Evidence]
+    EVIDENCE_MEASURED: _ClassVar[Evidence]
+    EVIDENCE_DERIVED: _ClassVar[Evidence]
+
+class FactScope(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FACT_SCOPE_UNSPECIFIED: _ClassVar[FactScope]
+    FACT_SCOPE_HOUSE: _ClassVar[FactScope]
+    FACT_SCOPE_HOUSEHOLD: _ClassVar[FactScope]
+
+class Feature(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FEATURE_UNSPECIFIED: _ClassVar[Feature]
+    FEATURE_FLOOR_ZONES: _ClassVar[Feature]
+    FEATURE_PLANT: _ClassVar[Feature]
+    FEATURE_COMFORT_LOADS: _ClassVar[Feature]
+    FEATURE_COST: _ClassVar[Feature]
+    FEATURE_PEAK_GUARD: _ClassVar[Feature]
+    FEATURE_PLANNING: _ClassVar[Feature]
+
+class FeatureState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FEATURE_STATE_UNSPECIFIED: _ClassVar[FeatureState]
+    FEATURE_STATE_WORKS: _ClassVar[FeatureState]
+    FEATURE_STATE_NEEDS: _ClassVar[FeatureState]
+    FEATURE_STATE_BLOCKED_FOR_SAFETY: _ClassVar[FeatureState]
+
+class BlockReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    BLOCK_REASON_UNSPECIFIED: _ClassVar[BlockReason]
+    BLOCK_REASON_TEST_FAILED: _ClassVar[BlockReason]
+    BLOCK_REASON_OUTPUT_NOT_LEASED: _ClassVar[BlockReason]
+    BLOCK_REASON_POWER_ON_NOT_AT_REST: _ClassVar[BlockReason]
+    BLOCK_REASON_DEVICE_GONE: _ClassVar[BlockReason]
+    BLOCK_REASON_CONTROL_ROOM_GONE: _ClassVar[BlockReason]
+
+class TestKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    TEST_KIND_UNSPECIFIED: _ClassVar[TestKind]
+    TEST_KIND_OUTPUT_LEASE: _ClassVar[TestKind]
+    TEST_KIND_ZONE_EFFECT: _ClassVar[TestKind]
+    TEST_KIND_PUMP_ALL_ZONES_OFF: _ClassVar[TestKind]
+
+class TestState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    TEST_STATE_UNSPECIFIED: _ClassVar[TestState]
+    TEST_STATE_RUNNING: _ClassVar[TestState]
+    TEST_STATE_PASSED: _ClassVar[TestState]
+    TEST_STATE_FAILED: _ClassVar[TestState]
+    TEST_STATE_ABORTED: _ClassVar[TestState]
+
+class TestFailure(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    TEST_FAILURE_UNSPECIFIED: _ClassVar[TestFailure]
+    TEST_FAILURE_POWER_ON_NOT_AT_REST: _ClassVar[TestFailure]
+    TEST_FAILURE_NO_STATE_CHANGE: _ClassVar[TestFailure]
+    TEST_FAILURE_LEASE_NOT_RENEWED: _ClassVar[TestFailure]
+    TEST_FAILURE_DID_NOT_RETURN_TO_REST: _ClassVar[TestFailure]
+    TEST_FAILURE_DEVICE_UNREACHABLE: _ClassVar[TestFailure]
+    TEST_FAILURE_NO_EFFECT: _ClassVar[TestFailure]
+    TEST_FAILURE_OBSERVED: _ClassVar[TestFailure]
+PARTY_UNSPECIFIED: Party
+PARTY_OWNER_ORGANISATION: Party
+PARTY_HOUSEHOLD: Party
+PARTY_INSTALLER: Party
+PARTY_AUTOMATIC: Party
+NECESSITY_UNSPECIFIED: Necessity
+NECESSITY_REQUIRED: Necessity
+NECESSITY_FOR_FEATURE: Necessity
+NECESSITY_OPTIONAL: Necessity
+EVIDENCE_UNSPECIFIED: Evidence
+EVIDENCE_STATED: Evidence
+EVIDENCE_PHOTO: Evidence
+EVIDENCE_DRAWING: Evidence
+EVIDENCE_INSPECTED: Evidence
+EVIDENCE_MEASURED: Evidence
+EVIDENCE_DERIVED: Evidence
+FACT_SCOPE_UNSPECIFIED: FactScope
+FACT_SCOPE_HOUSE: FactScope
+FACT_SCOPE_HOUSEHOLD: FactScope
+FEATURE_UNSPECIFIED: Feature
+FEATURE_FLOOR_ZONES: Feature
+FEATURE_PLANT: Feature
+FEATURE_COMFORT_LOADS: Feature
+FEATURE_COST: Feature
+FEATURE_PEAK_GUARD: Feature
+FEATURE_PLANNING: Feature
+FEATURE_STATE_UNSPECIFIED: FeatureState
+FEATURE_STATE_WORKS: FeatureState
+FEATURE_STATE_NEEDS: FeatureState
+FEATURE_STATE_BLOCKED_FOR_SAFETY: FeatureState
+BLOCK_REASON_UNSPECIFIED: BlockReason
+BLOCK_REASON_TEST_FAILED: BlockReason
+BLOCK_REASON_OUTPUT_NOT_LEASED: BlockReason
+BLOCK_REASON_POWER_ON_NOT_AT_REST: BlockReason
+BLOCK_REASON_DEVICE_GONE: BlockReason
+BLOCK_REASON_CONTROL_ROOM_GONE: BlockReason
+TEST_KIND_UNSPECIFIED: TestKind
+TEST_KIND_OUTPUT_LEASE: TestKind
+TEST_KIND_ZONE_EFFECT: TestKind
+TEST_KIND_PUMP_ALL_ZONES_OFF: TestKind
+TEST_STATE_UNSPECIFIED: TestState
+TEST_STATE_RUNNING: TestState
+TEST_STATE_PASSED: TestState
+TEST_STATE_FAILED: TestState
+TEST_STATE_ABORTED: TestState
+TEST_FAILURE_UNSPECIFIED: TestFailure
+TEST_FAILURE_POWER_ON_NOT_AT_REST: TestFailure
+TEST_FAILURE_NO_STATE_CHANGE: TestFailure
+TEST_FAILURE_LEASE_NOT_RENEWED: TestFailure
+TEST_FAILURE_DID_NOT_RETURN_TO_REST: TestFailure
+TEST_FAILURE_DEVICE_UNREACHABLE: TestFailure
+TEST_FAILURE_NO_EFFECT: TestFailure
+TEST_FAILURE_OBSERVED: TestFailure
+
+class Provenance(_message.Message):
+    __slots__ = ("party", "evidence", "at", "by")
+    PARTY_FIELD_NUMBER: _ClassVar[int]
+    EVIDENCE_FIELD_NUMBER: _ClassVar[int]
+    AT_FIELD_NUMBER: _ClassVar[int]
+    BY_FIELD_NUMBER: _ClassVar[int]
+    party: Party
+    evidence: Evidence
+    at: _timestamp_pb2.Timestamp
+    by: _identity_pb2.UserId
+    def __init__(self, party: _Optional[_Union[Party, str]] = ..., evidence: _Optional[_Union[Evidence, str]] = ..., at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ...) -> None: ...
+
+class CommissioningFact(_message.Message):
+    __slots__ = ("fact_id", "space_id", "record_id", "key", "value", "unknown", "answerer", "necessity", "feature", "provenance", "scope", "template_version", "revision")
+    FACT_ID_FIELD_NUMBER: _ClassVar[int]
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    KEY_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    UNKNOWN_FIELD_NUMBER: _ClassVar[int]
+    ANSWERER_FIELD_NUMBER: _ClassVar[int]
+    NECESSITY_FIELD_NUMBER: _ClassVar[int]
+    FEATURE_FIELD_NUMBER: _ClassVar[int]
+    PROVENANCE_FIELD_NUMBER: _ClassVar[int]
+    SCOPE_FIELD_NUMBER: _ClassVar[int]
+    TEMPLATE_VERSION_FIELD_NUMBER: _ClassVar[int]
+    REVISION_FIELD_NUMBER: _ClassVar[int]
+    fact_id: str
+    space_id: _identity_pb2.SpaceId
+    record_id: str
+    key: str
+    value: _cluster_state_pb2.AttributeValue
+    unknown: bool
+    answerer: Party
+    necessity: Necessity
+    feature: Feature
+    provenance: Provenance
+    scope: FactScope
+    template_version: int
+    revision: int
+    def __init__(self, fact_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., key: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., unknown: _Optional[bool] = ..., answerer: _Optional[_Union[Party, str]] = ..., necessity: _Optional[_Union[Necessity, str]] = ..., feature: _Optional[_Union[Feature, str]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., scope: _Optional[_Union[FactScope, str]] = ..., template_version: _Optional[int] = ..., revision: _Optional[int] = ...) -> None: ...
+
+class TemplateFact(_message.Message):
+    __slots__ = ("key", "subject_label", "value", "provenance")
+    KEY_FIELD_NUMBER: _ClassVar[int]
+    SUBJECT_LABEL_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    PROVENANCE_FIELD_NUMBER: _ClassVar[int]
+    key: str
+    subject_label: str
+    value: _cluster_state_pb2.AttributeValue
+    provenance: Provenance
+    def __init__(self, key: _Optional[str] = ..., subject_label: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ...) -> None: ...
+
+class HouseTemplate(_message.Message):
+    __slots__ = ("template_id", "building_id", "name", "version", "facts")
+    TEMPLATE_ID_FIELD_NUMBER: _ClassVar[int]
+    BUILDING_ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    FACTS_FIELD_NUMBER: _ClassVar[int]
+    template_id: str
+    building_id: _identity_pb2.SpaceId
+    name: str
+    version: int
+    facts: _containers.RepeatedCompositeFieldContainer[TemplateFact]
+    def __init__(self, template_id: _Optional[str] = ..., building_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., version: _Optional[int] = ..., facts: _Optional[_Iterable[_Union[TemplateFact, _Mapping]]] = ...) -> None: ...
+
+class Need(_message.Message):
+    __slots__ = ("fact_key", "test", "space_id", "record_id", "answerer")
+    FACT_KEY_FIELD_NUMBER: _ClassVar[int]
+    TEST_FIELD_NUMBER: _ClassVar[int]
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    ANSWERER_FIELD_NUMBER: _ClassVar[int]
+    fact_key: str
+    test: TestKind
+    space_id: _identity_pb2.SpaceId
+    record_id: str
+    answerer: Party
+    def __init__(self, fact_key: _Optional[str] = ..., test: _Optional[_Union[TestKind, str]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., answerer: _Optional[_Union[Party, str]] = ...) -> None: ...
+
+class FeatureBlock(_message.Message):
+    __slots__ = ("reason", "record_id", "device_id")
+    REASON_FIELD_NUMBER: _ClassVar[int]
+    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
+    reason: BlockReason
+    record_id: str
+    device_id: _identity_pb2.DeviceId
+    def __init__(self, reason: _Optional[_Union[BlockReason, str]] = ..., record_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
+
+class FeatureStatus(_message.Message):
+    __slots__ = ("feature", "state", "needs", "blocks")
+    FEATURE_FIELD_NUMBER: _ClassVar[int]
+    STATE_FIELD_NUMBER: _ClassVar[int]
+    NEEDS_FIELD_NUMBER: _ClassVar[int]
+    BLOCKS_FIELD_NUMBER: _ClassVar[int]
+    feature: Feature
+    state: FeatureState
+    needs: _containers.RepeatedCompositeFieldContainer[Need]
+    blocks: _containers.RepeatedCompositeFieldContainer[FeatureBlock]
+    def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ...) -> None: ...
+
+class CommissioningTest(_message.Message):
+    __slots__ = ("test_id", "kind", "record_id", "field", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded")
+    TEST_ID_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    FIELD_FIELD_NUMBER: _ClassVar[int]
+    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
+    STATE_FIELD_NUMBER: _ClassVar[int]
+    FAILURE_FIELD_NUMBER: _ClassVar[int]
+    STARTED_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDS_AT_FIELD_NUMBER: _ClassVar[int]
+    FINISHED_AT_FIELD_NUMBER: _ClassVar[int]
+    PROVENANCE_FIELD_NUMBER: _ClassVar[int]
+    SUPERSEDED_FIELD_NUMBER: _ClassVar[int]
+    test_id: str
+    kind: TestKind
+    record_id: str
+    field: str
+    device_id: _identity_pb2.DeviceId
+    state: TestState
+    failure: TestFailure
+    started_at: _timestamp_pb2.Timestamp
+    ends_at: _timestamp_pb2.Timestamp
+    finished_at: _timestamp_pb2.Timestamp
+    provenance: Provenance
+    superseded: bool
+    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., record_id: _Optional[str] = ..., field: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ...) -> None: ...
+
+class CommissioningProfile(_message.Message):
+    __slots__ = ("space_id", "facts", "tests", "features", "template_id", "template", "needs_withheld")
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    FACTS_FIELD_NUMBER: _ClassVar[int]
+    TESTS_FIELD_NUMBER: _ClassVar[int]
+    FEATURES_FIELD_NUMBER: _ClassVar[int]
+    TEMPLATE_ID_FIELD_NUMBER: _ClassVar[int]
+    TEMPLATE_FIELD_NUMBER: _ClassVar[int]
+    NEEDS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    space_id: _identity_pb2.SpaceId
+    facts: _containers.RepeatedCompositeFieldContainer[CommissioningFact]
+    tests: _containers.RepeatedCompositeFieldContainer[CommissioningTest]
+    features: _containers.RepeatedCompositeFieldContainer[FeatureStatus]
+    template_id: str
+    template: HouseTemplate
+    needs_withheld: bool
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template_id: _Optional[str] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ...) -> None: ...
+
+class HomeSetup(_message.Message):
+    __slots__ = ("home_id", "set_up")
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
+    SET_UP_FIELD_NUMBER: _ClassVar[int]
+    home_id: _identity_pb2.SpaceId
+    set_up: bool
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., set_up: _Optional[bool] = ...) -> None: ...
+
+class HomeSetups(_message.Message):
+    __slots__ = ("homes",)
+    HOMES_FIELD_NUMBER: _ClassVar[int]
+    homes: _containers.RepeatedCompositeFieldContainer[HomeSetup]
+    def __init__(self, homes: _Optional[_Iterable[_Union[HomeSetup, _Mapping]]] = ...) -> None: ...
+
+class CommissioningRecord(_message.Message):
+    __slots__ = ("fact", "test", "template")
+    FACT_FIELD_NUMBER: _ClassVar[int]
+    TEST_FIELD_NUMBER: _ClassVar[int]
+    TEMPLATE_FIELD_NUMBER: _ClassVar[int]
+    fact: CommissioningFact
+    test: CommissioningTest
+    template: HouseTemplate
+    def __init__(self, fact: _Optional[_Union[CommissioningFact, _Mapping]] = ..., test: _Optional[_Union[CommissioningTest, _Mapping]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ...) -> None: ...

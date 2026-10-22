@@ -6,6 +6,7 @@ import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/accountlink/v1/account_link.proto";
 import "kusinta/iot/climate/v1/climate.proto";
+import "kusinta/iot/commissioning/v1/commissioning.proto";
 import "kusinta/iot/common/v1/pairing.proto";
 import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/device/v1/device_event.proto";
@@ -182,6 +183,12 @@ message ManagementResult {
     // request_account_link_nonce
     kusinta.iot.accountlink.v1.AccountLinkNonce account_link_nonce = 17;
     kusinta.iot.accountlink.v1.AccountLinks account_links = 18; // list_account_links
+    // list_commissioning
+    kusinta.iot.commissioning.v1.CommissioningProfile commissioning_profile = 19;
+    // put_commissioning_fact, put_house_template, run_commissioning_test,
+    // conclude_commissioning_test
+    kusinta.iot.commissioning.v1.CommissioningRecord commissioning_record = 20;
+    kusinta.iot.commissioning.v1.HomeSetups home_setups = 21; // list_home_setups
   }
 }
 
@@ -419,6 +426,9 @@ message GatewayMessage {
     // The promotion requests the session's user made or was asked to accept changed; see
     // PromotionRequests.
     PromotionRequests promotion_requests = 25;
+    // A commissioning test changed state: to every session whose user is given it
+    // (commissioning.v1).
+    kusinta.iot.commissioning.v1.CommissioningTest commissioning_test = 26;
   }
 }
 

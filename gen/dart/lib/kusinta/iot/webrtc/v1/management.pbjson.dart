@@ -1192,6 +1192,167 @@ final $typed_data.Uint8List unlinkAccountDescriptor = $convert.base64Decode(
     '52MS5TcGFjZUlkUgZob21lSWQSQwoHc2VydmljZRgCIAEoDjIpLmt1c2ludGEuaW90LmFjY291'
     'bnRsaW5rLnYxLkxpbmtlZFNlcnZpY2VSB3NlcnZpY2U=');
 
+@$core.Deprecated('Use listCommissioningDescriptor instead')
+const ListCommissioning$json = {
+  '1': 'ListCommissioning',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListCommissioning`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listCommissioningDescriptor = $convert.base64Decode(
+    'ChFMaXN0Q29tbWlzc2lvbmluZxI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
+    '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQ=');
+
+@$core.Deprecated('Use putCommissioningFactDescriptor instead')
+const PutCommissioningFact$json = {
+  '1': 'PutCommissioningFact',
+  '2': [
+    {
+      '1': 'fact',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningFact',
+      '10': 'fact'
+    },
+  ],
+};
+
+/// Descriptor for `PutCommissioningFact`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putCommissioningFactDescriptor = $convert.base64Decode(
+    'ChRQdXRDb21taXNzaW9uaW5nRmFjdBJDCgRmYWN0GAEgASgLMi8ua3VzaW50YS5pb3QuY29tbW'
+    'lzc2lvbmluZy52MS5Db21taXNzaW9uaW5nRmFjdFIEZmFjdA==');
+
+@$core.Deprecated('Use removeCommissioningFactDescriptor instead')
+const RemoveCommissioningFact$json = {
+  '1': 'RemoveCommissioningFact',
+  '2': [
+    {'1': 'fact_id', '3': 1, '4': 1, '5': 9, '10': 'factId'},
+    {'1': 'revision', '3': 2, '4': 1, '5': 4, '10': 'revision'},
+  ],
+};
+
+/// Descriptor for `RemoveCommissioningFact`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List removeCommissioningFactDescriptor =
+    $convert.base64Decode(
+        'ChdSZW1vdmVDb21taXNzaW9uaW5nRmFjdBIXCgdmYWN0X2lkGAEgASgJUgZmYWN0SWQSGgoIcm'
+        'V2aXNpb24YAiABKARSCHJldmlzaW9u');
+
+@$core.Deprecated('Use putHouseTemplateDescriptor instead')
+const PutHouseTemplate$json = {
+  '1': 'PutHouseTemplate',
+  '2': [
+    {
+      '1': 'template',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.HouseTemplate',
+      '10': 'template'
+    },
+  ],
+};
+
+/// Descriptor for `PutHouseTemplate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putHouseTemplateDescriptor = $convert.base64Decode(
+    'ChBQdXRIb3VzZVRlbXBsYXRlEkcKCHRlbXBsYXRlGAEgASgLMisua3VzaW50YS5pb3QuY29tbW'
+    'lzc2lvbmluZy52MS5Ib3VzZVRlbXBsYXRlUgh0ZW1wbGF0ZQ==');
+
+@$core.Deprecated('Use setHomeTemplateDescriptor instead')
+const SetHomeTemplate$json = {
+  '1': 'SetHomeTemplate',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {'1': 'template_id', '3': 2, '4': 1, '5': 9, '10': 'templateId'},
+  ],
+};
+
+/// Descriptor for `SetHomeTemplate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setHomeTemplateDescriptor = $convert.base64Decode(
+    'Cg9TZXRIb21lVGVtcGxhdGUSOQoHaG9tZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aX'
+    'R5LnYxLlNwYWNlSWRSBmhvbWVJZBIfCgt0ZW1wbGF0ZV9pZBgCIAEoCVIKdGVtcGxhdGVJZA==');
+
+@$core.Deprecated('Use runCommissioningTestDescriptor instead')
+const RunCommissioningTest$json = {
+  '1': 'RunCommissioningTest',
+  '2': [
+    {
+      '1': 'kind',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.TestKind',
+      '10': 'kind'
+    },
+    {'1': 'record_id', '3': 2, '4': 1, '5': 9, '10': 'recordId'},
+    {'1': 'field', '3': 3, '4': 1, '5': 9, '10': 'field'},
+  ],
+};
+
+/// Descriptor for `RunCommissioningTest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List runCommissioningTestDescriptor = $convert.base64Decode(
+    'ChRSdW5Db21taXNzaW9uaW5nVGVzdBI6CgRraW5kGAEgASgOMiYua3VzaW50YS5pb3QuY29tbW'
+    'lzc2lvbmluZy52MS5UZXN0S2luZFIEa2luZBIbCglyZWNvcmRfaWQYAiABKAlSCHJlY29yZElk'
+    'EhQKBWZpZWxkGAMgASgJUgVmaWVsZA==');
+
+@$core.Deprecated('Use concludeCommissioningTestDescriptor instead')
+const ConcludeCommissioningTest$json = {
+  '1': 'ConcludeCommissioningTest',
+  '2': [
+    {'1': 'test_id', '3': 1, '4': 1, '5': 9, '10': 'testId'},
+    {
+      '1': 'verdict',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.TestState',
+      '10': 'verdict'
+    },
+  ],
+};
+
+/// Descriptor for `ConcludeCommissioningTest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List concludeCommissioningTestDescriptor = $convert.base64Decode(
+    'ChlDb25jbHVkZUNvbW1pc3Npb25pbmdUZXN0EhcKB3Rlc3RfaWQYASABKAlSBnRlc3RJZBJBCg'
+    'd2ZXJkaWN0GAIgASgOMicua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5UZXN0U3RhdGVS'
+    'B3ZlcmRpY3Q=');
+
+@$core.Deprecated('Use listHomeSetupsDescriptor instead')
+const ListHomeSetups$json = {
+  '1': 'ListHomeSetups',
+  '2': [
+    {
+      '1': 'root_space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'rootSpaceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListHomeSetups`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listHomeSetupsDescriptor = $convert.base64Decode(
+    'Cg5MaXN0SG9tZVNldHVwcxJECg1yb290X3NwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaW'
+    'RlbnRpdHkudjEuU3BhY2VJZFILcm9vdFNwYWNlSWQ=');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -1629,6 +1790,78 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'unlinkAccount'
     },
+    {
+      '1': 'list_commissioning',
+      '3': 49,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListCommissioning',
+      '9': 0,
+      '10': 'listCommissioning'
+    },
+    {
+      '1': 'put_commissioning_fact',
+      '3': 50,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutCommissioningFact',
+      '9': 0,
+      '10': 'putCommissioningFact'
+    },
+    {
+      '1': 'remove_commissioning_fact',
+      '3': 51,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RemoveCommissioningFact',
+      '9': 0,
+      '10': 'removeCommissioningFact'
+    },
+    {
+      '1': 'put_house_template',
+      '3': 52,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutHouseTemplate',
+      '9': 0,
+      '10': 'putHouseTemplate'
+    },
+    {
+      '1': 'set_home_template',
+      '3': 53,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetHomeTemplate',
+      '9': 0,
+      '10': 'setHomeTemplate'
+    },
+    {
+      '1': 'run_commissioning_test',
+      '3': 54,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RunCommissioningTest',
+      '9': 0,
+      '10': 'runCommissioningTest'
+    },
+    {
+      '1': 'conclude_commissioning_test',
+      '3': 55,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ConcludeCommissioningTest',
+      '9': 0,
+      '10': 'concludeCommissioningTest'
+    },
+    {
+      '1': 'list_home_setups',
+      '3': 56,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListHomeSetups',
+      '9': 0,
+      '10': 'listHomeSetups'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1713,4 +1946,18 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     '5vbmNlSABSF3JlcXVlc3RBY2NvdW50TGlua05vbmNlElcKEmxpc3RfYWNjb3VudF9saW5rcxgv'
     'IAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5MaXN0QWNjb3VudExpbmtzSABSEGxpc3RBY2'
     'NvdW50TGlua3MSTQoOdW5saW5rX2FjY291bnQYMCABKAsyJC5rdXNpbnRhLmlvdC53ZWJydGMu'
-    'djEuVW5saW5rQWNjb3VudEgAUg11bmxpbmtBY2NvdW50QgkKB3JlcXVlc3Q=');
+    'djEuVW5saW5rQWNjb3VudEgAUg11bmxpbmtBY2NvdW50ElkKEmxpc3RfY29tbWlzc2lvbmluZx'
+    'gxIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5MaXN0Q29tbWlzc2lvbmluZ0gAUhFsaXN0'
+    'Q29tbWlzc2lvbmluZxJjChZwdXRfY29tbWlzc2lvbmluZ19mYWN0GDIgASgLMisua3VzaW50YS'
+    '5pb3Qud2VicnRjLnYxLlB1dENvbW1pc3Npb25pbmdGYWN0SABSFHB1dENvbW1pc3Npb25pbmdG'
+    'YWN0EmwKGXJlbW92ZV9jb21taXNzaW9uaW5nX2ZhY3QYMyABKAsyLi5rdXNpbnRhLmlvdC53ZW'
+    'JydGMudjEuUmVtb3ZlQ29tbWlzc2lvbmluZ0ZhY3RIAFIXcmVtb3ZlQ29tbWlzc2lvbmluZ0Zh'
+    'Y3QSVwoScHV0X2hvdXNlX3RlbXBsYXRlGDQgASgLMicua3VzaW50YS5pb3Qud2VicnRjLnYxLl'
+    'B1dEhvdXNlVGVtcGxhdGVIAFIQcHV0SG91c2VUZW1wbGF0ZRJUChFzZXRfaG9tZV90ZW1wbGF0'
+    'ZRg1IAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZXRIb21lVGVtcGxhdGVIAFIPc2V0SG'
+    '9tZVRlbXBsYXRlEmMKFnJ1bl9jb21taXNzaW9uaW5nX3Rlc3QYNiABKAsyKy5rdXNpbnRhLmlv'
+    'dC53ZWJydGMudjEuUnVuQ29tbWlzc2lvbmluZ1Rlc3RIAFIUcnVuQ29tbWlzc2lvbmluZ1Rlc3'
+    'QScgobY29uY2x1ZGVfY29tbWlzc2lvbmluZ190ZXN0GDcgASgLMjAua3VzaW50YS5pb3Qud2Vi'
+    'cnRjLnYxLkNvbmNsdWRlQ29tbWlzc2lvbmluZ1Rlc3RIAFIZY29uY2x1ZGVDb21taXNzaW9uaW'
+    '5nVGVzdBJRChBsaXN0X2hvbWVfc2V0dXBzGDggASgLMiUua3VzaW50YS5pb3Qud2VicnRjLnYx'
+    'Lkxpc3RIb21lU2V0dXBzSABSDmxpc3RIb21lU2V0dXBzQgkKB3JlcXVlc3Q=');

@@ -317,13 +317,42 @@ which the contact is closed. That is a wiring fact, not a device fact: a relay w
 its normally closed contact closes it with the channel off. The gateway reads every state of
 a role through it. It drives an output only while its producer states it leased with a lapse
 value that leaves the contact where the role rests (checked at every drive, not only at
-binding), and only once it has passed its commissioning test. An output that stops being
+binding), and only while it holds a current pass of its commissioning test (below). An output that stops being
 bound gets its lapse value written at once.
 In a home the records are given only to its residents and to an installer under a
 commissioning grant, never to service.
 
 Room history keeps a zone's heating in its own field (`floor_heating_seconds`), apart from
 valve opening.
+
+## Commissioning
+
+`commissioning/v1/commissioning.proto` holds what is known about how a home's heating was
+built, the tests the gateway has run on its outputs, and which features work because of them.
+
+- **Facts:** one answer per key, about a space or a heating record in it, with its
+  **provenance** (which party, what evidence, when, by whom). "Don't know" is an answer. The
+  gateway's catalogue defines the keys; the ones a safety rule depends on are fixed in the
+  proto: pump protection, how many floor zones may switch on at once, actuator travel time,
+  fallback ceiling thermostat, maximum block length.
+- **House facts and household data:** what an installer confirmed or the gateway measured
+  describes the house and survives a household handover; what the household answered is
+  wiped with it.
+- **Templates:** the owner organisation describes each house type once
+  (`PutHouseTemplate`, versioned) and says which homes follow it (`SetHomeTemplate`). A home's
+  fact that departs from it names the template version. The owner organisation never sees a
+  home's facts or deviations, only whether it is set up (`ListHomeSetups`).
+- **Feature states:** per home, each feature works, **needs** a fact or a test from a named
+  party, or is **blocked for safety** with a reason. Residents who are not a household admin
+  see states and blocks, not to-dos.
+- **Tests:** the gateway runs them on one binding (`RunCommissioningTest`), every write
+  leased to end by the test's `ends_at`. **OUTPUT_LEASE** (C1) proves an output leaves rest,
+  holds through a renewal and returns to rest when the lease lapses, and an output is driven
+  only while it holds a current pass. A pass ends when the binding or the device changes, or
+  a floor zone's rooms or control room change. **ZONE_EFFECT** (C2) checks that a zone heats
+  its control room. **PUMP_ALL_ZONES_OFF** (C3) holds a floor circuit's zones off while an
+  installer watches the pump, and their verdict (`ConcludeCommissioningTest`) sets the pump
+  fact. State changes are pushed (`GatewayMessage.commissioning_test`).
 
 ## Linking a third-party account
 
