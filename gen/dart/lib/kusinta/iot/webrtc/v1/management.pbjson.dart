@@ -965,6 +965,155 @@ final $typed_data.Uint8List reconnectConnectorDescriptor = $convert.base64Decode
     'ChJSZWNvbm5lY3RDb25uZWN0b3ISRwoMY29ubmVjdG9yX2lkGAEgASgLMiQua3VzaW50YS5pb3'
     'QuaWRlbnRpdHkudjEuQ29ubmVjdG9ySWRSC2Nvbm5lY3Rvcklk');
 
+@$core.Deprecated('Use listHeatingDescriptor instead')
+const ListHeating$json = {
+  '1': 'ListHeating',
+  '2': [
+    {
+      '1': 'root_space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'rootSpaceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListHeating`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listHeatingDescriptor = $convert.base64Decode(
+    'CgtMaXN0SGVhdGluZxJECg1yb290X3NwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbn'
+    'RpdHkudjEuU3BhY2VJZFILcm9vdFNwYWNlSWQ=');
+
+@$core.Deprecated('Use putHeatingPlantDescriptor instead')
+const PutHeatingPlant$json = {
+  '1': 'PutHeatingPlant',
+  '2': [
+    {
+      '1': 'plant',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatingPlant',
+      '10': 'plant'
+    },
+  ],
+};
+
+/// Descriptor for `PutHeatingPlant`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putHeatingPlantDescriptor = $convert.base64Decode(
+    'Cg9QdXRIZWF0aW5nUGxhbnQSOgoFcGxhbnQYASABKAsyJC5rdXNpbnRhLmlvdC5oZWF0aW5nLn'
+    'YxLkhlYXRpbmdQbGFudFIFcGxhbnQ=');
+
+@$core.Deprecated('Use putHeatingCircuitDescriptor instead')
+const PutHeatingCircuit$json = {
+  '1': 'PutHeatingCircuit',
+  '2': [
+    {
+      '1': 'circuit',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatingCircuit',
+      '10': 'circuit'
+    },
+  ],
+};
+
+/// Descriptor for `PutHeatingCircuit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putHeatingCircuitDescriptor = $convert.base64Decode(
+    'ChFQdXRIZWF0aW5nQ2lyY3VpdBJACgdjaXJjdWl0GAEgASgLMiYua3VzaW50YS5pb3QuaGVhdG'
+    'luZy52MS5IZWF0aW5nQ2lyY3VpdFIHY2lyY3VpdA==');
+
+@$core.Deprecated('Use putFloorZoneDescriptor instead')
+const PutFloorZone$json = {
+  '1': 'PutFloorZone',
+  '2': [
+    {
+      '1': 'zone',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorZone',
+      '10': 'zone'
+    },
+  ],
+};
+
+/// Descriptor for `PutFloorZone`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putFloorZoneDescriptor = $convert.base64Decode(
+    'CgxQdXRGbG9vclpvbmUSNQoEem9uZRgBIAEoCzIhLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRm'
+    'xvb3Jab25lUgR6b25l');
+
+@$core.Deprecated('Use putComfortLoadDescriptor instead')
+const PutComfortLoad$json = {
+  '1': 'PutComfortLoad',
+  '2': [
+    {
+      '1': 'comfort_load',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ComfortLoad',
+      '10': 'comfortLoad'
+    },
+  ],
+};
+
+/// Descriptor for `PutComfortLoad`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putComfortLoadDescriptor = $convert.base64Decode(
+    'Cg5QdXRDb21mb3J0TG9hZBJGCgxjb21mb3J0X2xvYWQYASABKAsyIy5rdXNpbnRhLmlvdC5oZW'
+    'F0aW5nLnYxLkNvbWZvcnRMb2FkUgtjb21mb3J0TG9hZA==');
+
+@$core.Deprecated('Use removeHeatingRecordDescriptor instead')
+const RemoveHeatingRecord$json = {
+  '1': 'RemoveHeatingRecord',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    {'1': 'revision', '3': 2, '4': 1, '5': 4, '10': 'revision'},
+  ],
+};
+
+/// Descriptor for `RemoveHeatingRecord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List removeHeatingRecordDescriptor = $convert.base64Decode(
+    'ChNSZW1vdmVIZWF0aW5nUmVjb3JkEg4KAmlkGAEgASgJUgJpZBIaCghyZXZpc2lvbhgCIAEoBF'
+    'IIcmV2aXNpb24=');
+
+@$core.Deprecated('Use setComfortWindowsDescriptor instead')
+const SetComfortWindows$json = {
+  '1': 'SetComfortWindows',
+  '2': [
+    {'1': 'comfort_load_id', '3': 1, '4': 1, '5': 9, '10': 'comfortLoadId'},
+    {
+      '1': 'windows',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ComfortWindow',
+      '10': 'windows'
+    },
+    {
+      '1': 'windows_revision',
+      '3': 3,
+      '4': 1,
+      '5': 4,
+      '9': 0,
+      '10': 'windowsRevision',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_windows_revision'},
+  ],
+};
+
+/// Descriptor for `SetComfortWindows`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setComfortWindowsDescriptor = $convert.base64Decode(
+    'ChFTZXRDb21mb3J0V2luZG93cxImCg9jb21mb3J0X2xvYWRfaWQYASABKAlSDWNvbWZvcnRMb2'
+    'FkSWQSPwoHd2luZG93cxgCIAMoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tZm9ydFdp'
+    'bmRvd1IHd2luZG93cxIuChB3aW5kb3dzX3JldmlzaW9uGAMgASgESABSD3dpbmRvd3NSZXZpc2'
+    'lvbogBAUITChFfd2luZG93c19yZXZpc2lvbg==');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -1312,6 +1461,69 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'listPromotionRequests'
     },
+    {
+      '1': 'list_heating',
+      '3': 39,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListHeating',
+      '9': 0,
+      '10': 'listHeating'
+    },
+    {
+      '1': 'put_heating_plant',
+      '3': 40,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutHeatingPlant',
+      '9': 0,
+      '10': 'putHeatingPlant'
+    },
+    {
+      '1': 'put_heating_circuit',
+      '3': 41,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutHeatingCircuit',
+      '9': 0,
+      '10': 'putHeatingCircuit'
+    },
+    {
+      '1': 'put_floor_zone',
+      '3': 42,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutFloorZone',
+      '9': 0,
+      '10': 'putFloorZone'
+    },
+    {
+      '1': 'put_comfort_load',
+      '3': 43,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutComfortLoad',
+      '9': 0,
+      '10': 'putComfortLoad'
+    },
+    {
+      '1': 'remove_heating_record',
+      '3': 44,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RemoveHeatingRecord',
+      '9': 0,
+      '10': 'removeHeatingRecord'
+    },
+    {
+      '1': 'set_comfort_windows',
+      '3': 45,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetComfortWindows',
+      '9': 0,
+      '10': 'setComfortWindows'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1380,4 +1592,15 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'BSEHJlcXVlc3RQcm9tb3Rpb24SUwoQYW5zd2VyX3Byb21vdGlvbhglIAEoCzImLmt1c2ludGEu'
     'aW90LndlYnJ0Yy52MS5BbnN3ZXJQcm9tb3Rpb25IAFIPYW5zd2VyUHJvbW90aW9uEmYKF2xpc3'
     'RfcHJvbW90aW9uX3JlcXVlc3RzGCYgASgLMiwua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpc3RQ'
-    'cm9tb3Rpb25SZXF1ZXN0c0gAUhVsaXN0UHJvbW90aW9uUmVxdWVzdHNCCQoHcmVxdWVzdA==');
+    'cm9tb3Rpb25SZXF1ZXN0c0gAUhVsaXN0UHJvbW90aW9uUmVxdWVzdHMSRwoMbGlzdF9oZWF0aW'
+    '5nGCcgASgLMiIua3VzaW50YS5pb3Qud2VicnRjLnYxLkxpc3RIZWF0aW5nSABSC2xpc3RIZWF0'
+    'aW5nElQKEXB1dF9oZWF0aW5nX3BsYW50GCggASgLMiYua3VzaW50YS5pb3Qud2VicnRjLnYxLl'
+    'B1dEhlYXRpbmdQbGFudEgAUg9wdXRIZWF0aW5nUGxhbnQSWgoTcHV0X2hlYXRpbmdfY2lyY3Vp'
+    'dBgpIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5QdXRIZWF0aW5nQ2lyY3VpdEgAUhFwdX'
+    'RIZWF0aW5nQ2lyY3VpdBJLCg5wdXRfZmxvb3Jfem9uZRgqIAEoCzIjLmt1c2ludGEuaW90Lndl'
+    'YnJ0Yy52MS5QdXRGbG9vclpvbmVIAFIMcHV0Rmxvb3Jab25lElEKEHB1dF9jb21mb3J0X2xvYW'
+    'QYKyABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHV0Q29tZm9ydExvYWRIAFIOcHV0Q29t'
+    'Zm9ydExvYWQSYAoVcmVtb3ZlX2hlYXRpbmdfcmVjb3JkGCwgASgLMioua3VzaW50YS5pb3Qud2'
+    'VicnRjLnYxLlJlbW92ZUhlYXRpbmdSZWNvcmRIAFITcmVtb3ZlSGVhdGluZ1JlY29yZBJaChNz'
+    'ZXRfY29tZm9ydF93aW5kb3dzGC0gASgLMigua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldENvbW'
+    'ZvcnRXaW5kb3dzSABSEXNldENvbWZvcnRXaW5kb3dzQgkKB3JlcXVlc3Q=');

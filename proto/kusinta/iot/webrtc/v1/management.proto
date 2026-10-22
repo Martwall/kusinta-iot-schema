@@ -7,6 +7,7 @@ import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/common/v1/types.proto";
+import "kusinta/iot/heating/v1/heating.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
@@ -635,6 +636,91 @@ message ReconnectConnector {
   kusinta.iot.identity.v1.ConnectorId connector_id = 1;
 }
 
+// Lists the heating records (heating.v1) a caller may see under a space: unset
+// root_space_id lists every one the caller can reach. Answered with a HeatingLayout.
+message ListHeating {
+  kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+}
+
+// Creates a plant (empty plant_id) or replaces one. Answered with the HeatingRecord as
+// stored. The puts of heating records refuse, with metadata "reason":
+//
+//   INVALID_REQUEST
+//   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
+//   "ZONE_ROOMS_ACROSS_HOMES" a floor zone with rooms in two homes, or in a home and outside
+//                           homes.
+//   "ZONE_AREA_SHARES"      a floor zone with a room listed twice, a share of 0, or shares
+//                           that do not sum to 1000.
+//   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space; metadata "room_id" names it.
+//   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
+//   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
+//   "CONTROL_EMPTY"         a plant control that binds no input.
+//   "NO_ENDPOINT"           an attribute on the Matter branch with no endpoint_id.
+//   "WINDOWS_IN_PUT"        a comfort load put with windows (see SetComfortWindows).
+//
+//   FAILED_PRECONDITION
+//   "STALE_REVISION"        the record changed since the revision the request names.
+//   "CHILDREN_INVALID"      a plant or circuit put that would leave a record under it
+//                           invalid: a circuit with zones no longer a floor circuit, or a
+//                           space or plant change leaving a zone's room outside its plant.
+//   "OUTPUT_BOUND_TWICE"    an output already bound in another role or record.
+//   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
+//   "REST_STATE"            an output whose lapse value, read through closed_value, does not
+//                           leave the contact where its role rests.
+//
+// A refusal about one binding names it in metadata "field", by its proto field name:
+// "sg_ready_block", "sg_ready_boost", "add_on_heater_block", "meter", "output",
+// "supply_probe", "return_probe".
+//
+// A device or room the caller cannot reach, a parent it may not use (see heating.v1) and an
+// id that does not exist are all refused as NOT_ENTITLED with the same metadata, so no answer
+// tells one from another. HAS_CHILDREN, CHILDREN_INVALID and OUTPUT_BOUND_TWICE may count
+// records the caller cannot see — a zone in a home under a circuit outside it. That one bit
+// is accepted, as it is for the members listing; their metadata never names or counts such
+// a record.
+message PutHeatingPlant {
+  kusinta.iot.heating.v1.HeatingPlant plant = 1;
+}
+
+// Creates or replaces a circuit of a plant; as PutHeatingPlant.
+message PutHeatingCircuit {
+  kusinta.iot.heating.v1.HeatingCircuit circuit = 1;
+}
+
+// Creates or replaces a floor zone of a floor circuit; as PutHeatingPlant.
+message PutFloorZone {
+  kusinta.iot.heating.v1.FloorZone zone = 1;
+}
+
+// Creates or replaces a comfort load's room, name and output, keeping its windows; as
+// PutHeatingPlant.
+message PutComfortLoad {
+  kusinta.iot.heating.v1.ComfortLoad comfort_load = 1;
+}
+
+// Removes a heating record by its id, naming the revision it removes. Refused as
+// FAILED_PRECONDITION with metadata "reason" "STALE_REVISION" when it changed since, and
+// "HAS_CHILDREN" while records lie under it — a plant's circuits, a circuit's zones — so
+// nothing is removed that the caller did not name. Its outputs are returned to rest at once
+// (see heating.v1). Acked.
+message RemoveHeatingRecord {
+  string id = 1;
+  uint64 revision = 2;
+}
+
+// Replaces a comfort load's windows: a resident's setting, apart from the binding and its
+// revision. Answered with the HeatingRecord as stored. Refused as FAILED_PRECONDITION
+// "STALE_REVISION" when windows_revision is set and the windows changed since, and as
+// INVALID_REQUEST "WINDOW" for a window that ComfortWindow does not allow or more than 16.
+// From an installer under a commissioning grant, NOT_ENTITLED.
+message SetComfortWindows {
+  string comfort_load_id = 1;
+  repeated kusinta.iot.heating.v1.ComfortWindow windows = 2;
+
+  // The ComfortLoad.windows_revision these windows replace. Unset: whatever is stored.
+  optional uint64 windows_revision = 3;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -679,5 +765,13 @@ message ManagementRequest {
     RequestPromotion request_promotion = 36;
     AnswerPromotion answer_promotion = 37;
     ListPromotionRequests list_promotion_requests = 38;
+    // Heating records; see heating.v1.
+    ListHeating list_heating = 39;
+    PutHeatingPlant put_heating_plant = 40;
+    PutHeatingCircuit put_heating_circuit = 41;
+    PutFloorZone put_floor_zone = 42;
+    PutComfortLoad put_comfort_load = 43;
+    RemoveHeatingRecord remove_heating_record = 44;
+    SetComfortWindows set_comfort_windows = 45;
   }
 }

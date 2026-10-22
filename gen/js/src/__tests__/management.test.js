@@ -439,3 +439,59 @@ describe('ReconnectConnector', () => {
     expect(decoded.result).toMatchObject({ case: 'error', value: { metadata: { reason: 'TIMED_OUT' } } })
   })
 })
+
+describe('heating records', () => {
+  it('lists the heating under a space', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'listHeating', value: { rootSpaceId: { value: 'home-15' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'listHeating', value: { rootSpaceId: { value: 'home-15' } } })
+  })
+
+  it('puts a floor zone on its own, naming the revision it replaces', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'putFloorZone', value: { zone: { zoneId: 'zone-1', circuitId: 'circuit-1', revision: 3n } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'putFloorZone', value: { zone: { revision: 3n } } })
+  })
+
+  it('removes any heating record by its id, naming the revision it removes', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'removeHeatingRecord', value: { id: 'circuit-1', revision: 2n } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'removeHeatingRecord', value: { id: 'circuit-1', revision: 2n } })
+  })
+
+  it('sets a comfort load’s windows apart from its binding', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'setComfortWindows',
+        value: { comfortLoadId: 'load-1', windows: [{ weekdays: 0b1111111, startMinute: 300, endMinute: 420 }] },
+      },
+    })
+    expect(decoded.request).toMatchObject({ case: 'setComfortWindows', value: { windows: [{ startMinute: 300 }] } })
+  })
+
+  it('sets windows naming the windows revision they replace', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'setComfortWindows', value: { comfortLoadId: 'load-1', windowsRevision: 9n } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'setComfortWindows', value: { windowsRevision: 9n } })
+  })
+
+  it('answers a put with the one record as stored', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: { case: 'heatingRecord', value: { record: { case: 'plant', value: { plantId: 'plant-1', revision: 1n } } } },
+    })
+    expect(decoded.result).toMatchObject({ case: 'heatingRecord', value: { record: { case: 'plant' } } })
+  })
+
+  it('answers a listing with the layout', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-2',
+      result: { case: 'heatingLayout', value: { floorZones: [{ zoneId: 'zone-1' }] } },
+    })
+    expect(decoded.result).toMatchObject({ case: 'heatingLayout', value: { floorZones: [{ zoneId: 'zone-1' }] } })
+  })
+})

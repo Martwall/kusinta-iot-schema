@@ -1,0 +1,274 @@
+syntax = "proto3";
+
+package kusinta.iot.heating.v1;
+
+import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/device/v1/cluster_state.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// What heats a space, and which device outputs the building-server gateway may drive to
+// steer it: plants (heat sources), their circuits, the floor zones on a floor circuit and
+// the rooms each zone heats, and the comfort loads in rooms.
+//
+// No device is part of the heating by being filed in a room. A relay is nothing to the
+// heating until a record here binds one of its outputs to a role.
+//
+// Records are flat: a circuit names its plant, a floor zone its circuit, a comfort load its
+// room. Each is put, revisioned and authorized on its own, so a zone mapping, a plant's
+// inputs and a comfort load are edited by whoever may edit that record without touching
+// the others. Every record carries a revision, set by the gateway and bumped by every
+// change to it except a comfort load's windows, which have a revision of their own; a put
+// that replaces a record, and a remove, names the revision it acts on. Ids are assigned by
+// the gateway, unique among heating records, opaque and not sequential.
+//
+// Who may see and change them goes by the rooms a record names, not by the plant's space.
+// All of a floor zone's rooms lie in one home, or all lie outside homes. A floor zone or
+// comfort load naming a room in a home is that home's: given only to its residents and to
+// an installer under a commissioning grant for that home, changed by a household admin of
+// the home or that installer, whatever space its plant serves. Such a record may name a
+// parent the caller cannot see — a circuit of a central plant — as a bare id: a layout may
+// hold it without its parent, and a put of it needs no rights over the parent. Moving a
+// zone to another circuit does. Residents set a comfort load's windows; an installer under a
+// commissioning grant is given the comfort load without them (windows_withheld), since a
+// grant covers no comfort settings. A caller who reaches the home as service gets none of
+// these records, and a request naming one is refused as NOT_ENTITLED, however it is named.
+// A plant and its circuits are given to and changed by whoever holds those rights over the
+// plant's space: in a home as above; outside homes, the property owner and the gateway's
+// administrators. An output on a device the caller cannot reach — a zone relay at a central
+// manifold, outside the home — is bound by whoever can reach the device: the property owner,
+// the gateway's administrators, or an installer whose commissioning grant names it.
+//
+// The gateway drives a bound output only once it has passed its commissioning test, and
+// only while its producer states it as leased (device.v1.LeasedWrite) with a lapse value
+// that leaves the contact where its role rests. That is checked each time it drives, not
+// only when the output is bound: an output whose producer stops stating it so, or whose
+// device is gone, is not driven until that changes. A floor zone whose control room is
+// deleted or no longer within its plant's space is not driven either, and keeps naming the
+// room until the record is put again. When an output stops being bound — its record
+// removed, or a put binding another output in its place — the gateway writes its lapse
+// value, ending any lease at once; where the device cannot be reached then, the lease
+// running out returns it to rest, and that is the guarantee.
+
+// One attribute of one device: what a role reads or writes. Endpoint_id is required on the
+// Matter branch of the attribute here — an absent endpoint is refused, never read as the
+// root node.
+message DeviceAttribute {
+  kusinta.iot.identity.v1.DeviceId device_id = 1;
+  kusinta.iot.access.v1.AttributeRef attribute = 2;
+}
+
+// One device output switching one contact on the heating side: a floor zone's thermostat
+// input, a heat-source input, a comfort load's supply.
+message ContactBinding {
+  // OnOff on a relay channel, or a vendor parameter.
+  DeviceAttribute output = 1;
+
+  // The value of the output with which the contact is closed. A wiring fact, not a device
+  // fact: a changeover relay wired through its normally closed contact closes it with the
+  // channel off, so OnOff false. The producer cannot know it; whoever wires the relay
+  // states it, and the gateway reads every state of the role through it — never from the
+  // output's value alone.
+  //
+  // Each role has a fixed rest state (see the role), and the output's lapse value
+  // (device.v1.LeasedWrite.lapse_value), read through this value, must leave the contact
+  // where the role rests. Every comparison with this value matches type as well as value:
+  // an int 0 is not a bool false.
+  kusinta.iot.device.v1.AttributeValue closed_value = 2;
+}
+
+enum HeatSourceKind {
+  HEAT_SOURCE_KIND_UNSPECIFIED = 0;
+  HEAT_SOURCE_KIND_EXHAUST_AIR_HEAT_PUMP = 1;
+  HEAT_SOURCE_KIND_GROUND_SOURCE_HEAT_PUMP = 2;
+  HEAT_SOURCE_KIND_AIR_WATER_HEAT_PUMP = 3;
+  HEAT_SOURCE_KIND_DISTRICT_HEATING = 4;
+  HEAT_SOURCE_KIND_ELECTRIC_BOILER = 5;
+  HEAT_SOURCE_KIND_FUEL_BOILER = 6;
+}
+
+// One heat source.
+message HeatingPlant {
+  // Assigned by the gateway, unique among heating records; empty when creating.
+  string plant_id = 1;
+
+  // The space the plant serves: a home, or a space outside homes for a central plant.
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
+
+  string name = 3;
+  HeatSourceKind source = 4;
+
+  // The device the heat source's own readings come from — its temperatures, compressor and
+  // hot-water state — when it has one. Read only: the gateway drives a heat source through
+  // the plant's control, never through this device.
+  kusinta.iot.identity.v1.DeviceId readings_device_id = 5;
+
+  // How the gateway steers the heat source. Unset: it does not; the plant is read only. A
+  // control set binds at least one input.
+  oneof control {
+    HeatPumpControl heat_pump = 6;
+  }
+
+  // The electricity or heat meter the plant is measured by.
+  DeviceAttribute meter = 7;
+
+  // See the file comment.
+  uint64 revision = 8;
+}
+
+// A heat pump's control inputs.
+message HeatPumpControl {
+  // The SG Ready inputs, by what each means closed alone: sg_ready_block closed alone
+  // blocks the heat pump, sg_ready_boost closed alone recommends running harder, both
+  // closed commands it to, and both open is normal operation. Both rest open, so a lapsed
+  // lease or a stopped gateway leaves the heat pump running normally. Bound together or not
+  // at all.
+  //
+  // They lapse separately, so their leases are ordered: while both are closed, the gateway
+  // gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
+  // through "blocked" on its way back to normal. In general, of two bound inputs, the one
+  // whose half-state blocks heat never lapses last.
+  ContactBinding sg_ready_block = 1;
+  ContactBinding sg_ready_boost = 2;
+
+  // The input that blocks the heat pump's add-on (electric) heater while closed. Rests
+  // open: the add-on heater is allowed.
+  ContactBinding add_on_heater_block = 3;
+}
+
+// One heating circuit of a plant. Supply temperature and its cap are per circuit.
+message HeatingCircuit {
+  // Assigned by the gateway, unique among heating records; empty when creating.
+  string circuit_id = 1;
+
+  string plant_id = 2;
+  string name = 3;
+
+  oneof distribution {
+    RadiatorCircuit radiator = 4;
+    FloorCircuit floor = 5;
+  }
+
+  // See the file comment.
+  uint64 revision = 6;
+}
+
+// A radiator circuit. Its valves belong to the rooms (climate.v1.RoomClimate).
+message RadiatorCircuit {}
+
+// Hydronic floor heating: its own pump, mixing and supply cap, and the floor zones on its
+// manifold.
+message FloorCircuit {
+  // Whether a mixing valve feeds the circuit.
+  bool mixing_valve = 1;
+
+  // The supply temperature its self-acting limiter caps it at, in centidegrees. Absent: not
+  // known, never 0 °C.
+  optional sint32 supply_cap_centidegrees = 2;
+
+  // Probes on the supply (after mixing) and the return.
+  DeviceAttribute supply_probe = 3;
+  DeviceAttribute return_probe = 4;
+}
+
+// One loop or group of loops on a floor circuit's manifold, switched by one output on its
+// wiring centre's thermostat input. The output's contact closed means the zone heats, and it
+// rests closed: when the gateway is gone the zone heats, capped only by the circuit's supply
+// limiter.
+message FloorZone {
+  // Assigned by the gateway, unique among heating records; empty when creating.
+  string zone_id = 1;
+
+  // A FLOOR circuit.
+  string circuit_id = 2;
+
+  // As marked on the manifold or the drawing ("SL 2").
+  string name = 3;
+
+  // Where several zones share one device whose timer is device-wide (one delay for all its
+  // channels), the gateway renews the leases of all those zones in one go.
+  ContactBinding output = 4;
+
+  // The rooms the zone heats, each a room within its plant's space, listed once, with a
+  // share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
+  // be heated by several zones.
+  repeated FloorZoneRoom rooms = 5;
+
+  // One of rooms. Only its error, its sensor and its open window steer the zone.
+  kusinta.iot.identity.v1.SpaceId control_room_id = 6;
+
+  // See the file comment.
+  uint64 revision = 7;
+}
+
+message FloorZoneRoom {
+  kusinta.iot.identity.v1.SpaceId room_id = 1;
+
+  // This room's share of the zone's loop area, in thousandths.
+  uint32 area_share_permille = 2;
+}
+
+// An electric load kept warm for comfort rather than heating a room to a target — a heated
+// bathroom floor, a towel heater — run inside its time windows. Its output's contact closed
+// means the load may heat under its own thermostat, and it rests closed: when the gateway is
+// gone the load works as it did before.
+message ComfortLoad {
+  // Assigned by the gateway, unique among heating records; empty when creating.
+  string comfort_load_id = 1;
+
+  kusinta.iot.identity.v1.SpaceId room_id = 2;
+  string name = 3;
+  ContactBinding output = 4;
+
+  // When the load may heat: the union of its windows, at most 16. Empty: only when the
+  // plan allows it for price. Set with SetComfortWindows, never in a put, which keeps them.
+  // While the building's time zone is not known (space.v1.Space.time_zone unset) no window
+  // applies and the load is left at rest, heating under its own thermostat.
+  repeated ComfortWindow windows = 5;
+
+  // See the file comment.
+  uint64 revision = 6;
+
+  // Set by the gateway and bumped by every SetComfortWindows; see SetComfortWindows.
+  uint64 windows_revision = 7;
+
+  // Set when windows is left out for the recipient — an installer under a commissioning
+  // grant — so that an empty list is not read as "only when the plan allows it for price".
+  bool windows_withheld = 8;
+}
+
+// A recurring stretch of the building's local day (space.v1.Space.time_zone).
+message ComfortWindow {
+  // The days it starts on: bit 0 Monday through bit 6 Sunday, at least one, no higher bit.
+  // Not Matter's day bitmap, which starts on Sunday.
+  uint32 weekdays = 1;
+
+  // Minutes after local midnight: start 0–1439, end 1–1440 and exclusive, never equal, so 0
+  // to 1440 is a whole day. A window whose end is before its start runs past midnight into
+  // the next day.
+  //
+  // On a day that changes to or from daylight saving, minutes are local wall-clock time: a
+  // start or end in the skipped hour falls at the first minute after it, and a repeated
+  // hour counts once, at its first occurrence.
+  uint32 start_minute = 2;
+  uint32 end_minute = 3;
+}
+
+// The heating records a caller may see under a space, in reply to ListHeating.
+message HeatingLayout {
+  repeated HeatingPlant plants = 1;
+  repeated HeatingCircuit circuits = 2;
+  repeated FloorZone floor_zones = 3;
+  repeated ComfortLoad comfort_loads = 4;
+}
+
+// One heating record as stored, in reply to a put.
+message HeatingRecord {
+  oneof record {
+    HeatingPlant plant = 1;
+    HeatingCircuit circuit = 2;
+    FloorZone floor_zone = 3;
+    ComfortLoad comfort_load = 4;
+  }
+}

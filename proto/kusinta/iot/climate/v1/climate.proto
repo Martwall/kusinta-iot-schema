@@ -407,6 +407,13 @@ message RoomHistorySample {
 
   // The seconds within the bucket during which any of the room's valves was open.
   optional uint32 valve_open_seconds = 6;
+
+  // The seconds within the bucket during which any floor zone heating the room was heating
+  // (heating.v1.FloorZone), counted from the contact state the zone's output reports, read
+  // through its closed_value, not from what was commanded. Kept apart from the valve
+  // fields: a zone's duty and a valve's opening are different controls with different time
+  // scales. Absent where no floor zone heats the room.
+  optional uint32 floor_heating_seconds = 7;
 }
 
 // A room's history, in reply to GetRoomHistory.

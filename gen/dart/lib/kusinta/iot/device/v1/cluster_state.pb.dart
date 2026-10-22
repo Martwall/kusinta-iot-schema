@@ -671,12 +671,12 @@ enum AttributeBehaviour_Write { sticky, leased, notSet }
 /// case: a write whose kind is not stated is held as if sticky, and a reading whose latency
 /// is not stated is never treated as real-time.
 ///
-/// A gateway MUST NOT drive a heat source, a heating circuit or a floor zone through an
-/// attribute whose write kind is not stated here: it refuses the write. This is the
-/// opposite default to attribute_ids or a connector's known_links, where not stated only
-/// means not known; for an output that heats a home, not stated means no. Rollout order: a
-/// producer that carries such outputs states their behaviour before a gateway that drives
-/// them takes the release that enforces this.
+/// A consumer that drives an output while it may itself go quiet states its own rule for
+/// an output whose behaviour is not stated, and the rule is a refusal — the opposite default
+/// to attribute_ids or a connector's known_links, where not stated only means not known.
+/// heating.v1 is one: it binds no output whose write is not stated as leased. Rollout order:
+/// a producer states the behaviour of such outputs before a consumer that drives them takes
+/// the release that enforces its rule.
 class AttributeBehaviour extends $pb.GeneratedMessage {
   factory AttributeBehaviour({
     StickyWrite? sticky,

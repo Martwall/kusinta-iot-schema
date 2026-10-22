@@ -16,6 +16,8 @@ proto/
   device/          # DeviceDescriptor, per-type Properties messages, Device/Endpoint, PropertyUpdate
   space/           # Space (building hierarchy)
   access/          # Role, PermissionAction, DeviceAcl, EffectivePermissions
+  climate/         # RoomClimate, ClimateMode, room history, apartment summaries
+  heating/         # HeatingPlant, circuits, floor zones, comfort loads, contact bindings
   reporting/       # gateway → api-server reports: open problems, service reach, served spaces,
                    #   members, invite routes
   connector/       # ConnectorToGatewayMessage, GatewayToConnectorMessage, gRPC service
@@ -282,6 +284,46 @@ not reasons:
 What `condition` and `target_change` already say (a window, a lost sensor, who set the
 target) is never repeated in the list. In a home, all of this is withheld from service along
 with the rest of the room's state.
+
+## Heating records
+
+`heating/v1/heating.proto` says what heats a space and which device outputs the gateway may
+drive to steer it. A device is nothing to the heating for being filed in a room: a record
+binds one of its outputs to a role, by name. Records are flat, each naming its parent, and
+each is put (`PutHeatingPlant`, `PutHeatingCircuit`, `PutFloorZone`, `PutComfortLoad`) and
+revisioned on its own; any is removed with `RemoveHeatingRecord`, by revision, once nothing
+lies under it. Who may see a record goes by the rooms it names: a zone or comfort load in a
+home is that home's, whatever space its plant serves, and may name its parent as a bare id.
+A zone's rooms lie in one home, or all outside homes.
+
+- **Plant:** one heat source, the device its own readings come from, its meter and its
+  `control`. A heat pump is steered through its two **SG Ready** inputs (named by what each
+  means closed alone) and its **add-on heater block**. All three rest open, so the heat pump
+  runs normally whenever the gateway stops. A plant without control is read only.
+- **Circuit:** a radiator or a floor circuit. A floor circuit has its own mixing, supply cap
+  and supply and return probes.
+- **Floor zone:** one output on the wiring centre's thermostat input of a floor circuit. It
+  rests closed, so the zone heats when the gateway is gone. A zone may heat several rooms and
+  a room may have several zones. Area shares sum to 1000, and one **control room** alone
+  steers the zone.
+- **Comfort load:** a heated bathroom floor or towel heater, run in **time windows**
+  (minutes of the building's local day, end exclusive, so 0–1440 is a whole day) rather
+  than to a target. Residents set the windows (`SetComfortWindows`) under their own
+  `windows_revision`, apart from the binding. An installer under a commissioning grant sees
+  the load without them (`windows_withheld`).
+
+Every role is a **`ContactBinding`**: an output and `closed_value`, the output value with
+which the contact is closed. That is a wiring fact, not a device fact: a relay wired through
+its normally closed contact closes it with the channel off. The gateway reads every state of
+a role through it. It drives an output only while its producer states it leased with a lapse
+value that leaves the contact where the role rests (checked at every drive, not only at
+binding), and only once it has passed its commissioning test. An output that stops being
+bound gets its lapse value written at once.
+In a home the records are given only to its residents and to an installer under a
+commissioning grant, never to service.
+
+Room history keeps a zone's heating in its own field (`floor_heating_seconds`), apart from
+valve opening.
 
 ## Invites
 
@@ -569,9 +611,9 @@ it as current would be wrong, such as values a vendor's service hands on in batc
 Not stated is read as the worst case:
 - A write of unstated kind is held as if sticky.
 - A reading of unstated latency is never treated as real-time.
-- A gateway refuses to drive a heat source, heating circuit or floor zone through an
-  attribute whose write kind is not stated. This is the opposite default to `attribute_ids`
-  or `known_links`, where not stated only means not known.
+- A consumer that drives outputs while it may go quiet refuses one whose behaviour is not
+  stated. This is the opposite default to `attribute_ids` or `known_links`, where not stated
+  only means not known. The heating records are one: they bind only outputs stated leased.
 
 ## Field presence in properties
 

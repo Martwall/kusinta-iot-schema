@@ -465,6 +465,17 @@ export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHist
    * @generated from field: optional uint32 valve_open_seconds = 6;
    */
   valveOpenSeconds?: number | undefined;
+
+  /**
+   * The seconds within the bucket during which any floor zone heating the room was heating
+   * (heating.v1.FloorZone), counted from the contact state the zone's output reports, read
+   * through its closed_value, not from what was commanded. Kept apart from the valve
+   * fields: a zone's duty and a valve's opening are different controls with different time
+   * scales. Absent where no floor zone heats the room.
+   *
+   * @generated from field: optional uint32 floor_heating_seconds = 7;
+   */
+  floorHeatingSeconds?: number | undefined;
 };
 
 /**
