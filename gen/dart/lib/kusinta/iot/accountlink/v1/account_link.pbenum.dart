@@ -43,8 +43,10 @@ class AccountLinkOutcome extends $pb.ProtobufEnum {
       AccountLinkOutcome._(
           0, _omitEnumNames ? '' : 'ACCOUNT_LINK_OUTCOME_UNSPECIFIED');
 
-  /// Stored. A link the home already had at the same service is replaced, and its refresh
-  /// token revoked (RevokeToken).
+  /// Stored. A link the home already had at the same service is replaced. The gateway revokes
+  /// the replaced grant (RevokeToken) only once 30 seconds have passed with no
+  /// AccountLinkCancelled for this request_id; on a cancel within them, it restores the
+  /// replaced link.
   static const AccountLinkOutcome ACCOUNT_LINK_OUTCOME_LINKED =
       AccountLinkOutcome._(
           1, _omitEnumNames ? '' : 'ACCOUNT_LINK_OUTCOME_LINKED');

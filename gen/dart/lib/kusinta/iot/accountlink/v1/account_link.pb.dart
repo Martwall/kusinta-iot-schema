@@ -112,9 +112,12 @@ class AccountLinkNonce extends $pb.GeneratedMessage {
 /// thumbprint names is the current certificate of the gateway named by iss — or the one it
 /// replaced, for no more than 10 minutes after the renewal — and the signature by it, aud, svc
 /// and exp, and that sub_hash is the hash of the user posting the code. When the grant comes
-/// back, the gateway MUST verify the signature by its own key, that iss is itself, aud and
+/// back, the gateway MUST verify the signature by its own key — its current one, or the one
+/// it replaced for no more than 10 minutes after the renewal — that iss is itself, aud and
 /// exp, and then accept the nonce once, by its jti, for the home it recorded for that jti,
-/// and only while that user is still a household admin of the home.
+/// and only while that user is still a household admin of the home. exp is judged on the
+/// gateway's clock with no allowance for skew. A gateway that restarts mid-link may have
+/// lost its jti record and answer REJECTED; the household links again.
 class AccountLinkNonceClaims extends $pb.GeneratedMessage {
   factory AccountLinkNonceClaims({
     $core.String? iss,
@@ -643,13 +646,15 @@ class AccountLinkResult extends $pb.GeneratedMessage {
 /// Asks the api-server to refresh a grant, gateway → api-server. Answered with a TokenRefreshed
 /// carrying the same request_id.
 ///
-/// The gateway refreshes only when it needs a current access token for a read, and not
+/// The gateway refreshes only when it needs a current access token for a read — for a read
+/// by a connector, while a connector session reading through the link is open — and not
 /// before the access token is near its expiry, with a random margin, so that gateways do not
 /// refresh together; and it has at most one refresh of a grant in flight. A gateway with no
-/// answer asks again with the same request_id and refresh token.
+/// answer asks again with the same request_id and refresh token, for up to 10 minutes; after
+/// that it sends the old token no more, and the household links again.
 ///
 /// The api-server MUST keep its answer in memory, keyed by the requesting gateway's identity
-/// and a hash of the refresh token, for 60 seconds, and answer a repeated request from it
+/// and a hash of the refresh token, for 10 minutes, and answer a repeated request from it
 /// without asking the service: a service may rotate the refresh token, and a second exchange
 /// of the old one would end the link. Across several api-server instances that memory is
 /// shared, or a gateway's requests go to one instance. Nowhere else, and never in a log.
@@ -852,7 +857,9 @@ class TokenRefreshed extends $pb.GeneratedMessage {
 ///
 /// The gateway reads no more through the grant once it asks. It keeps only the refresh token,
 /// and only to ask again: after retry_after on UNAVAILABLE, until OK or REJECTED, and for no
-/// more than 7 days.
+/// more than 7 days. That pending revocation is stored encrypted, so it survives a restart,
+/// and it outlives a household handover's wipe and a gateway-wide wipe, which delete the
+/// grant itself: it is the only means left of ending the link at the service.
 class RevokeToken extends $pb.GeneratedMessage {
   factory RevokeToken({
     $core.String? requestId,
