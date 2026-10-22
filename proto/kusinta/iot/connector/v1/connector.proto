@@ -68,34 +68,56 @@ message ConnectorInfo {
   bool supports_backend_reinitialize = 12;
 
   // The linked services (accountlink.v1) whose accounts this connector reads devices from,
-  // with an access token the gateway hands it (CredentialsUpdate). The gateway sends a
-  // service's tokens to a connector that declares it, and to no other.
+  // with access tokens the gateway hands it (CredentialsUpdate). Declaring a service asks
+  // for its tokens; it does not earn them. The gateway sends a service's tokens only to a
+  // connector_id it has been configured to trust for that service, only after accepting
+  // its handshake, and to one live session at a time: a second session claiming the same
+  // service gets none, and a session that ends loses its links with it.
   repeated kusinta.iot.accountlink.v1.LinkedService consumes_credentials = 13;
 }
 
-// An access token for one home's linked account at a third-party service, handed to the
-// connector that reads that home's devices there. The gateway holds the token pair and
-// refreshes it; only the short-lived access token crosses, never a refresh token or a
-// client secret.
+// An access token for one account link (accountlink.v1): one home's grant at a third-party
+// service, handed to the connector that reads that home's devices there. The gateway holds
+// the token pair and refreshes it; only the short-lived access token crosses, never a
+// refresh token or a client secret. Neither side writes it to disk or a log, nor puts it in
+// BackendHealthReport.detail or an error message.
 //
-// Sent when a link is made, after every refresh, and after every handshake for every live
-// link of a declared service, so a restarted connector, which holds nothing, has it again.
-// The connector keeps it in memory only, never writes or logs it, and uses it for that link
-// alone. Once expires_at passes without a newer one, it stops reading the link and reports
-// the link's devices unreachable until an update arrives.
+// Sent after every refresh, at least five minutes before the previous token's expires_at,
+// and for a link made while the session is up. After a handshake, every live link arrives
+// in one CredentialsSnapshot instead.
+//
+// Once expires_at plus 60 seconds of clock skew passes without a newer token, the connector
+// stops reading the link and reports the link's devices unreachable, the way it reports any
+// unreachable device, until an update arrives. That is the link's state, not the backend's:
+// it does not put the backend in doubt or report it failing, and a connector with no live
+// link reports its backend OK.
 message CredentialsUpdate {
-  // Opaque and stable for the life of the link. It names no home, person or account; the
-  // connector keys the link's devices by it.
-  string link_id = 1;
+  // Opaque; it names no home, person or account. One id is one grant: replacing a link, or
+  // linking again after it needed relinking, mints a new id, and the old one is revoked
+  // (CredentialsRevoked). A cancelled replacement brings the old grant back under its old id
+  // with a fresh update. Not related to a device link's id (CreateLink).
+  string account_link_id = 1;
   kusinta.iot.accountlink.v1.LinkedService service = 2;
   string access_token = 3;
+  // Always set. When the service states no lifetime, the gateway states one of at most an
+  // hour.
   google.protobuf.Timestamp expires_at = 4;
 }
 
-// A link ended: unlinked, its home handed over, or wiped. The connector drops the token at
-// once, stops reading the link and removes its devices (DeviceRemoval).
+// Every live account link for the services this connector declares, sent once after each
+// accepted handshake and before any CredentialsUpdate on that session. Empty when there
+// are none. The connector drops every link it knows that is not listed, removing its
+// devices (DeviceRemoval), so a link that ended while the connector was away does not
+// survive the reconnect.
+message CredentialsSnapshot {
+  repeated CredentialsUpdate links = 1;
+}
+
+// An account link ended: unlinked, replaced, its home handed over, or wiped. Sent before the
+// gateway revokes the grant at the service. The connector drops the token at once, stops
+// reading the link and removes its devices (DeviceRemoval).
 message CredentialsRevoked {
-  string link_id = 1;
+  string account_link_id = 1;
 }
 
 message ConnectorHandshake {
@@ -318,6 +340,11 @@ message HandshakeAck {
   // backend health — the connector sends neither and works as before; such a gateway never
   // sends ReinitializeBackend.
   bool supports_backend_health = 4;
+
+  // The gateway sends account link tokens (CredentialsSnapshot, CredentialsUpdate) to a
+  // connector that declares ConnectorInfo.consumes_credentials and that it trusts for the
+  // service. Unset, no token will arrive on this session; the connector reads no link.
+  bool sends_credentials = 5;
 }
 
 // A device the connector has found. Carries the full Device, not just its descriptor,
@@ -346,6 +373,13 @@ message DeviceAnnouncement {
   // whoever forwards the outcome to the app has to map it back. The name avoids `in_reply_to`
   // for that reason, which everywhere else in this schema means the app's own message id.
   string pairing_request_id = 3;
+
+  // The account link (CredentialsUpdate) the device is read through, empty for a device
+  // that is not. The gateway files the device in that link's home and nowhere else. A
+  // device read through two links, as when two homes link the same account, is announced
+  // once per link under distinct device ids, each in its own home; revoking one link
+  // removes only that link's.
+  string account_link_id = 4;
 }
 
 message DeviceRemoval {
@@ -548,5 +582,6 @@ message SessionResponse {
     // A linked account's access token, and its end; see CredentialsUpdate.
     CredentialsUpdate credentials_update = 15;
     CredentialsRevoked credentials_revoked = 16;
+    CredentialsSnapshot credentials_snapshot = 17;
   }
 }

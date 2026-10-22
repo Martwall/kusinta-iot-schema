@@ -117,7 +117,7 @@ final $typed_data.Uint8List connectorInfoDescriptor = $convert.base64Decode(
 const CredentialsUpdate$json = {
   '1': 'CredentialsUpdate',
   '2': [
-    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {'1': 'account_link_id', '3': 1, '4': 1, '5': 9, '10': 'accountLinkId'},
     {
       '1': 'service',
       '3': 2,
@@ -140,23 +140,43 @@ const CredentialsUpdate$json = {
 
 /// Descriptor for `CredentialsUpdate`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List credentialsUpdateDescriptor = $convert.base64Decode(
-    'ChFDcmVkZW50aWFsc1VwZGF0ZRIXCgdsaW5rX2lkGAEgASgJUgZsaW5rSWQSQwoHc2VydmljZR'
-    'gCIAEoDjIpLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkxpbmtlZFNlcnZpY2VSB3NlcnZp'
-    'Y2USIQoMYWNjZXNzX3Rva2VuGAMgASgJUgthY2Nlc3NUb2tlbhI5CgpleHBpcmVzX2F0GAQgAS'
-    'gLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0F0');
+    'ChFDcmVkZW50aWFsc1VwZGF0ZRImCg9hY2NvdW50X2xpbmtfaWQYASABKAlSDWFjY291bnRMaW'
+    '5rSWQSQwoHc2VydmljZRgCIAEoDjIpLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkxpbmtl'
+    'ZFNlcnZpY2VSB3NlcnZpY2USIQoMYWNjZXNzX3Rva2VuGAMgASgJUgthY2Nlc3NUb2tlbhI5Cg'
+    'pleHBpcmVzX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0F0');
+
+@$core.Deprecated('Use credentialsSnapshotDescriptor instead')
+const CredentialsSnapshot$json = {
+  '1': 'CredentialsSnapshot',
+  '2': [
+    {
+      '1': 'links',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsUpdate',
+      '10': 'links'
+    },
+  ],
+};
+
+/// Descriptor for `CredentialsSnapshot`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List credentialsSnapshotDescriptor = $convert.base64Decode(
+    'ChNDcmVkZW50aWFsc1NuYXBzaG90EkEKBWxpbmtzGAEgAygLMisua3VzaW50YS5pb3QuY29ubm'
+    'VjdG9yLnYxLkNyZWRlbnRpYWxzVXBkYXRlUgVsaW5rcw==');
 
 @$core.Deprecated('Use credentialsRevokedDescriptor instead')
 const CredentialsRevoked$json = {
   '1': 'CredentialsRevoked',
   '2': [
-    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {'1': 'account_link_id', '3': 1, '4': 1, '5': 9, '10': 'accountLinkId'},
   ],
 };
 
 /// Descriptor for `CredentialsRevoked`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List credentialsRevokedDescriptor =
-    $convert.base64Decode(
-        'ChJDcmVkZW50aWFsc1Jldm9rZWQSFwoHbGlua19pZBgBIAEoCVIGbGlua0lk');
+final $typed_data.Uint8List credentialsRevokedDescriptor = $convert.base64Decode(
+    'ChJDcmVkZW50aWFsc1Jldm9rZWQSJgoPYWNjb3VudF9saW5rX2lkGAEgASgJUg1hY2NvdW50TG'
+    'lua0lk');
 
 @$core.Deprecated('Use connectorHandshakeDescriptor instead')
 const ConnectorHandshake$json = {
@@ -435,6 +455,13 @@ const HandshakeAck$json = {
       '5': 8,
       '10': 'supportsBackendHealth'
     },
+    {
+      '1': 'sends_credentials',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '10': 'sendsCredentials'
+    },
   ],
 };
 
@@ -443,7 +470,8 @@ final $typed_data.Uint8List handshakeAckDescriptor = $convert.base64Decode(
     'CgxIYW5kc2hha2VBY2sSGgoIYWNjZXB0ZWQYASABKAhSCGFjY2VwdGVkEhYKBnJlYXNvbhgCIA'
     'EoCVIGcmVhc29uEkEKCmdhdGV3YXlfaWQYAyABKAsyIi5rdXNpbnRhLmlvdC5pZGVudGl0eS52'
     'MS5HYXRld2F5SWRSCWdhdGV3YXlJZBI2ChdzdXBwb3J0c19iYWNrZW5kX2hlYWx0aBgEIAEoCF'
-    'IVc3VwcG9ydHNCYWNrZW5kSGVhbHRo');
+    'IVc3VwcG9ydHNCYWNrZW5kSGVhbHRoEisKEXNlbmRzX2NyZWRlbnRpYWxzGAUgASgIUhBzZW5k'
+    'c0NyZWRlbnRpYWxz');
 
 @$core.Deprecated('Use deviceAnnouncementDescriptor instead')
 const DeviceAnnouncement$json = {
@@ -464,6 +492,7 @@ const DeviceAnnouncement$json = {
       '5': 9,
       '10': 'pairingRequestId'
     },
+    {'1': 'account_link_id', '3': 4, '4': 1, '5': 9, '10': 'accountLinkId'},
   ],
   '9': [
     {'1': 1, '2': 2},
@@ -475,7 +504,8 @@ const DeviceAnnouncement$json = {
 final $typed_data.Uint8List deviceAnnouncementDescriptor = $convert.base64Decode(
     'ChJEZXZpY2VBbm5vdW5jZW1lbnQSNQoGZGV2aWNlGAIgASgLMh0ua3VzaW50YS5pb3QuZGV2aW'
     'NlLnYxLkRldmljZVIGZGV2aWNlEiwKEnBhaXJpbmdfcmVxdWVzdF9pZBgDIAEoCVIQcGFpcmlu'
-    'Z1JlcXVlc3RJZEoECAEQAlIKZGVzY3JpcHRvcg==');
+    'Z1JlcXVlc3RJZBImCg9hY2NvdW50X2xpbmtfaWQYBCABKAlSDWFjY291bnRMaW5rSWRKBAgBEA'
+    'JSCmRlc2NyaXB0b3I=');
 
 @$core.Deprecated('Use deviceRemovalDescriptor instead')
 const DeviceRemoval$json = {
@@ -986,6 +1016,15 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'credentialsRevoked'
     },
+    {
+      '1': 'credentials_snapshot',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsSnapshot',
+      '9': 0,
+      '10': 'credentialsSnapshot'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -1018,4 +1057,6 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'ZWRlbnRpYWxzX3VwZGF0ZRgPIAEoCzIrLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5DcmVkZW'
     '50aWFsc1VwZGF0ZUgAUhFjcmVkZW50aWFsc1VwZGF0ZRJfChNjcmVkZW50aWFsc19yZXZva2Vk'
     'GBAgASgLMiwua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNyZWRlbnRpYWxzUmV2b2tlZEgAUh'
-    'JjcmVkZW50aWFsc1Jldm9rZWRCCQoHcGF5bG9hZEoECAQQBQ==');
+    'JjcmVkZW50aWFsc1Jldm9rZWQSYgoUY3JlZGVudGlhbHNfc25hcHNob3QYESABKAsyLS5rdXNp'
+    'bnRhLmlvdC5jb25uZWN0b3IudjEuQ3JlZGVudGlhbHNTbmFwc2hvdEgAUhNjcmVkZW50aWFsc1'
+    'NuYXBzaG90QgkKB3BheWxvYWRKBAgEEAU=');

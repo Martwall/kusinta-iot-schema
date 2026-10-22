@@ -261,31 +261,39 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   void clearSupportsBackendReinitialize() => $_clearField(12);
 
   /// The linked services (accountlink.v1) whose accounts this connector reads devices from,
-  /// with an access token the gateway hands it (CredentialsUpdate). The gateway sends a
-  /// service's tokens to a connector that declares it, and to no other.
+  /// with access tokens the gateway hands it (CredentialsUpdate). Declaring a service asks
+  /// for its tokens; it does not earn them. The gateway sends a service's tokens only to a
+  /// connector_id it has been configured to trust for that service, only after accepting
+  /// its handshake, and to one live session at a time: a second session claiming the same
+  /// service gets none, and a session that ends loses its links with it.
   @$pb.TagNumber(13)
   $pb.PbList<$9.LinkedService> get consumesCredentials => $_getList(12);
 }
 
-/// An access token for one home's linked account at a third-party service, handed to the
-/// connector that reads that home's devices there. The gateway holds the token pair and
-/// refreshes it; only the short-lived access token crosses, never a refresh token or a
-/// client secret.
+/// An access token for one account link (accountlink.v1): one home's grant at a third-party
+/// service, handed to the connector that reads that home's devices there. The gateway holds
+/// the token pair and refreshes it; only the short-lived access token crosses, never a
+/// refresh token or a client secret. Neither side writes it to disk or a log, nor puts it in
+/// BackendHealthReport.detail or an error message.
 ///
-/// Sent when a link is made, after every refresh, and after every handshake for every live
-/// link of a declared service, so a restarted connector, which holds nothing, has it again.
-/// The connector keeps it in memory only, never writes or logs it, and uses it for that link
-/// alone. Once expires_at passes without a newer one, it stops reading the link and reports
-/// the link's devices unreachable until an update arrives.
+/// Sent after every refresh, at least five minutes before the previous token's expires_at,
+/// and for a link made while the session is up. After a handshake, every live link arrives
+/// in one CredentialsSnapshot instead.
+///
+/// Once expires_at plus 60 seconds of clock skew passes without a newer token, the connector
+/// stops reading the link and reports the link's devices unreachable, the way it reports any
+/// unreachable device, until an update arrives. That is the link's state, not the backend's:
+/// it does not put the backend in doubt or report it failing, and a connector with no live
+/// link reports its backend OK.
 class CredentialsUpdate extends $pb.GeneratedMessage {
   factory CredentialsUpdate({
-    $core.String? linkId,
+    $core.String? accountLinkId,
     $9.LinkedService? service,
     $core.String? accessToken,
     $1.Timestamp? expiresAt,
   }) {
     final result = create();
-    if (linkId != null) result.linkId = linkId;
+    if (accountLinkId != null) result.accountLinkId = accountLinkId;
     if (service != null) result.service = service;
     if (accessToken != null) result.accessToken = accessToken;
     if (expiresAt != null) result.expiresAt = expiresAt;
@@ -306,7 +314,7 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'linkId')
+    ..aOS(1, _omitFieldNames ? '' : 'accountLinkId')
     ..e<$9.LinkedService>(
         2, _omitFieldNames ? '' : 'service', $pb.PbFieldType.OE,
         defaultOrMaker: $9.LinkedService.LINKED_SERVICE_UNSPECIFIED,
@@ -338,16 +346,18 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<CredentialsUpdate>(create);
   static CredentialsUpdate? _defaultInstance;
 
-  /// Opaque and stable for the life of the link. It names no home, person or account; the
-  /// connector keys the link's devices by it.
+  /// Opaque; it names no home, person or account. One id is one grant: replacing a link, or
+  /// linking again after it needed relinking, mints a new id, and the old one is revoked
+  /// (CredentialsRevoked). A cancelled replacement brings the old grant back under its old id
+  /// with a fresh update. Not related to a device link's id (CreateLink).
   @$pb.TagNumber(1)
-  $core.String get linkId => $_getSZ(0);
+  $core.String get accountLinkId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set linkId($core.String value) => $_setString(0, value);
+  set accountLinkId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasLinkId() => $_has(0);
+  $core.bool hasAccountLinkId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLinkId() => $_clearField(1);
+  void clearAccountLinkId() => $_clearField(1);
 
   @$pb.TagNumber(2)
   $9.LinkedService get service => $_getN(1);
@@ -367,6 +377,8 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearAccessToken() => $_clearField(3);
 
+  /// Always set. When the service states no lifetime, the gateway states one of at most an
+  /// hour.
   @$pb.TagNumber(4)
   $1.Timestamp get expiresAt => $_getN(3);
   @$pb.TagNumber(4)
@@ -379,14 +391,73 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
   $1.Timestamp ensureExpiresAt() => $_ensure(3);
 }
 
-/// A link ended: unlinked, its home handed over, or wiped. The connector drops the token at
-/// once, stops reading the link and removes its devices (DeviceRemoval).
-class CredentialsRevoked extends $pb.GeneratedMessage {
-  factory CredentialsRevoked({
-    $core.String? linkId,
+/// Every live account link for the services this connector declares, sent once after each
+/// accepted handshake and before any CredentialsUpdate on that session. Empty when there
+/// are none. The connector drops every link it knows that is not listed, removing its
+/// devices (DeviceRemoval), so a link that ended while the connector was away does not
+/// survive the reconnect.
+class CredentialsSnapshot extends $pb.GeneratedMessage {
+  factory CredentialsSnapshot({
+    $core.Iterable<CredentialsUpdate>? links,
   }) {
     final result = create();
-    if (linkId != null) result.linkId = linkId;
+    if (links != null) result.links.addAll(links);
+    return result;
+  }
+
+  CredentialsSnapshot._();
+
+  factory CredentialsSnapshot.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CredentialsSnapshot.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CredentialsSnapshot',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
+      createEmptyInstance: create)
+    ..pc<CredentialsUpdate>(
+        1, _omitFieldNames ? '' : 'links', $pb.PbFieldType.PM,
+        subBuilder: CredentialsUpdate.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CredentialsSnapshot clone() => CredentialsSnapshot()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CredentialsSnapshot copyWith(void Function(CredentialsSnapshot) updates) =>
+      super.copyWith((message) => updates(message as CredentialsSnapshot))
+          as CredentialsSnapshot;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CredentialsSnapshot create() => CredentialsSnapshot._();
+  @$core.override
+  CredentialsSnapshot createEmptyInstance() => create();
+  static $pb.PbList<CredentialsSnapshot> createRepeated() =>
+      $pb.PbList<CredentialsSnapshot>();
+  @$core.pragma('dart2js:noInline')
+  static CredentialsSnapshot getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CredentialsSnapshot>(create);
+  static CredentialsSnapshot? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<CredentialsUpdate> get links => $_getList(0);
+}
+
+/// An account link ended: unlinked, replaced, its home handed over, or wiped. Sent before the
+/// gateway revokes the grant at the service. The connector drops the token at once, stops
+/// reading the link and removes its devices (DeviceRemoval).
+class CredentialsRevoked extends $pb.GeneratedMessage {
+  factory CredentialsRevoked({
+    $core.String? accountLinkId,
+  }) {
+    final result = create();
+    if (accountLinkId != null) result.accountLinkId = accountLinkId;
     return result;
   }
 
@@ -404,7 +475,7 @@ class CredentialsRevoked extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..aOS(1, _omitFieldNames ? '' : 'linkId')
+    ..aOS(1, _omitFieldNames ? '' : 'accountLinkId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -429,13 +500,13 @@ class CredentialsRevoked extends $pb.GeneratedMessage {
   static CredentialsRevoked? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get linkId => $_getSZ(0);
+  $core.String get accountLinkId => $_getSZ(0);
   @$pb.TagNumber(1)
-  set linkId($core.String value) => $_setString(0, value);
+  set accountLinkId($core.String value) => $_setString(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasLinkId() => $_has(0);
+  $core.bool hasAccountLinkId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLinkId() => $_clearField(1);
+  void clearAccountLinkId() => $_clearField(1);
 }
 
 class ConnectorHandshake extends $pb.GeneratedMessage {
@@ -1309,6 +1380,7 @@ class HandshakeAck extends $pb.GeneratedMessage {
     $core.String? reason,
     $0.GatewayId? gatewayId,
     $core.bool? supportsBackendHealth,
+    $core.bool? sendsCredentials,
   }) {
     final result = create();
     if (accepted != null) result.accepted = accepted;
@@ -1316,6 +1388,7 @@ class HandshakeAck extends $pb.GeneratedMessage {
     if (gatewayId != null) result.gatewayId = gatewayId;
     if (supportsBackendHealth != null)
       result.supportsBackendHealth = supportsBackendHealth;
+    if (sendsCredentials != null) result.sendsCredentials = sendsCredentials;
     return result;
   }
 
@@ -1338,6 +1411,7 @@ class HandshakeAck extends $pb.GeneratedMessage {
     ..aOM<$0.GatewayId>(3, _omitFieldNames ? '' : 'gatewayId',
         subBuilder: $0.GatewayId.create)
     ..aOB(4, _omitFieldNames ? '' : 'supportsBackendHealth')
+    ..aOB(5, _omitFieldNames ? '' : 'sendsCredentials')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1402,6 +1476,18 @@ class HandshakeAck extends $pb.GeneratedMessage {
   $core.bool hasSupportsBackendHealth() => $_has(3);
   @$pb.TagNumber(4)
   void clearSupportsBackendHealth() => $_clearField(4);
+
+  /// The gateway sends account link tokens (CredentialsSnapshot, CredentialsUpdate) to a
+  /// connector that declares ConnectorInfo.consumes_credentials and that it trusts for the
+  /// service. Unset, no token will arrive on this session; the connector reads no link.
+  @$pb.TagNumber(5)
+  $core.bool get sendsCredentials => $_getBF(4);
+  @$pb.TagNumber(5)
+  set sendsCredentials($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSendsCredentials() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSendsCredentials() => $_clearField(5);
 }
 
 /// A device the connector has found. Carries the full Device, not just its descriptor,
@@ -1414,10 +1500,12 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
   factory DeviceAnnouncement({
     $2.Device? device,
     $core.String? pairingRequestId,
+    $core.String? accountLinkId,
   }) {
     final result = create();
     if (device != null) result.device = device;
     if (pairingRequestId != null) result.pairingRequestId = pairingRequestId;
+    if (accountLinkId != null) result.accountLinkId = accountLinkId;
     return result;
   }
 
@@ -1438,6 +1526,7 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
     ..aOM<$2.Device>(2, _omitFieldNames ? '' : 'device',
         subBuilder: $2.Device.create)
     ..aOS(3, _omitFieldNames ? '' : 'pairingRequestId')
+    ..aOS(4, _omitFieldNames ? '' : 'accountLinkId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1493,6 +1582,20 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
   $core.bool hasPairingRequestId() => $_has(1);
   @$pb.TagNumber(3)
   void clearPairingRequestId() => $_clearField(3);
+
+  /// The account link (CredentialsUpdate) the device is read through, empty for a device
+  /// that is not. The gateway files the device in that link's home and nowhere else. A
+  /// device read through two links, as when two homes link the same account, is announced
+  /// once per link under distinct device ids, each in its own home; revoking one link
+  /// removes only that link's.
+  @$pb.TagNumber(4)
+  $core.String get accountLinkId => $_getSZ(2);
+  @$pb.TagNumber(4)
+  set accountLinkId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAccountLinkId() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearAccountLinkId() => $_clearField(4);
 }
 
 class DeviceRemoval extends $pb.GeneratedMessage {
@@ -2581,6 +2684,7 @@ enum SessionResponse_Payload {
   reinitializeBackend,
   credentialsUpdate,
   credentialsRevoked,
+  credentialsSnapshot,
   notSet
 }
 
@@ -2601,6 +2705,7 @@ class SessionResponse extends $pb.GeneratedMessage {
     ReinitializeBackend? reinitializeBackend,
     CredentialsUpdate? credentialsUpdate,
     CredentialsRevoked? credentialsRevoked,
+    CredentialsSnapshot? credentialsSnapshot,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -2621,6 +2726,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     if (credentialsUpdate != null) result.credentialsUpdate = credentialsUpdate;
     if (credentialsRevoked != null)
       result.credentialsRevoked = credentialsRevoked;
+    if (credentialsSnapshot != null)
+      result.credentialsSnapshot = credentialsSnapshot;
     return result;
   }
 
@@ -2648,6 +2755,7 @@ class SessionResponse extends $pb.GeneratedMessage {
     14: SessionResponse_Payload.reinitializeBackend,
     15: SessionResponse_Payload.credentialsUpdate,
     16: SessionResponse_Payload.credentialsRevoked,
+    17: SessionResponse_Payload.credentialsSnapshot,
     0: SessionResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2655,7 +2763,7 @@ class SessionResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+    ..oo(0, [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
         subBuilder: $1.Timestamp.create)
@@ -2686,6 +2794,8 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: CredentialsUpdate.create)
     ..aOM<CredentialsRevoked>(16, _omitFieldNames ? '' : 'credentialsRevoked',
         subBuilder: CredentialsRevoked.create)
+    ..aOM<CredentialsSnapshot>(17, _omitFieldNames ? '' : 'credentialsSnapshot',
+        subBuilder: CredentialsSnapshot.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2884,6 +2994,17 @@ class SessionResponse extends $pb.GeneratedMessage {
   void clearCredentialsRevoked() => $_clearField(16);
   @$pb.TagNumber(16)
   CredentialsRevoked ensureCredentialsRevoked() => $_ensure(14);
+
+  @$pb.TagNumber(17)
+  CredentialsSnapshot get credentialsSnapshot => $_getN(15);
+  @$pb.TagNumber(17)
+  set credentialsSnapshot(CredentialsSnapshot value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasCredentialsSnapshot() => $_has(15);
+  @$pb.TagNumber(17)
+  void clearCredentialsSnapshot() => $_clearField(17);
+  @$pb.TagNumber(17)
+  CredentialsSnapshot ensureCredentialsSnapshot() => $_ensure(15);
 }
 
 const $core.bool _omitFieldNames =
