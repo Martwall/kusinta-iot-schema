@@ -315,10 +315,11 @@ A zone's rooms lie in one home, or all outside homes.
 Every role is a **`ContactBinding`**: an output and `closed_value`, the output value with
 which the contact is closed. That is a wiring fact, not a device fact: a relay wired through
 its normally closed contact closes it with the channel off. The gateway reads every state of
-a role through it. It drives an output only while its producer states it leased with a lapse
-value that leaves the contact where the role rests (checked at every drive, not only at
-binding), and only while it holds a current pass of its commissioning test (below). An
-output that stops being bound gets its lapse value written at once.
+a role through it. It drives an output away from rest only while its producer states it
+leased with a lapse value that leaves the contact where the role rests (checked at every
+drive, not only at binding), and only while it holds a current pass of its commissioning test
+(below). Writing the lapse value is always allowed: an output that stops being bound gets it
+written at once.
 In a home the records are given only to its residents and to an installer under a
 commissioning grant, never to service.
 
@@ -347,9 +348,11 @@ built, the tests the gateway has run on its outputs, and which features work bec
   party, or is **blocked for safety** with a reason. Residents who are not a household admin
   see states and blocks, not to-dos.
 - **Tests:** the gateway runs them on one record or one binding of it
-  (`RunCommissioningTest`), every write leased to end by the test's `ends_at`. **OUTPUT_LEASE** (C1) proves an output leaves rest,
-  holds through a renewal and returns to rest when the lease lapses, and an output is driven
-  only while it holds a current pass. A pass ends when the binding or the device changes, or
+  (`RunCommissioningTest`), every write leased to end by the test's `ends_at`.
+  **OUTPUT_LEASE** (C1) proves an output leaves rest, holds through a renewal and returns to
+  rest when the lease lapses, as its producer runs it. It runs only on outputs whose reads
+  are stated real-time and whose lease bounds fit a lease of 60 seconds to 5 minutes, and ends
+  within 15 minutes. An output is driven away from rest only while it holds a current pass. A pass ends when the binding or the device changes, or
   a floor zone's rooms or control room change. **ZONE_EFFECT** (C2) checks that a zone heats
   its control room. **PUMP_ALL_ZONES_OFF** (C3) holds a floor circuit's zones off while an
   installer watches the pump, and their verdict (`ConcludeCommissioningTest`) sets the pump

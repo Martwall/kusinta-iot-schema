@@ -831,6 +831,10 @@ message SetHomeTemplate {
 //                       OUTPUT_LEASE pass; metadata "record_id" names one.
 //   "OUTPUT_NOT_LEASED" an output its producer does not state as leased, with a lapse value
 //                       at rest (heating.v1), so no test could leave it at rest.
+//   "READ_LATENCY"      OUTPUT_LEASE on an output whose producer does not state its reads
+//                       REAL_TIME: a pass judged against a guessed latency is none.
+//   "LEASE_BOUNDS"      OUTPUT_LEASE on an output whose lease bounds admit no lease of 60
+//                       seconds to 5 minutes, so the test could not end by its ends_at.
 //
 // A record the caller cannot reach is refused as NOT_ENTITLED.
 message RunCommissioningTest {

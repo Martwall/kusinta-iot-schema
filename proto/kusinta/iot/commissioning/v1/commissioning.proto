@@ -30,6 +30,10 @@ option optimize_for = SPEED;
 //       their holding power while they open. The gateway switches no more zones on within
 //       one actuator travel time, counting zones a lapsing lease returns to rest: the leases
 //       of zones held off together end that far apart, in groups no larger. Unknown: 1.
+//       This holds while the gateway runs. With the gateway gone, zones return to rest as
+//       their leases end, and a device whose timer is shared by its outputs returns them
+//       all at once, as after a power cut: an accepted risk, like a missing fallback
+//       ceiling thermostat.
 //   "floor.actuator_travel_seconds"  uint; a floor circuit. How long its zone actuators take
 //       to open fully. No zone is switched again sooner after it was switched. Unknown: 300.
 //   "floor.fallback_ceiling_thermostat"  bool; a floor zone. Whether a thermostat in series
@@ -84,8 +88,11 @@ option optimize_for = SPEED;
 // mid-test leaves the output to return to rest. A test ends at its ends_at at the latest,
 // and the output returns to its normal control.
 //
-// The gateway drives a bound output only while it holds a current pass of OUTPUT_LEASE run
-// on it (heating.v1). A pass stops being current (CommissioningTest.superseded) when:
+// The gateway drives a bound output away from rest only while it holds a current pass of
+// OUTPUT_LEASE run on it (heating.v1). Writing the lapse value, which returns the output to
+// rest, is always allowed: on unbinding, after a test, or at any time. A pass tests the
+// output as its producer runs it; it does not prove what the device does with the producer
+// gone. A pass stops being current (CommissioningTest.superseded) when:
 //   * its binding changes: another output, another device, another closed_value;
 //   * the device is replaced or re-paired, even under the same binding;
 //   * for a floor zone, its rooms or its control room change. Area shares may change
@@ -306,6 +313,10 @@ enum BlockReason {
   BLOCK_REASON_DEVICE_GONE = 4;
   // A floor zone whose control room is deleted or outside its plant's space.
   BLOCK_REASON_CONTROL_ROOM_GONE = 5;
+  // The output's shortest lease (device.v1.LeasedWrite.min_lease_seconds) is longer than
+  // the longest it may be held: "plant.max_block_minutes" for a blocking input, or the
+  // OUTPUT_LEASE test's 5 minutes.
+  BLOCK_REASON_LEASE_TOO_LONG = 6;
 }
 
 message FeatureBlock {
@@ -332,10 +343,13 @@ enum TestKind {
 
   // On one bound output (heating.v1). The gateway checks that the output's power-on value,
   // where its producer states one, leaves the contact at rest; writes the value that takes
-  // it away from rest under a short lease and sees the reported contact leave rest; renews
-  // the lease before it ends and sees the contact hold past the first lease's end; then
-  // lets it lapse and sees the contact return to rest within the read latency its producer
-  // states. Judged by the gateway. Ends at most 15 minutes after it starts.
+  // it away from rest under a lease of L = the greater of the producer's min_lease_seconds
+  // and 60 seconds, and sees the reported contact leave rest; renews the lease before it
+  // ends and sees the contact hold past the first lease's end; then lets it lapse and sees
+  // the contact return to rest. ends_at is the start plus 2 × L plus 5 minutes for the
+  // reports. Runs only on an output whose producer states its reads REAL_TIME and whose
+  // lease bounds admit an L of at most 5 minutes, so it ends within 15 minutes; any other
+  // is refused before it starts (RunCommissioningTest). Judged by the gateway.
   TEST_KIND_OUTPUT_LEASE = 1;
 
   // On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and

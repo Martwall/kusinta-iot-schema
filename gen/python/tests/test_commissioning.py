@@ -189,3 +189,9 @@ def test_a_need_for_a_fact_says_what_it_is_about():
     need = c.Need(fact_key="plant.max_block_minutes", fact_topic=c.FACT_TOPIC_HEAT_SOURCE)
 
     assert _round_trip(need).fact_topic == c.FACT_TOPIC_HEAT_SOURCE
+
+
+def test_a_block_names_a_lease_floor_longer_than_the_longest_block():
+    block = c.FeatureBlock(reason=c.BLOCK_REASON_LEASE_TOO_LONG, binding=c.BindingRef(record_id="plant-1", field="sg_ready_block"))
+
+    assert _round_trip(block).reason == c.BLOCK_REASON_LEASE_TOO_LONG

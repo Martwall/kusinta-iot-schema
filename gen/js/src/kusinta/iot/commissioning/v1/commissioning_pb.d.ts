@@ -966,6 +966,15 @@ export enum BlockReason {
    * @generated from enum value: BLOCK_REASON_CONTROL_ROOM_GONE = 5;
    */
   CONTROL_ROOM_GONE = 5,
+
+  /**
+   * The output's shortest lease (device.v1.LeasedWrite.min_lease_seconds) is longer than
+   * the longest it may be held: "plant.max_block_minutes" for a blocking input, or the
+   * OUTPUT_LEASE test's 5 minutes.
+   *
+   * @generated from enum value: BLOCK_REASON_LEASE_TOO_LONG = 6;
+   */
+  LEASE_TOO_LONG = 6,
 }
 
 /**
@@ -985,10 +994,13 @@ export enum TestKind {
   /**
    * On one bound output (heating.v1). The gateway checks that the output's power-on value,
    * where its producer states one, leaves the contact at rest; writes the value that takes
-   * it away from rest under a short lease and sees the reported contact leave rest; renews
-   * the lease before it ends and sees the contact hold past the first lease's end; then
-   * lets it lapse and sees the contact return to rest within the read latency its producer
-   * states. Judged by the gateway. Ends at most 15 minutes after it starts.
+   * it away from rest under a lease of L = the greater of the producer's min_lease_seconds
+   * and 60 seconds, and sees the reported contact leave rest; renews the lease before it
+   * ends and sees the contact hold past the first lease's end; then lets it lapse and sees
+   * the contact return to rest. ends_at is the start plus 2 × L plus 5 minutes for the
+   * reports. Runs only on an output whose producer states its reads REAL_TIME and whose
+   * lease bounds admit an L of at most 5 minutes, so it ends within 15 minutes; any other
+   * is refused before it starts (RunCommissioningTest). Judged by the gateway.
    *
    * @generated from enum value: TEST_KIND_OUTPUT_LEASE = 1;
    */

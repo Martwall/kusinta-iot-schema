@@ -40,8 +40,8 @@ option optimize_for = SPEED;
 // manifold, outside the home — is bound by whoever can reach the device: the property owner,
 // the gateway's administrators, or an installer whose commissioning grant names it.
 //
-// The gateway drives a bound output only while it holds a current pass of its commissioning
-// test (commissioning.v1, TEST_KIND_OUTPUT_LEASE), and only while its producer states it as
+// The gateway drives a bound output away from rest only while it holds a current pass of its
+// commissioning test (commissioning.v1, TEST_KIND_OUTPUT_LEASE), and only while its producer states it as
 // leased (device.v1.LeasedWrite) with a lapse value that leaves the contact where its role
 // rests. That is checked each time it drives, not only when the output is bound: an output
 // whose producer stops stating it so, or whose device is gone, is not driven until that
@@ -187,8 +187,6 @@ message FloorZone {
   // As marked on the manifold or the drawing ("SL 2").
   string name = 3;
 
-  // Where several zones share one device whose timer is device-wide (one delay for all its
-  // channels), the gateway renews the leases of all those zones in one go.
   ContactBinding output = 4;
 
   // The rooms the zone heats, each a room within its plant's space, listed once, with a
