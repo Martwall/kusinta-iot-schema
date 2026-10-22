@@ -483,12 +483,14 @@ export declare const ColorTemperatureLightPropertiesSchema: GenMessage<ColorTemp
  *
  * Matter types these as nullable, and every field here carries explicit presence: unset is
  * "not reported", and 0 is a measured zero — a relay that is off reads 0 W, never the last
- * non-zero power.
+ * non-zero power. A reported null (PropertyUpdate.null_value) unsets the field.
  *
  * The cumulative energy counters come from Electrical Energy Measurement (0x0091), the
  * other measurement cluster of the Electrical Sensor device type: the energy of Matter's
- * EnergyMeasurementStruct, in milliwatt-hours. The struct's start and end times are not
- * carried; a reading is as of its report.
+ * EnergyMeasurementStruct, in milliwatt-hours, never negative, so uint64. The struct's
+ * start and end times are not carried; a reading is as of its report. A counter only
+ * climbs: a reading lower than the one before is a reset, and consumption is counted
+ * again from it, never as a negative difference.
  *
  * @generated from message kusinta.iot.device.v1.EnergySensorProperties
  */
@@ -524,14 +526,14 @@ export declare type EnergySensorProperties = Message<"kusinta.iot.device.v1.Ener
   /**
    * Milliwatt-hours taken from the grid or the supply since the counter began.
    *
-   * @generated from field: optional sint64 cumulative_energy_imported = 9;
+   * @generated from field: optional uint64 cumulative_energy_imported = 9;
    */
   cumulativeEnergyImported?: bigint | undefined;
 
   /**
    * Milliwatt-hours delivered to the grid since the counter began, kept apart from import.
    *
-   * @generated from field: optional sint64 cumulative_energy_exported = 10;
+   * @generated from field: optional uint64 cumulative_energy_exported = 10;
    */
   cumulativeEnergyExported?: bigint | undefined;
 };

@@ -489,12 +489,14 @@ message ColorTemperatureLightProperties {
 //
 // Matter types these as nullable, and every field here carries explicit presence: unset is
 // "not reported", and 0 is a measured zero — a relay that is off reads 0 W, never the last
-// non-zero power.
+// non-zero power. A reported null (PropertyUpdate.null_value) unsets the field.
 //
 // The cumulative energy counters come from Electrical Energy Measurement (0x0091), the
 // other measurement cluster of the Electrical Sensor device type: the energy of Matter's
-// EnergyMeasurementStruct, in milliwatt-hours. The struct's start and end times are not
-// carried; a reading is as of its report.
+// EnergyMeasurementStruct, in milliwatt-hours, never negative, so uint64. The struct's
+// start and end times are not carried; a reading is as of its report. A counter only
+// climbs: a reading lower than the one before is a reset, and consumption is counted
+// again from it, never as a negative difference.
 message EnergySensorProperties {
   // Renamed from the Zigbee attribute names when the cluster was corrected to 0x0090.
   reserved "rms_voltage", "rms_current", "ac_frequency";
@@ -536,14 +538,14 @@ message EnergySensorProperties {
     (matter_attribute_capabilities) = 5
   ];
   // Milliwatt-hours taken from the grid or the supply since the counter began.
-  optional sint64 cumulative_energy_imported = 9 [
+  optional uint64 cumulative_energy_imported = 9 [
     (matter_cluster_id) = 0x0091,
     (matter_attribute) = "CumulativeEnergyImported",
     (matter_attribute_id) = 0x0001,
     (matter_attribute_capabilities) = 5
   ];
   // Milliwatt-hours delivered to the grid since the counter began, kept apart from import.
-  optional sint64 cumulative_energy_exported = 10 [
+  optional uint64 cumulative_energy_exported = 10 [
     (matter_cluster_id) = 0x0091,
     (matter_attribute) = "CumulativeEnergyExported",
     (matter_attribute_id) = 0x0002,

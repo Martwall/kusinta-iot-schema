@@ -74,6 +74,16 @@ def test_bare_type_attribute_resolves_to_covering_type():
     assert resolved == "covering_type"
 
 
+def test_cumulative_energy_imported_resolves_on_electrical_energy_measurement():
+    resolved = resolve_field(properties_pb2.EnergySensorProperties, 0x0091, "CumulativeEnergyImported")
+    assert resolved == "cumulative_energy_imported"
+
+
+def test_cumulative_energy_exported_resolves_on_electrical_energy_measurement():
+    resolved = resolve_field(properties_pb2.EnergySensorProperties, 0x0091, "CumulativeEnergyExported")
+    assert resolved == "cumulative_energy_exported"
+
+
 def test_acronym_attribute_resolves_without_case_normalisation():
     resolved = resolve_field(properties_pb2.EnergySensorProperties, 0x0090, "ActiveCurrent")
     assert resolved == "active_current"

@@ -5,6 +5,7 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId } from "../../identity/v1/identity_pb.js";
+import type { NullValue } from "./cluster_state_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
@@ -105,6 +106,12 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
   attributeName?: string | undefined;
 
   /**
+   * A value wider than 32 bits travels in int64_value or uint64_value: milliwatts above
+   * about 2.1 kW, milliwatt-hours above about 4,295 kWh. A producer may send a value that
+   * fits in either width, and a consumer reads both into the same typed field. null_value
+   * is a reported Matter null: it leaves the typed field unset, "not reported", rather than
+   * keeping the last value.
+   *
    * @generated from oneof kusinta.iot.device.v1.PropertyUpdate.value
    */
   value: {
@@ -143,6 +150,24 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
      */
     value: Uint8Array;
     case: "bytesValue";
+  } | {
+    /**
+     * @generated from field: sint64 int64_value = 16;
+     */
+    value: bigint;
+    case: "int64Value";
+  } | {
+    /**
+     * @generated from field: uint64 uint64_value = 17;
+     */
+    value: bigint;
+    case: "uint64Value";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.device.v1.NullValue null_value = 18;
+     */
+    value: NullValue;
+    case: "nullValue";
   } | { case: undefined; value?: undefined };
 
   /**

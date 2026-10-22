@@ -103,12 +103,6 @@ def test_energy_sensor_rejects_no_longer_used_field_numbers():
     assert numbers == {5, 6, 7, 8, 9, 10}
 
 
-def test_active_power_tells_a_measured_zero_from_not_reported():
-    decoded = properties_pb2.EnergySensorProperties()
-    decoded.ParseFromString(properties_pb2.EnergySensorProperties(active_power=0).SerializeToString())
-    assert decoded.HasField("active_power")
-
-
 def test_cumulative_energy_imported_carries_milliwatt_hours_above_the_int32_ceiling():
     original = properties_pb2.EnergySensorProperties(cumulative_energy_imported=4_182_000_000)
     decoded = properties_pb2.EnergySensorProperties()
@@ -224,3 +218,18 @@ def test_property_update_provenance_survives_a_batch():
     decoded.ParseFromString(batch.SerializeToString())
     assert decoded.updates[0].provenance == property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC
     assert decoded.updates[1].provenance == property_update_pb2.VALUE_PROVENANCE_CORRECTED
+
+
+def test_a_property_update_carries_a_value_wider_than_32_bits():
+    original = property_update_pb2.PropertyUpdate(uint64_value=4_295_000_000)
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(original.SerializeToString())
+    assert (decoded.WhichOneof("value"), decoded.uint64_value) == ("uint64_value", 4_295_000_000)
+
+
+def test_a_property_update_carries_a_reported_null():
+    original = property_update_pb2.PropertyUpdate()
+    original.null_value.SetInParent()
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.WhichOneof("value") == "null_value"

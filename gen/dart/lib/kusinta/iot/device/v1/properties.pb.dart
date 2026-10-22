@@ -1296,12 +1296,14 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
 ///
 /// Matter types these as nullable, and every field here carries explicit presence: unset is
 /// "not reported", and 0 is a measured zero — a relay that is off reads 0 W, never the last
-/// non-zero power.
+/// non-zero power. A reported null (PropertyUpdate.null_value) unsets the field.
 ///
 /// The cumulative energy counters come from Electrical Energy Measurement (0x0091), the
 /// other measurement cluster of the Electrical Sensor device type: the energy of Matter's
-/// EnergyMeasurementStruct, in milliwatt-hours. The struct's start and end times are not
-/// carried; a reading is as of its report.
+/// EnergyMeasurementStruct, in milliwatt-hours, never negative, so uint64. The struct's
+/// start and end times are not carried; a reading is as of its report. A counter only
+/// climbs: a reading lower than the one before is a reset, and consumption is counted
+/// again from it, never as a negative difference.
 class EnergySensorProperties extends $pb.GeneratedMessage {
   factory EnergySensorProperties({
     $fixnum.Int64? activePower,
@@ -1349,10 +1351,10 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
         8, _omitFieldNames ? '' : 'frequency', $pb.PbFieldType.OS6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(9, _omitFieldNames ? '' : 'cumulativeEnergyImported',
-        $pb.PbFieldType.OS6,
+        $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(10, _omitFieldNames ? '' : 'cumulativeEnergyExported',
-        $pb.PbFieldType.OS6,
+        $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 

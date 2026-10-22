@@ -945,7 +945,7 @@ const EnergySensorProperties$json = {
       '1': 'cumulative_energy_imported',
       '3': 9,
       '4': 1,
-      '5': 18,
+      '5': 4,
       '8': {},
       '9': 4,
       '10': 'cumulativeEnergyImported',
@@ -955,7 +955,7 @@ const EnergySensorProperties$json = {
       '1': 'cumulative_energy_exported',
       '3': 10,
       '4': 1,
-      '5': 18,
+      '5': 4,
       '8': {},
       '9': 5,
       '10': 'cumulativeEnergyExported',
@@ -987,9 +987,9 @@ final $typed_data.Uint8List energySensorPropertiesDescriptor = $convert.base64De
     'QhiItRiQAZK1GAdWb2x0YWdlsLUYBMi1GAVIAVIHdm9sdGFnZYgBARJKCg5hY3RpdmVfY3Vycm'
     'VudBgHIAEoEkIeiLUYkAGStRgNQWN0aXZlQ3VycmVudLC1GAXItRgFSAJSDWFjdGl2ZUN1cnJl'
     'bnSIAQESPQoJZnJlcXVlbmN5GAggASgSQhqItRiQAZK1GAlGcmVxdWVuY3mwtRgOyLUYBUgDUg'
-    'lmcmVxdWVuY3mIAQESbAoaY3VtdWxhdGl2ZV9lbmVyZ3lfaW1wb3J0ZWQYCSABKBJCKYi1GJEB'
+    'lmcmVxdWVuY3mIAQESbAoaY3VtdWxhdGl2ZV9lbmVyZ3lfaW1wb3J0ZWQYCSABKARCKYi1GJEB'
     'krUYGEN1bXVsYXRpdmVFbmVyZ3lJbXBvcnRlZLC1GAHItRgFSARSGGN1bXVsYXRpdmVFbmVyZ3'
-    'lJbXBvcnRlZIgBARJsChpjdW11bGF0aXZlX2VuZXJneV9leHBvcnRlZBgKIAEoEkIpiLUYkQGS'
+    'lJbXBvcnRlZIgBARJsChpjdW11bGF0aXZlX2VuZXJneV9leHBvcnRlZBgKIAEoBEIpiLUYkQGS'
     'tRgYQ3VtdWxhdGl2ZUVuZXJneUV4cG9ydGVksLUYAsi1GAVIBVIYY3VtdWxhdGl2ZUVuZXJneU'
     'V4cG9ydGVkiAEBOgaatRgCkApCDwoNX2FjdGl2ZV9wb3dlckIKCghfdm9sdGFnZUIRCg9fYWN0'
     'aXZlX2N1cnJlbnRCDAoKX2ZyZXF1ZW5jeUIdChtfY3VtdWxhdGl2ZV9lbmVyZ3lfaW1wb3J0ZW'
