@@ -15,8 +15,10 @@ option optimize_for = SPEED;
 // FACTS. A fact is one answer about one space — a building, a home or a room — or about one
 // heating record (heating.v1) in it, under a key. Which keys there are, the value type each
 // takes, who answers it and how much it is needed are the gateway's catalogue: it refuses a
-// key it does not know, and fills answerer, necessity and feature from the catalogue. A key
-// is never reused for another meaning. The keys a safety rule depends on are fixed here:
+// key it does not know, and fills answerer, necessity, feature and topic from the
+// catalogue. A key is never reused for another meaning. A client words a key named in this
+// file by the key, and any other by its FactTopic, never by the raw key. The keys a safety
+// rule depends on are fixed here:
 //
 //   "floor.pump_tolerates_all_zones_off"  bool; a floor circuit. Whether its pump runs safely
 //       with every zone on the manifold off (not heating): a variable-speed pump, or a
@@ -38,7 +40,9 @@ option optimize_for = SPEED;
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
 //
 // A fact's value takes the type its key states, matched by type as well as value, as
-// heating.v1.ContactBinding.closed_value is.
+// heating.v1.ContactBinding.closed_value is. A value is never free text: a key that takes a
+// string takes only a value from the closed list the key states, so that nothing a household
+// writes outlives it by an installer confirming it.
 //
 // HOUSE FACTS AND HOUSEHOLD DATA. A fact an installer confirmed (any evidence), or the
 // gateway derived or measured, describes the house: it is a HOUSE fact, kept when the
@@ -128,8 +132,34 @@ message Provenance {
   Party party = 1;
   Evidence evidence = 2;
   google.protobuf.Timestamp at = 3;
-  // Unset for AUTOMATIC, and after a household handover.
+  // Unset for AUTOMATIC, and after a household handover. On a home's facts and tests it is
+  // given to the home's residents, and to an installer only on what that installer put,
+  // started or concluded; to anyone else it is left unset, with party kept.
   kusinta.iot.identity.v1.UserId by = 4;
+}
+
+// What a fact is about, for a client that does not know its key. Closed: a client words a
+// topic it does not know as a detail about the space or record, from its answerer.
+enum FactTopic {
+  FACT_TOPIC_UNSPECIFIED = 0;
+  // The building: type, house types, drawings, gateway site, service agreements, payer.
+  FACT_TOPIC_BUILDING = 1;
+  // Rooms, walls added or removed, how each room is heated, its thermostats.
+  FACT_TOPIC_ROOMS = 2;
+  // The heat source: heat pump, its inputs, vendor account, blocks.
+  FACT_TOPIC_HEAT_SOURCE = 3;
+  // Floor heating: circuits, pump, mixing, supply cap, zones, actuators, probes.
+  FACT_TOPIC_FLOOR_HEATING = 4;
+  // Electric comfort loads: bathroom floors, towel heaters, their thermostats.
+  FACT_TOPIC_COMFORT_LOADS = 5;
+  // Electricity: grid subscription, operator, fuse size, meter and its port.
+  FACT_TOPIC_ELECTRICITY = 6;
+  // District heating: utility and tariff.
+  FACT_TOPIC_DISTRICT_HEATING = 7;
+  // Radio coverage and the gateways that carry it.
+  FACT_TOPIC_CONNECTIVITY = 8;
+  // Comfort wishes and schedules.
+  FACT_TOPIC_COMFORT = 9;
 }
 
 // One heating record (heating.v1), or one binding of it. An output is always named by its
@@ -180,6 +210,9 @@ message CommissioningFact {
   // Set: this answer departs from that version of a template, the home's when it was
   // recorded.
   TemplateRef deviates_from = 15;
+
+  // From the gateway's catalogue.
+  FactTopic topic = 16;
 
   reserved 11 to 12, 14;
   reserved "scope", "template_version", "template_id";
@@ -250,6 +283,8 @@ message Need {
   kusinta.iot.identity.v1.SpaceId space_id = 3;
   Party answerer = 5;
   BindingRef binding = 7;
+  // For a fact, its CommissioningFact.topic.
+  FactTopic fact_topic = 8;
 
   reserved 4, 6;
   reserved "record_id", "field";
@@ -390,11 +425,14 @@ message CommissioningProfile {
   reserved "template_id";
 }
 
-// Whether a home is set up: every REQUIRED fact answered, and every output bound in it
-// passed OUTPUT_LEASE at least once on the device it is bound to. A pass superseded by a
-// change of a floor zone's rooms or control room still counts here, so that set_up does not
-// tell the owner organisation of a renovation; binding a new output, or a new device, is
-// what it can show. All the owner organisation learns of a home's commissioning.
+// Whether a home is set up: every REQUIRED fact answered with a value at least once, and
+// every output bound in it passed OUTPUT_LEASE at least once on the device it is bound to.
+// "Don't know" is not an answer here. What the household does afterwards counts neither
+// way: a REQUIRED fact once answered still counts when it is removed or changed to "don't
+// know", as a pass superseded by a change of a floor zone's rooms or control room still
+// does, so that set_up tells the owner organisation neither of a household's edits nor of
+// a renovation. Binding a new output, or a new device, is what it can show. All the owner
+// organisation learns of a home's commissioning.
 message HomeSetup {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   bool set_up = 2;

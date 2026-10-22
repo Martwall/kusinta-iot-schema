@@ -37,6 +37,19 @@ class Evidence(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     EVIDENCE_MEASURED: _ClassVar[Evidence]
     EVIDENCE_DERIVED: _ClassVar[Evidence]
 
+class FactTopic(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FACT_TOPIC_UNSPECIFIED: _ClassVar[FactTopic]
+    FACT_TOPIC_BUILDING: _ClassVar[FactTopic]
+    FACT_TOPIC_ROOMS: _ClassVar[FactTopic]
+    FACT_TOPIC_HEAT_SOURCE: _ClassVar[FactTopic]
+    FACT_TOPIC_FLOOR_HEATING: _ClassVar[FactTopic]
+    FACT_TOPIC_COMFORT_LOADS: _ClassVar[FactTopic]
+    FACT_TOPIC_ELECTRICITY: _ClassVar[FactTopic]
+    FACT_TOPIC_DISTRICT_HEATING: _ClassVar[FactTopic]
+    FACT_TOPIC_CONNECTIVITY: _ClassVar[FactTopic]
+    FACT_TOPIC_COMFORT: _ClassVar[FactTopic]
+
 class Feature(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     FEATURE_UNSPECIFIED: _ClassVar[Feature]
@@ -104,6 +117,16 @@ EVIDENCE_DRAWING: Evidence
 EVIDENCE_INSPECTED: Evidence
 EVIDENCE_MEASURED: Evidence
 EVIDENCE_DERIVED: Evidence
+FACT_TOPIC_UNSPECIFIED: FactTopic
+FACT_TOPIC_BUILDING: FactTopic
+FACT_TOPIC_ROOMS: FactTopic
+FACT_TOPIC_HEAT_SOURCE: FactTopic
+FACT_TOPIC_FLOOR_HEATING: FactTopic
+FACT_TOPIC_COMFORT_LOADS: FactTopic
+FACT_TOPIC_ELECTRICITY: FactTopic
+FACT_TOPIC_DISTRICT_HEATING: FactTopic
+FACT_TOPIC_CONNECTIVITY: FactTopic
+FACT_TOPIC_COMFORT: FactTopic
 FEATURE_UNSPECIFIED: Feature
 FEATURE_FLOOR_ZONES: Feature
 FEATURE_PLANT: Feature
@@ -168,7 +191,7 @@ class TemplateRef(_message.Message):
     def __init__(self, template_id: _Optional[str] = ..., version: _Optional[int] = ...) -> None: ...
 
 class CommissioningFact(_message.Message):
-    __slots__ = ("fact_id", "space_id", "record_id", "key", "value", "unknown", "answerer", "necessity", "feature", "provenance", "revision", "deviates_from")
+    __slots__ = ("fact_id", "space_id", "record_id", "key", "value", "unknown", "answerer", "necessity", "feature", "provenance", "revision", "deviates_from", "topic")
     FACT_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RECORD_ID_FIELD_NUMBER: _ClassVar[int]
@@ -181,6 +204,7 @@ class CommissioningFact(_message.Message):
     PROVENANCE_FIELD_NUMBER: _ClassVar[int]
     REVISION_FIELD_NUMBER: _ClassVar[int]
     DEVIATES_FROM_FIELD_NUMBER: _ClassVar[int]
+    TOPIC_FIELD_NUMBER: _ClassVar[int]
     fact_id: str
     space_id: _identity_pb2.SpaceId
     record_id: str
@@ -193,7 +217,8 @@ class CommissioningFact(_message.Message):
     provenance: Provenance
     revision: int
     deviates_from: TemplateRef
-    def __init__(self, fact_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., key: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., unknown: _Optional[bool] = ..., answerer: _Optional[_Union[Party, str]] = ..., necessity: _Optional[_Union[Necessity, str]] = ..., feature: _Optional[_Union[Feature, str]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., revision: _Optional[int] = ..., deviates_from: _Optional[_Union[TemplateRef, _Mapping]] = ...) -> None: ...
+    topic: FactTopic
+    def __init__(self, fact_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., key: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., unknown: _Optional[bool] = ..., answerer: _Optional[_Union[Party, str]] = ..., necessity: _Optional[_Union[Necessity, str]] = ..., feature: _Optional[_Union[Feature, str]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., revision: _Optional[int] = ..., deviates_from: _Optional[_Union[TemplateRef, _Mapping]] = ..., topic: _Optional[_Union[FactTopic, str]] = ...) -> None: ...
 
 class TemplateFact(_message.Message):
     __slots__ = ("key", "subject_label", "value")
@@ -222,18 +247,20 @@ class HouseTemplate(_message.Message):
     def __init__(self, template_id: _Optional[str] = ..., building_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., version: _Optional[int] = ..., facts: _Optional[_Iterable[_Union[TemplateFact, _Mapping]]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ...) -> None: ...
 
 class Need(_message.Message):
-    __slots__ = ("fact_key", "test", "space_id", "answerer", "binding")
+    __slots__ = ("fact_key", "test", "space_id", "answerer", "binding", "fact_topic")
     FACT_KEY_FIELD_NUMBER: _ClassVar[int]
     TEST_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     ANSWERER_FIELD_NUMBER: _ClassVar[int]
     BINDING_FIELD_NUMBER: _ClassVar[int]
+    FACT_TOPIC_FIELD_NUMBER: _ClassVar[int]
     fact_key: str
     test: TestKind
     space_id: _identity_pb2.SpaceId
     answerer: Party
     binding: BindingRef
-    def __init__(self, fact_key: _Optional[str] = ..., test: _Optional[_Union[TestKind, str]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., answerer: _Optional[_Union[Party, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ...) -> None: ...
+    fact_topic: FactTopic
+    def __init__(self, fact_key: _Optional[str] = ..., test: _Optional[_Union[TestKind, str]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., answerer: _Optional[_Union[Party, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., fact_topic: _Optional[_Union[FactTopic, str]] = ...) -> None: ...
 
 class FeatureBlock(_message.Message):
     __slots__ = ("reason", "device_id", "binding")

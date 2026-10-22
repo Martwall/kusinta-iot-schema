@@ -1483,13 +1483,13 @@ export declare const ListCommissioningSchema: GenMessage<ListCommissioning>;
 
 /**
  * Creates a fact (empty fact_id) or replaces one. Answered with the CommissioningRecord as
- * stored. The gateway sets answerer, necessity, feature and provenance, save
+ * stored. The gateway sets answerer, necessity, feature, topic and provenance, save
  * provenance.evidence, which the caller states. Refused with metadata "reason":
  *
  *   INVALID_REQUEST
  *   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
- *   "VALUE_TYPE"        a value of another type than the key takes, unknown false, or no
- *                       answer.
+ *   "VALUE_TYPE"        a value of another type than the key takes, a string outside the
+ *                       key's closed list, unknown false, or no answer.
  *   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
  *                       that is not about that kind of space or record.
  *   "ANSWERER"          a key the caller's party does not answer.

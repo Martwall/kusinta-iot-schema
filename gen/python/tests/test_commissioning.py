@@ -177,3 +177,15 @@ def test_the_owner_organisation_is_told_only_whether_a_home_is_set_up():
     )
 
     assert _round_trip(result).home_setups.homes[0].set_up is False
+
+
+def test_a_fact_says_what_it_is_about_for_a_client_without_its_key():
+    decoded = _round_trip(c.CommissioningFact(key="floor.supply_cap", topic=c.FACT_TOPIC_FLOOR_HEATING))
+
+    assert decoded.topic == c.FACT_TOPIC_FLOOR_HEATING
+
+
+def test_a_need_for_a_fact_says_what_it_is_about():
+    need = c.Need(fact_key="plant.max_block_minutes", fact_topic=c.FACT_TOPIC_HEAT_SOURCE)
+
+    assert _round_trip(need).fact_topic == c.FACT_TOPIC_HEAT_SOURCE

@@ -120,6 +120,69 @@ class Evidence extends $pb.ProtobufEnum {
   const Evidence._(super.value, super.name);
 }
 
+/// What a fact is about, for a client that does not know its key. Closed: a client words a
+/// topic it does not know as a detail about the space or record, from its answerer.
+class FactTopic extends $pb.ProtobufEnum {
+  static const FactTopic FACT_TOPIC_UNSPECIFIED =
+      FactTopic._(0, _omitEnumNames ? '' : 'FACT_TOPIC_UNSPECIFIED');
+
+  /// The building: type, house types, drawings, gateway site, service agreements, payer.
+  static const FactTopic FACT_TOPIC_BUILDING =
+      FactTopic._(1, _omitEnumNames ? '' : 'FACT_TOPIC_BUILDING');
+
+  /// Rooms, walls added or removed, how each room is heated, its thermostats.
+  static const FactTopic FACT_TOPIC_ROOMS =
+      FactTopic._(2, _omitEnumNames ? '' : 'FACT_TOPIC_ROOMS');
+
+  /// The heat source: heat pump, its inputs, vendor account, blocks.
+  static const FactTopic FACT_TOPIC_HEAT_SOURCE =
+      FactTopic._(3, _omitEnumNames ? '' : 'FACT_TOPIC_HEAT_SOURCE');
+
+  /// Floor heating: circuits, pump, mixing, supply cap, zones, actuators, probes.
+  static const FactTopic FACT_TOPIC_FLOOR_HEATING =
+      FactTopic._(4, _omitEnumNames ? '' : 'FACT_TOPIC_FLOOR_HEATING');
+
+  /// Electric comfort loads: bathroom floors, towel heaters, their thermostats.
+  static const FactTopic FACT_TOPIC_COMFORT_LOADS =
+      FactTopic._(5, _omitEnumNames ? '' : 'FACT_TOPIC_COMFORT_LOADS');
+
+  /// Electricity: grid subscription, operator, fuse size, meter and its port.
+  static const FactTopic FACT_TOPIC_ELECTRICITY =
+      FactTopic._(6, _omitEnumNames ? '' : 'FACT_TOPIC_ELECTRICITY');
+
+  /// District heating: utility and tariff.
+  static const FactTopic FACT_TOPIC_DISTRICT_HEATING =
+      FactTopic._(7, _omitEnumNames ? '' : 'FACT_TOPIC_DISTRICT_HEATING');
+
+  /// Radio coverage and the gateways that carry it.
+  static const FactTopic FACT_TOPIC_CONNECTIVITY =
+      FactTopic._(8, _omitEnumNames ? '' : 'FACT_TOPIC_CONNECTIVITY');
+
+  /// Comfort wishes and schedules.
+  static const FactTopic FACT_TOPIC_COMFORT =
+      FactTopic._(9, _omitEnumNames ? '' : 'FACT_TOPIC_COMFORT');
+
+  static const $core.List<FactTopic> values = <FactTopic>[
+    FACT_TOPIC_UNSPECIFIED,
+    FACT_TOPIC_BUILDING,
+    FACT_TOPIC_ROOMS,
+    FACT_TOPIC_HEAT_SOURCE,
+    FACT_TOPIC_FLOOR_HEATING,
+    FACT_TOPIC_COMFORT_LOADS,
+    FACT_TOPIC_ELECTRICITY,
+    FACT_TOPIC_DISTRICT_HEATING,
+    FACT_TOPIC_CONNECTIVITY,
+    FACT_TOPIC_COMFORT,
+  ];
+
+  static final $core.List<FactTopic?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 9);
+  static FactTopic? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const FactTopic._(super.value, super.name);
+}
+
 /// The heating features a home's commissioning unlocks.
 class Feature extends $pb.ProtobufEnum {
   static const Feature FEATURE_UNSPECIFIED =

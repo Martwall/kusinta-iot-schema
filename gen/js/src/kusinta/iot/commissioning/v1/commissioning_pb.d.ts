@@ -36,7 +36,9 @@ export declare type Provenance = Message<"kusinta.iot.commissioning.v1.Provenanc
   at?: Timestamp | undefined;
 
   /**
-   * Unset for AUTOMATIC, and after a household handover.
+   * Unset for AUTOMATIC, and after a household handover. On a home's facts and tests it is
+   * given to the home's residents, and to an installer only on what that installer put,
+   * started or concluded; to anyone else it is left unset, with party kept.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId by = 4;
    */
@@ -186,6 +188,13 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
    * @generated from field: kusinta.iot.commissioning.v1.TemplateRef deviates_from = 15;
    */
   deviatesFrom?: TemplateRef | undefined;
+
+  /**
+   * From the gateway's catalogue.
+   *
+   * @generated from field: kusinta.iot.commissioning.v1.FactTopic topic = 16;
+   */
+  topic: FactTopic;
 };
 
 /**
@@ -315,6 +324,13 @@ export declare type Need = Message<"kusinta.iot.commissioning.v1.Need"> & {
    * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 7;
    */
   binding?: BindingRef | undefined;
+
+  /**
+   * For a fact, its CommissioningFact.topic.
+   *
+   * @generated from field: kusinta.iot.commissioning.v1.FactTopic fact_topic = 8;
+   */
+  factTopic: FactTopic;
 };
 
 /**
@@ -519,11 +535,14 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
 export declare const CommissioningProfileSchema: GenMessage<CommissioningProfile>;
 
 /**
- * Whether a home is set up: every REQUIRED fact answered, and every output bound in it
- * passed OUTPUT_LEASE at least once on the device it is bound to. A pass superseded by a
- * change of a floor zone's rooms or control room still counts here, so that set_up does not
- * tell the owner organisation of a renovation; binding a new output, or a new device, is
- * what it can show. All the owner organisation learns of a home's commissioning.
+ * Whether a home is set up: every REQUIRED fact answered with a value at least once, and
+ * every output bound in it passed OUTPUT_LEASE at least once on the device it is bound to.
+ * "Don't know" is not an answer here. What the household does afterwards counts neither
+ * way: a REQUIRED fact once answered still counts when it is removed or changed to "don't
+ * know", as a pass superseded by a change of a floor zone's rooms or control room still
+ * does, so that set_up tells the owner organisation neither of a household's edits nor of
+ * a renovation. Binding a new output, or a new device, is what it can show. All the owner
+ * organisation learns of a home's commissioning.
  *
  * @generated from message kusinta.iot.commissioning.v1.HomeSetup
  */
@@ -730,6 +749,87 @@ export enum Evidence {
  * Describes the enum kusinta.iot.commissioning.v1.Evidence.
  */
 export declare const EvidenceSchema: GenEnum<Evidence>;
+
+/**
+ * What a fact is about, for a client that does not know its key. Closed: a client words a
+ * topic it does not know as a detail about the space or record, from its answerer.
+ *
+ * @generated from enum kusinta.iot.commissioning.v1.FactTopic
+ */
+export enum FactTopic {
+  /**
+   * @generated from enum value: FACT_TOPIC_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The building: type, house types, drawings, gateway site, service agreements, payer.
+   *
+   * @generated from enum value: FACT_TOPIC_BUILDING = 1;
+   */
+  BUILDING = 1,
+
+  /**
+   * Rooms, walls added or removed, how each room is heated, its thermostats.
+   *
+   * @generated from enum value: FACT_TOPIC_ROOMS = 2;
+   */
+  ROOMS = 2,
+
+  /**
+   * The heat source: heat pump, its inputs, vendor account, blocks.
+   *
+   * @generated from enum value: FACT_TOPIC_HEAT_SOURCE = 3;
+   */
+  HEAT_SOURCE = 3,
+
+  /**
+   * Floor heating: circuits, pump, mixing, supply cap, zones, actuators, probes.
+   *
+   * @generated from enum value: FACT_TOPIC_FLOOR_HEATING = 4;
+   */
+  FLOOR_HEATING = 4,
+
+  /**
+   * Electric comfort loads: bathroom floors, towel heaters, their thermostats.
+   *
+   * @generated from enum value: FACT_TOPIC_COMFORT_LOADS = 5;
+   */
+  COMFORT_LOADS = 5,
+
+  /**
+   * Electricity: grid subscription, operator, fuse size, meter and its port.
+   *
+   * @generated from enum value: FACT_TOPIC_ELECTRICITY = 6;
+   */
+  ELECTRICITY = 6,
+
+  /**
+   * District heating: utility and tariff.
+   *
+   * @generated from enum value: FACT_TOPIC_DISTRICT_HEATING = 7;
+   */
+  DISTRICT_HEATING = 7,
+
+  /**
+   * Radio coverage and the gateways that carry it.
+   *
+   * @generated from enum value: FACT_TOPIC_CONNECTIVITY = 8;
+   */
+  CONNECTIVITY = 8,
+
+  /**
+   * Comfort wishes and schedules.
+   *
+   * @generated from enum value: FACT_TOPIC_COMFORT = 9;
+   */
+  COMFORT = 9,
+}
+
+/**
+ * Describes the enum kusinta.iot.commissioning.v1.FactTopic.
+ */
+export declare const FactTopicSchema: GenEnum<FactTopic>;
 
 /**
  * The heating features a home's commissioning unlocks.

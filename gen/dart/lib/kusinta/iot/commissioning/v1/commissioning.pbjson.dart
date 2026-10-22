@@ -70,6 +70,32 @@ final $typed_data.Uint8List evidenceDescriptor = $convert.base64Decode(
     'X0lOU1BFQ1RFRBAEEhUKEUVWSURFTkNFX01FQVNVUkVEEAUSFAoQRVZJREVOQ0VfREVSSVZFRB'
     'AG');
 
+@$core.Deprecated('Use factTopicDescriptor instead')
+const FactTopic$json = {
+  '1': 'FactTopic',
+  '2': [
+    {'1': 'FACT_TOPIC_UNSPECIFIED', '2': 0},
+    {'1': 'FACT_TOPIC_BUILDING', '2': 1},
+    {'1': 'FACT_TOPIC_ROOMS', '2': 2},
+    {'1': 'FACT_TOPIC_HEAT_SOURCE', '2': 3},
+    {'1': 'FACT_TOPIC_FLOOR_HEATING', '2': 4},
+    {'1': 'FACT_TOPIC_COMFORT_LOADS', '2': 5},
+    {'1': 'FACT_TOPIC_ELECTRICITY', '2': 6},
+    {'1': 'FACT_TOPIC_DISTRICT_HEATING', '2': 7},
+    {'1': 'FACT_TOPIC_CONNECTIVITY', '2': 8},
+    {'1': 'FACT_TOPIC_COMFORT', '2': 9},
+  ],
+};
+
+/// Descriptor for `FactTopic`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List factTopicDescriptor = $convert.base64Decode(
+    'CglGYWN0VG9waWMSGgoWRkFDVF9UT1BJQ19VTlNQRUNJRklFRBAAEhcKE0ZBQ1RfVE9QSUNfQl'
+    'VJTERJTkcQARIUChBGQUNUX1RPUElDX1JPT01TEAISGgoWRkFDVF9UT1BJQ19IRUFUX1NPVVJD'
+    'RRADEhwKGEZBQ1RfVE9QSUNfRkxPT1JfSEVBVElORxAEEhwKGEZBQ1RfVE9QSUNfQ09NRk9SVF'
+    '9MT0FEUxAFEhoKFkZBQ1RfVE9QSUNfRUxFQ1RSSUNJVFkQBhIfChtGQUNUX1RPUElDX0RJU1RS'
+    'SUNUX0hFQVRJTkcQBxIbChdGQUNUX1RPUElDX0NPTk5FQ1RJVklUWRAIEhYKEkZBQ1RfVE9QSU'
+    'NfQ09NRk9SVBAJ');
+
 @$core.Deprecated('Use featureDescriptor instead')
 const Feature$json = {
   '1': 'Feature',
@@ -328,6 +354,14 @@ const CommissioningFact$json = {
       '6': '.kusinta.iot.commissioning.v1.TemplateRef',
       '10': 'deviatesFrom'
     },
+    {
+      '1': 'topic',
+      '3': 16,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.FactTopic',
+      '10': 'topic'
+    },
   ],
   '8': [
     {'1': 'answer'},
@@ -352,8 +386,9 @@ final $typed_data.Uint8List commissioningFactDescriptor = $convert.base64Decode(
     'EkgKCnByb3ZlbmFuY2UYCiABKAsyKC5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlByb3'
     'ZlbmFuY2VSCnByb3ZlbmFuY2USGgoIcmV2aXNpb24YDSABKARSCHJldmlzaW9uEk4KDWRldmlh'
     'dGVzX2Zyb20YDyABKAsyKS5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlRlbXBsYXRlUm'
-    'VmUgxkZXZpYXRlc0Zyb21CCAoGYW5zd2VySgQICxANSgQIDhAPUgVzY29wZVIQdGVtcGxhdGVf'
-    'dmVyc2lvblILdGVtcGxhdGVfaWQ=');
+    'VmUgxkZXZpYXRlc0Zyb20SPQoFdG9waWMYECABKA4yJy5rdXNpbnRhLmlvdC5jb21taXNzaW9u'
+    'aW5nLnYxLkZhY3RUb3BpY1IFdG9waWNCCAoGYW5zd2VySgQICxANSgQIDhAPUgVzY29wZVIQdG'
+    'VtcGxhdGVfdmVyc2lvblILdGVtcGxhdGVfaWQ=');
 
 @$core.Deprecated('Use templateFactDescriptor instead')
 const TemplateFact$json = {
@@ -463,6 +498,14 @@ const Need$json = {
       '6': '.kusinta.iot.commissioning.v1.BindingRef',
       '10': 'binding'
     },
+    {
+      '1': 'fact_topic',
+      '3': 8,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.FactTopic',
+      '10': 'factTopic'
+    },
   ],
   '8': [
     {'1': 'what'},
@@ -481,7 +524,9 @@ final $typed_data.Uint8List needDescriptor = $convert.base64Decode(
     'IAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSPwoIYW5zd2'
     'VyZXIYBSABKA4yIy5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlBhcnR5UghhbnN3ZXJl'
     'chJCCgdiaW5kaW5nGAcgASgLMigua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5CaW5kaW'
-    '5nUmVmUgdiaW5kaW5nQgYKBHdoYXRKBAgEEAVKBAgGEAdSCXJlY29yZF9pZFIFZmllbGQ=');
+    '5nUmVmUgdiaW5kaW5nEkYKCmZhY3RfdG9waWMYCCABKA4yJy5rdXNpbnRhLmlvdC5jb21taXNz'
+    'aW9uaW5nLnYxLkZhY3RUb3BpY1IJZmFjdFRvcGljQgYKBHdoYXRKBAgEEAVKBAgGEAdSCXJlY2'
+    '9yZF9pZFIFZmllbGQ=');
 
 @$core.Deprecated('Use featureBlockDescriptor instead')
 const FeatureBlock$json = {

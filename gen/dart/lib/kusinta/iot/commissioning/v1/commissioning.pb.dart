@@ -117,7 +117,9 @@ class Provenance extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $0.Timestamp ensureAt() => $_ensure(2);
 
-  /// Unset for AUTOMATIC, and after a household handover.
+  /// Unset for AUTOMATIC, and after a household handover. On a home's facts and tests it is
+  /// given to the home's residents, and to an installer only on what that installer put,
+  /// started or concluded; to anyone else it is left unset, with party kept.
   @$pb.TagNumber(4)
   $1.UserId get by => $_getN(3);
   @$pb.TagNumber(4)
@@ -285,6 +287,7 @@ class CommissioningFact extends $pb.GeneratedMessage {
     Provenance? provenance,
     $fixnum.Int64? revision,
     TemplateRef? deviatesFrom,
+    FactTopic? topic,
   }) {
     final result = create();
     if (factId != null) result.factId = factId;
@@ -299,6 +302,7 @@ class CommissioningFact extends $pb.GeneratedMessage {
     if (provenance != null) result.provenance = provenance;
     if (revision != null) result.revision = revision;
     if (deviatesFrom != null) result.deviatesFrom = deviatesFrom;
+    if (topic != null) result.topic = topic;
     return result;
   }
 
@@ -350,6 +354,10 @@ class CommissioningFact extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<TemplateRef>(15, _omitFieldNames ? '' : 'deviatesFrom',
         subBuilder: TemplateRef.create)
+    ..e<FactTopic>(16, _omitFieldNames ? '' : 'topic', $pb.PbFieldType.OE,
+        defaultOrMaker: FactTopic.FACT_TOPIC_UNSPECIFIED,
+        valueOf: FactTopic.valueOf,
+        enumValues: FactTopic.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -503,6 +511,16 @@ class CommissioningFact extends $pb.GeneratedMessage {
   void clearDeviatesFrom() => $_clearField(15);
   @$pb.TagNumber(15)
   TemplateRef ensureDeviatesFrom() => $_ensure(11);
+
+  /// From the gateway's catalogue.
+  @$pb.TagNumber(16)
+  FactTopic get topic => $_getN(12);
+  @$pb.TagNumber(16)
+  set topic(FactTopic value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasTopic() => $_has(12);
+  @$pb.TagNumber(16)
+  void clearTopic() => $_clearField(16);
 }
 
 /// One answer in a house template.
@@ -725,6 +743,7 @@ class Need extends $pb.GeneratedMessage {
     $1.SpaceId? spaceId,
     Party? answerer,
     BindingRef? binding,
+    FactTopic? factTopic,
   }) {
     final result = create();
     if (factKey != null) result.factKey = factKey;
@@ -732,6 +751,7 @@ class Need extends $pb.GeneratedMessage {
     if (spaceId != null) result.spaceId = spaceId;
     if (answerer != null) result.answerer = answerer;
     if (binding != null) result.binding = binding;
+    if (factTopic != null) result.factTopic = factTopic;
     return result;
   }
 
@@ -768,6 +788,10 @@ class Need extends $pb.GeneratedMessage {
         enumValues: Party.values)
     ..aOM<BindingRef>(7, _omitFieldNames ? '' : 'binding',
         subBuilder: BindingRef.create)
+    ..e<FactTopic>(8, _omitFieldNames ? '' : 'factTopic', $pb.PbFieldType.OE,
+        defaultOrMaker: FactTopic.FACT_TOPIC_UNSPECIFIED,
+        valueOf: FactTopic.valueOf,
+        enumValues: FactTopic.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -842,6 +866,16 @@ class Need extends $pb.GeneratedMessage {
   void clearBinding() => $_clearField(7);
   @$pb.TagNumber(7)
   BindingRef ensureBinding() => $_ensure(4);
+
+  /// For a fact, its CommissioningFact.topic.
+  @$pb.TagNumber(8)
+  FactTopic get factTopic => $_getN(5);
+  @$pb.TagNumber(8)
+  set factTopic(FactTopic value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasFactTopic() => $_has(5);
+  @$pb.TagNumber(8)
+  void clearFactTopic() => $_clearField(8);
 }
 
 class FeatureBlock extends $pb.GeneratedMessage {
@@ -1356,11 +1390,14 @@ class CommissioningProfile extends $pb.GeneratedMessage {
   void clearNeedsWithheld() => $_clearField(7);
 }
 
-/// Whether a home is set up: every REQUIRED fact answered, and every output bound in it
-/// passed OUTPUT_LEASE at least once on the device it is bound to. A pass superseded by a
-/// change of a floor zone's rooms or control room still counts here, so that set_up does not
-/// tell the owner organisation of a renovation; binding a new output, or a new device, is
-/// what it can show. All the owner organisation learns of a home's commissioning.
+/// Whether a home is set up: every REQUIRED fact answered with a value at least once, and
+/// every output bound in it passed OUTPUT_LEASE at least once on the device it is bound to.
+/// "Don't know" is not an answer here. What the household does afterwards counts neither
+/// way: a REQUIRED fact once answered still counts when it is removed or changed to "don't
+/// know", as a pass superseded by a change of a floor zone's rooms or control room still
+/// does, so that set_up tells the owner organisation neither of a household's edits nor of
+/// a renovation. Binding a new output, or a new device, is what it can show. All the owner
+/// organisation learns of a home's commissioning.
 class HomeSetup extends $pb.GeneratedMessage {
   factory HomeSetup({
     $1.SpaceId? homeId,
