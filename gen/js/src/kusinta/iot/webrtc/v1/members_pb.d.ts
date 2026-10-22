@@ -319,8 +319,8 @@ export declare const PromotionRequestsSchema: GenMessage<PromotionRequests>;
  * then stays a member, a resident of it. By a residency id, it ends that residency alone, as
  * RemoveUserFromSpace would, with the invites the holder made as its resident.
  *
- * The last household admin of a home with other residents naming themselves is refused as
- * "last_household_admin" (household.proto, ADMIN-LESS HOME), and nothing is removed.
+ * A removal of themselves that would leave a home with residents but no household admin is
+ * refused as "last_household_admin" (household.proto, LAST ADMIN), and nothing is removed.
  *
  * A caller holding ROLE_GATEWAY_ADMIN may remove anyone but a vouched administrator
  * ("vouched_admin"). A caller holding ROLE_PROPERTY_OWNER, and not ROLE_GATEWAY_ADMIN,

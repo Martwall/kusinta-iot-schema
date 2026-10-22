@@ -22,9 +22,9 @@ export declare const file_kusinta_iot_webrtc_v1_household: GenFile;
  * A household admin of the home only; anyone else is refused as NOT_ENTITLED. user_id is
  * never a residency id (INVALID_REQUEST). A resident of the home who is not a household admin
  * is acknowledged and nothing changes; anyone else is "not_a_member", as members.proto has it.
- * The last household admin naming themselves while the home has other residents is refused as
- * "last_household_admin" (ADMIN-LESS HOME). Ends the promotion requests the demoted member made
- * for the home.
+ * A demotion that would leave the home with no household admin is refused as
+ * "last_household_admin" (LAST ADMIN). Ends the promotion requests the demoted member made for
+ * the home.
  *
  * @generated from message kusinta.iot.webrtc.v1.DemoteHouseholdAdmin
  */
@@ -181,8 +181,8 @@ export declare const ListHouseholdHandoversSchema: GenMessage<ListHouseholdHando
  *
  * The answer to StartHouseholdHandover, and pushed as GatewayMessage.household_handover to
  * every session it is told to (ListHouseholdHandovers) whenever it is started, cancelled or
- * done, or its staff_confirmable_from moves: to the household, the notice. A DONE push reaches the household's sessions before
- * they lose the home.
+ * done, or its staff_confirmable_from moves: to the household, the notice. A DONE push
+ * reaches the household's sessions before they lose the home.
  *
  * @generated from message kusinta.iot.webrtc.v1.HouseholdHandover
  */
@@ -332,8 +332,8 @@ export declare type HouseholdExport = Message<"kusinta.iot.webrtc.v1.HouseholdEx
     case: "roomClimates";
   } | {
     /**
-     * One room's history over at most 31 days of buckets (GetRoomHistory). A room's history
-     * comes in as many parts as it takes, in order.
+     * One room's history over at most 7 days of buckets, as GetRoomHistory answers it. A
+     * room's history comes in as many parts as it takes, in order.
      *
      * @generated from field: kusinta.iot.climate.v1.RoomHistory room_history = 3;
      */

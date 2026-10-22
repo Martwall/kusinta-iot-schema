@@ -18,7 +18,7 @@ import {
   HouseholdHandoverStateSchema,
   StaffAppointmentKind,
 } from '../kusinta/iot/webrtc/v1/household_pb.js'
-import { CreateInviteSchema } from '../kusinta/iot/webrtc/v1/invite_pb.js'
+import { CreateInviteSchema, InviteAdmission, InviteSchema } from '../kusinta/iot/webrtc/v1/invite_pb.js'
 import { ManagementRequestSchema, PrivacyDisclosureSchema } from '../kusinta/iot/webrtc/v1/management_pb.js'
 import { PromotionRequestSchema, RequestPromotionSchema } from '../kusinta/iot/webrtc/v1/members_pb.js'
 import { GatewayMessageSchema, ManagementResultSchema } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
@@ -52,6 +52,20 @@ describe('household admin relation', () => {
       email: 'new.owner@example.org',
     })
     expect(decoded.relation).toBe(MembershipRelation.HOUSEHOLD_ADMIN)
+  })
+
+  it('lists an appointment invite as bound to an address, admitting on its match', () => {
+    const decoded = onTheWire(InviteSchema, {
+      inviteId: 'inv-1',
+      relation: MembershipRelation.HOUSEHOLD_ADMIN,
+      email: 'new.owner@example.org',
+      admission: InviteAdmission.ON_EMAIL_MATCH,
+    })
+    expect([decoded.relation, decoded.email, decoded.admission]).toEqual([
+      MembershipRelation.HOUSEHOLD_ADMIN,
+      'new.owner@example.org',
+      InviteAdmission.ON_EMAIL_MATCH,
+    ])
   })
 
   it('tells a staff member redeeming an appointment that they may not be appointed', () => {

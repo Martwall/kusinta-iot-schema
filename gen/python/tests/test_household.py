@@ -57,6 +57,20 @@ def test_an_appointment_invite_carries_the_household_admin_relation():
     assert _round_trip(invite).relation == roles_pb2.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN
 
 
+def test_an_appointment_invite_is_listed_as_bound_to_an_address():
+    invite = invite_pb2.Invite(
+        relation=roles_pb2.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN,
+        email="new.owner@example.org",
+        admission=invite_pb2.INVITE_ADMISSION_ON_EMAIL_MATCH,
+    )
+
+    decoded = _round_trip(invite)
+    assert (decoded.email, decoded.admission) == (
+        "new.owner@example.org",
+        invite_pb2.INVITE_ADMISSION_ON_EMAIL_MATCH,
+    )
+
+
 def test_a_redeem_by_someone_who_may_not_be_appointed_has_its_own_outcome():
     result = signaling_pb2.RedeemInviteResult(
         request_id="r-1", outcome=signaling_pb2.REDEEM_OUTCOME_NOT_ELIGIBLE

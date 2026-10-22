@@ -248,7 +248,8 @@ export declare const AssignUserToSpaceSchema: GenMessage<AssignUserToSpace>;
  *
  * Removing someone else from a home is guarded as assigning is: within the household, it is a
  * household admin's (household.proto). Anyone may remove themselves, save the last household
- * admin of a home that has other residents ("last_household_admin", household.proto). A
+ * admin of a home that has other residents ("last_household_admin", household.proto, LAST
+ * ADMIN, which also refuses a household admin removing another when that would leave none). A
  * membership the caller is not told of under the user id given (see AssignUserToSpace) is
  * answered as one that does not exist, and stays.
  *
@@ -284,9 +285,9 @@ export declare const RemoveUserFromSpaceSchema: GenMessage<RemoveUserFromSpace>;
  * Into a home go only the building's own devices and devices its residents own, and a
  * device belongs to one home at most; filing into, out of or beside a home is guarded by
  * the gateway, and within the household it is a household admin's, save a device a resident
- * owns, which its owner files (household.proto). A caller not allowed is refused as NOT_ENTITLED, and filing that would leave
- * a link the caller can see across a home's boundary is refused whatever the caller; one
- * they cannot see is removed instead.
+ * owns, which its owner files (household.proto). A caller not allowed is refused as
+ * NOT_ENTITLED, and filing that would leave a link the caller can see across a home's
+ * boundary is refused whatever the caller; one they cannot see is removed instead.
  *
  * @generated from message kusinta.iot.webrtc.v1.PlaceDeviceInSpace
  */

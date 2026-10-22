@@ -21,7 +21,8 @@ export declare const file_kusinta_iot_webrtc_v1_invite: GenFile;
  * RESIDENT is refused anywhere but a home (access.v1.MembershipRelation). HOUSEHOLD_ADMIN is
  * a staff appointment, from a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, on an
  * empty home only, and refused as household.proto (STAFF APPOINTMENT) says; it never takes
- * access_until. No invite ever makes anyone a gateway administrator or a property owner:
+ * access_until. It must be bound to an address: one with no email is refused as
+ * INVALID_REQUEST with metadata {"reason": "email_required"}, and is never made a home key. No invite ever makes anyone a gateway administrator or a property owner:
  * those come only by promotion of someone already a member, and any other relation is refused
  * as INVALID_REQUEST.
  *

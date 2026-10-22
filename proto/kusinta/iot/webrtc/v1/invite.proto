@@ -38,9 +38,9 @@ option optimize_for = SPEED;
 //   * SERVICE with no address: a join request is made, approved by whoever may put people on
 //     the space (INVITE_ADMISSION_ON_APPROVAL);
 //   * appointment — a HOUSEHOLD_ADMIN invite, created by a property owner or an administrator
-//     on an empty home (household.proto, STAFF APPOINTMENT): bound to an address or a home
-//     key, as a RESIDENT invite they create would be, and making whoever it files the home's
-//     household admin.
+//     on an empty home (household.proto, STAFF APPOINTMENT): always bound to an address
+//     (INVITE_ADMISSION_ON_EMAIL_MATCH), never a home key or anything else its bearer can
+//     redeem, since whoever it files governs the home.
 //
 // An intercepted link or code of an invite that makes a join request gets nobody in on its
 // own. A home key does let in whoever redeems it first, so it is bounded otherwise: it is
@@ -81,7 +81,8 @@ option optimize_for = SPEED;
 // RESIDENT is refused anywhere but a home (access.v1.MembershipRelation). HOUSEHOLD_ADMIN is
 // a staff appointment, from a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, on an
 // empty home only, and refused as household.proto (STAFF APPOINTMENT) says; it never takes
-// access_until. No invite ever makes anyone a gateway administrator or a property owner:
+// access_until. It must be bound to an address: one with no email is refused as
+// INVALID_REQUEST with metadata {"reason": "email_required"}, and is never made a home key. No invite ever makes anyone a gateway administrator or a property owner:
 // those come only by promotion of someone already a member, and any other relation is refused
 // as INVALID_REQUEST.
 //

@@ -31,9 +31,9 @@ export 'household.pbenum.dart';
 /// A household admin of the home only; anyone else is refused as NOT_ENTITLED. user_id is
 /// never a residency id (INVALID_REQUEST). A resident of the home who is not a household admin
 /// is acknowledged and nothing changes; anyone else is "not_a_member", as members.proto has it.
-/// The last household admin naming themselves while the home has other residents is refused as
-/// "last_household_admin" (ADMIN-LESS HOME). Ends the promotion requests the demoted member made
-/// for the home.
+/// A demotion that would leave the home with no household admin is refused as
+/// "last_household_admin" (LAST ADMIN). Ends the promotion requests the demoted member made for
+/// the home.
 class DemoteHouseholdAdmin extends $pb.GeneratedMessage {
   factory DemoteHouseholdAdmin({
     $0.SpaceId? homeId,
@@ -496,8 +496,8 @@ class ListHouseholdHandovers extends $pb.GeneratedMessage {
 ///
 /// The answer to StartHouseholdHandover, and pushed as GatewayMessage.household_handover to
 /// every session it is told to (ListHouseholdHandovers) whenever it is started, cancelled or
-/// done, or its staff_confirmable_from moves: to the household, the notice. A DONE push reaches the household's sessions before
-/// they lose the home.
+/// done, or its staff_confirmable_from moves: to the household, the notice. A DONE push
+/// reaches the household's sessions before they lose the home.
 class HouseholdHandover extends $pb.GeneratedMessage {
   factory HouseholdHandover({
     $core.String? handoverId,
@@ -941,8 +941,8 @@ class HouseholdExport extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $2.RoomClimateList ensureRoomClimates() => $_ensure(1);
 
-  /// One room's history over at most 31 days of buckets (GetRoomHistory). A room's history
-  /// comes in as many parts as it takes, in order.
+  /// One room's history over at most 7 days of buckets, as GetRoomHistory answers it. A
+  /// room's history comes in as many parts as it takes, in order.
   @$pb.TagNumber(3)
   $2.RoomHistory get roomHistory => $_getN(2);
   @$pb.TagNumber(3)
