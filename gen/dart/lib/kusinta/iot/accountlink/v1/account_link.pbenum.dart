@@ -14,6 +14,34 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class AccountLinkStatus extends $pb.ProtobufEnum {
+  static const AccountLinkStatus ACCOUNT_LINK_STATUS_UNSPECIFIED =
+      AccountLinkStatus._(
+          0, _omitEnumNames ? '' : 'ACCOUNT_LINK_STATUS_UNSPECIFIED');
+  static const AccountLinkStatus ACCOUNT_LINK_STATUS_LINKED =
+      AccountLinkStatus._(
+          1, _omitEnumNames ? '' : 'ACCOUNT_LINK_STATUS_LINKED');
+
+  /// A refresh was REJECTED, or went unanswered past its retry window: the household links
+  /// again.
+  static const AccountLinkStatus ACCOUNT_LINK_STATUS_NEEDS_RELINK =
+      AccountLinkStatus._(
+          2, _omitEnumNames ? '' : 'ACCOUNT_LINK_STATUS_NEEDS_RELINK');
+
+  static const $core.List<AccountLinkStatus> values = <AccountLinkStatus>[
+    ACCOUNT_LINK_STATUS_UNSPECIFIED,
+    ACCOUNT_LINK_STATUS_LINKED,
+    ACCOUNT_LINK_STATUS_NEEDS_RELINK,
+  ];
+
+  static final $core.List<AccountLinkStatus?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static AccountLinkStatus? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const AccountLinkStatus._(super.value, super.name);
+}
+
 /// The services a home's account can be linked at. Each value names the fixed string that
 /// stands for it in a nonce's "svc" claim, which never changes with the value's name.
 class LinkedService extends $pb.ProtobufEnum {
@@ -43,10 +71,10 @@ class AccountLinkOutcome extends $pb.ProtobufEnum {
       AccountLinkOutcome._(
           0, _omitEnumNames ? '' : 'ACCOUNT_LINK_OUTCOME_UNSPECIFIED');
 
-  /// Stored. A link the home already had at the same service is replaced. The gateway revokes
-  /// the replaced grant (RevokeToken) only once 30 seconds have passed with no
-  /// AccountLinkCancelled for this request_id; on a cancel within them, it restores the
-  /// replaced link.
+  /// Stored. A link the home already had at the same service is replaced. The gateway keeps
+  /// the replaced grant, unused, and revokes it (RevokeToken) only once 60 seconds have passed
+  /// since this answer with no AccountLinkCancelled for its request_id; on a cancel within
+  /// them, it deletes the new grant and restores the replaced one.
   static const AccountLinkOutcome ACCOUNT_LINK_OUTCOME_LINKED =
       AccountLinkOutcome._(
           1, _omitEnumNames ? '' : 'ACCOUNT_LINK_OUTCOME_LINKED');

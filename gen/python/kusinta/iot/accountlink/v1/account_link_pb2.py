@@ -26,7 +26,7 @@ from google.protobuf import duration_pb2 as google_dot_protobuf_dot_duration__pb
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n-kusinta/iot/accountlink/v1/account_link.proto\x12\x1akusinta.iot.accountlink.v1\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"c\n\x10\x41\x63\x63ountLinkNonce\x12\x14\n\x05nonce\x18\x01 \x01(\tR\x05nonce\x12\x39\n\nexpires_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\texpiresAt\"\xe3\x01\n\x16\x41\x63\x63ountLinkNonceClaims\x12\x10\n\x03iss\x18\x01 \x01(\tR\x03iss\x12\x10\n\x03\x61ud\x18\x02 \x01(\tR\x03\x61ud\x12\x19\n\x08sub_hash\x18\x03 \x01(\tR\x07subHash\x12,\n\x03iat\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x03iat\x12,\n\x03\x65xp\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x03\x65xp\x12\x10\n\x03jti\x18\x06 \x01(\tR\x03jti\x12\x10\n\x03svc\x18\x08 \x01(\tR\x03svcJ\x04\x08\x07\x10\x08R\x04home\"\x81\x01\n\x0b\x41\x63\x63\x65ssGrant\x12!\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\tR\x0b\x61\x63\x63\x65ssToken\x12\x39\n\nexpires_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\texpiresAt\x12\x14\n\x05scope\x18\x03 \x01(\tR\x05scope\"r\n\nTokenGrant\x12?\n\x06\x61\x63\x63\x65ss\x18\x01 \x01(\x0b\x32\'.kusinta.iot.accountlink.v1.AccessGrantR\x06\x61\x63\x63\x65ss\x12#\n\rrefresh_token\x18\x02 \x01(\tR\x0crefreshToken\"\x82\x01\n\rAccountLinked\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x14\n\x05nonce\x18\x02 \x01(\tR\x05nonce\x12<\n\x05grant\x18\x03 \x01(\x0b\x32&.kusinta.iot.accountlink.v1.TokenGrantR\x05grant\"5\n\x14\x41\x63\x63ountLinkCancelled\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\"|\n\x11\x41\x63\x63ountLinkResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12H\n\x07outcome\x18\x02 \x01(\x0e\x32..kusinta.iot.accountlink.v1.AccountLinkOutcomeR\x07outcome\"\x97\x01\n\x0cRefreshToken\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x43\n\x07service\x18\x02 \x01(\x0e\x32).kusinta.iot.accountlink.v1.LinkedServiceR\x07service\x12#\n\rrefresh_token\x18\x03 \x01(\tR\x0crefreshToken\"\xed\x01\n\x0eTokenRefreshed\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x42\n\x07outcome\x18\x02 \x01(\x0e\x32(.kusinta.iot.accountlink.v1.TokenOutcomeR\x07outcome\x12<\n\x05grant\x18\x03 \x01(\x0b\x32&.kusinta.iot.accountlink.v1.TokenGrantR\x05grant\x12:\n\x0bretry_after\x18\x04 \x01(\x0b\x32\x19.google.protobuf.DurationR\nretryAfter\"\x96\x01\n\x0bRevokeToken\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x43\n\x07service\x18\x02 \x01(\x0e\x32).kusinta.iot.accountlink.v1.LinkedServiceR\x07service\x12#\n\rrefresh_token\x18\x03 \x01(\tR\x0crefreshToken\"\xad\x01\n\x0cTokenRevoked\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x42\n\x07outcome\x18\x02 \x01(\x0e\x32(.kusinta.iot.accountlink.v1.TokenOutcomeR\x07outcome\x12:\n\x0bretry_after\x18\x03 \x01(\x0b\x32\x19.google.protobuf.DurationR\nretryAfter*L\n\rLinkedService\x12\x1e\n\x1aLINKED_SERVICE_UNSPECIFIED\x10\x00\x12\x1b\n\x17LINKED_SERVICE_MYUPLINK\x10\x01*~\n\x12\x41\x63\x63ountLinkOutcome\x12$\n ACCOUNT_LINK_OUTCOME_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x41\x43\x43OUNT_LINK_OUTCOME_LINKED\x10\x01\x12!\n\x1d\x41\x43\x43OUNT_LINK_OUTCOME_REJECTED\x10\x02*~\n\x0cTokenOutcome\x12\x1d\n\x19TOKEN_OUTCOME_UNSPECIFIED\x10\x00\x12\x14\n\x10TOKEN_OUTCOME_OK\x10\x01\x12\x1a\n\x16TOKEN_OUTCOME_REJECTED\x10\x02\x12\x1d\n\x19TOKEN_OUTCOME_UNAVAILABLE\x10\x03\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n-kusinta/iot/accountlink/v1/account_link.proto\x12\x1akusinta.iot.accountlink.v1\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xd8\x01\n\x0b\x41\x63\x63ountLink\x12\x43\n\x07service\x18\x01 \x01(\x0e\x32).kusinta.iot.accountlink.v1.LinkedServiceR\x07service\x12\x45\n\x06status\x18\x02 \x01(\x0e\x32-.kusinta.iot.accountlink.v1.AccountLinkStatusR\x06status\x12=\n\x0clinked_since\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0blinkedSince\"M\n\x0c\x41\x63\x63ountLinks\x12=\n\x05links\x18\x01 \x03(\x0b\x32\'.kusinta.iot.accountlink.v1.AccountLinkR\x05links\"c\n\x10\x41\x63\x63ountLinkNonce\x12\x14\n\x05nonce\x18\x01 \x01(\tR\x05nonce\x12\x39\n\nexpires_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\texpiresAt\"\xda\x01\n\x16\x41\x63\x63ountLinkNonceClaims\x12\x10\n\x03iss\x18\x01 \x01(\tR\x03iss\x12\x10\n\x03\x61ud\x18\x02 \x01(\tR\x03\x61ud\x12\x10\n\x03sub\x18\x03 \x01(\tR\x03sub\x12,\n\x03iat\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x03iat\x12,\n\x03\x65xp\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x03\x65xp\x12\x10\n\x03jti\x18\x06 \x01(\tR\x03jti\x12\x10\n\x03svc\x18\x08 \x01(\tR\x03svcJ\x04\x08\x07\x10\x08R\x04home\"\x81\x01\n\x0b\x41\x63\x63\x65ssGrant\x12!\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\tR\x0b\x61\x63\x63\x65ssToken\x12\x39\n\nexpires_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\texpiresAt\x12\x14\n\x05scope\x18\x03 \x01(\tR\x05scope\"r\n\nTokenGrant\x12?\n\x06\x61\x63\x63\x65ss\x18\x01 \x01(\x0b\x32\'.kusinta.iot.accountlink.v1.AccessGrantR\x06\x61\x63\x63\x65ss\x12#\n\rrefresh_token\x18\x02 \x01(\tR\x0crefreshToken\"\x82\x01\n\rAccountLinked\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x14\n\x05nonce\x18\x02 \x01(\tR\x05nonce\x12<\n\x05grant\x18\x03 \x01(\x0b\x32&.kusinta.iot.accountlink.v1.TokenGrantR\x05grant\"5\n\x14\x41\x63\x63ountLinkCancelled\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\"|\n\x11\x41\x63\x63ountLinkResult\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12H\n\x07outcome\x18\x02 \x01(\x0e\x32..kusinta.iot.accountlink.v1.AccountLinkOutcomeR\x07outcome\"\x97\x01\n\x0cRefreshToken\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x43\n\x07service\x18\x02 \x01(\x0e\x32).kusinta.iot.accountlink.v1.LinkedServiceR\x07service\x12#\n\rrefresh_token\x18\x03 \x01(\tR\x0crefreshToken\"\xed\x01\n\x0eTokenRefreshed\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x42\n\x07outcome\x18\x02 \x01(\x0e\x32(.kusinta.iot.accountlink.v1.TokenOutcomeR\x07outcome\x12<\n\x05grant\x18\x03 \x01(\x0b\x32&.kusinta.iot.accountlink.v1.TokenGrantR\x05grant\x12:\n\x0bretry_after\x18\x04 \x01(\x0b\x32\x19.google.protobuf.DurationR\nretryAfter\"\x96\x01\n\x0bRevokeToken\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x43\n\x07service\x18\x02 \x01(\x0e\x32).kusinta.iot.accountlink.v1.LinkedServiceR\x07service\x12#\n\rrefresh_token\x18\x03 \x01(\tR\x0crefreshToken\"\xad\x01\n\x0cTokenRevoked\x12\x1d\n\nrequest_id\x18\x01 \x01(\tR\trequestId\x12\x42\n\x07outcome\x18\x02 \x01(\x0e\x32(.kusinta.iot.accountlink.v1.TokenOutcomeR\x07outcome\x12:\n\x0bretry_after\x18\x03 \x01(\x0b\x32\x19.google.protobuf.DurationR\nretryAfter*~\n\x11\x41\x63\x63ountLinkStatus\x12#\n\x1f\x41\x43\x43OUNT_LINK_STATUS_UNSPECIFIED\x10\x00\x12\x1e\n\x1a\x41\x43\x43OUNT_LINK_STATUS_LINKED\x10\x01\x12$\n ACCOUNT_LINK_STATUS_NEEDS_RELINK\x10\x02*L\n\rLinkedService\x12\x1e\n\x1aLINKED_SERVICE_UNSPECIFIED\x10\x00\x12\x1b\n\x17LINKED_SERVICE_MYUPLINK\x10\x01*~\n\x12\x41\x63\x63ountLinkOutcome\x12$\n ACCOUNT_LINK_OUTCOME_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x41\x43\x43OUNT_LINK_OUTCOME_LINKED\x10\x01\x12!\n\x1d\x41\x43\x43OUNT_LINK_OUTCOME_REJECTED\x10\x02*~\n\x0cTokenOutcome\x12\x1d\n\x19TOKEN_OUTCOME_UNSPECIFIED\x10\x00\x12\x14\n\x10TOKEN_OUTCOME_OK\x10\x01\x12\x1a\n\x16TOKEN_OUTCOME_REJECTED\x10\x02\x12\x1d\n\x19TOKEN_OUTCOME_UNAVAILABLE\x10\x03\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,32 +34,38 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.accountlink.v1.
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_LINKEDSERVICE']._serialized_start=1758
-  _globals['_LINKEDSERVICE']._serialized_end=1834
-  _globals['_ACCOUNTLINKOUTCOME']._serialized_start=1836
-  _globals['_ACCOUNTLINKOUTCOME']._serialized_end=1962
-  _globals['_TOKENOUTCOME']._serialized_start=1964
-  _globals['_TOKENOUTCOME']._serialized_end=2090
-  _globals['_ACCOUNTLINKNONCE']._serialized_start=142
-  _globals['_ACCOUNTLINKNONCE']._serialized_end=241
-  _globals['_ACCOUNTLINKNONCECLAIMS']._serialized_start=244
-  _globals['_ACCOUNTLINKNONCECLAIMS']._serialized_end=471
-  _globals['_ACCESSGRANT']._serialized_start=474
-  _globals['_ACCESSGRANT']._serialized_end=603
-  _globals['_TOKENGRANT']._serialized_start=605
-  _globals['_TOKENGRANT']._serialized_end=719
-  _globals['_ACCOUNTLINKED']._serialized_start=722
-  _globals['_ACCOUNTLINKED']._serialized_end=852
-  _globals['_ACCOUNTLINKCANCELLED']._serialized_start=854
-  _globals['_ACCOUNTLINKCANCELLED']._serialized_end=907
-  _globals['_ACCOUNTLINKRESULT']._serialized_start=909
-  _globals['_ACCOUNTLINKRESULT']._serialized_end=1033
-  _globals['_REFRESHTOKEN']._serialized_start=1036
-  _globals['_REFRESHTOKEN']._serialized_end=1187
-  _globals['_TOKENREFRESHED']._serialized_start=1190
-  _globals['_TOKENREFRESHED']._serialized_end=1427
-  _globals['_REVOKETOKEN']._serialized_start=1430
-  _globals['_REVOKETOKEN']._serialized_end=1580
-  _globals['_TOKENREVOKED']._serialized_start=1583
-  _globals['_TOKENREVOKED']._serialized_end=1756
+  _globals['_ACCOUNTLINKSTATUS']._serialized_start=2047
+  _globals['_ACCOUNTLINKSTATUS']._serialized_end=2173
+  _globals['_LINKEDSERVICE']._serialized_start=2175
+  _globals['_LINKEDSERVICE']._serialized_end=2251
+  _globals['_ACCOUNTLINKOUTCOME']._serialized_start=2253
+  _globals['_ACCOUNTLINKOUTCOME']._serialized_end=2379
+  _globals['_TOKENOUTCOME']._serialized_start=2381
+  _globals['_TOKENOUTCOME']._serialized_end=2507
+  _globals['_ACCOUNTLINK']._serialized_start=143
+  _globals['_ACCOUNTLINK']._serialized_end=359
+  _globals['_ACCOUNTLINKS']._serialized_start=361
+  _globals['_ACCOUNTLINKS']._serialized_end=438
+  _globals['_ACCOUNTLINKNONCE']._serialized_start=440
+  _globals['_ACCOUNTLINKNONCE']._serialized_end=539
+  _globals['_ACCOUNTLINKNONCECLAIMS']._serialized_start=542
+  _globals['_ACCOUNTLINKNONCECLAIMS']._serialized_end=760
+  _globals['_ACCESSGRANT']._serialized_start=763
+  _globals['_ACCESSGRANT']._serialized_end=892
+  _globals['_TOKENGRANT']._serialized_start=894
+  _globals['_TOKENGRANT']._serialized_end=1008
+  _globals['_ACCOUNTLINKED']._serialized_start=1011
+  _globals['_ACCOUNTLINKED']._serialized_end=1141
+  _globals['_ACCOUNTLINKCANCELLED']._serialized_start=1143
+  _globals['_ACCOUNTLINKCANCELLED']._serialized_end=1196
+  _globals['_ACCOUNTLINKRESULT']._serialized_start=1198
+  _globals['_ACCOUNTLINKRESULT']._serialized_end=1322
+  _globals['_REFRESHTOKEN']._serialized_start=1325
+  _globals['_REFRESHTOKEN']._serialized_end=1476
+  _globals['_TOKENREFRESHED']._serialized_start=1479
+  _globals['_TOKENREFRESHED']._serialized_end=1716
+  _globals['_REVOKETOKEN']._serialized_start=1719
+  _globals['_REVOKETOKEN']._serialized_end=1869
+  _globals['_TOKENREVOKED']._serialized_start=1872
+  _globals['_TOKENREVOKED']._serialized_end=2045
 # @@protoc_insertion_point(module_scope)

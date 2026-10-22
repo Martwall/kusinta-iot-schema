@@ -422,6 +422,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'accountLinkNonce'
     },
+    {
+      '1': 'account_links',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.AccountLinks',
+      '9': 0,
+      '10': 'accountLinks'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -453,7 +462,8 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'dBJOCg5oZWF0aW5nX3JlY29yZBgQIAEoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdG'
     'luZ1JlY29yZEgAUg1oZWF0aW5nUmVjb3JkElwKEmFjY291bnRfbGlua19ub25jZRgRIAEoCzIs'
     'Lmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkFjY291bnRMaW5rTm9uY2VIAFIQYWNjb3VudE'
-    'xpbmtOb25jZUIICgZyZXN1bHQ=');
+    'xpbmtOb25jZRJPCg1hY2NvdW50X2xpbmtzGBIgASgLMigua3VzaW50YS5pb3QuYWNjb3VudGxp'
+    'bmsudjEuQWNjb3VudExpbmtzSABSDGFjY291bnRMaW5rc0IICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

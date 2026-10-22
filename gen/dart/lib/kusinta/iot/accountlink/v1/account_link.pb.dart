@@ -22,10 +22,155 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'account_link.pbenum.dart';
 
+/// A home's link at one service, as its residents see it: never its tokens or the account's
+/// name.
+class AccountLink extends $pb.GeneratedMessage {
+  factory AccountLink({
+    LinkedService? service,
+    AccountLinkStatus? status,
+    $0.Timestamp? linkedSince,
+  }) {
+    final result = create();
+    if (service != null) result.service = service;
+    if (status != null) result.status = status;
+    if (linkedSince != null) result.linkedSince = linkedSince;
+    return result;
+  }
+
+  AccountLink._();
+
+  factory AccountLink.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AccountLink.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AccountLink',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.accountlink.v1'),
+      createEmptyInstance: create)
+    ..e<LinkedService>(1, _omitFieldNames ? '' : 'service', $pb.PbFieldType.OE,
+        defaultOrMaker: LinkedService.LINKED_SERVICE_UNSPECIFIED,
+        valueOf: LinkedService.valueOf,
+        enumValues: LinkedService.values)
+    ..e<AccountLinkStatus>(
+        2, _omitFieldNames ? '' : 'status', $pb.PbFieldType.OE,
+        defaultOrMaker: AccountLinkStatus.ACCOUNT_LINK_STATUS_UNSPECIFIED,
+        valueOf: AccountLinkStatus.valueOf,
+        enumValues: AccountLinkStatus.values)
+    ..aOM<$0.Timestamp>(3, _omitFieldNames ? '' : 'linkedSince',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AccountLink clone() => AccountLink()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AccountLink copyWith(void Function(AccountLink) updates) =>
+      super.copyWith((message) => updates(message as AccountLink))
+          as AccountLink;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AccountLink create() => AccountLink._();
+  @$core.override
+  AccountLink createEmptyInstance() => create();
+  static $pb.PbList<AccountLink> createRepeated() => $pb.PbList<AccountLink>();
+  @$core.pragma('dart2js:noInline')
+  static AccountLink getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AccountLink>(create);
+  static AccountLink? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  LinkedService get service => $_getN(0);
+  @$pb.TagNumber(1)
+  set service(LinkedService value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasService() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearService() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  AccountLinkStatus get status => $_getN(1);
+  @$pb.TagNumber(2)
+  set status(AccountLinkStatus value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStatus() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStatus() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $0.Timestamp get linkedSince => $_getN(2);
+  @$pb.TagNumber(3)
+  set linkedSince($0.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLinkedSince() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLinkedSince() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.Timestamp ensureLinkedSince() => $_ensure(2);
+}
+
+/// A home's links, in reply to ListAccountLinks. A service with no link is not listed.
+class AccountLinks extends $pb.GeneratedMessage {
+  factory AccountLinks({
+    $core.Iterable<AccountLink>? links,
+  }) {
+    final result = create();
+    if (links != null) result.links.addAll(links);
+    return result;
+  }
+
+  AccountLinks._();
+
+  factory AccountLinks.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AccountLinks.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AccountLinks',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.accountlink.v1'),
+      createEmptyInstance: create)
+    ..pc<AccountLink>(1, _omitFieldNames ? '' : 'links', $pb.PbFieldType.PM,
+        subBuilder: AccountLink.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AccountLinks clone() => AccountLinks()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AccountLinks copyWith(void Function(AccountLinks) updates) =>
+      super.copyWith((message) => updates(message as AccountLinks))
+          as AccountLinks;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AccountLinks create() => AccountLinks._();
+  @$core.override
+  AccountLinks createEmptyInstance() => create();
+  static $pb.PbList<AccountLinks> createRepeated() =>
+      $pb.PbList<AccountLinks>();
+  @$core.pragma('dart2js:noInline')
+  static AccountLinks getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AccountLinks>(create);
+  static AccountLinks? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<AccountLink> get links => $_getList(0);
+}
+
 /// A single-use nonce for one home's link, in reply to RequestAccountLinkNonce: a compact JWS
-/// carrying AccountLinkNonceClaims, signed by the gateway. The service sees it as the OAuth
-/// state, so it names the home not at all and the user only as a hash: the gateway records
-/// which home each jti was issued for.
+/// carrying AccountLinkNonceClaims, signed by the gateway. It passes between the gateway, the
+/// app and the api-server only; the service sees its hash (see the file comment). It names no
+/// home: the gateway records which home each jti was issued for.
 class AccountLinkNonce extends $pb.GeneratedMessage {
   factory AccountLinkNonce({
     $core.String? nonce,
@@ -104,25 +249,25 @@ class AccountLinkNonce extends $pb.GeneratedMessage {
 /// webrtc.v1.AppTokenClaims: registered claims are flat JWT strings and NumericDates.
 ///
 /// Signed with the private key of the gateway's client certificate — the one it connects to
-/// the api-server with — under the algorithm that key calls for. The JWS header carries
-/// "x5t#S256", the thumbprint of that certificate, so the api-server finds it across a
-/// renewal.
+/// the api-server with, a P-256 key — as ES256. The JWS header carries "x5t#S256", the
+/// thumbprint of that certificate, so the api-server finds it across a renewal. A verifier
+/// MUST refuse any other "alg".
 ///
-/// Before it calls the service, the api-server MUST verify that the certificate the
-/// thumbprint names is the current certificate of the gateway named by iss — or the one it
-/// replaced, for no more than 10 minutes after the renewal — and the signature by it, aud, svc
-/// and exp, and that sub_hash is the hash of the user posting the code. When the grant comes
-/// back, the gateway MUST verify the signature by its own key — its current one, or the one
-/// it replaced for no more than 10 minutes after the renewal — that iss is itself, aud and
-/// exp, and then accept the nonce once, by its jti, for the home it recorded for that jti,
-/// and only while that user is still a household admin of the home. exp is judged on the
-/// gateway's clock with no allowance for skew. A gateway that restarts mid-link may have
-/// lost its jti record and answer REJECTED; the household links again.
+/// Before it calls the service, the api-server MUST verify that the gateway named by iss is
+/// registered and neither deleted nor wiped, that the certificate the thumbprint names is its
+/// current certificate — or the one it replaced, for no more than 10 minutes after the
+/// renewal — and the signature by it, aud, svc and exp, and that sub is the user posting the
+/// code. When the grant comes back, the gateway MUST verify the signature by its own key —
+/// its current one, or the one it replaced for no more than 10 minutes after the renewal —
+/// that iss is itself, aud and exp, and then accept the nonce once, by its jti, for the home
+/// it recorded for that jti, and only while that user is still a household admin of the
+/// home. Both sides allow at most 60 seconds of clock skew on exp. A gateway that restarts
+/// mid-link may have lost its jti record and answer REJECTED; the household links again.
 class AccountLinkNonceClaims extends $pb.GeneratedMessage {
   factory AccountLinkNonceClaims({
     $core.String? iss,
     $core.String? aud,
-    $core.String? subHash,
+    $core.String? sub,
     $0.Timestamp? iat,
     $0.Timestamp? exp,
     $core.String? jti,
@@ -131,7 +276,7 @@ class AccountLinkNonceClaims extends $pb.GeneratedMessage {
     final result = create();
     if (iss != null) result.iss = iss;
     if (aud != null) result.aud = aud;
-    if (subHash != null) result.subHash = subHash;
+    if (sub != null) result.sub = sub;
     if (iat != null) result.iat = iat;
     if (exp != null) result.exp = exp;
     if (jti != null) result.jti = jti;
@@ -155,7 +300,7 @@ class AccountLinkNonceClaims extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'iss')
     ..aOS(2, _omitFieldNames ? '' : 'aud')
-    ..aOS(3, _omitFieldNames ? '' : 'subHash')
+    ..aOS(3, _omitFieldNames ? '' : 'sub')
     ..aOM<$0.Timestamp>(4, _omitFieldNames ? '' : 'iat',
         subBuilder: $0.Timestamp.create)
     ..aOM<$0.Timestamp>(5, _omitFieldNames ? '' : 'exp',
@@ -207,16 +352,15 @@ class AccountLinkNonceClaims extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearAud() => $_clearField(2);
 
-  /// The user it was issued to, as the unpadded base64url SHA-256 of their
-  /// identity.v1.UserId value. Named in JWT as "sub_hash"; there is no "sub".
+  /// The user it was issued to (identity.v1.UserId value).
   @$pb.TagNumber(3)
-  $core.String get subHash => $_getSZ(2);
+  $core.String get sub => $_getSZ(2);
   @$pb.TagNumber(3)
-  set subHash($core.String value) => $_setString(2, value);
+  set sub($core.String value) => $_setString(2, value);
   @$pb.TagNumber(3)
-  $core.bool hasSubHash() => $_has(2);
+  $core.bool hasSub() => $_has(2);
   @$pb.TagNumber(3)
-  void clearSubHash() => $_clearField(3);
+  void clearSub() => $_clearField(3);
 
   @$pb.TagNumber(4)
   $0.Timestamp get iat => $_getN(3);
@@ -653,11 +797,14 @@ class AccountLinkResult extends $pb.GeneratedMessage {
 /// answer asks again with the same request_id and refresh token, for up to 10 minutes; after
 /// that it sends the old token no more, and the household links again.
 ///
-/// The api-server MUST keep its answer in memory, keyed by the requesting gateway's identity
-/// and a hash of the refresh token, for 10 minutes, and answer a repeated request from it
-/// without asking the service: a service may rotate the refresh token, and a second exchange
-/// of the old one would end the link. Across several api-server instances that memory is
-/// shared, or a gateway's requests go to one instance. Nowhere else, and never in a log.
+/// The api-server MUST keep its answer, keyed by the requesting gateway's identity and a hash
+/// of the refresh token, for 10 minutes, and answer a repeated request from it without asking
+/// the service: a service may rotate the refresh token, and a second exchange of the old one
+/// would end the link. It is held in the memory of the process that answered — the one
+/// holding the gateway's stream — and never shared, persisted or logged; it goes at the end of
+/// the 10 minutes or of the process. A restart, or the stream moving to another process,
+/// within them loses it, and a retry then exchanges the old token again: where the service
+/// rotates refresh tokens the link ends and the household links again. That is accepted.
 class RefreshToken extends $pb.GeneratedMessage {
   factory RefreshToken({
     $core.String? requestId,

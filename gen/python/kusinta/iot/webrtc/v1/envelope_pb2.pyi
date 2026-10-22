@@ -123,7 +123,7 @@ class GatewayError(_message.Message):
     def __init__(self, code: _Optional[_Union[GatewayErrorCode, str]] = ..., message: _Optional[str] = ..., metadata: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class ManagementResult(_message.Message):
-    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links", "room_climates", "room_history", "privacy_disclosure", "apartment_climate_summary", "issued_invite", "space_invites", "gateway_members", "promotion_requests", "heating_layout", "heating_record", "account_link_nonce")
+    __slots__ = ("in_reply_to", "error", "space", "space_tree", "ack", "links", "room_climates", "room_history", "privacy_disclosure", "apartment_climate_summary", "issued_invite", "space_invites", "gateway_members", "promotion_requests", "heating_layout", "heating_record", "account_link_nonce", "account_links")
     IN_REPLY_TO_FIELD_NUMBER: _ClassVar[int]
     ERROR_FIELD_NUMBER: _ClassVar[int]
     SPACE_FIELD_NUMBER: _ClassVar[int]
@@ -141,6 +141,7 @@ class ManagementResult(_message.Message):
     HEATING_LAYOUT_FIELD_NUMBER: _ClassVar[int]
     HEATING_RECORD_FIELD_NUMBER: _ClassVar[int]
     ACCOUNT_LINK_NONCE_FIELD_NUMBER: _ClassVar[int]
+    ACCOUNT_LINKS_FIELD_NUMBER: _ClassVar[int]
     in_reply_to: str
     error: GatewayError
     space: _space_pb2.Space
@@ -158,7 +159,8 @@ class ManagementResult(_message.Message):
     heating_layout: _heating_pb2.HeatingLayout
     heating_record: _heating_pb2.HeatingRecord
     account_link_nonce: _account_link_pb2.AccountLinkNonce
-    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ..., privacy_disclosure: _Optional[_Union[_management_pb2.PrivacyDisclosure, _Mapping]] = ..., apartment_climate_summary: _Optional[_Union[_climate_pb2.ApartmentClimateSummary, _Mapping]] = ..., issued_invite: _Optional[_Union[_invite_pb2.IssuedInvite, _Mapping]] = ..., space_invites: _Optional[_Union[_invite_pb2.SpaceInvites, _Mapping]] = ..., gateway_members: _Optional[_Union[_members_pb2.GatewayMembers, _Mapping]] = ..., promotion_requests: _Optional[_Union[_members_pb2.PromotionRequests, _Mapping]] = ..., heating_layout: _Optional[_Union[_heating_pb2.HeatingLayout, _Mapping]] = ..., heating_record: _Optional[_Union[_heating_pb2.HeatingRecord, _Mapping]] = ..., account_link_nonce: _Optional[_Union[_account_link_pb2.AccountLinkNonce, _Mapping]] = ...) -> None: ...
+    account_links: _account_link_pb2.AccountLinks
+    def __init__(self, in_reply_to: _Optional[str] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., space: _Optional[_Union[_space_pb2.Space, _Mapping]] = ..., space_tree: _Optional[_Union[_management_pb2.SpaceTree, _Mapping]] = ..., ack: _Optional[_Union[_management_pb2.ManagementAck, _Mapping]] = ..., links: _Optional[_Union[_link_pb2.DeviceLinkList, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ..., privacy_disclosure: _Optional[_Union[_management_pb2.PrivacyDisclosure, _Mapping]] = ..., apartment_climate_summary: _Optional[_Union[_climate_pb2.ApartmentClimateSummary, _Mapping]] = ..., issued_invite: _Optional[_Union[_invite_pb2.IssuedInvite, _Mapping]] = ..., space_invites: _Optional[_Union[_invite_pb2.SpaceInvites, _Mapping]] = ..., gateway_members: _Optional[_Union[_members_pb2.GatewayMembers, _Mapping]] = ..., promotion_requests: _Optional[_Union[_members_pb2.PromotionRequests, _Mapping]] = ..., heating_layout: _Optional[_Union[_heating_pb2.HeatingLayout, _Mapping]] = ..., heating_record: _Optional[_Union[_heating_pb2.HeatingRecord, _Mapping]] = ..., account_link_nonce: _Optional[_Union[_account_link_pb2.AccountLinkNonce, _Mapping]] = ..., account_links: _Optional[_Union[_account_link_pb2.AccountLinks, _Mapping]] = ...) -> None: ...
 
 class StartPairing(_message.Message):
     __slots__ = ("connector_id", "window", "initial_space_id", "ownership")

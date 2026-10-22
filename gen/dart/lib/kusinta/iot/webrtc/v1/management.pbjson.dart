@@ -1143,6 +1143,55 @@ final $typed_data.Uint8List requestAccountLinkNonceDescriptor = $convert.base64D
     'QuaWRlbnRpdHkudjEuU3BhY2VJZFIGaG9tZUlkEkMKB3NlcnZpY2UYAiABKA4yKS5rdXNpbnRh'
     'LmlvdC5hY2NvdW50bGluay52MS5MaW5rZWRTZXJ2aWNlUgdzZXJ2aWNl');
 
+@$core.Deprecated('Use listAccountLinksDescriptor instead')
+const ListAccountLinks$json = {
+  '1': 'ListAccountLinks',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+  ],
+};
+
+/// Descriptor for `ListAccountLinks`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listAccountLinksDescriptor = $convert.base64Decode(
+    'ChBMaXN0QWNjb3VudExpbmtzEjkKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudG'
+    'l0eS52MS5TcGFjZUlkUgZob21lSWQ=');
+
+@$core.Deprecated('Use unlinkAccountDescriptor instead')
+const UnlinkAccount$json = {
+  '1': 'UnlinkAccount',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {
+      '1': 'service',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'service'
+    },
+  ],
+};
+
+/// Descriptor for `UnlinkAccount`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List unlinkAccountDescriptor = $convert.base64Decode(
+    'Cg1VbmxpbmtBY2NvdW50EjkKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
+    '52MS5TcGFjZUlkUgZob21lSWQSQwoHc2VydmljZRgCIAEoDjIpLmt1c2ludGEuaW90LmFjY291'
+    'bnRsaW5rLnYxLkxpbmtlZFNlcnZpY2VSB3NlcnZpY2U=');
+
 @$core.Deprecated('Use managementRequestDescriptor instead')
 const ManagementRequest$json = {
   '1': 'ManagementRequest',
@@ -1562,6 +1611,24 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'requestAccountLinkNonce'
     },
+    {
+      '1': 'list_account_links',
+      '3': 47,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListAccountLinks',
+      '9': 0,
+      '10': 'listAccountLinks'
+    },
+    {
+      '1': 'unlink_account',
+      '3': 48,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.UnlinkAccount',
+      '9': 0,
+      '10': 'unlinkAccount'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -1643,4 +1710,7 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'ZXRfY29tZm9ydF93aW5kb3dzGC0gASgLMigua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldENvbW'
     'ZvcnRXaW5kb3dzSABSEXNldENvbWZvcnRXaW5kb3dzEm0KGnJlcXVlc3RfYWNjb3VudF9saW5r'
     'X25vbmNlGC4gASgLMi4ua3VzaW50YS5pb3Qud2VicnRjLnYxLlJlcXVlc3RBY2NvdW50TGlua0'
-    '5vbmNlSABSF3JlcXVlc3RBY2NvdW50TGlua05vbmNlQgkKB3JlcXVlc3Q=');
+    '5vbmNlSABSF3JlcXVlc3RBY2NvdW50TGlua05vbmNlElcKEmxpc3RfYWNjb3VudF9saW5rcxgv'
+    'IAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5MaXN0QWNjb3VudExpbmtzSABSEGxpc3RBY2'
+    'NvdW50TGlua3MSTQoOdW5saW5rX2FjY291bnQYMCABKAsyJC5rdXNpbnRhLmlvdC53ZWJydGMu'
+    'djEuVW5saW5rQWNjb3VudEgAUg11bmxpbmtBY2NvdW50QgkKB3JlcXVlc3Q=');

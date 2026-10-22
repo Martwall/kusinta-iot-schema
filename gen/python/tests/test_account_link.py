@@ -4,8 +4,8 @@ These assert the decisions the shape encodes:
 
   * the access grant travels apart from the refresh token, which stays on the gateway
   * an unavailable refresh tells the gateway how long to wait
-  * the nonce's claims name the service by its fixed claim value, not an enum name, and
-    carry the user only as a hash
+  * the nonce's claims name the service by its fixed claim value, not an enum name
+  * a link's status names no token
 """
 
 from google.protobuf import duration_pb2
@@ -41,7 +41,9 @@ def test_the_nonce_claims_name_the_service_by_its_claim_value():
     assert _round_trip(claims).svc == "myuplink"
 
 
-def test_the_nonce_claims_carry_the_user_only_as_a_hash():
-    claims = account_link_pb2.AccountLinkNonceClaims(sub_hash="n4bQgYhMfWWaL-qgxVrQFaO_TxsrC4Is0V1sFbDwCgg")
+def test_a_link_status_carries_no_token():
+    link = account_link_pb2.AccountLink(
+        service=account_link_pb2.LINKED_SERVICE_MYUPLINK, status=account_link_pb2.ACCOUNT_LINK_STATUS_LINKED
+    )
 
-    assert _round_trip(claims).sub_hash == "n4bQgYhMfWWaL-qgxVrQFaO_TxsrC4Is0V1sFbDwCgg"
+    assert sorted(_round_trip(link).DESCRIPTOR.fields_by_name) == ["linked_since", "service", "status"]

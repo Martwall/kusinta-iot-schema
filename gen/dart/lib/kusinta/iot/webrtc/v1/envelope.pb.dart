@@ -708,6 +708,7 @@ enum ManagementResult_Result {
   heatingLayout,
   heatingRecord,
   accountLinkNonce,
+  accountLinks,
   notSet
 }
 
@@ -739,6 +740,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $8.HeatingLayout? heatingLayout,
     $8.HeatingRecord? heatingRecord,
     $9.AccountLinkNonce? accountLinkNonce,
+    $9.AccountLinks? accountLinks,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -759,6 +761,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (heatingLayout != null) result.heatingLayout = heatingLayout;
     if (heatingRecord != null) result.heatingRecord = heatingRecord;
     if (accountLinkNonce != null) result.accountLinkNonce = accountLinkNonce;
+    if (accountLinks != null) result.accountLinks = accountLinks;
     return result;
   }
 
@@ -789,6 +792,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     15: ManagementResult_Result.heatingLayout,
     16: ManagementResult_Result.heatingRecord,
     17: ManagementResult_Result.accountLinkNonce,
+    18: ManagementResult_Result.accountLinks,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -796,7 +800,7 @@ class ManagementResult extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+    ..oo(0, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
@@ -831,6 +835,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $8.HeatingRecord.create)
     ..aOM<$9.AccountLinkNonce>(17, _omitFieldNames ? '' : 'accountLinkNonce',
         subBuilder: $9.AccountLinkNonce.create)
+    ..aOM<$9.AccountLinks>(18, _omitFieldNames ? '' : 'accountLinks',
+        subBuilder: $9.AccountLinks.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1047,6 +1053,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearAccountLinkNonce() => $_clearField(17);
   @$pb.TagNumber(17)
   $9.AccountLinkNonce ensureAccountLinkNonce() => $_ensure(16);
+
+  @$pb.TagNumber(18)
+  $9.AccountLinks get accountLinks => $_getN(17);
+  @$pb.TagNumber(18)
+  set accountLinks($9.AccountLinks value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasAccountLinks() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearAccountLinks() => $_clearField(18);
+  @$pb.TagNumber(18)
+  $9.AccountLinks ensureAccountLinks() => $_ensure(17);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

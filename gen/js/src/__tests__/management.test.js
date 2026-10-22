@@ -16,7 +16,7 @@ import {
   SpaceTreeSchema,
   ManagementAckSchema,
 } from '../kusinta/iot/webrtc/v1/management_pb.js'
-import { LinkedService } from '../kusinta/iot/accountlink/v1/account_link_pb.js'
+import { LinkedService, AccountLinkStatus } from '../kusinta/iot/accountlink/v1/account_link_pb.js'
 import {
   AppMessageSchema,
   GatewayMessageSchema,
@@ -503,6 +503,31 @@ describe('account linking', () => {
       request: { case: 'requestAccountLinkNonce', value: { homeId: { value: 'home-15' }, service: LinkedService.MYUPLINK } },
     })
     expect(decoded.request).toMatchObject({ case: 'requestAccountLinkNonce', value: { service: LinkedService.MYUPLINK } })
+  })
+
+  it('lists a home’s links', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'listAccountLinks', value: { homeId: { value: 'home-15' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'listAccountLinks', value: { homeId: { value: 'home-15' } } })
+  })
+
+  it('answers with each link’s status, and nothing of its tokens', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-2',
+      result: {
+        case: 'accountLinks',
+        value: { links: [{ service: LinkedService.MYUPLINK, status: AccountLinkStatus.NEEDS_RELINK }] },
+      },
+    })
+    expect(decoded.result).toMatchObject({ case: 'accountLinks', value: { links: [{ status: AccountLinkStatus.NEEDS_RELINK }] } })
+  })
+
+  it('unlinks a home’s account at one service', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'unlinkAccount', value: { homeId: { value: 'home-15' }, service: LinkedService.MYUPLINK } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'unlinkAccount', value: { service: LinkedService.MYUPLINK } })
   })
 
   it('answers with the nonce', () => {

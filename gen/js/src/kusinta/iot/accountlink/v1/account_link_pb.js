@@ -9,90 +9,116 @@ import { file_google_protobuf_duration, file_google_protobuf_timestamp } from "@
  * Describes the file kusinta/iot/accountlink/v1/account_link.proto.
  */
 export const file_kusinta_iot_accountlink_v1_account_link = /*@__PURE__*/
-  fileDesc("Ci1rdXNpbnRhL2lvdC9hY2NvdW50bGluay92MS9hY2NvdW50X2xpbmsucHJvdG8SGmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxIlEKEEFjY291bnRMaW5rTm9uY2USDQoFbm9uY2UYASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAivAEKFkFjY291bnRMaW5rTm9uY2VDbGFpbXMSCwoDaXNzGAEgASgJEgsKA2F1ZBgCIAEoCRIQCghzdWJfaGFzaBgDIAEoCRInCgNpYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2V4cBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASCwoDanRpGAYgASgJEgsKA3N2YxgIIAEoCUoECAcQCFIEaG9tZSJiCgtBY2Nlc3NHcmFudBIUCgxhY2Nlc3NfdG9rZW4YASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDQoFc2NvcGUYAyABKAkiXAoKVG9rZW5HcmFudBI3CgZhY2Nlc3MYASABKAsyJy5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5BY2Nlc3NHcmFudBIVCg1yZWZyZXNoX3Rva2VuGAIgASgJImkKDUFjY291bnRMaW5rZWQSEgoKcmVxdWVzdF9pZBgBIAEoCRINCgVub25jZRgCIAEoCRI1CgVncmFudBgDIAEoCzImLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLlRva2VuR3JhbnQiKgoUQWNjb3VudExpbmtDYW5jZWxsZWQSEgoKcmVxdWVzdF9pZBgBIAEoCSJoChFBY2NvdW50TGlua1Jlc3VsdBISCgpyZXF1ZXN0X2lkGAEgASgJEj8KB291dGNvbWUYAiABKA4yLi5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5BY2NvdW50TGlua091dGNvbWUidQoMUmVmcmVzaFRva2VuEhIKCnJlcXVlc3RfaWQYASABKAkSOgoHc2VydmljZRgCIAEoDjIpLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkxpbmtlZFNlcnZpY2USFQoNcmVmcmVzaF90b2tlbhgDIAEoCSLGAQoOVG9rZW5SZWZyZXNoZWQSEgoKcmVxdWVzdF9pZBgBIAEoCRI5CgdvdXRjb21lGAIgASgOMigua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuVG9rZW5PdXRjb21lEjUKBWdyYW50GAMgASgLMiYua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuVG9rZW5HcmFudBIuCgtyZXRyeV9hZnRlchgEIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbiJ0CgtSZXZva2VUb2tlbhISCgpyZXF1ZXN0X2lkGAEgASgJEjoKB3NlcnZpY2UYAiABKA4yKS5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5MaW5rZWRTZXJ2aWNlEhUKDXJlZnJlc2hfdG9rZW4YAyABKAkijQEKDFRva2VuUmV2b2tlZBISCgpyZXF1ZXN0X2lkGAEgASgJEjkKB291dGNvbWUYAiABKA4yKC5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5Ub2tlbk91dGNvbWUSLgoLcmV0cnlfYWZ0ZXIYAyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24qTAoNTGlua2VkU2VydmljZRIeChpMSU5LRURfU0VSVklDRV9VTlNQRUNJRklFRBAAEhsKF0xJTktFRF9TRVJWSUNFX01ZVVBMSU5LEAEqfgoSQWNjb3VudExpbmtPdXRjb21lEiQKIEFDQ09VTlRfTElOS19PVVRDT01FX1VOU1BFQ0lGSUVEEAASHwobQUNDT1VOVF9MSU5LX09VVENPTUVfTElOS0VEEAESIQodQUNDT1VOVF9MSU5LX09VVENPTUVfUkVKRUNURUQQAip+CgxUb2tlbk91dGNvbWUSHQoZVE9LRU5fT1VUQ09NRV9VTlNQRUNJRklFRBAAEhQKEFRPS0VOX09VVENPTUVfT0sQARIaChZUT0tFTl9PVVRDT01FX1JFSkVDVEVEEAISHQoZVE9LRU5fT1VUQ09NRV9VTkFWQUlMQUJMRRADQgJIAWIGcHJvdG8z", [file_google_protobuf_duration, file_google_protobuf_timestamp]);
+  fileDesc("Ci1rdXNpbnRhL2lvdC9hY2NvdW50bGluay92MS9hY2NvdW50X2xpbmsucHJvdG8SGmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxIroBCgtBY2NvdW50TGluaxI6CgdzZXJ2aWNlGAEgASgOMikua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuTGlua2VkU2VydmljZRI9CgZzdGF0dXMYAiABKA4yLS5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5BY2NvdW50TGlua1N0YXR1cxIwCgxsaW5rZWRfc2luY2UYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIkYKDEFjY291bnRMaW5rcxI2CgVsaW5rcxgBIAMoCzInLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkFjY291bnRMaW5rIlEKEEFjY291bnRMaW5rTm9uY2USDQoFbm9uY2UYASABKAkSLgoKZXhwaXJlc19hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAitwEKFkFjY291bnRMaW5rTm9uY2VDbGFpbXMSCwoDaXNzGAEgASgJEgsKA2F1ZBgCIAEoCRILCgNzdWIYAyABKAkSJwoDaWF0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNleHAYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEgsKA2p0aRgGIAEoCRILCgNzdmMYCCABKAlKBAgHEAhSBGhvbWUiYgoLQWNjZXNzR3JhbnQSFAoMYWNjZXNzX3Rva2VuGAEgASgJEi4KCmV4cGlyZXNfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEg0KBXNjb3BlGAMgASgJIlwKClRva2VuR3JhbnQSNwoGYWNjZXNzGAEgASgLMicua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuQWNjZXNzR3JhbnQSFQoNcmVmcmVzaF90b2tlbhgCIAEoCSJpCg1BY2NvdW50TGlua2VkEhIKCnJlcXVlc3RfaWQYASABKAkSDQoFbm9uY2UYAiABKAkSNQoFZ3JhbnQYAyABKAsyJi5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5Ub2tlbkdyYW50IioKFEFjY291bnRMaW5rQ2FuY2VsbGVkEhIKCnJlcXVlc3RfaWQYASABKAkiaAoRQWNjb3VudExpbmtSZXN1bHQSEgoKcmVxdWVzdF9pZBgBIAEoCRI/CgdvdXRjb21lGAIgASgOMi4ua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuQWNjb3VudExpbmtPdXRjb21lInUKDFJlZnJlc2hUb2tlbhISCgpyZXF1ZXN0X2lkGAEgASgJEjoKB3NlcnZpY2UYAiABKA4yKS5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5MaW5rZWRTZXJ2aWNlEhUKDXJlZnJlc2hfdG9rZW4YAyABKAkixgEKDlRva2VuUmVmcmVzaGVkEhIKCnJlcXVlc3RfaWQYASABKAkSOQoHb3V0Y29tZRgCIAEoDjIoLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLlRva2VuT3V0Y29tZRI1CgVncmFudBgDIAEoCzImLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLlRva2VuR3JhbnQSLgoLcmV0cnlfYWZ0ZXIYBCABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24idAoLUmV2b2tlVG9rZW4SEgoKcmVxdWVzdF9pZBgBIAEoCRI6CgdzZXJ2aWNlGAIgASgOMikua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuTGlua2VkU2VydmljZRIVCg1yZWZyZXNoX3Rva2VuGAMgASgJIo0BCgxUb2tlblJldm9rZWQSEgoKcmVxdWVzdF9pZBgBIAEoCRI5CgdvdXRjb21lGAIgASgOMigua3VzaW50YS5pb3QuYWNjb3VudGxpbmsudjEuVG9rZW5PdXRjb21lEi4KC3JldHJ5X2FmdGVyGAMgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uKn4KEUFjY291bnRMaW5rU3RhdHVzEiMKH0FDQ09VTlRfTElOS19TVEFUVVNfVU5TUEVDSUZJRUQQABIeChpBQ0NPVU5UX0xJTktfU1RBVFVTX0xJTktFRBABEiQKIEFDQ09VTlRfTElOS19TVEFUVVNfTkVFRFNfUkVMSU5LEAIqTAoNTGlua2VkU2VydmljZRIeChpMSU5LRURfU0VSVklDRV9VTlNQRUNJRklFRBAAEhsKF0xJTktFRF9TRVJWSUNFX01ZVVBMSU5LEAEqfgoSQWNjb3VudExpbmtPdXRjb21lEiQKIEFDQ09VTlRfTElOS19PVVRDT01FX1VOU1BFQ0lGSUVEEAASHwobQUNDT1VOVF9MSU5LX09VVENPTUVfTElOS0VEEAESIQodQUNDT1VOVF9MSU5LX09VVENPTUVfUkVKRUNURUQQAip+CgxUb2tlbk91dGNvbWUSHQoZVE9LRU5fT1VUQ09NRV9VTlNQRUNJRklFRBAAEhQKEFRPS0VOX09VVENPTUVfT0sQARIaChZUT0tFTl9PVVRDT01FX1JFSkVDVEVEEAISHQoZVE9LRU5fT1VUQ09NRV9VTkFWQUlMQUJMRRADQgJIAWIGcHJvdG8z", [file_google_protobuf_duration, file_google_protobuf_timestamp]);
+
+/**
+ * Describes the message kusinta.iot.accountlink.v1.AccountLink.
+ * Use `create(AccountLinkSchema)` to create a new message.
+ */
+export const AccountLinkSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 0);
+
+/**
+ * Describes the message kusinta.iot.accountlink.v1.AccountLinks.
+ * Use `create(AccountLinksSchema)` to create a new message.
+ */
+export const AccountLinksSchema = /*@__PURE__*/
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 1);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.AccountLinkNonce.
  * Use `create(AccountLinkNonceSchema)` to create a new message.
  */
 export const AccountLinkNonceSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 0);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 2);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.AccountLinkNonceClaims.
  * Use `create(AccountLinkNonceClaimsSchema)` to create a new message.
  */
 export const AccountLinkNonceClaimsSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 1);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 3);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.AccessGrant.
  * Use `create(AccessGrantSchema)` to create a new message.
  */
 export const AccessGrantSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 2);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 4);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.TokenGrant.
  * Use `create(TokenGrantSchema)` to create a new message.
  */
 export const TokenGrantSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 3);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 5);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.AccountLinked.
  * Use `create(AccountLinkedSchema)` to create a new message.
  */
 export const AccountLinkedSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 4);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 6);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.AccountLinkCancelled.
  * Use `create(AccountLinkCancelledSchema)` to create a new message.
  */
 export const AccountLinkCancelledSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 5);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 7);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.AccountLinkResult.
  * Use `create(AccountLinkResultSchema)` to create a new message.
  */
 export const AccountLinkResultSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 6);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 8);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.RefreshToken.
  * Use `create(RefreshTokenSchema)` to create a new message.
  */
 export const RefreshTokenSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 7);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 9);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.TokenRefreshed.
  * Use `create(TokenRefreshedSchema)` to create a new message.
  */
 export const TokenRefreshedSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 8);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 10);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.RevokeToken.
  * Use `create(RevokeTokenSchema)` to create a new message.
  */
 export const RevokeTokenSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 9);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 11);
 
 /**
  * Describes the message kusinta.iot.accountlink.v1.TokenRevoked.
  * Use `create(TokenRevokedSchema)` to create a new message.
  */
 export const TokenRevokedSchema = /*@__PURE__*/
-  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 10);
+  messageDesc(file_kusinta_iot_accountlink_v1_account_link, 12);
+
+/**
+ * Describes the enum kusinta.iot.accountlink.v1.AccountLinkStatus.
+ */
+export const AccountLinkStatusSchema = /*@__PURE__*/
+  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 0);
+
+/**
+ * @generated from enum kusinta.iot.accountlink.v1.AccountLinkStatus
+ */
+export const AccountLinkStatus = /*@__PURE__*/
+  tsEnum(AccountLinkStatusSchema);
 
 /**
  * Describes the enum kusinta.iot.accountlink.v1.LinkedService.
  */
 export const LinkedServiceSchema = /*@__PURE__*/
-  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 0);
+  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 1);
 
 /**
  * The services a home's account can be linked at. Each value names the fixed string that
@@ -107,7 +133,7 @@ export const LinkedService = /*@__PURE__*/
  * Describes the enum kusinta.iot.accountlink.v1.AccountLinkOutcome.
  */
 export const AccountLinkOutcomeSchema = /*@__PURE__*/
-  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 1);
+  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 2);
 
 /**
  * @generated from enum kusinta.iot.accountlink.v1.AccountLinkOutcome
@@ -119,7 +145,7 @@ export const AccountLinkOutcome = /*@__PURE__*/
  * Describes the enum kusinta.iot.accountlink.v1.TokenOutcome.
  */
 export const TokenOutcomeSchema = /*@__PURE__*/
-  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 2);
+  enumDesc(file_kusinta_iot_accountlink_v1_account_link, 3);
 
 /**
  * On UNAVAILABLE the api-server sets retry_after: the service's own wait where it gave one,

@@ -14,6 +14,22 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use accountLinkStatusDescriptor instead')
+const AccountLinkStatus$json = {
+  '1': 'AccountLinkStatus',
+  '2': [
+    {'1': 'ACCOUNT_LINK_STATUS_UNSPECIFIED', '2': 0},
+    {'1': 'ACCOUNT_LINK_STATUS_LINKED', '2': 1},
+    {'1': 'ACCOUNT_LINK_STATUS_NEEDS_RELINK', '2': 2},
+  ],
+};
+
+/// Descriptor for `AccountLinkStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List accountLinkStatusDescriptor = $convert.base64Decode(
+    'ChFBY2NvdW50TGlua1N0YXR1cxIjCh9BQ0NPVU5UX0xJTktfU1RBVFVTX1VOU1BFQ0lGSUVEEA'
+    'ASHgoaQUNDT1VOVF9MSU5LX1NUQVRVU19MSU5LRUQQARIkCiBBQ0NPVU5UX0xJTktfU1RBVFVT'
+    'X05FRURTX1JFTElOSxAC');
+
 @$core.Deprecated('Use linkedServiceDescriptor instead')
 const LinkedService$json = {
   '1': 'LinkedService',
@@ -61,6 +77,64 @@ final $typed_data.Uint8List tokenOutcomeDescriptor = $convert.base64Decode(
     '9VVENPTUVfT0sQARIaChZUT0tFTl9PVVRDT01FX1JFSkVDVEVEEAISHQoZVE9LRU5fT1VUQ09N'
     'RV9VTkFWQUlMQUJMRRAD');
 
+@$core.Deprecated('Use accountLinkDescriptor instead')
+const AccountLink$json = {
+  '1': 'AccountLink',
+  '2': [
+    {
+      '1': 'service',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'service'
+    },
+    {
+      '1': 'status',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.AccountLinkStatus',
+      '10': 'status'
+    },
+    {
+      '1': 'linked_since',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'linkedSince'
+    },
+  ],
+};
+
+/// Descriptor for `AccountLink`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List accountLinkDescriptor = $convert.base64Decode(
+    'CgtBY2NvdW50TGluaxJDCgdzZXJ2aWNlGAEgASgOMikua3VzaW50YS5pb3QuYWNjb3VudGxpbm'
+    'sudjEuTGlua2VkU2VydmljZVIHc2VydmljZRJFCgZzdGF0dXMYAiABKA4yLS5rdXNpbnRhLmlv'
+    'dC5hY2NvdW50bGluay52MS5BY2NvdW50TGlua1N0YXR1c1IGc3RhdHVzEj0KDGxpbmtlZF9zaW'
+    '5jZRgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSC2xpbmtlZFNpbmNl');
+
+@$core.Deprecated('Use accountLinksDescriptor instead')
+const AccountLinks$json = {
+  '1': 'AccountLinks',
+  '2': [
+    {
+      '1': 'links',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.accountlink.v1.AccountLink',
+      '10': 'links'
+    },
+  ],
+};
+
+/// Descriptor for `AccountLinks`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List accountLinksDescriptor = $convert.base64Decode(
+    'CgxBY2NvdW50TGlua3MSPQoFbGlua3MYASADKAsyJy5rdXNpbnRhLmlvdC5hY2NvdW50bGluay'
+    '52MS5BY2NvdW50TGlua1IFbGlua3M=');
+
 @$core.Deprecated('Use accountLinkNonceDescriptor instead')
 const AccountLinkNonce$json = {
   '1': 'AccountLinkNonce',
@@ -88,7 +162,7 @@ const AccountLinkNonceClaims$json = {
   '2': [
     {'1': 'iss', '3': 1, '4': 1, '5': 9, '10': 'iss'},
     {'1': 'aud', '3': 2, '4': 1, '5': 9, '10': 'aud'},
-    {'1': 'sub_hash', '3': 3, '4': 1, '5': 9, '10': 'subHash'},
+    {'1': 'sub', '3': 3, '4': 1, '5': 9, '10': 'sub'},
     {
       '1': 'iat',
       '3': 4,
@@ -117,10 +191,9 @@ const AccountLinkNonceClaims$json = {
 /// Descriptor for `AccountLinkNonceClaims`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List accountLinkNonceClaimsDescriptor = $convert.base64Decode(
     'ChZBY2NvdW50TGlua05vbmNlQ2xhaW1zEhAKA2lzcxgBIAEoCVIDaXNzEhAKA2F1ZBgCIAEoCV'
-    'IDYXVkEhkKCHN1Yl9oYXNoGAMgASgJUgdzdWJIYXNoEiwKA2lhdBgEIAEoCzIaLmdvb2dsZS5w'
-    'cm90b2J1Zi5UaW1lc3RhbXBSA2lhdBIsCgNleHAYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVG'
-    'ltZXN0YW1wUgNleHASEAoDanRpGAYgASgJUgNqdGkSEAoDc3ZjGAggASgJUgNzdmNKBAgHEAhS'
-    'BGhvbWU=');
+    'IDYXVkEhAKA3N1YhgDIAEoCVIDc3ViEiwKA2lhdBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U'
+    'aW1lc3RhbXBSA2lhdBIsCgNleHAYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUg'
+    'NleHASEAoDanRpGAYgASgJUgNqdGkSEAoDc3ZjGAggASgJUgNzdmNKBAgHEAhSBGhvbWU=');
 
 @$core.Deprecated('Use accessGrantDescriptor instead')
 const AccessGrant$json = {

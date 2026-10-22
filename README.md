@@ -330,9 +330,11 @@ valve opening.
 `accountlink/v1/account_link.proto` links a home to its account at a third-party cloud
 service (myUplink first), so the gateway can read through it. The tokens live on the
 gateway, and the api-server is a confidential OAuth client that keeps nothing. The gateway
-signs a single-use nonce (`RequestAccountLinkNonce`, claims in `AccountLinkNonceClaims`) that
-the app passes as the OAuth `state`. The api-server verifies it, exchanges the code and hands
-the grant to that gateway over its stream (`AccountLinked`). Refresh and revocation go back
+signs a single-use nonce (`RequestAccountLinkNonce`, claims in `AccountLinkNonceClaims`). The
+app keeps it and passes the service only its SHA-256 as the OAuth `state`, then posts the
+nonce with the code to the api-server. The api-server verifies it, exchanges the code and hands
+the grant to that gateway over its stream (`AccountLinked`). A home's links are listed with
+`ListAccountLinks` and ended with `UnlinkAccount`. Refresh and revocation go back
 the same way (`RefreshToken`, `RevokeToken`), because only the api-server holds the client
 secret. The proto file states the full flow.
 

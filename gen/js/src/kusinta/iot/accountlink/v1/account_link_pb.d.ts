@@ -12,10 +12,57 @@ import type { Duration, Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_accountlink_v1_account_link: GenFile;
 
 /**
+ * A home's link at one service, as its residents see it: never its tokens or the account's
+ * name.
+ *
+ * @generated from message kusinta.iot.accountlink.v1.AccountLink
+ */
+export declare type AccountLink = Message<"kusinta.iot.accountlink.v1.AccountLink"> & {
+  /**
+   * @generated from field: kusinta.iot.accountlink.v1.LinkedService service = 1;
+   */
+  service: LinkedService;
+
+  /**
+   * @generated from field: kusinta.iot.accountlink.v1.AccountLinkStatus status = 2;
+   */
+  status: AccountLinkStatus;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp linked_since = 3;
+   */
+  linkedSince?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.accountlink.v1.AccountLink.
+ * Use `create(AccountLinkSchema)` to create a new message.
+ */
+export declare const AccountLinkSchema: GenMessage<AccountLink>;
+
+/**
+ * A home's links, in reply to ListAccountLinks. A service with no link is not listed.
+ *
+ * @generated from message kusinta.iot.accountlink.v1.AccountLinks
+ */
+export declare type AccountLinks = Message<"kusinta.iot.accountlink.v1.AccountLinks"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.accountlink.v1.AccountLink links = 1;
+   */
+  links: AccountLink[];
+};
+
+/**
+ * Describes the message kusinta.iot.accountlink.v1.AccountLinks.
+ * Use `create(AccountLinksSchema)` to create a new message.
+ */
+export declare const AccountLinksSchema: GenMessage<AccountLinks>;
+
+/**
  * A single-use nonce for one home's link, in reply to RequestAccountLinkNonce: a compact JWS
- * carrying AccountLinkNonceClaims, signed by the gateway. The service sees it as the OAuth
- * state, so it names the home not at all and the user only as a hash: the gateway records
- * which home each jti was issued for.
+ * carrying AccountLinkNonceClaims, signed by the gateway. It passes between the gateway, the
+ * app and the api-server only; the service sees its hash (see the file comment). It names no
+ * home: the gateway records which home each jti was issued for.
  *
  * @generated from message kusinta.iot.accountlink.v1.AccountLinkNonce
  */
@@ -45,20 +92,20 @@ export declare const AccountLinkNonceSchema: GenMessage<AccountLinkNonce>;
  * webrtc.v1.AppTokenClaims: registered claims are flat JWT strings and NumericDates.
  *
  * Signed with the private key of the gateway's client certificate — the one it connects to
- * the api-server with — under the algorithm that key calls for. The JWS header carries
- * "x5t#S256", the thumbprint of that certificate, so the api-server finds it across a
- * renewal.
+ * the api-server with, a P-256 key — as ES256. The JWS header carries "x5t#S256", the
+ * thumbprint of that certificate, so the api-server finds it across a renewal. A verifier
+ * MUST refuse any other "alg".
  *
- * Before it calls the service, the api-server MUST verify that the certificate the
- * thumbprint names is the current certificate of the gateway named by iss — or the one it
- * replaced, for no more than 10 minutes after the renewal — and the signature by it, aud, svc
- * and exp, and that sub_hash is the hash of the user posting the code. When the grant comes
- * back, the gateway MUST verify the signature by its own key — its current one, or the one
- * it replaced for no more than 10 minutes after the renewal — that iss is itself, aud and
- * exp, and then accept the nonce once, by its jti, for the home it recorded for that jti,
- * and only while that user is still a household admin of the home. exp is judged on the
- * gateway's clock with no allowance for skew. A gateway that restarts mid-link may have
- * lost its jti record and answer REJECTED; the household links again.
+ * Before it calls the service, the api-server MUST verify that the gateway named by iss is
+ * registered and neither deleted nor wiped, that the certificate the thumbprint names is its
+ * current certificate — or the one it replaced, for no more than 10 minutes after the
+ * renewal — and the signature by it, aud, svc and exp, and that sub is the user posting the
+ * code. When the grant comes back, the gateway MUST verify the signature by its own key —
+ * its current one, or the one it replaced for no more than 10 minutes after the renewal —
+ * that iss is itself, aud and exp, and then accept the nonce once, by its jti, for the home
+ * it recorded for that jti, and only while that user is still a household admin of the
+ * home. Both sides allow at most 60 seconds of clock skew on exp. A gateway that restarts
+ * mid-link may have lost its jti record and answer REJECTED; the household links again.
  *
  * @generated from message kusinta.iot.accountlink.v1.AccountLinkNonceClaims
  */
@@ -78,12 +125,11 @@ export declare type AccountLinkNonceClaims = Message<"kusinta.iot.accountlink.v1
   aud: string;
 
   /**
-   * The user it was issued to, as the unpadded base64url SHA-256 of their
-   * identity.v1.UserId value. Named in JWT as "sub_hash"; there is no "sub".
+   * The user it was issued to (identity.v1.UserId value).
    *
-   * @generated from field: string sub_hash = 3;
+   * @generated from field: string sub = 3;
    */
-  subHash: string;
+  sub: string;
 
   /**
    * @generated from field: google.protobuf.Timestamp iat = 4;
@@ -261,11 +307,14 @@ export declare const AccountLinkResultSchema: GenMessage<AccountLinkResult>;
  * answer asks again with the same request_id and refresh token, for up to 10 minutes; after
  * that it sends the old token no more, and the household links again.
  *
- * The api-server MUST keep its answer in memory, keyed by the requesting gateway's identity
- * and a hash of the refresh token, for 10 minutes, and answer a repeated request from it
- * without asking the service: a service may rotate the refresh token, and a second exchange
- * of the old one would end the link. Across several api-server instances that memory is
- * shared, or a gateway's requests go to one instance. Nowhere else, and never in a log.
+ * The api-server MUST keep its answer, keyed by the requesting gateway's identity and a hash
+ * of the refresh token, for 10 minutes, and answer a repeated request from it without asking
+ * the service: a service may rotate the refresh token, and a second exchange of the old one
+ * would end the link. It is held in the memory of the process that answered — the one
+ * holding the gateway's stream — and never shared, persisted or logged; it goes at the end of
+ * the 10 minutes or of the process. A restart, or the stream moving to another process,
+ * within them loses it, and a retry then exchanges the old token again: where the service
+ * rotates refresh tokens the link ends and the household links again. That is accepted.
  *
  * @generated from message kusinta.iot.accountlink.v1.RefreshToken
  */
@@ -407,6 +456,34 @@ export declare type TokenRevoked = Message<"kusinta.iot.accountlink.v1.TokenRevo
 export declare const TokenRevokedSchema: GenMessage<TokenRevoked>;
 
 /**
+ * @generated from enum kusinta.iot.accountlink.v1.AccountLinkStatus
+ */
+export enum AccountLinkStatus {
+  /**
+   * @generated from enum value: ACCOUNT_LINK_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: ACCOUNT_LINK_STATUS_LINKED = 1;
+   */
+  LINKED = 1,
+
+  /**
+   * A refresh was REJECTED, or went unanswered past its retry window: the household links
+   * again.
+   *
+   * @generated from enum value: ACCOUNT_LINK_STATUS_NEEDS_RELINK = 2;
+   */
+  NEEDS_RELINK = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.accountlink.v1.AccountLinkStatus.
+ */
+export declare const AccountLinkStatusSchema: GenEnum<AccountLinkStatus>;
+
+/**
  * The services a home's account can be linked at. Each value names the fixed string that
  * stands for it in a nonce's "svc" claim, which never changes with the value's name.
  *
@@ -443,10 +520,10 @@ export enum AccountLinkOutcome {
   UNSPECIFIED = 0,
 
   /**
-   * Stored. A link the home already had at the same service is replaced. The gateway revokes
-   * the replaced grant (RevokeToken) only once 30 seconds have passed with no
-   * AccountLinkCancelled for this request_id; on a cancel within them, it restores the
-   * replaced link.
+   * Stored. A link the home already had at the same service is replaced. The gateway keeps
+   * the replaced grant, unused, and revokes it (RevokeToken) only once 60 seconds have passed
+   * since this answer with no AccountLinkCancelled for its request_id; on a cancel within
+   * them, it deletes the new grant and restores the replaced one.
    *
    * @generated from enum value: ACCOUNT_LINK_OUTCOME_LINKED = 1;
    */

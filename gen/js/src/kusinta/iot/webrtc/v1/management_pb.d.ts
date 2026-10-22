@@ -1416,6 +1416,50 @@ export declare type RequestAccountLinkNonce = Message<"kusinta.iot.webrtc.v1.Req
 export declare const RequestAccountLinkNonceSchema: GenMessage<RequestAccountLinkNonce>;
 
 /**
+ * Lists a home's linked accounts and their status, answered with an AccountLinks. Given to
+ * the home's residents; anyone else is refused as NOT_ENTITLED.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListAccountLinks
+ */
+export declare type ListAccountLinks = Message<"kusinta.iot.webrtc.v1.ListAccountLinks"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListAccountLinks.
+ * Use `create(ListAccountLinksSchema)` to create a new message.
+ */
+export declare const ListAccountLinksSchema: GenMessage<ListAccountLinks>;
+
+/**
+ * Unlinks a home's account at one service: the gateway reads no more through it and revokes
+ * it (accountlink.v1.RevokeToken). A household admin of the home only; anyone else is refused
+ * as NOT_ENTITLED. A service with no link is acked all the same. Acked.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.UnlinkAccount
+ */
+export declare type UnlinkAccount = Message<"kusinta.iot.webrtc.v1.UnlinkAccount"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.accountlink.v1.LinkedService service = 2;
+   */
+  service: LinkedService;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.UnlinkAccount.
+ * Use `create(UnlinkAccountSchema)` to create a new message.
+ */
+export declare const UnlinkAccountSchema: GenMessage<UnlinkAccount>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
  */
 export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.ManagementRequest"> & {
@@ -1709,6 +1753,18 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: RequestAccountLinkNonce;
     case: "requestAccountLinkNonce";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListAccountLinks list_account_links = 47;
+     */
+    value: ListAccountLinks;
+    case: "listAccountLinks";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.UnlinkAccount unlink_account = 48;
+     */
+    value: UnlinkAccount;
+    case: "unlinkAccount";
   } | { case: undefined; value?: undefined };
 };
 

@@ -732,6 +732,20 @@ message RequestAccountLinkNonce {
   kusinta.iot.accountlink.v1.LinkedService service = 2;
 }
 
+// Lists a home's linked accounts and their status, answered with an AccountLinks. Given to
+// the home's residents; anyone else is refused as NOT_ENTITLED.
+message ListAccountLinks {
+  kusinta.iot.identity.v1.SpaceId home_id = 1;
+}
+
+// Unlinks a home's account at one service: the gateway reads no more through it and revokes
+// it (accountlink.v1.RevokeToken). A household admin of the home only; anyone else is refused
+// as NOT_ENTITLED. A service with no link is acked all the same. Acked.
+message UnlinkAccount {
+  kusinta.iot.identity.v1.SpaceId home_id = 1;
+  kusinta.iot.accountlink.v1.LinkedService service = 2;
+}
+
 message ManagementRequest {
   oneof request {
     CreateSpace create_space = 1;
@@ -785,5 +799,7 @@ message ManagementRequest {
     RemoveHeatingRecord remove_heating_record = 44;
     SetComfortWindows set_comfort_windows = 45;
     RequestAccountLinkNonce request_account_link_nonce = 46;
+    ListAccountLinks list_account_links = 47;
+    UnlinkAccount unlink_account = 48;
   }
 }

@@ -181,6 +181,7 @@ message ManagementResult {
     kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
     // request_account_link_nonce
     kusinta.iot.accountlink.v1.AccountLinkNonce account_link_nonce = 17;
+    kusinta.iot.accountlink.v1.AccountLinks account_links = 18; // list_account_links
   }
 }
 
