@@ -135,12 +135,12 @@ def test_dimmable_light_current_level_is_annotated_with_the_level_control_cluste
     assert resolved == "current_level"
 
 
-def test_energy_sensor_uses_the_matter_electrical_power_measurement_cluster():
+def test_energy_sensor_uses_the_matter_electrical_power_and_energy_measurement_clusters():
     clusters = {
         field.GetOptions().Extensions[matter_options_pb2.matter_cluster_id]
         for field in properties_pb2.EnergySensorProperties.DESCRIPTOR.fields
     }
-    assert clusters == {0x0090}
+    assert clusters == {0x0090, 0x0091}
 
 
 # --- device type resolution, issue #10 ---------------------------------------

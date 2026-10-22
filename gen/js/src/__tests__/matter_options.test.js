@@ -136,11 +136,11 @@ describe('multi-cluster properties messages', () => {
     )
   })
 
-  it('annotates EnergySensorProperties with Electrical Power Measurement only', () => {
+  it('annotates EnergySensorProperties with the Electrical Power and Energy Measurement clusters only', () => {
     const clusters = new Set(
       EnergySensorPropertiesSchema.fields.map((f) => getOption(f, matter_cluster_id)),
     )
-    expect([...clusters]).toEqual([0x0090])
+    expect([...clusters]).toEqual([0x0090, 0x0091])
   })
 })
 

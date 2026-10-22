@@ -193,8 +193,8 @@ describe('PropertyUpdateBatch', () => {
 
 describe('EnergySensorProperties', () => {
   it('no longer uses the field numbers that carried the old scaling', () => {
-    const numbers = EnergySensorPropertiesSchema.fields.map((f) => f.number).sort()
-    expect(numbers).toEqual([5, 6, 7, 8])
+    const numbers = EnergySensorPropertiesSchema.fields.map((f) => f.number).sort((a, b) => a - b)
+    expect(numbers).toEqual([5, 6, 7, 8, 9, 10])
   })
 
   it('round-trips active_power in milliwatts above the int32 ceiling', () => {

@@ -1294,22 +1294,32 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
 /// export. sint64 rather than int64 because zigzag keeps negatives at 1-5 bytes instead of
 /// the fixed 10 that int64 spends on any negative value.
 ///
-/// Matter types these as nullable. This schema has no presence anywhere in properties, so 0
-/// still means "not reported" rather than "measured zero" — unchanged, and untidy for a
-/// quantity that can legitimately read zero. Treat 0 as absent for these four; introducing
-/// presence is a schema-wide decision, not a per-message one.
+/// Matter types these as nullable, and every field here carries explicit presence: unset is
+/// "not reported", and 0 is a measured zero — a relay that is off reads 0 W, never the last
+/// non-zero power.
+///
+/// The cumulative energy counters come from Electrical Energy Measurement (0x0091), the
+/// other measurement cluster of the Electrical Sensor device type: the energy of Matter's
+/// EnergyMeasurementStruct, in milliwatt-hours. The struct's start and end times are not
+/// carried; a reading is as of its report.
 class EnergySensorProperties extends $pb.GeneratedMessage {
   factory EnergySensorProperties({
     $fixnum.Int64? activePower,
     $fixnum.Int64? voltage,
     $fixnum.Int64? activeCurrent,
     $fixnum.Int64? frequency,
+    $fixnum.Int64? cumulativeEnergyImported,
+    $fixnum.Int64? cumulativeEnergyExported,
   }) {
     final result = create();
     if (activePower != null) result.activePower = activePower;
     if (voltage != null) result.voltage = voltage;
     if (activeCurrent != null) result.activeCurrent = activeCurrent;
     if (frequency != null) result.frequency = frequency;
+    if (cumulativeEnergyImported != null)
+      result.cumulativeEnergyImported = cumulativeEnergyImported;
+    if (cumulativeEnergyExported != null)
+      result.cumulativeEnergyExported = cumulativeEnergyExported;
     return result;
   }
 
@@ -1337,6 +1347,12 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(
         8, _omitFieldNames ? '' : 'frequency', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(9, _omitFieldNames ? '' : 'cumulativeEnergyImported',
+        $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(10, _omitFieldNames ? '' : 'cumulativeEnergyExported',
+        $pb.PbFieldType.OS6,
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
@@ -1402,6 +1418,26 @@ class EnergySensorProperties extends $pb.GeneratedMessage {
   $core.bool hasFrequency() => $_has(3);
   @$pb.TagNumber(8)
   void clearFrequency() => $_clearField(8);
+
+  /// Milliwatt-hours taken from the grid or the supply since the counter began.
+  @$pb.TagNumber(9)
+  $fixnum.Int64 get cumulativeEnergyImported => $_getI64(4);
+  @$pb.TagNumber(9)
+  set cumulativeEnergyImported($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(9)
+  $core.bool hasCumulativeEnergyImported() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearCumulativeEnergyImported() => $_clearField(9);
+
+  /// Milliwatt-hours delivered to the grid since the counter began, kept apart from import.
+  @$pb.TagNumber(10)
+  $fixnum.Int64 get cumulativeEnergyExported => $_getI64(5);
+  @$pb.TagNumber(10)
+  set cumulativeEnergyExported($fixnum.Int64 value) => $_setInt64(5, value);
+  @$pb.TagNumber(10)
+  $core.bool hasCumulativeEnergyExported() => $_has(5);
+  @$pb.TagNumber(10)
+  void clearCumulativeEnergyExported() => $_clearField(10);
 }
 
 /// Matter Pressure Measurement cluster (0x0403)
