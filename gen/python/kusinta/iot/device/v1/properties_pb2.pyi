@@ -160,16 +160,20 @@ class ColorTemperatureLightProperties(_message.Message):
     def __init__(self, on_off: _Optional[bool] = ..., current_level: _Optional[int] = ..., color_temperature_mireds: _Optional[int] = ..., color_temp_physical_min_mireds: _Optional[int] = ..., color_temp_physical_max_mireds: _Optional[int] = ..., startup_color_temperature_mireds: _Optional[int] = ..., color_mode: _Optional[int] = ...) -> None: ...
 
 class EnergySensorProperties(_message.Message):
-    __slots__ = ("active_power", "voltage", "active_current", "frequency")
+    __slots__ = ("active_power", "voltage", "active_current", "frequency", "cumulative_energy_imported", "cumulative_energy_exported")
     ACTIVE_POWER_FIELD_NUMBER: _ClassVar[int]
     VOLTAGE_FIELD_NUMBER: _ClassVar[int]
     ACTIVE_CURRENT_FIELD_NUMBER: _ClassVar[int]
     FREQUENCY_FIELD_NUMBER: _ClassVar[int]
+    CUMULATIVE_ENERGY_IMPORTED_FIELD_NUMBER: _ClassVar[int]
+    CUMULATIVE_ENERGY_EXPORTED_FIELD_NUMBER: _ClassVar[int]
     active_power: int
     voltage: int
     active_current: int
     frequency: int
-    def __init__(self, active_power: _Optional[int] = ..., voltage: _Optional[int] = ..., active_current: _Optional[int] = ..., frequency: _Optional[int] = ...) -> None: ...
+    cumulative_energy_imported: int
+    cumulative_energy_exported: int
+    def __init__(self, active_power: _Optional[int] = ..., voltage: _Optional[int] = ..., active_current: _Optional[int] = ..., frequency: _Optional[int] = ..., cumulative_energy_imported: _Optional[int] = ..., cumulative_energy_exported: _Optional[int] = ...) -> None: ...
 
 class PressureSensorProperties(_message.Message):
     __slots__ = ("measured_value", "min_measured_value", "max_measured_value", "tolerance")

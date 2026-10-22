@@ -85,6 +85,18 @@ describe('attribute resolution', () => {
     expect(resolveField(WindowCoveringPropertiesSchema, 0x0102, 'Type')).toBe('covering_type')
   })
 
+  it('resolves CumulativeEnergyImported on Electrical Energy Measurement', () => {
+    expect(resolveField(EnergySensorPropertiesSchema, 0x0091, 'CumulativeEnergyImported')).toBe(
+      'cumulative_energy_imported',
+    )
+  })
+
+  it('resolves CumulativeEnergyExported on Electrical Energy Measurement', () => {
+    expect(resolveField(EnergySensorPropertiesSchema, 0x0091, 'CumulativeEnergyExported')).toBe(
+      'cumulative_energy_exported',
+    )
+  })
+
   it('resolves an acronym attribute without case normalisation', () => {
     expect(resolveField(EnergySensorPropertiesSchema, 0x0090, 'ActiveCurrent')).toBe(
       'active_current',
@@ -136,11 +148,11 @@ describe('multi-cluster properties messages', () => {
     )
   })
 
-  it('annotates EnergySensorProperties with Electrical Power Measurement only', () => {
+  it('annotates EnergySensorProperties with the Electrical Power and Energy Measurement clusters only', () => {
     const clusters = new Set(
       EnergySensorPropertiesSchema.fields.map((f) => getOption(f, matter_cluster_id)),
     )
-    expect([...clusters]).toEqual([0x0090])
+    expect([...clusters]).toEqual([0x0090, 0x0091])
   })
 })
 

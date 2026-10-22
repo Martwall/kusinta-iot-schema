@@ -475,16 +475,23 @@ export declare const ColorTemperatureLightPropertiesSchema: GenMessage<ColorTemp
  * Hz × 100) while their (matter_attribute) claimed to carry the Matter attribute, so every
  * connector had to divide, every consumer trusting the annotation was wrong by 10× to 1000×,
  * and sub-watt resolution was gone before the value reached the wire. In Matter's mW an
- * int32 caps at ~2.1 kW, so the unit and the width had to move together.
+ * int32 caps at ~2.1 MW, enough for a home but not for every Matter device, and Matter
+ * types these attributes int64, so the width follows the specification.
  *
  * Signed throughout, matching the cluster: active_power and active_current go negative on
  * export. sint64 rather than int64 because zigzag keeps negatives at 1-5 bytes instead of
  * the fixed 10 that int64 spends on any negative value.
  *
- * Matter types these as nullable. This schema has no presence anywhere in properties, so 0
- * still means "not reported" rather than "measured zero" — unchanged, and untidy for a
- * quantity that can legitimately read zero. Treat 0 as absent for these four; introducing
- * presence is a schema-wide decision, not a per-message one.
+ * Matter types these as nullable, and every field here carries explicit presence: unset is
+ * "not reported", and 0 is a measured zero — a relay that is off reads 0 W, never the last
+ * non-zero power. A reported null (PropertyUpdate.null_value) unsets the field.
+ *
+ * The cumulative energy counters come from Electrical Energy Measurement (0x0091), the
+ * other measurement cluster of the Electrical Sensor device type: the energy of Matter's
+ * EnergyMeasurementStruct, in milliwatt-hours, never negative, so uint64. The struct's
+ * start and end times are not carried; a reading is as of its report. A counter only
+ * climbs: a reading lower than the one before is a reset, and consumption is counted
+ * again from it, never as a negative difference.
  *
  * @generated from message kusinta.iot.device.v1.EnergySensorProperties
  */
@@ -516,6 +523,20 @@ export declare type EnergySensorProperties = Message<"kusinta.iot.device.v1.Ener
    * @generated from field: optional sint64 frequency = 8;
    */
   frequency?: bigint | undefined;
+
+  /**
+   * Milliwatt-hours taken from the grid or the supply since the counter began.
+   *
+   * @generated from field: optional uint64 cumulative_energy_imported = 9;
+   */
+  cumulativeEnergyImported?: bigint | undefined;
+
+  /**
+   * Milliwatt-hours delivered to the grid since the counter began, kept apart from import.
+   *
+   * @generated from field: optional uint64 cumulative_energy_exported = 10;
+   */
+  cumulativeEnergyExported?: bigint | undefined;
 };
 
 /**

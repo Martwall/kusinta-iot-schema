@@ -115,6 +115,24 @@ describe('DimmableLightProperties — Matter Level Control 0x0008', () => {
 })
 
 describe('PropertyUpdate', () => {
+  it('carries a value wider than 32 bits in int64_value', () => {
+    const u = create(PropertyUpdateSchema, { value: { case: 'int64Value', value: 3_500_000_000n } })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.value).toEqual({ case: 'int64Value', value: 3_500_000_000n })
+  })
+
+  it('carries an unsigned value wider than 32 bits in uint64_value', () => {
+    const u = create(PropertyUpdateSchema, { value: { case: 'uint64Value', value: 4_295_000_000n } })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.value).toEqual({ case: 'uint64Value', value: 4_295_000_000n })
+  })
+
+  it('carries a reported null', () => {
+    const u = create(PropertyUpdateSchema, { value: { case: 'nullValue', value: {} } })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.value.case).toBe('nullValue')
+  })
+
   it('round-trips int_value for thermostat setpoint', () => {
     const u = create(PropertyUpdateSchema, {
       deviceId: { value: 'therm-1' },
@@ -193,8 +211,20 @@ describe('PropertyUpdateBatch', () => {
 
 describe('EnergySensorProperties', () => {
   it('no longer uses the field numbers that carried the old scaling', () => {
-    const numbers = EnergySensorPropertiesSchema.fields.map((f) => f.number).sort()
-    expect(numbers).toEqual([5, 6, 7, 8])
+    const numbers = EnergySensorPropertiesSchema.fields.map((f) => f.number).sort((a, b) => a - b)
+    expect(numbers).toEqual([5, 6, 7, 8, 9, 10])
+  })
+
+  it('round-trips cumulative energy imported in milliwatt-hours above the uint32 ceiling', () => {
+    const p = create(EnergySensorPropertiesSchema, { cumulativeEnergyImported: 4_295_000_000n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect(decoded.cumulativeEnergyImported).toBe(4_295_000_000n)
+  })
+
+  it('keeps cumulative energy exported apart from imported', () => {
+    const p = create(EnergySensorPropertiesSchema, { cumulativeEnergyExported: 12_000n })
+    const decoded = fromBinary(EnergySensorPropertiesSchema, toBinary(EnergySensorPropertiesSchema, p))
+    expect([decoded.cumulativeEnergyImported, decoded.cumulativeEnergyExported]).toEqual([undefined, 12_000n])
   })
 
   it('round-trips active_power in milliwatts above the int32 ceiling', () => {

@@ -100,7 +100,21 @@ def test_property_update_batch():
 
 def test_energy_sensor_rejects_no_longer_used_field_numbers():
     numbers = {f.number for f in properties_pb2.EnergySensorProperties.DESCRIPTOR.fields}
-    assert numbers == {5, 6, 7, 8}
+    assert numbers == {5, 6, 7, 8, 9, 10}
+
+
+def test_cumulative_energy_imported_carries_milliwatt_hours_above_the_int32_ceiling():
+    original = properties_pb2.EnergySensorProperties(cumulative_energy_imported=4_182_000_000)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.cumulative_energy_imported == 4_182_000_000
+
+
+def test_cumulative_energy_exported_is_its_own_counter():
+    original = properties_pb2.EnergySensorProperties(cumulative_energy_exported=12_000)
+    decoded = properties_pb2.EnergySensorProperties()
+    decoded.ParseFromString(original.SerializeToString())
+    assert (decoded.HasField("cumulative_energy_imported"), decoded.cumulative_energy_exported) == (False, 12_000)
 
 
 def test_active_power_carries_milliwatts_above_the_int32_ceiling():
@@ -204,3 +218,18 @@ def test_property_update_provenance_survives_a_batch():
     decoded.ParseFromString(batch.SerializeToString())
     assert decoded.updates[0].provenance == property_update_pb2.VALUE_PROVENANCE_OPTIMISTIC
     assert decoded.updates[1].provenance == property_update_pb2.VALUE_PROVENANCE_CORRECTED
+
+
+def test_a_property_update_carries_a_value_wider_than_32_bits():
+    original = property_update_pb2.PropertyUpdate(uint64_value=4_295_000_000)
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(original.SerializeToString())
+    assert (decoded.WhichOneof("value"), decoded.uint64_value) == ("uint64_value", 4_295_000_000)
+
+
+def test_a_property_update_carries_a_reported_null():
+    original = property_update_pb2.PropertyUpdate()
+    original.null_value.SetInParent()
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(original.SerializeToString())
+    assert decoded.WhichOneof("value") == "null_value"

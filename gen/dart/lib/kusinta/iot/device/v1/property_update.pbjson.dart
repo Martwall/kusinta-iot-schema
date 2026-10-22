@@ -58,6 +58,17 @@ const PropertyUpdate$json = {
     {'1': 'float_value', '3': 6, '4': 1, '5': 2, '9': 0, '10': 'floatValue'},
     {'1': 'string_value', '3': 7, '4': 1, '5': 9, '9': 0, '10': 'stringValue'},
     {'1': 'bytes_value', '3': 8, '4': 1, '5': 12, '9': 0, '10': 'bytesValue'},
+    {'1': 'int64_value', '3': 16, '4': 1, '5': 18, '9': 0, '10': 'int64Value'},
+    {'1': 'uint64_value', '3': 17, '4': 1, '5': 4, '9': 0, '10': 'uint64Value'},
+    {
+      '1': 'null_value',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.NullValue',
+      '9': 0,
+      '10': 'nullValue'
+    },
     {
       '1': 'timestamp',
       '3': 9,
@@ -132,15 +143,17 @@ final $typed_data.Uint8List propertyUpdateDescriptor = $convert.base64Decode(
     'cmlidXRlTmFtZYgBARIdCglpbnRfdmFsdWUYAyABKBFIAFIIaW50VmFsdWUSHwoKdWludF92YW'
     'x1ZRgEIAEoDUgAUgl1aW50VmFsdWUSHwoKYm9vbF92YWx1ZRgFIAEoCEgAUglib29sVmFsdWUS'
     'IQoLZmxvYXRfdmFsdWUYBiABKAJIAFIKZmxvYXRWYWx1ZRIjCgxzdHJpbmdfdmFsdWUYByABKA'
-    'lIAFILc3RyaW5nVmFsdWUSIQoLYnl0ZXNfdmFsdWUYCCABKAxIAFIKYnl0ZXNWYWx1ZRI4Cgl0'
-    'aW1lc3RhbXAYCSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgl0aW1lc3RhbXASRg'
-    'oKcHJvdmVuYW5jZRgLIAEoDjImLmt1c2ludGEuaW90LmRldmljZS52MS5WYWx1ZVByb3ZlbmFu'
-    'Y2VSCnByb3ZlbmFuY2USJAoLZW5kcG9pbnRfaWQYDCABKA1IAlIKZW5kcG9pbnRJZIgBARIuCh'
-    'B2ZW5kb3JfZXh0ZW5zaW9uGA0gASgJSANSD3ZlbmRvckV4dGVuc2lvbogBARIiCgpjbHVzdGVy'
-    'X2lkGA4gASgNSARSCWNsdXN0ZXJJZIgBARImCgxhdHRyaWJ1dGVfaWQYDyABKA1IBVILYXR0cm'
-    'lidXRlSWSIAQFCBwoFdmFsdWVCEQoPX2F0dHJpYnV0ZV9uYW1lQg4KDF9lbmRwb2ludF9pZEIT'
-    'ChFfdmVuZG9yX2V4dGVuc2lvbkINCgtfY2x1c3Rlcl9pZEIPCg1fYXR0cmlidXRlX2lkSgQICh'
-    'ALUg5jbHVzdGVyX2lkX2hleA==');
+    'lIAFILc3RyaW5nVmFsdWUSIQoLYnl0ZXNfdmFsdWUYCCABKAxIAFIKYnl0ZXNWYWx1ZRIhCgtp'
+    'bnQ2NF92YWx1ZRgQIAEoEkgAUgppbnQ2NFZhbHVlEiMKDHVpbnQ2NF92YWx1ZRgRIAEoBEgAUg'
+    't1aW50NjRWYWx1ZRJBCgpudWxsX3ZhbHVlGBIgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYx'
+    'Lk51bGxWYWx1ZUgAUgludWxsVmFsdWUSOAoJdGltZXN0YW1wGAkgASgLMhouZ29vZ2xlLnByb3'
+    'RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEkYKCnByb3ZlbmFuY2UYCyABKA4yJi5rdXNpbnRh'
+    'LmlvdC5kZXZpY2UudjEuVmFsdWVQcm92ZW5hbmNlUgpwcm92ZW5hbmNlEiQKC2VuZHBvaW50X2'
+    'lkGAwgASgNSAJSCmVuZHBvaW50SWSIAQESLgoQdmVuZG9yX2V4dGVuc2lvbhgNIAEoCUgDUg92'
+    'ZW5kb3JFeHRlbnNpb26IAQESIgoKY2x1c3Rlcl9pZBgOIAEoDUgEUgljbHVzdGVySWSIAQESJg'
+    'oMYXR0cmlidXRlX2lkGA8gASgNSAVSC2F0dHJpYnV0ZUlkiAEBQgcKBXZhbHVlQhEKD19hdHRy'
+    'aWJ1dGVfbmFtZUIOCgxfZW5kcG9pbnRfaWRCEwoRX3ZlbmRvcl9leHRlbnNpb25CDQoLX2NsdX'
+    'N0ZXJfaWRCDwoNX2F0dHJpYnV0ZV9pZEoECAoQC1IOY2x1c3Rlcl9pZF9oZXg=');
 
 @$core.Deprecated('Use propertyUpdateBatchDescriptor instead')
 const PropertyUpdateBatch$json = {

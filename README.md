@@ -89,14 +89,16 @@ All device type IDs are Matter 1.5.1 `uint32` values.
 | `OnOffLightProperties` | `0x0100` | On/Off `0x0006` |
 | `DimmableLightProperties` | `0x0101` | On/Off `0x0006` + Level Control `0x0008` |
 | `ColorTemperatureLightProperties` | `0x010C` | On/Off + Level + Color Control `0x0300` |
-| `EnergySensorProperties` | `0x0510` | Electrical Power Measurement `0x0090` |
+| `EnergySensorProperties` | `0x0510` | Electrical Power Measurement `0x0090`, Electrical Energy Measurement `0x0091` |
 | `PressureSensorProperties` | `0x0305` | Pressure Measurement `0x0403` |
 | `PowerSourceProperties` | `0x0011` | Power Source `0x002F` |
 
 Temperatures are `sint32` centidegrees (°C × 100), matching Matter's `int16 × 0.01°C` encoding.
 `EnergySensorProperties` values are `sint64` in Matter's own mW / mV / mA / mHz, so a connector
 forwards what the cluster reports without rescaling; `active_power` and `active_current` go
-negative on export.
+negative on export. The cumulative energy counters are `uint64` milliwatt-hours, imported and
+exported apart; a reading lower than the last is a counter reset. Values wider than 32 bits
+travel in `PropertyUpdate.int64_value` / `uint64_value`, and a reported null in `null_value`.
 
 `PowerSourceProperties.bat_percent_remaining` is Matter's **half-percent, 0–200** — 200 is a full
 battery. Divide by two for display; do not rescale on the wire.
