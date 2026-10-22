@@ -126,7 +126,8 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
   scope: FactScope;
 
   /**
-   * Set: this answer departs from that version of the home's template.
+   * Set: this answer departs from that version of the home's template, named by
+   * template_id.
    *
    * @generated from field: optional uint32 template_version = 12;
    */
@@ -139,6 +140,13 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
    * @generated from field: uint64 revision = 13;
    */
   revision: bigint;
+
+  /**
+   * With template_version.
+   *
+   * @generated from field: string template_id = 14;
+   */
+  templateId: string;
 };
 
 /**
@@ -265,6 +273,13 @@ export declare type Need = Message<"kusinta.iot.commissioning.v1.Need"> & {
    * @generated from field: kusinta.iot.commissioning.v1.Party answerer = 5;
    */
   answerer: Party;
+
+  /**
+   * For an OUTPUT_LEASE test, the binding, as CommissioningTest.field.
+   *
+   * @generated from field: string field = 6;
+   */
+  field: string;
 };
 
 /**
@@ -293,6 +308,13 @@ export declare type FeatureBlock = Message<"kusinta.iot.commissioning.v1.Feature
    * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 3;
    */
   deviceId?: DeviceId | undefined;
+
+  /**
+   * The binding, as CommissioningTest.field, where the record has several.
+   *
+   * @generated from field: string field = 4;
+   */
+  field: string;
 };
 
 /**
@@ -479,9 +501,11 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
 export declare const CommissioningProfileSchema: GenMessage<CommissioningProfile>;
 
 /**
- * Whether a home is set up: every REQUIRED fact answered, and every bound output in it
- * holding a current OUTPUT_LEASE pass. All the owner organisation learns of a home's
- * commissioning.
+ * Whether a home is set up: every REQUIRED fact answered, and every output bound in it
+ * passed OUTPUT_LEASE at least once on the device it is bound to. A pass superseded by a
+ * change of a floor zone's rooms or control room still counts here, so that set_up does not
+ * tell the owner organisation of a renovation; binding a new output, or a new device, is
+ * what it can show. All the owner organisation learns of a home's commissioning.
  *
  * @generated from message kusinta.iot.commissioning.v1.HomeSetup
  */
@@ -869,7 +893,7 @@ export enum TestKind {
    * it away from rest under a short lease and sees the reported contact leave rest; renews
    * the lease before it ends and sees the contact hold past the first lease's end; then
    * lets it lapse and sees the contact return to rest within the read latency its producer
-   * states. Judged by the gateway. Takes minutes.
+   * states. Judged by the gateway. Ends at most 15 minutes after it starts.
    *
    * @generated from enum value: TEST_KIND_OUTPUT_LEASE = 1;
    */

@@ -323,6 +323,7 @@ const CommissioningFact$json = {
       '17': true
     },
     {'1': 'revision', '3': 13, '4': 1, '5': 4, '10': 'revision'},
+    {'1': 'template_id', '3': 14, '4': 1, '5': 9, '10': 'templateId'},
   ],
   '8': [
     {'1': '_template_version'},
@@ -342,8 +343,8 @@ final $typed_data.Uint8List commissioningFactDescriptor = $convert.base64Decode(
     'cHJvdmVuYW5jZRgKIAEoCzIoLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuUHJvdmVuYW'
     '5jZVIKcHJvdmVuYW5jZRI9CgVzY29wZRgLIAEoDjInLmt1c2ludGEuaW90LmNvbW1pc3Npb25p'
     'bmcudjEuRmFjdFNjb3BlUgVzY29wZRIuChB0ZW1wbGF0ZV92ZXJzaW9uGAwgASgNSABSD3RlbX'
-    'BsYXRlVmVyc2lvbogBARIaCghyZXZpc2lvbhgNIAEoBFIIcmV2aXNpb25CEwoRX3RlbXBsYXRl'
-    'X3ZlcnNpb24=');
+    'BsYXRlVmVyc2lvbogBARIaCghyZXZpc2lvbhgNIAEoBFIIcmV2aXNpb24SHwoLdGVtcGxhdGVf'
+    'aWQYDiABKAlSCnRlbXBsYXRlSWRCEwoRX3RlbXBsYXRlX3ZlcnNpb24=');
 
 @$core.Deprecated('Use templateFactDescriptor instead')
 const TemplateFact$json = {
@@ -442,6 +443,7 @@ const Need$json = {
       '6': '.kusinta.iot.commissioning.v1.Party',
       '10': 'answerer'
     },
+    {'1': 'field', '3': 6, '4': 1, '5': 9, '10': 'field'},
   ],
   '8': [
     {'1': 'what'},
@@ -454,7 +456,8 @@ final $typed_data.Uint8List needDescriptor = $convert.base64Decode(
     'ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuVGVzdEtpbmRIAFIEdGVzdBI7CghzcGFjZV9pZBgD'
     'IAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSGwoJcmVjb3'
     'JkX2lkGAQgASgJUghyZWNvcmRJZBI/CghhbnN3ZXJlchgFIAEoDjIjLmt1c2ludGEuaW90LmNv'
-    'bW1pc3Npb25pbmcudjEuUGFydHlSCGFuc3dlcmVyQgYKBHdoYXQ=');
+    'bW1pc3Npb25pbmcudjEuUGFydHlSCGFuc3dlcmVyEhQKBWZpZWxkGAYgASgJUgVmaWVsZEIGCg'
+    'R3aGF0');
 
 @$core.Deprecated('Use featureBlockDescriptor instead')
 const FeatureBlock$json = {
@@ -477,6 +480,7 @@ const FeatureBlock$json = {
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'deviceId'
     },
+    {'1': 'field', '3': 4, '4': 1, '5': 9, '10': 'field'},
   ],
 };
 
@@ -485,7 +489,7 @@ final $typed_data.Uint8List featureBlockDescriptor = $convert.base64Decode(
     'CgxGZWF0dXJlQmxvY2sSQQoGcmVhc29uGAEgASgOMikua3VzaW50YS5pb3QuY29tbWlzc2lvbm'
     'luZy52MS5CbG9ja1JlYXNvblIGcmVhc29uEhsKCXJlY29yZF9pZBgCIAEoCVIIcmVjb3JkSWQS'
     'PgoJZGV2aWNlX2lkGAMgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCG'
-    'RldmljZUlk');
+    'RldmljZUlkEhQKBWZpZWxkGAQgASgJUgVmaWVsZA==');
 
 @$core.Deprecated('Use featureStatusDescriptor instead')
 const FeatureStatus$json = {

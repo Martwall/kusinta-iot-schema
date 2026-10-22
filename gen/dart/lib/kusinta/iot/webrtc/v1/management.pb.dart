@@ -3603,7 +3603,8 @@ class ListCommissioning extends $pb.GeneratedMessage {
 ///
 ///   INVALID_REQUEST
 ///   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
-///   "VALUE_TYPE"        a value of another type than the key takes, or a value with unknown.
+///   "VALUE_TYPE"        a value of another type than the key takes, a value with unknown,
+///                       or neither.
 ///   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
 ///                       that is not about that kind of space or record.
 ///   "ANSWERER"          a key the caller's party does not answer.
@@ -3614,6 +3615,9 @@ class ListCommissioning extends $pb.GeneratedMessage {
 ///
 ///   FAILED_PRECONDITION
 ///   "STALE_REVISION"    the fact changed since the revision the request names.
+///   "FACT_EXISTS"       a create for a space, record and key that already have a fact;
+///                       metadata "fact_id" names it. One answer per key.
+///   "SET_BY_TEST"       a key only a test sets.
 ///
 /// A space or record the caller cannot reach, and a fact_id that does not exist, are refused
 /// as NOT_ENTITLED with the same metadata.
@@ -3679,8 +3683,8 @@ class PutCommissioningFact extends $pb.GeneratedMessage {
 }
 
 /// Removes a fact by its id, naming the revision it removes; as PutCommissioningFact. A fact
-/// set by a test cannot be removed, only replaced by running it again: refused as
-/// FAILED_PRECONDITION "SET_BY_TEST". Acked.
+/// set by a test is replaced only by running it again: refused as FAILED_PRECONDITION
+/// "SET_BY_TEST". Acked.
 class RemoveCommissioningFact extends $pb.GeneratedMessage {
   factory RemoveCommissioningFact({
     $core.String? factId,
@@ -3757,8 +3761,10 @@ class RemoveCommissioningFact extends $pb.GeneratedMessage {
 /// Creates a house template (empty template_id) or replaces one, naming the version it
 /// replaces. From the property owner or the gateway's administrators, reaching the building;
 /// anyone else is refused as NOT_ENTITLED. Answered with the CommissioningRecord as stored.
-/// Refused as FAILED_PRECONDITION "STALE_REVISION" when the template changed since, and as
-/// INVALID_REQUEST "UNKNOWN_KEY" or "VALUE_TYPE" as PutCommissioningFact.
+/// Refused as FAILED_PRECONDITION "STALE_REVISION" when the template changed since, as
+/// INVALID_REQUEST "UNKNOWN_KEY" or "VALUE_TYPE" as PutCommissioningFact, and as
+/// INVALID_REQUEST "EVIDENCE" for a key a template may not answer (commissioning.v1,
+/// TEMPLATES); metadata "key" names it.
 class PutHouseTemplate extends $pb.GeneratedMessage {
   factory PutHouseTemplate({
     $6.HouseTemplate? template,
@@ -4001,8 +4007,9 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
 
 /// Ends a running test. verdict ABORTED stops any test, from whoever started it or may run
 /// it; PASSED or FAILED concludes a PUMP_ALL_ZONES_OFF test, from an installer under a
-/// commissioning grant only, and is refused on any other kind as INVALID_REQUEST "VERDICT".
-/// Its outputs return to their normal control at once. Answered with the CommissioningRecord
+/// commissioning grant only. Any other verdict, or PASSED or FAILED on another kind, is
+/// refused as INVALID_REQUEST "VERDICT". Its outputs return to their normal control at once,
+/// floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered with the CommissioningRecord
 /// of the test. A test that has ended is refused as FAILED_PRECONDITION "TEST_ENDED".
 class ConcludeCommissioningTest extends $pb.GeneratedMessage {
   factory ConcludeCommissioningTest({

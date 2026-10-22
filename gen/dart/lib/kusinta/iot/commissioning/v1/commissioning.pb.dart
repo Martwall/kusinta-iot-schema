@@ -145,6 +145,7 @@ class CommissioningFact extends $pb.GeneratedMessage {
     FactScope? scope,
     $core.int? templateVersion,
     $fixnum.Int64? revision,
+    $core.String? templateId,
   }) {
     final result = create();
     if (factId != null) result.factId = factId;
@@ -160,6 +161,7 @@ class CommissioningFact extends $pb.GeneratedMessage {
     if (scope != null) result.scope = scope;
     if (templateVersion != null) result.templateVersion = templateVersion;
     if (revision != null) result.revision = revision;
+    if (templateId != null) result.templateId = templateId;
     return result;
   }
 
@@ -208,6 +210,7 @@ class CommissioningFact extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         13, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(14, _omitFieldNames ? '' : 'templateId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -345,7 +348,8 @@ class CommissioningFact extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   void clearScope() => $_clearField(11);
 
-  /// Set: this answer departs from that version of the home's template.
+  /// Set: this answer departs from that version of the home's template, named by
+  /// template_id.
   @$pb.TagNumber(12)
   $core.int get templateVersion => $_getIZ(11);
   @$pb.TagNumber(12)
@@ -365,6 +369,16 @@ class CommissioningFact extends $pb.GeneratedMessage {
   $core.bool hasRevision() => $_has(12);
   @$pb.TagNumber(13)
   void clearRevision() => $_clearField(13);
+
+  /// With template_version.
+  @$pb.TagNumber(14)
+  $core.String get templateId => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set templateId($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasTemplateId() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearTemplateId() => $_clearField(14);
 }
 
 /// One answer in a house template.
@@ -585,6 +599,7 @@ class Need extends $pb.GeneratedMessage {
     $1.SpaceId? spaceId,
     $core.String? recordId,
     Party? answerer,
+    $core.String? field_6,
   }) {
     final result = create();
     if (factKey != null) result.factKey = factKey;
@@ -592,6 +607,7 @@ class Need extends $pb.GeneratedMessage {
     if (spaceId != null) result.spaceId = spaceId;
     if (recordId != null) result.recordId = recordId;
     if (answerer != null) result.answerer = answerer;
+    if (field_6 != null) result.field_6 = field_6;
     return result;
   }
 
@@ -627,6 +643,7 @@ class Need extends $pb.GeneratedMessage {
         defaultOrMaker: Party.PARTY_UNSPECIFIED,
         valueOf: Party.valueOf,
         enumValues: Party.values)
+    ..aOS(6, _omitFieldNames ? '' : 'field')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -699,6 +716,16 @@ class Need extends $pb.GeneratedMessage {
   $core.bool hasAnswerer() => $_has(4);
   @$pb.TagNumber(5)
   void clearAnswerer() => $_clearField(5);
+
+  /// For an OUTPUT_LEASE test, the binding, as CommissioningTest.field.
+  @$pb.TagNumber(6)
+  $core.String get field_6 => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set field_6($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasField_6() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearField_6() => $_clearField(6);
 }
 
 class FeatureBlock extends $pb.GeneratedMessage {
@@ -706,11 +733,13 @@ class FeatureBlock extends $pb.GeneratedMessage {
     BlockReason? reason,
     $core.String? recordId,
     $1.DeviceId? deviceId,
+    $core.String? field_4,
   }) {
     final result = create();
     if (reason != null) result.reason = reason;
     if (recordId != null) result.recordId = recordId;
     if (deviceId != null) result.deviceId = deviceId;
+    if (field_4 != null) result.field_4 = field_4;
     return result;
   }
 
@@ -735,6 +764,7 @@ class FeatureBlock extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'recordId')
     ..aOM<$1.DeviceId>(3, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $1.DeviceId.create)
+    ..aOS(4, _omitFieldNames ? '' : 'field')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -787,6 +817,16 @@ class FeatureBlock extends $pb.GeneratedMessage {
   void clearDeviceId() => $_clearField(3);
   @$pb.TagNumber(3)
   $1.DeviceId ensureDeviceId() => $_ensure(2);
+
+  /// The binding, as CommissioningTest.field, where the record has several.
+  @$pb.TagNumber(4)
+  $core.String get field_4 => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set field_4($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasField_4() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearField_4() => $_clearField(4);
 }
 
 /// One feature of one home. WORKS when every heating record of the feature in the home may
@@ -1231,9 +1271,11 @@ class CommissioningProfile extends $pb.GeneratedMessage {
   void clearNeedsWithheld() => $_clearField(7);
 }
 
-/// Whether a home is set up: every REQUIRED fact answered, and every bound output in it
-/// holding a current OUTPUT_LEASE pass. All the owner organisation learns of a home's
-/// commissioning.
+/// Whether a home is set up: every REQUIRED fact answered, and every output bound in it
+/// passed OUTPUT_LEASE at least once on the device it is bound to. A pass superseded by a
+/// change of a floor zone's rooms or control room still counts here, so that set_up does not
+/// tell the owner organisation of a renovation; binding a new output, or a new device, is
+/// what it can show. All the owner organisation learns of a home's commissioning.
 class HomeSetup extends $pb.GeneratedMessage {
   factory HomeSetup({
     $1.SpaceId? homeId,

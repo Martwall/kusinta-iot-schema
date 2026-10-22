@@ -264,7 +264,7 @@ class TestKind extends $pb.ProtobufEnum {
   /// it away from rest under a short lease and sees the reported contact leave rest; renews
   /// the lease before it ends and sees the contact hold past the first lease's end; then
   /// lets it lapse and sees the contact return to rest within the read latency its producer
-  /// states. Judged by the gateway. Takes minutes.
+  /// states. Judged by the gateway. Ends at most 15 minutes after it starts.
   static const TestKind TEST_KIND_OUTPUT_LEASE =
       TestKind._(1, _omitEnumNames ? '' : 'TEST_KIND_OUTPUT_LEASE');
 

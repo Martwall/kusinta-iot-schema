@@ -20,12 +20,14 @@ option optimize_for = SPEED;
 //
 //   "floor.pump_tolerates_all_zones_off"  bool; a floor circuit. Whether its pump runs safely
 //       with every zone on the manifold off (not heating): a variable-speed pump, or a
-//       bypass. Counts only as MEASURED, set by a passed PUMP_ALL_ZONES_OFF test. Until it
-//       is true, the gateway keeps at least one zone of the circuit heating at all times.
+//       bypass. Set only by a concluded PUMP_ALL_ZONES_OFF test, as MEASURED: true on a
+//       pass, false on a fail. Until it is true, the gateway keeps at least one zone of the
+//       circuit heating at all times.
 //   "floor.max_zones_switching_on"  uint; a floor circuit. How many of its zones the wiring
 //       centre's supply carries switching on at once: thermal actuators draw several times
 //       their holding power while they open. The gateway switches no more zones on within
-//       one actuator travel time. Unknown: 1.
+//       one actuator travel time, counting zones a lapsing lease returns to rest: the leases
+//       of zones held off together end that far apart, in groups no larger. Unknown: 1.
 //   "floor.actuator_travel_seconds"  uint; a floor circuit. How long its zone actuators take
 //       to open fully. No zone is switched again sooner after it was switched. Unknown: 300.
 //   "floor.fallback_ceiling_thermostat"  bool; a floor zone. Whether a thermostat in series
@@ -33,7 +35,7 @@ option optimize_for = SPEED;
 //       accepted risk.
 //   "plant.max_block_minutes"  uint; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
-//       nothing, and the plant feature needs it.
+//       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
 //
 // A fact's value takes the type its key states, matched by type as well as value, as
 // heating.v1.ContactBinding.closed_value is.
@@ -46,8 +48,12 @@ option optimize_for = SPEED;
 // facts and the tests stay, with provenance.by cleared and provenance.party kept.
 //
 // TEMPLATES. An owner organisation describes each house type of a building once, from its
-// drawings, as a HouseTemplate, and says which homes follow which. A home's fact that
-// departs from its template names the template version it departs from (a deviation). The
+// drawings, as a HouseTemplate, and says which homes follow which. A template's fact counts
+// for a home that follows it as the home's answer with DRAWING evidence, until the home
+// answers the key itself, and only for a key that DRAWING satisfies: a key an installer or
+// the gateway answers, or one needing more evidence, is answered per home. A home's fact
+// that departs from its template names the template and version it departs from (a
+// deviation). The
 // owner organisation never sees a home's facts, deviations included, nor a home's tests or
 // to-dos: only whether the home is set up (HomeSetup). The commissioning profile must not
 // become a channel that tells a building's owner who has renovated.
@@ -161,12 +167,16 @@ message CommissioningFact {
   // Set by the gateway; see the file comment.
   FactScope scope = 11;
 
-  // Set: this answer departs from that version of the home's template.
+  // Set: this answer departs from that version of the home's template, named by
+  // template_id.
   optional uint32 template_version = 12;
 
   // Set by the gateway and bumped by every change; a put that replaces a fact, and a
   // remove, names the revision it acts on.
   uint64 revision = 13;
+
+  // With template_version.
+  string template_id = 14;
 }
 
 // One answer in a house template.
@@ -228,6 +238,8 @@ message Need {
   kusinta.iot.identity.v1.SpaceId space_id = 3;
   string record_id = 4;
   Party answerer = 5;
+  // For an OUTPUT_LEASE test, the binding, as CommissioningTest.field.
+  string field = 6;
 }
 
 enum BlockReason {
@@ -249,6 +261,8 @@ message FeatureBlock {
   // The heating record, and the device, it is blocked on.
   string record_id = 2;
   kusinta.iot.identity.v1.DeviceId device_id = 3;
+  // The binding, as CommissioningTest.field, where the record has several.
+  string field = 4;
 }
 
 // One feature of one home. WORKS when every heating record of the feature in the home may
@@ -268,7 +282,7 @@ enum TestKind {
   // it away from rest under a short lease and sees the reported contact leave rest; renews
   // the lease before it ends and sees the contact hold past the first lease's end; then
   // lets it lapse and sees the contact return to rest within the read latency its producer
-  // states. Judged by the gateway. Takes minutes.
+  // states. Judged by the gateway. Ends at most 15 minutes after it starts.
   TEST_KIND_OUTPUT_LEASE = 1;
 
   // On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and
@@ -356,9 +370,11 @@ message CommissioningProfile {
   bool needs_withheld = 7;
 }
 
-// Whether a home is set up: every REQUIRED fact answered, and every bound output in it
-// holding a current OUTPUT_LEASE pass. All the owner organisation learns of a home's
-// commissioning.
+// Whether a home is set up: every REQUIRED fact answered, and every output bound in it
+// passed OUTPUT_LEASE at least once on the device it is bound to. A pass superseded by a
+// change of a floor zone's rooms or control room still counts here, so that set_up does not
+// tell the owner organisation of a renovation; binding a new output, or a new device, is
+// what it can show. All the owner organisation learns of a home's commissioning.
 message HomeSetup {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   bool set_up = 2;

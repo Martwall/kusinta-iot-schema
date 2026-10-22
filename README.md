@@ -339,8 +339,9 @@ built, the tests the gateway has run on its outputs, and which features work bec
   describes the house and survives a household handover; what the household answered is
   wiped with it.
 - **Templates:** the owner organisation describes each house type once
-  (`PutHouseTemplate`, versioned) and says which homes follow it (`SetHomeTemplate`). A home's
-  fact that departs from it names the template version. The owner organisation never sees a
+  (`PutHouseTemplate`, versioned) and says which homes follow it (`SetHomeTemplate`). A
+  template answers for its homes only what a drawing can, never a safety key. A home's fact
+  that departs from it names the template and version. The owner organisation never sees a
   home's facts or deviations, only whether it is set up (`ListHomeSetups`).
 - **Feature states:** per home, each feature works, **needs** a fact or a test from a named
   party, or is **blocked for safety** with a reason. Residents who are not a household admin

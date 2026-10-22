@@ -53,6 +53,18 @@ def test_a_deviation_names_the_template_version_it_departs_from():
     assert _round_trip(c.CommissioningFact(template_version=0)).HasField("template_version")
 
 
+def test_a_deviation_names_its_template():
+    decoded = _round_trip(c.CommissioningFact(template_id="tpl-a", template_version=3))
+
+    assert (decoded.template_id, decoded.template_version) == ("tpl-a", 3)
+
+
+def test_a_block_names_the_binding_on_a_record_with_several():
+    status = c.FeatureStatus(blocks=[c.FeatureBlock(record_id="plant-1", field="sg_ready_block")])
+
+    assert _round_trip(status).blocks[0].field == "sg_ready_block"
+
+
 def test_household_data_is_told_apart_from_house_facts():
     assert _round_trip(c.CommissioningFact(scope=c.FACT_SCOPE_HOUSEHOLD)).scope == c.FACT_SCOPE_HOUSEHOLD
 

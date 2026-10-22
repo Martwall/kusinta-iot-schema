@@ -77,6 +77,11 @@ describe('commissioning fact', () => {
     expect(onTheWire(CommissioningFactSchema, { templateVersion: 3 }).templateVersion).toBe(3)
   })
 
+  it('names the template as well as the version it deviates from', () => {
+    const decoded = onTheWire(CommissioningFactSchema, { templateId: 'tpl-a', templateVersion: 3 })
+    expect([decoded.templateId, decoded.templateVersion]).toEqual(['tpl-a', 3])
+  })
+
   it('is no deviation when it names no template version', () => {
     expect(create(CommissioningFactSchema, {}).templateVersion).toBeUndefined()
   })
@@ -116,6 +121,14 @@ describe('feature status', () => {
       blocks: [{ reason: BlockReason.TEST_FAILED, recordId: 'zone-2', deviceId: { value: 'relay-1' } }],
     })
     expect(decoded.blocks).toMatchObject([{ reason: BlockReason.TEST_FAILED, recordId: 'zone-2' }])
+  })
+
+  it('names the binding a test is needed on, where a record has several', () => {
+    const decoded = onTheWire(FeatureStatusSchema, {
+      needs: [{ what: { case: 'test', value: TestKind.OUTPUT_LEASE }, recordId: 'plant-1', field: 'sg_ready_boost' }],
+      blocks: [{ reason: BlockReason.TEST_FAILED, recordId: 'plant-1', field: 'sg_ready_block' }],
+    })
+    expect([decoded.needs[0]?.field, decoded.blocks[0]?.field]).toEqual(['sg_ready_boost', 'sg_ready_block'])
   })
 
   it('says when its to-dos are withheld rather than none', () => {
