@@ -1,0 +1,469 @@
+syntax = "proto3";
+
+package kusinta.iot.commissioning.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/device/v1/cluster_state.proto";
+import "kusinta/iot/identity/v1/identity.proto";
+
+option optimize_for = SPEED;
+
+// How a home's heating was commissioned: the facts known about it, the house template it
+// was built to, the tests the building-server gateway has run on its outputs, and which
+// heating features work because of them.
+//
+// FACTS. A fact is one answer about one space — a building, a home or a room — or about one
+// heating record (heating.v1) in it, under a key. Which keys there are, the value type each
+// takes, who answers it and how much it is needed are the gateway's catalogue: it refuses a
+// key it does not know, and fills answerer, necessity, feature and topic from the
+// catalogue. A key is never reused for another meaning. A client words a key named in this
+// file by the key, and any other by its FactTopic, never by the raw key. The keys a safety
+// rule depends on are fixed here:
+//
+//   "floor.pump_tolerates_all_zones_off"  bool; a floor circuit. Whether its pump runs safely
+//       with every zone on the manifold off (not heating): a variable-speed pump, or a
+//       bypass. Set only by a concluded PUMP_ALL_ZONES_OFF test, as MEASURED: true on a
+//       pass, false on a fail. Until it is true, the gateway keeps at least one zone of the
+//       circuit heating at all times.
+//   "floor.max_zones_switching_on"  uint; a floor circuit. How many of its zones the wiring
+//       centre's supply carries switching on at once: thermal actuators draw several times
+//       their holding power while they open. The gateway switches no more zones on within
+//       one actuator travel time, counting zones a lapsing lease returns to rest: the leases
+//       of zones held off together end that far apart, in groups no larger. Unknown: 1.
+//       This holds while the gateway runs. With the gateway gone, zones return to rest as
+//       their leases end, and a device whose timer is shared by its outputs returns them
+//       all at once, as after a power cut: an accepted risk, like a missing fallback
+//       ceiling thermostat.
+//   "floor.actuator_travel_seconds"  uint; a floor circuit. How long its zone actuators take
+//       to open fully. No zone is switched again sooner after it was switched. Unknown: 300.
+//   "floor.fallback_ceiling_thermostat"  bool; a floor zone. Whether a thermostat in series
+//       caps the zone while the gateway is gone. Recorded, not enforced: false is an
+//       accepted risk.
+//   "plant.max_block_minutes"  uint; a plant. The longest the gateway holds an input that
+//       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
+//       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
+//
+// A fact's value takes the type its key states, matched by type as well as value, as
+// heating.v1.ContactBinding.closed_value is. A value is never free text: a key that takes a
+// string takes only a value from the closed list the key states, so that nothing a household
+// writes outlives it by an installer confirming it.
+//
+// HOUSE FACTS AND HOUSEHOLD DATA. A fact an installer confirmed (any evidence), or the
+// gateway derived or measured, describes the house: it is a HOUSE fact, kept when the
+// household changes. A fact the household answered (provenance.party HOUSEHOLD) is
+// HOUSEHOLD data: wiped at a household handover, with the photos it cites. An installer
+// confirming a household's answer makes it a house fact. At a handover the house facts and
+// the tests stay, with provenance.by cleared and provenance.party kept.
+//
+// TEMPLATES. An owner organisation describes each house type of a building once, from its
+// drawings, as a HouseTemplate, and says which homes follow which. A template's fact counts
+// for a home that follows it as the home's answer with DRAWING evidence, until the home
+// answers the key itself, and only for a key that DRAWING satisfies: a key an installer or
+// the gateway answers, or one needing more evidence, is answered per home. A home's fact
+// that departs from its template names the template and version it departs from (a
+// deviation, CommissioningFact.deviates_from). The owner organisation never sees a home's
+// facts, deviations included, nor a home's tests or to-dos: only whether the home is set up
+// (HomeSetup). The commissioning profile must not become a channel that tells a building's
+// owner who has renovated.
+//
+// WHO SEES AND CHANGES IT. A fact, test or feature about a home — its rooms, or a heating
+// record naming a room in it (heating.v1) — is given to the home's residents and to an
+// installer under a commissioning grant for the home. A fact is put by a household admin
+// of the home (HOUSEHOLD), or by that installer (INSTALLER). Facts about spaces outside
+// homes are given to and put by the property owner and the gateway's administrators
+// (OWNER_ORGANISATION), and by an installer under a grant naming the space. A caller who
+// reaches a home as service gets none of it, and is refused as NOT_ENTITLED. A fact of
+// FACT_TOPIC_COMFORT is the exception: it is given to and put by the home's residents only,
+// never under a commissioning grant, and no installer answers it.
+//
+// Of the feature states, residents who are not a household admin are given the states
+// and the blocks, not the needs (CommissioningProfile.needs_withheld): the to-dos belong
+// to whoever can answer them. "Don't know" from the household lists the fact as a need
+// for the installer.
+//
+// TESTS. The gateway runs every test itself, on one heating record or one binding of it
+// (BindingRef). While a
+// test drives an output nothing else does, and every write it makes is leased
+// (device.v1.LeasedWrite) to end no later than the test's ends_at, so a gateway that stops
+// mid-test leaves the output to return to rest. A test ends at its ends_at at the latest,
+// and the output returns to its normal control.
+//
+// The gateway drives a bound output away from rest only while it holds a current pass of
+// OUTPUT_LEASE run on it (heating.v1). Writing the lapse value, which returns the output to
+// rest, is always allowed: on unbinding, after a test, or at any time. A pass tests the
+// output as its producer runs it; it does not prove what the device does with the producer
+// gone. A pass stops being current (CommissioningTest.superseded) when:
+//   * its binding changes: another output, another device, another closed_value;
+//   * the device is replaced or re-paired, even under the same binding;
+//   * for a floor zone, its rooms or its control room change. Area shares may change
+//     freely.
+
+// Who answers a fact, or ran or concluded a test.
+enum Party {
+  PARTY_UNSPECIFIED = 0;
+  // The property owner or the gateway's administrators.
+  PARTY_OWNER_ORGANISATION = 1;
+  // A household admin of the home.
+  PARTY_HOUSEHOLD = 2;
+  // An installer under a commissioning grant.
+  PARTY_INSTALLER = 3;
+  // The gateway, from a device, a connector or a measurement of its own.
+  PARTY_AUTOMATIC = 4;
+}
+
+// How much a fact is needed.
+enum Necessity {
+  NECESSITY_UNSPECIFIED = 0;
+  // Before the home is set up (HomeSetup).
+  NECESSITY_REQUIRED = 1;
+  // Before its feature works (CommissioningFact.feature).
+  NECESSITY_FOR_FEATURE = 2;
+  NECESSITY_OPTIONAL = 3;
+}
+
+// How an answer was confirmed. A household answers STATED, PHOTO or DRAWING; INSPECTED and
+// MEASURED are an installer's or the gateway's; DERIVED is the gateway's alone. A key may
+// require more (see the file comment); less is refused.
+enum Evidence {
+  EVIDENCE_UNSPECIFIED = 0;
+  EVIDENCE_STATED = 1;
+  EVIDENCE_PHOTO = 2;
+  EVIDENCE_DRAWING = 3;
+  EVIDENCE_INSPECTED = 4;
+  EVIDENCE_MEASURED = 5;
+  // From other facts, the address or a connector's declaration.
+  EVIDENCE_DERIVED = 6;
+}
+
+// Who answered, how and when. Set by the gateway from the caller, never taken from a put,
+// save evidence.
+message Provenance {
+  Party party = 1;
+  Evidence evidence = 2;
+  google.protobuf.Timestamp at = 3;
+  // Unset for AUTOMATIC, and after a household handover. On a home's facts and tests it is
+  // given to the home's residents, and to an installer only on what that installer put,
+  // started or concluded; to anyone else it is left unset, with party kept.
+  kusinta.iot.identity.v1.UserId by = 4;
+}
+
+// What a fact is about, for a client that does not know its key. Closed: a client words a
+// topic it does not know as a detail about the space or record, from its answerer.
+enum FactTopic {
+  FACT_TOPIC_UNSPECIFIED = 0;
+  // The building: type, house types, drawings, gateway site, service agreements, payer.
+  FACT_TOPIC_BUILDING = 1;
+  // Rooms, walls added or removed, how each room is heated, its thermostats.
+  FACT_TOPIC_ROOMS = 2;
+  // The heat source: heat pump, its inputs, vendor account, blocks.
+  FACT_TOPIC_HEAT_SOURCE = 3;
+  // Floor heating: circuits, pump, mixing, supply cap, zones, actuators, probes.
+  FACT_TOPIC_FLOOR_HEATING = 4;
+  // Electric comfort loads: bathroom floors, towel heaters, their thermostats.
+  FACT_TOPIC_COMFORT_LOADS = 5;
+  // Electricity: grid subscription, operator, fuse size, meter and its port.
+  FACT_TOPIC_ELECTRICITY = 6;
+  // District heating: utility and tariff.
+  FACT_TOPIC_DISTRICT_HEATING = 7;
+  // Radio coverage and the gateways that carry it.
+  FACT_TOPIC_CONNECTIVITY = 8;
+  // Comfort wishes and schedules. Residents only, never under a commissioning grant.
+  FACT_TOPIC_COMFORT = 9;
+}
+
+// One heating record (heating.v1), or one binding of it. An output is always named by its
+// proto field name as the heating record puts name it ("output", "sg_ready_block", ...),
+// even a record's only one; an empty field is the record itself, never an output.
+message BindingRef {
+  string record_id = 1;
+  string field = 2;
+}
+
+// One version of a house template.
+message TemplateRef {
+  string template_id = 1;
+  uint32 version = 2;
+}
+
+message CommissioningFact {
+  // Assigned by the gateway, opaque; empty when creating.
+  string fact_id = 1;
+
+  // The space the fact is about: a building, a home or a room.
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
+
+  // A heating record within that space the fact is about. Empty: the space itself.
+  string record_id = 3;
+
+  string key = 4;
+
+  oneof answer {
+    kusinta.iot.device.v1.AttributeValue value = 5;
+    // "Don't know": an answer, which lists the fact as a need for the next party who can
+    // answer it. Only true is sent; false is refused.
+    bool unknown = 6;
+  }
+
+  // From the gateway's catalogue.
+  Party answerer = 7;
+  Necessity necessity = 8;
+  // For FOR_FEATURE.
+  Feature feature = 9;
+
+  Provenance provenance = 10;
+
+  // Set by the gateway and bumped by every change; a put that replaces a fact, and a
+  // remove, names the revision it acts on.
+  uint64 revision = 13;
+
+  // Set: this answer departs from that version of a template, the home's when it was
+  // recorded.
+  TemplateRef deviates_from = 15;
+
+  // From the gateway's catalogue.
+  FactTopic topic = 16;
+
+  reserved 11 to 12, 14;
+  reserved "scope", "template_version", "template_id";
+}
+
+// One answer in a house template.
+message TemplateFact {
+  string key = 1;
+  // What it is about, as named on the drawing ("SL 2", "Bathroom"). Empty: the house.
+  string subject_label = 2;
+  kusinta.iot.device.v1.AttributeValue value = 3;
+
+  reserved 4;
+  reserved "provenance";
+}
+
+// One house type of a building, as built. The owner organisation's.
+message HouseTemplate {
+  // Assigned by the gateway, opaque; empty when creating.
+  string template_id = 1;
+  kusinta.iot.identity.v1.SpaceId building_id = 2;
+  string name = 3;
+
+  // Set by the gateway and bumped by every put; a put that replaces a template names the
+  // version it replaces. A version once given is never given to other content.
+  uint32 version = 4;
+
+  repeated TemplateFact facts = 5;
+
+  // Who put this version, set by the gateway; its evidence is DRAWING. provenance.by is
+  // given to the owner organisation only, and left unset for residents and installers.
+  Provenance provenance = 6;
+}
+
+// The heating features a home's commissioning unlocks.
+enum Feature {
+  FEATURE_UNSPECIFIED = 0;
+  FEATURE_FLOOR_ZONES = 1;
+  // Steering the heat source (heating.v1.HeatingPlant.control).
+  FEATURE_PLANT = 2;
+  FEATURE_COMFORT_LOADS = 3;
+  // Planning by electricity price and the home's grid tariff.
+  FEATURE_COST = 4;
+  // Holding the home's load under a power peak, live.
+  FEATURE_PEAK_GUARD = 5;
+  // Planning by forecast, from the room models.
+  FEATURE_PLANNING = 6;
+}
+
+enum FeatureState {
+  // A state this schema does not know: read as NEEDS.
+  FEATURE_STATE_UNSPECIFIED = 0;
+  FEATURE_STATE_WORKS = 1;
+  // Something it needs is missing (FeatureStatus.needs), and nothing blocks it.
+  FEATURE_STATE_NEEDS = 2;
+  // FeatureStatus.blocks says why. Takes precedence over NEEDS.
+  FEATURE_STATE_BLOCKED_FOR_SAFETY = 3;
+}
+
+// A fact or a test a feature needs, and who can provide it.
+message Need {
+  oneof what {
+    string fact_key = 1;
+    TestKind test = 2;
+  }
+  // What it is needed about. For a fact, CommissioningFact.space_id and record_id, with
+  // binding.field empty; for a test, what it runs on, as CommissioningTest.binding.
+  kusinta.iot.identity.v1.SpaceId space_id = 3;
+  Party answerer = 5;
+  BindingRef binding = 7;
+  // For a fact, its CommissioningFact.topic.
+  FactTopic fact_topic = 8;
+
+  reserved 4, 6;
+  reserved "record_id", "field";
+}
+
+enum BlockReason {
+  BLOCK_REASON_UNSPECIFIED = 0;
+  // Its latest test failed, and has not passed since.
+  BLOCK_REASON_TEST_FAILED = 1;
+  // Its producer no longer states the output's write as leased with a lapse value at rest
+  // (heating.v1).
+  BLOCK_REASON_OUTPUT_NOT_LEASED = 2;
+  // Its producer now states a power-on value that would leave the contact away from rest,
+  // though a pass predates it. A test that finds this fails instead
+  // (TEST_FAILURE_POWER_ON_NOT_AT_REST), and blocks as TEST_FAILED.
+  BLOCK_REASON_POWER_ON_NOT_AT_REST = 3;
+  BLOCK_REASON_DEVICE_GONE = 4;
+  // A floor zone whose control room is deleted or outside its plant's space.
+  BLOCK_REASON_CONTROL_ROOM_GONE = 5;
+  // The output's shortest lease (device.v1.LeasedWrite.min_lease_seconds) is longer than
+  // the longest it may be held: "plant.max_block_minutes" for a blocking input, or the
+  // OUTPUT_LEASE test's 5 minutes.
+  BLOCK_REASON_LEASE_TOO_LONG = 6;
+}
+
+message FeatureBlock {
+  BlockReason reason = 1;
+  // The binding, and the device, it is blocked on.
+  kusinta.iot.identity.v1.DeviceId device_id = 3;
+  BindingRef binding = 5;
+
+  reserved 2, 4;
+  reserved "record_id", "field";
+}
+
+// One feature of one home. WORKS when every heating record of the feature in the home may
+// be driven and nothing it needs is missing.
+message FeatureStatus {
+  Feature feature = 1;
+  FeatureState state = 2;
+  repeated Need needs = 3;
+  repeated FeatureBlock blocks = 4;
+}
+
+enum TestKind {
+  TEST_KIND_UNSPECIFIED = 0;
+
+  // On one bound output (heating.v1). The gateway checks that the output's power-on value,
+  // where its producer states one, leaves the contact at rest; writes the value that takes
+  // it away from rest under a lease of L = the greater of the producer's min_lease_seconds
+  // and 60 seconds, and sees the reported contact leave rest; renews the lease before it
+  // ends and sees the contact hold past the first lease's end; then lets it lapse and sees
+  // the contact return to rest. ends_at is the start plus 2 × L plus 5 minutes for the
+  // reports. Runs only on an output whose producer states its reads REAL_TIME and whose
+  // lease bounds admit an L of at most 5 minutes, so it ends within 15 minutes; any other
+  // is refused before it starts (RunCommissioningTest). Judged by the gateway.
+  TEST_KIND_OUTPUT_LEASE = 1;
+
+  // On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and
+  // sees its control room's temperature and the circuit's return probe answer. Judged by
+  // the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
+  TEST_KIND_ZONE_EFFECT = 2;
+
+  // On one floor circuit whose every zone holds a current OUTPUT_LEASE pass. The gateway
+  // holds every zone off for at most 15 minutes while the installer watches the pump, and
+  // the installer concludes it (ConcludeCommissioningTest). Passed or failed, it sets
+  // "floor.pump_tolerates_all_zones_off" as MEASURED, with the installer's provenance.
+  TEST_KIND_PUMP_ALL_ZONES_OFF = 3;
+}
+
+enum TestState {
+  TEST_STATE_UNSPECIFIED = 0;
+  TEST_STATE_RUNNING = 1;
+  TEST_STATE_PASSED = 2;
+  TEST_STATE_FAILED = 3;
+  // Stopped by a caller, or ended at ends_at without a verdict. Proves nothing.
+  TEST_STATE_ABORTED = 4;
+}
+
+enum TestFailure {
+  TEST_FAILURE_UNSPECIFIED = 0;
+  // OUTPUT_LEASE.
+  TEST_FAILURE_POWER_ON_NOT_AT_REST = 1;
+  TEST_FAILURE_NO_STATE_CHANGE = 2;
+  TEST_FAILURE_LEASE_NOT_RENEWED = 3;
+  TEST_FAILURE_DID_NOT_RETURN_TO_REST = 4;
+  // The device answered nothing within the test.
+  TEST_FAILURE_DEVICE_UNREACHABLE = 5;
+  // ZONE_EFFECT: the control room and the return did not answer the zone.
+  TEST_FAILURE_NO_EFFECT = 6;
+  // PUMP_ALL_ZONES_OFF: the installer's verdict.
+  TEST_FAILURE_OBSERVED = 7;
+}
+
+message CommissioningTest {
+  // Assigned by the gateway, opaque.
+  string test_id = 1;
+  TestKind kind = 2;
+
+  // What it runs on: for OUTPUT_LEASE one binding; for ZONE_EFFECT and PUMP_ALL_ZONES_OFF
+  // the record, field empty.
+  BindingRef binding = 13;
+
+  // The device it ran on. Set by the gateway.
+  kusinta.iot.identity.v1.DeviceId device_id = 5;
+
+  TestState state = 6;
+  // FAILED only.
+  TestFailure failure = 7;
+
+  google.protobuf.Timestamp started_at = 8;
+  // The latest it ends, while it runs.
+  google.protobuf.Timestamp ends_at = 9;
+  google.protobuf.Timestamp finished_at = 10;
+
+  // Who started it; for an installer's verdict, who concluded it.
+  Provenance provenance = 11;
+
+  // A pass that no longer holds; see the file comment.
+  bool superseded = 12;
+
+  reserved 3 to 4;
+  reserved "record_id", "field";
+}
+
+// A space's commissioning, in reply to ListCommissioning.
+message CommissioningProfile {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+  repeated CommissioningFact facts = 2;
+
+  // The latest test of each kind on each binding.
+  repeated CommissioningTest tests = 3;
+
+  // For a home, one per feature.
+  repeated FeatureStatus features = 4;
+
+  // The home's template, at its latest version. Unset: it follows none.
+  HouseTemplate template = 6;
+
+  // Set when FeatureStatus.needs are left out for this caller, so that none listed is not
+  // read as nothing missing.
+  bool needs_withheld = 7;
+
+  reserved 5;
+  reserved "template_id";
+}
+
+// Whether a home is set up: every REQUIRED fact answered with a value at least once, and
+// every output bound in it passed OUTPUT_LEASE at least once on the device it is bound to.
+// "Don't know" is not an answer here. What the household does afterwards counts neither
+// way: a REQUIRED fact once answered still counts when it is removed or changed to "don't
+// know", as a pass superseded by a change of a floor zone's rooms or control room still
+// does, so that set_up tells the owner organisation neither of a household's edits nor of
+// a renovation. Binding a new output, or a new device, is what it can show. All the owner
+// organisation learns of a home's commissioning.
+message HomeSetup {
+  kusinta.iot.identity.v1.SpaceId home_id = 1;
+  bool set_up = 2;
+}
+
+// In reply to ListHomeSetups.
+message HomeSetups {
+  repeated HomeSetup homes = 1;
+}
+
+// One commissioning record as stored, in reply to a put, a test's start or its conclusion.
+message CommissioningRecord {
+  oneof record {
+    CommissioningFact fact = 1;
+    CommissioningTest test = 2;
+    HouseTemplate template = 3;
+  }
+}

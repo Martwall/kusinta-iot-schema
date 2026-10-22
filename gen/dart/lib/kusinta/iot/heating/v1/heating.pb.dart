@@ -863,8 +863,6 @@ class FloorZone extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearName() => $_clearField(3);
 
-  /// Where several zones share one device whose timer is device-wide (one delay for all its
-  /// channels), the gateway renews the leases of all those zones in one go.
   @$pb.TagNumber(4)
   ContactBinding get output => $_getN(3);
   @$pb.TagNumber(4)

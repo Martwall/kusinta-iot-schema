@@ -431,6 +431,33 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'accountLinks'
     },
+    {
+      '1': 'commissioning_profile',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningProfile',
+      '9': 0,
+      '10': 'commissioningProfile'
+    },
+    {
+      '1': 'commissioning_record',
+      '3': 20,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningRecord',
+      '9': 0,
+      '10': 'commissioningRecord'
+    },
+    {
+      '1': 'home_setups',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.HomeSetups',
+      '9': 0,
+      '10': 'homeSetups'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -463,7 +490,12 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'luZ1JlY29yZEgAUg1oZWF0aW5nUmVjb3JkElwKEmFjY291bnRfbGlua19ub25jZRgRIAEoCzIs'
     'Lmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkFjY291bnRMaW5rTm9uY2VIAFIQYWNjb3VudE'
     'xpbmtOb25jZRJPCg1hY2NvdW50X2xpbmtzGBIgASgLMigua3VzaW50YS5pb3QuYWNjb3VudGxp'
-    'bmsudjEuQWNjb3VudExpbmtzSABSDGFjY291bnRMaW5rc0IICgZyZXN1bHQ=');
+    'bmsudjEuQWNjb3VudExpbmtzSABSDGFjY291bnRMaW5rcxJpChVjb21taXNzaW9uaW5nX3Byb2'
+    'ZpbGUYEyABKAsyMi5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLkNvbW1pc3Npb25pbmdQ'
+    'cm9maWxlSABSFGNvbW1pc3Npb25pbmdQcm9maWxlEmYKFGNvbW1pc3Npb25pbmdfcmVjb3JkGB'
+    'QgASgLMjEua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nUmVjb3Jk'
+    'SABSE2NvbW1pc3Npb25pbmdSZWNvcmQSSwoLaG9tZV9zZXR1cHMYFSABKAsyKC5rdXNpbnRhLm'
+    'lvdC5jb21taXNzaW9uaW5nLnYxLkhvbWVTZXR1cHNIAFIKaG9tZVNldHVwc0IICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -929,6 +961,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'promotionRequests'
     },
+    {
+      '1': 'commissioning_test',
+      '3': 26,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningTest',
+      '9': 0,
+      '10': 'commissioningTest'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -975,8 +1016,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'dXNDaGFuZ2VkEkoKDXNwYWNlX2ludml0ZXMYGCABKAsyIy5rdXNpbnRhLmlvdC53ZWJydGMudj'
     'EuU3BhY2VJbnZpdGVzSABSDHNwYWNlSW52aXRlcxJZChJwcm9tb3Rpb25fcmVxdWVzdHMYGSAB'
     'KAsyKC5rdXNpbnRhLmlvdC53ZWJydGMudjEuUHJvbW90aW9uUmVxdWVzdHNIAFIRcHJvbW90aW'
-    '9uUmVxdWVzdHNCCQoHcGF5bG9hZEoECA8QEEoECAcQCFIWYXR0cmlidXRlX3dyaXRlX3Jlc3Vs'
-    'dFIOcHJvcGVydHlfZXZlbnQ=');
+    '9uUmVxdWVzdHMSYAoSY29tbWlzc2lvbmluZ190ZXN0GBogASgLMi8ua3VzaW50YS5pb3QuY29t'
+    'bWlzc2lvbmluZy52MS5Db21taXNzaW9uaW5nVGVzdEgAUhFjb21taXNzaW9uaW5nVGVzdEIJCg'
+    'dwYXlsb2FkSgQIDxAQSgQIBxAIUhZhdHRyaWJ1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9l'
+    'dmVudA==');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

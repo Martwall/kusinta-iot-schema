@@ -15,6 +15,7 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
+import type { BindingRef, CommissioningFact, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 
@@ -1460,6 +1461,242 @@ export declare type UnlinkAccount = Message<"kusinta.iot.webrtc.v1.UnlinkAccount
 export declare const UnlinkAccountSchema: GenMessage<UnlinkAccount>;
 
 /**
+ * Lists a space's commissioning (commissioning.v1): for a home, its facts, tests and feature
+ * states; for a space outside homes, its facts and the tests on records there. Answered
+ * with a CommissioningProfile, filtered as commissioning.v1 says. A home asked by a caller
+ * who is not given its commissioning is refused as NOT_ENTITLED.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListCommissioning
+ */
+export declare type ListCommissioning = Message<"kusinta.iot.webrtc.v1.ListCommissioning"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListCommissioning.
+ * Use `create(ListCommissioningSchema)` to create a new message.
+ */
+export declare const ListCommissioningSchema: GenMessage<ListCommissioning>;
+
+/**
+ * Creates a fact (empty fact_id) or replaces one. Answered with the CommissioningRecord as
+ * stored. The gateway sets answerer, necessity, feature, topic and provenance, save
+ * provenance.evidence, which the caller states. Refused with metadata "reason":
+ *
+ *   INVALID_REQUEST
+ *   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
+ *   "VALUE_TYPE"        a value of another type than the key takes, a string outside the
+ *                       key's closed list, unknown false, or no answer.
+ *   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
+ *                       that is not about that kind of space or record.
+ *   "ANSWERER"          a key the caller's party does not answer.
+ *   "EVIDENCE"          evidence the caller's party may not give, or less than the key
+ *                       requires.
+ *   "TEMPLATE_VERSION"  a new or changed deviates_from naming a template or version the
+ *                       home's template never was, or set on a home that follows no
+ *                       template. One carried over unchanged from the stored fact is kept,
+ *                       even after the home moved to another template.
+ *
+ *   FAILED_PRECONDITION
+ *   "STALE_REVISION"    the fact changed since the revision the request names.
+ *   "FACT_EXISTS"       a create for a space, record and key that already have a fact;
+ *                       metadata "fact_id" names it. One answer per key.
+ *   "SET_BY_TEST"       a key only a test sets.
+ *
+ * A space or record the caller cannot reach, and a fact_id that does not exist, are refused
+ * as NOT_ENTITLED with the same metadata.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PutCommissioningFact
+ */
+export declare type PutCommissioningFact = Message<"kusinta.iot.webrtc.v1.PutCommissioningFact"> & {
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.CommissioningFact fact = 1;
+   */
+  fact?: CommissioningFact | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PutCommissioningFact.
+ * Use `create(PutCommissioningFactSchema)` to create a new message.
+ */
+export declare const PutCommissioningFactSchema: GenMessage<PutCommissioningFact>;
+
+/**
+ * Removes a fact by its id, naming the revision it removes; as PutCommissioningFact. A fact
+ * set by a test is replaced only by running it again: refused as FAILED_PRECONDITION
+ * "SET_BY_TEST". Acked.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RemoveCommissioningFact
+ */
+export declare type RemoveCommissioningFact = Message<"kusinta.iot.webrtc.v1.RemoveCommissioningFact"> & {
+  /**
+   * @generated from field: string fact_id = 1;
+   */
+  factId: string;
+
+  /**
+   * @generated from field: uint64 revision = 2;
+   */
+  revision: bigint;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RemoveCommissioningFact.
+ * Use `create(RemoveCommissioningFactSchema)` to create a new message.
+ */
+export declare const RemoveCommissioningFactSchema: GenMessage<RemoveCommissioningFact>;
+
+/**
+ * Creates a house template (empty template_id) or replaces one, naming the version it
+ * replaces. From the property owner or the gateway's administrators, reaching the building;
+ * anyone else is refused as NOT_ENTITLED. Answered with the CommissioningRecord as stored.
+ * Refused as FAILED_PRECONDITION "STALE_REVISION" when the template changed since, as
+ * INVALID_REQUEST "UNKNOWN_KEY" or "VALUE_TYPE" as PutCommissioningFact, and as
+ * INVALID_REQUEST "EVIDENCE" for a key a template may not answer (commissioning.v1,
+ * TEMPLATES); metadata "key" names it.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PutHouseTemplate
+ */
+export declare type PutHouseTemplate = Message<"kusinta.iot.webrtc.v1.PutHouseTemplate"> & {
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.HouseTemplate template = 1;
+   */
+  template?: HouseTemplate | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PutHouseTemplate.
+ * Use `create(PutHouseTemplateSchema)` to create a new message.
+ */
+export declare const PutHouseTemplateSchema: GenMessage<PutHouseTemplate>;
+
+/**
+ * Says which house template a home follows; an empty template_id, none. From the property
+ * owner or the gateway's administrators; anyone else is refused as NOT_ENTITLED. A template
+ * of another building is refused as INVALID_REQUEST "TEMPLATE_BUILDING". Deviations recorded
+ * against another template stay, naming the version they were recorded against. Acked.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetHomeTemplate
+ */
+export declare type SetHomeTemplate = Message<"kusinta.iot.webrtc.v1.SetHomeTemplate"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: string template_id = 2;
+   */
+  templateId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetHomeTemplate.
+ * Use `create(SetHomeTemplateSchema)` to create a new message.
+ */
+export declare const SetHomeTemplateSchema: GenMessage<SetHomeTemplate>;
+
+/**
+ * Starts a commissioning test (commissioning.v1.TestKind) on a heating record, answered with
+ * the CommissioningRecord of the test, RUNNING. Its changes of state, the start included,
+ * are pushed (GatewayMessage.commissioning_test), save the start to the session that
+ * started it, which has it as the reply. Run by whoever may bind the outputs it drives
+ * (heating.v1); PUMP_ALL_ZONES_OFF by an installer under a commissioning grant only. Refused
+ * with metadata "reason":
+ *
+ *   INVALID_REQUEST
+ *   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a
+ *                       binding field that is empty or not a bound output of it; for the
+ *                       other kinds, a binding field that is not empty.
+ *
+ *   FAILED_PRECONDITION
+ *   "TEST_RUNNING"      a test already drives one of its outputs.
+ *   "NEEDS_PASS"        ZONE_EFFECT or PUMP_ALL_ZONES_OFF on outputs without a current
+ *                       OUTPUT_LEASE pass; metadata "record_id" names one.
+ *   "OUTPUT_NOT_LEASED" an output its producer does not state as leased, with a lapse value
+ *                       at rest (heating.v1), so no test could leave it at rest.
+ *   "READ_LATENCY"      OUTPUT_LEASE on an output whose producer does not state its reads
+ *                       REAL_TIME: a pass judged against a guessed latency is none.
+ *   "LEASE_BOUNDS"      OUTPUT_LEASE on an output whose lease bounds admit no lease of 60
+ *                       seconds to 5 minutes, so the test could not end by its ends_at.
+ *
+ * A record the caller cannot reach is refused as NOT_ENTITLED.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.RunCommissioningTest
+ */
+export declare type RunCommissioningTest = Message<"kusinta.iot.webrtc.v1.RunCommissioningTest"> & {
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.TestKind kind = 1;
+   */
+  kind: TestKind;
+
+  /**
+   * binding.field for OUTPUT_LEASE only.
+   *
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 4;
+   */
+  binding?: BindingRef | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.RunCommissioningTest.
+ * Use `create(RunCommissioningTestSchema)` to create a new message.
+ */
+export declare const RunCommissioningTestSchema: GenMessage<RunCommissioningTest>;
+
+/**
+ * Ends a running test. verdict ABORTED stops any test, from whoever started it or may run
+ * it; PASSED or FAILED concludes a PUMP_ALL_ZONES_OFF test, from an installer under a
+ * commissioning grant only. Any other verdict, or PASSED or FAILED on another kind, is
+ * refused as INVALID_REQUEST "VERDICT". Its outputs return to their normal control at once,
+ * floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered
+ * with the CommissioningRecord of the test. A test that has ended is refused as
+ * FAILED_PRECONDITION "TEST_ENDED".
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ConcludeCommissioningTest
+ */
+export declare type ConcludeCommissioningTest = Message<"kusinta.iot.webrtc.v1.ConcludeCommissioningTest"> & {
+  /**
+   * @generated from field: string test_id = 1;
+   */
+  testId: string;
+
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.TestState verdict = 2;
+   */
+  verdict: TestState;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ConcludeCommissioningTest.
+ * Use `create(ConcludeCommissioningTestSchema)` to create a new message.
+ */
+export declare const ConcludeCommissioningTestSchema: GenMessage<ConcludeCommissioningTest>;
+
+/**
+ * Lists whether each home under a space is set up (commissioning.v1.HomeSetup): unset
+ * root_space_id, every home the caller reaches. For the property owner and the gateway's
+ * administrators; anyone else is refused as NOT_ENTITLED. Answered with a HomeSetups.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListHomeSetups
+ */
+export declare type ListHomeSetups = Message<"kusinta.iot.webrtc.v1.ListHomeSetups"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+   */
+  rootSpaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListHomeSetups.
+ * Use `create(ListHomeSetupsSchema)` to create a new message.
+ */
+export declare const ListHomeSetupsSchema: GenMessage<ListHomeSetups>;
+
+/**
  * @generated from message kusinta.iot.webrtc.v1.ManagementRequest
  */
 export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.ManagementRequest"> & {
@@ -1765,6 +2002,56 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: UnlinkAccount;
     case: "unlinkAccount";
+  } | {
+    /**
+     * Commissioning; see commissioning.v1.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.ListCommissioning list_commissioning = 49;
+     */
+    value: ListCommissioning;
+    case: "listCommissioning";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PutCommissioningFact put_commissioning_fact = 50;
+     */
+    value: PutCommissioningFact;
+    case: "putCommissioningFact";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.RemoveCommissioningFact remove_commissioning_fact = 51;
+     */
+    value: RemoveCommissioningFact;
+    case: "removeCommissioningFact";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PutHouseTemplate put_house_template = 52;
+     */
+    value: PutHouseTemplate;
+    case: "putHouseTemplate";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetHomeTemplate set_home_template = 53;
+     */
+    value: SetHomeTemplate;
+    case: "setHomeTemplate";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.RunCommissioningTest run_commissioning_test = 54;
+     */
+    value: RunCommissioningTest;
+    case: "runCommissioningTest";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ConcludeCommissioningTest conclude_commissioning_test = 55;
+     */
+    value: ConcludeCommissioningTest;
+    case: "concludeCommissioningTest";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListHomeSetups list_home_setups = 56;
+     */
+    value: ListHomeSetups;
+    case: "listHomeSetups";
   } | { case: undefined; value?: undefined };
 };
 

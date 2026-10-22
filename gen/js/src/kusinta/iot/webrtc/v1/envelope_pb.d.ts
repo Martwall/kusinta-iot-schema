@@ -14,6 +14,7 @@ import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
 import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
 import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/account_link_pb.js";
+import type { CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -429,6 +430,31 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: AccountLinks;
     case: "accountLinks";
+  } | {
+    /**
+     * list_commissioning
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.CommissioningProfile commissioning_profile = 19;
+     */
+    value: CommissioningProfile;
+    case: "commissioningProfile";
+  } | {
+    /**
+     * put_commissioning_fact, put_house_template, run_commissioning_test,
+     * conclude_commissioning_test
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.CommissioningRecord commissioning_record = 20;
+     */
+    value: CommissioningRecord;
+    case: "commissioningRecord";
+  } | {
+    /**
+     * list_home_setups
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.HomeSetups home_setups = 21;
+     */
+    value: HomeSetups;
+    case: "homeSetups";
   } | { case: undefined; value?: undefined };
 };
 
@@ -967,6 +993,15 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: PromotionRequests;
     case: "promotionRequests";
+  } | {
+    /**
+     * A commissioning test changed state: to every session whose user is given it
+     * (commissioning.v1), save its start to the session that started it.
+     *
+     * @generated from field: kusinta.iot.commissioning.v1.CommissioningTest commissioning_test = 26;
+     */
+    value: CommissioningTest;
+    case: "commissioningTest";
   } | { case: undefined; value?: undefined };
 };
 

@@ -15,6 +15,8 @@ export 'kusinta/iot/accountlink/v1/account_link.pb.dart';
 export 'kusinta/iot/accountlink/v1/account_link.pbenum.dart';
 export 'kusinta/iot/climate/v1/climate.pb.dart';
 export 'kusinta/iot/climate/v1/climate.pbenum.dart';
+export 'kusinta/iot/commissioning/v1/commissioning.pb.dart';
+export 'kusinta/iot/commissioning/v1/commissioning.pbenum.dart';
 export 'kusinta/iot/common/v1/pairing.pb.dart';
 export 'kusinta/iot/common/v1/pairing.pbenum.dart';
 export 'kusinta/iot/common/v1/types.pb.dart';

@@ -331,9 +331,6 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
   name: string;
 
   /**
-   * Where several zones share one device whose timer is device-wide (one delay for all its
-   * channels), the gateway renews the leases of all those zones in one go.
-   *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding output = 4;
    */
   output?: ContactBinding | undefined;
