@@ -317,8 +317,8 @@ which the contact is closed. That is a wiring fact, not a device fact: a relay w
 its normally closed contact closes it with the channel off. The gateway reads every state of
 a role through it. It drives an output only while its producer states it leased with a lapse
 value that leaves the contact where the role rests (checked at every drive, not only at
-binding), and only while it holds a current pass of its commissioning test (below). An output that stops being
-bound gets its lapse value written at once.
+binding), and only while it holds a current pass of its commissioning test (below). An
+output that stops being bound gets its lapse value written at once.
 In a home the records are given only to its residents and to an installer under a
 commissioning grant, never to service.
 

@@ -37,12 +37,6 @@ class Evidence(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     EVIDENCE_MEASURED: _ClassVar[Evidence]
     EVIDENCE_DERIVED: _ClassVar[Evidence]
 
-class FactScope(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
-    __slots__ = ()
-    FACT_SCOPE_UNSPECIFIED: _ClassVar[FactScope]
-    FACT_SCOPE_HOUSE: _ClassVar[FactScope]
-    FACT_SCOPE_HOUSEHOLD: _ClassVar[FactScope]
-
 class Feature(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     FEATURE_UNSPECIFIED: _ClassVar[Feature]
@@ -110,9 +104,6 @@ EVIDENCE_DRAWING: Evidence
 EVIDENCE_INSPECTED: Evidence
 EVIDENCE_MEASURED: Evidence
 EVIDENCE_DERIVED: Evidence
-FACT_SCOPE_UNSPECIFIED: FactScope
-FACT_SCOPE_HOUSE: FactScope
-FACT_SCOPE_HOUSEHOLD: FactScope
 FEATURE_UNSPECIFIED: Feature
 FEATURE_FLOOR_ZONES: Feature
 FEATURE_PLANT: Feature
@@ -160,8 +151,24 @@ class Provenance(_message.Message):
     by: _identity_pb2.UserId
     def __init__(self, party: _Optional[_Union[Party, str]] = ..., evidence: _Optional[_Union[Evidence, str]] = ..., at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ...) -> None: ...
 
+class BindingRef(_message.Message):
+    __slots__ = ("record_id", "field")
+    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    FIELD_FIELD_NUMBER: _ClassVar[int]
+    record_id: str
+    field: str
+    def __init__(self, record_id: _Optional[str] = ..., field: _Optional[str] = ...) -> None: ...
+
+class TemplateRef(_message.Message):
+    __slots__ = ("template_id", "version")
+    TEMPLATE_ID_FIELD_NUMBER: _ClassVar[int]
+    VERSION_FIELD_NUMBER: _ClassVar[int]
+    template_id: str
+    version: int
+    def __init__(self, template_id: _Optional[str] = ..., version: _Optional[int] = ...) -> None: ...
+
 class CommissioningFact(_message.Message):
-    __slots__ = ("fact_id", "space_id", "record_id", "key", "value", "unknown", "answerer", "necessity", "feature", "provenance", "scope", "template_version", "revision", "template_id")
+    __slots__ = ("fact_id", "space_id", "record_id", "key", "value", "unknown", "answerer", "necessity", "feature", "provenance", "deviates_from", "revision")
     FACT_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     RECORD_ID_FIELD_NUMBER: _ClassVar[int]
@@ -172,10 +179,8 @@ class CommissioningFact(_message.Message):
     NECESSITY_FIELD_NUMBER: _ClassVar[int]
     FEATURE_FIELD_NUMBER: _ClassVar[int]
     PROVENANCE_FIELD_NUMBER: _ClassVar[int]
-    SCOPE_FIELD_NUMBER: _ClassVar[int]
-    TEMPLATE_VERSION_FIELD_NUMBER: _ClassVar[int]
+    DEVIATES_FROM_FIELD_NUMBER: _ClassVar[int]
     REVISION_FIELD_NUMBER: _ClassVar[int]
-    TEMPLATE_ID_FIELD_NUMBER: _ClassVar[int]
     fact_id: str
     space_id: _identity_pb2.SpaceId
     record_id: str
@@ -186,65 +191,59 @@ class CommissioningFact(_message.Message):
     necessity: Necessity
     feature: Feature
     provenance: Provenance
-    scope: FactScope
-    template_version: int
+    deviates_from: TemplateRef
     revision: int
-    template_id: str
-    def __init__(self, fact_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., key: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., unknown: _Optional[bool] = ..., answerer: _Optional[_Union[Party, str]] = ..., necessity: _Optional[_Union[Necessity, str]] = ..., feature: _Optional[_Union[Feature, str]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., scope: _Optional[_Union[FactScope, str]] = ..., template_version: _Optional[int] = ..., revision: _Optional[int] = ..., template_id: _Optional[str] = ...) -> None: ...
+    def __init__(self, fact_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., key: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., unknown: _Optional[bool] = ..., answerer: _Optional[_Union[Party, str]] = ..., necessity: _Optional[_Union[Necessity, str]] = ..., feature: _Optional[_Union[Feature, str]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., deviates_from: _Optional[_Union[TemplateRef, _Mapping]] = ..., revision: _Optional[int] = ...) -> None: ...
 
 class TemplateFact(_message.Message):
-    __slots__ = ("key", "subject_label", "value", "provenance")
+    __slots__ = ("key", "subject_label", "value")
     KEY_FIELD_NUMBER: _ClassVar[int]
     SUBJECT_LABEL_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
-    PROVENANCE_FIELD_NUMBER: _ClassVar[int]
     key: str
     subject_label: str
     value: _cluster_state_pb2.AttributeValue
-    provenance: Provenance
-    def __init__(self, key: _Optional[str] = ..., subject_label: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ...) -> None: ...
+    def __init__(self, key: _Optional[str] = ..., subject_label: _Optional[str] = ..., value: _Optional[_Union[_cluster_state_pb2.AttributeValue, _Mapping]] = ...) -> None: ...
 
 class HouseTemplate(_message.Message):
-    __slots__ = ("template_id", "building_id", "name", "version", "facts")
+    __slots__ = ("template_id", "building_id", "name", "version", "facts", "provenance")
     TEMPLATE_ID_FIELD_NUMBER: _ClassVar[int]
     BUILDING_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     VERSION_FIELD_NUMBER: _ClassVar[int]
     FACTS_FIELD_NUMBER: _ClassVar[int]
+    PROVENANCE_FIELD_NUMBER: _ClassVar[int]
     template_id: str
     building_id: _identity_pb2.SpaceId
     name: str
     version: int
     facts: _containers.RepeatedCompositeFieldContainer[TemplateFact]
-    def __init__(self, template_id: _Optional[str] = ..., building_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., version: _Optional[int] = ..., facts: _Optional[_Iterable[_Union[TemplateFact, _Mapping]]] = ...) -> None: ...
+    provenance: Provenance
+    def __init__(self, template_id: _Optional[str] = ..., building_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., version: _Optional[int] = ..., facts: _Optional[_Iterable[_Union[TemplateFact, _Mapping]]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ...) -> None: ...
 
 class Need(_message.Message):
-    __slots__ = ("fact_key", "test", "space_id", "record_id", "answerer", "field")
+    __slots__ = ("fact_key", "test", "space_id", "binding", "answerer")
     FACT_KEY_FIELD_NUMBER: _ClassVar[int]
     TEST_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
-    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    BINDING_FIELD_NUMBER: _ClassVar[int]
     ANSWERER_FIELD_NUMBER: _ClassVar[int]
-    FIELD_FIELD_NUMBER: _ClassVar[int]
     fact_key: str
     test: TestKind
     space_id: _identity_pb2.SpaceId
-    record_id: str
+    binding: BindingRef
     answerer: Party
-    field: str
-    def __init__(self, fact_key: _Optional[str] = ..., test: _Optional[_Union[TestKind, str]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., record_id: _Optional[str] = ..., answerer: _Optional[_Union[Party, str]] = ..., field: _Optional[str] = ...) -> None: ...
+    def __init__(self, fact_key: _Optional[str] = ..., test: _Optional[_Union[TestKind, str]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., answerer: _Optional[_Union[Party, str]] = ...) -> None: ...
 
 class FeatureBlock(_message.Message):
-    __slots__ = ("reason", "record_id", "device_id", "field")
+    __slots__ = ("reason", "binding", "device_id")
     REASON_FIELD_NUMBER: _ClassVar[int]
-    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
+    BINDING_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
-    FIELD_FIELD_NUMBER: _ClassVar[int]
     reason: BlockReason
-    record_id: str
+    binding: BindingRef
     device_id: _identity_pb2.DeviceId
-    field: str
-    def __init__(self, reason: _Optional[_Union[BlockReason, str]] = ..., record_id: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., field: _Optional[str] = ...) -> None: ...
+    def __init__(self, reason: _Optional[_Union[BlockReason, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
 
 class FeatureStatus(_message.Message):
     __slots__ = ("feature", "state", "needs", "blocks")
@@ -259,11 +258,10 @@ class FeatureStatus(_message.Message):
     def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ...) -> None: ...
 
 class CommissioningTest(_message.Message):
-    __slots__ = ("test_id", "kind", "record_id", "field", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded")
+    __slots__ = ("test_id", "kind", "binding", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded")
     TEST_ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
-    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
-    FIELD_FIELD_NUMBER: _ClassVar[int]
+    BINDING_FIELD_NUMBER: _ClassVar[int]
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     STATE_FIELD_NUMBER: _ClassVar[int]
     FAILURE_FIELD_NUMBER: _ClassVar[int]
@@ -274,8 +272,7 @@ class CommissioningTest(_message.Message):
     SUPERSEDED_FIELD_NUMBER: _ClassVar[int]
     test_id: str
     kind: TestKind
-    record_id: str
-    field: str
+    binding: BindingRef
     device_id: _identity_pb2.DeviceId
     state: TestState
     failure: TestFailure
@@ -284,25 +281,23 @@ class CommissioningTest(_message.Message):
     finished_at: _timestamp_pb2.Timestamp
     provenance: Provenance
     superseded: bool
-    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., record_id: _Optional[str] = ..., field: _Optional[str] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ...) -> None: ...
+    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ...) -> None: ...
 
 class CommissioningProfile(_message.Message):
-    __slots__ = ("space_id", "facts", "tests", "features", "template_id", "template", "needs_withheld")
+    __slots__ = ("space_id", "facts", "tests", "features", "template", "needs_withheld")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     FACTS_FIELD_NUMBER: _ClassVar[int]
     TESTS_FIELD_NUMBER: _ClassVar[int]
     FEATURES_FIELD_NUMBER: _ClassVar[int]
-    TEMPLATE_ID_FIELD_NUMBER: _ClassVar[int]
     TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     NEEDS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     facts: _containers.RepeatedCompositeFieldContainer[CommissioningFact]
     tests: _containers.RepeatedCompositeFieldContainer[CommissioningTest]
     features: _containers.RepeatedCompositeFieldContainer[FeatureStatus]
-    template_id: str
     template: HouseTemplate
     needs_withheld: bool
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template_id: _Optional[str] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ...) -> None: ...
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ...) -> None: ...
 
 class HomeSetup(_message.Message):
     __slots__ = ("home_id", "set_up")

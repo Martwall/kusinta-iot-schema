@@ -70,21 +70,6 @@ final $typed_data.Uint8List evidenceDescriptor = $convert.base64Decode(
     'X0lOU1BFQ1RFRBAEEhUKEUVWSURFTkNFX01FQVNVUkVEEAUSFAoQRVZJREVOQ0VfREVSSVZFRB'
     'AG');
 
-@$core.Deprecated('Use factScopeDescriptor instead')
-const FactScope$json = {
-  '1': 'FactScope',
-  '2': [
-    {'1': 'FACT_SCOPE_UNSPECIFIED', '2': 0},
-    {'1': 'FACT_SCOPE_HOUSE', '2': 1},
-    {'1': 'FACT_SCOPE_HOUSEHOLD', '2': 2},
-  ],
-};
-
-/// Descriptor for `FactScope`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List factScopeDescriptor = $convert.base64Decode(
-    'CglGYWN0U2NvcGUSGgoWRkFDVF9TQ09QRV9VTlNQRUNJRklFRBAAEhQKEEZBQ1RfU0NPUEVfSE'
-    '9VU0UQARIYChRGQUNUX1NDT1BFX0hPVVNFSE9MRBAC');
-
 @$core.Deprecated('Use featureDescriptor instead')
 const Feature$json = {
   '1': 'Feature',
@@ -249,6 +234,34 @@ final $typed_data.Uint8List provenanceDescriptor = $convert.base64Decode(
     'J1Zi5UaW1lc3RhbXBSAmF0Ei8KAmJ5GAQgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEu'
     'VXNlcklkUgJieQ==');
 
+@$core.Deprecated('Use bindingRefDescriptor instead')
+const BindingRef$json = {
+  '1': 'BindingRef',
+  '2': [
+    {'1': 'record_id', '3': 1, '4': 1, '5': 9, '10': 'recordId'},
+    {'1': 'field', '3': 2, '4': 1, '5': 9, '10': 'field'},
+  ],
+};
+
+/// Descriptor for `BindingRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List bindingRefDescriptor = $convert.base64Decode(
+    'CgpCaW5kaW5nUmVmEhsKCXJlY29yZF9pZBgBIAEoCVIIcmVjb3JkSWQSFAoFZmllbGQYAiABKA'
+    'lSBWZpZWxk');
+
+@$core.Deprecated('Use templateRefDescriptor instead')
+const TemplateRef$json = {
+  '1': 'TemplateRef',
+  '2': [
+    {'1': 'template_id', '3': 1, '4': 1, '5': 9, '10': 'templateId'},
+    {'1': 'version', '3': 2, '4': 1, '5': 13, '10': 'version'},
+  ],
+};
+
+/// Descriptor for `TemplateRef`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List templateRefDescriptor = $convert.base64Decode(
+    'CgtUZW1wbGF0ZVJlZhIfCgt0ZW1wbGF0ZV9pZBgBIAEoCVIKdGVtcGxhdGVJZBIYCgd2ZXJzaW'
+    '9uGAIgASgNUgd2ZXJzaW9u');
+
 @$core.Deprecated('Use commissioningFactDescriptor instead')
 const CommissioningFact$json = {
   '1': 'CommissioningFact',
@@ -270,9 +283,10 @@ const CommissioningFact$json = {
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.device.v1.AttributeValue',
+      '9': 0,
       '10': 'value'
     },
-    {'1': 'unknown', '3': 6, '4': 1, '5': 8, '10': 'unknown'},
+    {'1': 'unknown', '3': 6, '4': 1, '5': 8, '9': 0, '10': 'unknown'},
     {
       '1': 'answerer',
       '3': 7,
@@ -306,27 +320,17 @@ const CommissioningFact$json = {
       '10': 'provenance'
     },
     {
-      '1': 'scope',
+      '1': 'deviates_from',
       '3': 11,
       '4': 1,
-      '5': 14,
-      '6': '.kusinta.iot.commissioning.v1.FactScope',
-      '10': 'scope'
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.TemplateRef',
+      '10': 'deviatesFrom'
     },
-    {
-      '1': 'template_version',
-      '3': 12,
-      '4': 1,
-      '5': 13,
-      '9': 0,
-      '10': 'templateVersion',
-      '17': true
-    },
-    {'1': 'revision', '3': 13, '4': 1, '5': 4, '10': 'revision'},
-    {'1': 'template_id', '3': 14, '4': 1, '5': 9, '10': 'templateId'},
+    {'1': 'revision', '3': 12, '4': 1, '5': 4, '10': 'revision'},
   ],
   '8': [
-    {'1': '_template_version'},
+    {'1': 'answer'},
   ],
 };
 
@@ -334,17 +338,16 @@ const CommissioningFact$json = {
 final $typed_data.Uint8List commissioningFactDescriptor = $convert.base64Decode(
     'ChFDb21taXNzaW9uaW5nRmFjdBIXCgdmYWN0X2lkGAEgASgJUgZmYWN0SWQSOwoIc3BhY2VfaW'
     'QYAiABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlkEhsKCXJl'
-    'Y29yZF9pZBgDIAEoCVIIcmVjb3JkSWQSEAoDa2V5GAQgASgJUgNrZXkSOwoFdmFsdWUYBSABKA'
-    'syJS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuQXR0cmlidXRlVmFsdWVSBXZhbHVlEhgKB3Vua25v'
-    'd24YBiABKAhSB3Vua25vd24SPwoIYW5zd2VyZXIYByABKA4yIy5rdXNpbnRhLmlvdC5jb21taX'
-    'NzaW9uaW5nLnYxLlBhcnR5UghhbnN3ZXJlchJFCgluZWNlc3NpdHkYCCABKA4yJy5rdXNpbnRh'
-    'LmlvdC5jb21taXNzaW9uaW5nLnYxLk5lY2Vzc2l0eVIJbmVjZXNzaXR5Ej8KB2ZlYXR1cmUYCS'
-    'ABKA4yJS5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLkZlYXR1cmVSB2ZlYXR1cmUSSAoK'
-    'cHJvdmVuYW5jZRgKIAEoCzIoLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuUHJvdmVuYW'
-    '5jZVIKcHJvdmVuYW5jZRI9CgVzY29wZRgLIAEoDjInLmt1c2ludGEuaW90LmNvbW1pc3Npb25p'
-    'bmcudjEuRmFjdFNjb3BlUgVzY29wZRIuChB0ZW1wbGF0ZV92ZXJzaW9uGAwgASgNSABSD3RlbX'
-    'BsYXRlVmVyc2lvbogBARIaCghyZXZpc2lvbhgNIAEoBFIIcmV2aXNpb24SHwoLdGVtcGxhdGVf'
-    'aWQYDiABKAlSCnRlbXBsYXRlSWRCEwoRX3RlbXBsYXRlX3ZlcnNpb24=');
+    'Y29yZF9pZBgDIAEoCVIIcmVjb3JkSWQSEAoDa2V5GAQgASgJUgNrZXkSPQoFdmFsdWUYBSABKA'
+    'syJS5rdXNpbnRhLmlvdC5kZXZpY2UudjEuQXR0cmlidXRlVmFsdWVIAFIFdmFsdWUSGgoHdW5r'
+    'bm93bhgGIAEoCEgAUgd1bmtub3duEj8KCGFuc3dlcmVyGAcgASgOMiMua3VzaW50YS5pb3QuY2'
+    '9tbWlzc2lvbmluZy52MS5QYXJ0eVIIYW5zd2VyZXISRQoJbmVjZXNzaXR5GAggASgOMicua3Vz'
+    'aW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5OZWNlc3NpdHlSCW5lY2Vzc2l0eRI/CgdmZWF0dX'
+    'JlGAkgASgOMiUua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5GZWF0dXJlUgdmZWF0dXJl'
+    'EkgKCnByb3ZlbmFuY2UYCiABKAsyKC5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlByb3'
+    'ZlbmFuY2VSCnByb3ZlbmFuY2USTgoNZGV2aWF0ZXNfZnJvbRgLIAEoCzIpLmt1c2ludGEuaW90'
+    'LmNvbW1pc3Npb25pbmcudjEuVGVtcGxhdGVSZWZSDGRldmlhdGVzRnJvbRIaCghyZXZpc2lvbh'
+    'gMIAEoBFIIcmV2aXNpb25CCAoGYW5zd2Vy');
 
 @$core.Deprecated('Use templateFactDescriptor instead')
 const TemplateFact$json = {
@@ -360,14 +363,6 @@ const TemplateFact$json = {
       '6': '.kusinta.iot.device.v1.AttributeValue',
       '10': 'value'
     },
-    {
-      '1': 'provenance',
-      '3': 4,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.commissioning.v1.Provenance',
-      '10': 'provenance'
-    },
   ],
 };
 
@@ -375,8 +370,7 @@ const TemplateFact$json = {
 final $typed_data.Uint8List templateFactDescriptor = $convert.base64Decode(
     'CgxUZW1wbGF0ZUZhY3QSEAoDa2V5GAEgASgJUgNrZXkSIwoNc3ViamVjdF9sYWJlbBgCIAEoCV'
     'IMc3ViamVjdExhYmVsEjsKBXZhbHVlGAMgASgLMiUua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0'
-    'dHJpYnV0ZVZhbHVlUgV2YWx1ZRJICgpwcm92ZW5hbmNlGAQgASgLMigua3VzaW50YS5pb3QuY2'
-    '9tbWlzc2lvbmluZy52MS5Qcm92ZW5hbmNlUgpwcm92ZW5hbmNl');
+    'dHJpYnV0ZVZhbHVlUgV2YWx1ZQ==');
 
 @$core.Deprecated('Use houseTemplateDescriptor instead')
 const HouseTemplate$json = {
@@ -401,6 +395,14 @@ const HouseTemplate$json = {
       '6': '.kusinta.iot.commissioning.v1.TemplateFact',
       '10': 'facts'
     },
+    {
+      '1': 'provenance',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.Provenance',
+      '10': 'provenance'
+    },
   ],
 };
 
@@ -410,7 +412,8 @@ final $typed_data.Uint8List houseTemplateDescriptor = $convert.base64Decode(
     'xkaW5nX2lkGAIgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZFIKYnVpbGRp'
     'bmdJZBISCgRuYW1lGAMgASgJUgRuYW1lEhgKB3ZlcnNpb24YBCABKA1SB3ZlcnNpb24SQAoFZm'
     'FjdHMYBSADKAsyKi5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlRlbXBsYXRlRmFjdFIF'
-    'ZmFjdHM=');
+    'ZmFjdHMSSAoKcHJvdmVuYW5jZRgGIAEoCzIoLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudj'
+    'EuUHJvdmVuYW5jZVIKcHJvdmVuYW5jZQ==');
 
 @$core.Deprecated('Use needDescriptor instead')
 const Need$json = {
@@ -434,7 +437,14 @@ const Need$json = {
       '6': '.kusinta.iot.identity.v1.SpaceId',
       '10': 'spaceId'
     },
-    {'1': 'record_id', '3': 4, '4': 1, '5': 9, '10': 'recordId'},
+    {
+      '1': 'binding',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.BindingRef',
+      '10': 'binding'
+    },
     {
       '1': 'answerer',
       '3': 5,
@@ -443,7 +453,6 @@ const Need$json = {
       '6': '.kusinta.iot.commissioning.v1.Party',
       '10': 'answerer'
     },
-    {'1': 'field', '3': 6, '4': 1, '5': 9, '10': 'field'},
   ],
   '8': [
     {'1': 'what'},
@@ -454,10 +463,10 @@ const Need$json = {
 final $typed_data.Uint8List needDescriptor = $convert.base64Decode(
     'CgROZWVkEhsKCGZhY3Rfa2V5GAEgASgJSABSB2ZhY3RLZXkSPAoEdGVzdBgCIAEoDjImLmt1c2'
     'ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuVGVzdEtpbmRIAFIEdGVzdBI7CghzcGFjZV9pZBgD'
-    'IAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSGwoJcmVjb3'
-    'JkX2lkGAQgASgJUghyZWNvcmRJZBI/CghhbnN3ZXJlchgFIAEoDjIjLmt1c2ludGEuaW90LmNv'
-    'bW1pc3Npb25pbmcudjEuUGFydHlSCGFuc3dlcmVyEhQKBWZpZWxkGAYgASgJUgVmaWVsZEIGCg'
-    'R3aGF0');
+    'IAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSQgoHYmluZG'
+    'luZxgEIAEoCzIoLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuQmluZGluZ1JlZlIHYmlu'
+    'ZGluZxI/CghhbnN3ZXJlchgFIAEoDjIjLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuUG'
+    'FydHlSCGFuc3dlcmVyQgYKBHdoYXQ=');
 
 @$core.Deprecated('Use featureBlockDescriptor instead')
 const FeatureBlock$json = {
@@ -471,7 +480,14 @@ const FeatureBlock$json = {
       '6': '.kusinta.iot.commissioning.v1.BlockReason',
       '10': 'reason'
     },
-    {'1': 'record_id', '3': 2, '4': 1, '5': 9, '10': 'recordId'},
+    {
+      '1': 'binding',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.BindingRef',
+      '10': 'binding'
+    },
     {
       '1': 'device_id',
       '3': 3,
@@ -480,16 +496,15 @@ const FeatureBlock$json = {
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'deviceId'
     },
-    {'1': 'field', '3': 4, '4': 1, '5': 9, '10': 'field'},
   ],
 };
 
 /// Descriptor for `FeatureBlock`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List featureBlockDescriptor = $convert.base64Decode(
     'CgxGZWF0dXJlQmxvY2sSQQoGcmVhc29uGAEgASgOMikua3VzaW50YS5pb3QuY29tbWlzc2lvbm'
-    'luZy52MS5CbG9ja1JlYXNvblIGcmVhc29uEhsKCXJlY29yZF9pZBgCIAEoCVIIcmVjb3JkSWQS'
-    'PgoJZGV2aWNlX2lkGAMgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCG'
-    'RldmljZUlkEhQKBWZpZWxkGAQgASgJUgVmaWVsZA==');
+    'luZy52MS5CbG9ja1JlYXNvblIGcmVhc29uEkIKB2JpbmRpbmcYAiABKAsyKC5rdXNpbnRhLmlv'
+    'dC5jb21taXNzaW9uaW5nLnYxLkJpbmRpbmdSZWZSB2JpbmRpbmcSPgoJZGV2aWNlX2lkGAMgAS'
+    'gLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCGRldmljZUlk');
 
 @$core.Deprecated('Use featureStatusDescriptor instead')
 const FeatureStatus$json = {
@@ -551,11 +566,17 @@ const CommissioningTest$json = {
       '6': '.kusinta.iot.commissioning.v1.TestKind',
       '10': 'kind'
     },
-    {'1': 'record_id', '3': 3, '4': 1, '5': 9, '10': 'recordId'},
-    {'1': 'field', '3': 4, '4': 1, '5': 9, '10': 'field'},
+    {
+      '1': 'binding',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.BindingRef',
+      '10': 'binding'
+    },
     {
       '1': 'device_id',
-      '3': 5,
+      '3': 4,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.identity.v1.DeviceId',
@@ -563,7 +584,7 @@ const CommissioningTest$json = {
     },
     {
       '1': 'state',
-      '3': 6,
+      '3': 5,
       '4': 1,
       '5': 14,
       '6': '.kusinta.iot.commissioning.v1.TestState',
@@ -571,7 +592,7 @@ const CommissioningTest$json = {
     },
     {
       '1': 'failure',
-      '3': 7,
+      '3': 6,
       '4': 1,
       '5': 14,
       '6': '.kusinta.iot.commissioning.v1.TestFailure',
@@ -579,7 +600,7 @@ const CommissioningTest$json = {
     },
     {
       '1': 'started_at',
-      '3': 8,
+      '3': 7,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Timestamp',
@@ -587,7 +608,7 @@ const CommissioningTest$json = {
     },
     {
       '1': 'ends_at',
-      '3': 9,
+      '3': 8,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Timestamp',
@@ -595,7 +616,7 @@ const CommissioningTest$json = {
     },
     {
       '1': 'finished_at',
-      '3': 10,
+      '3': 9,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Timestamp',
@@ -603,30 +624,30 @@ const CommissioningTest$json = {
     },
     {
       '1': 'provenance',
-      '3': 11,
+      '3': 10,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.commissioning.v1.Provenance',
       '10': 'provenance'
     },
-    {'1': 'superseded', '3': 12, '4': 1, '5': 8, '10': 'superseded'},
+    {'1': 'superseded', '3': 11, '4': 1, '5': 8, '10': 'superseded'},
   ],
 };
 
 /// Descriptor for `CommissioningTest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List commissioningTestDescriptor = $convert.base64Decode(
     'ChFDb21taXNzaW9uaW5nVGVzdBIXCgd0ZXN0X2lkGAEgASgJUgZ0ZXN0SWQSOgoEa2luZBgCIA'
-    'EoDjImLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuVGVzdEtpbmRSBGtpbmQSGwoJcmVj'
-    'b3JkX2lkGAMgASgJUghyZWNvcmRJZBIUCgVmaWVsZBgEIAEoCVIFZmllbGQSPgoJZGV2aWNlX2'
-    'lkGAUgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCGRldmljZUlkEj0K'
-    'BXN0YXRlGAYgASgOMicua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5UZXN0U3RhdGVSBX'
-    'N0YXRlEkMKB2ZhaWx1cmUYByABKA4yKS5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlRl'
-    'c3RGYWlsdXJlUgdmYWlsdXJlEjkKCnN0YXJ0ZWRfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idW'
-    'YuVGltZXN0YW1wUglzdGFydGVkQXQSMwoHZW5kc19hdBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1'
-    'Zi5UaW1lc3RhbXBSBmVuZHNBdBI7CgtmaW5pc2hlZF9hdBgKIAEoCzIaLmdvb2dsZS5wcm90b2'
-    'J1Zi5UaW1lc3RhbXBSCmZpbmlzaGVkQXQSSAoKcHJvdmVuYW5jZRgLIAEoCzIoLmt1c2ludGEu'
-    'aW90LmNvbW1pc3Npb25pbmcudjEuUHJvdmVuYW5jZVIKcHJvdmVuYW5jZRIeCgpzdXBlcnNlZG'
-    'VkGAwgASgIUgpzdXBlcnNlZGVk');
+    'EoDjImLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuVGVzdEtpbmRSBGtpbmQSQgoHYmlu'
+    'ZGluZxgDIAEoCzIoLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuQmluZGluZ1JlZlIHYm'
+    'luZGluZxI+CglkZXZpY2VfaWQYBCABKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZp'
+    'Y2VJZFIIZGV2aWNlSWQSPQoFc3RhdGUYBSABKA4yJy5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW'
+    '5nLnYxLlRlc3RTdGF0ZVIFc3RhdGUSQwoHZmFpbHVyZRgGIAEoDjIpLmt1c2ludGEuaW90LmNv'
+    'bW1pc3Npb25pbmcudjEuVGVzdEZhaWx1cmVSB2ZhaWx1cmUSOQoKc3RhcnRlZF9hdBgHIAEoCz'
+    'IaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXN0YXJ0ZWRBdBIzCgdlbmRzX2F0GAggASgL'
+    'MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIGZW5kc0F0EjsKC2ZpbmlzaGVkX2F0GAkgAS'
+    'gLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIKZmluaXNoZWRBdBJICgpwcm92ZW5hbmNl'
+    'GAogASgLMigua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Qcm92ZW5hbmNlUgpwcm92ZW'
+    '5hbmNlEh4KCnN1cGVyc2VkZWQYCyABKAhSCnN1cGVyc2VkZWQ=');
 
 @$core.Deprecated('Use commissioningProfileDescriptor instead')
 const CommissioningProfile$json = {
@@ -664,16 +685,15 @@ const CommissioningProfile$json = {
       '6': '.kusinta.iot.commissioning.v1.FeatureStatus',
       '10': 'features'
     },
-    {'1': 'template_id', '3': 5, '4': 1, '5': 9, '10': 'templateId'},
     {
       '1': 'template',
-      '3': 6,
+      '3': 5,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.commissioning.v1.HouseTemplate',
       '10': 'template'
     },
-    {'1': 'needs_withheld', '3': 7, '4': 1, '5': 8, '10': 'needsWithheld'},
+    {'1': 'needs_withheld', '3': 6, '4': 1, '5': 8, '10': 'needsWithheld'},
   ],
 };
 
@@ -684,9 +704,9 @@ final $typed_data.Uint8List commissioningProfileDescriptor = $convert.base64Deco
     'dC5jb21taXNzaW9uaW5nLnYxLkNvbW1pc3Npb25pbmdGYWN0UgVmYWN0cxJFCgV0ZXN0cxgDIA'
     'MoCzIvLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuQ29tbWlzc2lvbmluZ1Rlc3RSBXRl'
     'c3RzEkcKCGZlYXR1cmVzGAQgAygLMisua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5GZW'
-    'F0dXJlU3RhdHVzUghmZWF0dXJlcxIfCgt0ZW1wbGF0ZV9pZBgFIAEoCVIKdGVtcGxhdGVJZBJH'
-    'Cgh0ZW1wbGF0ZRgGIAEoCzIrLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuSG91c2VUZW'
-    '1wbGF0ZVIIdGVtcGxhdGUSJQoObmVlZHNfd2l0aGhlbGQYByABKAhSDW5lZWRzV2l0aGhlbGQ=');
+    'F0dXJlU3RhdHVzUghmZWF0dXJlcxJHCgh0ZW1wbGF0ZRgFIAEoCzIrLmt1c2ludGEuaW90LmNv'
+    'bW1pc3Npb25pbmcudjEuSG91c2VUZW1wbGF0ZVIIdGVtcGxhdGUSJQoObmVlZHNfd2l0aGhlbG'
+    'QYBiABKAhSDW5lZWRzV2l0aGhlbGQ=');
 
 @$core.Deprecated('Use homeSetupDescriptor instead')
 const HomeSetup$json = {

@@ -130,6 +130,147 @@ class Provenance extends $pb.GeneratedMessage {
   $1.UserId ensureBy() => $_ensure(3);
 }
 
+/// One binding of one heating record (heating.v1): an output, by its proto field name as
+/// the heating record puts name it ("output", "sg_ready_block", ...). An empty field: the
+/// record itself, or its only binding.
+class BindingRef extends $pb.GeneratedMessage {
+  factory BindingRef({
+    $core.String? recordId,
+    $core.String? field_2,
+  }) {
+    final result = create();
+    if (recordId != null) result.recordId = recordId;
+    if (field_2 != null) result.field_2 = field_2;
+    return result;
+  }
+
+  BindingRef._();
+
+  factory BindingRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BindingRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BindingRef',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'recordId')
+    ..aOS(2, _omitFieldNames ? '' : 'field')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BindingRef clone() => BindingRef()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BindingRef copyWith(void Function(BindingRef) updates) =>
+      super.copyWith((message) => updates(message as BindingRef)) as BindingRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BindingRef create() => BindingRef._();
+  @$core.override
+  BindingRef createEmptyInstance() => create();
+  static $pb.PbList<BindingRef> createRepeated() => $pb.PbList<BindingRef>();
+  @$core.pragma('dart2js:noInline')
+  static BindingRef getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BindingRef>(create);
+  static BindingRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get recordId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set recordId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRecordId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRecordId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get field_2 => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set field_2($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasField_2() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearField_2() => $_clearField(2);
+}
+
+/// One version of a house template.
+class TemplateRef extends $pb.GeneratedMessage {
+  factory TemplateRef({
+    $core.String? templateId,
+    $core.int? version,
+  }) {
+    final result = create();
+    if (templateId != null) result.templateId = templateId;
+    if (version != null) result.version = version;
+    return result;
+  }
+
+  TemplateRef._();
+
+  factory TemplateRef.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TemplateRef.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TemplateRef',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'templateId')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'version', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TemplateRef clone() => TemplateRef()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TemplateRef copyWith(void Function(TemplateRef) updates) =>
+      super.copyWith((message) => updates(message as TemplateRef))
+          as TemplateRef;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TemplateRef create() => TemplateRef._();
+  @$core.override
+  TemplateRef createEmptyInstance() => create();
+  static $pb.PbList<TemplateRef> createRepeated() => $pb.PbList<TemplateRef>();
+  @$core.pragma('dart2js:noInline')
+  static TemplateRef getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TemplateRef>(create);
+  static TemplateRef? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get templateId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set templateId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTemplateId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTemplateId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get version => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set version($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVersion() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVersion() => $_clearField(2);
+}
+
+enum CommissioningFact_Answer { value, unknown, notSet }
+
 class CommissioningFact extends $pb.GeneratedMessage {
   factory CommissioningFact({
     $core.String? factId,
@@ -142,10 +283,8 @@ class CommissioningFact extends $pb.GeneratedMessage {
     Necessity? necessity,
     Feature? feature,
     Provenance? provenance,
-    FactScope? scope,
-    $core.int? templateVersion,
+    TemplateRef? deviatesFrom,
     $fixnum.Int64? revision,
-    $core.String? templateId,
   }) {
     final result = create();
     if (factId != null) result.factId = factId;
@@ -158,10 +297,8 @@ class CommissioningFact extends $pb.GeneratedMessage {
     if (necessity != null) result.necessity = necessity;
     if (feature != null) result.feature = feature;
     if (provenance != null) result.provenance = provenance;
-    if (scope != null) result.scope = scope;
-    if (templateVersion != null) result.templateVersion = templateVersion;
+    if (deviatesFrom != null) result.deviatesFrom = deviatesFrom;
     if (revision != null) result.revision = revision;
-    if (templateId != null) result.templateId = templateId;
     return result;
   }
 
@@ -174,11 +311,18 @@ class CommissioningFact extends $pb.GeneratedMessage {
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
       create()..mergeFromJson(json, registry);
 
+  static const $core.Map<$core.int, CommissioningFact_Answer>
+      _CommissioningFact_AnswerByTag = {
+    5: CommissioningFact_Answer.value,
+    6: CommissioningFact_Answer.unknown,
+    0: CommissioningFact_Answer.notSet
+  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'CommissioningFact',
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
       createEmptyInstance: create)
+    ..oo(0, [5, 6])
     ..aOS(1, _omitFieldNames ? '' : 'factId')
     ..aOM<$1.SpaceId>(2, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $1.SpaceId.create)
@@ -201,16 +345,11 @@ class CommissioningFact extends $pb.GeneratedMessage {
         enumValues: Feature.values)
     ..aOM<Provenance>(10, _omitFieldNames ? '' : 'provenance',
         subBuilder: Provenance.create)
-    ..e<FactScope>(11, _omitFieldNames ? '' : 'scope', $pb.PbFieldType.OE,
-        defaultOrMaker: FactScope.FACT_SCOPE_UNSPECIFIED,
-        valueOf: FactScope.valueOf,
-        enumValues: FactScope.values)
-    ..a<$core.int>(
-        12, _omitFieldNames ? '' : 'templateVersion', $pb.PbFieldType.OU3)
+    ..aOM<TemplateRef>(11, _omitFieldNames ? '' : 'deviatesFrom',
+        subBuilder: TemplateRef.create)
     ..a<$fixnum.Int64>(
-        13, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
+        12, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOS(14, _omitFieldNames ? '' : 'templateId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -233,6 +372,10 @@ class CommissioningFact extends $pb.GeneratedMessage {
   static CommissioningFact getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<CommissioningFact>(create);
   static CommissioningFact? _defaultInstance;
+
+  CommissioningFact_Answer whichAnswer() =>
+      _CommissioningFact_AnswerByTag[$_whichOneof(0)]!;
+  void clearAnswer() => $_clearField($_whichOneof(0));
 
   /// Assigned by the gateway, opaque; empty when creating.
   @$pb.TagNumber(1)
@@ -275,7 +418,6 @@ class CommissioningFact extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearKey() => $_clearField(4);
 
-  /// Unset with unknown.
   @$pb.TagNumber(5)
   $2.AttributeValue get value => $_getN(4);
   @$pb.TagNumber(5)
@@ -287,8 +429,8 @@ class CommissioningFact extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   $2.AttributeValue ensureValue() => $_ensure(4);
 
-  /// "Don't know": an answer, which lists the fact as a need for the next party who can
-  /// answer it.
+  /// "Don't know", always true when set: an answer, which lists the fact as a need for the
+  /// next party who can answer it.
   @$pb.TagNumber(6)
   $core.bool get unknown => $_getBF(5);
   @$pb.TagNumber(6)
@@ -338,47 +480,28 @@ class CommissioningFact extends $pb.GeneratedMessage {
   @$pb.TagNumber(10)
   Provenance ensureProvenance() => $_ensure(9);
 
-  /// Set by the gateway; see the file comment.
+  /// Set: this answer departs from that version of the home's template.
   @$pb.TagNumber(11)
-  FactScope get scope => $_getN(10);
+  TemplateRef get deviatesFrom => $_getN(10);
   @$pb.TagNumber(11)
-  set scope(FactScope value) => $_setField(11, value);
+  set deviatesFrom(TemplateRef value) => $_setField(11, value);
   @$pb.TagNumber(11)
-  $core.bool hasScope() => $_has(10);
+  $core.bool hasDeviatesFrom() => $_has(10);
   @$pb.TagNumber(11)
-  void clearScope() => $_clearField(11);
-
-  /// Set: this answer departs from that version of the home's template, named by
-  /// template_id.
-  @$pb.TagNumber(12)
-  $core.int get templateVersion => $_getIZ(11);
-  @$pb.TagNumber(12)
-  set templateVersion($core.int value) => $_setUnsignedInt32(11, value);
-  @$pb.TagNumber(12)
-  $core.bool hasTemplateVersion() => $_has(11);
-  @$pb.TagNumber(12)
-  void clearTemplateVersion() => $_clearField(12);
+  void clearDeviatesFrom() => $_clearField(11);
+  @$pb.TagNumber(11)
+  TemplateRef ensureDeviatesFrom() => $_ensure(10);
 
   /// Set by the gateway and bumped by every change; a put that replaces a fact, and a
   /// remove, names the revision it acts on.
-  @$pb.TagNumber(13)
-  $fixnum.Int64 get revision => $_getI64(12);
-  @$pb.TagNumber(13)
-  set revision($fixnum.Int64 value) => $_setInt64(12, value);
-  @$pb.TagNumber(13)
-  $core.bool hasRevision() => $_has(12);
-  @$pb.TagNumber(13)
-  void clearRevision() => $_clearField(13);
-
-  /// With template_version.
-  @$pb.TagNumber(14)
-  $core.String get templateId => $_getSZ(13);
-  @$pb.TagNumber(14)
-  set templateId($core.String value) => $_setString(13, value);
-  @$pb.TagNumber(14)
-  $core.bool hasTemplateId() => $_has(13);
-  @$pb.TagNumber(14)
-  void clearTemplateId() => $_clearField(14);
+  @$pb.TagNumber(12)
+  $fixnum.Int64 get revision => $_getI64(11);
+  @$pb.TagNumber(12)
+  set revision($fixnum.Int64 value) => $_setInt64(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasRevision() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearRevision() => $_clearField(12);
 }
 
 /// One answer in a house template.
@@ -387,13 +510,11 @@ class TemplateFact extends $pb.GeneratedMessage {
     $core.String? key,
     $core.String? subjectLabel,
     $2.AttributeValue? value,
-    Provenance? provenance,
   }) {
     final result = create();
     if (key != null) result.key = key;
     if (subjectLabel != null) result.subjectLabel = subjectLabel;
     if (value != null) result.value = value;
-    if (provenance != null) result.provenance = provenance;
     return result;
   }
 
@@ -415,8 +536,6 @@ class TemplateFact extends $pb.GeneratedMessage {
     ..aOS(2, _omitFieldNames ? '' : 'subjectLabel')
     ..aOM<$2.AttributeValue>(3, _omitFieldNames ? '' : 'value',
         subBuilder: $2.AttributeValue.create)
-    ..aOM<Provenance>(4, _omitFieldNames ? '' : 'provenance',
-        subBuilder: Provenance.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -469,17 +588,6 @@ class TemplateFact extends $pb.GeneratedMessage {
   void clearValue() => $_clearField(3);
   @$pb.TagNumber(3)
   $2.AttributeValue ensureValue() => $_ensure(2);
-
-  @$pb.TagNumber(4)
-  Provenance get provenance => $_getN(3);
-  @$pb.TagNumber(4)
-  set provenance(Provenance value) => $_setField(4, value);
-  @$pb.TagNumber(4)
-  $core.bool hasProvenance() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearProvenance() => $_clearField(4);
-  @$pb.TagNumber(4)
-  Provenance ensureProvenance() => $_ensure(3);
 }
 
 /// One house type of a building, as built. The owner organisation's.
@@ -490,6 +598,7 @@ class HouseTemplate extends $pb.GeneratedMessage {
     $core.String? name,
     $core.int? version,
     $core.Iterable<TemplateFact>? facts,
+    Provenance? provenance,
   }) {
     final result = create();
     if (templateId != null) result.templateId = templateId;
@@ -497,6 +606,7 @@ class HouseTemplate extends $pb.GeneratedMessage {
     if (name != null) result.name = name;
     if (version != null) result.version = version;
     if (facts != null) result.facts.addAll(facts);
+    if (provenance != null) result.provenance = provenance;
     return result;
   }
 
@@ -521,6 +631,8 @@ class HouseTemplate extends $pb.GeneratedMessage {
     ..a<$core.int>(4, _omitFieldNames ? '' : 'version', $pb.PbFieldType.OU3)
     ..pc<TemplateFact>(5, _omitFieldNames ? '' : 'facts', $pb.PbFieldType.PM,
         subBuilder: TemplateFact.create)
+    ..aOM<Provenance>(6, _omitFieldNames ? '' : 'provenance',
+        subBuilder: Provenance.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -587,6 +699,18 @@ class HouseTemplate extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(5)
   $pb.PbList<TemplateFact> get facts => $_getList(4);
+
+  /// Who put this version, set by the gateway; its evidence is DRAWING.
+  @$pb.TagNumber(6)
+  Provenance get provenance => $_getN(5);
+  @$pb.TagNumber(6)
+  set provenance(Provenance value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasProvenance() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearProvenance() => $_clearField(6);
+  @$pb.TagNumber(6)
+  Provenance ensureProvenance() => $_ensure(5);
 }
 
 enum Need_What { factKey, test, notSet }
@@ -597,17 +721,15 @@ class Need extends $pb.GeneratedMessage {
     $core.String? factKey,
     TestKind? test,
     $1.SpaceId? spaceId,
-    $core.String? recordId,
+    BindingRef? binding,
     Party? answerer,
-    $core.String? field_6,
   }) {
     final result = create();
     if (factKey != null) result.factKey = factKey;
     if (test != null) result.test = test;
     if (spaceId != null) result.spaceId = spaceId;
-    if (recordId != null) result.recordId = recordId;
+    if (binding != null) result.binding = binding;
     if (answerer != null) result.answerer = answerer;
-    if (field_6 != null) result.field_6 = field_6;
     return result;
   }
 
@@ -638,12 +760,12 @@ class Need extends $pb.GeneratedMessage {
         enumValues: TestKind.values)
     ..aOM<$1.SpaceId>(3, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $1.SpaceId.create)
-    ..aOS(4, _omitFieldNames ? '' : 'recordId')
+    ..aOM<BindingRef>(4, _omitFieldNames ? '' : 'binding',
+        subBuilder: BindingRef.create)
     ..e<Party>(5, _omitFieldNames ? '' : 'answerer', $pb.PbFieldType.OE,
         defaultOrMaker: Party.PARTY_UNSPECIFIED,
         valueOf: Party.valueOf,
         enumValues: Party.values)
-    ..aOS(6, _omitFieldNames ? '' : 'field')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -687,7 +809,7 @@ class Need extends $pb.GeneratedMessage {
   void clearTest() => $_clearField(2);
 
   /// What it is needed about, as CommissioningFact.space_id and record_id; for a test, the
-  /// record it runs on.
+  /// binding it runs on.
   @$pb.TagNumber(3)
   $1.SpaceId get spaceId => $_getN(2);
   @$pb.TagNumber(3)
@@ -700,13 +822,15 @@ class Need extends $pb.GeneratedMessage {
   $1.SpaceId ensureSpaceId() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $core.String get recordId => $_getSZ(3);
+  BindingRef get binding => $_getN(3);
   @$pb.TagNumber(4)
-  set recordId($core.String value) => $_setString(3, value);
+  set binding(BindingRef value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasRecordId() => $_has(3);
+  $core.bool hasBinding() => $_has(3);
   @$pb.TagNumber(4)
-  void clearRecordId() => $_clearField(4);
+  void clearBinding() => $_clearField(4);
+  @$pb.TagNumber(4)
+  BindingRef ensureBinding() => $_ensure(3);
 
   @$pb.TagNumber(5)
   Party get answerer => $_getN(4);
@@ -716,30 +840,18 @@ class Need extends $pb.GeneratedMessage {
   $core.bool hasAnswerer() => $_has(4);
   @$pb.TagNumber(5)
   void clearAnswerer() => $_clearField(5);
-
-  /// For an OUTPUT_LEASE test, the binding, as CommissioningTest.field.
-  @$pb.TagNumber(6)
-  $core.String get field_6 => $_getSZ(5);
-  @$pb.TagNumber(6)
-  set field_6($core.String value) => $_setString(5, value);
-  @$pb.TagNumber(6)
-  $core.bool hasField_6() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearField_6() => $_clearField(6);
 }
 
 class FeatureBlock extends $pb.GeneratedMessage {
   factory FeatureBlock({
     BlockReason? reason,
-    $core.String? recordId,
+    BindingRef? binding,
     $1.DeviceId? deviceId,
-    $core.String? field_4,
   }) {
     final result = create();
     if (reason != null) result.reason = reason;
-    if (recordId != null) result.recordId = recordId;
+    if (binding != null) result.binding = binding;
     if (deviceId != null) result.deviceId = deviceId;
-    if (field_4 != null) result.field_4 = field_4;
     return result;
   }
 
@@ -761,10 +873,10 @@ class FeatureBlock extends $pb.GeneratedMessage {
         defaultOrMaker: BlockReason.BLOCK_REASON_UNSPECIFIED,
         valueOf: BlockReason.valueOf,
         enumValues: BlockReason.values)
-    ..aOS(2, _omitFieldNames ? '' : 'recordId')
+    ..aOM<BindingRef>(2, _omitFieldNames ? '' : 'binding',
+        subBuilder: BindingRef.create)
     ..aOM<$1.DeviceId>(3, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $1.DeviceId.create)
-    ..aOS(4, _omitFieldNames ? '' : 'field')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -797,15 +909,17 @@ class FeatureBlock extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearReason() => $_clearField(1);
 
-  /// The heating record, and the device, it is blocked on.
+  /// The binding, and the device, it is blocked on.
   @$pb.TagNumber(2)
-  $core.String get recordId => $_getSZ(1);
+  BindingRef get binding => $_getN(1);
   @$pb.TagNumber(2)
-  set recordId($core.String value) => $_setString(1, value);
+  set binding(BindingRef value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasRecordId() => $_has(1);
+  $core.bool hasBinding() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRecordId() => $_clearField(2);
+  void clearBinding() => $_clearField(2);
+  @$pb.TagNumber(2)
+  BindingRef ensureBinding() => $_ensure(1);
 
   @$pb.TagNumber(3)
   $1.DeviceId get deviceId => $_getN(2);
@@ -817,16 +931,6 @@ class FeatureBlock extends $pb.GeneratedMessage {
   void clearDeviceId() => $_clearField(3);
   @$pb.TagNumber(3)
   $1.DeviceId ensureDeviceId() => $_ensure(2);
-
-  /// The binding, as CommissioningTest.field, where the record has several.
-  @$pb.TagNumber(4)
-  $core.String get field_4 => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set field_4($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasField_4() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearField_4() => $_clearField(4);
 }
 
 /// One feature of one home. WORKS when every heating record of the feature in the home may
@@ -924,8 +1028,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
   factory CommissioningTest({
     $core.String? testId,
     TestKind? kind,
-    $core.String? recordId,
-    $core.String? field_4,
+    BindingRef? binding,
     $1.DeviceId? deviceId,
     TestState? state,
     TestFailure? failure,
@@ -938,8 +1041,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     final result = create();
     if (testId != null) result.testId = testId;
     if (kind != null) result.kind = kind;
-    if (recordId != null) result.recordId = recordId;
-    if (field_4 != null) result.field_4 = field_4;
+    if (binding != null) result.binding = binding;
     if (deviceId != null) result.deviceId = deviceId;
     if (state != null) result.state = state;
     if (failure != null) result.failure = failure;
@@ -970,27 +1072,27 @@ class CommissioningTest extends $pb.GeneratedMessage {
         defaultOrMaker: TestKind.TEST_KIND_UNSPECIFIED,
         valueOf: TestKind.valueOf,
         enumValues: TestKind.values)
-    ..aOS(3, _omitFieldNames ? '' : 'recordId')
-    ..aOS(4, _omitFieldNames ? '' : 'field')
-    ..aOM<$1.DeviceId>(5, _omitFieldNames ? '' : 'deviceId',
+    ..aOM<BindingRef>(3, _omitFieldNames ? '' : 'binding',
+        subBuilder: BindingRef.create)
+    ..aOM<$1.DeviceId>(4, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $1.DeviceId.create)
-    ..e<TestState>(6, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE,
+    ..e<TestState>(5, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE,
         defaultOrMaker: TestState.TEST_STATE_UNSPECIFIED,
         valueOf: TestState.valueOf,
         enumValues: TestState.values)
-    ..e<TestFailure>(7, _omitFieldNames ? '' : 'failure', $pb.PbFieldType.OE,
+    ..e<TestFailure>(6, _omitFieldNames ? '' : 'failure', $pb.PbFieldType.OE,
         defaultOrMaker: TestFailure.TEST_FAILURE_UNSPECIFIED,
         valueOf: TestFailure.valueOf,
         enumValues: TestFailure.values)
-    ..aOM<$0.Timestamp>(8, _omitFieldNames ? '' : 'startedAt',
+    ..aOM<$0.Timestamp>(7, _omitFieldNames ? '' : 'startedAt',
         subBuilder: $0.Timestamp.create)
-    ..aOM<$0.Timestamp>(9, _omitFieldNames ? '' : 'endsAt',
+    ..aOM<$0.Timestamp>(8, _omitFieldNames ? '' : 'endsAt',
         subBuilder: $0.Timestamp.create)
-    ..aOM<$0.Timestamp>(10, _omitFieldNames ? '' : 'finishedAt',
+    ..aOM<$0.Timestamp>(9, _omitFieldNames ? '' : 'finishedAt',
         subBuilder: $0.Timestamp.create)
-    ..aOM<Provenance>(11, _omitFieldNames ? '' : 'provenance',
+    ..aOM<Provenance>(10, _omitFieldNames ? '' : 'provenance',
         subBuilder: Provenance.create)
-    ..aOB(12, _omitFieldNames ? '' : 'superseded')
+    ..aOB(11, _omitFieldNames ? '' : 'superseded')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1033,112 +1135,105 @@ class CommissioningTest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearKind() => $_clearField(2);
 
-  /// The heating record it runs on and, for OUTPUT_LEASE, the binding by its proto field
-  /// name, as the heating record puts name it ("output", "sg_ready_block", ...).
+  /// What it runs on: for OUTPUT_LEASE one binding; for ZONE_EFFECT and PUMP_ALL_ZONES_OFF
+  /// the record, field empty.
   @$pb.TagNumber(3)
-  $core.String get recordId => $_getSZ(2);
+  BindingRef get binding => $_getN(2);
   @$pb.TagNumber(3)
-  set recordId($core.String value) => $_setString(2, value);
+  set binding(BindingRef value) => $_setField(3, value);
   @$pb.TagNumber(3)
-  $core.bool hasRecordId() => $_has(2);
+  $core.bool hasBinding() => $_has(2);
   @$pb.TagNumber(3)
-  void clearRecordId() => $_clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get field_4 => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set field_4($core.String value) => $_setString(3, value);
-  @$pb.TagNumber(4)
-  $core.bool hasField_4() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearField_4() => $_clearField(4);
+  void clearBinding() => $_clearField(3);
+  @$pb.TagNumber(3)
+  BindingRef ensureBinding() => $_ensure(2);
 
   /// The device it ran on. Set by the gateway.
-  @$pb.TagNumber(5)
-  $1.DeviceId get deviceId => $_getN(4);
-  @$pb.TagNumber(5)
-  set deviceId($1.DeviceId value) => $_setField(5, value);
-  @$pb.TagNumber(5)
-  $core.bool hasDeviceId() => $_has(4);
-  @$pb.TagNumber(5)
-  void clearDeviceId() => $_clearField(5);
-  @$pb.TagNumber(5)
-  $1.DeviceId ensureDeviceId() => $_ensure(4);
+  @$pb.TagNumber(4)
+  $1.DeviceId get deviceId => $_getN(3);
+  @$pb.TagNumber(4)
+  set deviceId($1.DeviceId value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasDeviceId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearDeviceId() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.DeviceId ensureDeviceId() => $_ensure(3);
 
-  @$pb.TagNumber(6)
-  TestState get state => $_getN(5);
-  @$pb.TagNumber(6)
-  set state(TestState value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasState() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearState() => $_clearField(6);
+  @$pb.TagNumber(5)
+  TestState get state => $_getN(4);
+  @$pb.TagNumber(5)
+  set state(TestState value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasState() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearState() => $_clearField(5);
 
   /// FAILED only.
-  @$pb.TagNumber(7)
-  TestFailure get failure => $_getN(6);
-  @$pb.TagNumber(7)
-  set failure(TestFailure value) => $_setField(7, value);
-  @$pb.TagNumber(7)
-  $core.bool hasFailure() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearFailure() => $_clearField(7);
+  @$pb.TagNumber(6)
+  TestFailure get failure => $_getN(5);
+  @$pb.TagNumber(6)
+  set failure(TestFailure value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFailure() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFailure() => $_clearField(6);
 
-  @$pb.TagNumber(8)
-  $0.Timestamp get startedAt => $_getN(7);
-  @$pb.TagNumber(8)
-  set startedAt($0.Timestamp value) => $_setField(8, value);
-  @$pb.TagNumber(8)
-  $core.bool hasStartedAt() => $_has(7);
-  @$pb.TagNumber(8)
-  void clearStartedAt() => $_clearField(8);
-  @$pb.TagNumber(8)
-  $0.Timestamp ensureStartedAt() => $_ensure(7);
+  @$pb.TagNumber(7)
+  $0.Timestamp get startedAt => $_getN(6);
+  @$pb.TagNumber(7)
+  set startedAt($0.Timestamp value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasStartedAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearStartedAt() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $0.Timestamp ensureStartedAt() => $_ensure(6);
 
   /// The latest it ends, while it runs.
-  @$pb.TagNumber(9)
-  $0.Timestamp get endsAt => $_getN(8);
-  @$pb.TagNumber(9)
-  set endsAt($0.Timestamp value) => $_setField(9, value);
-  @$pb.TagNumber(9)
-  $core.bool hasEndsAt() => $_has(8);
-  @$pb.TagNumber(9)
-  void clearEndsAt() => $_clearField(9);
-  @$pb.TagNumber(9)
-  $0.Timestamp ensureEndsAt() => $_ensure(8);
+  @$pb.TagNumber(8)
+  $0.Timestamp get endsAt => $_getN(7);
+  @$pb.TagNumber(8)
+  set endsAt($0.Timestamp value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasEndsAt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearEndsAt() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $0.Timestamp ensureEndsAt() => $_ensure(7);
 
-  @$pb.TagNumber(10)
-  $0.Timestamp get finishedAt => $_getN(9);
-  @$pb.TagNumber(10)
-  set finishedAt($0.Timestamp value) => $_setField(10, value);
-  @$pb.TagNumber(10)
-  $core.bool hasFinishedAt() => $_has(9);
-  @$pb.TagNumber(10)
-  void clearFinishedAt() => $_clearField(10);
-  @$pb.TagNumber(10)
-  $0.Timestamp ensureFinishedAt() => $_ensure(9);
+  @$pb.TagNumber(9)
+  $0.Timestamp get finishedAt => $_getN(8);
+  @$pb.TagNumber(9)
+  set finishedAt($0.Timestamp value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasFinishedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearFinishedAt() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $0.Timestamp ensureFinishedAt() => $_ensure(8);
 
   /// Who started it; for an installer's verdict, who concluded it.
-  @$pb.TagNumber(11)
-  Provenance get provenance => $_getN(10);
-  @$pb.TagNumber(11)
-  set provenance(Provenance value) => $_setField(11, value);
-  @$pb.TagNumber(11)
-  $core.bool hasProvenance() => $_has(10);
-  @$pb.TagNumber(11)
-  void clearProvenance() => $_clearField(11);
-  @$pb.TagNumber(11)
-  Provenance ensureProvenance() => $_ensure(10);
+  @$pb.TagNumber(10)
+  Provenance get provenance => $_getN(9);
+  @$pb.TagNumber(10)
+  set provenance(Provenance value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasProvenance() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearProvenance() => $_clearField(10);
+  @$pb.TagNumber(10)
+  Provenance ensureProvenance() => $_ensure(9);
 
   /// A pass that no longer holds; see the file comment.
-  @$pb.TagNumber(12)
-  $core.bool get superseded => $_getBF(11);
-  @$pb.TagNumber(12)
-  set superseded($core.bool value) => $_setBool(11, value);
-  @$pb.TagNumber(12)
-  $core.bool hasSuperseded() => $_has(11);
-  @$pb.TagNumber(12)
-  void clearSuperseded() => $_clearField(12);
+  @$pb.TagNumber(11)
+  $core.bool get superseded => $_getBF(10);
+  @$pb.TagNumber(11)
+  set superseded($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasSuperseded() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearSuperseded() => $_clearField(11);
 }
 
 /// A space's commissioning, in reply to ListCommissioning.
@@ -1148,7 +1243,6 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     $core.Iterable<CommissioningFact>? facts,
     $core.Iterable<CommissioningTest>? tests,
     $core.Iterable<FeatureStatus>? features,
-    $core.String? templateId,
     HouseTemplate? template,
     $core.bool? needsWithheld,
   }) {
@@ -1157,7 +1251,6 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     if (facts != null) result.facts.addAll(facts);
     if (tests != null) result.tests.addAll(tests);
     if (features != null) result.features.addAll(features);
-    if (templateId != null) result.templateId = templateId;
     if (template != null) result.template = template;
     if (needsWithheld != null) result.needsWithheld = needsWithheld;
     return result;
@@ -1188,10 +1281,9 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     ..pc<FeatureStatus>(
         4, _omitFieldNames ? '' : 'features', $pb.PbFieldType.PM,
         subBuilder: FeatureStatus.create)
-    ..aOS(5, _omitFieldNames ? '' : 'templateId')
-    ..aOM<HouseTemplate>(6, _omitFieldNames ? '' : 'template',
+    ..aOM<HouseTemplate>(5, _omitFieldNames ? '' : 'template',
         subBuilder: HouseTemplate.create)
-    ..aOB(7, _omitFieldNames ? '' : 'needsWithheld')
+    ..aOB(6, _omitFieldNames ? '' : 'needsWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1240,35 +1332,26 @@ class CommissioningProfile extends $pb.GeneratedMessage {
 
   /// The home's template, at its latest version. Unset: it follows none.
   @$pb.TagNumber(5)
-  $core.String get templateId => $_getSZ(4);
+  HouseTemplate get template => $_getN(4);
   @$pb.TagNumber(5)
-  set templateId($core.String value) => $_setString(4, value);
+  set template(HouseTemplate value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasTemplateId() => $_has(4);
+  $core.bool hasTemplate() => $_has(4);
   @$pb.TagNumber(5)
-  void clearTemplateId() => $_clearField(5);
-
-  @$pb.TagNumber(6)
-  HouseTemplate get template => $_getN(5);
-  @$pb.TagNumber(6)
-  set template(HouseTemplate value) => $_setField(6, value);
-  @$pb.TagNumber(6)
-  $core.bool hasTemplate() => $_has(5);
-  @$pb.TagNumber(6)
-  void clearTemplate() => $_clearField(6);
-  @$pb.TagNumber(6)
-  HouseTemplate ensureTemplate() => $_ensure(5);
+  void clearTemplate() => $_clearField(5);
+  @$pb.TagNumber(5)
+  HouseTemplate ensureTemplate() => $_ensure(4);
 
   /// Set when FeatureStatus.needs are left out for this caller, so that none listed is not
   /// read as nothing missing.
-  @$pb.TagNumber(7)
-  $core.bool get needsWithheld => $_getBF(6);
-  @$pb.TagNumber(7)
-  set needsWithheld($core.bool value) => $_setBool(6, value);
-  @$pb.TagNumber(7)
-  $core.bool hasNeedsWithheld() => $_has(6);
-  @$pb.TagNumber(7)
-  void clearNeedsWithheld() => $_clearField(7);
+  @$pb.TagNumber(6)
+  $core.bool get needsWithheld => $_getBF(5);
+  @$pb.TagNumber(6)
+  set needsWithheld($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasNeedsWithheld() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearNeedsWithheld() => $_clearField(6);
 }
 
 /// Whether a home is set up: every REQUIRED fact answered, and every output bound in it

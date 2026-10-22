@@ -393,14 +393,12 @@ class SetHomeTemplate(_message.Message):
     def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., template_id: _Optional[str] = ...) -> None: ...
 
 class RunCommissioningTest(_message.Message):
-    __slots__ = ("kind", "record_id", "field")
+    __slots__ = ("kind", "binding")
     KIND_FIELD_NUMBER: _ClassVar[int]
-    RECORD_ID_FIELD_NUMBER: _ClassVar[int]
-    FIELD_FIELD_NUMBER: _ClassVar[int]
+    BINDING_FIELD_NUMBER: _ClassVar[int]
     kind: _commissioning_pb2.TestKind
-    record_id: str
-    field: str
-    def __init__(self, kind: _Optional[_Union[_commissioning_pb2.TestKind, str]] = ..., record_id: _Optional[str] = ..., field: _Optional[str] = ...) -> None: ...
+    binding: _commissioning_pb2.BindingRef
+    def __init__(self, kind: _Optional[_Union[_commissioning_pb2.TestKind, str]] = ..., binding: _Optional[_Union[_commissioning_pb2.BindingRef, _Mapping]] = ...) -> None: ...
 
 class ConcludeCommissioningTest(_message.Message):
     __slots__ = ("test_id", "verdict")

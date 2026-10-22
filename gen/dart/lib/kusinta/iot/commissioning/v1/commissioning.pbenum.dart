@@ -120,28 +120,6 @@ class Evidence extends $pb.ProtobufEnum {
   const Evidence._(super.value, super.name);
 }
 
-class FactScope extends $pb.ProtobufEnum {
-  static const FactScope FACT_SCOPE_UNSPECIFIED =
-      FactScope._(0, _omitEnumNames ? '' : 'FACT_SCOPE_UNSPECIFIED');
-  static const FactScope FACT_SCOPE_HOUSE =
-      FactScope._(1, _omitEnumNames ? '' : 'FACT_SCOPE_HOUSE');
-  static const FactScope FACT_SCOPE_HOUSEHOLD =
-      FactScope._(2, _omitEnumNames ? '' : 'FACT_SCOPE_HOUSEHOLD');
-
-  static const $core.List<FactScope> values = <FactScope>[
-    FACT_SCOPE_UNSPECIFIED,
-    FACT_SCOPE_HOUSE,
-    FACT_SCOPE_HOUSEHOLD,
-  ];
-
-  static final $core.List<FactScope?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
-  static FactScope? valueOf($core.int value) =>
-      value < 0 || value >= _byValue.length ? null : _byValue[value];
-
-  const FactScope._(super.value, super.name);
-}
-
 /// The heating features a home's commissioning unlocks.
 class Feature extends $pb.ProtobufEnum {
   static const Feature FEATURE_UNSPECIFIED =
@@ -228,7 +206,9 @@ class BlockReason extends $pb.ProtobufEnum {
   static const BlockReason BLOCK_REASON_OUTPUT_NOT_LEASED =
       BlockReason._(2, _omitEnumNames ? '' : 'BLOCK_REASON_OUTPUT_NOT_LEASED');
 
-  /// The output's power-on value would leave the contact away from rest.
+  /// Its producer now states a power-on value that would leave the contact away from rest,
+  /// though a pass predates it. A test that finds this fails instead
+  /// (TEST_FAILURE_POWER_ON_NOT_AT_REST), and blocks as TEST_FAILED.
   static const BlockReason BLOCK_REASON_POWER_ON_NOT_AT_REST = BlockReason._(
       3, _omitEnumNames ? '' : 'BLOCK_REASON_POWER_ON_NOT_AT_REST');
   static const BlockReason BLOCK_REASON_DEVICE_GONE =

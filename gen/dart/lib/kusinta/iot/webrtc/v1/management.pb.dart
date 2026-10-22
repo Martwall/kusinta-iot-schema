@@ -3598,20 +3598,19 @@ class ListCommissioning extends $pb.GeneratedMessage {
 }
 
 /// Creates a fact (empty fact_id) or replaces one. Answered with the CommissioningRecord as
-/// stored. The gateway sets answerer, necessity, feature, scope and provenance, save
+/// stored. The gateway sets answerer, necessity, feature and provenance, save
 /// provenance.evidence, which the caller states. Refused with metadata "reason":
 ///
 ///   INVALID_REQUEST
 ///   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
-///   "VALUE_TYPE"        a value of another type than the key takes, a value with unknown,
-///                       or neither.
+///   "VALUE_TYPE"        a value of another type than the key takes, or no answer.
 ///   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
 ///                       that is not about that kind of space or record.
 ///   "ANSWERER"          a key the caller's party does not answer.
 ///   "EVIDENCE"          evidence the caller's party may not give, or less than the key
 ///                       requires.
-///   "TEMPLATE_VERSION"  a template_version the home's template never had, or one set on a
-///                       home that follows no template.
+///   "TEMPLATE_VERSION"  a deviates_from naming a template or version the home's template
+///                       never was, or set on a home that follows no template.
 ///
 ///   FAILED_PRECONDITION
 ///   "STALE_REVISION"    the fact changed since the revision the request names.
@@ -3902,14 +3901,15 @@ class SetHomeTemplate extends $pb.GeneratedMessage {
 }
 
 /// Starts a commissioning test (commissioning.v1.TestKind) on a heating record, answered with
-/// the CommissioningRecord of the test, RUNNING. Its changes of state are pushed
-/// (GatewayMessage.commissioning_test). Run by whoever may bind the outputs it drives
+/// the CommissioningRecord of the test, RUNNING. Its changes of state, the start included,
+/// are pushed (GatewayMessage.commissioning_test), save the start to the session that
+/// started it, which has it as the reply. Run by whoever may bind the outputs it drives
 /// (heating.v1); PUMP_ALL_ZONES_OFF by an installer under a commissioning grant only. Refused
 /// with metadata "reason":
 ///
 ///   INVALID_REQUEST
-///   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a field
-///                       that is not a bound output of it.
+///   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a
+///                       binding field that is not a bound output of it.
 ///
 ///   FAILED_PRECONDITION
 ///   "TEST_RUNNING"      a test already drives one of its outputs.
@@ -3922,13 +3922,11 @@ class SetHomeTemplate extends $pb.GeneratedMessage {
 class RunCommissioningTest extends $pb.GeneratedMessage {
   factory RunCommissioningTest({
     $6.TestKind? kind,
-    $core.String? recordId,
-    $core.String? field_3,
+    $6.BindingRef? binding,
   }) {
     final result = create();
     if (kind != null) result.kind = kind;
-    if (recordId != null) result.recordId = recordId;
-    if (field_3 != null) result.field_3 = field_3;
+    if (binding != null) result.binding = binding;
     return result;
   }
 
@@ -3950,8 +3948,8 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
         defaultOrMaker: $6.TestKind.TEST_KIND_UNSPECIFIED,
         valueOf: $6.TestKind.valueOf,
         enumValues: $6.TestKind.values)
-    ..aOS(2, _omitFieldNames ? '' : 'recordId')
-    ..aOS(3, _omitFieldNames ? '' : 'field')
+    ..aOM<$6.BindingRef>(2, _omitFieldNames ? '' : 'binding',
+        subBuilder: $6.BindingRef.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3985,32 +3983,26 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearKind() => $_clearField(1);
 
+  /// binding.field for OUTPUT_LEASE only.
   @$pb.TagNumber(2)
-  $core.String get recordId => $_getSZ(1);
+  $6.BindingRef get binding => $_getN(1);
   @$pb.TagNumber(2)
-  set recordId($core.String value) => $_setString(1, value);
+  set binding($6.BindingRef value) => $_setField(2, value);
   @$pb.TagNumber(2)
-  $core.bool hasRecordId() => $_has(1);
+  $core.bool hasBinding() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRecordId() => $_clearField(2);
-
-  /// OUTPUT_LEASE only.
-  @$pb.TagNumber(3)
-  $core.String get field_3 => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set field_3($core.String value) => $_setString(2, value);
-  @$pb.TagNumber(3)
-  $core.bool hasField_3() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearField_3() => $_clearField(3);
+  void clearBinding() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $6.BindingRef ensureBinding() => $_ensure(1);
 }
 
 /// Ends a running test. verdict ABORTED stops any test, from whoever started it or may run
 /// it; PASSED or FAILED concludes a PUMP_ALL_ZONES_OFF test, from an installer under a
 /// commissioning grant only. Any other verdict, or PASSED or FAILED on another kind, is
 /// refused as INVALID_REQUEST "VERDICT". Its outputs return to their normal control at once,
-/// floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered with the CommissioningRecord
-/// of the test. A test that has ended is refused as FAILED_PRECONDITION "TEST_ENDED".
+/// floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered
+/// with the CommissioningRecord of the test. A test that has ended is refused as
+/// FAILED_PRECONDITION "TEST_ENDED".
 class ConcludeCommissioningTest extends $pb.GeneratedMessage {
   factory ConcludeCommissioningTest({
     $core.String? testId,

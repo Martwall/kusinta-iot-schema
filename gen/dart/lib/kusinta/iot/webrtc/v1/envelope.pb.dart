@@ -2464,7 +2464,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
   $7.PromotionRequests ensurePromotionRequests() => $_ensure(22);
 
   /// A commissioning test changed state: to every session whose user is given it
-  /// (commissioning.v1).
+  /// (commissioning.v1), save its start to the session that started it.
   @$pb.TagNumber(26)
   $10.CommissioningTest get commissioningTest => $_getN(23);
   @$pb.TagNumber(26)

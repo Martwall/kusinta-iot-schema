@@ -996,7 +996,7 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
   } | {
     /**
      * A commissioning test changed state: to every session whose user is given it
-     * (commissioning.v1).
+     * (commissioning.v1), save its start to the session that started it.
      *
      * @generated from field: kusinta.iot.commissioning.v1.CommissioningTest commissioning_test = 26;
      */

@@ -15,7 +15,7 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
-import type { CommissioningFact, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
+import type { BindingRef, CommissioningFact, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 
@@ -1483,20 +1483,19 @@ export declare const ListCommissioningSchema: GenMessage<ListCommissioning>;
 
 /**
  * Creates a fact (empty fact_id) or replaces one. Answered with the CommissioningRecord as
- * stored. The gateway sets answerer, necessity, feature, scope and provenance, save
+ * stored. The gateway sets answerer, necessity, feature and provenance, save
  * provenance.evidence, which the caller states. Refused with metadata "reason":
  *
  *   INVALID_REQUEST
  *   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
- *   "VALUE_TYPE"        a value of another type than the key takes, a value with unknown,
- *                       or neither.
+ *   "VALUE_TYPE"        a value of another type than the key takes, or no answer.
  *   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
  *                       that is not about that kind of space or record.
  *   "ANSWERER"          a key the caller's party does not answer.
  *   "EVIDENCE"          evidence the caller's party may not give, or less than the key
  *                       requires.
- *   "TEMPLATE_VERSION"  a template_version the home's template never had, or one set on a
- *                       home that follows no template.
+ *   "TEMPLATE_VERSION"  a deviates_from naming a template or version the home's template
+ *                       never was, or set on a home that follows no template.
  *
  *   FAILED_PRECONDITION
  *   "STALE_REVISION"    the fact changed since the revision the request names.
@@ -1599,14 +1598,15 @@ export declare const SetHomeTemplateSchema: GenMessage<SetHomeTemplate>;
 
 /**
  * Starts a commissioning test (commissioning.v1.TestKind) on a heating record, answered with
- * the CommissioningRecord of the test, RUNNING. Its changes of state are pushed
- * (GatewayMessage.commissioning_test). Run by whoever may bind the outputs it drives
+ * the CommissioningRecord of the test, RUNNING. Its changes of state, the start included,
+ * are pushed (GatewayMessage.commissioning_test), save the start to the session that
+ * started it, which has it as the reply. Run by whoever may bind the outputs it drives
  * (heating.v1); PUMP_ALL_ZONES_OFF by an installer under a commissioning grant only. Refused
  * with metadata "reason":
  *
  *   INVALID_REQUEST
- *   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a field
- *                       that is not a bound output of it.
+ *   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a
+ *                       binding field that is not a bound output of it.
  *
  *   FAILED_PRECONDITION
  *   "TEST_RUNNING"      a test already drives one of its outputs.
@@ -1626,16 +1626,11 @@ export declare type RunCommissioningTest = Message<"kusinta.iot.webrtc.v1.RunCom
   kind: TestKind;
 
   /**
-   * @generated from field: string record_id = 2;
-   */
-  recordId: string;
-
-  /**
-   * OUTPUT_LEASE only.
+   * binding.field for OUTPUT_LEASE only.
    *
-   * @generated from field: string field = 3;
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 2;
    */
-  field: string;
+  binding?: BindingRef | undefined;
 };
 
 /**
@@ -1649,8 +1644,9 @@ export declare const RunCommissioningTestSchema: GenMessage<RunCommissioningTest
  * it; PASSED or FAILED concludes a PUMP_ALL_ZONES_OFF test, from an installer under a
  * commissioning grant only. Any other verdict, or PASSED or FAILED on another kind, is
  * refused as INVALID_REQUEST "VERDICT". Its outputs return to their normal control at once,
- * floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered with the CommissioningRecord
- * of the test. A test that has ended is refused as FAILED_PRECONDITION "TEST_ENDED".
+ * floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered
+ * with the CommissioningRecord of the test. A test that has ended is refused as
+ * FAILED_PRECONDITION "TEST_ENDED".
  *
  * @generated from message kusinta.iot.webrtc.v1.ConcludeCommissioningTest
  */

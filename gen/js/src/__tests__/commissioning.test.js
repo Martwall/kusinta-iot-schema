@@ -10,7 +10,6 @@ import {
   Party,
   Evidence,
   Necessity,
-  FactScope,
   Feature,
   FeatureState,
   BlockReason,
@@ -35,7 +34,7 @@ describe('commissioning fact', () => {
       spaceId: { value: 'home-15' },
       recordId: 'circuit-1',
       key: 'floor.pump_tolerates_all_zones_off',
-      value: { value: { case: 'boolValue', value: true } },
+      answer: { case: 'value', value: { value: { case: 'boolValue', value: true } } },
       provenance: {
         party: Party.INSTALLER,
         evidence: Evidence.MEASURED,
@@ -51,9 +50,12 @@ describe('commissioning fact', () => {
     })
   })
 
-  it('takes "don’t know" as an answer, with no value', () => {
-    const decoded = onTheWire(CommissioningFactSchema, { key: 'floor.actuator_travel_seconds', unknown: true })
-    expect([decoded.unknown, decoded.value]).toEqual([true, undefined])
+  it('takes "don’t know" as an answer in place of a value', () => {
+    const decoded = onTheWire(CommissioningFactSchema, {
+      key: 'floor.actuator_travel_seconds',
+      answer: { case: 'unknown', value: true },
+    })
+    expect(decoded.answer).toEqual({ case: 'unknown', value: true })
   })
 
   it('says who should answer it and how much it is needed', () => {
@@ -69,21 +71,13 @@ describe('commissioning fact', () => {
     ])
   })
 
-  it('tells a house fact from household data', () => {
-    expect(onTheWire(CommissioningFactSchema, { scope: FactScope.HOUSEHOLD }).scope).toBe(FactScope.HOUSEHOLD)
+  it('names the template and the version it deviates from', () => {
+    const decoded = onTheWire(CommissioningFactSchema, { deviatesFrom: { templateId: 'tpl-a', version: 3 } })
+    expect(decoded.deviatesFrom).toMatchObject({ templateId: 'tpl-a', version: 3 })
   })
 
-  it('records the template version it deviates from', () => {
-    expect(onTheWire(CommissioningFactSchema, { templateVersion: 3 }).templateVersion).toBe(3)
-  })
-
-  it('names the template as well as the version it deviates from', () => {
-    const decoded = onTheWire(CommissioningFactSchema, { templateId: 'tpl-a', templateVersion: 3 })
-    expect([decoded.templateId, decoded.templateVersion]).toEqual(['tpl-a', 3])
-  })
-
-  it('is no deviation when it names no template version', () => {
-    expect(create(CommissioningFactSchema, {}).templateVersion).toBeUndefined()
+  it('is no deviation when it names no template', () => {
+    expect(create(CommissioningFactSchema, {}).deviatesFrom).toBeUndefined()
   })
 })
 
@@ -97,6 +91,14 @@ describe('house template', () => {
     })
     expect(decoded).toMatchObject({ version: 2, facts: [{ subjectLabel: 'SL 2' }] })
   })
+
+  it('records once who put a version', () => {
+    const decoded = onTheWire(HouseTemplateSchema, {
+      version: 2,
+      provenance: { party: Party.OWNER_ORGANISATION, evidence: Evidence.DRAWING },
+    })
+    expect(decoded.provenance).toMatchObject({ party: Party.OWNER_ORGANISATION, evidence: Evidence.DRAWING })
+  })
 })
 
 describe('feature status', () => {
@@ -105,30 +107,30 @@ describe('feature status', () => {
       feature: Feature.FLOOR_ZONES,
       state: FeatureState.NEEDS,
       needs: [
-        { what: { case: 'factKey', value: 'floor.max_zones_switching_on' }, recordId: 'circuit-1', answerer: Party.INSTALLER },
-        { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, recordId: 'zone-2', answerer: Party.INSTALLER },
+        { what: { case: 'factKey', value: 'floor.max_zones_switching_on' }, binding: { recordId: 'circuit-1' }, answerer: Party.INSTALLER },
+        { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'zone-2' }, answerer: Party.INSTALLER },
       ],
     })
     expect(decoded.needs).toMatchObject([
       { what: { case: 'factKey', value: 'floor.max_zones_switching_on' }, answerer: Party.INSTALLER },
-      { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, recordId: 'zone-2' },
+      { what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'zone-2' } },
     ])
   })
 
   it('says why a feature is blocked for safety, and on what', () => {
     const decoded = onTheWire(FeatureStatusSchema, {
       state: FeatureState.BLOCKED_FOR_SAFETY,
-      blocks: [{ reason: BlockReason.TEST_FAILED, recordId: 'zone-2', deviceId: { value: 'relay-1' } }],
+      blocks: [{ reason: BlockReason.TEST_FAILED, binding: { recordId: 'zone-2' }, deviceId: { value: 'relay-1' } }],
     })
-    expect(decoded.blocks).toMatchObject([{ reason: BlockReason.TEST_FAILED, recordId: 'zone-2' }])
+    expect(decoded.blocks).toMatchObject([{ reason: BlockReason.TEST_FAILED, binding: { recordId: 'zone-2' } }])
   })
 
   it('names the binding a test is needed on, where a record has several', () => {
     const decoded = onTheWire(FeatureStatusSchema, {
-      needs: [{ what: { case: 'test', value: TestKind.OUTPUT_LEASE }, recordId: 'plant-1', field: 'sg_ready_boost' }],
-      blocks: [{ reason: BlockReason.TEST_FAILED, recordId: 'plant-1', field: 'sg_ready_block' }],
+      needs: [{ what: { case: 'test', value: TestKind.OUTPUT_LEASE }, binding: { recordId: 'plant-1', field: 'sg_ready_boost' } }],
+      blocks: [{ reason: BlockReason.TEST_FAILED, binding: { recordId: 'plant-1', field: 'sg_ready_block' } }],
     })
-    expect([decoded.needs[0]?.field, decoded.blocks[0]?.field]).toEqual(['sg_ready_boost', 'sg_ready_block'])
+    expect([decoded.needs[0]?.binding?.field, decoded.blocks[0]?.binding?.field]).toEqual(['sg_ready_boost', 'sg_ready_block'])
   })
 
   it('says when its to-dos are withheld rather than none', () => {
@@ -142,13 +144,12 @@ describe('commissioning test', () => {
     const decoded = onTheWire(CommissioningTestSchema, {
       testId: 't-1',
       kind: TestKind.OUTPUT_LEASE,
-      recordId: 'zone-2',
-      field: 'output',
+      binding: { recordId: 'zone-2', field: 'output' },
       deviceId: { value: 'relay-1' },
       state: TestState.RUNNING,
       endsAt: { seconds: 1_790_000_600n },
     })
-    expect(decoded).toMatchObject({ recordId: 'zone-2', field: 'output', endsAt: { seconds: 1_790_000_600n } })
+    expect(decoded).toMatchObject({ binding: { recordId: 'zone-2', field: 'output' }, endsAt: { seconds: 1_790_000_600n } })
   })
 
   it('says how it failed', () => {
@@ -173,10 +174,10 @@ describe('commissioning requests', () => {
     const decoded = onTheWire(ManagementRequestSchema, {
       request: {
         case: 'runCommissioningTest',
-        value: { kind: TestKind.OUTPUT_LEASE, recordId: 'plant-1', field: 'sg_ready_block' },
+        value: { kind: TestKind.OUTPUT_LEASE, binding: { recordId: 'plant-1', field: 'sg_ready_block' } },
       },
     })
-    expect(decoded.request).toMatchObject({ case: 'runCommissioningTest', value: { field: 'sg_ready_block' } })
+    expect(decoded.request).toMatchObject({ case: 'runCommissioningTest', value: { binding: { field: 'sg_ready_block' } } })
   })
 
   it('concludes an observed test with the installer’s verdict', () => {
@@ -194,11 +195,11 @@ describe('commissioning requests', () => {
     expect(decoded.result).toMatchObject({ case: 'homeSetups', value: { homes: [{ setUp: true }] } })
   })
 
-  it('answers a listing with the profile', () => {
+  it('answers a listing with the profile and the template the home follows', () => {
     const decoded = onTheWire(ManagementResultSchema, {
-      result: { case: 'commissioningProfile', value: { spaceId: { value: 'home-15' }, templateId: 'tpl-a' } },
+      result: { case: 'commissioningProfile', value: { spaceId: { value: 'home-15' }, template: { templateId: 'tpl-a' } } },
     })
-    expect(decoded.result).toMatchObject({ case: 'commissioningProfile', value: { templateId: 'tpl-a' } })
+    expect(decoded.result).toMatchObject({ case: 'commissioningProfile', value: { template: { templateId: 'tpl-a' } } })
   })
 
   it('answers a put with the record as stored', () => {

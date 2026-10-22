@@ -50,6 +50,54 @@ export declare type Provenance = Message<"kusinta.iot.commissioning.v1.Provenanc
 export declare const ProvenanceSchema: GenMessage<Provenance>;
 
 /**
+ * One binding of one heating record (heating.v1): an output, by its proto field name as
+ * the heating record puts name it ("output", "sg_ready_block", ...). An empty field: the
+ * record itself, or its only binding.
+ *
+ * @generated from message kusinta.iot.commissioning.v1.BindingRef
+ */
+export declare type BindingRef = Message<"kusinta.iot.commissioning.v1.BindingRef"> & {
+  /**
+   * @generated from field: string record_id = 1;
+   */
+  recordId: string;
+
+  /**
+   * @generated from field: string field = 2;
+   */
+  field: string;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.BindingRef.
+ * Use `create(BindingRefSchema)` to create a new message.
+ */
+export declare const BindingRefSchema: GenMessage<BindingRef>;
+
+/**
+ * One version of a house template.
+ *
+ * @generated from message kusinta.iot.commissioning.v1.TemplateRef
+ */
+export declare type TemplateRef = Message<"kusinta.iot.commissioning.v1.TemplateRef"> & {
+  /**
+   * @generated from field: string template_id = 1;
+   */
+  templateId: string;
+
+  /**
+   * @generated from field: uint32 version = 2;
+   */
+  version: number;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.TemplateRef.
+ * Use `create(TemplateRefSchema)` to create a new message.
+ */
+export declare const TemplateRefSchema: GenMessage<TemplateRef>;
+
+/**
  * @generated from message kusinta.iot.commissioning.v1.CommissioningFact
  */
 export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.CommissioningFact"> & {
@@ -80,19 +128,24 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
   key: string;
 
   /**
-   * Unset with unknown.
-   *
-   * @generated from field: kusinta.iot.device.v1.AttributeValue value = 5;
+   * @generated from oneof kusinta.iot.commissioning.v1.CommissioningFact.answer
    */
-  value?: AttributeValue | undefined;
-
-  /**
-   * "Don't know": an answer, which lists the fact as a need for the next party who can
-   * answer it.
-   *
-   * @generated from field: bool unknown = 6;
-   */
-  unknown: boolean;
+  answer: {
+    /**
+     * @generated from field: kusinta.iot.device.v1.AttributeValue value = 5;
+     */
+    value: AttributeValue;
+    case: "value";
+  } | {
+    /**
+     * "Don't know", always true when set: an answer, which lists the fact as a need for the
+     * next party who can answer it.
+     *
+     * @generated from field: bool unknown = 6;
+     */
+    value: boolean;
+    case: "unknown";
+  } | { case: undefined; value?: undefined };
 
   /**
    * From the gateway's catalogue.
@@ -119,34 +172,19 @@ export declare type CommissioningFact = Message<"kusinta.iot.commissioning.v1.Co
   provenance?: Provenance | undefined;
 
   /**
-   * Set by the gateway; see the file comment.
+   * Set: this answer departs from that version of the home's template.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.FactScope scope = 11;
+   * @generated from field: kusinta.iot.commissioning.v1.TemplateRef deviates_from = 11;
    */
-  scope: FactScope;
-
-  /**
-   * Set: this answer departs from that version of the home's template, named by
-   * template_id.
-   *
-   * @generated from field: optional uint32 template_version = 12;
-   */
-  templateVersion?: number | undefined;
+  deviatesFrom?: TemplateRef | undefined;
 
   /**
    * Set by the gateway and bumped by every change; a put that replaces a fact, and a
    * remove, names the revision it acts on.
    *
-   * @generated from field: uint64 revision = 13;
+   * @generated from field: uint64 revision = 12;
    */
   revision: bigint;
-
-  /**
-   * With template_version.
-   *
-   * @generated from field: string template_id = 14;
-   */
-  templateId: string;
 };
 
 /**
@@ -177,11 +215,6 @@ export declare type TemplateFact = Message<"kusinta.iot.commissioning.v1.Templat
    * @generated from field: kusinta.iot.device.v1.AttributeValue value = 3;
    */
   value?: AttributeValue | undefined;
-
-  /**
-   * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 4;
-   */
-  provenance?: Provenance | undefined;
 };
 
 /**
@@ -225,6 +258,13 @@ export declare type HouseTemplate = Message<"kusinta.iot.commissioning.v1.HouseT
    * @generated from field: repeated kusinta.iot.commissioning.v1.TemplateFact facts = 5;
    */
   facts: TemplateFact[];
+
+  /**
+   * Who put this version, set by the gateway; its evidence is DRAWING.
+   *
+   * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 6;
+   */
+  provenance?: Provenance | undefined;
 };
 
 /**
@@ -258,28 +298,21 @@ export declare type Need = Message<"kusinta.iot.commissioning.v1.Need"> & {
 
   /**
    * What it is needed about, as CommissioningFact.space_id and record_id; for a test, the
-   * record it runs on.
+   * binding it runs on.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 3;
    */
   spaceId?: SpaceId | undefined;
 
   /**
-   * @generated from field: string record_id = 4;
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 4;
    */
-  recordId: string;
+  binding?: BindingRef | undefined;
 
   /**
    * @generated from field: kusinta.iot.commissioning.v1.Party answerer = 5;
    */
   answerer: Party;
-
-  /**
-   * For an OUTPUT_LEASE test, the binding, as CommissioningTest.field.
-   *
-   * @generated from field: string field = 6;
-   */
-  field: string;
 };
 
 /**
@@ -298,23 +331,16 @@ export declare type FeatureBlock = Message<"kusinta.iot.commissioning.v1.Feature
   reason: BlockReason;
 
   /**
-   * The heating record, and the device, it is blocked on.
+   * The binding, and the device, it is blocked on.
    *
-   * @generated from field: string record_id = 2;
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 2;
    */
-  recordId: string;
+  binding?: BindingRef | undefined;
 
   /**
    * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 3;
    */
   deviceId?: DeviceId | undefined;
-
-  /**
-   * The binding, as CommissioningTest.field, where the record has several.
-   *
-   * @generated from field: string field = 4;
-   */
-  field: string;
 };
 
 /**
@@ -374,65 +400,60 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
   kind: TestKind;
 
   /**
-   * The heating record it runs on and, for OUTPUT_LEASE, the binding by its proto field
-   * name, as the heating record puts name it ("output", "sg_ready_block", ...).
+   * What it runs on: for OUTPUT_LEASE one binding; for ZONE_EFFECT and PUMP_ALL_ZONES_OFF
+   * the record, field empty.
    *
-   * @generated from field: string record_id = 3;
+   * @generated from field: kusinta.iot.commissioning.v1.BindingRef binding = 3;
    */
-  recordId: string;
-
-  /**
-   * @generated from field: string field = 4;
-   */
-  field: string;
+  binding?: BindingRef | undefined;
 
   /**
    * The device it ran on. Set by the gateway.
    *
-   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 5;
+   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 4;
    */
   deviceId?: DeviceId | undefined;
 
   /**
-   * @generated from field: kusinta.iot.commissioning.v1.TestState state = 6;
+   * @generated from field: kusinta.iot.commissioning.v1.TestState state = 5;
    */
   state: TestState;
 
   /**
    * FAILED only.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.TestFailure failure = 7;
+   * @generated from field: kusinta.iot.commissioning.v1.TestFailure failure = 6;
    */
   failure: TestFailure;
 
   /**
-   * @generated from field: google.protobuf.Timestamp started_at = 8;
+   * @generated from field: google.protobuf.Timestamp started_at = 7;
    */
   startedAt?: Timestamp | undefined;
 
   /**
    * The latest it ends, while it runs.
    *
-   * @generated from field: google.protobuf.Timestamp ends_at = 9;
+   * @generated from field: google.protobuf.Timestamp ends_at = 8;
    */
   endsAt?: Timestamp | undefined;
 
   /**
-   * @generated from field: google.protobuf.Timestamp finished_at = 10;
+   * @generated from field: google.protobuf.Timestamp finished_at = 9;
    */
   finishedAt?: Timestamp | undefined;
 
   /**
    * Who started it; for an installer's verdict, who concluded it.
    *
-   * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 11;
+   * @generated from field: kusinta.iot.commissioning.v1.Provenance provenance = 10;
    */
   provenance?: Provenance | undefined;
 
   /**
    * A pass that no longer holds; see the file comment.
    *
-   * @generated from field: bool superseded = 12;
+   * @generated from field: bool superseded = 11;
    */
   superseded: boolean;
 };
@@ -476,12 +497,7 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
   /**
    * The home's template, at its latest version. Unset: it follows none.
    *
-   * @generated from field: string template_id = 5;
-   */
-  templateId: string;
-
-  /**
-   * @generated from field: kusinta.iot.commissioning.v1.HouseTemplate template = 6;
+   * @generated from field: kusinta.iot.commissioning.v1.HouseTemplate template = 5;
    */
   template?: HouseTemplate | undefined;
 
@@ -489,7 +505,7 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
    * Set when FeatureStatus.needs are left out for this caller, so that none listed is not
    * read as nothing missing.
    *
-   * @generated from field: bool needs_withheld = 7;
+   * @generated from field: bool needs_withheld = 6;
    */
   needsWithheld: boolean;
 };
@@ -714,31 +730,6 @@ export enum Evidence {
 export declare const EvidenceSchema: GenEnum<Evidence>;
 
 /**
- * @generated from enum kusinta.iot.commissioning.v1.FactScope
- */
-export enum FactScope {
-  /**
-   * @generated from enum value: FACT_SCOPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: FACT_SCOPE_HOUSE = 1;
-   */
-  HOUSE = 1,
-
-  /**
-   * @generated from enum value: FACT_SCOPE_HOUSEHOLD = 2;
-   */
-  HOUSEHOLD = 2,
-}
-
-/**
- * Describes the enum kusinta.iot.commissioning.v1.FactScope.
- */
-export declare const FactScopeSchema: GenEnum<FactScope>;
-
-/**
  * The heating features a home's commissioning unlocks.
  *
  * @generated from enum kusinta.iot.commissioning.v1.Feature
@@ -854,7 +845,9 @@ export enum BlockReason {
   OUTPUT_NOT_LEASED = 2,
 
   /**
-   * The output's power-on value would leave the contact away from rest.
+   * Its producer now states a power-on value that would leave the contact away from rest,
+   * though a pass predates it. A test that finds this fails instead
+   * (TEST_FAILURE_POWER_ON_NOT_AT_REST), and blocks as TEST_FAILED.
    *
    * @generated from enum value: BLOCK_REASON_POWER_ON_NOT_AT_REST = 3;
    */

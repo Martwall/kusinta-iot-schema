@@ -756,20 +756,19 @@ message ListCommissioning {
 }
 
 // Creates a fact (empty fact_id) or replaces one. Answered with the CommissioningRecord as
-// stored. The gateway sets answerer, necessity, feature, scope and provenance, save
+// stored. The gateway sets answerer, necessity, feature and provenance, save
 // provenance.evidence, which the caller states. Refused with metadata "reason":
 //
 //   INVALID_REQUEST
 //   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
-//   "VALUE_TYPE"        a value of another type than the key takes, a value with unknown,
-//                       or neither.
+//   "VALUE_TYPE"        a value of another type than the key takes, or no answer.
 //   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
 //                       that is not about that kind of space or record.
 //   "ANSWERER"          a key the caller's party does not answer.
 //   "EVIDENCE"          evidence the caller's party may not give, or less than the key
 //                       requires.
-//   "TEMPLATE_VERSION"  a template_version the home's template never had, or one set on a
-//                       home that follows no template.
+//   "TEMPLATE_VERSION"  a deviates_from naming a template or version the home's template
+//                       never was, or set on a home that follows no template.
 //
 //   FAILED_PRECONDITION
 //   "STALE_REVISION"    the fact changed since the revision the request names.
@@ -812,14 +811,15 @@ message SetHomeTemplate {
 }
 
 // Starts a commissioning test (commissioning.v1.TestKind) on a heating record, answered with
-// the CommissioningRecord of the test, RUNNING. Its changes of state are pushed
-// (GatewayMessage.commissioning_test). Run by whoever may bind the outputs it drives
+// the CommissioningRecord of the test, RUNNING. Its changes of state, the start included,
+// are pushed (GatewayMessage.commissioning_test), save the start to the session that
+// started it, which has it as the reply. Run by whoever may bind the outputs it drives
 // (heating.v1); PUMP_ALL_ZONES_OFF by an installer under a commissioning grant only. Refused
 // with metadata "reason":
 //
 //   INVALID_REQUEST
-//   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a field
-//                       that is not a bound output of it.
+//   "TEST_SUBJECT"      a kind that does not run on that record, or for OUTPUT_LEASE a
+//                       binding field that is not a bound output of it.
 //
 //   FAILED_PRECONDITION
 //   "TEST_RUNNING"      a test already drives one of its outputs.
@@ -831,17 +831,17 @@ message SetHomeTemplate {
 // A record the caller cannot reach is refused as NOT_ENTITLED.
 message RunCommissioningTest {
   kusinta.iot.commissioning.v1.TestKind kind = 1;
-  string record_id = 2;
-  // OUTPUT_LEASE only.
-  string field = 3;
+  // binding.field for OUTPUT_LEASE only.
+  kusinta.iot.commissioning.v1.BindingRef binding = 2;
 }
 
 // Ends a running test. verdict ABORTED stops any test, from whoever started it or may run
 // it; PASSED or FAILED concludes a PUMP_ALL_ZONES_OFF test, from an installer under a
 // commissioning grant only. Any other verdict, or PASSED or FAILED on another kind, is
 // refused as INVALID_REQUEST "VERDICT". Its outputs return to their normal control at once,
-// floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered with the CommissioningRecord
-// of the test. A test that has ended is refused as FAILED_PRECONDITION "TEST_ENDED".
+// floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered
+// with the CommissioningRecord of the test. A test that has ended is refused as
+// FAILED_PRECONDITION "TEST_ENDED".
 message ConcludeCommissioningTest {
   string test_id = 1;
   kusinta.iot.commissioning.v1.TestState verdict = 2;

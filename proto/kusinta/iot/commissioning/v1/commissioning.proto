@@ -42,10 +42,10 @@ option optimize_for = SPEED;
 //
 // HOUSE FACTS AND HOUSEHOLD DATA. A fact an installer confirmed (any evidence), or the
 // gateway derived or measured, describes the house: it is a HOUSE fact, kept when the
-// household changes. A fact the household answered is HOUSEHOLD data: wiped at a household
-// handover, with the photos it cites. The gateway sets FactScope from the provenance; an
-// installer confirming a household's answer makes it a house fact. At a handover the house
-// facts and the tests stay, with provenance.by cleared and provenance.party kept.
+// household changes. A fact the household answered (provenance.party HOUSEHOLD) is
+// HOUSEHOLD data: wiped at a household handover, with the photos it cites. An installer
+// confirming a household's answer makes it a house fact. At a handover the house facts and
+// the tests stay, with provenance.by cleared and provenance.party kept.
 //
 // TEMPLATES. An owner organisation describes each house type of a building once, from its
 // drawings, as a HouseTemplate, and says which homes follow which. A template's fact counts
@@ -53,10 +53,10 @@ option optimize_for = SPEED;
 // answers the key itself, and only for a key that DRAWING satisfies: a key an installer or
 // the gateway answers, or one needing more evidence, is answered per home. A home's fact
 // that departs from its template names the template and version it departs from (a
-// deviation). The
-// owner organisation never sees a home's facts, deviations included, nor a home's tests or
-// to-dos: only whether the home is set up (HomeSetup). The commissioning profile must not
-// become a channel that tells a building's owner who has renovated.
+// deviation, CommissioningFact.deviates_from). The owner organisation never sees a home's
+// facts, deviations included, nor a home's tests or to-dos: only whether the home is set up
+// (HomeSetup). The commissioning profile must not become a channel that tells a building's
+// owner who has renovated.
 //
 // WHO SEES AND CHANGES IT. A fact, test or feature about a home — its rooms, or a heating
 // record naming a room in it (heating.v1) — is given to the home's residents and to an
@@ -71,7 +71,7 @@ option optimize_for = SPEED;
 // to whoever can answer them. "Don't know" from the household lists the fact as a need
 // for the installer.
 //
-// TESTS. The gateway runs every test itself, on one binding of one heating record. While a
+// TESTS. The gateway runs every test itself, on one binding (BindingRef). While a
 // test drives an output nothing else does, and every write it makes is leased
 // (device.v1.LeasedWrite) to end no later than the test's ends_at, so a gateway that stops
 // mid-test leaves the output to return to rest. A test ends at its ends_at at the latest,
@@ -131,10 +131,18 @@ message Provenance {
   kusinta.iot.identity.v1.UserId by = 4;
 }
 
-enum FactScope {
-  FACT_SCOPE_UNSPECIFIED = 0;
-  FACT_SCOPE_HOUSE = 1;
-  FACT_SCOPE_HOUSEHOLD = 2;
+// One binding of one heating record (heating.v1): an output, by its proto field name as
+// the heating record puts name it ("output", "sg_ready_block", ...). An empty field: the
+// record itself, or its only binding.
+message BindingRef {
+  string record_id = 1;
+  string field = 2;
+}
+
+// One version of a house template.
+message TemplateRef {
+  string template_id = 1;
+  uint32 version = 2;
 }
 
 message CommissioningFact {
@@ -149,12 +157,12 @@ message CommissioningFact {
 
   string key = 4;
 
-  // Unset with unknown.
-  kusinta.iot.device.v1.AttributeValue value = 5;
-
-  // "Don't know": an answer, which lists the fact as a need for the next party who can
-  // answer it.
-  bool unknown = 6;
+  oneof answer {
+    kusinta.iot.device.v1.AttributeValue value = 5;
+    // "Don't know", always true when set: an answer, which lists the fact as a need for the
+    // next party who can answer it.
+    bool unknown = 6;
+  }
 
   // From the gateway's catalogue.
   Party answerer = 7;
@@ -164,19 +172,12 @@ message CommissioningFact {
 
   Provenance provenance = 10;
 
-  // Set by the gateway; see the file comment.
-  FactScope scope = 11;
-
-  // Set: this answer departs from that version of the home's template, named by
-  // template_id.
-  optional uint32 template_version = 12;
+  // Set: this answer departs from that version of the home's template.
+  TemplateRef deviates_from = 11;
 
   // Set by the gateway and bumped by every change; a put that replaces a fact, and a
   // remove, names the revision it acts on.
-  uint64 revision = 13;
-
-  // With template_version.
-  string template_id = 14;
+  uint64 revision = 12;
 }
 
 // One answer in a house template.
@@ -185,7 +186,6 @@ message TemplateFact {
   // What it is about, as named on the drawing ("SL 2", "Bathroom"). Empty: the house.
   string subject_label = 2;
   kusinta.iot.device.v1.AttributeValue value = 3;
-  Provenance provenance = 4;
 }
 
 // One house type of a building, as built. The owner organisation's.
@@ -200,6 +200,9 @@ message HouseTemplate {
   uint32 version = 4;
 
   repeated TemplateFact facts = 5;
+
+  // Who put this version, set by the gateway; its evidence is DRAWING.
+  Provenance provenance = 6;
 }
 
 // The heating features a home's commissioning unlocks.
@@ -234,12 +237,10 @@ message Need {
     TestKind test = 2;
   }
   // What it is needed about, as CommissioningFact.space_id and record_id; for a test, the
-  // record it runs on.
+  // binding it runs on.
   kusinta.iot.identity.v1.SpaceId space_id = 3;
-  string record_id = 4;
+  BindingRef binding = 4;
   Party answerer = 5;
-  // For an OUTPUT_LEASE test, the binding, as CommissioningTest.field.
-  string field = 6;
 }
 
 enum BlockReason {
@@ -249,7 +250,9 @@ enum BlockReason {
   // Its producer no longer states the output's write as leased with a lapse value at rest
   // (heating.v1).
   BLOCK_REASON_OUTPUT_NOT_LEASED = 2;
-  // The output's power-on value would leave the contact away from rest.
+  // Its producer now states a power-on value that would leave the contact away from rest,
+  // though a pass predates it. A test that finds this fails instead
+  // (TEST_FAILURE_POWER_ON_NOT_AT_REST), and blocks as TEST_FAILED.
   BLOCK_REASON_POWER_ON_NOT_AT_REST = 3;
   BLOCK_REASON_DEVICE_GONE = 4;
   // A floor zone whose control room is deleted or outside its plant's space.
@@ -258,11 +261,9 @@ enum BlockReason {
 
 message FeatureBlock {
   BlockReason reason = 1;
-  // The heating record, and the device, it is blocked on.
-  string record_id = 2;
+  // The binding, and the device, it is blocked on.
+  BindingRef binding = 2;
   kusinta.iot.identity.v1.DeviceId device_id = 3;
-  // The binding, as CommissioningTest.field, where the record has several.
-  string field = 4;
 }
 
 // One feature of one home. WORKS when every heating record of the feature in the home may
@@ -326,28 +327,27 @@ message CommissioningTest {
   string test_id = 1;
   TestKind kind = 2;
 
-  // The heating record it runs on and, for OUTPUT_LEASE, the binding by its proto field
-  // name, as the heating record puts name it ("output", "sg_ready_block", ...).
-  string record_id = 3;
-  string field = 4;
+  // What it runs on: for OUTPUT_LEASE one binding; for ZONE_EFFECT and PUMP_ALL_ZONES_OFF
+  // the record, field empty.
+  BindingRef binding = 3;
 
   // The device it ran on. Set by the gateway.
-  kusinta.iot.identity.v1.DeviceId device_id = 5;
+  kusinta.iot.identity.v1.DeviceId device_id = 4;
 
-  TestState state = 6;
+  TestState state = 5;
   // FAILED only.
-  TestFailure failure = 7;
+  TestFailure failure = 6;
 
-  google.protobuf.Timestamp started_at = 8;
+  google.protobuf.Timestamp started_at = 7;
   // The latest it ends, while it runs.
-  google.protobuf.Timestamp ends_at = 9;
-  google.protobuf.Timestamp finished_at = 10;
+  google.protobuf.Timestamp ends_at = 8;
+  google.protobuf.Timestamp finished_at = 9;
 
   // Who started it; for an installer's verdict, who concluded it.
-  Provenance provenance = 11;
+  Provenance provenance = 10;
 
   // A pass that no longer holds; see the file comment.
-  bool superseded = 12;
+  bool superseded = 11;
 }
 
 // A space's commissioning, in reply to ListCommissioning.
@@ -362,12 +362,11 @@ message CommissioningProfile {
   repeated FeatureStatus features = 4;
 
   // The home's template, at its latest version. Unset: it follows none.
-  string template_id = 5;
-  HouseTemplate template = 6;
+  HouseTemplate template = 5;
 
   // Set when FeatureStatus.needs are left out for this caller, so that none listed is not
   // read as nothing missing.
-  bool needs_withheld = 7;
+  bool needs_withheld = 6;
 }
 
 // Whether a home is set up: every REQUIRED fact answered, and every output bound in it

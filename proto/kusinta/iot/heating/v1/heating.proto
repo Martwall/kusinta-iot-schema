@@ -46,10 +46,11 @@ option optimize_for = SPEED;
 // rests. That is checked each time it drives, not only when the output is bound: an output
 // whose producer stops stating it so, or whose device is gone, is not driven until that
 // changes. A floor zone whose control room is deleted or no longer within its plant's space
-// is not driven either, and keeps naming the room until the record is put again. When an output stops being bound — its record
-// removed, or a put binding another output in its place — the gateway writes its lapse
-// value, ending any lease at once; where the device cannot be reached then, the lease
-// running out returns it to rest, and that is the guarantee.
+// is not driven either, and keeps naming the room until the record is put again. When an
+// output stops being bound — its record removed, or a put binding another output in its
+// place — the gateway writes its lapse value, ending any lease at once; where the device
+// cannot be reached then, the lease running out returns it to rest, and that is the
+// guarantee.
 
 // One attribute of one device: what a role reads or writes. Endpoint_id is required on the
 // Matter branch of the attribute here — an absent endpoint is refused, never read as the

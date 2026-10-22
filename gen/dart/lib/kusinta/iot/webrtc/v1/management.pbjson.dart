@@ -1300,16 +1300,22 @@ const RunCommissioningTest$json = {
       '6': '.kusinta.iot.commissioning.v1.TestKind',
       '10': 'kind'
     },
-    {'1': 'record_id', '3': 2, '4': 1, '5': 9, '10': 'recordId'},
-    {'1': 'field', '3': 3, '4': 1, '5': 9, '10': 'field'},
+    {
+      '1': 'binding',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.BindingRef',
+      '10': 'binding'
+    },
   ],
 };
 
 /// Descriptor for `RunCommissioningTest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List runCommissioningTestDescriptor = $convert.base64Decode(
     'ChRSdW5Db21taXNzaW9uaW5nVGVzdBI6CgRraW5kGAEgASgOMiYua3VzaW50YS5pb3QuY29tbW'
-    'lzc2lvbmluZy52MS5UZXN0S2luZFIEa2luZBIbCglyZWNvcmRfaWQYAiABKAlSCHJlY29yZElk'
-    'EhQKBWZpZWxkGAMgASgJUgVmaWVsZA==');
+    'lzc2lvbmluZy52MS5UZXN0S2luZFIEa2luZBJCCgdiaW5kaW5nGAIgASgLMigua3VzaW50YS5p'
+    'b3QuY29tbWlzc2lvbmluZy52MS5CaW5kaW5nUmVmUgdiaW5kaW5n');
 
 @$core.Deprecated('Use concludeCommissioningTestDescriptor instead')
 const ConcludeCommissioningTest$json = {
