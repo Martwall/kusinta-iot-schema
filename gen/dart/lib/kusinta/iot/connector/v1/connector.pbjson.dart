@@ -214,7 +214,27 @@ const ConnectorHandshake$json = {
       '6': '.kusinta.iot.connector.v1.BackendHealthReport',
       '10': 'backendHealth'
     },
+    {
+      '1': 'known_device_account_links',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6':
+          '.kusinta.iot.connector.v1.ConnectorHandshake.KnownDeviceAccountLinksEntry',
+      '10': 'knownDeviceAccountLinks'
+    },
   ],
+  '3': [ConnectorHandshake_KnownDeviceAccountLinksEntry$json],
+};
+
+@$core.Deprecated('Use connectorHandshakeDescriptor instead')
+const ConnectorHandshake_KnownDeviceAccountLinksEntry$json = {
+  '1': 'KnownDeviceAccountLinksEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `ConnectorHandshake`. Decode as a `google.protobuf.DescriptorProto`.
@@ -224,7 +244,11 @@ final $typed_data.Uint8List connectorHandshakeDescriptor = $convert.base64Decode
     'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlUgxrbm93bkRldmljZXMSQAoLa25vd25fbGlua3MYAy'
     'ADKAsyHy5rdXNpbnRhLmlvdC5saW5rLnYxLkRldmljZUxpbmtSCmtub3duTGlua3MSVAoOYmFj'
     'a2VuZF9oZWFsdGgYBCABKAsyLS5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuQmFja2VuZEhlYW'
-    'x0aFJlcG9ydFINYmFja2VuZEhlYWx0aA==');
+    'x0aFJlcG9ydFINYmFja2VuZEhlYWx0aBKGAQoaa25vd25fZGV2aWNlX2FjY291bnRfbGlua3MY'
+    'BSADKAsySS5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuQ29ubmVjdG9ySGFuZHNoYWtlLktub3'
+    'duRGV2aWNlQWNjb3VudExpbmtzRW50cnlSF2tub3duRGV2aWNlQWNjb3VudExpbmtzGkoKHEtu'
+    'b3duRGV2aWNlQWNjb3VudExpbmtzRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFsdWUYAi'
+    'ABKAlSBXZhbHVlOgI4AQ==');
 
 @$core.Deprecated('Use backendHealthReportDescriptor instead')
 const BackendHealthReport$json = {

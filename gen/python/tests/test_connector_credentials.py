@@ -79,3 +79,9 @@ def test_a_device_read_through_a_link_is_announced_under_it():
     announcement = connector_pb2.DeviceAnnouncement(account_link_id="l-1")
 
     assert _round_trip(announcement).account_link_id == "l-1"
+
+
+def test_a_reconnecting_connector_says_which_link_each_known_device_is_read_through():
+    handshake = connector_pb2.ConnectorHandshake(known_device_account_links={"myuplink:l-1:123": "l-1"})
+
+    assert dict(_round_trip(handshake).known_device_account_links) == {"myuplink:l-1:123": "l-1"}

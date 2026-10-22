@@ -263,9 +263,11 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   /// The linked services (accountlink.v1) whose accounts this connector reads devices from,
   /// with access tokens the gateway hands it (CredentialsUpdate). Declaring a service asks
   /// for its tokens; it does not earn them. The gateway sends a service's tokens only to a
-  /// connector_id it has been configured to trust for that service, only after accepting
-  /// its handshake, and to one live session at a time: a second session claiming the same
-  /// service gets none, and a session that ends loses its links with it.
+  /// connector_id it trusts for that service, only after accepting its handshake, and to
+  /// one live session at a time: a second session claiming the same service gets none, and
+  /// a session that ends loses its links with it. Trust is the gateway's own setting, made
+  /// by its administrators; where none is made for a service, the gateway trusts the one
+  /// accepted session that declares it, and none while two do.
   @$pb.TagNumber(13)
   $pb.PbList<$9.LinkedService> get consumesCredentials => $_getList(12);
 }
@@ -280,11 +282,17 @@ class ConnectorInfo extends $pb.GeneratedMessage {
 /// and for a link made while the session is up. After a handshake, every live link arrives
 /// in one CredentialsSnapshot instead.
 ///
-/// Once expires_at plus 60 seconds of clock skew passes without a newer token, the connector
+/// Once expires_at plus 60 seconds of clock skew passes without a newer token, or the
+/// service refuses a live token as unauthorised (revoked at the service), the connector
 /// stops reading the link and reports the link's devices unreachable, the way it reports any
 /// unreachable device, until an update arrives. That is the link's state, not the backend's:
 /// it does not put the backend in doubt or report it failing, and a connector with no live
 /// link reports its backend OK.
+///
+/// An update may carry another account's grant under the same id (the home linked again,
+/// replaced its link, or relinked after the old grant lapsed). The connector reads with it
+/// from then on and removes the link's devices the account no longer has (DeviceRemoval);
+/// the devices it still has keep their ids.
 class CredentialsUpdate extends $pb.GeneratedMessage {
   factory CredentialsUpdate({
     $core.String? accountLinkId,
@@ -346,10 +354,13 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<CredentialsUpdate>(create);
   static CredentialsUpdate? _defaultInstance;
 
-  /// Opaque; it names no home, person or account. One id is one grant: replacing a link, or
-  /// linking again after it needed relinking, mints a new id, and the old one is revoked
-  /// (CredentialsRevoked). A cancelled replacement brings the old grant back under its old id
-  /// with a fresh update. Not related to a device link's id (CreateLink).
+  /// Opaque; it names no home, person or account. Stable for one home and service for as
+  /// long as the home has that service linked: replacing the link, relinking after it
+  /// needed relinking, or a cancelled replacement arrives as an update under the same id, so
+  /// a device read through it keeps its id and its history. The gateway revokes a replaced
+  /// grant at the service itself. A device read through two links, as when two homes link
+  /// one account, has a distinct id per link. Not related to a device link's id
+  /// (CreateLink).
   @$pb.TagNumber(1)
   $core.String get accountLinkId => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -449,8 +460,9 @@ class CredentialsSnapshot extends $pb.GeneratedMessage {
   $pb.PbList<CredentialsUpdate> get links => $_getList(0);
 }
 
-/// An account link ended: unlinked, replaced, its home handed over, or wiped. Sent before the
-/// gateway revokes the grant at the service. The connector drops the token at once, stops
+/// An account link ended: unlinked, its home handed over, or wiped. Not sent for a
+/// replacement, which is an update under the same id. Sent before the gateway revokes the
+/// grant at the service. The connector drops the token at once, stops
 /// reading the link and removes its devices (DeviceRemoval).
 class CredentialsRevoked extends $pb.GeneratedMessage {
   factory CredentialsRevoked({
@@ -515,12 +527,16 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
     $core.Iterable<$2.Device>? knownDevices,
     $core.Iterable<$3.DeviceLink>? knownLinks,
     BackendHealthReport? backendHealth,
+    $core.Iterable<$core.MapEntry<$core.String, $core.String>>?
+        knownDeviceAccountLinks,
   }) {
     final result = create();
     if (info != null) result.info = info;
     if (knownDevices != null) result.knownDevices.addAll(knownDevices);
     if (knownLinks != null) result.knownLinks.addAll(knownLinks);
     if (backendHealth != null) result.backendHealth = backendHealth;
+    if (knownDeviceAccountLinks != null)
+      result.knownDeviceAccountLinks.addEntries(knownDeviceAccountLinks);
     return result;
   }
 
@@ -548,6 +564,12 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
         subBuilder: $3.DeviceLink.create)
     ..aOM<BackendHealthReport>(4, _omitFieldNames ? '' : 'backendHealth',
         subBuilder: BackendHealthReport.create)
+    ..m<$core.String, $core.String>(
+        5, _omitFieldNames ? '' : 'knownDeviceAccountLinks',
+        entryClassName: 'ConnectorHandshake.KnownDeviceAccountLinksEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('kusinta.iot.connector.v1'))
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -630,6 +652,14 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   void clearBackendHealth() => $_clearField(4);
   @$pb.TagNumber(4)
   BackendHealthReport ensureBackendHealth() => $_ensure(3);
+
+  /// For each device in known_devices read through an account link, that link's
+  /// account_link_id, keyed by the device's id: the handshake's form of
+  /// DeviceAnnouncement.account_link_id, so a reconnecting connector's linked devices are
+  /// filed in their homes again. A known device absent here is read through no link.
+  @$pb.TagNumber(5)
+  $pb.PbMap<$core.String, $core.String> get knownDeviceAccountLinks =>
+      $_getMap(4);
 }
 
 /// The health of the backend the connector drives, connector to gateway: whether the radio

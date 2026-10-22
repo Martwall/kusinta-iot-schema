@@ -123,9 +123,11 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
    * The linked services (accountlink.v1) whose accounts this connector reads devices from,
    * with access tokens the gateway hands it (CredentialsUpdate). Declaring a service asks
    * for its tokens; it does not earn them. The gateway sends a service's tokens only to a
-   * connector_id it has been configured to trust for that service, only after accepting
-   * its handshake, and to one live session at a time: a second session claiming the same
-   * service gets none, and a session that ends loses its links with it.
+   * connector_id it trusts for that service, only after accepting its handshake, and to
+   * one live session at a time: a second session claiming the same service gets none, and
+   * a session that ends loses its links with it. Trust is the gateway's own setting, made
+   * by its administrators; where none is made for a service, the gateway trusts the one
+   * accepted session that declares it, and none while two do.
    *
    * @generated from field: repeated kusinta.iot.accountlink.v1.LinkedService consumes_credentials = 13;
    */
@@ -149,20 +151,29 @@ export declare const ConnectorInfoSchema: GenMessage<ConnectorInfo>;
  * and for a link made while the session is up. After a handshake, every live link arrives
  * in one CredentialsSnapshot instead.
  *
- * Once expires_at plus 60 seconds of clock skew passes without a newer token, the connector
+ * Once expires_at plus 60 seconds of clock skew passes without a newer token, or the
+ * service refuses a live token as unauthorised (revoked at the service), the connector
  * stops reading the link and reports the link's devices unreachable, the way it reports any
  * unreachable device, until an update arrives. That is the link's state, not the backend's:
  * it does not put the backend in doubt or report it failing, and a connector with no live
  * link reports its backend OK.
  *
+ * An update may carry another account's grant under the same id (the home linked again,
+ * replaced its link, or relinked after the old grant lapsed). The connector reads with it
+ * from then on and removes the link's devices the account no longer has (DeviceRemoval);
+ * the devices it still has keep their ids.
+ *
  * @generated from message kusinta.iot.connector.v1.CredentialsUpdate
  */
 export declare type CredentialsUpdate = Message<"kusinta.iot.connector.v1.CredentialsUpdate"> & {
   /**
-   * Opaque; it names no home, person or account. One id is one grant: replacing a link, or
-   * linking again after it needed relinking, mints a new id, and the old one is revoked
-   * (CredentialsRevoked). A cancelled replacement brings the old grant back under its old id
-   * with a fresh update. Not related to a device link's id (CreateLink).
+   * Opaque; it names no home, person or account. Stable for one home and service for as
+   * long as the home has that service linked: replacing the link, relinking after it
+   * needed relinking, or a cancelled replacement arrives as an update under the same id, so
+   * a device read through it keeps its id and its history. The gateway revokes a replaced
+   * grant at the service itself. A device read through two links, as when two homes link
+   * one account, has a distinct id per link. Not related to a device link's id
+   * (CreateLink).
    *
    * @generated from field: string account_link_id = 1;
    */
@@ -216,8 +227,9 @@ export declare type CredentialsSnapshot = Message<"kusinta.iot.connector.v1.Cred
 export declare const CredentialsSnapshotSchema: GenMessage<CredentialsSnapshot>;
 
 /**
- * An account link ended: unlinked, replaced, its home handed over, or wiped. Sent before the
- * gateway revokes the grant at the service. The connector drops the token at once, stops
+ * An account link ended: unlinked, its home handed over, or wiped. Not sent for a
+ * replacement, which is an update under the same id. Sent before the gateway revokes the
+ * grant at the service. The connector drops the token at once, stops
  * reading the link and removes its devices (DeviceRemoval).
  *
  * @generated from message kusinta.iot.connector.v1.CredentialsRevoked
@@ -292,6 +304,16 @@ export declare type ConnectorHandshake = Message<"kusinta.iot.connector.v1.Conne
    * @generated from field: kusinta.iot.connector.v1.BackendHealthReport backend_health = 4;
    */
   backendHealth?: BackendHealthReport | undefined;
+
+  /**
+   * For each device in known_devices read through an account link, that link's
+   * account_link_id, keyed by the device's id: the handshake's form of
+   * DeviceAnnouncement.account_link_id, so a reconnecting connector's linked devices are
+   * filed in their homes again. A known device absent here is read through no link.
+   *
+   * @generated from field: map<string, string> known_device_account_links = 5;
+   */
+  knownDeviceAccountLinks: { [key: string]: string };
 };
 
 /**

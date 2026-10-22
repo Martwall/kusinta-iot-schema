@@ -85,16 +85,25 @@ class CredentialsRevoked(_message.Message):
     def __init__(self, account_link_id: _Optional[str] = ...) -> None: ...
 
 class ConnectorHandshake(_message.Message):
-    __slots__ = ("info", "known_devices", "known_links", "backend_health")
+    __slots__ = ("info", "known_devices", "known_links", "backend_health", "known_device_account_links")
+    class KnownDeviceAccountLinksEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     INFO_FIELD_NUMBER: _ClassVar[int]
     KNOWN_DEVICES_FIELD_NUMBER: _ClassVar[int]
     KNOWN_LINKS_FIELD_NUMBER: _ClassVar[int]
     BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
+    KNOWN_DEVICE_ACCOUNT_LINKS_FIELD_NUMBER: _ClassVar[int]
     info: ConnectorInfo
     known_devices: _containers.RepeatedCompositeFieldContainer[_device_pb2.Device]
     known_links: _containers.RepeatedCompositeFieldContainer[_link_pb2.DeviceLink]
     backend_health: BackendHealthReport
-    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., known_links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ...) -> None: ...
+    known_device_account_links: _containers.ScalarMap[str, str]
+    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., known_links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ..., known_device_account_links: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class BackendHealthReport(_message.Message):
     __slots__ = ("health", "detail")
