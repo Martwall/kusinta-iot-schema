@@ -1288,7 +1288,8 @@ class ColorTemperatureLightProperties extends $pb.GeneratedMessage {
 /// Hz × 100) while their (matter_attribute) claimed to carry the Matter attribute, so every
 /// connector had to divide, every consumer trusting the annotation was wrong by 10× to 1000×,
 /// and sub-watt resolution was gone before the value reached the wire. In Matter's mW an
-/// int32 caps at ~2.1 kW, so the unit and the width had to move together.
+/// int32 caps at ~2.1 MW, enough for a home but not for every Matter device, and Matter
+/// types these attributes int64, so the width follows the specification.
 ///
 /// Signed throughout, matching the cluster: active_power and active_current go negative on
 /// export. sint64 rather than int64 because zigzag keeps negatives at 1-5 bytes instead of

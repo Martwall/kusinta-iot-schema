@@ -117,11 +117,11 @@ message PropertyUpdate {
   // update legible to whoever reads the warning.
   optional string attribute_name = 2;
 
-  // A value wider than 32 bits travels in int64_value or uint64_value: milliwatts above
-  // about 2.1 kW, milliwatt-hours above about 4,295 kWh. A producer may send a value that
-  // fits in either width, and a consumer reads both into the same typed field. null_value
-  // is a reported Matter null: it leaves the typed field unset, "not reported", rather than
-  // keeping the last value.
+  // A value wider than 32 bits travels in int64_value or uint64_value: a cumulative energy
+  // counter in milliwatt-hours passes uint32 at about 4,295 kWh. A producer may send a value
+  // that fits in either width, and a consumer reads both into the same typed field.
+  // null_value is a reported Matter null: it leaves the typed field unset, "not reported",
+  // rather than keeping the last value.
   oneof value {
     sint32 int_value = 3;
     uint32 uint_value = 4;
