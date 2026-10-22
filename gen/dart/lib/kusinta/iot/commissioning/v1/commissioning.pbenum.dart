@@ -158,7 +158,7 @@ class FactTopic extends $pb.ProtobufEnum {
   static const FactTopic FACT_TOPIC_CONNECTIVITY =
       FactTopic._(8, _omitEnumNames ? '' : 'FACT_TOPIC_CONNECTIVITY');
 
-  /// Comfort wishes and schedules.
+  /// Comfort wishes and schedules. Residents only, never under a commissioning grant.
   static const FactTopic FACT_TOPIC_COMFORT =
       FactTopic._(9, _omitEnumNames ? '' : 'FACT_TOPIC_COMFORT');
 

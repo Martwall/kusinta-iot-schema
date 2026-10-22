@@ -819,7 +819,7 @@ export enum FactTopic {
   CONNECTIVITY = 8,
 
   /**
-   * Comfort wishes and schedules.
+   * Comfort wishes and schedules. Residents only, never under a commissioning grant.
    *
    * @generated from enum value: FACT_TOPIC_COMFORT = 9;
    */

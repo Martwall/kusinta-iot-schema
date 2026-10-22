@@ -68,7 +68,9 @@ option optimize_for = SPEED;
 // of the home (HOUSEHOLD), or by that installer (INSTALLER). Facts about spaces outside
 // homes are given to and put by the property owner and the gateway's administrators
 // (OWNER_ORGANISATION), and by an installer under a grant naming the space. A caller who
-// reaches a home as service gets none of it, and is refused as NOT_ENTITLED.
+// reaches a home as service gets none of it, and is refused as NOT_ENTITLED. A fact of
+// FACT_TOPIC_COMFORT is the exception: it is given to and put by the home's residents only,
+// never under a commissioning grant, and no installer answers it.
 //
 // Of the feature states, residents who are not a household admin are given the states
 // and the blocks, not the needs (CommissioningProfile.needs_withheld): the to-dos belong
@@ -158,7 +160,7 @@ enum FactTopic {
   FACT_TOPIC_DISTRICT_HEATING = 7;
   // Radio coverage and the gateways that carry it.
   FACT_TOPIC_CONNECTIVITY = 8;
-  // Comfort wishes and schedules.
+  // Comfort wishes and schedules. Residents only, never under a commissioning grant.
   FACT_TOPIC_COMFORT = 9;
 }
 
