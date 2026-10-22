@@ -6,9 +6,10 @@ import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2"
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identity_pb.js";
 import type { BackendFailureReason, BackendHealth, ConnectorKind, ConnectorTransport } from "../../common/v1/types_pb.js";
+import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { DeviceLink, LinkFunction, LinkState } from "../../link/v1/link_pb.js";
-import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { AttributeWriteRequest, CommandError, DeviceCommand } from "../../webrtc/v1/command_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { PropertyUpdateBatch } from "../../device/v1/property_update_pb.js";
@@ -117,6 +118,15 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
    * @generated from field: bool supports_backend_reinitialize = 12;
    */
   supportsBackendReinitialize: boolean;
+
+  /**
+   * The linked services (accountlink.v1) whose accounts this connector reads devices from,
+   * with an access token the gateway hands it (CredentialsUpdate). The gateway sends a
+   * service's tokens to a connector that declares it, and to no other.
+   *
+   * @generated from field: repeated kusinta.iot.accountlink.v1.LinkedService consumes_credentials = 13;
+   */
+  consumesCredentials: LinkedService[];
 };
 
 /**
@@ -124,6 +134,70 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
  * Use `create(ConnectorInfoSchema)` to create a new message.
  */
 export declare const ConnectorInfoSchema: GenMessage<ConnectorInfo>;
+
+/**
+ * An access token for one home's linked account at a third-party service, handed to the
+ * connector that reads that home's devices there. The gateway holds the token pair and
+ * refreshes it; only the short-lived access token crosses, never a refresh token or a
+ * client secret.
+ *
+ * Sent when a link is made, after every refresh, and after every handshake for every live
+ * link of a declared service, so a restarted connector, which holds nothing, has it again.
+ * The connector keeps it in memory only, never writes or logs it, and uses it for that link
+ * alone. Once expires_at passes without a newer one, it stops reading the link and reports
+ * the link's devices unreachable until an update arrives.
+ *
+ * @generated from message kusinta.iot.connector.v1.CredentialsUpdate
+ */
+export declare type CredentialsUpdate = Message<"kusinta.iot.connector.v1.CredentialsUpdate"> & {
+  /**
+   * Opaque and stable for the life of the link. It names no home, person or account; the
+   * connector keys the link's devices by it.
+   *
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+
+  /**
+   * @generated from field: kusinta.iot.accountlink.v1.LinkedService service = 2;
+   */
+  service: LinkedService;
+
+  /**
+   * @generated from field: string access_token = 3;
+   */
+  accessToken: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp expires_at = 4;
+   */
+  expiresAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.CredentialsUpdate.
+ * Use `create(CredentialsUpdateSchema)` to create a new message.
+ */
+export declare const CredentialsUpdateSchema: GenMessage<CredentialsUpdate>;
+
+/**
+ * A link ended: unlinked, its home handed over, or wiped. The connector drops the token at
+ * once, stops reading the link and removes its devices (DeviceRemoval).
+ *
+ * @generated from message kusinta.iot.connector.v1.CredentialsRevoked
+ */
+export declare type CredentialsRevoked = Message<"kusinta.iot.connector.v1.CredentialsRevoked"> & {
+  /**
+   * @generated from field: string link_id = 1;
+   */
+  linkId: string;
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.CredentialsRevoked.
+ * Use `create(CredentialsRevokedSchema)` to create a new message.
+ */
+export declare const CredentialsRevokedSchema: GenMessage<CredentialsRevoked>;
 
 /**
  * @generated from message kusinta.iot.connector.v1.ConnectorHandshake
@@ -1081,6 +1155,20 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
      */
     value: ReinitializeBackend;
     case: "reinitializeBackend";
+  } | {
+    /**
+     * A linked account's access token, and its end; see CredentialsUpdate.
+     *
+     * @generated from field: kusinta.iot.connector.v1.CredentialsUpdate credentials_update = 15;
+     */
+    value: CredentialsUpdate;
+    case: "credentialsUpdate";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.CredentialsRevoked credentials_revoked = 16;
+     */
+    value: CredentialsRevoked;
+    case: "credentialsRevoked";
   } | { case: undefined; value?: undefined };
 };
 

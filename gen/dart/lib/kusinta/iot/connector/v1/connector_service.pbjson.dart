@@ -153,6 +153,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.RemoveLink': $0.RemoveLink$json,
   '.kusinta.iot.connector.v1.ListLinks': $0.ListLinks$json,
   '.kusinta.iot.connector.v1.ReinitializeBackend': $0.ReinitializeBackend$json,
+  '.kusinta.iot.connector.v1.CredentialsUpdate': $0.CredentialsUpdate$json,
+  '.kusinta.iot.connector.v1.CredentialsRevoked': $0.CredentialsRevoked$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

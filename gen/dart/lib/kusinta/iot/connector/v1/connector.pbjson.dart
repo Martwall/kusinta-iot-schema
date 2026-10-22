@@ -86,6 +86,14 @@ const ConnectorInfo$json = {
       '5': 8,
       '10': 'supportsBackendReinitialize'
     },
+    {
+      '1': 'consumes_credentials',
+      '3': 13,
+      '4': 3,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'consumesCredentials'
+    },
   ],
 };
 
@@ -101,7 +109,54 @@ final $typed_data.Uint8List connectorInfoDescriptor = $convert.base64Decode(
     'BvcnRzUHJvdmlzaW9uaW5nEiMKDWJyb2tlcnNfbGlua3MYCSABKAhSDGJyb2tlcnNMaW5rcxI4'
     'CgRraW5kGAogASgOMiQua3VzaW50YS5pb3QuY29tbW9uLnYxLkNvbm5lY3RvcktpbmRSBGtpbm'
     'QSIAoLZGVzY3JpcHRpb24YCyABKAlSC2Rlc2NyaXB0aW9uEkIKHXN1cHBvcnRzX2JhY2tlbmRf'
-    'cmVpbml0aWFsaXplGAwgASgIUhtzdXBwb3J0c0JhY2tlbmRSZWluaXRpYWxpemU=');
+    'cmVpbml0aWFsaXplGAwgASgIUhtzdXBwb3J0c0JhY2tlbmRSZWluaXRpYWxpemUSXAoUY29uc3'
+    'VtZXNfY3JlZGVudGlhbHMYDSADKA4yKS5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5MaW5r'
+    'ZWRTZXJ2aWNlUhNjb25zdW1lc0NyZWRlbnRpYWxz');
+
+@$core.Deprecated('Use credentialsUpdateDescriptor instead')
+const CredentialsUpdate$json = {
+  '1': 'CredentialsUpdate',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+    {
+      '1': 'service',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'service'
+    },
+    {'1': 'access_token', '3': 3, '4': 1, '5': 9, '10': 'accessToken'},
+    {
+      '1': 'expires_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'expiresAt'
+    },
+  ],
+};
+
+/// Descriptor for `CredentialsUpdate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List credentialsUpdateDescriptor = $convert.base64Decode(
+    'ChFDcmVkZW50aWFsc1VwZGF0ZRIXCgdsaW5rX2lkGAEgASgJUgZsaW5rSWQSQwoHc2VydmljZR'
+    'gCIAEoDjIpLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkxpbmtlZFNlcnZpY2VSB3NlcnZp'
+    'Y2USIQoMYWNjZXNzX3Rva2VuGAMgASgJUgthY2Nlc3NUb2tlbhI5CgpleHBpcmVzX2F0GAQgAS'
+    'gLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0F0');
+
+@$core.Deprecated('Use credentialsRevokedDescriptor instead')
+const CredentialsRevoked$json = {
+  '1': 'CredentialsRevoked',
+  '2': [
+    {'1': 'link_id', '3': 1, '4': 1, '5': 9, '10': 'linkId'},
+  ],
+};
+
+/// Descriptor for `CredentialsRevoked`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List credentialsRevokedDescriptor =
+    $convert.base64Decode(
+        'ChJDcmVkZW50aWFsc1Jldm9rZWQSFwoHbGlua19pZBgBIAEoCVIGbGlua0lk');
 
 @$core.Deprecated('Use connectorHandshakeDescriptor instead')
 const ConnectorHandshake$json = {
@@ -913,6 +968,24 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'reinitializeBackend'
     },
+    {
+      '1': 'credentials_update',
+      '3': 15,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsUpdate',
+      '9': 0,
+      '10': 'credentialsUpdate'
+    },
+    {
+      '1': 'credentials_revoked',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsRevoked',
+      '9': 0,
+      '10': 'credentialsRevoked'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -941,5 +1014,8 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'aW50YS5pb3QuY29ubmVjdG9yLnYxLlJlbW92ZUxpbmtIAFIKcmVtb3ZlTGluaxJECgpsaXN0X2'
     'xpbmtzGA0gASgLMiMua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkxpc3RMaW5rc0gAUglsaXN0'
     'TGlua3MSYgoUcmVpbml0aWFsaXplX2JhY2tlbmQYDiABKAsyLS5rdXNpbnRhLmlvdC5jb25uZW'
-    'N0b3IudjEuUmVpbml0aWFsaXplQmFja2VuZEgAUhNyZWluaXRpYWxpemVCYWNrZW5kQgkKB3Bh'
-    'eWxvYWRKBAgEEAU=');
+    'N0b3IudjEuUmVpbml0aWFsaXplQmFja2VuZEgAUhNyZWluaXRpYWxpemVCYWNrZW5kElwKEmNy'
+    'ZWRlbnRpYWxzX3VwZGF0ZRgPIAEoCzIrLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5DcmVkZW'
+    '50aWFsc1VwZGF0ZUgAUhFjcmVkZW50aWFsc1VwZGF0ZRJfChNjcmVkZW50aWFsc19yZXZva2Vk'
+    'GBAgASgLMiwua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNyZWRlbnRpYWxzUmV2b2tlZEgAUh'
+    'JjcmVkZW50aWFsc1Jldm9rZWRCCQoHcGF5bG9hZEoECAQQBQ==');
