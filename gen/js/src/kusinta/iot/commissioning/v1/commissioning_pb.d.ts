@@ -546,8 +546,9 @@ export declare const CommissioningProfileSchema: GenMessage<CommissioningProfile
  *
  * The REQUIRED keys are those this file marks REQUIRED (HOUSEHOLD QUESTIONS) and no other, so
  * that set_up means the same on every gateway. A home with no room is not set up. Once a
- * home is set up, the facts it needs are those it needed then: a room created since, or a key
- * a later release of this schema marks REQUIRED, is not needed for it.
+ * home has been set up, its facts count neither way, whatever changes since — a room
+ * created, an answer removed, a key a later release of this schema marks REQUIRED: only an
+ * output bound since without a pass on the device it is bound to makes it not set up.
  *
  * @generated from message kusinta.iot.commissioning.v1.HomeSetup
  */

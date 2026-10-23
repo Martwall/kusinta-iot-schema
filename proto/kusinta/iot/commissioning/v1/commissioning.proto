@@ -45,8 +45,8 @@ option optimize_for = SPEED;
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
 //
 // A fact's value takes the type its key states, matched by type as well as value, as
-// heating.v1.ContactBinding.closed_value is. A key that states a closed list takes only its
-// values. A key that takes a list (AttributeValue.list_value) takes each value at most once,
+// heating.v1.ContactBinding.closed_value is. A key that states a closed list or a range takes
+// only its values. A key that takes a list (AttributeValue.list_value) takes each value at most once,
 // in any order, and an empty list is an answer whose meaning the key states. A value a person
 // puts is never free text: every string key a person may put states a closed list, so that
 // nothing a household writes outlives it by an installer confirming it. A string key only
@@ -70,7 +70,8 @@ option optimize_for = SPEED;
 // key a house template may answer (TEMPLATES). A room key is asked of every room of the
 // home; a plant key of a plant the home's heating records hold whose source is a heat pump
 // (heating.v1.HeatingPlant.source); "home.grid_operator" and "home.main_fuse_amperes" only
-// while "home.own_grid_subscription" is true.
+// while "home.own_grid_subscription" is true. A key not asked is not needed and is read by no
+// feature; an answer it holds is kept.
 //
 //   "room.walls_changed"  bool; a room. Whether a wall bounding it was added, removed or
 //       moved since the house was built, so that the drawing's rooms, emitters and floor
@@ -80,7 +81,8 @@ option optimize_for = SPEED;
 //       on a heating circuit), "radiator_electric" (electric panel heaters), "floor_water"
 //       (water floor heating), "floor_electric" (an electric floor), "air_to_air_heat_pump"
 //       (an indoor unit of one), "other". Empty: nothing heats it. A towel heater is not
-//       counted ("room.towel_heaters"). ROOMS; REQUIRED; STATED, PHOTO, DRAWING, INSPECTED.
+//       counted ("room.electric_towel_heater"). ROOMS; REQUIRED; STATED, PHOTO, DRAWING,
+//       INSPECTED.
 //   "room.thermostats"  list of string; a room. The kinds of thermostat in it that steer its
 //       heating, from: "radiator_valve" (a thermostatic head on a water radiator,
 //       self-acting or electronic), "floor_water_thermostat" (a room thermostat switching
@@ -88,10 +90,10 @@ option optimize_for = SPEED;
 //       "heat_pump_room_sensor" (the heat pump's room unit or sensor), "other". One built into
 //       an electric panel heater is not counted. Empty: none. ROOMS; REQUIRED; STATED, PHOTO,
 //       DRAWING, INSPECTED.
-//   "room.towel_heaters"  list of string; a room. The kinds of towel heater in it, from:
-//       "electric", "water" (on a heating circuit). Empty: none. An electric floor, the other
-//       comfort load, is "room.heating" "floor_electric". COMFORT_LOADS; FOR_FEATURE
-//       COMFORT_LOADS; STATED, PHOTO, DRAWING, INSPECTED.
+//   "room.electric_towel_heater"  bool; a room. Whether an electric towel heater is in it;
+//       one on a heating circuit is not. An electric floor, the other comfort load, is
+//       "room.heating" "floor_electric". COMFORT_LOADS; FOR_FEATURE COMFORT_LOADS; STATED,
+//       PHOTO, DRAWING, INSPECTED.
 //   "plant.heat_pump_brand"  string; a plant. The brand on the heat pump's nameplate, from:
 //       "nibe", "thermia", "ivt", "ctc", "bosch", "daikin", "mitsubishi_electric",
 //       "panasonic", "toshiba", "fujitsu", "lg", "samsung", "vaillant", "viessmann",
@@ -99,12 +101,13 @@ option optimize_for = SPEED;
 //       DRAWING, INSPECTED, DERIVED (from a linked account, accountlink.v1).
 //   "plant.heat_pump_model"  string; a plant. The heat pump's model as its maker's service
 //       names it, read through a linked account (accountlink.v1), never a name the account
-//       holder gave the device. Set by the gateway alone (AUTOMATIC); a put is refused.
-//       HEAT_SOURCE; OPTIONAL; DERIVED.
+//       holder gave the device. Set by the gateway alone (AUTOMATIC); a put is refused as
+//       ANSWERER. A house fact: it describes the heat pump, not the account. HEAT_SOURCE;
+//       OPTIONAL; DERIVED.
 //   "plant.vendor_account"  bool; a plant. Whether the household holds an account at the
 //       heat pump's maker that the heat pump is registered to, so that the home can be
-//       linked to it (accountlink.v1). HEAT_SOURCE; FOR_FEATURE PLANT; STATED, DERIVED (true
-//       once the home holds a link that reaches the heat pump).
+//       linked to it (accountlink.v1). HEAT_SOURCE; FOR_FEATURE PLANT; STATED, INSPECTED,
+//       DERIVED (true once the home holds a link that reaches the heat pump).
 //   "home.own_grid_subscription"  bool; a home. Whether the home has its own connection to
 //       the electricity grid, billed to the household by the grid operator. False: it is on
 //       the building's shared connection, which the owner organisation answers for.
@@ -114,11 +117,12 @@ option optimize_for = SPEED;
 //       "se_goteborg_energi", "se_malarenergi", "se_kraftringen", "se_oresundskraft",
 //       "se_tekniska_verken", "se_jamtkraft", "se_skelleftea_kraft", "se_umea_energi",
 //       "se_lulea_energi", "se_gavle_energi", "se_boras_elnat", "se_jonkoping_energi",
-//       "se_halmstads_energi", "se_sundsvall_elnat", "other". A value names an operator by
-//       its country's ISO 3166-1 code and the operator. ELECTRICITY; FOR_FEATURE COST; STATED,
-//       INSPECTED, DERIVED (from the building's address).
+//       "se_halmstads_energi", "se_sundsvall_elnat", "other". Every value but "other" names
+//       an operator by its country's ISO 3166-1 alpha-2 code and the operator. ELECTRICITY;
+//       FOR_FEATURE COST; STATED, INSPECTED, DERIVED (from the building's address).
 //   "home.main_fuse_amperes"  uint; a home. The rating of its own connection's main fuse,
-//       per phase, in amperes, from: 10, 16, 20, 25, 35, 50, 63, 80, 100, 125, 160, 200.
+//       per phase, in amperes, from 1 to 1000. A client offers the standard ratings 10, 16,
+//       20, 25, 35, 50, 63, 80, 100, 125, 160 and 200, and takes any other in the range.
 //       ELECTRICITY; FOR_FEATURE COST; STATED, PHOTO, DRAWING, INSPECTED.
 //
 // Comfort wishes and schedules (FACT_TOPIC_COMFORT) have no key here.
@@ -567,8 +571,9 @@ message CommissioningProfile {
 //
 // The REQUIRED keys are those this file marks REQUIRED (HOUSEHOLD QUESTIONS) and no other, so
 // that set_up means the same on every gateway. A home with no room is not set up. Once a
-// home is set up, the facts it needs are those it needed then: a room created since, or a key
-// a later release of this schema marks REQUIRED, is not needed for it.
+// home has been set up, its facts count neither way, whatever changes since — a room
+// created, an answer removed, a key a later release of this schema marks REQUIRED: only an
+// output bound since without a pass on the device it is bound to makes it not set up.
 message HomeSetup {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   bool set_up = 2;

@@ -85,7 +85,7 @@ def test_a_value_replaces_dont_know():
 
 def test_an_empty_list_is_an_answer_not_no_answer():
     empty_list = cluster_state_pb2.AttributeValue(list_value=cluster_state_pb2.AttributeValueList())
-    fact = c.CommissioningFact(key="room.towel_heaters", value=empty_list)
+    fact = c.CommissioningFact(key="room.heating", value=empty_list)
 
     decoded = _round_trip(fact)
 

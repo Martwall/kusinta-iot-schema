@@ -3637,7 +3637,8 @@ class ListCommissioning extends $pb.GeneratedMessage {
 ///   INVALID_REQUEST
 ///   "UNKNOWN_KEY"       a key the gateway's catalogue does not hold.
 ///   "VALUE_TYPE"        a value of another type than the key takes, a value outside the
-///                       key's closed list or listed twice, unknown false, or no answer.
+///                       key's closed list or range or listed twice, unknown false, or no
+///                       answer.
 ///   "SUBJECT"           a record_id that is not a heating record within space_id, or a key
 ///                       that is not about that kind of space or record.
 ///   "ANSWERER"          a key the caller's party does not answer.

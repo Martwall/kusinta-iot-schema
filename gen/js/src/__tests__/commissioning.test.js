@@ -92,7 +92,7 @@ describe('household question', () => {
   it('keeps an empty list as an answer, not as no answer', () => {
     const emptyList = { value: { case: 'listValue', value: { values: [] } } }
     const decoded = onTheWire(CommissioningFactSchema, {
-      key: 'room.towel_heaters',
+      key: 'room.heating',
       answer: { case: 'value', value: emptyList },
     })
     expect(decoded.answer).toMatchObject({ case: 'value', value: emptyList })
