@@ -88,6 +88,17 @@ describe('commissioning fact', () => {
   })
 })
 
+describe('household question', () => {
+  it('keeps an empty list as an answer, not as no answer', () => {
+    const emptyList = { value: { case: 'listValue', value: { values: [] } } }
+    const decoded = onTheWire(CommissioningFactSchema, {
+      key: 'room.heating',
+      answer: { case: 'value', value: emptyList },
+    })
+    expect(decoded.answer).toMatchObject({ case: 'value', value: emptyList })
+  })
+})
+
 describe('house template', () => {
   it('is versioned and holds facts by their label on the drawing', () => {
     const decoded = onTheWire(HouseTemplateSchema, {
