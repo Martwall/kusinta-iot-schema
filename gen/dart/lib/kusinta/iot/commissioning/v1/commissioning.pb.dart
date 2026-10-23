@@ -1398,6 +1398,11 @@ class CommissioningProfile extends $pb.GeneratedMessage {
 /// does, so that set_up tells the owner organisation neither of a household's edits nor of
 /// a renovation. Binding a new output, or a new device, is what it can show. All the owner
 /// organisation learns of a home's commissioning.
+///
+/// The REQUIRED keys are those this file marks REQUIRED (HOUSEHOLD QUESTIONS) and no other, so
+/// that set_up means the same on every gateway. A home with no room is not set up. Once a
+/// home is set up, the facts it needs are those it needed then: a room created since, or a key
+/// a later release of this schema marks REQUIRED, is not needed for it.
 class HomeSetup extends $pb.GeneratedMessage {
   factory HomeSetup({
     $1.SpaceId? homeId,

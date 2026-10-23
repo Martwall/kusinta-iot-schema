@@ -544,6 +544,11 @@ export declare const CommissioningProfileSchema: GenMessage<CommissioningProfile
  * a renovation. Binding a new output, or a new device, is what it can show. All the owner
  * organisation learns of a home's commissioning.
  *
+ * The REQUIRED keys are those this file marks REQUIRED (HOUSEHOLD QUESTIONS) and no other, so
+ * that set_up means the same on every gateway. A home with no room is not set up. Once a
+ * home is set up, the facts it needs are those it needed then: a room created since, or a key
+ * a later release of this schema marks REQUIRED, is not needed for it.
+ *
  * @generated from message kusinta.iot.commissioning.v1.HomeSetup
  */
 export declare type HomeSetup = Message<"kusinta.iot.commissioning.v1.HomeSetup"> & {

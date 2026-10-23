@@ -3,6 +3,7 @@
 These assert the decisions the shape encodes:
 
   * a fact records who answered it, how and when, and "don't know" is an answer
+  * an empty list is an answer, not the absence of one
   * a deviation names the template and version it departs from
   * a feature works, needs a fact or a test from a named party, or is blocked for safety
   * a commissioning test drives one binding of one heating record, and its pass can lapse
@@ -80,6 +81,15 @@ def test_a_value_replaces_dont_know():
     fact.value.CopyFrom(cluster_state_pb2.AttributeValue(uint_value=210))
 
     assert _round_trip(fact).WhichOneof("answer") == "value"
+
+
+def test_an_empty_list_is_an_answer_not_no_answer():
+    empty_list = cluster_state_pb2.AttributeValue(list_value=cluster_state_pb2.AttributeValueList())
+    fact = c.CommissioningFact(key="room.towel_heaters", value=empty_list)
+
+    decoded = _round_trip(fact)
+
+    assert (decoded.WhichOneof("answer"), decoded.value.WhichOneof("value")) == ("value", "list_value")
 
 
 def test_a_template_version_says_who_put_it():
