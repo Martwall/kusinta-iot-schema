@@ -1,6 +1,7 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.accountlink.v1 import account_link_pb2 as _account_link_pb2
 from kusinta.iot.common.v1 import pairing_pb2 as _pairing_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.device.v1 import device_pb2 as _device_pb2
@@ -30,7 +31,7 @@ REINITIALIZE_OUTCOME_FAILED: ReinitializeOutcome
 REINITIALIZE_OUTCOME_NOT_SUPPORTED: ReinitializeOutcome
 
 class ConnectorInfo(_message.Message):
-    __slots__ = ("connector_id", "display_name", "version", "transport", "endpoint", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description", "supports_backend_reinitialize")
+    __slots__ = ("connector_id", "display_name", "version", "transport", "endpoint", "supported_device_type_ids", "supports_pairing", "supports_provisioning", "brokers_links", "kind", "description", "supports_backend_reinitialize", "consumes_credentials")
     CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
     VERSION_FIELD_NUMBER: _ClassVar[int]
@@ -43,6 +44,7 @@ class ConnectorInfo(_message.Message):
     KIND_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     SUPPORTS_BACKEND_REINITIALIZE_FIELD_NUMBER: _ClassVar[int]
+    CONSUMES_CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
     connector_id: _identity_pb2.ConnectorId
     display_name: str
     version: str
@@ -55,19 +57,53 @@ class ConnectorInfo(_message.Message):
     kind: _types_pb2.ConnectorKind
     description: str
     supports_backend_reinitialize: bool
-    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., version: _Optional[str] = ..., transport: _Optional[_Union[_types_pb2.ConnectorTransport, str]] = ..., endpoint: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ..., supports_backend_reinitialize: _Optional[bool] = ...) -> None: ...
+    consumes_credentials: _containers.RepeatedScalarFieldContainer[_account_link_pb2.LinkedService]
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., display_name: _Optional[str] = ..., version: _Optional[str] = ..., transport: _Optional[_Union[_types_pb2.ConnectorTransport, str]] = ..., endpoint: _Optional[str] = ..., supported_device_type_ids: _Optional[_Iterable[int]] = ..., supports_pairing: _Optional[bool] = ..., supports_provisioning: _Optional[bool] = ..., brokers_links: _Optional[bool] = ..., kind: _Optional[_Union[_types_pb2.ConnectorKind, str]] = ..., description: _Optional[str] = ..., supports_backend_reinitialize: _Optional[bool] = ..., consumes_credentials: _Optional[_Iterable[_Union[_account_link_pb2.LinkedService, str]]] = ...) -> None: ...
+
+class CredentialsUpdate(_message.Message):
+    __slots__ = ("account_link_id", "service", "access_token", "expires_at")
+    ACCOUNT_LINK_ID_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_FIELD_NUMBER: _ClassVar[int]
+    ACCESS_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    account_link_id: str
+    service: _account_link_pb2.LinkedService
+    access_token: str
+    expires_at: _timestamp_pb2.Timestamp
+    def __init__(self, account_link_id: _Optional[str] = ..., service: _Optional[_Union[_account_link_pb2.LinkedService, str]] = ..., access_token: _Optional[str] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class CredentialsSnapshot(_message.Message):
+    __slots__ = ("links",)
+    LINKS_FIELD_NUMBER: _ClassVar[int]
+    links: _containers.RepeatedCompositeFieldContainer[CredentialsUpdate]
+    def __init__(self, links: _Optional[_Iterable[_Union[CredentialsUpdate, _Mapping]]] = ...) -> None: ...
+
+class CredentialsRevoked(_message.Message):
+    __slots__ = ("account_link_id",)
+    ACCOUNT_LINK_ID_FIELD_NUMBER: _ClassVar[int]
+    account_link_id: str
+    def __init__(self, account_link_id: _Optional[str] = ...) -> None: ...
 
 class ConnectorHandshake(_message.Message):
-    __slots__ = ("info", "known_devices", "known_links", "backend_health")
+    __slots__ = ("info", "known_devices", "known_links", "backend_health", "known_device_account_links")
+    class KnownDeviceAccountLinksEntry(_message.Message):
+        __slots__ = ("key", "value")
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     INFO_FIELD_NUMBER: _ClassVar[int]
     KNOWN_DEVICES_FIELD_NUMBER: _ClassVar[int]
     KNOWN_LINKS_FIELD_NUMBER: _ClassVar[int]
     BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
+    KNOWN_DEVICE_ACCOUNT_LINKS_FIELD_NUMBER: _ClassVar[int]
     info: ConnectorInfo
     known_devices: _containers.RepeatedCompositeFieldContainer[_device_pb2.Device]
     known_links: _containers.RepeatedCompositeFieldContainer[_link_pb2.DeviceLink]
     backend_health: BackendHealthReport
-    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., known_links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ...) -> None: ...
+    known_device_account_links: _containers.ScalarMap[str, str]
+    def __init__(self, info: _Optional[_Union[ConnectorInfo, _Mapping]] = ..., known_devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., known_links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ..., known_device_account_links: _Optional[_Mapping[str, str]] = ...) -> None: ...
 
 class BackendHealthReport(_message.Message):
     __slots__ = ("health", "detail")
@@ -144,24 +180,28 @@ class LinksReported(_message.Message):
     def __init__(self, links: _Optional[_Iterable[_Union[_link_pb2.DeviceLink, _Mapping]]] = ...) -> None: ...
 
 class HandshakeAck(_message.Message):
-    __slots__ = ("accepted", "reason", "gateway_id", "supports_backend_health")
+    __slots__ = ("accepted", "reason", "gateway_id", "supports_backend_health", "sends_credentials")
     ACCEPTED_FIELD_NUMBER: _ClassVar[int]
     REASON_FIELD_NUMBER: _ClassVar[int]
     GATEWAY_ID_FIELD_NUMBER: _ClassVar[int]
     SUPPORTS_BACKEND_HEALTH_FIELD_NUMBER: _ClassVar[int]
+    SENDS_CREDENTIALS_FIELD_NUMBER: _ClassVar[int]
     accepted: bool
     reason: str
     gateway_id: _identity_pb2.GatewayId
     supports_backend_health: bool
-    def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., supports_backend_health: _Optional[bool] = ...) -> None: ...
+    sends_credentials: bool
+    def __init__(self, accepted: _Optional[bool] = ..., reason: _Optional[str] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., supports_backend_health: _Optional[bool] = ..., sends_credentials: _Optional[bool] = ...) -> None: ...
 
 class DeviceAnnouncement(_message.Message):
-    __slots__ = ("device", "pairing_request_id")
+    __slots__ = ("device", "pairing_request_id", "account_link_id")
     DEVICE_FIELD_NUMBER: _ClassVar[int]
     PAIRING_REQUEST_ID_FIELD_NUMBER: _ClassVar[int]
+    ACCOUNT_LINK_ID_FIELD_NUMBER: _ClassVar[int]
     device: _device_pb2.Device
     pairing_request_id: str
-    def __init__(self, device: _Optional[_Union[_device_pb2.Device, _Mapping]] = ..., pairing_request_id: _Optional[str] = ...) -> None: ...
+    account_link_id: str
+    def __init__(self, device: _Optional[_Union[_device_pb2.Device, _Mapping]] = ..., pairing_request_id: _Optional[str] = ..., account_link_id: _Optional[str] = ...) -> None: ...
 
 class DeviceRemoval(_message.Message):
     __slots__ = ("device_id", "reason")
@@ -276,7 +316,7 @@ class SessionRequest(_message.Message):
     def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake: _Optional[_Union[ConnectorHandshake, _Mapping]] = ..., property_update: _Optional[_Union[_property_update_pb2.PropertyUpdateBatch, _Mapping]] = ..., device_announced: _Optional[_Union[DeviceAnnouncement, _Mapping]] = ..., device_removed: _Optional[_Union[DeviceRemoval, _Mapping]] = ..., command_result: _Optional[_Union[ConnectorCommandResult, _Mapping]] = ..., heartbeat: _Optional[_Union[HeartBeat, _Mapping]] = ..., device_events: _Optional[_Union[_device_event_pb2.DeviceEventBatch, _Mapping]] = ..., pairing_mode_result: _Optional[_Union[PairingModeResult, _Mapping]] = ..., pairing_mode_ended: _Optional[_Union[PairingModeEnded, _Mapping]] = ..., link_result: _Optional[_Union[LinkResult, _Mapping]] = ..., links_reported: _Optional[_Union[LinksReported, _Mapping]] = ..., backend_health: _Optional[_Union[BackendHealthReport, _Mapping]] = ..., reinitialize_backend_result: _Optional[_Union[ReinitializeBackendResult, _Mapping]] = ...) -> None: ...
 
 class SessionResponse(_message.Message):
-    __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command", "execute_attribute_write", "enter_pairing_mode", "create_link", "remove_link", "list_links", "reinitialize_backend")
+    __slots__ = ("message_id", "sent_at", "handshake_ack", "subscribe", "unsubscribe", "error", "execute_command", "execute_attribute_write", "enter_pairing_mode", "create_link", "remove_link", "list_links", "reinitialize_backend", "credentials_update", "credentials_revoked", "credentials_snapshot")
     MESSAGE_ID_FIELD_NUMBER: _ClassVar[int]
     SENT_AT_FIELD_NUMBER: _ClassVar[int]
     HANDSHAKE_ACK_FIELD_NUMBER: _ClassVar[int]
@@ -290,6 +330,9 @@ class SessionResponse(_message.Message):
     REMOVE_LINK_FIELD_NUMBER: _ClassVar[int]
     LIST_LINKS_FIELD_NUMBER: _ClassVar[int]
     REINITIALIZE_BACKEND_FIELD_NUMBER: _ClassVar[int]
+    CREDENTIALS_UPDATE_FIELD_NUMBER: _ClassVar[int]
+    CREDENTIALS_REVOKED_FIELD_NUMBER: _ClassVar[int]
+    CREDENTIALS_SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
     message_id: str
     sent_at: _timestamp_pb2.Timestamp
     handshake_ack: HandshakeAck
@@ -303,4 +346,7 @@ class SessionResponse(_message.Message):
     remove_link: RemoveLink
     list_links: ListLinks
     reinitialize_backend: ReinitializeBackend
-    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake_ack: _Optional[_Union[HandshakeAck, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevice, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevice, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., execute_command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., execute_attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ..., enter_pairing_mode: _Optional[_Union[EnterPairingMode, _Mapping]] = ..., create_link: _Optional[_Union[CreateLink, _Mapping]] = ..., remove_link: _Optional[_Union[RemoveLink, _Mapping]] = ..., list_links: _Optional[_Union[ListLinks, _Mapping]] = ..., reinitialize_backend: _Optional[_Union[ReinitializeBackend, _Mapping]] = ...) -> None: ...
+    credentials_update: CredentialsUpdate
+    credentials_revoked: CredentialsRevoked
+    credentials_snapshot: CredentialsSnapshot
+    def __init__(self, message_id: _Optional[str] = ..., sent_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., handshake_ack: _Optional[_Union[HandshakeAck, _Mapping]] = ..., subscribe: _Optional[_Union[SubscribeDevice, _Mapping]] = ..., unsubscribe: _Optional[_Union[UnsubscribeDevice, _Mapping]] = ..., error: _Optional[_Union[GatewayError, _Mapping]] = ..., execute_command: _Optional[_Union[_command_pb2.DeviceCommand, _Mapping]] = ..., execute_attribute_write: _Optional[_Union[_command_pb2.AttributeWriteRequest, _Mapping]] = ..., enter_pairing_mode: _Optional[_Union[EnterPairingMode, _Mapping]] = ..., create_link: _Optional[_Union[CreateLink, _Mapping]] = ..., remove_link: _Optional[_Union[RemoveLink, _Mapping]] = ..., list_links: _Optional[_Union[ListLinks, _Mapping]] = ..., reinitialize_backend: _Optional[_Union[ReinitializeBackend, _Mapping]] = ..., credentials_update: _Optional[_Union[CredentialsUpdate, _Mapping]] = ..., credentials_revoked: _Optional[_Union[CredentialsRevoked, _Mapping]] = ..., credentials_snapshot: _Optional[_Union[CredentialsSnapshot, _Mapping]] = ...) -> None: ...

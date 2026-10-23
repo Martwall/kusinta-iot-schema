@@ -86,6 +86,14 @@ const ConnectorInfo$json = {
       '5': 8,
       '10': 'supportsBackendReinitialize'
     },
+    {
+      '1': 'consumes_credentials',
+      '3': 13,
+      '4': 3,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'consumesCredentials'
+    },
   ],
 };
 
@@ -101,7 +109,74 @@ final $typed_data.Uint8List connectorInfoDescriptor = $convert.base64Decode(
     'BvcnRzUHJvdmlzaW9uaW5nEiMKDWJyb2tlcnNfbGlua3MYCSABKAhSDGJyb2tlcnNMaW5rcxI4'
     'CgRraW5kGAogASgOMiQua3VzaW50YS5pb3QuY29tbW9uLnYxLkNvbm5lY3RvcktpbmRSBGtpbm'
     'QSIAoLZGVzY3JpcHRpb24YCyABKAlSC2Rlc2NyaXB0aW9uEkIKHXN1cHBvcnRzX2JhY2tlbmRf'
-    'cmVpbml0aWFsaXplGAwgASgIUhtzdXBwb3J0c0JhY2tlbmRSZWluaXRpYWxpemU=');
+    'cmVpbml0aWFsaXplGAwgASgIUhtzdXBwb3J0c0JhY2tlbmRSZWluaXRpYWxpemUSXAoUY29uc3'
+    'VtZXNfY3JlZGVudGlhbHMYDSADKA4yKS5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5MaW5r'
+    'ZWRTZXJ2aWNlUhNjb25zdW1lc0NyZWRlbnRpYWxz');
+
+@$core.Deprecated('Use credentialsUpdateDescriptor instead')
+const CredentialsUpdate$json = {
+  '1': 'CredentialsUpdate',
+  '2': [
+    {'1': 'account_link_id', '3': 1, '4': 1, '5': 9, '10': 'accountLinkId'},
+    {
+      '1': 'service',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.accountlink.v1.LinkedService',
+      '10': 'service'
+    },
+    {'1': 'access_token', '3': 3, '4': 1, '5': 9, '10': 'accessToken'},
+    {
+      '1': 'expires_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'expiresAt'
+    },
+  ],
+};
+
+/// Descriptor for `CredentialsUpdate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List credentialsUpdateDescriptor = $convert.base64Decode(
+    'ChFDcmVkZW50aWFsc1VwZGF0ZRImCg9hY2NvdW50X2xpbmtfaWQYASABKAlSDWFjY291bnRMaW'
+    '5rSWQSQwoHc2VydmljZRgCIAEoDjIpLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLkxpbmtl'
+    'ZFNlcnZpY2VSB3NlcnZpY2USIQoMYWNjZXNzX3Rva2VuGAMgASgJUgthY2Nlc3NUb2tlbhI5Cg'
+    'pleHBpcmVzX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0F0');
+
+@$core.Deprecated('Use credentialsSnapshotDescriptor instead')
+const CredentialsSnapshot$json = {
+  '1': 'CredentialsSnapshot',
+  '2': [
+    {
+      '1': 'links',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsUpdate',
+      '10': 'links'
+    },
+  ],
+};
+
+/// Descriptor for `CredentialsSnapshot`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List credentialsSnapshotDescriptor = $convert.base64Decode(
+    'ChNDcmVkZW50aWFsc1NuYXBzaG90EkEKBWxpbmtzGAEgAygLMisua3VzaW50YS5pb3QuY29ubm'
+    'VjdG9yLnYxLkNyZWRlbnRpYWxzVXBkYXRlUgVsaW5rcw==');
+
+@$core.Deprecated('Use credentialsRevokedDescriptor instead')
+const CredentialsRevoked$json = {
+  '1': 'CredentialsRevoked',
+  '2': [
+    {'1': 'account_link_id', '3': 1, '4': 1, '5': 9, '10': 'accountLinkId'},
+  ],
+};
+
+/// Descriptor for `CredentialsRevoked`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List credentialsRevokedDescriptor = $convert.base64Decode(
+    'ChJDcmVkZW50aWFsc1Jldm9rZWQSJgoPYWNjb3VudF9saW5rX2lkGAEgASgJUg1hY2NvdW50TG'
+    'lua0lk');
 
 @$core.Deprecated('Use connectorHandshakeDescriptor instead')
 const ConnectorHandshake$json = {
@@ -139,7 +214,27 @@ const ConnectorHandshake$json = {
       '6': '.kusinta.iot.connector.v1.BackendHealthReport',
       '10': 'backendHealth'
     },
+    {
+      '1': 'known_device_account_links',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6':
+          '.kusinta.iot.connector.v1.ConnectorHandshake.KnownDeviceAccountLinksEntry',
+      '10': 'knownDeviceAccountLinks'
+    },
   ],
+  '3': [ConnectorHandshake_KnownDeviceAccountLinksEntry$json],
+};
+
+@$core.Deprecated('Use connectorHandshakeDescriptor instead')
+const ConnectorHandshake_KnownDeviceAccountLinksEntry$json = {
+  '1': 'KnownDeviceAccountLinksEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': {'7': true},
 };
 
 /// Descriptor for `ConnectorHandshake`. Decode as a `google.protobuf.DescriptorProto`.
@@ -149,7 +244,11 @@ final $typed_data.Uint8List connectorHandshakeDescriptor = $convert.base64Decode
     'bnRhLmlvdC5kZXZpY2UudjEuRGV2aWNlUgxrbm93bkRldmljZXMSQAoLa25vd25fbGlua3MYAy'
     'ADKAsyHy5rdXNpbnRhLmlvdC5saW5rLnYxLkRldmljZUxpbmtSCmtub3duTGlua3MSVAoOYmFj'
     'a2VuZF9oZWFsdGgYBCABKAsyLS5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuQmFja2VuZEhlYW'
-    'x0aFJlcG9ydFINYmFja2VuZEhlYWx0aA==');
+    'x0aFJlcG9ydFINYmFja2VuZEhlYWx0aBKGAQoaa25vd25fZGV2aWNlX2FjY291bnRfbGlua3MY'
+    'BSADKAsySS5rdXNpbnRhLmlvdC5jb25uZWN0b3IudjEuQ29ubmVjdG9ySGFuZHNoYWtlLktub3'
+    'duRGV2aWNlQWNjb3VudExpbmtzRW50cnlSF2tub3duRGV2aWNlQWNjb3VudExpbmtzGkoKHEtu'
+    'b3duRGV2aWNlQWNjb3VudExpbmtzRW50cnkSEAoDa2V5GAEgASgJUgNrZXkSFAoFdmFsdWUYAi'
+    'ABKAlSBXZhbHVlOgI4AQ==');
 
 @$core.Deprecated('Use backendHealthReportDescriptor instead')
 const BackendHealthReport$json = {
@@ -380,6 +479,13 @@ const HandshakeAck$json = {
       '5': 8,
       '10': 'supportsBackendHealth'
     },
+    {
+      '1': 'sends_credentials',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '10': 'sendsCredentials'
+    },
   ],
 };
 
@@ -388,7 +494,8 @@ final $typed_data.Uint8List handshakeAckDescriptor = $convert.base64Decode(
     'CgxIYW5kc2hha2VBY2sSGgoIYWNjZXB0ZWQYASABKAhSCGFjY2VwdGVkEhYKBnJlYXNvbhgCIA'
     'EoCVIGcmVhc29uEkEKCmdhdGV3YXlfaWQYAyABKAsyIi5rdXNpbnRhLmlvdC5pZGVudGl0eS52'
     'MS5HYXRld2F5SWRSCWdhdGV3YXlJZBI2ChdzdXBwb3J0c19iYWNrZW5kX2hlYWx0aBgEIAEoCF'
-    'IVc3VwcG9ydHNCYWNrZW5kSGVhbHRo');
+    'IVc3VwcG9ydHNCYWNrZW5kSGVhbHRoEisKEXNlbmRzX2NyZWRlbnRpYWxzGAUgASgIUhBzZW5k'
+    'c0NyZWRlbnRpYWxz');
 
 @$core.Deprecated('Use deviceAnnouncementDescriptor instead')
 const DeviceAnnouncement$json = {
@@ -409,6 +516,7 @@ const DeviceAnnouncement$json = {
       '5': 9,
       '10': 'pairingRequestId'
     },
+    {'1': 'account_link_id', '3': 4, '4': 1, '5': 9, '10': 'accountLinkId'},
   ],
   '9': [
     {'1': 1, '2': 2},
@@ -420,7 +528,8 @@ const DeviceAnnouncement$json = {
 final $typed_data.Uint8List deviceAnnouncementDescriptor = $convert.base64Decode(
     'ChJEZXZpY2VBbm5vdW5jZW1lbnQSNQoGZGV2aWNlGAIgASgLMh0ua3VzaW50YS5pb3QuZGV2aW'
     'NlLnYxLkRldmljZVIGZGV2aWNlEiwKEnBhaXJpbmdfcmVxdWVzdF9pZBgDIAEoCVIQcGFpcmlu'
-    'Z1JlcXVlc3RJZEoECAEQAlIKZGVzY3JpcHRvcg==');
+    'Z1JlcXVlc3RJZBImCg9hY2NvdW50X2xpbmtfaWQYBCABKAlSDWFjY291bnRMaW5rSWRKBAgBEA'
+    'JSCmRlc2NyaXB0b3I=');
 
 @$core.Deprecated('Use deviceRemovalDescriptor instead')
 const DeviceRemoval$json = {
@@ -913,6 +1022,33 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'reinitializeBackend'
     },
+    {
+      '1': 'credentials_update',
+      '3': 15,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsUpdate',
+      '9': 0,
+      '10': 'credentialsUpdate'
+    },
+    {
+      '1': 'credentials_revoked',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsRevoked',
+      '9': 0,
+      '10': 'credentialsRevoked'
+    },
+    {
+      '1': 'credentials_snapshot',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.CredentialsSnapshot',
+      '9': 0,
+      '10': 'credentialsSnapshot'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -941,5 +1077,10 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'aW50YS5pb3QuY29ubmVjdG9yLnYxLlJlbW92ZUxpbmtIAFIKcmVtb3ZlTGluaxJECgpsaXN0X2'
     'xpbmtzGA0gASgLMiMua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkxpc3RMaW5rc0gAUglsaXN0'
     'TGlua3MSYgoUcmVpbml0aWFsaXplX2JhY2tlbmQYDiABKAsyLS5rdXNpbnRhLmlvdC5jb25uZW'
-    'N0b3IudjEuUmVpbml0aWFsaXplQmFja2VuZEgAUhNyZWluaXRpYWxpemVCYWNrZW5kQgkKB3Bh'
-    'eWxvYWRKBAgEEAU=');
+    'N0b3IudjEuUmVpbml0aWFsaXplQmFja2VuZEgAUhNyZWluaXRpYWxpemVCYWNrZW5kElwKEmNy'
+    'ZWRlbnRpYWxzX3VwZGF0ZRgPIAEoCzIrLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5DcmVkZW'
+    '50aWFsc1VwZGF0ZUgAUhFjcmVkZW50aWFsc1VwZGF0ZRJfChNjcmVkZW50aWFsc19yZXZva2Vk'
+    'GBAgASgLMiwua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNyZWRlbnRpYWxzUmV2b2tlZEgAUh'
+    'JjcmVkZW50aWFsc1Jldm9rZWQSYgoUY3JlZGVudGlhbHNfc25hcHNob3QYESABKAsyLS5rdXNp'
+    'bnRhLmlvdC5jb25uZWN0b3IudjEuQ3JlZGVudGlhbHNTbmFwc2hvdEgAUhNjcmVkZW50aWFsc1'
+    'NuYXBzaG90QgkKB3BheWxvYWRKBAgEEAU=');

@@ -112,6 +112,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.link.v1.ClimateLeadSettings': $6.ClimateLeadSettings$json,
   '.kusinta.iot.connector.v1.BackendHealthReport': $0.BackendHealthReport$json,
   '.kusinta.iot.common.v1.BackendHealth': $8.BackendHealth$json,
+  '.kusinta.iot.connector.v1.ConnectorHandshake.KnownDeviceAccountLinksEntry':
+      $0.ConnectorHandshake_KnownDeviceAccountLinksEntry$json,
   '.kusinta.iot.device.v1.PropertyUpdateBatch': $11.PropertyUpdateBatch$json,
   '.kusinta.iot.device.v1.PropertyUpdate': $11.PropertyUpdate$json,
   '.kusinta.iot.connector.v1.DeviceAnnouncement': $0.DeviceAnnouncement$json,
@@ -153,6 +155,9 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.RemoveLink': $0.RemoveLink$json,
   '.kusinta.iot.connector.v1.ListLinks': $0.ListLinks$json,
   '.kusinta.iot.connector.v1.ReinitializeBackend': $0.ReinitializeBackend$json,
+  '.kusinta.iot.connector.v1.CredentialsUpdate': $0.CredentialsUpdate$json,
+  '.kusinta.iot.connector.v1.CredentialsRevoked': $0.CredentialsRevoked$json,
+  '.kusinta.iot.connector.v1.CredentialsSnapshot': $0.CredentialsSnapshot$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
