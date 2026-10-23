@@ -2097,6 +2097,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'exportHouseholdData'
     },
+    {
+      '1': 'set_home_name',
+      '3': 68,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetHomeName',
+      '9': 0,
+      '10': 'setHomeName'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2216,4 +2225,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'c2Vob2xkX2hhbmRvdmVycxhCIAEoCzItLmt1c2ludGEuaW90LndlYnJ0Yy52MS5MaXN0SG91c2'
     'Vob2xkSGFuZG92ZXJzSABSFmxpc3RIb3VzZWhvbGRIYW5kb3ZlcnMSYAoVZXhwb3J0X2hvdXNl'
     'aG9sZF9kYXRhGEMgASgLMioua3VzaW50YS5pb3Qud2VicnRjLnYxLkV4cG9ydEhvdXNlaG9sZE'
-    'RhdGFIAFITZXhwb3J0SG91c2Vob2xkRGF0YUIJCgdyZXF1ZXN0');
+    'RhdGFIAFITZXhwb3J0SG91c2Vob2xkRGF0YRJICg1zZXRfaG9tZV9uYW1lGEQgASgLMiIua3Vz'
+    'aW50YS5pb3Qud2VicnRjLnYxLlNldEhvbWVOYW1lSABSC3NldEhvbWVOYW1lQgkKB3JlcXVlc3'
+    'Q=');

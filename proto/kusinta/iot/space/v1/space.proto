@@ -12,6 +12,12 @@ option optimize_for = SPEED;
 message Space {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
   kusinta.iot.common.v1.SpaceType space_type = 2;
+
+  // On an apartment, the building's fixed, readable identifier for it — its number, say "Lgh
+  // 1102" — given by the property owner or the gateway's administrators when it is created and
+  // changed only by them (webrtc.v1.CreateSpace, webrtc.v1.UpdateSpace); never a generated id,
+  // and never touched by a household's handover. The household's own name for the home is
+  // home_name.
   string name = 3;
   string description = 4;
   int32 floor = 5; // meaningful for FLOOR type
@@ -59,6 +65,12 @@ message Space {
   // Set when members are not listed to this caller, so that an empty list is not read as
   // nobody being filed here.
   bool members_withheld = 14;
+
+  // On an apartment, the name its household gave the home (webrtc.v1.SetHomeName), which may
+  // name them ("The Svenssons"). Given to the home's residents only: empty for anyone else,
+  // so a client shows it to residents alone and the apartment's name to everyone. Wiped at
+  // the home's handover. Empty on every other space.
+  string home_name = 15;
 }
 
 // One membership of a space.

@@ -19,6 +19,7 @@ from kusinta.iot.common.v1 import types_pb2
 from kusinta.iot.device.v1 import descriptor_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.signaling.v1 import signaling_pb2
+from kusinta.iot.space.v1 import space_pb2
 from kusinta.iot.webrtc.v1 import envelope_pb2, household_pb2, invite_pb2, management_pb2, members_pb2
 
 c = commissioning_pb2
@@ -213,6 +214,28 @@ def test_a_handover_leaves_what_to_take_and_release_to_the_reads_that_hold_them(
     fields = h.HouseholdHandover.DESCRIPTOR.fields_by_name
 
     assert ("personal_device_ids" in fields, "linked_services" in fields) == (False, False)
+
+
+def test_a_handover_says_when_the_last_residency_ending_started_it():
+    handover = h.HouseholdHandover(handover_id="h-2", vacated=True)
+
+    decoded = _round_trip(handover)
+    assert (decoded.vacated, decoded.started_by_staff) == (True, False)
+
+
+def test_an_apartment_carries_a_home_name_apart_from_its_name():
+    space = space_pb2.Space(name="Lgh 1102", home_name="Our place")
+
+    decoded = _round_trip(space)
+    assert (decoded.name, decoded.home_name) == ("Lgh 1102", "Our place")
+
+
+def test_a_home_name_is_set_for_one_home():
+    request = management_pb2.ManagementRequest(
+        set_home_name=h.SetHomeName(home_id=identity_pb2.SpaceId(value="home-15"), name="Our place")
+    )
+
+    assert _round_trip(request).set_home_name.name == "Our place"
 
 
 def test_a_handover_is_pending_cancelled_or_done():

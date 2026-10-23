@@ -4,6 +4,7 @@ import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
 import { MembershipRelation, MembershipRelationSchema } from '../kusinta/iot/access/v1/roles_pb.js'
 import { AssetOwnerSchema } from '../kusinta/iot/common/v1/types_pb.js'
 import { DeviceDescriptorSchema } from '../kusinta/iot/device/v1/descriptor_pb.js'
+import { SpaceSchema } from '../kusinta/iot/space/v1/space_pb.js'
 import {
   CommissioningGrantSchema,
   CommissioningGrantState,
@@ -276,6 +277,16 @@ describe('household handover', () => {
     expect(decoded).toMatchObject({ startedByStaff: true, staffConfirmableFrom: { seconds: 1_790_604_800n } })
   })
 
+  it('says when it was started by the home’s last residency ending', () => {
+    const decoded = onTheWire(HouseholdHandoverSchema, {
+      handoverId: 'h-2',
+      state: HouseholdHandoverState.PENDING,
+      vacated: true,
+      staffConfirmableFrom: { seconds: 1_790_604_800n },
+    })
+    expect([decoded.vacated, decoded.startedByStaff]).toEqual([true, false])
+  })
+
   it('is answered with the handover when started', () => {
     const decoded = onTheWire(ManagementResultSchema, {
       result: { case: 'householdHandover', value: { handoverId: 'h-1' } },
@@ -295,6 +306,24 @@ describe('household handover', () => {
       result: { case: 'householdHandovers', value: { handovers: [{ handoverId: 'h-1' }] } },
     })
     expect(decoded.result).toMatchObject({ case: 'householdHandovers', value: { handovers: [{ handoverId: 'h-1' }] } })
+  })
+})
+
+describe('home name', () => {
+  it('travels on the apartment apart from the name the property owner gave it', () => {
+    const decoded = onTheWire(SpaceSchema, {
+      spaceId: { value: 'home-15' },
+      name: 'Lgh 1102',
+      homeName: 'Our place',
+    })
+    expect([decoded.name, decoded.homeName]).toEqual(['Lgh 1102', 'Our place'])
+  })
+
+  it('is set by a management request for one home', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'setHomeName', value: { homeId: { value: 'home-15' }, name: 'Our place' } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'setHomeName', value: { name: 'Our place' } })
   })
 })
 

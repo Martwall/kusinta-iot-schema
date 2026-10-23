@@ -126,9 +126,9 @@ option optimize_for = SPEED;
 // who lives there. Outside what it covers the installer sees a home as service, as before.
 //
 // A grant ends at ends_at, when it is ended (webrtc.v1.EndCommissioningGrant), when the
-// installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home when it is
-// wiped, at its handover or when its last residency ends (webrtc.v1 household.proto, WIPE): a
-// grant never passes from one household to the next. What it covered goes from the
+// installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home when its last
+// residency ends and when it is wiped (webrtc.v1 household.proto, VACANCY and WIPE): a grant
+// never passes from one household to the next. What it covered goes from the
 // installer's sessions at once, and a test they started under it is ABORTED, its outputs
 // returning to their normal control as webrtc.v1.ConcludeCommissioningTest says, floor zones
 // switching on no faster than "floor.max_zones_switching_on" allows. Until it ends —

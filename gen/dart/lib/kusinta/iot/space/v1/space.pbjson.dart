@@ -96,6 +96,7 @@ const Space$json = {
       '10': 'members'
     },
     {'1': 'members_withheld', '3': 14, '4': 1, '5': 8, '10': 'membersWithheld'},
+    {'1': 'home_name', '3': 15, '4': 1, '5': 9, '10': 'homeName'},
   ],
 };
 
@@ -114,7 +115,8 @@ final $typed_data.Uint8List spaceDescriptor = $convert.base64Decode(
     'ZW5hbnRJZBJBCgpnYXRld2F5X2lkGAsgASgLMiIua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuR2'
     'F0ZXdheUlkUglnYXRld2F5SWQSGwoJdGltZV96b25lGAwgASgJUgh0aW1lWm9uZRI7CgdtZW1i'
     'ZXJzGA0gAygLMiEua3VzaW50YS5pb3Quc3BhY2UudjEuU3BhY2VNZW1iZXJSB21lbWJlcnMSKQ'
-    'oQbWVtYmVyc193aXRoaGVsZBgOIAEoCFIPbWVtYmVyc1dpdGhoZWxk');
+    'oQbWVtYmVyc193aXRoaGVsZBgOIAEoCFIPbWVtYmVyc1dpdGhoZWxkEhsKCWhvbWVfbmFtZRgP'
+    'IAEoCVIIaG9tZU5hbWU=');
 
 @$core.Deprecated('Use spaceMemberDescriptor instead')
 const SpaceMember$json = {

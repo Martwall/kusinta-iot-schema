@@ -32,8 +32,9 @@ export 'household.pbenum.dart';
 /// never a residency id (INVALID_REQUEST). A resident of the home who is not a household admin
 /// is acknowledged and nothing changes; anyone else is "not_a_member", as members.proto has it.
 /// A demotion that would leave the home with no household admin is refused as
-/// "last_household_admin" (LAST ADMIN). Ends the promotion requests the demoted member made for
-/// the home.
+/// "last_household_admin" (LAST ADMIN). Ends, with the demotion, the promotion requests the
+/// demoted member made for the home and the household invites they created there, with the
+/// join requests those invites made.
 class DemoteHouseholdAdmin extends $pb.GeneratedMessage {
   factory DemoteHouseholdAdmin({
     $0.SpaceId? homeId,
@@ -300,7 +301,7 @@ class StartHouseholdHandover extends $pb.GeneratedMessage {
   $0.SpaceId ensureHomeId() => $_ensure(0);
 }
 
-/// Confirms a pending handover (HANDOVER, 3–4). Answered with ManagementAck once every
+/// Confirms a pending handover (HANDOVER, 3–4; VACANCY). Answered with ManagementAck once every
 /// membership of the home has ended; the wipe follows, and the handover is pushed as DONE.
 /// Staff confirming before staff_confirmable_from are refused as FAILED_PRECONDITION with
 /// metadata {"reason": "notice_running"}. A handover that is not pending, or that the caller
@@ -364,7 +365,7 @@ class ConfirmHouseholdHandover extends $pb.GeneratedMessage {
   void clearHandoverId() => $_clearField(1);
 }
 
-/// Cancels a pending handover (HANDOVER, 3); nothing has changed, and nothing does. Answered
+/// Cancels a pending handover (HANDOVER, 3; VACANCY); nothing has changed, and nothing does. Answered
 /// with ManagementAck, and pushed as CANCELLED. A handover that is not pending, or that the
 /// caller may not cancel, is refused as NOT_ENTITLED.
 class CancelHouseholdHandover extends $pb.GeneratedMessage {
@@ -428,7 +429,8 @@ class CancelHouseholdHandover extends $pb.GeneratedMessage {
 
 /// Lists the pending handovers of the homes under a space the caller may be told of, answered
 /// with HouseholdHandovers: unset root_space_id, every one. A home's handover is told to its
-/// residents, and to the property owner and the gateway administrators who reach it. Anyone may
+/// residents, and to the property owner and the gateway administrators who reach it; a
+/// vacated one to the departing household instead of residents (VACANCY). Anyone may
 /// ask; nobody is refused, and a caller told of none gets none.
 class ListHouseholdHandovers extends $pb.GeneratedMessage {
   factory ListHouseholdHandovers({
@@ -509,6 +511,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     $1.Timestamp? startedAt,
     $1.Timestamp? staffConfirmableFrom,
     $1.Timestamp? endedAt,
+    $core.bool? vacated,
   }) {
     final result = create();
     if (handoverId != null) result.handoverId = handoverId;
@@ -521,6 +524,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     if (staffConfirmableFrom != null)
       result.staffConfirmableFrom = staffConfirmableFrom;
     if (endedAt != null) result.endedAt = endedAt;
+    if (vacated != null) result.vacated = vacated;
     return result;
   }
 
@@ -557,6 +561,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
         subBuilder: $1.Timestamp.create)
     ..aOM<$1.Timestamp>(9, _omitFieldNames ? '' : 'endedAt',
         subBuilder: $1.Timestamp.create)
+    ..aOB(10, _omitFieldNames ? '' : 'vacated')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -635,7 +640,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   void clearStartedByName() => $_clearField(5);
 
   /// Set when the property owner or a gateway administrator started it, rather than the
-  /// household.
+  /// household. Neither this nor started_by is set when it was vacated.
   @$pb.TagNumber(6)
   $core.bool get startedByStaff => $_getBF(5);
   @$pb.TagNumber(6)
@@ -656,10 +661,11 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   $1.Timestamp ensureStartedAt() => $_ensure(6);
 
-  /// From when the property owner or a gateway administrator may confirm it: 7 days after
-  /// started_at, or started_at itself on a home with no resident. A residency that starts while
-  /// it is pending moves it to 7 days after that, and the handover is pushed again, so that a
-  /// household that moves in during it has its notice too.
+  /// From when the property owner or a gateway administrator may confirm it, and when a vacated
+  /// one completes on its own: 7 days after started_at, and never sooner than 7 days after the
+  /// home's last residency ended. A residency that starts while it is pending moves it to 7
+  /// days after that, and the handover is pushed again, so that a household that moves in
+  /// during it has its notice too.
   @$pb.TagNumber(8)
   $1.Timestamp get staffConfirmableFrom => $_getN(7);
   @$pb.TagNumber(8)
@@ -682,6 +688,94 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   void clearEndedAt() => $_clearField(9);
   @$pb.TagNumber(9)
   $1.Timestamp ensureEndedAt() => $_ensure(8);
+
+  /// Set when the home's last residency ending started it, rather than a request (VACANCY).
+  @$pb.TagNumber(10)
+  $core.bool get vacated => $_getBF(9);
+  @$pb.TagNumber(10)
+  set vacated($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasVacated() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearVacated() => $_clearField(10);
+}
+
+/// Sets the household's own name for its home (space.v1.Space.home_name). Answered with
+/// ManagementAck. Any resident of the home may — a name is not governance, so it is not kept to
+/// household admins; anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+/// (INVALID_REQUEST otherwise). The name is trimmed; empty clears it, and one longer than 64
+/// characters is refused as INVALID_REQUEST with metadata {"reason": "home_name"}. It never
+/// changes the apartment's own name (space.v1.Space.name), and it is wiped at the home's
+/// handover.
+class SetHomeName extends $pb.GeneratedMessage {
+  factory SetHomeName({
+    $0.SpaceId? homeId,
+    $core.String? name,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (name != null) result.name = name;
+    return result;
+  }
+
+  SetHomeName._();
+
+  factory SetHomeName.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetHomeName.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetHomeName',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..aOS(2, _omitFieldNames ? '' : 'name')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetHomeName clone() => SetHomeName()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetHomeName copyWith(void Function(SetHomeName) updates) =>
+      super.copyWith((message) => updates(message as SetHomeName))
+          as SetHomeName;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetHomeName create() => SetHomeName._();
+  @$core.override
+  SetHomeName createEmptyInstance() => create();
+  static $pb.PbList<SetHomeName> createRepeated() => $pb.PbList<SetHomeName>();
+  @$core.pragma('dart2js:noInline')
+  static SetHomeName getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetHomeName>(create);
+  static SetHomeName? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get name => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set name($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearName() => $_clearField(2);
 }
 
 /// The answer to ListHouseholdHandovers.
@@ -740,14 +834,16 @@ class HouseholdHandovers extends $pb.GeneratedMessage {
 
 /// Asks for one part of a home's export (EXPORT), answered with a HouseholdExport. The first
 /// part is asked with no part_token, and each further one with the next_part_token of the part
-/// before, until one comes with none. The home's residents only; anyone else is refused as
-/// NOT_ENTITLED.
+/// before, until one comes with none. The home's residents only, and during a vacated handover
+/// the departing household, as of when their residency ended (VACANCY); anyone else is refused
+/// as NOT_ENTITLED.
 ///
 /// A part_token says where the next part starts. The gateway keeps nothing for it: it checks
 /// the token it minted when it is used, against the caller's rights then, so an interrupted
 /// export resumes where it stopped, within the caller's residency. A token the gateway did not
-/// mint, or minted for another caller, home or residency — one that has ended included — is
-/// refused as INVALID_REQUEST with metadata {"reason": "part_token"}.
+/// mint, or minted for another caller, home or residency — one that has ended included, save
+/// during that home's vacated handover — is refused as INVALID_REQUEST with metadata
+/// {"reason": "part_token"}.
 class ExportHouseholdData extends $pb.GeneratedMessage {
   factory ExportHouseholdData({
     $0.SpaceId? homeId,

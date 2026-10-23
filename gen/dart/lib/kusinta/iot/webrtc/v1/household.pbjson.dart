@@ -251,6 +251,7 @@ const HouseholdHandover$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'endedAt'
     },
+    {'1': 'vacated', '3': 10, '4': 1, '5': 8, '10': 'vacated'},
   ],
 };
 
@@ -265,7 +266,28 @@ final $typed_data.Uint8List householdHandoverDescriptor = $convert.base64Decode(
     'cnRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXN0YXJ0ZWRBdBJQCh'
     'ZzdGFmZl9jb25maXJtYWJsZV9mcm9tGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt'
     'cFIUc3RhZmZDb25maXJtYWJsZUZyb20SNQoIZW5kZWRfYXQYCSABKAsyGi5nb29nbGUucHJvdG'
-    '9idWYuVGltZXN0YW1wUgdlbmRlZEF0');
+    '9idWYuVGltZXN0YW1wUgdlbmRlZEF0EhgKB3ZhY2F0ZWQYCiABKAhSB3ZhY2F0ZWQ=');
+
+@$core.Deprecated('Use setHomeNameDescriptor instead')
+const SetHomeName$json = {
+  '1': 'SetHomeName',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+  ],
+};
+
+/// Descriptor for `SetHomeName`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setHomeNameDescriptor = $convert.base64Decode(
+    'CgtTZXRIb21lTmFtZRI5Cgdob21lX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
+    'EuU3BhY2VJZFIGaG9tZUlkEhIKBG5hbWUYAiABKAlSBG5hbWU=');
 
 @$core.Deprecated('Use householdHandoversDescriptor instead')
 const HouseholdHandovers$json = {

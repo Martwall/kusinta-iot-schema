@@ -23,8 +23,9 @@ export declare const file_kusinta_iot_webrtc_v1_household: GenFile;
  * never a residency id (INVALID_REQUEST). A resident of the home who is not a household admin
  * is acknowledged and nothing changes; anyone else is "not_a_member", as members.proto has it.
  * A demotion that would leave the home with no household admin is refused as
- * "last_household_admin" (LAST ADMIN). Ends the promotion requests the demoted member made for
- * the home.
+ * "last_household_admin" (LAST ADMIN). Ends, with the demotion, the promotion requests the
+ * demoted member made for the home and the household invites they created there, with the
+ * join requests those invites made.
  *
  * @generated from message kusinta.iot.webrtc.v1.DemoteHouseholdAdmin
  */
@@ -114,7 +115,7 @@ export declare type StartHouseholdHandover = Message<"kusinta.iot.webrtc.v1.Star
 export declare const StartHouseholdHandoverSchema: GenMessage<StartHouseholdHandover>;
 
 /**
- * Confirms a pending handover (HANDOVER, 3–4). Answered with ManagementAck once every
+ * Confirms a pending handover (HANDOVER, 3–4; VACANCY). Answered with ManagementAck once every
  * membership of the home has ended; the wipe follows, and the handover is pushed as DONE.
  * Staff confirming before staff_confirmable_from are refused as FAILED_PRECONDITION with
  * metadata {"reason": "notice_running"}. A handover that is not pending, or that the caller
@@ -136,7 +137,7 @@ export declare type ConfirmHouseholdHandover = Message<"kusinta.iot.webrtc.v1.Co
 export declare const ConfirmHouseholdHandoverSchema: GenMessage<ConfirmHouseholdHandover>;
 
 /**
- * Cancels a pending handover (HANDOVER, 3); nothing has changed, and nothing does. Answered
+ * Cancels a pending handover (HANDOVER, 3; VACANCY); nothing has changed, and nothing does. Answered
  * with ManagementAck, and pushed as CANCELLED. A handover that is not pending, or that the
  * caller may not cancel, is refused as NOT_ENTITLED.
  *
@@ -158,7 +159,8 @@ export declare const CancelHouseholdHandoverSchema: GenMessage<CancelHouseholdHa
 /**
  * Lists the pending handovers of the homes under a space the caller may be told of, answered
  * with HouseholdHandovers: unset root_space_id, every one. A home's handover is told to its
- * residents, and to the property owner and the gateway administrators who reach it. Anyone may
+ * residents, and to the property owner and the gateway administrators who reach it; a
+ * vacated one to the departing household instead of residents (VACANCY). Anyone may
  * ask; nobody is refused, and a caller told of none gets none.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListHouseholdHandovers
@@ -221,7 +223,7 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
 
   /**
    * Set when the property owner or a gateway administrator started it, rather than the
-   * household.
+   * household. Neither this nor started_by is set when it was vacated.
    *
    * @generated from field: bool started_by_staff = 6;
    */
@@ -233,10 +235,11 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
   startedAt?: Timestamp | undefined;
 
   /**
-   * From when the property owner or a gateway administrator may confirm it: 7 days after
-   * started_at, or started_at itself on a home with no resident. A residency that starts while
-   * it is pending moves it to 7 days after that, and the handover is pushed again, so that a
-   * household that moves in during it has its notice too.
+   * From when the property owner or a gateway administrator may confirm it, and when a vacated
+   * one completes on its own: 7 days after started_at, and never sooner than 7 days after the
+   * home's last residency ended. A residency that starts while it is pending moves it to 7
+   * days after that, and the handover is pushed again, so that a household that moves in
+   * during it has its notice too.
    *
    * @generated from field: google.protobuf.Timestamp staff_confirmable_from = 8;
    */
@@ -248,6 +251,13 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * @generated from field: google.protobuf.Timestamp ended_at = 9;
    */
   endedAt?: Timestamp | undefined;
+
+  /**
+   * Set when the home's last residency ending started it, rather than a request (VACANCY).
+   *
+   * @generated from field: bool vacated = 10;
+   */
+  vacated: boolean;
 };
 
 /**
@@ -255,6 +265,35 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
  * Use `create(HouseholdHandoverSchema)` to create a new message.
  */
 export declare const HouseholdHandoverSchema: GenMessage<HouseholdHandover>;
+
+/**
+ * Sets the household's own name for its home (space.v1.Space.home_name). Answered with
+ * ManagementAck. Any resident of the home may — a name is not governance, so it is not kept to
+ * household admins; anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+ * (INVALID_REQUEST otherwise). The name is trimmed; empty clears it, and one longer than 64
+ * characters is refused as INVALID_REQUEST with metadata {"reason": "home_name"}. It never
+ * changes the apartment's own name (space.v1.Space.name), and it is wiped at the home's
+ * handover.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetHomeName
+ */
+export declare type SetHomeName = Message<"kusinta.iot.webrtc.v1.SetHomeName"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetHomeName.
+ * Use `create(SetHomeNameSchema)` to create a new message.
+ */
+export declare const SetHomeNameSchema: GenMessage<SetHomeName>;
 
 /**
  * The answer to ListHouseholdHandovers.
@@ -277,14 +316,16 @@ export declare const HouseholdHandoversSchema: GenMessage<HouseholdHandovers>;
 /**
  * Asks for one part of a home's export (EXPORT), answered with a HouseholdExport. The first
  * part is asked with no part_token, and each further one with the next_part_token of the part
- * before, until one comes with none. The home's residents only; anyone else is refused as
- * NOT_ENTITLED.
+ * before, until one comes with none. The home's residents only, and during a vacated handover
+ * the departing household, as of when their residency ended (VACANCY); anyone else is refused
+ * as NOT_ENTITLED.
  *
  * A part_token says where the next part starts. The gateway keeps nothing for it: it checks
  * the token it minted when it is used, against the caller's rights then, so an interrupted
  * export resumes where it stopped, within the caller's residency. A token the gateway did not
- * mint, or minted for another caller, home or residency — one that has ended included — is
- * refused as INVALID_REQUEST with metadata {"reason": "part_token"}.
+ * mint, or minted for another caller, home or residency — one that has ended included, save
+ * during that home's vacated handover — is refused as INVALID_REQUEST with metadata
+ * {"reason": "part_token"}.
  *
  * @generated from message kusinta.iot.webrtc.v1.ExportHouseholdData
  */

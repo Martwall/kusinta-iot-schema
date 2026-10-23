@@ -12,7 +12,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { CancelHouseholdHandover, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
+import type { CancelHouseholdHandover, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
@@ -33,6 +33,9 @@ export declare const file_kusinta_iot_webrtc_v1_management: GenFile;
  * Under an apartment only a room may be created. Creating in a home is guarded as
  * UpdateSpace is, and refused whatever the caller where UpdateSpace's structure rules would
  * refuse it.
+ *
+ * An apartment is created by the property owner or the gateway's administrators, with a name
+ * that identifies it in the building (space.v1.Space.name); an empty name is INVALID_REQUEST.
  *
  * @generated from message kusinta.iot.webrtc.v1.CreateSpace
  */
@@ -93,6 +96,11 @@ export declare const CreateSpaceSchema: GenMessage<CreateSpace>;
  * boundary is removed. Changing the type of a space that has members needs
  * ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, who see them, and is refused if it would
  * leave a RESIDENT membership on a room.
+ *
+ * The name of an apartment is the building's identifier for it (space.v1.Space.name), and is
+ * changed only by the property owner or the gateway's administrators: from anyone else, a
+ * request setting it is refused whole as NOT_ENTITLED. The household names its home with
+ * SetHomeName instead.
  *
  * Every descriptive field carries explicit presence: absent means leave it alone, present
  * means set it to this — including to the empty string, which is how a description is
@@ -2294,6 +2302,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: ExportHouseholdData;
     case: "exportHouseholdData";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetHomeName set_home_name = 68;
+     */
+    value: SetHomeName;
+    case: "setHomeName";
   } | { case: undefined; value?: undefined };
 };
 

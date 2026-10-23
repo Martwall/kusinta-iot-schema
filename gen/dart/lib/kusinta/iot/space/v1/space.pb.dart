@@ -37,6 +37,7 @@ class Space extends $pb.GeneratedMessage {
     $core.String? timeZone,
     $core.Iterable<SpaceMember>? members,
     $core.bool? membersWithheld,
+    $core.String? homeName,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -53,6 +54,7 @@ class Space extends $pb.GeneratedMessage {
     if (timeZone != null) result.timeZone = timeZone;
     if (members != null) result.members.addAll(members);
     if (membersWithheld != null) result.membersWithheld = membersWithheld;
+    if (homeName != null) result.homeName = homeName;
     return result;
   }
 
@@ -96,6 +98,7 @@ class Space extends $pb.GeneratedMessage {
     ..pc<SpaceMember>(13, _omitFieldNames ? '' : 'members', $pb.PbFieldType.PM,
         subBuilder: SpaceMember.create)
     ..aOB(14, _omitFieldNames ? '' : 'membersWithheld')
+    ..aOS(15, _omitFieldNames ? '' : 'homeName')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -137,6 +140,11 @@ class Space extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearSpaceType() => $_clearField(2);
 
+  /// On an apartment, the building's fixed, readable identifier for it — its number, say "Lgh
+  /// 1102" — given by the property owner or the gateway's administrators when it is created and
+  /// changed only by them (webrtc.v1.CreateSpace, webrtc.v1.UpdateSpace); never a generated id,
+  /// and never touched by a household's handover. The household's own name for the home is
+  /// home_name.
   @$pb.TagNumber(3)
   $core.String get name => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -271,6 +279,19 @@ class Space extends $pb.GeneratedMessage {
   $core.bool hasMembersWithheld() => $_has(13);
   @$pb.TagNumber(14)
   void clearMembersWithheld() => $_clearField(14);
+
+  /// On an apartment, the name its household gave the home (webrtc.v1.SetHomeName), which may
+  /// name them ("The Svenssons"). Given to the home's residents only: empty for anyone else,
+  /// so a client shows it to residents alone and the apartment's name to everyone. Wiped at
+  /// the home's handover. Empty on every other space.
+  @$pb.TagNumber(15)
+  $core.String get homeName => $_getSZ(14);
+  @$pb.TagNumber(15)
+  set homeName($core.String value) => $_setString(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasHomeName() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearHomeName() => $_clearField(15);
 }
 
 /// One membership of a space.

@@ -40,6 +40,9 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 /// Under an apartment only a room may be created. Creating in a home is guarded as
 /// UpdateSpace is, and refused whatever the caller where UpdateSpace's structure rules would
 /// refuse it.
+///
+/// An apartment is created by the property owner or the gateway's administrators, with a name
+/// that identifies it in the building (space.v1.Space.name); an empty name is INVALID_REQUEST.
 class CreateSpace extends $pb.GeneratedMessage {
   factory CreateSpace({
     $8.SpaceType? spaceType,
@@ -177,6 +180,11 @@ enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
 /// boundary is removed. Changing the type of a space that has members needs
 /// ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, who see them, and is refused if it would
 /// leave a RESIDENT membership on a room.
+///
+/// The name of an apartment is the building's identifier for it (space.v1.Space.name), and is
+/// changed only by the property owner or the gateway's administrators: from anyone else, a
+/// request setting it is refused whole as NOT_ENTITLED. The household names its home with
+/// SetHomeName instead.
 ///
 /// Every descriptive field carries explicit presence: absent means leave it alone, present
 /// means set it to this — including to the empty string, which is how a description is
@@ -4643,6 +4651,7 @@ enum ManagementRequest_Request {
   cancelHouseholdHandover,
   listHouseholdHandovers,
   exportHouseholdData,
+  setHomeName,
   notSet
 }
 
@@ -4716,6 +4725,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     $5.CancelHouseholdHandover? cancelHouseholdHandover,
     $5.ListHouseholdHandovers? listHouseholdHandovers,
     $5.ExportHouseholdData? exportHouseholdData,
+    $5.SetHomeName? setHomeName,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -4813,6 +4823,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.listHouseholdHandovers = listHouseholdHandovers;
     if (exportHouseholdData != null)
       result.exportHouseholdData = exportHouseholdData;
+    if (setHomeName != null) result.setHomeName = setHomeName;
     return result;
   }
 
@@ -4894,6 +4905,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     65: ManagementRequest_Request.cancelHouseholdHandover,
     66: ManagementRequest_Request.listHouseholdHandovers,
     67: ManagementRequest_Request.exportHouseholdData,
+    68: ManagementRequest_Request.setHomeName,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -4968,7 +4980,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       64,
       65,
       66,
-      67
+      67,
+      68
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -5128,6 +5141,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<$5.ExportHouseholdData>(
         67, _omitFieldNames ? '' : 'exportHouseholdData',
         subBuilder: $5.ExportHouseholdData.create)
+    ..aOM<$5.SetHomeName>(68, _omitFieldNames ? '' : 'setHomeName',
+        subBuilder: $5.SetHomeName.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -5922,6 +5937,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearExportHouseholdData() => $_clearField(67);
   @$pb.TagNumber(67)
   $5.ExportHouseholdData ensureExportHouseholdData() => $_ensure(66);
+
+  @$pb.TagNumber(68)
+  $5.SetHomeName get setHomeName => $_getN(67);
+  @$pb.TagNumber(68)
+  set setHomeName($5.SetHomeName value) => $_setField(68, value);
+  @$pb.TagNumber(68)
+  $core.bool hasSetHomeName() => $_has(67);
+  @$pb.TagNumber(68)
+  void clearSetHomeName() => $_clearField(68);
+  @$pb.TagNumber(68)
+  $5.SetHomeName ensureSetHomeName() => $_ensure(67);
 }
 
 const $core.bool _omitFieldNames =

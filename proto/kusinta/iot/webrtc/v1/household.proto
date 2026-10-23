@@ -34,7 +34,8 @@ option optimize_for = SPEED;
 //   * starting, confirming and cancelling the home's handover (HANDOVER).
 // A resident who is not a household admin is refused each of these as NOT_ENTITLED. Every
 // resident keeps the rest of what a resident may do: room targets, modes, comfort-load
-// windows, links between the home's devices, the lock on device controls, and leaving.
+// windows, links between the home's devices, the lock on device controls, naming the home
+// (SetHomeName), and leaving.
 //
 // PROMOTION. A household admin asks a resident of the home to become one with
 // RequestPromotion naming home_id and the resident's user id, and the resident accepts or
@@ -62,7 +63,7 @@ option optimize_for = SPEED;
 // wiped: staff end the residency of its last household admin (RemoveUserFromSpace or
 // RemoveFromGateway, by residency id); or that admin's account is deleted at the api-server,
 // which ends their memberships without any request on this leg, so nothing here can refuse it.
-// Either way, a home left with no resident at all is wiped as HANDOVER says.
+// Either way, a home left with no resident at all starts a handover (HANDOVER, VACANCY).
 //
 // STAFF APPOINTMENT. The property owner and the gateway's administrators (ROLE_PROPERTY_OWNER,
 // ROLE_GATEWAY_ADMIN) do not govern a home, but may give a home with no household admin its
@@ -117,23 +118,43 @@ option optimize_for = SPEED;
 //      by the property owner or a gateway administrator from staff_confirmable_from on, so
 //      that a household that moved out without a word does not hold the home for ever.
 //      Cancelled (CancelHouseholdHandover) while pending by a household admin of the home, or
-//      by the property owner or a gateway administrator.
+//      by the property owner or a gateway administrator. staff_confirmable_from is never
+//      sooner than 7 days after the home's last residency ended, so ending a lone resident
+//      and starting a handover anew does not shorten the notice.
 //   4. On confirmation every membership on the home's apartment and its rooms ends, of every
 //      relation, SERVICE included, with every pending invite and join request on them, every
 //      promotion request for the home; the household's sessions lose the home at once
 //      (LivePermissionUpdate). The home is then wiped (WIPE), and nobody is filed on it again
 //      until the wipe is done.
-// The same wipe follows whenever the last residency of a home ends, however it ends: a home
-// nobody lives in keeps nothing of the household that left. A handover pending then is DONE.
+//
+// VACANCY. When the last residency of a home ends other than by a confirmed handover — staff
+// end a lone resident, the last residents leave, an account is deleted — nothing is wiped at
+// once. The home is handed over as above, under the same notice: a handover starts, PENDING
+// and marked vacated, or one already pending carries on, its staff_confirmable_from moved to 7
+// days after that residency ended. It is told, and pushed as it changes, to the property owner
+// and the gateway administrators who reach the home, and to the departing household — the
+// members whose residencies were the home's last, each from their own sessions, for as long as
+// it is pending; nobody else learns of it. During the notice:
+//   * the departing household may export what they could read of the home when their
+//     residency ended (EXPORT), and its household admins may confirm the handover at once or
+//     cancel it, as the property owner and the gateway administrators may;
+//   * a member of the departing household who becomes a resident again cancels it, as if it
+//     had not started; anyone else becoming a resident restarts the notice
+//     (staff_confirmable_from), and the handover then goes on as one on a home with
+//     residents.
+// The wipe follows on confirmation, or on its own once staff_confirmable_from has passed with
+// nobody living in the home: a home nobody lives in keeps nothing of the household that left
+// for longer than the notice. A cancelled one leaves the home as it is until the next
+// handover.
 //
 // WIPE. A home's wipe is a step on the gateway's own records, all of it or none, and the
 // effects outside them that it queues; nothing in the step waits on a network or a device.
 //
 // The step deletes or anonymises, together:
 //   * everything recorded per home: its rooms' history and climate summaries, their targets,
-//     modes and comfort settings, its device events, its open problems, and the gateway's
-//     models and plans for it. Climate summaries over spaces that include it are recomputed
-//     without it;
+//     modes and comfort settings, its device events, the household's name for it
+//     (space.v1.Space.home_name), and the gateway's models and plans for it. Climate
+//     summaries over spaces that include it are recomputed without it;
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
 //     addresses, and the record of who did what in the home. What the gateway keeps of a
@@ -149,7 +170,14 @@ option optimize_for = SPEED;
 //     and the links made between them — queued in the same step as writes of their defaults
 //     and removals of those links.
 // Every room of the home is renamed in the step as GatewayDeleted renames spaces ("Room 1",
-// "Room 2"), and its description cleared. Devices stay filed where they are: the building's own
+// "Room 2"), and its description cleared. The apartment's own name, which the property owner
+// gave it (space.v1.Space.name), is the building's identifier and is not touched.
+//
+// Open problems about the devices that stay with the home (reporting.v1.Problem) are kept:
+// they are service signals, and must outlive the household so that the device still gets
+// fixed. A problem carries nothing a household entered and names no person, and keeps none
+// after the wipe; a device released with its owner takes its problems with it, as its removal
+// clears them. Devices stay filed where they are: the building's own
 // devices, those a household owns as an asset among them, stay with the home for the next
 // household (common.v1.AssetOwner); a device a resident owns is released, as when its owner
 // moves out (access.v1.MembershipRelation). What the host's own log holds is as GatewayDeleted
@@ -180,8 +208,9 @@ option optimize_for = SPEED;
 // never a residency id (INVALID_REQUEST). A resident of the home who is not a household admin
 // is acknowledged and nothing changes; anyone else is "not_a_member", as members.proto has it.
 // A demotion that would leave the home with no household admin is refused as
-// "last_household_admin" (LAST ADMIN). Ends the promotion requests the demoted member made for
-// the home.
+// "last_household_admin" (LAST ADMIN). Ends, with the demotion, the promotion requests the
+// demoted member made for the home and the household invites they created there, with the
+// join requests those invites made.
 message DemoteHouseholdAdmin {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   kusinta.iot.identity.v1.UserId user_id = 2;
@@ -221,7 +250,7 @@ message StartHouseholdHandover {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
 }
 
-// Confirms a pending handover (HANDOVER, 3–4). Answered with ManagementAck once every
+// Confirms a pending handover (HANDOVER, 3–4; VACANCY). Answered with ManagementAck once every
 // membership of the home has ended; the wipe follows, and the handover is pushed as DONE.
 // Staff confirming before staff_confirmable_from are refused as FAILED_PRECONDITION with
 // metadata {"reason": "notice_running"}. A handover that is not pending, or that the caller
@@ -230,7 +259,7 @@ message ConfirmHouseholdHandover {
   string handover_id = 1;
 }
 
-// Cancels a pending handover (HANDOVER, 3); nothing has changed, and nothing does. Answered
+// Cancels a pending handover (HANDOVER, 3; VACANCY); nothing has changed, and nothing does. Answered
 // with ManagementAck, and pushed as CANCELLED. A handover that is not pending, or that the
 // caller may not cancel, is refused as NOT_ENTITLED.
 message CancelHouseholdHandover {
@@ -239,7 +268,8 @@ message CancelHouseholdHandover {
 
 // Lists the pending handovers of the homes under a space the caller may be told of, answered
 // with HouseholdHandovers: unset root_space_id, every one. A home's handover is told to its
-// residents, and to the property owner and the gateway administrators who reach it. Anyone may
+// residents, and to the property owner and the gateway administrators who reach it; a
+// vacated one to the departing household instead of residents (VACANCY). Anyone may
 // ask; nobody is refused, and a caller told of none gets none.
 message ListHouseholdHandovers {
   kusinta.iot.identity.v1.SpaceId root_space_id = 1;
@@ -275,19 +305,35 @@ message HouseholdHandover {
   string started_by_name = 5;
 
   // Set when the property owner or a gateway administrator started it, rather than the
-  // household.
+  // household. Neither this nor started_by is set when it was vacated.
   bool started_by_staff = 6;
 
   google.protobuf.Timestamp started_at = 7;
 
-  // From when the property owner or a gateway administrator may confirm it: 7 days after
-  // started_at, or started_at itself on a home with no resident. A residency that starts while
-  // it is pending moves it to 7 days after that, and the handover is pushed again, so that a
-  // household that moves in during it has its notice too.
+  // From when the property owner or a gateway administrator may confirm it, and when a vacated
+  // one completes on its own: 7 days after started_at, and never sooner than 7 days after the
+  // home's last residency ended. A residency that starts while it is pending moves it to 7
+  // days after that, and the handover is pushed again, so that a household that moves in
+  // during it has its notice too.
   google.protobuf.Timestamp staff_confirmable_from = 8;
 
   // When it was cancelled or done. Unset while pending.
   google.protobuf.Timestamp ended_at = 9;
+
+  // Set when the home's last residency ending started it, rather than a request (VACANCY).
+  bool vacated = 10;
+}
+
+// Sets the household's own name for its home (space.v1.Space.home_name). Answered with
+// ManagementAck. Any resident of the home may — a name is not governance, so it is not kept to
+// household admins; anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+// (INVALID_REQUEST otherwise). The name is trimmed; empty clears it, and one longer than 64
+// characters is refused as INVALID_REQUEST with metadata {"reason": "home_name"}. It never
+// changes the apartment's own name (space.v1.Space.name), and it is wiped at the home's
+// handover.
+message SetHomeName {
+  kusinta.iot.identity.v1.SpaceId home_id = 1;
+  string name = 2;
 }
 
 // The answer to ListHouseholdHandovers.
@@ -297,14 +343,16 @@ message HouseholdHandovers {
 
 // Asks for one part of a home's export (EXPORT), answered with a HouseholdExport. The first
 // part is asked with no part_token, and each further one with the next_part_token of the part
-// before, until one comes with none. The home's residents only; anyone else is refused as
-// NOT_ENTITLED.
+// before, until one comes with none. The home's residents only, and during a vacated handover
+// the departing household, as of when their residency ended (VACANCY); anyone else is refused
+// as NOT_ENTITLED.
 //
 // A part_token says where the next part starts. The gateway keeps nothing for it: it checks
 // the token it minted when it is used, against the caller's rights then, so an interrupted
 // export resumes where it stopped, within the caller's residency. A token the gateway did not
-// mint, or minted for another caller, home or residency — one that has ended included — is
-// refused as INVALID_REQUEST with metadata {"reason": "part_token"}.
+// mint, or minted for another caller, home or residency — one that has ended included, save
+// during that home's vacated handover — is refused as INVALID_REQUEST with metadata
+// {"reason": "part_token"}.
 message ExportHouseholdData {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   string part_token = 2;
