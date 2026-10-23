@@ -25,6 +25,7 @@ class MembershipRelation(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     MEMBERSHIP_RELATION_UNSPECIFIED: _ClassVar[MembershipRelation]
     MEMBERSHIP_RELATION_RESIDENT: _ClassVar[MembershipRelation]
     MEMBERSHIP_RELATION_SERVICE: _ClassVar[MembershipRelation]
+    MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN: _ClassVar[MembershipRelation]
 ROLE_UNSPECIFIED: Role
 ROLE_RESIDENT: Role
 ROLE_PROPERTY_OWNER: Role
@@ -38,3 +39,4 @@ PERMISSION_ACTION_INVOKE: PermissionAction
 MEMBERSHIP_RELATION_UNSPECIFIED: MembershipRelation
 MEMBERSHIP_RELATION_RESIDENT: MembershipRelation
 MEMBERSHIP_RELATION_SERVICE: MembershipRelation
+MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN: MembershipRelation

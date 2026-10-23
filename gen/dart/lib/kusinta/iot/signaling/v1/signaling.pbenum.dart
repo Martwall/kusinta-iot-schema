@@ -55,16 +55,30 @@ class RedeemOutcome extends $pb.ProtobufEnum {
   static const RedeemOutcome REDEEM_OUTCOME_WRONG_ACCOUNT =
       RedeemOutcome._(4, _omitEnumNames ? '' : 'REDEEM_OUTCOME_WRONG_ACCOUNT');
 
+  /// The invite appoints a household admin (webrtc.v1 household.proto, STAFF APPOINTMENT),
+  /// and this user may not be appointed: they created it, or hold a staff role on the gateway.
+  /// Also the answer to anyone outside the departing household redeeming a RESIDENT or
+  /// HOUSEHOLD_ADMIN invite on a home whose vacated handover is pending (webrtc.v1
+  /// household.proto, VACANCY). Leaves the invite pending, for the person it was meant for.
+  /// Answered only to a user whose secret matched a live invite, so it tells nothing about
+  /// which secrets exist. An
+  /// appointment invite on a home that is no longer empty is no invite, and answers INVALID.
+  ///
+  /// Rollout order: the api-server handles it before a gateway sends it.
+  static const RedeemOutcome REDEEM_OUTCOME_NOT_ELIGIBLE =
+      RedeemOutcome._(5, _omitEnumNames ? '' : 'REDEEM_OUTCOME_NOT_ELIGIBLE');
+
   static const $core.List<RedeemOutcome> values = <RedeemOutcome>[
     REDEEM_OUTCOME_UNSPECIFIED,
     REDEEM_OUTCOME_JOINED,
     REDEEM_OUTCOME_PENDING_APPROVAL,
     REDEEM_OUTCOME_INVALID,
     REDEEM_OUTCOME_WRONG_ACCOUNT,
+    REDEEM_OUTCOME_NOT_ELIGIBLE,
   ];
 
   static final $core.List<RedeemOutcome?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static RedeemOutcome? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

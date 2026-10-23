@@ -191,6 +191,15 @@ export declare const PermissionActionSchema: GenEnum<PermissionAction>;
  * looks after a building's plant room is filed there as SERVICE. RESIDENT is refused on a
  * room: a home's residents live in all of it.
  *
+ * HOUSEHOLD ADMIN. HOUSEHOLD_ADMIN is RESIDENT and more: a resident who also governs the
+ * home (webrtc.v1 household.proto). It is held on an apartment and nowhere else, and is never
+ * a role: the app's token, and every role the gateway holds, are the same with it as without
+ * it. Wherever this schema says RESIDENT, a resident or a home's residents, it means
+ * HOUSEHOLD_ADMIN too, unless it names HOUSEHOLD_ADMIN apart: what a household admin sees of
+ * the home, and when from, is exactly what a resident sees. A change between RESIDENT and
+ * HOUSEHOLD_ADMIN on the same apartment continues the residency below, with its id and its
+ * since; it is no relation change in the sense the residency rules use.
+ *
  * A HOME is an apartment and the rooms in it. What a user learns of a home depends on how
  * they reach it; where several apply, the first wins:
  *
@@ -201,6 +210,11 @@ export declare const PermissionActionSchema: GenEnum<PermissionAction>;
  *     carry — a reading's timestamp included — is unset for them, save a
  *     webrtc.v1.ServiceStatus, which always carries its times and so gives none before the first
  *     quarter hour of their residency, from that quarter hour on.
+ *   * As an installer under a commissioning grant on the home, while it is active — the
+ *     service view below, and on top of it what commissioning.v1 (GRANTS) lists: the home's
+ *     commissioning and heating records, and the readings a test they run is judged by while
+ *     it runs. Never its history, savings, comfort settings or device events, nor who lives
+ *     there.
  *   * As service — SERVICE on the apartment, a room in it, or a building or floor above it,
  *     or as the gateway's administrator. Of the building's own devices in what they reach of
  *     the home — any
@@ -241,7 +255,8 @@ export declare const PermissionActionSchema: GenEnum<PermissionAction>;
  * newly in the home does, as it happens; that much a release shows.
  *
  * Who may change a home's members, move its spaces or file devices into and out of it is
- * restricted by the gateway, and a refused caller gets NOT_ENTITLED. This keeps a home's
+ * restricted by the gateway, and a refused caller gets NOT_ENTITLED; within the household it
+ * is its household admins' (webrtc.v1 household.proto). This keeps a home's
  * life — its readings, history and modes — from anyone but its residents by default; those
  * who service the building get the service view above and no more. It does not keep the
  * property owner or the administrator out by force — they hold the building's filing
@@ -292,6 +307,17 @@ export enum MembershipRelation {
    * @generated from enum value: MEMBERSHIP_RELATION_SERVICE = 2;
    */
   SERVICE = 2,
+
+  /**
+   * Lives there and governs the home: a resident who may also manage it (webrtc.v1
+   * household.proto). On an apartment only; refused anywhere else.
+   *
+   * Rollout order: an app whose schema predates this value cannot tell it from an unknown
+   * relation, so app handling ships before or with the gateway that records it.
+   *
+   * @generated from enum value: MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN = 3;
+   */
+  HOUSEHOLD_ADMIN = 3,
 }
 
 /**

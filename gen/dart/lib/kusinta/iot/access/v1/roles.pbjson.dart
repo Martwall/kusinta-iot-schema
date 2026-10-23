@@ -58,6 +58,7 @@ const MembershipRelation$json = {
     {'1': 'MEMBERSHIP_RELATION_UNSPECIFIED', '2': 0},
     {'1': 'MEMBERSHIP_RELATION_RESIDENT', '2': 1},
     {'1': 'MEMBERSHIP_RELATION_SERVICE', '2': 2},
+    {'1': 'MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN', '2': 3},
   ],
 };
 
@@ -65,4 +66,4 @@ const MembershipRelation$json = {
 final $typed_data.Uint8List membershipRelationDescriptor = $convert.base64Decode(
     'ChJNZW1iZXJzaGlwUmVsYXRpb24SIwofTUVNQkVSU0hJUF9SRUxBVElPTl9VTlNQRUNJRklFRB'
     'AAEiAKHE1FTUJFUlNISVBfUkVMQVRJT05fUkVTSURFTlQQARIfChtNRU1CRVJTSElQX1JFTEFU'
-    'SU9OX1NFUlZJQ0UQAg==');
+    'SU9OX1NFUlZJQ0UQAhInCiNNRU1CRVJTSElQX1JFTEFUSU9OX0hPVVNFSE9MRF9BRE1JThAD');

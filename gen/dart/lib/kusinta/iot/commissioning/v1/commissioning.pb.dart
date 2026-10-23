@@ -1624,6 +1624,301 @@ class CommissioningRecord extends $pb.GeneratedMessage {
   HouseTemplate ensureTemplate() => $_ensure(2);
 }
 
+/// One installer's grant to commission one space (see the file comment, GRANTS).
+class CommissioningGrant extends $pb.GeneratedMessage {
+  factory CommissioningGrant({
+    $core.String? grantId,
+    $1.SpaceId? spaceId,
+    $1.UserId? installer,
+    $core.String? installerName,
+    CommissioningGrantState? state,
+    $0.Timestamp? requestedAt,
+    $0.Timestamp? expiresAt,
+    $0.Timestamp? startsAt,
+    $0.Timestamp? endsAt,
+    $1.UserId? grantedBy,
+    $0.Timestamp? grantedAt,
+  }) {
+    final result = create();
+    if (grantId != null) result.grantId = grantId;
+    if (spaceId != null) result.spaceId = spaceId;
+    if (installer != null) result.installer = installer;
+    if (installerName != null) result.installerName = installerName;
+    if (state != null) result.state = state;
+    if (requestedAt != null) result.requestedAt = requestedAt;
+    if (expiresAt != null) result.expiresAt = expiresAt;
+    if (startsAt != null) result.startsAt = startsAt;
+    if (endsAt != null) result.endsAt = endsAt;
+    if (grantedBy != null) result.grantedBy = grantedBy;
+    if (grantedAt != null) result.grantedAt = grantedAt;
+    return result;
+  }
+
+  CommissioningGrant._();
+
+  factory CommissioningGrant.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CommissioningGrant.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CommissioningGrant',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'grantId')
+    ..aOM<$1.SpaceId>(2, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $1.SpaceId.create)
+    ..aOM<$1.UserId>(3, _omitFieldNames ? '' : 'installer',
+        subBuilder: $1.UserId.create)
+    ..aOS(4, _omitFieldNames ? '' : 'installerName')
+    ..e<CommissioningGrantState>(
+        5, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            CommissioningGrantState.COMMISSIONING_GRANT_STATE_UNSPECIFIED,
+        valueOf: CommissioningGrantState.valueOf,
+        enumValues: CommissioningGrantState.values)
+    ..aOM<$0.Timestamp>(6, _omitFieldNames ? '' : 'requestedAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(7, _omitFieldNames ? '' : 'expiresAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(8, _omitFieldNames ? '' : 'startsAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(9, _omitFieldNames ? '' : 'endsAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$1.UserId>(10, _omitFieldNames ? '' : 'grantedBy',
+        subBuilder: $1.UserId.create)
+    ..aOM<$0.Timestamp>(11, _omitFieldNames ? '' : 'grantedAt',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommissioningGrant clone() => CommissioningGrant()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommissioningGrant copyWith(void Function(CommissioningGrant) updates) =>
+      super.copyWith((message) => updates(message as CommissioningGrant))
+          as CommissioningGrant;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CommissioningGrant create() => CommissioningGrant._();
+  @$core.override
+  CommissioningGrant createEmptyInstance() => create();
+  static $pb.PbList<CommissioningGrant> createRepeated() =>
+      $pb.PbList<CommissioningGrant>();
+  @$core.pragma('dart2js:noInline')
+  static CommissioningGrant getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CommissioningGrant>(create);
+  static CommissioningGrant? _defaultInstance;
+
+  /// Minted by the gateway, opaque.
+  @$pb.TagNumber(1)
+  $core.String get grantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set grantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasGrantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGrantId() => $_clearField(1);
+
+  /// A home's apartment, or a space outside homes.
+  @$pb.TagNumber(2)
+  $1.SpaceId get spaceId => $_getN(1);
+  @$pb.TagNumber(2)
+  set spaceId($1.SpaceId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSpaceId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSpaceId() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.SpaceId ensureSpaceId() => $_ensure(1);
+
+  /// The installer who asked for it, and the name they gave their account
+  /// (webrtc.v1.AppTokenClaims.name) as the gateway last learnt it, so the household knows
+  /// whom it lets in; empty when none is learnt. Self-chosen, as webrtc.v1.MemberDetail.name
+  /// is.
+  @$pb.TagNumber(3)
+  $1.UserId get installer => $_getN(2);
+  @$pb.TagNumber(3)
+  set installer($1.UserId value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInstaller() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInstaller() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.UserId ensureInstaller() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.String get installerName => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set installerName($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasInstallerName() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearInstallerName() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  CommissioningGrantState get state => $_getN(4);
+  @$pb.TagNumber(5)
+  set state(CommissioningGrantState value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasState() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearState() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $0.Timestamp get requestedAt => $_getN(5);
+  @$pb.TagNumber(6)
+  set requestedAt($0.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRequestedAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRequestedAt() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $0.Timestamp ensureRequestedAt() => $_ensure(5);
+
+  /// When a request lapses unanswered: 7 days after requested_at, as
+  /// webrtc.v1.PromotionRequest.expires_at. REQUESTED only.
+  @$pb.TagNumber(7)
+  $0.Timestamp get expiresAt => $_getN(6);
+  @$pb.TagNumber(7)
+  set expiresAt($0.Timestamp value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasExpiresAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearExpiresAt() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $0.Timestamp ensureExpiresAt() => $_ensure(6);
+
+  /// When it is active, as granted, within the bounds webrtc.v1.AnswerCommissioningGrant sets.
+  /// GRANTED only.
+  @$pb.TagNumber(8)
+  $0.Timestamp get startsAt => $_getN(7);
+  @$pb.TagNumber(8)
+  set startsAt($0.Timestamp value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasStartsAt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearStartsAt() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $0.Timestamp ensureStartsAt() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  $0.Timestamp get endsAt => $_getN(8);
+  @$pb.TagNumber(9)
+  set endsAt($0.Timestamp value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasEndsAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEndsAt() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $0.Timestamp ensureEndsAt() => $_ensure(8);
+
+  /// Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
+  /// for a space outside homes to the property owner and the gateway's administrators; to the
+  /// installer it is unset, since a resident's user id would tell them who lives in the home.
+  @$pb.TagNumber(10)
+  $1.UserId get grantedBy => $_getN(9);
+  @$pb.TagNumber(10)
+  set grantedBy($1.UserId value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasGrantedBy() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearGrantedBy() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $1.UserId ensureGrantedBy() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  $0.Timestamp get grantedAt => $_getN(10);
+  @$pb.TagNumber(11)
+  set grantedAt($0.Timestamp value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasGrantedAt() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearGrantedAt() => $_clearField(11);
+  @$pb.TagNumber(11)
+  $0.Timestamp ensureGrantedAt() => $_ensure(10);
+}
+
+/// The grants on one space that have not ended, as listed to one caller: the answer to
+/// webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
+/// .commissioning_grants to every session that may list them whenever one is requested,
+/// answered or ended before its time — to the installer, their own grants alone. Nothing is
+/// pushed when a grant starts, ends or lapses at the time it states: a client reads those from
+/// starts_at, ends_at and expires_at.
+class CommissioningGrants extends $pb.GeneratedMessage {
+  factory CommissioningGrants({
+    $1.SpaceId? spaceId,
+    $core.Iterable<CommissioningGrant>? grants,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (grants != null) result.grants.addAll(grants);
+    return result;
+  }
+
+  CommissioningGrants._();
+
+  factory CommissioningGrants.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CommissioningGrants.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CommissioningGrants',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOM<$1.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $1.SpaceId.create)
+    ..pc<CommissioningGrant>(
+        2, _omitFieldNames ? '' : 'grants', $pb.PbFieldType.PM,
+        subBuilder: CommissioningGrant.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommissioningGrants clone() => CommissioningGrants()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommissioningGrants copyWith(void Function(CommissioningGrants) updates) =>
+      super.copyWith((message) => updates(message as CommissioningGrants))
+          as CommissioningGrants;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CommissioningGrants create() => CommissioningGrants._();
+  @$core.override
+  CommissioningGrants createEmptyInstance() => create();
+  static $pb.PbList<CommissioningGrants> createRepeated() =>
+      $pb.PbList<CommissioningGrants>();
+  @$core.pragma('dart2js:noInline')
+  static CommissioningGrants getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CommissioningGrants>(create);
+  static CommissioningGrants? _defaultInstance;
+
+  /// The space the grants are on, on a push; unset on a listing.
+  @$pb.TagNumber(1)
+  $1.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($1.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.SpaceId ensureSpaceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $pb.PbList<CommissioningGrant> get grants => $_getList(1);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

@@ -15,8 +15,8 @@ option optimize_for = SPEED;
 // Device.endpoints.
 //
 // Field bands: 1-2 identity, 3-10 Matter BasicInformation, 11-12 placement,
-// 13-16 ownership and lifecycle, 18-19 vendor identity and bridging.
-// 2 and 17 are burned; the next free number is 20.
+// 13-16 and 21 ownership and lifecycle, 18-20 vendor identity, bridging and linking.
+// 2 and 17 are burned; the next free number is 22.
 message DeviceDescriptor {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
 
@@ -47,6 +47,12 @@ message DeviceDescriptor {
 
   // Populated when ownership == RESIDENT
   kusinta.iot.identity.v1.UserId owner_user_id = 15;
+
+  // Who owns it as an asset, where ownership is COMPANY: see common.v1.AssetOwner, which
+  // decides nobody's access. Set by the gateway from its own records (webrtc.v1.SetAssetOwner)
+  // and given to whoever is given the descriptor; a connector leaves it unset, and the gateway
+  // ignores it from one.
+  kusinta.iot.common.v1.AssetOwner asset_owner = 21;
   // Unset when it is withheld from the recipient: in a service view, and from anyone when
   // it dates from before their current residency in the home, or from a home they did not
   // live in at the time (see access.v1.MembershipRelation).

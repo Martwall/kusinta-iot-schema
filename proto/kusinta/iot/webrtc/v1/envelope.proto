@@ -16,6 +16,7 @@ import "kusinta/iot/link/v1/link.proto";
 import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 import "kusinta/iot/webrtc/v1/device_state.proto";
+import "kusinta/iot/webrtc/v1/household.proto";
 import "kusinta/iot/webrtc/v1/invite.proto";
 import "kusinta/iot/webrtc/v1/management.proto";
 import "kusinta/iot/webrtc/v1/members.proto";
@@ -189,6 +190,13 @@ message ManagementResult {
     // conclude_commissioning_test
     kusinta.iot.commissioning.v1.CommissioningRecord commissioning_record = 20;
     kusinta.iot.commissioning.v1.HomeSetups home_setups = 21; // list_home_setups
+    // request_commissioning_grant, answer_commissioning_grant (granted)
+    kusinta.iot.commissioning.v1.CommissioningGrant commissioning_grant = 22;
+    // list_commissioning_grants
+    kusinta.iot.commissioning.v1.CommissioningGrants commissioning_grants = 23;
+    HouseholdHandover household_handover = 24; // start_household_handover
+    HouseholdHandovers household_handovers = 25; // list_household_handovers
+    HouseholdExport household_export = 26; // export_household_data
   }
 }
 
@@ -429,6 +437,10 @@ message GatewayMessage {
     // A commissioning test changed state: to every session whose user is given it
     // (commissioning.v1), save its start to the session that started it.
     kusinta.iot.commissioning.v1.CommissioningTest commissioning_test = 26;
+    // The commissioning grants on a space changed; see commissioning.v1.CommissioningGrants.
+    kusinta.iot.commissioning.v1.CommissioningGrants commissioning_grants = 27;
+    // A home's handover was started, cancelled or done; see HouseholdHandover.
+    HouseholdHandover household_handover = 28;
   }
 }
 

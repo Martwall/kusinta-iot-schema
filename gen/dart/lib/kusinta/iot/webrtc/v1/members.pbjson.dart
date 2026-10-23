@@ -73,6 +73,14 @@ const RequestPromotion$json = {
       '6': '.kusinta.iot.access.v1.Role',
       '10': 'role'
     },
+    {
+      '1': 'home_id',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
   ],
 };
 
@@ -80,7 +88,8 @@ const RequestPromotion$json = {
 final $typed_data.Uint8List requestPromotionDescriptor = $convert.base64Decode(
     'ChBSZXF1ZXN0UHJvbW90aW9uEjgKB3VzZXJfaWQYASABKAsyHy5rdXNpbnRhLmlvdC5pZGVudG'
     'l0eS52MS5Vc2VySWRSBnVzZXJJZBIvCgRyb2xlGAIgASgOMhsua3VzaW50YS5pb3QuYWNjZXNz'
-    'LnYxLlJvbGVSBHJvbGU=');
+    'LnYxLlJvbGVSBHJvbGUSOQoHaG9tZV9pZBgDIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5Ln'
+    'YxLlNwYWNlSWRSBmhvbWVJZA==');
 
 @$core.Deprecated('Use answerPromotionDescriptor instead')
 const AnswerPromotion$json = {
@@ -151,6 +160,14 @@ const PromotionRequest$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'expiresAt'
     },
+    {
+      '1': 'home_id',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
   ],
 };
 
@@ -163,7 +180,8 @@ final $typed_data.Uint8List promotionRequestDescriptor = $convert.base64Decode(
     'QnkSKgoRcmVxdWVzdGVkX2J5X25hbWUYBSABKAlSD3JlcXVlc3RlZEJ5TmFtZRI9CgxyZXF1ZX'
     'N0ZWRfYXQYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtyZXF1ZXN0ZWRBdBI5'
     'CgpleHBpcmVzX2F0GAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJZXhwaXJlc0'
-    'F0');
+    'F0EjkKB2hvbWVfaWQYCCABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgZo'
+    'b21lSWQ=');
 
 @$core.Deprecated('Use promotionRequestsDescriptor instead')
 const PromotionRequests$json = {

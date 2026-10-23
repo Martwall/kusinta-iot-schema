@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package kusinta.iot.common.v1;
 
+import "kusinta/iot/identity/v1/identity.proto";
+
 option optimize_for = SPEED;
 
 enum SpaceType {
@@ -13,10 +15,42 @@ enum SpaceType {
   SPACE_TYPE_COMMON_AREA = 5;
 }
 
+// Whether a person owns a device outright. COMPANY: no person does; it is one of the
+// building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
+// for a device of their own that they may take with them. Who paid for one of the
+// building's own devices is a separate question, answered by AssetOwner.
 enum DeviceOwnershipType {
   DEVICE_OWNERSHIP_TYPE_UNSPECIFIED = 0;
   DEVICE_OWNERSHIP_TYPE_COMPANY = 1;
   DEVICE_OWNERSHIP_TYPE_RESIDENT = 2;
+}
+
+// Who owns one of the building's own devices as an asset: who paid for it, for billing and
+// for what becomes of it when a household or the gateway's owner changes. Distinct from
+// DeviceOwnershipType, which says whether a person owns a device outright; a device a person
+// owns has no asset owner.
+//
+// VISIBILITY NEVER FOLLOWS IT. What anyone sees of a device, or may do to it, is decided by
+// the space it is filed in and how they stand to that space (access.v1.MembershipRelation),
+// never by its asset owner: a device the organisation owns in someone's home is seen by the
+// organisation's people as service and no more, and a device a household owns gives that
+// household nothing beyond what living in the home gives it. Setting or changing an asset
+// owner changes no one's access.
+//
+// Unset: not recorded. On a device whose ownership is COMPANY, anything that depends on it
+// reads an unset owner as owner_organisation; a device a person owns has none, and is theirs.
+message AssetOwner {
+  oneof owner {
+    // The organisation that owns the gateway (signaling.v1.GatewayStreamOpened, OWNER OF
+    // RECORD), whichever that is: such an asset goes with the gateway when it moves to
+    // another organisation. Only true is sent; false is refused.
+    bool owner_organisation = 1;
+
+    // The household of a home, named by the home's apartment. Keyed to the home, never to a
+    // person: when the household changes, the asset stays with the home for the next one
+    // (webrtc.v1 household.proto, HANDOVER).
+    kusinta.iot.identity.v1.SpaceId household_home_id = 2;
+  }
 }
 
 enum DeviceLifecycleState {

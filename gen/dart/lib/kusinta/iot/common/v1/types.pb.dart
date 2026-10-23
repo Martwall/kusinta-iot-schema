@@ -14,11 +14,113 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../identity/v1/identity.pb.dart' as $0;
 import 'types.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'types.pbenum.dart';
+
+enum AssetOwner_Owner { ownerOrganisation, householdHomeId, notSet }
+
+/// Who owns one of the building's own devices as an asset: who paid for it, for billing and
+/// for what becomes of it when a household or the gateway's owner changes. Distinct from
+/// DeviceOwnershipType, which says whether a person owns a device outright; a device a person
+/// owns has no asset owner.
+///
+/// VISIBILITY NEVER FOLLOWS IT. What anyone sees of a device, or may do to it, is decided by
+/// the space it is filed in and how they stand to that space (access.v1.MembershipRelation),
+/// never by its asset owner: a device the organisation owns in someone's home is seen by the
+/// organisation's people as service and no more, and a device a household owns gives that
+/// household nothing beyond what living in the home gives it. Setting or changing an asset
+/// owner changes no one's access.
+///
+/// Unset: not recorded. On a device whose ownership is COMPANY, anything that depends on it
+/// reads an unset owner as owner_organisation; a device a person owns has none, and is theirs.
+class AssetOwner extends $pb.GeneratedMessage {
+  factory AssetOwner({
+    $core.bool? ownerOrganisation,
+    $0.SpaceId? householdHomeId,
+  }) {
+    final result = create();
+    if (ownerOrganisation != null) result.ownerOrganisation = ownerOrganisation;
+    if (householdHomeId != null) result.householdHomeId = householdHomeId;
+    return result;
+  }
+
+  AssetOwner._();
+
+  factory AssetOwner.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory AssetOwner.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, AssetOwner_Owner> _AssetOwner_OwnerByTag = {
+    1: AssetOwner_Owner.ownerOrganisation,
+    2: AssetOwner_Owner.householdHomeId,
+    0: AssetOwner_Owner.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AssetOwner',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.common.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOB(1, _omitFieldNames ? '' : 'ownerOrganisation')
+    ..aOM<$0.SpaceId>(2, _omitFieldNames ? '' : 'householdHomeId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AssetOwner clone() => AssetOwner()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AssetOwner copyWith(void Function(AssetOwner) updates) =>
+      super.copyWith((message) => updates(message as AssetOwner)) as AssetOwner;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static AssetOwner create() => AssetOwner._();
+  @$core.override
+  AssetOwner createEmptyInstance() => create();
+  static $pb.PbList<AssetOwner> createRepeated() => $pb.PbList<AssetOwner>();
+  @$core.pragma('dart2js:noInline')
+  static AssetOwner getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AssetOwner>(create);
+  static AssetOwner? _defaultInstance;
+
+  AssetOwner_Owner whichOwner() => _AssetOwner_OwnerByTag[$_whichOneof(0)]!;
+  void clearOwner() => $_clearField($_whichOneof(0));
+
+  /// The organisation that owns the gateway (signaling.v1.GatewayStreamOpened, OWNER OF
+  /// RECORD), whichever that is: such an asset goes with the gateway when it moves to
+  /// another organisation. Only true is sent; false is refused.
+  @$pb.TagNumber(1)
+  $core.bool get ownerOrganisation => $_getBF(0);
+  @$pb.TagNumber(1)
+  set ownerOrganisation($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOwnerOrganisation() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOwnerOrganisation() => $_clearField(1);
+
+  /// The household of a home, named by the home's apartment. Keyed to the home, never to a
+  /// person: when the household changes, the asset stays with the home for the next one
+  /// (webrtc.v1 household.proto, HANDOVER).
+  @$pb.TagNumber(2)
+  $0.SpaceId get householdHomeId => $_getN(1);
+  @$pb.TagNumber(2)
+  set householdHomeId($0.SpaceId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHouseholdHomeId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHouseholdHomeId() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.SpaceId ensureHouseholdHomeId() => $_ensure(1);
+}
 
 class ErrorDetail extends $pb.GeneratedMessage {
   factory ErrorDetail({

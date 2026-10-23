@@ -15,7 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
-import '../../common/v1/types.pbenum.dart' as $4;
+import '../../common/v1/types.pb.dart' as $4;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $3;
 import '../../vendor/homematic/v1/homematic.pb.dart' as $2;
@@ -29,8 +29,8 @@ enum DeviceDescriptor_VendorIdentity { homematic, notSet }
 /// Device.endpoints.
 ///
 /// Field bands: 1-2 identity, 3-10 Matter BasicInformation, 11-12 placement,
-/// 13-16 ownership and lifecycle, 18-19 vendor identity and bridging.
-/// 2 and 17 are burned; the next free number is 20.
+/// 13-16 and 21 ownership and lifecycle, 18-20 vendor identity, bridging and linking.
+/// 2 and 17 are burned; the next free number is 22.
 class DeviceDescriptor extends $pb.GeneratedMessage {
   factory DeviceDescriptor({
     $0.DeviceId? deviceId,
@@ -51,6 +51,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     $2.HomematicDeviceIdentity? homematic,
     $0.DeviceId? bridgedBy,
     $core.Iterable<$3.LinkCapability>? linkCapabilities,
+    $4.AssetOwner? assetOwner,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -74,6 +75,7 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     if (bridgedBy != null) result.bridgedBy = bridgedBy;
     if (linkCapabilities != null)
       result.linkCapabilities.addAll(linkCapabilities);
+    if (assetOwner != null) result.assetOwner = assetOwner;
     return result;
   }
 
@@ -134,6 +136,8 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
     ..pc<$3.LinkCapability>(
         20, _omitFieldNames ? '' : 'linkCapabilities', $pb.PbFieldType.PM,
         subBuilder: $3.LinkCapability.create)
+    ..aOM<$4.AssetOwner>(21, _omitFieldNames ? '' : 'assetOwner',
+        subBuilder: $4.AssetOwner.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -357,6 +361,21 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   /// linked": a connector that does not model linking says nothing here.
   @$pb.TagNumber(20)
   $pb.PbList<$3.LinkCapability> get linkCapabilities => $_getList(17);
+
+  /// Who owns it as an asset, where ownership is COMPANY: see common.v1.AssetOwner, which
+  /// decides nobody's access. Set by the gateway from its own records (webrtc.v1.SetAssetOwner)
+  /// and given to whoever is given the descriptor; a connector leaves it unset, and the gateway
+  /// ignores it from one.
+  @$pb.TagNumber(21)
+  $4.AssetOwner get assetOwner => $_getN(18);
+  @$pb.TagNumber(21)
+  set assetOwner($4.AssetOwner value) => $_setField(21, value);
+  @$pb.TagNumber(21)
+  $core.bool hasAssetOwner() => $_has(18);
+  @$pb.TagNumber(21)
+  void clearAssetOwner() => $_clearField(21);
+  @$pb.TagNumber(21)
+  $4.AssetOwner ensureAssetOwner() => $_ensure(18);
 }
 
 const $core.bool _omitFieldNames =

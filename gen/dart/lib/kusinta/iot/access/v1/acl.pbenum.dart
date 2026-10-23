@@ -44,8 +44,8 @@ class ServiceSignal extends $pb.ProtobufEnum {
       ServiceSignal._(5, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FAULT');
 
   /// What the device is — its description, every field of device.v1.DeviceDescriptor but
-  /// claimed_at: type, name, vendor, product, serial number, versions, ownership, lifecycle
-  /// and connector; its endpoints and what each supports — and where it is filed. A
+  /// claimed_at: type, name, vendor, product, serial number, versions, ownership, asset
+  /// owner, lifecycle and connector; its endpoints and what each supports — and where it is filed. A
   /// bridged_by naming a device the recipient may not see, such as a bridge a resident owns,
   /// is unset. Always disclosed together with FIRMWARE, whose
   /// version it carries. Not when it was claimed: the only times service is given of a

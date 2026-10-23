@@ -16,21 +16,25 @@ export declare const file_kusinta_iot_webrtc_v1_invite: GenFile;
 /**
  * Creates an invite on a space.
  *
- * relation is RESIDENT or SERVICE and nothing else, and it decides the role the person
- * will hold: a resident for RESIDENT, a technician for SERVICE. RESIDENT is refused
- * anywhere but a home (access.v1.MembershipRelation). No invite ever makes anyone a
- * gateway administrator or a property owner: those come only by promotion of someone
- * already a member, and any other relation is refused as INVALID_REQUEST.
+ * relation is RESIDENT, SERVICE or HOUSEHOLD_ADMIN and nothing else, and it decides the role
+ * the person will hold: a resident for RESIDENT and HOUSEHOLD_ADMIN, a technician for SERVICE.
+ * RESIDENT is refused anywhere but a home (access.v1.MembershipRelation). HOUSEHOLD_ADMIN is
+ * a staff appointment, from a caller holding ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, on an
+ * empty home only, and refused as household.proto (STAFF APPOINTMENT) says; it never takes
+ * access_until. It must be bound to an address: one with no email is refused as
+ * INVALID_REQUEST with metadata {"reason": "email_required"}, and is never made a home key. No invite ever makes anyone a gateway administrator or a property owner:
+ * those come only by promotion of someone already a member, and any other relation is refused
+ * as INVALID_REQUEST.
  *
  * Who may create one is the gateway's decision, as for AssignUserToSpace. The gateway may
- * let a home's residents invite residents into their own home only, within a limit per
- * home. A caller over that limit is refused as FAILED_PRECONDITION with metadata
- * {"reason": "household_full"}.
+ * let a home's household admins invite residents into their own home only, within a limit per
+ * home; a resident who is not a household admin may not (household.proto). A caller over that
+ * limit is refused as FAILED_PRECONDITION with metadata {"reason": "household_full"}.
  *
  * Whether a RESIDENT invite with no address is a home key or a household invite (see the
  * file header) is decided by who creates it, never asked for: a home key when the caller
  * holds ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, whether or not they live in the home; a
- * household invite when the caller creates it as a resident of the home.
+ * household invite when the caller creates it as a household admin of the home.
  *
  * A gateway holds at most 5000 invites whose secrets it reports
  * (reporting.v1.ReportInviteRoutesRequest), used ones included until their secrets
@@ -154,11 +158,11 @@ export declare const MarkInviteEmailSentSchema: GenMessage<MarkInviteEmailSent>;
 /**
  * The pending invites and join requests of a space. Answered with SpaceInvites. Listed
  * only to a caller who may create invites on the space; anyone else is refused as
- * NOT_ENTITLED. A resident is listed only the invites a resident of their home made,
+ * NOT_ENTITLED. A household admin is listed only the invites a resident of their home made,
  * and the join requests those made: nothing they cannot act on.
  *
- * A household invite, and the join requests it made, are listed only to the residents of
- * that home, a property owner or an administrator included only if they live there:
+ * A household invite, and the join requests it made, are listed only to the household admins
+ * of that home, a property owner or an administrator included only if they live there:
  * otherwise Invite.created_by and JoinRequest.invited_by would say where its maker lives.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListSpaceInvites
@@ -181,8 +185,8 @@ export declare const ListSpaceInvitesSchema: GenMessage<ListSpaceInvites>;
  * that relation gives. Answered with ManagementAck.
  *
  * Who may approve is the gateway's decision, by the kind of invite the request came from
- * (see the file header): for a household invite, a resident of that home alone, and not a
- * property owner or an administrator who does not live there; for a SERVICE invite with no
+ * (see the file header): for a household invite, a household admin of that home alone, and
+ * not a property owner or an administrator who does not live there; for a SERVICE invite with no
  * address, whoever may put people on that space. Anyone else is refused as NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.ApproveJoinRequest
@@ -425,7 +429,7 @@ export declare const JoinRequestSchema: GenMessage<JoinRequest>;
  * every session that may list it, so the app shows the change without reloading. A push
  * always carries the whole of both lists for its space, as ListSpaceInvites would list
  * them to that session: a household invite and its join requests reach only the sessions
- * of that home's residents.
+ * of that home's household admins.
  *
  * @generated from message kusinta.iot.webrtc.v1.SpaceInvites
  */

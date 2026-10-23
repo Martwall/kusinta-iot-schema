@@ -619,6 +619,123 @@ export declare type CommissioningRecord = Message<"kusinta.iot.commissioning.v1.
 export declare const CommissioningRecordSchema: GenMessage<CommissioningRecord>;
 
 /**
+ * One installer's grant to commission one space (see the file comment, GRANTS).
+ *
+ * @generated from message kusinta.iot.commissioning.v1.CommissioningGrant
+ */
+export declare type CommissioningGrant = Message<"kusinta.iot.commissioning.v1.CommissioningGrant"> & {
+  /**
+   * Minted by the gateway, opaque.
+   *
+   * @generated from field: string grant_id = 1;
+   */
+  grantId: string;
+
+  /**
+   * A home's apartment, or a space outside homes.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 2;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * The installer who asked for it, and the name they gave their account
+   * (webrtc.v1.AppTokenClaims.name) as the gateway last learnt it, so the household knows
+   * whom it lets in; empty when none is learnt. Self-chosen, as webrtc.v1.MemberDetail.name
+   * is.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId installer = 3;
+   */
+  installer?: UserId | undefined;
+
+  /**
+   * @generated from field: string installer_name = 4;
+   */
+  installerName: string;
+
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.CommissioningGrantState state = 5;
+   */
+  state: CommissioningGrantState;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp requested_at = 6;
+   */
+  requestedAt?: Timestamp | undefined;
+
+  /**
+   * When a request lapses unanswered: 7 days after requested_at, as
+   * webrtc.v1.PromotionRequest.expires_at. REQUESTED only.
+   *
+   * @generated from field: google.protobuf.Timestamp expires_at = 7;
+   */
+  expiresAt?: Timestamp | undefined;
+
+  /**
+   * When it is active, as granted, within the bounds webrtc.v1.AnswerCommissioningGrant sets.
+   * GRANTED only.
+   *
+   * @generated from field: google.protobuf.Timestamp starts_at = 8;
+   */
+  startsAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp ends_at = 9;
+   */
+  endsAt?: Timestamp | undefined;
+
+  /**
+   * Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
+   * for a space outside homes to the property owner and the gateway's administrators; to the
+   * installer it is unset, since a resident's user id would tell them who lives in the home.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId granted_by = 10;
+   */
+  grantedBy?: UserId | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp granted_at = 11;
+   */
+  grantedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.CommissioningGrant.
+ * Use `create(CommissioningGrantSchema)` to create a new message.
+ */
+export declare const CommissioningGrantSchema: GenMessage<CommissioningGrant>;
+
+/**
+ * The grants on one space that have not ended, as listed to one caller: the answer to
+ * webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
+ * .commissioning_grants to every session that may list them whenever one is requested,
+ * answered or ended before its time — to the installer, their own grants alone. Nothing is
+ * pushed when a grant starts, ends or lapses at the time it states: a client reads those from
+ * starts_at, ends_at and expires_at.
+ *
+ * @generated from message kusinta.iot.commissioning.v1.CommissioningGrants
+ */
+export declare type CommissioningGrants = Message<"kusinta.iot.commissioning.v1.CommissioningGrants"> & {
+  /**
+   * The space the grants are on, on a push; unset on a listing.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: repeated kusinta.iot.commissioning.v1.CommissioningGrant grants = 2;
+   */
+  grants: CommissioningGrant[];
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.CommissioningGrants.
+ * Use `create(CommissioningGrantsSchema)` to create a new message.
+ */
+export declare const CommissioningGrantsSchema: GenMessage<CommissioningGrants>;
+
+/**
  * Who answers a fact, or ran or concluded a test.
  *
  * @generated from enum kusinta.iot.commissioning.v1.Party
@@ -637,14 +754,14 @@ export enum Party {
   OWNER_ORGANISATION = 1,
 
   /**
-   * A household admin of the home.
+   * A household admin of the home (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN).
    *
    * @generated from enum value: PARTY_HOUSEHOLD = 2;
    */
   HOUSEHOLD = 2,
 
   /**
-   * An installer under a commissioning grant.
+   * An installer under a commissioning grant (CommissioningGrant).
    *
    * @generated from enum value: PARTY_INSTALLER = 3;
    */
@@ -1125,4 +1242,39 @@ export enum TestFailure {
  * Describes the enum kusinta.iot.commissioning.v1.TestFailure.
  */
 export declare const TestFailureSchema: GenEnum<TestFailure>;
+
+/**
+ * Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no
+ * state: it is listed no more.
+ *
+ * @generated from enum kusinta.iot.commissioning.v1.CommissioningGrantState
+ */
+export enum CommissioningGrantState {
+  /**
+   * A state this schema does not know: read as REQUESTED, which covers nothing.
+   *
+   * @generated from enum value: COMMISSIONING_GRANT_STATE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Asked for by the installer and not yet answered. Covers nothing. Lapses unanswered at
+   * expires_at.
+   *
+   * @generated from enum value: COMMISSIONING_GRANT_STATE_REQUESTED = 1;
+   */
+  REQUESTED = 1,
+
+  /**
+   * Granted. Active from starts_at until ends_at; before starts_at it covers nothing yet.
+   *
+   * @generated from enum value: COMMISSIONING_GRANT_STATE_GRANTED = 2;
+   */
+  GRANTED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.commissioning.v1.CommissioningGrantState.
+ */
+export declare const CommissioningGrantStateSchema: GenEnum<CommissioningGrantState>;
 

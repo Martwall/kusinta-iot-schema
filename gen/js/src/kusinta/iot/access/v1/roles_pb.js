@@ -8,7 +8,7 @@ import { enumDesc, fileDesc, tsEnum } from "@bufbuild/protobuf/codegenv2";
  * Describes the file kusinta/iot/access/v1/roles.proto.
  */
 export const file_kusinta_iot_access_v1_roles = /*@__PURE__*/
-  fileDesc("CiFrdXNpbnRhL2lvdC9hY2Nlc3MvdjEvcm9sZXMucHJvdG8SFWt1c2ludGEuaW90LmFjY2Vzcy52MSp1CgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIRCg1ST0xFX1JFU0lERU5UEAESFwoTUk9MRV9QUk9QRVJUWV9PV05FUhACEhMKD1JPTEVfVEVDSE5JQ0lBThADEhYKElJPTEVfR0FURVdBWV9BRE1JThAEKq0BChBQZXJtaXNzaW9uQWN0aW9uEiEKHVBFUk1JU1NJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAISHwobUEVSTUlTU0lPTl9BQ1RJT05fU1VCU0NSSUJFEAMSHAoYUEVSTUlTU0lPTl9BQ1RJT05fSU5WT0tFEAQqfAoSTWVtYmVyc2hpcFJlbGF0aW9uEiMKH01FTUJFUlNISVBfUkVMQVRJT05fVU5TUEVDSUZJRUQQABIgChxNRU1CRVJTSElQX1JFTEFUSU9OX1JFU0lERU5UEAESHwobTUVNQkVSU0hJUF9SRUxBVElPTl9TRVJWSUNFEAJCAkgBYgZwcm90bzM");
+  fileDesc("CiFrdXNpbnRhL2lvdC9hY2Nlc3MvdjEvcm9sZXMucHJvdG8SFWt1c2ludGEuaW90LmFjY2Vzcy52MSp1CgRSb2xlEhQKEFJPTEVfVU5TUEVDSUZJRUQQABIRCg1ST0xFX1JFU0lERU5UEAESFwoTUk9MRV9QUk9QRVJUWV9PV05FUhACEhMKD1JPTEVfVEVDSE5JQ0lBThADEhYKElJPTEVfR0FURVdBWV9BRE1JThAEKq0BChBQZXJtaXNzaW9uQWN0aW9uEiEKHVBFUk1JU1NJT05fQUNUSU9OX1VOU1BFQ0lGSUVEEAASGgoWUEVSTUlTU0lPTl9BQ1RJT05fUkVBRBABEhsKF1BFUk1JU1NJT05fQUNUSU9OX1dSSVRFEAISHwobUEVSTUlTU0lPTl9BQ1RJT05fU1VCU0NSSUJFEAMSHAoYUEVSTUlTU0lPTl9BQ1RJT05fSU5WT0tFEAQqpQEKEk1lbWJlcnNoaXBSZWxhdGlvbhIjCh9NRU1CRVJTSElQX1JFTEFUSU9OX1VOU1BFQ0lGSUVEEAASIAocTUVNQkVSU0hJUF9SRUxBVElPTl9SRVNJREVOVBABEh8KG01FTUJFUlNISVBfUkVMQVRJT05fU0VSVklDRRACEicKI01FTUJFUlNISVBfUkVMQVRJT05fSE9VU0VIT0xEX0FETUlOEANCAkgBYgZwcm90bzM");
 
 /**
  * Describes the enum kusinta.iot.access.v1.Role.
@@ -95,6 +95,15 @@ export const MembershipRelationSchema = /*@__PURE__*/
  * looks after a building's plant room is filed there as SERVICE. RESIDENT is refused on a
  * room: a home's residents live in all of it.
  *
+ * HOUSEHOLD ADMIN. HOUSEHOLD_ADMIN is RESIDENT and more: a resident who also governs the
+ * home (webrtc.v1 household.proto). It is held on an apartment and nowhere else, and is never
+ * a role: the app's token, and every role the gateway holds, are the same with it as without
+ * it. Wherever this schema says RESIDENT, a resident or a home's residents, it means
+ * HOUSEHOLD_ADMIN too, unless it names HOUSEHOLD_ADMIN apart: what a household admin sees of
+ * the home, and when from, is exactly what a resident sees. A change between RESIDENT and
+ * HOUSEHOLD_ADMIN on the same apartment continues the residency below, with its id and its
+ * since; it is no relation change in the sense the residency rules use.
+ *
  * A HOME is an apartment and the rooms in it. What a user learns of a home depends on how
  * they reach it; where several apply, the first wins:
  *
@@ -105,6 +114,11 @@ export const MembershipRelationSchema = /*@__PURE__*/
  *     carry — a reading's timestamp included — is unset for them, save a
  *     webrtc.v1.ServiceStatus, which always carries its times and so gives none before the first
  *     quarter hour of their residency, from that quarter hour on.
+ *   * As an installer under a commissioning grant on the home, while it is active — the
+ *     service view below, and on top of it what commissioning.v1 (GRANTS) lists: the home's
+ *     commissioning and heating records, and the readings a test they run is judged by while
+ *     it runs. Never its history, savings, comfort settings or device events, nor who lives
+ *     there.
  *   * As service — SERVICE on the apartment, a room in it, or a building or floor above it,
  *     or as the gateway's administrator. Of the building's own devices in what they reach of
  *     the home — any
@@ -145,7 +159,8 @@ export const MembershipRelationSchema = /*@__PURE__*/
  * newly in the home does, as it happens; that much a release shows.
  *
  * Who may change a home's members, move its spaces or file devices into and out of it is
- * restricted by the gateway, and a refused caller gets NOT_ENTITLED. This keeps a home's
+ * restricted by the gateway, and a refused caller gets NOT_ENTITLED; within the household it
+ * is its household admins' (webrtc.v1 household.proto). This keeps a home's
  * life — its readings, history and modes — from anyone but its residents by default; those
  * who service the building get the service view above and no more. It does not keep the
  * property owner or the administrator out by force — they hold the building's filing

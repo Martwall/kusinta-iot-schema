@@ -17,12 +17,12 @@ import 'dart:typed_data' as $typed_data;
 import '../../../../google/protobuf/timestamp.pbjson.dart' as $1;
 import '../../access/v1/acl.pbjson.dart' as $7;
 import '../../common/v1/pairing.pbjson.dart' as $14;
-import '../../common/v1/types.pbjson.dart' as $10;
-import '../../device/v1/cluster_state.pbjson.dart' as $9;
+import '../../common/v1/types.pbjson.dart' as $8;
+import '../../device/v1/cluster_state.pbjson.dart' as $10;
 import '../../device/v1/descriptor.pbjson.dart' as $4;
 import '../../device/v1/device.pbjson.dart' as $3;
 import '../../device/v1/device_event.pbjson.dart' as $13;
-import '../../device/v1/properties.pbjson.dart' as $8;
+import '../../device/v1/properties.pbjson.dart' as $9;
 import '../../device/v1/property_update.pbjson.dart' as $11;
 import '../../identity/v1/identity.pbjson.dart' as $2;
 import '../../link/v1/link.pbjson.dart' as $6;
@@ -61,44 +61,45 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
       $5.HomematicDeviceIdentity$json,
   '.kusinta.iot.link.v1.LinkCapability': $6.LinkCapability$json,
   '.kusinta.iot.access.v1.AttributeRef': $7.AttributeRef$json,
+  '.kusinta.iot.common.v1.AssetOwner': $8.AssetOwner$json,
   '.kusinta.iot.device.v1.Endpoint': $3.Endpoint$json,
-  '.kusinta.iot.device.v1.ThermostatProperties': $8.ThermostatProperties$json,
+  '.kusinta.iot.device.v1.ThermostatProperties': $9.ThermostatProperties$json,
   '.kusinta.iot.device.v1.TemperatureSensorProperties':
-      $8.TemperatureSensorProperties$json,
+      $9.TemperatureSensorProperties$json,
   '.kusinta.iot.device.v1.HumiditySensorProperties':
-      $8.HumiditySensorProperties$json,
+      $9.HumiditySensorProperties$json,
   '.kusinta.iot.device.v1.OccupancySensorProperties':
-      $8.OccupancySensorProperties$json,
+      $9.OccupancySensorProperties$json,
   '.kusinta.iot.device.v1.ContactSensorProperties':
-      $8.ContactSensorProperties$json,
+      $9.ContactSensorProperties$json,
   '.kusinta.iot.device.v1.WindowCoveringProperties':
-      $8.WindowCoveringProperties$json,
-  '.kusinta.iot.device.v1.DoorLockProperties': $8.DoorLockProperties$json,
-  '.kusinta.iot.device.v1.OnOffLightProperties': $8.OnOffLightProperties$json,
+      $9.WindowCoveringProperties$json,
+  '.kusinta.iot.device.v1.DoorLockProperties': $9.DoorLockProperties$json,
+  '.kusinta.iot.device.v1.OnOffLightProperties': $9.OnOffLightProperties$json,
   '.kusinta.iot.device.v1.DimmableLightProperties':
-      $8.DimmableLightProperties$json,
+      $9.DimmableLightProperties$json,
   '.kusinta.iot.device.v1.ColorTemperatureLightProperties':
-      $8.ColorTemperatureLightProperties$json,
+      $9.ColorTemperatureLightProperties$json,
   '.kusinta.iot.device.v1.EnergySensorProperties':
-      $8.EnergySensorProperties$json,
+      $9.EnergySensorProperties$json,
   '.kusinta.iot.device.v1.PressureSensorProperties':
-      $8.PressureSensorProperties$json,
-  '.kusinta.iot.device.v1.PowerSourceProperties': $8.PowerSourceProperties$json,
-  '.kusinta.iot.device.v1.ClusterState': $9.ClusterState$json,
-  '.kusinta.iot.device.v1.AttributeState': $9.AttributeState$json,
-  '.kusinta.iot.device.v1.AttributeValue': $9.AttributeValue$json,
-  '.kusinta.iot.device.v1.AttributeValueList': $9.AttributeValueList$json,
-  '.kusinta.iot.device.v1.AttributeValueStruct': $9.AttributeValueStruct$json,
+      $9.PressureSensorProperties$json,
+  '.kusinta.iot.device.v1.PowerSourceProperties': $9.PowerSourceProperties$json,
+  '.kusinta.iot.device.v1.ClusterState': $10.ClusterState$json,
+  '.kusinta.iot.device.v1.AttributeState': $10.AttributeState$json,
+  '.kusinta.iot.device.v1.AttributeValue': $10.AttributeValue$json,
+  '.kusinta.iot.device.v1.AttributeValueList': $10.AttributeValueList$json,
+  '.kusinta.iot.device.v1.AttributeValueStruct': $10.AttributeValueStruct$json,
   '.kusinta.iot.device.v1.AttributeValueStruct.FieldsEntry':
-      $9.AttributeValueStruct_FieldsEntry$json,
-  '.kusinta.iot.device.v1.NullValue': $9.NullValue$json,
+      $10.AttributeValueStruct_FieldsEntry$json,
+  '.kusinta.iot.device.v1.NullValue': $10.NullValue$json,
   '.kusinta.iot.device.v1.ClusterState.AttributeStepsEntry':
-      $9.ClusterState_AttributeStepsEntry$json,
+      $10.ClusterState_AttributeStepsEntry$json,
   '.kusinta.iot.device.v1.ClusterState.AttributeBehavioursEntry':
-      $9.ClusterState_AttributeBehavioursEntry$json,
-  '.kusinta.iot.device.v1.AttributeBehaviour': $9.AttributeBehaviour$json,
-  '.kusinta.iot.device.v1.StickyWrite': $9.StickyWrite$json,
-  '.kusinta.iot.device.v1.LeasedWrite': $9.LeasedWrite$json,
+      $10.ClusterState_AttributeBehavioursEntry$json,
+  '.kusinta.iot.device.v1.AttributeBehaviour': $10.AttributeBehaviour$json,
+  '.kusinta.iot.device.v1.StickyWrite': $10.StickyWrite$json,
+  '.kusinta.iot.device.v1.LeasedWrite': $10.LeasedWrite$json,
   '.kusinta.iot.device.v1.Endpoint.VendorAttributeBehavioursEntry':
       $3.Endpoint_VendorAttributeBehavioursEntry$json,
   '.kusinta.iot.vendor.homematic.v1.HmThermostatProps':
@@ -110,7 +111,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.link.v1.LinkSettings': $6.LinkSettings$json,
   '.kusinta.iot.link.v1.ClimateLeadSettings': $6.ClimateLeadSettings$json,
   '.kusinta.iot.connector.v1.BackendHealthReport': $0.BackendHealthReport$json,
-  '.kusinta.iot.common.v1.BackendHealth': $10.BackendHealth$json,
+  '.kusinta.iot.common.v1.BackendHealth': $8.BackendHealth$json,
   '.kusinta.iot.device.v1.PropertyUpdateBatch': $11.PropertyUpdateBatch$json,
   '.kusinta.iot.device.v1.PropertyUpdate': $11.PropertyUpdate$json,
   '.kusinta.iot.connector.v1.DeviceAnnouncement': $0.DeviceAnnouncement$json,

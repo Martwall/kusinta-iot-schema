@@ -1,3 +1,4 @@
+from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -85,6 +86,14 @@ BACKEND_FAILURE_REASON_AUTH_FAILED: BackendFailureReason
 BACKEND_FAILURE_REASON_BACKEND_ERROR: BackendFailureReason
 BACKEND_FAILURE_REASON_MISCONFIGURED: BackendFailureReason
 BACKEND_FAILURE_REASON_INTERNAL: BackendFailureReason
+
+class AssetOwner(_message.Message):
+    __slots__ = ("owner_organisation", "household_home_id")
+    OWNER_ORGANISATION_FIELD_NUMBER: _ClassVar[int]
+    HOUSEHOLD_HOME_ID_FIELD_NUMBER: _ClassVar[int]
+    owner_organisation: bool
+    household_home_id: _identity_pb2.SpaceId
+    def __init__(self, owner_organisation: _Optional[bool] = ..., household_home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
 
 class ErrorDetail(_message.Message):
     __slots__ = ("code", "message", "metadata")

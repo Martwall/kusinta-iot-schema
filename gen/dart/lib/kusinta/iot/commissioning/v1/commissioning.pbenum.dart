@@ -23,11 +23,11 @@ class Party extends $pb.ProtobufEnum {
   static const Party PARTY_OWNER_ORGANISATION =
       Party._(1, _omitEnumNames ? '' : 'PARTY_OWNER_ORGANISATION');
 
-  /// A household admin of the home.
+  /// A household admin of the home (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN).
   static const Party PARTY_HOUSEHOLD =
       Party._(2, _omitEnumNames ? '' : 'PARTY_HOUSEHOLD');
 
-  /// An installer under a commissioning grant.
+  /// An installer under a commissioning grant (CommissioningGrant).
   static const Party PARTY_INSTALLER =
       Party._(3, _omitEnumNames ? '' : 'PARTY_INSTALLER');
 
@@ -422,6 +422,40 @@ class TestFailure extends $pb.ProtobufEnum {
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
   const TestFailure._(super.value, super.name);
+}
+
+/// Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no
+/// state: it is listed no more.
+class CommissioningGrantState extends $pb.ProtobufEnum {
+  /// A state this schema does not know: read as REQUESTED, which covers nothing.
+  static const CommissioningGrantState COMMISSIONING_GRANT_STATE_UNSPECIFIED =
+      CommissioningGrantState._(
+          0, _omitEnumNames ? '' : 'COMMISSIONING_GRANT_STATE_UNSPECIFIED');
+
+  /// Asked for by the installer and not yet answered. Covers nothing. Lapses unanswered at
+  /// expires_at.
+  static const CommissioningGrantState COMMISSIONING_GRANT_STATE_REQUESTED =
+      CommissioningGrantState._(
+          1, _omitEnumNames ? '' : 'COMMISSIONING_GRANT_STATE_REQUESTED');
+
+  /// Granted. Active from starts_at until ends_at; before starts_at it covers nothing yet.
+  static const CommissioningGrantState COMMISSIONING_GRANT_STATE_GRANTED =
+      CommissioningGrantState._(
+          2, _omitEnumNames ? '' : 'COMMISSIONING_GRANT_STATE_GRANTED');
+
+  static const $core.List<CommissioningGrantState> values =
+      <CommissioningGrantState>[
+    COMMISSIONING_GRANT_STATE_UNSPECIFIED,
+    COMMISSIONING_GRANT_STATE_REQUESTED,
+    COMMISSIONING_GRANT_STATE_GRANTED,
+  ];
+
+  static final $core.List<CommissioningGrantState?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static CommissioningGrantState? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const CommissioningGrantState._(super.value, super.name);
 }
 
 const $core.bool _omitEnumNames =

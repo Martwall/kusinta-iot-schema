@@ -29,6 +29,13 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
   spaceType: SpaceType;
 
   /**
+   * On an apartment, the building's fixed, readable identifier for it — its number, say "Lgh
+   * 1102" — given by the property owner or the gateway's administrators when it is created and
+   * changed only by them (webrtc.v1.CreateSpace, webrtc.v1.UpdateSpace); never a generated id,
+   * and never touched by a household's handover. An apartment created before this rule keeps
+   * the name it has, unchanged, as that identifier. The household's own name for the home is
+   * home_name.
+   *
    * @generated from field: string name = 3;
    */
   name: string;
@@ -130,6 +137,21 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
    * @generated from field: bool members_withheld = 14;
    */
   membersWithheld: boolean;
+
+  /**
+   * On an apartment, the name its household gave the home (webrtc.v1.SetHomeName), which may
+   * name them ("The Svenssons"). Given to the home's residents only: empty for anyone else,
+   * so a client shows it to residents alone and the apartment's name to everyone. Wiped at
+   * the home's handover. Empty on every other space.
+   *
+   * No other field carries it. Wherever the wire names an apartment to anyone — pushes,
+   * problems, invites and what is shown of them before redeeming, privacy disclosures, and
+   * reporting.v1.ServedSpace.name to the api-server — it is name, never this: the household's
+   * own name never leaves the gateway but to the home's residents.
+   *
+   * @generated from field: string home_name = 15;
+   */
+  homeName: string;
 };
 
 /**

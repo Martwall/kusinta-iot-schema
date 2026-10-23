@@ -22,9 +22,10 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!kusinta/iot/common/v1/types.proto\x12\x15kusinta.iot.common.v1\"\xc6\x01\n\x0b\x45rrorDetail\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12L\n\x08metadata\x18\x03 \x03(\x0b\x32\x30.kusinta.iot.common.v1.ErrorDetail.MetadataEntryR\x08metadata\x1a;\n\rMetadataEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"\x95\x01\n\rBackendHealth\x12?\n\x05state\x18\x01 \x01(\x0e\x32).kusinta.iot.common.v1.BackendHealthStateR\x05state\x12\x43\n\x06reason\x18\x02 \x01(\x0e\x32+.kusinta.iot.common.v1.BackendFailureReasonR\x06reason*\xa1\x01\n\tSpaceType\x12\x1a\n\x16SPACE_TYPE_UNSPECIFIED\x10\x00\x12\x17\n\x13SPACE_TYPE_BUILDING\x10\x01\x12\x14\n\x10SPACE_TYPE_FLOOR\x10\x02\x12\x18\n\x14SPACE_TYPE_APARTMENT\x10\x03\x12\x13\n\x0fSPACE_TYPE_ROOM\x10\x04\x12\x1a\n\x16SPACE_TYPE_COMMON_AREA\x10\x05*\x83\x01\n\x13\x44\x65viceOwnershipType\x12%\n!DEVICE_OWNERSHIP_TYPE_UNSPECIFIED\x10\x00\x12!\n\x1d\x44\x45VICE_OWNERSHIP_TYPE_COMPANY\x10\x01\x12\"\n\x1e\x44\x45VICE_OWNERSHIP_TYPE_RESIDENT\x10\x02*\xe1\x01\n\x14\x44\x65viceLifecycleState\x12&\n\"DEVICE_LIFECYCLE_STATE_UNSPECIFIED\x10\x00\x12(\n$DEVICE_LIFECYCLE_STATE_PENDING_CLAIM\x10\x01\x12 \n\x1c\x44\x45VICE_LIFECYCLE_STATE_OWNED\x10\x02\x12+\n\'DEVICE_LIFECYCLE_STATE_PENDING_TRANSFER\x10\x03\x12(\n$DEVICE_LIFECYCLE_STATE_BUILDING_POOL\x10\x04*\x80\x01\n\x12\x43onnectorTransport\x12#\n\x1f\x43ONNECTOR_TRANSPORT_UNSPECIFIED\x10\x00\x12#\n\x1f\x43ONNECTOR_TRANSPORT_UNIX_SOCKET\x10\x01\x12 \n\x1c\x43ONNECTOR_TRANSPORT_MTLS_TCP\x10\x02*l\n\rConnectorKind\x12\x1e\n\x1a\x43ONNECTOR_KIND_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x43ONNECTOR_KIND_HOMEMATIC_IP\x10\x01\x12\x1a\n\x16\x43ONNECTOR_KIND_LORAWAN\x10\x02*y\n\x12\x42\x61\x63kendHealthState\x12$\n BACKEND_HEALTH_STATE_UNSPECIFIED\x10\x00\x12\x1b\n\x17\x42\x41\x43KEND_HEALTH_STATE_OK\x10\x01\x12 \n\x1c\x42\x41\x43KEND_HEALTH_STATE_FAILING\x10\x02*\x87\x02\n\x14\x42\x61\x63kendFailureReason\x12&\n\"BACKEND_FAILURE_REASON_UNSPECIFIED\x10\x00\x12&\n\"BACKEND_FAILURE_REASON_UNREACHABLE\x10\x01\x12&\n\"BACKEND_FAILURE_REASON_AUTH_FAILED\x10\x02\x12(\n$BACKEND_FAILURE_REASON_BACKEND_ERROR\x10\x03\x12(\n$BACKEND_FAILURE_REASON_MISCONFIGURED\x10\x04\x12#\n\x1f\x42\x41\x43KEND_FAILURE_REASON_INTERNAL\x10\x05\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n!kusinta/iot/common/v1/types.proto\x12\x15kusinta.iot.common.v1\x1a&kusinta/iot/identity/v1/identity.proto\"\x96\x01\n\nAssetOwner\x12/\n\x12owner_organisation\x18\x01 \x01(\x08H\x00R\x11ownerOrganisation\x12N\n\x11household_home_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdH\x00R\x0fhouseholdHomeIdB\x07\n\x05owner\"\xc6\x01\n\x0b\x45rrorDetail\x12\x12\n\x04\x63ode\x18\x01 \x01(\tR\x04\x63ode\x12\x18\n\x07message\x18\x02 \x01(\tR\x07message\x12L\n\x08metadata\x18\x03 \x03(\x0b\x32\x30.kusinta.iot.common.v1.ErrorDetail.MetadataEntryR\x08metadata\x1a;\n\rMetadataEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n\x05value\x18\x02 \x01(\tR\x05value:\x02\x38\x01\"\x95\x01\n\rBackendHealth\x12?\n\x05state\x18\x01 \x01(\x0e\x32).kusinta.iot.common.v1.BackendHealthStateR\x05state\x12\x43\n\x06reason\x18\x02 \x01(\x0e\x32+.kusinta.iot.common.v1.BackendFailureReasonR\x06reason*\xa1\x01\n\tSpaceType\x12\x1a\n\x16SPACE_TYPE_UNSPECIFIED\x10\x00\x12\x17\n\x13SPACE_TYPE_BUILDING\x10\x01\x12\x14\n\x10SPACE_TYPE_FLOOR\x10\x02\x12\x18\n\x14SPACE_TYPE_APARTMENT\x10\x03\x12\x13\n\x0fSPACE_TYPE_ROOM\x10\x04\x12\x1a\n\x16SPACE_TYPE_COMMON_AREA\x10\x05*\x83\x01\n\x13\x44\x65viceOwnershipType\x12%\n!DEVICE_OWNERSHIP_TYPE_UNSPECIFIED\x10\x00\x12!\n\x1d\x44\x45VICE_OWNERSHIP_TYPE_COMPANY\x10\x01\x12\"\n\x1e\x44\x45VICE_OWNERSHIP_TYPE_RESIDENT\x10\x02*\xe1\x01\n\x14\x44\x65viceLifecycleState\x12&\n\"DEVICE_LIFECYCLE_STATE_UNSPECIFIED\x10\x00\x12(\n$DEVICE_LIFECYCLE_STATE_PENDING_CLAIM\x10\x01\x12 \n\x1c\x44\x45VICE_LIFECYCLE_STATE_OWNED\x10\x02\x12+\n\'DEVICE_LIFECYCLE_STATE_PENDING_TRANSFER\x10\x03\x12(\n$DEVICE_LIFECYCLE_STATE_BUILDING_POOL\x10\x04*\x80\x01\n\x12\x43onnectorTransport\x12#\n\x1f\x43ONNECTOR_TRANSPORT_UNSPECIFIED\x10\x00\x12#\n\x1f\x43ONNECTOR_TRANSPORT_UNIX_SOCKET\x10\x01\x12 \n\x1c\x43ONNECTOR_TRANSPORT_MTLS_TCP\x10\x02*l\n\rConnectorKind\x12\x1e\n\x1a\x43ONNECTOR_KIND_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x43ONNECTOR_KIND_HOMEMATIC_IP\x10\x01\x12\x1a\n\x16\x43ONNECTOR_KIND_LORAWAN\x10\x02*y\n\x12\x42\x61\x63kendHealthState\x12$\n BACKEND_HEALTH_STATE_UNSPECIFIED\x10\x00\x12\x1b\n\x17\x42\x41\x43KEND_HEALTH_STATE_OK\x10\x01\x12 \n\x1c\x42\x41\x43KEND_HEALTH_STATE_FAILING\x10\x02*\x87\x02\n\x14\x42\x61\x63kendFailureReason\x12&\n\"BACKEND_FAILURE_REASON_UNSPECIFIED\x10\x00\x12&\n\"BACKEND_FAILURE_REASON_UNREACHABLE\x10\x01\x12&\n\"BACKEND_FAILURE_REASON_AUTH_FAILED\x10\x02\x12(\n$BACKEND_FAILURE_REASON_BACKEND_ERROR\x10\x03\x12(\n$BACKEND_FAILURE_REASON_MISCONFIGURED\x10\x04\x12#\n\x1f\x42\x41\x43KEND_FAILURE_REASON_INTERNAL\x10\x05\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,24 +35,26 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_ERRORDETAIL_METADATAENTRY']._loaded_options = None
   _globals['_ERRORDETAIL_METADATAENTRY']._serialized_options = b'8\001'
-  _globals['_SPACETYPE']._serialized_start=414
-  _globals['_SPACETYPE']._serialized_end=575
-  _globals['_DEVICEOWNERSHIPTYPE']._serialized_start=578
-  _globals['_DEVICEOWNERSHIPTYPE']._serialized_end=709
-  _globals['_DEVICELIFECYCLESTATE']._serialized_start=712
-  _globals['_DEVICELIFECYCLESTATE']._serialized_end=937
-  _globals['_CONNECTORTRANSPORT']._serialized_start=940
-  _globals['_CONNECTORTRANSPORT']._serialized_end=1068
-  _globals['_CONNECTORKIND']._serialized_start=1070
-  _globals['_CONNECTORKIND']._serialized_end=1178
-  _globals['_BACKENDHEALTHSTATE']._serialized_start=1180
-  _globals['_BACKENDHEALTHSTATE']._serialized_end=1301
-  _globals['_BACKENDFAILUREREASON']._serialized_start=1304
-  _globals['_BACKENDFAILUREREASON']._serialized_end=1567
-  _globals['_ERRORDETAIL']._serialized_start=61
-  _globals['_ERRORDETAIL']._serialized_end=259
-  _globals['_ERRORDETAIL_METADATAENTRY']._serialized_start=200
-  _globals['_ERRORDETAIL_METADATAENTRY']._serialized_end=259
-  _globals['_BACKENDHEALTH']._serialized_start=262
-  _globals['_BACKENDHEALTH']._serialized_end=411
+  _globals['_SPACETYPE']._serialized_start=607
+  _globals['_SPACETYPE']._serialized_end=768
+  _globals['_DEVICEOWNERSHIPTYPE']._serialized_start=771
+  _globals['_DEVICEOWNERSHIPTYPE']._serialized_end=902
+  _globals['_DEVICELIFECYCLESTATE']._serialized_start=905
+  _globals['_DEVICELIFECYCLESTATE']._serialized_end=1130
+  _globals['_CONNECTORTRANSPORT']._serialized_start=1133
+  _globals['_CONNECTORTRANSPORT']._serialized_end=1261
+  _globals['_CONNECTORKIND']._serialized_start=1263
+  _globals['_CONNECTORKIND']._serialized_end=1371
+  _globals['_BACKENDHEALTHSTATE']._serialized_start=1373
+  _globals['_BACKENDHEALTHSTATE']._serialized_end=1494
+  _globals['_BACKENDFAILUREREASON']._serialized_start=1497
+  _globals['_BACKENDFAILUREREASON']._serialized_end=1760
+  _globals['_ASSETOWNER']._serialized_start=101
+  _globals['_ASSETOWNER']._serialized_end=251
+  _globals['_ERRORDETAIL']._serialized_start=254
+  _globals['_ERRORDETAIL']._serialized_end=452
+  _globals['_ERRORDETAIL_METADATAENTRY']._serialized_start=393
+  _globals['_ERRORDETAIL_METADATAENTRY']._serialized_end=452
+  _globals['_BACKENDHEALTH']._serialized_start=455
+  _globals['_BACKENDHEALTH']._serialized_end=604
 # @@protoc_insertion_point(module_scope)

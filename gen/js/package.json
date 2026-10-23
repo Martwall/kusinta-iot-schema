@@ -1,6 +1,6 @@
 {
   "name": "@kusinta/iot-schema",
-  "version": "0.2.0-beta.40",
+  "version": "0.2.0-beta.41",
   "type": "module",
   "license": "MIT",
   "files": ["src"],
@@ -36,6 +36,7 @@
     "./webrtc/app-token":       "./src/kusinta/iot/webrtc/v1/app_token_pb.js",
     "./webrtc/command":         "./src/kusinta/iot/webrtc/v1/command_pb.js",
     "./webrtc/device-state":    "./src/kusinta/iot/webrtc/v1/device_state_pb.js",
+    "./webrtc/household":       "./src/kusinta/iot/webrtc/v1/household_pb.js",
     "./webrtc/invite":          "./src/kusinta/iot/webrtc/v1/invite_pb.js",
     "./webrtc/members":         "./src/kusinta/iot/webrtc/v1/members_pb.js",
     "./webrtc/management":      "./src/kusinta/iot/webrtc/v1/management_pb.js",

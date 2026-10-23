@@ -102,6 +102,12 @@ class TestFailure(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TEST_FAILURE_DEVICE_UNREACHABLE: _ClassVar[TestFailure]
     TEST_FAILURE_NO_EFFECT: _ClassVar[TestFailure]
     TEST_FAILURE_OBSERVED: _ClassVar[TestFailure]
+
+class CommissioningGrantState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    COMMISSIONING_GRANT_STATE_UNSPECIFIED: _ClassVar[CommissioningGrantState]
+    COMMISSIONING_GRANT_STATE_REQUESTED: _ClassVar[CommissioningGrantState]
+    COMMISSIONING_GRANT_STATE_GRANTED: _ClassVar[CommissioningGrantState]
 PARTY_UNSPECIFIED: Party
 PARTY_OWNER_ORGANISATION: Party
 PARTY_HOUSEHOLD: Party
@@ -163,6 +169,9 @@ TEST_FAILURE_DID_NOT_RETURN_TO_REST: TestFailure
 TEST_FAILURE_DEVICE_UNREACHABLE: TestFailure
 TEST_FAILURE_NO_EFFECT: TestFailure
 TEST_FAILURE_OBSERVED: TestFailure
+COMMISSIONING_GRANT_STATE_UNSPECIFIED: CommissioningGrantState
+COMMISSIONING_GRANT_STATE_REQUESTED: CommissioningGrantState
+COMMISSIONING_GRANT_STATE_GRANTED: CommissioningGrantState
 
 class Provenance(_message.Message):
     __slots__ = ("party", "evidence", "at", "by")
@@ -351,3 +360,37 @@ class CommissioningRecord(_message.Message):
     test: CommissioningTest
     template: HouseTemplate
     def __init__(self, fact: _Optional[_Union[CommissioningFact, _Mapping]] = ..., test: _Optional[_Union[CommissioningTest, _Mapping]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ...) -> None: ...
+
+class CommissioningGrant(_message.Message):
+    __slots__ = ("grant_id", "space_id", "installer", "installer_name", "state", "requested_at", "expires_at", "starts_at", "ends_at", "granted_by", "granted_at")
+    GRANT_ID_FIELD_NUMBER: _ClassVar[int]
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    INSTALLER_FIELD_NUMBER: _ClassVar[int]
+    INSTALLER_NAME_FIELD_NUMBER: _ClassVar[int]
+    STATE_FIELD_NUMBER: _ClassVar[int]
+    REQUESTED_AT_FIELD_NUMBER: _ClassVar[int]
+    EXPIRES_AT_FIELD_NUMBER: _ClassVar[int]
+    STARTS_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDS_AT_FIELD_NUMBER: _ClassVar[int]
+    GRANTED_BY_FIELD_NUMBER: _ClassVar[int]
+    GRANTED_AT_FIELD_NUMBER: _ClassVar[int]
+    grant_id: str
+    space_id: _identity_pb2.SpaceId
+    installer: _identity_pb2.UserId
+    installer_name: str
+    state: CommissioningGrantState
+    requested_at: _timestamp_pb2.Timestamp
+    expires_at: _timestamp_pb2.Timestamp
+    starts_at: _timestamp_pb2.Timestamp
+    ends_at: _timestamp_pb2.Timestamp
+    granted_by: _identity_pb2.UserId
+    granted_at: _timestamp_pb2.Timestamp
+    def __init__(self, grant_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., installer: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., installer_name: _Optional[str] = ..., state: _Optional[_Union[CommissioningGrantState, str]] = ..., requested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., expires_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., granted_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., granted_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class CommissioningGrants(_message.Message):
+    __slots__ = ("space_id", "grants")
+    SPACE_ID_FIELD_NUMBER: _ClassVar[int]
+    GRANTS_FIELD_NUMBER: _ClassVar[int]
+    space_id: _identity_pb2.SpaceId
+    grants: _containers.RepeatedCompositeFieldContainer[CommissioningGrant]
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., grants: _Optional[_Iterable[_Union[CommissioningGrant, _Mapping]]] = ...) -> None: ...
