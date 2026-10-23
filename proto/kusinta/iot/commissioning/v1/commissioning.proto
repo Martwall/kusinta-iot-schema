@@ -71,7 +71,9 @@ option optimize_for = SPEED;
 // home; a plant key of a plant the home's heating records hold whose source is a heat pump
 // (heating.v1.HeatingPlant.source); "home.grid_operator" and "home.main_fuse_amperes" only
 // while "home.own_grid_subscription" is true. A key not asked is not needed and is read by no
-// feature; an answer it holds is kept.
+// feature; an answer it holds is kept. A plant key about a plant outside homes (a central
+// plant in a shared space) is answered by the owner organisation (OWNER_ORGANISATION), as
+// facts about spaces outside homes are, never by a household.
 //
 //   "room.walls_changed"  bool; a room. Whether a wall bounding it was added, removed or
 //       moved since the house was built, so that the drawing's rooms, emitters and floor
@@ -573,7 +575,9 @@ message CommissioningProfile {
 // that set_up means the same on every gateway. A home with no room is not set up. Once a
 // home has been set up, its facts count neither way, whatever changes since — a room
 // created, an answer removed, a key a later release of this schema marks REQUIRED: only an
-// output bound since without a pass on the device it is bound to makes it not set up.
+// output bound since without a pass on the device it is bound to makes it not set up. A
+// household handover does not reset it: the home stays set up for the next household, so
+// that set_up tells the owner organisation nothing of who moved in or out.
 message HomeSetup {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   bool set_up = 2;
