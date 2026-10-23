@@ -72,8 +72,8 @@ option optimize_for = SPEED;
 //     (CreateInvite): the one invite that makes anyone more than a resident or a technician.
 //     It is always bound to an address (CreateInvite.email; "email_required" otherwise) and
 //     never a home key, so only the account whose verified address it names can redeem it,
-//     and it does so at once, never by a join request. Refused on a home with a resident as FAILED_PRECONDITION with
-//     metadata {"reason": "home_not_empty"}. A pending one ends when anyone becomes a resident
+//     and it does so at once, never by a join request. Refused on a home with a resident as
+//     FAILED_PRECONDITION with metadata {"reason": "home_not_empty"}. A pending one ends when anyone becomes a resident
 //     of the home, so it never makes an outsider the governor of a household that has moved
 //     in;
 //   * an admin-less home by asking one of its residents (RequestPromotion with home_id),
@@ -130,22 +130,37 @@ option optimize_for = SPEED;
 // VACANCY. When the last residency of a home ends other than by a confirmed handover — staff
 // end a lone resident, the last residents leave, an account is deleted — nothing is wiped at
 // once. The home is handed over as above, under the same notice: a handover starts, PENDING
-// and marked vacated, or one already pending carries on, its staff_confirmable_from moved to 7
-// days after that residency ended. It is told, and pushed as it changes, to the property owner
-// and the gateway administrators who reach the home, and to the departing household — the
-// members whose residencies were the home's last, each from their own sessions, for as long as
-// it is pending; nobody else learns of it. During the notice:
-//   * the departing household may export what they could read of the home when their
-//     residency ended (EXPORT), and its household admins may confirm the handover at once or
-//     cancel it, as the property owner and the gateway administrators may;
-//   * a member of the departing household who becomes a resident again cancels it, as if it
-//     had not started; anyone else becoming a resident restarts the notice
-//     (staff_confirmable_from), and the handover then goes on as one on a home with
-//     residents.
-// The wipe follows on confirmation, or on its own once staff_confirmable_from has passed with
-// nobody living in the home: a home nobody lives in keeps nothing of the household that left
-// for longer than the notice. A cancelled one leaves the home as it is until the next
-// handover.
+// and marked vacated, or one already pending becomes vacated, its staff_confirmable_from moved
+// to 7 days after that residency ended.
+//
+// The departing household is the members whose residencies were the home's last, as they
+// stood when those residencies ended; its household admins are those of them who were the
+// home's household admins then. The handover is told, and pushed as it changes, to the
+// property owner and the gateway administrators who reach the home, and to the departing
+// household, each from their own sessions, for as long as it is pending; nobody else learns of
+// it. A departing member who no longer reaches the gateway at all — removed from it
+// (RemoveFromGateway), or whose account was deleted — has no session there: they are told
+// nothing and export nothing.
+//
+// While it is pending:
+//   * the departing household may export the home (EXPORT), as they could read it when their
+//     residency ended: nothing recorded after that is in it;
+//   * its household admins may confirm it at once; the property owner and the gateway
+//     administrators from staff_confirmable_from on, which is also when it completes on its
+//     own;
+//   * nobody cancels it while the home is empty, neither the departing household nor staff:
+//     CancelHouseholdHandover is refused as FAILED_PRECONDITION with metadata
+//     {"reason": "vacated"}. It ends only by the wipe, or by a member of the departing
+//     household becoming a resident again, which cancels it as if it had not started;
+//   * nobody outside the departing household becomes a resident of the home. Whatever would
+//     file one — a redeemed invite, an approved join request, AssignUserToSpace — is refused
+//     as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, and so is creating
+//     a RESIDENT or HOUSEHOLD_ADMIN invite on the home; an invite already pending, an
+//     appointment invite included, answers signaling.v1.REDEEM_OUTCOME_NOT_ELIGIBLE when
+//     redeemed and ends at the wipe. Staff file a new household once the wipe is done: at the
+//     end of the notice, or sooner if one of the departing household's admins confirms.
+// So the home's next household never moves in among the last one's records, and a home nobody
+// lives in keeps nothing of the household that left for longer than the notice.
 //
 // WIPE. A home's wipe is a step on the gateway's own records, all of it or none, and the
 // effects outside them that it queues; nothing in the step waits on a network or a device.
@@ -259,8 +274,9 @@ message ConfirmHouseholdHandover {
   string handover_id = 1;
 }
 
-// Cancels a pending handover (HANDOVER, 3; VACANCY); nothing has changed, and nothing does. Answered
-// with ManagementAck, and pushed as CANCELLED. A handover that is not pending, or that the
+// Cancels a pending handover (HANDOVER, 3); nothing has changed, and nothing does. Answered
+// with ManagementAck, and pushed as CANCELLED. A vacated one is refused as FAILED_PRECONDITION
+// with metadata {"reason": "vacated"} (VACANCY). A handover that is not pending, or that the
 // caller may not cancel, is refused as NOT_ENTITLED.
 message CancelHouseholdHandover {
   string handover_id = 1;
@@ -312,9 +328,10 @@ message HouseholdHandover {
 
   // From when the property owner or a gateway administrator may confirm it, and when a vacated
   // one completes on its own: 7 days after started_at, and never sooner than 7 days after the
-  // home's last residency ended. A residency that starts while it is pending moves it to 7
-  // days after that, and the handover is pushed again, so that a household that moves in
-  // during it has its notice too.
+  // home's last residency ended. On a handover that is not vacated, a residency that starts
+  // while it is pending moves it to 7 days after that, and the handover is pushed again, so
+  // that a household that moves in during it has its notice too; on a vacated one nobody new
+  // moves in (VACANCY).
   google.protobuf.Timestamp staff_confirmable_from = 8;
 
   // When it was cancelled or done. Unset while pending.
@@ -344,8 +361,8 @@ message HouseholdHandovers {
 // Asks for one part of a home's export (EXPORT), answered with a HouseholdExport. The first
 // part is asked with no part_token, and each further one with the next_part_token of the part
 // before, until one comes with none. The home's residents only, and during a vacated handover
-// the departing household, as of when their residency ended (VACANCY); anyone else is refused
-// as NOT_ENTITLED.
+// the departing household, holding nothing recorded after their residency ended (VACANCY);
+// anyone else is refused as NOT_ENTITLED.
 //
 // A part_token says where the next part starts. The gateway keeps nothing for it: it checks
 // the token it minted when it is used, against the caller's rights then, so an interrupted

@@ -137,8 +137,9 @@ export declare type ConfirmHouseholdHandover = Message<"kusinta.iot.webrtc.v1.Co
 export declare const ConfirmHouseholdHandoverSchema: GenMessage<ConfirmHouseholdHandover>;
 
 /**
- * Cancels a pending handover (HANDOVER, 3; VACANCY); nothing has changed, and nothing does. Answered
- * with ManagementAck, and pushed as CANCELLED. A handover that is not pending, or that the
+ * Cancels a pending handover (HANDOVER, 3); nothing has changed, and nothing does. Answered
+ * with ManagementAck, and pushed as CANCELLED. A vacated one is refused as FAILED_PRECONDITION
+ * with metadata {"reason": "vacated"} (VACANCY). A handover that is not pending, or that the
  * caller may not cancel, is refused as NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.CancelHouseholdHandover
@@ -237,9 +238,10 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
   /**
    * From when the property owner or a gateway administrator may confirm it, and when a vacated
    * one completes on its own: 7 days after started_at, and never sooner than 7 days after the
-   * home's last residency ended. A residency that starts while it is pending moves it to 7
-   * days after that, and the handover is pushed again, so that a household that moves in
-   * during it has its notice too.
+   * home's last residency ended. On a handover that is not vacated, a residency that starts
+   * while it is pending moves it to 7 days after that, and the handover is pushed again, so
+   * that a household that moves in during it has its notice too; on a vacated one nobody new
+   * moves in (VACANCY).
    *
    * @generated from field: google.protobuf.Timestamp staff_confirmable_from = 8;
    */
@@ -317,8 +319,8 @@ export declare const HouseholdHandoversSchema: GenMessage<HouseholdHandovers>;
  * Asks for one part of a home's export (EXPORT), answered with a HouseholdExport. The first
  * part is asked with no part_token, and each further one with the next_part_token of the part
  * before, until one comes with none. The home's residents only, and during a vacated handover
- * the departing household, as of when their residency ended (VACANCY); anyone else is refused
- * as NOT_ENTITLED.
+ * the departing household, holding nothing recorded after their residency ended (VACANCY);
+ * anyone else is refused as NOT_ENTITLED.
  *
  * A part_token says where the next part starts. The gateway keeps nothing for it: it checks
  * the token it minted when it is used, against the caller's rights then, so an interrupted

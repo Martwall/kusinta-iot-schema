@@ -1298,9 +1298,12 @@ class ReportServiceReachResponse extends $pb.GeneratedMessage {
 /// gateway affects and to name where a problem is. The fields of space.v1.Space it needs and
 /// no more: who is filed on a space, and which devices are in it, stay on the gateway.
 ///
-/// name is the space's name as filed. Building staff see it in the app already, but the name
-/// of a home may carry personal data ("Apt 101 – Andersson"), so it is stored by the api-server
-/// as personal data: something an operator's data protection assessment covers.
+/// name is the space's name as filed (space.v1.Space.name). For an apartment that is the
+/// building's own identifier for it, which the property owner gives and only staff change; the
+/// household's own name for its home (space.v1.Space.home_name) is never sent here, and never
+/// leaves the gateway. A name staff gave may still carry personal data ("Apt 101 – Andersson"),
+/// so it is stored by the api-server as personal data: something an operator's data protection
+/// assessment covers.
 class ServedSpace extends $pb.GeneratedMessage {
   factory ServedSpace({
     $0.SpaceId? spaceId,
