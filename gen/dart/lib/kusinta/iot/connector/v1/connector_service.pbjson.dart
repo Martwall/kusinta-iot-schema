@@ -112,6 +112,8 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.link.v1.ClimateLeadSettings': $6.ClimateLeadSettings$json,
   '.kusinta.iot.connector.v1.BackendHealthReport': $0.BackendHealthReport$json,
   '.kusinta.iot.common.v1.BackendHealth': $8.BackendHealth$json,
+  '.kusinta.iot.connector.v1.ConnectorHandshake.KnownDeviceAccountLinksEntry':
+      $0.ConnectorHandshake_KnownDeviceAccountLinksEntry$json,
   '.kusinta.iot.device.v1.PropertyUpdateBatch': $11.PropertyUpdateBatch$json,
   '.kusinta.iot.device.v1.PropertyUpdate': $11.PropertyUpdate$json,
   '.kusinta.iot.connector.v1.DeviceAnnouncement': $0.DeviceAnnouncement$json,
