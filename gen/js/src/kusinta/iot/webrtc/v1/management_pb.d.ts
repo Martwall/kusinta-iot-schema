@@ -949,11 +949,12 @@ export declare type GetRoomHistory = Message<"kusinta.iot.webrtc.v1.GetRoomHisto
 
   /**
    * The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses
-   * the finest resolution it gives that it keeps for long enough to reach back to from_time,
-   * and at which the range up to to_time (unset: now) holds no more buckets than one answer
-   * may give (RoomHistory.covered_from); where none does, or from_time is unset, the
-   * coarsest. How long each is kept is the gateway's, the same for every room and recipient,
-   * so the choice tells nothing of a room or of who may read it.
+   * from the request and the resolutions alone, never from what it holds: the finest
+   * resolution it gives that it keeps for long enough to reach back to from_time, and whose
+   * bucket length fits the span from from_time to to_time (unset: now) into no more buckets
+   * than one answer may give samples (RoomHistory.covered_from); where none does, or from_time
+   * is unset, the coarsest. How long each is kept is the gateway's, the same for every room and
+   * recipient, so the choice tells nothing of a room or of who may read it.
    *
    * @generated from field: kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
    */
@@ -1004,7 +1005,9 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
    * this length (climate.v1.ApartmentClimateSummary). UNSPECIFIED: no summary is given.
    * The gateway's own setting, WEEK unless it is configured otherwise; no operation in this
    * contract changes it. A change applies to periods that open after it: service is given
-   * no period that opened before the last change.
+   * no period that opened before the last change. A household's clear of its climate history
+   * (ClearClimateHistory) likewise leaves service no period from before the clear, and none
+   * until the first period that starts at or after it has closed.
    *
    * @generated from field: kusinta.iot.climate.v1.ClimateSummaryPeriod climate_summary_period = 4;
    */
