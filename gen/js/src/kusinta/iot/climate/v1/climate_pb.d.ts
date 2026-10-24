@@ -417,22 +417,26 @@ export declare type RoomClimateList = Message<"kusinta.iot.climate.v1.RoomClimat
 export declare const RoomClimateListSchema: GenMessage<RoomClimateList>;
 
 /**
- * One fixed 15-minute bucket of a room's history. Every reading is optional: absent
- * means nothing was known for that bucket, never zero.
+ * One bucket of a room's history, of the length RoomHistory.resolution names. Every reading
+ * is optional: absent means nothing was known for that bucket, never zero.
+ *
+ * An hour is made of its quarter hours, each reading as stated beside it. A reading none of
+ * the hour's quarter hours knew is absent in the hour too; a mean is taken over the quarter
+ * hours that knew one, and a sum likewise, so an hour partly unknown sums only what was known.
  *
  * @generated from message kusinta.iot.climate.v1.RoomHistorySample
  */
 export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHistorySample"> & {
   /**
-   * The start of the bucket. Buckets are fixed 15-minute intervals aligned to UTC
-   * quarter hours (:00, :15, :30, :45).
+   * The start of the bucket.
    *
    * @generated from field: google.protobuf.Timestamp at = 1;
    */
   at?: Timestamp | undefined;
 
   /**
-   * The mean of the room's measured temperature over the bucket, in centidegrees.
+   * The mean of the room's measured temperature over the bucket, in centidegrees. An hour:
+   * the mean of its quarter hours' means.
    *
    * @generated from field: optional sint32 measured_centidegrees = 2;
    */
@@ -440,7 +444,8 @@ export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHist
 
   /**
    * RoomClimate.target_centidegrees and .effective_target_centidegrees as they were in
-   * force at the bucket's start, in centidegrees.
+   * force at the bucket's start, in centidegrees. An hour: its first quarter hour's, and so
+   * absent when that quarter hour did not know them, whatever the later ones knew.
    *
    * @generated from field: optional sint32 target_centidegrees = 3;
    */
@@ -453,14 +458,16 @@ export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHist
 
   /**
    * The mean opening over the bucket across the room's valves that report one, in
-   * thousandths of fully open. Absent if none of them does.
+   * thousandths of fully open. Absent if none of them does. An hour: the mean of its quarter
+   * hours' means.
    *
    * @generated from field: optional uint32 valve_open_permille = 5;
    */
   valveOpenPermille?: number | undefined;
 
   /**
-   * The seconds within the bucket during which any of the room's valves was open.
+   * The seconds within the bucket during which any of the room's valves was open. An hour:
+   * the sum of its quarter hours', so up to 3600.
    *
    * @generated from field: optional uint32 valve_open_seconds = 6;
    */
@@ -471,7 +478,8 @@ export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHist
    * (heating.v1.FloorZone), counted from the contact state the zone's output reports, read
    * through its closed_value, not from what was commanded. Kept apart from the valve
    * fields: a zone's duty and a valve's opening are different controls with different time
-   * scales. Absent where no floor zone heats the room.
+   * scales. Absent where no floor zone heats the room. An hour: the sum of its quarter
+   * hours', as valve_open_seconds.
    *
    * @generated from field: optional uint32 floor_heating_seconds = 7;
    */
@@ -485,7 +493,13 @@ export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHist
 export declare const RoomHistorySampleSchema: GenMessage<RoomHistorySample>;
 
 /**
- * A room's history, in reply to GetRoomHistory.
+ * A room's history at one resolution, in reply to GetRoomHistory.
+ *
+ * A bucket is given only once the gateway has made it, never before it ends, and only where
+ * all of it lies within what the recipient may read. The covered range is over bucket starts,
+ * as the request's range is: a bucket is within it when covered_from <= at < covered_to. A
+ * bucket within it that is not among the samples is one for which nothing is known; of any
+ * other bucket this answer says nothing, and an app MUST NOT show it as empty on its account.
  *
  * @generated from message kusinta.iot.climate.v1.RoomHistory
  */
@@ -496,22 +510,60 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
   roomId?: SpaceId | undefined;
 
   /**
-   * The earliest moment the gateway still holds for this room. The request's from_time
-   * and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
-   * returned. For a room in the recipient's own home it is no earlier than the start of
-   * their current residency, nor than when the room last joined their home; for any other
-   * room, no earlier than when it last left a home.
+   * The start of the earliest bucket the gateway still holds for this room at this resolution
+   * that the recipient may read. The request's from_time and to_time are clamped to
+   * [kept_from, now], so nothing before kept_from is ever returned. For a room in the
+   * recipient's own home it is no earlier than the start of their current residency, nor than
+   * when the room last joined their home; for any other room, no earlier than when it last
+   * left a home. How far back the room's history reaches for the recipient, whether or not
+   * this answer reaches that far. Always set: where nothing is held for the recipient at this
+   * resolution, it is no earlier than covered_to.
    *
    * @generated from field: google.protobuf.Timestamp kept_from = 2;
    */
   keptFrom?: Timestamp | undefined;
 
   /**
-   * The buckets within the clamped range, in order of `at`.
+   * The buckets within [covered_from, covered_to), in order of `at`.
    *
    * @generated from field: repeated kusinta.iot.climate.v1.RoomHistorySample samples = 3;
    */
   samples: RoomHistorySample[];
+
+  /**
+   * The length of the samples' buckets. An app labels and plots them by this, never by the
+   * resolution it asked for.
+   *
+   * @generated from field: kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
+   */
+  resolution: RoomHistoryResolution;
+
+  /**
+   * The range this answer covers, [covered_from, covered_to). Both unset only in an answer
+   * from a gateway that predates them, which caps nothing: it covers the range asked, clamped.
+   *
+   * covered_to is the request's to_time as clamped, but never later than the start of the
+   * oldest bucket at this resolution the gateway has still to make — for an hour, possibly
+   * days after it ends — so no bucket within the range is made later. The time after it may be
+   * held at a finer resolution, and an app asks for it there.
+   *
+   * covered_from is the request's from_time as clamped, unless more than 768 samples fall
+   * between it and covered_to: then the answer is capped, keeping the newest 768, and
+   * covered_from is samples[0].at. Either way it is never later than covered_to, and an answer
+   * that covers nothing has the two equal.
+   *
+   * An answer is capped exactly when covered_from is later than kept_from and than the
+   * from_time asked for, if one was. The app asks for the next page with the same from_time,
+   * this answer's resolution, and to_time = covered_from, until an answer is not capped.
+   *
+   * @generated from field: google.protobuf.Timestamp covered_from = 5;
+   */
+  coveredFrom?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp covered_to = 6;
+   */
+  coveredTo?: Timestamp | undefined;
 };
 
 /**
@@ -967,6 +1019,49 @@ export enum ClimateModeKind {
  * Describes the enum kusinta.iot.climate.v1.ClimateModeKind.
  */
 export declare const ClimateModeKindSchema: GenEnum<ClimateModeKind>;
+
+/**
+ * The length of the buckets a room's history is given in. Buckets are fixed and aligned to
+ * UTC, whatever the building's time zone.
+ *
+ * @generated from enum kusinta.iot.climate.v1.RoomHistoryResolution
+ */
+export enum RoomHistoryResolution {
+  /**
+   * In a request: the gateway chooses (webrtc.v1.GetRoomHistory). In an answer: quarter hours,
+   * from a gateway that predates this field.
+   *
+   * Rollout note: an app that predates this field asks with it unset and reads every sample as
+   * a quarter hour and every answer as whole. A gateway may therefore give hours, or cap an
+   * answer, only to apps that read RoomHistory.resolution and its covered range: app handling
+   * ships before or with the gateway that does.
+   *
+   * @generated from enum value: ROOM_HISTORY_RESOLUTION_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * 15-minute buckets (:00, :15, :30, :45).
+   *
+   * @generated from enum value: ROOM_HISTORY_RESOLUTION_QUARTER_HOUR = 1;
+   */
+  QUARTER_HOUR = 1,
+
+  /**
+   * Hour buckets, each made of its four quarter hours as RoomHistorySample says. An hour is
+   * given only where all of it lies within what the recipient may read (RoomHistory): one
+   * that straddles the start of their residency, or the room joining their home, is left out,
+   * never trimmed or averaged again from its readable part.
+   *
+   * @generated from enum value: ROOM_HISTORY_RESOLUTION_HOUR = 2;
+   */
+  HOUR = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.climate.v1.RoomHistoryResolution.
+ */
+export declare const RoomHistoryResolutionSchema: GenEnum<RoomHistoryResolution>;
 
 /**
  * The length of the periods an ApartmentClimateSummary is given in. Each period runs from

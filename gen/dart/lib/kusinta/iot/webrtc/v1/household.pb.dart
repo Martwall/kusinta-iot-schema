@@ -739,6 +739,175 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   void clearRecipientHouseholdAdmin() => $_clearField(12);
 }
 
+/// Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and
+/// nothing else. Answered with ManagementAck once it is erased. A household admin of the home
+/// only (HOUSEHOLD ADMIN, ADMIN-LESS HOME), and so not the departing household of a vacated
+/// handover (VACANCY); anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+/// (INVALID_REQUEST otherwise).
+///
+/// All of it goes, whenever it was recorded: also what the caller may not read themselves, from
+/// before their residency. Every resident of the home loses it, not only the caller, and each is
+/// told (ClimateHistoryCleared). Nothing recorded before the clear is kept, or recorded at or
+/// after it, a late write included: room history begins again with the first bucket that starts
+/// at or after the clear, and the summary of each length with its first period that starts at or
+/// after the clear; the gateway learns its models and makes its plans afresh from what is
+/// recorded at or after it. The household's members, the home's rooms and their settings, its
+/// modes, its commissioning and its heating records stay. Its device events stay. It cannot be
+/// undone, and the gateway keeps no copy: an app asks its user to confirm, saying that everyone
+/// in the home loses it, and offers the household's export (EXPORT) first. Later parts of an
+/// export under way give nothing that was erased.
+///
+/// The clear is pushed as ClimateHistoryCleared to every session of the home's residents, the
+/// caller's included, before the acknowledgement.
+///
+/// The summaries are erased for everyone they are given to, so the property owner, the gateway
+/// administrators and whoever else is given the apartment's summary as service
+/// (PrivacyDisclosure.climate_summary_period) lose its periods from before the clear too, and
+/// are given none until the first period that starts at or after it has closed.
+class ClearClimateHistory extends $pb.GeneratedMessage {
+  factory ClearClimateHistory({
+    $0.SpaceId? homeId,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    return result;
+  }
+
+  ClearClimateHistory._();
+
+  factory ClearClimateHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClearClimateHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClearClimateHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClearClimateHistory clone() => ClearClimateHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClearClimateHistory copyWith(void Function(ClearClimateHistory) updates) =>
+      super.copyWith((message) => updates(message as ClearClimateHistory))
+          as ClearClimateHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClearClimateHistory create() => ClearClimateHistory._();
+  @$core.override
+  ClearClimateHistory createEmptyInstance() => create();
+  static $pb.PbList<ClearClimateHistory> createRepeated() =>
+      $pb.PbList<ClearClimateHistory>();
+  @$core.pragma('dart2js:noInline')
+  static ClearClimateHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClearClimateHistory>(create);
+  static ClearClimateHistory? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+}
+
+/// A home's climate history was cleared (ClearClimateHistory), pushed as
+/// GatewayMessage.climate_history_cleared to the sessions of its residents. An app drops on
+/// arrival every room history and climate summary of the home it holds from before cleared_at,
+/// rather than keeping what the gateway no longer does, and keeps cleared_at as a lasting floor
+/// for the home: a sample or period dated before it that arrives later — an answer already in
+/// flight at the clear — is dropped on arrival too. Nobody else is told: whoever is given
+/// the apartment's summary as service learns of it by reading it.
+class ClimateHistoryCleared extends $pb.GeneratedMessage {
+  factory ClimateHistoryCleared({
+    $0.SpaceId? homeId,
+    $1.Timestamp? clearedAt,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (clearedAt != null) result.clearedAt = clearedAt;
+    return result;
+  }
+
+  ClimateHistoryCleared._();
+
+  factory ClimateHistoryCleared.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClimateHistoryCleared.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClimateHistoryCleared',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'clearedAt',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimateHistoryCleared clone() =>
+      ClimateHistoryCleared()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClimateHistoryCleared copyWith(
+          void Function(ClimateHistoryCleared) updates) =>
+      super.copyWith((message) => updates(message as ClimateHistoryCleared))
+          as ClimateHistoryCleared;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClimateHistoryCleared create() => ClimateHistoryCleared._();
+  @$core.override
+  ClimateHistoryCleared createEmptyInstance() => create();
+  static $pb.PbList<ClimateHistoryCleared> createRepeated() =>
+      $pb.PbList<ClimateHistoryCleared>();
+  @$core.pragma('dart2js:noInline')
+  static ClimateHistoryCleared getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClimateHistoryCleared>(create);
+  static ClimateHistoryCleared? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $1.Timestamp get clearedAt => $_getN(1);
+  @$pb.TagNumber(2)
+  set clearedAt($1.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasClearedAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearClearedAt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $1.Timestamp ensureClearedAt() => $_ensure(1);
+}
+
 /// Sets the household's own name for its home (space.v1.Space.home_name). Answered with
 /// ManagementAck. Any resident of the home may — a name is not governance, so it is not kept to
 /// household admins; anyone else is refused as NOT_ENTITLED. home_id must be an apartment
@@ -1076,8 +1245,11 @@ class HouseholdExport extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $2.RoomClimateList ensureRoomClimates() => $_ensure(1);
 
-  /// One room's history over at most 7 days of buckets, as GetRoomHistory answers it. A
-  /// room's history comes in as many parts as it takes, in order.
+  /// One room's history at one resolution, one GetRoomHistory answer's worth. A room's history
+  /// comes at the finest resolution held for each stretch of time, with no time given twice:
+  /// at the finest resolution the gateway gives, from its kept_from; at each coarser one, the
+  /// buckets from its kept_from that end at or before the next finer one's kept_from. In as
+  /// many parts as it takes.
   @$pb.TagNumber(3)
   $2.RoomHistory get roomHistory => $_getN(2);
   @$pb.TagNumber(3)

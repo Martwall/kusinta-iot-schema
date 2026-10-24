@@ -441,6 +441,8 @@ message GatewayMessage {
     kusinta.iot.commissioning.v1.CommissioningGrants commissioning_grants = 27;
     // A home's handover was started, cancelled or done; see HouseholdHandover.
     HouseholdHandover household_handover = 28;
+    // A home's climate history was cleared; see ClimateHistoryCleared.
+    ClimateHistoryCleared climate_history_cleared = 29;
   }
 }
 

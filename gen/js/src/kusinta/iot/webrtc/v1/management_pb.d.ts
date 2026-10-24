@@ -10,9 +10,9 @@ import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
-import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
+import type { ClimateModeKind, ClimateSummaryPeriod, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { CancelHouseholdHandover, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
+import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
@@ -916,12 +916,13 @@ export declare type ListRoomClimates = Message<"kusinta.iot.webrtc.v1.ListRoomCl
 export declare const ListRoomClimatesSchema: GenMessage<ListRoomClimates>;
 
 /**
- * Reads a room's history, answered with a climate.v1.RoomHistory of fixed 15-minute
- * buckets aligned to UTC quarter hours (:00, :15, :30, :45). Needs READ on the room.
+ * Reads a room's history at one resolution, answered with a climate.v1.RoomHistory. Needs
+ * READ on the room.
  *
  * The range is half-open: a bucket is returned when from_time <= at < to_time, so
- * back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
- * unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+ * back-to-back windows neither repeat nor skip a bucket. Unset to_time means now; unset
+ * from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now]. A long range is
+ * answered newest first, in capped pages (RoomHistory.covered_from).
  *
  * A room in a home is readable by its residents only, and only from the start of their
  * current residency (see access.v1.MembershipRelation). A caller who reaches it as service is
@@ -945,6 +946,19 @@ export declare type GetRoomHistory = Message<"kusinta.iot.webrtc.v1.GetRoomHisto
    * @generated from field: google.protobuf.Timestamp to_time = 3;
    */
   toTime?: Timestamp | undefined;
+
+  /**
+   * The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses
+   * from the request and the resolutions alone, never from what it holds: the finest
+   * resolution it gives that it keeps for long enough to reach back to from_time, and whose
+   * bucket length fits the span from from_time to to_time (unset: now) into no more buckets
+   * than one answer may give samples (RoomHistory.covered_from); where none does, or from_time
+   * is unset, the coarsest. How long each is kept is the gateway's, the same for every room and
+   * recipient, so the choice tells nothing of a room or of who may read it.
+   *
+   * @generated from field: kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
+   */
+  resolution: RoomHistoryResolution;
 };
 
 /**
@@ -991,7 +1005,9 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
    * this length (climate.v1.ApartmentClimateSummary). UNSPECIFIED: no summary is given.
    * The gateway's own setting, WEEK unless it is configured otherwise; no operation in this
    * contract changes it. A change applies to periods that open after it: service is given
-   * no period that opened before the last change.
+   * no period that opened before the last change. A household's clear of its climate history
+   * (ClearClimateHistory) likewise leaves service no period from before the clear, and none
+   * until the first period that starts at or after it has closed.
    *
    * @generated from field: kusinta.iot.climate.v1.ClimateSummaryPeriod climate_summary_period = 4;
    */
@@ -2323,6 +2339,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: SetHomeName;
     case: "setHomeName";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ClearClimateHistory clear_climate_history = 69;
+     */
+    value: ClearClimateHistory;
+    case: "clearClimateHistory";
   } | { case: undefined; value?: undefined };
 };
 

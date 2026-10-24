@@ -292,6 +292,77 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
 export declare const HouseholdHandoverSchema: GenMessage<HouseholdHandover>;
 
 /**
+ * Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and
+ * nothing else. Answered with ManagementAck once it is erased. A household admin of the home
+ * only (HOUSEHOLD ADMIN, ADMIN-LESS HOME), and so not the departing household of a vacated
+ * handover (VACANCY); anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+ * (INVALID_REQUEST otherwise).
+ *
+ * All of it goes, whenever it was recorded: also what the caller may not read themselves, from
+ * before their residency. Every resident of the home loses it, not only the caller, and each is
+ * told (ClimateHistoryCleared). Nothing recorded before the clear is kept, or recorded at or
+ * after it, a late write included: room history begins again with the first bucket that starts
+ * at or after the clear, and the summary of each length with its first period that starts at or
+ * after the clear; the gateway learns its models and makes its plans afresh from what is
+ * recorded at or after it. The household's members, the home's rooms and their settings, its
+ * modes, its commissioning and its heating records stay. Its device events stay. It cannot be
+ * undone, and the gateway keeps no copy: an app asks its user to confirm, saying that everyone
+ * in the home loses it, and offers the household's export (EXPORT) first. Later parts of an
+ * export under way give nothing that was erased.
+ *
+ * The clear is pushed as ClimateHistoryCleared to every session of the home's residents, the
+ * caller's included, before the acknowledgement.
+ *
+ * The summaries are erased for everyone they are given to, so the property owner, the gateway
+ * administrators and whoever else is given the apartment's summary as service
+ * (PrivacyDisclosure.climate_summary_period) lose its periods from before the clear too, and
+ * are given none until the first period that starts at or after it has closed.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ClearClimateHistory
+ */
+export declare type ClearClimateHistory = Message<"kusinta.iot.webrtc.v1.ClearClimateHistory"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ClearClimateHistory.
+ * Use `create(ClearClimateHistorySchema)` to create a new message.
+ */
+export declare const ClearClimateHistorySchema: GenMessage<ClearClimateHistory>;
+
+/**
+ * A home's climate history was cleared (ClearClimateHistory), pushed as
+ * GatewayMessage.climate_history_cleared to the sessions of its residents. An app drops on
+ * arrival every room history and climate summary of the home it holds from before cleared_at,
+ * rather than keeping what the gateway no longer does, and keeps cleared_at as a lasting floor
+ * for the home: a sample or period dated before it that arrives later — an answer already in
+ * flight at the clear — is dropped on arrival too. Nobody else is told: whoever is given
+ * the apartment's summary as service learns of it by reading it.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ClimateHistoryCleared
+ */
+export declare type ClimateHistoryCleared = Message<"kusinta.iot.webrtc.v1.ClimateHistoryCleared"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp cleared_at = 2;
+   */
+  clearedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ClimateHistoryCleared.
+ * Use `create(ClimateHistoryClearedSchema)` to create a new message.
+ */
+export declare const ClimateHistoryClearedSchema: GenMessage<ClimateHistoryCleared>;
+
+/**
  * Sets the household's own name for its home (space.v1.Space.home_name). Answered with
  * ManagementAck. Any resident of the home may — a name is not governance, so it is not kept to
  * household admins; anyone else is refused as NOT_ENTITLED. home_id must be an apartment
@@ -398,8 +469,11 @@ export declare type HouseholdExport = Message<"kusinta.iot.webrtc.v1.HouseholdEx
     case: "roomClimates";
   } | {
     /**
-     * One room's history over at most 7 days of buckets, as GetRoomHistory answers it. A
-     * room's history comes in as many parts as it takes, in order.
+     * One room's history at one resolution, one GetRoomHistory answer's worth. A room's history
+     * comes at the finest resolution held for each stretch of time, with no time given twice:
+     * at the finest resolution the gateway gives, from its kept_from; at each coarser one, the
+     * buckets from its kept_from that end at or before the next finer one's kept_from. In as
+     * many parts as it takes.
      *
      * @generated from field: kusinta.iot.climate.v1.RoomHistory room_history = 3;
      */

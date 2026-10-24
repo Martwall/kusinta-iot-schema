@@ -2105,6 +2105,7 @@ enum GatewayMessage_Payload {
   commissioningTest,
   commissioningGrants,
   householdHandover,
+  climateHistoryCleared,
   notSet
 }
 
@@ -2136,6 +2137,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     $10.CommissioningTest? commissioningTest,
     $10.CommissioningGrants? commissioningGrants,
     $11.HouseholdHandover? householdHandover,
+    $11.ClimateHistoryCleared? climateHistoryCleared,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -2169,6 +2171,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (commissioningGrants != null)
       result.commissioningGrants = commissioningGrants;
     if (householdHandover != null) result.householdHandover = householdHandover;
+    if (climateHistoryCleared != null)
+      result.climateHistoryCleared = climateHistoryCleared;
     return result;
   }
 
@@ -2207,6 +2211,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     26: GatewayMessage_Payload.commissioningTest,
     27: GatewayMessage_Payload.commissioningGrants,
     28: GatewayMessage_Payload.householdHandover,
+    29: GatewayMessage_Payload.climateHistoryCleared,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2238,7 +2243,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
       25,
       26,
       27,
-      28
+      28,
+      29
     ])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$13.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
@@ -2293,6 +2299,9 @@ class GatewayMessage extends $pb.GeneratedMessage {
         subBuilder: $10.CommissioningGrants.create)
     ..aOM<$11.HouseholdHandover>(28, _omitFieldNames ? '' : 'householdHandover',
         subBuilder: $11.HouseholdHandover.create)
+    ..aOM<$11.ClimateHistoryCleared>(
+        29, _omitFieldNames ? '' : 'climateHistoryCleared',
+        subBuilder: $11.ClimateHistoryCleared.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2616,6 +2625,19 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearHouseholdHandover() => $_clearField(28);
   @$pb.TagNumber(28)
   $11.HouseholdHandover ensureHouseholdHandover() => $_ensure(25);
+
+  /// A home's climate history was cleared; see ClimateHistoryCleared.
+  @$pb.TagNumber(29)
+  $11.ClimateHistoryCleared get climateHistoryCleared => $_getN(26);
+  @$pb.TagNumber(29)
+  set climateHistoryCleared($11.ClimateHistoryCleared value) =>
+      $_setField(29, value);
+  @$pb.TagNumber(29)
+  $core.bool hasClimateHistoryCleared() => $_has(26);
+  @$pb.TagNumber(29)
+  void clearClimateHistoryCleared() => $_clearField(29);
+  @$pb.TagNumber(29)
+  $11.ClimateHistoryCleared ensureClimateHistoryCleared() => $_ensure(26);
 }
 
 enum AppMessage_Payload {

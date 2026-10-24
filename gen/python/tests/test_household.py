@@ -10,6 +10,7 @@ These assert the decisions the shape encodes:
     its home and never to a person
   * a handover is started, then confirmed or cancelled; the household can export what it may
     read, part by part, and no part carries the gateway's models
+  * a home's climate history is cleared whole, by naming the home and nothing else
 """
 
 from kusinta.iot.access.v1 import roles_pb2
@@ -236,6 +237,40 @@ def test_a_home_name_is_set_for_one_home():
     )
 
     assert _round_trip(request).set_home_name.name == "Our place"
+
+
+def test_clearing_a_home_s_climate_history_is_a_management_request_for_one_home():
+    request = management_pb2.ManagementRequest(
+        clear_climate_history=h.ClearClimateHistory(home_id=identity_pb2.SpaceId(value="home-15"))
+    )
+
+    decoded = _round_trip(request)
+    assert (decoded.WhichOneof("request"), decoded.clear_climate_history.home_id.value) == (
+        "clear_climate_history",
+        "home-15",
+    )
+
+
+def test_a_cleared_climate_history_is_pushed_with_when_it_was_cleared():
+    from google.protobuf import timestamp_pb2
+
+    message = envelope_pb2.GatewayMessage(
+        climate_history_cleared=h.ClimateHistoryCleared(
+            home_id=identity_pb2.SpaceId(value="home-15"),
+            cleared_at=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+        )
+    )
+
+    decoded = _round_trip(message)
+    assert (
+        decoded.WhichOneof("payload"),
+        decoded.climate_history_cleared.home_id.value,
+        decoded.climate_history_cleared.cleared_at.seconds,
+    ) == ("climate_history_cleared", "home-15", 1_800_000_000)
+
+
+def test_clearing_a_home_s_climate_history_names_nothing_but_the_home():
+    assert [f.name for f in h.ClearClimateHistory.DESCRIPTOR.fields] == ["home_id"]
 
 
 def test_a_handover_is_pending_cancelled_or_done():

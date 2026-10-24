@@ -875,8 +875,12 @@ class RoomClimateList extends $pb.GeneratedMessage {
   $pb.PbList<ClimateMode> get modes => $_getList(1);
 }
 
-/// One fixed 15-minute bucket of a room's history. Every reading is optional: absent
-/// means nothing was known for that bucket, never zero.
+/// One bucket of a room's history, of the length RoomHistory.resolution names. Every reading
+/// is optional: absent means nothing was known for that bucket, never zero.
+///
+/// An hour is made of its quarter hours, each reading as stated beside it. A reading none of
+/// the hour's quarter hours knew is absent in the hour too; a mean is taken over the quarter
+/// hours that knew one, and a sum likewise, so an hour partly unknown sums only what was known.
 class RoomHistorySample extends $pb.GeneratedMessage {
   factory RoomHistorySample({
     $0.Timestamp? at,
@@ -953,8 +957,7 @@ class RoomHistorySample extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<RoomHistorySample>(create);
   static RoomHistorySample? _defaultInstance;
 
-  /// The start of the bucket. Buckets are fixed 15-minute intervals aligned to UTC
-  /// quarter hours (:00, :15, :30, :45).
+  /// The start of the bucket.
   @$pb.TagNumber(1)
   $0.Timestamp get at => $_getN(0);
   @$pb.TagNumber(1)
@@ -966,7 +969,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.Timestamp ensureAt() => $_ensure(0);
 
-  /// The mean of the room's measured temperature over the bucket, in centidegrees.
+  /// The mean of the room's measured temperature over the bucket, in centidegrees. An hour:
+  /// the mean of its quarter hours' means.
   @$pb.TagNumber(2)
   $core.int get measuredCentidegrees => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -977,7 +981,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   void clearMeasuredCentidegrees() => $_clearField(2);
 
   /// RoomClimate.target_centidegrees and .effective_target_centidegrees as they were in
-  /// force at the bucket's start, in centidegrees.
+  /// force at the bucket's start, in centidegrees. An hour: its first quarter hour's, and so
+  /// absent when that quarter hour did not know them, whatever the later ones knew.
   @$pb.TagNumber(3)
   $core.int get targetCentidegrees => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -998,7 +1003,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   void clearEffectiveTargetCentidegrees() => $_clearField(4);
 
   /// The mean opening over the bucket across the room's valves that report one, in
-  /// thousandths of fully open. Absent if none of them does.
+  /// thousandths of fully open. Absent if none of them does. An hour: the mean of its quarter
+  /// hours' means.
   @$pb.TagNumber(5)
   $core.int get valveOpenPermille => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -1008,7 +1014,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearValveOpenPermille() => $_clearField(5);
 
-  /// The seconds within the bucket during which any of the room's valves was open.
+  /// The seconds within the bucket during which any of the room's valves was open. An hour:
+  /// the sum of its quarter hours', so up to 3600.
   @$pb.TagNumber(6)
   $core.int get valveOpenSeconds => $_getIZ(5);
   @$pb.TagNumber(6)
@@ -1022,7 +1029,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   /// (heating.v1.FloorZone), counted from the contact state the zone's output reports, read
   /// through its closed_value, not from what was commanded. Kept apart from the valve
   /// fields: a zone's duty and a valve's opening are different controls with different time
-  /// scales. Absent where no floor zone heats the room.
+  /// scales. Absent where no floor zone heats the room. An hour: the sum of its quarter
+  /// hours', as valve_open_seconds.
   @$pb.TagNumber(7)
   $core.int get floorHeatingSeconds => $_getIZ(6);
   @$pb.TagNumber(7)
@@ -1033,17 +1041,29 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   void clearFloorHeatingSeconds() => $_clearField(7);
 }
 
-/// A room's history, in reply to GetRoomHistory.
+/// A room's history at one resolution, in reply to GetRoomHistory.
+///
+/// A bucket is given only once the gateway has made it, never before it ends, and only where
+/// all of it lies within what the recipient may read. The covered range is over bucket starts,
+/// as the request's range is: a bucket is within it when covered_from <= at < covered_to. A
+/// bucket within it that is not among the samples is one for which nothing is known; of any
+/// other bucket this answer says nothing, and an app MUST NOT show it as empty on its account.
 class RoomHistory extends $pb.GeneratedMessage {
   factory RoomHistory({
     $1.SpaceId? roomId,
     $0.Timestamp? keptFrom,
     $core.Iterable<RoomHistorySample>? samples,
+    RoomHistoryResolution? resolution,
+    $0.Timestamp? coveredFrom,
+    $0.Timestamp? coveredTo,
   }) {
     final result = create();
     if (roomId != null) result.roomId = roomId;
     if (keptFrom != null) result.keptFrom = keptFrom;
     if (samples != null) result.samples.addAll(samples);
+    if (resolution != null) result.resolution = resolution;
+    if (coveredFrom != null) result.coveredFrom = coveredFrom;
+    if (coveredTo != null) result.coveredTo = coveredTo;
     return result;
   }
 
@@ -1068,6 +1088,16 @@ class RoomHistory extends $pb.GeneratedMessage {
     ..pc<RoomHistorySample>(
         3, _omitFieldNames ? '' : 'samples', $pb.PbFieldType.PM,
         subBuilder: RoomHistorySample.create)
+    ..e<RoomHistoryResolution>(
+        4, _omitFieldNames ? '' : 'resolution', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+        valueOf: RoomHistoryResolution.valueOf,
+        enumValues: RoomHistoryResolution.values)
+    ..aOM<$0.Timestamp>(5, _omitFieldNames ? '' : 'coveredFrom',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(6, _omitFieldNames ? '' : 'coveredTo',
+        subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1101,11 +1131,14 @@ class RoomHistory extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.SpaceId ensureRoomId() => $_ensure(0);
 
-  /// The earliest moment the gateway still holds for this room. The request's from_time
-  /// and to_time are clamped to [kept_from, now], so nothing before kept_from is ever
-  /// returned. For a room in the recipient's own home it is no earlier than the start of
-  /// their current residency, nor than when the room last joined their home; for any other
-  /// room, no earlier than when it last left a home.
+  /// The start of the earliest bucket the gateway still holds for this room at this resolution
+  /// that the recipient may read. The request's from_time and to_time are clamped to
+  /// [kept_from, now], so nothing before kept_from is ever returned. For a room in the
+  /// recipient's own home it is no earlier than the start of their current residency, nor than
+  /// when the room last joined their home; for any other room, no earlier than when it last
+  /// left a home. How far back the room's history reaches for the recipient, whether or not
+  /// this answer reaches that far. Always set: where nothing is held for the recipient at this
+  /// resolution, it is no earlier than covered_to.
   @$pb.TagNumber(2)
   $0.Timestamp get keptFrom => $_getN(1);
   @$pb.TagNumber(2)
@@ -1117,9 +1150,58 @@ class RoomHistory extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $0.Timestamp ensureKeptFrom() => $_ensure(1);
 
-  /// The buckets within the clamped range, in order of `at`.
+  /// The buckets within [covered_from, covered_to), in order of `at`.
   @$pb.TagNumber(3)
   $pb.PbList<RoomHistorySample> get samples => $_getList(2);
+
+  /// The length of the samples' buckets. An app labels and plots them by this, never by the
+  /// resolution it asked for.
+  @$pb.TagNumber(4)
+  RoomHistoryResolution get resolution => $_getN(3);
+  @$pb.TagNumber(4)
+  set resolution(RoomHistoryResolution value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasResolution() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearResolution() => $_clearField(4);
+
+  /// The range this answer covers, [covered_from, covered_to). Both unset only in an answer
+  /// from a gateway that predates them, which caps nothing: it covers the range asked, clamped.
+  ///
+  /// covered_to is the request's to_time as clamped, but never later than the start of the
+  /// oldest bucket at this resolution the gateway has still to make — for an hour, possibly
+  /// days after it ends — so no bucket within the range is made later. The time after it may be
+  /// held at a finer resolution, and an app asks for it there.
+  ///
+  /// covered_from is the request's from_time as clamped, unless more than 768 samples fall
+  /// between it and covered_to: then the answer is capped, keeping the newest 768, and
+  /// covered_from is samples[0].at. Either way it is never later than covered_to, and an answer
+  /// that covers nothing has the two equal.
+  ///
+  /// An answer is capped exactly when covered_from is later than kept_from and than the
+  /// from_time asked for, if one was. The app asks for the next page with the same from_time,
+  /// this answer's resolution, and to_time = covered_from, until an answer is not capped.
+  @$pb.TagNumber(5)
+  $0.Timestamp get coveredFrom => $_getN(4);
+  @$pb.TagNumber(5)
+  set coveredFrom($0.Timestamp value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCoveredFrom() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCoveredFrom() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $0.Timestamp ensureCoveredFrom() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $0.Timestamp get coveredTo => $_getN(5);
+  @$pb.TagNumber(6)
+  set coveredTo($0.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCoveredTo() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCoveredTo() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $0.Timestamp ensureCoveredTo() => $_ensure(5);
 }
 
 /// An apartment's climate over one period.

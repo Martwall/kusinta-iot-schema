@@ -9,6 +9,7 @@ These assert the decisions the shape encodes:
   * a mode sits on a space and is switched off with kind UNSPECIFIED
   * a holiday's warm-up lead is the gateway's, and absent when there is none
   * a room's history is fixed buckets whose readings are each optional
+  * a room's history names its resolution and the range an answer covers
 """
 
 from google.protobuf import timestamp_pb2
@@ -282,6 +283,46 @@ def test_a_history_answers_with_how_far_back_it_is_kept_and_its_samples():
         decoded.room_history.kept_from.seconds,
         [s.at.seconds for s in decoded.room_history.samples],
     ) == ("room_history", 1_799_000_000, [1_800_000_000, 1_800_000_900])
+
+
+def test_a_history_request_names_the_resolution_it_wants():
+    request = management_pb2.GetRoomHistory(
+        room_id=_ROOM, resolution=climate_pb2.ROOM_HISTORY_RESOLUTION_HOUR
+    )
+
+    assert _round_trip(request).resolution == climate_pb2.ROOM_HISTORY_RESOLUTION_HOUR
+
+
+def test_a_history_is_given_in_quarter_hours_or_hours():
+    assert [v.name for v in climate_pb2.RoomHistoryResolution.DESCRIPTOR.values] == [
+        "ROOM_HISTORY_RESOLUTION_UNSPECIFIED",
+        "ROOM_HISTORY_RESOLUTION_QUARTER_HOUR",
+        "ROOM_HISTORY_RESOLUTION_HOUR",
+    ]
+
+
+def test_a_history_says_the_resolution_its_samples_are_given_in():
+    history = climate_pb2.RoomHistory(
+        room_id=_ROOM, resolution=climate_pb2.ROOM_HISTORY_RESOLUTION_QUARTER_HOUR
+    )
+
+    assert _round_trip(history).resolution == climate_pb2.ROOM_HISTORY_RESOLUTION_QUARTER_HOUR
+
+
+def test_a_history_carries_the_range_it_covers_apart_from_how_far_back_it_is_kept():
+    history = climate_pb2.RoomHistory(
+        room_id=_ROOM,
+        kept_from=timestamp_pb2.Timestamp(seconds=1_780_000_000),
+        covered_from=timestamp_pb2.Timestamp(seconds=1_797_321_600),
+        covered_to=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+    )
+
+    decoded = _round_trip(history)
+    assert (
+        decoded.kept_from.seconds,
+        decoded.covered_from.seconds,
+        decoded.covered_to.seconds,
+    ) == (1_780_000_000, 1_797_321_600, 1_800_000_000)
 
 
 # --- explanations: why a room is where it is -------------------------------------------

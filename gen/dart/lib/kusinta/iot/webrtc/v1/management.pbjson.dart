@@ -784,6 +784,14 @@ const GetRoomHistory$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'toTime'
     },
+    {
+      '1': 'resolution',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.RoomHistoryResolution',
+      '10': 'resolution'
+    },
   ],
 };
 
@@ -792,7 +800,8 @@ final $typed_data.Uint8List getRoomHistoryDescriptor = $convert.base64Decode(
     'Cg5HZXRSb29tSGlzdG9yeRI5Cgdyb29tX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdH'
     'kudjEuU3BhY2VJZFIGcm9vbUlkEjcKCWZyb21fdGltZRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1'
     'Zi5UaW1lc3RhbXBSCGZyb21UaW1lEjMKB3RvX3RpbWUYAyABKAsyGi5nb29nbGUucHJvdG9idW'
-    'YuVGltZXN0YW1wUgZ0b1RpbWU=');
+    'YuVGltZXN0YW1wUgZ0b1RpbWUSTQoKcmVzb2x1dGlvbhgEIAEoDjItLmt1c2ludGEuaW90LmNs'
+    'aW1hdGUudjEuUm9vbUhpc3RvcnlSZXNvbHV0aW9uUgpyZXNvbHV0aW9u');
 
 @$core.Deprecated('Use privacyDisclosureDescriptor instead')
 const PrivacyDisclosure$json = {
@@ -2115,6 +2124,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'setHomeName'
     },
+    {
+      '1': 'clear_climate_history',
+      '3': 69,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ClearClimateHistory',
+      '9': 0,
+      '10': 'clearClimateHistory'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2235,5 +2253,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'Vob2xkSGFuZG92ZXJzSABSFmxpc3RIb3VzZWhvbGRIYW5kb3ZlcnMSYAoVZXhwb3J0X2hvdXNl'
     'aG9sZF9kYXRhGEMgASgLMioua3VzaW50YS5pb3Qud2VicnRjLnYxLkV4cG9ydEhvdXNlaG9sZE'
     'RhdGFIAFITZXhwb3J0SG91c2Vob2xkRGF0YRJICg1zZXRfaG9tZV9uYW1lGEQgASgLMiIua3Vz'
-    'aW50YS5pb3Qud2VicnRjLnYxLlNldEhvbWVOYW1lSABSC3NldEhvbWVOYW1lQgkKB3JlcXVlc3'
-    'Q=');
+    'aW50YS5pb3Qud2VicnRjLnYxLlNldEhvbWVOYW1lSABSC3NldEhvbWVOYW1lEmAKFWNsZWFyX2'
+    'NsaW1hdGVfaGlzdG9yeRhFIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5DbGVhckNsaW1h'
+    'dGVIaXN0b3J5SABSE2NsZWFyQ2xpbWF0ZUhpc3RvcnlCCQoHcmVxdWVzdA==');
