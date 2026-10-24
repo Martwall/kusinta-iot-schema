@@ -1042,6 +1042,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'householdHandover'
     },
+    {
+      '1': 'climate_history_cleared',
+      '3': 29,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ClimateHistoryCleared',
+      '9': 0,
+      '10': 'climateHistoryCleared'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -1093,8 +1102,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     'Rjb21taXNzaW9uaW5nX2dyYW50cxgbIAEoCzIxLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcu'
     'djEuQ29tbWlzc2lvbmluZ0dyYW50c0gAUhNjb21taXNzaW9uaW5nR3JhbnRzElkKEmhvdXNlaG'
     '9sZF9oYW5kb3ZlchgcIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Ib3VzZWhvbGRIYW5k'
-    'b3ZlckgAUhFob3VzZWhvbGRIYW5kb3ZlckIJCgdwYXlsb2FkSgQIDxAQSgQIBxAIUhZhdHRyaW'
-    'J1dGVfd3JpdGVfcmVzdWx0Ug5wcm9wZXJ0eV9ldmVudA==');
+    'b3ZlckgAUhFob3VzZWhvbGRIYW5kb3ZlchJmChdjbGltYXRlX2hpc3RvcnlfY2xlYXJlZBgdIA'
+    'EoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5DbGltYXRlSGlzdG9yeUNsZWFyZWRIAFIVY2xp'
+    'bWF0ZUhpc3RvcnlDbGVhcmVkQgkKB3BheWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cm'
+    'l0ZV9yZXN1bHRSDnByb3BlcnR5X2V2ZW50');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

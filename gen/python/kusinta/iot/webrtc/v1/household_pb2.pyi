@@ -108,6 +108,20 @@ class HouseholdHandover(_message.Message):
     recipient_household_admin: bool
     def __init__(self, handover_id: _Optional[str] = ..., home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., state: _Optional[_Union[HouseholdHandoverState, str]] = ..., started_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., started_by_name: _Optional[str] = ..., started_by_staff: _Optional[bool] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., staff_confirmable_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ended_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., vacated: _Optional[bool] = ..., recipient_in_household: _Optional[bool] = ..., recipient_household_admin: _Optional[bool] = ...) -> None: ...
 
+class ClearClimateHistory(_message.Message):
+    __slots__ = ("home_id",)
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
+    home_id: _identity_pb2.SpaceId
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
+
+class ClimateHistoryCleared(_message.Message):
+    __slots__ = ("home_id", "cleared_at")
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
+    CLEARED_AT_FIELD_NUMBER: _ClassVar[int]
+    home_id: _identity_pb2.SpaceId
+    cleared_at: _timestamp_pb2.Timestamp
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., cleared_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
 class SetHomeName(_message.Message):
     __slots__ = ("home_id", "name")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]

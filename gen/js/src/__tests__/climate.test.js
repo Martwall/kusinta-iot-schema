@@ -8,12 +8,15 @@ import {
   RoomClimateCondition,
   ClimateModeSchema,
   RoomHistorySampleSchema,
+  RoomHistorySchema,
+  RoomHistoryResolution,
   ClimateExplanationKind,
   ClimateExplanationSubject,
   RoomPlanning,
 } from '../kusinta/iot/climate/v1/climate_pb.js'
 import {
   ConfigureRoomClimateSchema,
+  GetRoomHistorySchema,
   RoomSensorsSchema,
   ManagementRequestSchema,
 } from '../kusinta/iot/webrtc/v1/management_pb.js'
@@ -209,6 +212,45 @@ describe('room history', () => {
       decoded.valveOpenSeconds,
       decoded.floorHeatingSeconds,
     ]).toEqual([2087, 2100, 1700, 420, 540, 600])
+  })
+
+  it('is given in quarter hours or hours', () => {
+    expect([RoomHistoryResolution.UNSPECIFIED, RoomHistoryResolution.QUARTER_HOUR, RoomHistoryResolution.HOUR]).toEqual([
+      0, 1, 2,
+    ])
+  })
+
+  it('names the resolution a request asks for', () => {
+    const request = create(GetRoomHistorySchema, {
+      roomId: ROOM,
+      resolution: RoomHistoryResolution.HOUR,
+    })
+    const decoded = fromBinary(GetRoomHistorySchema, toBinary(GetRoomHistorySchema, request))
+    expect(decoded.resolution).toBe(RoomHistoryResolution.HOUR)
+  })
+
+  it('says the resolution its samples are given in', () => {
+    const history = create(RoomHistorySchema, {
+      roomId: ROOM,
+      resolution: RoomHistoryResolution.QUARTER_HOUR,
+    })
+    const decoded = fromBinary(RoomHistorySchema, toBinary(RoomHistorySchema, history))
+    expect(decoded.resolution).toBe(RoomHistoryResolution.QUARTER_HOUR)
+  })
+
+  it('carries the range an answer covers apart from how far back it is kept', () => {
+    const history = create(RoomHistorySchema, {
+      roomId: ROOM,
+      keptFrom: timestampFromMs(1_780_000_000_000),
+      coveredFrom: timestampFromMs(1_797_321_600_000),
+      coveredTo: timestampFromMs(1_800_000_000_000),
+    })
+    const decoded = fromBinary(RoomHistorySchema, toBinary(RoomHistorySchema, history))
+    expect([decoded.keptFrom?.seconds, decoded.coveredFrom?.seconds, decoded.coveredTo?.seconds]).toEqual([
+      1_780_000_000n,
+      1_797_321_600n,
+      1_800_000_000n,
+    ])
   })
 
   it('answers with how far back it is kept and its samples', () => {

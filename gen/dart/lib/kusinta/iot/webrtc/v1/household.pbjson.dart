@@ -284,6 +284,55 @@ final $typed_data.Uint8List householdHandoverDescriptor = $convert.base64Decode(
     'aXBpZW50X2luX2hvdXNlaG9sZBgLIAEoCFIUcmVjaXBpZW50SW5Ib3VzZWhvbGQSOgoZcmVjaX'
     'BpZW50X2hvdXNlaG9sZF9hZG1pbhgMIAEoCFIXcmVjaXBpZW50SG91c2Vob2xkQWRtaW4=');
 
+@$core.Deprecated('Use clearClimateHistoryDescriptor instead')
+const ClearClimateHistory$json = {
+  '1': 'ClearClimateHistory',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+  ],
+};
+
+/// Descriptor for `ClearClimateHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List clearClimateHistoryDescriptor = $convert.base64Decode(
+    'ChNDbGVhckNsaW1hdGVIaXN0b3J5EjkKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZG'
+    'VudGl0eS52MS5TcGFjZUlkUgZob21lSWQ=');
+
+@$core.Deprecated('Use climateHistoryClearedDescriptor instead')
+const ClimateHistoryCleared$json = {
+  '1': 'ClimateHistoryCleared',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {
+      '1': 'cleared_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'clearedAt'
+    },
+  ],
+};
+
+/// Descriptor for `ClimateHistoryCleared`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List climateHistoryClearedDescriptor = $convert.base64Decode(
+    'ChVDbGltYXRlSGlzdG9yeUNsZWFyZWQSOQoHaG9tZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90Lm'
+    'lkZW50aXR5LnYxLlNwYWNlSWRSBmhvbWVJZBI5CgpjbGVhcmVkX2F0GAIgASgLMhouZ29vZ2xl'
+    'LnByb3RvYnVmLlRpbWVzdGFtcFIJY2xlYXJlZEF0');
+
 @$core.Deprecated('Use setHomeNameDescriptor instead')
 const SetHomeName$json = {
   '1': 'SetHomeName',
