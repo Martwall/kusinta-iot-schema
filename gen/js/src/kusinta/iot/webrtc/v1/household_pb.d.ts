@@ -285,9 +285,11 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
   recipientHouseholdAdmin: boolean;
 
   /**
-   * Set on a vacated handover that a new resident ends early (QUICK TURNOVER). An app says so
-   * from this field rather than from vacated, so that a handover from a gateway that predates
-   * it, which ends no notice early, is not misdescribed.
+   * Set on every vacated handover from the push that starts it: a new resident filed by staff
+   * may end it early (QUICK TURNOVER), so the departing household's export window runs until
+   * staff_confirmable_from or until then, whichever is first. An app says so from this field
+   * rather than from vacated, so that a handover from a gateway that predates it, which ends no
+   * notice early, is not misdescribed.
    *
    * @generated from field: bool may_end_on_move_in = 13;
    */

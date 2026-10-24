@@ -839,10 +839,11 @@ export declare const RoomLimitValueSchema: GenMessage<RoomLimitValue>;
  * metadata {"reason": "limits_order"}. A min changed to below the gateway's public-health
  * threshold — its own setting, which no operation in this contract changes; none while unset —
  * needs accept_below_threshold, and is refused without it as FAILED_PRECONDITION with metadata
- * {"reason": "below_threshold", "threshold_centidegrees": the threshold}. Neither refusal, nor
- * anything else in the answer, depends on the home's state — its targets, inner limits, modes,
- * or who lives there — so setting outer limits tells the caller nothing of it; what they clamp
- * is told to the household alone (RoomClimate.outer_limit_clamp).
+ * {"reason": "below_threshold", "threshold_centidegrees": the threshold}. Nothing in the answer
+ * to the outer limits depends on the home's state — its targets, inner limits, modes, or who
+ * lives there — so setting them tells the caller nothing of it; what they clamp is told to the
+ * household alone (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided
+ * by whether the home is empty, as EMPTY HOME says.
  *
  * Each field moves alone, as on UpdateSpace: unset leaves it as it is.
  *

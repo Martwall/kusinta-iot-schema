@@ -374,10 +374,13 @@ class RoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearOverridesMode() => $_clearField(5);
 
-  /// A copy of outer_limits.min and .max, in centidegrees, kept and always filled for apps that
-  /// predate outer_limits; read outer_limits instead. Where the gateway writes the outer limits
-  /// into a device's own setpoint limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops
-  /// at them, it writes them only to devices they bind (OuterRoomLimits, WHAT THEY BIND).
+  /// A copy of outer_limits.min and .max, in centidegrees, kept for apps that predate
+  /// outer_limits: each set exactly when its outer bound is, and unset otherwise. Read
+  /// outer_limits instead. Where the gateway writes the outer limits into a device's own setpoint
+  /// limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only to
+  /// devices they bind (OuterRoomLimits, WHAT THEY BIND); into a device they do not bind that holds
+  /// room limits written before, it writes the device's defaults back, queued and retried as the
+  /// wipe's device writes are (webrtc.v1 household.proto, WIPE).
   @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   $core.int get minCentidegrees => $_getIZ(5);
@@ -615,7 +618,7 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// Set while an outer bound holds the outputs it binds away from where the room would be held
   /// without it — the household's target, its inner limits or its mode's setback — so the
   /// household is told which bound does it, and from outer_limits the role behind it and since
-  /// when. Gone once nothing is clamped. Sent to the home's residents only.
+  /// when. Gone once nothing is clamped. Sent as outer_limits_coverage is.
   @$pb.TagNumber(23)
   OuterLimitClamp get outerLimitClamp => $_getN(22);
   @$pb.TagNumber(23)
@@ -628,8 +631,10 @@ class RoomClimate extends $pb.GeneratedMessage {
   OuterLimitClamp ensureOuterLimitClamp() => $_ensure(22);
 
   /// How many of the room's heating outputs the outer limits bind, so that an app shows the
-  /// building's bounds where they apply and not where they do not. Sent to the home's residents
-  /// only: to anyone else it would tell whether the room holds a device a resident owns.
+  /// building's bounds where they apply and not where they do not. In a home, sent to its
+  /// residents only: to anyone else it would tell whether the room holds a device a resident
+  /// owns. Outside homes, sent to whoever is sent the room, judged over the outputs of devices the
+  /// recipient sees, so that a device hidden from them changes nothing they are sent.
   @$pb.TagNumber(24)
   OuterLimitsCoverage get outerLimitsCoverage => $_getN(23);
   @$pb.TagNumber(24)
@@ -866,8 +871,9 @@ class OuterRoomLimits extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   OuterLimit ensureAwayMin() => $_ensure(2);
 
-  /// The target the room starts at when an empty home gains a resident, clamped to min and max
-  /// (webrtc.v1 household.proto, MOVE-IN). A start, never a limit.
+  /// The target the room starts at when an empty home gains a resident (webrtc.v1
+  /// household.proto, MOVE-IN). A start, never a limit, and a target like any other: the outputs
+  /// the outer limits bind are held within them (HELD), and the others at it.
   @$pb.TagNumber(4)
   OuterLimit get moveInTarget => $_getN(3);
   @$pb.TagNumber(4)
