@@ -232,14 +232,19 @@ option optimize_for = SPEED;
 //   * the gateway's models and plans for the home, learnt from that history.
 // Climate summaries over spaces that include the home are recomputed without it once it is
 // erased. A wipe erases it (WIPE), and so may the household on its own (ClearClimateHistory).
+// A household's clear is told two ways: live, by the push to the sessions up at the time
+// (ClimateHistoryCleared); and lastingly, on the apartment (space.v1.Space
+// .climate_history_cleared_at), which a session that missed the push — a phone reconnecting or
+// restarting — reads at its start. Both set the same floor.
 //
 // WIPE. A home's wipe is a step on the gateway's own records, all of it or none, and the
 // effects outside them that it queues; nothing in the step waits on a network or a device.
 //
 // The step deletes or anonymises, together:
-//   * everything recorded per home: its climate history (CLIMATE HISTORY), its rooms' targets,
-//     inner limits, modes and comfort settings, its device events, and the household's name for
-//     it (space.v1.Space.home_name);
+//   * everything recorded per home: its climate history (CLIMATE HISTORY) and when it was last
+//     cleared (space.v1.Space.climate_history_cleared_at), its rooms' targets, inner limits,
+//     modes and comfort settings, its device events, and the household's name for it
+//     (space.v1.Space.home_name);
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
 //     addresses, and the record of who did what in the home. What the gateway keeps of a
@@ -470,8 +475,10 @@ message ClearClimateHistory {
 // arrival every room history, climate summary and device event of the home it holds from before
 // cleared_at, rather than keeping what the gateway no longer does, and keeps cleared_at as a
 // lasting floor for the home: a sample, period or event dated before it that arrives later — an
-// answer already in flight at the clear — is dropped on arrival too. Nobody else is told:
-// whoever is given the apartment's summary as service learns of it by reading it.
+// answer already in flight at the clear — is dropped on arrival too. The push is the live
+// signal; a session that was not up for it reads the same floor from the apartment
+// (space.v1.Space.climate_history_cleared_at). Nobody else is told: whoever is given the
+// apartment's summary as service learns of it by reading it.
 message ClimateHistoryCleared {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   google.protobuf.Timestamp cleared_at = 2;

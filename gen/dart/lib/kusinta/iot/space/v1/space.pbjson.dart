@@ -97,6 +97,14 @@ const Space$json = {
     },
     {'1': 'members_withheld', '3': 14, '4': 1, '5': 8, '10': 'membersWithheld'},
     {'1': 'home_name', '3': 15, '4': 1, '5': 9, '10': 'homeName'},
+    {
+      '1': 'climate_history_cleared_at',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'climateHistoryClearedAt'
+    },
   ],
 };
 
@@ -116,7 +124,8 @@ final $typed_data.Uint8List spaceDescriptor = $convert.base64Decode(
     'F0ZXdheUlkUglnYXRld2F5SWQSGwoJdGltZV96b25lGAwgASgJUgh0aW1lWm9uZRI7CgdtZW1i'
     'ZXJzGA0gAygLMiEua3VzaW50YS5pb3Quc3BhY2UudjEuU3BhY2VNZW1iZXJSB21lbWJlcnMSKQ'
     'oQbWVtYmVyc193aXRoaGVsZBgOIAEoCFIPbWVtYmVyc1dpdGhoZWxkEhsKCWhvbWVfbmFtZRgP'
-    'IAEoCVIIaG9tZU5hbWU=');
+    'IAEoCVIIaG9tZU5hbWUSVwoaY2xpbWF0ZV9oaXN0b3J5X2NsZWFyZWRfYXQYECABKAsyGi5nb2'
+    '9nbGUucHJvdG9idWYuVGltZXN0YW1wUhdjbGltYXRlSGlzdG9yeUNsZWFyZWRBdA==');
 
 @$core.Deprecated('Use spaceMemberDescriptor instead')
 const SpaceMember$json = {
