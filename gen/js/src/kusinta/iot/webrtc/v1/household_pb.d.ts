@@ -265,8 +265,9 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * Set by the gateway per session: the session's user is a member of the household the
    * handover is about — the home's residents while it is not vacated, the departing household
    * (VACANCY) while it is. Someone who is both staff and in that household is told both, so a
-   * client offers them the household's export and confirmation as well as what staff may do,
-   * rather than guessing from roles which of the two they are.
+   * client offers them the household's export, and with recipient_household_admin its
+   * confirmation, as well as what staff may do, rather than guessing from roles which of the
+   * two they are.
    *
    * @generated from field: bool recipient_in_household = 11;
    */
