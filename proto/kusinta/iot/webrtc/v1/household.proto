@@ -73,9 +73,9 @@ option optimize_for = SPEED;
 //     It is always bound to an address (CreateInvite.email; "email_required" otherwise) and
 //     never a home key, so only the account whose verified address it names can redeem it,
 //     and it does so at once, never by a join request. Refused on a home with a resident as
-//     FAILED_PRECONDITION with metadata {"reason": "home_not_empty"}. A pending one ends when anyone becomes a resident
-//     of the home, so it never makes an outsider the governor of a household that has moved
-//     in;
+//     FAILED_PRECONDITION with metadata {"reason": "home_not_empty"}. A pending one ends when
+//     anyone becomes a resident of the home, so it never makes an outsider the governor of a
+//     household that has moved in;
 //   * an admin-less home by asking one of its residents (RequestPromotion with home_id),
 //     named by residency id to a caller who does not live there; never by inviting someone
 //     from outside.
@@ -151,7 +151,9 @@ option optimize_for = SPEED;
 //   * nobody cancels it while the home is empty, neither the departing household nor staff:
 //     CancelHouseholdHandover is refused as FAILED_PRECONDITION with metadata
 //     {"reason": "vacated"}. It ends only by the wipe, or by a member of the departing
-//     household becoming a resident again, which cancels it as if it had not started;
+//     household becoming a resident again, which cancels it as if it had not started. Since
+//     no invite to the home can be made or redeemed while it is pending, that return is
+//     staff filing them (AssignUserToSpace), which is not refused for a departing member;
 //   * nobody outside the departing household becomes a resident of the home. Whatever would
 //     file one — a redeemed invite, an approved join request, AssignUserToSpace — is refused
 //     as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, and so is creating
@@ -339,6 +341,13 @@ message HouseholdHandover {
 
   // Set when the home's last residency ending started it, rather than a request (VACANCY).
   bool vacated = 10;
+
+  // Set by the gateway per session: the session's user is a member of the household the
+  // handover is about — the home's residents while it is not vacated, the departing household
+  // (VACANCY) while it is. Someone who is both staff and in that household is told both, so a
+  // client offers them the household's export and confirmation as well as what staff may do,
+  // rather than guessing from roles which of the two they are.
+  bool recipient_departing = 11;
 }
 
 // Sets the household's own name for its home (space.v1.Space.home_name). Answered with

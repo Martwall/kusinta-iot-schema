@@ -2393,8 +2393,8 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// role the gateway has not yet learnt, counts as ROLE_UNSPECIFIED. ROLE_GATEWAY_ADMIN is
   /// always listed, and ROLE_PROPERTY_OWNER whenever anyone holds it, wherever they are
   /// filed: both may file themselves on the home. So the list reads the same whether or not
-  /// anyone lives in the home, and never understates who has reach or what they see. Devices a resident
-  /// owns are not shown to service at all.
+  /// anyone lives in the home, and never understates who has reach or what they see. Devices a
+  /// resident owns are not shown to service at all.
   @$pb.TagNumber(5)
   $pb.PbList<ServiceParty> get serviceParties => $_getList(2);
 
@@ -3346,7 +3346,10 @@ class SetComfortWindows extends $pb.GeneratedMessage {
 /// (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
 /// NOT_ENTITLED, as is a home the caller cannot reach. A service this gateway does not
-/// support is refused as INVALID_REQUEST.
+/// support is refused as INVALID_REQUEST. A gateway that cannot hold linked accounts right now
+/// — its key for sealing them is missing or is not the one its stored links were sealed with —
+/// refuses as UNAVAILABLE with metadata {"reason": "account_links_off"}; nothing is linked until
+/// that is put right on the gateway.
 class RequestAccountLinkNonce extends $pb.GeneratedMessage {
   factory RequestAccountLinkNonce({
     $0.SpaceId? homeId,
