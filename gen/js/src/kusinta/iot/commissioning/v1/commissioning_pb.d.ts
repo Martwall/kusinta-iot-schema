@@ -744,6 +744,46 @@ export declare type CommissioningGrants = Message<"kusinta.iot.commissioning.v1.
 export declare const CommissioningGrantsSchema: GenMessage<CommissioningGrants>;
 
 /**
+ * A commissioning grant on a home that was granted, as its residents are told it afterwards
+ * (webrtc.v1.PrivacyDisclosure.commissioning_grants): who held commissioning access to their
+ * home, and when. The installer by the name they gave their account as the gateway last learnt
+ * it, never by user id; empty when none is learnt, and emptied once their account is deleted or
+ * removed from the gateway, when the record stays without it.
+ *
+ * @generated from message kusinta.iot.commissioning.v1.CommissioningGrantRecord
+ */
+export declare type CommissioningGrantRecord = Message<"kusinta.iot.commissioning.v1.CommissioningGrantRecord"> & {
+  /**
+   * @generated from field: string installer_name = 1;
+   */
+  installerName: string;
+
+  /**
+   * When it was granted, and the time it covered: from its start until it ended. ended_at is
+   * unset while it is active.
+   *
+   * @generated from field: google.protobuf.Timestamp granted_at = 2;
+   */
+  grantedAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp starts_at = 3;
+   */
+  startsAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp ended_at = 4;
+   */
+  endedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.CommissioningGrantRecord.
+ * Use `create(CommissioningGrantRecordSchema)` to create a new message.
+ */
+export declare const CommissioningGrantRecordSchema: GenMessage<CommissioningGrantRecord>;
+
+/**
  * Who answers a fact, or ran or concluded a test.
  *
  * @generated from enum kusinta.iot.commissioning.v1.Party

@@ -188,7 +188,10 @@ option optimize_for = SPEED;
 // space for a bounded time. The installer asks for it (webrtc.v1.RequestCommissioningGrant)
 // and whoever governs the space answers: for a home, a household admin of it; for a space
 // outside homes, the property owner or the gateway's administrators. The installer is a
-// member holding access.v1.ROLE_TECHNICIAN who reaches the space; nobody else is granted one.
+// member holding access.v1.ROLE_TECHNICIAN who reaches the space, and who does not live in it:
+// a household does not commission its own answers into house facts. Nobody else is granted
+// one. Someone who also holds a staff role acts as INSTALLER only in what they do under the
+// grant's cover; the rest of their access is as it was.
 // A grant on a home covers the home and its rooms; a grant on a space outside homes covers it
 // and the spaces below it, save every home among them, which only a grant on that home
 // covers.
@@ -219,7 +222,9 @@ option optimize_for = SPEED;
 // switching on no faster than "floor.max_zones_switching_on" allows. Until it ends —
 // requested, or granted whether or not it has started — it is visible to the household:
 // listed to every resident of the home (webrtc.v1.ListCommissioningGrants), pushed to them as
-// it changes, and endable by its household admins.
+// it changes, and endable by its household admins. Once granted, it stays on record for the
+// home's residents after it ends (CommissioningGrantRecord, in their privacy disclosure), until
+// the home is wiped.
 
 // Who answers a fact, or ran or concluded a test.
 enum Party {
@@ -658,4 +663,18 @@ message CommissioningGrants {
   // The space the grants are on, on a push; unset on a listing.
   kusinta.iot.identity.v1.SpaceId space_id = 1;
   repeated CommissioningGrant grants = 2;
+}
+
+// A commissioning grant on a home that was granted, as its residents are told it afterwards
+// (webrtc.v1.PrivacyDisclosure.commissioning_grants): who held commissioning access to their
+// home, and when. The installer by the name they gave their account as the gateway last learnt
+// it, never by user id; empty when none is learnt, and emptied once their account is deleted or
+// removed from the gateway, when the record stays without it.
+message CommissioningGrantRecord {
+  string installer_name = 1;
+  // When it was granted, and the time it covered: from its start until it ended. ended_at is
+  // unset while it is active.
+  google.protobuf.Timestamp granted_at = 2;
+  google.protobuf.Timestamp starts_at = 3;
+  google.protobuf.Timestamp ended_at = 4;
 }

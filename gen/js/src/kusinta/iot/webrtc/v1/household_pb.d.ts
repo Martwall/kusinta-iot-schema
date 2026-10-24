@@ -62,8 +62,9 @@ export declare type StaffAppointment = Message<"kusinta.iot.webrtc.v1.StaffAppoi
 
   /**
    * The staff member who appointed them, and the name they gave their account
-   * (AppTokenClaims.name) as the gateway last learnt it; empty when none is learnt.
-   * Self-chosen, as MemberDetail.name is.
+   * (AppTokenClaims.name) as the gateway last learnt it; empty when none is learnt. Both are
+   * cleared once that account is deleted or removed from the gateway, when the record stays
+   * without them. Self-chosen, as MemberDetail.name is.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId appointed_by = 2;
    */

@@ -287,3 +287,22 @@ def test_a_handover_tells_its_recipient_they_may_confirm_it_as_a_household_admin
     decoded = _round_trip(h.HouseholdHandover(handover_id="h-4", vacated=True, recipient_household_admin=True))
 
     assert decoded.recipient_household_admin is True
+
+
+def test_a_disclosure_tells_residents_who_held_a_commissioning_grant_and_when():
+    from google.protobuf import timestamp_pb2
+
+    from kusinta.iot.commissioning.v1 import commissioning_pb2
+
+    disclosure = management_pb2.PrivacyDisclosure(
+        commissioning_grants=[
+            commissioning_pb2.CommissioningGrantRecord(
+                installer_name="Installer AB",
+                starts_at=timestamp_pb2.Timestamp(seconds=1_790_000_000),
+                ended_at=timestamp_pb2.Timestamp(seconds=1_790_086_400),
+            )
+        ]
+    )
+
+    decoded = _round_trip(disclosure).commissioning_grants[0]
+    assert (decoded.installer_name, decoded.ended_at.seconds) == ("Installer AB", 1_790_086_400)

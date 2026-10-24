@@ -20,9 +20,9 @@ import '../../access/v1/acl.pbenum.dart' as $13;
 import '../../access/v1/roles.pbenum.dart' as $11;
 import '../../accountlink/v1/account_link.pbenum.dart' as $14;
 import '../../climate/v1/climate.pbenum.dart' as $12;
-import '../../commissioning/v1/commissioning.pb.dart' as $7;
+import '../../commissioning/v1/commissioning.pb.dart' as $6;
 import '../../common/v1/types.pb.dart' as $8;
-import '../../heating/v1/heating.pb.dart' as $6;
+import '../../heating/v1/heating.pb.dart' as $7;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../link/v1/link.pb.dart' as $3;
 import '../../space/v1/space.pb.dart' as $2;
@@ -2292,6 +2292,7 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
     $core.String? ownerOrganisationName,
     $core.bool? namesWithheld,
     $core.Iterable<$5.StaffAppointment>? staffAppointments,
+    $core.Iterable<$6.CommissioningGrantRecord>? commissioningGrants,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -2303,6 +2304,8 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
     if (namesWithheld != null) result.namesWithheld = namesWithheld;
     if (staffAppointments != null)
       result.staffAppointments.addAll(staffAppointments);
+    if (commissioningGrants != null)
+      result.commissioningGrants.addAll(commissioningGrants);
     return result;
   }
 
@@ -2336,6 +2339,9 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
     ..pc<$5.StaffAppointment>(
         8, _omitFieldNames ? '' : 'staffAppointments', $pb.PbFieldType.PM,
         subBuilder: $5.StaffAppointment.create)
+    ..pc<$6.CommissioningGrantRecord>(
+        9, _omitFieldNames ? '' : 'commissioningGrants', $pb.PbFieldType.PM,
+        subBuilder: $6.CommissioningGrantRecord.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2431,6 +2437,13 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// as service: a client shows it to residents alone.
   @$pb.TagNumber(8)
   $pb.PbList<$5.StaffAppointment> get staffAppointments => $_getList(5);
+
+  /// Each commissioning grant on this home that was granted since it was last wiped, oldest
+  /// first, active ones included (commissioning.v1, GRANTS): who held commissioning access to the
+  /// home, and when. Given to the home's residents only, as staff_appointments is.
+  @$pb.TagNumber(9)
+  $pb.PbList<$6.CommissioningGrantRecord> get commissioningGrants =>
+      $_getList(6);
 }
 
 /// One kind of party with service reach of a home, and what it sees there. Every service
@@ -2939,7 +2952,7 @@ class ListHeating extends $pb.GeneratedMessage {
 /// a record.
 class PutHeatingPlant extends $pb.GeneratedMessage {
   factory PutHeatingPlant({
-    $6.HeatingPlant? plant,
+    $7.HeatingPlant? plant,
   }) {
     final result = create();
     if (plant != null) result.plant = plant;
@@ -2960,8 +2973,8 @@ class PutHeatingPlant extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$6.HeatingPlant>(1, _omitFieldNames ? '' : 'plant',
-        subBuilder: $6.HeatingPlant.create)
+    ..aOM<$7.HeatingPlant>(1, _omitFieldNames ? '' : 'plant',
+        subBuilder: $7.HeatingPlant.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2986,21 +2999,21 @@ class PutHeatingPlant extends $pb.GeneratedMessage {
   static PutHeatingPlant? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $6.HeatingPlant get plant => $_getN(0);
+  $7.HeatingPlant get plant => $_getN(0);
   @$pb.TagNumber(1)
-  set plant($6.HeatingPlant value) => $_setField(1, value);
+  set plant($7.HeatingPlant value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasPlant() => $_has(0);
   @$pb.TagNumber(1)
   void clearPlant() => $_clearField(1);
   @$pb.TagNumber(1)
-  $6.HeatingPlant ensurePlant() => $_ensure(0);
+  $7.HeatingPlant ensurePlant() => $_ensure(0);
 }
 
 /// Creates or replaces a circuit of a plant; as PutHeatingPlant.
 class PutHeatingCircuit extends $pb.GeneratedMessage {
   factory PutHeatingCircuit({
-    $6.HeatingCircuit? circuit,
+    $7.HeatingCircuit? circuit,
   }) {
     final result = create();
     if (circuit != null) result.circuit = circuit;
@@ -3021,8 +3034,8 @@ class PutHeatingCircuit extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$6.HeatingCircuit>(1, _omitFieldNames ? '' : 'circuit',
-        subBuilder: $6.HeatingCircuit.create)
+    ..aOM<$7.HeatingCircuit>(1, _omitFieldNames ? '' : 'circuit',
+        subBuilder: $7.HeatingCircuit.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3047,21 +3060,21 @@ class PutHeatingCircuit extends $pb.GeneratedMessage {
   static PutHeatingCircuit? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $6.HeatingCircuit get circuit => $_getN(0);
+  $7.HeatingCircuit get circuit => $_getN(0);
   @$pb.TagNumber(1)
-  set circuit($6.HeatingCircuit value) => $_setField(1, value);
+  set circuit($7.HeatingCircuit value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasCircuit() => $_has(0);
   @$pb.TagNumber(1)
   void clearCircuit() => $_clearField(1);
   @$pb.TagNumber(1)
-  $6.HeatingCircuit ensureCircuit() => $_ensure(0);
+  $7.HeatingCircuit ensureCircuit() => $_ensure(0);
 }
 
 /// Creates or replaces a floor zone of a floor circuit; as PutHeatingPlant.
 class PutFloorZone extends $pb.GeneratedMessage {
   factory PutFloorZone({
-    $6.FloorZone? zone,
+    $7.FloorZone? zone,
   }) {
     final result = create();
     if (zone != null) result.zone = zone;
@@ -3082,8 +3095,8 @@ class PutFloorZone extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$6.FloorZone>(1, _omitFieldNames ? '' : 'zone',
-        subBuilder: $6.FloorZone.create)
+    ..aOM<$7.FloorZone>(1, _omitFieldNames ? '' : 'zone',
+        subBuilder: $7.FloorZone.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3108,22 +3121,22 @@ class PutFloorZone extends $pb.GeneratedMessage {
   static PutFloorZone? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $6.FloorZone get zone => $_getN(0);
+  $7.FloorZone get zone => $_getN(0);
   @$pb.TagNumber(1)
-  set zone($6.FloorZone value) => $_setField(1, value);
+  set zone($7.FloorZone value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasZone() => $_has(0);
   @$pb.TagNumber(1)
   void clearZone() => $_clearField(1);
   @$pb.TagNumber(1)
-  $6.FloorZone ensureZone() => $_ensure(0);
+  $7.FloorZone ensureZone() => $_ensure(0);
 }
 
 /// Creates or replaces a comfort load's room, name and output, keeping its windows; as
 /// PutHeatingPlant.
 class PutComfortLoad extends $pb.GeneratedMessage {
   factory PutComfortLoad({
-    $6.ComfortLoad? comfortLoad,
+    $7.ComfortLoad? comfortLoad,
   }) {
     final result = create();
     if (comfortLoad != null) result.comfortLoad = comfortLoad;
@@ -3144,8 +3157,8 @@ class PutComfortLoad extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$6.ComfortLoad>(1, _omitFieldNames ? '' : 'comfortLoad',
-        subBuilder: $6.ComfortLoad.create)
+    ..aOM<$7.ComfortLoad>(1, _omitFieldNames ? '' : 'comfortLoad',
+        subBuilder: $7.ComfortLoad.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3170,15 +3183,15 @@ class PutComfortLoad extends $pb.GeneratedMessage {
   static PutComfortLoad? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $6.ComfortLoad get comfortLoad => $_getN(0);
+  $7.ComfortLoad get comfortLoad => $_getN(0);
   @$pb.TagNumber(1)
-  set comfortLoad($6.ComfortLoad value) => $_setField(1, value);
+  set comfortLoad($7.ComfortLoad value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasComfortLoad() => $_has(0);
   @$pb.TagNumber(1)
   void clearComfortLoad() => $_clearField(1);
   @$pb.TagNumber(1)
-  $6.ComfortLoad ensureComfortLoad() => $_ensure(0);
+  $7.ComfortLoad ensureComfortLoad() => $_ensure(0);
 }
 
 /// Removes a heating record by its id, naming the revision it removes. Refused as
@@ -3265,7 +3278,7 @@ class RemoveHeatingRecord extends $pb.GeneratedMessage {
 class SetComfortWindows extends $pb.GeneratedMessage {
   factory SetComfortWindows({
     $core.String? comfortLoadId,
-    $core.Iterable<$6.ComfortWindow>? windows,
+    $core.Iterable<$7.ComfortWindow>? windows,
     $fixnum.Int64? windowsRevision,
   }) {
     final result = create();
@@ -3290,9 +3303,9 @@ class SetComfortWindows extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'comfortLoadId')
-    ..pc<$6.ComfortWindow>(
+    ..pc<$7.ComfortWindow>(
         2, _omitFieldNames ? '' : 'windows', $pb.PbFieldType.PM,
-        subBuilder: $6.ComfortWindow.create)
+        subBuilder: $7.ComfortWindow.create)
     ..a<$fixnum.Int64>(
         3, _omitFieldNames ? '' : 'windowsRevision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
@@ -3329,7 +3342,7 @@ class SetComfortWindows extends $pb.GeneratedMessage {
   void clearComfortLoadId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$6.ComfortWindow> get windows => $_getList(1);
+  $pb.PbList<$7.ComfortWindow> get windows => $_getList(1);
 
   /// The ComfortLoad.windows_revision these windows replace. Unset: whatever is stored.
   @$pb.TagNumber(3)
@@ -3663,7 +3676,7 @@ class ListCommissioning extends $pb.GeneratedMessage {
 /// as NOT_ENTITLED with the same metadata.
 class PutCommissioningFact extends $pb.GeneratedMessage {
   factory PutCommissioningFact({
-    $7.CommissioningFact? fact,
+    $6.CommissioningFact? fact,
   }) {
     final result = create();
     if (fact != null) result.fact = fact;
@@ -3684,8 +3697,8 @@ class PutCommissioningFact extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$7.CommissioningFact>(1, _omitFieldNames ? '' : 'fact',
-        subBuilder: $7.CommissioningFact.create)
+    ..aOM<$6.CommissioningFact>(1, _omitFieldNames ? '' : 'fact',
+        subBuilder: $6.CommissioningFact.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3711,15 +3724,15 @@ class PutCommissioningFact extends $pb.GeneratedMessage {
   static PutCommissioningFact? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $7.CommissioningFact get fact => $_getN(0);
+  $6.CommissioningFact get fact => $_getN(0);
   @$pb.TagNumber(1)
-  set fact($7.CommissioningFact value) => $_setField(1, value);
+  set fact($6.CommissioningFact value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasFact() => $_has(0);
   @$pb.TagNumber(1)
   void clearFact() => $_clearField(1);
   @$pb.TagNumber(1)
-  $7.CommissioningFact ensureFact() => $_ensure(0);
+  $6.CommissioningFact ensureFact() => $_ensure(0);
 }
 
 /// Removes a fact by its id, naming the revision it removes; as PutCommissioningFact. A fact
@@ -3807,7 +3820,7 @@ class RemoveCommissioningFact extends $pb.GeneratedMessage {
 /// TEMPLATES); metadata "key" names it.
 class PutHouseTemplate extends $pb.GeneratedMessage {
   factory PutHouseTemplate({
-    $7.HouseTemplate? template,
+    $6.HouseTemplate? template,
   }) {
     final result = create();
     if (template != null) result.template = template;
@@ -3828,8 +3841,8 @@ class PutHouseTemplate extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..aOM<$7.HouseTemplate>(1, _omitFieldNames ? '' : 'template',
-        subBuilder: $7.HouseTemplate.create)
+    ..aOM<$6.HouseTemplate>(1, _omitFieldNames ? '' : 'template',
+        subBuilder: $6.HouseTemplate.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3854,15 +3867,15 @@ class PutHouseTemplate extends $pb.GeneratedMessage {
   static PutHouseTemplate? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $7.HouseTemplate get template => $_getN(0);
+  $6.HouseTemplate get template => $_getN(0);
   @$pb.TagNumber(1)
-  set template($7.HouseTemplate value) => $_setField(1, value);
+  set template($6.HouseTemplate value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasTemplate() => $_has(0);
   @$pb.TagNumber(1)
   void clearTemplate() => $_clearField(1);
   @$pb.TagNumber(1)
-  $7.HouseTemplate ensureTemplate() => $_ensure(0);
+  $6.HouseTemplate ensureTemplate() => $_ensure(0);
 }
 
 /// Says which house template a home follows; an empty template_id, none. From the property
@@ -3967,8 +3980,8 @@ class SetHomeTemplate extends $pb.GeneratedMessage {
 /// A record the caller cannot reach is refused as NOT_ENTITLED.
 class RunCommissioningTest extends $pb.GeneratedMessage {
   factory RunCommissioningTest({
-    $7.TestKind? kind,
-    $7.BindingRef? binding,
+    $6.TestKind? kind,
+    $6.BindingRef? binding,
   }) {
     final result = create();
     if (kind != null) result.kind = kind;
@@ -3990,12 +4003,12 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..e<$7.TestKind>(1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $7.TestKind.TEST_KIND_UNSPECIFIED,
-        valueOf: $7.TestKind.valueOf,
-        enumValues: $7.TestKind.values)
-    ..aOM<$7.BindingRef>(4, _omitFieldNames ? '' : 'binding',
-        subBuilder: $7.BindingRef.create)
+    ..e<$6.TestKind>(1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.TestKind.TEST_KIND_UNSPECIFIED,
+        valueOf: $6.TestKind.valueOf,
+        enumValues: $6.TestKind.values)
+    ..aOM<$6.BindingRef>(4, _omitFieldNames ? '' : 'binding',
+        subBuilder: $6.BindingRef.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4021,9 +4034,9 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
   static RunCommissioningTest? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $7.TestKind get kind => $_getN(0);
+  $6.TestKind get kind => $_getN(0);
   @$pb.TagNumber(1)
-  set kind($7.TestKind value) => $_setField(1, value);
+  set kind($6.TestKind value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasKind() => $_has(0);
   @$pb.TagNumber(1)
@@ -4031,15 +4044,15 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
 
   /// binding.field for OUTPUT_LEASE only.
   @$pb.TagNumber(4)
-  $7.BindingRef get binding => $_getN(1);
+  $6.BindingRef get binding => $_getN(1);
   @$pb.TagNumber(4)
-  set binding($7.BindingRef value) => $_setField(4, value);
+  set binding($6.BindingRef value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasBinding() => $_has(1);
   @$pb.TagNumber(4)
   void clearBinding() => $_clearField(4);
   @$pb.TagNumber(4)
-  $7.BindingRef ensureBinding() => $_ensure(1);
+  $6.BindingRef ensureBinding() => $_ensure(1);
 }
 
 /// Ends a running test. verdict ABORTED stops any test, from whoever started it or may run
@@ -4052,7 +4065,7 @@ class RunCommissioningTest extends $pb.GeneratedMessage {
 class ConcludeCommissioningTest extends $pb.GeneratedMessage {
   factory ConcludeCommissioningTest({
     $core.String? testId,
-    $7.TestState? verdict,
+    $6.TestState? verdict,
   }) {
     final result = create();
     if (testId != null) result.testId = testId;
@@ -4075,10 +4088,10 @@ class ConcludeCommissioningTest extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'testId')
-    ..e<$7.TestState>(2, _omitFieldNames ? '' : 'verdict', $pb.PbFieldType.OE,
-        defaultOrMaker: $7.TestState.TEST_STATE_UNSPECIFIED,
-        valueOf: $7.TestState.valueOf,
-        enumValues: $7.TestState.values)
+    ..e<$6.TestState>(2, _omitFieldNames ? '' : 'verdict', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.TestState.TEST_STATE_UNSPECIFIED,
+        valueOf: $6.TestState.valueOf,
+        enumValues: $6.TestState.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4114,9 +4127,9 @@ class ConcludeCommissioningTest extends $pb.GeneratedMessage {
   void clearTestId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $7.TestState get verdict => $_getN(1);
+  $6.TestState get verdict => $_getN(1);
   @$pb.TagNumber(2)
-  set verdict($7.TestState value) => $_setField(2, value);
+  set verdict($6.TestState value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasVerdict() => $_has(1);
   @$pb.TagNumber(2)
@@ -4194,7 +4207,8 @@ class ListHomeSetups extends $pb.GeneratedMessage {
 ///
 /// Accepted on any home the caller reaches, whether or not anyone could answer it: it lapses
 /// unanswered where nobody does, so the answer tells the installer nothing of whether anyone
-/// lives there.
+/// lives there. A caller who lives in the home is refused as FAILED_PRECONDITION with metadata
+/// {"reason": "installer_lives_here"}, which tells them nothing they do not know.
 class RequestCommissioningGrant extends $pb.GeneratedMessage {
   factory RequestCommissioningGrant({
     $0.SpaceId? spaceId,

@@ -13,10 +13,10 @@ import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb
 import type { ClimateModeKind, ClimateSummaryPeriod } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { CancelHouseholdHandover, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
+import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
 import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
-import type { BindingRef, CommissioningFact, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
 
@@ -1027,6 +1027,15 @@ export declare type PrivacyDisclosure = Message<"kusinta.iot.webrtc.v1.PrivacyDi
    * @generated from field: repeated kusinta.iot.webrtc.v1.StaffAppointment staff_appointments = 8;
    */
   staffAppointments: StaffAppointment[];
+
+  /**
+   * Each commissioning grant on this home that was granted since it was last wiped, oldest
+   * first, active ones included (commissioning.v1, GRANTS): who held commissioning access to the
+   * home, and when. Given to the home's residents only, as staff_appointments is.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.CommissioningGrantRecord commissioning_grants = 9;
+   */
+  commissioningGrants: CommissioningGrantRecord[];
 };
 
 /**
@@ -1740,7 +1749,8 @@ export declare const ListHomeSetupsSchema: GenMessage<ListHomeSetups>;
  *
  * Accepted on any home the caller reaches, whether or not anyone could answer it: it lapses
  * unanswered where nobody does, so the answer tells the installer nothing of whether anyone
- * lives there.
+ * lives there. A caller who lives in the home is refused as FAILED_PRECONDITION with metadata
+ * {"reason": "installer_lives_here"}, which tells them nothing they do not know.
  *
  * @generated from message kusinta.iot.webrtc.v1.RequestCommissioningGrant
  */
