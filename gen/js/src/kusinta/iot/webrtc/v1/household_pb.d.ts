@@ -305,10 +305,10 @@ export declare const HouseholdHandoverSchema: GenMessage<HouseholdHandover>;
  * at or after the clear, and the summary of each length with its first period that starts at or
  * after the clear; the gateway learns its models and makes its plans afresh from what is
  * recorded at or after it. The household's members, the home's rooms and their settings, its
- * modes, its commissioning and its heating records stay. Its device events stay. It cannot be
- * undone, and the gateway keeps no copy: an app asks its user to confirm, saying that everyone
- * in the home loses it, and offers the household's export (EXPORT) first. Later parts of an
- * export under way give nothing that was erased.
+ * modes, its commissioning and its heating records stay. It cannot be undone, and the gateway
+ * keeps no copy: an app asks its user to confirm, saying that everyone in the home loses it, and
+ * offers the household's export (EXPORT) first. Later parts of an export under way give nothing
+ * that was erased.
  *
  * The clear is pushed as ClimateHistoryCleared to every session of the home's residents, the
  * caller's included, before the acknowledgement.

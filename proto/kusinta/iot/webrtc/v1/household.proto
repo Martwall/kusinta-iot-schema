@@ -175,6 +175,8 @@ option optimize_for = SPEED;
 //     (RoomHistorySample.floor_heating_seconds) is part of it, as the room's heating record;
 //   * the apartment's climate summaries, every period of every length
 //     (climate.v1.ApartmentClimateSummary);
+//   * the home's device events (device.v1.DeviceEvent): setpoint changes, window and door
+//     contacts, presence and the like, which say as much of how the home is lived in;
 //   * the gateway's models and plans for the home, learnt from that history.
 // Climate summaries over spaces that include the home are recomputed without it once it is
 // erased. A wipe erases it (WIPE), and so may the household on its own (ClearClimateHistory).
@@ -387,10 +389,10 @@ message HouseholdHandover {
 // at or after the clear, and the summary of each length with its first period that starts at or
 // after the clear; the gateway learns its models and makes its plans afresh from what is
 // recorded at or after it. The household's members, the home's rooms and their settings, its
-// modes, its commissioning and its heating records stay. Its device events stay. It cannot be
-// undone, and the gateway keeps no copy: an app asks its user to confirm, saying that everyone
-// in the home loses it, and offers the household's export (EXPORT) first. Later parts of an
-// export under way give nothing that was erased.
+// modes, its commissioning and its heating records stay. It cannot be undone, and the gateway
+// keeps no copy: an app asks its user to confirm, saying that everyone in the home loses it, and
+// offers the household's export (EXPORT) first. Later parts of an export under way give nothing
+// that was erased.
 //
 // The clear is pushed as ClimateHistoryCleared to every session of the home's residents, the
 // caller's included, before the acknowledgement.
