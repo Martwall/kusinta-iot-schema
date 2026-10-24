@@ -307,6 +307,46 @@ class ClimateModeKind extends $pb.ProtobufEnum {
   const ClimateModeKind._(super.value, super.name);
 }
 
+/// The length of the buckets a room's history is given in. Buckets are fixed and aligned to
+/// UTC, whatever the building's time zone.
+class RoomHistoryResolution extends $pb.ProtobufEnum {
+  /// In a request: the gateway chooses (webrtc.v1.GetRoomHistory). In an answer: quarter hours,
+  /// from a gateway that predates this field.
+  static const RoomHistoryResolution ROOM_HISTORY_RESOLUTION_UNSPECIFIED =
+      RoomHistoryResolution._(
+          0, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_UNSPECIFIED');
+
+  /// 15-minute buckets aligned to UTC quarter hours (:00, :15, :30, :45).
+  static const RoomHistoryResolution ROOM_HISTORY_RESOLUTION_QUARTER_HOUR =
+      RoomHistoryResolution._(
+          1, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_QUARTER_HOUR');
+
+  /// Hour buckets aligned to UTC hours, each made of its four quarter hours as
+  /// RoomHistorySample says. An hour is given only where the whole hour lies within what the
+  /// recipient may read (RoomHistory.kept_from): an hour that straddles that edge — the start of
+  /// their residency, the room joining their home — mixes quarter hours they may read with ones
+  /// they may not, and is left out, never trimmed to its readable part or averaged again from
+  /// it. An hour is given once the gateway has made it of its quarter hours, which it may do
+  /// some time after the hour ends (see RoomHistory.covered_to).
+  static const RoomHistoryResolution ROOM_HISTORY_RESOLUTION_HOUR =
+      RoomHistoryResolution._(
+          2, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_HOUR');
+
+  static const $core.List<RoomHistoryResolution> values =
+      <RoomHistoryResolution>[
+    ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+    ROOM_HISTORY_RESOLUTION_QUARTER_HOUR,
+    ROOM_HISTORY_RESOLUTION_HOUR,
+  ];
+
+  static final $core.List<RoomHistoryResolution?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static RoomHistoryResolution? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const RoomHistoryResolution._(super.value, super.name);
+}
+
 /// The length of the periods an ApartmentClimateSummary is given in. Each period runs from
 /// the start of one local date to the start of another in the building's time zone
 /// (space.v1.Space.time_zone) — midnight, or the first moment of the date where daylight

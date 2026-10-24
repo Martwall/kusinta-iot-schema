@@ -57,6 +57,12 @@ class ClimateModeKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CLIMATE_MODE_KIND_AWAY: _ClassVar[ClimateModeKind]
     CLIMATE_MODE_KIND_HOLIDAY: _ClassVar[ClimateModeKind]
 
+class RoomHistoryResolution(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    ROOM_HISTORY_RESOLUTION_UNSPECIFIED: _ClassVar[RoomHistoryResolution]
+    ROOM_HISTORY_RESOLUTION_QUARTER_HOUR: _ClassVar[RoomHistoryResolution]
+    ROOM_HISTORY_RESOLUTION_HOUR: _ClassVar[RoomHistoryResolution]
+
 class ClimateSummaryPeriod(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     CLIMATE_SUMMARY_PERIOD_UNSPECIFIED: _ClassVar[ClimateSummaryPeriod]
@@ -99,6 +105,9 @@ CLIMATE_EXPLANATION_SUBJECT_ADD_ON_HEATER: ClimateExplanationSubject
 CLIMATE_MODE_KIND_UNSPECIFIED: ClimateModeKind
 CLIMATE_MODE_KIND_AWAY: ClimateModeKind
 CLIMATE_MODE_KIND_HOLIDAY: ClimateModeKind
+ROOM_HISTORY_RESOLUTION_UNSPECIFIED: RoomHistoryResolution
+ROOM_HISTORY_RESOLUTION_QUARTER_HOUR: RoomHistoryResolution
+ROOM_HISTORY_RESOLUTION_HOUR: RoomHistoryResolution
 CLIMATE_SUMMARY_PERIOD_UNSPECIFIED: ClimateSummaryPeriod
 CLIMATE_SUMMARY_PERIOD_DAY: ClimateSummaryPeriod
 CLIMATE_SUMMARY_PERIOD_WEEK: ClimateSummaryPeriod
@@ -215,14 +224,20 @@ class RoomHistorySample(_message.Message):
     def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., measured_centidegrees: _Optional[int] = ..., target_centidegrees: _Optional[int] = ..., effective_target_centidegrees: _Optional[int] = ..., valve_open_permille: _Optional[int] = ..., valve_open_seconds: _Optional[int] = ..., floor_heating_seconds: _Optional[int] = ...) -> None: ...
 
 class RoomHistory(_message.Message):
-    __slots__ = ("room_id", "kept_from", "samples")
+    __slots__ = ("room_id", "kept_from", "samples", "resolution", "covered_from", "covered_to")
     ROOM_ID_FIELD_NUMBER: _ClassVar[int]
     KEPT_FROM_FIELD_NUMBER: _ClassVar[int]
     SAMPLES_FIELD_NUMBER: _ClassVar[int]
+    RESOLUTION_FIELD_NUMBER: _ClassVar[int]
+    COVERED_FROM_FIELD_NUMBER: _ClassVar[int]
+    COVERED_TO_FIELD_NUMBER: _ClassVar[int]
     room_id: _identity_pb2.SpaceId
     kept_from: _timestamp_pb2.Timestamp
     samples: _containers.RepeatedCompositeFieldContainer[RoomHistorySample]
-    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., samples: _Optional[_Iterable[_Union[RoomHistorySample, _Mapping]]] = ...) -> None: ...
+    resolution: RoomHistoryResolution
+    covered_from: _timestamp_pb2.Timestamp
+    covered_to: _timestamp_pb2.Timestamp
+    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., samples: _Optional[_Iterable[_Union[RoomHistorySample, _Mapping]]] = ..., resolution: _Optional[_Union[RoomHistoryResolution, str]] = ..., covered_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., covered_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class ClimatePeriodMean(_message.Message):
     __slots__ = ("starts_at", "ends_at", "measured_centidegrees", "target_centidegrees", "measured_coverage_permille", "target_coverage_permille", "rooms_measured", "rooms")

@@ -2177,12 +2177,14 @@ class ListRoomClimates extends $pb.GeneratedMessage {
   $0.SpaceId ensureRootSpaceId() => $_ensure(0);
 }
 
-/// Reads a room's history, answered with a climate.v1.RoomHistory of fixed 15-minute
-/// buckets aligned to UTC quarter hours (:00, :15, :30, :45). Needs READ on the room.
+/// Reads a room's history at one resolution, answered with a climate.v1.RoomHistory. Needs
+/// READ on the room.
 ///
-/// The range is half-open: a bucket is returned when from_time <= at < to_time, so
-/// back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
-/// unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now].
+/// The range is half-open: a bucket is returned when from_time <= at < to_time and it has
+/// ended, so back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
+/// unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now]. One
+/// answer holds at most 744 samples, the newest of the range; a longer range is read page by
+/// page, each ending where the one before began (RoomHistory.covered_from).
 ///
 /// A room in a home is readable by its residents only, and only from the start of their
 /// current residency (see access.v1.MembershipRelation). A caller who reaches it as service is
@@ -2193,11 +2195,13 @@ class GetRoomHistory extends $pb.GeneratedMessage {
     $0.SpaceId? roomId,
     $4.Timestamp? fromTime,
     $4.Timestamp? toTime,
+    $12.RoomHistoryResolution? resolution,
   }) {
     final result = create();
     if (roomId != null) result.roomId = roomId;
     if (fromTime != null) result.fromTime = fromTime;
     if (toTime != null) result.toTime = toTime;
+    if (resolution != null) result.resolution = resolution;
     return result;
   }
 
@@ -2221,6 +2225,12 @@ class GetRoomHistory extends $pb.GeneratedMessage {
         subBuilder: $4.Timestamp.create)
     ..aOM<$4.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
         subBuilder: $4.Timestamp.create)
+    ..e<$12.RoomHistoryResolution>(
+        4, _omitFieldNames ? '' : 'resolution', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $12.RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+        valueOf: $12.RoomHistoryResolution.valueOf,
+        enumValues: $12.RoomHistoryResolution.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2276,6 +2286,20 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   void clearToTime() => $_clearField(3);
   @$pb.TagNumber(3)
   $4.Timestamp ensureToTime() => $_ensure(2);
+
+  /// The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses:
+  /// QUARTER_HOUR when from_time is set, no earlier than the room's oldest quarter hour the
+  /// caller may read, and no more than 7 days before to_time (unset: now); HOUR otherwise.
+  /// Either way the answer says what it holds (RoomHistory.resolution). How long each
+  /// resolution is kept is the gateway's; kept_from tells the caller.
+  @$pb.TagNumber(4)
+  $12.RoomHistoryResolution get resolution => $_getN(3);
+  @$pb.TagNumber(4)
+  set resolution($12.RoomHistoryResolution value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasResolution() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearResolution() => $_clearField(4);
 }
 
 /// What the parties who do not live in a private space learn of it — the answer to a
@@ -4671,6 +4695,7 @@ enum ManagementRequest_Request {
   listHouseholdHandovers,
   exportHouseholdData,
   setHomeName,
+  clearClimateHistory,
   notSet
 }
 
@@ -4745,6 +4770,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     $5.ListHouseholdHandovers? listHouseholdHandovers,
     $5.ExportHouseholdData? exportHouseholdData,
     $5.SetHomeName? setHomeName,
+    $5.ClearClimateHistory? clearClimateHistory,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -4843,6 +4869,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (exportHouseholdData != null)
       result.exportHouseholdData = exportHouseholdData;
     if (setHomeName != null) result.setHomeName = setHomeName;
+    if (clearClimateHistory != null)
+      result.clearClimateHistory = clearClimateHistory;
     return result;
   }
 
@@ -4925,6 +4953,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     66: ManagementRequest_Request.listHouseholdHandovers,
     67: ManagementRequest_Request.exportHouseholdData,
     68: ManagementRequest_Request.setHomeName,
+    69: ManagementRequest_Request.clearClimateHistory,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -5000,7 +5029,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       65,
       66,
       67,
-      68
+      68,
+      69
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -5162,6 +5192,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: $5.ExportHouseholdData.create)
     ..aOM<$5.SetHomeName>(68, _omitFieldNames ? '' : 'setHomeName',
         subBuilder: $5.SetHomeName.create)
+    ..aOM<$5.ClearClimateHistory>(
+        69, _omitFieldNames ? '' : 'clearClimateHistory',
+        subBuilder: $5.ClearClimateHistory.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -5967,6 +6000,18 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearSetHomeName() => $_clearField(68);
   @$pb.TagNumber(68)
   $5.SetHomeName ensureSetHomeName() => $_ensure(67);
+
+  @$pb.TagNumber(69)
+  $5.ClearClimateHistory get clearClimateHistory => $_getN(68);
+  @$pb.TagNumber(69)
+  set clearClimateHistory($5.ClearClimateHistory value) =>
+      $_setField(69, value);
+  @$pb.TagNumber(69)
+  $core.bool hasClearClimateHistory() => $_has(68);
+  @$pb.TagNumber(69)
+  void clearClearClimateHistory() => $_clearField(69);
+  @$pb.TagNumber(69)
+  $5.ClearClimateHistory ensureClearClimateHistory() => $_ensure(68);
 }
 
 const $core.bool _omitFieldNames =

@@ -739,6 +739,92 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   void clearRecipientHouseholdAdmin() => $_clearField(12);
 }
 
+/// Erases a home's climate history, at once and for good. Answered with ManagementAck once it
+/// is erased. A household admin of the home only; anyone else — a resident who is not one, the
+/// property owner, a gateway administrator, a home's departing household during a vacated
+/// handover — is refused as NOT_ENTITLED, as is everyone on an admin-less home (HOUSEHOLD
+/// ADMIN). home_id must be an apartment (INVALID_REQUEST otherwise).
+///
+/// Erased, in one step, all of it or none, whenever it was recorded and so also what the caller
+/// may not read themselves, from before their residency:
+///   * the history of every room while it was in the home, at every resolution
+///     (climate.v1.RoomHistory) — an hour partly recorded in the home included, and a room that
+///     has since left the home included;
+///   * the apartment's climate summaries, every period of every length
+///     (climate.v1.ApartmentClimateSummary), the period running at the clear included;
+///   * the gateway's models of how the home's rooms warm and cool, which it learns afresh from
+///     what is recorded after the clear.
+/// Nothing recorded before the clear is kept or recorded after it, a late write included: room
+/// history begins again with the first bucket that starts after the clear, and the summary of
+/// each length with its first period that starts after the clear. Nothing else changes: the
+/// household's members, the home's rooms and their settings, its modes, its device events, its
+/// commissioning and its heating records stay. It cannot be undone, and the gateway keeps no
+/// copy: an app asks its user to confirm, and offers the household's export (EXPORT) first.
+///
+/// The summaries are erased for everyone they are given to, so the property owner, the gateway
+/// administrators and whoever else is given the apartment's summary as service
+/// (PrivacyDisclosure.climate_summary_period) lose its periods from before the clear too, and
+/// are given none until the first period after it closes.
+class ClearClimateHistory extends $pb.GeneratedMessage {
+  factory ClearClimateHistory({
+    $0.SpaceId? homeId,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    return result;
+  }
+
+  ClearClimateHistory._();
+
+  factory ClearClimateHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ClearClimateHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ClearClimateHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClearClimateHistory clone() => ClearClimateHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ClearClimateHistory copyWith(void Function(ClearClimateHistory) updates) =>
+      super.copyWith((message) => updates(message as ClearClimateHistory))
+          as ClearClimateHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ClearClimateHistory create() => ClearClimateHistory._();
+  @$core.override
+  ClearClimateHistory createEmptyInstance() => create();
+  static $pb.PbList<ClearClimateHistory> createRepeated() =>
+      $pb.PbList<ClearClimateHistory>();
+  @$core.pragma('dart2js:noInline')
+  static ClearClimateHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ClearClimateHistory>(create);
+  static ClearClimateHistory? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+}
+
 /// Sets the household's own name for its home (space.v1.Space.home_name). Answered with
 /// ManagementAck. Any resident of the home may — a name is not governance, so it is not kept to
 /// household admins; anyone else is refused as NOT_ENTITLED. home_id must be an apartment
@@ -1076,8 +1162,9 @@ class HouseholdExport extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $2.RoomClimateList ensureRoomClimates() => $_ensure(1);
 
-  /// One room's history over at most 7 days of buckets, as GetRoomHistory answers it. A
-  /// room's history comes in as many parts as it takes, in order.
+  /// One room's history at one resolution, as GetRoomHistory answers it at that resolution,
+  /// with at most as many samples as one answer holds. A room's history comes at each
+  /// resolution the gateway gives — quarter hours and hours — in as many parts as each takes.
   @$pb.TagNumber(3)
   $2.RoomHistory get roomHistory => $_getN(2);
   @$pb.TagNumber(3)

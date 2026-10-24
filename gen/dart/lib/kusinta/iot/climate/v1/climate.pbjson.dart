@@ -122,6 +122,22 @@ final $typed_data.Uint8List climateModeKindDescriptor = $convert.base64Decode(
     'Cg9DbGltYXRlTW9kZUtpbmQSIQodQ0xJTUFURV9NT0RFX0tJTkRfVU5TUEVDSUZJRUQQABIaCh'
     'ZDTElNQVRFX01PREVfS0lORF9BV0FZEAESHQoZQ0xJTUFURV9NT0RFX0tJTkRfSE9MSURBWRAC');
 
+@$core.Deprecated('Use roomHistoryResolutionDescriptor instead')
+const RoomHistoryResolution$json = {
+  '1': 'RoomHistoryResolution',
+  '2': [
+    {'1': 'ROOM_HISTORY_RESOLUTION_UNSPECIFIED', '2': 0},
+    {'1': 'ROOM_HISTORY_RESOLUTION_QUARTER_HOUR', '2': 1},
+    {'1': 'ROOM_HISTORY_RESOLUTION_HOUR', '2': 2},
+  ],
+};
+
+/// Descriptor for `RoomHistoryResolution`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List roomHistoryResolutionDescriptor = $convert.base64Decode(
+    'ChVSb29tSGlzdG9yeVJlc29sdXRpb24SJwojUk9PTV9ISVNUT1JZX1JFU09MVVRJT05fVU5TUE'
+    'VDSUZJRUQQABIoCiRST09NX0hJU1RPUllfUkVTT0xVVElPTl9RVUFSVEVSX0hPVVIQARIgChxS'
+    'T09NX0hJU1RPUllfUkVTT0xVVElPTl9IT1VSEAI=');
+
 @$core.Deprecated('Use climateSummaryPeriodDescriptor instead')
 const ClimateSummaryPeriod$json = {
   '1': 'ClimateSummaryPeriod',
@@ -661,6 +677,30 @@ const RoomHistory$json = {
       '6': '.kusinta.iot.climate.v1.RoomHistorySample',
       '10': 'samples'
     },
+    {
+      '1': 'resolution',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.RoomHistoryResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'covered_from',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'coveredFrom'
+    },
+    {
+      '1': 'covered_to',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'coveredTo'
+    },
   ],
 };
 
@@ -669,7 +709,11 @@ final $typed_data.Uint8List roomHistoryDescriptor = $convert.base64Decode(
     'CgtSb29tSGlzdG9yeRI5Cgdyb29tX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudj'
     'EuU3BhY2VJZFIGcm9vbUlkEjcKCWtlcHRfZnJvbRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U'
     'aW1lc3RhbXBSCGtlcHRGcm9tEkMKB3NhbXBsZXMYAyADKAsyKS5rdXNpbnRhLmlvdC5jbGltYX'
-    'RlLnYxLlJvb21IaXN0b3J5U2FtcGxlUgdzYW1wbGVz');
+    'RlLnYxLlJvb21IaXN0b3J5U2FtcGxlUgdzYW1wbGVzEk0KCnJlc29sdXRpb24YBCABKA4yLS5r'
+    'dXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21IaXN0b3J5UmVzb2x1dGlvblIKcmVzb2x1dGlvbh'
+    'I9Cgxjb3ZlcmVkX2Zyb20YBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgtjb3Zl'
+    'cmVkRnJvbRI5Cgpjb3ZlcmVkX3RvGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcF'
+    'IJY292ZXJlZFRv');
 
 @$core.Deprecated('Use climatePeriodMeanDescriptor instead')
 const ClimatePeriodMean$json = {

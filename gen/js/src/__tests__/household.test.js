@@ -13,6 +13,7 @@ import {
 } from '../kusinta/iot/commissioning/v1/commissioning_pb.js'
 import { RedeemOutcome } from '../kusinta/iot/signaling/v1/signaling_pb.js'
 import {
+  ClearClimateHistorySchema,
   HouseholdExportSchema,
   HouseholdHandoverSchema,
   HouseholdHandoverState,
@@ -324,6 +325,22 @@ describe('home name', () => {
       request: { case: 'setHomeName', value: { homeId: { value: 'home-15' }, name: 'Our place' } },
     })
     expect(decoded.request).toMatchObject({ case: 'setHomeName', value: { name: 'Our place' } })
+  })
+})
+
+describe('clearing a home\'s climate history', () => {
+  it('is asked by a management request for one home', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'clearClimateHistory', value: { homeId: { value: 'home-15' } } },
+    })
+    expect(decoded.request).toMatchObject({
+      case: 'clearClimateHistory',
+      value: { homeId: { value: 'home-15' } },
+    })
+  })
+
+  it('names nothing but the home, so no part of the history can be kept back', () => {
+    expect(ClearClimateHistorySchema.fields.map((f) => f.name)).toEqual(['home_id'])
   })
 })
 
