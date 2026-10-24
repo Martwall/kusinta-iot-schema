@@ -191,9 +191,9 @@ class StaffAppointment extends $pb.GeneratedMessage {
   $0.UserId ensureAppointee() => $_ensure(0);
 
   /// The staff member who appointed them, and the name they gave their account
-  /// (AppTokenClaims.name) as the gateway last learnt it; empty when none is learnt, and
-  /// emptied once that account is deleted or removed from the gateway, when the record stays
-  /// without it. Self-chosen, as MemberDetail.name is.
+  /// (AppTokenClaims.name) as the gateway last learnt it; empty when none is learnt. Both are
+  /// cleared once that account is deleted or removed from the gateway, when the record stays
+  /// without them. Self-chosen, as MemberDetail.name is.
   @$pb.TagNumber(2)
   $0.UserId get appointedBy => $_getN(1);
   @$pb.TagNumber(2)
