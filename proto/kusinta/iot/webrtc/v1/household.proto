@@ -250,8 +250,9 @@ message StaffAppointment {
   kusinta.iot.identity.v1.UserId appointee = 1;
 
   // The staff member who appointed them, and the name they gave their account
-  // (AppTokenClaims.name) as the gateway last learnt it; empty when none is learnt.
-  // Self-chosen, as MemberDetail.name is.
+  // (AppTokenClaims.name) as the gateway last learnt it; empty when none is learnt, and
+  // emptied once that account is deleted or removed from the gateway, when the record stays
+  // without it. Self-chosen, as MemberDetail.name is.
   kusinta.iot.identity.v1.UserId appointed_by = 2;
   string appointed_by_name = 3;
 

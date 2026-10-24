@@ -1930,7 +1930,8 @@ class CommissioningGrants extends $pb.GeneratedMessage {
 /// A commissioning grant on a home that was granted, as its residents are told it afterwards
 /// (webrtc.v1.PrivacyDisclosure.commissioning_grants): who held commissioning access to their
 /// home, and when. The installer by the name they gave their account as the gateway last learnt
-/// it, never by user id; empty when none is learnt.
+/// it, never by user id; empty when none is learnt, and emptied once their account is deleted or
+/// removed from the gateway, when the record stays without it.
 class CommissioningGrantRecord extends $pb.GeneratedMessage {
   factory CommissioningGrantRecord({
     $core.String? installerName,
