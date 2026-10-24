@@ -32,7 +32,7 @@ option optimize_for = SPEED;
 //     commissioning.v1), and opting the home in to its heating features;
 //   * answering and ending commissioning grants on the home (commissioning.v1, GRANTS);
 //   * starting, confirming and cancelling the home's handover (HANDOVER);
-//   * clearing the home's climate history (ClearClimateHistory).
+//   * clearing the home's climate history (CLIMATE HISTORY, ClearClimateHistory).
 // A resident who is not a household admin is refused each of these as NOT_ENTITLED. Every
 // resident keeps the rest of what a resident may do: room targets, modes, comfort-load
 // windows, links between the home's devices, the lock on device controls, naming the home
@@ -167,14 +167,24 @@ option optimize_for = SPEED;
 // So the home's next household never moves in among the last one's records, and a home nobody
 // lives in keeps nothing of the household that left for longer than the notice.
 //
+// CLIMATE HISTORY. A home's climate history is what the gateway has recorded and learnt of how
+// warm it was kept:
+//   * the history of each room while it was in the home, at every resolution
+//     (climate.v1.RoomHistory): an hour partly recorded in the home included, and a room that
+//     has since left the home included;
+//   * the apartment's climate summaries, every period of every length
+//     (climate.v1.ApartmentClimateSummary);
+//   * the gateway's models and plans for the home, learnt from that history.
+// Climate summaries over spaces that include the home are recomputed without it once it is
+// erased. A wipe erases it (WIPE), and so may the household on its own (ClearClimateHistory).
+//
 // WIPE. A home's wipe is a step on the gateway's own records, all of it or none, and the
 // effects outside them that it queues; nothing in the step waits on a network or a device.
 //
 // The step deletes or anonymises, together:
-//   * everything recorded per home: its rooms' history and climate summaries, their targets,
-//     modes and comfort settings, its device events, the household's name for it
-//     (space.v1.Space.home_name), and the gateway's models and plans for it. Climate
-//     summaries over spaces that include it are recomputed without it;
+//   * everything recorded per home: its climate history (CLIMATE HISTORY), its rooms' targets,
+//     modes and comfort settings, its device events, and the household's name for it
+//     (space.v1.Space.home_name);
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
 //     addresses, and the record of who did what in the home. What the gateway keeps of a
@@ -363,24 +373,17 @@ message HouseholdHandover {
   bool recipient_household_admin = 12;
 }
 
-// Erases a home's climate history, at once and for good. Answered with ManagementAck once it
-// is erased. A household admin of the home only; anyone else — a resident who is not one, the
-// property owner, a gateway administrator, a home's departing household during a vacated
-// handover — is refused as NOT_ENTITLED, as is everyone on an admin-less home (HOUSEHOLD
-// ADMIN). home_id must be an apartment (INVALID_REQUEST otherwise).
+// Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and
+// nothing else. Answered with ManagementAck once it is erased. A household admin of the home
+// only (HOUSEHOLD ADMIN, ADMIN-LESS HOME), and so not the departing household of a vacated
+// handover (VACANCY); anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+// (INVALID_REQUEST otherwise).
 //
-// Erased, in one step, all of it or none, whenever it was recorded and so also what the caller
-// may not read themselves, from before their residency:
-//   * the history of every room while it was in the home, at every resolution
-//     (climate.v1.RoomHistory) — an hour partly recorded in the home included, and a room that
-//     has since left the home included;
-//   * the apartment's climate summaries, every period of every length
-//     (climate.v1.ApartmentClimateSummary), the period running at the clear included;
-//   * the gateway's models of how the home's rooms warm and cool, which it learns afresh from
-//     what is recorded after the clear.
-// Nothing recorded before the clear is kept or recorded after it, a late write included: room
-// history begins again with the first bucket that starts after the clear, and the summary of
-// each length with its first period that starts after the clear. Nothing else changes: the
+// All of it goes, whenever it was recorded: also what the caller may not read themselves, from
+// before their residency. Nothing recorded before the clear is kept or recorded after it, a
+// late write included: room history begins again with the first bucket that starts after the
+// clear, and the summary of each length with its first period that starts after the clear; the
+// gateway learns its models and makes its plans afresh from what is recorded after it. The
 // household's members, the home's rooms and their settings, its modes, its device events, its
 // commissioning and its heating records stay. It cannot be undone, and the gateway keeps no
 // copy: an app asks its user to confirm, and offers the household's export (EXPORT) first.
@@ -437,9 +440,10 @@ message HouseholdExport {
     // The home's rooms, their settings, and the modes on the home (ListRoomClimates).
     kusinta.iot.climate.v1.RoomClimateList room_climates = 2;
 
-    // One room's history at one resolution, as GetRoomHistory answers it at that resolution,
-    // with at most as many samples as one answer holds. A room's history comes at each
-    // resolution the gateway gives — quarter hours and hours — in as many parts as each takes.
+    // One room's history at one resolution, one GetRoomHistory answer's worth. A room's history
+    // comes at the finest resolution held for each stretch of time: at each resolution the
+    // gateway gives, from its kept_from up to the kept_from of the next finer one, in as many
+    // parts as it takes.
     kusinta.iot.climate.v1.RoomHistory room_history = 3;
 
     // The home's climate summary over one period length (GetApartmentClimateSummary): one

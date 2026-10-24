@@ -2180,11 +2180,10 @@ class ListRoomClimates extends $pb.GeneratedMessage {
 /// Reads a room's history at one resolution, answered with a climate.v1.RoomHistory. Needs
 /// READ on the room.
 ///
-/// The range is half-open: a bucket is returned when from_time <= at < to_time and it has
-/// ended, so back-to-back windows neither repeat nor skip a bucket. Unset to_time means now;
-/// unset from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now]. One
-/// answer holds at most 744 samples, the newest of the range; a longer range is read page by
-/// page, each ending where the one before began (RoomHistory.covered_from).
+/// The range is half-open: a bucket is returned when from_time <= at < to_time, so
+/// back-to-back windows neither repeat nor skip a bucket. Unset to_time means now; unset
+/// from_time means RoomHistory.kept_from. Both are clamped to [kept_from, now]. A long range is
+/// answered newest first, in capped pages (RoomHistory.covered_from).
 ///
 /// A room in a home is readable by its residents only, and only from the start of their
 /// current residency (see access.v1.MembershipRelation). A caller who reaches it as service is
@@ -2287,11 +2286,10 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $4.Timestamp ensureToTime() => $_ensure(2);
 
-  /// The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses:
-  /// QUARTER_HOUR when from_time is set, no earlier than the room's oldest quarter hour the
-  /// caller may read, and no more than 7 days before to_time (unset: now); HOUR otherwise.
-  /// Either way the answer says what it holds (RoomHistory.resolution). How long each
-  /// resolution is kept is the gateway's; kept_from tells the caller.
+  /// The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses
+  /// the finest resolution it gives at which from_time is no earlier than kept_from and the
+  /// range up to to_time (unset: now) fits in one answer; where none does, or from_time is
+  /// unset, the coarsest.
   @$pb.TagNumber(4)
   $12.RoomHistoryResolution get resolution => $_getN(3);
   @$pb.TagNumber(4)

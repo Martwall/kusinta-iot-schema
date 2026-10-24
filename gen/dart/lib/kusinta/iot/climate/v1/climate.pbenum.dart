@@ -316,18 +316,15 @@ class RoomHistoryResolution extends $pb.ProtobufEnum {
       RoomHistoryResolution._(
           0, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_UNSPECIFIED');
 
-  /// 15-minute buckets aligned to UTC quarter hours (:00, :15, :30, :45).
+  /// 15-minute buckets (:00, :15, :30, :45).
   static const RoomHistoryResolution ROOM_HISTORY_RESOLUTION_QUARTER_HOUR =
       RoomHistoryResolution._(
           1, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_QUARTER_HOUR');
 
-  /// Hour buckets aligned to UTC hours, each made of its four quarter hours as
-  /// RoomHistorySample says. An hour is given only where the whole hour lies within what the
-  /// recipient may read (RoomHistory.kept_from): an hour that straddles that edge — the start of
-  /// their residency, the room joining their home — mixes quarter hours they may read with ones
-  /// they may not, and is left out, never trimmed to its readable part or averaged again from
-  /// it. An hour is given once the gateway has made it of its quarter hours, which it may do
-  /// some time after the hour ends (see RoomHistory.covered_to).
+  /// Hour buckets, each made of its four quarter hours as RoomHistorySample says. An hour is
+  /// given only where all of it lies within what the recipient may read (RoomHistory): one
+  /// that straddles the start of their residency, or the room joining their home, is left out,
+  /// never trimmed or averaged again from its readable part.
   static const RoomHistoryResolution ROOM_HISTORY_RESOLUTION_HOUR =
       RoomHistoryResolution._(
           2, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_HOUR');

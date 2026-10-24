@@ -739,24 +739,17 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   void clearRecipientHouseholdAdmin() => $_clearField(12);
 }
 
-/// Erases a home's climate history, at once and for good. Answered with ManagementAck once it
-/// is erased. A household admin of the home only; anyone else — a resident who is not one, the
-/// property owner, a gateway administrator, a home's departing household during a vacated
-/// handover — is refused as NOT_ENTITLED, as is everyone on an admin-less home (HOUSEHOLD
-/// ADMIN). home_id must be an apartment (INVALID_REQUEST otherwise).
+/// Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and
+/// nothing else. Answered with ManagementAck once it is erased. A household admin of the home
+/// only (HOUSEHOLD ADMIN, ADMIN-LESS HOME), and so not the departing household of a vacated
+/// handover (VACANCY); anyone else is refused as NOT_ENTITLED. home_id must be an apartment
+/// (INVALID_REQUEST otherwise).
 ///
-/// Erased, in one step, all of it or none, whenever it was recorded and so also what the caller
-/// may not read themselves, from before their residency:
-///   * the history of every room while it was in the home, at every resolution
-///     (climate.v1.RoomHistory) — an hour partly recorded in the home included, and a room that
-///     has since left the home included;
-///   * the apartment's climate summaries, every period of every length
-///     (climate.v1.ApartmentClimateSummary), the period running at the clear included;
-///   * the gateway's models of how the home's rooms warm and cool, which it learns afresh from
-///     what is recorded after the clear.
-/// Nothing recorded before the clear is kept or recorded after it, a late write included: room
-/// history begins again with the first bucket that starts after the clear, and the summary of
-/// each length with its first period that starts after the clear. Nothing else changes: the
+/// All of it goes, whenever it was recorded: also what the caller may not read themselves, from
+/// before their residency. Nothing recorded before the clear is kept or recorded after it, a
+/// late write included: room history begins again with the first bucket that starts after the
+/// clear, and the summary of each length with its first period that starts after the clear; the
+/// gateway learns its models and makes its plans afresh from what is recorded after it. The
 /// household's members, the home's rooms and their settings, its modes, its device events, its
 /// commissioning and its heating records stay. It cannot be undone, and the gateway keeps no
 /// copy: an app asks its user to confirm, and offers the household's export (EXPORT) first.
@@ -1162,9 +1155,10 @@ class HouseholdExport extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $2.RoomClimateList ensureRoomClimates() => $_ensure(1);
 
-  /// One room's history at one resolution, as GetRoomHistory answers it at that resolution,
-  /// with at most as many samples as one answer holds. A room's history comes at each
-  /// resolution the gateway gives — quarter hours and hours — in as many parts as each takes.
+  /// One room's history at one resolution, one GetRoomHistory answer's worth. A room's history
+  /// comes at the finest resolution held for each stretch of time: at each resolution the
+  /// gateway gives, from its kept_from up to the kept_from of the next finer one, in as many
+  /// parts as it takes.
   @$pb.TagNumber(3)
   $2.RoomHistory get roomHistory => $_getN(2);
   @$pb.TagNumber(3)

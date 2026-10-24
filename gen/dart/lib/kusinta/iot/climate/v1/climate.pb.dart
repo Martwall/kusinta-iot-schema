@@ -1043,9 +1043,10 @@ class RoomHistorySample extends $pb.GeneratedMessage {
 
 /// A room's history at one resolution, in reply to GetRoomHistory.
 ///
-/// A bucket is given only once it has ended. Within [covered_from, covered_to), a bucket that
-/// is not among the samples is one for which nothing is known; outside it, this answer says nothing, and an app MUST NOT show that time
-/// as empty on its account.
+/// A bucket is given only once the gateway has made it, never before it ends, and only where
+/// all of it lies within what the recipient may read. Within [covered_from, covered_to), a
+/// bucket that is not among the samples is one for which nothing is known; outside it, this
+/// answer says nothing, and an app MUST NOT show that time as empty on its account.
 class RoomHistory extends $pb.GeneratedMessage {
   factory RoomHistory({
     $1.SpaceId? roomId,
@@ -1129,14 +1130,13 @@ class RoomHistory extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $1.SpaceId ensureRoomId() => $_ensure(0);
 
-  /// The earliest moment the gateway still holds for this room at this resolution that the
-  /// recipient may read. The request's from_time and to_time are clamped to [kept_from, now],
-  /// so nothing before kept_from is ever returned. For a room in the recipient's own home it is
-  /// no earlier than the start of their current residency, nor than when the room last joined
-  /// their home; for any other room, no earlier than when it last left a home. At HOUR it is
-  /// the start of the first whole hour the recipient may read. The same per recipient whether
-  /// or not the answer is capped: how far back the room's history reaches, not how far this
-  /// answer does.
+  /// The start of the earliest bucket the gateway still holds for this room at this resolution
+  /// that the recipient may read. The request's from_time and to_time are clamped to
+  /// [kept_from, now], so nothing before kept_from is ever returned. For a room in the
+  /// recipient's own home it is no earlier than the start of their current residency, nor than
+  /// when the room last joined their home; for any other room, no earlier than when it last
+  /// left a home. How far back the room's history reaches for the recipient, whether or not
+  /// this answer reaches that far.
   @$pb.TagNumber(2)
   $0.Timestamp get keptFrom => $_getN(1);
   @$pb.TagNumber(2)
@@ -1148,8 +1148,7 @@ class RoomHistory extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $0.Timestamp ensureKeptFrom() => $_ensure(1);
 
-  /// The buckets within [covered_from, covered_to), in order of `at`; never more than 744 of
-  /// them (see covered_from).
+  /// The buckets within [covered_from, covered_to), in order of `at`.
   @$pb.TagNumber(3)
   $pb.PbList<RoomHistorySample> get samples => $_getList(2);
 
@@ -1164,17 +1163,16 @@ class RoomHistory extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearResolution() => $_clearField(4);
 
-  /// The range this answer covers, half-open: from covered_from up to covered_to.
+  /// The range this answer covers, [covered_from, covered_to).
   ///
   /// covered_to is the request's to_time as clamped, but never later than the end of the
-  /// newest bucket that has ended — at HOUR, of the newest hour the gateway has made, which may
-  /// be days before now. At HOUR the time after covered_to is held at quarter hours, if at all,
-  /// and an app asks for it there.
+  /// newest bucket the gateway has made at this resolution — for an hour, possibly days after
+  /// it ends. The time after it may be held at a finer resolution, and an app asks for it there.
   ///
-  /// covered_from is the request's from_time as clamped, unless more than 744 samples fall
-  /// between it and covered_to: then the answer is capped, keeping the newest 744, and
-  /// covered_from is the start of the oldest one given. Either way it is never later than
-  /// covered_to, and an answer that covers nothing has the two equal.
+  /// covered_from is the request's from_time as clamped, unless more than 768 samples fall
+  /// between it and covered_to: then the answer is capped, keeping the newest 768, and
+  /// covered_from is samples[0].at. Either way it is never later than covered_to, and an answer
+  /// that covers nothing has the two equal.
   ///
   /// An answer is capped exactly when covered_from is later than kept_from and than the
   /// from_time asked for, if one was. The app asks for the next page with the same from_time

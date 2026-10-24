@@ -214,10 +214,10 @@ describe('room history', () => {
     ]).toEqual([2087, 2100, 1700, 420, 540, 600])
   })
 
-  it('leaves the resolution to the gateway when a request names none', () => {
-    const request = create(GetRoomHistorySchema, { roomId: ROOM })
-    const decoded = fromBinary(GetRoomHistorySchema, toBinary(GetRoomHistorySchema, request))
-    expect(decoded.resolution).toBe(RoomHistoryResolution.UNSPECIFIED)
+  it('is given in quarter hours or hours', () => {
+    expect([RoomHistoryResolution.UNSPECIFIED, RoomHistoryResolution.QUARTER_HOUR, RoomHistoryResolution.HOUR]).toEqual([
+      0, 1, 2,
+    ])
   })
 
   it('names the resolution a request asks for', () => {
@@ -251,16 +251,6 @@ describe('room history', () => {
       1_797_321_600n,
       1_800_000_000n,
     ])
-  })
-
-  it('carries an hour\'s open seconds summed past a quarter hour\'s length', () => {
-    const sample = create(RoomHistorySampleSchema, {
-      at: timestampFromMs(1_800_000_000_000),
-      valveOpenSeconds: 3600,
-      floorHeatingSeconds: 2700,
-    })
-    const decoded = fromBinary(RoomHistorySampleSchema, toBinary(RoomHistorySampleSchema, sample))
-    expect([decoded.valveOpenSeconds, decoded.floorHeatingSeconds]).toEqual([3600, 2700])
   })
 
   it('answers with how far back it is kept and its samples', () => {
