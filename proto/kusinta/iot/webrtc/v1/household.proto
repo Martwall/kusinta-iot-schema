@@ -144,7 +144,9 @@ option optimize_for = SPEED;
 //
 // While it is pending:
 //   * the departing household may export the home (EXPORT), as they could read it when their
-//     residency ended: nothing recorded after that is in it;
+//     residency ended: nothing recorded after that is in it; and may list the home's linked
+//     accounts (ListAccountLinks), so that they can release what stays registered to them at a
+//     vendor before the wipe revokes it;
 //   * its household admins may confirm it at once; the property owner and the gateway
 //     administrators from staff_confirmable_from on, which is also when it completes on its
 //     own;
@@ -298,7 +300,9 @@ enum HouseholdHandoverState {
   HOUSEHOLD_HANDOVER_STATE_UNSPECIFIED = 0;
   HOUSEHOLD_HANDOVER_STATE_PENDING = 1;
   HOUSEHOLD_HANDOVER_STATE_CANCELLED = 2;
-  // Confirmed, or the last residency of the home ended while it was pending.
+  // Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
+  // has run. The last residency ending while one is pending makes it vacated, not done
+  // (VACANCY).
   HOUSEHOLD_HANDOVER_STATE_DONE = 3;
 }
 
@@ -348,6 +352,12 @@ message HouseholdHandover {
   // client offers them the household's export and confirmation as well as what staff may do,
   // rather than guessing from roles which of the two they are.
   bool recipient_in_household = 11;
+
+  // Set by the gateway per session: the session's user may confirm the handover as a household
+  // admin — a household admin of the home now, or, for a vacated one, one of the departing
+  // household's admins (VACANCY). A client offers confirmation on this, not on
+  // recipient_in_household, which a plain resident holds too.
+  bool recipient_household_admin = 12;
 }
 
 // Sets the household's own name for its home (space.v1.Space.home_name). Answered with

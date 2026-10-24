@@ -1451,7 +1451,8 @@ export declare const RequestAccountLinkNonceSchema: GenMessage<RequestAccountLin
 
 /**
  * Lists a home's linked accounts and their status, answered with an AccountLinks. Given to
- * the home's residents; anyone else is refused as NOT_ENTITLED.
+ * the home's residents, and to the departing household while a vacated handover of the home is
+ * pending (household.proto, VACANCY); anyone else is refused as NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListAccountLinks
  */

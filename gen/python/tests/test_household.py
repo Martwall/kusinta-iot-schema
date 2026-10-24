@@ -281,3 +281,9 @@ def test_a_handover_tells_its_recipient_they_are_in_its_household():
     decoded = _round_trip(h.HouseholdHandover(handover_id="h-3", vacated=True, recipient_in_household=True))
 
     assert decoded.recipient_in_household is True
+
+
+def test_a_handover_tells_its_recipient_they_may_confirm_it_as_a_household_admin():
+    decoded = _round_trip(h.HouseholdHandover(handover_id="h-4", vacated=True, recipient_household_admin=True))
+
+    assert decoded.recipient_household_admin is True

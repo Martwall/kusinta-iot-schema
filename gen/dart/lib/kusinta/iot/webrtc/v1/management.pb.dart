@@ -3429,7 +3429,8 @@ class RequestAccountLinkNonce extends $pb.GeneratedMessage {
 }
 
 /// Lists a home's linked accounts and their status, answered with an AccountLinks. Given to
-/// the home's residents; anyone else is refused as NOT_ENTITLED.
+/// the home's residents, and to the departing household while a vacated handover of the home is
+/// pending (household.proto, VACANCY); anyone else is refused as NOT_ENTITLED.
 class ListAccountLinks extends $pb.GeneratedMessage {
   factory ListAccountLinks({
     $0.SpaceId? homeId,

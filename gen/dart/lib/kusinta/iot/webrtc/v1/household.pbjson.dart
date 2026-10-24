@@ -259,6 +259,13 @@ const HouseholdHandover$json = {
       '5': 8,
       '10': 'recipientInHousehold'
     },
+    {
+      '1': 'recipient_household_admin',
+      '3': 12,
+      '4': 1,
+      '5': 8,
+      '10': 'recipientHouseholdAdmin'
+    },
   ],
 };
 
@@ -274,7 +281,8 @@ final $typed_data.Uint8List householdHandoverDescriptor = $convert.base64Decode(
     'ZzdGFmZl9jb25maXJtYWJsZV9mcm9tGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt'
     'cFIUc3RhZmZDb25maXJtYWJsZUZyb20SNQoIZW5kZWRfYXQYCSABKAsyGi5nb29nbGUucHJvdG'
     '9idWYuVGltZXN0YW1wUgdlbmRlZEF0EhgKB3ZhY2F0ZWQYCiABKAhSB3ZhY2F0ZWQSNAoWcmVj'
-    'aXBpZW50X2luX2hvdXNlaG9sZBgLIAEoCFIUcmVjaXBpZW50SW5Ib3VzZWhvbGQ=');
+    'aXBpZW50X2luX2hvdXNlaG9sZBgLIAEoCFIUcmVjaXBpZW50SW5Ib3VzZWhvbGQSOgoZcmVjaX'
+    'BpZW50X2hvdXNlaG9sZF9hZG1pbhgMIAEoCFIXcmVjaXBpZW50SG91c2Vob2xkQWRtaW4=');
 
 @$core.Deprecated('Use setHomeNameDescriptor instead')
 const SetHomeName$json = {
