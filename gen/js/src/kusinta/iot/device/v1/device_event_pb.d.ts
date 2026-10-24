@@ -128,8 +128,10 @@ export declare type DeviceEvent = Message<"kusinta.iot.device.v1.DeviceEvent"> &
    * how many it was not sent: that much a partial grant of events discloses.
    *
    * previous_event_number never names an event from before the user's current residency in
-   * a home, nor from before their current, unbroken stretch of seeing the device — it is
-   * unset instead, and follows_loss then looks no further back either. Otherwise it is the
+   * a home, nor from before their current, unbroken stretch of seeing the device, nor from
+   * before the home's climate history was last cleared (webrtc.v1 household.proto, CLIMATE
+   * HISTORY), which erases its events — it is unset instead, and follows_loss then looks no
+   * further back either. Otherwise it is the
    * event_number of the previous event of this device that this user was due — within the
    * grant they held when it happened — whether or not any session of theirs was open to be
    * sent it, so that events missed while away are a gap like any other. A number of the

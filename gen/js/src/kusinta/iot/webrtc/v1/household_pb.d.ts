@@ -336,10 +336,10 @@ export declare const ClearClimateHistorySchema: GenMessage<ClearClimateHistory>;
 /**
  * A home's climate history was cleared (ClearClimateHistory), pushed as
  * GatewayMessage.climate_history_cleared to the sessions of its residents. An app drops on
- * arrival every room history and climate summary of the home it holds from before cleared_at,
- * rather than keeping what the gateway no longer does, and keeps cleared_at as a lasting floor
- * for the home: a sample or period dated before it that arrives later — an answer already in
- * flight at the clear — is dropped on arrival too. Nobody else is told: whoever is given
+ * arrival every room history, climate summary and device event of the home it holds from before
+ * cleared_at, rather than keeping what the gateway no longer does, and keeps cleared_at as a
+ * lasting floor for the home: a sample, period or event dated before it that arrives later — an
+ * answer already in flight at the clear — is dropped on arrival too. Nobody else is told: whoever is given
  * the apartment's summary as service learns of it by reading it.
  *
  * @generated from message kusinta.iot.webrtc.v1.ClimateHistoryCleared
