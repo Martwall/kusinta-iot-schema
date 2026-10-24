@@ -538,6 +538,11 @@ message PrivacyDisclosure {
   // its admins there. Given to the home's residents only, and so never to a caller who sees it
   // as service: a client shows it to residents alone.
   repeated StaffAppointment staff_appointments = 8;
+
+  // Each commissioning grant on this home that was granted since it was last wiped, oldest
+  // first, active ones included (commissioning.v1, GRANTS): who held commissioning access to the
+  // home, and when. Given to the home's residents only, as staff_appointments is.
+  repeated kusinta.iot.commissioning.v1.CommissioningGrantRecord commissioning_grants = 9;
 }
 
 // One kind of party with service reach of a home, and what it sees there. Every service
@@ -904,7 +909,8 @@ message ListHomeSetups {
 //
 // Accepted on any home the caller reaches, whether or not anyone could answer it: it lapses
 // unanswered where nobody does, so the answer tells the installer nothing of whether anyone
-// lives there.
+// lives there. A caller who lives in the home is refused as FAILED_PRECONDITION with metadata
+// {"reason": "installer_lives_here"}, which tells them nothing they do not know.
 message RequestCommissioningGrant {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
 }

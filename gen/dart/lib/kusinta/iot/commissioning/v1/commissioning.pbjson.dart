@@ -1011,3 +1011,43 @@ final $typed_data.Uint8List commissioningGrantsDescriptor = $convert.base64Decod
     'ChNDb21taXNzaW9uaW5nR3JhbnRzEjsKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaW'
     'RlbnRpdHkudjEuU3BhY2VJZFIHc3BhY2VJZBJICgZncmFudHMYAiADKAsyMC5rdXNpbnRhLmlv'
     'dC5jb21taXNzaW9uaW5nLnYxLkNvbW1pc3Npb25pbmdHcmFudFIGZ3JhbnRz');
+
+@$core.Deprecated('Use commissioningGrantRecordDescriptor instead')
+const CommissioningGrantRecord$json = {
+  '1': 'CommissioningGrantRecord',
+  '2': [
+    {'1': 'installer_name', '3': 1, '4': 1, '5': 9, '10': 'installerName'},
+    {
+      '1': 'granted_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'grantedAt'
+    },
+    {
+      '1': 'starts_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'startsAt'
+    },
+    {
+      '1': 'ended_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'endedAt'
+    },
+  ],
+};
+
+/// Descriptor for `CommissioningGrantRecord`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List commissioningGrantRecordDescriptor = $convert.base64Decode(
+    'ChhDb21taXNzaW9uaW5nR3JhbnRSZWNvcmQSJQoOaW5zdGFsbGVyX25hbWUYASABKAlSDWluc3'
+    'RhbGxlck5hbWUSOQoKZ3JhbnRlZF9hdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh'
+    'bXBSCWdyYW50ZWRBdBI3CglzdGFydHNfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZX'
+    'N0YW1wUghzdGFydHNBdBI1CghlbmRlZF9hdBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l'
+    'c3RhbXBSB2VuZGVkQXQ=');

@@ -838,6 +838,14 @@ const PrivacyDisclosure$json = {
       '6': '.kusinta.iot.webrtc.v1.StaffAppointment',
       '10': 'staffAppointments'
     },
+    {
+      '1': 'commissioning_grants',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.CommissioningGrantRecord',
+      '10': 'commissioningGrants'
+    },
   ],
   '9': [
     {'1': 2, '2': 4},
@@ -853,8 +861,9 @@ final $typed_data.Uint8List privacyDisclosureDescriptor = $convert.base64Decode(
     'ZVN1bW1hcnlQZXJpb2RSFGNsaW1hdGVTdW1tYXJ5UGVyaW9kEjYKF293bmVyX29yZ2FuaXNhdG'
     'lvbl9uYW1lGAYgASgJUhVvd25lck9yZ2FuaXNhdGlvbk5hbWUSJQoObmFtZXNfd2l0aGhlbGQY'
     'ByABKAhSDW5hbWVzV2l0aGhlbGQSVgoSc3RhZmZfYXBwb2ludG1lbnRzGAggAygLMicua3VzaW'
-    '50YS5pb3Qud2VicnRjLnYxLlN0YWZmQXBwb2ludG1lbnRSEXN0YWZmQXBwb2ludG1lbnRzSgQI'
-    'AhAE');
+    '50YS5pb3Qud2VicnRjLnYxLlN0YWZmQXBwb2ludG1lbnRSEXN0YWZmQXBwb2ludG1lbnRzEmkK'
+    'FGNvbW1pc3Npb25pbmdfZ3JhbnRzGAkgAygLMjYua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy'
+    '52MS5Db21taXNzaW9uaW5nR3JhbnRSZWNvcmRSE2NvbW1pc3Npb25pbmdHcmFudHNKBAgCEAQ=');
 
 @$core.Deprecated('Use servicePartyDescriptor instead')
 const ServiceParty$json = {

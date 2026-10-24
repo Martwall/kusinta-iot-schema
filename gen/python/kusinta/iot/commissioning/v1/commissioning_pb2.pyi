@@ -394,3 +394,15 @@ class CommissioningGrants(_message.Message):
     space_id: _identity_pb2.SpaceId
     grants: _containers.RepeatedCompositeFieldContainer[CommissioningGrant]
     def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., grants: _Optional[_Iterable[_Union[CommissioningGrant, _Mapping]]] = ...) -> None: ...
+
+class CommissioningGrantRecord(_message.Message):
+    __slots__ = ("installer_name", "granted_at", "starts_at", "ended_at")
+    INSTALLER_NAME_FIELD_NUMBER: _ClassVar[int]
+    GRANTED_AT_FIELD_NUMBER: _ClassVar[int]
+    STARTS_AT_FIELD_NUMBER: _ClassVar[int]
+    ENDED_AT_FIELD_NUMBER: _ClassVar[int]
+    installer_name: str
+    granted_at: _timestamp_pb2.Timestamp
+    starts_at: _timestamp_pb2.Timestamp
+    ended_at: _timestamp_pb2.Timestamp
+    def __init__(self, installer_name: _Optional[str] = ..., granted_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., starts_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ended_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...

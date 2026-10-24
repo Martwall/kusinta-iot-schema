@@ -1927,6 +1927,116 @@ class CommissioningGrants extends $pb.GeneratedMessage {
   $pb.PbList<CommissioningGrant> get grants => $_getList(1);
 }
 
+/// A commissioning grant on a home that was granted, as its residents are told it afterwards
+/// (webrtc.v1.PrivacyDisclosure.commissioning_grants): who held commissioning access to their
+/// home, and when. The installer by the name they gave their account as the gateway last learnt
+/// it, never by user id; empty when none is learnt.
+class CommissioningGrantRecord extends $pb.GeneratedMessage {
+  factory CommissioningGrantRecord({
+    $core.String? installerName,
+    $0.Timestamp? grantedAt,
+    $0.Timestamp? startsAt,
+    $0.Timestamp? endedAt,
+  }) {
+    final result = create();
+    if (installerName != null) result.installerName = installerName;
+    if (grantedAt != null) result.grantedAt = grantedAt;
+    if (startsAt != null) result.startsAt = startsAt;
+    if (endedAt != null) result.endedAt = endedAt;
+    return result;
+  }
+
+  CommissioningGrantRecord._();
+
+  factory CommissioningGrantRecord.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CommissioningGrantRecord.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CommissioningGrantRecord',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'installerName')
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'grantedAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(3, _omitFieldNames ? '' : 'startsAt',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(4, _omitFieldNames ? '' : 'endedAt',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommissioningGrantRecord clone() =>
+      CommissioningGrantRecord()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CommissioningGrantRecord copyWith(
+          void Function(CommissioningGrantRecord) updates) =>
+      super.copyWith((message) => updates(message as CommissioningGrantRecord))
+          as CommissioningGrantRecord;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CommissioningGrantRecord create() => CommissioningGrantRecord._();
+  @$core.override
+  CommissioningGrantRecord createEmptyInstance() => create();
+  static $pb.PbList<CommissioningGrantRecord> createRepeated() =>
+      $pb.PbList<CommissioningGrantRecord>();
+  @$core.pragma('dart2js:noInline')
+  static CommissioningGrantRecord getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CommissioningGrantRecord>(create);
+  static CommissioningGrantRecord? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get installerName => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set installerName($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInstallerName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInstallerName() => $_clearField(1);
+
+  /// When it was granted, and the time it covered: from its start until it ended. ended_at is
+  /// unset while it is active.
+  @$pb.TagNumber(2)
+  $0.Timestamp get grantedAt => $_getN(1);
+  @$pb.TagNumber(2)
+  set grantedAt($0.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasGrantedAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearGrantedAt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.Timestamp ensureGrantedAt() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $0.Timestamp get startsAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set startsAt($0.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasStartsAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearStartsAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.Timestamp ensureStartsAt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $0.Timestamp get endedAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set endedAt($0.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEndedAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEndedAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.Timestamp ensureEndedAt() => $_ensure(3);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =
