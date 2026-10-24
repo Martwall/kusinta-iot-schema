@@ -448,6 +448,12 @@ class DeleteSpace extends $pb.GeneratedMessage {
 /// its household: access.v1.MembershipRelation, RESIDENCY IDS) is never changed through it:
 /// assigning onto it is refused as NOT_ENTITLED, and RemoveUserFromSpace answers as for one
 /// that does not exist. user_id is never a residency id.
+///
+/// While a vacated handover of the home is pending (household.proto, VACANCY), the property
+/// owner or a gateway administrator assigning RESIDENT to someone outside the departing household
+/// completes the handover first — its wipe runs — and then files them, rather than being refused
+/// as "handover_pending". Every other check on the request is made first, so one refused for any
+/// other reason leaves the handover pending.
 class AssignUserToSpace extends $pb.GeneratedMessage {
   factory AssignUserToSpace({
     $0.SpaceId? spaceId,
@@ -1286,8 +1292,10 @@ class ManagementAck extends $pb.GeneratedMessage {
 /// to someone else's hardware.
 ///
 /// In a home it is the other way round: links between its devices are its residents' to
-/// make, change and remove, and a caller who reaches it as service is refused as
-/// NOT_ENTITLED. A link between a device in a home and one outside it is refused to anyone.
+/// make, change and remove, and in an empty home (household.proto, EMPTY HOME) the property
+/// owner's and the gateway administrators' who reach it; any other caller who reaches it as
+/// service is refused as NOT_ENTITLED. A link between a device in a home and one outside it is
+/// refused to anyone.
 /// The same holds for UpdateDeviceLink and RemoveDeviceLink.
 class CreateDeviceLink extends $pb.GeneratedMessage {
   factory CreateDeviceLink({
@@ -1646,11 +1654,14 @@ class ListDeviceLinks extends $pb.GeneratedMessage {
 /// as turning a radiator's knob; setting up what the room obeys is ConfigureRoomClimate,
 /// and stays with owners, except the lock in a home.
 ///
-/// In a home, only its residents may set it; a caller who reaches the room as service is
-/// refused as NOT_ENTITLED.
+/// In a home, only its residents may set it, and in an empty home (household.proto, EMPTY HOME)
+/// the property owner and the gateway administrators who reach it, whose target there is
+/// cleared when the home gains a resident (household.proto, MOVE-IN); any other caller who
+/// reaches the room as service is refused as NOT_ENTITLED.
 ///
-/// Clamped to the room's limits rather than refused outside them, and the clamped value is
-/// what the room's RoomClimate then reports.
+/// Clamped to the room's inner limits (climate.v1.InnerRoomLimits) rather than refused outside
+/// them, and the clamped value is what the room's RoomClimate then reports. The outer limits do
+/// not clamp it: they bind outputs (climate.v1.OuterRoomLimits).
 class SetRoomTarget extends $pb.GeneratedMessage {
   factory SetRoomTarget({
     $0.SpaceId? roomId,
@@ -1856,17 +1867,92 @@ class RoomLimits extends $pb.GeneratedMessage {
   void clearMaxCentidegrees() => $_clearField(2);
 }
 
-/// Configures what a room obeys: its limits, its sensors, and whether a change made by
-/// hand at one of its devices counts. Authorized as directing — owners and filing roles —
-/// because this decides what everybody in the room can do.
+/// One bound that moves alone, for the same reason as RoomLimits: unset leaves the bound as it
+/// is; set, an unset centidegrees removes it.
+class RoomLimitValue extends $pb.GeneratedMessage {
+  factory RoomLimitValue({
+    $core.int? centidegrees,
+  }) {
+    final result = create();
+    if (centidegrees != null) result.centidegrees = centidegrees;
+    return result;
+  }
+
+  RoomLimitValue._();
+
+  factory RoomLimitValue.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RoomLimitValue.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RoomLimitValue',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'centidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomLimitValue clone() => RoomLimitValue()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RoomLimitValue copyWith(void Function(RoomLimitValue) updates) =>
+      super.copyWith((message) => updates(message as RoomLimitValue))
+          as RoomLimitValue;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RoomLimitValue create() => RoomLimitValue._();
+  @$core.override
+  RoomLimitValue createEmptyInstance() => create();
+  static $pb.PbList<RoomLimitValue> createRepeated() =>
+      $pb.PbList<RoomLimitValue>();
+  @$core.pragma('dart2js:noInline')
+  static RoomLimitValue getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RoomLimitValue>(create);
+  static RoomLimitValue? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get centidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set centidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCentidegrees() => $_clearField(1);
+}
+
+/// Configures what a room obeys: its outer limits, its sensors, and whether a change made by
+/// hand at one of its devices counts. Authorized as directing, because this decides what
+/// everybody in the room can do, and each part by its own deciders:
+///   * the outer limits — limits, away_min, move_in_target (climate.v1.OuterRoomLimits) — the
+///     property owner or a gateway administrator who reaches the room, or an installer under an
+///     active commissioning grant covering it (commissioning.v1, GRANTS), in a home or not. A
+///     household's own limits are SetInnerRoomLimits;
+///   * sensors — ROLE_PROPERTY_OWNER or a filing role. It orders only the building's own
+///     sensors (see RoomClimate.sensor_ids);
+///   * lock_device_controls — in a home, its residents', who may send this request with nothing
+///     else set, and in an empty home (household.proto, EMPTY HOME) the property owner's and the
+///     gateway administrators' who reach it, whose lock there is cleared when the home gains a
+///     resident; outside homes, ROLE_PROPERTY_OWNER's or a filing role's, as the sensors are.
+/// A request that sets anything its caller may not is refused whole as NOT_ENTITLED, so nothing
+/// of it applies.
 ///
-/// One exception: in a home, lock_device_controls is its residents' alone. They may send
-/// this request with nothing else set. Outside homes the lock is the owner's, as the rest
-/// is. A request that sets anything its caller may not — the lock in a home for service;
-/// anything but the lock in a home, or the lock outside one, for a caller with neither
-/// ROLE_PROPERTY_OWNER nor a filing role — is refused whole as NOT_ENTITLED, so nothing of
-/// it applies. sensors orders only the building's own
-/// sensors (see RoomClimate.sensor_ids).
+/// Each outer bound the request changes is stamped with the caller's role and the time
+/// (climate.v1.OuterLimit); one set to the value it has keeps its stamp. As the outer limits will
+/// stand, min above max, or away_min above min or max, is refused as INVALID_REQUEST with
+/// metadata {"reason": "limits_order"}. A min changed to below the gateway's public-health
+/// threshold — its own setting, which no operation in this contract changes; none while unset —
+/// needs accept_below_threshold, and is refused without it as FAILED_PRECONDITION with metadata
+/// {"reason": "below_threshold", "threshold_centidegrees": the threshold}. Neither refusal, nor
+/// anything else in the answer, depends on the home's state — its targets, inner limits, modes,
+/// or who lives there — so setting outer limits tells the caller nothing of it; what they clamp
+/// is told to the household alone (RoomClimate.outer_limit_clamp).
 ///
 /// Each field moves alone, as on UpdateSpace: unset leaves it as it is.
 class ConfigureRoomClimate extends $pb.GeneratedMessage {
@@ -1875,6 +1961,9 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
     RoomLimits? limits,
     RoomSensors? sensors,
     $core.bool? lockDeviceControls,
+    RoomLimitValue? awayMin,
+    RoomLimitValue? moveInTarget,
+    $core.bool? acceptBelowThreshold,
   }) {
     final result = create();
     if (roomId != null) result.roomId = roomId;
@@ -1882,6 +1971,10 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
     if (sensors != null) result.sensors = sensors;
     if (lockDeviceControls != null)
       result.lockDeviceControls = lockDeviceControls;
+    if (awayMin != null) result.awayMin = awayMin;
+    if (moveInTarget != null) result.moveInTarget = moveInTarget;
+    if (acceptBelowThreshold != null)
+      result.acceptBelowThreshold = acceptBelowThreshold;
     return result;
   }
 
@@ -1906,6 +1999,11 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
     ..aOM<RoomSensors>(3, _omitFieldNames ? '' : 'sensors',
         subBuilder: RoomSensors.create)
     ..aOB(4, _omitFieldNames ? '' : 'lockDeviceControls')
+    ..aOM<RoomLimitValue>(5, _omitFieldNames ? '' : 'awayMin',
+        subBuilder: RoomLimitValue.create)
+    ..aOM<RoomLimitValue>(6, _omitFieldNames ? '' : 'moveInTarget',
+        subBuilder: RoomLimitValue.create)
+    ..aOB(7, _omitFieldNames ? '' : 'acceptBelowThreshold')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1941,7 +2039,8 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.SpaceId ensureRoomId() => $_ensure(0);
 
-  /// Replaces both bounds; see RoomLimits.
+  /// The outer limits' min and max (climate.v1.OuterRoomLimits); replaces both bounds, see
+  /// RoomLimits.
   @$pb.TagNumber(2)
   RoomLimits get limits => $_getN(1);
   @$pb.TagNumber(2)
@@ -1974,6 +2073,134 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
   $core.bool hasLockDeviceControls() => $_has(3);
   @$pb.TagNumber(4)
   void clearLockDeviceControls() => $_clearField(4);
+
+  /// The outer limits' away minimum and move-in target, each alone; see RoomLimitValue.
+  @$pb.TagNumber(5)
+  RoomLimitValue get awayMin => $_getN(4);
+  @$pb.TagNumber(5)
+  set awayMin(RoomLimitValue value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasAwayMin() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAwayMin() => $_clearField(5);
+  @$pb.TagNumber(5)
+  RoomLimitValue ensureAwayMin() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  RoomLimitValue get moveInTarget => $_getN(5);
+  @$pb.TagNumber(6)
+  set moveInTarget(RoomLimitValue value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMoveInTarget() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMoveInTarget() => $_clearField(6);
+  @$pb.TagNumber(6)
+  RoomLimitValue ensureMoveInTarget() => $_ensure(5);
+
+  /// The caller accepts a min below the public-health threshold, recorded with the bound
+  /// (OuterRoomLimits.min_accepted_threshold_centidegrees). Ignored on a request that sets no
+  /// such min.
+  @$pb.TagNumber(7)
+  $core.bool get acceptBelowThreshold => $_getBF(6);
+  @$pb.TagNumber(7)
+  set acceptBelowThreshold($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasAcceptBelowThreshold() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearAcceptBelowThreshold() => $_clearField(7);
+}
+
+/// Sets a room's inner limits (climate.v1.InnerRoomLimits), replacing both bounds: an unset bound
+/// removes it. Answered with ManagementAck. A household admin of the home the room is in only
+/// (household.proto, HOUSEHOLD ADMIN); anyone else, and a room in no home, is refused as
+/// NOT_ENTITLED — never covered by a commissioning grant. min above max is refused as
+/// INVALID_REQUEST with metadata {"reason": "limits_order"}. Bounds outside the outer limits are
+/// accepted as they are: the outer limits clamp the outputs they bind, and only those
+/// (climate.v1.OuterRoomLimits). The room's target is clamped into the new limits.
+class SetInnerRoomLimits extends $pb.GeneratedMessage {
+  factory SetInnerRoomLimits({
+    $0.SpaceId? roomId,
+    $core.int? minCentidegrees,
+    $core.int? maxCentidegrees,
+  }) {
+    final result = create();
+    if (roomId != null) result.roomId = roomId;
+    if (minCentidegrees != null) result.minCentidegrees = minCentidegrees;
+    if (maxCentidegrees != null) result.maxCentidegrees = maxCentidegrees;
+    return result;
+  }
+
+  SetInnerRoomLimits._();
+
+  factory SetInnerRoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetInnerRoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetInnerRoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $0.SpaceId.create)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'minCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'maxCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetInnerRoomLimits clone() => SetInnerRoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetInnerRoomLimits copyWith(void Function(SetInnerRoomLimits) updates) =>
+      super.copyWith((message) => updates(message as SetInnerRoomLimits))
+          as SetInnerRoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetInnerRoomLimits create() => SetInnerRoomLimits._();
+  @$core.override
+  SetInnerRoomLimits createEmptyInstance() => create();
+  static $pb.PbList<SetInnerRoomLimits> createRepeated() =>
+      $pb.PbList<SetInnerRoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static SetInnerRoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetInnerRoomLimits>(create);
+  static SetInnerRoomLimits? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get roomId => $_getN(0);
+  @$pb.TagNumber(1)
+  set roomId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureRoomId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.int get minCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set minCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMinCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMinCentidegrees() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get maxCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set maxCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMaxCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMaxCentidegrees() => $_clearField(3);
 }
 
 /// Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
@@ -1985,11 +2212,12 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
 ///
 /// In a home, only its residents may switch one on or off: whether a home stands empty is
 /// theirs to say. A caller who reaches it as service is refused as NOT_ENTITLED — except
-/// that, while the home has no resident, ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN may
-/// switch off a mode that is on and whose setter is not a resident, so that no mode
-/// outlives everyone who could end it. Any other switch-off from them — no mode on, or one
-/// that is a resident's — is accepted and does nothing, so the answer tells them nothing of
-/// whether a mode was on or whether anyone has moved in.
+/// that, while the home is empty (household.proto, EMPTY HOME), ROLE_PROPERTY_OWNER or
+/// ROLE_GATEWAY_ADMIN may switch one on, and switch off one that is on, so that no mode
+/// outlives everyone who could end it; a mode they switch on there ends when the home gains a
+/// resident (climate.v1.ClimateMode). Any other switch-off from them — in a home that is not
+/// empty, or with no mode on — is accepted and does nothing, so the answer tells them nothing of
+/// whether a mode was on.
 class SetClimateMode extends $pb.GeneratedMessage {
   factory SetClimateMode({
     $0.SpaceId? spaceId,
@@ -2466,8 +2694,9 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   $pb.PbList<$5.StaffAppointment> get staffAppointments => $_getList(5);
 
   /// Each commissioning grant on this home that was granted since it was last wiped, oldest
-  /// first, active ones included (commissioning.v1, GRANTS): who held commissioning access to the
-  /// home, and when. Given to the home's residents only, as staff_appointments is.
+  /// first, active ones included, and those the property owner or a gateway administrator granted
+  /// while it stood empty among them (commissioning.v1, GRANTS): who held commissioning access to
+  /// the home, and when. Given to the home's residents only, as staff_appointments is.
   @$pb.TagNumber(9)
   $pb.PbList<$6.CommissioningGrantRecord> get commissioningGrants =>
       $_getList(6);
@@ -4300,9 +4529,11 @@ class RequestCommissioningGrant extends $pb.GeneratedMessage {
 
 /// Answers a requested commissioning grant, answered with the CommissioningGrant as stored when
 /// granted, and with ManagementAck when declined, which ends it. From a household admin of the
-/// home, or for a space outside homes the property owner or a gateway administrator who reaches
-/// it; anyone else, and a grant_id that is not requested on a space the caller may answer for,
-/// is refused as NOT_ENTITLED, so that no grant id can be probed.
+/// home, or for a space outside homes or an empty home (household.proto, EMPTY HOME) the
+/// property owner or a gateway administrator who reaches it; anyone else, and a grant_id that is
+/// not requested on a space the caller may answer for, is refused as NOT_ENTITLED, so that no
+/// grant id can be probed. A grant they grant on an empty home ends when the home gains a
+/// resident (commissioning.v1, GRANTS).
 ///
 /// Granting needs ends_at after starts_at, no more than 14 days after it, and starts_at no
 /// later than 30 days from now; otherwise INVALID_REQUEST with metadata
@@ -4474,8 +4705,9 @@ class EndCommissioningGrant extends $pb.GeneratedMessage {
 }
 
 /// Lists the commissioning grants that have not ended on a space and those below it, answered
-/// with CommissioningGrants: a home's to its residents; one on a space outside homes to the
-/// property owner and the gateway administrators who reach it; to an installer, their own.
+/// with CommissioningGrants: a home's to its residents, and an empty home's (household.proto,
+/// EMPTY HOME) to the property owner and the gateway administrators who reach it, as one on a
+/// space outside homes is; to an installer, their own.
 /// Unset root_space_id lists every one the caller may be listed. Anyone may ask; nobody is
 /// refused, and a caller listed none gets none.
 class ListCommissioningGrants extends $pb.GeneratedMessage {
@@ -4541,7 +4773,8 @@ class ListCommissioningGrants extends $pb.GeneratedMessage {
 }
 
 /// Sets who owns one of the building's own devices as an asset (common.v1.AssetOwner), and
-/// with it nobody's access. Answered with ManagementAck. From the property owner or a gateway
+/// with it whether a room's outer limits can bind the device (climate.v1.OuterRoomLimits), and
+/// nobody's access. Answered with ManagementAck. From the property owner or a gateway
 /// administrator who reaches the device; anyone else is refused as NOT_ENTITLED. Unset
 /// asset_owner clears it, as does one with neither owner set.
 ///
@@ -4699,6 +4932,7 @@ enum ManagementRequest_Request {
   exportHouseholdData,
   setHomeName,
   clearClimateHistory,
+  setInnerRoomLimits,
   notSet
 }
 
@@ -4774,6 +5008,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     $5.ExportHouseholdData? exportHouseholdData,
     $5.SetHomeName? setHomeName,
     $5.ClearClimateHistory? clearClimateHistory,
+    SetInnerRoomLimits? setInnerRoomLimits,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -4874,6 +5109,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (setHomeName != null) result.setHomeName = setHomeName;
     if (clearClimateHistory != null)
       result.clearClimateHistory = clearClimateHistory;
+    if (setInnerRoomLimits != null)
+      result.setInnerRoomLimits = setInnerRoomLimits;
     return result;
   }
 
@@ -4957,6 +5194,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     67: ManagementRequest_Request.exportHouseholdData,
     68: ManagementRequest_Request.setHomeName,
     69: ManagementRequest_Request.clearClimateHistory,
+    70: ManagementRequest_Request.setInnerRoomLimits,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -5033,7 +5271,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       66,
       67,
       68,
-      69
+      69,
+      70
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -5198,6 +5437,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<$5.ClearClimateHistory>(
         69, _omitFieldNames ? '' : 'clearClimateHistory',
         subBuilder: $5.ClearClimateHistory.create)
+    ..aOM<SetInnerRoomLimits>(70, _omitFieldNames ? '' : 'setInnerRoomLimits',
+        subBuilder: SetInnerRoomLimits.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -6015,6 +6256,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearClearClimateHistory() => $_clearField(69);
   @$pb.TagNumber(69)
   $5.ClearClimateHistory ensureClearClimateHistory() => $_ensure(68);
+
+  @$pb.TagNumber(70)
+  SetInnerRoomLimits get setInnerRoomLimits => $_getN(69);
+  @$pb.TagNumber(70)
+  set setInnerRoomLimits(SetInnerRoomLimits value) => $_setField(70, value);
+  @$pb.TagNumber(70)
+  $core.bool hasSetInnerRoomLimits() => $_has(69);
+  @$pb.TagNumber(70)
+  void clearSetInnerRoomLimits() => $_clearField(70);
+  @$pb.TagNumber(70)
+  SetInnerRoomLimits ensureSetInnerRoomLimits() => $_ensure(69);
 }
 
 const $core.bool _omitFieldNames =

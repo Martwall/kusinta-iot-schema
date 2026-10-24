@@ -1827,8 +1827,9 @@ class CommissioningGrant extends $pb.GeneratedMessage {
   $0.Timestamp ensureEndsAt() => $_ensure(8);
 
   /// Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
-  /// for a space outside homes to the property owner and the gateway's administrators; to the
-  /// installer it is unset, since a resident's user id would tell them who lives in the home.
+  /// for a space outside homes or an empty home to the property owner and the gateway's
+  /// administrators; to the installer it is unset, since a resident's user id would tell them
+  /// who lives in the home.
   @$pb.TagNumber(10)
   $1.UserId get grantedBy => $_getN(9);
   @$pb.TagNumber(10)

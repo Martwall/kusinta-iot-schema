@@ -516,6 +516,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     $core.bool? vacated,
     $core.bool? recipientInHousehold,
     $core.bool? recipientHouseholdAdmin,
+    $core.bool? mayEndOnMoveIn,
   }) {
     final result = create();
     if (handoverId != null) result.handoverId = handoverId;
@@ -533,6 +534,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
       result.recipientInHousehold = recipientInHousehold;
     if (recipientHouseholdAdmin != null)
       result.recipientHouseholdAdmin = recipientHouseholdAdmin;
+    if (mayEndOnMoveIn != null) result.mayEndOnMoveIn = mayEndOnMoveIn;
     return result;
   }
 
@@ -572,6 +574,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     ..aOB(10, _omitFieldNames ? '' : 'vacated')
     ..aOB(11, _omitFieldNames ? '' : 'recipientInHousehold')
     ..aOB(12, _omitFieldNames ? '' : 'recipientHouseholdAdmin')
+    ..aOB(13, _omitFieldNames ? '' : 'mayEndOnMoveIn')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -675,8 +678,8 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   /// one completes on its own: 7 days after started_at, and never sooner than 7 days after the
   /// home's last residency ended. On a handover that is not vacated, a residency that starts
   /// while it is pending moves it to 7 days after that, and the handover is pushed again, so
-  /// that a household that moves in during it has its notice too; on a vacated one nobody new
-  /// moves in (VACANCY).
+  /// that a household that moves in during it has its notice too; on a vacated one, a new
+  /// household moving in completes it instead (QUICK TURNOVER).
   @$pb.TagNumber(8)
   $1.Timestamp get staffConfirmableFrom => $_getN(7);
   @$pb.TagNumber(8)
@@ -737,6 +740,20 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   $core.bool hasRecipientHouseholdAdmin() => $_has(11);
   @$pb.TagNumber(12)
   void clearRecipientHouseholdAdmin() => $_clearField(12);
+
+  /// Set on a vacated handover: it ends at staff_confirmable_from or when the property owner or a
+  /// gateway administrator files a new resident, whichever is first (QUICK TURNOVER), and so does
+  /// the departing household's export window. An app says so from this field rather than from
+  /// vacated, so that a handover from a gateway that predates it, which ends no notice early, is
+  /// not misdescribed.
+  @$pb.TagNumber(13)
+  $core.bool get mayEndOnMoveIn => $_getBF(12);
+  @$pb.TagNumber(13)
+  set mayEndOnMoveIn($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasMayEndOnMoveIn() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearMayEndOnMoveIn() => $_clearField(13);
 }
 
 /// Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and

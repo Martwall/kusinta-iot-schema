@@ -24,6 +24,12 @@ export declare const file_kusinta_iot_common_v1_types: GenFile;
  * household nothing beyond what living in the home gives it. Setting or changing an asset
  * owner changes no one's access.
  *
+ * IT DECIDES ONE THING: whether a room's outer limits can bind the device
+ * (climate.v1.OuterRoomLimits, WHAT THEY BIND). They can bind an asset of the organisation, and
+ * one of the building's own devices with no asset owner recorded; never a household's asset,
+ * nor a device a person owns. Whether they do is the organisation's, since every bound is
+ * optional. It still decides nothing about who sees what.
+ *
  * Unset: not recorded. On a device whose ownership is COMPANY, anything that depends on it
  * reads an unset owner as owner_organisation; a device a person owns has none, and is theirs.
  *

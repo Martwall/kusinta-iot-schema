@@ -55,7 +55,8 @@ class ServiceSignal extends $pb.ProtobufEnum {
       ServiceSignal._(6, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FILING');
 
   /// How the home is set up: the apartment and its rooms, their names and descriptions, the
-  /// rooms' limits, and the building's sensors in them.
+  /// rooms' outer limits with the role that set each and when — never the household's inner
+  /// limits — and the building's sensors in them.
   static const ServiceSignal SERVICE_SIGNAL_ROOM_SETUP =
       ServiceSignal._(7, _omitEnumNames ? '' : 'SERVICE_SIGNAL_ROOM_SETUP');
 

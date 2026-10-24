@@ -6,6 +6,7 @@ import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2"
 import type { Message } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
+import type { Role } from "../../access/v1/roles_pb.js";
 
 /**
  * Describes the file kusinta/iot/climate/v1/climate.proto.
@@ -49,6 +50,15 @@ export declare type TargetChange = Message<"kusinta.iot.climate.v1.TargetChange"
      */
     value: DeviceId;
     case: "device";
+  } | {
+    /**
+     * Set by the gateway when the home gained a resident, from the room's outer move-in target
+     * (OuterRoomLimits.move_in_target; webrtc.v1 household.proto, MOVE-IN). Only true is sent.
+     *
+     * @generated from field: bool move_in = 4;
+     */
+    value: boolean;
+    case: "moveIn";
   } | { case: undefined; value?: undefined };
 };
 
@@ -76,7 +86,12 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 
   /**
    * The temperature the room is to be held at, in centidegrees. Unset: nobody has set
-   * one. Always within [min_centidegrees, max_centidegrees] where those are set.
+   * one. Always within the inner limits where those are set (inner_limits). The outer limits
+   * bind outputs, not the room, and do not clamp it (OuterRoomLimits): where they hold the
+   * outputs they bind elsewhere, effective_target_centidegrees and outer_limit_clamp say so.
+   *
+   * Rollout note: an app that predates outer_limits reads min_centidegrees and
+   * max_centidegrees as bounds on this field, and may be sent a target outside them.
    *
    * @generated from field: optional sint32 target_centidegrees = 2;
    */
@@ -96,7 +111,10 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * What the valves are actually being held at, in centidegrees. Equal to the target
    * unless a ClimateMode on an enclosing space sets the room back — and then the room's
    * own target again if somebody changed this room during the mode (see
-   * overrides_mode). Unset while nothing is being held.
+   * overrides_mode) — or the vacancy setback holds it (webrtc.v1 household.proto, VACANCY), or
+   * an outer bound clamps it (outer_limit_clamp). Where the outer limits bind some of the
+   * room's outputs and not others, what those they bind are held at. Unset while nothing is
+   * being held.
    *
    * @generated from field: optional sint32 effective_target_centidegrees = 4;
    */
@@ -119,10 +137,11 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   modeSpaceId?: SpaceId | undefined;
 
   /**
-   * The owner's limits, in centidegrees. The gateway writes them to every device in the
-   * room (Matter Min/MaxHeatSetpointLimit), so a knob stops at them physically, and
-   * clamps every target — from the app, a knob or a mode — to them. The minimum is also
-   * the floor under a mode's setback.
+   * The outer limits' minimum and maximum, in centidegrees: always outer_limits.min and
+   * .max, which add who set each and when. They bind the outputs OuterRoomLimits says, and
+   * nothing else. Where the gateway writes them into a device's own setpoint limits (Matter
+   * Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only to devices
+   * they bind.
    *
    * @generated from field: optional sint32 min_centidegrees = 6;
    */
@@ -186,8 +205,9 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * Stated as the lock rather than as a permission so that the proto3 default — false,
    * unlocked — is the intended default: a room nobody has configured takes changes at its
    * devices, as a room in an apartment should until its residents decide otherwise; when a
-   * home loses its last resident, its rooms' locks are cleared. Elsewhere locking is the
-   * owner's choice.
+   * home loses its last resident, its rooms' locks are cleared, and so are those set while it
+   * stood empty when it gains one (webrtc.v1 household.proto, EMPTY HOME). Elsewhere locking
+   * is the owner's choice.
    *
    * @generated from field: bool lock_device_controls = 12;
    */
@@ -198,13 +218,14 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * access.v1.MembershipRelation): the room is in someone's home, and what describes the
    * people in it is WITHHELD — target_centidegrees, target_change,
    * effective_target_centidegrees, overrides_mode, mode_space_id, measured_centidegrees,
-   * measured_by, condition and lock_device_controls are all left unset, and sensor_ids
-   * leaves out sensors a resident owns.
+   * measured_by, condition, lock_device_controls, inner_limits, outer_limit_clamp and
+   * outer_limits_coverage are all left unset, and sensor_ids leaves out sensors a resident
+   * owns.
    *
    * Unset because withheld, not because unknown: an app must not render them as NO_TARGET or
    * a lost sensor. A withheld room is sent again only when something that IS sent changes,
-   * so that the timing of an update does not give away what was withheld. Its limits and
-   * the sensors service may see are still sent, since setting a room up is service work.
+   * so that the timing of an update does not give away what was withheld. Its outer limits
+   * and the sensors service may see are still sent, since setting a room up is service work.
    * Its climate over time is available to service only as an ApartmentClimateSummary.
    *
    * explanations, target_held_until, planning and the comfort band are withheld in the
@@ -253,8 +274,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   /**
    * The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
    * room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
-   * no higher than high, and within [min_centidegrees, max_centidegrees] where those are
-   * set. Absent: no band, and a plan holds the room at its target — never 0 °C.
+   * no higher than high, and within [min_centidegrees, max_centidegrees] and the inner limits
+   * where those are set. Absent: no band, and a plan holds the room at its target — never 0 °C.
    *
    * @generated from field: optional sint32 comfort_band_low_centidegrees = 19;
    */
@@ -264,6 +285,42 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * @generated from field: optional sint32 comfort_band_high_centidegrees = 20;
    */
   comfortBandHighCentidegrees?: number | undefined;
+
+  /**
+   * The room's outer limits, each bound with who set it and when (OuterRoomLimits). Sent to
+   * whoever is sent the room, service included: they are the building's, and setting them is
+   * service work. Unset: the room has none.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterRoomLimits outer_limits = 21;
+   */
+  outerLimits?: OuterRoomLimits | undefined;
+
+  /**
+   * The household's limits (InnerRoomLimits). Sent to the home's residents only, and never with
+   * state_withheld. Unset: none, or a room outside homes.
+   *
+   * @generated from field: kusinta.iot.climate.v1.InnerRoomLimits inner_limits = 22;
+   */
+  innerLimits?: InnerRoomLimits | undefined;
+
+  /**
+   * Set while an outer bound holds the outputs it binds away from where the room would be held
+   * without it — the household's target, its inner limits or its mode's setback — so the
+   * household is told which bound does it, and from outer_limits the role behind it and since
+   * when. Gone once nothing is clamped. Sent to the home's residents only.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimitClamp outer_limit_clamp = 23;
+   */
+  outerLimitClamp?: OuterLimitClamp | undefined;
+
+  /**
+   * How many of the room's heating outputs the outer limits bind, so that an app shows the
+   * building's bounds where they apply and not where they do not. Sent to the home's residents
+   * only: to anyone else it would tell whether the room holds a device a resident owns.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimitsCoverage outer_limits_coverage = 24;
+   */
+  outerLimitsCoverage: OuterLimitsCoverage;
 };
 
 /**
@@ -271,6 +328,181 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
  * Use `create(RoomClimateSchema)` to create a new message.
  */
 export declare const RoomClimateSchema: GenMessage<RoomClimate>;
+
+/**
+ * One bound of a room's outer limits, with who set it and when. Shown to the household as the
+ * role and the time, never a name: "building administrator, since …".
+ *
+ * @generated from message kusinta.iot.climate.v1.OuterLimit
+ */
+export declare type OuterLimit = Message<"kusinta.iot.climate.v1.OuterLimit"> & {
+  /**
+   * @generated from field: sint32 centidegrees = 1;
+   */
+  centidegrees: number;
+
+  /**
+   * The role its setter acted in: ROLE_PROPERTY_OWNER where they hold it, else
+   * ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN for an installer under a commissioning grant
+   * (webrtc.v1.ConfigureRoomClimate).
+   *
+   * @generated from field: kusinta.iot.access.v1.Role set_by_role = 2;
+   */
+  setByRole: Role;
+
+  /**
+   * When the bound was last given a new value. Always sent, also when it dates from before the
+   * recipient's residency: it records an act of the building's, and nothing of a household.
+   *
+   * @generated from field: google.protobuf.Timestamp set_at = 3;
+   */
+  setAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.OuterLimit.
+ * Use `create(OuterLimitSchema)` to create a new message.
+ */
+export declare const OuterLimitSchema: GenMessage<OuterLimit>;
+
+/**
+ * A room's outer limits: the building's bounds on the heating it owns, set by the property
+ * owner or a gateway administrator, or an installer under a commissioning grant covering the
+ * room (webrtc.v1.ConfigureRoomClimate). Every bound is optional and moves alone: a building
+ * where each home pays its own heating may set floors only.
+ *
+ * WHAT THEY BIND. The asset owner decides whether they can bind a device, and the
+ * organisation whether to use them. They bind an output only on one of the building's own
+ * devices (common.v1.DeviceOwnershipType COMPANY) whose asset owner is the organisation, or
+ * that has none recorded (common.v1.AssetOwner); never a household's asset, nor a device a
+ * person owns outright. The clamp is applied per output, by its device's owner: in a room with
+ * a valve the organisation owns and a heater a resident owns, the valve is held within the
+ * outer limits and the heater at the room's target. So they bind outputs, never the room: the
+ * room's target and its inner limits are the household's, are not rewritten when an outer bound
+ * moves, and hold again at those outputs once it moves back out.
+ *
+ * At an output they bind, what is held is the room's effective target, within its inner limits
+ * (InnerRoomLimits), then clamped:
+ *   * to [min, max] while no mode sets the room back;
+ *   * to [AWAY FLOOR, max] while a mode (ClimateMode) sets it back, and held at the AWAY FLOOR
+ *     during the vacancy setback (webrtc.v1 household.proto, VACANCY).
+ * Where an inner bound and an outer bound disagree, the outer one wins, so the household's
+ * range at those outputs is always inside the building's. The AWAY FLOOR is away_min, or min
+ * where away_min is unset: kept apart from min so that a household going away may set back
+ * below its everyday floor but never below what the building needs — frost, damp, heat drawn
+ * from neighbours. With neither set, a room has no away floor, and no vacancy setback.
+ *
+ * Neither tier of comfort limits widens an installer's equipment-safety limits — a floor's
+ * surface maximum, a supply cap (commissioning.v1) — which bind whatever these say.
+ *
+ * They stay with the home: a household handover wipes the inner limits, never these
+ * (webrtc.v1 household.proto, WIPE).
+ *
+ * @generated from message kusinta.iot.climate.v1.OuterRoomLimits
+ */
+export declare type OuterRoomLimits = Message<"kusinta.iot.climate.v1.OuterRoomLimits"> & {
+  /**
+   * The normal minimum and maximum.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimit min = 1;
+   */
+  min?: OuterLimit | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.OuterLimit max = 2;
+   */
+  max?: OuterLimit | undefined;
+
+  /**
+   * The floor under a setback; see AWAY FLOOR above.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimit away_min = 3;
+   */
+  awayMin?: OuterLimit | undefined;
+
+  /**
+   * The target the room starts at when an empty home gains a resident, clamped to min and max
+   * (webrtc.v1 household.proto, MOVE-IN). A start, never a limit.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimit move_in_target = 4;
+   */
+  moveInTarget?: OuterLimit | undefined;
+
+  /**
+   * Set while min was set below the gateway's public-health threshold: the threshold in force
+   * then, which min's setter explicitly accepted going below (ConfigureRoomClimate
+   * .accept_below_threshold). The acceptance is recorded with min's set_by_role and set_at.
+   * Unset while min is unset or was set at or above the threshold. A threshold changed later
+   * re-judges nothing already set.
+   *
+   * @generated from field: optional sint32 min_accepted_threshold_centidegrees = 5;
+   */
+  minAcceptedThresholdCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.OuterRoomLimits.
+ * Use `create(OuterRoomLimitsSchema)` to create a new message.
+ */
+export declare const OuterRoomLimitsSchema: GenMessage<OuterRoomLimits>;
+
+/**
+ * A room's inner limits: the household's own minimum and maximum, set by the home's household
+ * admins (webrtc.v1.SetInnerRoomLimits). They clamp the room's target, from the app or a knob
+ * alike, and setting them clamps the target already set. They apply to every output in the
+ * room, a household's own devices included, and the outer limits clamp further the outputs they
+ * bind (OuterRoomLimits). While a mode sets the room back the minimum, a household's everyday
+ * floor, does not apply, and the maximum does. Household data: never told to anyone but the
+ * home's residents, and wiped at a handover (webrtc.v1 household.proto, WIPE).
+ *
+ * @generated from message kusinta.iot.climate.v1.InnerRoomLimits
+ */
+export declare type InnerRoomLimits = Message<"kusinta.iot.climate.v1.InnerRoomLimits"> & {
+  /**
+   * @generated from field: optional sint32 min_centidegrees = 1;
+   */
+  minCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 max_centidegrees = 2;
+   */
+  maxCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.InnerRoomLimits.
+ * Use `create(InnerRoomLimitsSchema)` to create a new message.
+ */
+export declare const InnerRoomLimitsSchema: GenMessage<InnerRoomLimits>;
+
+/**
+ * An outer bound clamping a room (RoomClimate.outer_limit_clamp).
+ *
+ * @generated from message kusinta.iot.climate.v1.OuterLimitClamp
+ */
+export declare type OuterLimitClamp = Message<"kusinta.iot.climate.v1.OuterLimitClamp"> & {
+  /**
+   * Which bound. An app that does not know the value shows that the building's limits clamp the
+   * room, without naming one.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimitKind limit = 1;
+   */
+  limit: OuterLimitKind;
+
+  /**
+   * Where the room would be held without it, in centidegrees: where outputs the outer limits do
+   * not bind are held. effective_target_centidegrees is where those they bind are.
+   *
+   * @generated from field: optional sint32 unclamped_centidegrees = 2;
+   */
+  unclampedCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.OuterLimitClamp.
+ * Use `create(OuterLimitClampSchema)` to create a new message.
+ */
+export declare const OuterLimitClampSchema: GenMessage<OuterLimitClamp>;
 
 /**
  * One reason a room, or a part of its heating, is where it is.
@@ -345,8 +577,9 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
 
   /**
    * The temperature every room is set back to, in centidegrees. Required while a mode is
-   * on — a mode with nothing to set back to is refused, not defaulted. Clamped by each
-   * room's min_centidegrees, which is the frost floor.
+   * on — a mode with nothing to set back to is refused, not defaulted. Clamped by each room's
+   * inner maximum, and at the outputs a room's outer limits bind to its away floor and maximum
+   * (OuterRoomLimits), the away floor being what the building needs.
    *
    * @generated from field: optional sint32 setback_centidegrees = 3;
    */
@@ -774,6 +1007,81 @@ export enum RoomClimateCondition {
  * Describes the enum kusinta.iot.climate.v1.RoomClimateCondition.
  */
 export declare const RoomClimateConditionSchema: GenEnum<RoomClimateCondition>;
+
+/**
+ * Which bound of a room's outer limits clamps the outputs it binds.
+ *
+ * @generated from enum kusinta.iot.climate.v1.OuterLimitKind
+ */
+export enum OuterLimitKind {
+  /**
+   * @generated from enum value: OUTER_LIMIT_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: OUTER_LIMIT_KIND_MIN = 1;
+   */
+  MIN = 1,
+
+  /**
+   * @generated from enum value: OUTER_LIMIT_KIND_MAX = 2;
+   */
+  MAX = 2,
+
+  /**
+   * Also when min stands in for an unset away_min, as the AWAY FLOOR: then it is MIN.
+   *
+   * @generated from enum value: OUTER_LIMIT_KIND_AWAY_MIN = 3;
+   */
+  AWAY_MIN = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.climate.v1.OuterLimitKind.
+ */
+export declare const OuterLimitKindSchema: GenEnum<OuterLimitKind>;
+
+/**
+ * How many of a room's heating outputs its outer limits bind (OuterRoomLimits, WHAT THEY BIND).
+ *
+ * @generated from enum kusinta.iot.climate.v1.OuterLimitsCoverage
+ */
+export enum OuterLimitsCoverage {
+  /**
+   * Not stated: withheld, or the room has no outer limits.
+   *
+   * @generated from enum value: OUTER_LIMITS_COVERAGE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The room has outer limits and they bind none of its heating outputs: it heats only with a
+   * household's own devices, or with nothing.
+   *
+   * @generated from enum value: OUTER_LIMITS_COVERAGE_NONE = 1;
+   */
+  NONE = 1,
+
+  /**
+   * Some of its heating outputs and not others.
+   *
+   * @generated from enum value: OUTER_LIMITS_COVERAGE_SOME = 2;
+   */
+  SOME = 2,
+
+  /**
+   * Every heating output in it.
+   *
+   * @generated from enum value: OUTER_LIMITS_COVERAGE_ALL = 3;
+   */
+  ALL = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.climate.v1.OuterLimitsCoverage.
+ */
+export declare const OuterLimitsCoverageSchema: GenEnum<OuterLimitsCoverage>;
 
 /**
  * Whether a plan steers a room: one that looks ahead at prices, weather and the heat

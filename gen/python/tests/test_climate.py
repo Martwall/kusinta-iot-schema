@@ -10,10 +10,13 @@ These assert the decisions the shape encodes:
   * a holiday's warm-up lead is the gateway's, and absent when there is none
   * a room's history is fixed buckets whose readings are each optional
   * a room's history names its resolution and the range an answer covers
+  * a room's outer limits carry, bound by bound, the role that set each and when; the
+    household's inner limits travel apart from them, and "unset" is never 0 °C
 """
 
 from google.protobuf import timestamp_pb2
 
+from kusinta.iot.access.v1 import roles_pb2
 from kusinta.iot.climate.v1 import climate_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.webrtc.v1 import envelope_pb2, management_pb2
@@ -403,3 +406,129 @@ def test_a_target_without_a_hold_has_no_hold_time():
     room = climate_pb2.RoomClimate(space_id=_ROOM)
 
     assert not _round_trip(room).HasField("target_held_until")
+
+
+# --- comfort limits -------------------------------------------------------------------
+
+def test_an_outer_bound_nobody_set_is_absent_rather_than_zero():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM, outer_limits=climate_pb2.OuterRoomLimits(min=climate_pb2.OuterLimit(centidegrees=1800))
+    )
+
+    assert _round_trip(room).outer_limits.HasField("max") is False
+
+
+def test_an_outer_bound_carries_the_role_that_set_it_and_when():
+    bound = climate_pb2.OuterLimit(
+        centidegrees=1500,
+        set_by_role=roles_pb2.ROLE_PROPERTY_OWNER,
+        set_at=timestamp_pb2.Timestamp(seconds=1_790_000_000),
+    )
+
+    decoded = _round_trip(climate_pb2.OuterRoomLimits(away_min=bound)).away_min
+    assert (decoded.centidegrees, decoded.set_by_role, decoded.set_at.seconds) == (
+        1500,
+        roles_pb2.ROLE_PROPERTY_OWNER,
+        1_790_000_000,
+    )
+
+
+def test_outer_limits_record_the_threshold_a_minimum_was_accepted_below():
+    limits = climate_pb2.OuterRoomLimits(
+        min=climate_pb2.OuterLimit(centidegrees=1600), min_accepted_threshold_centidegrees=1800
+    )
+
+    assert _round_trip(limits).min_accepted_threshold_centidegrees == 1800
+
+
+def test_outer_limits_leave_the_threshold_absent_while_no_acceptance_was_needed():
+    limits = climate_pb2.OuterRoomLimits(min=climate_pb2.OuterLimit(centidegrees=1900))
+
+    assert _round_trip(limits).HasField("min_accepted_threshold_centidegrees") is False
+
+
+def test_a_room_carries_the_households_inner_limits_apart_from_the_outer_ones():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM,
+        outer_limits=climate_pb2.OuterRoomLimits(max=climate_pb2.OuterLimit(centidegrees=2400)),
+        inner_limits=climate_pb2.InnerRoomLimits(max_centidegrees=2200),
+    )
+
+    decoded = _round_trip(room).inner_limits
+    assert (decoded.max_centidegrees, decoded.HasField("min_centidegrees")) == (2200, False)
+
+
+def test_a_room_says_which_outer_bound_clamps_it_and_where_it_would_be_held_without_it():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM,
+        outer_limit_clamp=climate_pb2.OuterLimitClamp(
+            limit=climate_pb2.OUTER_LIMIT_KIND_AWAY_MIN, unclamped_centidegrees=1200
+        ),
+    )
+
+    decoded = _round_trip(room).outer_limit_clamp
+    assert (decoded.limit, decoded.unclamped_centidegrees) == (climate_pb2.OUTER_LIMIT_KIND_AWAY_MIN, 1200)
+
+
+def test_a_room_says_how_many_of_its_heating_outputs_the_outer_limits_bind():
+    room = climate_pb2.RoomClimate(space_id=_ROOM, outer_limits_coverage=climate_pb2.OUTER_LIMITS_COVERAGE_SOME)
+
+    assert _round_trip(room).outer_limits_coverage == climate_pb2.OUTER_LIMITS_COVERAGE_SOME
+
+
+def test_a_move_in_target_is_told_apart_from_a_target_a_person_set():
+    change = climate_pb2.TargetChange(move_in=True)
+
+    assert _round_trip(change).WhichOneof("by") == "move_in"
+
+
+def test_a_configuration_that_does_not_name_the_away_minimum_leaves_it_alone():
+    request = management_pb2.ConfigureRoomClimate(
+        room_id=_ROOM, limits=management_pb2.RoomLimits(min_centidegrees=1800)
+    )
+
+    assert _round_trip(request).HasField("away_min") is False
+
+
+def test_a_configuration_naming_the_away_minimum_without_a_value_removes_it():
+    request = management_pb2.ConfigureRoomClimate(room_id=_ROOM, away_min=management_pb2.RoomLimitValue())
+
+    decoded = _round_trip(request)
+    assert (decoded.HasField("away_min"), decoded.away_min.HasField("centidegrees")) == (True, False)
+
+
+def test_a_configuration_sets_the_move_in_target_alone():
+    request = management_pb2.ConfigureRoomClimate(
+        room_id=_ROOM, move_in_target=management_pb2.RoomLimitValue(centidegrees=2100)
+    )
+
+    decoded = _round_trip(request)
+    assert (decoded.move_in_target.centidegrees, decoded.HasField("limits")) == (2100, False)
+
+
+def test_a_configuration_carries_the_acceptance_of_a_minimum_below_the_threshold():
+    request = management_pb2.ConfigureRoomClimate(
+        room_id=_ROOM, limits=management_pb2.RoomLimits(min_centidegrees=1600), accept_below_threshold=True
+    )
+
+    assert _round_trip(request).accept_below_threshold is True
+
+
+def test_a_rooms_inner_limits_are_set_as_a_management_request():
+    request = management_pb2.ManagementRequest(
+        set_inner_room_limits=management_pb2.SetInnerRoomLimits(
+            room_id=_ROOM, min_centidegrees=1900, max_centidegrees=2300
+        )
+    )
+
+    decoded = _round_trip(request)
+    assert (decoded.WhichOneof("request"), decoded.set_inner_room_limits.max_centidegrees) == (
+        "set_inner_room_limits",
+        2300,
+    )
+
+
+def test_an_inner_bound_left_unset_is_removed_rather_than_zero():
+    request = management_pb2.SetInnerRoomLimits(room_id=_ROOM, max_centidegrees=2300)
+
+    assert _round_trip(request).HasField("min_centidegrees") is False

@@ -129,6 +129,12 @@ message DeleteSpace {
 // its household: access.v1.MembershipRelation, RESIDENCY IDS) is never changed through it:
 // assigning onto it is refused as NOT_ENTITLED, and RemoveUserFromSpace answers as for one
 // that does not exist. user_id is never a residency id.
+//
+// While a vacated handover of the home is pending (household.proto, VACANCY), the property
+// owner or a gateway administrator assigning RESIDENT to someone outside the departing household
+// completes the handover first — its wipe runs — and then files them, rather than being refused
+// as "handover_pending". Every other check on the request is made first, so one refused for any
+// other reason leaves the handover pending.
 message AssignUserToSpace {
   reserved 3; // held for a per-space Role, should roles stop being gateway-wide
 
@@ -308,8 +314,10 @@ message ManagementAck {}
 // to someone else's hardware.
 //
 // In a home it is the other way round: links between its devices are its residents' to
-// make, change and remove, and a caller who reaches it as service is refused as
-// NOT_ENTITLED. A link between a device in a home and one outside it is refused to anyone.
+// make, change and remove, and in an empty home (household.proto, EMPTY HOME) the property
+// owner's and the gateway administrators' who reach it; any other caller who reaches it as
+// service is refused as NOT_ENTITLED. A link between a device in a home and one outside it is
+// refused to anyone.
 // The same holds for UpdateDeviceLink and RemoveDeviceLink.
 message CreateDeviceLink {
   kusinta.iot.identity.v1.DeviceId sender = 1;
@@ -382,11 +390,14 @@ message ListDeviceLinks {
 // as turning a radiator's knob; setting up what the room obeys is ConfigureRoomClimate,
 // and stays with owners, except the lock in a home.
 //
-// In a home, only its residents may set it; a caller who reaches the room as service is
-// refused as NOT_ENTITLED.
+// In a home, only its residents may set it, and in an empty home (household.proto, EMPTY HOME)
+// the property owner and the gateway administrators who reach it, whose target there is
+// cleared when the home gains a resident (household.proto, MOVE-IN); any other caller who
+// reaches the room as service is refused as NOT_ENTITLED.
 //
-// Clamped to the room's limits rather than refused outside them, and the clamped value is
-// what the room's RoomClimate then reports.
+// Clamped to the room's inner limits (climate.v1.InnerRoomLimits) rather than refused outside
+// them, and the clamped value is what the room's RoomClimate then reports. The outer limits do
+// not clamp it: they bind outputs (climate.v1.OuterRoomLimits).
 message SetRoomTarget {
   kusinta.iot.identity.v1.SpaceId room_id = 1;
 
@@ -413,23 +424,45 @@ message RoomLimits {
   optional sint32 max_centidegrees = 2;
 }
 
-// Configures what a room obeys: its limits, its sensors, and whether a change made by
-// hand at one of its devices counts. Authorized as directing — owners and filing roles —
-// because this decides what everybody in the room can do.
+// One bound that moves alone, for the same reason as RoomLimits: unset leaves the bound as it
+// is; set, an unset centidegrees removes it.
+message RoomLimitValue {
+  optional sint32 centidegrees = 1;
+}
+
+// Configures what a room obeys: its outer limits, its sensors, and whether a change made by
+// hand at one of its devices counts. Authorized as directing, because this decides what
+// everybody in the room can do, and each part by its own deciders:
+//   * the outer limits — limits, away_min, move_in_target (climate.v1.OuterRoomLimits) — the
+//     property owner or a gateway administrator who reaches the room, or an installer under an
+//     active commissioning grant covering it (commissioning.v1, GRANTS), in a home or not. A
+//     household's own limits are SetInnerRoomLimits;
+//   * sensors — ROLE_PROPERTY_OWNER or a filing role. It orders only the building's own
+//     sensors (see RoomClimate.sensor_ids);
+//   * lock_device_controls — in a home, its residents', who may send this request with nothing
+//     else set, and in an empty home (household.proto, EMPTY HOME) the property owner's and the
+//     gateway administrators' who reach it, whose lock there is cleared when the home gains a
+//     resident; outside homes, ROLE_PROPERTY_OWNER's or a filing role's, as the sensors are.
+// A request that sets anything its caller may not is refused whole as NOT_ENTITLED, so nothing
+// of it applies.
 //
-// One exception: in a home, lock_device_controls is its residents' alone. They may send
-// this request with nothing else set. Outside homes the lock is the owner's, as the rest
-// is. A request that sets anything its caller may not — the lock in a home for service;
-// anything but the lock in a home, or the lock outside one, for a caller with neither
-// ROLE_PROPERTY_OWNER nor a filing role — is refused whole as NOT_ENTITLED, so nothing of
-// it applies. sensors orders only the building's own
-// sensors (see RoomClimate.sensor_ids).
+// Each outer bound the request changes is stamped with the caller's role and the time
+// (climate.v1.OuterLimit); one set to the value it has keeps its stamp. As the outer limits will
+// stand, min above max, or away_min above min or max, is refused as INVALID_REQUEST with
+// metadata {"reason": "limits_order"}. A min changed to below the gateway's public-health
+// threshold — its own setting, which no operation in this contract changes; none while unset —
+// needs accept_below_threshold, and is refused without it as FAILED_PRECONDITION with metadata
+// {"reason": "below_threshold", "threshold_centidegrees": the threshold}. Neither refusal, nor
+// anything else in the answer, depends on the home's state — its targets, inner limits, modes,
+// or who lives there — so setting outer limits tells the caller nothing of it; what they clamp
+// is told to the household alone (RoomClimate.outer_limit_clamp).
 //
 // Each field moves alone, as on UpdateSpace: unset leaves it as it is.
 message ConfigureRoomClimate {
   kusinta.iot.identity.v1.SpaceId room_id = 1;
 
-  // Replaces both bounds; see RoomLimits.
+  // The outer limits' min and max (climate.v1.OuterRoomLimits); replaces both bounds, see
+  // RoomLimits.
   RoomLimits limits = 2;
 
   // Only the building's sensors filed in this room; any other — including a sensor a
@@ -437,6 +470,28 @@ message ConfigureRoomClimate {
   RoomSensors sensors = 3;
 
   optional bool lock_device_controls = 4;
+
+  // The outer limits' away minimum and move-in target, each alone; see RoomLimitValue.
+  RoomLimitValue away_min = 5;
+  RoomLimitValue move_in_target = 6;
+
+  // The caller accepts a min below the public-health threshold, recorded with the bound
+  // (OuterRoomLimits.min_accepted_threshold_centidegrees). Ignored on a request that sets no
+  // such min.
+  bool accept_below_threshold = 7;
+}
+
+// Sets a room's inner limits (climate.v1.InnerRoomLimits), replacing both bounds: an unset bound
+// removes it. Answered with ManagementAck. A household admin of the home the room is in only
+// (household.proto, HOUSEHOLD ADMIN); anyone else, and a room in no home, is refused as
+// NOT_ENTITLED — never covered by a commissioning grant. min above max is refused as
+// INVALID_REQUEST with metadata {"reason": "limits_order"}. Bounds outside the outer limits are
+// accepted as they are: the outer limits clamp the outputs they bind, and only those
+// (climate.v1.OuterRoomLimits). The room's target is clamped into the new limits.
+message SetInnerRoomLimits {
+  kusinta.iot.identity.v1.SpaceId room_id = 1;
+  optional sint32 min_centidegrees = 2;
+  optional sint32 max_centidegrees = 3;
 }
 
 // Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
@@ -448,11 +503,12 @@ message ConfigureRoomClimate {
 //
 // In a home, only its residents may switch one on or off: whether a home stands empty is
 // theirs to say. A caller who reaches it as service is refused as NOT_ENTITLED — except
-// that, while the home has no resident, ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN may
-// switch off a mode that is on and whose setter is not a resident, so that no mode
-// outlives everyone who could end it. Any other switch-off from them — no mode on, or one
-// that is a resident's — is accepted and does nothing, so the answer tells them nothing of
-// whether a mode was on or whether anyone has moved in.
+// that, while the home is empty (household.proto, EMPTY HOME), ROLE_PROPERTY_OWNER or
+// ROLE_GATEWAY_ADMIN may switch one on, and switch off one that is on, so that no mode
+// outlives everyone who could end it; a mode they switch on there ends when the home gains a
+// resident (climate.v1.ClimateMode). Any other switch-off from them — in a home that is not
+// empty, or with no mode on — is accepted and does nothing, so the answer tells them nothing of
+// whether a mode was on.
 message SetClimateMode {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
   kusinta.iot.climate.v1.ClimateModeKind kind = 2;
@@ -552,8 +608,9 @@ message PrivacyDisclosure {
   repeated StaffAppointment staff_appointments = 8;
 
   // Each commissioning grant on this home that was granted since it was last wiped, oldest
-  // first, active ones included (commissioning.v1, GRANTS): who held commissioning access to the
-  // home, and when. Given to the home's residents only, as staff_appointments is.
+  // first, active ones included, and those the property owner or a gateway administrator granted
+  // while it stood empty among them (commissioning.v1, GRANTS): who held commissioning access to
+  // the home, and when. Given to the home's residents only, as staff_appointments is.
   repeated kusinta.iot.commissioning.v1.CommissioningGrantRecord commissioning_grants = 9;
 }
 
@@ -929,9 +986,11 @@ message RequestCommissioningGrant {
 
 // Answers a requested commissioning grant, answered with the CommissioningGrant as stored when
 // granted, and with ManagementAck when declined, which ends it. From a household admin of the
-// home, or for a space outside homes the property owner or a gateway administrator who reaches
-// it; anyone else, and a grant_id that is not requested on a space the caller may answer for,
-// is refused as NOT_ENTITLED, so that no grant id can be probed.
+// home, or for a space outside homes or an empty home (household.proto, EMPTY HOME) the
+// property owner or a gateway administrator who reaches it; anyone else, and a grant_id that is
+// not requested on a space the caller may answer for, is refused as NOT_ENTITLED, so that no
+// grant id can be probed. A grant they grant on an empty home ends when the home gains a
+// resident (commissioning.v1, GRANTS).
 //
 // Granting needs ends_at after starts_at, no more than 14 days after it, and starts_at no
 // later than 30 days from now; otherwise INVALID_REQUEST with metadata
@@ -956,8 +1015,9 @@ message EndCommissioningGrant {
 }
 
 // Lists the commissioning grants that have not ended on a space and those below it, answered
-// with CommissioningGrants: a home's to its residents; one on a space outside homes to the
-// property owner and the gateway administrators who reach it; to an installer, their own.
+// with CommissioningGrants: a home's to its residents, and an empty home's (household.proto,
+// EMPTY HOME) to the property owner and the gateway administrators who reach it, as one on a
+// space outside homes is; to an installer, their own.
 // Unset root_space_id lists every one the caller may be listed. Anyone may ask; nobody is
 // refused, and a caller listed none gets none.
 message ListCommissioningGrants {
@@ -965,7 +1025,8 @@ message ListCommissioningGrants {
 }
 
 // Sets who owns one of the building's own devices as an asset (common.v1.AssetOwner), and
-// with it nobody's access. Answered with ManagementAck. From the property owner or a gateway
+// with it whether a room's outer limits can bind the device (climate.v1.OuterRoomLimits), and
+// nobody's access. Answered with ManagementAck. From the property owner or a gateway
 // administrator who reaches the device; anyone else is refused as NOT_ENTITLED. Unset
 // asset_owner clears it, as does one with neither owner set.
 //
@@ -1062,5 +1123,6 @@ message ManagementRequest {
     ExportHouseholdData export_household_data = 67;
     SetHomeName set_home_name = 68;
     ClearClimateHistory clear_climate_history = 69;
+    SetInnerRoomLimits set_inner_room_limits = 70;
   }
 }

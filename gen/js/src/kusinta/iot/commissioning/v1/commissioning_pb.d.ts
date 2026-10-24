@@ -694,8 +694,9 @@ export declare type CommissioningGrant = Message<"kusinta.iot.commissioning.v1.C
 
   /**
    * Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
-   * for a space outside homes to the property owner and the gateway's administrators; to the
-   * installer it is unset, since a resident's user id would tell them who lives in the home.
+   * for a space outside homes or an empty home to the property owner and the gateway's
+   * administrators; to the installer it is unset, since a resident's user id would tell them
+   * who lives in the home.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId granted_by = 10;
    */

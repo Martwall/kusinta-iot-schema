@@ -288,6 +288,16 @@ describe('household handover', () => {
     expect([decoded.vacated, decoded.startedByStaff]).toEqual([true, false])
   })
 
+  it('says a vacated one’s notice ends early if a new household moves in', () => {
+    const decoded = onTheWire(HouseholdHandoverSchema, {
+      handoverId: 'h-5',
+      state: HouseholdHandoverState.PENDING,
+      vacated: true,
+      mayEndOnMoveIn: true,
+    })
+    expect(decoded.mayEndOnMoveIn).toBe(true)
+  })
+
   it('is answered with the handover when started', () => {
     const decoded = onTheWire(ManagementResultSchema, {
       result: { case: 'householdHandover', value: { handoverId: 'h-1' } },

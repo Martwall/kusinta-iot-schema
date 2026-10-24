@@ -241,8 +241,8 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * one completes on its own: 7 days after started_at, and never sooner than 7 days after the
    * home's last residency ended. On a handover that is not vacated, a residency that starts
    * while it is pending moves it to 7 days after that, and the handover is pushed again, so
-   * that a household that moves in during it has its notice too; on a vacated one nobody new
-   * moves in (VACANCY).
+   * that a household that moves in during it has its notice too; on a vacated one, a new
+   * household moving in completes it instead (QUICK TURNOVER).
    *
    * @generated from field: google.protobuf.Timestamp staff_confirmable_from = 8;
    */
@@ -283,6 +283,17 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * @generated from field: bool recipient_household_admin = 12;
    */
   recipientHouseholdAdmin: boolean;
+
+  /**
+   * Set on a vacated handover: it ends at staff_confirmable_from or when the property owner or a
+   * gateway administrator files a new resident, whichever is first (QUICK TURNOVER), and so does
+   * the departing household's export window. An app says so from this field rather than from
+   * vacated, so that a handover from a gateway that predates it, which ends no notice early, is
+   * not misdescribed.
+   *
+   * @generated from field: bool may_end_on_move_in = 13;
+   */
+  mayEndOnMoveIn: boolean;
 };
 
 /**
@@ -573,9 +584,9 @@ export enum HouseholdHandoverState {
   CANCELLED = 2,
 
   /**
-   * Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
-   * has run. The last residency ending while one is pending makes it vacated, not done
-   * (VACANCY).
+   * Confirmed, or, for a vacated one, its notice passed with nobody living in the home or a new
+   * resident filed (QUICK TURNOVER); the wipe has run. The last residency ending while one is
+   * pending makes it vacated, not done (VACANCY).
    *
    * @generated from enum value: HOUSEHOLD_HANDOVER_STATE_DONE = 3;
    */

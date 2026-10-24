@@ -624,6 +624,30 @@ final $typed_data.Uint8List roomLimitsDescriptor = $convert.base64Decode(
     'VziAEBEi4KEG1heF9jZW50aWRlZ3JlZXMYAiABKBFIAVIPbWF4Q2VudGlkZWdyZWVziAEBQhMK'
     'EV9taW5fY2VudGlkZWdyZWVzQhMKEV9tYXhfY2VudGlkZWdyZWVz');
 
+@$core.Deprecated('Use roomLimitValueDescriptor instead')
+const RoomLimitValue$json = {
+  '1': 'RoomLimitValue',
+  '2': [
+    {
+      '1': 'centidegrees',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'centidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_centidegrees'},
+  ],
+};
+
+/// Descriptor for `RoomLimitValue`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List roomLimitValueDescriptor = $convert.base64Decode(
+    'Cg5Sb29tTGltaXRWYWx1ZRInCgxjZW50aWRlZ3JlZXMYASABKBFIAFIMY2VudGlkZWdyZWVziA'
+    'EBQg8KDV9jZW50aWRlZ3JlZXM=');
+
 @$core.Deprecated('Use configureRoomClimateDescriptor instead')
 const ConfigureRoomClimate$json = {
   '1': 'ConfigureRoomClimate',
@@ -661,6 +685,29 @@ const ConfigureRoomClimate$json = {
       '10': 'lockDeviceControls',
       '17': true
     },
+    {
+      '1': 'away_min',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RoomLimitValue',
+      '10': 'awayMin'
+    },
+    {
+      '1': 'move_in_target',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RoomLimitValue',
+      '10': 'moveInTarget'
+    },
+    {
+      '1': 'accept_below_threshold',
+      '3': 7,
+      '4': 1,
+      '5': 8,
+      '10': 'acceptBelowThreshold'
+    },
   ],
   '8': [
     {'1': '_lock_device_controls'},
@@ -673,8 +720,55 @@ final $typed_data.Uint8List configureRoomClimateDescriptor = $convert.base64Deco
     'RlbnRpdHkudjEuU3BhY2VJZFIGcm9vbUlkEjkKBmxpbWl0cxgCIAEoCzIhLmt1c2ludGEuaW90'
     'LndlYnJ0Yy52MS5Sb29tTGltaXRzUgZsaW1pdHMSPAoHc2Vuc29ycxgDIAEoCzIiLmt1c2ludG'
     'EuaW90LndlYnJ0Yy52MS5Sb29tU2Vuc29yc1IHc2Vuc29ycxI1ChRsb2NrX2RldmljZV9jb250'
-    'cm9scxgEIAEoCEgAUhJsb2NrRGV2aWNlQ29udHJvbHOIAQFCFwoVX2xvY2tfZGV2aWNlX2Nvbn'
-    'Ryb2xz');
+    'cm9scxgEIAEoCEgAUhJsb2NrRGV2aWNlQ29udHJvbHOIAQESQAoIYXdheV9taW4YBSABKAsyJS'
+    '5rdXNpbnRhLmlvdC53ZWJydGMudjEuUm9vbUxpbWl0VmFsdWVSB2F3YXlNaW4SSwoObW92ZV9p'
+    'bl90YXJnZXQYBiABKAsyJS5rdXNpbnRhLmlvdC53ZWJydGMudjEuUm9vbUxpbWl0VmFsdWVSDG'
+    '1vdmVJblRhcmdldBI0ChZhY2NlcHRfYmVsb3dfdGhyZXNob2xkGAcgASgIUhRhY2NlcHRCZWxv'
+    'd1RocmVzaG9sZEIXChVfbG9ja19kZXZpY2VfY29udHJvbHM=');
+
+@$core.Deprecated('Use setInnerRoomLimitsDescriptor instead')
+const SetInnerRoomLimits$json = {
+  '1': 'SetInnerRoomLimits',
+  '2': [
+    {
+      '1': 'room_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'roomId'
+    },
+    {
+      '1': 'min_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'minCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'max_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'maxCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_min_centidegrees'},
+    {'1': '_max_centidegrees'},
+  ],
+};
+
+/// Descriptor for `SetInnerRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setInnerRoomLimitsDescriptor = $convert.base64Decode(
+    'ChJTZXRJbm5lclJvb21MaW1pdHMSOQoHcm9vbV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
+    '50aXR5LnYxLlNwYWNlSWRSBnJvb21JZBIuChBtaW5fY2VudGlkZWdyZWVzGAIgASgRSABSD21p'
+    'bkNlbnRpZGVncmVlc4gBARIuChBtYXhfY2VudGlkZWdyZWVzGAMgASgRSAFSD21heENlbnRpZG'
+    'VncmVlc4gBAUITChFfbWluX2NlbnRpZGVncmVlc0ITChFfbWF4X2NlbnRpZGVncmVlcw==');
 
 @$core.Deprecated('Use setClimateModeDescriptor instead')
 const SetClimateMode$json = {
@@ -2133,6 +2227,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'clearClimateHistory'
     },
+    {
+      '1': 'set_inner_room_limits',
+      '3': 70,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetInnerRoomLimits',
+      '9': 0,
+      '10': 'setInnerRoomLimits'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2255,4 +2358,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'RhdGFIAFITZXhwb3J0SG91c2Vob2xkRGF0YRJICg1zZXRfaG9tZV9uYW1lGEQgASgLMiIua3Vz'
     'aW50YS5pb3Qud2VicnRjLnYxLlNldEhvbWVOYW1lSABSC3NldEhvbWVOYW1lEmAKFWNsZWFyX2'
     'NsaW1hdGVfaGlzdG9yeRhFIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5DbGVhckNsaW1h'
-    'dGVIaXN0b3J5SABSE2NsZWFyQ2xpbWF0ZUhpc3RvcnlCCQoHcmVxdWVzdA==');
+    'dGVIaXN0b3J5SABSE2NsZWFyQ2xpbWF0ZUhpc3RvcnkSXgoVc2V0X2lubmVyX3Jvb21fbGltaX'
+    'RzGEYgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldElubmVyUm9vbUxpbWl0c0gAUhJz'
+    'ZXRJbm5lclJvb21MaW1pdHNCCQoHcmVxdWVzdA==');

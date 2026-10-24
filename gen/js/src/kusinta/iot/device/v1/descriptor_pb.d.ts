@@ -103,9 +103,9 @@ export declare type DeviceDescriptor = Message<"kusinta.iot.device.v1.DeviceDesc
 
   /**
    * Who owns it as an asset, where ownership is COMPANY: see common.v1.AssetOwner, which
-   * decides nobody's access. Set by the gateway from its own records (webrtc.v1.SetAssetOwner)
-   * and given to whoever is given the descriptor; a connector leaves it unset, and the gateway
-   * ignores it from one.
+   * decides nobody's access, only whether a room's outer limits can bind the device. Set by the
+   * gateway from its own records (webrtc.v1.SetAssetOwner) and given to whoever is given the
+   * descriptor; a connector leaves it unset, and the gateway ignores it from one.
    *
    * @generated from field: kusinta.iot.common.v1.AssetOwner asset_owner = 21;
    */

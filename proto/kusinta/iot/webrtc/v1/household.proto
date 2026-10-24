@@ -30,6 +30,7 @@ option optimize_for = SPEED;
 //     files;
 //   * putting the home's heating records and the household's commissioning facts (heating.v1,
 //     commissioning.v1), and opting the home in to its heating features;
+//   * setting its rooms' inner limits (SetInnerRoomLimits, climate.v1.InnerRoomLimits);
 //   * answering and ending commissioning grants on the home (commissioning.v1, GRANTS);
 //   * starting, confirming and cancelling the home's handover (HANDOVER);
 //   * clearing the home's climate history (CLIMATE HISTORY, ClearClimateHistory).
@@ -69,7 +70,7 @@ option optimize_for = SPEED;
 // STAFF APPOINTMENT. The property owner and the gateway's administrators (ROLE_PROPERTY_OWNER,
 // ROLE_GATEWAY_ADMIN) do not govern a home, but may give a home with no household admin its
 // first one, in one of two ways and in no other:
-//   * an empty home — no resident at all — by an invite with relation HOUSEHOLD_ADMIN
+//   * an empty home (EMPTY HOME) by an invite with relation HOUSEHOLD_ADMIN
 //     (CreateInvite): the one invite that makes anyone more than a resident or a technician.
 //     It is always bound to an address (CreateInvite.email; "email_required" otherwise) and
 //     never a home key, so only the account whose verified address it names can redeem it,
@@ -157,15 +158,57 @@ option optimize_for = SPEED;
 //     household becoming a resident again, which cancels it as if it had not started. Since
 //     no invite to the home can be made or redeemed while it is pending, that return is
 //     staff filing them (AssignUserToSpace), which is not refused for a departing member;
-//   * nobody outside the departing household becomes a resident of the home. Whatever would
-//     file one — a redeemed invite, an approved join request, AssignUserToSpace — is refused
-//     as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, and so is creating
-//     a RESIDENT or HOUSEHOLD_ADMIN invite on the home; an invite already pending, an
-//     appointment invite included, answers signaling.v1.REDEEM_OUTCOME_NOT_ELIGIBLE when
-//     redeemed and ends at the wipe. Staff file a new household once the wipe is done: at the
-//     end of the notice, or sooner if one of the departing household's admins confirms.
+//   * nobody outside the departing household becomes a resident of the home, save by the
+//     property owner or a gateway administrator filing them, which completes the handover
+//     first (QUICK TURNOVER). Whatever else would file one — a redeemed invite, an approved join
+//     request, AssignUserToSpace from anyone else — is refused as FAILED_PRECONDITION with
+//     metadata {"reason": "handover_pending"}, and so is creating a RESIDENT or HOUSEHOLD_ADMIN
+//     invite on the home; an invite already pending, an appointment invite included, answers
+//     signaling.v1.REDEEM_OUTCOME_NOT_ELIGIBLE when redeemed and ends at the wipe.
 // So the home's next household never moves in among the last one's records, and a home nobody
 // lives in keeps nothing of the household that left for longer than the notice.
+//
+// QUICK TURNOVER. The property owner or a gateway administrator assigning RESIDENT on the
+// apartment to someone outside the departing household (AssignUserToSpace) while a vacated
+// handover is pending completes it first: the handover is done, its wipe runs, it is pushed DONE
+// to the departing household as at the end of the notice, and then the newcomer is filed — the
+// home empty in between, so that they move in as MOVE-IN says. Nothing else ends the notice
+// early, and a handover that is not vacated, with someone still living in the home, is
+// unchanged. The departing household is told from the start (HouseholdHandover
+// .may_end_on_move_in): their export window runs until staff_confirmable_from, or until a new
+// household moves in, whichever is first.
+//
+// VACANCY SETBACK. When a home's last residency ends, each of its rooms with an away floor
+// (climate.v1.OuterRoomLimits, AWAY FLOOR) is set back to it on its own, at the outputs its
+// outer limits bind; outputs they do not bind — a household's assets — keep the target they had
+// until the wipe clears it. The setback holds until the home gains a resident (MOVE-IN): through
+// the notice and the wipe, and while the home stands empty, save in a room where the property
+// owner or a gateway administrator sets a target or a mode once it is empty (EMPTY HOME), which
+// holds there instead. It is the gateway's, and no one's mode: no ClimateMode carries it, it has
+// no setter, and it tells nobody anything of who left.
+//
+// EMPTY HOME. A home is empty while it has no resident and no handover of it is pending. A home
+// whose last residency has ended is not empty until its handover is done, so none of what
+// follows applies during a notice, while the departing household's records still exist. Every
+// rule in this contract that relaxes something for a home nobody lives in applies to an empty
+// home only:
+//   * the property owner and the gateway administrators who reach it may set its rooms' targets
+//     (SetRoomTarget), switch modes on it (SetClimateMode), lock its devices' controls
+//     (ConfigureRoomClimate), and make, change and remove links between its devices
+//     (CreateDeviceLink). Technicians stay refused, empty or not, so no answer tells service
+//     whether a home is empty;
+//   * they may give it its first household admin by an appointment invite (STAFF APPOINTMENT);
+//   * they answer and end commissioning grants on it (commissioning.v1, GRANTS).
+// It stops being empty when it gains a resident (MOVE-IN).
+//
+// MOVE-IN. When an empty home gains a resident, in the same step as that residency starts: the
+// targets and locks the property owner and the gateway administrators set while it stood empty
+// are cleared, and their modes end (climate.v1.ClimateMode); every commissioning grant they
+// granted on it ends, while one still requested stays, for the household's admins to answer
+// (commissioning.v1, GRANTS); the vacancy setback ends; and each room whose outer limits have a
+// move-in target (climate.v1.OuterRoomLimits.move_in_target) takes it as its target, clamped to
+// their min and max, with RoomClimate.target_change.move_in set. A room without one is left with
+// no target. The household's own targets replace it as they set them.
 //
 // CLIMATE HISTORY. A home's climate history is what the gateway has recorded and learnt of how
 // warm it was kept:
@@ -186,8 +229,8 @@ option optimize_for = SPEED;
 //
 // The step deletes or anonymises, together:
 //   * everything recorded per home: its climate history (CLIMATE HISTORY), its rooms' targets,
-//     modes and comfort settings, its device events, and the household's name for it
-//     (space.v1.Space.home_name);
+//     inner limits, modes and comfort settings, its device events, and the household's name for
+//     it (space.v1.Space.home_name);
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
 //     addresses, and the record of who did what in the home. What the gateway keeps of a
@@ -199,9 +242,10 @@ option optimize_for = SPEED;
 //     section says, and so do the home's heating records, which describe the house;
 //   * its linked accounts' grants. In the same step each is queued for revocation, in the
 //     durable queue accountlink.v1.RevokeToken describes, which outlives the wipe;
-//   * what was set on its devices for the household — limits, locks, comfort-load windows,
-//     and the links made between them — queued in the same step as writes of their defaults
-//     and removals of those links.
+//   * what was set on its devices for the household — locks, comfort-load windows, and the
+//     links made between them — queued in the same step as writes of their defaults and
+//     removals of those links.
+// The rooms' outer limits (climate.v1.OuterRoomLimits) are the building's, and stay.
 // Every room of the home is renamed in the step as GatewayDeleted renames spaces ("Room 1",
 // "Room 2"), and its description cleared. The apartment's own name, which the property owner
 // gave it (space.v1.Space.name), is the building's identifier and is not touched.
@@ -315,9 +359,9 @@ enum HouseholdHandoverState {
   HOUSEHOLD_HANDOVER_STATE_UNSPECIFIED = 0;
   HOUSEHOLD_HANDOVER_STATE_PENDING = 1;
   HOUSEHOLD_HANDOVER_STATE_CANCELLED = 2;
-  // Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
-  // has run. The last residency ending while one is pending makes it vacated, not done
-  // (VACANCY).
+  // Confirmed, or, for a vacated one, its notice passed with nobody living in the home or a new
+  // resident filed (QUICK TURNOVER); the wipe has run. The last residency ending while one is
+  // pending makes it vacated, not done (VACANCY).
   HOUSEHOLD_HANDOVER_STATE_DONE = 3;
 }
 
@@ -351,8 +395,8 @@ message HouseholdHandover {
   // one completes on its own: 7 days after started_at, and never sooner than 7 days after the
   // home's last residency ended. On a handover that is not vacated, a residency that starts
   // while it is pending moves it to 7 days after that, and the handover is pushed again, so
-  // that a household that moves in during it has its notice too; on a vacated one nobody new
-  // moves in (VACANCY).
+  // that a household that moves in during it has its notice too; on a vacated one, a new
+  // household moving in completes it instead (QUICK TURNOVER).
   google.protobuf.Timestamp staff_confirmable_from = 8;
 
   // When it was cancelled or done. Unset while pending.
@@ -374,6 +418,13 @@ message HouseholdHandover {
   // household's admins (VACANCY). A client offers confirmation on this, not on
   // recipient_in_household, which a plain resident holds too.
   bool recipient_household_admin = 12;
+
+  // Set on a vacated handover: it ends at staff_confirmable_from or when the property owner or a
+  // gateway administrator files a new resident, whichever is first (QUICK TURNOVER), and so does
+  // the departing household's export window. An app says so from this field rather than from
+  // vacated, so that a handover from a gateway that predates it, which ends no notice early, is
+  // not misdescribed.
+  bool may_end_on_move_in = 13;
 }
 
 // Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and

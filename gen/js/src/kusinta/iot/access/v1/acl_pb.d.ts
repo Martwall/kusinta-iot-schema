@@ -447,7 +447,8 @@ export enum ServiceSignal {
 
   /**
    * How the home is set up: the apartment and its rooms, their names and descriptions, the
-   * rooms' limits, and the building's sensors in them.
+   * rooms' outer limits with the role that set each and when — never the household's inner
+   * limits — and the building's sensors in them.
    *
    * @generated from enum value: SERVICE_SIGNAL_ROOM_SETUP = 7;
    */

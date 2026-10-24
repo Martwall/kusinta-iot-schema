@@ -363,9 +363,9 @@ class DeviceDescriptor extends $pb.GeneratedMessage {
   $pb.PbList<$3.LinkCapability> get linkCapabilities => $_getList(17);
 
   /// Who owns it as an asset, where ownership is COMPANY: see common.v1.AssetOwner, which
-  /// decides nobody's access. Set by the gateway from its own records (webrtc.v1.SetAssetOwner)
-  /// and given to whoever is given the descriptor; a connector leaves it unset, and the gateway
-  /// ignores it from one.
+  /// decides nobody's access, only whether a room's outer limits can bind the device. Set by the
+  /// gateway from its own records (webrtc.v1.SetAssetOwner) and given to whoever is given the
+  /// descriptor; a connector leaves it unset, and the gateway ignores it from one.
   @$pb.TagNumber(21)
   $4.AssetOwner get assetOwner => $_getN(18);
   @$pb.TagNumber(21)
