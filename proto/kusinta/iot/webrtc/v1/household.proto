@@ -73,9 +73,9 @@ option optimize_for = SPEED;
 //     It is always bound to an address (CreateInvite.email; "email_required" otherwise) and
 //     never a home key, so only the account whose verified address it names can redeem it,
 //     and it does so at once, never by a join request. Refused on a home with a resident as
-//     FAILED_PRECONDITION with metadata {"reason": "home_not_empty"}. A pending one ends when anyone becomes a resident
-//     of the home, so it never makes an outsider the governor of a household that has moved
-//     in;
+//     FAILED_PRECONDITION with metadata {"reason": "home_not_empty"}. A pending one ends when
+//     anyone becomes a resident of the home, so it never makes an outsider the governor of a
+//     household that has moved in;
 //   * an admin-less home by asking one of its residents (RequestPromotion with home_id),
 //     named by residency id to a caller who does not live there; never by inviting someone
 //     from outside.
@@ -144,14 +144,18 @@ option optimize_for = SPEED;
 //
 // While it is pending:
 //   * the departing household may export the home (EXPORT), as they could read it when their
-//     residency ended: nothing recorded after that is in it;
+//     residency ended: nothing recorded after that is in it; and may list the home's linked
+//     accounts (ListAccountLinks), so that they can release what stays registered to them at a
+//     vendor before the wipe revokes it;
 //   * its household admins may confirm it at once; the property owner and the gateway
 //     administrators from staff_confirmable_from on, which is also when it completes on its
 //     own;
 //   * nobody cancels it while the home is empty, neither the departing household nor staff:
 //     CancelHouseholdHandover is refused as FAILED_PRECONDITION with metadata
 //     {"reason": "vacated"}. It ends only by the wipe, or by a member of the departing
-//     household becoming a resident again, which cancels it as if it had not started;
+//     household becoming a resident again, which cancels it as if it had not started. Since
+//     no invite to the home can be made or redeemed while it is pending, that return is
+//     staff filing them (AssignUserToSpace), which is not refused for a departing member;
 //   * nobody outside the departing household becomes a resident of the home. Whatever would
 //     file one — a redeemed invite, an approved join request, AssignUserToSpace — is refused
 //     as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, and so is creating
@@ -296,7 +300,9 @@ enum HouseholdHandoverState {
   HOUSEHOLD_HANDOVER_STATE_UNSPECIFIED = 0;
   HOUSEHOLD_HANDOVER_STATE_PENDING = 1;
   HOUSEHOLD_HANDOVER_STATE_CANCELLED = 2;
-  // Confirmed, or the last residency of the home ended while it was pending.
+  // Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
+  // has run. The last residency ending while one is pending makes it vacated, not done
+  // (VACANCY).
   HOUSEHOLD_HANDOVER_STATE_DONE = 3;
 }
 
@@ -339,6 +345,20 @@ message HouseholdHandover {
 
   // Set when the home's last residency ending started it, rather than a request (VACANCY).
   bool vacated = 10;
+
+  // Set by the gateway per session: the session's user is a member of the household the
+  // handover is about — the home's residents while it is not vacated, the departing household
+  // (VACANCY) while it is. Someone who is both staff and in that household is told both, so a
+  // client offers them the household's export, and with recipient_household_admin its
+  // confirmation, as well as what staff may do, rather than guessing from roles which of the
+  // two they are.
+  bool recipient_in_household = 11;
+
+  // Set by the gateway per session: the session's user may confirm the handover as a household
+  // admin — a household admin of the home now, or, for a vacated one, one of the departing
+  // household's admins (VACANCY). A client offers confirmation on this, not on
+  // recipient_in_household, which a plain resident holds too.
+  bool recipient_household_admin = 12;
 }
 
 // Sets the household's own name for its home (space.v1.Space.home_name). Answered with

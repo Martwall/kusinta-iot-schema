@@ -46,17 +46,19 @@ option optimize_for = SPEED;
 //
 // A fact's value takes the type its key states, matched by type as well as value, as
 // heating.v1.ContactBinding.closed_value is. A key that states a closed list or a range takes
-// only its values. A key that takes a list (AttributeValue.list_value) takes each value at most once,
-// in any order, and an empty list is an answer whose meaning the key states. A value a person
-// puts is never free text: every string key a person may put states a closed list, so that
-// nothing a household writes outlives it by an installer confirming it. A string key only
-// the gateway sets (AUTOMATIC) may carry what its source names.
+// only its values. A key that takes a list (AttributeValue.list_value) takes each value at
+// most once, in any order, and an empty list is an answer whose meaning the key states. A
+// value a person puts is never free text: every string key a person may put states a closed
+// list, so that nothing a household writes outlives it by an installer confirming it. A
+// string key only the gateway sets (AUTOMATIC) may carry what its source names.
 //
 // A closed list grows only by a release of this schema adding a value. A value is never
 // removed or given another meaning: a brand or operator that is renamed or merged keeps the
 // values it had. The gateway refuses a value outside the list as it knows it. A client words
 // a value it knows by the value, and one it does not know, added after it was built, as an
-// answer about the key's topic, as it words a key it does not know. "other" is an answer: a
+// answer about the key's topic, as it words a key it does not know, and when it puts a list
+// again keeps the values it read but does not know, so that an older client drops none —
+// unless it puts the empty list, which answers that none applies. "other" is an answer: a
 // value outside the list, known to whoever answered. "Don't know" is never a value of a list:
 // it is CommissioningFact.unknown.
 //

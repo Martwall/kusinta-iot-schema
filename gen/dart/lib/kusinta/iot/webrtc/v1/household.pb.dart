@@ -513,6 +513,8 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     $1.Timestamp? staffConfirmableFrom,
     $1.Timestamp? endedAt,
     $core.bool? vacated,
+    $core.bool? recipientInHousehold,
+    $core.bool? recipientHouseholdAdmin,
   }) {
     final result = create();
     if (handoverId != null) result.handoverId = handoverId;
@@ -526,6 +528,10 @@ class HouseholdHandover extends $pb.GeneratedMessage {
       result.staffConfirmableFrom = staffConfirmableFrom;
     if (endedAt != null) result.endedAt = endedAt;
     if (vacated != null) result.vacated = vacated;
+    if (recipientInHousehold != null)
+      result.recipientInHousehold = recipientInHousehold;
+    if (recipientHouseholdAdmin != null)
+      result.recipientHouseholdAdmin = recipientHouseholdAdmin;
     return result;
   }
 
@@ -563,6 +569,8 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     ..aOM<$1.Timestamp>(9, _omitFieldNames ? '' : 'endedAt',
         subBuilder: $1.Timestamp.create)
     ..aOB(10, _omitFieldNames ? '' : 'vacated')
+    ..aOB(11, _omitFieldNames ? '' : 'recipientInHousehold')
+    ..aOB(12, _omitFieldNames ? '' : 'recipientHouseholdAdmin')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -700,6 +708,34 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   $core.bool hasVacated() => $_has(9);
   @$pb.TagNumber(10)
   void clearVacated() => $_clearField(10);
+
+  /// Set by the gateway per session: the session's user is a member of the household the
+  /// handover is about — the home's residents while it is not vacated, the departing household
+  /// (VACANCY) while it is. Someone who is both staff and in that household is told both, so a
+  /// client offers them the household's export, and with recipient_household_admin its
+  /// confirmation, as well as what staff may do, rather than guessing from roles which of the
+  /// two they are.
+  @$pb.TagNumber(11)
+  $core.bool get recipientInHousehold => $_getBF(10);
+  @$pb.TagNumber(11)
+  set recipientInHousehold($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasRecipientInHousehold() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearRecipientInHousehold() => $_clearField(11);
+
+  /// Set by the gateway per session: the session's user may confirm the handover as a household
+  /// admin — a household admin of the home now, or, for a vacated one, one of the departing
+  /// household's admins (VACANCY). A client offers confirmation on this, not on
+  /// recipient_in_household, which a plain resident holds too.
+  @$pb.TagNumber(12)
+  $core.bool get recipientHouseholdAdmin => $_getBF(11);
+  @$pb.TagNumber(12)
+  set recipientHouseholdAdmin($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasRecipientHouseholdAdmin() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearRecipientHouseholdAdmin() => $_clearField(12);
 }
 
 /// Sets the household's own name for its home (space.v1.Space.home_name). Answered with

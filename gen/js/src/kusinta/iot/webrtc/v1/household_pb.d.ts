@@ -260,6 +260,28 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * @generated from field: bool vacated = 10;
    */
   vacated: boolean;
+
+  /**
+   * Set by the gateway per session: the session's user is a member of the household the
+   * handover is about — the home's residents while it is not vacated, the departing household
+   * (VACANCY) while it is. Someone who is both staff and in that household is told both, so a
+   * client offers them the household's export, and with recipient_household_admin its
+   * confirmation, as well as what staff may do, rather than guessing from roles which of the
+   * two they are.
+   *
+   * @generated from field: bool recipient_in_household = 11;
+   */
+  recipientInHousehold: boolean;
+
+  /**
+   * Set by the gateway per session: the session's user may confirm the handover as a household
+   * admin — a household admin of the home now, or, for a vacated one, one of the departing
+   * household's admins (VACANCY). A client offers confirmation on this, not on
+   * recipient_in_household, which a plain resident holds too.
+   *
+   * @generated from field: bool recipient_household_admin = 12;
+   */
+  recipientHouseholdAdmin: boolean;
 };
 
 /**
@@ -476,7 +498,9 @@ export enum HouseholdHandoverState {
   CANCELLED = 2,
 
   /**
-   * Confirmed, or the last residency of the home ended while it was pending.
+   * Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
+   * has run. The last residency ending while one is pending makes it vacated, not done
+   * (VACANCY).
    *
    * @generated from enum value: HOUSEHOLD_HANDOVER_STATE_DONE = 3;
    */
