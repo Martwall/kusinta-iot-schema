@@ -277,7 +277,7 @@ def test_a_handover_push_reaches_the_app():
     assert _round_trip(message).household_handover.state == h.HOUSEHOLD_HANDOVER_STATE_DONE
 
 
-def test_a_handover_tells_its_recipient_they_are_in_the_departing_household():
-    decoded = _round_trip(h.HouseholdHandover(handover_id="h-3", vacated=True, recipient_departing=True))
+def test_a_handover_tells_its_recipient_they_are_in_its_household():
+    decoded = _round_trip(h.HouseholdHandover(handover_id="h-3", vacated=True, recipient_in_household=True))
 
-    assert decoded.recipient_departing is True
+    assert decoded.recipient_in_household is True

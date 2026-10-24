@@ -81,7 +81,7 @@ class ListHouseholdHandovers(_message.Message):
     def __init__(self, root_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
 
 class HouseholdHandover(_message.Message):
-    __slots__ = ("handover_id", "home_id", "state", "started_by", "started_by_name", "started_by_staff", "started_at", "staff_confirmable_from", "ended_at", "vacated", "recipient_departing")
+    __slots__ = ("handover_id", "home_id", "state", "started_by", "started_by_name", "started_by_staff", "started_at", "staff_confirmable_from", "ended_at", "vacated", "recipient_in_household")
     HANDOVER_ID_FIELD_NUMBER: _ClassVar[int]
     HOME_ID_FIELD_NUMBER: _ClassVar[int]
     STATE_FIELD_NUMBER: _ClassVar[int]
@@ -92,7 +92,7 @@ class HouseholdHandover(_message.Message):
     STAFF_CONFIRMABLE_FROM_FIELD_NUMBER: _ClassVar[int]
     ENDED_AT_FIELD_NUMBER: _ClassVar[int]
     VACATED_FIELD_NUMBER: _ClassVar[int]
-    RECIPIENT_DEPARTING_FIELD_NUMBER: _ClassVar[int]
+    RECIPIENT_IN_HOUSEHOLD_FIELD_NUMBER: _ClassVar[int]
     handover_id: str
     home_id: _identity_pb2.SpaceId
     state: HouseholdHandoverState
@@ -103,8 +103,8 @@ class HouseholdHandover(_message.Message):
     staff_confirmable_from: _timestamp_pb2.Timestamp
     ended_at: _timestamp_pb2.Timestamp
     vacated: bool
-    recipient_departing: bool
-    def __init__(self, handover_id: _Optional[str] = ..., home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., state: _Optional[_Union[HouseholdHandoverState, str]] = ..., started_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., started_by_name: _Optional[str] = ..., started_by_staff: _Optional[bool] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., staff_confirmable_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ended_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., vacated: _Optional[bool] = ..., recipient_departing: _Optional[bool] = ...) -> None: ...
+    recipient_in_household: bool
+    def __init__(self, handover_id: _Optional[str] = ..., home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., state: _Optional[_Union[HouseholdHandoverState, str]] = ..., started_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., started_by_name: _Optional[str] = ..., started_by_staff: _Optional[bool] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., staff_confirmable_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ended_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., vacated: _Optional[bool] = ..., recipient_in_household: _Optional[bool] = ...) -> None: ...
 
 class SetHomeName(_message.Message):
     __slots__ = ("home_id", "name")

@@ -57,9 +57,10 @@ option optimize_for = SPEED;
 // values it had. The gateway refuses a value outside the list as it knows it. A client words
 // a value it knows by the value, and one it does not know, added after it was built, as an
 // answer about the key's topic, as it words a key it does not know, and when it puts a list
-// again keeps the values it read but does not know, so that an older client drops none.
-// "other" is an answer: a value outside the list, known to whoever answered. "Don't know" is
-// never a value of a list: it is CommissioningFact.unknown.
+// again keeps the values it read but does not know, so that an older client drops none —
+// unless it puts the empty list, which answers that none applies. "other" is an answer: a
+// value outside the list, known to whoever answered. "Don't know" is never a value of a list:
+// it is CommissioningFact.unknown.
 //
 // HOUSEHOLD QUESTIONS. The keys a household answers or is shown, so that a client can ask
 // each in its own words and offer only the values it takes. Each is answered by a household

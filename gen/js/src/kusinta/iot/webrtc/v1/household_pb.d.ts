@@ -268,9 +268,9 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * client offers them the household's export and confirmation as well as what staff may do,
    * rather than guessing from roles which of the two they are.
    *
-   * @generated from field: bool recipient_departing = 11;
+   * @generated from field: bool recipient_in_household = 11;
    */
-  recipientDeparting: boolean;
+  recipientInHousehold: boolean;
 };
 
 /**

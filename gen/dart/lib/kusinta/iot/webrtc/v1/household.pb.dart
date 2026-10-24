@@ -513,7 +513,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     $1.Timestamp? staffConfirmableFrom,
     $1.Timestamp? endedAt,
     $core.bool? vacated,
-    $core.bool? recipientDeparting,
+    $core.bool? recipientInHousehold,
   }) {
     final result = create();
     if (handoverId != null) result.handoverId = handoverId;
@@ -527,8 +527,8 @@ class HouseholdHandover extends $pb.GeneratedMessage {
       result.staffConfirmableFrom = staffConfirmableFrom;
     if (endedAt != null) result.endedAt = endedAt;
     if (vacated != null) result.vacated = vacated;
-    if (recipientDeparting != null)
-      result.recipientDeparting = recipientDeparting;
+    if (recipientInHousehold != null)
+      result.recipientInHousehold = recipientInHousehold;
     return result;
   }
 
@@ -566,7 +566,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     ..aOM<$1.Timestamp>(9, _omitFieldNames ? '' : 'endedAt',
         subBuilder: $1.Timestamp.create)
     ..aOB(10, _omitFieldNames ? '' : 'vacated')
-    ..aOB(11, _omitFieldNames ? '' : 'recipientDeparting')
+    ..aOB(11, _omitFieldNames ? '' : 'recipientInHousehold')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -711,13 +711,13 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   /// client offers them the household's export and confirmation as well as what staff may do,
   /// rather than guessing from roles which of the two they are.
   @$pb.TagNumber(11)
-  $core.bool get recipientDeparting => $_getBF(10);
+  $core.bool get recipientInHousehold => $_getBF(10);
   @$pb.TagNumber(11)
-  set recipientDeparting($core.bool value) => $_setBool(10, value);
+  set recipientInHousehold($core.bool value) => $_setBool(10, value);
   @$pb.TagNumber(11)
-  $core.bool hasRecipientDeparting() => $_has(10);
+  $core.bool hasRecipientInHousehold() => $_has(10);
   @$pb.TagNumber(11)
-  void clearRecipientDeparting() => $_clearField(11);
+  void clearRecipientInHousehold() => $_clearField(11);
 }
 
 /// Sets the household's own name for its home (space.v1.Space.home_name). Answered with

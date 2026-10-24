@@ -253,11 +253,11 @@ const HouseholdHandover$json = {
     },
     {'1': 'vacated', '3': 10, '4': 1, '5': 8, '10': 'vacated'},
     {
-      '1': 'recipient_departing',
+      '1': 'recipient_in_household',
       '3': 11,
       '4': 1,
       '5': 8,
-      '10': 'recipientDeparting'
+      '10': 'recipientInHousehold'
     },
   ],
 };
@@ -273,8 +273,8 @@ final $typed_data.Uint8List householdHandoverDescriptor = $convert.base64Decode(
     'cnRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXN0YXJ0ZWRBdBJQCh'
     'ZzdGFmZl9jb25maXJtYWJsZV9mcm9tGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt'
     'cFIUc3RhZmZDb25maXJtYWJsZUZyb20SNQoIZW5kZWRfYXQYCSABKAsyGi5nb29nbGUucHJvdG'
-    '9idWYuVGltZXN0YW1wUgdlbmRlZEF0EhgKB3ZhY2F0ZWQYCiABKAhSB3ZhY2F0ZWQSLwoTcmVj'
-    'aXBpZW50X2RlcGFydGluZxgLIAEoCFIScmVjaXBpZW50RGVwYXJ0aW5n');
+    '9idWYuVGltZXN0YW1wUgdlbmRlZEF0EhgKB3ZhY2F0ZWQYCiABKAhSB3ZhY2F0ZWQSNAoWcmVj'
+    'aXBpZW50X2luX2hvdXNlaG9sZBgLIAEoCFIUcmVjaXBpZW50SW5Ib3VzZWhvbGQ=');
 
 @$core.Deprecated('Use setHomeNameDescriptor instead')
 const SetHomeName$json = {

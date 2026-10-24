@@ -347,7 +347,7 @@ message HouseholdHandover {
   // (VACANCY) while it is. Someone who is both staff and in that household is told both, so a
   // client offers them the household's export and confirmation as well as what staff may do,
   // rather than guessing from roles which of the two they are.
-  bool recipient_departing = 11;
+  bool recipient_in_household = 11;
 }
 
 // Sets the household's own name for its home (space.v1.Space.home_name). Answered with
