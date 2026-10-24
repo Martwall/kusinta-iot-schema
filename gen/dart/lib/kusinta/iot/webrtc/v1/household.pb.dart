@@ -829,8 +829,8 @@ class ClearClimateHistory extends $pb.GeneratedMessage {
 /// arrival every room history, climate summary and device event of the home it holds from before
 /// cleared_at, rather than keeping what the gateway no longer does, and keeps cleared_at as a
 /// lasting floor for the home: a sample, period or event dated before it that arrives later — an
-/// answer already in flight at the clear — is dropped on arrival too. Nobody else is told: whoever is given
-/// the apartment's summary as service learns of it by reading it.
+/// answer already in flight at the clear — is dropped on arrival too. Nobody else is told:
+/// whoever is given the apartment's summary as service learns of it by reading it.
 class ClimateHistoryCleared extends $pb.GeneratedMessage {
   factory ClimateHistoryCleared({
     $0.SpaceId? homeId,
