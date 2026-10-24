@@ -151,6 +151,14 @@ describe('feature status', () => {
     expect([decoded.needs[0]?.binding?.field, decoded.blocks[0]?.binding?.field]).toEqual(['sg_ready_boost', 'sg_ready_block'])
   })
 
+  it('says a feature stopped because a bound device lies across a home’s boundary', () => {
+    const decoded = onTheWire(FeatureStatusSchema, {
+      state: FeatureState.BLOCKED_FOR_SAFETY,
+      blocks: [{ reason: BlockReason.DEVICE_ACROSS_HOME, binding: { recordId: 'circuit-1', field: 'return_probe' } }],
+    })
+    expect(decoded.blocks).toMatchObject([{ reason: BlockReason.DEVICE_ACROSS_HOME }])
+  })
+
   it('says when its to-dos are withheld rather than none', () => {
     const decoded = onTheWire(CommissioningProfileSchema, { needsWithheld: true })
     expect(decoded.needsWithheld).toBe(true)

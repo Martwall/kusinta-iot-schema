@@ -835,8 +835,8 @@ export declare const RoomLimitValueSchema: GenMessage<RoomLimitValue>;
  *
  * Each outer bound the request changes is stamped with the caller's role and the time
  * (climate.v1.OuterLimit); one set to the value it has keeps its stamp. As the outer limits will
- * stand, min above max, or away_min above min or max, is refused as INVALID_REQUEST with
- * metadata {"reason": "limits_order"}. A min changed to below the gateway's public-health
+ * stand, min above max, away_min above min or max, or move_in_target outside [min, max] where
+ * those are set, is refused as INVALID_REQUEST with metadata {"reason": "limits_order"}. A min changed to below the gateway's public-health
  * threshold — its own setting, which no operation in this contract changes; none while unset —
  * needs accept_below_threshold, and is refused without it as FAILED_PRECONDITION with metadata
  * {"reason": "below_threshold", "threshold_centidegrees": the threshold}. Nothing in the answer

@@ -90,7 +90,9 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * the outer ones (OuterRoomLimits, WHAT THEY BIND).
    *
    * Rollout note: an app that predates outer_limits reads min_centidegrees and
-   * max_centidegrees as bounds on this field, and may be sent a target outside them.
+   * max_centidegrees as bounds on this field, and may be sent a target outside them; one that
+   * holds its control to them may, on any touch, send the outer bound as the target and so
+   * rewrite a household's target set beyond it.
    *
    * @generated from field: optional sint32 target_centidegrees = 2;
    */
@@ -138,11 +140,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   /**
    * A copy of outer_limits.min and .max, in centidegrees, kept for apps that predate
    * outer_limits: each set exactly when its outer bound is, and unset otherwise. Read
-   * outer_limits instead. Where the gateway writes the outer limits into a device's own setpoint
-   * limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only to
-   * devices they bind (OuterRoomLimits, WHAT THEY BIND); into a device they do not bind that holds
-   * room limits written before, it writes the device's defaults back, queued and retried as the
-   * wipe's device writes are (webrtc.v1 household.proto, WIPE).
+   * outer_limits instead. What the gateway writes into a device's own setpoint limits is
+   * OuterRoomLimits' (DEVICE LIMITS).
    *
    * @generated from field: optional sint32 min_centidegrees = 6 [deprecated = true];
    * @deprecated
@@ -402,6 +401,16 @@ export declare const OuterLimitSchema: GenMessage<OuterLimit>;
  * building needs — frost, damp, heat drawn from neighbours. With neither set, a room has no away
  * floor, and no vacancy setback.
  *
+ * DEVICE LIMITS. Where the gateway writes a room's outer limits into a device's own setpoint
+ * limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only to
+ * devices they bind (WHAT THEY BIND), and writes the AWAY FLOOR as the minimum and max as the
+ * maximum, each only where set: a device holding min as its own minimum would refuse the
+ * setbacks of step 3. Outside a setback the gateway holds min itself: a change made by hand at
+ * such a device below min is clamped to min where the gateway adopts it, and min is what it then
+ * holds the output at. Into a device the outer limits do not bind that holds room limits written
+ * before, it writes the device's defaults back, queued and retried as the wipe's device writes
+ * are (webrtc.v1 household.proto, WIPE).
+ *
  * They stay with the home: a household handover wipes the inner limits, never these
  * (webrtc.v1 household.proto, WIPE).
  *
@@ -429,8 +438,8 @@ export declare type OuterRoomLimits = Message<"kusinta.iot.climate.v1.OuterRoomL
 
   /**
    * The target the room starts at when an empty home gains a resident (webrtc.v1
-   * household.proto, MOVE-IN). A start, never a limit, and a target like any other: the outputs
-   * the outer limits bind are held within them (HELD), and the others at it.
+   * household.proto, MOVE-IN). A start, never a limit, and a target like any other. Always within
+   * [min, max] where those are set (webrtc.v1.ConfigureRoomClimate, "limits_order").
    *
    * @generated from field: kusinta.iot.climate.v1.OuterLimit move_in_target = 4;
    */

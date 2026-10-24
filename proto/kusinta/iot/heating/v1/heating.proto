@@ -49,7 +49,10 @@ option optimize_for = SPEED;
 // bound: an output whose producer stops stating it so, or whose device is gone, is not
 // driven until that changes. A floor zone whose control room is deleted or no longer within
 // its plant's space is not driven either, and keeps naming the room until the record is put
-// again. When an output stops being bound — its record removed, or a put binding another
+// again. Nor is an output, or a reading, on a device on the other side of a home's boundary from
+// the record that binds it: filing that would leave a bound device so is refused as
+// NOT_ENTITLED, and one bound so before that rule blocks its feature
+// (commissioning.v1.BLOCK_REASON_DEVICE_ACROSS_HOME). When an output stops being bound — its record removed, or a put binding another
 // output in its place — the gateway writes its lapse value, ending any lease at once; where
 // the device cannot be reached then, the lease running out returns it to rest, and that is
 // the guarantee.

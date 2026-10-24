@@ -287,6 +287,13 @@ class BlockReason extends $pb.ProtobufEnum {
   static const BlockReason BLOCK_REASON_LEASE_TOO_LONG =
       BlockReason._(6, _omitEnumNames ? '' : 'BLOCK_REASON_LEASE_TOO_LONG');
 
+  /// The device lies on the other side of a home's boundary from the record that binds or reads
+  /// it: a binding stored before filing a bound device across that boundary was refused
+  /// (heating.v1). Its output is held at rest and nothing reads it for the record until the
+  /// device is unbound, or filed back on the record's side.
+  static const BlockReason BLOCK_REASON_DEVICE_ACROSS_HOME =
+      BlockReason._(7, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_ACROSS_HOME');
+
   static const $core.List<BlockReason> values = <BlockReason>[
     BLOCK_REASON_UNSPECIFIED,
     BLOCK_REASON_TEST_FAILED,
@@ -295,10 +302,11 @@ class BlockReason extends $pb.ProtobufEnum {
     BLOCK_REASON_DEVICE_GONE,
     BLOCK_REASON_CONTROL_ROOM_GONE,
     BLOCK_REASON_LEASE_TOO_LONG,
+    BLOCK_REASON_DEVICE_ACROSS_HOME,
   ];
 
   static final $core.List<BlockReason?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static BlockReason? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

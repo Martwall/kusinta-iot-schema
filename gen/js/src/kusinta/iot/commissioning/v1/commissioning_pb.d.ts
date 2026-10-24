@@ -1141,6 +1141,16 @@ export enum BlockReason {
    * @generated from enum value: BLOCK_REASON_LEASE_TOO_LONG = 6;
    */
   LEASE_TOO_LONG = 6,
+
+  /**
+   * The device lies on the other side of a home's boundary from the record that binds or reads
+   * it: a binding stored before filing a bound device across that boundary was refused
+   * (heating.v1). Its output is held at rest and nothing reads it for the record until the
+   * device is unbound, or filed back on the record's side.
+   *
+   * @generated from enum value: BLOCK_REASON_DEVICE_ACROSS_HOME = 7;
+   */
+  DEVICE_ACROSS_HOME = 7,
 }
 
 /**
