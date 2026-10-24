@@ -1941,16 +1941,17 @@ class RoomLimitValue extends $pb.GeneratedMessage {
 /// of it applies.
 ///
 /// Each outer bound the request changes is stamped with the caller's role and the time
-/// (climate.v1.OuterLimit); one set to the value it has keeps its stamp. As the outer limits will
-/// stand, min above max, away_min above min or max, or move_in_target outside [min, max] where
-/// those are set, is refused as INVALID_REQUEST with metadata {"reason": "limits_order"}. A min changed to below the gateway's public-health
-/// threshold — its own setting, which no operation in this contract changes; none while unset —
-/// needs accept_below_threshold, and is refused without it as FAILED_PRECONDITION with metadata
-/// {"reason": "below_threshold", "threshold_centidegrees": the threshold}. Nothing in the answer
-/// to the outer limits depends on the home's state — its targets, inner limits, modes, or who
-/// lives there — so setting them tells the caller nothing of it; what they clamp is told to the
-/// household alone (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided
-/// by whether the home is empty, as EMPTY HOME says.
+/// (climate.v1.OuterLimit); one set to the value it has keeps its stamp. As the outer limits
+/// will stand, min above max, away_min above min or max, or move_in_target outside [min, max]
+/// where those are set, is refused as INVALID_REQUEST with metadata {"reason": "limits_order"}.
+/// A min changed to below the gateway's public-health threshold — its own setting, which no
+/// operation in this contract changes; none while unset — needs accept_below_threshold, and is
+/// refused without it as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
+/// "threshold_centidegrees": the threshold}. Nothing in the answer to the outer limits depends
+/// on the home's state — its targets, inner limits, modes, or who lives there — so setting them
+/// tells the caller nothing of it; what they clamp is told to the household alone
+/// (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided by whether the
+/// home is empty, as EMPTY HOME says.
 ///
 /// Each field moves alone, as on UpdateSpace: unset leaves it as it is.
 class ConfigureRoomClimate extends $pb.GeneratedMessage {
@@ -2680,9 +2681,9 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   $pb.PbList<$6.StaffAppointment> get staffAppointments => $_getList(5);
 
   /// Each commissioning grant on this home that was granted since it was last wiped, oldest
-  /// first, active ones included, and those the property owner or a gateway administrator granted
-  /// while it stood empty among them (commissioning.v1, GRANTS): who held commissioning access to
-  /// the home, and when. Given to the home's residents only, as staff_appointments is.
+  /// first, active ones included, and those the property owner or a gateway administrator
+  /// granted while it stood empty among them (commissioning.v1, GRANTS): who held commissioning
+  /// access to the home, and when. Given to the home's residents only, as staff_appointments is.
   @$pb.TagNumber(9)
   $pb.PbList<$7.CommissioningGrantRecord> get commissioningGrants =>
       $_getList(6);

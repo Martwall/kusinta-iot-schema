@@ -159,8 +159,8 @@ option optimize_for = SPEED;
 //     no invite to the home can be made or redeemed while it is pending, that return is
 //     staff filing them (AssignUserToSpace), which is not refused for a departing member;
 //   * nobody outside the departing household becomes a resident of the home, save by the
-//     property owner or a gateway administrator filing them, which completes the handover
-//     first (QUICK TURNOVER). Whatever else would file one — a redeemed invite, an approved join
+//     property owner or a gateway administrator filing them, which completes the handover first
+//     (QUICK TURNOVER). Whatever else would file one — a redeemed invite, an approved join
 //     request, AssignUserToSpace from anyone else — is refused as FAILED_PRECONDITION with
 //     metadata {"reason": "handover_pending"}, and so is creating a RESIDENT or HOUSEHOLD_ADMIN
 //     invite on the home; an invite already pending, an appointment invite included, answers
@@ -170,13 +170,13 @@ option optimize_for = SPEED;
 //
 // QUICK TURNOVER. The property owner or a gateway administrator assigning RESIDENT on the
 // apartment to someone outside the departing household (AssignUserToSpace) while a vacated
-// handover is pending completes it first: the handover is done, its wipe runs, it is pushed DONE
-// to the departing household as at the end of the notice, and then the newcomer is filed — the
-// home empty in between, so that they move in as MOVE-IN says. Every other check on the request
-// is made first, so one refused for any other reason leaves the handover pending; and
-// HOUSEHOLD_ADMIN is refused through AssignUserToSpace as ever, so a new household's first admin
-// comes by STAFF APPOINTMENT once it has moved in. Nothing else ends the notice early, and a
-// handover that is not vacated, with someone still living in the home, is unchanged. The
+// handover is pending completes it first: the handover is done, its wipe runs, it is pushed
+// DONE to the departing household as at the end of the notice, and then the newcomer is filed —
+// the home empty in between, so that they move in as MOVE-IN says. Every other check on the
+// request is made first, so one refused for any other reason leaves the handover pending; and
+// HOUSEHOLD_ADMIN is refused through AssignUserToSpace as ever, so a new household's first
+// admin comes by STAFF APPOINTMENT once it has moved in. Nothing else ends the notice early,
+// and a handover that is not vacated, with someone still living in the home, is unchanged. The
 // departing household is told from the start (HouseholdHandover.may_end_on_move_in): their
 // export window runs until staff_confirmable_from, or until a new household moves in, whichever
 // is first.
@@ -184,13 +184,13 @@ option optimize_for = SPEED;
 // VACANCY SETBACK. When a home's last residency ends, each of its rooms with an away floor
 // (climate.v1.OuterRoomLimits, AWAY FLOOR) is set back to it on its own, at the outputs its
 // outer limits bind; outputs they do not bind — a household's assets — keep the target they had
-// until the wipe clears it. The setback holds until someone becomes a resident of the home again:
-// at MOVE-IN, or when a member of the departing household returns during the notice, which
-// cancels the handover and returns each room to its own target. Until then it holds through
-// the notice and the wipe, and while the home stands empty, save in a room where the property
-// owner or a gateway administrator sets a target or a mode once it is empty (EMPTY HOME), which
-// holds there instead. It is the gateway's, and no one's mode: no ClimateMode carries it, it has
-// no setter, and it tells nobody anything of who left.
+// until the wipe clears it. The setback holds until someone becomes a resident of the home
+// again: at MOVE-IN, or when a member of the departing household returns during the notice,
+// which cancels the handover and returns each room to its own target. Until then it holds
+// through the notice and the wipe, and while the home stands empty, save in a room where the
+// property owner or a gateway administrator sets a target or a mode once it is empty
+// (EMPTY HOME), which holds there instead. It is the gateway's, and no one's mode: no
+// ClimateMode carries it, it has no setter, and it tells nobody anything of who left.
 //
 // EMPTY HOME. A home is empty while it has no resident and no handover of it is pending. A home
 // whose last residency has ended is not empty until its handover is done, so none of what
@@ -204,20 +204,20 @@ option optimize_for = SPEED;
 //     whether a home is empty;
 //   * they may give it its first household admin by an appointment invite (STAFF APPOINTMENT);
 //   * they answer and end commissioning grants on it (commissioning.v1, GRANTS).
-// What they set or granted under this section ends at MOVE-IN — targets and locks cleared, modes
-// ended (climate.v1.ClimateMode), grants they granted ended, while one still requested stays for
-// the household's admins to answer — save the links they made, which describe how the devices
-// work together rather than how anyone lives, and pass to the household to change.
+// What they set or granted under this section ends at MOVE-IN — targets and locks cleared,
+// modes ended (climate.v1.ClimateMode), grants they granted ended, while one still requested
+// stays for the household's admins to answer — save the links they made, which describe how the
+// devices work together rather than how anyone lives, and pass to the household to change.
 //
 // MOVE-IN. An empty home gains a resident when a residency starts in it
 // (access.v1.MembershipRelation): someone is assigned RESIDENT on its apartment, a member
 // recorded with no relation included, or its space becomes an apartment with RESIDENT members.
-// In the same step as that residency starts, what EMPTY HOME lets staff set ends as that section
-// says; the vacancy setback ends; and each room whose outer limits have a move-in target
-// (climate.v1.OuterRoomLimits.move_in_target) takes it as its target, with
-// RoomClimate.target_change.move_in set; the outputs the outer limits bind are held within them,
-// as for any target (climate.v1.OuterRoomLimits, HELD). A room without one is left with no target.
-// The household's own targets replace it as they set them.
+// In the same step as that residency starts, what EMPTY HOME lets staff set ends as that
+// section says; the vacancy setback ends; and each room whose outer limits have a move-in
+// target (climate.v1.OuterRoomLimits.move_in_target) takes it as its target, with
+// RoomClimate.target_change.move_in set; the outputs the outer limits bind are held within
+// them, as for any target (climate.v1.OuterRoomLimits, HELD). A room without one is left with
+// no target. The household's own targets replace it as they set them.
 //
 // CLIMATE HISTORY. A home's climate history is what the gateway has recorded and learnt of how
 // warm it was kept:

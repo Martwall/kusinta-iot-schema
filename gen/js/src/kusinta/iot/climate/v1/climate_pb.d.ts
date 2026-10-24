@@ -320,8 +320,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * How many of the room's heating outputs the outer limits bind, so that an app shows the
    * building's bounds where they apply and not where they do not. In a home, sent to its
    * residents only: to anyone else it would tell whether the room holds a device a resident
-   * owns. Outside homes, sent to whoever is sent the room, judged over the outputs of devices the
-   * recipient sees, so that a device hidden from them changes nothing they are sent.
+   * owns. Outside homes, sent to whoever is sent the room, judged over the outputs of devices
+   * the recipient sees, so that a device hidden from them changes nothing they are sent.
    *
    * @generated from field: kusinta.iot.climate.v1.OuterLimitsCoverage outer_limits_coverage = 24;
    */
@@ -396,20 +396,20 @@ export declare const OuterLimitSchema: GenMessage<OuterLimit>;
  *      (commissioning.v1) — which neither tier of comfort limits widens.
  * So where an inner bound and an outer bound disagree the outer one wins, and the household's
  * range at those outputs is always inside the building's; outputs the outer limits do not bind
- * stop at step 2. The AWAY FLOOR is away_min, or min where away_min is unset: kept apart from min
- * so that a household going away may set back below its everyday floor but never below what the
- * building needs — frost, damp, heat drawn from neighbours. With neither set, a room has no away
- * floor, and no vacancy setback.
+ * stop at step 2. The AWAY FLOOR is away_min, or min where away_min is unset: kept apart from
+ * min so that a household going away may set back below its everyday floor but never below what
+ * the building needs — frost, damp, heat drawn from neighbours. With neither set, a room has no
+ * away floor, and no vacancy setback.
  *
  * DEVICE LIMITS. Where the gateway writes a room's outer limits into a device's own setpoint
- * limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only to
- * devices they bind (WHAT THEY BIND), and writes the AWAY FLOOR as the minimum and max as the
- * maximum, each only where set: a device holding min as its own minimum would refuse the
+ * limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only
+ * to devices they bind (WHAT THEY BIND), and writes the AWAY FLOOR as the minimum and max as
+ * the maximum, each only where set: a device holding min as its own minimum would refuse the
  * setbacks of step 3. Outside a setback the gateway holds min itself: a change made by hand at
- * such a device below min is clamped to min where the gateway adopts it, and min is what it then
- * holds the output at. Into a device the outer limits do not bind that holds room limits written
- * before, it writes the device's defaults back, queued and retried as the wipe's device writes
- * are (webrtc.v1 household.proto, WIPE).
+ * such a device below min is clamped to min where the gateway adopts it, and min is what it
+ * then holds the output at. Into a device the outer limits do not bind that holds room limits
+ * written before, it writes the device's defaults back, queued and retried as the wipe's device
+ * writes are (webrtc.v1 household.proto, WIPE).
  *
  * They stay with the home: a household handover wipes the inner limits, never these
  * (webrtc.v1 household.proto, WIPE).
@@ -438,8 +438,8 @@ export declare type OuterRoomLimits = Message<"kusinta.iot.climate.v1.OuterRoomL
 
   /**
    * The target the room starts at when an empty home gains a resident (webrtc.v1
-   * household.proto, MOVE-IN). A start, never a limit, and a target like any other. Always within
-   * [min, max] where those are set (webrtc.v1.ConfigureRoomClimate, "limits_order").
+   * household.proto, MOVE-IN). A start, never a limit, and a target like any other. Always
+   * within [min, max] where those are set (webrtc.v1.ConfigureRoomClimate, "limits_order").
    *
    * @generated from field: kusinta.iot.climate.v1.OuterLimit move_in_target = 4;
    */
