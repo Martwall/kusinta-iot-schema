@@ -306,7 +306,10 @@ export declare const HouseholdHandoverSchema: GenMessage<HouseholdHandover>;
  * household's members, the home's rooms and their settings, its modes, its device events, its
  * commissioning and its heating records stay. It cannot be undone, and the gateway keeps no
  * copy: an app asks its user to confirm, and offers the household's export (EXPORT) first.
+ * Later parts of an export under way give nothing that was erased.
  *
+ * The clear is pushed as ClimateHistoryCleared to every session of the home's residents, the
+ * caller's included, before the acknowledgement.
  * The summaries are erased for everyone they are given to, so the property owner, the gateway
  * administrators and whoever else is given the apartment's summary as service
  * (PrivacyDisclosure.climate_summary_period) lose its periods from before the clear too, and
@@ -326,6 +329,33 @@ export declare type ClearClimateHistory = Message<"kusinta.iot.webrtc.v1.ClearCl
  * Use `create(ClearClimateHistorySchema)` to create a new message.
  */
 export declare const ClearClimateHistorySchema: GenMessage<ClearClimateHistory>;
+
+/**
+ * A home's climate history was cleared (ClearClimateHistory), pushed as
+ * GatewayMessage.climate_history_cleared to the sessions of its residents. An app drops on
+ * arrival every room history and climate summary of the home it holds from before cleared_at,
+ * rather than keeping what the gateway no longer does. Nobody else is told: whoever is given
+ * the apartment's summary as service learns of it by reading it.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ClimateHistoryCleared
+ */
+export declare type ClimateHistoryCleared = Message<"kusinta.iot.webrtc.v1.ClimateHistoryCleared"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp cleared_at = 2;
+   */
+  clearedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ClimateHistoryCleared.
+ * Use `create(ClimateHistoryClearedSchema)` to create a new message.
+ */
+export declare const ClimateHistoryClearedSchema: GenMessage<ClimateHistoryCleared>;
 
 /**
  * Sets the household's own name for its home (space.v1.Space.home_name). Answered with
@@ -435,9 +465,10 @@ export declare type HouseholdExport = Message<"kusinta.iot.webrtc.v1.HouseholdEx
   } | {
     /**
      * One room's history at one resolution, one GetRoomHistory answer's worth. A room's history
-     * comes at the finest resolution held for each stretch of time: at each resolution the
-     * gateway gives, from its kept_from up to the kept_from of the next finer one, in as many
-     * parts as it takes.
+     * comes at the finest resolution held for each stretch of time, with no time given twice:
+     * at each resolution the gateway gives, from its kept_from up to where the next finer one
+     * takes over, at the first start of a bucket of this resolution at or after the finer
+     * one's kept_from. In as many parts as it takes.
      *
      * @generated from field: kusinta.iot.climate.v1.RoomHistory room_history = 3;
      */

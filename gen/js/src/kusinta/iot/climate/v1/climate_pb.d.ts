@@ -496,9 +496,10 @@ export declare const RoomHistorySampleSchema: GenMessage<RoomHistorySample>;
  * A room's history at one resolution, in reply to GetRoomHistory.
  *
  * A bucket is given only once the gateway has made it, never before it ends, and only where
- * all of it lies within what the recipient may read. Within [covered_from, covered_to), a
- * bucket that is not among the samples is one for which nothing is known; outside it, this
- * answer says nothing, and an app MUST NOT show that time as empty on its account.
+ * all of it lies within what the recipient may read. The covered range is over bucket starts,
+ * as the request's range is: a bucket is within it when covered_from <= at < covered_to. A
+ * bucket within it that is not among the samples is one for which nothing is known; of any
+ * other bucket this answer says nothing, and an app MUST NOT show it as empty on its account.
  *
  * @generated from message kusinta.iot.climate.v1.RoomHistory
  */
@@ -515,7 +516,8 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
    * recipient's own home it is no earlier than the start of their current residency, nor than
    * when the room last joined their home; for any other room, no earlier than when it last
    * left a home. How far back the room's history reaches for the recipient, whether or not
-   * this answer reaches that far.
+   * this answer reaches that far. Always set: where nothing is held for the recipient at this
+   * resolution, it is no earlier than covered_to.
    *
    * @generated from field: google.protobuf.Timestamp kept_from = 2;
    */
@@ -537,11 +539,13 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
   resolution: RoomHistoryResolution;
 
   /**
-   * The range this answer covers, [covered_from, covered_to).
+   * The range this answer covers, [covered_from, covered_to). Both unset only in an answer
+   * from a gateway that predates them, which caps nothing: it covers the range asked, clamped.
    *
-   * covered_to is the request's to_time as clamped, but never later than the end of the
-   * newest bucket the gateway has made at this resolution — for an hour, possibly days after
-   * it ends. The time after it may be held at a finer resolution, and an app asks for it there.
+   * covered_to is the request's to_time as clamped, but never later than the start of the
+   * oldest bucket at this resolution the gateway has still to make — for an hour, possibly
+   * days after it ends — so no bucket within the range is made later. The time after it may be
+   * held at a finer resolution, and an app asks for it there.
    *
    * covered_from is the request's from_time as clamped, unless more than 768 samples fall
    * between it and covered_to: then the answer is capped, keeping the newest 768, and
@@ -549,8 +553,8 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
    * that covers nothing has the two equal.
    *
    * An answer is capped exactly when covered_from is later than kept_from and than the
-   * from_time asked for, if one was. The app asks for the next page with the same from_time
-   * and resolution and to_time = covered_from, until an answer is not capped.
+   * from_time asked for, if one was. The app asks for the next page with the same from_time,
+   * this answer's resolution, and to_time = covered_from, until an answer is not capped.
    *
    * @generated from field: google.protobuf.Timestamp covered_from = 5;
    */
@@ -1026,6 +1030,11 @@ export enum RoomHistoryResolution {
   /**
    * In a request: the gateway chooses (webrtc.v1.GetRoomHistory). In an answer: quarter hours,
    * from a gateway that predates this field.
+   *
+   * Rollout note: an app that predates this field asks with it unset and reads every sample as
+   * a quarter hour and every answer as whole. A gateway may therefore give hours, or cap an
+   * answer, only to apps that read RoomHistory.resolution and its covered range: app handling
+   * ships before or with the gateway that does.
    *
    * @generated from enum value: ROOM_HISTORY_RESOLUTION_UNSPECIFIED = 0;
    */

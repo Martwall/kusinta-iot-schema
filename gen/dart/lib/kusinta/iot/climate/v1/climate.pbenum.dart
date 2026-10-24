@@ -312,6 +312,11 @@ class ClimateModeKind extends $pb.ProtobufEnum {
 class RoomHistoryResolution extends $pb.ProtobufEnum {
   /// In a request: the gateway chooses (webrtc.v1.GetRoomHistory). In an answer: quarter hours,
   /// from a gateway that predates this field.
+  ///
+  /// Rollout note: an app that predates this field asks with it unset and reads every sample as
+  /// a quarter hour and every answer as whole. A gateway may therefore give hours, or cap an
+  /// answer, only to apps that read RoomHistory.resolution and its covered range: app handling
+  /// ships before or with the gateway that does.
   static const RoomHistoryResolution ROOM_HISTORY_RESOLUTION_UNSPECIFIED =
       RoomHistoryResolution._(
           0, _omitEnumNames ? '' : 'ROOM_HISTORY_RESOLUTION_UNSPECIFIED');

@@ -339,6 +339,19 @@ describe('clearing a home\'s climate history', () => {
     })
   })
 
+  it('is pushed to the home\'s residents with when it was cleared', () => {
+    const decoded = onTheWire(GatewayMessageSchema, {
+      payload: {
+        case: 'climateHistoryCleared',
+        value: { homeId: { value: 'home-15' }, clearedAt: { seconds: 1_800_000_000n } },
+      },
+    })
+    expect(decoded.payload).toMatchObject({
+      case: 'climateHistoryCleared',
+      value: { homeId: { value: 'home-15' }, clearedAt: { seconds: 1_800_000_000n } },
+    })
+  })
+
   it('names nothing but the home, so no part of the history can be kept back', () => {
     expect(ClearClimateHistorySchema.fields.map((f) => f.name)).toEqual(['home_id'])
   })

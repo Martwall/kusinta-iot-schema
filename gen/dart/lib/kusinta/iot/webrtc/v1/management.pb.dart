@@ -2287,9 +2287,11 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   $4.Timestamp ensureToTime() => $_ensure(2);
 
   /// The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses
-  /// the finest resolution it gives at which from_time is no earlier than kept_from and the
-  /// range up to to_time (unset: now) fits in one answer; where none does, or from_time is
-  /// unset, the coarsest.
+  /// the finest resolution it gives that it keeps for long enough to reach back to from_time,
+  /// and at which the range up to to_time (unset: now) holds no more buckets than one answer
+  /// may give (RoomHistory.covered_from); where none does, or from_time is unset, the
+  /// coarsest. How long each is kept is the gateway's, the same for every room and recipient,
+  /// so the choice tells nothing of a room or of who may read it.
   @$pb.TagNumber(4)
   $12.RoomHistoryResolution get resolution => $_getN(3);
   @$pb.TagNumber(4)

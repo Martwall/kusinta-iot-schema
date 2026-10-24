@@ -114,6 +114,14 @@ class ClearClimateHistory(_message.Message):
     home_id: _identity_pb2.SpaceId
     def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ...) -> None: ...
 
+class ClimateHistoryCleared(_message.Message):
+    __slots__ = ("home_id", "cleared_at")
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
+    CLEARED_AT_FIELD_NUMBER: _ClassVar[int]
+    home_id: _identity_pb2.SpaceId
+    cleared_at: _timestamp_pb2.Timestamp
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., cleared_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
 class SetHomeName(_message.Message):
     __slots__ = ("home_id", "name")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]

@@ -15,7 +15,7 @@ import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
 import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
 import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/account_link_pb.js";
 import type { CommissioningGrant, CommissioningGrants, CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
-import type { HouseholdExport, HouseholdHandover, HouseholdHandovers } from "./household_pb.js";
+import type { ClimateHistoryCleared, HouseholdExport, HouseholdHandover, HouseholdHandovers } from "./household_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -1059,6 +1059,14 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: HouseholdHandover;
     case: "householdHandover";
+  } | {
+    /**
+     * A home's climate history was cleared; see ClimateHistoryCleared.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.ClimateHistoryCleared climate_history_cleared = 29;
+     */
+    value: ClimateHistoryCleared;
+    case: "climateHistoryCleared";
   } | { case: undefined; value?: undefined };
 };
 

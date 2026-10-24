@@ -251,6 +251,24 @@ def test_clearing_a_home_s_climate_history_is_a_management_request_for_one_home(
     )
 
 
+def test_a_cleared_climate_history_is_pushed_with_when_it_was_cleared():
+    from google.protobuf import timestamp_pb2
+
+    message = envelope_pb2.GatewayMessage(
+        climate_history_cleared=h.ClimateHistoryCleared(
+            home_id=identity_pb2.SpaceId(value="home-15"),
+            cleared_at=timestamp_pb2.Timestamp(seconds=1_800_000_000),
+        )
+    )
+
+    decoded = _round_trip(message)
+    assert (
+        decoded.WhichOneof("payload"),
+        decoded.climate_history_cleared.home_id.value,
+        decoded.climate_history_cleared.cleared_at.seconds,
+    ) == ("climate_history_cleared", "home-15", 1_800_000_000)
+
+
 def test_clearing_a_home_s_climate_history_names_nothing_but_the_home():
     assert [f.name for f in h.ClearClimateHistory.DESCRIPTOR.fields] == ["home_id"]
 
