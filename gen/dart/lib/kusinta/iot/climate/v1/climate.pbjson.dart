@@ -299,18 +299,20 @@ const RoomClimate$json = {
       '3': 6,
       '4': 1,
       '5': 17,
+      '8': {'3': true},
       '9': 2,
       '10': 'minCentidegrees',
-      '17': true
+      '17': true,
     },
     {
       '1': 'max_centidegrees',
       '3': 7,
       '4': 1,
       '5': 17,
+      '8': {'3': true},
       '9': 3,
       '10': 'maxCentidegrees',
-      '17': true
+      '17': true,
     },
     {
       '1': 'sensor_ids',
@@ -454,33 +456,33 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     'NsaW1hdGUudjEuVGFyZ2V0Q2hhbmdlUgx0YXJnZXRDaGFuZ2USRwodZWZmZWN0aXZlX3Rhcmdl'
     'dF9jZW50aWRlZ3JlZXMYBCABKBFIAVIbZWZmZWN0aXZlVGFyZ2V0Q2VudGlkZWdyZWVziAEBEi'
     'UKDm92ZXJyaWRlc19tb2RlGAUgASgIUg1vdmVycmlkZXNNb2RlEkQKDW1vZGVfc3BhY2VfaWQY'
-    'DSABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgttb2RlU3BhY2VJZBIuCh'
-    'BtaW5fY2VudGlkZWdyZWVzGAYgASgRSAJSD21pbkNlbnRpZGVncmVlc4gBARIuChBtYXhfY2Vu'
-    'dGlkZWdyZWVzGAcgASgRSANSD21heENlbnRpZGVncmVlc4gBARJACgpzZW5zb3JfaWRzGAggAy'
-    'gLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCXNlbnNvcklkcxItChJzZW5z'
-    'b3JzX2NvbmZpZ3VyZWQYDiABKAhSEXNlbnNvcnNDb25maWd1cmVkEjgKFW1lYXN1cmVkX2Nlbn'
-    'RpZGVncmVlcxgJIAEoEUgEUhRtZWFzdXJlZENlbnRpZGVncmVlc4gBARJCCgttZWFzdXJlZF9i'
-    'eRgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUgptZWFzdXJlZEJ5Ek'
-    'oKCWNvbmRpdGlvbhgLIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbUNsaW1hdGVD'
-    'b25kaXRpb25SCWNvbmRpdGlvbhIwChRsb2NrX2RldmljZV9jb250cm9scxgMIAEoCFISbG9ja0'
-    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkEk4K'
-    'DGV4cGxhbmF0aW9ucxgQIAMoCzIqLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0ZUV4cG'
-    'xhbmF0aW9uUgxleHBsYW5hdGlvbnMSRgoRdGFyZ2V0X2hlbGRfdW50aWwYESABKAsyGi5nb29n'
-    'bGUucHJvdG9idWYuVGltZXN0YW1wUg90YXJnZXRIZWxkVW50aWwSQAoIcGxhbm5pbmcYEiABKA'
-    '4yJC5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21QbGFubmluZ1IIcGxhbm5pbmcSRgodY29t'
-    'Zm9ydF9iYW5kX2xvd19jZW50aWRlZ3JlZXMYEyABKBFIBVIaY29tZm9ydEJhbmRMb3dDZW50aW'
-    'RlZ3JlZXOIAQESSAoeY29tZm9ydF9iYW5kX2hpZ2hfY2VudGlkZWdyZWVzGBQgASgRSAZSG2Nv'
-    'bWZvcnRCYW5kSGlnaENlbnRpZGVncmVlc4gBARJKCgxvdXRlcl9saW1pdHMYFSABKAsyJy5rdX'
-    'NpbnRhLmlvdC5jbGltYXRlLnYxLk91dGVyUm9vbUxpbWl0c1ILb3V0ZXJMaW1pdHMSSgoMaW5u'
-    'ZXJfbGltaXRzGBYgASgLMicua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5Jbm5lclJvb21MaW1pdH'
-    'NSC2lubmVyTGltaXRzElMKEW91dGVyX2xpbWl0X2NsYW1wGBcgASgLMicua3VzaW50YS5pb3Qu'
-    'Y2xpbWF0ZS52MS5PdXRlckxpbWl0Q2xhbXBSD291dGVyTGltaXRDbGFtcBJfChVvdXRlcl9saW'
-    '1pdHNfY292ZXJhZ2UYGCABKA4yKy5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLk91dGVyTGltaXRz'
-    'Q292ZXJhZ2VSE291dGVyTGltaXRzQ292ZXJhZ2VCFgoUX3RhcmdldF9jZW50aWRlZ3JlZXNCIA'
-    'oeX2VmZmVjdGl2ZV90YXJnZXRfY2VudGlkZWdyZWVzQhMKEV9taW5fY2VudGlkZWdyZWVzQhMK'
-    'EV9tYXhfY2VudGlkZWdyZWVzQhgKFl9tZWFzdXJlZF9jZW50aWRlZ3JlZXNCIAoeX2NvbWZvcn'
-    'RfYmFuZF9sb3dfY2VudGlkZWdyZWVzQiEKH19jb21mb3J0X2JhbmRfaGlnaF9jZW50aWRlZ3Jl'
-    'ZXM=');
+    'DSABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgttb2RlU3BhY2VJZBIyCh'
+    'BtaW5fY2VudGlkZWdyZWVzGAYgASgRQgIYAUgCUg9taW5DZW50aWRlZ3JlZXOIAQESMgoQbWF4'
+    'X2NlbnRpZGVncmVlcxgHIAEoEUICGAFIA1IPbWF4Q2VudGlkZWdyZWVziAEBEkAKCnNlbnNvcl'
+    '9pZHMYCCADKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIJc2Vuc29ySWRz'
+    'Ei0KEnNlbnNvcnNfY29uZmlndXJlZBgOIAEoCFIRc2Vuc29yc0NvbmZpZ3VyZWQSOAoVbWVhc3'
+    'VyZWRfY2VudGlkZWdyZWVzGAkgASgRSARSFG1lYXN1cmVkQ2VudGlkZWdyZWVziAEBEkIKC21l'
+    'YXN1cmVkX2J5GAogASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCm1lYX'
+    'N1cmVkQnkSSgoJY29uZGl0aW9uGAsgASgOMiwua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5Sb29t'
+    'Q2xpbWF0ZUNvbmRpdGlvblIJY29uZGl0aW9uEjAKFGxvY2tfZGV2aWNlX2NvbnRyb2xzGAwgAS'
+    'gIUhJsb2NrRGV2aWNlQ29udHJvbHMSJQoOc3RhdGVfd2l0aGhlbGQYDyABKAhSDXN0YXRlV2l0'
+    'aGhlbGQSTgoMZXhwbGFuYXRpb25zGBAgAygLMioua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5DbG'
+    'ltYXRlRXhwbGFuYXRpb25SDGV4cGxhbmF0aW9ucxJGChF0YXJnZXRfaGVsZF91bnRpbBgRIAEo'
+    'CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSD3RhcmdldEhlbGRVbnRpbBJACghwbGFubm'
+    'luZxgSIAEoDjIkLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbVBsYW5uaW5nUghwbGFubmlu'
+    'ZxJGCh1jb21mb3J0X2JhbmRfbG93X2NlbnRpZGVncmVlcxgTIAEoEUgFUhpjb21mb3J0QmFuZE'
+    'xvd0NlbnRpZGVncmVlc4gBARJICh5jb21mb3J0X2JhbmRfaGlnaF9jZW50aWRlZ3JlZXMYFCAB'
+    'KBFIBlIbY29tZm9ydEJhbmRIaWdoQ2VudGlkZWdyZWVziAEBEkoKDG91dGVyX2xpbWl0cxgVIA'
+    'EoCzInLmt1c2ludGEuaW90LmNsaW1hdGUudjEuT3V0ZXJSb29tTGltaXRzUgtvdXRlckxpbWl0'
+    'cxJKCgxpbm5lcl9saW1pdHMYFiABKAsyJy5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLklubmVyUm'
+    '9vbUxpbWl0c1ILaW5uZXJMaW1pdHMSUwoRb3V0ZXJfbGltaXRfY2xhbXAYFyABKAsyJy5rdXNp'
+    'bnRhLmlvdC5jbGltYXRlLnYxLk91dGVyTGltaXRDbGFtcFIPb3V0ZXJMaW1pdENsYW1wEl8KFW'
+    '91dGVyX2xpbWl0c19jb3ZlcmFnZRgYIAEoDjIrLmt1c2ludGEuaW90LmNsaW1hdGUudjEuT3V0'
+    'ZXJMaW1pdHNDb3ZlcmFnZVITb3V0ZXJMaW1pdHNDb3ZlcmFnZUIWChRfdGFyZ2V0X2NlbnRpZG'
+    'VncmVlc0IgCh5fZWZmZWN0aXZlX3RhcmdldF9jZW50aWRlZ3JlZXNCEwoRX21pbl9jZW50aWRl'
+    'Z3JlZXNCEwoRX21heF9jZW50aWRlZ3JlZXNCGAoWX21lYXN1cmVkX2NlbnRpZGVncmVlc0IgCh'
+    '5fY29tZm9ydF9iYW5kX2xvd19jZW50aWRlZ3JlZXNCIQofX2NvbWZvcnRfYmFuZF9oaWdoX2Nl'
+    'bnRpZGVncmVlcw==');
 
 @$core.Deprecated('Use outerLimitDescriptor instead')
 const OuterLimit$json = {

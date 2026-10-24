@@ -10,7 +10,7 @@ import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
-import type { ClimateModeKind, ClimateSummaryPeriod, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
+import type { ClimateModeKind, ClimateSummaryPeriod, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
@@ -221,11 +221,9 @@ export declare const DeleteSpaceSchema: GenMessage<DeleteSpace>;
  * assigning onto it is refused as NOT_ENTITLED, and RemoveUserFromSpace answers as for one
  * that does not exist. user_id is never a residency id.
  *
- * While a vacated handover of the home is pending (household.proto, VACANCY), the property
- * owner or a gateway administrator assigning RESIDENT to someone outside the departing household
- * completes the handover first — its wipe runs — and then files them, rather than being refused
- * as "handover_pending". Every other check on the request is made first, so one refused for any
- * other reason leaves the handover pending.
+ * While a vacated handover of the home is pending, the property owner or a gateway
+ * administrator assigning RESIDENT to someone outside the departing household completes it
+ * first rather than being refused as "handover_pending" (household.proto, QUICK TURNOVER).
  *
  * @generated from message kusinta.iot.webrtc.v1.AssignUserToSpace
  */
@@ -720,14 +718,13 @@ export declare const ListDeviceLinksSchema: GenMessage<ListDeviceLinks>;
  * as turning a radiator's knob; setting up what the room obeys is ConfigureRoomClimate,
  * and stays with owners, except the lock in a home.
  *
- * In a home, only its residents may set it, and in an empty home (household.proto, EMPTY HOME)
- * the property owner and the gateway administrators who reach it, whose target there is
- * cleared when the home gains a resident (household.proto, MOVE-IN); any other caller who
+ * In a home, only its residents may set it, and in an empty home the property owner and the
+ * gateway administrators who reach it (household.proto, EMPTY HOME); any other caller who
  * reaches the room as service is refused as NOT_ENTITLED.
  *
  * Clamped to the room's inner limits (climate.v1.InnerRoomLimits) rather than refused outside
- * them, and the clamped value is what the room's RoomClimate then reports. The outer limits do
- * not clamp it: they bind outputs (climate.v1.OuterRoomLimits).
+ * them, and the clamped value is what the room's RoomClimate then reports; never to the outer
+ * ones (climate.v1.OuterRoomLimits, WHAT THEY BIND).
  *
  * @generated from message kusinta.iot.webrtc.v1.SetRoomTarget
  */
@@ -830,9 +827,9 @@ export declare const RoomLimitValueSchema: GenMessage<RoomLimitValue>;
  *   * sensors — ROLE_PROPERTY_OWNER or a filing role. It orders only the building's own
  *     sensors (see RoomClimate.sensor_ids);
  *   * lock_device_controls — in a home, its residents', who may send this request with nothing
- *     else set, and in an empty home (household.proto, EMPTY HOME) the property owner's and the
- *     gateway administrators' who reach it, whose lock there is cleared when the home gains a
- *     resident; outside homes, ROLE_PROPERTY_OWNER's or a filing role's, as the sensors are.
+ *     else set, and in an empty home the property owner's and the gateway administrators' who
+ *     reach it (household.proto, EMPTY HOME); outside homes, ROLE_PROPERTY_OWNER's or a filing
+ *     role's, as the sensors are.
  * A request that sets anything its caller may not is refused whole as NOT_ENTITLED, so nothing
  * of it applies.
  *
@@ -907,13 +904,12 @@ export declare type ConfigureRoomClimate = Message<"kusinta.iot.webrtc.v1.Config
 export declare const ConfigureRoomClimateSchema: GenMessage<ConfigureRoomClimate>;
 
 /**
- * Sets a room's inner limits (climate.v1.InnerRoomLimits), replacing both bounds: an unset bound
- * removes it. Answered with ManagementAck. A household admin of the home the room is in only
- * (household.proto, HOUSEHOLD ADMIN); anyone else, and a room in no home, is refused as
- * NOT_ENTITLED — never covered by a commissioning grant. min above max is refused as
- * INVALID_REQUEST with metadata {"reason": "limits_order"}. Bounds outside the outer limits are
- * accepted as they are: the outer limits clamp the outputs they bind, and only those
- * (climate.v1.OuterRoomLimits). The room's target is clamped into the new limits.
+ * Sets a room's inner limits (climate.v1.InnerRoomLimits). Answered with ManagementAck. A
+ * household admin of the home the room is in only (household.proto, HOUSEHOLD ADMIN); anyone
+ * else, and a room in no home, is refused as NOT_ENTITLED — never covered by a commissioning
+ * grant. min above max is refused as INVALID_REQUEST with metadata {"reason": "limits_order"}.
+ * Bounds outside the outer limits are accepted as they are (climate.v1.OuterRoomLimits, HELD).
+ * The room's target is clamped into the new limits.
  *
  * @generated from message kusinta.iot.webrtc.v1.SetInnerRoomLimits
  */
@@ -924,14 +920,11 @@ export declare type SetInnerRoomLimits = Message<"kusinta.iot.webrtc.v1.SetInner
   roomId?: SpaceId | undefined;
 
   /**
-   * @generated from field: optional sint32 min_centidegrees = 2;
+   * Replaces both bounds: a bound unset in it, or limits unset, removes them.
+   *
+   * @generated from field: kusinta.iot.climate.v1.InnerRoomLimits limits = 2;
    */
-  minCentidegrees?: number | undefined;
-
-  /**
-   * @generated from field: optional sint32 max_centidegrees = 3;
-   */
-  maxCentidegrees?: number | undefined;
+  limits?: InnerRoomLimits | undefined;
 };
 
 /**
@@ -952,8 +945,7 @@ export declare const SetInnerRoomLimitsSchema: GenMessage<SetInnerRoomLimits>;
  * theirs to say. A caller who reaches it as service is refused as NOT_ENTITLED — except
  * that, while the home is empty (household.proto, EMPTY HOME), ROLE_PROPERTY_OWNER or
  * ROLE_GATEWAY_ADMIN may switch one on, and switch off one that is on, so that no mode
- * outlives everyone who could end it; a mode they switch on there ends when the home gains a
- * resident (climate.v1.ClimateMode). Any other switch-off from them — in a home that is not
+ * outlives everyone who could end it. Any other switch-off from them — in a home that is not
  * empty, or with no mode on — is accepted and does nothing, so the answer tells them nothing of
  * whether a mode was on.
  *
@@ -1892,8 +1884,7 @@ export declare const RequestCommissioningGrantSchema: GenMessage<RequestCommissi
  * home, or for a space outside homes or an empty home (household.proto, EMPTY HOME) the
  * property owner or a gateway administrator who reaches it; anyone else, and a grant_id that is
  * not requested on a space the caller may answer for, is refused as NOT_ENTITLED, so that no
- * grant id can be probed. A grant they grant on an empty home ends when the home gains a
- * resident (commissioning.v1, GRANTS).
+ * grant id can be probed.
  *
  * Granting needs ends_at after starts_at, no more than 14 days after it, and starts_at no
  * later than 30 days from now; otherwise INVALID_REQUEST with metadata

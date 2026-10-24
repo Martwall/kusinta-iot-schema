@@ -739,36 +739,21 @@ const SetInnerRoomLimits$json = {
       '10': 'roomId'
     },
     {
-      '1': 'min_centidegrees',
+      '1': 'limits',
       '3': 2,
       '4': 1,
-      '5': 17,
-      '9': 0,
-      '10': 'minCentidegrees',
-      '17': true
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.InnerRoomLimits',
+      '10': 'limits'
     },
-    {
-      '1': 'max_centidegrees',
-      '3': 3,
-      '4': 1,
-      '5': 17,
-      '9': 1,
-      '10': 'maxCentidegrees',
-      '17': true
-    },
-  ],
-  '8': [
-    {'1': '_min_centidegrees'},
-    {'1': '_max_centidegrees'},
   ],
 };
 
 /// Descriptor for `SetInnerRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setInnerRoomLimitsDescriptor = $convert.base64Decode(
     'ChJTZXRJbm5lclJvb21MaW1pdHMSOQoHcm9vbV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
-    '50aXR5LnYxLlNwYWNlSWRSBnJvb21JZBIuChBtaW5fY2VudGlkZWdyZWVzGAIgASgRSABSD21p'
-    'bkNlbnRpZGVncmVlc4gBARIuChBtYXhfY2VudGlkZWdyZWVzGAMgASgRSAFSD21heENlbnRpZG'
-    'VncmVlc4gBAUITChFfbWluX2NlbnRpZGVncmVlc0ITChFfbWF4X2NlbnRpZGVncmVlcw==');
+    '50aXR5LnYxLlNwYWNlSWRSBnJvb21JZBI/CgZsaW1pdHMYAiABKAsyJy5rdXNpbnRhLmlvdC5j'
+    'bGltYXRlLnYxLklubmVyUm9vbUxpbWl0c1IGbGltaXRz');
 
 @$core.Deprecated('Use setClimateModeDescriptor instead')
 const SetClimateMode$json = {

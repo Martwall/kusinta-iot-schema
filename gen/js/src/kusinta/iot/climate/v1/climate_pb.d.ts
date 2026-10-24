@@ -86,9 +86,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 
   /**
    * The temperature the room is to be held at, in centidegrees. Unset: nobody has set
-   * one. Always within the inner limits where those are set (inner_limits). The outer limits
-   * bind outputs, not the room, and do not clamp it (OuterRoomLimits): where they hold the
-   * outputs they bind elsewhere, effective_target_centidegrees and outer_limit_clamp say so.
+   * one. Always within the inner limits where those are set (inner_limits); never clamped by
+   * the outer ones (OuterRoomLimits, WHAT THEY BIND).
    *
    * Rollout note: an app that predates outer_limits reads min_centidegrees and
    * max_centidegrees as bounds on this field, and may be sent a target outside them.
@@ -113,8 +112,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * own target again if somebody changed this room during the mode (see
    * overrides_mode) — or the vacancy setback holds it (webrtc.v1 household.proto, VACANCY), or
    * an outer bound clamps it (outer_limit_clamp). Where the outer limits bind some of the
-   * room's outputs and not others, what those they bind are held at. Unset while nothing is
-   * being held.
+   * room's outputs and not others, what those they bind are held at (OuterRoomLimits, HELD).
+   * Unset while nothing is being held.
    *
    * @generated from field: optional sint32 effective_target_centidegrees = 4;
    */
@@ -137,18 +136,19 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   modeSpaceId?: SpaceId | undefined;
 
   /**
-   * The outer limits' minimum and maximum, in centidegrees: always outer_limits.min and
-   * .max, which add who set each and when. They bind the outputs OuterRoomLimits says, and
-   * nothing else. Where the gateway writes them into a device's own setpoint limits (Matter
-   * Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only to devices
-   * they bind.
+   * A copy of outer_limits.min and .max, in centidegrees, kept and always filled for apps that
+   * predate outer_limits; read outer_limits instead. Where the gateway writes the outer limits
+   * into a device's own setpoint limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops
+   * at them, it writes them only to devices they bind (OuterRoomLimits, WHAT THEY BIND).
    *
-   * @generated from field: optional sint32 min_centidegrees = 6;
+   * @generated from field: optional sint32 min_centidegrees = 6 [deprecated = true];
+   * @deprecated
    */
   minCentidegrees?: number | undefined;
 
   /**
-   * @generated from field: optional sint32 max_centidegrees = 7;
+   * @generated from field: optional sint32 max_centidegrees = 7 [deprecated = true];
+   * @deprecated
    */
   maxCentidegrees?: number | undefined;
 
@@ -206,8 +206,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * unlocked — is the intended default: a room nobody has configured takes changes at its
    * devices, as a room in an apartment should until its residents decide otherwise; when a
    * home loses its last resident, its rooms' locks are cleared, and so are those set while it
-   * stood empty when it gains one (webrtc.v1 household.proto, EMPTY HOME). Elsewhere locking
-   * is the owner's choice.
+   * stood empty when it gains one (webrtc.v1 household.proto, MOVE-IN). Elsewhere locking is
+   * the owner's choice.
    *
    * @generated from field: bool lock_device_controls = 12;
    */
@@ -274,8 +274,9 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   /**
    * The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
    * room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
-   * no higher than high, and within [min_centidegrees, max_centidegrees] and the inner limits
-   * where those are set. Absent: no band, and a plan holds the room at its target — never 0 °C.
+   * no higher than high, and within the inner limits where those are set; at the outputs the
+   * outer limits bind, a plan holds within them too (OuterRoomLimits, HELD). Absent: no band,
+   * and a plan holds the room at its target — never 0 °C.
    *
    * @generated from field: optional sint32 comfort_band_low_centidegrees = 19;
    */
@@ -342,9 +343,8 @@ export declare type OuterLimit = Message<"kusinta.iot.climate.v1.OuterLimit"> & 
   centidegrees: number;
 
   /**
-   * The role its setter acted in: ROLE_PROPERTY_OWNER where they hold it, else
-   * ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN for an installer under a commissioning grant
-   * (webrtc.v1.ConfigureRoomClimate).
+   * The role its setter acted in (webrtc.v1.ConfigureRoomClimate): ROLE_PROPERTY_OWNER where
+   * they hold it, else ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN.
    *
    * @generated from field: kusinta.iot.access.v1.Role set_by_role = 2;
    */
@@ -366,10 +366,9 @@ export declare type OuterLimit = Message<"kusinta.iot.climate.v1.OuterLimit"> & 
 export declare const OuterLimitSchema: GenMessage<OuterLimit>;
 
 /**
- * A room's outer limits: the building's bounds on the heating it owns, set by the property
- * owner or a gateway administrator, or an installer under a commissioning grant covering the
- * room (webrtc.v1.ConfigureRoomClimate). Every bound is optional and moves alone: a building
- * where each home pays its own heating may set floors only.
+ * A room's outer limits: the building's bounds on the heating it owns, set by the parties
+ * webrtc.v1.ConfigureRoomClimate names. Every bound is optional: a building where each home
+ * pays its own heating may set floors only.
  *
  * WHAT THEY BIND. The asset owner decides whether they can bind a device, and the
  * organisation whether to use them. They bind an output only on one of the building's own
@@ -381,19 +380,22 @@ export declare const OuterLimitSchema: GenMessage<OuterLimit>;
  * room's target and its inner limits are the household's, are not rewritten when an outer bound
  * moves, and hold again at those outputs once it moves back out.
  *
- * At an output they bind, what is held is the room's effective target, within its inner limits
- * (InnerRoomLimits), then clamped:
- *   * to [min, max] while no mode sets the room back;
- *   * to [AWAY FLOOR, max] while a mode (ClimateMode) sets it back, and held at the AWAY FLOOR
- *     during the vacancy setback (webrtc.v1 household.proto, VACANCY).
- * Where an inner bound and an outer bound disagree, the outer one wins, so the household's
- * range at those outputs is always inside the building's. The AWAY FLOOR is away_min, or min
- * where away_min is unset: kept apart from min so that a household going away may set back
- * below its everyday floor but never below what the building needs — frost, damp, heat drawn
- * from neighbours. With neither set, a room has no away floor, and no vacancy setback.
- *
- * Neither tier of comfort limits widens an installer's equipment-safety limits — a floor's
- * surface maximum, a supply cap (commissioning.v1) — which bind whatever these say.
+ * HELD. What an output is held at is worked out in this order, each step clamping the one
+ * before:
+ *   1. the room's target, or while a mode (ClimateMode) sets the room back its setback;
+ *   2. the inner limits (InnerRoomLimits): the maximum always, the minimum — the household's
+ *      everyday floor — only while no mode sets the room back;
+ *   3. at an output the outer limits bind: [min, max] while no mode sets the room back, and
+ *      [AWAY FLOOR, max] while one does; during the vacancy setback (webrtc.v1 household.proto,
+ *      VACANCY), the AWAY FLOOR itself;
+ *   4. an installer's equipment-safety limits — a floor's surface maximum, a supply cap
+ *      (commissioning.v1) — which neither tier of comfort limits widens.
+ * So where an inner bound and an outer bound disagree the outer one wins, and the household's
+ * range at those outputs is always inside the building's; outputs the outer limits do not bind
+ * stop at step 2. The AWAY FLOOR is away_min, or min where away_min is unset: kept apart from min
+ * so that a household going away may set back below its everyday floor but never below what the
+ * building needs — frost, damp, heat drawn from neighbours. With neither set, a room has no away
+ * floor, and no vacancy setback.
  *
  * They stay with the home: a household handover wipes the inner limits, never these
  * (webrtc.v1 household.proto, WIPE).
@@ -450,10 +452,9 @@ export declare const OuterRoomLimitsSchema: GenMessage<OuterRoomLimits>;
  * A room's inner limits: the household's own minimum and maximum, set by the home's household
  * admins (webrtc.v1.SetInnerRoomLimits). They clamp the room's target, from the app or a knob
  * alike, and setting them clamps the target already set. They apply to every output in the
- * room, a household's own devices included, and the outer limits clamp further the outputs they
- * bind (OuterRoomLimits). While a mode sets the room back the minimum, a household's everyday
- * floor, does not apply, and the maximum does. Household data: never told to anyone but the
- * home's residents, and wiped at a handover (webrtc.v1 household.proto, WIPE).
+ * room, a household's own devices included, as OuterRoomLimits (HELD) orders them. Household
+ * data: never told to anyone but the home's residents, and wiped at a handover (webrtc.v1
+ * household.proto, WIPE).
  *
  * @generated from message kusinta.iot.climate.v1.InnerRoomLimits
  */
@@ -577,9 +578,8 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
 
   /**
    * The temperature every room is set back to, in centidegrees. Required while a mode is
-   * on — a mode with nothing to set back to is refused, not defaulted. Clamped by each room's
-   * inner maximum, and at the outputs a room's outer limits bind to its away floor and maximum
-   * (OuterRoomLimits), the away floor being what the building needs.
+   * on — a mode with nothing to set back to is refused, not defaulted. Clamped in each room as
+   * OuterRoomLimits (HELD) orders, the away floor being what the building needs.
    *
    * @generated from field: optional sint32 setback_centidegrees = 3;
    */
@@ -1020,6 +1020,8 @@ export enum OuterLimitKind {
   UNSPECIFIED = 0,
 
   /**
+   * Also when min stands in as the AWAY FLOOR for an unset away_min.
+   *
    * @generated from enum value: OUTER_LIMIT_KIND_MIN = 1;
    */
   MIN = 1,
@@ -1030,8 +1032,6 @@ export enum OuterLimitKind {
   MAX = 2,
 
   /**
-   * Also when min stands in for an unset away_min, as the AWAY FLOOR: then it is MIN.
-   *
    * @generated from enum value: OUTER_LIMIT_KIND_AWAY_MIN = 3;
    */
   AWAY_MIN = 3,

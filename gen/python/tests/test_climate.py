@@ -454,8 +454,8 @@ def test_a_room_carries_the_households_inner_limits_apart_from_the_outer_ones():
         inner_limits=climate_pb2.InnerRoomLimits(max_centidegrees=2200),
     )
 
-    decoded = _round_trip(room).inner_limits
-    assert (decoded.max_centidegrees, decoded.HasField("min_centidegrees")) == (2200, False)
+    decoded = _round_trip(room)
+    assert (decoded.inner_limits.max_centidegrees, decoded.outer_limits.max.centidegrees) == (2200, 2400)
 
 
 def test_a_room_says_which_outer_bound_clamps_it_and_where_it_would_be_held_without_it():
@@ -517,18 +517,20 @@ def test_a_configuration_carries_the_acceptance_of_a_minimum_below_the_threshold
 def test_a_rooms_inner_limits_are_set_as_a_management_request():
     request = management_pb2.ManagementRequest(
         set_inner_room_limits=management_pb2.SetInnerRoomLimits(
-            room_id=_ROOM, min_centidegrees=1900, max_centidegrees=2300
+            room_id=_ROOM, limits=climate_pb2.InnerRoomLimits(min_centidegrees=1900, max_centidegrees=2300)
         )
     )
 
     decoded = _round_trip(request)
-    assert (decoded.WhichOneof("request"), decoded.set_inner_room_limits.max_centidegrees) == (
+    assert (decoded.WhichOneof("request"), decoded.set_inner_room_limits.limits.max_centidegrees) == (
         "set_inner_room_limits",
         2300,
     )
 
 
 def test_an_inner_bound_left_unset_is_removed_rather_than_zero():
-    request = management_pb2.SetInnerRoomLimits(room_id=_ROOM, max_centidegrees=2300)
+    request = management_pb2.SetInnerRoomLimits(
+        room_id=_ROOM, limits=climate_pb2.InnerRoomLimits(max_centidegrees=2300)
+    )
 
-    assert _round_trip(request).HasField("min_centidegrees") is False
+    assert _round_trip(request).limits.HasField("min_centidegrees") is False

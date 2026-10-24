@@ -741,11 +741,9 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   @$pb.TagNumber(12)
   void clearRecipientHouseholdAdmin() => $_clearField(12);
 
-  /// Set on a vacated handover: it ends at staff_confirmable_from or when the property owner or a
-  /// gateway administrator files a new resident, whichever is first (QUICK TURNOVER), and so does
-  /// the departing household's export window. An app says so from this field rather than from
-  /// vacated, so that a handover from a gateway that predates it, which ends no notice early, is
-  /// not misdescribed.
+  /// Set on a vacated handover that a new resident ends early (QUICK TURNOVER). An app says so
+  /// from this field rather than from vacated, so that a handover from a gateway that predates
+  /// it, which ends no notice early, is not misdescribed.
   @$pb.TagNumber(13)
   $core.bool get mayEndOnMoveIn => $_getBF(12);
   @$pb.TagNumber(13)

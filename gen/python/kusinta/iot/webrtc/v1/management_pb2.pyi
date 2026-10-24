@@ -224,14 +224,12 @@ class ConfigureRoomClimate(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., limits: _Optional[_Union[RoomLimits, _Mapping]] = ..., sensors: _Optional[_Union[RoomSensors, _Mapping]] = ..., lock_device_controls: _Optional[bool] = ..., away_min: _Optional[_Union[RoomLimitValue, _Mapping]] = ..., move_in_target: _Optional[_Union[RoomLimitValue, _Mapping]] = ..., accept_below_threshold: _Optional[bool] = ...) -> None: ...
 
 class SetInnerRoomLimits(_message.Message):
-    __slots__ = ("room_id", "min_centidegrees", "max_centidegrees")
+    __slots__ = ("room_id", "limits")
     ROOM_ID_FIELD_NUMBER: _ClassVar[int]
-    MIN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
-    MAX_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    LIMITS_FIELD_NUMBER: _ClassVar[int]
     room_id: _identity_pb2.SpaceId
-    min_centidegrees: int
-    max_centidegrees: int
-    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ...) -> None: ...
+    limits: _climate_pb2.InnerRoomLimits
+    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., limits: _Optional[_Union[_climate_pb2.InnerRoomLimits, _Mapping]] = ...) -> None: ...
 
 class SetClimateMode(_message.Message):
     __slots__ = ("space_id", "kind", "setback_centidegrees", "starts_at", "ends_at")

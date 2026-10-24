@@ -222,8 +222,8 @@ option optimize_for = SPEED;
 // installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home when its last
 // residency ends and when it is wiped (webrtc.v1 household.proto, VACANCY and WIPE): a grant
 // never passes from one household to the next. One the property owner or a gateway
-// administrator granted on an empty home ends when the home gains a resident (MOVE-IN), so it
-// never covers a household that did not grant it. What it covered goes from the
+// administrator granted on an empty home ends when the home gains a resident (webrtc.v1
+// household.proto, MOVE-IN), so it never covers a household that did not grant it. What it covered goes from the
 // installer's sessions at once, and a test they started under it is ABORTED, its outputs
 // returning to their normal control as webrtc.v1.ConcludeCommissioningTest says, floor zones
 // switching on no faster than "floor.max_zones_switching_on" allows. Until it ends —

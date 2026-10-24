@@ -86,12 +86,12 @@ class RoomClimateCondition extends $pb.ProtobufEnum {
 class OuterLimitKind extends $pb.ProtobufEnum {
   static const OuterLimitKind OUTER_LIMIT_KIND_UNSPECIFIED =
       OuterLimitKind._(0, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_UNSPECIFIED');
+
+  /// Also when min stands in as the AWAY FLOOR for an unset away_min.
   static const OuterLimitKind OUTER_LIMIT_KIND_MIN =
       OuterLimitKind._(1, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_MIN');
   static const OuterLimitKind OUTER_LIMIT_KIND_MAX =
       OuterLimitKind._(2, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_MAX');
-
-  /// Also when min stands in for an unset away_min, as the AWAY FLOOR: then it is MIN.
   static const OuterLimitKind OUTER_LIMIT_KIND_AWAY_MIN =
       OuterLimitKind._(3, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_AWAY_MIN');
 
