@@ -2345,7 +2345,9 @@ class SetClimateMode extends $pb.GeneratedMessage {
 ///
 /// A caller who reaches a room inside an apartment as service gets it with
 /// RoomClimate.state_withheld set — what is new as it happens, what is gone at once — and
-/// gets no ClimateMode set on that apartment or its rooms.
+/// gets no ClimateMode set on that apartment or its rooms; save the property owner and the
+/// gateway administrators while the home is empty, who get both as for a space outside homes
+/// (household.proto, EMPTY HOME).
 class ListRoomClimates extends $pb.GeneratedMessage {
   factory ListRoomClimates({
     $0.SpaceId? rootSpaceId,

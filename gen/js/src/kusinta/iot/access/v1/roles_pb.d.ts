@@ -223,7 +223,9 @@ export declare const PermissionActionSchema: GenEnum<PermissionAction>;
  *     operate none of them. Of what they reach of the home — from the room they are filed
  *     on, or all of it — they see how its rooms are set up, with
  *     RoomClimate.state_withheld marking what is not shown, and its links with
- *     DeviceLink.details_withheld; modes on a home are not sent to them at all. Service
+ *     DeviceLink.details_withheld; modes on a home are not sent to them at all — save that the
+ *     property owner and the gateway administrators are sent an empty home's rooms and modes
+ *     in full (webrtc.v1 household.proto, EMPTY HOME). Service
  *     that reaches the apartment itself also gets its climate summary over the disclosed
  *     period. What they newly see of the home reaches them as it happens; what they lose,
  *     at once.

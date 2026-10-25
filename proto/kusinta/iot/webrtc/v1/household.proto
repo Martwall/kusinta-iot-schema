@@ -158,28 +158,38 @@ option optimize_for = SPEED;
 //     household becoming a resident again, which cancels it as if it had not started. Since
 //     no invite to the home can be made or redeemed while it is pending, that return is
 //     staff filing them (AssignUserToSpace), which is not refused for a departing member;
-//   * nobody outside the departing household becomes a resident of the home, save by the
-//     property owner or a gateway administrator filing them, which completes the handover first
-//     (QUICK TURNOVER). Whatever else would file one — a redeemed invite, an approved join
-//     request, AssignUserToSpace from anyone else — is refused as FAILED_PRECONDITION with
-//     metadata {"reason": "handover_pending"}, and so is creating a RESIDENT or HOUSEHOLD_ADMIN
-//     invite on the home; an invite already pending, an appointment invite included, answers
+//   * nobody outside the departing household becomes a resident of the home, save as
+//     QUICK TURNOVER allows the property owner or a gateway administrator to file them.
+//     Whatever else would file one — a redeemed invite, an approved join request,
+//     AssignUserToSpace from anyone else — is refused as FAILED_PRECONDITION with metadata
+//     {"reason": "handover_pending"}, and so is creating a RESIDENT or HOUSEHOLD_ADMIN invite
+//     on the home; an invite already pending, an appointment invite included, answers
 //     signaling.v1.REDEEM_OUTCOME_NOT_ELIGIBLE when redeemed and ends at the wipe.
 // So the home's next household never moves in among the last one's records, and a home nobody
 // lives in keeps nothing of the household that left for longer than the notice.
 //
 // QUICK TURNOVER. The property owner or a gateway administrator assigning RESIDENT on the
 // apartment to someone outside the departing household (AssignUserToSpace) while a vacated
-// handover is pending completes it first: the handover is done, its wipe runs, it is pushed
-// DONE to the departing household as at the end of the notice, and then the newcomer is filed —
-// the home empty in between, so that they move in as MOVE-IN says. Every other check on the
-// request is made first, so one refused for any other reason leaves the handover pending; and
-// HOUSEHOLD_ADMIN is refused through AssignUserToSpace as ever, so a new household's first
-// admin comes by STAFF APPOINTMENT once it has moved in. Nothing else ends the notice early,
-// and a handover that is not vacated, with someone still living in the home, is unchanged. The
+// handover is pending completes it first — the handover is done, its wipe runs, and then the
+// newcomer is filed, the home empty in between, so that they move in as MOVE-IN says — but only
+// when both hold:
+//   * the user filed holds no staff role on the gateway (access.v1.Role, STAFF). Otherwise it
+//     is refused as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, as
+//     VACANCY has it: a member of staff moving in waits for a departing household admin's
+//     confirmation or the end of the notice;
+//   * at least 24 hours have passed since the home's last residency ended. Otherwise it is
+//     refused as FAILED_PRECONDITION with metadata {"reason": "turnover_too_soon",
+//     "earliest_at": the first moment it would be accepted, as an RFC 3339 UTC timestamp}.
+// Every other check on the request is made before these, so one refused for any reason leaves
+// the handover pending; and HOUSEHOLD_ADMIN is refused through AssignUserToSpace as ever, so a
+// new household's first admin comes by STAFF APPOINTMENT once it has moved in. The departing
+// household is told at once: the handover is pushed DONE to them with
+// HouseholdHandover.ended_by_move_in set and ended_at saying when, and the early end is
+// recorded as an act of staff on the home (WIPE). Nothing else ends the notice early, and a
+// handover that is not vacated, with someone still living in the home, is unchanged. The
 // departing household is told from the start (HouseholdHandover.may_end_on_move_in): their
-// export window runs until staff_confirmable_from, or until a new household moves in, whichever
-// is first.
+// export window runs until staff_confirmable_from, or until a new household moves in no sooner
+// than 24 hours after the last residency ended, whichever is first.
 //
 // VACANCY SETBACK. When a home's last residency ends, each of its rooms with an away floor
 // (climate.v1.OuterRoomLimits, AWAY FLOOR) is set back to it on its own, at the outputs its
@@ -207,7 +217,12 @@ option optimize_for = SPEED;
 //     (CreateDeviceLink). Technicians stay refused, empty or not, so no answer tells service
 //     whether a home is empty;
 //   * they may give it its first household admin by an appointment invite (STAFF APPOINTMENT);
-//   * they answer and end commissioning grants on it (commissioning.v1, GRANTS).
+//   * they answer and end commissioning grants on it (commissioning.v1, GRANTS);
+//   * they are sent its rooms as rooms outside homes are sent — without
+//     climate.v1.RoomClimate.state_withheld, with their targets, the lock and the rest — and
+//     the modes on it, with set_by and starts_at (climate.v1.ClimateMode), so that they see
+//     what they set. Nothing a household left can reach them so: a home is empty only once its
+//     handover is done and its wipe has run. Technicians stay withheld, empty or not.
 // What they set or granted under this section ends at MOVE-IN — targets and locks cleared,
 // modes ended (climate.v1.ClimateMode), grants they granted ended, while one still requested
 // stays for the household's admins to answer — save the links they made, which describe how the
@@ -443,11 +458,16 @@ message HouseholdHandover {
 
   // Set whenever a handover is or becomes vacated, from the push that tells it so — one started
   // vacated, or a pending one the last residency ending makes vacated (VACANCY): a new resident
-  // filed by staff may end it early (QUICK TURNOVER), so the departing household's export
-  // window runs until staff_confirmable_from or until then, whichever is first. An app says so
+  // filed by staff may end it early, no sooner than 24 hours after the last residency ended
+  // (QUICK TURNOVER), so the departing household's export window runs until
+  // staff_confirmable_from or until then, whichever is first. An app says so
   // from this field rather than from vacated, so that a handover from a gateway that predates
   // it, which ends no notice early, is not misdescribed.
   bool may_end_on_move_in = 13;
+
+  // Set on a vacated handover done early because the property owner or a gateway administrator
+  // filed a new resident (QUICK TURNOVER); ended_at says when. Unset on every other.
+  bool ended_by_move_in = 14;
 }
 
 // Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and

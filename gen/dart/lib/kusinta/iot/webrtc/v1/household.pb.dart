@@ -517,6 +517,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     $core.bool? recipientInHousehold,
     $core.bool? recipientHouseholdAdmin,
     $core.bool? mayEndOnMoveIn,
+    $core.bool? endedByMoveIn,
   }) {
     final result = create();
     if (handoverId != null) result.handoverId = handoverId;
@@ -535,6 +536,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     if (recipientHouseholdAdmin != null)
       result.recipientHouseholdAdmin = recipientHouseholdAdmin;
     if (mayEndOnMoveIn != null) result.mayEndOnMoveIn = mayEndOnMoveIn;
+    if (endedByMoveIn != null) result.endedByMoveIn = endedByMoveIn;
     return result;
   }
 
@@ -575,6 +577,7 @@ class HouseholdHandover extends $pb.GeneratedMessage {
     ..aOB(11, _omitFieldNames ? '' : 'recipientInHousehold')
     ..aOB(12, _omitFieldNames ? '' : 'recipientHouseholdAdmin')
     ..aOB(13, _omitFieldNames ? '' : 'mayEndOnMoveIn')
+    ..aOB(14, _omitFieldNames ? '' : 'endedByMoveIn')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -743,8 +746,9 @@ class HouseholdHandover extends $pb.GeneratedMessage {
 
   /// Set whenever a handover is or becomes vacated, from the push that tells it so — one started
   /// vacated, or a pending one the last residency ending makes vacated (VACANCY): a new resident
-  /// filed by staff may end it early (QUICK TURNOVER), so the departing household's export
-  /// window runs until staff_confirmable_from or until then, whichever is first. An app says so
+  /// filed by staff may end it early, no sooner than 24 hours after the last residency ended
+  /// (QUICK TURNOVER), so the departing household's export window runs until
+  /// staff_confirmable_from or until then, whichever is first. An app says so
   /// from this field rather than from vacated, so that a handover from a gateway that predates
   /// it, which ends no notice early, is not misdescribed.
   @$pb.TagNumber(13)
@@ -755,6 +759,17 @@ class HouseholdHandover extends $pb.GeneratedMessage {
   $core.bool hasMayEndOnMoveIn() => $_has(12);
   @$pb.TagNumber(13)
   void clearMayEndOnMoveIn() => $_clearField(13);
+
+  /// Set on a vacated handover done early because the property owner or a gateway administrator
+  /// filed a new resident (QUICK TURNOVER); ended_at says when. Unset on every other.
+  @$pb.TagNumber(14)
+  $core.bool get endedByMoveIn => $_getBF(13);
+  @$pb.TagNumber(14)
+  set endedByMoveIn($core.bool value) => $_setBool(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasEndedByMoveIn() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearEndedByMoveIn() => $_clearField(14);
 }
 
 /// Erases a home's climate history (CLIMATE HISTORY), in one step, all of it or none, and

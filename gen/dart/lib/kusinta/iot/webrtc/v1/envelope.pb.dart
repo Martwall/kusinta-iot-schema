@@ -2029,7 +2029,9 @@ class RoomClimateChanged extends $pb.GeneratedMessage {
 /// A mode on a space was switched on, changed or ended, gateway → app. `ended` rather than
 /// kind UNSPECIFIED, so an app can still name the mode that finished. A mode on an
 /// apartment or a room in one is sent to its residents only — whether a home stands empty
-/// is theirs to know; one on any other space, to whoever reaches it.
+/// is theirs to know — and, while the home is empty, to the property owner and the gateway
+/// administrators who reach it (household.proto, EMPTY HOME), who are sent its end at MOVE-IN;
+/// one on any other space, to whoever reaches it.
 class ClimateModeChanged extends $pb.GeneratedMessage {
   factory ClimateModeChanged({
     $5.ClimateMode? mode,

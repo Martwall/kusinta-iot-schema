@@ -1008,7 +1008,9 @@ export declare const SetClimateModeSchema: GenMessage<SetClimateMode>;
  *
  * A caller who reaches a room inside an apartment as service gets it with
  * RoomClimate.state_withheld set — what is new as it happens, what is gone at once — and
- * gets no ClimateMode set on that apartment or its rooms.
+ * gets no ClimateMode set on that apartment or its rooms; save the property owner and the
+ * gateway administrators while the home is empty, who get both as for a space outside homes
+ * (household.proto, EMPTY HOME).
  *
  * @generated from message kusinta.iot.webrtc.v1.ListRoomClimates
  */

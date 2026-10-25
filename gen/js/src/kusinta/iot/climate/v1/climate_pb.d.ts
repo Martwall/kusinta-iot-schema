@@ -103,7 +103,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 
   /**
    * Who or what set target_centidegrees. Unset while the target is, and when it is withheld
-   * from the recipient: from service in a home, and from anyone when it dates from before
+   * from the recipient: from service in a home that is not empty (webrtc.v1 household.proto,
+   * EMPTY HOME), and from anyone when it dates from before
    * their current residency in the home, or from a home they did not live in at the time
    * (see access.v1.MembershipRelation).
    *
@@ -220,12 +221,14 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 
   /**
    * Set when the recipient reaches this room only as service (see
-   * access.v1.MembershipRelation): the room is in someone's home, and what describes the
-   * people in it is WITHHELD — target_centidegrees, target_change,
-   * effective_target_centidegrees, overrides_mode, mode_space_id, measured_centidegrees,
-   * measured_by, condition, lock_device_controls, inner_limits, outer_limit_clamp,
-   * outer_limits_coverage and outer_bound_device_ids are all left unset, and sensor_ids leaves
-   * out sensors a resident owns.
+   * access.v1.MembershipRelation): the room is in someone's home, and what describes the people
+   * in it is WITHHELD. Never set for the property owner or a gateway administrator while the
+   * home is empty (webrtc.v1 household.proto, EMPTY HOME): they are sent its rooms as rooms
+   * outside homes are, and at MOVE-IN sent them again with it set. When it is set,
+   * target_centidegrees, target_change, effective_target_centidegrees, overrides_mode,
+   * mode_space_id, measured_centidegrees, measured_by, condition, lock_device_controls,
+   * inner_limits, outer_limit_clamp, outer_limits_coverage and outer_bound_device_ids are all
+   * left unset, and sensor_ids leaves out sensors a resident owns.
    *
    * Unset because withheld, not because unknown: an app must not render them as NO_TARGET or
    * a lost sensor. A withheld room is sent again only when something that IS sent changes,
@@ -368,7 +371,10 @@ export declare type OuterLimit = Message<"kusinta.iot.climate.v1.OuterLimit"> & 
 
   /**
    * The role its setter acted in (webrtc.v1.ConfigureRoomClimate): ROLE_PROPERTY_OWNER where
-   * they hold it, else ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN.
+   * they hold it, else ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN. In a home, a bound an
+   * installer set under a commissioning grant has it unset to anyone but the home's residents:
+   * staff are shown its value and set_at alone, so the stamp tells them nothing of when the
+   * household let an installer in. An app shows an unset role as not stated.
    *
    * @generated from field: kusinta.iot.access.v1.Role set_by_role = 2;
    */
@@ -628,7 +634,8 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
    * targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is when it
    * was switched on; ends_at is unset. starts_at is unset when it dates from before the
    * recipient's current residency in the home, or from a home they did not live in at the
-   * time; an ends_at ahead is always sent.
+   * time, save to the property owner and the gateway administrators for a mode on a home while
+   * it is empty (webrtc.v1 household.proto, EMPTY HOME); an ends_at ahead is always sent.
    *
    * @generated from field: google.protobuf.Timestamp starts_at = 4;
    */
@@ -642,7 +649,9 @@ export declare type ClimateMode = Message<"kusinta.iot.climate.v1.ClimateMode"> 
   /**
    * Who switched it on. Unset when it is withheld from the recipient: from service in a
    * home, and from anyone when it dates from before their current residency in the home, or
-   * from a home they did not live in at the time (see access.v1.MembershipRelation).
+   * from a home they did not live in at the time (see access.v1.MembershipRelation). The
+   * property owner and the gateway administrators are given it for a mode on a home while it is
+   * empty, which only they can have switched on (webrtc.v1 household.proto, EMPTY HOME).
    *
    * @generated from field: kusinta.iot.identity.v1.UserId set_by = 6;
    */

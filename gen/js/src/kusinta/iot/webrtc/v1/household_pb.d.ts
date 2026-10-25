@@ -287,14 +287,23 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
   /**
    * Set whenever a handover is or becomes vacated, from the push that tells it so — one started
    * vacated, or a pending one the last residency ending makes vacated (VACANCY): a new resident
-   * filed by staff may end it early (QUICK TURNOVER), so the departing household's export
-   * window runs until staff_confirmable_from or until then, whichever is first. An app says so
+   * filed by staff may end it early, no sooner than 24 hours after the last residency ended
+   * (QUICK TURNOVER), so the departing household's export window runs until
+   * staff_confirmable_from or until then, whichever is first. An app says so
    * from this field rather than from vacated, so that a handover from a gateway that predates
    * it, which ends no notice early, is not misdescribed.
    *
    * @generated from field: bool may_end_on_move_in = 13;
    */
   mayEndOnMoveIn: boolean;
+
+  /**
+   * Set on a vacated handover done early because the property owner or a gateway administrator
+   * filed a new resident (QUICK TURNOVER); ended_at says when. Unset on every other.
+   *
+   * @generated from field: bool ended_by_move_in = 14;
+   */
+  endedByMoveIn: boolean;
 };
 
 /**
