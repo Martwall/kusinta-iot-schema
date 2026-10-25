@@ -17,22 +17,26 @@ import 'package:protobuf/protobuf.dart' as $pb;
 /// Why a handshake was refused (HandshakeRejected.code).
 class HandshakeRejectReason extends $pb.ProtobufEnum {
   /// Not stated, or a value this app's schema does not know: an app says that the gateway
-  /// refused the connection, and no more.
+  /// refused the connection, and no more. It treats the refusal as a passing failure, and
+  /// retries under its ordinary backoff.
   static const HandshakeRejectReason HANDSHAKE_REJECT_REASON_UNSPECIFIED =
       HandshakeRejectReason._(
           0, _omitEnumNames ? '' : 'HANDSHAKE_REJECT_REASON_UNSPECIFIED');
 
-  /// A message the gateway could not decode.
+  /// A message the gateway could not decode. A fault of the app's: retrying repeats it, so an
+  /// app MUST NOT retry in a loop.
   static const HandshakeRejectReason HANDSHAKE_REJECT_REASON_INVALID_ENCODING =
       HandshakeRejectReason._(
           1, _omitEnumNames ? '' : 'HANDSHAKE_REJECT_REASON_INVALID_ENCODING');
 
-  /// A message before AppHandshake, which must come first.
+  /// A message before AppHandshake, which must come first. A fault of the app's, as
+  /// INVALID_ENCODING is: an app MUST NOT retry in a loop.
   static const HandshakeRejectReason
       HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED = HandshakeRejectReason._(2,
           _omitEnumNames ? '' : 'HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED');
 
-  /// The token in AppHandshake was not accepted (AppTokenClaims).
+  /// The token in AppHandshake was not accepted (AppTokenClaims). A fresh token can help: an
+  /// app may refresh it and retry once, and then stops and tells its user.
   static const HandshakeRejectReason
       HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED = HandshakeRejectReason._(
           3,

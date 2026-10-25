@@ -1179,28 +1179,32 @@ export declare const AppMessageSchema: GenMessage<AppMessage>;
 export enum HandshakeRejectReason {
   /**
    * Not stated, or a value this app's schema does not know: an app says that the gateway
-   * refused the connection, and no more.
+   * refused the connection, and no more. It treats the refusal as a passing failure, and
+   * retries under its ordinary backoff.
    *
    * @generated from enum value: HANDSHAKE_REJECT_REASON_UNSPECIFIED = 0;
    */
   UNSPECIFIED = 0,
 
   /**
-   * A message the gateway could not decode.
+   * A message the gateway could not decode. A fault of the app's: retrying repeats it, so an
+   * app MUST NOT retry in a loop.
    *
    * @generated from enum value: HANDSHAKE_REJECT_REASON_INVALID_ENCODING = 1;
    */
   INVALID_ENCODING = 1,
 
   /**
-   * A message before AppHandshake, which must come first.
+   * A message before AppHandshake, which must come first. A fault of the app's, as
+   * INVALID_ENCODING is: an app MUST NOT retry in a loop.
    *
    * @generated from enum value: HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED = 2;
    */
   HANDSHAKE_REQUIRED = 2,
 
   /**
-   * The token in AppHandshake was not accepted (AppTokenClaims).
+   * The token in AppHandshake was not accepted (AppTokenClaims). A fresh token can help: an
+   * app may refresh it and retry once, and then stops and tells its user.
    *
    * @generated from enum value: HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED = 3;
    */
