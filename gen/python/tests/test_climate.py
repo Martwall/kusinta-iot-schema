@@ -534,3 +534,23 @@ def test_an_inner_bound_left_unset_is_removed_rather_than_zero():
     )
 
     assert _round_trip(request).limits.HasField("min_centidegrees") is False
+
+
+def test_outer_limits_kept_with_none_set_are_an_empty_message_rather_than_none():
+    room = climate_pb2.RoomClimate(space_id=_ROOM, outer_limits=climate_pb2.OuterRoomLimits())
+
+    assert _round_trip(room).HasField("outer_limits") is True
+
+
+def test_outer_limits_are_unset_from_a_gateway_that_predates_them():
+    assert _round_trip(climate_pb2.RoomClimate(space_id=_ROOM)).HasField("outer_limits") is False
+
+
+def test_a_room_names_the_devices_whose_outputs_the_outer_limits_bind():
+    room = climate_pb2.RoomClimate(
+        space_id=_ROOM,
+        outer_limits_coverage=climate_pb2.OUTER_LIMITS_COVERAGE_SOME,
+        outer_bound_device_ids=[identity_pb2.DeviceId(value="lora:valve-1")],
+    )
+
+    assert [d.value for d in _round_trip(room).outer_bound_device_ids] == ["lora:valve-1"]

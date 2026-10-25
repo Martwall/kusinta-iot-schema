@@ -92,7 +92,8 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * Rollout note: an app that predates outer_limits reads min_centidegrees and
    * max_centidegrees as bounds on this field, and may be sent a target outside them; one that
    * holds its control to them may, on any touch, send the outer bound as the target and so
-   * rewrite a household's target set beyond it.
+   * rewrite a household's target set beyond it. An app tells a gateway that predates outer
+   * limits by outer_limits unset, and offers it only min and max (ConfigureRoomClimate.limits).
    *
    * @generated from field: optional sint32 target_centidegrees = 2;
    */
@@ -220,9 +221,9 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * access.v1.MembershipRelation): the room is in someone's home, and what describes the
    * people in it is WITHHELD — target_centidegrees, target_change,
    * effective_target_centidegrees, overrides_mode, mode_space_id, measured_centidegrees,
-   * measured_by, condition, lock_device_controls, inner_limits, outer_limit_clamp and
-   * outer_limits_coverage are all left unset, and sensor_ids leaves out sensors a resident
-   * owns.
+   * measured_by, condition, lock_device_controls, inner_limits, outer_limit_clamp,
+   * outer_limits_coverage and outer_bound_device_ids are all left unset, and sensor_ids leaves
+   * out sensors a resident owns.
    *
    * Unset because withheld, not because unknown: an app must not render them as NO_TARGET or
    * a lost sensor. A withheld room is sent again only when something that IS sent changes,
@@ -291,8 +292,13 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 
   /**
    * The room's outer limits, each bound with who set it and when (OuterRoomLimits). Sent to
-   * whoever is sent the room, service included: they are the building's, and setting them is
-   * service work. Unset: the room has none.
+   * whoever is sent the room, service included and with state_withheld too: they are the
+   * building's, and setting them is service work.
+   *
+   * Always set by a gateway that keeps outer limits: an empty OuterRoomLimits where the room
+   * has none. Unset only from a gateway that predates them, which keeps min and max alone: an
+   * app reads unset so, and offers only min and max, through ConfigureRoomClimate.limits,
+   * rather than an editor whose away minimum and move-in target that gateway would drop.
    *
    * @generated from field: kusinta.iot.climate.v1.OuterRoomLimits outer_limits = 21;
    */
@@ -326,6 +332,18 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * @generated from field: kusinta.iot.climate.v1.OuterLimitsCoverage outer_limits_coverage = 24;
    */
   outerLimitsCoverage: OuterLimitsCoverage;
+
+  /**
+   * The devices in the room with a heating output the outer limits bind
+   * (OuterRoomLimits, WHAT THEY BIND), so that an app marks a device's own limit settings as
+   * governed by them only where they are. Sent as outer_limits_coverage is, and judged over the
+   * same devices: outside homes, only devices the recipient sees are listed. Empty under
+   * coverage NONE or UNSPECIFIED; under ALL, every heating device in the room the recipient
+   * sees is in it; under SOME, some are.
+   *
+   * @generated from field: repeated kusinta.iot.identity.v1.DeviceId outer_bound_device_ids = 25;
+   */
+  outerBoundDeviceIds: DeviceId[];
 };
 
 /**

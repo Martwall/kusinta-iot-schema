@@ -336,6 +336,25 @@ describe('comfort limits', () => {
     expect(decoded.outerLimitsCoverage).toBe(OuterLimitsCoverage.SOME)
   })
 
+  it('says outer limits are kept, with none set, by an empty message rather than none', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimits: {} })
+    expect(decoded.outerLimits).toBeDefined()
+  })
+
+  it('leaves outer limits unset from a gateway that predates them', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM })
+    expect(decoded.outerLimits).toBeUndefined()
+  })
+
+  it('names the devices whose outputs the outer limits bind', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      outerLimitsCoverage: OuterLimitsCoverage.SOME,
+      outerBoundDeviceIds: [{ value: 'lora:valve-1' }],
+    })
+    expect(decoded.outerBoundDeviceIds.map((d) => d.value)).toEqual(['lora:valve-1'])
+  })
+
   it('tells a move-in target apart from a target a person set', () => {
     const decoded = onTheWire(TargetChangeSchema, { by: { case: 'moveIn', value: true } })
     expect(decoded.by).toEqual({ case: 'moveIn', value: true })

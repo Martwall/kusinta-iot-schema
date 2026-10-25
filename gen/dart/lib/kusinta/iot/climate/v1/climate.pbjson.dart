@@ -436,6 +436,14 @@ const RoomClimate$json = {
       '6': '.kusinta.iot.climate.v1.OuterLimitsCoverage',
       '10': 'outerLimitsCoverage'
     },
+    {
+      '1': 'outer_bound_device_ids',
+      '3': 25,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'outerBoundDeviceIds'
+    },
   ],
   '8': [
     {'1': '_target_centidegrees'},
@@ -478,11 +486,12 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     '9vbUxpbWl0c1ILaW5uZXJMaW1pdHMSUwoRb3V0ZXJfbGltaXRfY2xhbXAYFyABKAsyJy5rdXNp'
     'bnRhLmlvdC5jbGltYXRlLnYxLk91dGVyTGltaXRDbGFtcFIPb3V0ZXJMaW1pdENsYW1wEl8KFW'
     '91dGVyX2xpbWl0c19jb3ZlcmFnZRgYIAEoDjIrLmt1c2ludGEuaW90LmNsaW1hdGUudjEuT3V0'
-    'ZXJMaW1pdHNDb3ZlcmFnZVITb3V0ZXJMaW1pdHNDb3ZlcmFnZUIWChRfdGFyZ2V0X2NlbnRpZG'
-    'VncmVlc0IgCh5fZWZmZWN0aXZlX3RhcmdldF9jZW50aWRlZ3JlZXNCEwoRX21pbl9jZW50aWRl'
-    'Z3JlZXNCEwoRX21heF9jZW50aWRlZ3JlZXNCGAoWX21lYXN1cmVkX2NlbnRpZGVncmVlc0IgCh'
-    '5fY29tZm9ydF9iYW5kX2xvd19jZW50aWRlZ3JlZXNCIQofX2NvbWZvcnRfYmFuZF9oaWdoX2Nl'
-    'bnRpZGVncmVlcw==');
+    'ZXJMaW1pdHNDb3ZlcmFnZVITb3V0ZXJMaW1pdHNDb3ZlcmFnZRJWChZvdXRlcl9ib3VuZF9kZX'
+    'ZpY2VfaWRzGBkgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSE291dGVy'
+    'Qm91bmREZXZpY2VJZHNCFgoUX3RhcmdldF9jZW50aWRlZ3JlZXNCIAoeX2VmZmVjdGl2ZV90YX'
+    'JnZXRfY2VudGlkZWdyZWVzQhMKEV9taW5fY2VudGlkZWdyZWVzQhMKEV9tYXhfY2VudGlkZWdy'
+    'ZWVzQhgKFl9tZWFzdXJlZF9jZW50aWRlZ3JlZXNCIAoeX2NvbWZvcnRfYmFuZF9sb3dfY2VudG'
+    'lkZWdyZWVzQiEKH19jb21mb3J0X2JhbmRfaGlnaF9jZW50aWRlZ3JlZXM=');
 
 @$core.Deprecated('Use outerLimitDescriptor instead')
 const OuterLimit$json = {
