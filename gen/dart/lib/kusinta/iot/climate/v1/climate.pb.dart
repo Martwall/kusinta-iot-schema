@@ -323,8 +323,10 @@ class RoomClimate extends $pb.GeneratedMessage {
   $1.SpaceId ensureSpaceId() => $_ensure(0);
 
   /// The temperature the room is to be held at, in centidegrees. Unset: nobody has set
-  /// one. Always within the inner limits where those are set (inner_limits); never clamped by
-  /// the outer ones (OuterRoomLimits, WHAT THEY BIND).
+  /// one. Always within the inner limits where those are set (inner_limits), and bounded by
+  /// nothing of the room where they are not. Never clamped by the outer ones, a change made by
+  /// hand at a device they bind included: the target keeps the change, and that device's output
+  /// is held within them (OuterRoomLimits, WHAT THEY BIND and DEVICE LIMITS).
   ///
   /// Rollout note: an app that predates outer_limits reads min_centidegrees and
   /// max_centidegrees as bounds on this field, and may be sent a target outside them; one that
@@ -793,8 +795,9 @@ class OuterLimit extends $pb.GeneratedMessage {
 /// to devices they bind (WHAT THEY BIND), and writes the AWAY FLOOR as the minimum and max as
 /// the maximum, each only where set: a device holding min as its own minimum would refuse the
 /// setbacks of step 3. Outside a setback the gateway holds min itself: a change made by hand at
-/// such a device below min is clamped to min where the gateway adopts it, and min is what it
-/// then holds the output at. Into a device the outer limits do not bind that holds room limits
+/// such a device below min is adopted as the room's target as it was made, within the inner
+/// limits and never clamped by the outer ones, while the device's output is held at min and min
+/// is written back to it. Into a device the outer limits do not bind that holds room limits
 /// written before, it writes the device's defaults back, queued and retried as the wipe's device
 /// writes are (webrtc.v1 household.proto, WIPE).
 ///
@@ -936,7 +939,9 @@ class OuterRoomLimits extends $pb.GeneratedMessage {
 /// alike, and setting them clamps the target already set. They apply to every output in the
 /// room, a household's own devices included, as OuterRoomLimits (HELD) orders them. Household
 /// data: never told to anyone but the home's residents, and wiped at a handover (webrtc.v1
-/// household.proto, WIPE).
+/// household.proto, WIPE). They belong to the room while it is in the home: cleared when it
+/// leaves the home, or the space stops being an apartment, so an empty home's rooms hold none
+/// and a move-in target meets none.
 class InnerRoomLimits extends $pb.GeneratedMessage {
   factory InnerRoomLimits({
     $core.int? minCentidegrees,

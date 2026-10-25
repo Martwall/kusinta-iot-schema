@@ -441,7 +441,12 @@ message RoomLimitValue {
 //     reach it (household.proto, EMPTY HOME); outside homes, ROLE_PROPERTY_OWNER's or a filing
 //     role's, as the sensors are.
 // A request that sets anything its caller may not is refused whole as NOT_ENTITLED, so nothing
-// of it applies.
+// of it applies, with metadata {"field": the first such part, by its proto field name —
+// "limits", "away_min", "move_in_target", "sensors" or "lock_device_controls"}, which tells the
+// caller only what they may not set. Rollout note: outer limits were once a filing role's; a
+// filing role that is neither ROLE_PROPERTY_OWNER nor ROLE_GATEWAY_ADMIN, without a grant, is
+// now refused them, so an app offers the outer limits to those roles alone and sends sensors on
+// their own.
 //
 // Each outer bound the request changes is stamped with the caller's role and the time
 // (climate.v1.OuterLimit); one set to the value it has keeps its stamp. As the outer limits
@@ -987,7 +992,8 @@ message RequestCommissioningGrant {
 // home, or for a space outside homes or an empty home (household.proto, EMPTY HOME) the
 // property owner or a gateway administrator who reaches it; anyone else, and a grant_id that is
 // not requested on a space the caller may answer for, is refused as NOT_ENTITLED, so that no
-// grant id can be probed.
+// grant id can be probed. So is a grant that names the caller as its installer, whoever they
+// are (commissioning.v1, GRANTS).
 //
 // Granting needs ends_at after starts_at, no more than 14 days after it, and starts_at no
 // later than 30 days from now; otherwise INVALID_REQUEST with metadata

@@ -185,18 +185,19 @@ option optimize_for = SPEED;
 //     freely.
 //
 // GRANTS. A commissioning grant (CommissioningGrant) lets one named installer commission one
-// space for a bounded time. The installer asks for it (webrtc.v1.RequestCommissioningGrant)
-// and whoever governs the space answers: for a home, a household admin of it, or while it is
-// empty (webrtc.v1 household.proto, EMPTY HOME) the property owner or the gateway's
-// administrators; for a space outside homes, the property owner or the gateway's
-// administrators. The installer is a member holding access.v1.ROLE_TECHNICIAN who reaches the
-// space, and who does not live in it: a household does not commission its own answers into
-// house facts. Nobody else is granted one. Someone who also holds a staff role acts as
-// INSTALLER only in what they do under the grant's cover; the rest of their access is as it
-// was.
-// A grant on a home covers the home and its rooms; a grant on a space outside homes covers it
-// and the spaces below it, save every home among them, which only a grant on that home
-// covers.
+// space for a bounded time. The installer asks for it (webrtc.v1.RequestCommissioningGrant) and
+// whoever governs the space answers: for a home, a household admin of it, or while it is empty
+// (webrtc.v1 household.proto, EMPTY HOME) the property owner or the gateway's administrators;
+// for a space outside homes, the property owner or the gateway's administrators. The installer
+// is a member holding access.v1.ROLE_TECHNICIAN who reaches the space, and who does not live in
+// it: a household does not commission its own answers into house facts. Nobody else is granted
+// one, and nobody answers a grant that names them as its installer, whatever else they hold:
+// one who may answer for the space — the property owner or a gateway administrator on an empty
+// home or a space outside homes — is refused it as NOT_ENTITLED
+// (webrtc.v1.AnswerCommissioningGrant). Someone who also holds a staff role acts as INSTALLER
+// only in what they do under the grant's cover; the rest of their access is as it was. A grant
+// on a home covers the home and its rooms; a grant on a space outside homes covers it and the
+// spaces below it, save every home among them, which only a grant on that home covers.
 //
 // A grant is active from starts_at until ends_at, and then ends on its own. While active it
 // covers, on the spaces it covers and nothing else:
@@ -670,9 +671,13 @@ message CommissioningGrant {
 // The grants on one space that have not ended, as listed to one caller: the answer to
 // webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
 // .commissioning_grants to every session that may list them whenever one is requested,
-// answered or ended before its time — to the installer, their own grants alone. Nothing is
-// pushed when a grant starts, ends or lapses at the time it states: a client reads those from
-// starts_at, ends_at and expires_at.
+// answered or ended before its time — to the installer, their own grants alone. When who may
+// list a home's grants changes — the home gaining a resident (webrtc.v1 household.proto,
+// MOVE-IN), its last residency ending — they are pushed whole to the sessions that could list
+// them before as well: empty, to one that may list none now, so that no session keeps showing a
+// grant it no longer has or a request it can no longer answer. Nothing is pushed when a grant
+// starts, ends or lapses at the time it states: a client reads those from starts_at, ends_at
+// and expires_at.
 message CommissioningGrants {
   // The space the grants are on, on a push; unset on a listing.
   kusinta.iot.identity.v1.SpaceId space_id = 1;
