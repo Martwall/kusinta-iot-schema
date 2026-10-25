@@ -455,9 +455,9 @@ enum BlockReason {
   // OUTPUT_LEASE test's 5 minutes.
   BLOCK_REASON_LEASE_TOO_LONG = 6;
   // The device lies on the other side of a home's boundary from the record that binds or reads
-  // it: a binding stored before filing a bound device across that boundary was refused
-  // (heating.v1). Its output is held at rest and nothing reads it for the record until the
-  // device is unbound, or filed back on the record's side.
+  // it: a binding stored before such crossings were refused or undone (heating.v1). Mostly
+  // transitional: the gateway removes such a binding once when it starts, so this is sent only
+  // until then. Its output is held at rest and nothing reads it for the record meanwhile.
   BLOCK_REASON_DEVICE_ACROSS_HOME = 7;
 }
 

@@ -102,6 +102,9 @@ export declare const CreateSpaceSchema: GenMessage<CreateSpace>;
  * request setting it is refused whole as NOT_ENTITLED. The household names its home with
  * SetHomeName instead.
  *
+ * A heating record the change would leave across a home's boundary is refused or undone as
+ * HEATING ACROSS A HOME says.
+ *
  * Every descriptive field carries explicit presence: absent means leave it alone, present
  * means set it to this — including to the empty string, which is how a description is
  * cleared.
@@ -176,7 +179,8 @@ export declare const UpdateSpaceSchema: GenMessage<UpdateSpace>;
  * Deletes a space. Refused if the space still holds devices or sub-spaces unless
  * cascade is set, so that emptying a building is always something the caller
  * asked for rather than something a stale client did by accident. Deleting a home, or
- * anything in one, is guarded as UpdateSpace is.
+ * anything in one, is guarded as UpdateSpace is, heating records included
+ * (HEATING ACROSS A HOME).
  *
  * @generated from message kusinta.iot.webrtc.v1.DeleteSpace
  */
@@ -299,7 +303,8 @@ export declare const RemoveUserFromSpaceSchema: GenMessage<RemoveUserFromSpace>;
  * the gateway, and within the household it is a household admin's, save a device a resident
  * owns, which its owner files (household.proto). A caller not allowed is refused as
  * NOT_ENTITLED, and filing that would leave a link the caller can see across a home's
- * boundary is refused whatever the caller; one they cannot see is removed instead.
+ * boundary is refused whatever the caller; one they cannot see is removed instead. A heating
+ * record left across it is refused or undone as HEATING ACROSS A HOME says.
  *
  * @generated from message kusinta.iot.webrtc.v1.PlaceDeviceInSpace
  */
@@ -326,7 +331,8 @@ export declare const PlaceDeviceInSpaceSchema: GenMessage<PlaceDeviceInSpace>;
  * space and with no owner is unfiled, and visible only to the administrator.
  *
  * Taking a device out of a home is guarded as PlaceDeviceInSpace is, and removes its links
- * to devices still in the home.
+ * to devices still in the home; a heating record it would leave across the boundary is refused
+ * or undone as HEATING ACROSS A HOME says.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveDeviceFromSpace
  */
@@ -356,7 +362,9 @@ export declare const RemoveDeviceFromSpaceSchema: GenMessage<RemoveDeviceFromSpa
  *
  * Only a RESIDENT claim makes the caller the owner. A COMPANY claim records that the
  * building owns the device, names no person, and grants the caller no reach. Claims of a
- * device in a home, or of one already claimed, are restricted by the gateway.
+ * device in a home, or of one already claimed, are restricted by the gateway. A claim, with
+ * initial_space_id or without, that would leave a heating record across a home's boundary is
+ * refused or undone as HEATING ACROSS A HOME says.
  *
  * @generated from message kusinta.iot.webrtc.v1.ClaimDevice
  */
@@ -408,9 +416,10 @@ export declare type ClaimDevice = Message<"kusinta.iot.webrtc.v1.ClaimDevice"> &
 export declare const ClaimDeviceSchema: GenMessage<ClaimDevice>;
 
 /**
- * Gives up ownership. The device keeps whatever space filing it has, except that a device in
- * a home stays filed in the home alone, as one of the building's own devices there — as
- * when its owner moves out; if it has none it becomes unfiled.
+ * Gives up ownership. The device keeps whatever space filing it has, except that a device in a
+ * home stays filed in the home alone, as one of the building's own devices there — as when its
+ * owner moves out; if it has none it becomes unfiled. A heating record the release would leave
+ * across a home's boundary is undone, never refused (HEATING ACROSS A HOME).
  *
  * @generated from message kusinta.iot.webrtc.v1.ReleaseDevice
  */
