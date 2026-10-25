@@ -34,6 +34,7 @@ enum PropertyUpdate_Value {
   int64Value,
   uint64Value,
   nullValue,
+  doubleValue,
   notSet
 }
 
@@ -127,6 +128,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     $fixnum.Int64? int64Value,
     $fixnum.Int64? uint64Value,
     $2.NullValue? nullValue,
+    $core.double? doubleValue,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -146,6 +148,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     if (int64Value != null) result.int64Value = int64Value;
     if (uint64Value != null) result.uint64Value = uint64Value;
     if (nullValue != null) result.nullValue = nullValue;
+    if (doubleValue != null) result.doubleValue = doubleValue;
     return result;
   }
 
@@ -169,6 +172,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
     16: PropertyUpdate_Value.int64Value,
     17: PropertyUpdate_Value.uint64Value,
     18: PropertyUpdate_Value.nullValue,
+    19: PropertyUpdate_Value.doubleValue,
     0: PropertyUpdate_Value.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -176,7 +180,7 @@ class PropertyUpdate extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 4, 5, 6, 7, 8, 16, 17, 18])
+    ..oo(0, [3, 4, 5, 6, 7, 8, 16, 17, 18, 19])
     ..aOM<$0.DeviceId>(1, _omitFieldNames ? '' : 'deviceId',
         subBuilder: $0.DeviceId.create)
     ..aOS(2, _omitFieldNames ? '' : 'attributeName')
@@ -208,6 +212,8 @@ class PropertyUpdate extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<$2.NullValue>(18, _omitFieldNames ? '' : 'nullValue',
         subBuilder: $2.NullValue.create)
+    ..a<$core.double>(
+        19, _omitFieldNames ? '' : 'doubleValue', $pb.PbFieldType.OD)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -436,6 +442,15 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   void clearNullValue() => $_clearField(18);
   @$pb.TagNumber(18)
   $2.NullValue ensureNullValue() => $_ensure(16);
+
+  @$pb.TagNumber(19)
+  $core.double get doubleValue => $_getN(17);
+  @$pb.TagNumber(19)
+  set doubleValue($core.double value) => $_setDouble(17, value);
+  @$pb.TagNumber(19)
+  $core.bool hasDoubleValue() => $_has(17);
+  @$pb.TagNumber(19)
+  void clearDoubleValue() => $_clearField(19);
 }
 
 class PropertyUpdateBatch extends $pb.GeneratedMessage {

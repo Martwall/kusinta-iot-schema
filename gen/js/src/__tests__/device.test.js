@@ -127,6 +127,12 @@ describe('PropertyUpdate', () => {
     expect(decoded.value).toEqual({ case: 'uint64Value', value: 4_295_000_000n })
   })
 
+  it('carries a non-integer value a float cannot hold in double_value', () => {
+    const u = create(PropertyUpdateSchema, { value: { case: 'doubleValue', value: 12_345_678.25 } })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))
+    expect(decoded.value).toEqual({ case: 'doubleValue', value: 12_345_678.25 })
+  })
+
   it('carries a reported null', () => {
     const u = create(PropertyUpdateSchema, { value: { case: 'nullValue', value: {} } })
     const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, u))

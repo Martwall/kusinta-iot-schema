@@ -24,7 +24,7 @@ VALUE_PROVENANCE_OPTIMISTIC: ValueProvenance
 VALUE_PROVENANCE_CORRECTED: ValueProvenance
 
 class PropertyUpdate(_message.Message):
-    __slots__ = ("device_id", "attribute_name", "int_value", "uint_value", "bool_value", "float_value", "string_value", "bytes_value", "int64_value", "uint64_value", "null_value", "timestamp", "provenance", "endpoint_id", "vendor_extension", "cluster_id", "attribute_id")
+    __slots__ = ("device_id", "attribute_name", "int_value", "uint_value", "bool_value", "float_value", "string_value", "bytes_value", "int64_value", "uint64_value", "null_value", "double_value", "timestamp", "provenance", "endpoint_id", "vendor_extension", "cluster_id", "attribute_id")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     ATTRIBUTE_NAME_FIELD_NUMBER: _ClassVar[int]
     INT_VALUE_FIELD_NUMBER: _ClassVar[int]
@@ -36,6 +36,7 @@ class PropertyUpdate(_message.Message):
     INT64_VALUE_FIELD_NUMBER: _ClassVar[int]
     UINT64_VALUE_FIELD_NUMBER: _ClassVar[int]
     NULL_VALUE_FIELD_NUMBER: _ClassVar[int]
+    DOUBLE_VALUE_FIELD_NUMBER: _ClassVar[int]
     TIMESTAMP_FIELD_NUMBER: _ClassVar[int]
     PROVENANCE_FIELD_NUMBER: _ClassVar[int]
     ENDPOINT_ID_FIELD_NUMBER: _ClassVar[int]
@@ -53,13 +54,14 @@ class PropertyUpdate(_message.Message):
     int64_value: int
     uint64_value: int
     null_value: _cluster_state_pb2.NullValue
+    double_value: float
     timestamp: _timestamp_pb2.Timestamp
     provenance: ValueProvenance
     endpoint_id: int
     vendor_extension: str
     cluster_id: int
     attribute_id: int
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., int_value: _Optional[int] = ..., uint_value: _Optional[int] = ..., bool_value: _Optional[bool] = ..., float_value: _Optional[float] = ..., string_value: _Optional[str] = ..., bytes_value: _Optional[bytes] = ..., int64_value: _Optional[int] = ..., uint64_value: _Optional[int] = ..., null_value: _Optional[_Union[_cluster_state_pb2.NullValue, _Mapping]] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[ValueProvenance, str]] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ..., cluster_id: _Optional[int] = ..., attribute_id: _Optional[int] = ...) -> None: ...
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., attribute_name: _Optional[str] = ..., int_value: _Optional[int] = ..., uint_value: _Optional[int] = ..., bool_value: _Optional[bool] = ..., float_value: _Optional[float] = ..., string_value: _Optional[str] = ..., bytes_value: _Optional[bytes] = ..., int64_value: _Optional[int] = ..., uint64_value: _Optional[int] = ..., null_value: _Optional[_Union[_cluster_state_pb2.NullValue, _Mapping]] = ..., double_value: _Optional[float] = ..., timestamp: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[ValueProvenance, str]] = ..., endpoint_id: _Optional[int] = ..., vendor_extension: _Optional[str] = ..., cluster_id: _Optional[int] = ..., attribute_id: _Optional[int] = ...) -> None: ...
 
 class PropertyUpdateBatch(_message.Message):
     __slots__ = ("updates", "batch_timestamp")
