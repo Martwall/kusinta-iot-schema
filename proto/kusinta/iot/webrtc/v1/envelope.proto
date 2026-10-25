@@ -27,8 +27,31 @@ option optimize_for = SPEED;
 message Ping {}
 message Pong {}
 
+// The gateway refused the session's handshake, gateway → app; the session ends.
 message HandshakeRejected {
+  // For logs and debugging only, in the gateway's words. An app MUST NOT show it to a user: it
+  // names the refusal by code, in its user's language.
   string reason = 1;
+
+  // Why, as a closed list. Rollout note: a gateway that predates this field sends reason alone,
+  // which an app reads as UNSPECIFIED.
+  HandshakeRejectReason code = 2;
+}
+
+// Why a handshake was refused (HandshakeRejected.code).
+enum HandshakeRejectReason {
+  // Not stated, or a value this app's schema does not know: an app says that the gateway
+  // refused the connection, and no more.
+  HANDSHAKE_REJECT_REASON_UNSPECIFIED = 0;
+
+  // A message the gateway could not decode.
+  HANDSHAKE_REJECT_REASON_INVALID_ENCODING = 1;
+
+  // A message before AppHandshake, which must come first.
+  HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED = 2;
+
+  // The token in AppHandshake was not accepted (AppTokenClaims).
+  HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED = 3;
 }
 
 // AppHandshake must be the first message sent by the app on the data channel.

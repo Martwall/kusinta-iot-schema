@@ -117,12 +117,15 @@ class Pong extends $pb.GeneratedMessage {
   static Pong? _defaultInstance;
 }
 
+/// The gateway refused the session's handshake, gateway → app; the session ends.
 class HandshakeRejected extends $pb.GeneratedMessage {
   factory HandshakeRejected({
     $core.String? reason,
+    HandshakeRejectReason? code,
   }) {
     final result = create();
     if (reason != null) result.reason = reason;
+    if (code != null) result.code = code;
     return result;
   }
 
@@ -141,6 +144,12 @@ class HandshakeRejected extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'reason')
+    ..e<HandshakeRejectReason>(
+        2, _omitFieldNames ? '' : 'code', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HandshakeRejectReason.HANDSHAKE_REJECT_REASON_UNSPECIFIED,
+        valueOf: HandshakeRejectReason.valueOf,
+        enumValues: HandshakeRejectReason.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -164,6 +173,8 @@ class HandshakeRejected extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<HandshakeRejected>(create);
   static HandshakeRejected? _defaultInstance;
 
+  /// For logs and debugging only, in the gateway's words. An app MUST NOT show it to a user: it
+  /// names the refusal by code, in its user's language.
   @$pb.TagNumber(1)
   $core.String get reason => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -172,6 +183,17 @@ class HandshakeRejected extends $pb.GeneratedMessage {
   $core.bool hasReason() => $_has(0);
   @$pb.TagNumber(1)
   void clearReason() => $_clearField(1);
+
+  /// Why, as a closed list. Rollout note: a gateway that predates this field sends reason alone,
+  /// which an app reads as UNSPECIFIED.
+  @$pb.TagNumber(2)
+  HandshakeRejectReason get code => $_getN(1);
+  @$pb.TagNumber(2)
+  set code(HandshakeRejectReason value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasCode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCode() => $_clearField(2);
 }
 
 /// AppHandshake must be the first message sent by the app on the data channel.

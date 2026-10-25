@@ -14,6 +14,48 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// Why a handshake was refused (HandshakeRejected.code).
+class HandshakeRejectReason extends $pb.ProtobufEnum {
+  /// Not stated, or a value this app's schema does not know: an app says that the gateway
+  /// refused the connection, and no more.
+  static const HandshakeRejectReason HANDSHAKE_REJECT_REASON_UNSPECIFIED =
+      HandshakeRejectReason._(
+          0, _omitEnumNames ? '' : 'HANDSHAKE_REJECT_REASON_UNSPECIFIED');
+
+  /// A message the gateway could not decode.
+  static const HandshakeRejectReason HANDSHAKE_REJECT_REASON_INVALID_ENCODING =
+      HandshakeRejectReason._(
+          1, _omitEnumNames ? '' : 'HANDSHAKE_REJECT_REASON_INVALID_ENCODING');
+
+  /// A message before AppHandshake, which must come first.
+  static const HandshakeRejectReason
+      HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED = HandshakeRejectReason._(2,
+          _omitEnumNames ? '' : 'HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED');
+
+  /// The token in AppHandshake was not accepted (AppTokenClaims).
+  static const HandshakeRejectReason
+      HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED = HandshakeRejectReason._(
+          3,
+          _omitEnumNames
+              ? ''
+              : 'HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED');
+
+  static const $core.List<HandshakeRejectReason> values =
+      <HandshakeRejectReason>[
+    HANDSHAKE_REJECT_REASON_UNSPECIFIED,
+    HANDSHAKE_REJECT_REASON_INVALID_ENCODING,
+    HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED,
+    HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED,
+  ];
+
+  static final $core.List<HandshakeRejectReason?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static HandshakeRejectReason? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HandshakeRejectReason._(super.value, super.name);
+}
+
 /// Machine-readable classification of a session-level gateway error, so the app
 /// can branch without string-matching a human sentence. Deliberately an enum here,
 /// unlike the free-form code on connector.v1.GatewayError: the app leg is versioned

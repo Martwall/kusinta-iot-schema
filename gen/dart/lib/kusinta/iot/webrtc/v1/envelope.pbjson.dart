@@ -14,6 +14,24 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use handshakeRejectReasonDescriptor instead')
+const HandshakeRejectReason$json = {
+  '1': 'HandshakeRejectReason',
+  '2': [
+    {'1': 'HANDSHAKE_REJECT_REASON_UNSPECIFIED', '2': 0},
+    {'1': 'HANDSHAKE_REJECT_REASON_INVALID_ENCODING', '2': 1},
+    {'1': 'HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED', '2': 2},
+    {'1': 'HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED', '2': 3},
+  ],
+};
+
+/// Descriptor for `HandshakeRejectReason`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List handshakeRejectReasonDescriptor = $convert.base64Decode(
+    'ChVIYW5kc2hha2VSZWplY3RSZWFzb24SJwojSEFORFNIQUtFX1JFSkVDVF9SRUFTT05fVU5TUE'
+    'VDSUZJRUQQABIsCihIQU5EU0hBS0VfUkVKRUNUX1JFQVNPTl9JTlZBTElEX0VOQ09ESU5HEAES'
+    'LgoqSEFORFNIQUtFX1JFSkVDVF9SRUFTT05fSEFORFNIQUtFX1JFUVVJUkVEEAISMQotSEFORF'
+    'NIQUtFX1JFSkVDVF9SRUFTT05fQVVUSEVOVElDQVRJT05fRkFJTEVEEAM=');
+
 @$core.Deprecated('Use gatewayErrorCodeDescriptor instead')
 const GatewayErrorCode$json = {
   '1': 'GatewayErrorCode',
@@ -58,12 +76,21 @@ const HandshakeRejected$json = {
   '1': 'HandshakeRejected',
   '2': [
     {'1': 'reason', '3': 1, '4': 1, '5': 9, '10': 'reason'},
+    {
+      '1': 'code',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.HandshakeRejectReason',
+      '10': 'code'
+    },
   ],
 };
 
 /// Descriptor for `HandshakeRejected`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List handshakeRejectedDescriptor = $convert.base64Decode(
-    'ChFIYW5kc2hha2VSZWplY3RlZBIWCgZyZWFzb24YASABKAlSBnJlYXNvbg==');
+    'ChFIYW5kc2hha2VSZWplY3RlZBIWCgZyZWFzb24YASABKAlSBnJlYXNvbhJACgRjb2RlGAIgAS'
+    'gOMiwua3VzaW50YS5pb3Qud2VicnRjLnYxLkhhbmRzaGFrZVJlamVjdFJlYXNvblIEY29kZQ==');
 
 @$core.Deprecated('Use appHandshakeDescriptor instead')
 const AppHandshake$json = {
