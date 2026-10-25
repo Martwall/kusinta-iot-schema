@@ -111,10 +111,11 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
    * that fits in either width, and a consumer reads both into the same typed field.
    *
    * A non-integer value travels in double_value: a float holds about seven significant digits,
-   * so a meter total of 12345678 kWh would arrive as 12345680. float_value stays for a value
-   * that is 32-bit at its source, and a consumer reads both into the same typed field. Rollout
-   * note: a consumer that predates double_value drops it, so a producer sends it only once the
-   * gateway it reports to reads it, as for int64_value and uint64_value.
+   * so a meter total of 12345.678 kWh would arrive as 12345.677734375. float_value stays for a
+   * value that is 32-bit at its source, and a consumer reads both into the same typed field.
+   * Rollout note: a consumer that predates double_value drops it, so a producer sends it only
+   * once the gateway it reports to reads it, as for int64_value and uint64_value.
+   *
    * null_value is a reported Matter null: it leaves the typed field unset, "not reported",
    * rather than keeping the last value.
    *
