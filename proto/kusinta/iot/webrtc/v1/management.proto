@@ -41,15 +41,23 @@ option optimize_for = SPEED;
 //     in another home, outside homes while the record is in one, in a home while the record is
 //     outside homes, or filed in no space;
 //   * a floor zone's rooms lie on both sides of a home's boundary;
-//   * a household's record — a floor zone or comfort load in a home — is carried out of its
-//     home whole, or a building's record into a home.
+//   * a household's record — a plant in a home with its circuits and their zones, or a floor
+//     zone or comfort load in a home — is carried out of its home whole, or a building's record
+//     — a plant outside homes with its circuits and zones, or a floor zone outside homes — into
+//     a home. A plant is carried whenever its space is.
 //
-// Such a change by PlaceDeviceInSpace, ClaimDevice (with initial_space_id or without),
-// RemoveDeviceFromSpace, UpdateSpace (a reparent, a detach or a change of type) or DeleteSpace
-// is refused when the caller is given a record in the way, as NOT_ENTITLED with metadata
-// "reason":
-//   "heating_across_home" the caller may change every such record: unbind the device,
-//                                    or move the record, first;
+// A heating put (PutHeatingPlant, PutHeatingCircuit, PutFloorZone, PutComfortLoad) never makes
+// a crossing: one binding or reading a device on the other side of the record's home boundary,
+// or filed in no space, is refused as NOT_ENTITLED with the metadata of a device out of reach,
+// so the answer says nothing of where the device is filed. A binding the put leaves as stored
+// is not judged again, unless the put moves the record across the boundary.
+//
+// A change that crosses it by PlaceDeviceInSpace, ClaimDevice (with initial_space_id or
+// without), RemoveDeviceFromSpace, UpdateSpace (a reparent, a detach or a change of type) or
+// DeleteSpace is refused when the caller is given a record in the way, as NOT_ENTITLED with
+// metadata "reason":
+//   "heating_across_home"            the caller may change every such record: unbind the
+//                                    device, or move the record, first;
 //   "heating_across_home_not_yours"  the caller is given one they may not change.
 // A caller who does not see every device those records name is refused as NOT_ENTITLED with no
 // "reason", so the refusal names nothing they do not see.
@@ -58,12 +66,15 @@ option optimize_for = SPEED;
 // in the same change. A binding or reading across the boundary is removed from its record; a
 // floor zone loses the rooms the change took across, its control room cleared if that went, and
 // the area shares of the rooms it keeps rescaled to sum to 1000; a household's record carried
-// out of its home whole is deleted with its household settings (a comfort load's windows), and
-// a building's record carried into a home is deleted too. The same holds, never refused for it,
-// for ReleaseDevice, for RemoveFromGateway's releases of the member's own devices, for devices
-// filed by pairing or by a linked account, and for a household's wipe (household.proto, WIPE).
-// Each record changed so has its revision bumped, and an output whose binding is removed has
-// its lapse value written (heating.v1).
+// out of its home whole is deleted with what lies under it (a plant's circuits and zones) and
+// its household settings (a comfort load's windows), and a building's record carried into a
+// home is deleted likewise. The same holds, never refused for it, for ReleaseDevice, for
+// RemoveFromGateway's releases of the member's own devices, for devices filed by pairing or by
+// a linked account, and for a household's wipe (household.proto, WIPE). Each record changed so
+// has its revision bumped, and an output whose binding is removed has its lapse value written
+// (heating.v1). A floor zone whose control room was cleared is not driven until whoever may put
+// it names a new one among the rooms it keeps: a put with none is refused as
+// "ZONE_CONTROL_ROOM" (PutHeatingPlant).
 
 // Creates a space. A space with no parent_space_id is top level, which is a
 // stronger request than it looks: there is no parent whose reach could authorize
