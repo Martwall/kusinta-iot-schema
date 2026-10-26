@@ -44,7 +44,11 @@ option optimize_for = SPEED;
 //   * a household's record — a plant in a home with its circuits and their zones, or a floor
 //     zone or comfort load in a home — is carried out of its home whole, or a building's record
 //     — a plant outside homes with its circuits and zones, or a floor zone outside homes — into
-//     a home. A plant is carried whenever its space is.
+//     a home. A plant is carried whenever its space is, and a floor zone whenever all its rooms
+//     are, whatever its plant. A deletion carries a record when it changes whose the record is:
+//     a home's comfort load whose room is deleted would be the building's.
+// Only what the change touches is weighed: a crossing it leaves as it was, made before this
+// rule, refuses nothing and is undone by nothing.
 //
 // A heating put (PutHeatingPlant, PutHeatingCircuit, PutFloorZone, PutComfortLoad) never makes
 // a crossing: one binding or reading a device on the other side of the record's home boundary,
@@ -63,18 +67,32 @@ option optimize_for = SPEED;
 // "reason", so the refusal names nothing they do not see.
 //
 // Records the caller is not given never refuse a change: it applies, and the crossing is undone
-// in the same change. A binding or reading across the boundary is removed from its record; a
-// floor zone loses the rooms the change took across, its control room cleared if that went, and
-// the area shares of the rooms it keeps rescaled to sum to 1000; a household's record carried
-// out of its home whole is deleted with what lies under it (a plant's circuits and zones) and
-// its household settings (a comfort load's windows), and a building's record carried into a
-// home is deleted likewise. The same holds, never refused for it, for ReleaseDevice, for
+// in the same change. A binding or reading across the boundary is removed from its record. A
+// floor zone is cut on the side it was whose before the change — a room in a home makes it that
+// home's — losing the rooms the change took across or deleted, its control room cleared if that
+// went, and the area shares of the rooms it keeps made whole again in proportion. A household's
+// record carried out of its home whole is removed as a household's data goes at a wipe, with
+// what lies under it (a plant's circuits and zones), its bindings, a comfort load's windows, a
+// zone's rooms and duty, and what the household answered of it (commissioning.v1), comfort
+// facts among it; house facts and tests of it stay, naming nobody. What the household answered
+// of a space the change takes out of its home goes too. A building's record carried into a
+// home is removed likewise. The same holds, never refused for it, for ReleaseDevice, for
 // RemoveFromGateway's releases of the member's own devices, for devices filed by pairing or by
 // a linked account, and for a household's wipe (household.proto, WIPE). Each record changed so
-// has its revision bumped, and an output whose binding is removed has its lapse value written
-// (heating.v1). A floor zone whose control room was cleared is not driven until whoever may put
-// it names a new one among the rooms it keeps: a put with none is refused as
-// "ZONE_CONTROL_ROOM" (PutHeatingPlant).
+// has its revision bumped, so a put naming the revision it had is stale and a pass held against
+// a binding it lost is no longer current, and every output no longer bound is returned to rest
+// once the change is committed (heating.v1). heating.v1 pushes no record: whoever is given one
+// sees it changed, or gone, at their next ListHeating. A floor zone whose control room was
+// cleared is not driven until whoever may put it names a new one among the rooms it keeps: a
+// put with none is refused as "ZONE_CONTROL_ROOM" (PutHeatingPlant).
+//
+// START-UP. A crossing stored before this rule is undone once, when the gateway starts, before
+// it first reads its heating records: a binding or reading across a boundary is removed, and a
+// floor zone stored with rooms on both sides is cut as above, keeping the home it is whose — a
+// room in a home makes it that home's — and losing its rooms outside it. The step writes no
+// output: none of those outputs has been driven since they were held at rest, and a lease still
+// running lapses on its own. A record stored carried across before the rule is not removed by
+// it.
 
 // Creates a space. A space with no parent_space_id is top level, which is a
 // stronger request than it looks: there is no parent whose reach could authorize

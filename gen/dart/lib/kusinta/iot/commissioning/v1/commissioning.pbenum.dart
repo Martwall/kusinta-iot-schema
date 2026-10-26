@@ -289,8 +289,9 @@ class BlockReason extends $pb.ProtobufEnum {
 
   /// The device lies on the other side of a home's boundary from the record that binds or reads
   /// it: a binding stored before such crossings were refused or undone (heating.v1). Mostly
-  /// transitional: the gateway removes such a binding once when it starts, so this is sent only
-  /// until then. Its output is held at rest and nothing reads it for the record meanwhile.
+  /// transitional: a gateway removes such a binding once at start-up, before it first reads its
+  /// records (webrtc.v1 management.proto, START-UP), so this is sent only by one that holds such
+  /// a binding yet. Its output is held at rest and nothing reads it for the record meanwhile.
   static const BlockReason BLOCK_REASON_DEVICE_ACROSS_HOME =
       BlockReason._(7, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_ACROSS_HOME');
 

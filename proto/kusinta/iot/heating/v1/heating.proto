@@ -58,8 +58,9 @@ option optimize_for = SPEED;
 // room was cleared (webrtc.v1 management.proto, HEATING ACROSS A HOME) is not driven until a
 // put names a new one. No record reaches across a home's boundary: a change that would leave
 // one so is refused or undone as webrtc.v1 management.proto (HEATING ACROSS A HOME) says. A
-// binding left across it from before that rule is removed once, when the gateway starts; until
-// then its output is not driven, nor its device read for the record, and it blocks its feature
+// binding across it, or a floor zone split by it, stored before that rule is undone once, when
+// the gateway starts (management.proto, START-UP); a binding across it is never driven or read
+// for its record meanwhile, and blocks its feature
 // (commissioning.v1.BLOCK_REASON_DEVICE_ACROSS_HOME). When an output stops being bound — its
 // record removed, or a put binding another output in its place — the gateway writes its lapse
 // value, ending any lease at once; where the device cannot be reached then, the lease running
