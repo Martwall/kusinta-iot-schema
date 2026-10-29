@@ -1,6 +1,7 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
@@ -21,6 +22,20 @@ class RoomClimateCondition(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ROOM_CLIMATE_CONDITION_NO_HEATING: _ClassVar[RoomClimateCondition]
     ROOM_CLIMATE_CONDITION_HEATING_UNREACHABLE: _ClassVar[RoomClimateCondition]
     ROOM_CLIMATE_CONDITION_NO_SENSOR: _ClassVar[RoomClimateCondition]
+
+class OuterLimitKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    OUTER_LIMIT_KIND_UNSPECIFIED: _ClassVar[OuterLimitKind]
+    OUTER_LIMIT_KIND_MIN: _ClassVar[OuterLimitKind]
+    OUTER_LIMIT_KIND_MAX: _ClassVar[OuterLimitKind]
+    OUTER_LIMIT_KIND_AWAY_MIN: _ClassVar[OuterLimitKind]
+
+class OuterLimitsCoverage(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    OUTER_LIMITS_COVERAGE_UNSPECIFIED: _ClassVar[OuterLimitsCoverage]
+    OUTER_LIMITS_COVERAGE_NONE: _ClassVar[OuterLimitsCoverage]
+    OUTER_LIMITS_COVERAGE_SOME: _ClassVar[OuterLimitsCoverage]
+    OUTER_LIMITS_COVERAGE_ALL: _ClassVar[OuterLimitsCoverage]
 
 class RoomPlanning(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -82,6 +97,14 @@ ROOM_CLIMATE_CONDITION_WINDOW_OPEN: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_NO_HEATING: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_HEATING_UNREACHABLE: RoomClimateCondition
 ROOM_CLIMATE_CONDITION_NO_SENSOR: RoomClimateCondition
+OUTER_LIMIT_KIND_UNSPECIFIED: OuterLimitKind
+OUTER_LIMIT_KIND_MIN: OuterLimitKind
+OUTER_LIMIT_KIND_MAX: OuterLimitKind
+OUTER_LIMIT_KIND_AWAY_MIN: OuterLimitKind
+OUTER_LIMITS_COVERAGE_UNSPECIFIED: OuterLimitsCoverage
+OUTER_LIMITS_COVERAGE_NONE: OuterLimitsCoverage
+OUTER_LIMITS_COVERAGE_SOME: OuterLimitsCoverage
+OUTER_LIMITS_COVERAGE_ALL: OuterLimitsCoverage
 ROOM_PLANNING_UNSPECIFIED: RoomPlanning
 ROOM_PLANNING_PLANNED: RoomPlanning
 ROOM_PLANNING_NOT_PLANNED: RoomPlanning
@@ -116,17 +139,19 @@ CLIMATE_SUMMARY_WEIGHTING_UNSPECIFIED: ClimateSummaryWeighting
 CLIMATE_SUMMARY_WEIGHTING_ROOMS_EQUAL: ClimateSummaryWeighting
 
 class TargetChange(_message.Message):
-    __slots__ = ("at", "user", "device")
+    __slots__ = ("at", "user", "device", "move_in")
     AT_FIELD_NUMBER: _ClassVar[int]
     USER_FIELD_NUMBER: _ClassVar[int]
     DEVICE_FIELD_NUMBER: _ClassVar[int]
+    MOVE_IN_FIELD_NUMBER: _ClassVar[int]
     at: _timestamp_pb2.Timestamp
     user: _identity_pb2.UserId
     device: _identity_pb2.DeviceId
-    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., user: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., device: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
+    move_in: bool
+    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., user: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., device: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., move_in: _Optional[bool] = ...) -> None: ...
 
 class RoomClimate(_message.Message):
-    __slots__ = ("space_id", "target_centidegrees", "target_change", "effective_target_centidegrees", "overrides_mode", "mode_space_id", "min_centidegrees", "max_centidegrees", "sensor_ids", "sensors_configured", "measured_centidegrees", "measured_by", "condition", "lock_device_controls", "state_withheld", "explanations", "target_held_until", "planning", "comfort_band_low_centidegrees", "comfort_band_high_centidegrees")
+    __slots__ = ("space_id", "target_centidegrees", "target_change", "effective_target_centidegrees", "overrides_mode", "mode_space_id", "min_centidegrees", "max_centidegrees", "sensor_ids", "sensors_configured", "measured_centidegrees", "measured_by", "condition", "lock_device_controls", "state_withheld", "explanations", "target_held_until", "planning", "comfort_band_low_centidegrees", "comfort_band_high_centidegrees", "outer_limits", "inner_limits", "outer_limit_clamp", "outer_limits_coverage", "outer_bound_device_ids")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     TARGET_CHANGE_FIELD_NUMBER: _ClassVar[int]
@@ -147,6 +172,11 @@ class RoomClimate(_message.Message):
     PLANNING_FIELD_NUMBER: _ClassVar[int]
     COMFORT_BAND_LOW_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     COMFORT_BAND_HIGH_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OUTER_LIMITS_FIELD_NUMBER: _ClassVar[int]
+    INNER_LIMITS_FIELD_NUMBER: _ClassVar[int]
+    OUTER_LIMIT_CLAMP_FIELD_NUMBER: _ClassVar[int]
+    OUTER_LIMITS_COVERAGE_FIELD_NUMBER: _ClassVar[int]
+    OUTER_BOUND_DEVICE_IDS_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     target_centidegrees: int
     target_change: TargetChange
@@ -167,7 +197,52 @@ class RoomClimate(_message.Message):
     planning: RoomPlanning
     comfort_band_low_centidegrees: int
     comfort_band_high_centidegrees: int
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ..., state_withheld: _Optional[bool] = ..., explanations: _Optional[_Iterable[_Union[ClimateExplanation, _Mapping]]] = ..., target_held_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., planning: _Optional[_Union[RoomPlanning, str]] = ..., comfort_band_low_centidegrees: _Optional[int] = ..., comfort_band_high_centidegrees: _Optional[int] = ...) -> None: ...
+    outer_limits: OuterRoomLimits
+    inner_limits: InnerRoomLimits
+    outer_limit_clamp: OuterLimitClamp
+    outer_limits_coverage: OuterLimitsCoverage
+    outer_bound_device_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.DeviceId]
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., target_change: _Optional[_Union[TargetChange, _Mapping]] = ..., effective_target_centidegrees: _Optional[int] = ..., overrides_mode: _Optional[bool] = ..., mode_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ..., sensor_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., sensors_configured: _Optional[bool] = ..., measured_centidegrees: _Optional[int] = ..., measured_by: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., condition: _Optional[_Union[RoomClimateCondition, str]] = ..., lock_device_controls: _Optional[bool] = ..., state_withheld: _Optional[bool] = ..., explanations: _Optional[_Iterable[_Union[ClimateExplanation, _Mapping]]] = ..., target_held_until: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., planning: _Optional[_Union[RoomPlanning, str]] = ..., comfort_band_low_centidegrees: _Optional[int] = ..., comfort_band_high_centidegrees: _Optional[int] = ..., outer_limits: _Optional[_Union[OuterRoomLimits, _Mapping]] = ..., inner_limits: _Optional[_Union[InnerRoomLimits, _Mapping]] = ..., outer_limit_clamp: _Optional[_Union[OuterLimitClamp, _Mapping]] = ..., outer_limits_coverage: _Optional[_Union[OuterLimitsCoverage, str]] = ..., outer_bound_device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ...) -> None: ...
+
+class OuterLimit(_message.Message):
+    __slots__ = ("centidegrees", "set_by_role", "set_at")
+    CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    SET_BY_ROLE_FIELD_NUMBER: _ClassVar[int]
+    SET_AT_FIELD_NUMBER: _ClassVar[int]
+    centidegrees: int
+    set_by_role: _roles_pb2.Role
+    set_at: _timestamp_pb2.Timestamp
+    def __init__(self, centidegrees: _Optional[int] = ..., set_by_role: _Optional[_Union[_roles_pb2.Role, str]] = ..., set_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class OuterRoomLimits(_message.Message):
+    __slots__ = ("min", "max", "away_min", "move_in_target", "min_accepted_threshold_centidegrees")
+    MIN_FIELD_NUMBER: _ClassVar[int]
+    MAX_FIELD_NUMBER: _ClassVar[int]
+    AWAY_MIN_FIELD_NUMBER: _ClassVar[int]
+    MOVE_IN_TARGET_FIELD_NUMBER: _ClassVar[int]
+    MIN_ACCEPTED_THRESHOLD_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    min: OuterLimit
+    max: OuterLimit
+    away_min: OuterLimit
+    move_in_target: OuterLimit
+    min_accepted_threshold_centidegrees: int
+    def __init__(self, min: _Optional[_Union[OuterLimit, _Mapping]] = ..., max: _Optional[_Union[OuterLimit, _Mapping]] = ..., away_min: _Optional[_Union[OuterLimit, _Mapping]] = ..., move_in_target: _Optional[_Union[OuterLimit, _Mapping]] = ..., min_accepted_threshold_centidegrees: _Optional[int] = ...) -> None: ...
+
+class InnerRoomLimits(_message.Message):
+    __slots__ = ("min_centidegrees", "max_centidegrees")
+    MIN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    MAX_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    min_centidegrees: int
+    max_centidegrees: int
+    def __init__(self, min_centidegrees: _Optional[int] = ..., max_centidegrees: _Optional[int] = ...) -> None: ...
+
+class OuterLimitClamp(_message.Message):
+    __slots__ = ("limit", "unclamped_centidegrees")
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    UNCLAMPED_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    limit: OuterLimitKind
+    unclamped_centidegrees: int
+    def __init__(self, limit: _Optional[_Union[OuterLimitKind, str]] = ..., unclamped_centidegrees: _Optional[int] = ...) -> None: ...
 
 class ClimateExplanation(_message.Message):
     __slots__ = ("kind", "subject", "ends_at")

@@ -76,6 +76,7 @@ class BlockReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     BLOCK_REASON_DEVICE_GONE: _ClassVar[BlockReason]
     BLOCK_REASON_CONTROL_ROOM_GONE: _ClassVar[BlockReason]
     BLOCK_REASON_LEASE_TOO_LONG: _ClassVar[BlockReason]
+    BLOCK_REASON_DEVICE_ACROSS_HOME: _ClassVar[BlockReason]
 
 class TestKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -152,6 +153,7 @@ BLOCK_REASON_POWER_ON_NOT_AT_REST: BlockReason
 BLOCK_REASON_DEVICE_GONE: BlockReason
 BLOCK_REASON_CONTROL_ROOM_GONE: BlockReason
 BLOCK_REASON_LEASE_TOO_LONG: BlockReason
+BLOCK_REASON_DEVICE_ACROSS_HOME: BlockReason
 TEST_KIND_UNSPECIFIED: TestKind
 TEST_KIND_OUTPUT_LEASE: TestKind
 TEST_KIND_ZONE_EFFECT: TestKind

@@ -694,8 +694,9 @@ export declare type CommissioningGrant = Message<"kusinta.iot.commissioning.v1.C
 
   /**
    * Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
-   * for a space outside homes to the property owner and the gateway's administrators; to the
-   * installer it is unset, since a resident's user id would tell them who lives in the home.
+   * for a space outside homes or an empty home to the property owner and the gateway's
+   * administrators; to the installer it is unset, since a resident's user id would tell them
+   * who lives in the home.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId granted_by = 10;
    */
@@ -717,9 +718,13 @@ export declare const CommissioningGrantSchema: GenMessage<CommissioningGrant>;
  * The grants on one space that have not ended, as listed to one caller: the answer to
  * webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
  * .commissioning_grants to every session that may list them whenever one is requested,
- * answered or ended before its time — to the installer, their own grants alone. Nothing is
- * pushed when a grant starts, ends or lapses at the time it states: a client reads those from
- * starts_at, ends_at and expires_at.
+ * answered or ended before its time — to the installer, their own grants alone. When who may
+ * list a home's grants changes — the home gaining a resident (webrtc.v1 household.proto,
+ * MOVE-IN), its last residency ending — they are pushed whole to the sessions that could list
+ * them before as well: empty, to one that may list none now, so that no session keeps showing a
+ * grant it no longer has or a request it can no longer answer. Nothing is pushed when a grant
+ * starts, ends or lapses at the time it states: a client reads those from starts_at, ends_at
+ * and expires_at.
  *
  * @generated from message kusinta.iot.commissioning.v1.CommissioningGrants
  */
@@ -1140,6 +1145,17 @@ export enum BlockReason {
    * @generated from enum value: BLOCK_REASON_LEASE_TOO_LONG = 6;
    */
   LEASE_TOO_LONG = 6,
+
+  /**
+   * The device lies on the other side of a home's boundary from the record that binds or reads
+   * it: a binding stored before such crossings were refused or undone (heating.v1). Mostly
+   * transitional: a gateway removes such a binding once at start-up, before it first reads its
+   * records (webrtc.v1 management.proto, START-UP), so this is sent only by one that holds such
+   * a binding yet. Its output is held at rest and nothing reads it for the record meanwhile.
+   *
+   * @generated from enum value: BLOCK_REASON_DEVICE_ACROSS_HOME = 7;
+   */
+  DEVICE_ACROSS_HOME = 7,
 }
 
 /**

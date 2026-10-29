@@ -37,22 +37,34 @@ option optimize_for = SPEED;
 // these records, and a request naming one is refused as NOT_ENTITLED, however it is named.
 // A plant and its circuits are given to and changed by whoever holds those rights over the
 // plant's space: in a home as above; outside homes, the property owner and the gateway's
-// administrators. An output on a device the caller cannot reach — a zone relay at a central
-// manifold, outside the home — is bound by whoever can reach the device: the property owner,
-// the gateway's administrators, or an installer whose commissioning grant covers a space it
-// is filed in.
+// administrators.
+//
+// A zone relay at a central manifold is filed in the home it serves, on its apartment, wherever
+// it physically hangs (webrtc.v1.PlaceDeviceInSpace). It is then the home's device: its state
+// is withheld from service as any device's in a home is (access.v1.MembershipRelation), and its
+// outputs are bound by those who bind the home's — its household admins, or an installer whose
+// commissioning grant covers the home — so its binding never crosses a home's boundary
+// (webrtc.v1 management.proto, HEATING ACROSS A HOME). One device serves one home: a relay
+// whose channels would serve two homes cannot be bound to both, and each home has a relay of
+// its own.
 //
 // The gateway drives a bound output away from rest only while it holds a current pass of its
 // commissioning test (commissioning.v1, TEST_KIND_OUTPUT_LEASE), and only while its producer
-// states it as leased (device.v1.LeasedWrite) with a lapse value that leaves the contact
-// where its role rests. That is checked each time it drives, not only when the output is
-// bound: an output whose producer stops stating it so, or whose device is gone, is not
-// driven until that changes. A floor zone whose control room is deleted or no longer within
-// its plant's space is not driven either, and keeps naming the room until the record is put
-// again. When an output stops being bound — its record removed, or a put binding another
-// output in its place — the gateway writes its lapse value, ending any lease at once; where
-// the device cannot be reached then, the lease running out returns it to rest, and that is
-// the guarantee.
+// states it as leased (device.v1.LeasedWrite) with a lapse value that leaves the contact where
+// its role rests. That is checked each time it drives, not only when the output is bound: an
+// output whose producer stops stating it so, or whose device is gone, is not driven until that
+// changes. A floor zone whose control room is deleted or no longer within its plant's space is
+// not driven either, and keeps naming the room until the record is put again; one whose control
+// room was cleared (webrtc.v1 management.proto, HEATING ACROSS A HOME) is not driven until a
+// put names a new one. No record reaches across a home's boundary: a change that would leave
+// one so is refused or undone as webrtc.v1 management.proto (HEATING ACROSS A HOME) says. A
+// binding across it, or a floor zone split by it, stored before that rule is undone once, when
+// the gateway starts (management.proto, START-UP); a binding across it is never driven or read
+// for its record meanwhile, and blocks its feature
+// (commissioning.v1.BLOCK_REASON_DEVICE_ACROSS_HOME). When an output stops being bound — its
+// record removed, or a put binding another output in its place — the gateway writes its lapse
+// value, ending any lease at once; where the device cannot be reached then, the lease running
+// out returns it to rest, and that is the guarantee.
 
 // One attribute of one device: what a role reads or writes. Endpoint_id is required on the
 // Matter branch of the attribute here — an absent endpoint is refused, never read as the

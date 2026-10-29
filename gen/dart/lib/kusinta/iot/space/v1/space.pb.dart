@@ -38,6 +38,7 @@ class Space extends $pb.GeneratedMessage {
     $core.Iterable<SpaceMember>? members,
     $core.bool? membersWithheld,
     $core.String? homeName,
+    $1.Timestamp? climateHistoryClearedAt,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -55,6 +56,8 @@ class Space extends $pb.GeneratedMessage {
     if (members != null) result.members.addAll(members);
     if (membersWithheld != null) result.membersWithheld = membersWithheld;
     if (homeName != null) result.homeName = homeName;
+    if (climateHistoryClearedAt != null)
+      result.climateHistoryClearedAt = climateHistoryClearedAt;
     return result;
   }
 
@@ -99,6 +102,8 @@ class Space extends $pb.GeneratedMessage {
         subBuilder: SpaceMember.create)
     ..aOB(14, _omitFieldNames ? '' : 'membersWithheld')
     ..aOS(15, _omitFieldNames ? '' : 'homeName')
+    ..aOM<$1.Timestamp>(16, _omitFieldNames ? '' : 'climateHistoryClearedAt',
+        subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -298,6 +303,28 @@ class Space extends $pb.GeneratedMessage {
   $core.bool hasHomeName() => $_has(14);
   @$pb.TagNumber(15)
   void clearHomeName() => $_clearField(15);
+
+  /// On an apartment, when its household last cleared the home's climate history
+  /// (webrtc.v1.ClimateHistoryCleared.cleared_at): the lasting floor a session that missed the
+  /// push reads, sent on every listing. An app sets it as the home's floor when it reads it, and
+  /// drops anything of the home it holds dated before it, device events included, as on the push
+  /// (webrtc.v1 household.proto, CLIMATE HISTORY).
+  ///
+  /// Given to the home's residents only, and only when it falls within the recipient's current
+  /// residency: the start of that residency is already their floor, and an earlier clear is a
+  /// time from before it (access.v1.MembershipRelation). Unset for anyone else — service and
+  /// staff included — where the home has never been cleared, and on every other space. A wipe
+  /// erases it with the household's other records (webrtc.v1 household.proto, WIPE).
+  @$pb.TagNumber(16)
+  $1.Timestamp get climateHistoryClearedAt => $_getN(15);
+  @$pb.TagNumber(16)
+  set climateHistoryClearedAt($1.Timestamp value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasClimateHistoryClearedAt() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearClimateHistoryClearedAt() => $_clearField(16);
+  @$pb.TagNumber(16)
+  $1.Timestamp ensureClimateHistoryClearedAt() => $_ensure(15);
 }
 
 /// One membership of a space.

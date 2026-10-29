@@ -266,6 +266,14 @@ const HouseholdHandover$json = {
       '5': 8,
       '10': 'recipientHouseholdAdmin'
     },
+    {
+      '1': 'may_end_on_move_in',
+      '3': 13,
+      '4': 1,
+      '5': 8,
+      '10': 'mayEndOnMoveIn'
+    },
+    {'1': 'ended_by_move_in', '3': 14, '4': 1, '5': 8, '10': 'endedByMoveIn'},
   ],
 };
 
@@ -282,7 +290,9 @@ final $typed_data.Uint8List householdHandoverDescriptor = $convert.base64Decode(
     'cFIUc3RhZmZDb25maXJtYWJsZUZyb20SNQoIZW5kZWRfYXQYCSABKAsyGi5nb29nbGUucHJvdG'
     '9idWYuVGltZXN0YW1wUgdlbmRlZEF0EhgKB3ZhY2F0ZWQYCiABKAhSB3ZhY2F0ZWQSNAoWcmVj'
     'aXBpZW50X2luX2hvdXNlaG9sZBgLIAEoCFIUcmVjaXBpZW50SW5Ib3VzZWhvbGQSOgoZcmVjaX'
-    'BpZW50X2hvdXNlaG9sZF9hZG1pbhgMIAEoCFIXcmVjaXBpZW50SG91c2Vob2xkQWRtaW4=');
+    'BpZW50X2hvdXNlaG9sZF9hZG1pbhgMIAEoCFIXcmVjaXBpZW50SG91c2Vob2xkQWRtaW4SKgoS'
+    'bWF5X2VuZF9vbl9tb3ZlX2luGA0gASgIUg5tYXlFbmRPbk1vdmVJbhInChBlbmRlZF9ieV9tb3'
+    'ZlX2luGA4gASgIUg1lbmRlZEJ5TW92ZUlu');
 
 @$core.Deprecated('Use clearClimateHistoryDescriptor instead')
 const ClearClimateHistory$json = {

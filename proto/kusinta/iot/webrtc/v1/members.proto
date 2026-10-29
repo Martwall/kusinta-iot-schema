@@ -225,6 +225,10 @@ message PromotionRequests {
 // then stays a member, a resident of it. By a residency id, it ends that residency alone, as
 // RemoveUserFromSpace would, with the invites the holder made as its resident.
 //
+// Devices the member owns are released as ReleaseDevice says, and a heating record a release
+// would leave across a home's boundary is undone, never refused (management.proto,
+// HEATING ACROSS A HOME).
+//
 // A removal of themselves that would leave a home with residents but no household admin is
 // refused as "last_household_admin" (household.proto, LAST ADMIN), and nothing is removed.
 //

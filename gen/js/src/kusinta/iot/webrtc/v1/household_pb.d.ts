@@ -241,8 +241,8 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * one completes on its own: 7 days after started_at, and never sooner than 7 days after the
    * home's last residency ended. On a handover that is not vacated, a residency that starts
    * while it is pending moves it to 7 days after that, and the handover is pushed again, so
-   * that a household that moves in during it has its notice too; on a vacated one nobody new
-   * moves in (VACANCY).
+   * that a household that moves in during it has its notice too; on a vacated one, a new
+   * household moving in completes it instead (QUICK TURNOVER).
    *
    * @generated from field: google.protobuf.Timestamp staff_confirmable_from = 8;
    */
@@ -283,6 +283,27 @@ export declare type HouseholdHandover = Message<"kusinta.iot.webrtc.v1.Household
    * @generated from field: bool recipient_household_admin = 12;
    */
   recipientHouseholdAdmin: boolean;
+
+  /**
+   * Set whenever a handover is or becomes vacated, from the push that tells it so — one started
+   * vacated, or a pending one the last residency ending makes vacated (VACANCY): a new resident
+   * filed by staff may end it early, no sooner than 24 hours after the last residency ended
+   * (QUICK TURNOVER), so the departing household's export window runs until
+   * staff_confirmable_from or until then, whichever is first. An app says so
+   * from this field rather than from vacated, so that a handover from a gateway that predates
+   * it, which ends no notice early, is not misdescribed.
+   *
+   * @generated from field: bool may_end_on_move_in = 13;
+   */
+  mayEndOnMoveIn: boolean;
+
+  /**
+   * Set on a vacated handover done early because the property owner or a gateway administrator
+   * filed a new resident (QUICK TURNOVER); ended_at says when. Unset on every other.
+   *
+   * @generated from field: bool ended_by_move_in = 14;
+   */
+  endedByMoveIn: boolean;
 };
 
 /**
@@ -339,8 +360,10 @@ export declare const ClearClimateHistorySchema: GenMessage<ClearClimateHistory>;
  * arrival every room history, climate summary and device event of the home it holds from before
  * cleared_at, rather than keeping what the gateway no longer does, and keeps cleared_at as a
  * lasting floor for the home: a sample, period or event dated before it that arrives later — an
- * answer already in flight at the clear — is dropped on arrival too. Nobody else is told:
- * whoever is given the apartment's summary as service learns of it by reading it.
+ * answer already in flight at the clear — is dropped on arrival too. The push is the live
+ * signal; a session that was not up for it reads the same floor from the apartment
+ * (space.v1.Space.climate_history_cleared_at). Nobody else is told: whoever is given the
+ * apartment's summary as service learns of it by reading it.
  *
  * @generated from message kusinta.iot.webrtc.v1.ClimateHistoryCleared
  */
@@ -573,9 +596,9 @@ export enum HouseholdHandoverState {
   CANCELLED = 2,
 
   /**
-   * Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
-   * has run. The last residency ending while one is pending makes it vacated, not done
-   * (VACANCY).
+   * Confirmed, or, for a vacated one, its notice passed with nobody living in the home or a new
+   * resident filed (QUICK TURNOVER); the wipe has run. The last residency ending while one is
+   * pending makes it vacated, not done (VACANCY).
    *
    * @generated from enum value: HOUSEHOLD_HANDOVER_STATE_DONE = 3;
    */

@@ -6,6 +6,7 @@ import {
   AppMessageSchema,
   AppHandshakeSchema,
   HandshakeRejectedSchema,
+  HandshakeRejectReason,
   GatewayErrorSchema,
   GatewayErrorCode,
   SubscribeDevicesSchema,
@@ -772,5 +773,22 @@ describe('DeviceCommand — numeric command addressing', () => {
     const cmd = create(DeviceCommandSchema, { requestId: 'cmd-uuid-10' })
     const decoded = fromBinary(DeviceCommandSchema, toBinary(DeviceCommandSchema, cmd))
     expect(decoded.matterCommandId).toBeUndefined()
+  })
+})
+
+describe('HandshakeRejected', () => {
+  it('names why a handshake was refused by code', () => {
+    const rejected = create(HandshakeRejectedSchema, {
+      reason: 'Authentication failed',
+      code: HandshakeRejectReason.AUTHENTICATION_FAILED,
+    })
+    const decoded = fromBinary(HandshakeRejectedSchema, toBinary(HandshakeRejectedSchema, rejected))
+    expect(decoded.code).toBe(HandshakeRejectReason.AUTHENTICATION_FAILED)
+  })
+
+  it('reads a refusal from a gateway that sends only a reason as unspecified', () => {
+    const rejected = create(HandshakeRejectedSchema, { reason: 'Must authenticate with AppHandshake first' })
+    const decoded = fromBinary(HandshakeRejectedSchema, toBinary(HandshakeRejectedSchema, rejected))
+    expect(decoded.code).toBe(HandshakeRejectReason.UNSPECIFIED)
   })
 })

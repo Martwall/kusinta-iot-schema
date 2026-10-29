@@ -13,19 +13,30 @@ import {
   ClimateExplanationKind,
   ClimateExplanationSubject,
   RoomPlanning,
+  OuterLimitKind,
+  OuterLimitsCoverage,
 } from '../kusinta/iot/climate/v1/climate_pb.js'
 import {
   ConfigureRoomClimateSchema,
   GetRoomHistorySchema,
+  SetInnerRoomLimitsSchema,
   RoomSensorsSchema,
   ManagementRequestSchema,
 } from '../kusinta/iot/webrtc/v1/management_pb.js'
+import { Role } from '../kusinta/iot/access/v1/roles_pb.js'
 import {
   GatewayMessageSchema,
   ManagementResultSchema,
 } from '../kusinta/iot/webrtc/v1/envelope_pb.js'
 
 const ROOM = { value: 'room-1' }
+
+/**
+ * @template {import('@bufbuild/protobuf').DescMessage} T
+ * @param {T} schema
+ * @param {import('@bufbuild/protobuf').MessageInitShape<T>} init
+ */
+const onTheWire = (schema, init) => fromBinary(schema, toBinary(schema, create(schema, init)))
 
 describe('room climate', () => {
   it('leaves an unset target absent rather than 0 °C', () => {
@@ -93,16 +104,12 @@ describe('room climate', () => {
 })
 
 describe('why a room is where it is', () => {
-  /** @param {import('@bufbuild/protobuf').MessageInitShape<typeof RoomClimateSchema>} init */
-  const onTheWire = (init) =>
-    fromBinary(RoomClimateSchema, toBinary(RoomClimateSchema, create(RoomClimateSchema, init)))
-
   it('has no explanations when nothing beyond the target needs explaining', () => {
     expect(create(RoomClimateSchema, { spaceId: ROOM }).explanations).toEqual([])
   })
 
   it('keeps explanations in the order sent, most significant first', () => {
-    const decoded = onTheWire({
+    const decoded = onTheWire(RoomClimateSchema, {
       spaceId: ROOM,
       explanations: [
         { kind: ClimateExplanationKind.HOT_WATER_PRIORITY },
@@ -116,7 +123,7 @@ describe('why a room is where it is', () => {
   })
 
   it('names what a cause holds back when it is not the room’s heating as a whole', () => {
-    const decoded = onTheWire({
+    const decoded = onTheWire(RoomClimateSchema, {
       spaceId: ROOM,
       explanations: [{ kind: ClimateExplanationKind.PRICE_HIGH, subject: ClimateExplanationSubject.FLOOR_ZONE }],
     })
@@ -124,7 +131,7 @@ describe('why a room is where it is', () => {
   })
 
   it('names the room’s heating as a whole as a subject of its own, not the default', () => {
-    const decoded = onTheWire({
+    const decoded = onTheWire(RoomClimateSchema, {
       spaceId: ROOM,
       explanations: [{ kind: ClimateExplanationKind.PRICE_HIGH, subject: ClimateExplanationSubject.ROOM }],
     })
@@ -132,7 +139,7 @@ describe('why a room is where it is', () => {
   })
 
   it('carries when an explanation ends', () => {
-    const decoded = onTheWire({
+    const decoded = onTheWire(RoomClimateSchema, {
       spaceId: ROOM,
       explanations: [{ kind: ClimateExplanationKind.PRE_HEAT, endsAt: timestampFromMs(1_800_000_000_000) }],
     })
@@ -140,12 +147,12 @@ describe('why a room is where it is', () => {
   })
 
   it('says the room is not planned for', () => {
-    const decoded = onTheWire({ spaceId: ROOM, planning: RoomPlanning.NOT_PLANNED })
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, planning: RoomPlanning.NOT_PLANNED })
     expect(decoded.planning).toBe(RoomPlanning.NOT_PLANNED)
   })
 
   it('carries the comfort band in centidegrees', () => {
-    const decoded = onTheWire({ spaceId: ROOM, comfortBandLowCentidegrees: 2000, comfortBandHighCentidegrees: 2250 })
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, comfortBandLowCentidegrees: 2000, comfortBandHighCentidegrees: 2250 })
     expect([decoded.comfortBandLowCentidegrees, decoded.comfortBandHighCentidegrees]).toEqual([2000, 2250])
   })
 
@@ -155,7 +162,7 @@ describe('why a room is where it is', () => {
   })
 
   it('says until when a person’s target holds', () => {
-    const decoded = onTheWire({ spaceId: ROOM, targetHeldUntil: timestampFromMs(1_800_000_000_000) })
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, targetHeldUntil: timestampFromMs(1_800_000_000_000) })
     expect(decoded.targetHeldUntil?.seconds).toBe(1_800_000_000n)
   })
 
@@ -267,5 +274,128 @@ describe('room history', () => {
     })
     const decoded = fromBinary(ManagementResultSchema, toBinary(ManagementResultSchema, result))
     expect(decoded.result.case).toBe('roomHistory')
+  })
+})
+
+describe('comfort limits', () => {
+  it('leaves an outer bound nobody set absent rather than 0 °C', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimits: { min: { centidegrees: 1800 } } })
+    expect(decoded.outerLimits?.max).toBeUndefined()
+  })
+
+  it('carries each outer bound with the role that set it and when', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      outerLimits: {
+        awayMin: { centidegrees: 1500, setByRole: Role.GATEWAY_ADMIN, setAt: timestampFromMs(1_790_000_000_000) },
+      },
+    })
+    const awayMin = decoded.outerLimits?.awayMin
+    expect([awayMin?.centidegrees, awayMin?.setByRole, Number(awayMin?.setAt?.seconds)]).toEqual([
+      1500,
+      Role.GATEWAY_ADMIN,
+      1_790_000_000,
+    ])
+  })
+
+  it('records the threshold a minimum was accepted below', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      outerLimits: { min: { centidegrees: 1600 }, minAcceptedThresholdCentidegrees: 1800 },
+    })
+    expect(decoded.outerLimits?.minAcceptedThresholdCentidegrees).toBe(1800)
+  })
+
+  it('leaves the threshold absent while no acceptance was needed', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimits: { min: { centidegrees: 1900 } } })
+    expect(decoded.outerLimits?.minAcceptedThresholdCentidegrees).toBeUndefined()
+  })
+
+  it('carries the household’s inner limits apart from the outer ones', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      outerLimits: { max: { centidegrees: 2400 } },
+      innerLimits: { maxCentidegrees: 2200 },
+    })
+    expect([decoded.innerLimits?.maxCentidegrees, decoded.outerLimits?.max?.centidegrees]).toEqual([2200, 2400])
+  })
+
+  it('says which outer bound clamps the room and where it would be held without it', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      outerLimitClamp: { limit: OuterLimitKind.MAX, unclampedCentidegrees: 2500 },
+    })
+    expect([decoded.outerLimitClamp?.limit, decoded.outerLimitClamp?.unclampedCentidegrees]).toEqual([
+      OuterLimitKind.MAX,
+      2500,
+    ])
+  })
+
+  it('says how many of a room’s heating outputs the outer limits bind', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimitsCoverage: OuterLimitsCoverage.SOME })
+    expect(decoded.outerLimitsCoverage).toBe(OuterLimitsCoverage.SOME)
+  })
+
+  it('says outer limits are kept, with none set, by an empty message rather than none', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimits: {} })
+    expect(decoded.outerLimits).toBeDefined()
+  })
+
+  it('leaves outer limits unset from a gateway that predates them', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM })
+    expect(decoded.outerLimits).toBeUndefined()
+  })
+
+  it('names the devices whose outputs the outer limits bind', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      outerLimitsCoverage: OuterLimitsCoverage.SOME,
+      outerBoundDeviceIds: [{ value: 'lora:valve-1' }],
+    })
+    expect(decoded.outerBoundDeviceIds.map((d) => d.value)).toEqual(['lora:valve-1'])
+  })
+
+  it('tells a move-in target apart from a target a person set', () => {
+    const decoded = onTheWire(TargetChangeSchema, { by: { case: 'moveIn', value: true } })
+    expect(decoded.by).toEqual({ case: 'moveIn', value: true })
+  })
+
+  it('leaves the away minimum alone when a configuration does not name it', () => {
+    const decoded = onTheWire(ConfigureRoomClimateSchema, { roomId: ROOM, limits: { minCentidegrees: 1800 } })
+    expect(decoded.awayMin).toBeUndefined()
+  })
+
+  it('removes the away minimum when it is named without a value', () => {
+    const decoded = onTheWire(ConfigureRoomClimateSchema, { roomId: ROOM, awayMin: {} })
+    expect(decoded.awayMin).toBeDefined()
+    expect(decoded.awayMin?.centidegrees).toBeUndefined()
+  })
+
+  it('sets the move-in target alone', () => {
+    const decoded = onTheWire(ConfigureRoomClimateSchema, { roomId: ROOM, moveInTarget: { centidegrees: 2100 } })
+    expect([decoded.moveInTarget?.centidegrees, decoded.limits]).toEqual([2100, undefined])
+  })
+
+  it('carries the acceptance of a minimum below the threshold', () => {
+    const decoded = onTheWire(ConfigureRoomClimateSchema, { roomId: ROOM, limits: { minCentidegrees: 1600 }, acceptBelowThreshold: true })
+    expect(decoded.acceptBelowThreshold).toBe(true)
+  })
+
+  it('sets a room’s inner limits as a management request', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'setInnerRoomLimits',
+        value: { roomId: ROOM, limits: { minCentidegrees: 1900, maxCentidegrees: 2300 } },
+      },
+    })
+    expect(decoded.request).toMatchObject({
+      case: 'setInnerRoomLimits',
+      value: { limits: { minCentidegrees: 1900, maxCentidegrees: 2300 } },
+    })
+  })
+
+  it('removes an inner bound by leaving it unset', () => {
+    const decoded = onTheWire(SetInnerRoomLimitsSchema, { roomId: ROOM, limits: { maxCentidegrees: 2300 } })
+    expect(decoded.limits?.minCentidegrees).toBeUndefined()
   })
 })

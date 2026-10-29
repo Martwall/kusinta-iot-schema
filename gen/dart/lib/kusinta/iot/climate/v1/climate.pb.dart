@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $0;
+import '../../access/v1/roles.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $1;
 import 'climate.pbenum.dart';
 
@@ -22,7 +23,7 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'climate.pbenum.dart';
 
-enum TargetChange_By { user, device, notSet }
+enum TargetChange_By { user, device, moveIn, notSet }
 
 /// Who or what last set a room's target, and when.
 ///
@@ -34,11 +35,13 @@ class TargetChange extends $pb.GeneratedMessage {
     $0.Timestamp? at,
     $1.UserId? user,
     $1.DeviceId? device,
+    $core.bool? moveIn,
   }) {
     final result = create();
     if (at != null) result.at = at;
     if (user != null) result.user = user;
     if (device != null) result.device = device;
+    if (moveIn != null) result.moveIn = moveIn;
     return result;
   }
 
@@ -54,6 +57,7 @@ class TargetChange extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, TargetChange_By> _TargetChange_ByByTag = {
     2: TargetChange_By.user,
     3: TargetChange_By.device,
+    4: TargetChange_By.moveIn,
     0: TargetChange_By.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -61,13 +65,14 @@ class TargetChange extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3])
+    ..oo(0, [2, 3, 4])
     ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'at',
         subBuilder: $0.Timestamp.create)
     ..aOM<$1.UserId>(2, _omitFieldNames ? '' : 'user',
         subBuilder: $1.UserId.create)
     ..aOM<$1.DeviceId>(3, _omitFieldNames ? '' : 'device',
         subBuilder: $1.DeviceId.create)
+    ..aOB(4, _omitFieldNames ? '' : 'moveIn')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -131,6 +136,17 @@ class TargetChange extends $pb.GeneratedMessage {
   void clearDevice() => $_clearField(3);
   @$pb.TagNumber(3)
   $1.DeviceId ensureDevice() => $_ensure(2);
+
+  /// Set by the gateway when the home gained a resident, from the room's outer move-in target
+  /// (OuterRoomLimits.move_in_target; webrtc.v1 household.proto, MOVE-IN). Only true is sent.
+  @$pb.TagNumber(4)
+  $core.bool get moveIn => $_getBF(3);
+  @$pb.TagNumber(4)
+  set moveIn($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMoveIn() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMoveIn() => $_clearField(4);
 }
 
 /// The climate of one room.
@@ -144,8 +160,8 @@ class RoomClimate extends $pb.GeneratedMessage {
     TargetChange? targetChange,
     $core.int? effectiveTargetCentidegrees,
     $core.bool? overridesMode,
-    $core.int? minCentidegrees,
-    $core.int? maxCentidegrees,
+    @$core.Deprecated('This field is deprecated.') $core.int? minCentidegrees,
+    @$core.Deprecated('This field is deprecated.') $core.int? maxCentidegrees,
     $core.Iterable<$1.DeviceId>? sensorIds,
     $core.int? measuredCentidegrees,
     $1.DeviceId? measuredBy,
@@ -159,6 +175,11 @@ class RoomClimate extends $pb.GeneratedMessage {
     RoomPlanning? planning,
     $core.int? comfortBandLowCentidegrees,
     $core.int? comfortBandHighCentidegrees,
+    OuterRoomLimits? outerLimits,
+    InnerRoomLimits? innerLimits,
+    OuterLimitClamp? outerLimitClamp,
+    OuterLimitsCoverage? outerLimitsCoverage,
+    $core.Iterable<$1.DeviceId>? outerBoundDeviceIds,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -187,6 +208,13 @@ class RoomClimate extends $pb.GeneratedMessage {
       result.comfortBandLowCentidegrees = comfortBandLowCentidegrees;
     if (comfortBandHighCentidegrees != null)
       result.comfortBandHighCentidegrees = comfortBandHighCentidegrees;
+    if (outerLimits != null) result.outerLimits = outerLimits;
+    if (innerLimits != null) result.innerLimits = innerLimits;
+    if (outerLimitClamp != null) result.outerLimitClamp = outerLimitClamp;
+    if (outerLimitsCoverage != null)
+      result.outerLimitsCoverage = outerLimitsCoverage;
+    if (outerBoundDeviceIds != null)
+      result.outerBoundDeviceIds.addAll(outerBoundDeviceIds);
     return result;
   }
 
@@ -246,6 +274,20 @@ class RoomClimate extends $pb.GeneratedMessage {
         $pb.PbFieldType.OS3)
     ..a<$core.int>(20, _omitFieldNames ? '' : 'comfortBandHighCentidegrees',
         $pb.PbFieldType.OS3)
+    ..aOM<OuterRoomLimits>(21, _omitFieldNames ? '' : 'outerLimits',
+        subBuilder: OuterRoomLimits.create)
+    ..aOM<InnerRoomLimits>(22, _omitFieldNames ? '' : 'innerLimits',
+        subBuilder: InnerRoomLimits.create)
+    ..aOM<OuterLimitClamp>(23, _omitFieldNames ? '' : 'outerLimitClamp',
+        subBuilder: OuterLimitClamp.create)
+    ..e<OuterLimitsCoverage>(
+        24, _omitFieldNames ? '' : 'outerLimitsCoverage', $pb.PbFieldType.OE,
+        defaultOrMaker: OuterLimitsCoverage.OUTER_LIMITS_COVERAGE_UNSPECIFIED,
+        valueOf: OuterLimitsCoverage.valueOf,
+        enumValues: OuterLimitsCoverage.values)
+    ..pc<$1.DeviceId>(
+        25, _omitFieldNames ? '' : 'outerBoundDeviceIds', $pb.PbFieldType.PM,
+        subBuilder: $1.DeviceId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -281,7 +323,16 @@ class RoomClimate extends $pb.GeneratedMessage {
   $1.SpaceId ensureSpaceId() => $_ensure(0);
 
   /// The temperature the room is to be held at, in centidegrees. Unset: nobody has set
-  /// one. Always within [min_centidegrees, max_centidegrees] where those are set.
+  /// one. Always within the inner limits where those are set (inner_limits), and bounded by
+  /// nothing of the room where they are not. Never clamped by the outer ones, a change made by
+  /// hand at a device they bind included: the target keeps the change, and that device's output
+  /// is held within them (OuterRoomLimits, WHAT THEY BIND and DEVICE LIMITS).
+  ///
+  /// Rollout note: an app that predates outer_limits reads min_centidegrees and
+  /// max_centidegrees as bounds on this field, and may be sent a target outside them; one that
+  /// holds its control to them may, on any touch, send the outer bound as the target and so
+  /// rewrite a household's target set beyond it. An app tells a gateway that predates outer
+  /// limits by outer_limits unset, and offers it only min and max (ConfigureRoomClimate.limits).
   @$pb.TagNumber(2)
   $core.int get targetCentidegrees => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -292,7 +343,8 @@ class RoomClimate extends $pb.GeneratedMessage {
   void clearTargetCentidegrees() => $_clearField(2);
 
   /// Who or what set target_centidegrees. Unset while the target is, and when it is withheld
-  /// from the recipient: from service in a home, and from anyone when it dates from before
+  /// from the recipient: from service in a home that is not empty (webrtc.v1 household.proto,
+  /// EMPTY HOME), and from anyone when it dates from before
   /// their current residency in the home, or from a home they did not live in at the time
   /// (see access.v1.MembershipRelation).
   @$pb.TagNumber(3)
@@ -309,7 +361,10 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// What the valves are actually being held at, in centidegrees. Equal to the target
   /// unless a ClimateMode on an enclosing space sets the room back — and then the room's
   /// own target again if somebody changed this room during the mode (see
-  /// overrides_mode). Unset while nothing is being held.
+  /// overrides_mode) — or the vacancy setback holds it (webrtc.v1 household.proto, VACANCY), or
+  /// an outer bound clamps it (outer_limit_clamp). Where the outer limits bind some of the
+  /// room's outputs and not others, what those they bind are held at (OuterRoomLimits, HELD).
+  /// Unset while nothing is being held.
   @$pb.TagNumber(4)
   $core.int get effectiveTargetCentidegrees => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -331,25 +386,33 @@ class RoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(5)
   void clearOverridesMode() => $_clearField(5);
 
-  /// The owner's limits, in centidegrees. The gateway writes them to every device in the
-  /// room (Matter Min/MaxHeatSetpointLimit), so a knob stops at them physically, and
-  /// clamps every target — from the app, a knob or a mode — to them. The minimum is also
-  /// the floor under a mode's setback.
+  /// A copy of outer_limits.min and .max, in centidegrees, kept for apps that predate
+  /// outer_limits: each set exactly when its outer bound is, and unset otherwise. Read
+  /// outer_limits instead. What the gateway writes into a device's own setpoint limits is
+  /// OuterRoomLimits' (DEVICE LIMITS).
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   $core.int get minCentidegrees => $_getIZ(5);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   set minCentidegrees($core.int value) => $_setSignedInt32(5, value);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   $core.bool hasMinCentidegrees() => $_has(5);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(6)
   void clearMinCentidegrees() => $_clearField(6);
 
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(7)
   $core.int get maxCentidegrees => $_getIZ(6);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(7)
   set maxCentidegrees($core.int value) => $_setSignedInt32(6, value);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(7)
   $core.bool hasMaxCentidegrees() => $_has(6);
+  @$core.Deprecated('This field is deprecated.')
   @$pb.TagNumber(7)
   void clearMaxCentidegrees() => $_clearField(7);
 
@@ -405,8 +468,9 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// Stated as the lock rather than as a permission so that the proto3 default — false,
   /// unlocked — is the intended default: a room nobody has configured takes changes at its
   /// devices, as a room in an apartment should until its residents decide otherwise; when a
-  /// home loses its last resident, its rooms' locks are cleared. Elsewhere locking is the
-  /// owner's choice.
+  /// home loses its last resident, its rooms' locks are cleared, and so are those set while it
+  /// stood empty when it gains one (webrtc.v1 household.proto, MOVE-IN). Elsewhere locking is
+  /// the owner's choice.
   @$pb.TagNumber(12)
   $core.bool get lockDeviceControls => $_getBF(11);
   @$pb.TagNumber(12)
@@ -443,16 +507,19 @@ class RoomClimate extends $pb.GeneratedMessage {
   void clearSensorsConfigured() => $_clearField(14);
 
   /// Set when the recipient reaches this room only as service (see
-  /// access.v1.MembershipRelation): the room is in someone's home, and what describes the
-  /// people in it is WITHHELD — target_centidegrees, target_change,
-  /// effective_target_centidegrees, overrides_mode, mode_space_id, measured_centidegrees,
-  /// measured_by, condition and lock_device_controls are all left unset, and sensor_ids
-  /// leaves out sensors a resident owns.
+  /// access.v1.MembershipRelation): the room is in someone's home, and what describes the people
+  /// in it is WITHHELD. Never set for the property owner or a gateway administrator while the
+  /// home is empty (webrtc.v1 household.proto, EMPTY HOME): they are sent its rooms as rooms
+  /// outside homes are, and at MOVE-IN sent them again with it set. When it is set,
+  /// target_centidegrees, target_change, effective_target_centidegrees, overrides_mode,
+  /// mode_space_id, measured_centidegrees, measured_by, condition, lock_device_controls,
+  /// inner_limits, outer_limit_clamp, outer_limits_coverage and outer_bound_device_ids are all
+  /// left unset, and sensor_ids leaves out sensors a resident owns.
   ///
   /// Unset because withheld, not because unknown: an app must not render them as NO_TARGET or
   /// a lost sensor. A withheld room is sent again only when something that IS sent changes,
-  /// so that the timing of an update does not give away what was withheld. Its limits and
-  /// the sensors service may see are still sent, since setting a room up is service work.
+  /// so that the timing of an update does not give away what was withheld. Its outer limits
+  /// and the sensors service may see are still sent, since setting a room up is service work.
   /// Its climate over time is available to service only as an ApartmentClimateSummary.
   ///
   /// explanations, target_held_until, planning and the comfort band are withheld in the
@@ -509,8 +576,9 @@ class RoomClimate extends $pb.GeneratedMessage {
 
   /// The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
   /// room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
-  /// no higher than high, and within [min_centidegrees, max_centidegrees] where those are
-  /// set. Absent: no band, and a plan holds the room at its target — never 0 °C.
+  /// no higher than high, and within the inner limits where those are set; at the outputs the
+  /// outer limits bind, a plan holds within them too (OuterRoomLimits, HELD). Absent: no band,
+  /// and a plan holds the room at its target — never 0 °C.
   @$pb.TagNumber(19)
   $core.int get comfortBandLowCentidegrees => $_getIZ(18);
   @$pb.TagNumber(19)
@@ -530,6 +598,504 @@ class RoomClimate extends $pb.GeneratedMessage {
   $core.bool hasComfortBandHighCentidegrees() => $_has(19);
   @$pb.TagNumber(20)
   void clearComfortBandHighCentidegrees() => $_clearField(20);
+
+  /// The room's outer limits, each bound with who set it and when (OuterRoomLimits). Sent to
+  /// whoever is sent the room, service included and with state_withheld too: they are the
+  /// building's, and setting them is service work.
+  ///
+  /// Always set by a gateway that keeps outer limits: an empty OuterRoomLimits where the room
+  /// has none. Unset only from a gateway that predates them, which keeps min and max alone: an
+  /// app reads unset so, and offers only min and max, through ConfigureRoomClimate.limits,
+  /// rather than an editor whose away minimum and move-in target that gateway would drop.
+  @$pb.TagNumber(21)
+  OuterRoomLimits get outerLimits => $_getN(20);
+  @$pb.TagNumber(21)
+  set outerLimits(OuterRoomLimits value) => $_setField(21, value);
+  @$pb.TagNumber(21)
+  $core.bool hasOuterLimits() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearOuterLimits() => $_clearField(21);
+  @$pb.TagNumber(21)
+  OuterRoomLimits ensureOuterLimits() => $_ensure(20);
+
+  /// The household's limits (InnerRoomLimits). Sent to the home's residents only, and never with
+  /// state_withheld. Unset: none, or a room outside homes.
+  @$pb.TagNumber(22)
+  InnerRoomLimits get innerLimits => $_getN(21);
+  @$pb.TagNumber(22)
+  set innerLimits(InnerRoomLimits value) => $_setField(22, value);
+  @$pb.TagNumber(22)
+  $core.bool hasInnerLimits() => $_has(21);
+  @$pb.TagNumber(22)
+  void clearInnerLimits() => $_clearField(22);
+  @$pb.TagNumber(22)
+  InnerRoomLimits ensureInnerLimits() => $_ensure(21);
+
+  /// Set while an outer bound holds the outputs it binds away from where the room would be held
+  /// without it — the household's target, its inner limits or its mode's setback — so the
+  /// household is told which bound does it, and from outer_limits the role behind it and since
+  /// when. Gone once nothing is clamped. Sent as outer_limits_coverage is.
+  @$pb.TagNumber(23)
+  OuterLimitClamp get outerLimitClamp => $_getN(22);
+  @$pb.TagNumber(23)
+  set outerLimitClamp(OuterLimitClamp value) => $_setField(23, value);
+  @$pb.TagNumber(23)
+  $core.bool hasOuterLimitClamp() => $_has(22);
+  @$pb.TagNumber(23)
+  void clearOuterLimitClamp() => $_clearField(23);
+  @$pb.TagNumber(23)
+  OuterLimitClamp ensureOuterLimitClamp() => $_ensure(22);
+
+  /// How many of the room's heating outputs the outer limits bind, so that an app shows the
+  /// building's bounds where they apply and not where they do not. In a home, sent to its
+  /// residents only: to anyone else it would tell whether the room holds a device a resident
+  /// owns. Outside homes, sent to whoever is sent the room, judged over the outputs of devices
+  /// the recipient sees, so that a device hidden from them changes nothing they are sent.
+  @$pb.TagNumber(24)
+  OuterLimitsCoverage get outerLimitsCoverage => $_getN(23);
+  @$pb.TagNumber(24)
+  set outerLimitsCoverage(OuterLimitsCoverage value) => $_setField(24, value);
+  @$pb.TagNumber(24)
+  $core.bool hasOuterLimitsCoverage() => $_has(23);
+  @$pb.TagNumber(24)
+  void clearOuterLimitsCoverage() => $_clearField(24);
+
+  /// The devices in the room with a heating output the outer limits bind
+  /// (OuterRoomLimits, WHAT THEY BIND), so that an app marks a device's own limit settings as
+  /// governed by them only where they are. Sent as outer_limits_coverage is, and judged over the
+  /// same devices: outside homes, only devices the recipient sees are listed. Empty under
+  /// coverage NONE or UNSPECIFIED; under ALL, every heating device in the room the recipient
+  /// sees is in it; under SOME, some are.
+  @$pb.TagNumber(25)
+  $pb.PbList<$1.DeviceId> get outerBoundDeviceIds => $_getList(24);
+}
+
+/// One bound of a room's outer limits, with who set it and when. Shown to the household as the
+/// role and the time, never a name: "building administrator, since …".
+class OuterLimit extends $pb.GeneratedMessage {
+  factory OuterLimit({
+    $core.int? centidegrees,
+    $2.Role? setByRole,
+    $0.Timestamp? setAt,
+  }) {
+    final result = create();
+    if (centidegrees != null) result.centidegrees = centidegrees;
+    if (setByRole != null) result.setByRole = setByRole;
+    if (setAt != null) result.setAt = setAt;
+    return result;
+  }
+
+  OuterLimit._();
+
+  factory OuterLimit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OuterLimit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OuterLimit',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'centidegrees', $pb.PbFieldType.OS3)
+    ..e<$2.Role>(2, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.Role.ROLE_UNSPECIFIED,
+        valueOf: $2.Role.valueOf,
+        enumValues: $2.Role.values)
+    ..aOM<$0.Timestamp>(3, _omitFieldNames ? '' : 'setAt',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OuterLimit clone() => OuterLimit()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OuterLimit copyWith(void Function(OuterLimit) updates) =>
+      super.copyWith((message) => updates(message as OuterLimit)) as OuterLimit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OuterLimit create() => OuterLimit._();
+  @$core.override
+  OuterLimit createEmptyInstance() => create();
+  static $pb.PbList<OuterLimit> createRepeated() => $pb.PbList<OuterLimit>();
+  @$core.pragma('dart2js:noInline')
+  static OuterLimit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OuterLimit>(create);
+  static OuterLimit? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get centidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set centidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCentidegrees() => $_clearField(1);
+
+  /// The role its setter acted in (webrtc.v1.ConfigureRoomClimate): ROLE_PROPERTY_OWNER where
+  /// they hold it, else ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN. In a home, a bound an
+  /// installer set under a commissioning grant has it unset to anyone but the home's residents:
+  /// staff are shown its value and set_at alone, so the stamp tells them nothing of when the
+  /// household let an installer in. An app shows an unset role as not stated.
+  @$pb.TagNumber(2)
+  $2.Role get setByRole => $_getN(1);
+  @$pb.TagNumber(2)
+  set setByRole($2.Role value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSetByRole() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSetByRole() => $_clearField(2);
+
+  /// When the bound was last given a new value. Always sent, also when it dates from before the
+  /// recipient's residency: it records an act of the building's, and nothing of a household.
+  @$pb.TagNumber(3)
+  $0.Timestamp get setAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set setAt($0.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSetAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSetAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.Timestamp ensureSetAt() => $_ensure(2);
+}
+
+/// A room's outer limits: the building's bounds on the heating it owns, set by the parties
+/// webrtc.v1.ConfigureRoomClimate names. Every bound is optional: a building where each home
+/// pays its own heating may set floors only.
+///
+/// WHAT THEY BIND. The asset owner decides whether they can bind a device, and the
+/// organisation whether to use them. They bind an output only on one of the building's own
+/// devices (common.v1.DeviceOwnershipType COMPANY) whose asset owner is the organisation, or
+/// that has none recorded (common.v1.AssetOwner); never a household's asset, nor a device a
+/// person owns outright. The clamp is applied per output, by its device's owner: in a room with
+/// a valve the organisation owns and a heater a resident owns, the valve is held within the
+/// outer limits and the heater at the room's target. So they bind outputs, never the room: the
+/// room's target and its inner limits are the household's, are not rewritten when an outer bound
+/// moves, and hold again at those outputs once it moves back out.
+///
+/// HELD. What an output is held at is worked out in this order, each step clamping the one
+/// before:
+///   1. the room's target, or while a mode (ClimateMode) sets the room back its setback;
+///   2. the inner limits (InnerRoomLimits): the maximum always, the minimum — the household's
+///      everyday floor — only while no mode sets the room back;
+///   3. at an output the outer limits bind: [min, max] while no mode sets the room back, and
+///      [AWAY FLOOR, max] while one does; during the vacancy setback (webrtc.v1 household.proto,
+///      VACANCY), the AWAY FLOOR itself;
+///   4. an installer's equipment-safety limits — a floor's surface maximum, a supply cap
+///      (commissioning.v1) — which neither tier of comfort limits widens.
+/// So where an inner bound and an outer bound disagree the outer one wins, and the household's
+/// range at those outputs is always inside the building's; outputs the outer limits do not bind
+/// stop at step 2. The AWAY FLOOR is away_min, or min where away_min is unset: kept apart from
+/// min so that a household going away may set back below its everyday floor but never below what
+/// the building needs — frost, damp, heat drawn from neighbours. With neither set, a room has no
+/// away floor, and no vacancy setback.
+///
+/// DEVICE LIMITS. Where the gateway writes a room's outer limits into a device's own setpoint
+/// limits (Matter Min/MaxHeatSetpointLimit), so that a knob stops at them, it writes them only
+/// to devices they bind (WHAT THEY BIND), and writes the AWAY FLOOR as the minimum and max as
+/// the maximum, each only where set: a device holding min as its own minimum would refuse the
+/// setbacks of step 3. Outside a setback the gateway holds min itself: a change made by hand at
+/// such a device below min is adopted as the room's target as it was made, within the inner
+/// limits and never clamped by the outer ones, while the device's output is held at min and min
+/// is written back to it. Into a device the outer limits do not bind that holds room limits
+/// written before, it writes the device's defaults back, queued and retried as the wipe's device
+/// writes are (webrtc.v1 household.proto, WIPE).
+///
+/// They stay with the home: a household handover wipes the inner limits, never these
+/// (webrtc.v1 household.proto, WIPE).
+class OuterRoomLimits extends $pb.GeneratedMessage {
+  factory OuterRoomLimits({
+    OuterLimit? min,
+    OuterLimit? max,
+    OuterLimit? awayMin,
+    OuterLimit? moveInTarget,
+    $core.int? minAcceptedThresholdCentidegrees,
+  }) {
+    final result = create();
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    if (awayMin != null) result.awayMin = awayMin;
+    if (moveInTarget != null) result.moveInTarget = moveInTarget;
+    if (minAcceptedThresholdCentidegrees != null)
+      result.minAcceptedThresholdCentidegrees =
+          minAcceptedThresholdCentidegrees;
+    return result;
+  }
+
+  OuterRoomLimits._();
+
+  factory OuterRoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OuterRoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OuterRoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<OuterLimit>(1, _omitFieldNames ? '' : 'min',
+        subBuilder: OuterLimit.create)
+    ..aOM<OuterLimit>(2, _omitFieldNames ? '' : 'max',
+        subBuilder: OuterLimit.create)
+    ..aOM<OuterLimit>(3, _omitFieldNames ? '' : 'awayMin',
+        subBuilder: OuterLimit.create)
+    ..aOM<OuterLimit>(4, _omitFieldNames ? '' : 'moveInTarget',
+        subBuilder: OuterLimit.create)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'minAcceptedThresholdCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OuterRoomLimits clone() => OuterRoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OuterRoomLimits copyWith(void Function(OuterRoomLimits) updates) =>
+      super.copyWith((message) => updates(message as OuterRoomLimits))
+          as OuterRoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OuterRoomLimits create() => OuterRoomLimits._();
+  @$core.override
+  OuterRoomLimits createEmptyInstance() => create();
+  static $pb.PbList<OuterRoomLimits> createRepeated() =>
+      $pb.PbList<OuterRoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static OuterRoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OuterRoomLimits>(create);
+  static OuterRoomLimits? _defaultInstance;
+
+  /// The normal minimum and maximum.
+  @$pb.TagNumber(1)
+  OuterLimit get min => $_getN(0);
+  @$pb.TagNumber(1)
+  set min(OuterLimit value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMin() => $_clearField(1);
+  @$pb.TagNumber(1)
+  OuterLimit ensureMin() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  OuterLimit get max => $_getN(1);
+  @$pb.TagNumber(2)
+  set max(OuterLimit value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMax() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMax() => $_clearField(2);
+  @$pb.TagNumber(2)
+  OuterLimit ensureMax() => $_ensure(1);
+
+  /// The floor under a setback; see AWAY FLOOR above.
+  @$pb.TagNumber(3)
+  OuterLimit get awayMin => $_getN(2);
+  @$pb.TagNumber(3)
+  set awayMin(OuterLimit value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAwayMin() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAwayMin() => $_clearField(3);
+  @$pb.TagNumber(3)
+  OuterLimit ensureAwayMin() => $_ensure(2);
+
+  /// The target the room starts at when an empty home gains a resident (webrtc.v1
+  /// household.proto, MOVE-IN). A start, never a limit, and a target like any other. Always
+  /// within [min, max] where those are set (webrtc.v1.ConfigureRoomClimate, "limits_order").
+  @$pb.TagNumber(4)
+  OuterLimit get moveInTarget => $_getN(3);
+  @$pb.TagNumber(4)
+  set moveInTarget(OuterLimit value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasMoveInTarget() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMoveInTarget() => $_clearField(4);
+  @$pb.TagNumber(4)
+  OuterLimit ensureMoveInTarget() => $_ensure(3);
+
+  /// Set while min was set below the gateway's public-health threshold: the threshold in force
+  /// then, which min's setter explicitly accepted going below (ConfigureRoomClimate
+  /// .accept_below_threshold). The acceptance is recorded with min's set_by_role and set_at.
+  /// Unset while min is unset or was set at or above the threshold. A threshold changed later
+  /// re-judges nothing already set.
+  @$pb.TagNumber(5)
+  $core.int get minAcceptedThresholdCentidegrees => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set minAcceptedThresholdCentidegrees($core.int value) =>
+      $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMinAcceptedThresholdCentidegrees() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMinAcceptedThresholdCentidegrees() => $_clearField(5);
+}
+
+/// A room's inner limits: the household's own minimum and maximum, set by the home's household
+/// admins (webrtc.v1.SetInnerRoomLimits). They clamp the room's target, from the app or a knob
+/// alike, and setting them clamps the target already set. They apply to every output in the
+/// room, a household's own devices included, as OuterRoomLimits (HELD) orders them. Household
+/// data: never told to anyone but the home's residents, and wiped at a handover (webrtc.v1
+/// household.proto, WIPE). They belong to the room while it is in the home: cleared when it
+/// leaves the home, or the space stops being an apartment, so an empty home's rooms hold none
+/// and a move-in target meets none.
+class InnerRoomLimits extends $pb.GeneratedMessage {
+  factory InnerRoomLimits({
+    $core.int? minCentidegrees,
+    $core.int? maxCentidegrees,
+  }) {
+    final result = create();
+    if (minCentidegrees != null) result.minCentidegrees = minCentidegrees;
+    if (maxCentidegrees != null) result.maxCentidegrees = maxCentidegrees;
+    return result;
+  }
+
+  InnerRoomLimits._();
+
+  factory InnerRoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory InnerRoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'InnerRoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'minCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'maxCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  InnerRoomLimits clone() => InnerRoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  InnerRoomLimits copyWith(void Function(InnerRoomLimits) updates) =>
+      super.copyWith((message) => updates(message as InnerRoomLimits))
+          as InnerRoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static InnerRoomLimits create() => InnerRoomLimits._();
+  @$core.override
+  InnerRoomLimits createEmptyInstance() => create();
+  static $pb.PbList<InnerRoomLimits> createRepeated() =>
+      $pb.PbList<InnerRoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static InnerRoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<InnerRoomLimits>(create);
+  static InnerRoomLimits? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get minCentidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set minCentidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMinCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMinCentidegrees() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get maxCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set maxCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMaxCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMaxCentidegrees() => $_clearField(2);
+}
+
+/// An outer bound clamping a room (RoomClimate.outer_limit_clamp).
+class OuterLimitClamp extends $pb.GeneratedMessage {
+  factory OuterLimitClamp({
+    OuterLimitKind? limit,
+    $core.int? unclampedCentidegrees,
+  }) {
+    final result = create();
+    if (limit != null) result.limit = limit;
+    if (unclampedCentidegrees != null)
+      result.unclampedCentidegrees = unclampedCentidegrees;
+    return result;
+  }
+
+  OuterLimitClamp._();
+
+  factory OuterLimitClamp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory OuterLimitClamp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'OuterLimitClamp',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..e<OuterLimitKind>(1, _omitFieldNames ? '' : 'limit', $pb.PbFieldType.OE,
+        defaultOrMaker: OuterLimitKind.OUTER_LIMIT_KIND_UNSPECIFIED,
+        valueOf: OuterLimitKind.valueOf,
+        enumValues: OuterLimitKind.values)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'unclampedCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OuterLimitClamp clone() => OuterLimitClamp()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  OuterLimitClamp copyWith(void Function(OuterLimitClamp) updates) =>
+      super.copyWith((message) => updates(message as OuterLimitClamp))
+          as OuterLimitClamp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static OuterLimitClamp create() => OuterLimitClamp._();
+  @$core.override
+  OuterLimitClamp createEmptyInstance() => create();
+  static $pb.PbList<OuterLimitClamp> createRepeated() =>
+      $pb.PbList<OuterLimitClamp>();
+  @$core.pragma('dart2js:noInline')
+  static OuterLimitClamp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<OuterLimitClamp>(create);
+  static OuterLimitClamp? _defaultInstance;
+
+  /// Which bound. An app that does not know the value shows that the building's limits clamp the
+  /// room, without naming one.
+  @$pb.TagNumber(1)
+  OuterLimitKind get limit => $_getN(0);
+  @$pb.TagNumber(1)
+  set limit(OuterLimitKind value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLimit() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLimit() => $_clearField(1);
+
+  /// Where the room would be held without it, in centidegrees: where outputs the outer limits do
+  /// not bind are held. effective_target_centidegrees is where those they bind are.
+  @$pb.TagNumber(2)
+  $core.int get unclampedCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set unclampedCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUnclampedCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUnclampedCentidegrees() => $_clearField(2);
 }
 
 /// One reason a room, or a part of its heating, is where it is.
@@ -748,8 +1314,8 @@ class ClimateMode extends $pb.GeneratedMessage {
   void clearKind() => $_clearField(2);
 
   /// The temperature every room is set back to, in centidegrees. Required while a mode is
-  /// on — a mode with nothing to set back to is refused, not defaulted. Clamped by each
-  /// room's min_centidegrees, which is the frost floor.
+  /// on — a mode with nothing to set back to is refused, not defaulted. Clamped in each room as
+  /// OuterRoomLimits (HELD) orders, the away floor being what the building needs.
   @$pb.TagNumber(3)
   $core.int get setbackCentidegrees => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -763,7 +1329,8 @@ class ClimateMode extends $pb.GeneratedMessage {
   /// targets — warm by then, not starting to heat (see warm_from). AWAY: starts_at is when it
   /// was switched on; ends_at is unset. starts_at is unset when it dates from before the
   /// recipient's current residency in the home, or from a home they did not live in at the
-  /// time; an ends_at ahead is always sent.
+  /// time, save to the property owner and the gateway administrators for a mode on a home while
+  /// it is empty (webrtc.v1 household.proto, EMPTY HOME); an ends_at ahead is always sent.
   @$pb.TagNumber(4)
   $0.Timestamp get startsAt => $_getN(3);
   @$pb.TagNumber(4)
@@ -788,7 +1355,9 @@ class ClimateMode extends $pb.GeneratedMessage {
 
   /// Who switched it on. Unset when it is withheld from the recipient: from service in a
   /// home, and from anyone when it dates from before their current residency in the home, or
-  /// from a home they did not live in at the time (see access.v1.MembershipRelation).
+  /// from a home they did not live in at the time (see access.v1.MembershipRelation). The
+  /// property owner and the gateway administrators are given it for a mode on a home while it is
+  /// empty, which only they can have switched on (webrtc.v1 household.proto, EMPTY HOME).
   @$pb.TagNumber(6)
   $1.UserId get setBy => $_getN(5);
   @$pb.TagNumber(6)

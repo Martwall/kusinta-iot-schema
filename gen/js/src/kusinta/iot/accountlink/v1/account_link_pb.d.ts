@@ -395,6 +395,13 @@ export declare const TokenRefreshedSchema: GenMessage<TokenRefreshed>;
  * and it outlives a household handover's wipe and a gateway-wide wipe, which delete the
  * grant itself: it is the only means left of ending the link at the service.
  *
+ * A service with no means of revoking a grant is answered REJECTED by the api-server without
+ * asking the service. The gateway drops the token as for any REJECTED, and the grant stays
+ * valid at the service until it expires or the account holder removes the access there. So an
+ * app never tells the household that the service revoked the access, only that the home no
+ * longer holds it; where the service has no revocation, it may say that the access is removed
+ * at the service by the account holder.
+ *
  * @generated from message kusinta.iot.accountlink.v1.RevokeToken
  */
 export declare type RevokeToken = Message<"kusinta.iot.accountlink.v1.RevokeToken"> & {
@@ -434,8 +441,9 @@ export declare type TokenRevoked = Message<"kusinta.iot.accountlink.v1.TokenRevo
   requestId: string;
 
   /**
-   * OK: revoked. REJECTED: the service no longer knew the token, which is as good.
-   * UNAVAILABLE: ask again after retry_after.
+   * OK: revoked. REJECTED: the service no longer knew the token, which is as good — or it has
+   * no means of revoking one, which the api-server answers without asking it (RevokeToken);
+   * either way the gateway drops the token. UNAVAILABLE: ask again after retry_after.
    *
    * @generated from field: kusinta.iot.accountlink.v1.TokenOutcome outcome = 2;
    */

@@ -82,6 +82,72 @@ class RoomClimateCondition extends $pb.ProtobufEnum {
   const RoomClimateCondition._(super.value, super.name);
 }
 
+/// Which bound of a room's outer limits clamps the outputs it binds.
+class OuterLimitKind extends $pb.ProtobufEnum {
+  static const OuterLimitKind OUTER_LIMIT_KIND_UNSPECIFIED =
+      OuterLimitKind._(0, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_UNSPECIFIED');
+
+  /// Also when min stands in as the AWAY FLOOR for an unset away_min.
+  static const OuterLimitKind OUTER_LIMIT_KIND_MIN =
+      OuterLimitKind._(1, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_MIN');
+  static const OuterLimitKind OUTER_LIMIT_KIND_MAX =
+      OuterLimitKind._(2, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_MAX');
+  static const OuterLimitKind OUTER_LIMIT_KIND_AWAY_MIN =
+      OuterLimitKind._(3, _omitEnumNames ? '' : 'OUTER_LIMIT_KIND_AWAY_MIN');
+
+  static const $core.List<OuterLimitKind> values = <OuterLimitKind>[
+    OUTER_LIMIT_KIND_UNSPECIFIED,
+    OUTER_LIMIT_KIND_MIN,
+    OUTER_LIMIT_KIND_MAX,
+    OUTER_LIMIT_KIND_AWAY_MIN,
+  ];
+
+  static final $core.List<OuterLimitKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static OuterLimitKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const OuterLimitKind._(super.value, super.name);
+}
+
+/// How many of a room's heating outputs its outer limits bind (OuterRoomLimits, WHAT THEY BIND).
+class OuterLimitsCoverage extends $pb.ProtobufEnum {
+  /// Not stated: withheld, or the room has no outer limits.
+  static const OuterLimitsCoverage OUTER_LIMITS_COVERAGE_UNSPECIFIED =
+      OuterLimitsCoverage._(
+          0, _omitEnumNames ? '' : 'OUTER_LIMITS_COVERAGE_UNSPECIFIED');
+
+  /// The room has outer limits and they bind none of its heating outputs: it heats only with a
+  /// household's own devices, or with nothing.
+  static const OuterLimitsCoverage OUTER_LIMITS_COVERAGE_NONE =
+      OuterLimitsCoverage._(
+          1, _omitEnumNames ? '' : 'OUTER_LIMITS_COVERAGE_NONE');
+
+  /// Some of its heating outputs and not others.
+  static const OuterLimitsCoverage OUTER_LIMITS_COVERAGE_SOME =
+      OuterLimitsCoverage._(
+          2, _omitEnumNames ? '' : 'OUTER_LIMITS_COVERAGE_SOME');
+
+  /// Every heating output in it.
+  static const OuterLimitsCoverage OUTER_LIMITS_COVERAGE_ALL =
+      OuterLimitsCoverage._(
+          3, _omitEnumNames ? '' : 'OUTER_LIMITS_COVERAGE_ALL');
+
+  static const $core.List<OuterLimitsCoverage> values = <OuterLimitsCoverage>[
+    OUTER_LIMITS_COVERAGE_UNSPECIFIED,
+    OUTER_LIMITS_COVERAGE_NONE,
+    OUTER_LIMITS_COVERAGE_SOME,
+    OUTER_LIMITS_COVERAGE_ALL,
+  ];
+
+  static final $core.List<OuterLimitsCoverage?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static OuterLimitsCoverage? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const OuterLimitsCoverage._(super.value, super.name);
+}
+
 /// Whether a plan steers a room: one that looks ahead at prices, weather and the heat
 /// source and moves the room within its comfort band. A standing state of the room, not a
 /// reason, so it is a field of its own rather than an explanation.

@@ -6,8 +6,8 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId, GatewayId, SpaceId, TenantId, UserId } from "../../identity/v1/identity_pb.js";
 import type { SpaceType } from "../../common/v1/types_pb.js";
-import type { MembershipRelation } from "../../access/v1/roles_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { MembershipRelation } from "../../access/v1/roles_pb.js";
 
 /**
  * Describes the file kusinta/iot/space/v1/space.proto.
@@ -152,6 +152,23 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
    * @generated from field: string home_name = 15;
    */
   homeName: string;
+
+  /**
+   * On an apartment, when its household last cleared the home's climate history
+   * (webrtc.v1.ClimateHistoryCleared.cleared_at): the lasting floor a session that missed the
+   * push reads, sent on every listing. An app sets it as the home's floor when it reads it, and
+   * drops anything of the home it holds dated before it, device events included, as on the push
+   * (webrtc.v1 household.proto, CLIMATE HISTORY).
+   *
+   * Given to the home's residents only, and only when it falls within the recipient's current
+   * residency: the start of that residency is already their floor, and an earlier clear is a
+   * time from before it (access.v1.MembershipRelation). Unset for anyone else — service and
+   * staff included — where the home has never been cleared, and on every other space. A wipe
+   * erases it with the household's other records (webrtc.v1 household.proto, WIPE).
+   *
+   * @generated from field: google.protobuf.Timestamp climate_history_cleared_at = 16;
+   */
+  climateHistoryClearedAt?: Timestamp | undefined;
 };
 
 /**

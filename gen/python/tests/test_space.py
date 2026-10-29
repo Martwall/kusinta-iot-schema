@@ -90,3 +90,18 @@ def test_a_member_says_since_when_they_hold_their_membership():
     )
 
     assert _round_trip(home).members[0].since.seconds == 1_790_000_000
+
+
+def test_an_apartment_carries_when_its_climate_history_was_last_cleared():
+    space = space_pb2.Space(climate_history_cleared_at=timestamp_pb2.Timestamp(seconds=1_790_000_000))
+
+    decoded = space_pb2.Space()
+    decoded.ParseFromString(space.SerializeToString())
+    assert decoded.climate_history_cleared_at.seconds == 1_790_000_000
+
+
+def test_an_apartment_never_cleared_carries_no_floor():
+    decoded = space_pb2.Space()
+    decoded.ParseFromString(space_pb2.Space(space_type=types_pb2.SPACE_TYPE_APARTMENT).SerializeToString())
+
+    assert decoded.HasField("climate_history_cleared_at") is False

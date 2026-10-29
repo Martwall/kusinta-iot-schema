@@ -1827,8 +1827,9 @@ class CommissioningGrant extends $pb.GeneratedMessage {
   $0.Timestamp ensureEndsAt() => $_ensure(8);
 
   /// Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
-  /// for a space outside homes to the property owner and the gateway's administrators; to the
-  /// installer it is unset, since a resident's user id would tell them who lives in the home.
+  /// for a space outside homes or an empty home to the property owner and the gateway's
+  /// administrators; to the installer it is unset, since a resident's user id would tell them
+  /// who lives in the home.
   @$pb.TagNumber(10)
   $1.UserId get grantedBy => $_getN(9);
   @$pb.TagNumber(10)
@@ -1855,9 +1856,13 @@ class CommissioningGrant extends $pb.GeneratedMessage {
 /// The grants on one space that have not ended, as listed to one caller: the answer to
 /// webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
 /// .commissioning_grants to every session that may list them whenever one is requested,
-/// answered or ended before its time — to the installer, their own grants alone. Nothing is
-/// pushed when a grant starts, ends or lapses at the time it states: a client reads those from
-/// starts_at, ends_at and expires_at.
+/// answered or ended before its time — to the installer, their own grants alone. When who may
+/// list a home's grants changes — the home gaining a resident (webrtc.v1 household.proto,
+/// MOVE-IN), its last residency ending — they are pushed whole to the sessions that could list
+/// them before as well: empty, to one that may list none now, so that no session keeps showing a
+/// grant it no longer has or a request it can no longer answer. Nothing is pushed when a grant
+/// starts, ends or lapses at the time it states: a client reads those from starts_at, ends_at
+/// and expires_at.
 class CommissioningGrants extends $pb.GeneratedMessage {
   factory CommissioningGrants({
     $1.SpaceId? spaceId,

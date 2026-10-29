@@ -39,6 +39,40 @@ final $typed_data.Uint8List roomClimateConditionDescriptor = $convert.base64Deco
     'RJT05fSEVBVElOR19VTlJFQUNIQUJMRRAGEiQKIFJPT01fQ0xJTUFURV9DT05ESVRJT05fTk9f'
     'U0VOU09SEAc=');
 
+@$core.Deprecated('Use outerLimitKindDescriptor instead')
+const OuterLimitKind$json = {
+  '1': 'OuterLimitKind',
+  '2': [
+    {'1': 'OUTER_LIMIT_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'OUTER_LIMIT_KIND_MIN', '2': 1},
+    {'1': 'OUTER_LIMIT_KIND_MAX', '2': 2},
+    {'1': 'OUTER_LIMIT_KIND_AWAY_MIN', '2': 3},
+  ],
+};
+
+/// Descriptor for `OuterLimitKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List outerLimitKindDescriptor = $convert.base64Decode(
+    'Cg5PdXRlckxpbWl0S2luZBIgChxPVVRFUl9MSU1JVF9LSU5EX1VOU1BFQ0lGSUVEEAASGAoUT1'
+    'VURVJfTElNSVRfS0lORF9NSU4QARIYChRPVVRFUl9MSU1JVF9LSU5EX01BWBACEh0KGU9VVEVS'
+    'X0xJTUlUX0tJTkRfQVdBWV9NSU4QAw==');
+
+@$core.Deprecated('Use outerLimitsCoverageDescriptor instead')
+const OuterLimitsCoverage$json = {
+  '1': 'OuterLimitsCoverage',
+  '2': [
+    {'1': 'OUTER_LIMITS_COVERAGE_UNSPECIFIED', '2': 0},
+    {'1': 'OUTER_LIMITS_COVERAGE_NONE', '2': 1},
+    {'1': 'OUTER_LIMITS_COVERAGE_SOME', '2': 2},
+    {'1': 'OUTER_LIMITS_COVERAGE_ALL', '2': 3},
+  ],
+};
+
+/// Descriptor for `OuterLimitsCoverage`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List outerLimitsCoverageDescriptor = $convert.base64Decode(
+    'ChNPdXRlckxpbWl0c0NvdmVyYWdlEiUKIU9VVEVSX0xJTUlUU19DT1ZFUkFHRV9VTlNQRUNJRk'
+    'lFRBAAEh4KGk9VVEVSX0xJTUlUU19DT1ZFUkFHRV9OT05FEAESHgoaT1VURVJfTElNSVRTX0NP'
+    'VkVSQUdFX1NPTUUQAhIdChlPVVRFUl9MSU1JVFNfQ09WRVJBR0VfQUxMEAM=');
+
 @$core.Deprecated('Use roomPlanningDescriptor instead')
 const RoomPlanning$json = {
   '1': 'RoomPlanning',
@@ -199,6 +233,7 @@ const TargetChange$json = {
       '9': 0,
       '10': 'device'
     },
+    {'1': 'move_in', '3': 4, '4': 1, '5': 8, '9': 0, '10': 'moveIn'},
   ],
   '8': [
     {'1': 'by'},
@@ -210,7 +245,7 @@ final $typed_data.Uint8List targetChangeDescriptor = $convert.base64Decode(
     'CgxUYXJnZXRDaGFuZ2USKgoCYXQYASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUg'
     'JhdBI1CgR1c2VyGAIgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNlcklkSABSBHVz'
     'ZXISOwoGZGV2aWNlGAMgASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRIAF'
-    'IGZGV2aWNlQgQKAmJ5');
+    'IGZGV2aWNlEhkKB21vdmVfaW4YBCABKAhIAFIGbW92ZUluQgQKAmJ5');
 
 @$core.Deprecated('Use roomClimateDescriptor instead')
 const RoomClimate$json = {
@@ -264,18 +299,20 @@ const RoomClimate$json = {
       '3': 6,
       '4': 1,
       '5': 17,
+      '8': {'3': true},
       '9': 2,
       '10': 'minCentidegrees',
-      '17': true
+      '17': true,
     },
     {
       '1': 'max_centidegrees',
       '3': 7,
       '4': 1,
       '5': 17,
+      '8': {'3': true},
       '9': 3,
       '10': 'maxCentidegrees',
-      '17': true
+      '17': true,
     },
     {
       '1': 'sensor_ids',
@@ -367,6 +404,46 @@ const RoomClimate$json = {
       '10': 'comfortBandHighCentidegrees',
       '17': true
     },
+    {
+      '1': 'outer_limits',
+      '3': 21,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.OuterRoomLimits',
+      '10': 'outerLimits'
+    },
+    {
+      '1': 'inner_limits',
+      '3': 22,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.InnerRoomLimits',
+      '10': 'innerLimits'
+    },
+    {
+      '1': 'outer_limit_clamp',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.OuterLimitClamp',
+      '10': 'outerLimitClamp'
+    },
+    {
+      '1': 'outer_limits_coverage',
+      '3': 24,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.OuterLimitsCoverage',
+      '10': 'outerLimitsCoverage'
+    },
+    {
+      '1': 'outer_bound_device_ids',
+      '3': 25,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'outerBoundDeviceIds'
+    },
   ],
   '8': [
     {'1': '_target_centidegrees'},
@@ -387,27 +464,194 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     'NsaW1hdGUudjEuVGFyZ2V0Q2hhbmdlUgx0YXJnZXRDaGFuZ2USRwodZWZmZWN0aXZlX3Rhcmdl'
     'dF9jZW50aWRlZ3JlZXMYBCABKBFIAVIbZWZmZWN0aXZlVGFyZ2V0Q2VudGlkZWdyZWVziAEBEi'
     'UKDm92ZXJyaWRlc19tb2RlGAUgASgIUg1vdmVycmlkZXNNb2RlEkQKDW1vZGVfc3BhY2VfaWQY'
-    'DSABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgttb2RlU3BhY2VJZBIuCh'
-    'BtaW5fY2VudGlkZWdyZWVzGAYgASgRSAJSD21pbkNlbnRpZGVncmVlc4gBARIuChBtYXhfY2Vu'
-    'dGlkZWdyZWVzGAcgASgRSANSD21heENlbnRpZGVncmVlc4gBARJACgpzZW5zb3JfaWRzGAggAy'
-    'gLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCXNlbnNvcklkcxItChJzZW5z'
-    'b3JzX2NvbmZpZ3VyZWQYDiABKAhSEXNlbnNvcnNDb25maWd1cmVkEjgKFW1lYXN1cmVkX2Nlbn'
-    'RpZGVncmVlcxgJIAEoEUgEUhRtZWFzdXJlZENlbnRpZGVncmVlc4gBARJCCgttZWFzdXJlZF9i'
-    'eRgKIAEoCzIhLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUgptZWFzdXJlZEJ5Ek'
-    'oKCWNvbmRpdGlvbhgLIAEoDjIsLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbUNsaW1hdGVD'
-    'b25kaXRpb25SCWNvbmRpdGlvbhIwChRsb2NrX2RldmljZV9jb250cm9scxgMIAEoCFISbG9ja0'
-    'RldmljZUNvbnRyb2xzEiUKDnN0YXRlX3dpdGhoZWxkGA8gASgIUg1zdGF0ZVdpdGhoZWxkEk4K'
-    'DGV4cGxhbmF0aW9ucxgQIAMoCzIqLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ2xpbWF0ZUV4cG'
-    'xhbmF0aW9uUgxleHBsYW5hdGlvbnMSRgoRdGFyZ2V0X2hlbGRfdW50aWwYESABKAsyGi5nb29n'
-    'bGUucHJvdG9idWYuVGltZXN0YW1wUg90YXJnZXRIZWxkVW50aWwSQAoIcGxhbm5pbmcYEiABKA'
-    '4yJC5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21QbGFubmluZ1IIcGxhbm5pbmcSRgodY29t'
-    'Zm9ydF9iYW5kX2xvd19jZW50aWRlZ3JlZXMYEyABKBFIBVIaY29tZm9ydEJhbmRMb3dDZW50aW'
-    'RlZ3JlZXOIAQESSAoeY29tZm9ydF9iYW5kX2hpZ2hfY2VudGlkZWdyZWVzGBQgASgRSAZSG2Nv'
-    'bWZvcnRCYW5kSGlnaENlbnRpZGVncmVlc4gBAUIWChRfdGFyZ2V0X2NlbnRpZGVncmVlc0IgCh'
-    '5fZWZmZWN0aXZlX3RhcmdldF9jZW50aWRlZ3JlZXNCEwoRX21pbl9jZW50aWRlZ3JlZXNCEwoR'
-    'X21heF9jZW50aWRlZ3JlZXNCGAoWX21lYXN1cmVkX2NlbnRpZGVncmVlc0IgCh5fY29tZm9ydF'
-    '9iYW5kX2xvd19jZW50aWRlZ3JlZXNCIQofX2NvbWZvcnRfYmFuZF9oaWdoX2NlbnRpZGVncmVl'
-    'cw==');
+    'DSABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgttb2RlU3BhY2VJZBIyCh'
+    'BtaW5fY2VudGlkZWdyZWVzGAYgASgRQgIYAUgCUg9taW5DZW50aWRlZ3JlZXOIAQESMgoQbWF4'
+    'X2NlbnRpZGVncmVlcxgHIAEoEUICGAFIA1IPbWF4Q2VudGlkZWdyZWVziAEBEkAKCnNlbnNvcl'
+    '9pZHMYCCADKAsyIS5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIJc2Vuc29ySWRz'
+    'Ei0KEnNlbnNvcnNfY29uZmlndXJlZBgOIAEoCFIRc2Vuc29yc0NvbmZpZ3VyZWQSOAoVbWVhc3'
+    'VyZWRfY2VudGlkZWdyZWVzGAkgASgRSARSFG1lYXN1cmVkQ2VudGlkZWdyZWVziAEBEkIKC21l'
+    'YXN1cmVkX2J5GAogASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCm1lYX'
+    'N1cmVkQnkSSgoJY29uZGl0aW9uGAsgASgOMiwua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5Sb29t'
+    'Q2xpbWF0ZUNvbmRpdGlvblIJY29uZGl0aW9uEjAKFGxvY2tfZGV2aWNlX2NvbnRyb2xzGAwgAS'
+    'gIUhJsb2NrRGV2aWNlQ29udHJvbHMSJQoOc3RhdGVfd2l0aGhlbGQYDyABKAhSDXN0YXRlV2l0'
+    'aGhlbGQSTgoMZXhwbGFuYXRpb25zGBAgAygLMioua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5DbG'
+    'ltYXRlRXhwbGFuYXRpb25SDGV4cGxhbmF0aW9ucxJGChF0YXJnZXRfaGVsZF91bnRpbBgRIAEo'
+    'CzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSD3RhcmdldEhlbGRVbnRpbBJACghwbGFubm'
+    'luZxgSIAEoDjIkLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUm9vbVBsYW5uaW5nUghwbGFubmlu'
+    'ZxJGCh1jb21mb3J0X2JhbmRfbG93X2NlbnRpZGVncmVlcxgTIAEoEUgFUhpjb21mb3J0QmFuZE'
+    'xvd0NlbnRpZGVncmVlc4gBARJICh5jb21mb3J0X2JhbmRfaGlnaF9jZW50aWRlZ3JlZXMYFCAB'
+    'KBFIBlIbY29tZm9ydEJhbmRIaWdoQ2VudGlkZWdyZWVziAEBEkoKDG91dGVyX2xpbWl0cxgVIA'
+    'EoCzInLmt1c2ludGEuaW90LmNsaW1hdGUudjEuT3V0ZXJSb29tTGltaXRzUgtvdXRlckxpbWl0'
+    'cxJKCgxpbm5lcl9saW1pdHMYFiABKAsyJy5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLklubmVyUm'
+    '9vbUxpbWl0c1ILaW5uZXJMaW1pdHMSUwoRb3V0ZXJfbGltaXRfY2xhbXAYFyABKAsyJy5rdXNp'
+    'bnRhLmlvdC5jbGltYXRlLnYxLk91dGVyTGltaXRDbGFtcFIPb3V0ZXJMaW1pdENsYW1wEl8KFW'
+    '91dGVyX2xpbWl0c19jb3ZlcmFnZRgYIAEoDjIrLmt1c2ludGEuaW90LmNsaW1hdGUudjEuT3V0'
+    'ZXJMaW1pdHNDb3ZlcmFnZVITb3V0ZXJMaW1pdHNDb3ZlcmFnZRJWChZvdXRlcl9ib3VuZF9kZX'
+    'ZpY2VfaWRzGBkgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSE291dGVy'
+    'Qm91bmREZXZpY2VJZHNCFgoUX3RhcmdldF9jZW50aWRlZ3JlZXNCIAoeX2VmZmVjdGl2ZV90YX'
+    'JnZXRfY2VudGlkZWdyZWVzQhMKEV9taW5fY2VudGlkZWdyZWVzQhMKEV9tYXhfY2VudGlkZWdy'
+    'ZWVzQhgKFl9tZWFzdXJlZF9jZW50aWRlZ3JlZXNCIAoeX2NvbWZvcnRfYmFuZF9sb3dfY2VudG'
+    'lkZWdyZWVzQiEKH19jb21mb3J0X2JhbmRfaGlnaF9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use outerLimitDescriptor instead')
+const OuterLimit$json = {
+  '1': 'OuterLimit',
+  '2': [
+    {'1': 'centidegrees', '3': 1, '4': 1, '5': 17, '10': 'centidegrees'},
+    {
+      '1': 'set_by_role',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'setByRole'
+    },
+    {
+      '1': 'set_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'setAt'
+    },
+  ],
+};
+
+/// Descriptor for `OuterLimit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List outerLimitDescriptor = $convert.base64Decode(
+    'CgpPdXRlckxpbWl0EiIKDGNlbnRpZGVncmVlcxgBIAEoEVIMY2VudGlkZWdyZWVzEjsKC3NldF'
+    '9ieV9yb2xlGAIgASgOMhsua3VzaW50YS5pb3QuYWNjZXNzLnYxLlJvbGVSCXNldEJ5Um9sZRIx'
+    'CgZzZXRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgVzZXRBdA==');
+
+@$core.Deprecated('Use outerRoomLimitsDescriptor instead')
+const OuterRoomLimits$json = {
+  '1': 'OuterRoomLimits',
+  '2': [
+    {
+      '1': 'min',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.OuterLimit',
+      '10': 'min'
+    },
+    {
+      '1': 'max',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.OuterLimit',
+      '10': 'max'
+    },
+    {
+      '1': 'away_min',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.OuterLimit',
+      '10': 'awayMin'
+    },
+    {
+      '1': 'move_in_target',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.OuterLimit',
+      '10': 'moveInTarget'
+    },
+    {
+      '1': 'min_accepted_threshold_centidegrees',
+      '3': 5,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'minAcceptedThresholdCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_min_accepted_threshold_centidegrees'},
+  ],
+};
+
+/// Descriptor for `OuterRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List outerRoomLimitsDescriptor = $convert.base64Decode(
+    'Cg9PdXRlclJvb21MaW1pdHMSNAoDbWluGAEgASgLMiIua3VzaW50YS5pb3QuY2xpbWF0ZS52MS'
+    '5PdXRlckxpbWl0UgNtaW4SNAoDbWF4GAIgASgLMiIua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5P'
+    'dXRlckxpbWl0UgNtYXgSPQoIYXdheV9taW4YAyABKAsyIi5rdXNpbnRhLmlvdC5jbGltYXRlLn'
+    'YxLk91dGVyTGltaXRSB2F3YXlNaW4SSAoObW92ZV9pbl90YXJnZXQYBCABKAsyIi5rdXNpbnRh'
+    'LmlvdC5jbGltYXRlLnYxLk91dGVyTGltaXRSDG1vdmVJblRhcmdldBJSCiNtaW5fYWNjZXB0ZW'
+    'RfdGhyZXNob2xkX2NlbnRpZGVncmVlcxgFIAEoEUgAUiBtaW5BY2NlcHRlZFRocmVzaG9sZENl'
+    'bnRpZGVncmVlc4gBAUImCiRfbWluX2FjY2VwdGVkX3RocmVzaG9sZF9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use innerRoomLimitsDescriptor instead')
+const InnerRoomLimits$json = {
+  '1': 'InnerRoomLimits',
+  '2': [
+    {
+      '1': 'min_centidegrees',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'minCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'max_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'maxCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_min_centidegrees'},
+    {'1': '_max_centidegrees'},
+  ],
+};
+
+/// Descriptor for `InnerRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List innerRoomLimitsDescriptor = $convert.base64Decode(
+    'Cg9Jbm5lclJvb21MaW1pdHMSLgoQbWluX2NlbnRpZGVncmVlcxgBIAEoEUgAUg9taW5DZW50aW'
+    'RlZ3JlZXOIAQESLgoQbWF4X2NlbnRpZGVncmVlcxgCIAEoEUgBUg9tYXhDZW50aWRlZ3JlZXOI'
+    'AQFCEwoRX21pbl9jZW50aWRlZ3JlZXNCEwoRX21heF9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use outerLimitClampDescriptor instead')
+const OuterLimitClamp$json = {
+  '1': 'OuterLimitClamp',
+  '2': [
+    {
+      '1': 'limit',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.OuterLimitKind',
+      '10': 'limit'
+    },
+    {
+      '1': 'unclamped_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'unclampedCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_unclamped_centidegrees'},
+  ],
+};
+
+/// Descriptor for `OuterLimitClamp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List outerLimitClampDescriptor = $convert.base64Decode(
+    'Cg9PdXRlckxpbWl0Q2xhbXASPAoFbGltaXQYASABKA4yJi5rdXNpbnRhLmlvdC5jbGltYXRlLn'
+    'YxLk91dGVyTGltaXRLaW5kUgVsaW1pdBI6ChZ1bmNsYW1wZWRfY2VudGlkZWdyZWVzGAIgASgR'
+    'SABSFXVuY2xhbXBlZENlbnRpZGVncmVlc4gBAUIZChdfdW5jbGFtcGVkX2NlbnRpZGVncmVlcw'
+    '==');
 
 @$core.Deprecated('Use climateExplanationDescriptor instead')
 const ClimateExplanation$json = {

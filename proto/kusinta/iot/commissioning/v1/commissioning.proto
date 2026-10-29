@@ -185,16 +185,19 @@ option optimize_for = SPEED;
 //     freely.
 //
 // GRANTS. A commissioning grant (CommissioningGrant) lets one named installer commission one
-// space for a bounded time. The installer asks for it (webrtc.v1.RequestCommissioningGrant)
-// and whoever governs the space answers: for a home, a household admin of it; for a space
-// outside homes, the property owner or the gateway's administrators. The installer is a
-// member holding access.v1.ROLE_TECHNICIAN who reaches the space, and who does not live in it:
-// a household does not commission its own answers into house facts. Nobody else is granted
-// one. Someone who also holds a staff role acts as INSTALLER only in what they do under the
-// grant's cover; the rest of their access is as it was.
-// A grant on a home covers the home and its rooms; a grant on a space outside homes covers it
-// and the spaces below it, save every home among them, which only a grant on that home
-// covers.
+// space for a bounded time. The installer asks for it (webrtc.v1.RequestCommissioningGrant) and
+// whoever governs the space answers: for a home, a household admin of it, or while it is empty
+// (webrtc.v1 household.proto, EMPTY HOME) the property owner or the gateway's administrators;
+// for a space outside homes, the property owner or the gateway's administrators. The installer
+// is a member holding access.v1.ROLE_TECHNICIAN who reaches the space, and who does not live in
+// it: a household does not commission its own answers into house facts. Nobody else is granted
+// one, and nobody answers a grant that names them as its installer, whatever else they hold:
+// one who may answer for the space — the property owner or a gateway administrator on an empty
+// home or a space outside homes — is refused it as NOT_ENTITLED
+// (webrtc.v1.AnswerCommissioningGrant). Someone who also holds a staff role acts as INSTALLER
+// only in what they do under the grant's cover; the rest of their access is as it was. A grant
+// on a home covers the home and its rooms; a grant on a space outside homes covers it and the
+// spaces below it, save every home among them, which only a grant on that home covers.
 //
 // A grant is active from starts_at until ends_at, and then ends on its own. While active it
 // covers, on the spaces it covers and nothing else:
@@ -202,6 +205,8 @@ option optimize_for = SPEED;
 //     feature states, needs included;
 //   * the heating records there (heating.v1), comfort loads without their windows, and
 //     binding outputs on devices filed there;
+//   * the outer limits of the rooms there (climate.v1.OuterRoomLimits,
+//     webrtc.v1.ConfigureRoomClimate);
 //   * running commissioning tests there, and concluding PUMP_ALL_ZONES_OFF;
 //   * while a test the installer started under it runs, the readings that test is judged by:
 //     the state of the output it drives and, for ZONE_EFFECT, its control room's temperature
@@ -210,21 +215,25 @@ option optimize_for = SPEED;
 //   * the photos a household shares for commissioning, those it shares and only while the
 //     grant is active.
 // It NEVER covers a home's history (room history, climate summaries), savings or comfort
-// settings (targets, modes, comfort-load windows, FACT_TOPIC_COMFORT), its device events, nor
-// who lives there. Outside what it covers the installer sees a home as service, as before.
+// settings (targets, inner limits, modes, comfort-load windows, FACT_TOPIC_COMFORT), its device
+// events, nor who lives there. Outside what it covers the installer sees a home as service, as
+// before.
 //
 // A grant ends at ends_at, when it is ended (webrtc.v1.EndCommissioningGrant), when the
 // installer stops holding ROLE_TECHNICIAN or reaching the space, and for a home when its last
 // residency ends and when it is wiped (webrtc.v1 household.proto, VACANCY and WIPE): a grant
-// never passes from one household to the next. What it covered goes from the
-// installer's sessions at once, and a test they started under it is ABORTED, its outputs
-// returning to their normal control as webrtc.v1.ConcludeCommissioningTest says, floor zones
-// switching on no faster than "floor.max_zones_switching_on" allows. Until it ends —
-// requested, or granted whether or not it has started — it is visible to the household:
+// never passes from one household to the next. One the property owner or a gateway
+// administrator granted on an empty home ends when the home gains a resident (webrtc.v1
+// household.proto, MOVE-IN), so it never covers a household that did not grant it. What it
+// covered goes from the installer's sessions at once, and a test they started under it is
+// ABORTED, its outputs returning to their normal control as webrtc.v1.ConcludeCommissioningTest
+// says, floor zones switching on no faster than "floor.max_zones_switching_on" allows. Until it
+// ends — requested, or granted whether or not it has started — it is visible to the household:
 // listed to every resident of the home (webrtc.v1.ListCommissioningGrants), pushed to them as
-// it changes, and endable by its household admins. Once granted, it stays on record for the
-// home's residents after it ends (CommissioningGrantRecord, in their privacy disclosure), until
-// the home is wiped.
+// it changes, and endable by its household admins; on an empty home, to the property owner and
+// the gateway's administrators instead. Once granted, it stays on record for the home's
+// residents after it ends (CommissioningGrantRecord, in their privacy disclosure), until the
+// home is wiped.
 
 // Who answers a fact, or ran or concluded a test.
 enum Party {
@@ -445,6 +454,12 @@ enum BlockReason {
   // the longest it may be held: "plant.max_block_minutes" for a blocking input, or the
   // OUTPUT_LEASE test's 5 minutes.
   BLOCK_REASON_LEASE_TOO_LONG = 6;
+  // The device lies on the other side of a home's boundary from the record that binds or reads
+  // it: a binding stored before such crossings were refused or undone (heating.v1). Mostly
+  // transitional: a gateway removes such a binding once at start-up, before it first reads its
+  // records (webrtc.v1 management.proto, START-UP), so this is sent only by one that holds such
+  // a binding yet. Its output is held at rest and nothing reads it for the record meanwhile.
+  BLOCK_REASON_DEVICE_ACROSS_HOME = 7;
 }
 
 message FeatureBlock {
@@ -647,8 +662,9 @@ message CommissioningGrant {
   google.protobuf.Timestamp ends_at = 9;
 
   // Who granted it, and when. GRANTED only. granted_by is given to the home's residents, and
-  // for a space outside homes to the property owner and the gateway's administrators; to the
-  // installer it is unset, since a resident's user id would tell them who lives in the home.
+  // for a space outside homes or an empty home to the property owner and the gateway's
+  // administrators; to the installer it is unset, since a resident's user id would tell them
+  // who lives in the home.
   kusinta.iot.identity.v1.UserId granted_by = 10;
   google.protobuf.Timestamp granted_at = 11;
 }
@@ -656,9 +672,13 @@ message CommissioningGrant {
 // The grants on one space that have not ended, as listed to one caller: the answer to
 // webrtc.v1.ListCommissioningGrants, and pushed whole as webrtc.v1.GatewayMessage
 // .commissioning_grants to every session that may list them whenever one is requested,
-// answered or ended before its time — to the installer, their own grants alone. Nothing is
-// pushed when a grant starts, ends or lapses at the time it states: a client reads those from
-// starts_at, ends_at and expires_at.
+// answered or ended before its time — to the installer, their own grants alone. When who may
+// list a home's grants changes — the home gaining a resident (webrtc.v1 household.proto,
+// MOVE-IN), its last residency ending — they are pushed whole to the sessions that could list
+// them before as well: empty, to one that may list none now, so that no session keeps showing a
+// grant it no longer has or a request it can no longer answer. Nothing is pushed when a grant
+// starts, ends or lapses at the time it states: a client reads those from starts_at, ends_at
+// and expires_at.
 message CommissioningGrants {
   // The space the grants are on, on a push; unset on a listing.
   kusinta.iot.identity.v1.SpaceId space_id = 1;

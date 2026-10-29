@@ -85,4 +85,15 @@ describe('Space', () => {
     const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, home))
     expect(decoded.members[0].since?.seconds).toBe(1_790_000_000n)
   })
+
+  it('carries when an apartment’s climate history was last cleared', () => {
+    const space = create(SpaceSchema, { spaceType: SpaceType.APARTMENT, climateHistoryClearedAt: { seconds: 1_790_000_000n } })
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, space))
+    expect(decoded.climateHistoryClearedAt?.seconds).toBe(1_790_000_000n)
+  })
+
+  it('carries no floor for an apartment never cleared', () => {
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, create(SpaceSchema, { spaceType: SpaceType.APARTMENT })))
+    expect(decoded.climateHistoryClearedAt).toBeUndefined()
+  })
 })

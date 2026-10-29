@@ -69,6 +69,7 @@ const PropertyUpdate$json = {
       '9': 0,
       '10': 'nullValue'
     },
+    {'1': 'double_value', '3': 19, '4': 1, '5': 1, '9': 0, '10': 'doubleValue'},
     {
       '1': 'timestamp',
       '3': 9,
@@ -146,14 +147,15 @@ final $typed_data.Uint8List propertyUpdateDescriptor = $convert.base64Decode(
     'lIAFILc3RyaW5nVmFsdWUSIQoLYnl0ZXNfdmFsdWUYCCABKAxIAFIKYnl0ZXNWYWx1ZRIhCgtp'
     'bnQ2NF92YWx1ZRgQIAEoEkgAUgppbnQ2NFZhbHVlEiMKDHVpbnQ2NF92YWx1ZRgRIAEoBEgAUg'
     't1aW50NjRWYWx1ZRJBCgpudWxsX3ZhbHVlGBIgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYx'
-    'Lk51bGxWYWx1ZUgAUgludWxsVmFsdWUSOAoJdGltZXN0YW1wGAkgASgLMhouZ29vZ2xlLnByb3'
-    'RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1wEkYKCnByb3ZlbmFuY2UYCyABKA4yJi5rdXNpbnRh'
-    'LmlvdC5kZXZpY2UudjEuVmFsdWVQcm92ZW5hbmNlUgpwcm92ZW5hbmNlEiQKC2VuZHBvaW50X2'
-    'lkGAwgASgNSAJSCmVuZHBvaW50SWSIAQESLgoQdmVuZG9yX2V4dGVuc2lvbhgNIAEoCUgDUg92'
-    'ZW5kb3JFeHRlbnNpb26IAQESIgoKY2x1c3Rlcl9pZBgOIAEoDUgEUgljbHVzdGVySWSIAQESJg'
-    'oMYXR0cmlidXRlX2lkGA8gASgNSAVSC2F0dHJpYnV0ZUlkiAEBQgcKBXZhbHVlQhEKD19hdHRy'
-    'aWJ1dGVfbmFtZUIOCgxfZW5kcG9pbnRfaWRCEwoRX3ZlbmRvcl9leHRlbnNpb25CDQoLX2NsdX'
-    'N0ZXJfaWRCDwoNX2F0dHJpYnV0ZV9pZEoECAoQC1IOY2x1c3Rlcl9pZF9oZXg=');
+    'Lk51bGxWYWx1ZUgAUgludWxsVmFsdWUSIwoMZG91YmxlX3ZhbHVlGBMgASgBSABSC2RvdWJsZV'
+    'ZhbHVlEjgKCXRpbWVzdGFtcBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXRp'
+    'bWVzdGFtcBJGCgpwcm92ZW5hbmNlGAsgASgOMiYua3VzaW50YS5pb3QuZGV2aWNlLnYxLlZhbH'
+    'VlUHJvdmVuYW5jZVIKcHJvdmVuYW5jZRIkCgtlbmRwb2ludF9pZBgMIAEoDUgCUgplbmRwb2lu'
+    'dElkiAEBEi4KEHZlbmRvcl9leHRlbnNpb24YDSABKAlIA1IPdmVuZG9yRXh0ZW5zaW9uiAEBEi'
+    'IKCmNsdXN0ZXJfaWQYDiABKA1IBFIJY2x1c3RlcklkiAEBEiYKDGF0dHJpYnV0ZV9pZBgPIAEo'
+    'DUgFUgthdHRyaWJ1dGVJZIgBAUIHCgV2YWx1ZUIRCg9fYXR0cmlidXRlX25hbWVCDgoMX2VuZH'
+    'BvaW50X2lkQhMKEV92ZW5kb3JfZXh0ZW5zaW9uQg0KC19jbHVzdGVyX2lkQg8KDV9hdHRyaWJ1'
+    'dGVfaWRKBAgKEAtSDmNsdXN0ZXJfaWRfaGV4');
 
 @$core.Deprecated('Use propertyUpdateBatchDescriptor instead')
 const PropertyUpdateBatch$json = {

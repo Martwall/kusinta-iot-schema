@@ -205,3 +205,9 @@ def test_a_block_names_a_lease_floor_longer_than_the_longest_block():
     block = c.FeatureBlock(reason=c.BLOCK_REASON_LEASE_TOO_LONG, binding=c.BindingRef(record_id="plant-1", field="sg_ready_block"))
 
     assert _round_trip(block).reason == c.BLOCK_REASON_LEASE_TOO_LONG
+
+
+def test_a_block_names_a_bound_device_across_a_homes_boundary():
+    block = c.FeatureBlock(reason=c.BLOCK_REASON_DEVICE_ACROSS_HOME, binding=c.BindingRef(record_id="circuit-1", field="return_probe"))
+
+    assert _round_trip(block).reason == c.BLOCK_REASON_DEVICE_ACROSS_HOME

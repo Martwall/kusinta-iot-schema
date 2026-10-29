@@ -28,6 +28,13 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class HandshakeRejectReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    HANDSHAKE_REJECT_REASON_UNSPECIFIED: _ClassVar[HandshakeRejectReason]
+    HANDSHAKE_REJECT_REASON_INVALID_ENCODING: _ClassVar[HandshakeRejectReason]
+    HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED: _ClassVar[HandshakeRejectReason]
+    HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED: _ClassVar[HandshakeRejectReason]
+
 class GatewayErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     GATEWAY_ERROR_CODE_UNSPECIFIED: _ClassVar[GatewayErrorCode]
@@ -37,6 +44,10 @@ class GatewayErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     GATEWAY_ERROR_CODE_INTERNAL: _ClassVar[GatewayErrorCode]
     GATEWAY_ERROR_CODE_SESSION_LIMIT_REACHED: _ClassVar[GatewayErrorCode]
     GATEWAY_ERROR_CODE_FAILED_PRECONDITION: _ClassVar[GatewayErrorCode]
+HANDSHAKE_REJECT_REASON_UNSPECIFIED: HandshakeRejectReason
+HANDSHAKE_REJECT_REASON_INVALID_ENCODING: HandshakeRejectReason
+HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED: HandshakeRejectReason
+HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED: HandshakeRejectReason
 GATEWAY_ERROR_CODE_UNSPECIFIED: GatewayErrorCode
 GATEWAY_ERROR_CODE_NOT_ENTITLED: GatewayErrorCode
 GATEWAY_ERROR_CODE_INVALID_REQUEST: GatewayErrorCode
@@ -54,10 +65,12 @@ class Pong(_message.Message):
     def __init__(self) -> None: ...
 
 class HandshakeRejected(_message.Message):
-    __slots__ = ("reason",)
+    __slots__ = ("reason", "code")
     REASON_FIELD_NUMBER: _ClassVar[int]
+    CODE_FIELD_NUMBER: _ClassVar[int]
     reason: str
-    def __init__(self, reason: _Optional[str] = ...) -> None: ...
+    code: HandshakeRejectReason
+    def __init__(self, reason: _Optional[str] = ..., code: _Optional[_Union[HandshakeRejectReason, str]] = ...) -> None: ...
 
 class AppHandshake(_message.Message):
     __slots__ = ("jwt", "subscribe_device_ids")

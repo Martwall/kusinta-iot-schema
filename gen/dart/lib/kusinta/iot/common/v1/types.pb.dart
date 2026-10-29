@@ -35,6 +35,9 @@ enum AssetOwner_Owner { ownerOrganisation, householdHomeId, notSet }
 /// household nothing beyond what living in the home gives it. Setting or changing an asset
 /// owner changes no one's access.
 ///
+/// IT DECIDES ONE THING: whether a room's outer limits can bind the device
+/// (climate.v1.OuterRoomLimits, WHAT THEY BIND). It still decides nothing about who sees what.
+///
 /// Unset: not recorded. On a device whose ownership is COMPANY, anything that depends on it
 /// reads an unset owner as owner_organisation; a device a person owns has none, and is theirs.
 class AssetOwner extends $pb.GeneratedMessage {

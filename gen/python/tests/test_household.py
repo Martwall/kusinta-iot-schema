@@ -341,3 +341,17 @@ def test_a_disclosure_tells_residents_who_held_a_commissioning_grant_and_when():
 
     decoded = _round_trip(disclosure).commissioning_grants[0]
     assert (decoded.installer_name, decoded.ended_at.seconds) == ("Installer AB", 1_790_086_400)
+
+
+def test_a_vacated_handover_says_its_notice_ends_early_if_a_new_household_moves_in():
+    decoded = _round_trip(h.HouseholdHandover(handover_id="h-5", vacated=True, may_end_on_move_in=True))
+
+    assert decoded.may_end_on_move_in is True
+
+
+def test_a_vacated_handover_says_it_was_done_early_because_a_new_household_moved_in():
+    decoded = _round_trip(
+        h.HouseholdHandover(handover_id="h-6", state=h.HOUSEHOLD_HANDOVER_STATE_DONE, vacated=True, ended_by_move_in=True)
+    )
+
+    assert decoded.ended_by_move_in is True

@@ -227,6 +227,13 @@ def test_a_property_update_carries_a_value_wider_than_32_bits():
     assert (decoded.WhichOneof("value"), decoded.uint64_value) == ("uint64_value", 4_295_000_000)
 
 
+def test_a_property_update_carries_a_non_integer_value_a_float_cannot_hold():
+    original = property_update_pb2.PropertyUpdate(double_value=12_345_678.25)
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(original.SerializeToString())
+    assert (decoded.WhichOneof("value"), decoded.double_value) == ("double_value", 12_345_678.25)
+
+
 def test_a_property_update_carries_a_reported_null():
     original = property_update_pb2.PropertyUpdate()
     original.null_value.SetInParent()

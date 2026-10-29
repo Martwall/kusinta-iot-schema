@@ -56,9 +56,9 @@ class HouseholdHandoverState extends $pb.ProtobufEnum {
       HouseholdHandoverState._(
           2, _omitEnumNames ? '' : 'HOUSEHOLD_HANDOVER_STATE_CANCELLED');
 
-  /// Confirmed, or, for a vacated one, its notice passed with nobody living in the home; the wipe
-  /// has run. The last residency ending while one is pending makes it vacated, not done
-  /// (VACANCY).
+  /// Confirmed, or, for a vacated one, its notice passed with nobody living in the home or a new
+  /// resident filed (QUICK TURNOVER); the wipe has run. The last residency ending while one is
+  /// pending makes it vacated, not done (VACANCY).
   static const HouseholdHandoverState HOUSEHOLD_HANDOVER_STATE_DONE =
       HouseholdHandoverState._(
           3, _omitEnumNames ? '' : 'HOUSEHOLD_HANDOVER_STATE_DONE');

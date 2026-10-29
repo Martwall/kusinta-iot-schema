@@ -54,13 +54,26 @@ export declare type Pong = Message<"kusinta.iot.webrtc.v1.Pong"> & {
 export declare const PongSchema: GenMessage<Pong>;
 
 /**
+ * The gateway refused the session's handshake, gateway → app; the session ends.
+ *
  * @generated from message kusinta.iot.webrtc.v1.HandshakeRejected
  */
 export declare type HandshakeRejected = Message<"kusinta.iot.webrtc.v1.HandshakeRejected"> & {
   /**
+   * For logs and debugging only, in the gateway's words. An app MUST NOT show it to a user: it
+   * names the refusal by code, in its user's language.
+   *
    * @generated from field: string reason = 1;
    */
   reason: string;
+
+  /**
+   * Why, as a closed list. Rollout note: a gateway that predates this field sends reason alone,
+   * which an app reads as UNSPECIFIED.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.HandshakeRejectReason code = 2;
+   */
+  code: HandshakeRejectReason;
 };
 
 /**
@@ -859,7 +872,9 @@ export declare const RoomClimateChangedSchema: GenMessage<RoomClimateChanged>;
  * A mode on a space was switched on, changed or ended, gateway → app. `ended` rather than
  * kind UNSPECIFIED, so an app can still name the mode that finished. A mode on an
  * apartment or a room in one is sent to its residents only — whether a home stands empty
- * is theirs to know; one on any other space, to whoever reaches it.
+ * is theirs to know — and, while the home is empty, to the property owner and the gateway
+ * administrators who reach it (household.proto, EMPTY HOME), who are sent its end at MOVE-IN;
+ * one on any other space, to whoever reaches it.
  *
  * @generated from message kusinta.iot.webrtc.v1.ClimateModeChanged
  */
@@ -1157,6 +1172,51 @@ export declare type AppMessage = Message<"kusinta.iot.webrtc.v1.AppMessage"> & {
  * Use `create(AppMessageSchema)` to create a new message.
  */
 export declare const AppMessageSchema: GenMessage<AppMessage>;
+
+/**
+ * Why a handshake was refused (HandshakeRejected.code).
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.HandshakeRejectReason
+ */
+export enum HandshakeRejectReason {
+  /**
+   * Not stated, or a value this app's schema does not know: an app says that the gateway
+   * refused the connection, and no more. It treats the refusal as a passing failure, and
+   * retries under its ordinary backoff.
+   *
+   * @generated from enum value: HANDSHAKE_REJECT_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A message the gateway could not decode. A fault of the app's: retrying repeats it, so an
+   * app MUST NOT retry in a loop.
+   *
+   * @generated from enum value: HANDSHAKE_REJECT_REASON_INVALID_ENCODING = 1;
+   */
+  INVALID_ENCODING = 1,
+
+  /**
+   * A message before AppHandshake, which must come first. A fault of the app's, as
+   * INVALID_ENCODING is: an app MUST NOT retry in a loop.
+   *
+   * @generated from enum value: HANDSHAKE_REJECT_REASON_HANDSHAKE_REQUIRED = 2;
+   */
+  HANDSHAKE_REQUIRED = 2,
+
+  /**
+   * The token in AppHandshake was not accepted (AppTokenClaims). A fresh token can help: an
+   * app may refresh it and retry once, and then stops and tells its user.
+   *
+   * @generated from enum value: HANDSHAKE_REJECT_REASON_AUTHENTICATION_FAILED = 3;
+   */
+  AUTHENTICATION_FAILED = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.HandshakeRejectReason.
+ */
+export declare const HandshakeRejectReasonSchema: GenEnum<HandshakeRejectReason>;
 
 /**
  * Machine-readable classification of a session-level gateway error, so the app

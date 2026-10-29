@@ -13,7 +13,7 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class Space(_message.Message):
-    __slots__ = ("space_id", "space_type", "name", "description", "floor", "parent_space_id", "sub_space_ids", "device_ids", "resident_user_id", "tenant_id", "gateway_id", "time_zone", "members", "members_withheld", "home_name")
+    __slots__ = ("space_id", "space_type", "name", "description", "floor", "parent_space_id", "sub_space_ids", "device_ids", "resident_user_id", "tenant_id", "gateway_id", "time_zone", "members", "members_withheld", "home_name", "climate_history_cleared_at")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_TYPE_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -29,6 +29,7 @@ class Space(_message.Message):
     MEMBERS_FIELD_NUMBER: _ClassVar[int]
     MEMBERS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     HOME_NAME_FIELD_NUMBER: _ClassVar[int]
+    CLIMATE_HISTORY_CLEARED_AT_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     space_type: _types_pb2.SpaceType
     name: str
@@ -44,7 +45,8 @@ class Space(_message.Message):
     members: _containers.RepeatedCompositeFieldContainer[SpaceMember]
     members_withheld: bool
     home_name: str
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., sub_space_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., resident_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., tenant_id: _Optional[_Union[_identity_pb2.TenantId, _Mapping]] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., time_zone: _Optional[str] = ..., members: _Optional[_Iterable[_Union[SpaceMember, _Mapping]]] = ..., members_withheld: _Optional[bool] = ..., home_name: _Optional[str] = ...) -> None: ...
+    climate_history_cleared_at: _timestamp_pb2.Timestamp
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., sub_space_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., resident_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., tenant_id: _Optional[_Union[_identity_pb2.TenantId, _Mapping]] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., time_zone: _Optional[str] = ..., members: _Optional[_Iterable[_Union[SpaceMember, _Mapping]]] = ..., members_withheld: _Optional[bool] = ..., home_name: _Optional[str] = ..., climate_history_cleared_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class SpaceMember(_message.Message):
     __slots__ = ("user_id", "relation", "name", "since")
