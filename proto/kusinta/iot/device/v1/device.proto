@@ -20,7 +20,8 @@ option optimize_for = SPEED;
 // per physical device, so a device is still one row, one claim, one placement.
 //
 // Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
-// extensions — the vendor_properties cases, and radio_link (52) outside that oneof.
+// extensions — the vendor_properties cases, and radio_link (52) and heat_source (53) outside
+// that oneof.
 //
 // endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
 // global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -94,6 +95,13 @@ message Endpoint {
   // vendor_properties case, by its (vendor_extension) key "kusinta.radio".
   RadioLink radio_link = 52;
 
+  // A heat source's own readings, on the endpoint its connector reports them on. Outside
+  // vendor_properties for the reason radio_link is: they are not one vendor's extension but
+  // readings any heat source may have, whoever made it, and they must be able to sit beside a
+  // vendor case the same endpoint carries. Selected by the vendor branch by its
+  // (vendor_extension) key "kusinta.heat_source".
+  HeatSourceReadings heat_source = 53;
+
   // Every cluster this endpoint hosts: what it supports, and any attribute value that has
   // no typed field above. This is what makes a device the schema does not model usable
   // rather than silent — and what carries the optional clusters the Matter specification
@@ -110,10 +118,11 @@ message Endpoint {
   // vendor parameter has no cluster and so no ClusterState to be listed in. A name list
   // rather than an id list because the vendor branch addresses by name. A bare list
   // rather than a per-extension map because an endpoint carries at most one
-  // vendor_properties case and at most a radio_link beside it, and the schema keeps
-  // radio_link's attribute names disjoint from every vendor_properties case's — a test
-  // enforces it — so a name here never needs its extension to be read. radio_link's
-  // parameters are listed here the same way as a vendor's.
+  // vendor_properties case and at most a radio_link and a heat_source beside it, and the
+  // schema keeps the attribute names of radio_link, heat_source and every vendor_properties
+  // case disjoint — a test enforces it — so a name here never needs its extension to be
+  // read. radio_link's and heat_source's parameters are listed here the same way as a
+  // vendor's.
   //
   // Same reading as the Matter side: named here with no value = implemented, not yet
   // reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -199,6 +208,170 @@ message Device {
   // access.v1.MembershipRelation).
   // Whether such a device is reachable is still told by its webrtc.v1.ServiceStatus.
   google.protobuf.Timestamp last_updated = 21;
+}
+
+// A heat source's own readings: the temperatures its controller measures and works out, and
+// its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
+// connector reads them from the heat source or the maker's service. What
+// heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
+//
+// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
+// these attribute names, the value case following the field type as everywhere on the vendor
+// branch. A temperature is in centidegrees (°C × 100) as int_value, as temperatures are
+// throughout this schema: a connector converts what the heat source gives — degrees with a
+// decimal, a maker's register scale — into centidegrees and rounds it no further. An
+// enum-valued reading travels as its number in uint_value, as RadioLink.quality does, and
+// keeps explicit presence: its UNSPECIFIED is never sent, since an unreported one is an
+// absent field.
+//
+// Vendor-neutral on purpose: the same message for every heat source, a heat pump, a boiler
+// or a district-heating substation, so that whoever reads a plant reads one shape. Which of
+// the maker's points carries each reading, and how its codes map onto the values here, is
+// the connector's mapping and not part of this contract; a reading the heat source has no
+// sensor or state for is never sent, never sent as zero.
+//
+// Every field is `optional`, for the reason vendor readings always are: absent means never
+// reported, present means a reading, 0 °C included. Read only: a heat source is steered
+// through its plant's control inputs (heating.v1.HeatPumpControl), never by writing these.
+//
+// Who is sent them follows the device, as for any device's readings
+// (access.v1.MembershipRelation), whoever owns the heat source (common.v1.AssetOwner decides
+// nothing of who sees what). A heat source filed in a home is household data there: its
+// readings go to the home's residents and never to service (access.v1.DeviceAcl.relation
+// SERVICE), who are given of it only what a webrtc.v1.ServiceStatus carries, within the
+// service signals (access.v1.ServiceSignal): an alarm as a fault (alarm_active), and never
+// alarm_code or any other reading here.
+message HeatSourceReadings {
+  option (kusinta.iot.vendor.v1.vendor_extension) = "kusinta.heat_source";
+
+  // The heat source's own outdoor sensor: the outdoor temperature its heating curve works
+  // from.
+  optional sint32 outdoor_centidegrees = 1 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "outdoor_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The supply (flow) line from the heat source to its climate system, at its own sensor —
+  // its first climate system where it serves several. Where radiators and a floor circuit
+  // share it, this is the shared supply, before the floor circuit's own mixing
+  // (heating.v1.FloorCircuit.supply_probe reads after it).
+  optional sint32 supply_centidegrees = 2 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "supply_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The return line into the heat source, at its own sensor: the combined return of
+  // everything it heats.
+  optional sint32 return_centidegrees = 3 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "return_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The top of the hot-water tank: how hot the water available to draw is.
+  optional sint32 hot_water_top_centidegrees = 4 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "hot_water_top_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The hot-water tank's charging sensor: the one the heat source starts and stops making
+  // hot water by.
+  optional sint32 hot_water_charging_centidegrees = 5 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "hot_water_charging_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The supply temperature the heat source's own control is aiming for on the line
+  // supply_centidegrees reads, as it has worked it out from its heating curve and the
+  // outdoor temperature, with whatever offsets it applies. Its target, not a measurement.
+  optional sint32 calculated_supply_centidegrees = 6 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "calculated_supply_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // What the heat source is producing now (HeatSourceProduction), as its number. While it
+  // makes hot water its supply and return say nothing of the space heating, which is what a
+  // consumer reading them for the heating sets aside. A connector that cannot tell what its
+  // heat source is producing sends none, rather than a guess or OTHER: OTHER is a state the
+  // heat source reports, not a reading the connector lacks.
+  optional uint32 producing = 7 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "producing",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its compressor's state (CompressorState), as its number — its first compressor, where it
+  // has several. Absent for a heat source with none.
+  optional uint32 compressor_state = 8 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "compressor_state",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its degree minutes, in whole degree-minutes (°C × minutes), rounded to the nearest: the
+  // running sum over time of how far the supply has been from calculated_supply_centidegrees,
+  // negative while it has run below it. What a heat source that keeps one starts its
+  // compressor and its add-on heat by, at thresholds of its own. Absent for a heat source
+  // that keeps none.
+  optional sint32 degree_minutes = 9 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "degree_minutes",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Whether the heat source reports an alarm now. An error it reports in its own operation:
+  // service is given it as webrtc.v1.SERVICE_FAULT_ERROR (access.v1.SERVICE_SIGNAL_FAULT), as
+  // any device's error, and nothing more of it.
+  optional bool alarm_active = 10 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "alarm_active",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The maker's own number for its most severe current alarm, for whoever looks it up in the
+  // maker's documentation. Vendor-specific: it means nothing without the product, and no
+  // consumer decides anything by it. Present only while alarm_active is true; a connector
+  // sends a null value (PropertyUpdate.null_value) when the alarm ends. Never sent to service,
+  // in a home or out of one.
+  optional uint32 alarm_code = 11 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "alarm_code",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+}
+
+// The value set of HeatSourceReadings.producing: what a heat source is producing now. Not a
+// field type — producing is a uint32 like every enum-valued reading, so it keeps explicit
+// presence — but the named constants for its numbers. A connector maps its maker's codes onto
+// these; a code none of them names is OTHER.
+enum HeatSourceProduction {
+  // Never sent; an unreported state is an absent field.
+  HEAT_SOURCE_PRODUCTION_UNSPECIFIED = 0;
+
+  // Producing nothing.
+  HEAT_SOURCE_PRODUCTION_OFF = 1;
+
+  // Heating the building: its climate systems.
+  HEAT_SOURCE_PRODUCTION_SPACE_HEATING = 2;
+
+  // Making hot water.
+  HEAT_SOURCE_PRODUCTION_HOT_WATER = 3;
+
+  // Heating a pool.
+  HEAT_SOURCE_PRODUCTION_POOL = 4;
+
+  // Cooling.
+  HEAT_SOURCE_PRODUCTION_COOLING = 5;
+
+  // Something none of the above names, such as a transfer between stores.
+  HEAT_SOURCE_PRODUCTION_OTHER = 6;
+}
+
+// The value set of HeatSourceReadings.compressor_state, as the named constants for its
+// numbers. Starting and stopping are kept apart from running and stopped: while a compressor
+// starts, the heat it makes has not yet reached the supply, and readings then are not yet what
+// it runs at.
+enum CompressorState {
+  // Never sent; an unreported state is an absent field.
+  COMPRESSOR_STATE_UNSPECIFIED = 0;
+  COMPRESSOR_STATE_STOPPED = 1;
+  COMPRESSOR_STATE_STARTING = 2;
+  COMPRESSOR_STATE_RUNNING = 3;
+  COMPRESSOR_STATE_STOPPING = 4;
 }
 
 // The value set of RadioLink.quality: how well a link is doing, as the device's

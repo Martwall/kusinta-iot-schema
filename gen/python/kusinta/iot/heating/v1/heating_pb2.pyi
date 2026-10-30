@@ -1,3 +1,6 @@
+import datetime
+
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
@@ -106,7 +109,7 @@ class FloorCircuit(_message.Message):
     def __init__(self, mixing_valve: _Optional[bool] = ..., supply_cap_centidegrees: _Optional[int] = ..., supply_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ..., return_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ...) -> None: ...
 
 class FloorZone(_message.Message):
-    __slots__ = ("zone_id", "circuit_id", "name", "output", "rooms", "control_room_id", "revision")
+    __slots__ = ("zone_id", "circuit_id", "name", "output", "rooms", "control_room_id", "revision", "uncontrolled_since", "uncontrolled_by")
     ZONE_ID_FIELD_NUMBER: _ClassVar[int]
     CIRCUIT_ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -114,6 +117,8 @@ class FloorZone(_message.Message):
     ROOMS_FIELD_NUMBER: _ClassVar[int]
     CONTROL_ROOM_ID_FIELD_NUMBER: _ClassVar[int]
     REVISION_FIELD_NUMBER: _ClassVar[int]
+    UNCONTROLLED_SINCE_FIELD_NUMBER: _ClassVar[int]
+    UNCONTROLLED_BY_FIELD_NUMBER: _ClassVar[int]
     zone_id: str
     circuit_id: str
     name: str
@@ -121,7 +126,9 @@ class FloorZone(_message.Message):
     rooms: _containers.RepeatedCompositeFieldContainer[FloorZoneRoom]
     control_room_id: _identity_pb2.SpaceId
     revision: int
-    def __init__(self, zone_id: _Optional[str] = ..., circuit_id: _Optional[str] = ..., name: _Optional[str] = ..., output: _Optional[_Union[ContactBinding, _Mapping]] = ..., rooms: _Optional[_Iterable[_Union[FloorZoneRoom, _Mapping]]] = ..., control_room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., revision: _Optional[int] = ...) -> None: ...
+    uncontrolled_since: _timestamp_pb2.Timestamp
+    uncontrolled_by: _identity_pb2.UserId
+    def __init__(self, zone_id: _Optional[str] = ..., circuit_id: _Optional[str] = ..., name: _Optional[str] = ..., output: _Optional[_Union[ContactBinding, _Mapping]] = ..., rooms: _Optional[_Iterable[_Union[FloorZoneRoom, _Mapping]]] = ..., control_room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., revision: _Optional[int] = ..., uncontrolled_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., uncontrolled_by: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ...) -> None: ...
 
 class FloorZoneRoom(_message.Message):
     __slots__ = ("room_id", "area_share_permille")

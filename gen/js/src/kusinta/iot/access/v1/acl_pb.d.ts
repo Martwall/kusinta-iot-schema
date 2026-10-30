@@ -384,8 +384,8 @@ export declare const EffectivePermissionsSchema: GenMessage<EffectivePermissions
 /**
  * What service sees of a home, as a resident is told it in webrtc.v1.PrivacyDisclosure.
  * Each names part of a webrtc.v1.ServiceStatus, of a device's description, of how the
- * home is set up, or of who lives there; with the climate summary the disclosure names
- * separately, nothing else of the home reaches service.
+ * home is set up, of who lives there, or a problem the gateway reports of it; with the
+ * climate summary the disclosure names separately, nothing else of the home reaches service.
  *
  * @generated from enum kusinta.iot.access.v1.ServiceSignal
  */
@@ -475,6 +475,17 @@ export enum ServiceSignal {
    * @generated from enum value: SERVICE_SIGNAL_RESIDENTS = 9;
    */
   RESIDENTS = 9,
+
+  /**
+   * That a floor zone on one of the home's devices has been uncontrolled for about an hour —
+   * without a room, or without a control room — and so heats without control: the device and
+   * the quarter hour it was reported, until the zone is given a control room or removed. Never
+   * which rooms it had or lacks, nor who left it so
+   * (reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED).
+   *
+   * @generated from enum value: SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED = 10;
+   */
+  FLOOR_ZONE_UNCONTROLLED = 10,
 }
 
 /**

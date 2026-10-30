@@ -4,6 +4,7 @@
   * a problem transition is keyed by problem id and seq, so a repeat is recognisable
   * a problem is opened with its whole state and closed with a reason
   * a battery level is optional: absent is not zero
+  * a floor zone without control is a problem of the device whose output it binds
   * service reach says, for each space, since when it has been unbroken
   * reach and served spaces are ordered by a seq the api-server can refuse to go back on
   * a member carries its service roles alone; a resident is a member with none
@@ -128,6 +129,25 @@ def test_an_open_window_is_about_a_room():
     )
 
     assert problem.subject.WhichOneof("subject") == "room_id"
+
+
+def test_a_floor_zone_without_control_is_about_the_device_its_output_is_on():
+    relay = identity_pb2.DeviceId(value="relay-zones")
+    apartment = identity_pb2.SpaceId(value="apt-15")
+    problem = _round_trip(
+        reporting_pb2.Problem(
+            kind=reporting_pb2.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED,
+            subject=reporting_pb2.ProblemSubject(device_id=relay),
+            space_id=apartment,
+            opened_at=QUARTER,
+        )
+    )
+
+    assert (problem.subject.device_id.value, problem.space_id.value) == ("relay-zones", "apt-15")
+
+
+def test_floor_zone_uncontrolled_keeps_its_wire_number():
+    assert reporting_pb2.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED == 10
 
 
 def test_each_transition_is_acknowledged_by_its_key():

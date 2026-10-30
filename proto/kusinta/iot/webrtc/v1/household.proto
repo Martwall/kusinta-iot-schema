@@ -268,10 +268,11 @@ option optimize_for = SPEED;
 //     (space.v1.Space.home_name);
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
-//     addresses, and the record of who did what in the home. What the gateway keeps of a
-//     residency is its residency id with when it began and ended, and nothing tying it to a
-//     person, while a kept record cites it and for at most 25 months; acts of staff on the
-//     home are kept under that id, without names;
+//     addresses, and the record of who did what in the home, heating.v1.FloorZone
+//     .uncontrolled_by among it. What the gateway keeps of a residency is its residency id
+//     with when it began and ended, and nothing tying it to a person, while a kept record
+//     cites it and for at most 25 months; acts of staff on the home are kept under that id,
+//     without names;
 //   * the household's commissioning data: its answers and the photos it shared
 //     (commissioning.v1, HOUSE FACTS AND HOUSEHOLD DATA). House facts and tests stay, as that
 //     section says, and so do the home's heating records, which describe the house;

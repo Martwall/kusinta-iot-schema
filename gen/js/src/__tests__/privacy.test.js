@@ -71,6 +71,7 @@ describe('privacy disclosure', () => {
                 ServiceSignal.FILING,
                 ServiceSignal.ROOM_SETUP,
                 ServiceSignal.LINKS,
+                ServiceSignal.FLOOR_ZONE_UNCONTROLLED,
               ],
             },
           ],

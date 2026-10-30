@@ -103,10 +103,11 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
 
   /**
    * Who or what set target_centidegrees. Unset while the target is, and when it is withheld
-   * from the recipient: from service in a home that is not empty (webrtc.v1 household.proto,
-   * EMPTY HOME), and from anyone when it dates from before
+   * from the recipient: from service in a home, and from anyone when it dates from before
    * their current residency in the home, or from a home they did not live in at the time
-   * (see access.v1.MembershipRelation).
+   * (see access.v1.MembershipRelation). The property owner and the gateway administrators are
+   * given it for a target set in a home while it is empty, as they are given its rooms then
+   * (webrtc.v1 household.proto, EMPTY HOME); technicians stay withheld, empty or not.
    *
    * @generated from field: kusinta.iot.climate.v1.TargetChange target_change = 3;
    */

@@ -28,6 +28,7 @@ const ServiceSignal$json = {
     {'1': 'SERVICE_SIGNAL_ROOM_SETUP', '2': 7},
     {'1': 'SERVICE_SIGNAL_LINKS', '2': 8},
     {'1': 'SERVICE_SIGNAL_RESIDENTS', '2': 9},
+    {'1': 'SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED', '2': 10},
   ],
 };
 
@@ -38,7 +39,8 @@ final $typed_data.Uint8List serviceSignalDescriptor = $convert.base64Decode(
     'GVNFUlZJQ0VfU0lHTkFMX1JBRElPX0xJTksQAxIbChdTRVJWSUNFX1NJR05BTF9GSVJNV0FSRR'
     'AEEhgKFFNFUlZJQ0VfU0lHTkFMX0ZBVUxUEAUSGQoVU0VSVklDRV9TSUdOQUxfRklMSU5HEAYS'
     'HQoZU0VSVklDRV9TSUdOQUxfUk9PTV9TRVRVUBAHEhgKFFNFUlZJQ0VfU0lHTkFMX0xJTktTEA'
-    'gSHAoYU0VSVklDRV9TSUdOQUxfUkVTSURFTlRTEAk=');
+    'gSHAoYU0VSVklDRV9TSUdOQUxfUkVTSURFTlRTEAkSKgomU0VSVklDRV9TSUdOQUxfRkxPT1Jf'
+    'Wk9ORV9VTkNPTlRST0xMRUQQCg==');
 
 @$core.Deprecated('Use attributeRefDescriptor instead')
 const AttributeRef$json = {

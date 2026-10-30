@@ -8,9 +8,13 @@ These assert the decisions the shape encodes:
   * a circuit is a radiator or a floor circuit by its distribution, and an unknown supply
     cap is absent, never 0 °C
   * a floor zone heats several rooms by area share, steered by one control room
+  * an uncontrolled zone (no room, or no control room) says since when and by whom, and a
+    controlled one carries neither
   * records are flat and put one by one, by revision; any is removed by its id
   * a comfort load's windows are minutes of the building's local day, set apart from it
 """
+
+from google.protobuf import timestamp_pb2
 
 from kusinta.iot.access.v1 import acl_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2
@@ -88,6 +92,51 @@ def test_a_zone_heats_several_rooms_steered_by_one_control_room():
         decoded.rooms[1].area_share_permille,
         decoded.control_room_id.value,
     ) == ("room-hall", 400, "room-bath", 600, "room-bath")
+
+
+def test_a_zone_with_no_room_says_since_when_and_by_whom_it_is_uncontrolled():
+    zone = heating_pb2.FloorZone(
+        zone_id="zone-2",
+        output=_nc_channel(2),
+        uncontrolled_since=timestamp_pb2.Timestamp(seconds=1_793_000_000),
+        uncontrolled_by=identity_pb2.UserId(value="user-admin"),
+    )
+
+    decoded = _round_trip(zone)
+    assert (
+        len(decoded.rooms),
+        decoded.uncontrolled_since.seconds,
+        decoded.uncontrolled_by.value,
+    ) == (0, 1_793_000_000, "user-admin")
+
+
+def test_a_zone_with_rooms_but_no_control_room_is_uncontrolled_too():
+    zone = heating_pb2.FloorZone(
+        zone_id="zone-3",
+        output=_nc_channel(3),
+        rooms=[heating_pb2.FloorZoneRoom(room_id=identity_pb2.SpaceId(value="room-hall"), area_share_permille=1000)],
+        uncontrolled_since=timestamp_pb2.Timestamp(seconds=1_793_000_900),
+    )
+
+    decoded = _round_trip(zone)
+    assert (
+        decoded.HasField("control_room_id"),
+        decoded.uncontrolled_since.seconds,
+        decoded.HasField("uncontrolled_by"),
+    ) == (False, 1_793_000_900, False)
+
+
+def test_a_controlled_zone_carries_no_since_or_by():
+    zone = heating_pb2.FloorZone(
+        rooms=[heating_pb2.FloorZoneRoom(room_id=identity_pb2.SpaceId(value="room-hall"), area_share_permille=1000)],
+        control_room_id=identity_pb2.SpaceId(value="room-hall"),
+    )
+
+    decoded = _round_trip(zone)
+    assert (decoded.HasField("uncontrolled_since"), decoded.HasField("uncontrolled_by")) == (
+        False,
+        False,
+    )
 
 
 def test_a_comfort_load_carries_windows_in_local_minutes():

@@ -52,7 +52,8 @@ enum Endpoint_VendorProperties { hmThermostat, hmMaintenance, notSet }
 /// per physical device, so a device is still one row, one claim, one placement.
 ///
 /// Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
-/// extensions — the vendor_properties cases, and radio_link (52) outside that oneof.
+/// extensions — the vendor_properties cases, and radio_link (52) and heat_source (53) outside
+/// that oneof.
 ///
 /// endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
 /// global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -115,6 +116,7 @@ class Endpoint extends $pb.GeneratedMessage {
     $2.HmThermostatProps? hmThermostat,
     $2.HmMaintenanceProps? hmMaintenance,
     RadioLink? radioLink,
+    HeatSourceReadings? heatSource,
   }) {
     final result = create();
     if (endpointId != null) result.endpointId = endpointId;
@@ -141,6 +143,7 @@ class Endpoint extends $pb.GeneratedMessage {
     if (hmThermostat != null) result.hmThermostat = hmThermostat;
     if (hmMaintenance != null) result.hmMaintenance = hmMaintenance;
     if (radioLink != null) result.radioLink = radioLink;
+    if (heatSource != null) result.heatSource = heatSource;
     return result;
   }
 
@@ -237,6 +240,8 @@ class Endpoint extends $pb.GeneratedMessage {
         subBuilder: $2.HmMaintenanceProps.create)
     ..aOM<RadioLink>(52, _omitFieldNames ? '' : 'radioLink',
         subBuilder: RadioLink.create)
+    ..aOM<HeatSourceReadings>(53, _omitFieldNames ? '' : 'heatSource',
+        subBuilder: HeatSourceReadings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -448,10 +453,11 @@ class Endpoint extends $pb.GeneratedMessage {
   /// vendor parameter has no cluster and so no ClusterState to be listed in. A name list
   /// rather than an id list because the vendor branch addresses by name. A bare list
   /// rather than a per-extension map because an endpoint carries at most one
-  /// vendor_properties case and at most a radio_link beside it, and the schema keeps
-  /// radio_link's attribute names disjoint from every vendor_properties case's — a test
-  /// enforces it — so a name here never needs its extension to be read. radio_link's
-  /// parameters are listed here the same way as a vendor's.
+  /// vendor_properties case and at most a radio_link and a heat_source beside it, and the
+  /// schema keeps the attribute names of radio_link, heat_source and every vendor_properties
+  /// case disjoint — a test enforces it — so a name here never needs its extension to be
+  /// read. radio_link's and heat_source's parameters are listed here the same way as a
+  /// vendor's.
   ///
   /// Same reading as the Matter side: named here with no value = implemented, not yet
   /// reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -511,6 +517,22 @@ class Endpoint extends $pb.GeneratedMessage {
   void clearRadioLink() => $_clearField(52);
   @$pb.TagNumber(52)
   RadioLink ensureRadioLink() => $_ensure(20);
+
+  /// A heat source's own readings, on the endpoint its connector reports them on. Outside
+  /// vendor_properties for the reason radio_link is: they are not one vendor's extension but
+  /// readings any heat source may have, whoever made it, and they must be able to sit beside a
+  /// vendor case the same endpoint carries. Selected by the vendor branch by its
+  /// (vendor_extension) key "kusinta.heat_source".
+  @$pb.TagNumber(53)
+  HeatSourceReadings get heatSource => $_getN(21);
+  @$pb.TagNumber(53)
+  set heatSource(HeatSourceReadings value) => $_setField(53, value);
+  @$pb.TagNumber(53)
+  $core.bool hasHeatSource() => $_has(21);
+  @$pb.TagNumber(53)
+  void clearHeatSource() => $_clearField(53);
+  @$pb.TagNumber(53)
+  HeatSourceReadings ensureHeatSource() => $_ensure(21);
 }
 
 /// Device is a DeviceDescriptor plus the endpoints it presents.
@@ -683,6 +705,264 @@ class Device extends $pb.GeneratedMessage {
   void clearLastUpdated() => $_clearField(21);
   @$pb.TagNumber(21)
   $4.Timestamp ensureLastUpdated() => $_ensure(5);
+}
+
+/// A heat source's own readings: the temperatures its controller measures and works out, and
+/// its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
+/// connector reads them from the heat source or the maker's service. What
+/// heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
+///
+/// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
+/// these attribute names, the value case following the field type as everywhere on the vendor
+/// branch. A temperature is in centidegrees (°C × 100) as int_value, as temperatures are
+/// throughout this schema: a connector converts what the heat source gives — degrees with a
+/// decimal, a maker's register scale — into centidegrees and rounds it no further. An
+/// enum-valued reading travels as its number in uint_value, as RadioLink.quality does, and
+/// keeps explicit presence: its UNSPECIFIED is never sent, since an unreported one is an
+/// absent field.
+///
+/// Vendor-neutral on purpose: the same message for every heat source, a heat pump, a boiler
+/// or a district-heating substation, so that whoever reads a plant reads one shape. Which of
+/// the maker's points carries each reading, and how its codes map onto the values here, is
+/// the connector's mapping and not part of this contract; a reading the heat source has no
+/// sensor or state for is never sent, never sent as zero.
+///
+/// Every field is `optional`, for the reason vendor readings always are: absent means never
+/// reported, present means a reading, 0 °C included. Read only: a heat source is steered
+/// through its plant's control inputs (heating.v1.HeatPumpControl), never by writing these.
+///
+/// Who is sent them follows the device, as for any device's readings
+/// (access.v1.MembershipRelation), whoever owns the heat source (common.v1.AssetOwner decides
+/// nothing of who sees what). A heat source filed in a home is household data there: its
+/// readings go to the home's residents and never to service (access.v1.DeviceAcl.relation
+/// SERVICE), who are given of it only what a webrtc.v1.ServiceStatus carries, within the
+/// service signals (access.v1.ServiceSignal): an alarm as a fault (alarm_active), and never
+/// alarm_code or any other reading here.
+class HeatSourceReadings extends $pb.GeneratedMessage {
+  factory HeatSourceReadings({
+    $core.int? outdoorCentidegrees,
+    $core.int? supplyCentidegrees,
+    $core.int? returnCentidegrees,
+    $core.int? hotWaterTopCentidegrees,
+    $core.int? hotWaterChargingCentidegrees,
+    $core.int? calculatedSupplyCentidegrees,
+    $core.int? producing,
+    $core.int? compressorState,
+    $core.int? degreeMinutes,
+    $core.bool? alarmActive,
+    $core.int? alarmCode,
+  }) {
+    final result = create();
+    if (outdoorCentidegrees != null)
+      result.outdoorCentidegrees = outdoorCentidegrees;
+    if (supplyCentidegrees != null)
+      result.supplyCentidegrees = supplyCentidegrees;
+    if (returnCentidegrees != null)
+      result.returnCentidegrees = returnCentidegrees;
+    if (hotWaterTopCentidegrees != null)
+      result.hotWaterTopCentidegrees = hotWaterTopCentidegrees;
+    if (hotWaterChargingCentidegrees != null)
+      result.hotWaterChargingCentidegrees = hotWaterChargingCentidegrees;
+    if (calculatedSupplyCentidegrees != null)
+      result.calculatedSupplyCentidegrees = calculatedSupplyCentidegrees;
+    if (producing != null) result.producing = producing;
+    if (compressorState != null) result.compressorState = compressorState;
+    if (degreeMinutes != null) result.degreeMinutes = degreeMinutes;
+    if (alarmActive != null) result.alarmActive = alarmActive;
+    if (alarmCode != null) result.alarmCode = alarmCode;
+    return result;
+  }
+
+  HeatSourceReadings._();
+
+  factory HeatSourceReadings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatSourceReadings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatSourceReadings',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'outdoorCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'supplyCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'returnCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'hotWaterTopCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'hotWaterChargingCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'calculatedSupplyCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'producing', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'compressorState', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        9, _omitFieldNames ? '' : 'degreeMinutes', $pb.PbFieldType.OS3)
+    ..aOB(10, _omitFieldNames ? '' : 'alarmActive')
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'alarmCode', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatSourceReadings clone() => HeatSourceReadings()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatSourceReadings copyWith(void Function(HeatSourceReadings) updates) =>
+      super.copyWith((message) => updates(message as HeatSourceReadings))
+          as HeatSourceReadings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatSourceReadings create() => HeatSourceReadings._();
+  @$core.override
+  HeatSourceReadings createEmptyInstance() => create();
+  static $pb.PbList<HeatSourceReadings> createRepeated() =>
+      $pb.PbList<HeatSourceReadings>();
+  @$core.pragma('dart2js:noInline')
+  static HeatSourceReadings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatSourceReadings>(create);
+  static HeatSourceReadings? _defaultInstance;
+
+  /// The heat source's own outdoor sensor: the outdoor temperature its heating curve works
+  /// from.
+  @$pb.TagNumber(1)
+  $core.int get outdoorCentidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set outdoorCentidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOutdoorCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOutdoorCentidegrees() => $_clearField(1);
+
+  /// The supply (flow) line from the heat source to its climate system, at its own sensor —
+  /// its first climate system where it serves several. Where radiators and a floor circuit
+  /// share it, this is the shared supply, before the floor circuit's own mixing
+  /// (heating.v1.FloorCircuit.supply_probe reads after it).
+  @$pb.TagNumber(2)
+  $core.int get supplyCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set supplyCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSupplyCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSupplyCentidegrees() => $_clearField(2);
+
+  /// The return line into the heat source, at its own sensor: the combined return of
+  /// everything it heats.
+  @$pb.TagNumber(3)
+  $core.int get returnCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set returnCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReturnCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReturnCentidegrees() => $_clearField(3);
+
+  /// The top of the hot-water tank: how hot the water available to draw is.
+  @$pb.TagNumber(4)
+  $core.int get hotWaterTopCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set hotWaterTopCentidegrees($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasHotWaterTopCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHotWaterTopCentidegrees() => $_clearField(4);
+
+  /// The hot-water tank's charging sensor: the one the heat source starts and stops making
+  /// hot water by.
+  @$pb.TagNumber(5)
+  $core.int get hotWaterChargingCentidegrees => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set hotWaterChargingCentidegrees($core.int value) =>
+      $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasHotWaterChargingCentidegrees() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearHotWaterChargingCentidegrees() => $_clearField(5);
+
+  /// The supply temperature the heat source's own control is aiming for on the line
+  /// supply_centidegrees reads, as it has worked it out from its heating curve and the
+  /// outdoor temperature, with whatever offsets it applies. Its target, not a measurement.
+  @$pb.TagNumber(6)
+  $core.int get calculatedSupplyCentidegrees => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set calculatedSupplyCentidegrees($core.int value) =>
+      $_setSignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCalculatedSupplyCentidegrees() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCalculatedSupplyCentidegrees() => $_clearField(6);
+
+  /// What the heat source is producing now (HeatSourceProduction), as its number. While it
+  /// makes hot water its supply and return say nothing of the space heating, which is what a
+  /// consumer reading them for the heating sets aside. A connector that cannot tell what its
+  /// heat source is producing sends none, rather than a guess or OTHER: OTHER is a state the
+  /// heat source reports, not a reading the connector lacks.
+  @$pb.TagNumber(7)
+  $core.int get producing => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set producing($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasProducing() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearProducing() => $_clearField(7);
+
+  /// Its compressor's state (CompressorState), as its number — its first compressor, where it
+  /// has several. Absent for a heat source with none.
+  @$pb.TagNumber(8)
+  $core.int get compressorState => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set compressorState($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCompressorState() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCompressorState() => $_clearField(8);
+
+  /// Its degree minutes, in whole degree-minutes (°C × minutes), rounded to the nearest: the
+  /// running sum over time of how far the supply has been from calculated_supply_centidegrees,
+  /// negative while it has run below it. What a heat source that keeps one starts its
+  /// compressor and its add-on heat by, at thresholds of its own. Absent for a heat source
+  /// that keeps none.
+  @$pb.TagNumber(9)
+  $core.int get degreeMinutes => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set degreeMinutes($core.int value) => $_setSignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasDegreeMinutes() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDegreeMinutes() => $_clearField(9);
+
+  /// Whether the heat source reports an alarm now. An error it reports in its own operation:
+  /// service is given it as webrtc.v1.SERVICE_FAULT_ERROR (access.v1.SERVICE_SIGNAL_FAULT), as
+  /// any device's error, and nothing more of it.
+  @$pb.TagNumber(10)
+  $core.bool get alarmActive => $_getBF(9);
+  @$pb.TagNumber(10)
+  set alarmActive($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAlarmActive() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAlarmActive() => $_clearField(10);
+
+  /// The maker's own number for its most severe current alarm, for whoever looks it up in the
+  /// maker's documentation. Vendor-specific: it means nothing without the product, and no
+  /// consumer decides anything by it. Present only while alarm_active is true; a connector
+  /// sends a null value (PropertyUpdate.null_value) when the alarm ends. Never sent to service,
+  /// in a home or out of one.
+  @$pb.TagNumber(11)
+  $core.int get alarmCode => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set alarmCode($core.int value) => $_setUnsignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasAlarmCode() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearAlarmCode() => $_clearField(11);
 }
 
 /// A device's radio link, as its connector reports it.

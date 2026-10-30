@@ -76,7 +76,8 @@ export declare type ProblemSubject = Message<"kusinta.iot.reporting.v1.ProblemSu
    */
   subject: {
     /**
-     * DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER.
+     * DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER; FLOOR_ZONE_UNCONTROLLED: the
+     * device whose output the zone binds.
      *
      * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
      */
@@ -956,9 +957,9 @@ export declare type ReportInviteRoutesResponse = Message<"kusinta.iot.reporting.
 export declare const ReportInviteRoutesResponseSchema: GenMessage<ReportInviteRoutesResponse>;
 
 /**
- * What kind of problem is open. The device kinds mirror what service staff are given of a
- * device (webrtc.v1.ServiceStatus: reachability, the battery flags, the ServiceFault values);
- * a device signal added there is added here too.
+ * What kind of problem is open. The device kinds, FLOOR_ZONE_UNCONTROLLED aside, mirror what
+ * service staff are given of a device (webrtc.v1.ServiceStatus: reachability, the battery
+ * flags, the ServiceFault values); a device signal added there is added here too.
  *
  * @generated from enum kusinta.iot.reporting.v1.ProblemKind
  */
@@ -1053,6 +1054,27 @@ export enum ProblemKind {
    * @generated from enum value: PROBLEM_KIND_WINDOW_OPEN = 9;
    */
   WINDOW_OPEN = 9,
+
+  /**
+   * A floor zone bound to one of the device's outputs (heating.v1.FloorZone.output) is
+   * uncontrolled — it has no room, or no control room — and so heats without control: an
+   * uncontrolled zone is not driven, and a floor zone rests closed (heating.v1, UNCONTROLLED
+   * ZONES). Opened by the gateway only once the zone has been uncontrolled for about an hour,
+   * so that a zone left so for a step of commissioning raises nothing. One problem per device,
+   * however many zones on its outputs are uncontrolled. Closes CLEAR_REASON_RECOVERED once
+   * each of them has a control room again or has been removed, and
+   * CLEAR_REASON_DEVICE_REMOVED with the device.
+   *
+   * A service signal: it names the device and where the device is filed (Problem.space_id),
+   * as any device problem does, and nothing else — not the zone's rooms, not which of the two
+   * it lacks, not who left it so, and no time finer than Problem allows for a device in a
+   * home. Not part of
+   * webrtc.v1.ServiceStatus; residents are told of it as
+   * access.v1.SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED.
+   *
+   * @generated from enum value: PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED = 10;
+   */
+  FLOOR_ZONE_UNCONTROLLED = 10,
 }
 
 /**
@@ -1111,7 +1133,8 @@ export enum ClearReason {
 
   /**
    * The condition ended: the device was heard, its battery recovered or was replaced, the
-   * connector came back, the window closed.
+   * connector came back, the window closed, the floor zone was given a control room or
+   * removed.
    *
    * @generated from enum value: CLEAR_REASON_RECOVERED = 1;
    */

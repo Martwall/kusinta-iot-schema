@@ -82,9 +82,11 @@ option optimize_for = SPEED;
 // has its revision bumped, so a put naming the revision it had is stale and a pass held against
 // a binding it lost is no longer current, and every output no longer bound is returned to rest
 // once the change is committed (heating.v1). heating.v1 pushes no record: whoever is given one
-// sees it changed, or gone, at their next ListHeating. A floor zone whose control room was
-// cleared is not driven until whoever may put it names a new one among the rooms it keeps: a
-// put with none is refused as "ZONE_CONTROL_ROOM" (PutHeatingPlant).
+// sees it changed, or gone, at their next ListHeating. A deletion that crosses nothing cuts
+// every floor zone naming a room it deletes the same way, whoever is given the zone, and keeps
+// a zone it leaves with no room (heating.v1, UNCONTROLLED ZONES). A floor zone whose control
+// room was cleared is not driven until whoever may put it names a new one among the rooms it
+// keeps: a put with none is refused as "ZONE_CONTROL_ROOM" (PutHeatingPlant).
 //
 // START-UP. A crossing stored before this rule is undone once, when the gateway starts, before
 // it first reads its heating records: a binding or reading across a boundary is removed, and a

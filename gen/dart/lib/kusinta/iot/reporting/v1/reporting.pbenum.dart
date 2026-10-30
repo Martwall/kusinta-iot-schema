@@ -14,9 +14,9 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-/// What kind of problem is open. The device kinds mirror what service staff are given of a
-/// device (webrtc.v1.ServiceStatus: reachability, the battery flags, the ServiceFault values);
-/// a device signal added there is added here too.
+/// What kind of problem is open. The device kinds, FLOOR_ZONE_UNCONTROLLED aside, mirror what
+/// service staff are given of a device (webrtc.v1.ServiceStatus: reachability, the battery
+/// flags, the ServiceFault values); a device signal added there is added here too.
 class ProblemKind extends $pb.ProtobufEnum {
   static const ProblemKind PROBLEM_KIND_UNSPECIFIED =
       ProblemKind._(0, _omitEnumNames ? '' : 'PROBLEM_KIND_UNSPECIFIED');
@@ -81,6 +81,24 @@ class ProblemKind extends $pb.ProtobufEnum {
   static const ProblemKind PROBLEM_KIND_WINDOW_OPEN =
       ProblemKind._(9, _omitEnumNames ? '' : 'PROBLEM_KIND_WINDOW_OPEN');
 
+  /// A floor zone bound to one of the device's outputs (heating.v1.FloorZone.output) is
+  /// uncontrolled — it has no room, or no control room — and so heats without control: an
+  /// uncontrolled zone is not driven, and a floor zone rests closed (heating.v1, UNCONTROLLED
+  /// ZONES). Opened by the gateway only once the zone has been uncontrolled for about an hour,
+  /// so that a zone left so for a step of commissioning raises nothing. One problem per device,
+  /// however many zones on its outputs are uncontrolled. Closes CLEAR_REASON_RECOVERED once
+  /// each of them has a control room again or has been removed, and
+  /// CLEAR_REASON_DEVICE_REMOVED with the device.
+  ///
+  /// A service signal: it names the device and where the device is filed (Problem.space_id),
+  /// as any device problem does, and nothing else — not the zone's rooms, not which of the two
+  /// it lacks, not who left it so, and no time finer than Problem allows for a device in a
+  /// home. Not part of
+  /// webrtc.v1.ServiceStatus; residents are told of it as
+  /// access.v1.SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED.
+  static const ProblemKind PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED = ProblemKind._(
+      10, _omitEnumNames ? '' : 'PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED');
+
   static const $core.List<ProblemKind> values = <ProblemKind>[
     PROBLEM_KIND_UNSPECIFIED,
     PROBLEM_KIND_DEVICE_OFFLINE,
@@ -92,10 +110,11 @@ class ProblemKind extends $pb.ProtobufEnum {
     PROBLEM_KIND_CONNECTOR_ERROR,
     PROBLEM_KIND_UNFILED_DEVICES,
     PROBLEM_KIND_WINDOW_OPEN,
+    PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED,
   ];
 
   static final $core.List<ProblemKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 9);
+      $pb.ProtobufEnum.$_initByValueList(values, 10);
   static ProblemKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
@@ -146,7 +165,8 @@ class ClearReason extends $pb.ProtobufEnum {
       ClearReason._(0, _omitEnumNames ? '' : 'CLEAR_REASON_UNSPECIFIED');
 
   /// The condition ended: the device was heard, its battery recovered or was replaced, the
-  /// connector came back, the window closed.
+  /// connector came back, the window closed, the floor zone was given a control room or
+  /// removed.
   static const ClearReason CLEAR_REASON_RECOVERED =
       ClearReason._(1, _omitEnumNames ? '' : 'CLEAR_REASON_RECOVERED');
 

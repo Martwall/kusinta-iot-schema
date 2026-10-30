@@ -3,12 +3,34 @@ import { describe, it, expect } from 'vitest'
 import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
 import { Role } from '../kusinta/iot/access/v1/roles_pb.js'
 import {
+  ProblemKind,
+  ProblemSchema,
   GatewayMemberSchema,
   ReportMembersRequestSchema,
   ReportMembersResponseSchema,
   ReportInviteRoutesRequestSchema,
 } from '../kusinta/iot/reporting/v1/reporting_pb.js'
 import { GatewayReportingService } from '../kusinta/iot/reporting/v1/reporting_service_pb.js'
+
+describe('floor zone without control', () => {
+  it('is a problem of the device whose output the zone binds, filed in the home', () => {
+    const problem = create(ProblemSchema, {
+      kind: ProblemKind.FLOOR_ZONE_UNCONTROLLED,
+      subject: { subject: { case: 'deviceId', value: { value: 'relay-zones' } } },
+      spaceId: { value: 'apt-15' },
+    })
+    const decoded = fromBinary(ProblemSchema, toBinary(ProblemSchema, problem))
+    expect([decoded.kind, decoded.subject?.subject.case, decoded.spaceId?.value]).toEqual([
+      ProblemKind.FLOOR_ZONE_UNCONTROLLED,
+      'deviceId',
+      'apt-15',
+    ])
+  })
+
+  it('keeps its wire number', () => {
+    expect(ProblemKind.FLOOR_ZONE_UNCONTROLLED).toBe(10)
+  })
+})
 
 describe('ReportMembers', () => {
   it('carries a member with its service roles', () => {
