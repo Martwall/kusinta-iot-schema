@@ -326,20 +326,20 @@ const FloorZone$json = {
     },
     {'1': 'revision', '3': 7, '4': 1, '5': 4, '10': 'revision'},
     {
-      '1': 'no_rooms_since',
+      '1': 'uncontrolled_since',
       '3': 8,
       '4': 1,
       '5': 11,
       '6': '.google.protobuf.Timestamp',
-      '10': 'noRoomsSince'
+      '10': 'uncontrolledSince'
     },
     {
-      '1': 'no_rooms_by',
+      '1': 'uncontrolled_by',
       '3': 9,
       '4': 1,
       '5': 11,
       '6': '.kusinta.iot.identity.v1.UserId',
-      '10': 'noRoomsBy'
+      '10': 'uncontrolledBy'
     },
   ],
 };
@@ -351,10 +351,10 @@ final $typed_data.Uint8List floorZoneDescriptor = $convert.base64Decode(
     'dGEuaW90LmhlYXRpbmcudjEuQ29udGFjdEJpbmRpbmdSBm91dHB1dBI7CgVyb29tcxgFIAMoCz'
     'IlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRmxvb3Jab25lUm9vbVIFcm9vbXMSSAoPY29udHJv'
     'bF9yb29tX2lkGAYgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3BhY2VJZFINY29udH'
-    'JvbFJvb21JZBIaCghyZXZpc2lvbhgHIAEoBFIIcmV2aXNpb24SQAoObm9fcm9vbXNfc2luY2UY'
-    'CCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgxub1Jvb21zU2luY2USPwoLbm9fcm'
-    '9vbXNfYnkYCSABKAsyHy5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5Vc2VySWRSCW5vUm9vbXNC'
-    'eQ==');
+    'JvbFJvb21JZBIaCghyZXZpc2lvbhgHIAEoBFIIcmV2aXNpb24SSQoSdW5jb250cm9sbGVkX3Np'
+    'bmNlGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIRdW5jb250cm9sbGVkU2luY2'
+    'USSAoPdW5jb250cm9sbGVkX2J5GAkgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNl'
+    'cklkUg51bmNvbnRyb2xsZWRCeQ==');
 
 @$core.Deprecated('Use floorZoneRoomDescriptor instead')
 const FloorZoneRoom$json = {

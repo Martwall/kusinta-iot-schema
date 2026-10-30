@@ -94,27 +94,41 @@ describe('floor zone', () => {
   })
 })
 
-describe('floor zone with no room', () => {
-  it('says since when and by whom it has had none', () => {
+describe('uncontrolled floor zone', () => {
+  it('says since when and by whom it has had no room', () => {
     const decoded = onTheWire(FloorZoneSchema, {
       zoneId: 'zone-2',
       output: ncChannel(2),
-      noRoomsSince: { seconds: 1_793_000_000n },
-      noRoomsBy: { value: 'user-admin' },
+      uncontrolledSince: { seconds: 1_793_000_000n },
+      uncontrolledBy: { value: 'user-admin' },
     })
-    expect([decoded.rooms.length, decoded.noRoomsSince?.seconds, decoded.noRoomsBy?.value]).toEqual([
+    expect([decoded.rooms.length, decoded.uncontrolledSince?.seconds, decoded.uncontrolledBy?.value]).toEqual([
       0,
       1_793_000_000n,
       'user-admin',
     ])
   })
 
-  it('carries neither while the zone has rooms', () => {
+  it('covers a zone with rooms but no control room', () => {
+    const decoded = onTheWire(FloorZoneSchema, {
+      zoneId: 'zone-3',
+      output: ncChannel(3),
+      rooms: [{ roomId: { value: 'room-hall' }, areaSharePermille: 1000 }],
+      uncontrolledSince: { seconds: 1_793_000_900n },
+    })
+    expect([decoded.controlRoomId, decoded.uncontrolledSince?.seconds, decoded.uncontrolledBy]).toEqual([
+      undefined,
+      1_793_000_900n,
+      undefined,
+    ])
+  })
+
+  it('carries neither while the zone is controlled', () => {
     const decoded = onTheWire(FloorZoneSchema, {
       rooms: [{ roomId: { value: 'room-hall' }, areaSharePermille: 1000 }],
       controlRoomId: { value: 'room-hall' },
     })
-    expect([decoded.noRoomsSince, decoded.noRoomsBy]).toEqual([undefined, undefined])
+    expect([decoded.uncontrolledSince, decoded.uncontrolledBy]).toEqual([undefined, undefined])
   })
 })
 

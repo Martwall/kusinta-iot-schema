@@ -901,7 +901,9 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
 
   /// What the heat source is producing now (HeatSourceProduction), as its number. While it
   /// makes hot water its supply and return say nothing of the space heating, which is what a
-  /// consumer reading them for the heating sets aside.
+  /// consumer reading them for the heating sets aside. A connector that cannot tell what its
+  /// heat source is producing sends none, rather than a guess or OTHER: OTHER is a state the
+  /// heat source reports, not a reading the connector lacks.
   @$pb.TagNumber(7)
   $core.int get producing => $_getIZ(6);
   @$pb.TagNumber(7)

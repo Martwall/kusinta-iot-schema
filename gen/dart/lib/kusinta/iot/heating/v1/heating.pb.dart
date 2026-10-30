@@ -776,8 +776,8 @@ class FloorZone extends $pb.GeneratedMessage {
     $core.Iterable<FloorZoneRoom>? rooms,
     $0.SpaceId? controlRoomId,
     $fixnum.Int64? revision,
-    $3.Timestamp? noRoomsSince,
-    $0.UserId? noRoomsBy,
+    $3.Timestamp? uncontrolledSince,
+    $0.UserId? uncontrolledBy,
   }) {
     final result = create();
     if (zoneId != null) result.zoneId = zoneId;
@@ -787,8 +787,8 @@ class FloorZone extends $pb.GeneratedMessage {
     if (rooms != null) result.rooms.addAll(rooms);
     if (controlRoomId != null) result.controlRoomId = controlRoomId;
     if (revision != null) result.revision = revision;
-    if (noRoomsSince != null) result.noRoomsSince = noRoomsSince;
-    if (noRoomsBy != null) result.noRoomsBy = noRoomsBy;
+    if (uncontrolledSince != null) result.uncontrolledSince = uncontrolledSince;
+    if (uncontrolledBy != null) result.uncontrolledBy = uncontrolledBy;
     return result;
   }
 
@@ -818,9 +818,9 @@ class FloorZone extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         7, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOM<$3.Timestamp>(8, _omitFieldNames ? '' : 'noRoomsSince',
+    ..aOM<$3.Timestamp>(8, _omitFieldNames ? '' : 'uncontrolledSince',
         subBuilder: $3.Timestamp.create)
-    ..aOM<$0.UserId>(9, _omitFieldNames ? '' : 'noRoomsBy',
+    ..aOM<$0.UserId>(9, _omitFieldNames ? '' : 'uncontrolledBy',
         subBuilder: $0.UserId.create)
     ..hasRequiredFields = false;
 
@@ -887,13 +887,13 @@ class FloorZone extends $pb.GeneratedMessage {
   /// The rooms the zone heats, each a room within its plant's space, listed once, with a
   /// share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
   /// be heated by several zones. A put names at least one; empty only for a zone whose rooms
-  /// were all deleted (see the file comment), which heats without control until a put names
-  /// rooms again.
+  /// were all deleted, which is uncontrolled (see the file comment, UNCONTROLLED ZONES).
   @$pb.TagNumber(5)
   $pb.PbList<FloorZoneRoom> get rooms => $_getList(4);
 
-  /// One of rooms. Only its error, its sensor and its open window steer the zone. Unset while
-  /// rooms is empty.
+  /// One of rooms. Only its error, its sensor and its open window steer the zone. A put names
+  /// one; unset only once a deletion cleared it, and always while rooms is empty. A zone
+  /// without one is uncontrolled (see the file comment, UNCONTROLLED ZONES).
   @$pb.TagNumber(6)
   $0.SpaceId get controlRoomId => $_getN(5);
   @$pb.TagNumber(6)
@@ -915,39 +915,45 @@ class FloorZone extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearRevision() => $_clearField(7);
 
-  /// While rooms is empty: since when the zone has had no room, and the user whose change left
-  /// it so — the deletion of its last room; no_rooms_by is unset where no user's change did.
-  /// Both unset while the zone has rooms. Read-only: set by the gateway, ignored in a put.
+  /// While the zone is uncontrolled — no room, or no control room (see the file comment,
+  /// UNCONTROLLED ZONES): since when it has been so, and the user whose change left it so — the
+  /// deletion of its control room or its last room; uncontrolled_by is unset where no user's
+  /// change did. Both unset while the zone is controlled. Read-only: set by the gateway, ignored
+  /// in a put. A put that names a control room among its rooms ends it.
   ///
-  /// For a home's zone — one left without rooms stays whose it was — sent only to the home's
+  /// uncontrolled_by is erased at the home's wipe with the record of who did what in the home
+  /// (webrtc.v1 household.proto, WIPE); uncontrolled_since stays with the zone, which describes
+  /// the house.
+  ///
+  /// For a home's zone — one left uncontrolled stays whose it was — sent only to the home's
   /// household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) and an installer under a
   /// commissioning grant on the home, and unset for the home's other residents; never sent to
   /// service. Unset, too, when it dates from before the recipient's current residency in the
   /// home, or from a home they did not live in at the time (see access.v1.MembershipRelation).
-  /// For a zone outside homes, sent to whoever is given the zone. That rooms is empty is what
-  /// says the zone has none; these say only since when and by whom, where the recipient is
-  /// given them.
+  /// For a zone outside homes, sent to whoever is given the zone. That rooms is empty, or
+  /// control_room_id unset, is what says the zone is uncontrolled; these say only since when
+  /// and by whom, where the recipient is given them.
   @$pb.TagNumber(8)
-  $3.Timestamp get noRoomsSince => $_getN(7);
+  $3.Timestamp get uncontrolledSince => $_getN(7);
   @$pb.TagNumber(8)
-  set noRoomsSince($3.Timestamp value) => $_setField(8, value);
+  set uncontrolledSince($3.Timestamp value) => $_setField(8, value);
   @$pb.TagNumber(8)
-  $core.bool hasNoRoomsSince() => $_has(7);
+  $core.bool hasUncontrolledSince() => $_has(7);
   @$pb.TagNumber(8)
-  void clearNoRoomsSince() => $_clearField(8);
+  void clearUncontrolledSince() => $_clearField(8);
   @$pb.TagNumber(8)
-  $3.Timestamp ensureNoRoomsSince() => $_ensure(7);
+  $3.Timestamp ensureUncontrolledSince() => $_ensure(7);
 
   @$pb.TagNumber(9)
-  $0.UserId get noRoomsBy => $_getN(8);
+  $0.UserId get uncontrolledBy => $_getN(8);
   @$pb.TagNumber(9)
-  set noRoomsBy($0.UserId value) => $_setField(9, value);
+  set uncontrolledBy($0.UserId value) => $_setField(9, value);
   @$pb.TagNumber(9)
-  $core.bool hasNoRoomsBy() => $_has(8);
+  $core.bool hasUncontrolledBy() => $_has(8);
   @$pb.TagNumber(9)
-  void clearNoRoomsBy() => $_clearField(9);
+  void clearUncontrolledBy() => $_clearField(9);
   @$pb.TagNumber(9)
-  $0.UserId ensureNoRoomsBy() => $_ensure(8);
+  $0.UserId ensureUncontrolledBy() => $_ensure(8);
 }
 
 class FloorZoneRoom extends $pb.GeneratedMessage {

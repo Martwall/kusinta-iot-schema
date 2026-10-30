@@ -448,7 +448,9 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   /**
    * What the heat source is producing now (HeatSourceProduction), as its number. While it
    * makes hot water its supply and return say nothing of the space heating, which is what a
-   * consumer reading them for the heating sets aside.
+   * consumer reading them for the heating sets aside. A connector that cannot tell what its
+   * heat source is producing sends none, rather than a guess or OTHER: OTHER is a state the
+   * heat source reports, not a reading the connector lacks.
    *
    * @generated from field: optional uint32 producing = 7;
    */

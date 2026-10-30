@@ -341,16 +341,16 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
    * The rooms the zone heats, each a room within its plant's space, listed once, with a
    * share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
    * be heated by several zones. A put names at least one; empty only for a zone whose rooms
-   * were all deleted (see the file comment), which heats without control until a put names
-   * rooms again.
+   * were all deleted, which is uncontrolled (see the file comment, UNCONTROLLED ZONES).
    *
    * @generated from field: repeated kusinta.iot.heating.v1.FloorZoneRoom rooms = 5;
    */
   rooms: FloorZoneRoom[];
 
   /**
-   * One of rooms. Only its error, its sensor and its open window steer the zone. Unset while
-   * rooms is empty.
+   * One of rooms. Only its error, its sensor and its open window steer the zone. A put names
+   * one; unset only once a deletion cleared it, and always while rooms is empty. A zone
+   * without one is uncontrolled (see the file comment, UNCONTROLLED ZONES).
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId control_room_id = 6;
    */
@@ -364,27 +364,33 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
   revision: bigint;
 
   /**
-   * While rooms is empty: since when the zone has had no room, and the user whose change left
-   * it so — the deletion of its last room; no_rooms_by is unset where no user's change did.
-   * Both unset while the zone has rooms. Read-only: set by the gateway, ignored in a put.
+   * While the zone is uncontrolled — no room, or no control room (see the file comment,
+   * UNCONTROLLED ZONES): since when it has been so, and the user whose change left it so — the
+   * deletion of its control room or its last room; uncontrolled_by is unset where no user's
+   * change did. Both unset while the zone is controlled. Read-only: set by the gateway, ignored
+   * in a put. A put that names a control room among its rooms ends it.
    *
-   * For a home's zone — one left without rooms stays whose it was — sent only to the home's
+   * uncontrolled_by is erased at the home's wipe with the record of who did what in the home
+   * (webrtc.v1 household.proto, WIPE); uncontrolled_since stays with the zone, which describes
+   * the house.
+   *
+   * For a home's zone — one left uncontrolled stays whose it was — sent only to the home's
    * household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) and an installer under a
    * commissioning grant on the home, and unset for the home's other residents; never sent to
    * service. Unset, too, when it dates from before the recipient's current residency in the
    * home, or from a home they did not live in at the time (see access.v1.MembershipRelation).
-   * For a zone outside homes, sent to whoever is given the zone. That rooms is empty is what
-   * says the zone has none; these say only since when and by whom, where the recipient is
-   * given them.
+   * For a zone outside homes, sent to whoever is given the zone. That rooms is empty, or
+   * control_room_id unset, is what says the zone is uncontrolled; these say only since when
+   * and by whom, where the recipient is given them.
    *
-   * @generated from field: google.protobuf.Timestamp no_rooms_since = 8;
+   * @generated from field: google.protobuf.Timestamp uncontrolled_since = 8;
    */
-  noRoomsSince?: Timestamp | undefined;
+  uncontrolledSince?: Timestamp | undefined;
 
   /**
-   * @generated from field: kusinta.iot.identity.v1.UserId no_rooms_by = 9;
+   * @generated from field: kusinta.iot.identity.v1.UserId uncontrolled_by = 9;
    */
-  noRoomsBy?: UserId | undefined;
+  uncontrolledBy?: UserId | undefined;
 };
 
 /**

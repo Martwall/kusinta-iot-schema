@@ -477,9 +477,10 @@ export enum ServiceSignal {
   RESIDENTS = 9,
 
   /**
-   * That a floor zone on one of the home's devices has been without a room for about an hour,
-   * and so heats without control: the device and the quarter hour it was reported, until the
-   * zone is given a room or removed. Never which rooms it had, nor who left it without them
+   * That a floor zone on one of the home's devices has been uncontrolled for about an hour —
+   * without a room, or without a control room — and so heats without control: the device and
+   * the quarter hour it was reported, until the zone is given a control room or removed. Never
+   * which rooms it had or lacks, nor who left it so
    * (reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED).
    *
    * @generated from enum value: SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED = 10;
