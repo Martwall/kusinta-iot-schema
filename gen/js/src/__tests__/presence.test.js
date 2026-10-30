@@ -30,10 +30,11 @@ const PROPERTIES_MESSAGES = EndpointSchema.oneofs
   .fields.map((f) => f.message)
 
 // Every message the vendor branch can select: the vendor_properties cases, plus
-// radio_link, which sits outside that oneof.
+// radio_link and heat_source, which sit outside that oneof.
 const VENDOR_EXTENSIONS = [
   ...EndpointSchema.oneofs.find((o) => o.name === 'vendor_properties').fields.map((f) => f.message),
   EndpointSchema.fields.find((f) => f.name === 'radio_link').message,
+  EndpointSchema.fields.find((f) => f.name === 'heat_source').message,
 ]
 
 describe('contact state, where false is the alarm reading', () => {
@@ -113,7 +114,7 @@ describe('schema-wide invariant', () => {
     )
     expect(implicit).toEqual([])
   })
-  it('gives every vendor reading field explicit presence, radio_link included', () => {
+  it('gives every vendor reading field explicit presence, radio_link and heat_source included', () => {
     const implicit = VENDOR_EXTENSIONS.flatMap((schema) =>
       schema.fields.filter((f) => f.presence !== EXPLICIT).map((f) => `${schema.name}.${f.name}`),
     )

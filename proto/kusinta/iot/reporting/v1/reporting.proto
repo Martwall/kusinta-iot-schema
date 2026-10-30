@@ -147,9 +147,9 @@ message SnapshotPart {
   bool last = 3;
 }
 
-// What kind of problem is open. The device kinds mirror what service staff are given of a
-// device (webrtc.v1.ServiceStatus: reachability, the battery flags, the ServiceFault values);
-// a device signal added there is added here too.
+// What kind of problem is open. The device kinds, FLOOR_ZONE_UNCONTROLLED aside, mirror what
+// service staff are given of a device (webrtc.v1.ServiceStatus: reachability, the battery
+// flags, the ServiceFault values); a device signal added there is added here too.
 enum ProblemKind {
   PROBLEM_KIND_UNSPECIFIED = 0;
 
@@ -202,6 +202,21 @@ enum ProblemKind {
   // its window open raises this at the quarter hour it leaves, stamped with that quarter hour,
   // never with when the window opened.
   PROBLEM_KIND_WINDOW_OPEN = 9;
+
+  // A floor zone bound to one of the device's outputs (heating.v1.FloorZone.output) has no
+  // room, and so heats without control: a zone with no room is not driven, and a floor zone
+  // rests closed (heating.v1, the file comment). Opened by the gateway only once the zone has
+  // been without a room for about an hour, so that a zone left so for a step of commissioning
+  // raises nothing. One problem per device, however many zones on its outputs have no room.
+  // Closes CLEAR_REASON_RECOVERED once each of them has a room again or has been removed, and
+  // CLEAR_REASON_DEVICE_REMOVED with the device.
+  //
+  // A service signal: it names the device and where the device is filed (Problem.space_id),
+  // as any device problem does, and nothing else — not the zone's rooms, not who left it
+  // without them, and no time finer than Problem allows for a device in a home. Not part of
+  // webrtc.v1.ServiceStatus; residents are told of it as
+  // access.v1.SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED.
+  PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED = 10;
 }
 
 // Why a problem closed.
@@ -247,7 +262,7 @@ enum ClearReason {
   CLEAR_REASON_UNSPECIFIED = 0;
 
   // The condition ended: the device was heard, its battery recovered or was replaced, the
-  // connector came back, the window closed.
+  // connector came back, the window closed, the floor zone was given a room or removed.
   CLEAR_REASON_RECOVERED = 1;
 
   // The unfiled devices were filed.
@@ -284,7 +299,8 @@ enum ClearReason {
 // The thing a problem is about.
 message ProblemSubject {
   oneof subject {
-    // DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER.
+    // DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER; FLOOR_ZONE_UNCONTROLLED: the
+    // device whose output the zone binds.
     kusinta.iot.identity.v1.DeviceId device_id = 1;
 
     // CONNECTOR_OFFLINE, CONNECTOR_ERROR.

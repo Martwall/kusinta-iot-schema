@@ -27,7 +27,7 @@ RADIO_QUALITY_FAIR: RadioQuality
 RADIO_QUALITY_POOR: RadioQuality
 
 class Endpoint(_message.Message):
-    __slots__ = ("endpoint_id", "matter_device_type_id", "thermostat", "temperature_sensor", "humidity_sensor", "occupancy_sensor", "contact_sensor", "window_covering", "door_lock", "on_off_light", "dimmable_light", "color_temp_light", "energy_sensor", "pressure_sensor", "power_source", "hm_thermostat", "hm_maintenance", "radio_link", "clusters", "vendor_attribute_names", "vendor_attribute_behaviours")
+    __slots__ = ("endpoint_id", "matter_device_type_id", "thermostat", "temperature_sensor", "humidity_sensor", "occupancy_sensor", "contact_sensor", "window_covering", "door_lock", "on_off_light", "dimmable_light", "color_temp_light", "energy_sensor", "pressure_sensor", "power_source", "hm_thermostat", "hm_maintenance", "radio_link", "heat_source", "clusters", "vendor_attribute_names", "vendor_attribute_behaviours")
     class VendorAttributeBehavioursEntry(_message.Message):
         __slots__ = ("key", "value")
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -53,6 +53,7 @@ class Endpoint(_message.Message):
     HM_THERMOSTAT_FIELD_NUMBER: _ClassVar[int]
     HM_MAINTENANCE_FIELD_NUMBER: _ClassVar[int]
     RADIO_LINK_FIELD_NUMBER: _ClassVar[int]
+    HEAT_SOURCE_FIELD_NUMBER: _ClassVar[int]
     CLUSTERS_FIELD_NUMBER: _ClassVar[int]
     VENDOR_ATTRIBUTE_NAMES_FIELD_NUMBER: _ClassVar[int]
     VENDOR_ATTRIBUTE_BEHAVIOURS_FIELD_NUMBER: _ClassVar[int]
@@ -74,10 +75,11 @@ class Endpoint(_message.Message):
     hm_thermostat: _homematic_pb2.HmThermostatProps
     hm_maintenance: _homematic_pb2.HmMaintenanceProps
     radio_link: RadioLink
+    heat_source: HeatSourceReadings
     clusters: _containers.RepeatedCompositeFieldContainer[_cluster_state_pb2.ClusterState]
     vendor_attribute_names: _containers.RepeatedScalarFieldContainer[str]
     vendor_attribute_behaviours: _containers.MessageMap[str, _cluster_state_pb2.AttributeBehaviour]
-    def __init__(self, endpoint_id: _Optional[int] = ..., matter_device_type_id: _Optional[int] = ..., thermostat: _Optional[_Union[_properties_pb2.ThermostatProperties, _Mapping]] = ..., temperature_sensor: _Optional[_Union[_properties_pb2.TemperatureSensorProperties, _Mapping]] = ..., humidity_sensor: _Optional[_Union[_properties_pb2.HumiditySensorProperties, _Mapping]] = ..., occupancy_sensor: _Optional[_Union[_properties_pb2.OccupancySensorProperties, _Mapping]] = ..., contact_sensor: _Optional[_Union[_properties_pb2.ContactSensorProperties, _Mapping]] = ..., window_covering: _Optional[_Union[_properties_pb2.WindowCoveringProperties, _Mapping]] = ..., door_lock: _Optional[_Union[_properties_pb2.DoorLockProperties, _Mapping]] = ..., on_off_light: _Optional[_Union[_properties_pb2.OnOffLightProperties, _Mapping]] = ..., dimmable_light: _Optional[_Union[_properties_pb2.DimmableLightProperties, _Mapping]] = ..., color_temp_light: _Optional[_Union[_properties_pb2.ColorTemperatureLightProperties, _Mapping]] = ..., energy_sensor: _Optional[_Union[_properties_pb2.EnergySensorProperties, _Mapping]] = ..., pressure_sensor: _Optional[_Union[_properties_pb2.PressureSensorProperties, _Mapping]] = ..., power_source: _Optional[_Union[_properties_pb2.PowerSourceProperties, _Mapping]] = ..., hm_thermostat: _Optional[_Union[_homematic_pb2.HmThermostatProps, _Mapping]] = ..., hm_maintenance: _Optional[_Union[_homematic_pb2.HmMaintenanceProps, _Mapping]] = ..., radio_link: _Optional[_Union[RadioLink, _Mapping]] = ..., clusters: _Optional[_Iterable[_Union[_cluster_state_pb2.ClusterState, _Mapping]]] = ..., vendor_attribute_names: _Optional[_Iterable[str]] = ..., vendor_attribute_behaviours: _Optional[_Mapping[str, _cluster_state_pb2.AttributeBehaviour]] = ...) -> None: ...
+    def __init__(self, endpoint_id: _Optional[int] = ..., matter_device_type_id: _Optional[int] = ..., thermostat: _Optional[_Union[_properties_pb2.ThermostatProperties, _Mapping]] = ..., temperature_sensor: _Optional[_Union[_properties_pb2.TemperatureSensorProperties, _Mapping]] = ..., humidity_sensor: _Optional[_Union[_properties_pb2.HumiditySensorProperties, _Mapping]] = ..., occupancy_sensor: _Optional[_Union[_properties_pb2.OccupancySensorProperties, _Mapping]] = ..., contact_sensor: _Optional[_Union[_properties_pb2.ContactSensorProperties, _Mapping]] = ..., window_covering: _Optional[_Union[_properties_pb2.WindowCoveringProperties, _Mapping]] = ..., door_lock: _Optional[_Union[_properties_pb2.DoorLockProperties, _Mapping]] = ..., on_off_light: _Optional[_Union[_properties_pb2.OnOffLightProperties, _Mapping]] = ..., dimmable_light: _Optional[_Union[_properties_pb2.DimmableLightProperties, _Mapping]] = ..., color_temp_light: _Optional[_Union[_properties_pb2.ColorTemperatureLightProperties, _Mapping]] = ..., energy_sensor: _Optional[_Union[_properties_pb2.EnergySensorProperties, _Mapping]] = ..., pressure_sensor: _Optional[_Union[_properties_pb2.PressureSensorProperties, _Mapping]] = ..., power_source: _Optional[_Union[_properties_pb2.PowerSourceProperties, _Mapping]] = ..., hm_thermostat: _Optional[_Union[_homematic_pb2.HmThermostatProps, _Mapping]] = ..., hm_maintenance: _Optional[_Union[_homematic_pb2.HmMaintenanceProps, _Mapping]] = ..., radio_link: _Optional[_Union[RadioLink, _Mapping]] = ..., heat_source: _Optional[_Union[HeatSourceReadings, _Mapping]] = ..., clusters: _Optional[_Iterable[_Union[_cluster_state_pb2.ClusterState, _Mapping]]] = ..., vendor_attribute_names: _Optional[_Iterable[str]] = ..., vendor_attribute_behaviours: _Optional[_Mapping[str, _cluster_state_pb2.AttributeBehaviour]] = ...) -> None: ...
 
 class Device(_message.Message):
     __slots__ = ("descriptor", "endpoints", "min_write_interval_seconds", "max_write_delay_seconds", "last_seen", "last_updated")
@@ -94,6 +96,22 @@ class Device(_message.Message):
     last_seen: _timestamp_pb2.Timestamp
     last_updated: _timestamp_pb2.Timestamp
     def __init__(self, descriptor: _Optional[_Union[_descriptor_pb2.DeviceDescriptor, _Mapping]] = ..., endpoints: _Optional[_Iterable[_Union[Endpoint, _Mapping]]] = ..., min_write_interval_seconds: _Optional[int] = ..., max_write_delay_seconds: _Optional[int] = ..., last_seen: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_updated: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class HeatSourceReadings(_message.Message):
+    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees")
+    OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    RETURN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    HOT_WATER_TOP_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    HOT_WATER_CHARGING_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    CALCULATED_SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    outdoor_centidegrees: int
+    supply_centidegrees: int
+    return_centidegrees: int
+    hot_water_top_centidegrees: int
+    hot_water_charging_centidegrees: int
+    calculated_supply_centidegrees: int
+    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ...) -> None: ...
 
 class RadioLink(_message.Message):
     __slots__ = ("quality", "rssi_dbm", "snr_db")

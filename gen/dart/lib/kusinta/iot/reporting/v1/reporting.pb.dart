@@ -202,7 +202,8 @@ class ProblemSubject extends $pb.GeneratedMessage {
       _ProblemSubject_SubjectByTag[$_whichOneof(0)]!;
   void clearSubject() => $_clearField($_whichOneof(0));
 
-  /// DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER.
+  /// DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER; FLOOR_ZONE_UNCONTROLLED: the
+  /// device whose output the zone binds.
   @$pb.TagNumber(1)
   $0.DeviceId get deviceId => $_getN(0);
   @$pb.TagNumber(1)

@@ -15,6 +15,7 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import '../../../../google/protobuf/timestamp.pb.dart' as $3;
 import '../../access/v1/acl.pb.dart' as $1;
 import '../../device/v1/cluster_state.pb.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
@@ -321,8 +322,9 @@ class HeatingPlant extends $pb.GeneratedMessage {
   void clearSource() => $_clearField(4);
 
   /// The device the heat source's own readings come from — its temperatures, compressor and
-  /// hot-water state — when it has one. Read only: the gateway drives a heat source through
-  /// the plant's control, never through this device.
+  /// hot-water state — when it has one; its temperatures are the device's
+  /// device.v1.HeatSourceReadings. Read only: the gateway drives a heat source through the
+  /// plant's control, never through this device.
   @$pb.TagNumber(5)
   $0.DeviceId get readingsDeviceId => $_getN(4);
   @$pb.TagNumber(5)
@@ -774,6 +776,8 @@ class FloorZone extends $pb.GeneratedMessage {
     $core.Iterable<FloorZoneRoom>? rooms,
     $0.SpaceId? controlRoomId,
     $fixnum.Int64? revision,
+    $3.Timestamp? noRoomsSince,
+    $0.UserId? noRoomsBy,
   }) {
     final result = create();
     if (zoneId != null) result.zoneId = zoneId;
@@ -783,6 +787,8 @@ class FloorZone extends $pb.GeneratedMessage {
     if (rooms != null) result.rooms.addAll(rooms);
     if (controlRoomId != null) result.controlRoomId = controlRoomId;
     if (revision != null) result.revision = revision;
+    if (noRoomsSince != null) result.noRoomsSince = noRoomsSince;
+    if (noRoomsBy != null) result.noRoomsBy = noRoomsBy;
     return result;
   }
 
@@ -812,6 +818,10 @@ class FloorZone extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         7, _omitFieldNames ? '' : 'revision', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOM<$3.Timestamp>(8, _omitFieldNames ? '' : 'noRoomsSince',
+        subBuilder: $3.Timestamp.create)
+    ..aOM<$0.UserId>(9, _omitFieldNames ? '' : 'noRoomsBy',
+        subBuilder: $0.UserId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -876,11 +886,14 @@ class FloorZone extends $pb.GeneratedMessage {
 
   /// The rooms the zone heats, each a room within its plant's space, listed once, with a
   /// share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
-  /// be heated by several zones.
+  /// be heated by several zones. A put names at least one; empty only for a zone whose rooms
+  /// were all deleted (see the file comment), which heats without control until a put names
+  /// rooms again.
   @$pb.TagNumber(5)
   $pb.PbList<FloorZoneRoom> get rooms => $_getList(4);
 
-  /// One of rooms. Only its error, its sensor and its open window steer the zone.
+  /// One of rooms. Only its error, its sensor and its open window steer the zone. Unset while
+  /// rooms is empty.
   @$pb.TagNumber(6)
   $0.SpaceId get controlRoomId => $_getN(5);
   @$pb.TagNumber(6)
@@ -901,6 +914,40 @@ class FloorZone extends $pb.GeneratedMessage {
   $core.bool hasRevision() => $_has(6);
   @$pb.TagNumber(7)
   void clearRevision() => $_clearField(7);
+
+  /// While rooms is empty: since when the zone has had no room, and the user whose change left
+  /// it so — the deletion of its last room; no_rooms_by is unset where no user's change did.
+  /// Both unset while the zone has rooms. Read-only: set by the gateway, ignored in a put.
+  ///
+  /// For a home's zone — one left without rooms stays whose it was — sent only to the home's
+  /// household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) and an installer under a
+  /// commissioning grant on the home, and unset for the home's other residents; never sent to
+  /// service. Unset, too, when it dates from before the recipient's current residency in the
+  /// home, or from a home they did not live in at the time (see access.v1.MembershipRelation).
+  /// For a zone outside homes, sent to whoever is given the zone. That rooms is empty is what
+  /// says the zone has none; these say only since when and by whom, where the recipient is
+  /// given them.
+  @$pb.TagNumber(8)
+  $3.Timestamp get noRoomsSince => $_getN(7);
+  @$pb.TagNumber(8)
+  set noRoomsSince($3.Timestamp value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasNoRoomsSince() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearNoRoomsSince() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $3.Timestamp ensureNoRoomsSince() => $_ensure(7);
+
+  @$pb.TagNumber(9)
+  $0.UserId get noRoomsBy => $_getN(8);
+  @$pb.TagNumber(9)
+  set noRoomsBy($0.UserId value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasNoRoomsBy() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearNoRoomsBy() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $0.UserId ensureNoRoomsBy() => $_ensure(8);
 }
 
 class FloorZoneRoom extends $pb.GeneratedMessage {

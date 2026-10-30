@@ -94,6 +94,30 @@ describe('floor zone', () => {
   })
 })
 
+describe('floor zone with no room', () => {
+  it('says since when and by whom it has had none', () => {
+    const decoded = onTheWire(FloorZoneSchema, {
+      zoneId: 'zone-2',
+      output: ncChannel(2),
+      noRoomsSince: { seconds: 1_793_000_000n },
+      noRoomsBy: { value: 'user-admin' },
+    })
+    expect([decoded.rooms.length, decoded.noRoomsSince?.seconds, decoded.noRoomsBy?.value]).toEqual([
+      0,
+      1_793_000_000n,
+      'user-admin',
+    ])
+  })
+
+  it('carries neither while the zone has rooms', () => {
+    const decoded = onTheWire(FloorZoneSchema, {
+      rooms: [{ roomId: { value: 'room-hall' }, areaSharePermille: 1000 }],
+      controlRoomId: { value: 'room-hall' },
+    })
+    expect([decoded.noRoomsSince, decoded.noRoomsBy]).toEqual([undefined, undefined])
+  })
+})
+
 describe('comfort load', () => {
   it('carries its time windows, in minutes of the building’s local day', () => {
     const decoded = onTheWire(ComfortLoadSchema, {

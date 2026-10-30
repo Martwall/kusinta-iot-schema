@@ -22,12 +22,13 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 from kusinta.iot.access.v1 import acl_pb2 as kusinta_dot_iot_dot_access_dot_v1_dot_acl__pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as kusinta_dot_iot_dot_device_dot_v1_dot_cluster__state__pb2
 from kusinta.iot.identity.v1 import identity_pb2 as kusinta_dot_iot_dot_identity_dot_v1_dot_identity__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n$kusinta/iot/heating/v1/heating.proto\x12\x16kusinta.iot.heating.v1\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a)kusinta/iot/device/v1/cluster_state.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x94\x01\n\x0f\x44\x65viceAttribute\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x41\n\tattribute\x18\x02 \x01(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\tattribute\"\x9b\x01\n\x0e\x43ontactBinding\x12?\n\x06output\x18\x01 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x06output\x12H\n\x0c\x63losed_value\x18\x02 \x01(\x0b\x32%.kusinta.iot.device.v1.AttributeValueR\x0b\x63losedValue\"\xb9\x03\n\x0cHeatingPlant\x12\x19\n\x08plant_id\x18\x01 \x01(\tR\x07plantId\x12;\n\x08space_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12>\n\x06source\x18\x04 \x01(\x0e\x32&.kusinta.iot.heating.v1.HeatSourceKindR\x06source\x12O\n\x12readings_device_id\x18\x05 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x10readingsDeviceId\x12\x46\n\theat_pump\x18\x06 \x01(\x0b\x32\'.kusinta.iot.heating.v1.HeatPumpControlH\x00R\x08heatPump\x12=\n\x05meter\x18\x07 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x05meter\x12\x1a\n\x08revision\x18\x08 \x01(\x04R\x08revisionB\t\n\x07\x63ontrol\"\x84\x02\n\x0fHeatPumpControl\x12L\n\x0esg_ready_block\x18\x01 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x0csgReadyBlock\x12L\n\x0esg_ready_boost\x18\x02 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x0csgReadyBoost\x12U\n\x13\x61\x64\x64_on_heater_block\x18\x03 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x10\x61\x64\x64OnHeaterBlock\"\x8f\x02\n\x0eHeatingCircuit\x12\x1d\n\ncircuit_id\x18\x01 \x01(\tR\tcircuitId\x12\x19\n\x08plant_id\x18\x02 \x01(\tR\x07plantId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12\x45\n\x08radiator\x18\x04 \x01(\x0b\x32\'.kusinta.iot.heating.v1.RadiatorCircuitH\x00R\x08radiator\x12<\n\x05\x66loor\x18\x05 \x01(\x0b\x32$.kusinta.iot.heating.v1.FloorCircuitH\x00R\x05\x66loor\x12\x1a\n\x08revision\x18\x06 \x01(\x04R\x08revisionB\x0e\n\x0c\x64istribution\"\x11\n\x0fRadiatorCircuit\"\xa2\x02\n\x0c\x46loorCircuit\x12!\n\x0cmixing_valve\x18\x01 \x01(\x08R\x0bmixingValve\x12;\n\x17supply_cap_centidegrees\x18\x02 \x01(\x11H\x00R\x15supplyCapCentidegrees\x88\x01\x01\x12J\n\x0csupply_probe\x18\x03 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x0bsupplyProbe\x12J\n\x0creturn_probe\x18\x04 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x0breturnProbeB\x1a\n\x18_supply_cap_centidegrees\"\xba\x02\n\tFloorZone\x12\x17\n\x07zone_id\x18\x01 \x01(\tR\x06zoneId\x12\x1d\n\ncircuit_id\x18\x02 \x01(\tR\tcircuitId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12>\n\x06output\x18\x04 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x06output\x12;\n\x05rooms\x18\x05 \x03(\x0b\x32%.kusinta.iot.heating.v1.FloorZoneRoomR\x05rooms\x12H\n\x0f\x63ontrol_room_id\x18\x06 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\rcontrolRoomId\x12\x1a\n\x08revision\x18\x07 \x01(\x04R\x08revision\"z\n\rFloorZoneRoom\x12\x39\n\x07room_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x06roomId\x12.\n\x13\x61rea_share_permille\x18\x02 \x01(\rR\x11\x61reaSharePermille\"\xf7\x02\n\x0b\x43omfortLoad\x12&\n\x0f\x63omfort_load_id\x18\x01 \x01(\tR\rcomfortLoadId\x12\x39\n\x07room_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x06roomId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12>\n\x06output\x18\x04 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x06output\x12?\n\x07windows\x18\x05 \x03(\x0b\x32%.kusinta.iot.heating.v1.ComfortWindowR\x07windows\x12\x1a\n\x08revision\x18\x06 \x01(\x04R\x08revision\x12)\n\x10windows_revision\x18\x07 \x01(\x04R\x0fwindowsRevision\x12)\n\x10windows_withheld\x18\x08 \x01(\x08R\x0fwindowsWithheld\"m\n\rComfortWindow\x12\x1a\n\x08weekdays\x18\x01 \x01(\rR\x08weekdays\x12!\n\x0cstart_minute\x18\x02 \x01(\rR\x0bstartMinute\x12\x1d\n\nend_minute\x18\x03 \x01(\rR\tendMinute\"\x9f\x02\n\rHeatingLayout\x12<\n\x06plants\x18\x01 \x03(\x0b\x32$.kusinta.iot.heating.v1.HeatingPlantR\x06plants\x12\x42\n\x08\x63ircuits\x18\x02 \x03(\x0b\x32&.kusinta.iot.heating.v1.HeatingCircuitR\x08\x63ircuits\x12\x42\n\x0b\x66loor_zones\x18\x03 \x03(\x0b\x32!.kusinta.iot.heating.v1.FloorZoneR\nfloorZones\x12H\n\rcomfort_loads\x18\x04 \x03(\x0b\x32#.kusinta.iot.heating.v1.ComfortLoadR\x0c\x63omfortLoads\"\xa9\x02\n\rHeatingRecord\x12<\n\x05plant\x18\x01 \x01(\x0b\x32$.kusinta.iot.heating.v1.HeatingPlantH\x00R\x05plant\x12\x42\n\x07\x63ircuit\x18\x02 \x01(\x0b\x32&.kusinta.iot.heating.v1.HeatingCircuitH\x00R\x07\x63ircuit\x12\x42\n\nfloor_zone\x18\x03 \x01(\x0b\x32!.kusinta.iot.heating.v1.FloorZoneH\x00R\tfloorZone\x12H\n\x0c\x63omfort_load\x18\x04 \x01(\x0b\x32#.kusinta.iot.heating.v1.ComfortLoadH\x00R\x0b\x63omfortLoadB\x08\n\x06record*\xa5\x02\n\x0eHeatSourceKind\x12 \n\x1cHEAT_SOURCE_KIND_UNSPECIFIED\x10\x00\x12*\n&HEAT_SOURCE_KIND_EXHAUST_AIR_HEAT_PUMP\x10\x01\x12,\n(HEAT_SOURCE_KIND_GROUND_SOURCE_HEAT_PUMP\x10\x02\x12(\n$HEAT_SOURCE_KIND_AIR_WATER_HEAT_PUMP\x10\x03\x12%\n!HEAT_SOURCE_KIND_DISTRICT_HEATING\x10\x04\x12$\n HEAT_SOURCE_KIND_ELECTRIC_BOILER\x10\x05\x12 \n\x1cHEAT_SOURCE_KIND_FUEL_BOILER\x10\x06\x42\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n$kusinta/iot/heating/v1/heating.proto\x12\x16kusinta.iot.heating.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1fkusinta/iot/access/v1/acl.proto\x1a)kusinta/iot/device/v1/cluster_state.proto\x1a&kusinta/iot/identity/v1/identity.proto\"\x94\x01\n\x0f\x44\x65viceAttribute\x12>\n\tdevice_id\x18\x01 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x08\x64\x65viceId\x12\x41\n\tattribute\x18\x02 \x01(\x0b\x32#.kusinta.iot.access.v1.AttributeRefR\tattribute\"\x9b\x01\n\x0e\x43ontactBinding\x12?\n\x06output\x18\x01 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x06output\x12H\n\x0c\x63losed_value\x18\x02 \x01(\x0b\x32%.kusinta.iot.device.v1.AttributeValueR\x0b\x63losedValue\"\xb9\x03\n\x0cHeatingPlant\x12\x19\n\x08plant_id\x18\x01 \x01(\tR\x07plantId\x12;\n\x08space_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x07spaceId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12>\n\x06source\x18\x04 \x01(\x0e\x32&.kusinta.iot.heating.v1.HeatSourceKindR\x06source\x12O\n\x12readings_device_id\x18\x05 \x01(\x0b\x32!.kusinta.iot.identity.v1.DeviceIdR\x10readingsDeviceId\x12\x46\n\theat_pump\x18\x06 \x01(\x0b\x32\'.kusinta.iot.heating.v1.HeatPumpControlH\x00R\x08heatPump\x12=\n\x05meter\x18\x07 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x05meter\x12\x1a\n\x08revision\x18\x08 \x01(\x04R\x08revisionB\t\n\x07\x63ontrol\"\x84\x02\n\x0fHeatPumpControl\x12L\n\x0esg_ready_block\x18\x01 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x0csgReadyBlock\x12L\n\x0esg_ready_boost\x18\x02 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x0csgReadyBoost\x12U\n\x13\x61\x64\x64_on_heater_block\x18\x03 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x10\x61\x64\x64OnHeaterBlock\"\x8f\x02\n\x0eHeatingCircuit\x12\x1d\n\ncircuit_id\x18\x01 \x01(\tR\tcircuitId\x12\x19\n\x08plant_id\x18\x02 \x01(\tR\x07plantId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12\x45\n\x08radiator\x18\x04 \x01(\x0b\x32\'.kusinta.iot.heating.v1.RadiatorCircuitH\x00R\x08radiator\x12<\n\x05\x66loor\x18\x05 \x01(\x0b\x32$.kusinta.iot.heating.v1.FloorCircuitH\x00R\x05\x66loor\x12\x1a\n\x08revision\x18\x06 \x01(\x04R\x08revisionB\x0e\n\x0c\x64istribution\"\x11\n\x0fRadiatorCircuit\"\xa2\x02\n\x0c\x46loorCircuit\x12!\n\x0cmixing_valve\x18\x01 \x01(\x08R\x0bmixingValve\x12;\n\x17supply_cap_centidegrees\x18\x02 \x01(\x11H\x00R\x15supplyCapCentidegrees\x88\x01\x01\x12J\n\x0csupply_probe\x18\x03 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x0bsupplyProbe\x12J\n\x0creturn_probe\x18\x04 \x01(\x0b\x32\'.kusinta.iot.heating.v1.DeviceAttributeR\x0breturnProbeB\x1a\n\x18_supply_cap_centidegrees\"\xbd\x03\n\tFloorZone\x12\x17\n\x07zone_id\x18\x01 \x01(\tR\x06zoneId\x12\x1d\n\ncircuit_id\x18\x02 \x01(\tR\tcircuitId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12>\n\x06output\x18\x04 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x06output\x12;\n\x05rooms\x18\x05 \x03(\x0b\x32%.kusinta.iot.heating.v1.FloorZoneRoomR\x05rooms\x12H\n\x0f\x63ontrol_room_id\x18\x06 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\rcontrolRoomId\x12\x1a\n\x08revision\x18\x07 \x01(\x04R\x08revision\x12@\n\x0eno_rooms_since\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x0cnoRoomsSince\x12?\n\x0bno_rooms_by\x18\t \x01(\x0b\x32\x1f.kusinta.iot.identity.v1.UserIdR\tnoRoomsBy\"z\n\rFloorZoneRoom\x12\x39\n\x07room_id\x18\x01 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x06roomId\x12.\n\x13\x61rea_share_permille\x18\x02 \x01(\rR\x11\x61reaSharePermille\"\xf7\x02\n\x0b\x43omfortLoad\x12&\n\x0f\x63omfort_load_id\x18\x01 \x01(\tR\rcomfortLoadId\x12\x39\n\x07room_id\x18\x02 \x01(\x0b\x32 .kusinta.iot.identity.v1.SpaceIdR\x06roomId\x12\x12\n\x04name\x18\x03 \x01(\tR\x04name\x12>\n\x06output\x18\x04 \x01(\x0b\x32&.kusinta.iot.heating.v1.ContactBindingR\x06output\x12?\n\x07windows\x18\x05 \x03(\x0b\x32%.kusinta.iot.heating.v1.ComfortWindowR\x07windows\x12\x1a\n\x08revision\x18\x06 \x01(\x04R\x08revision\x12)\n\x10windows_revision\x18\x07 \x01(\x04R\x0fwindowsRevision\x12)\n\x10windows_withheld\x18\x08 \x01(\x08R\x0fwindowsWithheld\"m\n\rComfortWindow\x12\x1a\n\x08weekdays\x18\x01 \x01(\rR\x08weekdays\x12!\n\x0cstart_minute\x18\x02 \x01(\rR\x0bstartMinute\x12\x1d\n\nend_minute\x18\x03 \x01(\rR\tendMinute\"\x9f\x02\n\rHeatingLayout\x12<\n\x06plants\x18\x01 \x03(\x0b\x32$.kusinta.iot.heating.v1.HeatingPlantR\x06plants\x12\x42\n\x08\x63ircuits\x18\x02 \x03(\x0b\x32&.kusinta.iot.heating.v1.HeatingCircuitR\x08\x63ircuits\x12\x42\n\x0b\x66loor_zones\x18\x03 \x03(\x0b\x32!.kusinta.iot.heating.v1.FloorZoneR\nfloorZones\x12H\n\rcomfort_loads\x18\x04 \x03(\x0b\x32#.kusinta.iot.heating.v1.ComfortLoadR\x0c\x63omfortLoads\"\xa9\x02\n\rHeatingRecord\x12<\n\x05plant\x18\x01 \x01(\x0b\x32$.kusinta.iot.heating.v1.HeatingPlantH\x00R\x05plant\x12\x42\n\x07\x63ircuit\x18\x02 \x01(\x0b\x32&.kusinta.iot.heating.v1.HeatingCircuitH\x00R\x07\x63ircuit\x12\x42\n\nfloor_zone\x18\x03 \x01(\x0b\x32!.kusinta.iot.heating.v1.FloorZoneH\x00R\tfloorZone\x12H\n\x0c\x63omfort_load\x18\x04 \x01(\x0b\x32#.kusinta.iot.heating.v1.ComfortLoadH\x00R\x0b\x63omfortLoadB\x08\n\x06record*\xa5\x02\n\x0eHeatSourceKind\x12 \n\x1cHEAT_SOURCE_KIND_UNSPECIFIED\x10\x00\x12*\n&HEAT_SOURCE_KIND_EXHAUST_AIR_HEAT_PUMP\x10\x01\x12,\n(HEAT_SOURCE_KIND_GROUND_SOURCE_HEAT_PUMP\x10\x02\x12(\n$HEAT_SOURCE_KIND_AIR_WATER_HEAT_PUMP\x10\x03\x12%\n!HEAT_SOURCE_KIND_DISTRICT_HEATING\x10\x04\x12$\n HEAT_SOURCE_KIND_ELECTRIC_BOILER\x10\x05\x12 \n\x1cHEAT_SOURCE_KIND_FUEL_BOILER\x10\x06\x42\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -35,32 +36,32 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.heating.v1.heat
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_HEATSOURCEKIND']._serialized_start=3303
-  _globals['_HEATSOURCEKIND']._serialized_end=3596
-  _globals['_DEVICEATTRIBUTE']._serialized_start=181
-  _globals['_DEVICEATTRIBUTE']._serialized_end=329
-  _globals['_CONTACTBINDING']._serialized_start=332
-  _globals['_CONTACTBINDING']._serialized_end=487
-  _globals['_HEATINGPLANT']._serialized_start=490
-  _globals['_HEATINGPLANT']._serialized_end=931
-  _globals['_HEATPUMPCONTROL']._serialized_start=934
-  _globals['_HEATPUMPCONTROL']._serialized_end=1194
-  _globals['_HEATINGCIRCUIT']._serialized_start=1197
-  _globals['_HEATINGCIRCUIT']._serialized_end=1468
-  _globals['_RADIATORCIRCUIT']._serialized_start=1470
-  _globals['_RADIATORCIRCUIT']._serialized_end=1487
-  _globals['_FLOORCIRCUIT']._serialized_start=1490
-  _globals['_FLOORCIRCUIT']._serialized_end=1780
-  _globals['_FLOORZONE']._serialized_start=1783
-  _globals['_FLOORZONE']._serialized_end=2097
-  _globals['_FLOORZONEROOM']._serialized_start=2099
-  _globals['_FLOORZONEROOM']._serialized_end=2221
-  _globals['_COMFORTLOAD']._serialized_start=2224
-  _globals['_COMFORTLOAD']._serialized_end=2599
-  _globals['_COMFORTWINDOW']._serialized_start=2601
-  _globals['_COMFORTWINDOW']._serialized_end=2710
-  _globals['_HEATINGLAYOUT']._serialized_start=2713
-  _globals['_HEATINGLAYOUT']._serialized_end=3000
-  _globals['_HEATINGRECORD']._serialized_start=3003
-  _globals['_HEATINGRECORD']._serialized_end=3300
+  _globals['_HEATSOURCEKIND']._serialized_start=3467
+  _globals['_HEATSOURCEKIND']._serialized_end=3760
+  _globals['_DEVICEATTRIBUTE']._serialized_start=214
+  _globals['_DEVICEATTRIBUTE']._serialized_end=362
+  _globals['_CONTACTBINDING']._serialized_start=365
+  _globals['_CONTACTBINDING']._serialized_end=520
+  _globals['_HEATINGPLANT']._serialized_start=523
+  _globals['_HEATINGPLANT']._serialized_end=964
+  _globals['_HEATPUMPCONTROL']._serialized_start=967
+  _globals['_HEATPUMPCONTROL']._serialized_end=1227
+  _globals['_HEATINGCIRCUIT']._serialized_start=1230
+  _globals['_HEATINGCIRCUIT']._serialized_end=1501
+  _globals['_RADIATORCIRCUIT']._serialized_start=1503
+  _globals['_RADIATORCIRCUIT']._serialized_end=1520
+  _globals['_FLOORCIRCUIT']._serialized_start=1523
+  _globals['_FLOORCIRCUIT']._serialized_end=1813
+  _globals['_FLOORZONE']._serialized_start=1816
+  _globals['_FLOORZONE']._serialized_end=2261
+  _globals['_FLOORZONEROOM']._serialized_start=2263
+  _globals['_FLOORZONEROOM']._serialized_end=2385
+  _globals['_COMFORTLOAD']._serialized_start=2388
+  _globals['_COMFORTLOAD']._serialized_end=2763
+  _globals['_COMFORTWINDOW']._serialized_start=2765
+  _globals['_COMFORTWINDOW']._serialized_end=2874
+  _globals['_HEATINGLAYOUT']._serialized_start=2877
+  _globals['_HEATINGLAYOUT']._serialized_end=3164
+  _globals['_HEATINGRECORD']._serialized_start=3167
+  _globals['_HEATINGRECORD']._serialized_end=3464
 # @@protoc_insertion_point(module_scope)

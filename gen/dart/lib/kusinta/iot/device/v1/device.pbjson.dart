@@ -187,6 +187,14 @@ const Endpoint$json = {
       '10': 'radioLink'
     },
     {
+      '1': 'heat_source',
+      '3': 53,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.HeatSourceReadings',
+      '10': 'heatSource'
+    },
+    {
       '1': 'clusters',
       '3': 16,
       '4': 3,
@@ -262,15 +270,16 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'ludGEuaW90LnZlbmRvci5ob21lbWF0aWMudjEuSG1UaGVybW9zdGF0UHJvcHNIAVIMaG1UaGVy'
     'bW9zdGF0ElwKDmhtX21haW50ZW5hbmNlGDMgASgLMjMua3VzaW50YS5pb3QudmVuZG9yLmhvbW'
     'VtYXRpYy52MS5IbU1haW50ZW5hbmNlUHJvcHNIAVINaG1NYWludGVuYW5jZRI/CgpyYWRpb19s'
-    'aW5rGDQgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJhZGlvTGlua1IJcmFkaW9MaW5rEj'
-    '8KCGNsdXN0ZXJzGBAgAygLMiMua3VzaW50YS5pb3QuZGV2aWNlLnYxLkNsdXN0ZXJTdGF0ZVII'
-    'Y2x1c3RlcnMSNAoWdmVuZG9yX2F0dHJpYnV0ZV9uYW1lcxgRIAMoCVIUdmVuZG9yQXR0cmlidX'
-    'RlTmFtZXMSfgobdmVuZG9yX2F0dHJpYnV0ZV9iZWhhdmlvdXJzGBIgAygLMj4ua3VzaW50YS5p'
-    'b3QuZGV2aWNlLnYxLkVuZHBvaW50LlZlbmRvckF0dHJpYnV0ZUJlaGF2aW91cnNFbnRyeVIZdm'
-    'VuZG9yQXR0cmlidXRlQmVoYXZpb3Vycxp3Ch5WZW5kb3JBdHRyaWJ1dGVCZWhhdmlvdXJzRW50'
-    'cnkSEAoDa2V5GAEgASgJUgNrZXkSPwoFdmFsdWUYAiABKAsyKS5rdXNpbnRhLmlvdC5kZXZpY2'
-    'UudjEuQXR0cmlidXRlQmVoYXZpb3VyUgV2YWx1ZToCOAFCEwoRbWF0dGVyX3Byb3BlcnRpZXNC'
-    'EwoRdmVuZG9yX3Byb3BlcnRpZXM=');
+    'aW5rGDQgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJhZGlvTGlua1IJcmFkaW9MaW5rEk'
+    'oKC2hlYXRfc291cmNlGDUgASgLMikua3VzaW50YS5pb3QuZGV2aWNlLnYxLkhlYXRTb3VyY2VS'
+    'ZWFkaW5nc1IKaGVhdFNvdXJjZRI/CghjbHVzdGVycxgQIAMoCzIjLmt1c2ludGEuaW90LmRldm'
+    'ljZS52MS5DbHVzdGVyU3RhdGVSCGNsdXN0ZXJzEjQKFnZlbmRvcl9hdHRyaWJ1dGVfbmFtZXMY'
+    'ESADKAlSFHZlbmRvckF0dHJpYnV0ZU5hbWVzEn4KG3ZlbmRvcl9hdHRyaWJ1dGVfYmVoYXZpb3'
+    'VycxgSIAMoCzI+Lmt1c2ludGEuaW90LmRldmljZS52MS5FbmRwb2ludC5WZW5kb3JBdHRyaWJ1'
+    'dGVCZWhhdmlvdXJzRW50cnlSGXZlbmRvckF0dHJpYnV0ZUJlaGF2aW91cnMadwoeVmVuZG9yQX'
+    'R0cmlidXRlQmVoYXZpb3Vyc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5Ej8KBXZhbHVlGAIgASgL'
+    'Mikua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0dHJpYnV0ZUJlaGF2aW91clIFdmFsdWU6AjgBQh'
+    'MKEW1hdHRlcl9wcm9wZXJ0aWVzQhMKEXZlbmRvcl9wcm9wZXJ0aWVz');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {
@@ -366,6 +375,100 @@ final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode(
     'RpdHlfc2Vuc29yUhBvY2N1cGFuY3lfc2Vuc29yUg5jb250YWN0X3NlbnNvclIPd2luZG93X2Nv'
     'dmVyaW5nUglkb29yX2xvY2tSDG9uX29mZl9saWdodFIOZGltbWFibGVfbGlnaHRSEGNvbG9yX3'
     'RlbXBfbGlnaHRSDWVuZXJneV9zZW5zb3JSD3ByZXNzdXJlX3NlbnNvclIJaG9tZW1hdGlj');
+
+@$core.Deprecated('Use heatSourceReadingsDescriptor instead')
+const HeatSourceReadings$json = {
+  '1': 'HeatSourceReadings',
+  '2': [
+    {
+      '1': 'outdoor_centidegrees',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 0,
+      '10': 'outdoorCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'supply_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 1,
+      '10': 'supplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'return_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 2,
+      '10': 'returnCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'hot_water_top_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 3,
+      '10': 'hotWaterTopCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'hot_water_charging_centidegrees',
+      '3': 5,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 4,
+      '10': 'hotWaterChargingCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'calculated_supply_centidegrees',
+      '3': 6,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 5,
+      '10': 'calculatedSupplyCentidegrees',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_outdoor_centidegrees'},
+    {'1': '_supply_centidegrees'},
+    {'1': '_return_centidegrees'},
+    {'1': '_hot_water_top_centidegrees'},
+    {'1': '_hot_water_charging_centidegrees'},
+    {'1': '_calculated_supply_centidegrees'},
+  ],
+};
+
+/// Descriptor for `HeatSourceReadings`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatSourceReadingsDescriptor = $convert.base64Decode(
+    'ChJIZWF0U291cmNlUmVhZGluZ3MSVAoUb3V0ZG9vcl9jZW50aWRlZ3JlZXMYASABKBFCHKK1GB'
+    'RvdXRkb29yX2NlbnRpZGVncmVlc9C1GAVIAFITb3V0ZG9vckNlbnRpZGVncmVlc4gBARJRChNz'
+    'dXBwbHlfY2VudGlkZWdyZWVzGAIgASgRQhuitRgTc3VwcGx5X2NlbnRpZGVncmVlc9C1GAVIAV'
+    'ISc3VwcGx5Q2VudGlkZWdyZWVziAEBElEKE3JldHVybl9jZW50aWRlZ3JlZXMYAyABKBFCG6K1'
+    'GBNyZXR1cm5fY2VudGlkZWdyZWVz0LUYBUgCUhJyZXR1cm5DZW50aWRlZ3JlZXOIAQESZAoaaG'
+    '90X3dhdGVyX3RvcF9jZW50aWRlZ3JlZXMYBCABKBFCIqK1GBpob3Rfd2F0ZXJfdG9wX2NlbnRp'
+    'ZGVncmVlc9C1GAVIA1IXaG90V2F0ZXJUb3BDZW50aWRlZ3JlZXOIAQEScwofaG90X3dhdGVyX2'
+    'NoYXJnaW5nX2NlbnRpZGVncmVlcxgFIAEoEUInorUYH2hvdF93YXRlcl9jaGFyZ2luZ19jZW50'
+    'aWRlZ3JlZXPQtRgFSARSHGhvdFdhdGVyQ2hhcmdpbmdDZW50aWRlZ3JlZXOIAQEScQoeY2FsY3'
+    'VsYXRlZF9zdXBwbHlfY2VudGlkZWdyZWVzGAYgASgRQiaitRgeY2FsY3VsYXRlZF9zdXBwbHlf'
+    'Y2VudGlkZWdyZWVz0LUYBUgFUhxjYWxjdWxhdGVkU3VwcGx5Q2VudGlkZWdyZWVziAEBOheqtR'
+    'gTa3VzaW50YS5oZWF0X3NvdXJjZUIXChVfb3V0ZG9vcl9jZW50aWRlZ3JlZXNCFgoUX3N1cHBs'
+    'eV9jZW50aWRlZ3JlZXNCFgoUX3JldHVybl9jZW50aWRlZ3JlZXNCHQobX2hvdF93YXRlcl90b3'
+    'BfY2VudGlkZWdyZWVzQiIKIF9ob3Rfd2F0ZXJfY2hhcmdpbmdfY2VudGlkZWdyZWVzQiEKH19j'
+    'YWxjdWxhdGVkX3N1cHBseV9jZW50aWRlZ3JlZXM=');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

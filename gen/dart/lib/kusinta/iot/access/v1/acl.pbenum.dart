@@ -16,8 +16,8 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 /// What service sees of a home, as a resident is told it in webrtc.v1.PrivacyDisclosure.
 /// Each names part of a webrtc.v1.ServiceStatus, of a device's description, of how the
-/// home is set up, or of who lives there; with the climate summary the disclosure names
-/// separately, nothing else of the home reaches service.
+/// home is set up, of who lives there, or a problem the gateway reports of it; with the
+/// climate summary the disclosure names separately, nothing else of the home reaches service.
 class ServiceSignal extends $pb.ProtobufEnum {
   static const ServiceSignal SERVICE_SIGNAL_UNSPECIFIED =
       ServiceSignal._(0, _omitEnumNames ? '' : 'SERVICE_SIGNAL_UNSPECIFIED');
@@ -76,6 +76,14 @@ class ServiceSignal extends $pb.ProtobufEnum {
   static const ServiceSignal SERVICE_SIGNAL_RESIDENTS =
       ServiceSignal._(9, _omitEnumNames ? '' : 'SERVICE_SIGNAL_RESIDENTS');
 
+  /// That a floor zone on one of the home's devices has been without a room for about an hour,
+  /// and so heats without control: the device and the quarter hour it was reported, until the
+  /// zone is given a room or removed. Never which rooms it had, nor who left it without them
+  /// (reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED).
+  static const ServiceSignal SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED =
+      ServiceSignal._(
+          10, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED');
+
   static const $core.List<ServiceSignal> values = <ServiceSignal>[
     SERVICE_SIGNAL_UNSPECIFIED,
     SERVICE_SIGNAL_REACHABILITY,
@@ -87,10 +95,11 @@ class ServiceSignal extends $pb.ProtobufEnum {
     SERVICE_SIGNAL_ROOM_SETUP,
     SERVICE_SIGNAL_LINKS,
     SERVICE_SIGNAL_RESIDENTS,
+    SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED,
   ];
 
   static final $core.List<ServiceSignal?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 9);
+      $pb.ProtobufEnum.$_initByValueList(values, 10);
   static ServiceSignal? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

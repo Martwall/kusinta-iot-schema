@@ -29,7 +29,8 @@ export declare const file_kusinta_iot_device_v1_property_update: GenFile;
  *         (matter_device_type) == Endpoint.matter_device_type_id.
  *       - present (vendor): the Endpoint field whose message type declares
  *         (vendor_extension) == the update's vendor_extension — a vendor_properties case,
- *         or radio_link ("kusinta.radio"), which sits outside that oneof.
+ *         or radio_link ("kusinta.radio") or heat_source ("kusinta.heat_source"), which sit
+ *         outside that oneof.
  *  3. Pick the field:
  *       - Matter branch: the one field whose (matter_cluster_id) equals cluster_id AND
  *         whose (matter_attribute_id) equals attribute_id.

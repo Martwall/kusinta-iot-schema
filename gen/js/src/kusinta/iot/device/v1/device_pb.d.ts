@@ -25,7 +25,8 @@ export declare const file_kusinta_iot_device_v1_device: GenFile;
  * per physical device, so a device is still one row, one claim, one placement.
  *
  * Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
- * extensions — the vendor_properties cases, and radio_link (52) outside that oneof.
+ * extensions — the vendor_properties cases, and radio_link (52) and heat_source (53) outside
+ * that oneof.
  *
  * endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
  * global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -194,6 +195,17 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   radioLink?: RadioLink | undefined;
 
   /**
+   * A heat source's own readings, on the endpoint its connector reports them on. Outside
+   * vendor_properties for the reason radio_link is: they are not one vendor's extension but
+   * readings any heat source may have, whoever made it, and they must be able to sit beside a
+   * vendor case the same endpoint carries. Selected by the vendor branch by its
+   * (vendor_extension) key "kusinta.heat_source".
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings heat_source = 53;
+   */
+  heatSource?: HeatSourceReadings | undefined;
+
+  /**
    * Every cluster this endpoint hosts: what it supports, and any attribute value that has
    * no typed field above. This is what makes a device the schema does not model usable
    * rather than silent — and what carries the optional clusters the Matter specification
@@ -214,10 +226,11 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
    * vendor parameter has no cluster and so no ClusterState to be listed in. A name list
    * rather than an id list because the vendor branch addresses by name. A bare list
    * rather than a per-extension map because an endpoint carries at most one
-   * vendor_properties case and at most a radio_link beside it, and the schema keeps
-   * radio_link's attribute names disjoint from every vendor_properties case's — a test
-   * enforces it — so a name here never needs its extension to be read. radio_link's
-   * parameters are listed here the same way as a vendor's.
+   * vendor_properties case and at most a radio_link and a heat_source beside it, and the
+   * schema keeps the attribute names of radio_link, heat_source and every vendor_properties
+   * case disjoint — a test enforces it — so a name here never needs its extension to be
+   * read. radio_link's and heat_source's parameters are listed here the same way as a
+   * vendor's.
    *
    * Same reading as the Matter side: named here with no value = implemented, not yet
    * reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -345,6 +358,86 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
  * Use `create(DeviceSchema)` to create a new message.
  */
 export declare const DeviceSchema: GenMessage<Device>;
+
+/**
+ * A heat source's own readings: the temperatures its controller measures and works out, as
+ * its connector reads them from the heat source or the maker's service. What
+ * heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
+ *
+ * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
+ * these attribute names, each a temperature in centidegrees (°C × 100) as int_value, as
+ * temperatures are throughout this schema. A connector converts what the heat source gives —
+ * degrees with a decimal, a maker's register scale — into centidegrees and rounds it no
+ * further.
+ *
+ * Vendor-neutral on purpose: the same message for every heat source, a heat pump, a boiler
+ * or a district-heating substation, so that whoever reads a plant reads one shape. Which of
+ * the maker's points carries each reading is the connector's mapping and not part of this
+ * contract; a reading the heat source has no sensor for is never sent, never sent as zero.
+ *
+ * Every field is `optional`, for the reason vendor readings always are: absent means never
+ * reported, present means a reading, 0 °C included. Read only: a heat source is steered
+ * through its plant's control inputs (heating.v1.HeatPumpControl), never by writing these.
+ *
+ * @generated from message kusinta.iot.device.v1.HeatSourceReadings
+ */
+export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSourceReadings"> & {
+  /**
+   * The heat source's own outdoor sensor: the outdoor temperature its heating curve works
+   * from.
+   *
+   * @generated from field: optional sint32 outdoor_centidegrees = 1;
+   */
+  outdoorCentidegrees?: number | undefined;
+
+  /**
+   * The supply (flow) line from the heat source to its climate system, at its own sensor —
+   * its first climate system where it serves several. Where radiators and a floor circuit
+   * share it, this is the shared supply, before the floor circuit's own mixing
+   * (heating.v1.FloorCircuit.supply_probe reads after it).
+   *
+   * @generated from field: optional sint32 supply_centidegrees = 2;
+   */
+  supplyCentidegrees?: number | undefined;
+
+  /**
+   * The return line into the heat source, at its own sensor: the combined return of
+   * everything it heats.
+   *
+   * @generated from field: optional sint32 return_centidegrees = 3;
+   */
+  returnCentidegrees?: number | undefined;
+
+  /**
+   * The top of the hot-water tank: how hot the water available to draw is.
+   *
+   * @generated from field: optional sint32 hot_water_top_centidegrees = 4;
+   */
+  hotWaterTopCentidegrees?: number | undefined;
+
+  /**
+   * The hot-water tank's charging sensor: the one the heat source starts and stops making
+   * hot water by.
+   *
+   * @generated from field: optional sint32 hot_water_charging_centidegrees = 5;
+   */
+  hotWaterChargingCentidegrees?: number | undefined;
+
+  /**
+   * The supply temperature the heat source's own control is aiming for on the line
+   * supply_centidegrees reads, as it has worked it out from its heating curve and the
+   * outdoor temperature, with whatever offsets it applies. Its target, not a measurement.
+   *
+   * @generated from field: optional sint32 calculated_supply_centidegrees = 6;
+   */
+  calculatedSupplyCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.HeatSourceReadings.
+ * Use `create(HeatSourceReadingsSchema)` to create a new message.
+ */
+export declare const HeatSourceReadingsSchema: GenMessage<HeatSourceReadings>;
 
 /**
  * A device's radio link, as its connector reports it.

@@ -4,9 +4,10 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
+import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
+import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
  * Describes the file kusinta/iot/heating/v1/heating.proto.
@@ -107,8 +108,9 @@ export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"
 
   /**
    * The device the heat source's own readings come from — its temperatures, compressor and
-   * hot-water state — when it has one. Read only: the gateway drives a heat source through
-   * the plant's control, never through this device.
+   * hot-water state — when it has one; its temperatures are the device's
+   * device.v1.HeatSourceReadings. Read only: the gateway drives a heat source through the
+   * plant's control, never through this device.
    *
    * @generated from field: kusinta.iot.identity.v1.DeviceId readings_device_id = 5;
    */
@@ -338,14 +340,17 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
   /**
    * The rooms the zone heats, each a room within its plant's space, listed once, with a
    * share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
-   * be heated by several zones.
+   * be heated by several zones. A put names at least one; empty only for a zone whose rooms
+   * were all deleted (see the file comment), which heats without control until a put names
+   * rooms again.
    *
    * @generated from field: repeated kusinta.iot.heating.v1.FloorZoneRoom rooms = 5;
    */
   rooms: FloorZoneRoom[];
 
   /**
-   * One of rooms. Only its error, its sensor and its open window steer the zone.
+   * One of rooms. Only its error, its sensor and its open window steer the zone. Unset while
+   * rooms is empty.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId control_room_id = 6;
    */
@@ -357,6 +362,29 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
    * @generated from field: uint64 revision = 7;
    */
   revision: bigint;
+
+  /**
+   * While rooms is empty: since when the zone has had no room, and the user whose change left
+   * it so — the deletion of its last room; no_rooms_by is unset where no user's change did.
+   * Both unset while the zone has rooms. Read-only: set by the gateway, ignored in a put.
+   *
+   * For a home's zone — one left without rooms stays whose it was — sent only to the home's
+   * household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) and an installer under a
+   * commissioning grant on the home, and unset for the home's other residents; never sent to
+   * service. Unset, too, when it dates from before the recipient's current residency in the
+   * home, or from a home they did not live in at the time (see access.v1.MembershipRelation).
+   * For a zone outside homes, sent to whoever is given the zone. That rooms is empty is what
+   * says the zone has none; these say only since when and by whom, where the recipient is
+   * given them.
+   *
+   * @generated from field: google.protobuf.Timestamp no_rooms_since = 8;
+   */
+  noRoomsSince?: Timestamp | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.UserId no_rooms_by = 9;
+   */
+  noRoomsBy?: UserId | undefined;
 };
 
 /**

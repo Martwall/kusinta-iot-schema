@@ -8,9 +8,11 @@ import {
 } from '../kusinta/iot/vendor/homematic/v1/homematic_pb.js'
 import {
   EndpointSchema,
+  HeatSourceReadingsSchema,
   RadioLinkSchema,
   RadioQuality,
 } from '../kusinta/iot/device/v1/device_pb.js'
+import { PropertyUpdateSchema } from '../kusinta/iot/device/v1/property_update_pb.js'
 import { DeviceDescriptorSchema } from '../kusinta/iot/device/v1/descriptor_pb.js'
 
 describe('HmThermostatProps', () => {
@@ -127,6 +129,51 @@ describe('RadioLink', () => {
     const link = create(RadioLinkSchema, { quality: RadioQuality.POOR, rssiDbm: -117, snrDb: -7.5 })
     const decoded = fromBinary(RadioLinkSchema, toBinary(RadioLinkSchema, link))
     expect([decoded.rssiDbm, decoded.snrDb]).toEqual([-117, -7.5])
+  })
+})
+
+describe('HeatSourceReadings', () => {
+  it('rides beside the radio link on a heat pump endpoint', () => {
+    const e = create(EndpointSchema, {
+      endpointId: 1,
+      matterDeviceTypeId: 0x0309,
+      radioLink: { quality: RadioQuality.GOOD },
+      heatSource: { supplyCentidegrees: 3550, returnCentidegrees: 2810 },
+    })
+    const decoded = fromBinary(EndpointSchema, toBinary(EndpointSchema, e))
+    expect([decoded.radioLink?.quality, decoded.heatSource?.supplyCentidegrees]).toEqual([
+      RadioQuality.GOOD,
+      3550,
+    ])
+  })
+
+  it('leaves unreported readings absent', () => {
+    const decoded = fromBinary(
+      HeatSourceReadingsSchema,
+      toBinary(HeatSourceReadingsSchema, create(HeatSourceReadingsSchema, {})),
+    )
+    expect([decoded.outdoorCentidegrees, decoded.hotWaterTopCentidegrees]).toEqual([undefined, undefined])
+  })
+
+  it('carries a frosty outdoor reading and a reading of zero', () => {
+    const readings = create(HeatSourceReadingsSchema, { outdoorCentidegrees: -1850, hotWaterChargingCentidegrees: 0 })
+    const decoded = fromBinary(HeatSourceReadingsSchema, toBinary(HeatSourceReadingsSchema, readings))
+    expect([decoded.outdoorCentidegrees, decoded.hotWaterChargingCentidegrees]).toEqual([-1850, 0])
+  })
+
+  it('travels as a vendor update with an int value', () => {
+    const update = create(PropertyUpdateSchema, {
+      endpointId: 1,
+      vendorExtension: 'kusinta.heat_source',
+      attributeName: 'calculated_supply_centidegrees',
+      value: { case: 'intValue', value: 3720 },
+    })
+    const decoded = fromBinary(PropertyUpdateSchema, toBinary(PropertyUpdateSchema, update))
+    expect([decoded.vendorExtension, decoded.value.case, decoded.value.value]).toEqual([
+      'kusinta.heat_source',
+      'intValue',
+      3720,
+    ])
   })
 })
 
