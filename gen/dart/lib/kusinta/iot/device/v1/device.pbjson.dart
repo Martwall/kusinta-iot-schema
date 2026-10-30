@@ -14,6 +14,48 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use heatSourceProductionDescriptor instead')
+const HeatSourceProduction$json = {
+  '1': 'HeatSourceProduction',
+  '2': [
+    {'1': 'HEAT_SOURCE_PRODUCTION_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_SOURCE_PRODUCTION_OFF', '2': 1},
+    {'1': 'HEAT_SOURCE_PRODUCTION_SPACE_HEATING', '2': 2},
+    {'1': 'HEAT_SOURCE_PRODUCTION_HOT_WATER', '2': 3},
+    {'1': 'HEAT_SOURCE_PRODUCTION_POOL', '2': 4},
+    {'1': 'HEAT_SOURCE_PRODUCTION_COOLING', '2': 5},
+    {'1': 'HEAT_SOURCE_PRODUCTION_OTHER', '2': 6},
+  ],
+};
+
+/// Descriptor for `HeatSourceProduction`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatSourceProductionDescriptor = $convert.base64Decode(
+    'ChRIZWF0U291cmNlUHJvZHVjdGlvbhImCiJIRUFUX1NPVVJDRV9QUk9EVUNUSU9OX1VOU1BFQ0'
+    'lGSUVEEAASHgoaSEVBVF9TT1VSQ0VfUFJPRFVDVElPTl9PRkYQARIoCiRIRUFUX1NPVVJDRV9Q'
+    'Uk9EVUNUSU9OX1NQQUNFX0hFQVRJTkcQAhIkCiBIRUFUX1NPVVJDRV9QUk9EVUNUSU9OX0hPVF'
+    '9XQVRFUhADEh8KG0hFQVRfU09VUkNFX1BST0RVQ1RJT05fUE9PTBAEEiIKHkhFQVRfU09VUkNF'
+    'X1BST0RVQ1RJT05fQ09PTElORxAFEiAKHEhFQVRfU09VUkNFX1BST0RVQ1RJT05fT1RIRVIQBg'
+    '==');
+
+@$core.Deprecated('Use compressorStateDescriptor instead')
+const CompressorState$json = {
+  '1': 'CompressorState',
+  '2': [
+    {'1': 'COMPRESSOR_STATE_UNSPECIFIED', '2': 0},
+    {'1': 'COMPRESSOR_STATE_STOPPED', '2': 1},
+    {'1': 'COMPRESSOR_STATE_STARTING', '2': 2},
+    {'1': 'COMPRESSOR_STATE_RUNNING', '2': 3},
+    {'1': 'COMPRESSOR_STATE_STOPPING', '2': 4},
+  ],
+};
+
+/// Descriptor for `CompressorState`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List compressorStateDescriptor = $convert.base64Decode(
+    'Cg9Db21wcmVzc29yU3RhdGUSIAocQ09NUFJFU1NPUl9TVEFURV9VTlNQRUNJRklFRBAAEhwKGE'
+    'NPTVBSRVNTT1JfU1RBVEVfU1RPUFBFRBABEh0KGUNPTVBSRVNTT1JfU1RBVEVfU1RBUlRJTkcQ'
+    'AhIcChhDT01QUkVTU09SX1NUQVRFX1JVTk5JTkcQAxIdChlDT01QUkVTU09SX1NUQVRFX1NUT1'
+    'BQSU5HEAQ=');
+
 @$core.Deprecated('Use radioQualityDescriptor instead')
 const RadioQuality$json = {
   '1': 'RadioQuality',
@@ -440,6 +482,56 @@ const HeatSourceReadings$json = {
       '10': 'calculatedSupplyCentidegrees',
       '17': true
     },
+    {
+      '1': 'producing',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 6,
+      '10': 'producing',
+      '17': true
+    },
+    {
+      '1': 'compressor_state',
+      '3': 8,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 7,
+      '10': 'compressorState',
+      '17': true
+    },
+    {
+      '1': 'degree_minutes',
+      '3': 9,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 8,
+      '10': 'degreeMinutes',
+      '17': true
+    },
+    {
+      '1': 'alarm_active',
+      '3': 10,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 9,
+      '10': 'alarmActive',
+      '17': true
+    },
+    {
+      '1': 'alarm_code',
+      '3': 11,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 10,
+      '10': 'alarmCode',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -449,6 +541,11 @@ const HeatSourceReadings$json = {
     {'1': '_hot_water_top_centidegrees'},
     {'1': '_hot_water_charging_centidegrees'},
     {'1': '_calculated_supply_centidegrees'},
+    {'1': '_producing'},
+    {'1': '_compressor_state'},
+    {'1': '_degree_minutes'},
+    {'1': '_alarm_active'},
+    {'1': '_alarm_code'},
   ],
 };
 
@@ -464,11 +561,18 @@ final $typed_data.Uint8List heatSourceReadingsDescriptor = $convert.base64Decode
     'NoYXJnaW5nX2NlbnRpZGVncmVlcxgFIAEoEUInorUYH2hvdF93YXRlcl9jaGFyZ2luZ19jZW50'
     'aWRlZ3JlZXPQtRgFSARSHGhvdFdhdGVyQ2hhcmdpbmdDZW50aWRlZ3JlZXOIAQEScQoeY2FsY3'
     'VsYXRlZF9zdXBwbHlfY2VudGlkZWdyZWVzGAYgASgRQiaitRgeY2FsY3VsYXRlZF9zdXBwbHlf'
-    'Y2VudGlkZWdyZWVz0LUYBUgFUhxjYWxjdWxhdGVkU3VwcGx5Q2VudGlkZWdyZWVziAEBOheqtR'
-    'gTa3VzaW50YS5oZWF0X3NvdXJjZUIXChVfb3V0ZG9vcl9jZW50aWRlZ3JlZXNCFgoUX3N1cHBs'
-    'eV9jZW50aWRlZ3JlZXNCFgoUX3JldHVybl9jZW50aWRlZ3JlZXNCHQobX2hvdF93YXRlcl90b3'
-    'BfY2VudGlkZWdyZWVzQiIKIF9ob3Rfd2F0ZXJfY2hhcmdpbmdfY2VudGlkZWdyZWVzQiEKH19j'
-    'YWxjdWxhdGVkX3N1cHBseV9jZW50aWRlZ3JlZXM=');
+    'Y2VudGlkZWdyZWVz0LUYBUgFUhxjYWxjdWxhdGVkU3VwcGx5Q2VudGlkZWdyZWVziAEBEjQKCX'
+    'Byb2R1Y2luZxgHIAEoDUIRorUYCXByb2R1Y2luZ9C1GAVIBlIJcHJvZHVjaW5niAEBEkgKEGNv'
+    'bXByZXNzb3Jfc3RhdGUYCCABKA1CGKK1GBBjb21wcmVzc29yX3N0YXRl0LUYBUgHUg9jb21wcm'
+    'Vzc29yU3RhdGWIAQESQgoOZGVncmVlX21pbnV0ZXMYCSABKBFCFqK1GA5kZWdyZWVfbWludXRl'
+    'c9C1GAVICFINZGVncmVlTWludXRlc4gBARI8CgxhbGFybV9hY3RpdmUYCiABKAhCFKK1GAxhbG'
+    'FybV9hY3RpdmXQtRgFSAlSC2FsYXJtQWN0aXZliAEBEjYKCmFsYXJtX2NvZGUYCyABKA1CEqK1'
+    'GAphbGFybV9jb2Rl0LUYBUgKUglhbGFybUNvZGWIAQE6F6q1GBNrdXNpbnRhLmhlYXRfc291cm'
+    'NlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcGx5X2NlbnRpZGVncmVlc0IWChRf'
+    'cmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdGVyX3RvcF9jZW50aWRlZ3JlZXNCIgogX2'
+    'hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNCIQofX2NhbGN1bGF0ZWRfc3VwcGx5X2Nl'
+    'bnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb21wcmVzc29yX3N0YXRlQhEKD19kZWdyZW'
+    'VfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19hbGFybV9jb2Rl');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

@@ -360,24 +360,37 @@ export declare type Device = Message<"kusinta.iot.device.v1.Device"> & {
 export declare const DeviceSchema: GenMessage<Device>;
 
 /**
- * A heat source's own readings: the temperatures its controller measures and works out, as
- * its connector reads them from the heat source or the maker's service. What
+ * A heat source's own readings: the temperatures its controller measures and works out, and
+ * its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
+ * connector reads them from the heat source or the maker's service. What
  * heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
  *
  * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
- * these attribute names, each a temperature in centidegrees (°C × 100) as int_value, as
- * temperatures are throughout this schema. A connector converts what the heat source gives —
- * degrees with a decimal, a maker's register scale — into centidegrees and rounds it no
- * further.
+ * these attribute names, the value case following the field type as everywhere on the vendor
+ * branch. A temperature is in centidegrees (°C × 100) as int_value, as temperatures are
+ * throughout this schema: a connector converts what the heat source gives — degrees with a
+ * decimal, a maker's register scale — into centidegrees and rounds it no further. An
+ * enum-valued reading travels as its number in uint_value, as RadioLink.quality does, and
+ * keeps explicit presence: its UNSPECIFIED is never sent, since an unreported one is an
+ * absent field.
  *
  * Vendor-neutral on purpose: the same message for every heat source, a heat pump, a boiler
  * or a district-heating substation, so that whoever reads a plant reads one shape. Which of
- * the maker's points carries each reading is the connector's mapping and not part of this
- * contract; a reading the heat source has no sensor for is never sent, never sent as zero.
+ * the maker's points carries each reading, and how its codes map onto the values here, is
+ * the connector's mapping and not part of this contract; a reading the heat source has no
+ * sensor or state for is never sent, never sent as zero.
  *
  * Every field is `optional`, for the reason vendor readings always are: absent means never
  * reported, present means a reading, 0 °C included. Read only: a heat source is steered
  * through its plant's control inputs (heating.v1.HeatPumpControl), never by writing these.
+ *
+ * Who is sent them follows the device, as for any device's readings
+ * (access.v1.MembershipRelation), whoever owns the heat source (common.v1.AssetOwner decides
+ * nothing of who sees what). A heat source filed in a home is household data there: its
+ * readings go to the home's residents and never to service (access.v1.DeviceAcl.relation
+ * SERVICE), who are given of it only what a webrtc.v1.ServiceStatus carries, within the
+ * service signals (access.v1.ServiceSignal): an alarm as a fault (alarm_active), and never
+ * alarm_code or any other reading here.
  *
  * @generated from message kusinta.iot.device.v1.HeatSourceReadings
  */
@@ -431,6 +444,54 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
    * @generated from field: optional sint32 calculated_supply_centidegrees = 6;
    */
   calculatedSupplyCentidegrees?: number | undefined;
+
+  /**
+   * What the heat source is producing now (HeatSourceProduction), as its number. While it
+   * makes hot water its supply and return say nothing of the space heating, which is what a
+   * consumer reading them for the heating sets aside.
+   *
+   * @generated from field: optional uint32 producing = 7;
+   */
+  producing?: number | undefined;
+
+  /**
+   * Its compressor's state (CompressorState), as its number — its first compressor, where it
+   * has several. Absent for a heat source with none.
+   *
+   * @generated from field: optional uint32 compressor_state = 8;
+   */
+  compressorState?: number | undefined;
+
+  /**
+   * Its degree minutes, in whole degree-minutes (°C × minutes), rounded to the nearest: the
+   * running sum over time of how far the supply has been from calculated_supply_centidegrees,
+   * negative while it has run below it. What a heat source that keeps one starts its
+   * compressor and its add-on heat by, at thresholds of its own. Absent for a heat source
+   * that keeps none.
+   *
+   * @generated from field: optional sint32 degree_minutes = 9;
+   */
+  degreeMinutes?: number | undefined;
+
+  /**
+   * Whether the heat source reports an alarm now. An error it reports in its own operation:
+   * service is given it as webrtc.v1.SERVICE_FAULT_ERROR (access.v1.SERVICE_SIGNAL_FAULT), as
+   * any device's error, and nothing more of it.
+   *
+   * @generated from field: optional bool alarm_active = 10;
+   */
+  alarmActive?: boolean | undefined;
+
+  /**
+   * The maker's own number for its most severe current alarm, for whoever looks it up in the
+   * maker's documentation. Vendor-specific: it means nothing without the product, and no
+   * consumer decides anything by it. Present only while alarm_active is true; a connector
+   * sends a null value (PropertyUpdate.null_value) when the alarm ends. Never sent to service,
+   * in a home or out of one.
+   *
+   * @generated from field: optional uint32 alarm_code = 11;
+   */
+  alarmCode?: number | undefined;
 };
 
 /**
@@ -485,6 +546,112 @@ export declare type RadioLink = Message<"kusinta.iot.device.v1.RadioLink"> & {
  * Use `create(RadioLinkSchema)` to create a new message.
  */
 export declare const RadioLinkSchema: GenMessage<RadioLink>;
+
+/**
+ * The value set of HeatSourceReadings.producing: what a heat source is producing now. Not a
+ * field type — producing is a uint32 like every enum-valued reading, so it keeps explicit
+ * presence — but the named constants for its numbers. A connector maps its maker's codes onto
+ * these; a code none of them names is OTHER.
+ *
+ * @generated from enum kusinta.iot.device.v1.HeatSourceProduction
+ */
+export enum HeatSourceProduction {
+  /**
+   * Never sent; an unreported state is an absent field.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Producing nothing.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_OFF = 1;
+   */
+  OFF = 1,
+
+  /**
+   * Heating the building: its climate systems.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_SPACE_HEATING = 2;
+   */
+  SPACE_HEATING = 2,
+
+  /**
+   * Making hot water.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_HOT_WATER = 3;
+   */
+  HOT_WATER = 3,
+
+  /**
+   * Heating a pool.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_POOL = 4;
+   */
+  POOL = 4,
+
+  /**
+   * Cooling.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_COOLING = 5;
+   */
+  COOLING = 5,
+
+  /**
+   * Something none of the above names, such as a transfer between stores.
+   *
+   * @generated from enum value: HEAT_SOURCE_PRODUCTION_OTHER = 6;
+   */
+  OTHER = 6,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.HeatSourceProduction.
+ */
+export declare const HeatSourceProductionSchema: GenEnum<HeatSourceProduction>;
+
+/**
+ * The value set of HeatSourceReadings.compressor_state, as the named constants for its
+ * numbers. Starting and stopping are kept apart from running and stopped: while a compressor
+ * starts, the heat it makes has not yet reached the supply, and readings then are not yet what
+ * it runs at.
+ *
+ * @generated from enum kusinta.iot.device.v1.CompressorState
+ */
+export enum CompressorState {
+  /**
+   * Never sent; an unreported state is an absent field.
+   *
+   * @generated from enum value: COMPRESSOR_STATE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: COMPRESSOR_STATE_STOPPED = 1;
+   */
+  STOPPED = 1,
+
+  /**
+   * @generated from enum value: COMPRESSOR_STATE_STARTING = 2;
+   */
+  STARTING = 2,
+
+  /**
+   * @generated from enum value: COMPRESSOR_STATE_RUNNING = 3;
+   */
+  RUNNING = 3,
+
+  /**
+   * @generated from enum value: COMPRESSOR_STATE_STOPPING = 4;
+   */
+  STOPPING = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.CompressorState.
+ */
+export declare const CompressorStateSchema: GenEnum<CompressorState>;
 
 /**
  * The value set of RadioLink.quality: how well a link is doing, as the device's

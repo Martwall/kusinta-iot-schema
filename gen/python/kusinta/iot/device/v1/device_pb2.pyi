@@ -15,12 +15,42 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class HeatSourceProduction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    HEAT_SOURCE_PRODUCTION_UNSPECIFIED: _ClassVar[HeatSourceProduction]
+    HEAT_SOURCE_PRODUCTION_OFF: _ClassVar[HeatSourceProduction]
+    HEAT_SOURCE_PRODUCTION_SPACE_HEATING: _ClassVar[HeatSourceProduction]
+    HEAT_SOURCE_PRODUCTION_HOT_WATER: _ClassVar[HeatSourceProduction]
+    HEAT_SOURCE_PRODUCTION_POOL: _ClassVar[HeatSourceProduction]
+    HEAT_SOURCE_PRODUCTION_COOLING: _ClassVar[HeatSourceProduction]
+    HEAT_SOURCE_PRODUCTION_OTHER: _ClassVar[HeatSourceProduction]
+
+class CompressorState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    COMPRESSOR_STATE_UNSPECIFIED: _ClassVar[CompressorState]
+    COMPRESSOR_STATE_STOPPED: _ClassVar[CompressorState]
+    COMPRESSOR_STATE_STARTING: _ClassVar[CompressorState]
+    COMPRESSOR_STATE_RUNNING: _ClassVar[CompressorState]
+    COMPRESSOR_STATE_STOPPING: _ClassVar[CompressorState]
+
 class RadioQuality(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     RADIO_QUALITY_UNSPECIFIED: _ClassVar[RadioQuality]
     RADIO_QUALITY_GOOD: _ClassVar[RadioQuality]
     RADIO_QUALITY_FAIR: _ClassVar[RadioQuality]
     RADIO_QUALITY_POOR: _ClassVar[RadioQuality]
+HEAT_SOURCE_PRODUCTION_UNSPECIFIED: HeatSourceProduction
+HEAT_SOURCE_PRODUCTION_OFF: HeatSourceProduction
+HEAT_SOURCE_PRODUCTION_SPACE_HEATING: HeatSourceProduction
+HEAT_SOURCE_PRODUCTION_HOT_WATER: HeatSourceProduction
+HEAT_SOURCE_PRODUCTION_POOL: HeatSourceProduction
+HEAT_SOURCE_PRODUCTION_COOLING: HeatSourceProduction
+HEAT_SOURCE_PRODUCTION_OTHER: HeatSourceProduction
+COMPRESSOR_STATE_UNSPECIFIED: CompressorState
+COMPRESSOR_STATE_STOPPED: CompressorState
+COMPRESSOR_STATE_STARTING: CompressorState
+COMPRESSOR_STATE_RUNNING: CompressorState
+COMPRESSOR_STATE_STOPPING: CompressorState
 RADIO_QUALITY_UNSPECIFIED: RadioQuality
 RADIO_QUALITY_GOOD: RadioQuality
 RADIO_QUALITY_FAIR: RadioQuality
@@ -98,20 +128,30 @@ class Device(_message.Message):
     def __init__(self, descriptor: _Optional[_Union[_descriptor_pb2.DeviceDescriptor, _Mapping]] = ..., endpoints: _Optional[_Iterable[_Union[Endpoint, _Mapping]]] = ..., min_write_interval_seconds: _Optional[int] = ..., max_write_delay_seconds: _Optional[int] = ..., last_seen: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_updated: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class HeatSourceReadings(_message.Message):
-    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees")
+    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees", "producing", "compressor_state", "degree_minutes", "alarm_active", "alarm_code")
     OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     RETURN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     HOT_WATER_TOP_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     HOT_WATER_CHARGING_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     CALCULATED_SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    PRODUCING_FIELD_NUMBER: _ClassVar[int]
+    COMPRESSOR_STATE_FIELD_NUMBER: _ClassVar[int]
+    DEGREE_MINUTES_FIELD_NUMBER: _ClassVar[int]
+    ALARM_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    ALARM_CODE_FIELD_NUMBER: _ClassVar[int]
     outdoor_centidegrees: int
     supply_centidegrees: int
     return_centidegrees: int
     hot_water_top_centidegrees: int
     hot_water_charging_centidegrees: int
     calculated_supply_centidegrees: int
-    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ...) -> None: ...
+    producing: int
+    compressor_state: int
+    degree_minutes: int
+    alarm_active: bool
+    alarm_code: int
+    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., producing: _Optional[int] = ..., compressor_state: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., alarm_active: _Optional[bool] = ..., alarm_code: _Optional[int] = ...) -> None: ...
 
 class RadioLink(_message.Message):
     __slots__ = ("quality", "rssi_dbm", "snr_db")

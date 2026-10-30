@@ -14,6 +14,97 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+/// The value set of HeatSourceReadings.producing: what a heat source is producing now. Not a
+/// field type — producing is a uint32 like every enum-valued reading, so it keeps explicit
+/// presence — but the named constants for its numbers. A connector maps its maker's codes onto
+/// these; a code none of them names is OTHER.
+class HeatSourceProduction extends $pb.ProtobufEnum {
+  /// Never sent; an unreported state is an absent field.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_UNSPECIFIED =
+      HeatSourceProduction._(
+          0, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_UNSPECIFIED');
+
+  /// Producing nothing.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_OFF =
+      HeatSourceProduction._(
+          1, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_OFF');
+
+  /// Heating the building: its climate systems.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_SPACE_HEATING =
+      HeatSourceProduction._(
+          2, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_SPACE_HEATING');
+
+  /// Making hot water.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_HOT_WATER =
+      HeatSourceProduction._(
+          3, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_HOT_WATER');
+
+  /// Heating a pool.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_POOL =
+      HeatSourceProduction._(
+          4, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_POOL');
+
+  /// Cooling.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_COOLING =
+      HeatSourceProduction._(
+          5, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_COOLING');
+
+  /// Something none of the above names, such as a transfer between stores.
+  static const HeatSourceProduction HEAT_SOURCE_PRODUCTION_OTHER =
+      HeatSourceProduction._(
+          6, _omitEnumNames ? '' : 'HEAT_SOURCE_PRODUCTION_OTHER');
+
+  static const $core.List<HeatSourceProduction> values = <HeatSourceProduction>[
+    HEAT_SOURCE_PRODUCTION_UNSPECIFIED,
+    HEAT_SOURCE_PRODUCTION_OFF,
+    HEAT_SOURCE_PRODUCTION_SPACE_HEATING,
+    HEAT_SOURCE_PRODUCTION_HOT_WATER,
+    HEAT_SOURCE_PRODUCTION_POOL,
+    HEAT_SOURCE_PRODUCTION_COOLING,
+    HEAT_SOURCE_PRODUCTION_OTHER,
+  ];
+
+  static final $core.List<HeatSourceProduction?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
+  static HeatSourceProduction? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatSourceProduction._(super.value, super.name);
+}
+
+/// The value set of HeatSourceReadings.compressor_state, as the named constants for its
+/// numbers. Starting and stopping are kept apart from running and stopped: while a compressor
+/// starts, the heat it makes has not yet reached the supply, and readings then are not yet what
+/// it runs at.
+class CompressorState extends $pb.ProtobufEnum {
+  /// Never sent; an unreported state is an absent field.
+  static const CompressorState COMPRESSOR_STATE_UNSPECIFIED = CompressorState._(
+      0, _omitEnumNames ? '' : 'COMPRESSOR_STATE_UNSPECIFIED');
+  static const CompressorState COMPRESSOR_STATE_STOPPED =
+      CompressorState._(1, _omitEnumNames ? '' : 'COMPRESSOR_STATE_STOPPED');
+  static const CompressorState COMPRESSOR_STATE_STARTING =
+      CompressorState._(2, _omitEnumNames ? '' : 'COMPRESSOR_STATE_STARTING');
+  static const CompressorState COMPRESSOR_STATE_RUNNING =
+      CompressorState._(3, _omitEnumNames ? '' : 'COMPRESSOR_STATE_RUNNING');
+  static const CompressorState COMPRESSOR_STATE_STOPPING =
+      CompressorState._(4, _omitEnumNames ? '' : 'COMPRESSOR_STATE_STOPPING');
+
+  static const $core.List<CompressorState> values = <CompressorState>[
+    COMPRESSOR_STATE_UNSPECIFIED,
+    COMPRESSOR_STATE_STOPPED,
+    COMPRESSOR_STATE_STARTING,
+    COMPRESSOR_STATE_RUNNING,
+    COMPRESSOR_STATE_STOPPING,
+  ];
+
+  static final $core.List<CompressorState?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static CompressorState? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const CompressorState._(super.value, super.name);
+}
+
 /// The value set of RadioLink.quality: how well a link is doing, as the device's
 /// connector rates it. Not a field type — quality is a uint32 like every enum-valued
 /// reading, so it keeps explicit presence — but the named constants for its numbers.

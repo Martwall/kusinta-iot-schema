@@ -7,7 +7,9 @@ import {
   HmThermostatPropsSchema,
 } from '../kusinta/iot/vendor/homematic/v1/homematic_pb.js'
 import {
+  CompressorState,
   EndpointSchema,
+  HeatSourceProduction,
   HeatSourceReadingsSchema,
   RadioLinkSchema,
   RadioQuality,
@@ -159,6 +161,49 @@ describe('HeatSourceReadings', () => {
     const readings = create(HeatSourceReadingsSchema, { outdoorCentidegrees: -1850, hotWaterChargingCentidegrees: 0 })
     const decoded = fromBinary(HeatSourceReadingsSchema, toBinary(HeatSourceReadingsSchema, readings))
     expect([decoded.outdoorCentidegrees, decoded.hotWaterChargingCentidegrees]).toEqual([-1850, 0])
+  })
+
+  it('carries the run state: what it produces, its compressor, degree minutes and an alarm', () => {
+    const readings = create(HeatSourceReadingsSchema, {
+      producing: HeatSourceProduction.HOT_WATER,
+      compressorState: CompressorState.STARTING,
+      degreeMinutes: -420,
+      alarmActive: true,
+      alarmCode: 183,
+    })
+    const decoded = fromBinary(HeatSourceReadingsSchema, toBinary(HeatSourceReadingsSchema, readings))
+    expect([
+      decoded.producing,
+      decoded.compressorState,
+      decoded.degreeMinutes,
+      decoded.alarmActive,
+      decoded.alarmCode,
+    ]).toEqual([HeatSourceProduction.HOT_WATER, CompressorState.STARTING, -420, true, 183])
+  })
+
+  it('tells no alarm apart from an unreported one', () => {
+    const decoded = fromBinary(
+      HeatSourceReadingsSchema,
+      toBinary(HeatSourceReadingsSchema, create(HeatSourceReadingsSchema, { alarmActive: false })),
+    )
+    expect([decoded.alarmActive, decoded.alarmCode, decoded.producing]).toEqual([false, undefined, undefined])
+  })
+
+  it('pins the production and compressor numbers that travel on the wire', () => {
+    expect([
+      HeatSourceProduction.UNSPECIFIED,
+      HeatSourceProduction.OFF,
+      HeatSourceProduction.SPACE_HEATING,
+      HeatSourceProduction.HOT_WATER,
+      HeatSourceProduction.POOL,
+      HeatSourceProduction.COOLING,
+      HeatSourceProduction.OTHER,
+      CompressorState.UNSPECIFIED,
+      CompressorState.STOPPED,
+      CompressorState.STARTING,
+      CompressorState.RUNNING,
+      CompressorState.STOPPING,
+    ]).toEqual([0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4])
   })
 
   it('travels as a vendor update with an int value', () => {

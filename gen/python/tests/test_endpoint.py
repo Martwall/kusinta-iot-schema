@@ -921,6 +921,11 @@ def test_heat_source_fields_carry_the_published_attribute_names():
         _heat_source_attribute("hot_water_top_centidegrees"),
         _heat_source_attribute("hot_water_charging_centidegrees"),
         _heat_source_attribute("calculated_supply_centidegrees"),
+        _heat_source_attribute("producing"),
+        _heat_source_attribute("compressor_state"),
+        _heat_source_attribute("degree_minutes"),
+        _heat_source_attribute("alarm_active"),
+        _heat_source_attribute("alarm_code"),
     ] == [
         "outdoor_centidegrees",
         "supply_centidegrees",
@@ -928,6 +933,11 @@ def test_heat_source_fields_carry_the_published_attribute_names():
         "hot_water_top_centidegrees",
         "hot_water_charging_centidegrees",
         "calculated_supply_centidegrees",
+        "producing",
+        "compressor_state",
+        "degree_minutes",
+        "alarm_active",
+        "alarm_code",
     ]
 
 
@@ -940,10 +950,93 @@ def test_heat_source_readings_are_read_and_report_only():
     assert capabilities == {5}
 
 
-def test_heat_source_readings_are_temperatures_in_signed_centidegrees():
+def test_heat_source_temperatures_are_signed_centidegrees():
     """Carried as int_value, as every temperature in this schema is: sint32 centidegrees."""
-    types = {f.type for f in device_pb2.HeatSourceReadings.DESCRIPTOR.fields}
+    types = {
+        f.type
+        for f in device_pb2.HeatSourceReadings.DESCRIPTOR.fields
+        if f.name.endswith("_centidegrees")
+    }
     assert types == {google_descriptor_pb2.FieldDescriptorProto.TYPE_SINT32}
+
+
+def test_heat_source_enum_readings_travel_as_numbers_with_presence():
+    """producing and compressor_state are uint32, as RadioLink.quality is, so an unreported
+    state is an absent field rather than UNSPECIFIED."""
+    fields = device_pb2.HeatSourceReadings.DESCRIPTOR.fields_by_name
+    assert (fields["producing"].type, fields["compressor_state"].type) == (
+        google_descriptor_pb2.FieldDescriptorProto.TYPE_UINT32,
+        google_descriptor_pb2.FieldDescriptorProto.TYPE_UINT32,
+    )
+
+
+def test_heat_source_production_numbers_are_the_wire_contract():
+    assert (
+        device_pb2.HEAT_SOURCE_PRODUCTION_UNSPECIFIED,
+        device_pb2.HEAT_SOURCE_PRODUCTION_OFF,
+        device_pb2.HEAT_SOURCE_PRODUCTION_SPACE_HEATING,
+        device_pb2.HEAT_SOURCE_PRODUCTION_HOT_WATER,
+        device_pb2.HEAT_SOURCE_PRODUCTION_POOL,
+        device_pb2.HEAT_SOURCE_PRODUCTION_COOLING,
+        device_pb2.HEAT_SOURCE_PRODUCTION_OTHER,
+    ) == (0, 1, 2, 3, 4, 5, 6)
+
+
+def test_compressor_state_numbers_are_the_wire_contract():
+    assert (
+        device_pb2.COMPRESSOR_STATE_UNSPECIFIED,
+        device_pb2.COMPRESSOR_STATE_STOPPED,
+        device_pb2.COMPRESSOR_STATE_STARTING,
+        device_pb2.COMPRESSOR_STATE_RUNNING,
+        device_pb2.COMPRESSOR_STATE_STOPPING,
+    ) == (0, 1, 2, 3, 4)
+
+
+def test_an_unreported_run_state_is_absent_not_off_or_stopped():
+    decoded = device_pb2.HeatSourceReadings()
+    decoded.ParseFromString(device_pb2.HeatSourceReadings().SerializeToString())
+    assert (
+        decoded.HasField("producing"),
+        decoded.HasField("compressor_state"),
+        decoded.HasField("degree_minutes"),
+        decoded.HasField("alarm_active"),
+    ) == (False, False, False, False)
+
+
+def test_no_alarm_is_a_reading_distinct_from_an_unreported_one():
+    decoded = device_pb2.HeatSourceReadings()
+    decoded.ParseFromString(
+        device_pb2.HeatSourceReadings(alarm_active=False).SerializeToString()
+    )
+    assert (decoded.HasField("alarm_active"), decoded.HasField("alarm_code")) == (True, False)
+
+
+def test_an_alarm_carries_the_makers_number_beside_it():
+    decoded = device_pb2.HeatSourceReadings()
+    decoded.ParseFromString(
+        device_pb2.HeatSourceReadings(alarm_active=True, alarm_code=183).SerializeToString()
+    )
+    assert (decoded.alarm_active, decoded.alarm_code) == (True, 183)
+
+
+def test_a_heat_deficit_survives_the_wire_as_negative_degree_minutes():
+    decoded = device_pb2.HeatSourceReadings()
+    decoded.ParseFromString(
+        device_pb2.HeatSourceReadings(degree_minutes=-420).SerializeToString()
+    )
+    assert decoded.degree_minutes == -420
+
+
+def test_what_the_heat_source_produces_travels_as_its_number_in_uint_value():
+    update = property_update_pb2.PropertyUpdate(
+        endpoint_id=1,
+        vendor_extension="kusinta.heat_source",
+        attribute_name="producing",
+        uint_value=device_pb2.HEAT_SOURCE_PRODUCTION_HOT_WATER,
+    )
+    decoded = property_update_pb2.PropertyUpdate()
+    decoded.ParseFromString(update.SerializeToString())
+    assert (decoded.WhichOneof("value"), decoded.uint_value) == ("uint_value", 3)
 
 
 def test_an_outdoor_reading_of_zero_degrees_is_a_reading_not_an_absence():

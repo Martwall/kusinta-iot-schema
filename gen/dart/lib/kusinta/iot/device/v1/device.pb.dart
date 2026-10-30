@@ -707,24 +707,37 @@ class Device extends $pb.GeneratedMessage {
   $4.Timestamp ensureLastUpdated() => $_ensure(5);
 }
 
-/// A heat source's own readings: the temperatures its controller measures and works out, as
-/// its connector reads them from the heat source or the maker's service. What
+/// A heat source's own readings: the temperatures its controller measures and works out, and
+/// its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
+/// connector reads them from the heat source or the maker's service. What
 /// heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
 ///
 /// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
-/// these attribute names, each a temperature in centidegrees (°C × 100) as int_value, as
-/// temperatures are throughout this schema. A connector converts what the heat source gives —
-/// degrees with a decimal, a maker's register scale — into centidegrees and rounds it no
-/// further.
+/// these attribute names, the value case following the field type as everywhere on the vendor
+/// branch. A temperature is in centidegrees (°C × 100) as int_value, as temperatures are
+/// throughout this schema: a connector converts what the heat source gives — degrees with a
+/// decimal, a maker's register scale — into centidegrees and rounds it no further. An
+/// enum-valued reading travels as its number in uint_value, as RadioLink.quality does, and
+/// keeps explicit presence: its UNSPECIFIED is never sent, since an unreported one is an
+/// absent field.
 ///
 /// Vendor-neutral on purpose: the same message for every heat source, a heat pump, a boiler
 /// or a district-heating substation, so that whoever reads a plant reads one shape. Which of
-/// the maker's points carries each reading is the connector's mapping and not part of this
-/// contract; a reading the heat source has no sensor for is never sent, never sent as zero.
+/// the maker's points carries each reading, and how its codes map onto the values here, is
+/// the connector's mapping and not part of this contract; a reading the heat source has no
+/// sensor or state for is never sent, never sent as zero.
 ///
 /// Every field is `optional`, for the reason vendor readings always are: absent means never
 /// reported, present means a reading, 0 °C included. Read only: a heat source is steered
 /// through its plant's control inputs (heating.v1.HeatPumpControl), never by writing these.
+///
+/// Who is sent them follows the device, as for any device's readings
+/// (access.v1.MembershipRelation), whoever owns the heat source (common.v1.AssetOwner decides
+/// nothing of who sees what). A heat source filed in a home is household data there: its
+/// readings go to the home's residents and never to service (access.v1.DeviceAcl.relation
+/// SERVICE), who are given of it only what a webrtc.v1.ServiceStatus carries, within the
+/// service signals (access.v1.ServiceSignal): an alarm as a fault (alarm_active), and never
+/// alarm_code or any other reading here.
 class HeatSourceReadings extends $pb.GeneratedMessage {
   factory HeatSourceReadings({
     $core.int? outdoorCentidegrees,
@@ -733,6 +746,11 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     $core.int? hotWaterTopCentidegrees,
     $core.int? hotWaterChargingCentidegrees,
     $core.int? calculatedSupplyCentidegrees,
+    $core.int? producing,
+    $core.int? compressorState,
+    $core.int? degreeMinutes,
+    $core.bool? alarmActive,
+    $core.int? alarmCode,
   }) {
     final result = create();
     if (outdoorCentidegrees != null)
@@ -747,6 +765,11 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
       result.hotWaterChargingCentidegrees = hotWaterChargingCentidegrees;
     if (calculatedSupplyCentidegrees != null)
       result.calculatedSupplyCentidegrees = calculatedSupplyCentidegrees;
+    if (producing != null) result.producing = producing;
+    if (compressorState != null) result.compressorState = compressorState;
+    if (degreeMinutes != null) result.degreeMinutes = degreeMinutes;
+    if (alarmActive != null) result.alarmActive = alarmActive;
+    if (alarmCode != null) result.alarmCode = alarmCode;
     return result;
   }
 
@@ -776,6 +799,13 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
         $pb.PbFieldType.OS3)
     ..a<$core.int>(6, _omitFieldNames ? '' : 'calculatedSupplyCentidegrees',
         $pb.PbFieldType.OS3)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'producing', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'compressorState', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        9, _omitFieldNames ? '' : 'degreeMinutes', $pb.PbFieldType.OS3)
+    ..aOB(10, _omitFieldNames ? '' : 'alarmActive')
+    ..a<$core.int>(11, _omitFieldNames ? '' : 'alarmCode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -868,6 +898,69 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   $core.bool hasCalculatedSupplyCentidegrees() => $_has(5);
   @$pb.TagNumber(6)
   void clearCalculatedSupplyCentidegrees() => $_clearField(6);
+
+  /// What the heat source is producing now (HeatSourceProduction), as its number. While it
+  /// makes hot water its supply and return say nothing of the space heating, which is what a
+  /// consumer reading them for the heating sets aside.
+  @$pb.TagNumber(7)
+  $core.int get producing => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set producing($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasProducing() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearProducing() => $_clearField(7);
+
+  /// Its compressor's state (CompressorState), as its number — its first compressor, where it
+  /// has several. Absent for a heat source with none.
+  @$pb.TagNumber(8)
+  $core.int get compressorState => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set compressorState($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCompressorState() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCompressorState() => $_clearField(8);
+
+  /// Its degree minutes, in whole degree-minutes (°C × minutes), rounded to the nearest: the
+  /// running sum over time of how far the supply has been from calculated_supply_centidegrees,
+  /// negative while it has run below it. What a heat source that keeps one starts its
+  /// compressor and its add-on heat by, at thresholds of its own. Absent for a heat source
+  /// that keeps none.
+  @$pb.TagNumber(9)
+  $core.int get degreeMinutes => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set degreeMinutes($core.int value) => $_setSignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasDegreeMinutes() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDegreeMinutes() => $_clearField(9);
+
+  /// Whether the heat source reports an alarm now. An error it reports in its own operation:
+  /// service is given it as webrtc.v1.SERVICE_FAULT_ERROR (access.v1.SERVICE_SIGNAL_FAULT), as
+  /// any device's error, and nothing more of it.
+  @$pb.TagNumber(10)
+  $core.bool get alarmActive => $_getBF(9);
+  @$pb.TagNumber(10)
+  set alarmActive($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAlarmActive() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAlarmActive() => $_clearField(10);
+
+  /// The maker's own number for its most severe current alarm, for whoever looks it up in the
+  /// maker's documentation. Vendor-specific: it means nothing without the product, and no
+  /// consumer decides anything by it. Present only while alarm_active is true; a connector
+  /// sends a null value (PropertyUpdate.null_value) when the alarm ends. Never sent to service,
+  /// in a home or out of one.
+  @$pb.TagNumber(11)
+  $core.int get alarmCode => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set alarmCode($core.int value) => $_setUnsignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasAlarmCode() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearAlarmCode() => $_clearField(11);
 }
 
 /// A device's radio link, as its connector reports it.
