@@ -657,8 +657,12 @@ class DeviceAcl extends $pb.GeneratedMessage {
   /// relation their membership records. They hold no action on it — allowed_actions is empty
   /// — and are sent no reading or event of it. The Device they are sent carries its
   /// description only: its endpoints with their device types and implemented lists, and no
-  /// property value. What keeps it working comes as a webrtc.v1.ServiceStatus instead. An
-  /// app should show its readings as withheld, not missing. RESIDENT: the user lives in the
+  /// property value — save that, while a commissioning grant on the home is active, its
+  /// installer is also sent each cluster's attribute_behaviours and each endpoint's
+  /// vendor_attribute_behaviours, the device's statement of how it holds an output, to bind
+  /// outputs by (commissioning.v1, GRANTS); still no property value. What keeps it working
+  /// comes as a webrtc.v1.ServiceStatus instead. An app should show its readings as withheld,
+  /// not missing. RESIDENT: the user lives in the
   /// home the device is filed in, whether or not they also own it; a household admin is given
   /// RESIDENT here too, since they see the device as any resident does. UNSPECIFIED: neither
   /// applies — the device is not in a home, or the user reaches it only by owning it.

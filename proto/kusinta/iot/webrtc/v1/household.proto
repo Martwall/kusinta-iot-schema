@@ -218,6 +218,9 @@ option optimize_for = SPEED;
 //     whether a home is empty;
 //   * they may give it its first household admin by an appointment invite (STAFF APPOINTMENT);
 //   * they answer and end commissioning grants on it (commissioning.v1, GRANTS);
+//   * they are given its floor zones — not its plants, circuits or comfort loads — and may
+//     change which of its rooms a stored zone heats and its control room (heating.v1;
+//     management.proto, PutFloorZone);
 //   * they are sent its rooms as rooms outside homes are sent — without
 //     climate.v1.RoomClimate.state_withheld, with their targets, the lock and the rest — and
 //     the modes on it, with set_by and starts_at (climate.v1.ClimateMode), so that they see
@@ -226,7 +229,9 @@ option optimize_for = SPEED;
 // What they set or granted under this section ends at MOVE-IN — targets and locks cleared,
 // modes ended (climate.v1.ClimateMode), grants they granted ended, while one still requested
 // stays for the household's admins to answer — save the links they made, which describe how the
-// devices work together rather than how anyone lives, and pass to the household to change.
+// devices work together rather than how anyone lives, and pass to the household to change; and
+// save the floor zones' rooms and control rooms they set, which describe the house: the zone
+// mapping is kept, and MOVE-IN touches no heating record.
 //
 // MOVE-IN. An empty home gains a resident when a residency starts in it
 // (access.v1.MembershipRelation), however it starts: someone assigned RESIDENT on its apartment
