@@ -198,7 +198,11 @@ export declare const UpdateSpaceSchema: GenMessage<UpdateSpace>;
  * Refused as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, cascade or not,
  * while a handover is under way, as UpdateSpace has it, of the home deleted or of any home
  * beneath the space: a household's records go by its wipe (household.proto, WIPE), never by a
- * deletion.
+ * deletion. Refused as FAILED_PRECONDITION with metadata {"reason": "home_occupied"}, cascade or
+ * not, while any residency of the home deleted, or of any home beneath the space, names someone:
+ * a current resident, or a past household whose data has not been wiped. The home's household
+ * data goes by a handover first (household.proto, HANDOVER, WIPE), and no residency names a home
+ * that was deleted. "handover_pending" is checked before "home_occupied".
  *
  * @generated from message kusinta.iot.webrtc.v1.DeleteSpace
  */
@@ -1480,6 +1484,16 @@ export declare const PutHeatingCircuitSchema: GenMessage<PutHeatingCircuit>;
 /**
  * Creates or replaces a floor zone of a floor circuit; as PutHeatingPlant.
  *
+ * While a home is empty (household.proto, EMPTY HOME), the property owner and the gateway
+ * administrators who reach it may change which of its rooms a stored floor zone of the home
+ * heats, and so bring a zone left uncontrolled back under control (heating.v1, UNCONTROLLED
+ * ZONES). From them, only a stored zone's rooms and control_room_id may change, its rooms
+ * staying in that home. Any other change from them — its output, its circuit, its name — a new
+ * zone, and removing one (RemoveHeatingRecord) are refused as NOT_ENTITLED, the same answer as
+ * for a zone out of reach; a put naming a revision the zone has moved on from is still refused
+ * as FAILED_PRECONDITION "STALE_REVISION". It ends at MOVE-IN (household.proto), and the zone
+ * mapping they left is kept: MOVE-IN's reset does not touch heating records.
+ *
  * @generated from message kusinta.iot.webrtc.v1.PutFloorZone
  */
 export declare type PutFloorZone = Message<"kusinta.iot.webrtc.v1.PutFloorZone"> & {
@@ -1519,7 +1533,8 @@ export declare const PutComfortLoadSchema: GenMessage<PutComfortLoad>;
  * FAILED_PRECONDITION with metadata "reason" "STALE_REVISION" when it changed since, and
  * "HAS_CHILDREN" while records lie under it — a plant's circuits, a circuit's zones — so
  * nothing is removed that the caller did not name. Its outputs are returned to rest at once
- * (see heating.v1). Acked.
+ * (see heating.v1). Acked. An empty home's floor zone is not removed by the property owner or
+ * the gateway administrators who are given it: NOT_ENTITLED, as PutFloorZone says.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveHeatingRecord
  */

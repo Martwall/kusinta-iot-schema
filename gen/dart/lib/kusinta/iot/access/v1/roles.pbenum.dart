@@ -201,8 +201,9 @@ class PermissionAction extends $pb.ProtobufEnum {
 ///     quarter hour of their residency, from that quarter hour on.
 ///   * As an installer under a commissioning grant on the home, while it is active — the
 ///     service view below, and on top of it what commissioning.v1 (GRANTS) lists: the home's
-///     commissioning and heating records, and the readings a test they run is judged by while
-///     it runs. Never its history, savings, comfort settings or device events, nor who lives
+///     commissioning and heating records, its devices' write behaviours to bind outputs by
+///     (device.v1.AttributeBehaviour), and the readings a test they run is judged by while it
+///     runs. Never its history, savings, comfort settings or device events, nor who lives
 ///     there.
 ///   * As service — SERVICE on the apartment, a room in it, or a building or floor above it,
 ///     or as the gateway's administrator. Of the building's own devices in what they reach of
@@ -214,7 +215,7 @@ class PermissionAction extends $pb.ProtobufEnum {
 ///     RoomClimate.state_withheld marking what is not shown, and its links with
 ///     DeviceLink.details_withheld; modes on a home are not sent to them at all — save that the
 ///     property owner and the gateway administrators are sent an empty home's rooms and modes
-///     in full (webrtc.v1 household.proto, EMPTY HOME). Service
+///     in full, and its floor zones (webrtc.v1 household.proto, EMPTY HOME). Service
 ///     that reaches the apartment itself also gets its climate summary over the disclosed
 ///     period. What they newly see of the home reaches them as it happens; what they lose,
 ///     at once.

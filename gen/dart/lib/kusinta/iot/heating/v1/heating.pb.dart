@@ -930,6 +930,9 @@ class FloorZone extends $pb.GeneratedMessage {
   /// commissioning grant on the home, and unset for the home's other residents; never sent to
   /// service. Unset, too, when it dates from before the recipient's current residency in the
   /// home, or from a home they did not live in at the time (see access.v1.MembershipRelation).
+  /// While the home is empty (webrtc.v1 household.proto, EMPTY HOME), the property owner and the
+  /// gateway administrators who reach it are sent uncontrolled_since, never uncontrolled_by (see
+  /// the file comment).
   /// For a zone outside homes, sent to whoever is given the zone. That rooms is empty, or
   /// control_room_id unset, is what says the zone is uncontrolled; these say only since when
   /// and by whom, where the recipient is given them.
