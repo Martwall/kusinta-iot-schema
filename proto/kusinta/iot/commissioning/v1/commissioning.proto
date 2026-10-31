@@ -25,7 +25,8 @@ option optimize_for = SPEED;
 //       with every zone on the manifold off (not heating): a variable-speed pump, or a
 //       bypass. Set only by a concluded PUMP_ALL_ZONES_OFF test, as MEASURED: true on a
 //       pass, false on a fail. Until it is true, the gateway keeps at least one zone of the
-//       circuit heating at all times.
+//       circuit heating at all times, and refuses a test that would leave none
+//       (webrtc.v1 RunCommissioningTest, "LAST_HEATING_ZONE").
 //   "floor.max_zones_switching_on"  uint; a floor circuit. How many of its zones the wiring
 //       centre's supply carries switching on at once: thermal actuators draw several times
 //       their holding power while they open. The gateway switches no more zones on within

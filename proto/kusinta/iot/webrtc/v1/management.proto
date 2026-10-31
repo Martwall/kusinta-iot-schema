@@ -128,7 +128,20 @@ message CreateSpace {
 // filed on the apartment, where it was in it — and any link it would carry across a
 // boundary is removed. Changing the type of a space that has members needs
 // ROLE_PROPERTY_OWNER or ROLE_GATEWAY_ADMIN, who see them, and is refused if it would
-// leave a RESIDENT membership on a room.
+// leave a RESIDENT membership on a room, as INVALID_REQUEST with metadata
+// {"reason": "resident_on_room"}.
+//
+// An apartment keeps its type while its household data is there. A change of an apartment's
+// type is refused as FAILED_PRECONDITION with metadata {"reason": "handover_pending"} while a
+// handover of the home is under way: pending (household.proto, HANDOVER, VACANCY), confirmed
+// but its wipe not yet done, or its last residency ended and no handover recorded yet. It is
+// refused as FAILED_PRECONDITION with metadata {"reason": "home_occupied"} while any residency
+// of the home names someone: a current resident, or a past household whose data has not been
+// wiped. The home's household data goes by a handover first (household.proto, HANDOVER, WIPE),
+// never by a retype away and back. Neither refuses a change that leaves the type as it is, a
+// rename among them. Every other check is made first — who may make the change, and the
+// refusals of its shape as INVALID_REQUEST, "resident_on_room" among them — and
+// "handover_pending" before "home_occupied".
 //
 // The name of an apartment is the building's identifier for it (space.v1.Space.name), and is
 // changed only by the property owner or the gateway's administrators: from anyone else, a
@@ -168,6 +181,11 @@ message UpdateSpace {
 // asked for rather than something a stale client did by accident. Deleting a home, or
 // anything in one, is guarded as UpdateSpace is, heating records included
 // (HEATING ACROSS A HOME).
+//
+// Refused as FAILED_PRECONDITION with metadata {"reason": "handover_pending"}, cascade or not,
+// while a handover is under way, as UpdateSpace has it, of the home deleted or of any home
+// beneath the space: a household's records go by its wipe (household.proto, WIPE), never by a
+// deletion.
 message DeleteSpace {
   kusinta.iot.identity.v1.SpaceId space_id = 1;
   bool cascade = 2;
@@ -1007,6 +1025,16 @@ message SetHomeTemplate {
 //
 //   FAILED_PRECONDITION
 //   "TEST_RUNNING"      a test already drives one of its outputs.
+//   "SG_READY_ORDER"    OUTPUT_LEASE on one SG Ready input while a running test drives the
+//                       other input of the same plant, in either order: both held away from
+//                       rest is a state of the heat pump no test asks for. metadata "field"
+//                       names the input the running test drives.
+//   "LAST_HEATING_ZONE" OUTPUT_LEASE or ZONE_EFFECT on a floor zone's output that would leave
+//                       its circuit no zone heating: the zone is the circuit's only one, or
+//                       every other zone of the circuit has its output driven by a running
+//                       test. A zone with no bound output counts as heating. Not refused once
+//                       the circuit's "floor.pump_tolerates_all_zones_off" is true
+//                       (commissioning.v1). metadata "record_id" names the zone.
 //   "NEEDS_PASS"        ZONE_EFFECT or PUMP_ALL_ZONES_OFF on outputs without a current
 //                       OUTPUT_LEASE pass; metadata "record_id" names one.
 //   "OUTPUT_NOT_LEASED" an output its producer does not state as leased, with a lapse value
