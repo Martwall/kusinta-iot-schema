@@ -206,12 +206,13 @@ option optimize_for = SPEED;
 //     feature states, needs included;
 //   * the heating records there (heating.v1), comfort loads without their windows, and
 //     binding outputs on devices filed there;
-//   * the write behaviours of a home's devices, so that outputs can be bound: the devices of a
-//     home it covers, which the installer otherwise sees as service, are shown to them with
-//     each cluster's attribute_behaviours and each endpoint's vendor_attribute_behaviours
+//   * the write behaviours of the devices filed there, so that outputs can be bound: each
+//     cluster's attribute_behaviours and each endpoint's vendor_attribute_behaviours
 //     (device.v1.AttributeBehaviour) — the device's statement of how it holds an output: lease
-//     bounds, lapse value, power-on value, read latency. Their readings stay withheld, save
-//     those a running test of the installer's is judged by (the next entry);
+//     bounds, lapse value, power-on value, read latency. Only a home's devices gain by this:
+//     the installer otherwise sees them as service, and no device outside homes as service. A
+//     home's device readings stay withheld, save those a running test of the installer's is
+//     judged by (the next entry);
 //   * the outer limits of the rooms there (climate.v1.OuterRoomLimits,
 //     webrtc.v1.ConfigureRoomClimate);
 //   * running commissioning tests there, and concluding PUMP_ALL_ZONES_OFF;

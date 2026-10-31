@@ -1490,9 +1490,11 @@ export declare const PutHeatingCircuitSchema: GenMessage<PutHeatingCircuit>;
  * ZONES). From them, only a stored zone's rooms and control_room_id may change, its rooms
  * staying in that home. Any other change from them — its output, its circuit, its name — a new
  * zone, and removing one (RemoveHeatingRecord) are refused as NOT_ENTITLED, the same answer as
- * for a zone out of reach; a put naming a revision the zone has moved on from is still refused
- * as FAILED_PRECONDITION "STALE_REVISION". It ends at MOVE-IN (household.proto), and the zone
- * mapping they left is kept: MOVE-IN's reset does not touch heating records.
+ * for a zone out of reach. A caller not given the home's zones is refused NOT_ENTITLED first.
+ * For one given the zone, a put naming a revision the zone has moved on from is refused as
+ * FAILED_PRECONDITION "STALE_REVISION" before any of the changes above is judged, so a racing
+ * put is told to re-read. It ends at MOVE-IN (household.proto), and the zone mapping they left
+ * is kept: MOVE-IN's reset does not touch heating records.
  *
  * @generated from message kusinta.iot.webrtc.v1.PutFloorZone
  */
