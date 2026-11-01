@@ -246,8 +246,11 @@ message RoomClimate {
   // How many of the room's heating outputs the outer limits bind, so that an app shows the
   // building's bounds where they apply and not where they do not. In a home, sent to its
   // residents only: to anyone else it would tell whether the room holds a device a resident
-  // owns. Outside homes, sent to whoever is sent the room, judged over the outputs of devices
-  // the recipient sees, so that a device hidden from them changes nothing they are sent.
+  // owns. The exception is a home that stands empty (webrtc.v1 household.proto, EMPTY HOME):
+  // its property owner and gateway administrators are sent its rooms as rooms outside homes
+  // are, this included, as no household's device or setting is left in it. Outside homes, sent
+  // to whoever is sent the room, judged over the outputs of devices the recipient sees, so
+  // that a device hidden from them changes nothing they are sent.
   OuterLimitsCoverage outer_limits_coverage = 24;
 
   // The devices in the room with a heating output the outer limits bind
