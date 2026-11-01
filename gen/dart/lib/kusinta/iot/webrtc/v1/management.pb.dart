@@ -1983,7 +1983,14 @@ class RoomLimitValue extends $pb.GeneratedMessage {
 /// A min changed to below the gateway's public-health threshold — its own setting, which no
 /// operation in this contract changes; none while unset — needs accept_below_threshold, and is
 /// refused without it as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
-/// "threshold_centidegrees": the threshold}. Nothing in the answer to the outer limits depends
+/// "threshold_centidegrees": the threshold}. Outer limits that change so that a valve they bind
+/// could not be set between them — no step of its setpoint grid, or of its own limit settings,
+/// whichever is coarser, lies in [min, max], or in [away_min, max] where min is unset — are
+/// refused as INVALID_REQUEST with metadata {"reason": "limits_no_setpoint",
+/// "step_centidegrees": that coarsest step, as a decimal string}. It is judged only over valves
+/// the caller sees, so it tells them nothing of a device hidden from them; a valve filed later,
+/// or hidden from whoever set the limits, whose grid leaves no step between them is held at the
+/// minimum. Limits the request leaves as they are are not judged again. Nothing in the answer to the outer limits depends
 /// on the home's state — its targets, inner limits, modes, or who lives there — so setting them
 /// tells the caller nothing of it; what they clamp is told to the household alone
 /// (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided by whether the
