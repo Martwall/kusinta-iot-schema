@@ -388,6 +388,16 @@ export declare const RemoveDeviceFromSpaceSchema: GenMessage<RemoveDeviceFromSpa
  * initial_space_id or without, that would leave a heating record across a home's boundary is
  * refused or undone as HEATING ACROSS A HOME says.
  *
+ * WHICH CLAIM. The claim states its ownership, and the gateway never defaults it: one with
+ * neither is refused as INVALID_REQUEST. A COMPANY claim is accepted only from a filing role,
+ * and refused as NOT_ENTITLED from anyone else, since it would grant them nothing of the device.
+ * A filing role may make either, in a home it lives in too: someone who both lives in a home
+ * and files for the building (the property owner, a technician or the gateway's administrator,
+ * filing the building's equipment in their own home) says which the device is, the building's
+ * or their own, and nothing about the caller decides it for them. A client SHOULD ask that person, and may choose
+ * for everyone else: COMPANY for a filing role outside the homes it lives in, RESIDENT for
+ * anyone without one.
+ *
  * @generated from message kusinta.iot.webrtc.v1.ClaimDevice
  */
 export declare type ClaimDevice = Message<"kusinta.iot.webrtc.v1.ClaimDevice"> & {

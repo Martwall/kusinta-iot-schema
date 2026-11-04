@@ -1323,8 +1323,11 @@ class GatewayStreamOpened extends $pb.GeneratedMessage {
 /// of access; every device's ownership, an owned device staying filed where it is, released, as
 /// one of the building's own; every contact; and everything recorded per home — room history,
 /// climate summaries, events, targets, modes and routines — including what is still queued for the
-/// api-server about any of them, and the gateway's own records of who did what. Every open session
-/// ends, and none is admitted until the wipe is done.
+/// api-server about any of them, and the gateway's own records of who did what. No home is held
+/// vacant after it (webrtc.v1 household.proto, VACANCY SETBACK): with every residency gone,
+/// nothing is left to show that anyone lived in any home, so the setback ends in all of them. A
+/// home's own wipe (household.proto, WIPE) keeps it. Every open session ends, and none is
+/// admitted until the wipe is done.
 ///
 /// Logs. A wipe takes what the gateway itself keeps; the operating system's log of the host it
 /// runs on is not the gateway's to erase, and what it holds stays until the host's own retention
