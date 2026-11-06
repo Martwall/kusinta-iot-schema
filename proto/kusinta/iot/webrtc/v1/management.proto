@@ -325,7 +325,11 @@ message ClaimDevice {
 
 // Gives up ownership. The device keeps whatever space filing it has, except that a device in a
 // home stays filed in the home alone, as one of the building's own devices there — as when its
-// owner moves out; if it has none it becomes unfiled. A heating record the release would leave
+// owner moves out; if it has none it becomes unfiled. A device a person owns is released by
+// that person alone. One claimed for the building is released by the property owner or a
+// gateway administrator who reaches it, and also by a filing role who lives in the home it is
+// filed in: whoever may choose there between the building's device and their own (ClaimDevice,
+// WHICH CLAIM) may undo a building claim made by mistake. A heating record the release would leave
 // across a home's boundary is undone, never refused (HEATING ACROSS A HOME).
 message ReleaseDevice {
   kusinta.iot.identity.v1.DeviceId device_id = 1;
