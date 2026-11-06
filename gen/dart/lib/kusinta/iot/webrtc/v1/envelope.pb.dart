@@ -741,6 +741,7 @@ enum ManagementResult_Result {
   householdHandover,
   householdHandovers,
   householdExport,
+  plantHistory,
   notSet
 }
 
@@ -781,6 +782,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $11.HouseholdHandover? householdHandover,
     $11.HouseholdHandovers? householdHandovers,
     $11.HouseholdExport? householdExport,
+    $5.PlantHistory? plantHistory,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -815,6 +817,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (householdHandovers != null)
       result.householdHandovers = householdHandovers;
     if (householdExport != null) result.householdExport = householdExport;
+    if (plantHistory != null) result.plantHistory = plantHistory;
     return result;
   }
 
@@ -854,6 +857,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     24: ManagementResult_Result.householdHandover,
     25: ManagementResult_Result.householdHandovers,
     26: ManagementResult_Result.householdExport,
+    27: ManagementResult_Result.plantHistory,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -886,7 +890,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       23,
       24,
       25,
-      26
+      26,
+      27
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -945,6 +950,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $11.HouseholdHandovers.create)
     ..aOM<$11.HouseholdExport>(26, _omitFieldNames ? '' : 'householdExport',
         subBuilder: $11.HouseholdExport.create)
+    ..aOM<$5.PlantHistory>(27, _omitFieldNames ? '' : 'plantHistory',
+        subBuilder: $5.PlantHistory.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1268,6 +1275,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearHouseholdExport() => $_clearField(26);
   @$pb.TagNumber(26)
   $11.HouseholdExport ensureHouseholdExport() => $_ensure(25);
+
+  @$pb.TagNumber(27)
+  $5.PlantHistory get plantHistory => $_getN(26);
+  @$pb.TagNumber(27)
+  set plantHistory($5.PlantHistory value) => $_setField(27, value);
+  @$pb.TagNumber(27)
+  $core.bool hasPlantHistory() => $_has(26);
+  @$pb.TagNumber(27)
+  void clearPlantHistory() => $_clearField(27);
+  @$pb.TagNumber(27)
+  $5.PlantHistory ensurePlantHistory() => $_ensure(26);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

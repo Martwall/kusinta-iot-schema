@@ -959,6 +959,270 @@ final $typed_data.Uint8List roomHistoryDescriptor = $convert.base64Decode(
     'cmVkRnJvbRI5Cgpjb3ZlcmVkX3RvGAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcF'
     'IJY292ZXJlZFRv');
 
+@$core.Deprecated('Use plantHistorySampleDescriptor instead')
+const PlantHistorySample$json = {
+  '1': 'PlantHistorySample',
+  '2': [
+    {
+      '1': 'at',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'at'
+    },
+    {
+      '1': 'outdoor_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'outdoorCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'supply_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'supplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'return_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 17,
+      '9': 2,
+      '10': 'returnCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'calculated_supply_centidegrees',
+      '3': 5,
+      '4': 1,
+      '5': 17,
+      '9': 3,
+      '10': 'calculatedSupplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'hot_water_top_centidegrees',
+      '3': 6,
+      '4': 1,
+      '5': 17,
+      '9': 4,
+      '10': 'hotWaterTopCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'outdoor_min_centidegrees',
+      '3': 7,
+      '4': 1,
+      '5': 17,
+      '9': 5,
+      '10': 'outdoorMinCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'outdoor_max_centidegrees',
+      '3': 8,
+      '4': 1,
+      '5': 17,
+      '9': 6,
+      '10': 'outdoorMaxCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'degree_minutes',
+      '3': 9,
+      '4': 1,
+      '5': 17,
+      '9': 7,
+      '10': 'degreeMinutes',
+      '17': true
+    },
+    {
+      '1': 'add_on_heat_watts',
+      '3': 10,
+      '4': 1,
+      '5': 13,
+      '9': 8,
+      '10': 'addOnHeatWatts',
+      '17': true
+    },
+    {
+      '1': 'space_heating_permille',
+      '3': 11,
+      '4': 1,
+      '5': 13,
+      '9': 9,
+      '10': 'spaceHeatingPermille',
+      '17': true
+    },
+    {
+      '1': 'hot_water_permille',
+      '3': 12,
+      '4': 1,
+      '5': 13,
+      '9': 10,
+      '10': 'hotWaterPermille',
+      '17': true
+    },
+    {
+      '1': 'producing_nothing_permille',
+      '3': 13,
+      '4': 1,
+      '5': 13,
+      '9': 11,
+      '10': 'producingNothingPermille',
+      '17': true
+    },
+    {
+      '1': 'compressor_running_permille',
+      '3': 14,
+      '4': 1,
+      '5': 13,
+      '9': 12,
+      '10': 'compressorRunningPermille',
+      '17': true
+    },
+    {
+      '1': 'compressor_blocked_permille',
+      '3': 15,
+      '4': 1,
+      '5': 13,
+      '9': 13,
+      '10': 'compressorBlockedPermille',
+      '17': true
+    },
+    {
+      '1': 'alarms_begun',
+      '3': 16,
+      '4': 1,
+      '5': 13,
+      '9': 14,
+      '10': 'alarmsBegun',
+      '17': true
+    },
+    {
+      '1': 'meter_imported_mwh',
+      '3': 17,
+      '4': 1,
+      '5': 4,
+      '9': 15,
+      '10': 'meterImportedMwh',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_outdoor_centidegrees'},
+    {'1': '_supply_centidegrees'},
+    {'1': '_return_centidegrees'},
+    {'1': '_calculated_supply_centidegrees'},
+    {'1': '_hot_water_top_centidegrees'},
+    {'1': '_outdoor_min_centidegrees'},
+    {'1': '_outdoor_max_centidegrees'},
+    {'1': '_degree_minutes'},
+    {'1': '_add_on_heat_watts'},
+    {'1': '_space_heating_permille'},
+    {'1': '_hot_water_permille'},
+    {'1': '_producing_nothing_permille'},
+    {'1': '_compressor_running_permille'},
+    {'1': '_compressor_blocked_permille'},
+    {'1': '_alarms_begun'},
+    {'1': '_meter_imported_mwh'},
+  ],
+};
+
+/// Descriptor for `PlantHistorySample`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List plantHistorySampleDescriptor = $convert.base64Decode(
+    'ChJQbGFudEhpc3RvcnlTYW1wbGUSKgoCYXQYASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZX'
+    'N0YW1wUgJhdBI2ChRvdXRkb29yX2NlbnRpZGVncmVlcxgCIAEoEUgAUhNvdXRkb29yQ2VudGlk'
+    'ZWdyZWVziAEBEjQKE3N1cHBseV9jZW50aWRlZ3JlZXMYAyABKBFIAVISc3VwcGx5Q2VudGlkZW'
+    'dyZWVziAEBEjQKE3JldHVybl9jZW50aWRlZ3JlZXMYBCABKBFIAlIScmV0dXJuQ2VudGlkZWdy'
+    'ZWVziAEBEkkKHmNhbGN1bGF0ZWRfc3VwcGx5X2NlbnRpZGVncmVlcxgFIAEoEUgDUhxjYWxjdW'
+    'xhdGVkU3VwcGx5Q2VudGlkZWdyZWVziAEBEkAKGmhvdF93YXRlcl90b3BfY2VudGlkZWdyZWVz'
+    'GAYgASgRSARSF2hvdFdhdGVyVG9wQ2VudGlkZWdyZWVziAEBEj0KGG91dGRvb3JfbWluX2Nlbn'
+    'RpZGVncmVlcxgHIAEoEUgFUhZvdXRkb29yTWluQ2VudGlkZWdyZWVziAEBEj0KGG91dGRvb3Jf'
+    'bWF4X2NlbnRpZGVncmVlcxgIIAEoEUgGUhZvdXRkb29yTWF4Q2VudGlkZWdyZWVziAEBEioKDm'
+    'RlZ3JlZV9taW51dGVzGAkgASgRSAdSDWRlZ3JlZU1pbnV0ZXOIAQESLgoRYWRkX29uX2hlYXRf'
+    'd2F0dHMYCiABKA1ICFIOYWRkT25IZWF0V2F0dHOIAQESOQoWc3BhY2VfaGVhdGluZ19wZXJtaW'
+    'xsZRgLIAEoDUgJUhRzcGFjZUhlYXRpbmdQZXJtaWxsZYgBARIxChJob3Rfd2F0ZXJfcGVybWls'
+    'bGUYDCABKA1IClIQaG90V2F0ZXJQZXJtaWxsZYgBARJBChpwcm9kdWNpbmdfbm90aGluZ19wZX'
+    'JtaWxsZRgNIAEoDUgLUhhwcm9kdWNpbmdOb3RoaW5nUGVybWlsbGWIAQESQwobY29tcHJlc3Nv'
+    'cl9ydW5uaW5nX3Blcm1pbGxlGA4gASgNSAxSGWNvbXByZXNzb3JSdW5uaW5nUGVybWlsbGWIAQ'
+    'ESQwobY29tcHJlc3Nvcl9ibG9ja2VkX3Blcm1pbGxlGA8gASgNSA1SGWNvbXByZXNzb3JCbG9j'
+    'a2VkUGVybWlsbGWIAQESJgoMYWxhcm1zX2JlZ3VuGBAgASgNSA5SC2FsYXJtc0JlZ3VuiAEBEj'
+    'EKEm1ldGVyX2ltcG9ydGVkX213aBgRIAEoBEgPUhBtZXRlckltcG9ydGVkTXdoiAEBQhcKFV9v'
+    'dXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcGx5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2'
+    'NlbnRpZGVncmVlc0IhCh9fY2FsY3VsYXRlZF9zdXBwbHlfY2VudGlkZWdyZWVzQh0KG19ob3Rf'
+    'd2F0ZXJfdG9wX2NlbnRpZGVncmVlc0IbChlfb3V0ZG9vcl9taW5fY2VudGlkZWdyZWVzQhsKGV'
+    '9vdXRkb29yX21heF9jZW50aWRlZ3JlZXNCEQoPX2RlZ3JlZV9taW51dGVzQhQKEl9hZGRfb25f'
+    'aGVhdF93YXR0c0IZChdfc3BhY2VfaGVhdGluZ19wZXJtaWxsZUIVChNfaG90X3dhdGVyX3Blcm'
+    '1pbGxlQh0KG19wcm9kdWNpbmdfbm90aGluZ19wZXJtaWxsZUIeChxfY29tcHJlc3Nvcl9ydW5u'
+    'aW5nX3Blcm1pbGxlQh4KHF9jb21wcmVzc29yX2Jsb2NrZWRfcGVybWlsbGVCDwoNX2FsYXJtc1'
+    '9iZWd1bkIVChNfbWV0ZXJfaW1wb3J0ZWRfbXdo');
+
+@$core.Deprecated('Use plantHistoryDescriptor instead')
+const PlantHistory$json = {
+  '1': 'PlantHistory',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'kept_from',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'keptFrom'
+    },
+    {
+      '1': 'samples',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.PlantHistorySample',
+      '10': 'samples'
+    },
+    {
+      '1': 'resolution',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.RoomHistoryResolution',
+      '10': 'resolution'
+    },
+    {
+      '1': 'covered_from',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'coveredFrom'
+    },
+    {
+      '1': 'covered_to',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'coveredTo'
+    },
+  ],
+};
+
+/// Descriptor for `PlantHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List plantHistoryDescriptor = $convert.base64Decode(
+    'CgxQbGFudEhpc3RvcnkSGQoIcGxhbnRfaWQYASABKAlSB3BsYW50SWQSNwoJa2VwdF9mcm9tGA'
+    'IgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIa2VwdEZyb20SRAoHc2FtcGxlcxgD'
+    'IAMoCzIqLmt1c2ludGEuaW90LmNsaW1hdGUudjEuUGxhbnRIaXN0b3J5U2FtcGxlUgdzYW1wbG'
+    'VzEk0KCnJlc29sdXRpb24YBCABKA4yLS5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLlJvb21IaXN0'
+    'b3J5UmVzb2x1dGlvblIKcmVzb2x1dGlvbhI9Cgxjb3ZlcmVkX2Zyb20YBSABKAsyGi5nb29nbG'
+    'UucHJvdG9idWYuVGltZXN0YW1wUgtjb3ZlcmVkRnJvbRI5Cgpjb3ZlcmVkX3RvGAYgASgLMhou'
+    'Z29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJY292ZXJlZFRv');
+
 @$core.Deprecated('Use climatePeriodMeanDescriptor instead')
 const ClimatePeriodMean$json = {
   '1': 'ClimatePeriodMean',
