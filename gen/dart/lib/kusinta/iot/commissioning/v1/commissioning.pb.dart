@@ -1074,6 +1074,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     $core.bool? superseded,
     BindingRef? binding,
     $0.Timestamp? concludeBy,
+    $core.Iterable<TestEvidence>? evidence,
   }) {
     final result = create();
     if (testId != null) result.testId = testId;
@@ -1088,6 +1089,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     if (superseded != null) result.superseded = superseded;
     if (binding != null) result.binding = binding;
     if (concludeBy != null) result.concludeBy = concludeBy;
+    if (evidence != null) result.evidence.addAll(evidence);
     return result;
   }
 
@@ -1133,6 +1135,9 @@ class CommissioningTest extends $pb.GeneratedMessage {
         subBuilder: BindingRef.create)
     ..aOM<$0.Timestamp>(14, _omitFieldNames ? '' : 'concludeBy',
         subBuilder: $0.Timestamp.create)
+    ..pc<TestEvidence>(
+        15, _omitFieldNames ? '' : 'evidence', $pb.PbFieldType.PM,
+        subBuilder: TestEvidence.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1293,6 +1298,108 @@ class CommissioningTest extends $pb.GeneratedMessage {
   void clearConcludeBy() => $_clearField(14);
   @$pb.TagNumber(14)
   $0.Timestamp ensureConcludeBy() => $_ensure(11);
+
+  /// What the heat source reported while an OUTPUT_LEASE test held one of its plant's inputs
+  /// (heating.v1.HeatPumpControl: an SG Ready input or the add-on heat block), from the
+  /// plant's bound readings (device.v1.HeatSourceReadings) that arrived between the test's
+  /// first write and its end, in the order they arrived. Evidence for the person judging the
+  /// installation, never part of the verdict: the test passes on the output's own state. Empty
+  /// where none arrived, as a heat source read by polling may report less often than a test
+  /// lasts. The heat source's data, not a household's: kept with the test as its verdict is,
+  /// through a household handover and a wipe of people.
+  @$pb.TagNumber(15)
+  $pb.PbList<TestEvidence> get evidence => $_getList(12);
+}
+
+/// One reading a heat source reported during a test (CommissioningTest.evidence).
+class TestEvidence extends $pb.GeneratedMessage {
+  factory TestEvidence({
+    $core.String? reading,
+    $fixnum.Int64? value,
+    $0.Timestamp? observedAt,
+  }) {
+    final result = create();
+    if (reading != null) result.reading = reading;
+    if (value != null) result.value = value;
+    if (observedAt != null) result.observedAt = observedAt;
+    return result;
+  }
+
+  TestEvidence._();
+
+  factory TestEvidence.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TestEvidence.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TestEvidence',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'reading')
+    ..a<$fixnum.Int64>(2, _omitFieldNames ? '' : 'value', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOM<$0.Timestamp>(3, _omitFieldNames ? '' : 'observedAt',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TestEvidence clone() => TestEvidence()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TestEvidence copyWith(void Function(TestEvidence) updates) =>
+      super.copyWith((message) => updates(message as TestEvidence))
+          as TestEvidence;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TestEvidence create() => TestEvidence._();
+  @$core.override
+  TestEvidence createEmptyInstance() => create();
+  static $pb.PbList<TestEvidence> createRepeated() =>
+      $pb.PbList<TestEvidence>();
+  @$core.pragma('dart2js:noInline')
+  static TestEvidence getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TestEvidence>(create);
+  static TestEvidence? _defaultInstance;
+
+  /// The reading, by its field name in device.v1.HeatSourceReadings, e.g. "compressor_state",
+  /// "add_on_heat_watts".
+  @$pb.TagNumber(1)
+  $core.String get reading => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set reading($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasReading() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReading() => $_clearField(1);
+
+  /// Its value, in that field's units; an enum-valued reading by its number, and a yes-or-no
+  /// reading (e.g. "alarm_active") as 1 for true, 0 for false.
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get value => $_getI64(1);
+  @$pb.TagNumber(2)
+  set value($fixnum.Int64 value) => $_setInt64(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearValue() => $_clearField(2);
+
+  /// When the heat source reported it.
+  @$pb.TagNumber(3)
+  $0.Timestamp get observedAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set observedAt($0.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasObservedAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearObservedAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.Timestamp ensureObservedAt() => $_ensure(2);
 }
 
 /// A space's commissioning, in reply to ListCommissioning.

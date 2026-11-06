@@ -592,8 +592,30 @@ message CommissioningTest {
   // counts from when it received it, not on its own clock against this time.
   google.protobuf.Timestamp conclude_by = 14;
 
+  // What the heat source reported while an OUTPUT_LEASE test held one of its plant's inputs
+  // (heating.v1.HeatPumpControl: an SG Ready input or the add-on heat block), from the
+  // plant's bound readings (device.v1.HeatSourceReadings) that arrived between the test's
+  // first write and its end, in the order they arrived. Evidence for the person judging the
+  // installation, never part of the verdict: the test passes on the output's own state. Empty
+  // where none arrived, as a heat source read by polling may report less often than a test
+  // lasts. The heat source's data, not a household's: kept with the test as its verdict is,
+  // through a household handover and a wipe of people.
+  repeated TestEvidence evidence = 15;
+
   reserved 3 to 4;
   reserved "record_id", "field";
+}
+
+// One reading a heat source reported during a test (CommissioningTest.evidence).
+message TestEvidence {
+  // The reading, by its field name in device.v1.HeatSourceReadings, e.g. "compressor_state",
+  // "add_on_heat_watts".
+  string reading = 1;
+  // Its value, in that field's units; an enum-valued reading by its number, and a yes-or-no
+  // reading (e.g. "alarm_active") as 1 for true, 0 for false.
+  sint64 value = 2;
+  // When the heat source reported it.
+  google.protobuf.Timestamp observed_at = 3;
 }
 
 // A space's commissioning, in reply to ListCommissioning.

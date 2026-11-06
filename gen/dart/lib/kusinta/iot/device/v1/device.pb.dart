@@ -751,6 +751,7 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     $core.int? degreeMinutes,
     $core.bool? alarmActive,
     $core.int? alarmCode,
+    $core.int? addOnHeatWatts,
   }) {
     final result = create();
     if (outdoorCentidegrees != null)
@@ -770,6 +771,7 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     if (degreeMinutes != null) result.degreeMinutes = degreeMinutes;
     if (alarmActive != null) result.alarmActive = alarmActive;
     if (alarmCode != null) result.alarmCode = alarmCode;
+    if (addOnHeatWatts != null) result.addOnHeatWatts = addOnHeatWatts;
     return result;
   }
 
@@ -806,6 +808,8 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
         9, _omitFieldNames ? '' : 'degreeMinutes', $pb.PbFieldType.OS3)
     ..aOB(10, _omitFieldNames ? '' : 'alarmActive')
     ..a<$core.int>(11, _omitFieldNames ? '' : 'alarmCode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        12, _omitFieldNames ? '' : 'addOnHeatWatts', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -963,6 +967,18 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   $core.bool hasAlarmCode() => $_has(10);
   @$pb.TagNumber(11)
   void clearAlarmCode() => $_clearField(11);
+
+  /// The power its internal electric add-on heat (an immersion heater or an electric boiler
+  /// inside the heat source) draws now, in watts: 0 while it is off or blocked. Absent for a
+  /// heat source without one, or whose connector cannot read it.
+  @$pb.TagNumber(12)
+  $core.int get addOnHeatWatts => $_getIZ(11);
+  @$pb.TagNumber(12)
+  set addOnHeatWatts($core.int value) => $_setUnsignedInt32(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasAddOnHeatWatts() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearAddOnHeatWatts() => $_clearField(12);
 }
 
 /// A device's radio link, as its connector reports it.

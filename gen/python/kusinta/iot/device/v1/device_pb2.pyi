@@ -32,6 +32,7 @@ class CompressorState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     COMPRESSOR_STATE_STARTING: _ClassVar[CompressorState]
     COMPRESSOR_STATE_RUNNING: _ClassVar[CompressorState]
     COMPRESSOR_STATE_STOPPING: _ClassVar[CompressorState]
+    COMPRESSOR_STATE_BLOCKED: _ClassVar[CompressorState]
 
 class RadioQuality(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -51,6 +52,7 @@ COMPRESSOR_STATE_STOPPED: CompressorState
 COMPRESSOR_STATE_STARTING: CompressorState
 COMPRESSOR_STATE_RUNNING: CompressorState
 COMPRESSOR_STATE_STOPPING: CompressorState
+COMPRESSOR_STATE_BLOCKED: CompressorState
 RADIO_QUALITY_UNSPECIFIED: RadioQuality
 RADIO_QUALITY_GOOD: RadioQuality
 RADIO_QUALITY_FAIR: RadioQuality
@@ -128,7 +130,7 @@ class Device(_message.Message):
     def __init__(self, descriptor: _Optional[_Union[_descriptor_pb2.DeviceDescriptor, _Mapping]] = ..., endpoints: _Optional[_Iterable[_Union[Endpoint, _Mapping]]] = ..., min_write_interval_seconds: _Optional[int] = ..., max_write_delay_seconds: _Optional[int] = ..., last_seen: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_updated: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class HeatSourceReadings(_message.Message):
-    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees", "producing", "compressor_state", "degree_minutes", "alarm_active", "alarm_code")
+    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees", "producing", "compressor_state", "degree_minutes", "alarm_active", "alarm_code", "add_on_heat_watts")
     OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     RETURN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
@@ -140,6 +142,7 @@ class HeatSourceReadings(_message.Message):
     DEGREE_MINUTES_FIELD_NUMBER: _ClassVar[int]
     ALARM_ACTIVE_FIELD_NUMBER: _ClassVar[int]
     ALARM_CODE_FIELD_NUMBER: _ClassVar[int]
+    ADD_ON_HEAT_WATTS_FIELD_NUMBER: _ClassVar[int]
     outdoor_centidegrees: int
     supply_centidegrees: int
     return_centidegrees: int
@@ -151,7 +154,8 @@ class HeatSourceReadings(_message.Message):
     degree_minutes: int
     alarm_active: bool
     alarm_code: int
-    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., producing: _Optional[int] = ..., compressor_state: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., alarm_active: _Optional[bool] = ..., alarm_code: _Optional[int] = ...) -> None: ...
+    add_on_heat_watts: int
+    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., producing: _Optional[int] = ..., compressor_state: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., alarm_active: _Optional[bool] = ..., alarm_code: _Optional[int] = ..., add_on_heat_watts: _Optional[int] = ...) -> None: ...
 
 class RadioLink(_message.Message):
     __slots__ = ("quality", "rssi_dbm", "snr_db")

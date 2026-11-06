@@ -89,16 +89,23 @@ class CompressorState extends $pb.ProtobufEnum {
   static const CompressorState COMPRESSOR_STATE_STOPPING =
       CompressorState._(4, _omitEnumNames ? '' : 'COMPRESSOR_STATE_STOPPING');
 
+  /// Stopped and held off: the heat source says its compressor is blocked, for whatever reason
+  /// it has (an external input, a low outdoor temperature, its own restart delay, an alarm).
+  /// Not a statement of why.
+  static const CompressorState COMPRESSOR_STATE_BLOCKED =
+      CompressorState._(5, _omitEnumNames ? '' : 'COMPRESSOR_STATE_BLOCKED');
+
   static const $core.List<CompressorState> values = <CompressorState>[
     COMPRESSOR_STATE_UNSPECIFIED,
     COMPRESSOR_STATE_STOPPED,
     COMPRESSOR_STATE_STARTING,
     COMPRESSOR_STATE_RUNNING,
     COMPRESSOR_STATE_STOPPING,
+    COMPRESSOR_STATE_BLOCKED,
   ];
 
   static final $core.List<CompressorState?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 5);
   static CompressorState? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

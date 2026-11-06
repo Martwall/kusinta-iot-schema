@@ -494,6 +494,15 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
    * @generated from field: optional uint32 alarm_code = 11;
    */
   alarmCode?: number | undefined;
+
+  /**
+   * The power its internal electric add-on heat (an immersion heater or an electric boiler
+   * inside the heat source) draws now, in watts: 0 while it is off or blocked. Absent for a
+   * heat source without one, or whose connector cannot read it.
+   *
+   * @generated from field: optional uint32 add_on_heat_watts = 12;
+   */
+  addOnHeatWatts?: number | undefined;
 };
 
 /**
@@ -648,6 +657,15 @@ export enum CompressorState {
    * @generated from enum value: COMPRESSOR_STATE_STOPPING = 4;
    */
   STOPPING = 4,
+
+  /**
+   * Stopped and held off: the heat source says its compressor is blocked, for whatever reason
+   * it has (an external input, a low outdoor temperature, its own restart delay, an alarm).
+   * Not a statement of why.
+   *
+   * @generated from enum value: COMPRESSOR_STATE_BLOCKED = 5;
+   */
+  BLOCKED = 5,
 }
 
 /**

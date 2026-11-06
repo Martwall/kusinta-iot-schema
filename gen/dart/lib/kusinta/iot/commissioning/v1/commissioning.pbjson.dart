@@ -725,6 +725,14 @@ const CommissioningTest$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'concludeBy'
     },
+    {
+      '1': 'evidence',
+      '3': 15,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.TestEvidence',
+      '10': 'evidence'
+    },
   ],
   '9': [
     {'1': 3, '2': 5},
@@ -746,8 +754,32 @@ final $typed_data.Uint8List commissioningTestDescriptor = $convert.base64Decode(
     'gLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIKZmluaXNoZWRBdBJICgpwcm92ZW5hbmNl'
     'GAsgASgLMigua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Qcm92ZW5hbmNlUgpwcm92ZW'
     '5hbmNlEh4KCnN1cGVyc2VkZWQYDCABKAhSCnN1cGVyc2VkZWQSOwoLY29uY2x1ZGVfYnkYDiAB'
-    'KAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgpjb25jbHVkZUJ5SgQIAxAFUglyZWNvcm'
-    'RfaWRSBWZpZWxk');
+    'KAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgpjb25jbHVkZUJ5EkYKCGV2aWRlbmNlGA'
+    '8gAygLMioua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5UZXN0RXZpZGVuY2VSCGV2aWRl'
+    'bmNlSgQIAxAFUglyZWNvcmRfaWRSBWZpZWxk');
+
+@$core.Deprecated('Use testEvidenceDescriptor instead')
+const TestEvidence$json = {
+  '1': 'TestEvidence',
+  '2': [
+    {'1': 'reading', '3': 1, '4': 1, '5': 9, '10': 'reading'},
+    {'1': 'value', '3': 2, '4': 1, '5': 18, '10': 'value'},
+    {
+      '1': 'observed_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'observedAt'
+    },
+  ],
+};
+
+/// Descriptor for `TestEvidence`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List testEvidenceDescriptor = $convert.base64Decode(
+    'CgxUZXN0RXZpZGVuY2USGAoHcmVhZGluZxgBIAEoCVIHcmVhZGluZxIUCgV2YWx1ZRgCIAEoEl'
+    'IFdmFsdWUSOwoLb2JzZXJ2ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w'
+    'UgpvYnNlcnZlZEF0');
 
 @$core.Deprecated('Use commissioningProfileDescriptor instead')
 const CommissioningProfile$json = {
