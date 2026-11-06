@@ -496,8 +496,10 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
    * first write and its end, in the order they arrived. Evidence for the person judging the
    * installation, never part of the verdict: the test passes on the output's own state. Empty
    * where none arrived, as a heat source read by polling may report less often than a test
-   * lasts. The heat source's data, not a household's: kept with the test as its verdict is,
-   * through a household handover and a wipe of people.
+   * lasts. A heat source's readings with their times, which in a home are the household's
+   * (never given to service): told only to whoever is shown the test's provenance.by — outside
+   * homes, the home's residents, and whoever ran the test — and erased with the home's wipe
+   * and with a wipe of people, while the verdict stays.
    *
    * @generated from field: repeated kusinta.iot.commissioning.v1.TestEvidence evidence = 15;
    */
