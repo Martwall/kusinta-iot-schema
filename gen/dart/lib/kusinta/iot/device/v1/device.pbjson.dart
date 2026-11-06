@@ -46,6 +46,7 @@ const CompressorState$json = {
     {'1': 'COMPRESSOR_STATE_STARTING', '2': 2},
     {'1': 'COMPRESSOR_STATE_RUNNING', '2': 3},
     {'1': 'COMPRESSOR_STATE_STOPPING', '2': 4},
+    {'1': 'COMPRESSOR_STATE_BLOCKED', '2': 5},
   ],
 };
 
@@ -54,7 +55,7 @@ final $typed_data.Uint8List compressorStateDescriptor = $convert.base64Decode(
     'Cg9Db21wcmVzc29yU3RhdGUSIAocQ09NUFJFU1NPUl9TVEFURV9VTlNQRUNJRklFRBAAEhwKGE'
     'NPTVBSRVNTT1JfU1RBVEVfU1RPUFBFRBABEh0KGUNPTVBSRVNTT1JfU1RBVEVfU1RBUlRJTkcQ'
     'AhIcChhDT01QUkVTU09SX1NUQVRFX1JVTk5JTkcQAxIdChlDT01QUkVTU09SX1NUQVRFX1NUT1'
-    'BQSU5HEAQ=');
+    'BQSU5HEAQSHAoYQ09NUFJFU1NPUl9TVEFURV9CTE9DS0VEEAU=');
 
 @$core.Deprecated('Use radioQualityDescriptor instead')
 const RadioQuality$json = {
@@ -532,6 +533,16 @@ const HeatSourceReadings$json = {
       '10': 'alarmCode',
       '17': true
     },
+    {
+      '1': 'add_on_heat_watts',
+      '3': 12,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 11,
+      '10': 'addOnHeatWatts',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -546,6 +557,7 @@ const HeatSourceReadings$json = {
     {'1': '_degree_minutes'},
     {'1': '_alarm_active'},
     {'1': '_alarm_code'},
+    {'1': '_add_on_heat_watts'},
   ],
 };
 
@@ -567,12 +579,14 @@ final $typed_data.Uint8List heatSourceReadingsDescriptor = $convert.base64Decode
     'Vzc29yU3RhdGWIAQESQgoOZGVncmVlX21pbnV0ZXMYCSABKBFCFqK1GA5kZWdyZWVfbWludXRl'
     'c9C1GAVICFINZGVncmVlTWludXRlc4gBARI8CgxhbGFybV9hY3RpdmUYCiABKAhCFKK1GAxhbG'
     'FybV9hY3RpdmXQtRgFSAlSC2FsYXJtQWN0aXZliAEBEjYKCmFsYXJtX2NvZGUYCyABKA1CEqK1'
-    'GAphbGFybV9jb2Rl0LUYBUgKUglhbGFybUNvZGWIAQE6F6q1GBNrdXNpbnRhLmhlYXRfc291cm'
-    'NlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcGx5X2NlbnRpZGVncmVlc0IWChRf'
-    'cmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdGVyX3RvcF9jZW50aWRlZ3JlZXNCIgogX2'
-    'hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNCIQofX2NhbGN1bGF0ZWRfc3VwcGx5X2Nl'
-    'bnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb21wcmVzc29yX3N0YXRlQhEKD19kZWdyZW'
-    'VfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19hbGFybV9jb2Rl');
+    'GAphbGFybV9jb2Rl0LUYBUgKUglhbGFybUNvZGWIAQESSQoRYWRkX29uX2hlYXRfd2F0dHMYDC'
+    'ABKA1CGaK1GBFhZGRfb25faGVhdF93YXR0c9C1GAVIC1IOYWRkT25IZWF0V2F0dHOIAQE6F6q1'
+    'GBNrdXNpbnRhLmhlYXRfc291cmNlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcG'
+    'x5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdGVyX3Rv'
+    'cF9jZW50aWRlZ3JlZXNCIgogX2hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNCIQofX2'
+    'NhbGN1bGF0ZWRfc3VwcGx5X2NlbnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb21wcmVz'
+    'c29yX3N0YXRlQhEKD19kZWdyZWVfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19hbGFybV'
+    '9jb2RlQhQKEl9hZGRfb25faGVhdF93YXR0cw==');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

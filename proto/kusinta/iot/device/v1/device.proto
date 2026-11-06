@@ -332,6 +332,14 @@ message HeatSourceReadings {
     (kusinta.iot.vendor.v1.vendor_attribute) = "alarm_code",
     (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
   ];
+
+  // The power its internal electric add-on heat (an immersion heater or an electric boiler
+  // inside the heat source) draws now, in watts: 0 while it is off or blocked. Absent for a
+  // heat source without one, or whose connector cannot read it.
+  optional uint32 add_on_heat_watts = 12 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "add_on_heat_watts",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
 }
 
 // The value set of HeatSourceReadings.producing: what a heat source is producing now. Not a
@@ -372,6 +380,10 @@ enum CompressorState {
   COMPRESSOR_STATE_STARTING = 2;
   COMPRESSOR_STATE_RUNNING = 3;
   COMPRESSOR_STATE_STOPPING = 4;
+  // Stopped and held off: the heat source says its compressor is blocked, for whatever reason
+  // it has (an external input, a low outdoor temperature, its own restart delay, an alarm).
+  // Not a statement of why.
+  COMPRESSOR_STATE_BLOCKED = 5;
 }
 
 // The value set of RadioLink.quality: how well a link is doing, as the device's

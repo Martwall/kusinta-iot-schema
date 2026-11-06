@@ -488,6 +488,20 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
    * @generated from field: google.protobuf.Timestamp conclude_by = 14;
    */
   concludeBy?: Timestamp | undefined;
+
+  /**
+   * What the heat source reported while an OUTPUT_LEASE test held one of its plant's inputs
+   * (heating.v1.HeatPumpControl: an SG Ready input or the add-on heat block), from the
+   * plant's bound readings (device.v1.HeatSourceReadings) that arrived between the test's
+   * first write and its end, in the order they arrived. Evidence for the person judging the
+   * installation, never part of the verdict: the test passes on the output's own state. Empty
+   * where none arrived, as a heat source read by polling may report less often than a test
+   * lasts. The heat source's data, not a household's: kept with the test as its verdict is,
+   * through a household handover and a wipe of people.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.TestEvidence evidence = 15;
+   */
+  evidence: TestEvidence[];
 };
 
 /**
@@ -495,6 +509,41 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
  * Use `create(CommissioningTestSchema)` to create a new message.
  */
 export declare const CommissioningTestSchema: GenMessage<CommissioningTest>;
+
+/**
+ * One reading a heat source reported during a test (CommissioningTest.evidence).
+ *
+ * @generated from message kusinta.iot.commissioning.v1.TestEvidence
+ */
+export declare type TestEvidence = Message<"kusinta.iot.commissioning.v1.TestEvidence"> & {
+  /**
+   * The reading, by its field name in device.v1.HeatSourceReadings, e.g. "compressor_state",
+   * "add_on_heat_watts".
+   *
+   * @generated from field: string reading = 1;
+   */
+  reading: string;
+
+  /**
+   * Its value, in that field's units; an enum-valued reading by its number.
+   *
+   * @generated from field: sint64 value = 2;
+   */
+  value: bigint;
+
+  /**
+   * When the heat source reported it.
+   *
+   * @generated from field: google.protobuf.Timestamp observed_at = 3;
+   */
+  observedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.TestEvidence.
+ * Use `create(TestEvidenceSchema)` to create a new message.
+ */
+export declare const TestEvidenceSchema: GenMessage<TestEvidence>;
 
 /**
  * A space's commissioning, in reply to ListCommissioning.
