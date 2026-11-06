@@ -885,8 +885,8 @@ message ListHeating {
 //                           leave the contact where its role rests.
 //   "TEST_RUNNING"          a put that would change what a running commissioning test drives
 //                           or judges: an output binding of a record whose output it drives,
-//                           or a floor zone's rooms or control room while a test runs on the
-//                           zone or on its circuit (PUMP_ALL_ZONES_OFF). metadata "record_id"
+//                           or a floor zone's rooms, control room or circuit while a test runs
+//                           on the zone or on a circuit it leaves or joins (PUMP_ALL_ZONES_OFF). metadata "record_id"
 //                           names the test's record. A name, an area share or a supply cap
 //                           may change meanwhile.
 //
