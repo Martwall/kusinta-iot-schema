@@ -717,6 +717,14 @@ const CommissioningTest$json = {
       '10': 'provenance'
     },
     {'1': 'superseded', '3': 12, '4': 1, '5': 8, '10': 'superseded'},
+    {
+      '1': 'conclude_by',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'concludeBy'
+    },
   ],
   '9': [
     {'1': 3, '2': 5},
@@ -737,8 +745,9 @@ final $typed_data.Uint8List commissioningTestDescriptor = $convert.base64Decode(
     'MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIGZW5kc0F0EjsKC2ZpbmlzaGVkX2F0GAogAS'
     'gLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIKZmluaXNoZWRBdBJICgpwcm92ZW5hbmNl'
     'GAsgASgLMigua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Qcm92ZW5hbmNlUgpwcm92ZW'
-    '5hbmNlEh4KCnN1cGVyc2VkZWQYDCABKAhSCnN1cGVyc2VkZWRKBAgDEAVSCXJlY29yZF9pZFIF'
-    'ZmllbGQ=');
+    '5hbmNlEh4KCnN1cGVyc2VkZWQYDCABKAhSCnN1cGVyc2VkZWQSOwoLY29uY2x1ZGVfYnkYDiAB'
+    'KAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgpjb25jbHVkZUJ5SgQIAxAFUglyZWNvcm'
+    'RfaWRSBWZpZWxk');
 
 @$core.Deprecated('Use commissioningProfileDescriptor instead')
 const CommissioningProfile$json = {

@@ -474,6 +474,20 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
    * @generated from field: bool superseded = 12;
    */
   superseded: boolean;
+
+  /**
+   * For a test an installer concludes (PUMP_ALL_ZONES_OFF), while it runs: the last moment a
+   * verdict is taken (webrtc.v1.ConcludeCommissioningTest), on the gateway's clock. At it,
+   * without a verdict, the test ends ABORTED and its outputs start returning to their normal
+   * control, so that every write it made, leased to end by ends_at, can still end by then:
+   * conclude_by comes before ends_at, by as much as its slowest output's device needs. Never
+   * later than the end of the commissioning grant it runs under. Fixed when the test starts.
+   * Unset for the other kinds, and once the test has ended. A client counting down to it
+   * counts from when it received it, not on its own clock against this time.
+   *
+   * @generated from field: google.protobuf.Timestamp conclude_by = 14;
+   */
+  concludeBy?: Timestamp | undefined;
 };
 
 /**
@@ -1237,7 +1251,8 @@ export enum TestState {
   FAILED = 3,
 
   /**
-   * Stopped by a caller, or ended at ends_at without a verdict. Proves nothing.
+   * Stopped by a caller; ended at ends_at; or, for a test an installer concludes
+   * (PUMP_ALL_ZONES_OFF), ended at conclude_by without a verdict. Proves nothing.
    *
    * @generated from enum value: TEST_STATE_ABORTED = 4;
    */

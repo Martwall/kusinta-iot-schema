@@ -1073,6 +1073,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     Provenance? provenance,
     $core.bool? superseded,
     BindingRef? binding,
+    $0.Timestamp? concludeBy,
   }) {
     final result = create();
     if (testId != null) result.testId = testId;
@@ -1086,6 +1087,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     if (provenance != null) result.provenance = provenance;
     if (superseded != null) result.superseded = superseded;
     if (binding != null) result.binding = binding;
+    if (concludeBy != null) result.concludeBy = concludeBy;
     return result;
   }
 
@@ -1129,6 +1131,8 @@ class CommissioningTest extends $pb.GeneratedMessage {
     ..aOB(12, _omitFieldNames ? '' : 'superseded')
     ..aOM<BindingRef>(13, _omitFieldNames ? '' : 'binding',
         subBuilder: BindingRef.create)
+    ..aOM<$0.Timestamp>(14, _omitFieldNames ? '' : 'concludeBy',
+        subBuilder: $0.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1270,6 +1274,25 @@ class CommissioningTest extends $pb.GeneratedMessage {
   void clearBinding() => $_clearField(13);
   @$pb.TagNumber(13)
   BindingRef ensureBinding() => $_ensure(10);
+
+  /// For a test an installer concludes (PUMP_ALL_ZONES_OFF), while it runs: the last moment a
+  /// verdict is taken (webrtc.v1.ConcludeCommissioningTest), on the gateway's clock. At it,
+  /// without a verdict, the test ends ABORTED and its outputs start returning to their normal
+  /// control, so that every write it made, leased to end by ends_at, can still end by then:
+  /// conclude_by comes before ends_at, by as much as its slowest output's device needs. Never
+  /// later than the end of the commissioning grant it runs under. Fixed when the test starts.
+  /// Unset for the other kinds, and once the test has ended. A client counting down to it
+  /// counts from when it received it, not on its own clock against this time.
+  @$pb.TagNumber(14)
+  $0.Timestamp get concludeBy => $_getN(11);
+  @$pb.TagNumber(14)
+  set concludeBy($0.Timestamp value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasConcludeBy() => $_has(11);
+  @$pb.TagNumber(14)
+  void clearConcludeBy() => $_clearField(14);
+  @$pb.TagNumber(14)
+  $0.Timestamp ensureConcludeBy() => $_ensure(11);
 }
 
 /// A space's commissioning, in reply to ListCommissioning.

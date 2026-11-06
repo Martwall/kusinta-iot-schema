@@ -368,7 +368,8 @@ class TestState extends $pb.ProtobufEnum {
   static const TestState TEST_STATE_FAILED =
       TestState._(3, _omitEnumNames ? '' : 'TEST_STATE_FAILED');
 
-  /// Stopped by a caller, or ended at ends_at without a verdict. Proves nothing.
+  /// Stopped by a caller; ended at ends_at; or, for a test an installer concludes
+  /// (PUMP_ALL_ZONES_OFF), ended at conclude_by without a verdict. Proves nothing.
   static const TestState TEST_STATE_ABORTED =
       TestState._(4, _omitEnumNames ? '' : 'TEST_STATE_ABORTED');
 
