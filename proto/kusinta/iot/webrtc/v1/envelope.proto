@@ -224,6 +224,7 @@ message ManagementResult {
     HouseholdHandover household_handover = 24; // start_household_handover
     HouseholdHandovers household_handovers = 25; // list_household_handovers
     HouseholdExport household_export = 26; // export_household_data
+    kusinta.iot.climate.v1.PlantHistory plant_history = 27; // get_plant_history
   }
 }
 

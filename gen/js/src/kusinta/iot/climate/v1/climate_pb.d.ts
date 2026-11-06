@@ -857,6 +857,190 @@ export declare type RoomHistory = Message<"kusinta.iot.climate.v1.RoomHistory"> 
 export declare const RoomHistorySchema: GenMessage<RoomHistory>;
 
 /**
+ * One bucket of a heat source's history (PlantHistory), of the length PlantHistory.resolution
+ * names, from its plant's readings (device.v1.HeatSourceReadings, read from
+ * heating.v1.HeatingPlant.readings_device_id while that device is bound to it). Every reading
+ * is optional: absent means nothing fresh was known for that bucket, never zero.
+ *
+ * A mean or a share is weighted by time: each reading counts for as long as it held within the
+ * bucket, from its report until the next, carried forward no longer than a reading stays fresh;
+ * a bucket whose only reading has gone stale knows nothing of it. An hour is made of its quarter
+ * hours as RoomHistorySample's are: a mean of the quarter hours' means, a sum of their sums, a
+ * last value its last quarter hour's.
+ *
+ * @generated from message kusinta.iot.climate.v1.PlantHistorySample
+ */
+export declare type PlantHistorySample = Message<"kusinta.iot.climate.v1.PlantHistorySample"> & {
+  /**
+   * The start of the bucket.
+   *
+   * @generated from field: google.protobuf.Timestamp at = 1;
+   */
+  at?: Timestamp | undefined;
+
+  /**
+   * Means over the bucket, in centidegrees, of the readings of the same names.
+   *
+   * @generated from field: optional sint32 outdoor_centidegrees = 2;
+   */
+  outdoorCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 supply_centidegrees = 3;
+   */
+  supplyCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 return_centidegrees = 4;
+   */
+  returnCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 calculated_supply_centidegrees = 5;
+   */
+  calculatedSupplyCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 hot_water_top_centidegrees = 6;
+   */
+  hotWaterTopCentidegrees?: number | undefined;
+
+  /**
+   * The lowest and highest outdoor reading held within the bucket, in centidegrees. An hour:
+   * the lowest and highest of its quarter hours'.
+   *
+   * @generated from field: optional sint32 outdoor_min_centidegrees = 7;
+   */
+  outdoorMinCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 outdoor_max_centidegrees = 8;
+   */
+  outdoorMaxCentidegrees?: number | undefined;
+
+  /**
+   * The last degree-minutes reading held in the bucket.
+   *
+   * @generated from field: optional sint32 degree_minutes = 9;
+   */
+  degreeMinutes?: number | undefined;
+
+  /**
+   * The mean power of the internal add-on heat over the bucket, in watts.
+   *
+   * @generated from field: optional uint32 add_on_heat_watts = 10;
+   */
+  addOnHeatWatts?: number | undefined;
+
+  /**
+   * Shares of the bucket, in thousandths, during which the heat source reported producing
+   * space heating, producing hot water, producing nothing (device.v1.HeatSourceProduction), its
+   * compressor running, and its compressor blocked (device.v1.CompressorState). Each over the
+   * part of the bucket the reading was known for; absent where it was never known.
+   *
+   * @generated from field: optional uint32 space_heating_permille = 11;
+   */
+  spaceHeatingPermille?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 hot_water_permille = 12;
+   */
+  hotWaterPermille?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 producing_nothing_permille = 13;
+   */
+  producingNothingPermille?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 compressor_running_permille = 14;
+   */
+  compressorRunningPermille?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 compressor_blocked_permille = 15;
+   */
+  compressorBlockedPermille?: number | undefined;
+
+  /**
+   * How many times an alarm began (alarm_active turning true) within the bucket. The alarm's
+   * own code is never kept here.
+   *
+   * @generated from field: optional uint32 alarms_begun = 16;
+   */
+  alarmsBegun?: number | undefined;
+
+  /**
+   * The energy counter of the plant's meter (heating.v1.HeatingPlant.meter) as last read in the
+   * bucket, imported, in milliwatt-hours: with the heat delivered, what a coefficient of
+   * performance is worked out from. Absent where the plant binds no meter.
+   *
+   * @generated from field: optional uint64 meter_imported_mwh = 17;
+   */
+  meterImportedMwh?: bigint | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.PlantHistorySample.
+ * Use `create(PlantHistorySampleSchema)` to create a new message.
+ */
+export declare const PlantHistorySampleSchema: GenMessage<PlantHistorySample>;
+
+/**
+ * A heat source's history at one resolution, in reply to webrtc.v1.GetPlantHistory, read as
+ * RoomHistory is: the same half-open range, kept_from, covered_from and covered_to, the same
+ * cap and paging.
+ *
+ * Whose it is is fixed when each bucket is made, by where the plant was then: a plant in a
+ * home is its household's, and its buckets are read by that home's residents only, from the
+ * start of their current residency, and erased with the home's wipe and its household's Clear
+ * history (webrtc.v1 household.proto, WIPE; ClearClimateHistory); a plant outside homes is the
+ * building's, read by the property owner and the gateway administrators. A bucket made while
+ * the plant was in one place is never read as of another, wherever the plant is now.
+ *
+ * @generated from message kusinta.iot.climate.v1.PlantHistory
+ */
+export declare type PlantHistory = Message<"kusinta.iot.climate.v1.PlantHistory"> & {
+  /**
+   * The plant (heating.v1.HeatingPlant.plant_id).
+   *
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp kept_from = 2;
+   */
+  keptFrom?: Timestamp | undefined;
+
+  /**
+   * @generated from field: repeated kusinta.iot.climate.v1.PlantHistorySample samples = 3;
+   */
+  samples: PlantHistorySample[];
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
+   */
+  resolution: RoomHistoryResolution;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp covered_from = 5;
+   */
+  coveredFrom?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp covered_to = 6;
+   */
+  coveredTo?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.PlantHistory.
+ * Use `create(PlantHistorySchema)` to create a new message.
+ */
+export declare const PlantHistorySchema: GenMessage<PlantHistory>;
+
+/**
  * An apartment's climate over one period.
  *
  * Each room's mean is taken over the quarter hours of the period in which it was in this

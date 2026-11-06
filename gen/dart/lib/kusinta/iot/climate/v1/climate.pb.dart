@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $0;
@@ -1754,6 +1755,453 @@ class RoomHistory extends $pb.GeneratedMessage {
   /// An answer is capped exactly when covered_from is later than kept_from and than the
   /// from_time asked for, if one was. The app asks for the next page with the same from_time,
   /// this answer's resolution, and to_time = covered_from, until an answer is not capped.
+  @$pb.TagNumber(5)
+  $0.Timestamp get coveredFrom => $_getN(4);
+  @$pb.TagNumber(5)
+  set coveredFrom($0.Timestamp value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCoveredFrom() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCoveredFrom() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $0.Timestamp ensureCoveredFrom() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $0.Timestamp get coveredTo => $_getN(5);
+  @$pb.TagNumber(6)
+  set coveredTo($0.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCoveredTo() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCoveredTo() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $0.Timestamp ensureCoveredTo() => $_ensure(5);
+}
+
+/// One bucket of a heat source's history (PlantHistory), of the length PlantHistory.resolution
+/// names, from its plant's readings (device.v1.HeatSourceReadings, read from
+/// heating.v1.HeatingPlant.readings_device_id while that device is bound to it). Every reading
+/// is optional: absent means nothing fresh was known for that bucket, never zero.
+///
+/// A mean or a share is weighted by time: each reading counts for as long as it held within the
+/// bucket, from its report until the next, carried forward no longer than a reading stays fresh;
+/// a bucket whose only reading has gone stale knows nothing of it. An hour is made of its quarter
+/// hours as RoomHistorySample's are: a mean of the quarter hours' means, a sum of their sums, a
+/// last value its last quarter hour's.
+class PlantHistorySample extends $pb.GeneratedMessage {
+  factory PlantHistorySample({
+    $0.Timestamp? at,
+    $core.int? outdoorCentidegrees,
+    $core.int? supplyCentidegrees,
+    $core.int? returnCentidegrees,
+    $core.int? calculatedSupplyCentidegrees,
+    $core.int? hotWaterTopCentidegrees,
+    $core.int? outdoorMinCentidegrees,
+    $core.int? outdoorMaxCentidegrees,
+    $core.int? degreeMinutes,
+    $core.int? addOnHeatWatts,
+    $core.int? spaceHeatingPermille,
+    $core.int? hotWaterPermille,
+    $core.int? producingNothingPermille,
+    $core.int? compressorRunningPermille,
+    $core.int? compressorBlockedPermille,
+    $core.int? alarmsBegun,
+    $fixnum.Int64? meterImportedMwh,
+  }) {
+    final result = create();
+    if (at != null) result.at = at;
+    if (outdoorCentidegrees != null)
+      result.outdoorCentidegrees = outdoorCentidegrees;
+    if (supplyCentidegrees != null)
+      result.supplyCentidegrees = supplyCentidegrees;
+    if (returnCentidegrees != null)
+      result.returnCentidegrees = returnCentidegrees;
+    if (calculatedSupplyCentidegrees != null)
+      result.calculatedSupplyCentidegrees = calculatedSupplyCentidegrees;
+    if (hotWaterTopCentidegrees != null)
+      result.hotWaterTopCentidegrees = hotWaterTopCentidegrees;
+    if (outdoorMinCentidegrees != null)
+      result.outdoorMinCentidegrees = outdoorMinCentidegrees;
+    if (outdoorMaxCentidegrees != null)
+      result.outdoorMaxCentidegrees = outdoorMaxCentidegrees;
+    if (degreeMinutes != null) result.degreeMinutes = degreeMinutes;
+    if (addOnHeatWatts != null) result.addOnHeatWatts = addOnHeatWatts;
+    if (spaceHeatingPermille != null)
+      result.spaceHeatingPermille = spaceHeatingPermille;
+    if (hotWaterPermille != null) result.hotWaterPermille = hotWaterPermille;
+    if (producingNothingPermille != null)
+      result.producingNothingPermille = producingNothingPermille;
+    if (compressorRunningPermille != null)
+      result.compressorRunningPermille = compressorRunningPermille;
+    if (compressorBlockedPermille != null)
+      result.compressorBlockedPermille = compressorBlockedPermille;
+    if (alarmsBegun != null) result.alarmsBegun = alarmsBegun;
+    if (meterImportedMwh != null) result.meterImportedMwh = meterImportedMwh;
+    return result;
+  }
+
+  PlantHistorySample._();
+
+  factory PlantHistorySample.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PlantHistorySample.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PlantHistorySample',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.Timestamp>(1, _omitFieldNames ? '' : 'at',
+        subBuilder: $0.Timestamp.create)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'outdoorCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'supplyCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'returnCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'calculatedSupplyCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'hotWaterTopCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'outdoorMinCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'outdoorMaxCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        9, _omitFieldNames ? '' : 'degreeMinutes', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        10, _omitFieldNames ? '' : 'addOnHeatWatts', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        11, _omitFieldNames ? '' : 'spaceHeatingPermille', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        12, _omitFieldNames ? '' : 'hotWaterPermille', $pb.PbFieldType.OU3)
+    ..a<$core.int>(13, _omitFieldNames ? '' : 'producingNothingPermille',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(14, _omitFieldNames ? '' : 'compressorRunningPermille',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(15, _omitFieldNames ? '' : 'compressorBlockedPermille',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        16, _omitFieldNames ? '' : 'alarmsBegun', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(
+        17, _omitFieldNames ? '' : 'meterImportedMwh', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PlantHistorySample clone() => PlantHistorySample()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PlantHistorySample copyWith(void Function(PlantHistorySample) updates) =>
+      super.copyWith((message) => updates(message as PlantHistorySample))
+          as PlantHistorySample;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PlantHistorySample create() => PlantHistorySample._();
+  @$core.override
+  PlantHistorySample createEmptyInstance() => create();
+  static $pb.PbList<PlantHistorySample> createRepeated() =>
+      $pb.PbList<PlantHistorySample>();
+  @$core.pragma('dart2js:noInline')
+  static PlantHistorySample getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PlantHistorySample>(create);
+  static PlantHistorySample? _defaultInstance;
+
+  /// The start of the bucket.
+  @$pb.TagNumber(1)
+  $0.Timestamp get at => $_getN(0);
+  @$pb.TagNumber(1)
+  set at($0.Timestamp value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAt() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAt() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Timestamp ensureAt() => $_ensure(0);
+
+  /// Means over the bucket, in centidegrees, of the readings of the same names.
+  @$pb.TagNumber(2)
+  $core.int get outdoorCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set outdoorCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutdoorCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutdoorCentidegrees() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get supplyCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set supplyCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSupplyCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSupplyCentidegrees() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get returnCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set returnCentidegrees($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasReturnCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearReturnCentidegrees() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get calculatedSupplyCentidegrees => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set calculatedSupplyCentidegrees($core.int value) =>
+      $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCalculatedSupplyCentidegrees() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCalculatedSupplyCentidegrees() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get hotWaterTopCentidegrees => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set hotWaterTopCentidegrees($core.int value) => $_setSignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasHotWaterTopCentidegrees() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearHotWaterTopCentidegrees() => $_clearField(6);
+
+  /// The lowest and highest outdoor reading held within the bucket, in centidegrees. An hour:
+  /// the lowest and highest of its quarter hours'.
+  @$pb.TagNumber(7)
+  $core.int get outdoorMinCentidegrees => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set outdoorMinCentidegrees($core.int value) => $_setSignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasOutdoorMinCentidegrees() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearOutdoorMinCentidegrees() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.int get outdoorMaxCentidegrees => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set outdoorMaxCentidegrees($core.int value) => $_setSignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasOutdoorMaxCentidegrees() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearOutdoorMaxCentidegrees() => $_clearField(8);
+
+  /// The last degree-minutes reading held in the bucket.
+  @$pb.TagNumber(9)
+  $core.int get degreeMinutes => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set degreeMinutes($core.int value) => $_setSignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasDegreeMinutes() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearDegreeMinutes() => $_clearField(9);
+
+  /// The mean power of the internal add-on heat over the bucket, in watts.
+  @$pb.TagNumber(10)
+  $core.int get addOnHeatWatts => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set addOnHeatWatts($core.int value) => $_setUnsignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAddOnHeatWatts() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAddOnHeatWatts() => $_clearField(10);
+
+  /// Shares of the bucket, in thousandths, during which the heat source reported producing
+  /// space heating, producing hot water, producing nothing (device.v1.HeatSourceProduction), its
+  /// compressor running, and its compressor blocked (device.v1.CompressorState). Each over the
+  /// part of the bucket the reading was known for; absent where it was never known.
+  @$pb.TagNumber(11)
+  $core.int get spaceHeatingPermille => $_getIZ(10);
+  @$pb.TagNumber(11)
+  set spaceHeatingPermille($core.int value) => $_setUnsignedInt32(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasSpaceHeatingPermille() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearSpaceHeatingPermille() => $_clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.int get hotWaterPermille => $_getIZ(11);
+  @$pb.TagNumber(12)
+  set hotWaterPermille($core.int value) => $_setUnsignedInt32(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasHotWaterPermille() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearHotWaterPermille() => $_clearField(12);
+
+  @$pb.TagNumber(13)
+  $core.int get producingNothingPermille => $_getIZ(12);
+  @$pb.TagNumber(13)
+  set producingNothingPermille($core.int value) =>
+      $_setUnsignedInt32(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasProducingNothingPermille() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearProducingNothingPermille() => $_clearField(13);
+
+  @$pb.TagNumber(14)
+  $core.int get compressorRunningPermille => $_getIZ(13);
+  @$pb.TagNumber(14)
+  set compressorRunningPermille($core.int value) =>
+      $_setUnsignedInt32(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasCompressorRunningPermille() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearCompressorRunningPermille() => $_clearField(14);
+
+  @$pb.TagNumber(15)
+  $core.int get compressorBlockedPermille => $_getIZ(14);
+  @$pb.TagNumber(15)
+  set compressorBlockedPermille($core.int value) =>
+      $_setUnsignedInt32(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasCompressorBlockedPermille() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearCompressorBlockedPermille() => $_clearField(15);
+
+  /// How many times an alarm began (alarm_active turning true) within the bucket. The alarm's
+  /// own code is never kept here.
+  @$pb.TagNumber(16)
+  $core.int get alarmsBegun => $_getIZ(15);
+  @$pb.TagNumber(16)
+  set alarmsBegun($core.int value) => $_setUnsignedInt32(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasAlarmsBegun() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearAlarmsBegun() => $_clearField(16);
+
+  /// The energy counter of the plant's meter (heating.v1.HeatingPlant.meter) as last read in the
+  /// bucket, imported, in milliwatt-hours: with the heat delivered, what a coefficient of
+  /// performance is worked out from. Absent where the plant binds no meter.
+  @$pb.TagNumber(17)
+  $fixnum.Int64 get meterImportedMwh => $_getI64(16);
+  @$pb.TagNumber(17)
+  set meterImportedMwh($fixnum.Int64 value) => $_setInt64(16, value);
+  @$pb.TagNumber(17)
+  $core.bool hasMeterImportedMwh() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearMeterImportedMwh() => $_clearField(17);
+}
+
+/// A heat source's history at one resolution, in reply to webrtc.v1.GetPlantHistory, read as
+/// RoomHistory is: the same half-open range, kept_from, covered_from and covered_to, the same
+/// cap and paging.
+///
+/// Whose it is is fixed when each bucket is made, by where the plant was then: a plant in a
+/// home is its household's, and its buckets are read by that home's residents only, from the
+/// start of their current residency, and erased with the home's wipe and its household's Clear
+/// history (webrtc.v1 household.proto, WIPE; ClearClimateHistory); a plant outside homes is the
+/// building's, read by the property owner and the gateway administrators. A bucket made while
+/// the plant was in one place is never read as of another, wherever the plant is now.
+class PlantHistory extends $pb.GeneratedMessage {
+  factory PlantHistory({
+    $core.String? plantId,
+    $0.Timestamp? keptFrom,
+    $core.Iterable<PlantHistorySample>? samples,
+    RoomHistoryResolution? resolution,
+    $0.Timestamp? coveredFrom,
+    $0.Timestamp? coveredTo,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (keptFrom != null) result.keptFrom = keptFrom;
+    if (samples != null) result.samples.addAll(samples);
+    if (resolution != null) result.resolution = resolution;
+    if (coveredFrom != null) result.coveredFrom = coveredFrom;
+    if (coveredTo != null) result.coveredTo = coveredTo;
+    return result;
+  }
+
+  PlantHistory._();
+
+  factory PlantHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PlantHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PlantHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOM<$0.Timestamp>(2, _omitFieldNames ? '' : 'keptFrom',
+        subBuilder: $0.Timestamp.create)
+    ..pc<PlantHistorySample>(
+        3, _omitFieldNames ? '' : 'samples', $pb.PbFieldType.PM,
+        subBuilder: PlantHistorySample.create)
+    ..e<RoomHistoryResolution>(
+        4, _omitFieldNames ? '' : 'resolution', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+        valueOf: RoomHistoryResolution.valueOf,
+        enumValues: RoomHistoryResolution.values)
+    ..aOM<$0.Timestamp>(5, _omitFieldNames ? '' : 'coveredFrom',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$0.Timestamp>(6, _omitFieldNames ? '' : 'coveredTo',
+        subBuilder: $0.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PlantHistory clone() => PlantHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PlantHistory copyWith(void Function(PlantHistory) updates) =>
+      super.copyWith((message) => updates(message as PlantHistory))
+          as PlantHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PlantHistory create() => PlantHistory._();
+  @$core.override
+  PlantHistory createEmptyInstance() => create();
+  static $pb.PbList<PlantHistory> createRepeated() =>
+      $pb.PbList<PlantHistory>();
+  @$core.pragma('dart2js:noInline')
+  static PlantHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PlantHistory>(create);
+  static PlantHistory? _defaultInstance;
+
+  /// The plant (heating.v1.HeatingPlant.plant_id).
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $0.Timestamp get keptFrom => $_getN(1);
+  @$pb.TagNumber(2)
+  set keptFrom($0.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKeptFrom() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKeptFrom() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.Timestamp ensureKeptFrom() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $pb.PbList<PlantHistorySample> get samples => $_getList(2);
+
+  @$pb.TagNumber(4)
+  RoomHistoryResolution get resolution => $_getN(3);
+  @$pb.TagNumber(4)
+  set resolution(RoomHistoryResolution value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasResolution() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearResolution() => $_clearField(4);
+
   @$pb.TagNumber(5)
   $0.Timestamp get coveredFrom => $_getN(4);
   @$pb.TagNumber(5)
