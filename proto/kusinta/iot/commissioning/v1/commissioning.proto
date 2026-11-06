@@ -611,7 +611,8 @@ message TestEvidence {
   // The reading, by its field name in device.v1.HeatSourceReadings, e.g. "compressor_state",
   // "add_on_heat_watts".
   string reading = 1;
-  // Its value, in that field's units; an enum-valued reading by its number.
+  // Its value, in that field's units; an enum-valued reading by its number, and a yes-or-no
+  // reading (e.g. "alarm_active") as 1 for true, 0 for false.
   sint64 value = 2;
   // When the heat source reported it.
   google.protobuf.Timestamp observed_at = 3;

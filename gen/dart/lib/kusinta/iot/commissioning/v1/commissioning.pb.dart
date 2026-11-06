@@ -1378,7 +1378,8 @@ class TestEvidence extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearReading() => $_clearField(1);
 
-  /// Its value, in that field's units; an enum-valued reading by its number.
+  /// Its value, in that field's units; an enum-valued reading by its number, and a yes-or-no
+  /// reading (e.g. "alarm_active") as 1 for true, 0 for false.
   @$pb.TagNumber(2)
   $fixnum.Int64 get value => $_getI64(1);
   @$pb.TagNumber(2)

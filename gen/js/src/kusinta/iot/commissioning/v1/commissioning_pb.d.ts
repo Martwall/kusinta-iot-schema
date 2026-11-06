@@ -525,7 +525,8 @@ export declare type TestEvidence = Message<"kusinta.iot.commissioning.v1.TestEvi
   reading: string;
 
   /**
-   * Its value, in that field's units; an enum-valued reading by its number.
+   * Its value, in that field's units; an enum-valued reading by its number, and a yes-or-no
+   * reading (e.g. "alarm_active") as 1 for true, 0 for false.
    *
    * @generated from field: sint64 value = 2;
    */
