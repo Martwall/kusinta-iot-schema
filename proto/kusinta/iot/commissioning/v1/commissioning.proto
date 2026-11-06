@@ -43,6 +43,17 @@ option optimize_for = SPEED;
 //   "floor.fallback_ceiling_thermostat"  bool; a floor zone. Whether a thermostat in series
 //       caps the zone while the gateway is gone. Recorded, not enforced: false is an
 //       accepted risk.
+//   "floor.circulation"  string; a floor circuit. What moves its water, so that a
+//       PUMP_ALL_ZONES_OFF test is judged on the right pump: "separate_pump" (a pump of the
+//       circuit's own, at its manifold or mixing group), "heat_source_pump" (only the heat
+//       source's own circulation pump), "both". FLOOR_HEATING; OPTIONAL; INSPECTED,
+//       MEASURED. Unknown: a client gives the test's instructions for either. No test is
+//       refused for any answer: the test is how a pump's tolerance is found out.
+//   "floor.min_flow_path"  bool; a floor circuit. Whether a bypass or an overflow valve
+//       keeps water moving with every zone closed. FLOOR_HEATING; OPTIONAL; INSPECTED,
+//       MEASURED. Recorded, not enforced: false with the heat source's pump serving the
+//       circuit is the case a client warns of before the test, since a heat source may stop
+//       on low flow.
 //   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
