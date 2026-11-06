@@ -53,7 +53,9 @@ option optimize_for = SPEED;
 //       keeps water moving with every zone closed. FLOOR_HEATING; OPTIONAL; INSPECTED,
 //       MEASURED. Recorded, not enforced: false with the heat source's pump serving the
 //       circuit is the case a client warns of before the test, since a heat source may stop
-//       on low flow.
+//       on low flow. The test closes this circuit's zones only, so the heat source's pump
+//       keeps whatever flow its other circuits have: the warning matters most where this
+//       circuit is the heat source's only one.
 //   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
