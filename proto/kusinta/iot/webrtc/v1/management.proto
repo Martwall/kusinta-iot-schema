@@ -883,6 +883,12 @@ message ListHeating {
 //   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
 //   "REST_STATE"            an output whose lapse value, read through closed_value, does not
 //                           leave the contact where its role rests.
+//   "TEST_RUNNING"          a put that would change what a running commissioning test drives
+//                           or judges: an output binding of a record whose output it drives,
+//                           or a floor zone's rooms or control room while a test runs on the
+//                           zone or on its circuit (PUMP_ALL_ZONES_OFF). metadata "record_id"
+//                           names the test's record. A name, an area share or a supply cap
+//                           may change meanwhile.
 //
 // A refusal about one binding names it in metadata "field", by its proto field name:
 // "sg_ready_block", "sg_ready_boost", "add_on_heater_block", "meter", "output",
@@ -929,7 +935,12 @@ message PutComfortLoad {
 // Removes a heating record by its id, naming the revision it removes. Refused as
 // FAILED_PRECONDITION with metadata "reason" "STALE_REVISION" when it changed since, and
 // "HAS_CHILDREN" while records lie under it — a plant's circuits, a circuit's zones — so
-// nothing is removed that the caller did not name. Its outputs are returned to rest at once
+// nothing is removed that the caller did not name, and "TEST_RUNNING" while a running
+// commissioning test drives one of its outputs or judges it: a zone under its own test or
+// its circuit's PUMP_ALL_ZONES_OFF, a circuit while a test runs on it or on one of its
+// zones, a plant while a test runs on one of its outputs; metadata "record_id" names the
+// test's record. Removing it would change what the test's verdict covers while it runs.
+// Its outputs are returned to rest at once
 // (see heating.v1). Acked. An empty home's floor zone is not removed by the property owner or
 // the gateway administrators who are given it: NOT_ENTITLED, as PutFloorZone says.
 message RemoveHeatingRecord {
@@ -1069,6 +1080,11 @@ message SetHomeTemplate {
 //                       test. A zone with no bound output counts as heating. Not refused once
 //                       the circuit's "floor.pump_tolerates_all_zones_off" is true
 //                       (commissioning.v1). metadata "record_id" names the zone.
+//   "ZONES_SWITCHING_ON" OUTPUT_LEASE or ZONE_EFFECT on a floor zone while the circuit's
+//                       zones driven by running or starting tests of those kinds already
+//                       number its "floor.max_zones_switching_on" (commissioning.v1): their
+//                       leases would end together and their actuators open at once.
+//                       metadata "record_id" names the circuit.
 //   "NEEDS_PASS"        ZONE_EFFECT or PUMP_ALL_ZONES_OFF on outputs without a current
 //                       OUTPUT_LEASE pass; metadata "record_id" names one.
 //   "OUTPUT_NOT_LEASED" an output its producer does not state as leased, with a lapse value
@@ -1090,9 +1106,10 @@ message RunCommissioningTest {
 
 // Ends a running test. verdict ABORTED stops any test, from whoever started it or may run
 // it; PASSED or FAILED concludes a PUMP_ALL_ZONES_OFF test, from an installer under a
-// commissioning grant only. Any other verdict, or PASSED or FAILED on another kind, is
-// refused as INVALID_REQUEST "VERDICT". Its outputs return to their normal control at once,
-// floor zones switching on no faster than "floor.max_zones_switching_on" allows. Answered
+// commissioning grant only, until the test's conclude_by. Any other verdict, or PASSED or
+// FAILED on another kind, is refused as INVALID_REQUEST "VERDICT". Its outputs return to
+// their normal control at once, floor zones switching on no faster than
+// "floor.max_zones_switching_on" allows. Answered
 // with the CommissioningRecord of the test. A test that has ended is refused as
 // FAILED_PRECONDITION "TEST_ENDED".
 message ConcludeCommissioningTest {

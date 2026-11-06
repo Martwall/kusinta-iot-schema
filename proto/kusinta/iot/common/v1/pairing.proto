@@ -113,7 +113,9 @@ message PairingWindow {
   //
   // A batch suits commissioning, where devices are paired in a row and become a building's
   // rather than any person's. It does not suit a caller whose pairing mints personal
-  // ownership.
+  // ownership: a window whose arrivals become the pairer's own (webrtc.v1 StartPairing
+  // ownership RESIDENT, or a caller who can only pair their own) attributes one at most, and
+  // more is refused, from someone who files for the building too.
   //
   // Ignored where device_hint is set, and narrowed to one rather than refused: a hint names
   // one device, so a window restricted to it can never produce a second arrival to attribute.

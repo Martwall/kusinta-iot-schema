@@ -27,7 +27,7 @@ option optimize_for = SPEED;
 //       pass, false on a fail. Until it is true, the gateway keeps at least one zone of the
 //       circuit heating at all times, and refuses a test that would leave none
 //       (webrtc.v1 RunCommissioningTest, "LAST_HEATING_ZONE").
-//   "floor.max_zones_switching_on"  uint; a floor circuit. How many of its zones the wiring
+//   "floor.max_zones_switching_on"  uint, 1 to 16; a floor circuit. How many of its zones the wiring
 //       centre's supply carries switching on at once: thermal actuators draw several times
 //       their holding power while they open. The gateway switches no more zones on within
 //       one actuator travel time, counting zones a lapsing lease returns to rest: the leases
@@ -35,13 +35,15 @@ option optimize_for = SPEED;
 //       This holds while the gateway runs. With the gateway gone, zones return to rest as
 //       their leases end, and a device whose timer is shared by its outputs returns them
 //       all at once, as after a power cut: an accepted risk, like a missing fallback
-//       ceiling thermostat.
-//   "floor.actuator_travel_seconds"  uint; a floor circuit. How long its zone actuators take
+//       ceiling thermostat. A value above the circuit's zone count means all of them; the
+//       count changes as zones are added, so it is not the bound. Zone tests are held to it
+//       too (webrtc.v1 RunCommissioningTest, "ZONES_SWITCHING_ON").
+//   "floor.actuator_travel_seconds"  uint, 1 to 900; a floor circuit. How long its zone actuators take
 //       to open fully. No zone is switched again sooner after it was switched. Unknown: 300.
 //   "floor.fallback_ceiling_thermostat"  bool; a floor zone. Whether a thermostat in series
 //       caps the zone while the gateway is gone. Recorded, not enforced: false is an
 //       accepted risk.
-//   "plant.max_block_minutes"  uint; a plant. The longest the gateway holds an input that
+//   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
 //
@@ -520,7 +522,8 @@ enum TestState {
   TEST_STATE_RUNNING = 1;
   TEST_STATE_PASSED = 2;
   TEST_STATE_FAILED = 3;
-  // Stopped by a caller, or ended at ends_at without a verdict. Proves nothing.
+  // Stopped by a caller; ended at ends_at; or, for a test an installer concludes
+  // (PUMP_ALL_ZONES_OFF), ended at conclude_by without a verdict. Proves nothing.
   TEST_STATE_ABORTED = 4;
 }
 
@@ -565,6 +568,16 @@ message CommissioningTest {
 
   // A pass that no longer holds; see the file comment.
   bool superseded = 12;
+
+  // For a test an installer concludes (PUMP_ALL_ZONES_OFF), while it runs: the last moment a
+  // verdict is taken (webrtc.v1.ConcludeCommissioningTest), on the gateway's clock. At it,
+  // without a verdict, the test ends ABORTED and its outputs start returning to their normal
+  // control, so that every write it made, leased to end by ends_at, can still end by then:
+  // conclude_by comes before ends_at, by as much as its slowest output's device needs. Never
+  // later than the end of the commissioning grant it runs under. Fixed when the test starts.
+  // Unset for the other kinds, and once the test has ended. A client counting down to it
+  // counts from when it received it, not on its own clock against this time.
+  google.protobuf.Timestamp conclude_by = 14;
 
   reserved 3 to 4;
   reserved "record_id", "field";

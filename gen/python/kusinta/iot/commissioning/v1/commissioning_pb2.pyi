@@ -298,7 +298,7 @@ class FeatureStatus(_message.Message):
     def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ...) -> None: ...
 
 class CommissioningTest(_message.Message):
-    __slots__ = ("test_id", "kind", "binding", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded")
+    __slots__ = ("test_id", "kind", "binding", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded", "conclude_by")
     TEST_ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     BINDING_FIELD_NUMBER: _ClassVar[int]
@@ -310,6 +310,7 @@ class CommissioningTest(_message.Message):
     FINISHED_AT_FIELD_NUMBER: _ClassVar[int]
     PROVENANCE_FIELD_NUMBER: _ClassVar[int]
     SUPERSEDED_FIELD_NUMBER: _ClassVar[int]
+    CONCLUDE_BY_FIELD_NUMBER: _ClassVar[int]
     test_id: str
     kind: TestKind
     binding: BindingRef
@@ -321,7 +322,8 @@ class CommissioningTest(_message.Message):
     finished_at: _timestamp_pb2.Timestamp
     provenance: Provenance
     superseded: bool
-    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ...) -> None: ...
+    conclude_by: _timestamp_pb2.Timestamp
+    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ..., conclude_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CommissioningProfile(_message.Message):
     __slots__ = ("space_id", "facts", "tests", "features", "template", "needs_withheld")
