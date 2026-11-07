@@ -837,10 +837,9 @@ class RemoveDeviceFromSpace extends $pb.GeneratedMessage {
 /// Only a RESIDENT claim makes the caller the owner. A COMPANY claim records that the
 /// building owns the device, names no person, and grants the caller no reach. The gateway keeps
 /// who made it for 24 hours only, for ReleaseDevice's undo, shows it to nobody, and erases it
-/// then, or sooner with that person. Claims of a
-/// device in a home, or of one already claimed, are restricted by the gateway. A claim, with
-/// initial_space_id or without, that would leave a heating record across a home's boundary is
-/// refused or undone as HEATING ACROSS A HOME says.
+/// then, or sooner with that person. Claims of a device in a home, or of one already claimed,
+/// are restricted by the gateway. A claim, with initial_space_id or without, that would leave a
+/// heating record across a home's boundary is refused or undone as HEATING ACROSS A HOME says.
 ///
 /// WHICH CLAIM. The claim states its ownership, and the gateway never defaults it: one with
 /// neither is refused as INVALID_REQUEST. A COMPANY claim is accepted only from a filing role,
