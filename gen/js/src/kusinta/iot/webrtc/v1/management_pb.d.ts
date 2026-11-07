@@ -383,10 +383,11 @@ export declare const RemoveDeviceFromSpaceSchema: GenMessage<RemoveDeviceFromSpa
  * home only if they live there (see PlaceDeviceInSpace).
  *
  * Only a RESIDENT claim makes the caller the owner. A COMPANY claim records that the
- * building owns the device, names no person, and grants the caller no reach. Claims of a
- * device in a home, or of one already claimed, are restricted by the gateway. A claim, with
- * initial_space_id or without, that would leave a heating record across a home's boundary is
- * refused or undone as HEATING ACROSS A HOME says.
+ * building owns the device, names no person, and grants the caller no reach. The gateway keeps
+ * who made it for 24 hours only, for ReleaseDevice's undo, shows it to nobody, and erases it
+ * then, or sooner with that person. Claims of a device in a home, or of one already claimed,
+ * are restricted by the gateway. A claim, with initial_space_id or without, that would leave a
+ * heating record across a home's boundary is refused or undone as HEATING ACROSS A HOME says.
  *
  * WHICH CLAIM. The claim states its ownership, and the gateway never defaults it: one with
  * neither is refused as INVALID_REQUEST. A COMPANY claim is accepted only from a filing role,
@@ -450,7 +451,12 @@ export declare const ClaimDeviceSchema: GenMessage<ClaimDevice>;
 /**
  * Gives up ownership. The device keeps whatever space filing it has, except that a device in a
  * home stays filed in the home alone, as one of the building's own devices there — as when its
- * owner moves out; if it has none it becomes unfiled. A heating record the release would leave
+ * owner moves out; if it has none it becomes unfiled. A device a person owns is released by
+ * that person alone. One claimed for the building is released by the property owner or a
+ * gateway administrator who reaches it, at any time; and, within 24 hours of the claim, by the
+ * filing role who made it, while they still reach it, no heating record binds it and no asset
+ * owner is recorded, so that a building claim made by mistake is undone by whoever made it.
+ * Anyone else is refused as NOT_ENTITLED. A heating record the release would leave
  * across a home's boundary is undone, never refused (HEATING ACROSS A HOME).
  *
  * @generated from message kusinta.iot.webrtc.v1.ReleaseDevice
