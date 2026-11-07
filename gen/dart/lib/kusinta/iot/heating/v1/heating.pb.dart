@@ -739,7 +739,10 @@ class FloorCircuit extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearSupplyCapCentidegrees() => $_clearField(2);
 
-  /// Probes on the supply (after mixing) and the return.
+  /// Probes on the supply (after mixing) and the return. Each names the Matter Temperature
+  /// Measurement cluster's MeasuredValue (cluster 0x0402, attribute 0x0000, in centidegrees) on
+  /// the probe's endpoint; a put naming any other attribute, or a vendor parameter, is refused as
+  /// INVALID_REQUEST, so that every reading of a probe is a temperature in one unit.
   @$pb.TagNumber(3)
   DeviceAttribute get supplyProbe => $_getN(2);
   @$pb.TagNumber(3)
