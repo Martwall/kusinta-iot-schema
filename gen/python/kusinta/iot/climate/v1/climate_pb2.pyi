@@ -315,7 +315,7 @@ class RoomHistory(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., samples: _Optional[_Iterable[_Union[RoomHistorySample, _Mapping]]] = ..., resolution: _Optional[_Union[RoomHistoryResolution, str]] = ..., covered_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., covered_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class PlantHistorySample(_message.Message):
-    __slots__ = ("at", "outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "calculated_supply_centidegrees", "hot_water_top_centidegrees", "outdoor_min_centidegrees", "outdoor_max_centidegrees", "degree_minutes", "add_on_heat_watts", "space_heating_permille", "hot_water_permille", "producing_nothing_permille", "compressor_running_permille", "compressor_blocked_permille", "alarms_begun", "meter_imported_mwh")
+    __slots__ = ("at", "outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "calculated_supply_centidegrees", "hot_water_top_centidegrees", "outdoor_min_centidegrees", "outdoor_max_centidegrees", "degree_minutes", "add_on_heat_watts", "space_heating_permille", "hot_water_permille", "producing_nothing_permille", "compressor_running_permille", "compressor_blocked_permille", "alarms_begun", "meter_imported_mwh", "last_alarm_code")
     AT_FIELD_NUMBER: _ClassVar[int]
     OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
@@ -333,6 +333,7 @@ class PlantHistorySample(_message.Message):
     COMPRESSOR_BLOCKED_PERMILLE_FIELD_NUMBER: _ClassVar[int]
     ALARMS_BEGUN_FIELD_NUMBER: _ClassVar[int]
     METER_IMPORTED_MWH_FIELD_NUMBER: _ClassVar[int]
+    LAST_ALARM_CODE_FIELD_NUMBER: _ClassVar[int]
     at: _timestamp_pb2.Timestamp
     outdoor_centidegrees: int
     supply_centidegrees: int
@@ -350,7 +351,8 @@ class PlantHistorySample(_message.Message):
     compressor_blocked_permille: int
     alarms_begun: int
     meter_imported_mwh: int
-    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., outdoor_min_centidegrees: _Optional[int] = ..., outdoor_max_centidegrees: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., add_on_heat_watts: _Optional[int] = ..., space_heating_permille: _Optional[int] = ..., hot_water_permille: _Optional[int] = ..., producing_nothing_permille: _Optional[int] = ..., compressor_running_permille: _Optional[int] = ..., compressor_blocked_permille: _Optional[int] = ..., alarms_begun: _Optional[int] = ..., meter_imported_mwh: _Optional[int] = ...) -> None: ...
+    last_alarm_code: int
+    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., outdoor_min_centidegrees: _Optional[int] = ..., outdoor_max_centidegrees: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., add_on_heat_watts: _Optional[int] = ..., space_heating_permille: _Optional[int] = ..., hot_water_permille: _Optional[int] = ..., producing_nothing_permille: _Optional[int] = ..., compressor_running_permille: _Optional[int] = ..., compressor_blocked_permille: _Optional[int] = ..., alarms_begun: _Optional[int] = ..., meter_imported_mwh: _Optional[int] = ..., last_alarm_code: _Optional[int] = ...) -> None: ...
 
 class PlantHistory(_message.Message):
     __slots__ = ("plant_id", "kept_from", "samples", "resolution", "covered_from", "covered_to")

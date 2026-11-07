@@ -1115,6 +1115,15 @@ const PlantHistorySample$json = {
       '10': 'meterImportedMwh',
       '17': true
     },
+    {
+      '1': 'last_alarm_code',
+      '3': 18,
+      '4': 1,
+      '5': 13,
+      '9': 16,
+      '10': 'lastAlarmCode',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_outdoor_centidegrees'},
@@ -1133,6 +1142,7 @@ const PlantHistorySample$json = {
     {'1': '_compressor_blocked_permille'},
     {'1': '_alarms_begun'},
     {'1': '_meter_imported_mwh'},
+    {'1': '_last_alarm_code'},
   ],
 };
 
@@ -1155,15 +1165,16 @@ final $typed_data.Uint8List plantHistorySampleDescriptor = $convert.base64Decode
     'cl9ydW5uaW5nX3Blcm1pbGxlGA4gASgNSAxSGWNvbXByZXNzb3JSdW5uaW5nUGVybWlsbGWIAQ'
     'ESQwobY29tcHJlc3Nvcl9ibG9ja2VkX3Blcm1pbGxlGA8gASgNSA1SGWNvbXByZXNzb3JCbG9j'
     'a2VkUGVybWlsbGWIAQESJgoMYWxhcm1zX2JlZ3VuGBAgASgNSA5SC2FsYXJtc0JlZ3VuiAEBEj'
-    'EKEm1ldGVyX2ltcG9ydGVkX213aBgRIAEoBEgPUhBtZXRlckltcG9ydGVkTXdoiAEBQhcKFV9v'
-    'dXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcGx5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2'
-    'NlbnRpZGVncmVlc0IhCh9fY2FsY3VsYXRlZF9zdXBwbHlfY2VudGlkZWdyZWVzQh0KG19ob3Rf'
-    'd2F0ZXJfdG9wX2NlbnRpZGVncmVlc0IbChlfb3V0ZG9vcl9taW5fY2VudGlkZWdyZWVzQhsKGV'
-    '9vdXRkb29yX21heF9jZW50aWRlZ3JlZXNCEQoPX2RlZ3JlZV9taW51dGVzQhQKEl9hZGRfb25f'
-    'aGVhdF93YXR0c0IZChdfc3BhY2VfaGVhdGluZ19wZXJtaWxsZUIVChNfaG90X3dhdGVyX3Blcm'
-    '1pbGxlQh0KG19wcm9kdWNpbmdfbm90aGluZ19wZXJtaWxsZUIeChxfY29tcHJlc3Nvcl9ydW5u'
-    'aW5nX3Blcm1pbGxlQh4KHF9jb21wcmVzc29yX2Jsb2NrZWRfcGVybWlsbGVCDwoNX2FsYXJtc1'
-    '9iZWd1bkIVChNfbWV0ZXJfaW1wb3J0ZWRfbXdo');
+    'EKEm1ldGVyX2ltcG9ydGVkX213aBgRIAEoBEgPUhBtZXRlckltcG9ydGVkTXdoiAEBEisKD2xh'
+    'c3RfYWxhcm1fY29kZRgSIAEoDUgQUg1sYXN0QWxhcm1Db2RliAEBQhcKFV9vdXRkb29yX2Nlbn'
+    'RpZGVncmVlc0IWChRfc3VwcGx5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2NlbnRpZGVncmVl'
+    'c0IhCh9fY2FsY3VsYXRlZF9zdXBwbHlfY2VudGlkZWdyZWVzQh0KG19ob3Rfd2F0ZXJfdG9wX2'
+    'NlbnRpZGVncmVlc0IbChlfb3V0ZG9vcl9taW5fY2VudGlkZWdyZWVzQhsKGV9vdXRkb29yX21h'
+    'eF9jZW50aWRlZ3JlZXNCEQoPX2RlZ3JlZV9taW51dGVzQhQKEl9hZGRfb25faGVhdF93YXR0c0'
+    'IZChdfc3BhY2VfaGVhdGluZ19wZXJtaWxsZUIVChNfaG90X3dhdGVyX3Blcm1pbGxlQh0KG19w'
+    'cm9kdWNpbmdfbm90aGluZ19wZXJtaWxsZUIeChxfY29tcHJlc3Nvcl9ydW5uaW5nX3Blcm1pbG'
+    'xlQh4KHF9jb21wcmVzc29yX2Jsb2NrZWRfcGVybWlsbGVCDwoNX2FsYXJtc19iZWd1bkIVChNf'
+    'bWV0ZXJfaW1wb3J0ZWRfbXdoQhIKEF9sYXN0X2FsYXJtX2NvZGU=');
 
 @$core.Deprecated('Use plantHistoryDescriptor instead')
 const PlantHistory$json = {

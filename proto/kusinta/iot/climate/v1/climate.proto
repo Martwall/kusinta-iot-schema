@@ -731,14 +731,19 @@ message PlantHistorySample {
   optional uint32 compressor_running_permille = 14;
   optional uint32 compressor_blocked_permille = 15;
 
-  // How many times an alarm began (alarm_active turning true) within the bucket. The alarm's
-  // own code is never kept here.
+  // How many times an alarm began (alarm_active turning true) within the bucket.
   optional uint32 alarms_begun = 16;
 
   // The energy counter of the plant's meter (heating.v1.HeatingPlant.meter) as last read in the
   // bucket, imported, in milliwatt-hours: with the heat delivered, what a coefficient of
   // performance is worked out from. Absent where the plant binds no meter.
   optional uint64 meter_imported_mwh = 17;
+
+  // The vendor's code (device.v1.HeatSourceReadings.alarm_code) of the last alarm that began in
+  // the bucket. Absent where none began, or where the heat source reports no code. Read only as
+  // the bucket is: never given to service, who are told of an alarm as a fault alone
+  // (device.v1.HeatSourceReadings).
+  optional uint32 last_alarm_code = 18;
 }
 
 // A heat source's history at one resolution, in reply to webrtc.v1.GetPlantHistory, read as
@@ -751,6 +756,10 @@ message PlantHistorySample {
 // history (webrtc.v1 household.proto, WIPE; ClearClimateHistory); a plant outside homes is the
 // building's, read by the property owner and the gateway administrators. A bucket made while
 // the plant was in one place is never read as of another, wherever the plant is now.
+//
+// Kept, for every plant, a home's as a building's: quarter hours for 180 days and hours for 25
+// months, so that a year's coefficient of performance can be set beside the year before. The
+// gateway's records hold no other tier for a plant.
 message PlantHistory {
   // The plant (heating.v1.HeatingPlant.plant_id).
   string plant_id = 1;

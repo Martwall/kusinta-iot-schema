@@ -1807,6 +1807,7 @@ class PlantHistorySample extends $pb.GeneratedMessage {
     $core.int? compressorBlockedPermille,
     $core.int? alarmsBegun,
     $fixnum.Int64? meterImportedMwh,
+    $core.int? lastAlarmCode,
   }) {
     final result = create();
     if (at != null) result.at = at;
@@ -1837,6 +1838,7 @@ class PlantHistorySample extends $pb.GeneratedMessage {
       result.compressorBlockedPermille = compressorBlockedPermille;
     if (alarmsBegun != null) result.alarmsBegun = alarmsBegun;
     if (meterImportedMwh != null) result.meterImportedMwh = meterImportedMwh;
+    if (lastAlarmCode != null) result.lastAlarmCode = lastAlarmCode;
     return result;
   }
 
@@ -1889,6 +1891,8 @@ class PlantHistorySample extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         17, _omitFieldNames ? '' : 'meterImportedMwh', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(
+        18, _omitFieldNames ? '' : 'lastAlarmCode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2063,8 +2067,7 @@ class PlantHistorySample extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   void clearCompressorBlockedPermille() => $_clearField(15);
 
-  /// How many times an alarm began (alarm_active turning true) within the bucket. The alarm's
-  /// own code is never kept here.
+  /// How many times an alarm began (alarm_active turning true) within the bucket.
   @$pb.TagNumber(16)
   $core.int get alarmsBegun => $_getIZ(15);
   @$pb.TagNumber(16)
@@ -2085,6 +2088,19 @@ class PlantHistorySample extends $pb.GeneratedMessage {
   $core.bool hasMeterImportedMwh() => $_has(16);
   @$pb.TagNumber(17)
   void clearMeterImportedMwh() => $_clearField(17);
+
+  /// The vendor's code (device.v1.HeatSourceReadings.alarm_code) of the last alarm that began in
+  /// the bucket. Absent where none began, or where the heat source reports no code. Read only as
+  /// the bucket is: never given to service, who are told of an alarm as a fault alone
+  /// (device.v1.HeatSourceReadings).
+  @$pb.TagNumber(18)
+  $core.int get lastAlarmCode => $_getIZ(17);
+  @$pb.TagNumber(18)
+  set lastAlarmCode($core.int value) => $_setUnsignedInt32(17, value);
+  @$pb.TagNumber(18)
+  $core.bool hasLastAlarmCode() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearLastAlarmCode() => $_clearField(18);
 }
 
 /// A heat source's history at one resolution, in reply to webrtc.v1.GetPlantHistory, read as
@@ -2097,6 +2113,10 @@ class PlantHistorySample extends $pb.GeneratedMessage {
 /// history (webrtc.v1 household.proto, WIPE; ClearClimateHistory); a plant outside homes is the
 /// building's, read by the property owner and the gateway administrators. A bucket made while
 /// the plant was in one place is never read as of another, wherever the plant is now.
+///
+/// Kept, for every plant, a home's as a building's: quarter hours for 180 days and hours for 25
+/// months, so that a year's coefficient of performance can be set beside the year before. The
+/// gateway's records hold no other tier for a plant.
 class PlantHistory extends $pb.GeneratedMessage {
   factory PlantHistory({
     $core.String? plantId,

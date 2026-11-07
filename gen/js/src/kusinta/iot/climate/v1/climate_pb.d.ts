@@ -963,8 +963,7 @@ export declare type PlantHistorySample = Message<"kusinta.iot.climate.v1.PlantHi
   compressorBlockedPermille?: number | undefined;
 
   /**
-   * How many times an alarm began (alarm_active turning true) within the bucket. The alarm's
-   * own code is never kept here.
+   * How many times an alarm began (alarm_active turning true) within the bucket.
    *
    * @generated from field: optional uint32 alarms_begun = 16;
    */
@@ -978,6 +977,16 @@ export declare type PlantHistorySample = Message<"kusinta.iot.climate.v1.PlantHi
    * @generated from field: optional uint64 meter_imported_mwh = 17;
    */
   meterImportedMwh?: bigint | undefined;
+
+  /**
+   * The vendor's code (device.v1.HeatSourceReadings.alarm_code) of the last alarm that began in
+   * the bucket. Absent where none began, or where the heat source reports no code. Read only as
+   * the bucket is: never given to service, who are told of an alarm as a fault alone
+   * (device.v1.HeatSourceReadings).
+   *
+   * @generated from field: optional uint32 last_alarm_code = 18;
+   */
+  lastAlarmCode?: number | undefined;
 };
 
 /**
@@ -997,6 +1006,10 @@ export declare const PlantHistorySampleSchema: GenMessage<PlantHistorySample>;
  * history (webrtc.v1 household.proto, WIPE; ClearClimateHistory); a plant outside homes is the
  * building's, read by the property owner and the gateway administrators. A bucket made while
  * the plant was in one place is never read as of another, wherever the plant is now.
+ *
+ * Kept, for every plant, a home's as a building's: quarter hours for 180 days and hours for 25
+ * months, so that a year's coefficient of performance can be set beside the year before. The
+ * gateway's records hold no other tier for a plant.
  *
  * @generated from message kusinta.iot.climate.v1.PlantHistory
  */
