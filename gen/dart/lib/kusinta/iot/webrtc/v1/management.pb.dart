@@ -2580,6 +2580,117 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   void clearResolution() => $_clearField(4);
 }
 
+/// Reads a heat source's history at one resolution, answered with a climate.v1.PlantHistory, as
+/// GetRoomHistory reads a room's: the same range, clamping, paging and choice of resolution.
+/// Whose buckets the caller is given is as climate.v1.PlantHistory says: a home's plant to its
+/// residents only, from the start of their current residency; a plant outside homes to the
+/// property owner and the gateway administrators. Anyone else, and a plant that does not exist,
+/// is refused as NOT_ENTITLED with the same metadata, as is a caller who reaches the home only as
+/// service: a heat source's readings with their times are never service's.
+class GetPlantHistory extends $pb.GeneratedMessage {
+  factory GetPlantHistory({
+    $core.String? plantId,
+    $5.Timestamp? fromTime,
+    $5.Timestamp? toTime,
+    $4.RoomHistoryResolution? resolution,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (fromTime != null) result.fromTime = fromTime;
+    if (toTime != null) result.toTime = toTime;
+    if (resolution != null) result.resolution = resolution;
+    return result;
+  }
+
+  GetPlantHistory._();
+
+  factory GetPlantHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetPlantHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetPlantHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOM<$5.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $5.Timestamp.create)
+    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $5.Timestamp.create)
+    ..e<$4.RoomHistoryResolution>(
+        4, _omitFieldNames ? '' : 'resolution', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $4.RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+        valueOf: $4.RoomHistoryResolution.valueOf,
+        enumValues: $4.RoomHistoryResolution.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetPlantHistory clone() => GetPlantHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetPlantHistory copyWith(void Function(GetPlantHistory) updates) =>
+      super.copyWith((message) => updates(message as GetPlantHistory))
+          as GetPlantHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetPlantHistory create() => GetPlantHistory._();
+  @$core.override
+  GetPlantHistory createEmptyInstance() => create();
+  static $pb.PbList<GetPlantHistory> createRepeated() =>
+      $pb.PbList<GetPlantHistory>();
+  @$core.pragma('dart2js:noInline')
+  static GetPlantHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetPlantHistory>(create);
+  static GetPlantHistory? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $5.Timestamp get fromTime => $_getN(1);
+  @$pb.TagNumber(2)
+  set fromTime($5.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFromTime() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFromTime() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $5.Timestamp ensureFromTime() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $5.Timestamp get toTime => $_getN(2);
+  @$pb.TagNumber(3)
+  set toTime($5.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasToTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearToTime() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $5.Timestamp ensureToTime() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $4.RoomHistoryResolution get resolution => $_getN(3);
+  @$pb.TagNumber(4)
+  set resolution($4.RoomHistoryResolution value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasResolution() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearResolution() => $_clearField(4);
+}
+
 /// What the parties who do not live in a private space learn of it — the answer to a
 /// resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
 ///
@@ -5022,6 +5133,7 @@ enum ManagementRequest_Request {
   setHomeName,
   clearClimateHistory,
   setInnerRoomLimits,
+  getPlantHistory,
   notSet
 }
 
@@ -5098,6 +5210,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     $6.SetHomeName? setHomeName,
     $6.ClearClimateHistory? clearClimateHistory,
     SetInnerRoomLimits? setInnerRoomLimits,
+    GetPlantHistory? getPlantHistory,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -5200,6 +5313,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.clearClimateHistory = clearClimateHistory;
     if (setInnerRoomLimits != null)
       result.setInnerRoomLimits = setInnerRoomLimits;
+    if (getPlantHistory != null) result.getPlantHistory = getPlantHistory;
     return result;
   }
 
@@ -5284,6 +5398,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     68: ManagementRequest_Request.setHomeName,
     69: ManagementRequest_Request.clearClimateHistory,
     70: ManagementRequest_Request.setInnerRoomLimits,
+    71: ManagementRequest_Request.getPlantHistory,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -5361,7 +5476,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       67,
       68,
       69,
-      70
+      70,
+      71
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -5528,6 +5644,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: $6.ClearClimateHistory.create)
     ..aOM<SetInnerRoomLimits>(70, _omitFieldNames ? '' : 'setInnerRoomLimits',
         subBuilder: SetInnerRoomLimits.create)
+    ..aOM<GetPlantHistory>(71, _omitFieldNames ? '' : 'getPlantHistory',
+        subBuilder: GetPlantHistory.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -6356,6 +6474,17 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearSetInnerRoomLimits() => $_clearField(70);
   @$pb.TagNumber(70)
   SetInnerRoomLimits ensureSetInnerRoomLimits() => $_ensure(69);
+
+  @$pb.TagNumber(71)
+  GetPlantHistory get getPlantHistory => $_getN(70);
+  @$pb.TagNumber(71)
+  set getPlantHistory(GetPlantHistory value) => $_setField(71, value);
+  @$pb.TagNumber(71)
+  $core.bool hasGetPlantHistory() => $_has(70);
+  @$pb.TagNumber(71)
+  void clearGetPlantHistory() => $_clearField(71);
+  @$pb.TagNumber(71)
+  GetPlantHistory ensureGetPlantHistory() => $_ensure(70);
 }
 
 const $core.bool _omitFieldNames =

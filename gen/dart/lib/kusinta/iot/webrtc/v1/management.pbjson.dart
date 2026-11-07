@@ -882,6 +882,46 @@ final $typed_data.Uint8List getRoomHistoryDescriptor = $convert.base64Decode(
     'YuVGltZXN0YW1wUgZ0b1RpbWUSTQoKcmVzb2x1dGlvbhgEIAEoDjItLmt1c2ludGEuaW90LmNs'
     'aW1hdGUudjEuUm9vbUhpc3RvcnlSZXNvbHV0aW9uUgpyZXNvbHV0aW9u');
 
+@$core.Deprecated('Use getPlantHistoryDescriptor instead')
+const GetPlantHistory$json = {
+  '1': 'GetPlantHistory',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'from_time',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'fromTime'
+    },
+    {
+      '1': 'to_time',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'toTime'
+    },
+    {
+      '1': 'resolution',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.RoomHistoryResolution',
+      '10': 'resolution'
+    },
+  ],
+};
+
+/// Descriptor for `GetPlantHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getPlantHistoryDescriptor = $convert.base64Decode(
+    'Cg9HZXRQbGFudEhpc3RvcnkSGQoIcGxhbnRfaWQYASABKAlSB3BsYW50SWQSNwoJZnJvbV90aW'
+    '1lGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIZnJvbVRpbWUSMwoHdG9fdGlt'
+    'ZRgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSBnRvVGltZRJNCgpyZXNvbHV0aW'
+    '9uGAQgASgOMi0ua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5Sb29tSGlzdG9yeVJlc29sdXRpb25S'
+    'CnJlc29sdXRpb24=');
+
 @$core.Deprecated('Use privacyDisclosureDescriptor instead')
 const PrivacyDisclosure$json = {
   '1': 'PrivacyDisclosure',
@@ -2221,6 +2261,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'setInnerRoomLimits'
     },
+    {
+      '1': 'get_plant_history',
+      '3': 71,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetPlantHistory',
+      '9': 0,
+      '10': 'getPlantHistory'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2345,4 +2394,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'NsaW1hdGVfaGlzdG9yeRhFIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5DbGVhckNsaW1h'
     'dGVIaXN0b3J5SABSE2NsZWFyQ2xpbWF0ZUhpc3RvcnkSXgoVc2V0X2lubmVyX3Jvb21fbGltaX'
     'RzGEYgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldElubmVyUm9vbUxpbWl0c0gAUhJz'
-    'ZXRJbm5lclJvb21MaW1pdHNCCQoHcmVxdWVzdA==');
+    'ZXRJbm5lclJvb21MaW1pdHMSVAoRZ2V0X3BsYW50X2hpc3RvcnkYRyABKAsyJi5rdXNpbnRhLm'
+    'lvdC53ZWJydGMudjEuR2V0UGxhbnRIaXN0b3J5SABSD2dldFBsYW50SGlzdG9yeUIJCgdyZXF1'
+    'ZXN0');

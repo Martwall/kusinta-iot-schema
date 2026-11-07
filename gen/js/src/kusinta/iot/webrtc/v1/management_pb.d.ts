@@ -1126,6 +1126,45 @@ export declare type GetRoomHistory = Message<"kusinta.iot.webrtc.v1.GetRoomHisto
 export declare const GetRoomHistorySchema: GenMessage<GetRoomHistory>;
 
 /**
+ * Reads a heat source's history at one resolution, answered with a climate.v1.PlantHistory, as
+ * GetRoomHistory reads a room's: the same range, clamping, paging and choice of resolution.
+ * Whose buckets the caller is given is as climate.v1.PlantHistory says: a home's plant to its
+ * residents only, from the start of their current residency; a plant outside homes to the
+ * property owner and the gateway administrators. Anyone else, and a plant that does not exist,
+ * is refused as NOT_ENTITLED with the same metadata, as is a caller who reaches the home only as
+ * service: a heat source's readings with their times are never service's.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetPlantHistory
+ */
+export declare type GetPlantHistory = Message<"kusinta.iot.webrtc.v1.GetPlantHistory"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp from_time = 2;
+   */
+  fromTime?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp to_time = 3;
+   */
+  toTime?: Timestamp | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
+   */
+  resolution: RoomHistoryResolution;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetPlantHistory.
+ * Use `create(GetPlantHistorySchema)` to create a new message.
+ */
+export declare const GetPlantHistorySchema: GenMessage<GetPlantHistory>;
+
+/**
  * What the parties who do not live in a private space learn of it — the answer to a
  * resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
  *
@@ -2554,6 +2593,12 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: SetInnerRoomLimits;
     case: "setInnerRoomLimits";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetPlantHistory get_plant_history = 71;
+     */
+    value: GetPlantHistory;
+    case: "getPlantHistory";
   } | { case: undefined; value?: undefined };
 };
 

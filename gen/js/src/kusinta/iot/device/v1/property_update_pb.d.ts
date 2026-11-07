@@ -185,6 +185,10 @@ export declare type PropertyUpdate = Message<"kusinta.iot.device.v1.PropertyUpda
   } | { case: undefined; value?: undefined };
 
   /**
+   * When the value was known to be current: when it was read or reported, not when it last
+   * changed. A source that re-reads an unchanged value says it again with the new time, so a
+   * reading is held fresh no longer than it was last confirmed.
+   *
    * @generated from field: google.protobuf.Timestamp timestamp = 9;
    */
   timestamp?: Timestamp | undefined;

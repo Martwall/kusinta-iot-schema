@@ -677,6 +677,20 @@ message GetRoomHistory {
   kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
 }
 
+// Reads a heat source's history at one resolution, answered with a climate.v1.PlantHistory, as
+// GetRoomHistory reads a room's: the same range, clamping, paging and choice of resolution.
+// Whose buckets the caller is given is as climate.v1.PlantHistory says: a home's plant to its
+// residents only, from the start of their current residency; a plant outside homes to the
+// property owner and the gateway administrators. Anyone else, and a plant that does not exist,
+// is refused as NOT_ENTITLED with the same metadata, as is a caller who reaches the home only as
+// service: a heat source's readings with their times are never service's.
+message GetPlantHistory {
+  string plant_id = 1;
+  google.protobuf.Timestamp from_time = 2;
+  google.protobuf.Timestamp to_time = 3;
+  kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
+}
+
 // What the parties who do not live in a private space learn of it — the answer to a
 // resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
 //
@@ -1285,5 +1299,6 @@ message ManagementRequest {
     SetHomeName set_home_name = 68;
     ClearClimateHistory clear_climate_history = 69;
     SetInnerRoomLimits set_inner_room_limits = 70;
+    GetPlantHistory get_plant_history = 71;
   }
 }
