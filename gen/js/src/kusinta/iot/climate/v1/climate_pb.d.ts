@@ -863,8 +863,9 @@ export declare const RoomHistorySchema: GenMessage<RoomHistory>;
  * is optional: absent means nothing fresh was known for that bucket, never zero.
  *
  * A mean or a share is weighted by time: each reading counts for as long as it held within the
- * bucket, from its report until the next, carried forward no longer than a reading stays fresh;
- * a bucket whose only reading has gone stale knows nothing of it. An hour is made of its quarter
+ * bucket, from its report until the next, carried forward no longer than a reading stays fresh
+ * (45 minutes after the time it was known current, device.v1.PropertyUpdate.timestamp); a
+ * bucket whose only reading has gone stale knows nothing of it. An hour is made of its quarter
  * hours as RoomHistorySample's are: a mean of the quarter hours' means, a sum of their sums, and
  * for a last value the last one known among its quarter hours.
  *
@@ -972,7 +973,8 @@ export declare type PlantHistorySample = Message<"kusinta.iot.climate.v1.PlantHi
   /**
    * The energy counter of the plant's meter (heating.v1.HeatingPlant.meter) as last read in the
    * bucket, imported, in milliwatt-hours: with the heat delivered, what a coefficient of
-   * performance is worked out from. Absent where the plant binds no meter.
+   * performance is worked out from. Absent where the plant binds no meter, or where the meter was
+   * not read in the bucket.
    *
    * @generated from field: optional uint64 meter_imported_mwh = 17;
    */
