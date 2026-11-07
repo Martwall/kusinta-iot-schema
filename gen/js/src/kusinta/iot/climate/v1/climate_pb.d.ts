@@ -983,8 +983,8 @@ export declare type PlantHistorySample = Message<"kusinta.iot.climate.v1.PlantHi
   /**
    * The vendor's code (device.v1.HeatSourceReadings.alarm_code) last reported in the bucket
    * while an alarm was active: a code reported a little after its alarm began is kept with the
-   * bucket it arrived in. Absent where no alarm was active, or where the heat source reports no
-   * code. Read only as the bucket is: never given to service, who are told of an alarm as a
+   * bucket it arrived in. Absent where no code was reported in the bucket while an alarm was
+   * active, or where the heat source reports none. Read only as the bucket is: never given to service, who are told of an alarm as a
    * fault alone (device.v1.HeatSourceReadings).
    *
    * @generated from field: optional uint32 last_alarm_code = 18;
