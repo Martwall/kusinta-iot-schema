@@ -9,7 +9,7 @@ import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
 import type { ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
-import type { ApartmentClimateSummary, ClimateMode, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
+import type { ApartmentClimateSummary, ClimateMode, PlantHistory, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
 import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
@@ -509,6 +509,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: HouseholdExport;
     case: "householdExport";
+  } | {
+    /**
+     * get_plant_history
+     *
+     * @generated from field: kusinta.iot.climate.v1.PlantHistory plant_history = 27;
+     */
+    value: PlantHistory;
+    case: "plantHistory";
   } | { case: undefined; value?: undefined };
 };
 

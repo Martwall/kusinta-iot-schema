@@ -320,6 +320,9 @@ class PropertyUpdate extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearBytesValue() => $_clearField(8);
 
+  /// When the value was known to be current: when it was read or reported, not when it last
+  /// changed. A source that re-reads an unchanged value says it again with the new time, so a
+  /// reading is held fresh no longer than it was last confirmed.
   @$pb.TagNumber(9)
   $1.Timestamp get timestamp => $_getN(8);
   @$pb.TagNumber(9)

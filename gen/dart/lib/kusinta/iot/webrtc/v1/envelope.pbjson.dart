@@ -530,6 +530,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'householdExport'
     },
+    {
+      '1': 'plant_history',
+      '3': 27,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.PlantHistory',
+      '9': 0,
+      '10': 'plantHistory'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -576,7 +585,8 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'hhbmRvdmVyElwKE2hvdXNlaG9sZF9oYW5kb3ZlcnMYGSABKAsyKS5rdXNpbnRhLmlvdC53ZWJy'
     'dGMudjEuSG91c2Vob2xkSGFuZG92ZXJzSABSEmhvdXNlaG9sZEhhbmRvdmVycxJTChBob3VzZW'
     'hvbGRfZXhwb3J0GBogASgLMiYua3VzaW50YS5pb3Qud2VicnRjLnYxLkhvdXNlaG9sZEV4cG9y'
-    'dEgAUg9ob3VzZWhvbGRFeHBvcnRCCAoGcmVzdWx0');
+    'dEgAUg9ob3VzZWhvbGRFeHBvcnQSSwoNcGxhbnRfaGlzdG9yeRgbIAEoCzIkLmt1c2ludGEuaW'
+    '90LmNsaW1hdGUudjEuUGxhbnRIaXN0b3J5SABSDHBsYW50SGlzdG9yeUIICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

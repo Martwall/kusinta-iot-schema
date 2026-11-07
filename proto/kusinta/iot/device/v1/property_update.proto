@@ -143,6 +143,9 @@ message PropertyUpdate {
     double double_value = 19;
   }
 
+  // When the value was known to be current: when it was read or reported, not when it last
+  // changed. A source that re-reads an unchanged value says it again with the new time, so a
+  // reading is held fresh no longer than it was last confirmed.
   google.protobuf.Timestamp timestamp = 9;
 
   // Was cluster_id_hex, a 4-char hex string. Burned rather than reused: the type changed,
