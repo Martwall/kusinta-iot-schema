@@ -981,10 +981,11 @@ export declare type PlantHistorySample = Message<"kusinta.iot.climate.v1.PlantHi
   meterImportedMwh?: bigint | undefined;
 
   /**
-   * The vendor's code (device.v1.HeatSourceReadings.alarm_code) of the last alarm that began in
-   * the bucket. Absent where none began, or where the heat source reports no code. Read only as
-   * the bucket is: never given to service, who are told of an alarm as a fault alone
-   * (device.v1.HeatSourceReadings).
+   * The vendor's code (device.v1.HeatSourceReadings.alarm_code) last reported in the bucket
+   * while an alarm was active: a code reported a little after its alarm began is kept with the
+   * bucket it arrived in. Absent where no alarm was active, or where the heat source reports no
+   * code. Read only as the bucket is: never given to service, who are told of an alarm as a
+   * fault alone (device.v1.HeatSourceReadings).
    *
    * @generated from field: optional uint32 last_alarm_code = 18;
    */
