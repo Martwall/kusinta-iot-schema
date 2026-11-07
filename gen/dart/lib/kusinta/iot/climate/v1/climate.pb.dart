@@ -1786,8 +1786,8 @@ class RoomHistory extends $pb.GeneratedMessage {
 /// A mean or a share is weighted by time: each reading counts for as long as it held within the
 /// bucket, from its report until the next, carried forward no longer than a reading stays fresh;
 /// a bucket whose only reading has gone stale knows nothing of it. An hour is made of its quarter
-/// hours as RoomHistorySample's are: a mean of the quarter hours' means, a sum of their sums, a
-/// last value its last quarter hour's.
+/// hours as RoomHistorySample's are: a mean of the quarter hours' means, a sum of their sums, and
+/// for a last value the last one known among its quarter hours.
 class PlantHistorySample extends $pb.GeneratedMessage {
   factory PlantHistorySample({
     $0.Timestamp? at,
