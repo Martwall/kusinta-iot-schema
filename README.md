@@ -20,6 +20,7 @@ proto/
   heating/         # HeatingPlant, circuits, floor zones, comfort loads, contact bindings
   reporting/       # gateway → api-server reports: open problems, service reach, served spaces,
                    #   members, invite routes
+  planning/        # api-server → gateway planning inputs: day-ahead prices, weather forecast
   connector/       # ConnectorToGatewayMessage, GatewayToConnectorMessage, gRPC service
   webrtc/          # GatewayMessage, AppMessage, DeviceCommand, DeviceStateSnapshot, …
   vendor/
