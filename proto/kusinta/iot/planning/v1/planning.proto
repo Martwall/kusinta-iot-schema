@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package kusinta.iot.planning.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option optimize_for = SPEED;
+
+// What a gateway's planner reads from outside the building: day-ahead electricity prices for
+// its bidding zone and a weather forecast for where it is, fetched once for the whole fleet by
+// the api-server and served to each gateway on request (PlanningInputsService). A planner runs
+// without them: it plans no shift while they are missing or stale, and nothing that keeps a
+// home safe or warm ever reads them.
+//
+// Neither is personal data: a price is for a bidding zone and a forecast for a place. What a
+// gateway says of itself to get them is kept to that: its bidding zone and a forecast cell
+// rounded to a hundredth of a degree (about a kilometre, coarser than the forecast's own
+// grid), never an address or a position finer than the cell.
+
+// A place to forecast for, rounded to a hundredth of a degree of latitude and of longitude.
+// A value that is not a whole number of hundredths is refused as INVALID_ARGUMENT.
+message ForecastCell {
+  // Degrees north, in hundredths (5931 for 59.31° N).
+  sint32 latitude_centidegrees = 1;
+
+  // Degrees east, in hundredths (1806 for 18.06° E).
+  sint32 longitude_centidegrees = 2;
+}
+
+// One market time unit of a day-ahead price: [start, end), in euros per megawatt-hour, in
+// cents (a price may be negative). A day has 96 of 15 minutes where the market clears in
+// quarter hours.
+message PriceInterval {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+  sint32 eur_cents_per_mwh = 3;
+}
+
+// One point of a forecast, valid at an instant. Every value is optional: absent means the
+// forecast gave none, never zero. A gateway reads the values it knows and ignores the rest.
+message ForecastPoint {
+  google.protobuf.Timestamp valid_at = 1;
+
+  // Air temperature at two metres, in centidegrees Celsius.
+  optional sint32 temperature_centidegrees = 2;
+
+  // Mean wind speed at ten metres, in centimetres per second.
+  optional uint32 wind_speed_cm_per_s = 3;
+
+  // The direction the wind blows from, in whole degrees from north, 0–359.
+  optional uint32 wind_from_degrees = 4;
+
+  // Global radiation on a horizontal surface, in watts per square metre.
+  optional uint32 global_radiation_w_per_m2 = 5;
+}
+
+// One issue of a forecast for a cell: when it was issued, by whom, and its points, oldest
+// first, from the issue's first hour onward.
+message ForecastIssue {
+  google.protobuf.Timestamp issued_at = 1;
+
+  // Whom to credit wherever the forecast is shown, as its licence asks (for example "SMHI").
+  string attribution = 2;
+
+  repeated ForecastPoint points = 3;
+}

@@ -99,6 +99,13 @@ class ProblemKind extends $pb.ProtobufEnum {
   static const ProblemKind PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED = ProblemKind._(
       10, _omitEnumNames ? '' : 'PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED');
 
+  /// The gateway's planning inputs (planning.v1) are stale: its forecast is more than six hours
+  /// old, or the next day's prices are still missing at 16:00 in the bidding zone's own time,
+  /// well after the day-ahead market has cleared. Building-level: it names the gateway, never a home. Its planner meanwhile plans
+  /// no shift, so nothing goes cold or unsafe while it is open.
+  static const ProblemKind PROBLEM_KIND_PLANNING_INPUTS_STALE = ProblemKind._(
+      11, _omitEnumNames ? '' : 'PROBLEM_KIND_PLANNING_INPUTS_STALE');
+
   static const $core.List<ProblemKind> values = <ProblemKind>[
     PROBLEM_KIND_UNSPECIFIED,
     PROBLEM_KIND_DEVICE_OFFLINE,
@@ -111,10 +118,11 @@ class ProblemKind extends $pb.ProtobufEnum {
     PROBLEM_KIND_UNFILED_DEVICES,
     PROBLEM_KIND_WINDOW_OPEN,
     PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED,
+    PROBLEM_KIND_PLANNING_INPUTS_STALE,
   ];
 
   static final $core.List<ProblemKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 10);
+      $pb.ProtobufEnum.$_initByValueList(values, 11);
   static ProblemKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

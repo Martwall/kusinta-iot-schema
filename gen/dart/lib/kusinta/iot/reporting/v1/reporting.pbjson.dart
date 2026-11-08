@@ -29,6 +29,7 @@ const ProblemKind$json = {
     {'1': 'PROBLEM_KIND_UNFILED_DEVICES', '2': 8},
     {'1': 'PROBLEM_KIND_WINDOW_OPEN', '2': 9},
     {'1': 'PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED', '2': 10},
+    {'1': 'PROBLEM_KIND_PLANNING_INPUTS_STALE', '2': 11},
   ],
 };
 
@@ -41,7 +42,7 @@ final $typed_data.Uint8List problemKindDescriptor = $convert.base64Decode(
     'TEVNX0tJTkRfQ09OTkVDVE9SX09GRkxJTkUQBhIgChxQUk9CTEVNX0tJTkRfQ09OTkVDVE9SX0'
     'VSUk9SEAcSIAocUFJPQkxFTV9LSU5EX1VORklMRURfREVWSUNFUxAIEhwKGFBST0JMRU1fS0lO'
     'RF9XSU5ET1dfT1BFThAJEigKJFBST0JMRU1fS0lORF9GTE9PUl9aT05FX1VOQ09OVFJPTExFRB'
-    'AK');
+    'AKEiYKIlBST0JMRU1fS0lORF9QTEFOTklOR19JTlBVVFNfU1RBTEUQCw==');
 
 @$core.Deprecated('Use clearReasonDescriptor instead')
 const ClearReason$json = {

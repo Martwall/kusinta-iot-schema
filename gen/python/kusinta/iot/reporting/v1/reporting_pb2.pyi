@@ -26,6 +26,7 @@ class ProblemKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     PROBLEM_KIND_UNFILED_DEVICES: _ClassVar[ProblemKind]
     PROBLEM_KIND_WINDOW_OPEN: _ClassVar[ProblemKind]
     PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED: _ClassVar[ProblemKind]
+    PROBLEM_KIND_PLANNING_INPUTS_STALE: _ClassVar[ProblemKind]
 
 class ClearReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -56,6 +57,7 @@ PROBLEM_KIND_CONNECTOR_ERROR: ProblemKind
 PROBLEM_KIND_UNFILED_DEVICES: ProblemKind
 PROBLEM_KIND_WINDOW_OPEN: ProblemKind
 PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED: ProblemKind
+PROBLEM_KIND_PLANNING_INPUTS_STALE: ProblemKind
 CLEAR_REASON_UNSPECIFIED: ClearReason
 CLEAR_REASON_RECOVERED: ClearReason
 CLEAR_REASON_FILED: ClearReason

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package kusinta.iot.planning.v1;
+
+import "google/protobuf/timestamp.proto";
+import "kusinta/iot/planning/v1/planning.proto";
+
+option optimize_for = SPEED;
+
+// The api-server's planning inputs for a gateway, over the gateway's client certificate. The
+// gateway asks; the api-server answers from what it has fetched for the fleet, and keeps no
+// record of which gateway asked for which cell.
+service PlanningInputsService {
+  rpc GetPlanningInputs(GetPlanningInputsRequest) returns (GetPlanningInputsResponse);
+}
+
+message GetPlanningInputsRequest {
+  // The bidding zone's short code, as the day-ahead market names it: "SE1" to "SE4" in
+  // Sweden. Unknown to the api-server: answered with no prices, never refused.
+  string bidding_zone = 1;
+
+  // Where to forecast for. Unset: no forecast is asked for.
+  ForecastCell forecast_cell = 2;
+
+  // The earliest price interval wanted. Every interval known from it on is answered, up to
+  // the last the market has published (the next day's, once its auction has cleared).
+  // Unset: from the start of the current day in the zone's own time.
+  google.protobuf.Timestamp prices_from = 3;
+
+  // The issue the gateway already holds. Set: a forecast is answered only where a later issue
+  // is known. Unset: the latest issue.
+  google.protobuf.Timestamp forecast_issued_after = 4;
+}
+
+message GetPlanningInputsResponse {
+  // Oldest first, without gaps or overlaps. Empty where none is known for the zone yet.
+  repeated PriceInterval prices = 1;
+
+  // The latest issue for the cell, where one later than forecast_issued_after is known.
+  ForecastIssue forecast = 2;
+}
