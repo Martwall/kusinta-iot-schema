@@ -38,4 +38,9 @@ message GetPlanningInputsResponse {
 
   // The latest issue for the cell, where one later than forecast_issued_after is known.
   ForecastIssue forecast = 2;
+
+  // When the latest issue known for the cell was issued, whether or not it is answered in
+  // forecast: unset where none is known for the cell at all, so that "nothing newer" and
+  // "nothing" are told apart.
+  google.protobuf.Timestamp latest_forecast_issued_at = 3;
 }

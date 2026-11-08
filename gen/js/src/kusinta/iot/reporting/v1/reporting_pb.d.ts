@@ -1079,8 +1079,9 @@ export enum ProblemKind {
   /**
    * The gateway's planning inputs (planning.v1) are stale: its forecast is more than six hours
    * old, or the next day's prices are still missing at 16:00 in the bidding zone's own time,
-   * well after the day-ahead market has cleared. Building-level: it names the gateway, never a home. Its planner meanwhile plans
-   * no shift, so nothing goes cold or unsafe while it is open.
+   * well after the day-ahead market has cleared. Building-level: it names the gateway, never
+   * a home. Its planner meanwhile shifts no load past what it holds, so nothing goes cold or
+   * unsafe while it is open.
    *
    * @generated from enum value: PROBLEM_KIND_PLANNING_INPUTS_STALE = 11;
    */

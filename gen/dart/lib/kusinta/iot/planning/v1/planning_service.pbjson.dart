@@ -78,6 +78,14 @@ const GetPlanningInputsResponse$json = {
       '6': '.kusinta.iot.planning.v1.ForecastIssue',
       '10': 'forecast'
     },
+    {
+      '1': 'latest_forecast_issued_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'latestForecastIssuedAt'
+    },
   ],
 };
 
@@ -85,7 +93,9 @@ const GetPlanningInputsResponse$json = {
 final $typed_data.Uint8List getPlanningInputsResponseDescriptor = $convert.base64Decode(
     'ChlHZXRQbGFubmluZ0lucHV0c1Jlc3BvbnNlEj4KBnByaWNlcxgBIAMoCzImLmt1c2ludGEuaW'
     '90LnBsYW5uaW5nLnYxLlByaWNlSW50ZXJ2YWxSBnByaWNlcxJCCghmb3JlY2FzdBgCIAEoCzIm'
-    'Lmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLkZvcmVjYXN0SXNzdWVSCGZvcmVjYXN0');
+    'Lmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLkZvcmVjYXN0SXNzdWVSCGZvcmVjYXN0ElUKGWxhdG'
+    'VzdF9mb3JlY2FzdF9pc3N1ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w'
+    'UhZsYXRlc3RGb3JlY2FzdElzc3VlZEF0');
 
 const $core.Map<$core.String, $core.dynamic> PlanningInputsServiceBase$json = {
   '1': 'PlanningInputsService',

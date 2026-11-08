@@ -137,10 +137,13 @@ class GetPlanningInputsResponse extends $pb.GeneratedMessage {
   factory GetPlanningInputsResponse({
     $core.Iterable<$0.PriceInterval>? prices,
     $0.ForecastIssue? forecast,
+    $1.Timestamp? latestForecastIssuedAt,
   }) {
     final result = create();
     if (prices != null) result.prices.addAll(prices);
     if (forecast != null) result.forecast = forecast;
+    if (latestForecastIssuedAt != null)
+      result.latestForecastIssuedAt = latestForecastIssuedAt;
     return result;
   }
 
@@ -163,6 +166,8 @@ class GetPlanningInputsResponse extends $pb.GeneratedMessage {
         subBuilder: $0.PriceInterval.create)
     ..aOM<$0.ForecastIssue>(2, _omitFieldNames ? '' : 'forecast',
         subBuilder: $0.ForecastIssue.create)
+    ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'latestForecastIssuedAt',
+        subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -203,6 +208,20 @@ class GetPlanningInputsResponse extends $pb.GeneratedMessage {
   void clearForecast() => $_clearField(2);
   @$pb.TagNumber(2)
   $0.ForecastIssue ensureForecast() => $_ensure(1);
+
+  /// When the latest issue known for the cell was issued, whether or not it is answered in
+  /// forecast: unset where none is known for the cell at all, so that "nothing newer" and
+  /// "nothing" are told apart.
+  @$pb.TagNumber(3)
+  $1.Timestamp get latestForecastIssuedAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set latestForecastIssuedAt($1.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLatestForecastIssuedAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLatestForecastIssuedAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $1.Timestamp ensureLatestForecastIssuedAt() => $_ensure(2);
 }
 
 /// The api-server's planning inputs for a gateway, over the gateway's client certificate. The

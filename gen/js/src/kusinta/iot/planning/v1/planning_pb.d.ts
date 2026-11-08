@@ -12,21 +12,24 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 export declare const file_kusinta_iot_planning_v1_planning: GenFile;
 
 /**
- * A place to forecast for, rounded to a hundredth of a degree of latitude and of longitude.
- * A value that is not a whole number of hundredths is refused as INVALID_ARGUMENT.
+ * A place to forecast for: the corner of a cell 0.02° of latitude by 0.04° of longitude,
+ * about 2.2 by 2.3 kilometres at 59° N, the size of the forecast's own grid. A gateway rounds
+ * its position down to the cell's corner. A latitude that is not a multiple of 2 hundredths
+ * or outside ±9000, or a longitude that is not a multiple of 4 hundredths or outside ±18000,
+ * is refused as INVALID_ARGUMENT.
  *
  * @generated from message kusinta.iot.planning.v1.ForecastCell
  */
 export declare type ForecastCell = Message<"kusinta.iot.planning.v1.ForecastCell"> & {
   /**
-   * Degrees north, in hundredths (5931 for 59.31° N).
+   * Degrees north, in hundredths: a multiple of 2 (5930 for 59.30° N).
    *
    * @generated from field: sint32 latitude_centidegrees = 1;
    */
   latitudeCentidegrees: number;
 
   /**
-   * Degrees east, in hundredths (1806 for 18.06° E).
+   * Degrees east, in hundredths: a multiple of 4 (1804 for 18.04° E).
    *
    * @generated from field: sint32 longitude_centidegrees = 2;
    */

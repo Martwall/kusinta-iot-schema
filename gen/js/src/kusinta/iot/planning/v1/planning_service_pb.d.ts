@@ -72,6 +72,15 @@ export declare type GetPlanningInputsResponse = Message<"kusinta.iot.planning.v1
    * @generated from field: kusinta.iot.planning.v1.ForecastIssue forecast = 2;
    */
   forecast?: ForecastIssue | undefined;
+
+  /**
+   * When the latest issue known for the cell was issued, whether or not it is answered in
+   * forecast: unset where none is known for the cell at all, so that "nothing newer" and
+   * "nothing" are told apart.
+   *
+   * @generated from field: google.protobuf.Timestamp latest_forecast_issued_at = 3;
+   */
+  latestForecastIssuedAt?: Timestamp | undefined;
 };
 
 /**

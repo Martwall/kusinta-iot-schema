@@ -26,7 +26,7 @@ from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__
 from kusinta.iot.planning.v1 import planning_pb2 as kusinta_dot_iot_dot_planning_dot_v1_dot_planning__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.kusinta/iot/planning/v1/planning_service.proto\x12\x17kusinta.iot.planning.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/planning/v1/planning.proto\"\x96\x02\n\x18GetPlanningInputsRequest\x12!\n\x0c\x62idding_zone\x18\x01 \x01(\tR\x0b\x62iddingZone\x12J\n\rforecast_cell\x18\x02 \x01(\x0b\x32%.kusinta.iot.planning.v1.ForecastCellR\x0c\x66orecastCell\x12;\n\x0bprices_from\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\npricesFrom\x12N\n\x15\x66orecast_issued_after\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x13\x66orecastIssuedAfter\"\x9f\x01\n\x19GetPlanningInputsResponse\x12>\n\x06prices\x18\x01 \x03(\x0b\x32&.kusinta.iot.planning.v1.PriceIntervalR\x06prices\x12\x42\n\x08\x66orecast\x18\x02 \x01(\x0b\x32&.kusinta.iot.planning.v1.ForecastIssueR\x08\x66orecast2\x93\x01\n\x15PlanningInputsService\x12z\n\x11GetPlanningInputs\x12\x31.kusinta.iot.planning.v1.GetPlanningInputsRequest\x1a\x32.kusinta.iot.planning.v1.GetPlanningInputsResponseB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n.kusinta/iot/planning/v1/planning_service.proto\x12\x17kusinta.iot.planning.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a&kusinta/iot/planning/v1/planning.proto\"\x96\x02\n\x18GetPlanningInputsRequest\x12!\n\x0c\x62idding_zone\x18\x01 \x01(\tR\x0b\x62iddingZone\x12J\n\rforecast_cell\x18\x02 \x01(\x0b\x32%.kusinta.iot.planning.v1.ForecastCellR\x0c\x66orecastCell\x12;\n\x0bprices_from\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\npricesFrom\x12N\n\x15\x66orecast_issued_after\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x13\x66orecastIssuedAfter\"\xf6\x01\n\x19GetPlanningInputsResponse\x12>\n\x06prices\x18\x01 \x03(\x0b\x32&.kusinta.iot.planning.v1.PriceIntervalR\x06prices\x12\x42\n\x08\x66orecast\x18\x02 \x01(\x0b\x32&.kusinta.iot.planning.v1.ForecastIssueR\x08\x66orecast\x12U\n\x19latest_forecast_issued_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x16latestForecastIssuedAt2\x93\x01\n\x15PlanningInputsService\x12z\n\x11GetPlanningInputs\x12\x31.kusinta.iot.planning.v1.GetPlanningInputsRequest\x1a\x32.kusinta.iot.planning.v1.GetPlanningInputsResponseB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,7 +37,7 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETPLANNINGINPUTSREQUEST']._serialized_start=149
   _globals['_GETPLANNINGINPUTSREQUEST']._serialized_end=427
   _globals['_GETPLANNINGINPUTSRESPONSE']._serialized_start=430
-  _globals['_GETPLANNINGINPUTSRESPONSE']._serialized_end=589
-  _globals['_PLANNINGINPUTSSERVICE']._serialized_start=592
-  _globals['_PLANNINGINPUTSSERVICE']._serialized_end=739
+  _globals['_GETPLANNINGINPUTSRESPONSE']._serialized_end=676
+  _globals['_PLANNINGINPUTSSERVICE']._serialized_start=679
+  _globals['_PLANNINGINPUTSSERVICE']._serialized_end=826
 # @@protoc_insertion_point(module_scope)
