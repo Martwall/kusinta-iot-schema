@@ -12,6 +12,7 @@ import "kusinta/iot/common/v1/types.proto";
 import "kusinta/iot/heating/v1/heating.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
+import "kusinta/iot/planning/v1/planning.proto";
 import "kusinta/iot/space/v1/space.proto";
 import "kusinta/iot/vendor/lorawan/v1/lorawan.proto";
 import "kusinta/iot/webrtc/v1/household.proto";
@@ -690,6 +691,113 @@ message GetPlantHistory {
   kusinta.iot.climate.v1.RoomHistoryResolution resolution = 4;
 }
 
+// BUILDING PLANNING. What a building's planner is given from outside it (planning.v1): the
+// day-ahead bidding zone its electricity is priced in, and the forecast cell it lies in. One
+// record per building — a top-level space — read with GetBuildingPlanning and replaced whole
+// with PutBuildingPlanning. A gateway serving several buildings asks the api-server for each
+// distinct zone and cell its records name, and for nothing a record does not name.
+//
+// Neither value is household data: a household's handover keeps the record, and deleting the
+// building removes it. It is never reported to the api-server, which learns the zone and the
+// cell only as planning.v1 asks carry them.
+//
+// THE CELL, NEVER A POSITION. A client that takes the building's position from its own device
+// rounds it down to the forecast cell's corner on that device (planning.v1.ForecastCell) and
+// sends only the corner. The exact position is never put, stored, logged or sent, by a client
+// or by the gateway. A client that offers the cell from the device's location asks for the
+// location only when the person chooses to give it, and offers typing the cell's position in
+// as the alternative.
+//
+// WHO. Given to and put by the property owner and the gateway's administrators
+// (access.v1.ROLE_PROPERTY_OWNER, access.v1.ROLE_GATEWAY_ADMIN) who reach the building, and by
+// an installer under a commissioning grant on the building (commissioning.v1, GRANTS), as
+// facts about spaces outside homes are. Anyone else is refused as NOT_ENTITLED. The prices
+// themselves are given more widely: GetDayAheadPrices.
+
+// Reads a building's planning record. Answered as BuildingPlanning.
+message GetBuildingPlanning {
+  // The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+}
+
+// Replaces a building's planning record whole. Answered as BuildingPlanning, as it now stands.
+//
+// A zone and a cell together turn the building's planning inputs on: the gateway asks for
+// prices and the forecast from then on. Without either, it asks for nothing for the building,
+// and no PLANNING_INPUTS_STALE is opened for it (reporting.v1). A put without a zone and a cell
+// removes them: nothing of them is kept.
+message PutBuildingPlanning {
+  // The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // The bidding zone's short code, as planning.v1.GetPlanningInputsRequest.bidding_zone names
+  // it: "SE1" to "SE4". A client offers the zone the building's grid connection is in. Its
+  // location may suggest one, but the connection decides, and the zone is printed on the
+  // grid operator's invoice. A code the gateway does not know is refused as INVALID_REQUEST
+  // with metadata {"reason": "bidding_zone"}. Empty: none.
+  string bidding_zone = 2;
+
+  // The forecast cell's corner. A cell planning.v1.ForecastCell refuses is refused here as
+  // INVALID_REQUEST with metadata {"reason": "forecast_cell"}. Unset: none.
+  kusinta.iot.planning.v1.ForecastCell forecast_cell = 3;
+
+  // The owner's choice to keep the building's planning inputs off while both values are
+  // set: the gateway asks for nothing for the building. False, the default, leaves them on.
+  bool inputs_off = 4;
+}
+
+// A building's planning record, and how its inputs stand.
+message BuildingPlanning {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // As put. Empty, unset: none.
+  string bidding_zone = 2;
+  kusinta.iot.planning.v1.ForecastCell forecast_cell = 3;
+  bool inputs_off = 4;
+
+  // The end of the last price interval the gateway holds for the zone without a gap from the
+  // current interval on, as the stale rule reads them. Unset where it holds no current one.
+  google.protobuf.Timestamp prices_through = 5;
+
+  // When the forecast the gateway holds for the cell was issued. Unset where it holds none.
+  google.protobuf.Timestamp forecast_issued_at = 6;
+
+  // Whether the building's inputs are stale, by the rule of reporting.v1
+  // PROBLEM_KIND_PLANNING_INPUTS_STALE. False while the inputs are off, or while the gateway
+  // has not yet asked for them since they were put.
+  bool stale = 7;
+}
+
+// Reads the day-ahead prices for the bidding zone of the building a space is in, so that a
+// client can draw them. Answered as DayAheadPrices.
+//
+// Given to anyone who reaches the space, residents and service included: a price is for a
+// zone, never for a home, and says nothing of anyone. Only the raw market price is answered.
+// What a household pays on top of it — the grid fee, taxes, the supplier's margin — is not
+// part of this record.
+message GetDayAheadPrices {
+  // Any space the caller reaches. Answered for the building it is in.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // [from_time, to_time). Intervals overlapping it are answered. Unset from_time: the start of
+  // the current day in the bidding zone's own time. Unset to_time: from_time plus 31 days,
+  // and no further than the last interval held. A span longer than 31 days, or a from_time
+  // not before to_time, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
+  google.protobuf.Timestamp from_time = 2;
+  google.protobuf.Timestamp to_time = 3;
+}
+
+// The prices GetDayAheadPrices asked for.
+message DayAheadPrices {
+  // The zone they are for. Empty where the building has none, and then no prices are given.
+  string bidding_zone = 1;
+
+  // Oldest first and never overlapping, as the gateway holds them. A time no interval covers
+  // is a gap, never a price of zero, and a client draws it as one. Empty where the gateway
+  // holds none in the span.
+  repeated kusinta.iot.planning.v1.PriceInterval prices = 2;
+}
+
 // What the parties who do not live in a private space learn of it — the answer to a
 // resident asking who can see what in their home, in reply to GetPrivacyDisclosure.
 //
@@ -1299,5 +1407,9 @@ message ManagementRequest {
     ClearClimateHistory clear_climate_history = 69;
     SetInnerRoomLimits set_inner_room_limits = 70;
     GetPlantHistory get_plant_history = 71;
+    // Building planning; see BUILDING PLANNING.
+    GetBuildingPlanning get_building_planning = 72;
+    PutBuildingPlanning put_building_planning = 73;
+    GetDayAheadPrices get_day_ahead_prices = 74;
   }
 }

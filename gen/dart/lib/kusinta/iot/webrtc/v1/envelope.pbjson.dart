@@ -539,6 +539,24 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'plantHistory'
     },
+    {
+      '1': 'building_planning',
+      '3': 28,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.BuildingPlanning',
+      '9': 0,
+      '10': 'buildingPlanning'
+    },
+    {
+      '1': 'day_ahead_prices',
+      '3': 29,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.DayAheadPrices',
+      '9': 0,
+      '10': 'dayAheadPrices'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -586,7 +604,11 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'dGMudjEuSG91c2Vob2xkSGFuZG92ZXJzSABSEmhvdXNlaG9sZEhhbmRvdmVycxJTChBob3VzZW'
     'hvbGRfZXhwb3J0GBogASgLMiYua3VzaW50YS5pb3Qud2VicnRjLnYxLkhvdXNlaG9sZEV4cG9y'
     'dEgAUg9ob3VzZWhvbGRFeHBvcnQSSwoNcGxhbnRfaGlzdG9yeRgbIAEoCzIkLmt1c2ludGEuaW'
-    '90LmNsaW1hdGUudjEuUGxhbnRIaXN0b3J5SABSDHBsYW50SGlzdG9yeUIICgZyZXN1bHQ=');
+    '90LmNsaW1hdGUudjEuUGxhbnRIaXN0b3J5SABSDHBsYW50SGlzdG9yeRJWChFidWlsZGluZ19w'
+    'bGFubmluZxgcIAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5CdWlsZGluZ1BsYW5uaW5nSA'
+    'BSEGJ1aWxkaW5nUGxhbm5pbmcSUQoQZGF5X2FoZWFkX3ByaWNlcxgdIAEoCzIlLmt1c2ludGEu'
+    'aW90LndlYnJ0Yy52MS5EYXlBaGVhZFByaWNlc0gAUg5kYXlBaGVhZFByaWNlc0IICgZyZXN1bH'
+    'Q=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

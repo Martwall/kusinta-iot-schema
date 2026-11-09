@@ -12,6 +12,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { ForecastCell, PriceInterval } from "../../planning/v1/planning_pb.js";
 import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
@@ -1162,6 +1163,207 @@ export declare type GetPlantHistory = Message<"kusinta.iot.webrtc.v1.GetPlantHis
  * Use `create(GetPlantHistorySchema)` to create a new message.
  */
 export declare const GetPlantHistorySchema: GenMessage<GetPlantHistory>;
+
+/**
+ * Reads a building's planning record. Answered as BuildingPlanning.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetBuildingPlanning
+ */
+export declare type GetBuildingPlanning = Message<"kusinta.iot.webrtc.v1.GetBuildingPlanning"> & {
+  /**
+   * The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetBuildingPlanning.
+ * Use `create(GetBuildingPlanningSchema)` to create a new message.
+ */
+export declare const GetBuildingPlanningSchema: GenMessage<GetBuildingPlanning>;
+
+/**
+ * Replaces a building's planning record whole. Answered as BuildingPlanning, as it now stands.
+ *
+ * A zone and a cell together turn the building's planning inputs on: the gateway asks for
+ * prices and the forecast from then on. Without either, it asks for nothing for the building,
+ * and no PLANNING_INPUTS_STALE is opened for it (reporting.v1). A put without a zone and a cell
+ * removes them: nothing of them is kept.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PutBuildingPlanning
+ */
+export declare type PutBuildingPlanning = Message<"kusinta.iot.webrtc.v1.PutBuildingPlanning"> & {
+  /**
+   * The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * The bidding zone's short code, as planning.v1.GetPlanningInputsRequest.bidding_zone names
+   * it: "SE1" to "SE4". A client offers the zone the building's grid connection is in. Its
+   * location may suggest one, but the connection decides, and the zone is printed on the
+   * grid operator's invoice. A code the gateway does not know is refused as INVALID_REQUEST
+   * with metadata {"reason": "bidding_zone"}. Empty: none.
+   *
+   * @generated from field: string bidding_zone = 2;
+   */
+  biddingZone: string;
+
+  /**
+   * The forecast cell's corner. A cell planning.v1.ForecastCell refuses is refused here as
+   * INVALID_REQUEST with metadata {"reason": "forecast_cell"}. Unset: none.
+   *
+   * @generated from field: kusinta.iot.planning.v1.ForecastCell forecast_cell = 3;
+   */
+  forecastCell?: ForecastCell | undefined;
+
+  /**
+   * The owner's choice to keep the building's planning inputs off while both values are
+   * set: the gateway asks for nothing for the building. False, the default, leaves them on.
+   *
+   * @generated from field: bool inputs_off = 4;
+   */
+  inputsOff: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PutBuildingPlanning.
+ * Use `create(PutBuildingPlanningSchema)` to create a new message.
+ */
+export declare const PutBuildingPlanningSchema: GenMessage<PutBuildingPlanning>;
+
+/**
+ * A building's planning record, and how its inputs stand.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.BuildingPlanning
+ */
+export declare type BuildingPlanning = Message<"kusinta.iot.webrtc.v1.BuildingPlanning"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * As put. Empty, unset: none.
+   *
+   * @generated from field: string bidding_zone = 2;
+   */
+  biddingZone: string;
+
+  /**
+   * @generated from field: kusinta.iot.planning.v1.ForecastCell forecast_cell = 3;
+   */
+  forecastCell?: ForecastCell | undefined;
+
+  /**
+   * @generated from field: bool inputs_off = 4;
+   */
+  inputsOff: boolean;
+
+  /**
+   * The end of the last price interval the gateway holds for the zone without a gap from the
+   * current interval on, as the stale rule reads them. Unset where it holds no current one.
+   *
+   * @generated from field: google.protobuf.Timestamp prices_through = 5;
+   */
+  pricesThrough?: Timestamp | undefined;
+
+  /**
+   * When the forecast the gateway holds for the cell was issued. Unset where it holds none.
+   *
+   * @generated from field: google.protobuf.Timestamp forecast_issued_at = 6;
+   */
+  forecastIssuedAt?: Timestamp | undefined;
+
+  /**
+   * Whether the building's inputs are stale, by the rule of reporting.v1
+   * PROBLEM_KIND_PLANNING_INPUTS_STALE. False while the inputs are off, or while the gateway
+   * has not yet asked for them since they were put.
+   *
+   * @generated from field: bool stale = 7;
+   */
+  stale: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.BuildingPlanning.
+ * Use `create(BuildingPlanningSchema)` to create a new message.
+ */
+export declare const BuildingPlanningSchema: GenMessage<BuildingPlanning>;
+
+/**
+ * Reads the day-ahead prices for the bidding zone of the building a space is in, so that a
+ * client can draw them. Answered as DayAheadPrices.
+ *
+ * Given to anyone who reaches the space, residents and service included: a price is for a
+ * zone, never for a home, and says nothing of anyone. Only the raw market price is answered.
+ * What a household pays on top of it — the grid fee, taxes, the supplier's margin — is not
+ * part of this record.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetDayAheadPrices
+ */
+export declare type GetDayAheadPrices = Message<"kusinta.iot.webrtc.v1.GetDayAheadPrices"> & {
+  /**
+   * Any space the caller reaches. Answered for the building it is in.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * [from_time, to_time). Intervals overlapping it are answered. Unset from_time: the start of
+   * the current day in the bidding zone's own time. Unset to_time: from_time plus 31 days,
+   * and no further than the last interval held. A span longer than 31 days, or a from_time
+   * not before to_time, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
+   *
+   * @generated from field: google.protobuf.Timestamp from_time = 2;
+   */
+  fromTime?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp to_time = 3;
+   */
+  toTime?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetDayAheadPrices.
+ * Use `create(GetDayAheadPricesSchema)` to create a new message.
+ */
+export declare const GetDayAheadPricesSchema: GenMessage<GetDayAheadPrices>;
+
+/**
+ * The prices GetDayAheadPrices asked for.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.DayAheadPrices
+ */
+export declare type DayAheadPrices = Message<"kusinta.iot.webrtc.v1.DayAheadPrices"> & {
+  /**
+   * The zone they are for. Empty where the building has none, and then no prices are given.
+   *
+   * @generated from field: string bidding_zone = 1;
+   */
+  biddingZone: string;
+
+  /**
+   * Oldest first and never overlapping, as the gateway holds them. A time no interval covers
+   * is a gap, never a price of zero, and a client draws it as one. Empty where the gateway
+   * holds none in the span.
+   *
+   * @generated from field: repeated kusinta.iot.planning.v1.PriceInterval prices = 2;
+   */
+  prices: PriceInterval[];
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.DayAheadPrices.
+ * Use `create(DayAheadPricesSchema)` to create a new message.
+ */
+export declare const DayAheadPricesSchema: GenMessage<DayAheadPrices>;
 
 /**
  * What the parties who do not live in a private space learn of it — the answer to a
@@ -2598,6 +2800,26 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: GetPlantHistory;
     case: "getPlantHistory";
+  } | {
+    /**
+     * Building planning; see BUILDING PLANNING.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.GetBuildingPlanning get_building_planning = 72;
+     */
+    value: GetBuildingPlanning;
+    case: "getBuildingPlanning";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PutBuildingPlanning put_building_planning = 73;
+     */
+    value: PutBuildingPlanning;
+    case: "putBuildingPlanning";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetDayAheadPrices get_day_ahead_prices = 74;
+     */
+    value: GetDayAheadPrices;
+    case: "getDayAheadPrices";
   } | { case: undefined; value?: undefined };
 };
 
