@@ -538,3 +538,86 @@ describe('account linking', () => {
     expect(decoded.result).toMatchObject({ case: 'accountLinkNonce', value: { nonce: 'eyJ.nonce.sig' } })
   })
 })
+
+describe('building planning', () => {
+  it('reads a building’s planning record', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'getBuildingPlanning', value: { spaceId: { value: 'space-building' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'getBuildingPlanning', value: { spaceId: { value: 'space-building' } } })
+  })
+
+  it('puts a zone and a cell corner, never a finer position', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'putBuildingPlanning',
+        value: {
+          spaceId: { value: 'space-building' },
+          biddingZone: 'SE3',
+          forecastCell: { latitudeCentidegrees: 5930, longitudeCentidegrees: 1804 },
+        },
+      },
+    })
+    expect(decoded.request).toMatchObject({
+      case: 'putBuildingPlanning',
+      value: { biddingZone: 'SE3', forecastCell: { latitudeCentidegrees: 5930, longitudeCentidegrees: 1804 } },
+    })
+  })
+
+  it('leaves the inputs on unless the owner turns them off', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'putBuildingPlanning', value: { spaceId: { value: 'space-building' }, biddingZone: 'SE3' } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'putBuildingPlanning', value: { inputsOff: false } })
+  })
+
+  it('removes the zone and the cell with a put that names neither', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'putBuildingPlanning', value: { spaceId: { value: 'space-building' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'putBuildingPlanning', value: { biddingZone: '' } })
+    expect(decoded.request.value).not.toHaveProperty('forecastCell')
+  })
+
+  it('answers the record with how its inputs stand', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: {
+        case: 'buildingPlanning',
+        value: {
+          spaceId: { value: 'space-building' },
+          biddingZone: 'SE3',
+          forecastCell: { latitudeCentidegrees: 5930, longitudeCentidegrees: 1804 },
+          pricesThrough: { seconds: 1794265200n },
+          forecastIssuedAt: { seconds: 1794175200n },
+          stale: true,
+        },
+      },
+    })
+    expect(decoded.result).toMatchObject({ case: 'buildingPlanning', value: { biddingZone: 'SE3', stale: true } })
+  })
+
+  it('asks for the day-ahead prices of the building a space is in', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'getDayAheadPrices',
+        value: { spaceId: { value: 'space-apartment' }, fromTime: { seconds: 1794178800n }, toTime: { seconds: 1794265200n } },
+      },
+    })
+    expect(decoded.request).toMatchObject({ case: 'getDayAheadPrices', value: { spaceId: { value: 'space-apartment' } } })
+  })
+
+  it('answers the raw market prices with their zone, a negative price included', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: {
+        case: 'dayAheadPrices',
+        value: {
+          biddingZone: 'SE3',
+          prices: [{ start: { seconds: 1794178800n }, end: { seconds: 1794179700n }, eurCentsPerMwh: -125 }],
+        },
+      },
+    })
+    expect(decoded.result).toMatchObject({ case: 'dayAheadPrices', value: { biddingZone: 'SE3', prices: [{ eurCentsPerMwh: -125 }] } })
+  })
+})

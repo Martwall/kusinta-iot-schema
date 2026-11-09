@@ -922,6 +922,171 @@ final $typed_data.Uint8List getPlantHistoryDescriptor = $convert.base64Decode(
     '9uGAQgASgOMi0ua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5Sb29tSGlzdG9yeVJlc29sdXRpb25S'
     'CnJlc29sdXRpb24=');
 
+@$core.Deprecated('Use getBuildingPlanningDescriptor instead')
+const GetBuildingPlanning$json = {
+  '1': 'GetBuildingPlanning',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+  ],
+};
+
+/// Descriptor for `GetBuildingPlanning`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getBuildingPlanningDescriptor = $convert.base64Decode(
+    'ChNHZXRCdWlsZGluZ1BsYW5uaW5nEjsKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaW'
+    'RlbnRpdHkudjEuU3BhY2VJZFIHc3BhY2VJZA==');
+
+@$core.Deprecated('Use putBuildingPlanningDescriptor instead')
+const PutBuildingPlanning$json = {
+  '1': 'PutBuildingPlanning',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {'1': 'bidding_zone', '3': 2, '4': 1, '5': 9, '10': 'biddingZone'},
+    {
+      '1': 'forecast_cell',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.planning.v1.ForecastCell',
+      '10': 'forecastCell'
+    },
+    {'1': 'inputs_off', '3': 4, '4': 1, '5': 8, '10': 'inputsOff'},
+  ],
+};
+
+/// Descriptor for `PutBuildingPlanning`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putBuildingPlanningDescriptor = $convert.base64Decode(
+    'ChNQdXRCdWlsZGluZ1BsYW5uaW5nEjsKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaW'
+    'RlbnRpdHkudjEuU3BhY2VJZFIHc3BhY2VJZBIhCgxiaWRkaW5nX3pvbmUYAiABKAlSC2JpZGRp'
+    'bmdab25lEkoKDWZvcmVjYXN0X2NlbGwYAyABKAsyJS5rdXNpbnRhLmlvdC5wbGFubmluZy52MS'
+    '5Gb3JlY2FzdENlbGxSDGZvcmVjYXN0Q2VsbBIdCgppbnB1dHNfb2ZmGAQgASgIUglpbnB1dHNP'
+    'ZmY=');
+
+@$core.Deprecated('Use buildingPlanningDescriptor instead')
+const BuildingPlanning$json = {
+  '1': 'BuildingPlanning',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {'1': 'bidding_zone', '3': 2, '4': 1, '5': 9, '10': 'biddingZone'},
+    {
+      '1': 'forecast_cell',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.planning.v1.ForecastCell',
+      '10': 'forecastCell'
+    },
+    {'1': 'inputs_off', '3': 4, '4': 1, '5': 8, '10': 'inputsOff'},
+    {
+      '1': 'prices_through',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'pricesThrough'
+    },
+    {
+      '1': 'forecast_issued_at',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'forecastIssuedAt'
+    },
+    {'1': 'stale', '3': 7, '4': 1, '5': 8, '10': 'stale'},
+  ],
+};
+
+/// Descriptor for `BuildingPlanning`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List buildingPlanningDescriptor = $convert.base64Decode(
+    'ChBCdWlsZGluZ1BsYW5uaW5nEjsKCHNwYWNlX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbn'
+    'RpdHkudjEuU3BhY2VJZFIHc3BhY2VJZBIhCgxiaWRkaW5nX3pvbmUYAiABKAlSC2JpZGRpbmda'
+    'b25lEkoKDWZvcmVjYXN0X2NlbGwYAyABKAsyJS5rdXNpbnRhLmlvdC5wbGFubmluZy52MS5Gb3'
+    'JlY2FzdENlbGxSDGZvcmVjYXN0Q2VsbBIdCgppbnB1dHNfb2ZmGAQgASgIUglpbnB1dHNPZmYS'
+    'QQoOcHJpY2VzX3Rocm91Z2gYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUg1wcm'
+    'ljZXNUaHJvdWdoEkgKEmZvcmVjYXN0X2lzc3VlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1'
+    'Zi5UaW1lc3RhbXBSEGZvcmVjYXN0SXNzdWVkQXQSFAoFc3RhbGUYByABKAhSBXN0YWxl');
+
+@$core.Deprecated('Use getDayAheadPricesDescriptor instead')
+const GetDayAheadPrices$json = {
+  '1': 'GetDayAheadPrices',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'from_time',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'fromTime'
+    },
+    {
+      '1': 'to_time',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'toTime'
+    },
+  ],
+};
+
+/// Descriptor for `GetDayAheadPrices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getDayAheadPricesDescriptor = $convert.base64Decode(
+    'ChFHZXREYXlBaGVhZFByaWNlcxI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW'
+    '50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSNwoJZnJvbV90aW1lGAIgASgLMhouZ29vZ2xlLnBy'
+    'b3RvYnVmLlRpbWVzdGFtcFIIZnJvbVRpbWUSMwoHdG9fdGltZRgDIAEoCzIaLmdvb2dsZS5wcm'
+    '90b2J1Zi5UaW1lc3RhbXBSBnRvVGltZQ==');
+
+@$core.Deprecated('Use dayAheadPricesDescriptor instead')
+const DayAheadPrices$json = {
+  '1': 'DayAheadPrices',
+  '2': [
+    {'1': 'bidding_zone', '3': 1, '4': 1, '5': 9, '10': 'biddingZone'},
+    {
+      '1': 'prices',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.planning.v1.PriceInterval',
+      '10': 'prices'
+    },
+  ],
+};
+
+/// Descriptor for `DayAheadPrices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dayAheadPricesDescriptor = $convert.base64Decode(
+    'Cg5EYXlBaGVhZFByaWNlcxIhCgxiaWRkaW5nX3pvbmUYASABKAlSC2JpZGRpbmdab25lEj4KBn'
+    'ByaWNlcxgCIAMoCzImLmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLlByaWNlSW50ZXJ2YWxSBnBy'
+    'aWNlcw==');
+
 @$core.Deprecated('Use privacyDisclosureDescriptor instead')
 const PrivacyDisclosure$json = {
   '1': 'PrivacyDisclosure',
@@ -2270,6 +2435,33 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'getPlantHistory'
     },
+    {
+      '1': 'get_building_planning',
+      '3': 72,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetBuildingPlanning',
+      '9': 0,
+      '10': 'getBuildingPlanning'
+    },
+    {
+      '1': 'put_building_planning',
+      '3': 73,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutBuildingPlanning',
+      '9': 0,
+      '10': 'putBuildingPlanning'
+    },
+    {
+      '1': 'get_day_ahead_prices',
+      '3': 74,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetDayAheadPrices',
+      '9': 0,
+      '10': 'getDayAheadPrices'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2395,5 +2587,10 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'dGVIaXN0b3J5SABSE2NsZWFyQ2xpbWF0ZUhpc3RvcnkSXgoVc2V0X2lubmVyX3Jvb21fbGltaX'
     'RzGEYgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlNldElubmVyUm9vbUxpbWl0c0gAUhJz'
     'ZXRJbm5lclJvb21MaW1pdHMSVAoRZ2V0X3BsYW50X2hpc3RvcnkYRyABKAsyJi5rdXNpbnRhLm'
-    'lvdC53ZWJydGMudjEuR2V0UGxhbnRIaXN0b3J5SABSD2dldFBsYW50SGlzdG9yeUIJCgdyZXF1'
-    'ZXN0');
+    'lvdC53ZWJydGMudjEuR2V0UGxhbnRIaXN0b3J5SABSD2dldFBsYW50SGlzdG9yeRJgChVnZXRf'
+    'YnVpbGRpbmdfcGxhbm5pbmcYSCABKAsyKi5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0QnVpbG'
+    'RpbmdQbGFubmluZ0gAUhNnZXRCdWlsZGluZ1BsYW5uaW5nEmAKFXB1dF9idWlsZGluZ19wbGFu'
+    'bmluZxhJIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5QdXRCdWlsZGluZ1BsYW5uaW5nSA'
+    'BSE3B1dEJ1aWxkaW5nUGxhbm5pbmcSWwoUZ2V0X2RheV9haGVhZF9wcmljZXMYSiABKAsyKC5r'
+    'dXNpbnRhLmlvdC53ZWJydGMudjEuR2V0RGF5QWhlYWRQcmljZXNIAFIRZ2V0RGF5QWhlYWRQcm'
+    'ljZXNCCQoHcmVxdWVzdA==');

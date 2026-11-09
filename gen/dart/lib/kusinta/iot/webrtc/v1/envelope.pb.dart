@@ -742,6 +742,8 @@ enum ManagementResult_Result {
   householdHandovers,
   householdExport,
   plantHistory,
+  buildingPlanning,
+  dayAheadPrices,
   notSet
 }
 
@@ -783,6 +785,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     $11.HouseholdHandovers? householdHandovers,
     $11.HouseholdExport? householdExport,
     $5.PlantHistory? plantHistory,
+    $3.BuildingPlanning? buildingPlanning,
+    $3.DayAheadPrices? dayAheadPrices,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -818,6 +822,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       result.householdHandovers = householdHandovers;
     if (householdExport != null) result.householdExport = householdExport;
     if (plantHistory != null) result.plantHistory = plantHistory;
+    if (buildingPlanning != null) result.buildingPlanning = buildingPlanning;
+    if (dayAheadPrices != null) result.dayAheadPrices = dayAheadPrices;
     return result;
   }
 
@@ -858,6 +864,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     25: ManagementResult_Result.householdHandovers,
     26: ManagementResult_Result.householdExport,
     27: ManagementResult_Result.plantHistory,
+    28: ManagementResult_Result.buildingPlanning,
+    29: ManagementResult_Result.dayAheadPrices,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -891,7 +899,9 @@ class ManagementResult extends $pb.GeneratedMessage {
       24,
       25,
       26,
-      27
+      27,
+      28,
+      29
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -952,6 +962,10 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $11.HouseholdExport.create)
     ..aOM<$5.PlantHistory>(27, _omitFieldNames ? '' : 'plantHistory',
         subBuilder: $5.PlantHistory.create)
+    ..aOM<$3.BuildingPlanning>(28, _omitFieldNames ? '' : 'buildingPlanning',
+        subBuilder: $3.BuildingPlanning.create)
+    ..aOM<$3.DayAheadPrices>(29, _omitFieldNames ? '' : 'dayAheadPrices',
+        subBuilder: $3.DayAheadPrices.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1286,6 +1300,28 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearPlantHistory() => $_clearField(27);
   @$pb.TagNumber(27)
   $5.PlantHistory ensurePlantHistory() => $_ensure(26);
+
+  @$pb.TagNumber(28)
+  $3.BuildingPlanning get buildingPlanning => $_getN(27);
+  @$pb.TagNumber(28)
+  set buildingPlanning($3.BuildingPlanning value) => $_setField(28, value);
+  @$pb.TagNumber(28)
+  $core.bool hasBuildingPlanning() => $_has(27);
+  @$pb.TagNumber(28)
+  void clearBuildingPlanning() => $_clearField(28);
+  @$pb.TagNumber(28)
+  $3.BuildingPlanning ensureBuildingPlanning() => $_ensure(27);
+
+  @$pb.TagNumber(29)
+  $3.DayAheadPrices get dayAheadPrices => $_getN(28);
+  @$pb.TagNumber(29)
+  set dayAheadPrices($3.DayAheadPrices value) => $_setField(29, value);
+  @$pb.TagNumber(29)
+  $core.bool hasDayAheadPrices() => $_has(28);
+  @$pb.TagNumber(29)
+  void clearDayAheadPrices() => $_clearField(29);
+  @$pb.TagNumber(29)
+  $3.DayAheadPrices ensureDayAheadPrices() => $_ensure(28);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the
