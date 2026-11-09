@@ -2981,8 +2981,8 @@ class BuildingPlanning extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearInputsOff() => $_clearField(4);
 
-  /// The end of the last price interval the gateway holds for the zone. Unset where it holds
-  /// none.
+  /// The end of the last price interval the gateway holds for the zone without a gap from the
+  /// current interval on, as the stale rule reads them. Unset where it holds no current one.
   @$pb.TagNumber(5)
   $5.Timestamp get pricesThrough => $_getN(4);
   @$pb.TagNumber(5)
@@ -3094,9 +3094,10 @@ class GetDayAheadPrices extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
-  /// [from_time, to_time). Intervals overlapping it are answered. A span longer than 31 days is
-  /// refused as INVALID_REQUEST with metadata {"reason": "span"}. Unset from_time: the start of
-  /// the current day in the building's time zone. Unset to_time: up to the last interval held.
+  /// [from_time, to_time). Intervals overlapping it are answered. Unset from_time: the start of
+  /// the current day in the bidding zone's own time. Unset to_time: from_time plus 31 days,
+  /// and no further than the last interval held. A span longer than 31 days, or a from_time
+  /// not before to_time, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
   @$pb.TagNumber(2)
   $5.Timestamp get fromTime => $_getN(1);
   @$pb.TagNumber(2)
@@ -3183,8 +3184,9 @@ class DayAheadPrices extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearBiddingZone() => $_clearField(1);
 
-  /// Oldest first, without gaps or overlaps, as the gateway holds them. Empty where it holds
-  /// none in the span.
+  /// Oldest first and never overlapping, as the gateway holds them. A time no interval covers
+  /// is a gap, never a price of zero, and a client draws it as one. Empty where the gateway
+  /// holds none in the span.
   @$pb.TagNumber(2)
   $pb.PbList<$6.PriceInterval> get prices => $_getList(1);
 }

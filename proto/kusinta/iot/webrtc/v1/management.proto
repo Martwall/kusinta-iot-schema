@@ -755,8 +755,8 @@ message BuildingPlanning {
   kusinta.iot.planning.v1.ForecastCell forecast_cell = 3;
   bool inputs_off = 4;
 
-  // The end of the last price interval the gateway holds for the zone. Unset where it holds
-  // none.
+  // The end of the last price interval the gateway holds for the zone without a gap from the
+  // current interval on, as the stale rule reads them. Unset where it holds no current one.
   google.protobuf.Timestamp prices_through = 5;
 
   // When the forecast the gateway holds for the cell was issued. Unset where it holds none.
@@ -779,9 +779,10 @@ message GetDayAheadPrices {
   // Any space the caller reaches. Answered for the building it is in.
   kusinta.iot.identity.v1.SpaceId space_id = 1;
 
-  // [from_time, to_time). Intervals overlapping it are answered. A span longer than 31 days is
-  // refused as INVALID_REQUEST with metadata {"reason": "span"}. Unset from_time: the start of
-  // the current day in the building's time zone. Unset to_time: up to the last interval held.
+  // [from_time, to_time). Intervals overlapping it are answered. Unset from_time: the start of
+  // the current day in the bidding zone's own time. Unset to_time: from_time plus 31 days,
+  // and no further than the last interval held. A span longer than 31 days, or a from_time
+  // not before to_time, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
   google.protobuf.Timestamp from_time = 2;
   google.protobuf.Timestamp to_time = 3;
 }
@@ -791,8 +792,9 @@ message DayAheadPrices {
   // The zone they are for. Empty where the building has none, and then no prices are given.
   string bidding_zone = 1;
 
-  // Oldest first, without gaps or overlaps, as the gateway holds them. Empty where it holds
-  // none in the span.
+  // Oldest first and never overlapping, as the gateway holds them. A time no interval covers
+  // is a gap, never a price of zero, and a client draws it as one. Empty where the gateway
+  // holds none in the span.
   repeated kusinta.iot.planning.v1.PriceInterval prices = 2;
 }
 

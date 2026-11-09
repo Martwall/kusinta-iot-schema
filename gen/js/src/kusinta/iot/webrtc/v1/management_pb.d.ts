@@ -1265,8 +1265,8 @@ export declare type BuildingPlanning = Message<"kusinta.iot.webrtc.v1.BuildingPl
   inputsOff: boolean;
 
   /**
-   * The end of the last price interval the gateway holds for the zone. Unset where it holds
-   * none.
+   * The end of the last price interval the gateway holds for the zone without a gap from the
+   * current interval on, as the stale rule reads them. Unset where it holds no current one.
    *
    * @generated from field: google.protobuf.Timestamp prices_through = 5;
    */
@@ -1315,9 +1315,10 @@ export declare type GetDayAheadPrices = Message<"kusinta.iot.webrtc.v1.GetDayAhe
   spaceId?: SpaceId | undefined;
 
   /**
-   * [from_time, to_time). Intervals overlapping it are answered. A span longer than 31 days is
-   * refused as INVALID_REQUEST with metadata {"reason": "span"}. Unset from_time: the start of
-   * the current day in the building's time zone. Unset to_time: up to the last interval held.
+   * [from_time, to_time). Intervals overlapping it are answered. Unset from_time: the start of
+   * the current day in the bidding zone's own time. Unset to_time: from_time plus 31 days,
+   * and no further than the last interval held. A span longer than 31 days, or a from_time
+   * not before to_time, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
    *
    * @generated from field: google.protobuf.Timestamp from_time = 2;
    */
@@ -1349,8 +1350,9 @@ export declare type DayAheadPrices = Message<"kusinta.iot.webrtc.v1.DayAheadPric
   biddingZone: string;
 
   /**
-   * Oldest first, without gaps or overlaps, as the gateway holds them. Empty where it holds
-   * none in the span.
+   * Oldest first and never overlapping, as the gateway holds them. A time no interval covers
+   * is a gap, never a price of zero, and a client draws it as one. Empty where the gateway
+   * holds none in the span.
    *
    * @generated from field: repeated kusinta.iot.planning.v1.PriceInterval prices = 2;
    */
