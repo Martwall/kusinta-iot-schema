@@ -1317,8 +1317,9 @@ export declare type GetDayAheadPrices = Message<"kusinta.iot.webrtc.v1.GetDayAhe
   /**
    * [from_time, to_time). Intervals overlapping it are answered. Unset from_time: the start of
    * the current day in the bidding zone's own time. Unset to_time: from_time plus 31 days,
-   * and no further than the last interval held. A span longer than 31 days, or a from_time
-   * not before to_time, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
+   * and no further than the last interval held; where none is held after from_time, the
+   * answer is empty. A to_time the caller sets more than 31 days after from_time, or not
+   * after it, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
    *
    * @generated from field: google.protobuf.Timestamp from_time = 2;
    */
