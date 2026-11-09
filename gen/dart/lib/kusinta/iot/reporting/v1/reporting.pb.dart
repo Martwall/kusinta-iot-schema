@@ -239,7 +239,7 @@ class ProblemSubject extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   $0.SpaceId ensureRoomId() => $_ensure(2);
 
-  /// UNFILED_DEVICES: the gateway itself.
+  /// UNFILED_DEVICES, PLANNING_INPUTS_STALE: the gateway itself.
   @$pb.TagNumber(4)
   $core.bool get gateway => $_getBF(3);
   @$pb.TagNumber(4)

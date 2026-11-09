@@ -101,7 +101,7 @@ export declare type ProblemSubject = Message<"kusinta.iot.reporting.v1.ProblemSu
     case: "roomId";
   } | {
     /**
-     * UNFILED_DEVICES: the gateway itself.
+     * UNFILED_DEVICES, PLANNING_INPUTS_STALE: the gateway itself.
      *
      * @generated from field: bool gateway = 4;
      */
