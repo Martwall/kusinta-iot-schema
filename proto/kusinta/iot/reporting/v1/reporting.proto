@@ -319,7 +319,7 @@ message ProblemSubject {
     // WINDOW_OPEN: the room.
     kusinta.iot.identity.v1.SpaceId room_id = 3;
 
-    // UNFILED_DEVICES: the gateway itself.
+    // UNFILED_DEVICES, PLANNING_INPUTS_STALE: the gateway itself.
     bool gateway = 4;
   }
 }
