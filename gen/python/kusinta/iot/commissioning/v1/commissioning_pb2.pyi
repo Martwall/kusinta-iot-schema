@@ -122,6 +122,7 @@ class ModelFitGap(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     MODEL_FIT_GAP_NOT_PHYSICAL: _ClassVar[ModelFitGap]
     MODEL_FIT_GAP_RETURNS_SHARED: _ClassVar[ModelFitGap]
     MODEL_FIT_GAP_TOO_FEW_NIGHTS: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_SETUP_CHANGED: _ClassVar[ModelFitGap]
 
 class CommissioningGrantState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -203,6 +204,7 @@ MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN: ModelFitGap
 MODEL_FIT_GAP_NOT_PHYSICAL: ModelFitGap
 MODEL_FIT_GAP_RETURNS_SHARED: ModelFitGap
 MODEL_FIT_GAP_TOO_FEW_NIGHTS: ModelFitGap
+MODEL_FIT_GAP_SETUP_CHANGED: ModelFitGap
 COMMISSIONING_GRANT_STATE_UNSPECIFIED: CommissioningGrantState
 COMMISSIONING_GRANT_STATE_REQUESTED: CommissioningGrantState
 COMMISSIONING_GRANT_STATE_GRANTED: CommissioningGrantState

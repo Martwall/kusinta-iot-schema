@@ -511,6 +511,13 @@ class ModelFitGap extends $pb.ProtobufEnum {
   static const ModelFitGap MODEL_FIT_GAP_TOO_FEW_NIGHTS =
       ModelFitGap._(7, _omitEnumNames ? '' : 'MODEL_FIT_GAP_TOO_FEW_NIGHTS');
 
+  /// What heats the room or zone changed since its model was last fitted: a heat source, a
+  /// circuit, a floor zone's rooms or a comfort load. The model learns again from the next
+  /// nightly fit on, and the band said before the change no longer holds. Set with
+  /// NOT_ENOUGH_DATA, in place of whatever the last fit's gap was.
+  static const ModelFitGap MODEL_FIT_GAP_SETUP_CHANGED =
+      ModelFitGap._(8, _omitEnumNames ? '' : 'MODEL_FIT_GAP_SETUP_CHANGED');
+
   static const $core.List<ModelFitGap> values = <ModelFitGap>[
     MODEL_FIT_GAP_UNSPECIFIED,
     MODEL_FIT_GAP_NO_EXCITATION,
@@ -520,10 +527,11 @@ class ModelFitGap extends $pb.ProtobufEnum {
     MODEL_FIT_GAP_NOT_PHYSICAL,
     MODEL_FIT_GAP_RETURNS_SHARED,
     MODEL_FIT_GAP_TOO_FEW_NIGHTS,
+    MODEL_FIT_GAP_SETUP_CHANGED,
   ];
 
   static final $core.List<ModelFitGap?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 7);
+      $pb.ProtobufEnum.$_initByValueList(values, 8);
   static ModelFitGap? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
