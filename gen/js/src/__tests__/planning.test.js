@@ -24,6 +24,13 @@ describe('planning inputs', () => {
     expect(decoded.exchangeRates).toMatchObject([{ publishedOn: '2026-11-06' }, { publishedOn: '2026-11-09', perEurE4: 113725 }])
   })
 
+  it('answers the rates without any price, so a new rate arrives after its prices', () => {
+    const decoded = onTheWire(GetPlanningInputsResponseSchema, {
+      exchangeRates: [{ currency: 'SEK', publishedOn: '2026-11-10', perEurE4: 113725, source: 'Sveriges Riksbank' }],
+    })
+    expect(decoded).toMatchObject({ prices: [], exchangeRates: [{ publishedOn: '2026-11-10' }] })
+  })
+
   it('answers no rates where none is known', () => {
     const decoded = onTheWire(GetPlanningInputsResponseSchema, { prices: [] })
     expect(decoded.exchangeRates).toEqual([])

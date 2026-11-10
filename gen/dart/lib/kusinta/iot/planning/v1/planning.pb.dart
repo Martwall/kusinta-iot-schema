@@ -462,8 +462,9 @@ class ExchangeRate extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearCurrency() => $_clearField(1);
 
-  /// The day the rate was published for, in the publisher's own calendar: "2026-11-10". No rate
-  /// is published on a weekend or a holiday; the last one published before it applies.
+  /// The day the rate was published for, in the publisher's own calendar, as an ISO 8601
+  /// calendar date (YYYY-MM-DD): "2026-11-10". No rate is published on a weekend or a holiday;
+  /// the last one published before it applies.
   @$pb.TagNumber(2)
   $core.String get publishedOn => $_getSZ(1);
   @$pb.TagNumber(2)

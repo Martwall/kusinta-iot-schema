@@ -3341,9 +3341,10 @@ class PutSpaceAddress extends $pb.GeneratedMessage {
   PostalAddress ensureAddress() => $_ensure(1);
 }
 
-/// A postal address, as a person writes it. Free text in each field. A set address without a
-/// street, a field longer than its bound, or a country that is not two capital letters is
-/// refused as INVALID_REQUEST with metadata {"reason": "address"}.
+/// A postal address, as a person writes it. Free text in each field; a field's bound counts
+/// Unicode code points, not bytes or UTF-16 code units. A set address without a street, a
+/// field longer than its bound, or a country that is not two capital letters is refused as
+/// INVALID_REQUEST with metadata {"reason": "address"}.
 class PostalAddress extends $pb.GeneratedMessage {
   factory PostalAddress({
     $core.String? street,

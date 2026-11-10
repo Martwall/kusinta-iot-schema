@@ -77,8 +77,9 @@ message ExchangeRate {
   // The currency converted to, as ISO 4217 names it: "SEK".
   string currency = 1;
 
-  // The day the rate was published for, in the publisher's own calendar: "2026-11-10". No rate
-  // is published on a weekend or a holiday; the last one published before it applies.
+  // The day the rate was published for, in the publisher's own calendar, as an ISO 8601
+  // calendar date (YYYY-MM-DD): "2026-11-10". No rate is published on a weekend or a holiday;
+  // the last one published before it applies.
   string published_on = 2;
 
   // Units of the currency per euro, times 10 000: 113725 for 11.3725 SEK per EUR.

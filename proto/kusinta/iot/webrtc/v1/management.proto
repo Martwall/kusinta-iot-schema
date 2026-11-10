@@ -822,7 +822,10 @@ message DayAheadPrices {
 //
 // WHO. Given to anyone who reaches the space, service included. Put by the property owner and
 // the gateway's administrators who reach it, and on a home by the home's household admins.
-// Anyone else is refused as NOT_ENTITLED.
+// Anyone else is refused as NOT_ENTITLED. Residents of a home inside a building reach the
+// home, not the building, so they read their home's address but not the building's. That
+// service sees a home's address is disclosed to its residents (access.v1
+// SERVICE_SIGNAL_ADDRESS in PrivacyDisclosure).
 
 // Reads a space's address. Answered as SpaceAddress.
 message GetSpaceAddress {
@@ -837,9 +840,10 @@ message PutSpaceAddress {
   PostalAddress address = 2;
 }
 
-// A postal address, as a person writes it. Free text in each field. A set address without a
-// street, a field longer than its bound, or a country that is not two capital letters is
-// refused as INVALID_REQUEST with metadata {"reason": "address"}.
+// A postal address, as a person writes it. Free text in each field; a field's bound counts
+// Unicode code points, not bytes or UTF-16 code units. A set address without a street, a
+// field longer than its bound, or a country that is not two capital letters is refused as
+// INVALID_REQUEST with metadata {"reason": "address"}.
 message PostalAddress {
   // The street and number, with any entrance or flat: "Exempelgatan 1". Up to 200 characters.
   string street = 1;

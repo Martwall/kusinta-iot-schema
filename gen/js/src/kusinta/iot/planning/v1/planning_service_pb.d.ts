@@ -83,10 +83,12 @@ export declare type GetPlanningInputsResponse = Message<"kusinta.iot.planning.v1
   latestForecastIssuedAt?: Timestamp | undefined;
 
   /**
-   * The reference rates to the currency households in the zone pay in (SEK for SE1–SE4), for
-   * the days the answered prices cover: every rate published from the day of the first price
-   * answered on, and the last one published before it, oldest first. Empty where no prices
-   * are answered, or no rate is known for the zone's currency.
+   * The reference rates to the currency households in the zone pay in (SEK for SE1–SE4):
+   * every rate published from the day of prices_from on (its default where unset, in the
+   * zone's own time), and the last one published before that day, oldest first — whether or
+   * not any price is answered. A gateway that asks from the prices it already holds so learns
+   * each new rate as it is published, after the prices it converts have arrived. Empty where
+   * no rate is known for the zone's currency.
    *
    * @generated from field: repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 4;
    */

@@ -25,6 +25,7 @@ class ServiceSignal(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     SERVICE_SIGNAL_LINKS: _ClassVar[ServiceSignal]
     SERVICE_SIGNAL_RESIDENTS: _ClassVar[ServiceSignal]
     SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED: _ClassVar[ServiceSignal]
+    SERVICE_SIGNAL_ADDRESS: _ClassVar[ServiceSignal]
 SERVICE_SIGNAL_UNSPECIFIED: ServiceSignal
 SERVICE_SIGNAL_REACHABILITY: ServiceSignal
 SERVICE_SIGNAL_BATTERY: ServiceSignal
@@ -36,6 +37,7 @@ SERVICE_SIGNAL_ROOM_SETUP: ServiceSignal
 SERVICE_SIGNAL_LINKS: ServiceSignal
 SERVICE_SIGNAL_RESIDENTS: ServiceSignal
 SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED: ServiceSignal
+SERVICE_SIGNAL_ADDRESS: ServiceSignal
 
 class AttributeRef(_message.Message):
     __slots__ = ("attribute_name", "cluster_id", "attribute_id", "endpoint_id", "vendor_extension")

@@ -168,8 +168,9 @@ export declare type ExchangeRate = Message<"kusinta.iot.planning.v1.ExchangeRate
   currency: string;
 
   /**
-   * The day the rate was published for, in the publisher's own calendar: "2026-11-10". No rate
-   * is published on a weekend or a holiday; the last one published before it applies.
+   * The day the rate was published for, in the publisher's own calendar, as an ISO 8601
+   * calendar date (YYYY-MM-DD): "2026-11-10". No rate is published on a weekend or a holiday;
+   * the last one published before it applies.
    *
    * @generated from field: string published_on = 2;
    */
