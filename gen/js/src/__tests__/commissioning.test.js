@@ -188,6 +188,32 @@ describe('model fit', () => {
     expect(decoded.modelFits).toMatchObject([{ band: ModelFitBand.NOT_ENOUGH_DATA, gap: ModelFitGap.NO_PLANT }])
   })
 
+  it('says a fitted model is waiting for scored nights', () => {
+    const decoded = onTheWire(CommissioningProfileSchema, {
+      modelFits: [
+        {
+          subject: { case: 'roomId', value: { value: 'room-1' } },
+          band: ModelFitBand.NOT_ENOUGH_DATA,
+          gap: ModelFitGap.TOO_FEW_NIGHTS,
+        },
+      ],
+    })
+    expect(decoded.modelFits).toMatchObject([{ gap: ModelFitGap.TOO_FEW_NIGHTS }])
+  })
+
+  it("says a floor zone's return is shared with other zones", () => {
+    const decoded = onTheWire(CommissioningProfileSchema, {
+      modelFits: [
+        {
+          subject: { case: 'floorZoneId', value: 'zone-1' },
+          band: ModelFitBand.NOT_ENOUGH_DATA,
+          gap: ModelFitGap.RETURNS_SHARED,
+        },
+      ],
+    })
+    expect(decoded.modelFits).toMatchObject([{ gap: ModelFitGap.RETURNS_SHARED }])
+  })
+
   it("gives a floor zone's model a band of its own", () => {
     const decoded = onTheWire(CommissioningProfileSchema, {
       modelFits: [

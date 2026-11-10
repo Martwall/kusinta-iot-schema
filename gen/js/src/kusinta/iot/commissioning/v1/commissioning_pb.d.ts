@@ -1495,8 +1495,8 @@ export enum ModelFitGap {
   NO_EXCITATION = 1,
 
   /**
-   * No single heat source is set up as serving the room's radiators (heating.v1): the model
-   * has no supply or outdoor temperature to learn against.
+   * No heat source is set up as serving the room's radiators, or more than one is
+   * (heating.v1): the model has no one supply and outdoor temperature to learn against.
    *
    * @generated from enum value: MODEL_FIT_GAP_NO_PLANT = 2;
    */
@@ -1523,6 +1523,22 @@ export enum ModelFitGap {
    * @generated from enum value: MODEL_FIT_GAP_NOT_PHYSICAL = 5;
    */
   NOT_PHYSICAL = 5,
+
+  /**
+   * A floor zone's return temperature is shared with other zones of its circuit, so it says
+   * nothing of the zone alone: the zone needs a return probe of its own.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_RETURNS_SHARED = 6;
+   */
+  RETURNS_SHARED = 6,
+
+  /**
+   * The model is fitted, and its predictions have not yet been scored over enough nights to
+   * be judged. Time fixes it.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_TOO_FEW_NIGHTS = 7;
+   */
+  TOO_FEW_NIGHTS = 7,
 }
 
 /**

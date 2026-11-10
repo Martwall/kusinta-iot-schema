@@ -483,8 +483,8 @@ class ModelFitGap extends $pb.ProtobufEnum {
   static const ModelFitGap MODEL_FIT_GAP_NO_EXCITATION =
       ModelFitGap._(1, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_EXCITATION');
 
-  /// No single heat source is set up as serving the room's radiators (heating.v1): the model
-  /// has no supply or outdoor temperature to learn against.
+  /// No heat source is set up as serving the room's radiators, or more than one is
+  /// (heating.v1): the model has no one supply and outdoor temperature to learn against.
   static const ModelFitGap MODEL_FIT_GAP_NO_PLANT =
       ModelFitGap._(2, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_PLANT');
 
@@ -501,6 +501,16 @@ class ModelFitGap extends $pb.ProtobufEnum {
   static const ModelFitGap MODEL_FIT_GAP_NOT_PHYSICAL =
       ModelFitGap._(5, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_PHYSICAL');
 
+  /// A floor zone's return temperature is shared with other zones of its circuit, so it says
+  /// nothing of the zone alone: the zone needs a return probe of its own.
+  static const ModelFitGap MODEL_FIT_GAP_RETURNS_SHARED =
+      ModelFitGap._(6, _omitEnumNames ? '' : 'MODEL_FIT_GAP_RETURNS_SHARED');
+
+  /// The model is fitted, and its predictions have not yet been scored over enough nights to
+  /// be judged. Time fixes it.
+  static const ModelFitGap MODEL_FIT_GAP_TOO_FEW_NIGHTS =
+      ModelFitGap._(7, _omitEnumNames ? '' : 'MODEL_FIT_GAP_TOO_FEW_NIGHTS');
+
   static const $core.List<ModelFitGap> values = <ModelFitGap>[
     MODEL_FIT_GAP_UNSPECIFIED,
     MODEL_FIT_GAP_NO_EXCITATION,
@@ -508,10 +518,12 @@ class ModelFitGap extends $pb.ProtobufEnum {
     MODEL_FIT_GAP_NO_RETURNS,
     MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN,
     MODEL_FIT_GAP_NOT_PHYSICAL,
+    MODEL_FIT_GAP_RETURNS_SHARED,
+    MODEL_FIT_GAP_TOO_FEW_NIGHTS,
   ];
 
   static final $core.List<ModelFitGap?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 5);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static ModelFitGap? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

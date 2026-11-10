@@ -657,7 +657,12 @@ message CommissioningProfile {
 //
 // The band is judged by the gateway, over the latest nights' predictions, against a forecast
 // that assumes the room stays as it is: GOOD clearly better than it, FAIR better, POOR no
-// better. NOT_ENOUGH_DATA until it has seen enough, with the gap that keeps it so.
+// better. NOT_ENOUGH_DATA until it has seen enough, with the gap that keeps it so. The
+// measure and its thresholds are the gateway's and may change: a client shows the band and
+// the gap, and never derives a number from them.
+//
+// Only a home's profile carries bands. Rooms and floor zones outside homes are modelled too;
+// their bands are left for later.
 
 // How well a model predicts its room or zone.
 enum ModelFitBand {
@@ -680,8 +685,8 @@ enum ModelFitGap {
   // The heating has not varied enough yet for the model to learn from: the room's target
   // has barely changed, or it is outside the heating season. Time fixes it.
   MODEL_FIT_GAP_NO_EXCITATION = 1;
-  // No single heat source is set up as serving the room's radiators (heating.v1): the model
-  // has no supply or outdoor temperature to learn against.
+  // No heat source is set up as serving the room's radiators, or more than one is
+  // (heating.v1): the model has no one supply and outdoor temperature to learn against.
   MODEL_FIT_GAP_NO_PLANT = 2;
   // A floor zone's circuit has no return temperature: its pipe probes are not bound.
   MODEL_FIT_GAP_NO_RETURNS = 3;
@@ -690,6 +695,12 @@ enum ModelFitGap {
   // The fit came out physically impossible: usually a sensor in the wrong place or a
   // mapping of rooms to zones that does not match the house.
   MODEL_FIT_GAP_NOT_PHYSICAL = 5;
+  // A floor zone's return temperature is shared with other zones of its circuit, so it says
+  // nothing of the zone alone: the zone needs a return probe of its own.
+  MODEL_FIT_GAP_RETURNS_SHARED = 6;
+  // The model is fitted, and its predictions have not yet been scored over enough nights to
+  // be judged. Time fixes it.
+  MODEL_FIT_GAP_TOO_FEW_NIGHTS = 7;
 }
 
 // One room's or floor zone's model fit.

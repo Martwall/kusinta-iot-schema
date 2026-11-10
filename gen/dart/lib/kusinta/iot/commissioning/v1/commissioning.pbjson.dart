@@ -245,6 +245,8 @@ const ModelFitGap$json = {
     {'1': 'MODEL_FIT_GAP_NO_RETURNS', '2': 3},
     {'1': 'MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN', '2': 4},
     {'1': 'MODEL_FIT_GAP_NOT_PHYSICAL', '2': 5},
+    {'1': 'MODEL_FIT_GAP_RETURNS_SHARED', '2': 6},
+    {'1': 'MODEL_FIT_GAP_TOO_FEW_NIGHTS', '2': 7},
   ],
 };
 
@@ -253,7 +255,8 @@ final $typed_data.Uint8List modelFitGapDescriptor = $convert.base64Decode(
     'CgtNb2RlbEZpdEdhcBIdChlNT0RFTF9GSVRfR0FQX1VOU1BFQ0lGSUVEEAASHwobTU9ERUxfRk'
     'lUX0dBUF9OT19FWENJVEFUSU9OEAESGgoWTU9ERUxfRklUX0dBUF9OT19QTEFOVBACEhwKGE1P'
     'REVMX0ZJVF9HQVBfTk9fUkVUVVJOUxADEiQKIE1PREVMX0ZJVF9HQVBfTk9UX0dBVEVXQVlfRF'
-    'JJVkVOEAQSHgoaTU9ERUxfRklUX0dBUF9OT1RfUEhZU0lDQUwQBQ==');
+    'JJVkVOEAQSHgoaTU9ERUxfRklUX0dBUF9OT1RfUEhZU0lDQUwQBRIgChxNT0RFTF9GSVRfR0FQ'
+    'X1JFVFVSTlNfU0hBUkVEEAYSIAocTU9ERUxfRklUX0dBUF9UT09fRkVXX05JR0hUUxAH');
 
 @$core.Deprecated('Use commissioningGrantStateDescriptor instead')
 const CommissioningGrantState$json = {
