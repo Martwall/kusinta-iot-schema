@@ -6,6 +6,8 @@ import {
   CommissioningTestSchema,
   CommissioningProfileSchema,
   FeatureStatusSchema,
+  ModelFitBand,
+  ModelFitGap,
   HouseTemplateSchema,
   Party,
   Evidence,
@@ -162,6 +164,41 @@ describe('feature status', () => {
   it('says when its to-dos are withheld rather than none', () => {
     const decoded = onTheWire(CommissioningProfileSchema, { needsWithheld: true })
     expect(decoded.needsWithheld).toBe(true)
+  })
+})
+
+describe('model fit', () => {
+  it("gives a room's model a band, never its parameters", () => {
+    const decoded = onTheWire(CommissioningProfileSchema, {
+      modelFits: [{ subject: { case: 'roomId', value: { value: 'room-1' } }, band: ModelFitBand.GOOD }],
+    })
+    expect(decoded.modelFits).toMatchObject([{ subject: { case: 'roomId', value: { value: 'room-1' } }, band: ModelFitBand.GOOD }])
+  })
+
+  it('says why there is not enough data yet', () => {
+    const decoded = onTheWire(CommissioningProfileSchema, {
+      modelFits: [
+        {
+          subject: { case: 'roomId', value: { value: 'room-1' } },
+          band: ModelFitBand.NOT_ENOUGH_DATA,
+          gap: ModelFitGap.NO_PLANT,
+        },
+      ],
+    })
+    expect(decoded.modelFits).toMatchObject([{ band: ModelFitBand.NOT_ENOUGH_DATA, gap: ModelFitGap.NO_PLANT }])
+  })
+
+  it("gives a floor zone's model a band of its own", () => {
+    const decoded = onTheWire(CommissioningProfileSchema, {
+      modelFits: [
+        {
+          subject: { case: 'floorZoneId', value: 'zone-1' },
+          band: ModelFitBand.NOT_ENOUGH_DATA,
+          gap: ModelFitGap.NO_RETURNS,
+        },
+      ],
+    })
+    expect(decoded.modelFits).toMatchObject([{ subject: { case: 'floorZoneId', value: 'zone-1' }, gap: ModelFitGap.NO_RETURNS }])
   })
 })
 

@@ -592,6 +592,15 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
    * @generated from field: bool needs_withheld = 7;
    */
   needsWithheld: boolean;
+
+  /**
+   * For a home, how well the gateway's model of each room and each floor zone in it predicts
+   * it (see ModelFit): one per room or zone the gateway models. Empty for a space that is
+   * not a home, and for a home none of whose rooms or zones is modelled yet.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.ModelFit model_fits = 8;
+   */
+  modelFits: ModelFit[];
 };
 
 /**
@@ -599,6 +608,50 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
  * Use `create(CommissioningProfileSchema)` to create a new message.
  */
 export declare const CommissioningProfileSchema: GenMessage<CommissioningProfile>;
+
+/**
+ * One room's or floor zone's model fit.
+ *
+ * @generated from message kusinta.iot.commissioning.v1.ModelFit
+ */
+export declare type ModelFit = Message<"kusinta.iot.commissioning.v1.ModelFit"> & {
+  /**
+   * @generated from oneof kusinta.iot.commissioning.v1.ModelFit.subject
+   */
+  subject: {
+    /**
+     * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 1;
+     */
+    value: SpaceId;
+    case: "roomId";
+  } | {
+    /**
+     * A heating.v1 FloorZone's zone_id.
+     *
+     * @generated from field: string floor_zone_id = 2;
+     */
+    value: string;
+    case: "floorZoneId";
+  } | { case: undefined; value?: undefined };
+
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.ModelFitBand band = 3;
+   */
+  band: ModelFitBand;
+
+  /**
+   * Set with NOT_ENOUGH_DATA, and with POOR where a gap explains it.
+   *
+   * @generated from field: kusinta.iot.commissioning.v1.ModelFitGap gap = 4;
+   */
+  gap: ModelFitGap;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.ModelFit.
+ * Use `create(ModelFitSchema)` to create a new message.
+ */
+export declare const ModelFitSchema: GenMessage<ModelFit>;
 
 /**
  * Whether a home is set up: every REQUIRED fact answered with a value at least once, and
@@ -1373,6 +1426,109 @@ export enum TestFailure {
  * Describes the enum kusinta.iot.commissioning.v1.TestFailure.
  */
 export declare const TestFailureSchema: GenEnum<TestFailure>;
+
+/**
+ * How well a model predicts its room or zone.
+ *
+ * @generated from enum kusinta.iot.commissioning.v1.ModelFitBand
+ */
+export enum ModelFitBand {
+  /**
+   * @generated from enum value: MODEL_FIT_BAND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Not judged yet: see ModelFit.gap.
+   *
+   * @generated from enum value: MODEL_FIT_BAND_NOT_ENOUGH_DATA = 1;
+   */
+  NOT_ENOUGH_DATA = 1,
+
+  /**
+   * No better than assuming no change: the planner does not plan with it.
+   *
+   * @generated from enum value: MODEL_FIT_BAND_POOR = 2;
+   */
+  POOR = 2,
+
+  /**
+   * Better than assuming no change.
+   *
+   * @generated from enum value: MODEL_FIT_BAND_FAIR = 3;
+   */
+  FAIR = 3,
+
+  /**
+   * Clearly better than assuming no change.
+   *
+   * @generated from enum value: MODEL_FIT_BAND_GOOD = 4;
+   */
+  GOOD = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.commissioning.v1.ModelFitBand.
+ */
+export declare const ModelFitBandSchema: GenEnum<ModelFitBand>;
+
+/**
+ * What keeps a model from being judged, or from fitting at all: a client says what to do
+ * about it. Read by a client that does not know a value as UNSPECIFIED.
+ *
+ * @generated from enum kusinta.iot.commissioning.v1.ModelFitGap
+ */
+export enum ModelFitGap {
+  /**
+   * None, or none the gateway names.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The heating has not varied enough yet for the model to learn from: the room's target
+   * has barely changed, or it is outside the heating season. Time fixes it.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_NO_EXCITATION = 1;
+   */
+  NO_EXCITATION = 1,
+
+  /**
+   * No single heat source is set up as serving the room's radiators (heating.v1): the model
+   * has no supply or outdoor temperature to learn against.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_NO_PLANT = 2;
+   */
+  NO_PLANT = 2,
+
+  /**
+   * A floor zone's circuit has no return temperature: its pipe probes are not bound.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_NO_RETURNS = 3;
+   */
+  NO_RETURNS = 3,
+
+  /**
+   * A floor zone the gateway does not drive: there is nothing of its own to learn from.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN = 4;
+   */
+  NOT_GATEWAY_DRIVEN = 4,
+
+  /**
+   * The fit came out physically impossible: usually a sensor in the wrong place or a
+   * mapping of rooms to zones that does not match the house.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_NOT_PHYSICAL = 5;
+   */
+  NOT_PHYSICAL = 5,
+}
+
+/**
+ * Describes the enum kusinta.iot.commissioning.v1.ModelFitGap.
+ */
+export declare const ModelFitGapSchema: GenEnum<ModelFitGap>;
 
 /**
  * Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no

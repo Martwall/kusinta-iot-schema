@@ -217,6 +217,44 @@ final $typed_data.Uint8List testFailureDescriptor = $convert.base64Decode(
     'Q0hBQkxFEAUSGgoWVEVTVF9GQUlMVVJFX05PX0VGRkVDVBAGEhkKFVRFU1RfRkFJTFVSRV9PQl'
     'NFUlZFRBAH');
 
+@$core.Deprecated('Use modelFitBandDescriptor instead')
+const ModelFitBand$json = {
+  '1': 'ModelFitBand',
+  '2': [
+    {'1': 'MODEL_FIT_BAND_UNSPECIFIED', '2': 0},
+    {'1': 'MODEL_FIT_BAND_NOT_ENOUGH_DATA', '2': 1},
+    {'1': 'MODEL_FIT_BAND_POOR', '2': 2},
+    {'1': 'MODEL_FIT_BAND_FAIR', '2': 3},
+    {'1': 'MODEL_FIT_BAND_GOOD', '2': 4},
+  ],
+};
+
+/// Descriptor for `ModelFitBand`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List modelFitBandDescriptor = $convert.base64Decode(
+    'CgxNb2RlbEZpdEJhbmQSHgoaTU9ERUxfRklUX0JBTkRfVU5TUEVDSUZJRUQQABIiCh5NT0RFTF'
+    '9GSVRfQkFORF9OT1RfRU5PVUdIX0RBVEEQARIXChNNT0RFTF9GSVRfQkFORF9QT09SEAISFwoT'
+    'TU9ERUxfRklUX0JBTkRfRkFJUhADEhcKE01PREVMX0ZJVF9CQU5EX0dPT0QQBA==');
+
+@$core.Deprecated('Use modelFitGapDescriptor instead')
+const ModelFitGap$json = {
+  '1': 'ModelFitGap',
+  '2': [
+    {'1': 'MODEL_FIT_GAP_UNSPECIFIED', '2': 0},
+    {'1': 'MODEL_FIT_GAP_NO_EXCITATION', '2': 1},
+    {'1': 'MODEL_FIT_GAP_NO_PLANT', '2': 2},
+    {'1': 'MODEL_FIT_GAP_NO_RETURNS', '2': 3},
+    {'1': 'MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN', '2': 4},
+    {'1': 'MODEL_FIT_GAP_NOT_PHYSICAL', '2': 5},
+  ],
+};
+
+/// Descriptor for `ModelFitGap`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List modelFitGapDescriptor = $convert.base64Decode(
+    'CgtNb2RlbEZpdEdhcBIdChlNT0RFTF9GSVRfR0FQX1VOU1BFQ0lGSUVEEAASHwobTU9ERUxfRk'
+    'lUX0dBUF9OT19FWENJVEFUSU9OEAESGgoWTU9ERUxfRklUX0dBUF9OT19QTEFOVBACEhwKGE1P'
+    'REVMX0ZJVF9HQVBfTk9fUkVUVVJOUxADEiQKIE1PREVMX0ZJVF9HQVBfTk9UX0dBVEVXQVlfRF'
+    'JJVkVOEAQSHgoaTU9ERUxfRklUX0dBUF9OT1RfUEhZU0lDQUwQBQ==');
+
 @$core.Deprecated('Use commissioningGrantStateDescriptor instead')
 const CommissioningGrantState$json = {
   '1': 'CommissioningGrantState',
@@ -826,6 +864,14 @@ const CommissioningProfile$json = {
       '10': 'template'
     },
     {'1': 'needs_withheld', '3': 7, '4': 1, '5': 8, '10': 'needsWithheld'},
+    {
+      '1': 'model_fits',
+      '3': 8,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.ModelFit',
+      '10': 'modelFits'
+    },
   ],
   '9': [
     {'1': 5, '2': 6},
@@ -842,7 +888,53 @@ final $typed_data.Uint8List commissioningProfileDescriptor = $convert.base64Deco
     'c3RzEkcKCGZlYXR1cmVzGAQgAygLMisua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5GZW'
     'F0dXJlU3RhdHVzUghmZWF0dXJlcxJHCgh0ZW1wbGF0ZRgGIAEoCzIrLmt1c2ludGEuaW90LmNv'
     'bW1pc3Npb25pbmcudjEuSG91c2VUZW1wbGF0ZVIIdGVtcGxhdGUSJQoObmVlZHNfd2l0aGhlbG'
-    'QYByABKAhSDW5lZWRzV2l0aGhlbGRKBAgFEAZSC3RlbXBsYXRlX2lk');
+    'QYByABKAhSDW5lZWRzV2l0aGhlbGQSRQoKbW9kZWxfZml0cxgIIAMoCzImLmt1c2ludGEuaW90'
+    'LmNvbW1pc3Npb25pbmcudjEuTW9kZWxGaXRSCW1vZGVsRml0c0oECAUQBlILdGVtcGxhdGVfaW'
+    'Q=');
+
+@$core.Deprecated('Use modelFitDescriptor instead')
+const ModelFit$json = {
+  '1': 'ModelFit',
+  '2': [
+    {
+      '1': 'room_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '9': 0,
+      '10': 'roomId'
+    },
+    {'1': 'floor_zone_id', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'floorZoneId'},
+    {
+      '1': 'band',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.ModelFitBand',
+      '10': 'band'
+    },
+    {
+      '1': 'gap',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.ModelFitGap',
+      '10': 'gap'
+    },
+  ],
+  '8': [
+    {'1': 'subject'},
+  ],
+};
+
+/// Descriptor for `ModelFit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List modelFitDescriptor = $convert.base64Decode(
+    'CghNb2RlbEZpdBI7Cgdyb29tX2lkGAEgASgLMiAua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuU3'
+    'BhY2VJZEgAUgZyb29tSWQSJAoNZmxvb3Jfem9uZV9pZBgCIAEoCUgAUgtmbG9vclpvbmVJZBI+'
+    'CgRiYW5kGAMgASgOMioua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Nb2RlbEZpdEJhbm'
+    'RSBGJhbmQSOwoDZ2FwGAQgASgOMikua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Nb2Rl'
+    'bEZpdEdhcFIDZ2FwQgkKB3N1YmplY3Q=');
 
 @$core.Deprecated('Use homeSetupDescriptor instead')
 const HomeSetup$json = {

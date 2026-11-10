@@ -1413,6 +1413,7 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     $core.Iterable<FeatureStatus>? features,
     HouseTemplate? template,
     $core.bool? needsWithheld,
+    $core.Iterable<ModelFit>? modelFits,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -1421,6 +1422,7 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     if (features != null) result.features.addAll(features);
     if (template != null) result.template = template;
     if (needsWithheld != null) result.needsWithheld = needsWithheld;
+    if (modelFits != null) result.modelFits.addAll(modelFits);
     return result;
   }
 
@@ -1452,6 +1454,8 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     ..aOM<HouseTemplate>(6, _omitFieldNames ? '' : 'template',
         subBuilder: HouseTemplate.create)
     ..aOB(7, _omitFieldNames ? '' : 'needsWithheld')
+    ..pc<ModelFit>(8, _omitFieldNames ? '' : 'modelFits', $pb.PbFieldType.PM,
+        subBuilder: ModelFit.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1520,6 +1524,126 @@ class CommissioningProfile extends $pb.GeneratedMessage {
   $core.bool hasNeedsWithheld() => $_has(5);
   @$pb.TagNumber(7)
   void clearNeedsWithheld() => $_clearField(7);
+
+  /// For a home, how well the gateway's model of each room and each floor zone in it predicts
+  /// it (see ModelFit): one per room or zone the gateway models. Empty for a space that is
+  /// not a home, and for a home none of whose rooms or zones is modelled yet.
+  @$pb.TagNumber(8)
+  $pb.PbList<ModelFit> get modelFits => $_getList(6);
+}
+
+enum ModelFit_Subject { roomId, floorZoneId, notSet }
+
+/// One room's or floor zone's model fit.
+class ModelFit extends $pb.GeneratedMessage {
+  factory ModelFit({
+    $1.SpaceId? roomId,
+    $core.String? floorZoneId,
+    ModelFitBand? band,
+    ModelFitGap? gap,
+  }) {
+    final result = create();
+    if (roomId != null) result.roomId = roomId;
+    if (floorZoneId != null) result.floorZoneId = floorZoneId;
+    if (band != null) result.band = band;
+    if (gap != null) result.gap = gap;
+    return result;
+  }
+
+  ModelFit._();
+
+  factory ModelFit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ModelFit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ModelFit_Subject> _ModelFit_SubjectByTag = {
+    1: ModelFit_Subject.roomId,
+    2: ModelFit_Subject.floorZoneId,
+    0: ModelFit_Subject.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ModelFit',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<$1.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $1.SpaceId.create)
+    ..aOS(2, _omitFieldNames ? '' : 'floorZoneId')
+    ..e<ModelFitBand>(3, _omitFieldNames ? '' : 'band', $pb.PbFieldType.OE,
+        defaultOrMaker: ModelFitBand.MODEL_FIT_BAND_UNSPECIFIED,
+        valueOf: ModelFitBand.valueOf,
+        enumValues: ModelFitBand.values)
+    ..e<ModelFitGap>(4, _omitFieldNames ? '' : 'gap', $pb.PbFieldType.OE,
+        defaultOrMaker: ModelFitGap.MODEL_FIT_GAP_UNSPECIFIED,
+        valueOf: ModelFitGap.valueOf,
+        enumValues: ModelFitGap.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ModelFit clone() => ModelFit()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ModelFit copyWith(void Function(ModelFit) updates) =>
+      super.copyWith((message) => updates(message as ModelFit)) as ModelFit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ModelFit create() => ModelFit._();
+  @$core.override
+  ModelFit createEmptyInstance() => create();
+  static $pb.PbList<ModelFit> createRepeated() => $pb.PbList<ModelFit>();
+  @$core.pragma('dart2js:noInline')
+  static ModelFit getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ModelFit>(create);
+  static ModelFit? _defaultInstance;
+
+  ModelFit_Subject whichSubject() => _ModelFit_SubjectByTag[$_whichOneof(0)]!;
+  void clearSubject() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $1.SpaceId get roomId => $_getN(0);
+  @$pb.TagNumber(1)
+  set roomId($1.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $1.SpaceId ensureRoomId() => $_ensure(0);
+
+  /// A heating.v1 FloorZone's zone_id.
+  @$pb.TagNumber(2)
+  $core.String get floorZoneId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set floorZoneId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFloorZoneId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFloorZoneId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  ModelFitBand get band => $_getN(2);
+  @$pb.TagNumber(3)
+  set band(ModelFitBand value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBand() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBand() => $_clearField(3);
+
+  /// Set with NOT_ENOUGH_DATA, and with POOR where a gap explains it.
+  @$pb.TagNumber(4)
+  ModelFitGap get gap => $_getN(3);
+  @$pb.TagNumber(4)
+  set gap(ModelFitGap value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasGap() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearGap() => $_clearField(4);
 }
 
 /// Whether a home is set up: every REQUIRED fact answered with a value at least once, and
