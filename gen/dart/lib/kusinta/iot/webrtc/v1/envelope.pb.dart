@@ -744,6 +744,7 @@ enum ManagementResult_Result {
   plantHistory,
   buildingPlanning,
   dayAheadPrices,
+  spaceAddress,
   notSet
 }
 
@@ -787,6 +788,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $5.PlantHistory? plantHistory,
     $3.BuildingPlanning? buildingPlanning,
     $3.DayAheadPrices? dayAheadPrices,
+    $3.SpaceAddress? spaceAddress,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -824,6 +826,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (plantHistory != null) result.plantHistory = plantHistory;
     if (buildingPlanning != null) result.buildingPlanning = buildingPlanning;
     if (dayAheadPrices != null) result.dayAheadPrices = dayAheadPrices;
+    if (spaceAddress != null) result.spaceAddress = spaceAddress;
     return result;
   }
 
@@ -866,6 +869,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     27: ManagementResult_Result.plantHistory,
     28: ManagementResult_Result.buildingPlanning,
     29: ManagementResult_Result.dayAheadPrices,
+    30: ManagementResult_Result.spaceAddress,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -901,7 +905,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       26,
       27,
       28,
-      29
+      29,
+      30
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -966,6 +971,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $3.BuildingPlanning.create)
     ..aOM<$3.DayAheadPrices>(29, _omitFieldNames ? '' : 'dayAheadPrices',
         subBuilder: $3.DayAheadPrices.create)
+    ..aOM<$3.SpaceAddress>(30, _omitFieldNames ? '' : 'spaceAddress',
+        subBuilder: $3.SpaceAddress.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1322,6 +1329,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearDayAheadPrices() => $_clearField(29);
   @$pb.TagNumber(29)
   $3.DayAheadPrices ensureDayAheadPrices() => $_ensure(28);
+
+  @$pb.TagNumber(30)
+  $3.SpaceAddress get spaceAddress => $_getN(29);
+  @$pb.TagNumber(30)
+  set spaceAddress($3.SpaceAddress value) => $_setField(30, value);
+  @$pb.TagNumber(30)
+  $core.bool hasSpaceAddress() => $_has(29);
+  @$pb.TagNumber(30)
+  void clearSpaceAddress() => $_clearField(30);
+  @$pb.TagNumber(30)
+  $3.SpaceAddress ensureSpaceAddress() => $_ensure(29);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

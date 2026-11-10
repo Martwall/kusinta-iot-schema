@@ -711,8 +711,11 @@ message GetPlantHistory {
 // WHO. Given to and put by the property owner and the gateway's administrators
 // (access.v1.ROLE_PROPERTY_OWNER, access.v1.ROLE_GATEWAY_ADMIN) who reach the building, and by
 // an installer under a commissioning grant on the building (commissioning.v1, GRANTS), as
-// facts about spaces outside homes are. Anyone else is refused as NOT_ENTITLED. The prices
-// themselves are given more widely: GetDayAheadPrices.
+// facts about spaces outside homes are. Where the building is itself a home (a detached house,
+// whose one top-level space is the home), its household admins (household.v1) are given and
+// put it too: there is no other owner to set it for them. A household admin of a home inside a
+// building is not. Anyone else is refused as NOT_ENTITLED. The prices themselves are given
+// more widely: GetDayAheadPrices.
 
 // Reads a building's planning record. Answered as BuildingPlanning.
 message GetBuildingPlanning {
@@ -797,6 +800,63 @@ message DayAheadPrices {
   // is a gap, never a price of zero, and a client draws it as one. Empty where the gateway
   // holds none in the span.
   repeated kusinta.iot.planning.v1.PriceInterval prices = 2;
+
+  // The reference rates a client converts the prices at, as planning.v1.ExchangeRate says:
+  // every rate the gateway holds from the day of the first price on, and the last one before
+  // it, oldest first. Empty where it holds none; a client then shows the prices in euros.
+  repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 3;
+}
+
+// SPACE ADDRESS. The street address of a building or a home, kept on the gateway so that the
+// people who look after the building can find it: its owner, and a technician sent to fix
+// something. A block of flats keeps one address on the building; row houses keep one on each
+// home, since each has its own street number.
+//
+// Only a top-level space or a home (household.v1) holds an address. Any other space is
+// refused as INVALID_REQUEST.
+//
+// KEPT ON THE GATEWAY. An address is never part of any message the gateway sends upstream,
+// never logged, and never used to look anything up with a third party. A household's
+// handover keeps it, since it describes the house, not the household; deleting the space
+// removes it.
+//
+// WHO. Given to anyone who reaches the space, service included. Put by the property owner and
+// the gateway's administrators who reach it, and on a home by the home's household admins.
+// Anyone else is refused as NOT_ENTITLED.
+
+// Reads a space's address. Answered as SpaceAddress.
+message GetSpaceAddress {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+}
+
+// Replaces a space's address whole. Answered as SpaceAddress, as it now stands.
+message PutSpaceAddress {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // Unset: the address is removed, and nothing of it is kept.
+  PostalAddress address = 2;
+}
+
+// A postal address, as a person writes it. Free text in each field. A set address without a
+// street, a field longer than its bound, or a country that is not two capital letters is
+// refused as INVALID_REQUEST with metadata {"reason": "address"}.
+message PostalAddress {
+  // The street and number, with any entrance or flat: "Exempelgatan 1". Up to 200 characters.
+  string street = 1;
+  // As written locally: "123 45". Up to 16 characters. Empty: none.
+  string postal_code = 2;
+  // Up to 100 characters. Empty: none.
+  string town = 3;
+  // ISO 3166-1 alpha-2: "SE". Empty: none.
+  string country = 4;
+}
+
+// A space's address.
+message SpaceAddress {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // Unset: the space has none.
+  PostalAddress address = 2;
 }
 
 // What the parties who do not live in a private space learn of it — the answer to a
@@ -1412,5 +1472,8 @@ message ManagementRequest {
     GetBuildingPlanning get_building_planning = 72;
     PutBuildingPlanning put_building_planning = 73;
     GetDayAheadPrices get_day_ahead_prices = 74;
+    // A building's or a home's street address; see SPACE ADDRESS.
+    GetSpaceAddress get_space_address = 75;
+    PutSpaceAddress put_space_address = 76;
   }
 }

@@ -169,3 +169,20 @@ final $typed_data.Uint8List forecastIssueDescriptor = $convert.base64Decode(
     '1lc3RhbXBSCGlzc3VlZEF0EiAKC2F0dHJpYnV0aW9uGAIgASgJUgthdHRyaWJ1dGlvbhI+CgZw'
     'b2ludHMYAyADKAsyJi5rdXNpbnRhLmlvdC5wbGFubmluZy52MS5Gb3JlY2FzdFBvaW50UgZwb2'
     'ludHM=');
+
+@$core.Deprecated('Use exchangeRateDescriptor instead')
+const ExchangeRate$json = {
+  '1': 'ExchangeRate',
+  '2': [
+    {'1': 'currency', '3': 1, '4': 1, '5': 9, '10': 'currency'},
+    {'1': 'published_on', '3': 2, '4': 1, '5': 9, '10': 'publishedOn'},
+    {'1': 'per_eur_e4', '3': 3, '4': 1, '5': 13, '10': 'perEurE4'},
+    {'1': 'source', '3': 4, '4': 1, '5': 9, '10': 'source'},
+  ],
+};
+
+/// Descriptor for `ExchangeRate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List exchangeRateDescriptor = $convert.base64Decode(
+    'CgxFeGNoYW5nZVJhdGUSGgoIY3VycmVuY3kYASABKAlSCGN1cnJlbmN5EiEKDHB1Ymxpc2hlZF'
+    '9vbhgCIAEoCVILcHVibGlzaGVkT24SHAoKcGVyX2V1cl9lNBgDIAEoDVIIcGVyRXVyRTQSFgoG'
+    'c291cmNlGAQgASgJUgZzb3VyY2U=');

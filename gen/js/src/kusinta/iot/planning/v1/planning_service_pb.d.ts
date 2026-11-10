@@ -4,7 +4,7 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { ForecastCell, ForecastIssue, PriceInterval } from "./planning_pb.js";
+import type { ExchangeRate, ForecastCell, ForecastIssue, PriceInterval } from "./planning_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 
 /**
@@ -81,6 +81,16 @@ export declare type GetPlanningInputsResponse = Message<"kusinta.iot.planning.v1
    * @generated from field: google.protobuf.Timestamp latest_forecast_issued_at = 3;
    */
   latestForecastIssuedAt?: Timestamp | undefined;
+
+  /**
+   * The reference rates to the currency households in the zone pay in (SEK for SE1–SE4), for
+   * the days the answered prices cover: every rate published from the day of the first price
+   * answered on, and the last one published before it, oldest first. Empty where no prices
+   * are answered, or no rate is known for the zone's currency.
+   *
+   * @generated from field: repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 4;
+   */
+  exchangeRates: ExchangeRate[];
 };
 
 /**

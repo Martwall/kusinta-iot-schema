@@ -43,4 +43,10 @@ message GetPlanningInputsResponse {
   // forecast: unset where none is known for the cell at all, so that "nothing newer" and
   // "nothing" are told apart.
   google.protobuf.Timestamp latest_forecast_issued_at = 3;
+
+  // The reference rates to the currency households in the zone pay in (SEK for SE1–SE4), for
+  // the days the answered prices cover: every rate published from the day of the first price
+  // answered on, and the last one published before it, oldest first. Empty where no prices
+  // are answered, or no rate is known for the zone's currency.
+  repeated ExchangeRate exchange_rates = 4;
 }
