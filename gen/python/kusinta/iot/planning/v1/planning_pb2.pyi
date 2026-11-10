@@ -50,3 +50,15 @@ class ForecastIssue(_message.Message):
     attribution: str
     points: _containers.RepeatedCompositeFieldContainer[ForecastPoint]
     def __init__(self, issued_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., attribution: _Optional[str] = ..., points: _Optional[_Iterable[_Union[ForecastPoint, _Mapping]]] = ...) -> None: ...
+
+class ExchangeRate(_message.Message):
+    __slots__ = ("currency", "published_on", "per_eur_e4", "source")
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    PUBLISHED_ON_FIELD_NUMBER: _ClassVar[int]
+    PER_EUR_E4_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_FIELD_NUMBER: _ClassVar[int]
+    currency: str
+    published_on: str
+    per_eur_e4: int
+    source: str
+    def __init__(self, currency: _Optional[str] = ..., published_on: _Optional[str] = ..., per_eur_e4: _Optional[int] = ..., source: _Optional[str] = ...) -> None: ...

@@ -86,6 +86,14 @@ const GetPlanningInputsResponse$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'latestForecastIssuedAt'
     },
+    {
+      '1': 'exchange_rates',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.planning.v1.ExchangeRate',
+      '10': 'exchangeRates'
+    },
   ],
 };
 
@@ -95,7 +103,8 @@ final $typed_data.Uint8List getPlanningInputsResponseDescriptor = $convert.base6
     '90LnBsYW5uaW5nLnYxLlByaWNlSW50ZXJ2YWxSBnByaWNlcxJCCghmb3JlY2FzdBgCIAEoCzIm'
     'Lmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLkZvcmVjYXN0SXNzdWVSCGZvcmVjYXN0ElUKGWxhdG'
     'VzdF9mb3JlY2FzdF9pc3N1ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1w'
-    'UhZsYXRlc3RGb3JlY2FzdElzc3VlZEF0');
+    'UhZsYXRlc3RGb3JlY2FzdElzc3VlZEF0EkwKDmV4Y2hhbmdlX3JhdGVzGAQgAygLMiUua3VzaW'
+    '50YS5pb3QucGxhbm5pbmcudjEuRXhjaGFuZ2VSYXRlUg1leGNoYW5nZVJhdGVz');
 
 const $core.Map<$core.String, $core.dynamic> PlanningInputsServiceBase$json = {
   '1': 'PlanningInputsService',
@@ -120,6 +129,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.planning.v1.PriceInterval': $0.PriceInterval$json,
   '.kusinta.iot.planning.v1.ForecastIssue': $0.ForecastIssue$json,
   '.kusinta.iot.planning.v1.ForecastPoint': $0.ForecastPoint$json,
+  '.kusinta.iot.planning.v1.ExchangeRate': $0.ExchangeRate$json,
 };
 
 /// Descriptor for `PlanningInputsService`. Decode as a `google.protobuf.ServiceDescriptorProto`.

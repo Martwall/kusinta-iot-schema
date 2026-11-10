@@ -138,12 +138,14 @@ class GetPlanningInputsResponse extends $pb.GeneratedMessage {
     $core.Iterable<$0.PriceInterval>? prices,
     $0.ForecastIssue? forecast,
     $1.Timestamp? latestForecastIssuedAt,
+    $core.Iterable<$0.ExchangeRate>? exchangeRates,
   }) {
     final result = create();
     if (prices != null) result.prices.addAll(prices);
     if (forecast != null) result.forecast = forecast;
     if (latestForecastIssuedAt != null)
       result.latestForecastIssuedAt = latestForecastIssuedAt;
+    if (exchangeRates != null) result.exchangeRates.addAll(exchangeRates);
     return result;
   }
 
@@ -168,6 +170,9 @@ class GetPlanningInputsResponse extends $pb.GeneratedMessage {
         subBuilder: $0.ForecastIssue.create)
     ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'latestForecastIssuedAt',
         subBuilder: $1.Timestamp.create)
+    ..pc<$0.ExchangeRate>(
+        4, _omitFieldNames ? '' : 'exchangeRates', $pb.PbFieldType.PM,
+        subBuilder: $0.ExchangeRate.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -222,6 +227,15 @@ class GetPlanningInputsResponse extends $pb.GeneratedMessage {
   void clearLatestForecastIssuedAt() => $_clearField(3);
   @$pb.TagNumber(3)
   $1.Timestamp ensureLatestForecastIssuedAt() => $_ensure(2);
+
+  /// The reference rates to the currency households in the zone pay in (SEK for SE1–SE4):
+  /// every rate published from the day of prices_from on (its default where unset, in the
+  /// zone's own time), and the last one published before that day, oldest first — whether or
+  /// not any price is answered. A gateway that asks from the prices it already holds so learns
+  /// each new rate as it is published, after the prices it converts have arrived. Empty where
+  /// no rate is known for the zone's currency.
+  @$pb.TagNumber(4)
+  $pb.PbList<$0.ExchangeRate> get exchangeRates => $_getList(3);
 }
 
 /// The api-server's planning inputs for a gateway, over the gateway's client certificate. The

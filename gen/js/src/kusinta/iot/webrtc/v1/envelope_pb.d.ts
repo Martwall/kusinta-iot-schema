@@ -7,7 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
-import type { BuildingPlanning, DayAheadPrices, ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceTree } from "./management_pb.js";
+import type { BuildingPlanning, DayAheadPrices, ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceAddress, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, PlantHistory, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
@@ -533,6 +533,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: DayAheadPrices;
     case: "dayAheadPrices";
+  } | {
+    /**
+     * get_space_address, put_space_address
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SpaceAddress space_address = 30;
+     */
+    value: SpaceAddress;
+    case: "spaceAddress";
   } | { case: undefined; value?: undefined };
 };
 

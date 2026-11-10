@@ -227,6 +227,7 @@ message ManagementResult {
     kusinta.iot.climate.v1.PlantHistory plant_history = 27; // get_plant_history
     BuildingPlanning building_planning = 28; // get_building_planning, put_building_planning
     DayAheadPrices day_ahead_prices = 29; // get_day_ahead_prices
+    SpaceAddress space_address = 30; // get_space_address, put_space_address
   }
 }
 

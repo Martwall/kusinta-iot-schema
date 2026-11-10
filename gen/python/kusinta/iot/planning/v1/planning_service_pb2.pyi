@@ -23,11 +23,13 @@ class GetPlanningInputsRequest(_message.Message):
     def __init__(self, bidding_zone: _Optional[str] = ..., forecast_cell: _Optional[_Union[_planning_pb2.ForecastCell, _Mapping]] = ..., prices_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., forecast_issued_after: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class GetPlanningInputsResponse(_message.Message):
-    __slots__ = ("prices", "forecast", "latest_forecast_issued_at")
+    __slots__ = ("prices", "forecast", "latest_forecast_issued_at", "exchange_rates")
     PRICES_FIELD_NUMBER: _ClassVar[int]
     FORECAST_FIELD_NUMBER: _ClassVar[int]
     LATEST_FORECAST_ISSUED_AT_FIELD_NUMBER: _ClassVar[int]
+    EXCHANGE_RATES_FIELD_NUMBER: _ClassVar[int]
     prices: _containers.RepeatedCompositeFieldContainer[_planning_pb2.PriceInterval]
     forecast: _planning_pb2.ForecastIssue
     latest_forecast_issued_at: _timestamp_pb2.Timestamp
-    def __init__(self, prices: _Optional[_Iterable[_Union[_planning_pb2.PriceInterval, _Mapping]]] = ..., forecast: _Optional[_Union[_planning_pb2.ForecastIssue, _Mapping]] = ..., latest_forecast_issued_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    exchange_rates: _containers.RepeatedCompositeFieldContainer[_planning_pb2.ExchangeRate]
+    def __init__(self, prices: _Optional[_Iterable[_Union[_planning_pb2.PriceInterval, _Mapping]]] = ..., forecast: _Optional[_Union[_planning_pb2.ForecastIssue, _Mapping]] = ..., latest_forecast_issued_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., exchange_rates: _Optional[_Iterable[_Union[_planning_pb2.ExchangeRate, _Mapping]]] = ...) -> None: ...

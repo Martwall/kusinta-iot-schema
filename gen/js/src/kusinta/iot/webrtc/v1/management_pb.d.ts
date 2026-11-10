@@ -12,7 +12,7 @@ import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
-import type { ForecastCell, PriceInterval } from "../../planning/v1/planning_pb.js";
+import type { ExchangeRate, ForecastCell, PriceInterval } from "../../planning/v1/planning_pb.js";
 import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
@@ -1358,6 +1358,15 @@ export declare type DayAheadPrices = Message<"kusinta.iot.webrtc.v1.DayAheadPric
    * @generated from field: repeated kusinta.iot.planning.v1.PriceInterval prices = 2;
    */
   prices: PriceInterval[];
+
+  /**
+   * The reference rates a client converts the prices at, as planning.v1.ExchangeRate says:
+   * every rate the gateway holds from the day of the first price on, and the last one before
+   * it, oldest first. Empty where it holds none; a client then shows the prices in euros.
+   *
+   * @generated from field: repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 3;
+   */
+  exchangeRates: ExchangeRate[];
 };
 
 /**
@@ -1365,6 +1374,118 @@ export declare type DayAheadPrices = Message<"kusinta.iot.webrtc.v1.DayAheadPric
  * Use `create(DayAheadPricesSchema)` to create a new message.
  */
 export declare const DayAheadPricesSchema: GenMessage<DayAheadPrices>;
+
+/**
+ * Reads a space's address. Answered as SpaceAddress.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetSpaceAddress
+ */
+export declare type GetSpaceAddress = Message<"kusinta.iot.webrtc.v1.GetSpaceAddress"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetSpaceAddress.
+ * Use `create(GetSpaceAddressSchema)` to create a new message.
+ */
+export declare const GetSpaceAddressSchema: GenMessage<GetSpaceAddress>;
+
+/**
+ * Replaces a space's address whole. Answered as SpaceAddress, as it now stands.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PutSpaceAddress
+ */
+export declare type PutSpaceAddress = Message<"kusinta.iot.webrtc.v1.PutSpaceAddress"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * Unset: the address is removed, and nothing of it is kept.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.PostalAddress address = 2;
+   */
+  address?: PostalAddress | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PutSpaceAddress.
+ * Use `create(PutSpaceAddressSchema)` to create a new message.
+ */
+export declare const PutSpaceAddressSchema: GenMessage<PutSpaceAddress>;
+
+/**
+ * A postal address, as a person writes it. Free text in each field; a field's bound counts
+ * Unicode code points, not bytes or UTF-16 code units. A set address without a street, a
+ * field longer than its bound, or a country that is not two capital letters is refused as
+ * INVALID_REQUEST with metadata {"reason": "address"}.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.PostalAddress
+ */
+export declare type PostalAddress = Message<"kusinta.iot.webrtc.v1.PostalAddress"> & {
+  /**
+   * The street and number, with any entrance or flat: "Exempelgatan 1". Up to 200 characters.
+   *
+   * @generated from field: string street = 1;
+   */
+  street: string;
+
+  /**
+   * As written locally: "123 45". Up to 16 characters. Empty: none.
+   *
+   * @generated from field: string postal_code = 2;
+   */
+  postalCode: string;
+
+  /**
+   * Up to 100 characters. Empty: none.
+   *
+   * @generated from field: string town = 3;
+   */
+  town: string;
+
+  /**
+   * ISO 3166-1 alpha-2: "SE". Empty: none.
+   *
+   * @generated from field: string country = 4;
+   */
+  country: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.PostalAddress.
+ * Use `create(PostalAddressSchema)` to create a new message.
+ */
+export declare const PostalAddressSchema: GenMessage<PostalAddress>;
+
+/**
+ * A space's address.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SpaceAddress
+ */
+export declare type SpaceAddress = Message<"kusinta.iot.webrtc.v1.SpaceAddress"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * Unset: the space has none.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.PostalAddress address = 2;
+   */
+  address?: PostalAddress | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SpaceAddress.
+ * Use `create(SpaceAddressSchema)` to create a new message.
+ */
+export declare const SpaceAddressSchema: GenMessage<SpaceAddress>;
 
 /**
  * What the parties who do not live in a private space learn of it — the answer to a
@@ -2821,6 +2942,20 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: GetDayAheadPrices;
     case: "getDayAheadPrices";
+  } | {
+    /**
+     * A building's or a home's street address; see SPACE ADDRESS.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.GetSpaceAddress get_space_address = 75;
+     */
+    value: GetSpaceAddress;
+    case: "getSpaceAddress";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.PutSpaceAddress put_space_address = 76;
+     */
+    value: PutSpaceAddress;
+    case: "putSpaceAddress";
   } | { case: undefined; value?: undefined };
 };
 

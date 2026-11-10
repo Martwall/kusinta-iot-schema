@@ -1078,6 +1078,14 @@ const DayAheadPrices$json = {
       '6': '.kusinta.iot.planning.v1.PriceInterval',
       '10': 'prices'
     },
+    {
+      '1': 'exchange_rates',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.planning.v1.ExchangeRate',
+      '10': 'exchangeRates'
+    },
   ],
 };
 
@@ -1085,7 +1093,103 @@ const DayAheadPrices$json = {
 final $typed_data.Uint8List dayAheadPricesDescriptor = $convert.base64Decode(
     'Cg5EYXlBaGVhZFByaWNlcxIhCgxiaWRkaW5nX3pvbmUYASABKAlSC2JpZGRpbmdab25lEj4KBn'
     'ByaWNlcxgCIAMoCzImLmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLlByaWNlSW50ZXJ2YWxSBnBy'
-    'aWNlcw==');
+    'aWNlcxJMCg5leGNoYW5nZV9yYXRlcxgDIAMoCzIlLmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLk'
+    'V4Y2hhbmdlUmF0ZVINZXhjaGFuZ2VSYXRlcw==');
+
+@$core.Deprecated('Use getSpaceAddressDescriptor instead')
+const GetSpaceAddress$json = {
+  '1': 'GetSpaceAddress',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+  ],
+};
+
+/// Descriptor for `GetSpaceAddress`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getSpaceAddressDescriptor = $convert.base64Decode(
+    'Cg9HZXRTcGFjZUFkZHJlc3MSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudG'
+    'l0eS52MS5TcGFjZUlkUgdzcGFjZUlk');
+
+@$core.Deprecated('Use putSpaceAddressDescriptor instead')
+const PutSpaceAddress$json = {
+  '1': 'PutSpaceAddress',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'address',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PostalAddress',
+      '10': 'address'
+    },
+  ],
+};
+
+/// Descriptor for `PutSpaceAddress`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List putSpaceAddressDescriptor = $convert.base64Decode(
+    'Cg9QdXRTcGFjZUFkZHJlc3MSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudG'
+    'l0eS52MS5TcGFjZUlkUgdzcGFjZUlkEj4KB2FkZHJlc3MYAiABKAsyJC5rdXNpbnRhLmlvdC53'
+    'ZWJydGMudjEuUG9zdGFsQWRkcmVzc1IHYWRkcmVzcw==');
+
+@$core.Deprecated('Use postalAddressDescriptor instead')
+const PostalAddress$json = {
+  '1': 'PostalAddress',
+  '2': [
+    {'1': 'street', '3': 1, '4': 1, '5': 9, '10': 'street'},
+    {'1': 'postal_code', '3': 2, '4': 1, '5': 9, '10': 'postalCode'},
+    {'1': 'town', '3': 3, '4': 1, '5': 9, '10': 'town'},
+    {'1': 'country', '3': 4, '4': 1, '5': 9, '10': 'country'},
+  ],
+};
+
+/// Descriptor for `PostalAddress`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List postalAddressDescriptor = $convert.base64Decode(
+    'Cg1Qb3N0YWxBZGRyZXNzEhYKBnN0cmVldBgBIAEoCVIGc3RyZWV0Eh8KC3Bvc3RhbF9jb2RlGA'
+    'IgASgJUgpwb3N0YWxDb2RlEhIKBHRvd24YAyABKAlSBHRvd24SGAoHY291bnRyeRgEIAEoCVIH'
+    'Y291bnRyeQ==');
+
+@$core.Deprecated('Use spaceAddressDescriptor instead')
+const SpaceAddress$json = {
+  '1': 'SpaceAddress',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'address',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PostalAddress',
+      '10': 'address'
+    },
+  ],
+};
+
+/// Descriptor for `SpaceAddress`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List spaceAddressDescriptor = $convert.base64Decode(
+    'CgxTcGFjZUFkZHJlc3MSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
+    '52MS5TcGFjZUlkUgdzcGFjZUlkEj4KB2FkZHJlc3MYAiABKAsyJC5rdXNpbnRhLmlvdC53ZWJy'
+    'dGMudjEuUG9zdGFsQWRkcmVzc1IHYWRkcmVzcw==');
 
 @$core.Deprecated('Use privacyDisclosureDescriptor instead')
 const PrivacyDisclosure$json = {
@@ -2462,6 +2566,24 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'getDayAheadPrices'
     },
+    {
+      '1': 'get_space_address',
+      '3': 75,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetSpaceAddress',
+      '9': 0,
+      '10': 'getSpaceAddress'
+    },
+    {
+      '1': 'put_space_address',
+      '3': 76,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.PutSpaceAddress',
+      '9': 0,
+      '10': 'putSpaceAddress'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2593,4 +2715,7 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'bmluZxhJIAEoCzIqLmt1c2ludGEuaW90LndlYnJ0Yy52MS5QdXRCdWlsZGluZ1BsYW5uaW5nSA'
     'BSE3B1dEJ1aWxkaW5nUGxhbm5pbmcSWwoUZ2V0X2RheV9haGVhZF9wcmljZXMYSiABKAsyKC5r'
     'dXNpbnRhLmlvdC53ZWJydGMudjEuR2V0RGF5QWhlYWRQcmljZXNIAFIRZ2V0RGF5QWhlYWRQcm'
-    'ljZXNCCQoHcmVxdWVzdA==');
+    'ljZXMSVAoRZ2V0X3NwYWNlX2FkZHJlc3MYSyABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEu'
+    'R2V0U3BhY2VBZGRyZXNzSABSD2dldFNwYWNlQWRkcmVzcxJUChFwdXRfc3BhY2VfYWRkcmVzcx'
+    'hMIAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5QdXRTcGFjZUFkZHJlc3NIAFIPcHV0U3Bh'
+    'Y2VBZGRyZXNzQgkKB3JlcXVlc3Q=');

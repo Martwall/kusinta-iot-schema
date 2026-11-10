@@ -490,6 +490,14 @@ export enum ServiceSignal {
    * @generated from enum value: SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED = 10;
    */
   FLOOR_ZONE_UNCONTROLLED = 10,
+
+  /**
+   * The home's street address, where one is set on it (webrtc.v1 SPACE ADDRESS), so that a
+   * technician can find the house. Never sent upstream.
+   *
+   * @generated from enum value: SERVICE_SIGNAL_ADDRESS = 11;
+   */
+  ADDRESS = 11,
 }
 
 /**

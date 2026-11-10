@@ -3127,10 +3127,12 @@ class DayAheadPrices extends $pb.GeneratedMessage {
   factory DayAheadPrices({
     $core.String? biddingZone,
     $core.Iterable<$6.PriceInterval>? prices,
+    $core.Iterable<$6.ExchangeRate>? exchangeRates,
   }) {
     final result = create();
     if (biddingZone != null) result.biddingZone = biddingZone;
     if (prices != null) result.prices.addAll(prices);
+    if (exchangeRates != null) result.exchangeRates.addAll(exchangeRates);
     return result;
   }
 
@@ -3152,6 +3154,9 @@ class DayAheadPrices extends $pb.GeneratedMessage {
     ..pc<$6.PriceInterval>(
         2, _omitFieldNames ? '' : 'prices', $pb.PbFieldType.PM,
         subBuilder: $6.PriceInterval.create)
+    ..pc<$6.ExchangeRate>(
+        3, _omitFieldNames ? '' : 'exchangeRates', $pb.PbFieldType.PM,
+        subBuilder: $6.ExchangeRate.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3190,6 +3195,328 @@ class DayAheadPrices extends $pb.GeneratedMessage {
   /// holds none in the span.
   @$pb.TagNumber(2)
   $pb.PbList<$6.PriceInterval> get prices => $_getList(1);
+
+  /// The reference rates a client converts the prices at, as planning.v1.ExchangeRate says:
+  /// every rate the gateway holds from the day of the first price on, and the last one before
+  /// it, oldest first. Empty where it holds none; a client then shows the prices in euros.
+  @$pb.TagNumber(3)
+  $pb.PbList<$6.ExchangeRate> get exchangeRates => $_getList(2);
+}
+
+/// Reads a space's address. Answered as SpaceAddress.
+class GetSpaceAddress extends $pb.GeneratedMessage {
+  factory GetSpaceAddress({
+    $0.SpaceId? spaceId,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    return result;
+  }
+
+  GetSpaceAddress._();
+
+  factory GetSpaceAddress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetSpaceAddress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetSpaceAddress',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetSpaceAddress clone() => GetSpaceAddress()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetSpaceAddress copyWith(void Function(GetSpaceAddress) updates) =>
+      super.copyWith((message) => updates(message as GetSpaceAddress))
+          as GetSpaceAddress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetSpaceAddress create() => GetSpaceAddress._();
+  @$core.override
+  GetSpaceAddress createEmptyInstance() => create();
+  static $pb.PbList<GetSpaceAddress> createRepeated() =>
+      $pb.PbList<GetSpaceAddress>();
+  @$core.pragma('dart2js:noInline')
+  static GetSpaceAddress getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetSpaceAddress>(create);
+  static GetSpaceAddress? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+}
+
+/// Replaces a space's address whole. Answered as SpaceAddress, as it now stands.
+class PutSpaceAddress extends $pb.GeneratedMessage {
+  factory PutSpaceAddress({
+    $0.SpaceId? spaceId,
+    PostalAddress? address,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (address != null) result.address = address;
+    return result;
+  }
+
+  PutSpaceAddress._();
+
+  factory PutSpaceAddress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PutSpaceAddress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PutSpaceAddress',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<PostalAddress>(2, _omitFieldNames ? '' : 'address',
+        subBuilder: PostalAddress.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PutSpaceAddress clone() => PutSpaceAddress()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PutSpaceAddress copyWith(void Function(PutSpaceAddress) updates) =>
+      super.copyWith((message) => updates(message as PutSpaceAddress))
+          as PutSpaceAddress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PutSpaceAddress create() => PutSpaceAddress._();
+  @$core.override
+  PutSpaceAddress createEmptyInstance() => create();
+  static $pb.PbList<PutSpaceAddress> createRepeated() =>
+      $pb.PbList<PutSpaceAddress>();
+  @$core.pragma('dart2js:noInline')
+  static PutSpaceAddress getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PutSpaceAddress>(create);
+  static PutSpaceAddress? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  /// Unset: the address is removed, and nothing of it is kept.
+  @$pb.TagNumber(2)
+  PostalAddress get address => $_getN(1);
+  @$pb.TagNumber(2)
+  set address(PostalAddress value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAddress() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAddress() => $_clearField(2);
+  @$pb.TagNumber(2)
+  PostalAddress ensureAddress() => $_ensure(1);
+}
+
+/// A postal address, as a person writes it. Free text in each field; a field's bound counts
+/// Unicode code points, not bytes or UTF-16 code units. A set address without a street, a
+/// field longer than its bound, or a country that is not two capital letters is refused as
+/// INVALID_REQUEST with metadata {"reason": "address"}.
+class PostalAddress extends $pb.GeneratedMessage {
+  factory PostalAddress({
+    $core.String? street,
+    $core.String? postalCode,
+    $core.String? town,
+    $core.String? country,
+  }) {
+    final result = create();
+    if (street != null) result.street = street;
+    if (postalCode != null) result.postalCode = postalCode;
+    if (town != null) result.town = town;
+    if (country != null) result.country = country;
+    return result;
+  }
+
+  PostalAddress._();
+
+  factory PostalAddress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PostalAddress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PostalAddress',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'street')
+    ..aOS(2, _omitFieldNames ? '' : 'postalCode')
+    ..aOS(3, _omitFieldNames ? '' : 'town')
+    ..aOS(4, _omitFieldNames ? '' : 'country')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PostalAddress clone() => PostalAddress()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PostalAddress copyWith(void Function(PostalAddress) updates) =>
+      super.copyWith((message) => updates(message as PostalAddress))
+          as PostalAddress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PostalAddress create() => PostalAddress._();
+  @$core.override
+  PostalAddress createEmptyInstance() => create();
+  static $pb.PbList<PostalAddress> createRepeated() =>
+      $pb.PbList<PostalAddress>();
+  @$core.pragma('dart2js:noInline')
+  static PostalAddress getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PostalAddress>(create);
+  static PostalAddress? _defaultInstance;
+
+  /// The street and number, with any entrance or flat: "Exempelgatan 1". Up to 200 characters.
+  @$pb.TagNumber(1)
+  $core.String get street => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set street($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStreet() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStreet() => $_clearField(1);
+
+  /// As written locally: "123 45". Up to 16 characters. Empty: none.
+  @$pb.TagNumber(2)
+  $core.String get postalCode => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set postalCode($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPostalCode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPostalCode() => $_clearField(2);
+
+  /// Up to 100 characters. Empty: none.
+  @$pb.TagNumber(3)
+  $core.String get town => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set town($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTown() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTown() => $_clearField(3);
+
+  /// ISO 3166-1 alpha-2: "SE". Empty: none.
+  @$pb.TagNumber(4)
+  $core.String get country => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set country($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCountry() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCountry() => $_clearField(4);
+}
+
+/// A space's address.
+class SpaceAddress extends $pb.GeneratedMessage {
+  factory SpaceAddress({
+    $0.SpaceId? spaceId,
+    PostalAddress? address,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (address != null) result.address = address;
+    return result;
+  }
+
+  SpaceAddress._();
+
+  factory SpaceAddress.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SpaceAddress.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SpaceAddress',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<PostalAddress>(2, _omitFieldNames ? '' : 'address',
+        subBuilder: PostalAddress.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SpaceAddress clone() => SpaceAddress()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SpaceAddress copyWith(void Function(SpaceAddress) updates) =>
+      super.copyWith((message) => updates(message as SpaceAddress))
+          as SpaceAddress;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SpaceAddress create() => SpaceAddress._();
+  @$core.override
+  SpaceAddress createEmptyInstance() => create();
+  static $pb.PbList<SpaceAddress> createRepeated() =>
+      $pb.PbList<SpaceAddress>();
+  @$core.pragma('dart2js:noInline')
+  static SpaceAddress getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SpaceAddress>(create);
+  static SpaceAddress? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  /// Unset: the space has none.
+  @$pb.TagNumber(2)
+  PostalAddress get address => $_getN(1);
+  @$pb.TagNumber(2)
+  set address(PostalAddress value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAddress() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAddress() => $_clearField(2);
+  @$pb.TagNumber(2)
+  PostalAddress ensureAddress() => $_ensure(1);
 }
 
 /// What the parties who do not live in a private space learn of it — the answer to a
@@ -5638,6 +5965,8 @@ enum ManagementRequest_Request {
   getBuildingPlanning,
   putBuildingPlanning,
   getDayAheadPrices,
+  getSpaceAddress,
+  putSpaceAddress,
   notSet
 }
 
@@ -5718,6 +6047,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetBuildingPlanning? getBuildingPlanning,
     PutBuildingPlanning? putBuildingPlanning,
     GetDayAheadPrices? getDayAheadPrices,
+    GetSpaceAddress? getSpaceAddress,
+    PutSpaceAddress? putSpaceAddress,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -5826,6 +6157,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (putBuildingPlanning != null)
       result.putBuildingPlanning = putBuildingPlanning;
     if (getDayAheadPrices != null) result.getDayAheadPrices = getDayAheadPrices;
+    if (getSpaceAddress != null) result.getSpaceAddress = getSpaceAddress;
+    if (putSpaceAddress != null) result.putSpaceAddress = putSpaceAddress;
     return result;
   }
 
@@ -5914,6 +6247,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     72: ManagementRequest_Request.getBuildingPlanning,
     73: ManagementRequest_Request.putBuildingPlanning,
     74: ManagementRequest_Request.getDayAheadPrices,
+    75: ManagementRequest_Request.getSpaceAddress,
+    76: ManagementRequest_Request.putSpaceAddress,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -5995,7 +6330,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
       71,
       72,
       73,
-      74
+      74,
+      75,
+      76
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -6170,6 +6507,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: PutBuildingPlanning.create)
     ..aOM<GetDayAheadPrices>(74, _omitFieldNames ? '' : 'getDayAheadPrices',
         subBuilder: GetDayAheadPrices.create)
+    ..aOM<GetSpaceAddress>(75, _omitFieldNames ? '' : 'getSpaceAddress',
+        subBuilder: GetSpaceAddress.create)
+    ..aOM<PutSpaceAddress>(76, _omitFieldNames ? '' : 'putSpaceAddress',
+        subBuilder: PutSpaceAddress.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -7043,6 +7384,29 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearGetDayAheadPrices() => $_clearField(74);
   @$pb.TagNumber(74)
   GetDayAheadPrices ensureGetDayAheadPrices() => $_ensure(73);
+
+  /// A building's or a home's street address; see SPACE ADDRESS.
+  @$pb.TagNumber(75)
+  GetSpaceAddress get getSpaceAddress => $_getN(74);
+  @$pb.TagNumber(75)
+  set getSpaceAddress(GetSpaceAddress value) => $_setField(75, value);
+  @$pb.TagNumber(75)
+  $core.bool hasGetSpaceAddress() => $_has(74);
+  @$pb.TagNumber(75)
+  void clearGetSpaceAddress() => $_clearField(75);
+  @$pb.TagNumber(75)
+  GetSpaceAddress ensureGetSpaceAddress() => $_ensure(74);
+
+  @$pb.TagNumber(76)
+  PutSpaceAddress get putSpaceAddress => $_getN(75);
+  @$pb.TagNumber(76)
+  set putSpaceAddress(PutSpaceAddress value) => $_setField(76, value);
+  @$pb.TagNumber(76)
+  $core.bool hasPutSpaceAddress() => $_has(75);
+  @$pb.TagNumber(76)
+  void clearPutSpaceAddress() => $_clearField(76);
+  @$pb.TagNumber(76)
+  PutSpaceAddress ensurePutSpaceAddress() => $_ensure(75);
 }
 
 const $core.bool _omitFieldNames =

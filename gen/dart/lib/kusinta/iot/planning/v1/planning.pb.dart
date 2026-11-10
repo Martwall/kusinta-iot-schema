@@ -391,6 +391,110 @@ class ForecastIssue extends $pb.GeneratedMessage {
   $pb.PbList<ForecastPoint> get points => $_getList(2);
 }
 
+/// An official reference rate from euros to another currency, published once a working day.
+/// Day-ahead prices are always in euros; a client that shows them in the currency a household
+/// pays in converts each price at the latest rate published on or before the price's day, in
+/// the bidding zone's own time. For display only: a planner compares prices with each other
+/// and never needs a rate.
+class ExchangeRate extends $pb.GeneratedMessage {
+  factory ExchangeRate({
+    $core.String? currency,
+    $core.String? publishedOn,
+    $core.int? perEurE4,
+    $core.String? source,
+  }) {
+    final result = create();
+    if (currency != null) result.currency = currency;
+    if (publishedOn != null) result.publishedOn = publishedOn;
+    if (perEurE4 != null) result.perEurE4 = perEurE4;
+    if (source != null) result.source = source;
+    return result;
+  }
+
+  ExchangeRate._();
+
+  factory ExchangeRate.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ExchangeRate.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ExchangeRate',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.planning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'currency')
+    ..aOS(2, _omitFieldNames ? '' : 'publishedOn')
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'perEurE4', $pb.PbFieldType.OU3)
+    ..aOS(4, _omitFieldNames ? '' : 'source')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExchangeRate clone() => ExchangeRate()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ExchangeRate copyWith(void Function(ExchangeRate) updates) =>
+      super.copyWith((message) => updates(message as ExchangeRate))
+          as ExchangeRate;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ExchangeRate create() => ExchangeRate._();
+  @$core.override
+  ExchangeRate createEmptyInstance() => create();
+  static $pb.PbList<ExchangeRate> createRepeated() =>
+      $pb.PbList<ExchangeRate>();
+  @$core.pragma('dart2js:noInline')
+  static ExchangeRate getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ExchangeRate>(create);
+  static ExchangeRate? _defaultInstance;
+
+  /// The currency converted to, as ISO 4217 names it: "SEK".
+  @$pb.TagNumber(1)
+  $core.String get currency => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set currency($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCurrency() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCurrency() => $_clearField(1);
+
+  /// The day the rate was published for, in the publisher's own calendar, as an ISO 8601
+  /// calendar date (YYYY-MM-DD): "2026-11-10". No rate is published on a weekend or a holiday;
+  /// the last one published before it applies.
+  @$pb.TagNumber(2)
+  $core.String get publishedOn => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set publishedOn($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPublishedOn() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPublishedOn() => $_clearField(2);
+
+  /// Units of the currency per euro, times 10 000: 113725 for 11.3725 SEK per EUR.
+  @$pb.TagNumber(3)
+  $core.int get perEurE4 => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set perEurE4($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPerEurE4() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPerEurE4() => $_clearField(3);
+
+  /// Who published it, to name wherever a converted price is shown: "Sveriges Riksbank".
+  @$pb.TagNumber(4)
+  $core.String get source => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set source($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSource() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSource() => $_clearField(4);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

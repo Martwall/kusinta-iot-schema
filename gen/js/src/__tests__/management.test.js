@@ -620,4 +620,72 @@ describe('building planning', () => {
     })
     expect(decoded.result).toMatchObject({ case: 'dayAheadPrices', value: { biddingZone: 'SE3', prices: [{ eurCentsPerMwh: -125 }] } })
   })
+
+  it('answers the prices with the reference rates a client converts them at', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: {
+        case: 'dayAheadPrices',
+        value: {
+          biddingZone: 'SE3',
+          exchangeRates: [{ currency: 'SEK', publishedOn: '2026-11-10', perEurE4: 113725, source: 'Sveriges Riksbank' }],
+        },
+      },
+    })
+    expect(decoded.result).toMatchObject({
+      case: 'dayAheadPrices',
+      value: { exchangeRates: [{ currency: 'SEK', publishedOn: '2026-11-10', perEurE4: 113725 }] },
+    })
+  })
+})
+
+describe('space address', () => {
+  it('reads the address of a building or a home', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'getSpaceAddress', value: { spaceId: { value: 'space-home' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'getSpaceAddress', value: { spaceId: { value: 'space-home' } } })
+  })
+
+  it('puts a structured address', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'putSpaceAddress',
+        value: {
+          spaceId: { value: 'space-home' },
+          address: { street: 'Exempelgatan 1', postalCode: '123 45', town: 'Exempelstad', country: 'SE' },
+        },
+      },
+    })
+    expect(decoded.request).toMatchObject({
+      case: 'putSpaceAddress',
+      value: { address: { street: 'Exempelgatan 1', postalCode: '123 45', town: 'Exempelstad', country: 'SE' } },
+    })
+  })
+
+  it('clears the address with a put that carries none', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'putSpaceAddress', value: { spaceId: { value: 'space-home' } } },
+    })
+    expect(decoded.request.value).not.toHaveProperty('address')
+  })
+
+  it('answers the address as it stands', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: {
+        case: 'spaceAddress',
+        value: { spaceId: { value: 'space-home' }, address: { street: 'Exempelgatan 1' } },
+      },
+    })
+    expect(decoded.result).toMatchObject({ case: 'spaceAddress', value: { address: { street: 'Exempelgatan 1' } } })
+  })
+
+  it('answers a space with no address with none', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: { case: 'spaceAddress', value: { spaceId: { value: 'space-home' } } },
+    })
+    expect(decoded.result.value).not.toHaveProperty('address')
+  })
 })

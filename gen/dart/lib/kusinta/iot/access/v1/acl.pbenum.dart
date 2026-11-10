@@ -85,6 +85,11 @@ class ServiceSignal extends $pb.ProtobufEnum {
       ServiceSignal._(
           10, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED');
 
+  /// The home's street address, where one is set on it (webrtc.v1 SPACE ADDRESS), so that a
+  /// technician can find the house. Never sent upstream.
+  static const ServiceSignal SERVICE_SIGNAL_ADDRESS =
+      ServiceSignal._(11, _omitEnumNames ? '' : 'SERVICE_SIGNAL_ADDRESS');
+
   static const $core.List<ServiceSignal> values = <ServiceSignal>[
     SERVICE_SIGNAL_UNSPECIFIED,
     SERVICE_SIGNAL_REACHABILITY,
@@ -97,10 +102,11 @@ class ServiceSignal extends $pb.ProtobufEnum {
     SERVICE_SIGNAL_LINKS,
     SERVICE_SIGNAL_RESIDENTS,
     SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED,
+    SERVICE_SIGNAL_ADDRESS,
   ];
 
   static final $core.List<ServiceSignal?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 10);
+      $pb.ProtobufEnum.$_initByValueList(values, 11);
   static ServiceSignal? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

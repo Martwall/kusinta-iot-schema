@@ -249,6 +249,10 @@ enum ServiceSignal {
   // which rooms it had or lacks, nor who left it so
   // (reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED).
   SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED = 10;
+
+  // The home's street address, where one is set on it (webrtc.v1 SPACE ADDRESS), so that a
+  // technician can find the house. Never sent upstream.
+  SERVICE_SIGNAL_ADDRESS = 11;
 }
 
 // Every DeviceAcl in force for one user on one gateway, at valid_at.

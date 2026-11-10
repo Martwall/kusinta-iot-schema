@@ -150,3 +150,50 @@ export declare type ForecastIssue = Message<"kusinta.iot.planning.v1.ForecastIss
  */
 export declare const ForecastIssueSchema: GenMessage<ForecastIssue>;
 
+/**
+ * An official reference rate from euros to another currency, published once a working day.
+ * Day-ahead prices are always in euros; a client that shows them in the currency a household
+ * pays in converts each price at the latest rate published on or before the price's day, in
+ * the bidding zone's own time. For display only: a planner compares prices with each other
+ * and never needs a rate.
+ *
+ * @generated from message kusinta.iot.planning.v1.ExchangeRate
+ */
+export declare type ExchangeRate = Message<"kusinta.iot.planning.v1.ExchangeRate"> & {
+  /**
+   * The currency converted to, as ISO 4217 names it: "SEK".
+   *
+   * @generated from field: string currency = 1;
+   */
+  currency: string;
+
+  /**
+   * The day the rate was published for, in the publisher's own calendar, as an ISO 8601
+   * calendar date (YYYY-MM-DD): "2026-11-10". No rate is published on a weekend or a holiday;
+   * the last one published before it applies.
+   *
+   * @generated from field: string published_on = 2;
+   */
+  publishedOn: string;
+
+  /**
+   * Units of the currency per euro, times 10 000: 113725 for 11.3725 SEK per EUR.
+   *
+   * @generated from field: uint32 per_eur_e4 = 3;
+   */
+  perEurE4: number;
+
+  /**
+   * Who published it, to name wherever a converted price is shown: "Sveriges Riksbank".
+   *
+   * @generated from field: string source = 4;
+   */
+  source: string;
+};
+
+/**
+ * Describes the message kusinta.iot.planning.v1.ExchangeRate.
+ * Use `create(ExchangeRateSchema)` to create a new message.
+ */
+export declare const ExchangeRateSchema: GenMessage<ExchangeRate>;
+

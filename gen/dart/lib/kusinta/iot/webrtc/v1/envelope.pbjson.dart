@@ -557,6 +557,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'dayAheadPrices'
     },
+    {
+      '1': 'space_address',
+      '3': 30,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SpaceAddress',
+      '9': 0,
+      '10': 'spaceAddress'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -607,8 +616,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     '90LmNsaW1hdGUudjEuUGxhbnRIaXN0b3J5SABSDHBsYW50SGlzdG9yeRJWChFidWlsZGluZ19w'
     'bGFubmluZxgcIAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5CdWlsZGluZ1BsYW5uaW5nSA'
     'BSEGJ1aWxkaW5nUGxhbm5pbmcSUQoQZGF5X2FoZWFkX3ByaWNlcxgdIAEoCzIlLmt1c2ludGEu'
-    'aW90LndlYnJ0Yy52MS5EYXlBaGVhZFByaWNlc0gAUg5kYXlBaGVhZFByaWNlc0IICgZyZXN1bH'
-    'Q=');
+    'aW90LndlYnJ0Yy52MS5EYXlBaGVhZFByaWNlc0gAUg5kYXlBaGVhZFByaWNlcxJKCg1zcGFjZV'
+    '9hZGRyZXNzGB4gASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLlNwYWNlQWRkcmVzc0gAUgxz'
+    'cGFjZUFkZHJlc3NCCAoGcmVzdWx0');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
