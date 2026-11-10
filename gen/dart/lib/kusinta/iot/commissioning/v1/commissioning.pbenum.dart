@@ -434,6 +434,102 @@ class TestFailure extends $pb.ProtobufEnum {
   const TestFailure._(super.value, super.name);
 }
 
+/// How well a model predicts its room or zone.
+class ModelFitBand extends $pb.ProtobufEnum {
+  static const ModelFitBand MODEL_FIT_BAND_UNSPECIFIED =
+      ModelFitBand._(0, _omitEnumNames ? '' : 'MODEL_FIT_BAND_UNSPECIFIED');
+
+  /// Not judged yet: see ModelFit.gap.
+  static const ModelFitBand MODEL_FIT_BAND_NOT_ENOUGH_DATA =
+      ModelFitBand._(1, _omitEnumNames ? '' : 'MODEL_FIT_BAND_NOT_ENOUGH_DATA');
+
+  /// No better than assuming no change: the planner does not plan with it.
+  static const ModelFitBand MODEL_FIT_BAND_POOR =
+      ModelFitBand._(2, _omitEnumNames ? '' : 'MODEL_FIT_BAND_POOR');
+
+  /// Better than assuming no change.
+  static const ModelFitBand MODEL_FIT_BAND_FAIR =
+      ModelFitBand._(3, _omitEnumNames ? '' : 'MODEL_FIT_BAND_FAIR');
+
+  /// Clearly better than assuming no change.
+  static const ModelFitBand MODEL_FIT_BAND_GOOD =
+      ModelFitBand._(4, _omitEnumNames ? '' : 'MODEL_FIT_BAND_GOOD');
+
+  static const $core.List<ModelFitBand> values = <ModelFitBand>[
+    MODEL_FIT_BAND_UNSPECIFIED,
+    MODEL_FIT_BAND_NOT_ENOUGH_DATA,
+    MODEL_FIT_BAND_POOR,
+    MODEL_FIT_BAND_FAIR,
+    MODEL_FIT_BAND_GOOD,
+  ];
+
+  static final $core.List<ModelFitBand?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static ModelFitBand? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ModelFitBand._(super.value, super.name);
+}
+
+/// What keeps a model from being judged, or from fitting at all: a client says what to do
+/// about it. Read by a client that does not know a value as UNSPECIFIED.
+class ModelFitGap extends $pb.ProtobufEnum {
+  /// None, or none the gateway names.
+  static const ModelFitGap MODEL_FIT_GAP_UNSPECIFIED =
+      ModelFitGap._(0, _omitEnumNames ? '' : 'MODEL_FIT_GAP_UNSPECIFIED');
+
+  /// The heating has not varied enough yet for the model to learn from: the room's target
+  /// has barely changed, or it is outside the heating season. Time fixes it.
+  static const ModelFitGap MODEL_FIT_GAP_NO_EXCITATION =
+      ModelFitGap._(1, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_EXCITATION');
+
+  /// No heat source is set up as serving the room's radiators, or more than one is
+  /// (heating.v1): the model has no one supply and outdoor temperature to learn against.
+  static const ModelFitGap MODEL_FIT_GAP_NO_PLANT =
+      ModelFitGap._(2, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_PLANT');
+
+  /// A floor zone's circuit has no return temperature: its pipe probes are not bound.
+  static const ModelFitGap MODEL_FIT_GAP_NO_RETURNS =
+      ModelFitGap._(3, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_RETURNS');
+
+  /// A floor zone the gateway does not drive: there is nothing of its own to learn from.
+  static const ModelFitGap MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN = ModelFitGap._(
+      4, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN');
+
+  /// The fit came out physically impossible: usually a sensor in the wrong place or a
+  /// mapping of rooms to zones that does not match the house.
+  static const ModelFitGap MODEL_FIT_GAP_NOT_PHYSICAL =
+      ModelFitGap._(5, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_PHYSICAL');
+
+  /// A floor zone's return temperature is shared with other zones of its circuit, so it says
+  /// nothing of the zone alone: the zone needs a return probe of its own.
+  static const ModelFitGap MODEL_FIT_GAP_RETURNS_SHARED =
+      ModelFitGap._(6, _omitEnumNames ? '' : 'MODEL_FIT_GAP_RETURNS_SHARED');
+
+  /// The model is fitted, and its predictions have not yet been scored over enough nights to
+  /// be judged. Time fixes it.
+  static const ModelFitGap MODEL_FIT_GAP_TOO_FEW_NIGHTS =
+      ModelFitGap._(7, _omitEnumNames ? '' : 'MODEL_FIT_GAP_TOO_FEW_NIGHTS');
+
+  static const $core.List<ModelFitGap> values = <ModelFitGap>[
+    MODEL_FIT_GAP_UNSPECIFIED,
+    MODEL_FIT_GAP_NO_EXCITATION,
+    MODEL_FIT_GAP_NO_PLANT,
+    MODEL_FIT_GAP_NO_RETURNS,
+    MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN,
+    MODEL_FIT_GAP_NOT_PHYSICAL,
+    MODEL_FIT_GAP_RETURNS_SHARED,
+    MODEL_FIT_GAP_TOO_FEW_NIGHTS,
+  ];
+
+  static final $core.List<ModelFitGap?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
+  static ModelFitGap? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ModelFitGap._(super.value, super.name);
+}
+
 /// Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no
 /// state: it is listed no more.
 class CommissioningGrantState extends $pb.ProtobufEnum {

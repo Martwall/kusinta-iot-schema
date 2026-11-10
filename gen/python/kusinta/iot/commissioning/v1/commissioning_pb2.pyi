@@ -104,6 +104,25 @@ class TestFailure(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TEST_FAILURE_NO_EFFECT: _ClassVar[TestFailure]
     TEST_FAILURE_OBSERVED: _ClassVar[TestFailure]
 
+class ModelFitBand(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MODEL_FIT_BAND_UNSPECIFIED: _ClassVar[ModelFitBand]
+    MODEL_FIT_BAND_NOT_ENOUGH_DATA: _ClassVar[ModelFitBand]
+    MODEL_FIT_BAND_POOR: _ClassVar[ModelFitBand]
+    MODEL_FIT_BAND_FAIR: _ClassVar[ModelFitBand]
+    MODEL_FIT_BAND_GOOD: _ClassVar[ModelFitBand]
+
+class ModelFitGap(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MODEL_FIT_GAP_UNSPECIFIED: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_NO_EXCITATION: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_NO_PLANT: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_NO_RETURNS: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_NOT_PHYSICAL: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_RETURNS_SHARED: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_TOO_FEW_NIGHTS: _ClassVar[ModelFitGap]
+
 class CommissioningGrantState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     COMMISSIONING_GRANT_STATE_UNSPECIFIED: _ClassVar[CommissioningGrantState]
@@ -171,6 +190,19 @@ TEST_FAILURE_DID_NOT_RETURN_TO_REST: TestFailure
 TEST_FAILURE_DEVICE_UNREACHABLE: TestFailure
 TEST_FAILURE_NO_EFFECT: TestFailure
 TEST_FAILURE_OBSERVED: TestFailure
+MODEL_FIT_BAND_UNSPECIFIED: ModelFitBand
+MODEL_FIT_BAND_NOT_ENOUGH_DATA: ModelFitBand
+MODEL_FIT_BAND_POOR: ModelFitBand
+MODEL_FIT_BAND_FAIR: ModelFitBand
+MODEL_FIT_BAND_GOOD: ModelFitBand
+MODEL_FIT_GAP_UNSPECIFIED: ModelFitGap
+MODEL_FIT_GAP_NO_EXCITATION: ModelFitGap
+MODEL_FIT_GAP_NO_PLANT: ModelFitGap
+MODEL_FIT_GAP_NO_RETURNS: ModelFitGap
+MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN: ModelFitGap
+MODEL_FIT_GAP_NOT_PHYSICAL: ModelFitGap
+MODEL_FIT_GAP_RETURNS_SHARED: ModelFitGap
+MODEL_FIT_GAP_TOO_FEW_NIGHTS: ModelFitGap
 COMMISSIONING_GRANT_STATE_UNSPECIFIED: CommissioningGrantState
 COMMISSIONING_GRANT_STATE_REQUESTED: CommissioningGrantState
 COMMISSIONING_GRANT_STATE_GRANTED: CommissioningGrantState
@@ -338,20 +370,34 @@ class TestEvidence(_message.Message):
     def __init__(self, reading: _Optional[str] = ..., value: _Optional[int] = ..., observed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CommissioningProfile(_message.Message):
-    __slots__ = ("space_id", "facts", "tests", "features", "template", "needs_withheld")
+    __slots__ = ("space_id", "facts", "tests", "features", "template", "needs_withheld", "model_fits")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     FACTS_FIELD_NUMBER: _ClassVar[int]
     TESTS_FIELD_NUMBER: _ClassVar[int]
     FEATURES_FIELD_NUMBER: _ClassVar[int]
     TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     NEEDS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    MODEL_FITS_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     facts: _containers.RepeatedCompositeFieldContainer[CommissioningFact]
     tests: _containers.RepeatedCompositeFieldContainer[CommissioningTest]
     features: _containers.RepeatedCompositeFieldContainer[FeatureStatus]
     template: HouseTemplate
     needs_withheld: bool
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ...) -> None: ...
+    model_fits: _containers.RepeatedCompositeFieldContainer[ModelFit]
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ..., model_fits: _Optional[_Iterable[_Union[ModelFit, _Mapping]]] = ...) -> None: ...
+
+class ModelFit(_message.Message):
+    __slots__ = ("room_id", "floor_zone_id", "band", "gap")
+    ROOM_ID_FIELD_NUMBER: _ClassVar[int]
+    FLOOR_ZONE_ID_FIELD_NUMBER: _ClassVar[int]
+    BAND_FIELD_NUMBER: _ClassVar[int]
+    GAP_FIELD_NUMBER: _ClassVar[int]
+    room_id: _identity_pb2.SpaceId
+    floor_zone_id: str
+    band: ModelFitBand
+    gap: ModelFitGap
+    def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., floor_zone_id: _Optional[str] = ..., band: _Optional[_Union[ModelFitBand, str]] = ..., gap: _Optional[_Union[ModelFitGap, str]] = ...) -> None: ...
 
 class HomeSetup(_message.Message):
     __slots__ = ("home_id", "set_up")

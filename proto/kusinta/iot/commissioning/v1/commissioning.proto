@@ -638,8 +638,81 @@ message CommissioningProfile {
   // read as nothing missing.
   bool needs_withheld = 7;
 
+  // For a home, how well the gateway's model of each room and each floor zone in it predicts
+  // it (see ModelFit): one per room or zone the gateway models. Empty for a space that is
+  // not a home, and for a home none of whose rooms or zones is modelled yet.
+  repeated ModelFit model_fits = 8;
+
   reserved 5;
   reserved "template_id";
+}
+
+// MODEL FIT. The gateway learns a model of each heated room and each floor zone from their
+// history, and plans with it only where it predicts the room well. How well is told to
+// whoever is given the home's commissioning, as a coarse band, so that an installer knows
+// whether the planner can rely on a room and what to fix where it cannot. Never the model's
+// parameters, its errors in degrees, or when the room was warm: a band says almost nothing
+// about the household, and a gap names what is missing in the installation, not in the home's
+// life.
+//
+// The band is judged by the gateway, over the latest nights' predictions, against a forecast
+// that assumes the room stays as it is: GOOD clearly better than it, FAIR better, POOR no
+// better. NOT_ENOUGH_DATA until it has seen enough, with the gap that keeps it so. The
+// measure and its thresholds are the gateway's and may change: a client shows the band and
+// the gap, and never derives a number from them.
+//
+// Only a home's profile carries bands. Rooms and floor zones outside homes are modelled too;
+// their bands are left for later.
+
+// How well a model predicts its room or zone.
+enum ModelFitBand {
+  MODEL_FIT_BAND_UNSPECIFIED = 0;
+  // Not judged yet: see ModelFit.gap.
+  MODEL_FIT_BAND_NOT_ENOUGH_DATA = 1;
+  // No better than assuming no change: the planner does not plan with it.
+  MODEL_FIT_BAND_POOR = 2;
+  // Better than assuming no change.
+  MODEL_FIT_BAND_FAIR = 3;
+  // Clearly better than assuming no change.
+  MODEL_FIT_BAND_GOOD = 4;
+}
+
+// What keeps a model from being judged, or from fitting at all: a client says what to do
+// about it. Read by a client that does not know a value as UNSPECIFIED.
+enum ModelFitGap {
+  // None, or none the gateway names.
+  MODEL_FIT_GAP_UNSPECIFIED = 0;
+  // The heating has not varied enough yet for the model to learn from: the room's target
+  // has barely changed, or it is outside the heating season. Time fixes it.
+  MODEL_FIT_GAP_NO_EXCITATION = 1;
+  // No heat source is set up as serving the room's radiators, or more than one is
+  // (heating.v1): the model has no one supply and outdoor temperature to learn against.
+  MODEL_FIT_GAP_NO_PLANT = 2;
+  // A floor zone's circuit has no return temperature: its pipe probes are not bound.
+  MODEL_FIT_GAP_NO_RETURNS = 3;
+  // A floor zone the gateway does not drive: there is nothing of its own to learn from.
+  MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN = 4;
+  // The fit came out physically impossible: usually a sensor in the wrong place or a
+  // mapping of rooms to zones that does not match the house.
+  MODEL_FIT_GAP_NOT_PHYSICAL = 5;
+  // A floor zone's return temperature is shared with other zones of its circuit, so it says
+  // nothing of the zone alone: the zone needs a return probe of its own.
+  MODEL_FIT_GAP_RETURNS_SHARED = 6;
+  // The model is fitted, and its predictions have not yet been scored over enough nights to
+  // be judged. Time fixes it.
+  MODEL_FIT_GAP_TOO_FEW_NIGHTS = 7;
+}
+
+// One room's or floor zone's model fit.
+message ModelFit {
+  oneof subject {
+    kusinta.iot.identity.v1.SpaceId room_id = 1;
+    // A heating.v1 FloorZone's zone_id.
+    string floor_zone_id = 2;
+  }
+  ModelFitBand band = 3;
+  // Set with NOT_ENOUGH_DATA, and with POOR where a gap explains it.
+  ModelFitGap gap = 4;
 }
 
 // Whether a home is set up: every REQUIRED fact answered with a value at least once, and
