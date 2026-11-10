@@ -1539,6 +1539,16 @@ export enum ModelFitGap {
    * @generated from enum value: MODEL_FIT_GAP_TOO_FEW_NIGHTS = 7;
    */
   TOO_FEW_NIGHTS = 7,
+
+  /**
+   * What heats the room or zone changed since its model was last fitted: a heat source, a
+   * circuit, a floor zone's rooms or a comfort load. The model learns again from the next
+   * nightly fit on, and the band said before the change no longer holds. Set with
+   * NOT_ENOUGH_DATA, in place of whatever the last fit's gap was.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_SETUP_CHANGED = 8;
+   */
+  SETUP_CHANGED = 8,
 }
 
 /**

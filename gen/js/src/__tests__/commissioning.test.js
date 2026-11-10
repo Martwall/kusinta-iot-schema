@@ -201,6 +201,19 @@ describe('model fit', () => {
     expect(decoded.modelFits).toMatchObject([{ gap: ModelFitGap.TOO_FEW_NIGHTS }])
   })
 
+  it('says the heating setup changed since the last fit', () => {
+    const decoded = onTheWire(CommissioningProfileSchema, {
+      modelFits: [
+        {
+          subject: { case: 'roomId', value: { value: 'room-1' } },
+          band: ModelFitBand.NOT_ENOUGH_DATA,
+          gap: ModelFitGap.SETUP_CHANGED,
+        },
+      ],
+    })
+    expect(decoded.modelFits).toMatchObject([{ gap: ModelFitGap.SETUP_CHANGED }])
+  })
+
   it("says a floor zone's return is shared with other zones", () => {
     const decoded = onTheWire(CommissioningProfileSchema, {
       modelFits: [
