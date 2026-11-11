@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import { create, toBinary, fromBinary } from '@bufbuild/protobuf'
 import { SpaceType } from '../kusinta/iot/common/v1/types_pb.js'
-import { SpaceSchema } from '../kusinta/iot/space/v1/space_pb.js'
+import { SpaceSchema, RoomType } from '../kusinta/iot/space/v1/space_pb.js'
 
 describe('Space', () => {
   it('round-trips a building with sub-spaces', () => {
@@ -95,5 +95,18 @@ describe('Space', () => {
   it('carries no floor for an apartment never cleared', () => {
     const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, create(SpaceSchema, { spaceType: SpaceType.APARTMENT })))
     expect(decoded.climateHistoryClearedAt).toBeUndefined()
+  })
+})
+
+describe('room type', () => {
+  it('says what a room is used for', () => {
+    const room = create(SpaceSchema, { spaceType: SpaceType.ROOM, name: 'Badrum', roomType: RoomType.BATHROOM })
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, room))
+    expect(decoded.roomType).toBe(RoomType.BATHROOM)
+  })
+
+  it('leaves a room of no stated type unspecified', () => {
+    const decoded = fromBinary(SpaceSchema, toBinary(SpaceSchema, create(SpaceSchema, { name: 'Rum' })))
+    expect(decoded.roomType).toBe(RoomType.UNSPECIFIED)
   })
 })

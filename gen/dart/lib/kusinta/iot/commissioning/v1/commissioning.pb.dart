@@ -1666,10 +1666,12 @@ class HomeSetup extends $pb.GeneratedMessage {
   factory HomeSetup({
     $1.SpaceId? homeId,
     $core.bool? setUp,
+    $core.Iterable<SetupMissing>? missing,
   }) {
     final result = create();
     if (homeId != null) result.homeId = homeId;
     if (setUp != null) result.setUp = setUp;
+    if (missing != null) result.missing.addAll(missing);
     return result;
   }
 
@@ -1690,6 +1692,10 @@ class HomeSetup extends $pb.GeneratedMessage {
     ..aOM<$1.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
         subBuilder: $1.SpaceId.create)
     ..aOB(2, _omitFieldNames ? '' : 'setUp')
+    ..pc<SetupMissing>(3, _omitFieldNames ? '' : 'missing', $pb.PbFieldType.KE,
+        valueOf: SetupMissing.valueOf,
+        enumValues: SetupMissing.values,
+        defaultEnumValue: SetupMissing.SETUP_MISSING_UNSPECIFIED)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1730,6 +1736,13 @@ class HomeSetup extends $pb.GeneratedMessage {
   $core.bool hasSetUp() => $_has(1);
   @$pb.TagNumber(2)
   void clearSetUp() => $_clearField(2);
+
+  /// While set_up is false, the kinds of step still left, so that the owner organisation can
+  /// say what to ask about. Never how many: how far a household has got with its answers is
+  /// not the owner organisation's to know. Empty once set up. Read by a client that does not
+  /// know a value as none.
+  @$pb.TagNumber(3)
+  $pb.PbList<SetupMissing> get missing => $_getList(2);
 }
 
 /// In reply to ListHomeSetups.

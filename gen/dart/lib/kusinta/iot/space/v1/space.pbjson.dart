@@ -14,6 +14,29 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use roomTypeDescriptor instead')
+const RoomType$json = {
+  '1': 'RoomType',
+  '2': [
+    {'1': 'ROOM_TYPE_UNSPECIFIED', '2': 0},
+    {'1': 'ROOM_TYPE_BATHROOM', '2': 1},
+    {'1': 'ROOM_TYPE_BEDROOM', '2': 2},
+    {'1': 'ROOM_TYPE_KITCHEN', '2': 3},
+    {'1': 'ROOM_TYPE_LIVING_ROOM', '2': 4},
+    {'1': 'ROOM_TYPE_HALL', '2': 5},
+    {'1': 'ROOM_TYPE_LAUNDRY', '2': 6},
+    {'1': 'ROOM_TYPE_STORAGE', '2': 7},
+    {'1': 'ROOM_TYPE_OTHER', '2': 8},
+  ],
+};
+
+/// Descriptor for `RoomType`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List roomTypeDescriptor = $convert.base64Decode(
+    'CghSb29tVHlwZRIZChVST09NX1RZUEVfVU5TUEVDSUZJRUQQABIWChJST09NX1RZUEVfQkFUSF'
+    'JPT00QARIVChFST09NX1RZUEVfQkVEUk9PTRACEhUKEVJPT01fVFlQRV9LSVRDSEVOEAMSGQoV'
+    'Uk9PTV9UWVBFX0xJVklOR19ST09NEAQSEgoOUk9PTV9UWVBFX0hBTEwQBRIVChFST09NX1RZUE'
+    'VfTEFVTkRSWRAGEhUKEVJPT01fVFlQRV9TVE9SQUdFEAcSEwoPUk9PTV9UWVBFX09USEVSEAg=');
+
 @$core.Deprecated('Use spaceDescriptor instead')
 const Space$json = {
   '1': 'Space',
@@ -96,6 +119,14 @@ const Space$json = {
       '10': 'members'
     },
     {'1': 'members_withheld', '3': 14, '4': 1, '5': 8, '10': 'membersWithheld'},
+    {
+      '1': 'room_type',
+      '3': 17,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.space.v1.RoomType',
+      '10': 'roomType'
+    },
     {'1': 'home_name', '3': 15, '4': 1, '5': 9, '10': 'homeName'},
     {
       '1': 'climate_history_cleared_at',
@@ -123,9 +154,10 @@ final $typed_data.Uint8List spaceDescriptor = $convert.base64Decode(
     'ZW5hbnRJZBJBCgpnYXRld2F5X2lkGAsgASgLMiIua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuR2'
     'F0ZXdheUlkUglnYXRld2F5SWQSGwoJdGltZV96b25lGAwgASgJUgh0aW1lWm9uZRI7CgdtZW1i'
     'ZXJzGA0gAygLMiEua3VzaW50YS5pb3Quc3BhY2UudjEuU3BhY2VNZW1iZXJSB21lbWJlcnMSKQ'
-    'oQbWVtYmVyc193aXRoaGVsZBgOIAEoCFIPbWVtYmVyc1dpdGhoZWxkEhsKCWhvbWVfbmFtZRgP'
-    'IAEoCVIIaG9tZU5hbWUSVwoaY2xpbWF0ZV9oaXN0b3J5X2NsZWFyZWRfYXQYECABKAsyGi5nb2'
-    '9nbGUucHJvdG9idWYuVGltZXN0YW1wUhdjbGltYXRlSGlzdG9yeUNsZWFyZWRBdA==');
+    'oQbWVtYmVyc193aXRoaGVsZBgOIAEoCFIPbWVtYmVyc1dpdGhoZWxkEjsKCXJvb21fdHlwZRgR'
+    'IAEoDjIeLmt1c2ludGEuaW90LnNwYWNlLnYxLlJvb21UeXBlUghyb29tVHlwZRIbCglob21lX2'
+    '5hbWUYDyABKAlSCGhvbWVOYW1lElcKGmNsaW1hdGVfaGlzdG9yeV9jbGVhcmVkX2F0GBAgASgL'
+    'MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIXY2xpbWF0ZUhpc3RvcnlDbGVhcmVkQXQ=');
 
 @$core.Deprecated('Use spaceMemberDescriptor instead')
 const SpaceMember$json = {

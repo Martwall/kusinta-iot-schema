@@ -7,6 +7,8 @@ import {
   CommissioningProfileSchema,
   FeatureStatusSchema,
   ModelFitBand,
+  HomeSetupSchema,
+  SetupMissing,
   ModelFitGap,
   HouseTemplateSchema,
   Party,
@@ -316,5 +318,21 @@ describe('commissioning requests', () => {
       payload: { case: 'commissioningTest', value: { testId: 't-1', state: TestState.PASSED } },
     })
     expect(decoded.payload).toMatchObject({ case: 'commissioningTest', value: { state: TestState.PASSED } })
+  })
+})
+
+describe('home setup', () => {
+  it('says the kinds of step left while a home is not set up, never how many', () => {
+    const decoded = onTheWire(HomeSetupSchema, {
+      homeId: { value: 'home-1' },
+      setUp: false,
+      missing: [SetupMissing.ROOM_QUESTIONS, SetupMissing.OUTPUT_TEST],
+    })
+    expect(decoded.missing).toEqual([SetupMissing.ROOM_QUESTIONS, SetupMissing.OUTPUT_TEST])
+  })
+
+  it('says nothing left once set up', () => {
+    const decoded = onTheWire(HomeSetupSchema, { homeId: { value: 'home-1' }, setUp: true })
+    expect(decoded.missing).toEqual([])
   })
 })

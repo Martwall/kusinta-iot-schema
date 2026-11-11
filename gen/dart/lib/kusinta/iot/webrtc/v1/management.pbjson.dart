@@ -46,6 +46,14 @@ const CreateSpace$json = {
       '10': 'timeZone',
       '17': true
     },
+    {
+      '1': 'room_type',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.space.v1.RoomType',
+      '10': 'roomType'
+    },
   ],
   '8': [
     {'1': '_time_zone'},
@@ -58,7 +66,9 @@ final $typed_data.Uint8List createSpaceDescriptor = $convert.base64Decode(
     'YxLlNwYWNlVHlwZVIJc3BhY2VUeXBlEhIKBG5hbWUYAiABKAlSBG5hbWUSIAoLZGVzY3JpcHRp'
     'b24YAyABKAlSC2Rlc2NyaXB0aW9uEhQKBWZsb29yGAQgASgFUgVmbG9vchJICg9wYXJlbnRfc3'
     'BhY2VfaWQYBSABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUg1wYXJlbnRT'
-    'cGFjZUlkEiAKCXRpbWVfem9uZRgGIAEoCUgAUgh0aW1lWm9uZYgBAUIMCgpfdGltZV96b25l');
+    'cGFjZUlkEiAKCXRpbWVfem9uZRgGIAEoCUgAUgh0aW1lWm9uZYgBARI7Cglyb29tX3R5cGUYBy'
+    'ABKA4yHi5rdXNpbnRhLmlvdC5zcGFjZS52MS5Sb29tVHlwZVIIcm9vbVR5cGVCDAoKX3RpbWVf'
+    'em9uZQ==');
 
 @$core.Deprecated('Use updateSpaceDescriptor instead')
 const UpdateSpace$json = {
@@ -112,6 +122,16 @@ const UpdateSpace$json = {
       '10': 'timeZone',
       '17': true
     },
+    {
+      '1': 'room_type',
+      '3': 9,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.space.v1.RoomType',
+      '9': 6,
+      '10': 'roomType',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'parent_change'},
@@ -120,6 +140,7 @@ const UpdateSpace$json = {
     {'1': '_description'},
     {'1': '_floor'},
     {'1': '_time_zone'},
+    {'1': '_room_type'},
   ],
 };
 
@@ -131,9 +152,10 @@ final $typed_data.Uint8List updateSpaceDescriptor = $convert.base64Decode(
     'gBARIlCgtkZXNjcmlwdGlvbhgEIAEoCUgDUgtkZXNjcmlwdGlvbogBARIZCgVmbG9vchgFIAEo'
     'BUgEUgVmbG9vcogBARJKCg9wYXJlbnRfc3BhY2VfaWQYBiABKAsyIC5rdXNpbnRhLmlvdC5pZG'
     'VudGl0eS52MS5TcGFjZUlkSABSDXBhcmVudFNwYWNlSWQSGAoGZGV0YWNoGAcgASgISABSBmRl'
-    'dGFjaBIgCgl0aW1lX3pvbmUYCCABKAlIBVIIdGltZVpvbmWIAQFCDwoNcGFyZW50X2NoYW5nZU'
-    'INCgtfc3BhY2VfdHlwZUIHCgVfbmFtZUIOCgxfZGVzY3JpcHRpb25CCAoGX2Zsb29yQgwKCl90'
-    'aW1lX3pvbmU=');
+    'dGFjaBIgCgl0aW1lX3pvbmUYCCABKAlIBVIIdGltZVpvbmWIAQESQAoJcm9vbV90eXBlGAkgAS'
+    'gOMh4ua3VzaW50YS5pb3Quc3BhY2UudjEuUm9vbVR5cGVIBlIIcm9vbVR5cGWIAQFCDwoNcGFy'
+    'ZW50X2NoYW5nZUINCgtfc3BhY2VfdHlwZUIHCgVfbmFtZUIOCgxfZGVzY3JpcHRpb25CCAoGX2'
+    'Zsb29yQgwKCl90aW1lX3pvbmVCDAoKX3Jvb21fdHlwZQ==');
 
 @$core.Deprecated('Use deleteSpaceDescriptor instead')
 const DeleteSpace$json = {

@@ -683,6 +683,16 @@ export declare type HomeSetup = Message<"kusinta.iot.commissioning.v1.HomeSetup"
    * @generated from field: bool set_up = 2;
    */
   setUp: boolean;
+
+  /**
+   * While set_up is false, the kinds of step still left, so that the owner organisation can
+   * say what to ask about. Never how many: how far a household has got with its answers is
+   * not the owner organisation's to know. Empty once set up. Read by a client that does not
+   * know a value as none.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.SetupMissing missing = 3;
+   */
+  missing: SetupMissing[];
 };
 
 /**
@@ -1555,6 +1565,44 @@ export enum ModelFitGap {
  * Describes the enum kusinta.iot.commissioning.v1.ModelFitGap.
  */
 export declare const ModelFitGapSchema: GenEnum<ModelFitGap>;
+
+/**
+ * A kind of step a home has left before it is set up (HomeSetup).
+ *
+ * @generated from enum kusinta.iot.commissioning.v1.SetupMissing
+ */
+export enum SetupMissing {
+  /**
+   * @generated from enum value: SETUP_MISSING_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A REQUIRED household question not yet answered with a value in some room.
+   *
+   * @generated from enum value: SETUP_MISSING_ROOM_QUESTIONS = 1;
+   */
+  ROOM_QUESTIONS = 1,
+
+  /**
+   * An output bound in the home with no OUTPUT_LEASE pass on the device it is bound to.
+   *
+   * @generated from enum value: SETUP_MISSING_OUTPUT_TEST = 2;
+   */
+  OUTPUT_TEST = 2,
+
+  /**
+   * The home has no room.
+   *
+   * @generated from enum value: SETUP_MISSING_NO_ROOMS = 3;
+   */
+  NO_ROOMS = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.commissioning.v1.SetupMissing.
+ */
+export declare const SetupMissingSchema: GenEnum<SetupMissing>;
 
 /**
  * Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no

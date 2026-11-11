@@ -18,8 +18,11 @@ import '../../../../google/protobuf/timestamp.pb.dart' as $1;
 import '../../access/v1/roles.pbenum.dart' as $3;
 import '../../common/v1/types.pbenum.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
+import 'space.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'space.pbenum.dart';
 
 class Space extends $pb.GeneratedMessage {
   factory Space({
@@ -39,6 +42,7 @@ class Space extends $pb.GeneratedMessage {
     $core.bool? membersWithheld,
     $core.String? homeName,
     $1.Timestamp? climateHistoryClearedAt,
+    RoomType? roomType,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -58,6 +62,7 @@ class Space extends $pb.GeneratedMessage {
     if (homeName != null) result.homeName = homeName;
     if (climateHistoryClearedAt != null)
       result.climateHistoryClearedAt = climateHistoryClearedAt;
+    if (roomType != null) result.roomType = roomType;
     return result;
   }
 
@@ -104,6 +109,10 @@ class Space extends $pb.GeneratedMessage {
     ..aOS(15, _omitFieldNames ? '' : 'homeName')
     ..aOM<$1.Timestamp>(16, _omitFieldNames ? '' : 'climateHistoryClearedAt',
         subBuilder: $1.Timestamp.create)
+    ..e<RoomType>(17, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
+        defaultOrMaker: RoomType.ROOM_TYPE_UNSPECIFIED,
+        valueOf: RoomType.valueOf,
+        enumValues: RoomType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -325,9 +334,21 @@ class Space extends $pb.GeneratedMessage {
   void clearClimateHistoryClearedAt() => $_clearField(16);
   @$pb.TagNumber(16)
   $1.Timestamp ensureClimateHistoryClearedAt() => $_ensure(15);
+
+  /// What kind of room this is, on a ROOM only: what it is used for, so that a client can
+  /// propose likely answers to its household questions (commissioning.v1) and name it in
+  /// lists. Set by whoever may rename the room, and changed the same way. UNSPECIFIED: not
+  /// said. It changes nothing the gateway steers.
+  @$pb.TagNumber(17)
+  RoomType get roomType => $_getN(16);
+  @$pb.TagNumber(17)
+  set roomType(RoomType value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasRoomType() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearRoomType() => $_clearField(17);
 }
 
-/// One membership of a space.
 class SpaceMember extends $pb.GeneratedMessage {
   factory SpaceMember({
     $0.UserId? userId,

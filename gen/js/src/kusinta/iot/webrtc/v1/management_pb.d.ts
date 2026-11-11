@@ -6,9 +6,9 @@ import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { AssetOwner, DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
+import type { RoomType, Space } from "../../space/v1/space_pb.js";
 import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
-import type { Space } from "../../space/v1/space_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
 import type { ClimateModeKind, ClimateSummaryPeriod, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
@@ -77,6 +77,13 @@ export declare type CreateSpace = Message<"kusinta.iot.webrtc.v1.CreateSpace"> &
    * @generated from field: optional string time_zone = 6;
    */
   timeZone?: string | undefined;
+
+  /**
+   * On a ROOM only (space.v1.Space.room_type); refused on any other type as INVALID_REQUEST.
+   *
+   * @generated from field: kusinta.iot.space.v1.RoomType room_type = 7;
+   */
+  roomType: RoomType;
 };
 
 /**
@@ -181,6 +188,13 @@ export declare type UpdateSpace = Message<"kusinta.iot.webrtc.v1.UpdateSpace"> &
    * @generated from field: optional string time_zone = 8;
    */
   timeZone?: string | undefined;
+
+  /**
+   * Set: the room's type changes (UNSPECIFIED clears it). On a ROOM only.
+   *
+   * @generated from field: optional kusinta.iot.space.v1.RoomType room_type = 9;
+   */
+  roomType?: RoomType | undefined;
 };
 
 /**
