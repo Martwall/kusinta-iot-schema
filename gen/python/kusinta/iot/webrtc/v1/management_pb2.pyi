@@ -25,23 +25,25 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class CreateSpace(_message.Message):
-    __slots__ = ("space_type", "name", "description", "floor", "parent_space_id", "time_zone")
+    __slots__ = ("space_type", "name", "description", "floor", "parent_space_id", "time_zone", "room_type")
     SPACE_TYPE_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     FLOOR_FIELD_NUMBER: _ClassVar[int]
     PARENT_SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     TIME_ZONE_FIELD_NUMBER: _ClassVar[int]
+    ROOM_TYPE_FIELD_NUMBER: _ClassVar[int]
     space_type: _types_pb2.SpaceType
     name: str
     description: str
     floor: int
     parent_space_id: _identity_pb2.SpaceId
     time_zone: str
-    def __init__(self, space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., time_zone: _Optional[str] = ...) -> None: ...
+    room_type: _space_pb2.RoomType
+    def __init__(self, space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., time_zone: _Optional[str] = ..., room_type: _Optional[_Union[_space_pb2.RoomType, str]] = ...) -> None: ...
 
 class UpdateSpace(_message.Message):
-    __slots__ = ("space_id", "space_type", "name", "description", "floor", "parent_space_id", "detach", "time_zone")
+    __slots__ = ("space_id", "space_type", "name", "description", "floor", "parent_space_id", "detach", "time_zone", "room_type")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_TYPE_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -50,6 +52,7 @@ class UpdateSpace(_message.Message):
     PARENT_SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     DETACH_FIELD_NUMBER: _ClassVar[int]
     TIME_ZONE_FIELD_NUMBER: _ClassVar[int]
+    ROOM_TYPE_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     space_type: _types_pb2.SpaceType
     name: str
@@ -58,7 +61,8 @@ class UpdateSpace(_message.Message):
     parent_space_id: _identity_pb2.SpaceId
     detach: bool
     time_zone: str
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., detach: _Optional[bool] = ..., time_zone: _Optional[str] = ...) -> None: ...
+    room_type: _space_pb2.RoomType
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., detach: _Optional[bool] = ..., time_zone: _Optional[str] = ..., room_type: _Optional[_Union[_space_pb2.RoomType, str]] = ...) -> None: ...
 
 class DeleteSpace(_message.Message):
     __slots__ = ("space_id", "cascade")

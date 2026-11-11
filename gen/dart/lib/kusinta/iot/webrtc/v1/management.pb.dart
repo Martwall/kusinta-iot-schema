@@ -52,6 +52,7 @@ class CreateSpace extends $pb.GeneratedMessage {
     $core.int? floor,
     $0.SpaceId? parentSpaceId,
     $core.String? timeZone,
+    $2.RoomType? roomType,
   }) {
     final result = create();
     if (spaceType != null) result.spaceType = spaceType;
@@ -60,6 +61,7 @@ class CreateSpace extends $pb.GeneratedMessage {
     if (floor != null) result.floor = floor;
     if (parentSpaceId != null) result.parentSpaceId = parentSpaceId;
     if (timeZone != null) result.timeZone = timeZone;
+    if (roomType != null) result.roomType = roomType;
     return result;
   }
 
@@ -88,6 +90,10 @@ class CreateSpace extends $pb.GeneratedMessage {
     ..aOM<$0.SpaceId>(5, _omitFieldNames ? '' : 'parentSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOS(6, _omitFieldNames ? '' : 'timeZone')
+    ..e<$2.RoomType>(7, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.RoomType.ROOM_TYPE_UNSPECIFIED,
+        valueOf: $2.RoomType.valueOf,
+        enumValues: $2.RoomType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -167,6 +173,16 @@ class CreateSpace extends $pb.GeneratedMessage {
   $core.bool hasTimeZone() => $_has(5);
   @$pb.TagNumber(6)
   void clearTimeZone() => $_clearField(6);
+
+  /// On a ROOM only (space.v1.Space.room_type); refused on any other type as INVALID_REQUEST.
+  @$pb.TagNumber(7)
+  $2.RoomType get roomType => $_getN(6);
+  @$pb.TagNumber(7)
+  set roomType($2.RoomType value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasRoomType() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearRoomType() => $_clearField(7);
 }
 
 enum UpdateSpace_ParentChange { parentSpaceId, detach, notSet }
@@ -217,6 +233,7 @@ class UpdateSpace extends $pb.GeneratedMessage {
     $0.SpaceId? parentSpaceId,
     $core.bool? detach,
     $core.String? timeZone,
+    $2.RoomType? roomType,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -227,6 +244,7 @@ class UpdateSpace extends $pb.GeneratedMessage {
     if (parentSpaceId != null) result.parentSpaceId = parentSpaceId;
     if (detach != null) result.detach = detach;
     if (timeZone != null) result.timeZone = timeZone;
+    if (roomType != null) result.roomType = roomType;
     return result;
   }
 
@@ -265,6 +283,10 @@ class UpdateSpace extends $pb.GeneratedMessage {
         subBuilder: $0.SpaceId.create)
     ..aOB(7, _omitFieldNames ? '' : 'detach')
     ..aOS(8, _omitFieldNames ? '' : 'timeZone')
+    ..e<$2.RoomType>(9, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
+        defaultOrMaker: $2.RoomType.ROOM_TYPE_UNSPECIFIED,
+        valueOf: $2.RoomType.valueOf,
+        enumValues: $2.RoomType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -369,6 +391,16 @@ class UpdateSpace extends $pb.GeneratedMessage {
   $core.bool hasTimeZone() => $_has(7);
   @$pb.TagNumber(8)
   void clearTimeZone() => $_clearField(8);
+
+  /// Set: the room's type changes (UNSPECIFIED clears it). On a ROOM only.
+  @$pb.TagNumber(9)
+  $2.RoomType get roomType => $_getN(8);
+  @$pb.TagNumber(9)
+  set roomType($2.RoomType value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasRoomType() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearRoomType() => $_clearField(9);
 }
 
 /// Deletes a space. Refused if the space still holds devices or sub-spaces unless

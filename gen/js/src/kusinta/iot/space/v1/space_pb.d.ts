@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/space/v1/space.proto (package kusinta.iot.space.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { DeviceId, GatewayId, SpaceId, TenantId, UserId } from "../../identity/v1/identity_pb.js";
 import type { SpaceType } from "../../common/v1/types_pb.js";
@@ -139,6 +139,16 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
   membersWithheld: boolean;
 
   /**
+   * What kind of room this is, on a ROOM only: what it is used for, so that a client can
+   * propose likely answers to its household questions (commissioning.v1) and name it in
+   * lists. Set by whoever may rename the room, and changed the same way. UNSPECIFIED: not
+   * said. It changes nothing the gateway steers.
+   *
+   * @generated from field: kusinta.iot.space.v1.RoomType room_type = 17;
+   */
+  roomType: RoomType;
+
+  /**
    * On an apartment, the name its household gave the home (webrtc.v1.SetHomeName), which may
    * name them ("The Svenssons"). Given to the home's residents only: empty for anyone else,
    * so a client shows it to residents alone and the apartment's name to everyone. Wiped at
@@ -227,4 +237,65 @@ export declare type SpaceMember = Message<"kusinta.iot.space.v1.SpaceMember"> & 
  * Use `create(SpaceMemberSchema)` to create a new message.
  */
 export declare const SpaceMemberSchema: GenMessage<SpaceMember>;
+
+/**
+ * What a room is used for (Space.room_type).
+ *
+ * @generated from enum kusinta.iot.space.v1.RoomType
+ */
+export enum RoomType {
+  /**
+   * @generated from enum value: ROOM_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: ROOM_TYPE_BATHROOM = 1;
+   */
+  BATHROOM = 1,
+
+  /**
+   * @generated from enum value: ROOM_TYPE_BEDROOM = 2;
+   */
+  BEDROOM = 2,
+
+  /**
+   * @generated from enum value: ROOM_TYPE_KITCHEN = 3;
+   */
+  KITCHEN = 3,
+
+  /**
+   * @generated from enum value: ROOM_TYPE_LIVING_ROOM = 4;
+   */
+  LIVING_ROOM = 4,
+
+  /**
+   * A hall or an entrance.
+   *
+   * @generated from enum value: ROOM_TYPE_HALL = 5;
+   */
+  HALL = 5,
+
+  /**
+   * A laundry or utility room.
+   *
+   * @generated from enum value: ROOM_TYPE_LAUNDRY = 6;
+   */
+  LAUNDRY = 6,
+
+  /**
+   * @generated from enum value: ROOM_TYPE_STORAGE = 7;
+   */
+  STORAGE = 7,
+
+  /**
+   * @generated from enum value: ROOM_TYPE_OTHER = 8;
+   */
+  OTHER = 8,
+}
+
+/**
+ * Describes the enum kusinta.iot.space.v1.RoomType.
+ */
+export declare const RoomTypeSchema: GenEnum<RoomType>;
 

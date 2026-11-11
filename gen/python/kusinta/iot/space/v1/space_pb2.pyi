@@ -5,6 +5,7 @@ from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from collections.abc import Iterable as _Iterable, Mapping as _Mapping
@@ -12,8 +13,29 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class RoomType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    ROOM_TYPE_UNSPECIFIED: _ClassVar[RoomType]
+    ROOM_TYPE_BATHROOM: _ClassVar[RoomType]
+    ROOM_TYPE_BEDROOM: _ClassVar[RoomType]
+    ROOM_TYPE_KITCHEN: _ClassVar[RoomType]
+    ROOM_TYPE_LIVING_ROOM: _ClassVar[RoomType]
+    ROOM_TYPE_HALL: _ClassVar[RoomType]
+    ROOM_TYPE_LAUNDRY: _ClassVar[RoomType]
+    ROOM_TYPE_STORAGE: _ClassVar[RoomType]
+    ROOM_TYPE_OTHER: _ClassVar[RoomType]
+ROOM_TYPE_UNSPECIFIED: RoomType
+ROOM_TYPE_BATHROOM: RoomType
+ROOM_TYPE_BEDROOM: RoomType
+ROOM_TYPE_KITCHEN: RoomType
+ROOM_TYPE_LIVING_ROOM: RoomType
+ROOM_TYPE_HALL: RoomType
+ROOM_TYPE_LAUNDRY: RoomType
+ROOM_TYPE_STORAGE: RoomType
+ROOM_TYPE_OTHER: RoomType
+
 class Space(_message.Message):
-    __slots__ = ("space_id", "space_type", "name", "description", "floor", "parent_space_id", "sub_space_ids", "device_ids", "resident_user_id", "tenant_id", "gateway_id", "time_zone", "members", "members_withheld", "home_name", "climate_history_cleared_at")
+    __slots__ = ("space_id", "space_type", "name", "description", "floor", "parent_space_id", "sub_space_ids", "device_ids", "resident_user_id", "tenant_id", "gateway_id", "time_zone", "members", "members_withheld", "room_type", "home_name", "climate_history_cleared_at")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     SPACE_TYPE_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
@@ -28,6 +50,7 @@ class Space(_message.Message):
     TIME_ZONE_FIELD_NUMBER: _ClassVar[int]
     MEMBERS_FIELD_NUMBER: _ClassVar[int]
     MEMBERS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    ROOM_TYPE_FIELD_NUMBER: _ClassVar[int]
     HOME_NAME_FIELD_NUMBER: _ClassVar[int]
     CLIMATE_HISTORY_CLEARED_AT_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
@@ -44,9 +67,10 @@ class Space(_message.Message):
     time_zone: str
     members: _containers.RepeatedCompositeFieldContainer[SpaceMember]
     members_withheld: bool
+    room_type: RoomType
     home_name: str
     climate_history_cleared_at: _timestamp_pb2.Timestamp
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., sub_space_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., resident_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., tenant_id: _Optional[_Union[_identity_pb2.TenantId, _Mapping]] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., time_zone: _Optional[str] = ..., members: _Optional[_Iterable[_Union[SpaceMember, _Mapping]]] = ..., members_withheld: _Optional[bool] = ..., home_name: _Optional[str] = ..., climate_history_cleared_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., space_type: _Optional[_Union[_types_pb2.SpaceType, str]] = ..., name: _Optional[str] = ..., description: _Optional[str] = ..., floor: _Optional[int] = ..., parent_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., sub_space_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., device_ids: _Optional[_Iterable[_Union[_identity_pb2.DeviceId, _Mapping]]] = ..., resident_user_id: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., tenant_id: _Optional[_Union[_identity_pb2.TenantId, _Mapping]] = ..., gateway_id: _Optional[_Union[_identity_pb2.GatewayId, _Mapping]] = ..., time_zone: _Optional[str] = ..., members: _Optional[_Iterable[_Union[SpaceMember, _Mapping]]] = ..., members_withheld: _Optional[bool] = ..., room_type: _Optional[_Union[RoomType, str]] = ..., home_name: _Optional[str] = ..., climate_history_cleared_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class SpaceMember(_message.Message):
     __slots__ = ("user_id", "relation", "name", "since")

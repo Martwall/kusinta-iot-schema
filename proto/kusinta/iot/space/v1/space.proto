@@ -67,6 +67,12 @@ message Space {
   // nobody being filed here.
   bool members_withheld = 14;
 
+  // What kind of room this is, on a ROOM only: what it is used for, so that a client can
+  // propose likely answers to its household questions (commissioning.v1) and name it in
+  // lists. Set by whoever may rename the room, and changed the same way. UNSPECIFIED: not
+  // said. It changes nothing the gateway steers.
+  RoomType room_type = 17;
+
   // On an apartment, the name its household gave the home (webrtc.v1.SetHomeName), which may
   // name them ("The Svenssons"). Given to the home's residents only: empty for anyone else,
   // so a client shows it to residents alone and the apartment's name to everyone. Wiped at
@@ -90,6 +96,21 @@ message Space {
   // staff included — where the home has never been cleared, and on every other space. A wipe
   // erases it with the household's other records (webrtc.v1 household.proto, WIPE).
   google.protobuf.Timestamp climate_history_cleared_at = 16;
+}
+
+// What a room is used for (Space.room_type).
+enum RoomType {
+  ROOM_TYPE_UNSPECIFIED = 0;
+  ROOM_TYPE_BATHROOM = 1;
+  ROOM_TYPE_BEDROOM = 2;
+  ROOM_TYPE_KITCHEN = 3;
+  ROOM_TYPE_LIVING_ROOM = 4;
+  // A hall or an entrance.
+  ROOM_TYPE_HALL = 5;
+  // A laundry or utility room.
+  ROOM_TYPE_LAUNDRY = 6;
+  ROOM_TYPE_STORAGE = 7;
+  ROOM_TYPE_OTHER = 8;
 }
 
 // One membership of a space.

@@ -689,3 +689,19 @@ describe('space address', () => {
     expect(decoded.result.value).not.toHaveProperty('address')
   })
 })
+
+describe('room type on create and update', () => {
+  it('creates a room with its type', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'createSpace', value: { name: 'Kök', roomType: 3 } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'createSpace', value: { roomType: 3 } })
+  })
+
+  it("changes a room's type only when one is given", () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'updateSpace', value: { spaceId: { value: 'room-1' }, name: 'Kök' } },
+    })
+    expect(decoded.request.value.roomType).toBeUndefined()
+  })
+})

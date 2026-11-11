@@ -124,6 +124,13 @@ class ModelFitGap(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     MODEL_FIT_GAP_TOO_FEW_NIGHTS: _ClassVar[ModelFitGap]
     MODEL_FIT_GAP_SETUP_CHANGED: _ClassVar[ModelFitGap]
 
+class SetupMissing(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    SETUP_MISSING_UNSPECIFIED: _ClassVar[SetupMissing]
+    SETUP_MISSING_ROOM_QUESTIONS: _ClassVar[SetupMissing]
+    SETUP_MISSING_OUTPUT_TEST: _ClassVar[SetupMissing]
+    SETUP_MISSING_NO_ROOMS: _ClassVar[SetupMissing]
+
 class CommissioningGrantState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     COMMISSIONING_GRANT_STATE_UNSPECIFIED: _ClassVar[CommissioningGrantState]
@@ -205,6 +212,10 @@ MODEL_FIT_GAP_NOT_PHYSICAL: ModelFitGap
 MODEL_FIT_GAP_RETURNS_SHARED: ModelFitGap
 MODEL_FIT_GAP_TOO_FEW_NIGHTS: ModelFitGap
 MODEL_FIT_GAP_SETUP_CHANGED: ModelFitGap
+SETUP_MISSING_UNSPECIFIED: SetupMissing
+SETUP_MISSING_ROOM_QUESTIONS: SetupMissing
+SETUP_MISSING_OUTPUT_TEST: SetupMissing
+SETUP_MISSING_NO_ROOMS: SetupMissing
 COMMISSIONING_GRANT_STATE_UNSPECIFIED: CommissioningGrantState
 COMMISSIONING_GRANT_STATE_REQUESTED: CommissioningGrantState
 COMMISSIONING_GRANT_STATE_GRANTED: CommissioningGrantState
@@ -402,12 +413,14 @@ class ModelFit(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., floor_zone_id: _Optional[str] = ..., band: _Optional[_Union[ModelFitBand, str]] = ..., gap: _Optional[_Union[ModelFitGap, str]] = ...) -> None: ...
 
 class HomeSetup(_message.Message):
-    __slots__ = ("home_id", "set_up")
+    __slots__ = ("home_id", "set_up", "missing")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]
     SET_UP_FIELD_NUMBER: _ClassVar[int]
+    MISSING_FIELD_NUMBER: _ClassVar[int]
     home_id: _identity_pb2.SpaceId
     set_up: bool
-    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., set_up: _Optional[bool] = ...) -> None: ...
+    missing: _containers.RepeatedScalarFieldContainer[SetupMissing]
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., set_up: _Optional[bool] = ..., missing: _Optional[_Iterable[_Union[SetupMissing, str]]] = ...) -> None: ...
 
 class HomeSetups(_message.Message):
     __slots__ = ("homes",)

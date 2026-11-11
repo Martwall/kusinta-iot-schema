@@ -260,6 +260,23 @@ final $typed_data.Uint8List modelFitGapDescriptor = $convert.base64Decode(
     'X1JFVFVSTlNfU0hBUkVEEAYSIAocTU9ERUxfRklUX0dBUF9UT09fRkVXX05JR0hUUxAHEh8KG0'
     '1PREVMX0ZJVF9HQVBfU0VUVVBfQ0hBTkdFRBAI');
 
+@$core.Deprecated('Use setupMissingDescriptor instead')
+const SetupMissing$json = {
+  '1': 'SetupMissing',
+  '2': [
+    {'1': 'SETUP_MISSING_UNSPECIFIED', '2': 0},
+    {'1': 'SETUP_MISSING_ROOM_QUESTIONS', '2': 1},
+    {'1': 'SETUP_MISSING_OUTPUT_TEST', '2': 2},
+    {'1': 'SETUP_MISSING_NO_ROOMS', '2': 3},
+  ],
+};
+
+/// Descriptor for `SetupMissing`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List setupMissingDescriptor = $convert.base64Decode(
+    'CgxTZXR1cE1pc3NpbmcSHQoZU0VUVVBfTUlTU0lOR19VTlNQRUNJRklFRBAAEiAKHFNFVFVQX0'
+    '1JU1NJTkdfUk9PTV9RVUVTVElPTlMQARIdChlTRVRVUF9NSVNTSU5HX09VVFBVVF9URVNUEAIS'
+    'GgoWU0VUVVBfTUlTU0lOR19OT19ST09NUxAD');
+
 @$core.Deprecated('Use commissioningGrantStateDescriptor instead')
 const CommissioningGrantState$json = {
   '1': 'CommissioningGrantState',
@@ -954,13 +971,22 @@ const HomeSetup$json = {
       '10': 'homeId'
     },
     {'1': 'set_up', '3': 2, '4': 1, '5': 8, '10': 'setUp'},
+    {
+      '1': 'missing',
+      '3': 3,
+      '4': 3,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.SetupMissing',
+      '10': 'missing'
+    },
   ],
 };
 
 /// Descriptor for `HomeSetup`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List homeSetupDescriptor = $convert.base64Decode(
     'CglIb21lU2V0dXASOQoHaG9tZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLl'
-    'NwYWNlSWRSBmhvbWVJZBIVCgZzZXRfdXAYAiABKAhSBXNldFVw');
+    'NwYWNlSWRSBmhvbWVJZBIVCgZzZXRfdXAYAiABKAhSBXNldFVwEkQKB21pc3NpbmcYAyADKA4y'
+    'Ki5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlNldHVwTWlzc2luZ1IHbWlzc2luZw==');
 
 @$core.Deprecated('Use homeSetupsDescriptor instead')
 const HomeSetups$json = {

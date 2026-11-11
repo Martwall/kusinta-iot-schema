@@ -117,6 +117,8 @@ message CreateSpace {
   // An IANA time zone name, e.g. "Europe/Stockholm". Accepted only on a building — a
   // top-level space — and refused on any other. Unset leaves it unknown.
   optional string time_zone = 6;
+  // On a ROOM only (space.v1.Space.room_type); refused on any other type as INVALID_REQUEST.
+  kusinta.iot.space.v1.RoomType room_type = 7;
 }
 
 // Changes a space in place. Changes that would take a space into or out of a home, or move
@@ -175,6 +177,8 @@ message UpdateSpace {
   // top-level space — and refused on any other. Unset leaves it unchanged; the empty
   // string clears it.
   optional string time_zone = 8;
+  // Set: the room's type changes (UNSPECIFIED clears it). On a ROOM only.
+  optional kusinta.iot.space.v1.RoomType room_type = 9;
 }
 
 // Deletes a space. Refused if the space still holds devices or sub-spaces unless

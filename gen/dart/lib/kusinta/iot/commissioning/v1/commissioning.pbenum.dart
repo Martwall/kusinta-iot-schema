@@ -538,6 +538,38 @@ class ModelFitGap extends $pb.ProtobufEnum {
   const ModelFitGap._(super.value, super.name);
 }
 
+/// A kind of step a home has left before it is set up (HomeSetup).
+class SetupMissing extends $pb.ProtobufEnum {
+  static const SetupMissing SETUP_MISSING_UNSPECIFIED =
+      SetupMissing._(0, _omitEnumNames ? '' : 'SETUP_MISSING_UNSPECIFIED');
+
+  /// A REQUIRED household question not yet answered with a value in some room.
+  static const SetupMissing SETUP_MISSING_ROOM_QUESTIONS =
+      SetupMissing._(1, _omitEnumNames ? '' : 'SETUP_MISSING_ROOM_QUESTIONS');
+
+  /// An output bound in the home with no OUTPUT_LEASE pass on the device it is bound to.
+  static const SetupMissing SETUP_MISSING_OUTPUT_TEST =
+      SetupMissing._(2, _omitEnumNames ? '' : 'SETUP_MISSING_OUTPUT_TEST');
+
+  /// The home has no room.
+  static const SetupMissing SETUP_MISSING_NO_ROOMS =
+      SetupMissing._(3, _omitEnumNames ? '' : 'SETUP_MISSING_NO_ROOMS');
+
+  static const $core.List<SetupMissing> values = <SetupMissing>[
+    SETUP_MISSING_UNSPECIFIED,
+    SETUP_MISSING_ROOM_QUESTIONS,
+    SETUP_MISSING_OUTPUT_TEST,
+    SETUP_MISSING_NO_ROOMS,
+  ];
+
+  static final $core.List<SetupMissing?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static SetupMissing? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const SetupMissing._(super.value, super.name);
+}
+
 /// Where a commissioning grant stands (see the file comment, GRANTS). An ended grant has no
 /// state: it is listed no more.
 class CommissioningGrantState extends $pb.ProtobufEnum {
