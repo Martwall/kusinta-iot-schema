@@ -687,8 +687,9 @@ export declare type HomeSetup = Message<"kusinta.iot.commissioning.v1.HomeSetup"
   /**
    * While set_up is false, the kinds of step still left, so that the owner organisation can
    * say what to ask about. Never how many: how far a household has got with its answers is
-   * not the owner organisation's to know. Empty once set up. Read by a client that does not
-   * know a value as none.
+   * not the owner organisation's to know. So each kind appears at most once, in the enum's
+   * order, whatever number of rooms or outputs it stands for. Empty once set up. Read by a
+   * client that does not know a value as none.
    *
    * @generated from field: repeated kusinta.iot.commissioning.v1.SetupMissing missing = 3;
    */

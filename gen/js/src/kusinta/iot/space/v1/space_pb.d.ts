@@ -188,6 +188,8 @@ export declare type Space = Message<"kusinta.iot.space.v1.Space"> & {
 export declare const SpaceSchema: GenMessage<Space>;
 
 /**
+ * One membership of a space.
+ *
  * @generated from message kusinta.iot.space.v1.SpaceMember
  */
 export declare type SpaceMember = Message<"kusinta.iot.space.v1.SpaceMember"> & {
@@ -237,7 +239,6 @@ export declare type SpaceMember = Message<"kusinta.iot.space.v1.SpaceMember"> & 
 export declare const SpaceMemberSchema: GenMessage<SpaceMember>;
 
 /**
- * One membership of a space.
  * What a room is used for (Space.room_type).
  *
  * @generated from enum kusinta.iot.space.v1.RoomType

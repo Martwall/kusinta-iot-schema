@@ -349,6 +349,7 @@ class Space extends $pb.GeneratedMessage {
   void clearRoomType() => $_clearField(17);
 }
 
+/// One membership of a space.
 class SpaceMember extends $pb.GeneratedMessage {
   factory SpaceMember({
     $0.UserId? userId,

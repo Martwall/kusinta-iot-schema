@@ -35,7 +35,6 @@ export const RoomTypeSchema = /*@__PURE__*/
   enumDesc(file_kusinta_iot_space_v1_space, 0);
 
 /**
- * One membership of a space.
  * What a room is used for (Space.room_type).
  *
  * @generated from enum kusinta.iot.space.v1.RoomType

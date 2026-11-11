@@ -1739,8 +1739,9 @@ class HomeSetup extends $pb.GeneratedMessage {
 
   /// While set_up is false, the kinds of step still left, so that the owner organisation can
   /// say what to ask about. Never how many: how far a household has got with its answers is
-  /// not the owner organisation's to know. Empty once set up. Read by a client that does not
-  /// know a value as none.
+  /// not the owner organisation's to know. So each kind appears at most once, in the enum's
+  /// order, whatever number of rooms or outputs it stands for. Empty once set up. Read by a
+  /// client that does not know a value as none.
   @$pb.TagNumber(3)
   $pb.PbList<SetupMissing> get missing => $_getList(2);
 }

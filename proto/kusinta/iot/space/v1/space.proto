@@ -98,7 +98,6 @@ message Space {
   google.protobuf.Timestamp climate_history_cleared_at = 16;
 }
 
-// One membership of a space.
 // What a room is used for (Space.room_type).
 enum RoomType {
   ROOM_TYPE_UNSPECIFIED = 0;
@@ -114,6 +113,7 @@ enum RoomType {
   ROOM_TYPE_OTHER = 8;
 }
 
+// One membership of a space.
 message SpaceMember {
   // The member's user id, or for a RESIDENT member listed to a caller who does not live in
   // the home, the residency's id (Space.members).

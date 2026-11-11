@@ -331,6 +331,15 @@ describe('home setup', () => {
     expect(decoded.missing).toEqual([SetupMissing.ROOM_QUESTIONS, SetupMissing.OUTPUT_TEST])
   })
 
+  // A list one kind long per room would say how many rooms are left.
+  it('carries each kind once, in the enum order, however many rooms it stands for', () => {
+    const decoded = onTheWire(HomeSetupSchema, {
+      homeId: { value: 'home-1' },
+      missing: [SetupMissing.ROOM_QUESTIONS, SetupMissing.OUTPUT_TEST],
+    })
+    expect(decoded.missing).toEqual([...new Set(decoded.missing)].sort((a, b) => a - b))
+  })
+
   it('says nothing left once set up', () => {
     const decoded = onTheWire(HomeSetupSchema, { homeId: { value: 'home-1' }, setUp: true })
     expect(decoded.missing).toEqual([])

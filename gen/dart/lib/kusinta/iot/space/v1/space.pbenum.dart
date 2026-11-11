@@ -14,7 +14,6 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-/// One membership of a space.
 /// What a room is used for (Space.room_type).
 class RoomType extends $pb.ProtobufEnum {
   static const RoomType ROOM_TYPE_UNSPECIFIED =
