@@ -58,7 +58,25 @@ option optimize_for = SPEED;
 //       circuit is the heat source's only one.
 //   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
-//       nothing outside an OUTPUT_LEASE test, and the plant feature needs it.
+//       nothing outside an OUTPUT_LEASE test, and the plant feature needs it. For a heat
+//       source with a compressor (a heat pump), at most 180 and at least
+//       "plant.min_block_minutes" (against 20 while that is unanswered): an inverter may fault
+//       on a longer block, and a shorter one than its own restart wait saves nothing. A value
+//       outside that is refused as INVALID_REQUEST with metadata {"reason": "value"}.
+//   "plant.min_block_minutes"  uint, 10 to 60; a plant with a compressor. The shortest block the
+//       gateway applies: a compressor waits after it stops before it may start again (from
+//       about 3 to 20 minutes by maker), so a block shorter than that gains nothing and adds
+//       wear. Unknown: 20. Refused as INVALID_REQUEST with metadata {"reason": "value"} where
+//       above "plant.max_block_minutes". Not asked of a heat source without a compressor
+//       (district heating, a boiler, direct electric), where no minimum applies.
+//   "plant.max_blocks_per_day"  uint, 1 to 6; a plant with a compressor. How many separate blocks
+//       the gateway applies in a day, in the building's time. Unknown: 3.
+//
+// BLOCKS ON A COMPRESSOR. Whatever the keys above say, the gateway releases the input after a
+// block for at least as long as that block lasted, and starts no block within 6 minutes of
+// the compressor starting, so that it is not stopped before its shortest run. Where the plant
+// does not report its compressor's state, or that report is not heard, the gateway starts no
+// block at all: it does not apply a block that a missing reading would have bounded.
 //
 // A fact's value takes the type its key states, matched by type as well as value, as
 // heating.v1.ContactBinding.closed_value is. A key that states a closed list or a range takes
@@ -128,6 +146,15 @@ option optimize_for = SPEED;
 //       heat pump's maker that the heat pump is registered to, so that the home can be
 //       linked to it (accountlink.v1). HEAT_SOURCE; FOR_FEATURE PLANT; STATED, INSPECTED,
 //       DERIVED (true once the home holds a link that reaches the heat pump).
+//   "home.position"  string; a home. Where the home sits along its row or floor, from: "mid"
+//       (walls shared on both sides), "end" (one side shared), "corner", "detached". Homes of the
+//       same template and position lose heat alike, so a new home's heating models may start
+//       from theirs. BUILDING; OPTIONAL; STATED, INSPECTED, DRAWING.
+//   "home.storey_position"  string; a home in a building of several storeys. Where it sits
+//       vertically, from: "ground" (above the ground or a cellar), "middle", "top" (under the
+//       roof), "all" (it spans every storey, as a row house does). Pooled with "home.position",
+//       since a top or ground-floor home loses heat very differently from a middle one.
+//       BUILDING; OPTIONAL; STATED, INSPECTED, DRAWING.
 //   "home.own_grid_subscription"  bool; a home. Whether the home has its own connection to
 //       the electricity grid, billed to the household by the grid operator. False: it is on
 //       the building's shared connection, which the owner organisation answers for.
