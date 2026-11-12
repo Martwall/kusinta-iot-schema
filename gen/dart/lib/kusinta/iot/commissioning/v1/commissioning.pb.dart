@@ -17,6 +17,7 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $0;
 import '../../device/v1/cluster_state.pb.dart' as $2;
+import '../../heating/v1/heating.pb.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $1;
 import 'commissioning.pbenum.dart';
 
@@ -1075,6 +1076,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     BindingRef? binding,
     $0.Timestamp? concludeBy,
     $core.Iterable<TestEvidence>? evidence,
+    $3.DeviceAttribute? output,
   }) {
     final result = create();
     if (testId != null) result.testId = testId;
@@ -1090,6 +1092,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     if (binding != null) result.binding = binding;
     if (concludeBy != null) result.concludeBy = concludeBy;
     if (evidence != null) result.evidence.addAll(evidence);
+    if (output != null) result.output = output;
     return result;
   }
 
@@ -1138,6 +1141,8 @@ class CommissioningTest extends $pb.GeneratedMessage {
     ..pc<TestEvidence>(
         15, _omitFieldNames ? '' : 'evidence', $pb.PbFieldType.PM,
         subBuilder: TestEvidence.create)
+    ..aOM<$3.DeviceAttribute>(16, _omitFieldNames ? '' : 'output',
+        subBuilder: $3.DeviceAttribute.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1311,6 +1316,23 @@ class CommissioningTest extends $pb.GeneratedMessage {
   /// and with a wipe of people, while the verdict stays.
   @$pb.TagNumber(15)
   $pb.PbList<TestEvidence> get evidence => $_getList(12);
+
+  /// For OUTPUT_LEASE, the output it drove: the binding's output (heating.v1.ContactBinding)
+  /// as it stood when the test started. A home's set-up counts a pass on the output now bound
+  /// to its binding, a pass superseded since included (HomeSetup), so a client tells a pass on
+  /// the output bound now from one on an output bound before by comparing this with the
+  /// binding's output: a floor zone moved to another channel of the same device keeps its
+  /// device_id and needs a pass again. Unset for the other kinds.
+  @$pb.TagNumber(16)
+  $3.DeviceAttribute get output => $_getN(13);
+  @$pb.TagNumber(16)
+  set output($3.DeviceAttribute value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasOutput() => $_has(13);
+  @$pb.TagNumber(16)
+  void clearOutput() => $_clearField(16);
+  @$pb.TagNumber(16)
+  $3.DeviceAttribute ensureOutput() => $_ensure(13);
 }
 
 /// One reading a heat source reported during a test (CommissioningTest.evidence).

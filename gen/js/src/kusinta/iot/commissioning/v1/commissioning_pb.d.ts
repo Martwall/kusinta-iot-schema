@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
+import type { DeviceAttribute } from "../../heating/v1/heating_pb.js";
 
 /**
  * Describes the file kusinta/iot/commissioning/v1/commissioning.proto.
@@ -504,6 +505,18 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
    * @generated from field: repeated kusinta.iot.commissioning.v1.TestEvidence evidence = 15;
    */
   evidence: TestEvidence[];
+
+  /**
+   * For OUTPUT_LEASE, the output it drove: the binding's output (heating.v1.ContactBinding)
+   * as it stood when the test started. A home's set-up counts a pass on the output now bound
+   * to its binding, a pass superseded since included (HomeSetup), so a client tells a pass on
+   * the output bound now from one on an output bound before by comparing this with the
+   * binding's output: a floor zone moved to another channel of the same device keeps its
+   * device_id and needs a pass again. Unset for the other kinds.
+   *
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute output = 16;
+   */
+  output?: DeviceAttribute | undefined;
 };
 
 /**

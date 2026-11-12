@@ -793,6 +793,14 @@ const CommissioningTest$json = {
       '6': '.kusinta.iot.commissioning.v1.TestEvidence',
       '10': 'evidence'
     },
+    {
+      '1': 'output',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.DeviceAttribute',
+      '10': 'output'
+    },
   ],
   '9': [
     {'1': 3, '2': 5},
@@ -816,7 +824,8 @@ final $typed_data.Uint8List commissioningTestDescriptor = $convert.base64Decode(
     '5hbmNlEh4KCnN1cGVyc2VkZWQYDCABKAhSCnN1cGVyc2VkZWQSOwoLY29uY2x1ZGVfYnkYDiAB'
     'KAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgpjb25jbHVkZUJ5EkYKCGV2aWRlbmNlGA'
     '8gAygLMioua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5UZXN0RXZpZGVuY2VSCGV2aWRl'
-    'bmNlSgQIAxAFUglyZWNvcmRfaWRSBWZpZWxk');
+    'bmNlEj8KBm91dHB1dBgQIAEoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuRGV2aWNlQXR0cm'
+    'lidXRlUgZvdXRwdXRKBAgDEAVSCXJlY29yZF9pZFIFZmllbGQ=');
 
 @$core.Deprecated('Use testEvidenceDescriptor instead')
 const TestEvidence$json = {

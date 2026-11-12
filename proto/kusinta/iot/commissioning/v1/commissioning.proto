@@ -4,6 +4,7 @@ package kusinta.iot.commissioning.v1;
 
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/device/v1/cluster_state.proto";
+import "kusinta/iot/heating/v1/heating.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
@@ -643,6 +644,14 @@ message CommissioningTest {
   // homes, the home's residents, and whoever ran the test — and erased with the home's wipe
   // and with a wipe of people, while the verdict stays.
   repeated TestEvidence evidence = 15;
+
+  // For OUTPUT_LEASE, the output it drove: the binding's output (heating.v1.ContactBinding)
+  // as it stood when the test started. A home's set-up counts a pass on the output now bound
+  // to its binding, a pass superseded since included (HomeSetup), so a client tells a pass on
+  // the output bound now from one on an output bound before by comparing this with the
+  // binding's output: a floor zone moved to another channel of the same device keeps its
+  // device_id and needs a pass again. Unset for the other kinds.
+  kusinta.iot.heating.v1.DeviceAttribute output = 16;
 
   reserved 3 to 4;
   reserved "record_id", "field";
