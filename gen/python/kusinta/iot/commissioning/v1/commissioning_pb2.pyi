@@ -2,6 +2,7 @@ import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
+from kusinta.iot.heating.v1 import heating_pb2 as _heating_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
@@ -343,7 +344,7 @@ class FeatureStatus(_message.Message):
     def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ...) -> None: ...
 
 class CommissioningTest(_message.Message):
-    __slots__ = ("test_id", "kind", "binding", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded", "conclude_by", "evidence")
+    __slots__ = ("test_id", "kind", "binding", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded", "conclude_by", "evidence", "output")
     TEST_ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     BINDING_FIELD_NUMBER: _ClassVar[int]
@@ -357,6 +358,7 @@ class CommissioningTest(_message.Message):
     SUPERSEDED_FIELD_NUMBER: _ClassVar[int]
     CONCLUDE_BY_FIELD_NUMBER: _ClassVar[int]
     EVIDENCE_FIELD_NUMBER: _ClassVar[int]
+    OUTPUT_FIELD_NUMBER: _ClassVar[int]
     test_id: str
     kind: TestKind
     binding: BindingRef
@@ -370,7 +372,8 @@ class CommissioningTest(_message.Message):
     superseded: bool
     conclude_by: _timestamp_pb2.Timestamp
     evidence: _containers.RepeatedCompositeFieldContainer[TestEvidence]
-    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ..., conclude_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., evidence: _Optional[_Iterable[_Union[TestEvidence, _Mapping]]] = ...) -> None: ...
+    output: _heating_pb2.DeviceAttribute
+    def __init__(self, test_id: _Optional[str] = ..., kind: _Optional[_Union[TestKind, str]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., state: _Optional[_Union[TestState, str]] = ..., failure: _Optional[_Union[TestFailure, str]] = ..., started_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., ends_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., finished_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., provenance: _Optional[_Union[Provenance, _Mapping]] = ..., superseded: _Optional[bool] = ..., conclude_by: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., evidence: _Optional[_Iterable[_Union[TestEvidence, _Mapping]]] = ..., output: _Optional[_Union[_heating_pb2.DeviceAttribute, _Mapping]] = ...) -> None: ...
 
 class TestEvidence(_message.Message):
     __slots__ = ("reading", "value", "observed_at")

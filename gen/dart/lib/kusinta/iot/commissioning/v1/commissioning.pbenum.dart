@@ -547,7 +547,7 @@ class SetupMissing extends $pb.ProtobufEnum {
   static const SetupMissing SETUP_MISSING_ROOM_QUESTIONS =
       SetupMissing._(1, _omitEnumNames ? '' : 'SETUP_MISSING_ROOM_QUESTIONS');
 
-  /// An output bound in the home with no OUTPUT_LEASE pass on the device it is bound to.
+  /// An output bound in the home with no OUTPUT_LEASE pass on the output it is bound to.
   static const SetupMissing SETUP_MISSING_OUTPUT_TEST =
       SetupMissing._(2, _omitEnumNames ? '' : 'SETUP_MISSING_OUTPUT_TEST');
 

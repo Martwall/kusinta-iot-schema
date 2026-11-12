@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
+import type { DeviceAttribute } from "../../heating/v1/heating_pb.js";
 
 /**
  * Describes the file kusinta/iot/commissioning/v1/commissioning.proto.
@@ -504,6 +505,21 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
    * @generated from field: repeated kusinta.iot.commissioning.v1.TestEvidence evidence = 15;
    */
   evidence: TestEvidence[];
+
+  /**
+   * For OUTPUT_LEASE, the output it drove: the binding's output (heating.v1.ContactBinding)
+   * as it stood when the test started. A home's set-up counts a pass on the output now bound
+   * to its binding, a pass superseded since included (HomeSetup), so a client tells a pass on
+   * the output bound now from one on an output bound before by whether this is the same output
+   * as the binding's: the same device_id and endpoint_id (unset is not 0), and the same
+   * cluster_id and attribute_id on the Matter branch, or vendor_extension and attribute_name on
+   * the vendor branch. A Matter attribute_name is advisory and not compared, and may be unset
+   * here. A floor zone moved to another channel of the same device keeps its device_id and
+   * needs a pass again. Unset for the other kinds.
+   *
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute output = 16;
+   */
+  output?: DeviceAttribute | undefined;
 };
 
 /**
@@ -655,7 +671,7 @@ export declare const ModelFitSchema: GenMessage<ModelFit>;
 
 /**
  * Whether a home is set up: every REQUIRED fact answered with a value at least once, and
- * every output bound in it passed OUTPUT_LEASE at least once on the device it is bound to.
+ * every output bound in it passed OUTPUT_LEASE at least once on the output it is bound to.
  * "Don't know" is not an answer here. What the household does afterwards counts neither
  * way: a REQUIRED fact once answered still counts when it is removed or changed to "don't
  * know", as a pass superseded by a change of a floor zone's rooms or control room still
@@ -667,7 +683,7 @@ export declare const ModelFitSchema: GenMessage<ModelFit>;
  * that set_up means the same on every gateway. A home with no room is not set up. Once a
  * home has been set up, its facts count neither way, whatever changes since — a room
  * created, an answer removed, a key a later release of this schema marks REQUIRED: only an
- * output bound since without a pass on the device it is bound to makes it not set up. A
+ * output bound since without a pass on the output it is bound to makes it not set up. A
  * household handover does not reset it: the home stays set up for the next household, so
  * that set_up tells the owner organisation nothing of who moved in or out. A key a later
  * release no longer marks REQUIRED stops counting at once, for a home not yet set up.
@@ -1587,7 +1603,7 @@ export enum SetupMissing {
   ROOM_QUESTIONS = 1,
 
   /**
-   * An output bound in the home with no OUTPUT_LEASE pass on the device it is bound to.
+   * An output bound in the home with no OUTPUT_LEASE pass on the output it is bound to.
    *
    * @generated from enum value: SETUP_MISSING_OUTPUT_TEST = 2;
    */
