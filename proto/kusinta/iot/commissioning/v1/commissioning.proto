@@ -58,22 +58,35 @@ option optimize_for = SPEED;
 //       circuit is the heat source's only one.
 //   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
-//       nothing outside an OUTPUT_LEASE test, and the plant feature needs it. For a heat
-//       source with a compressor (a heat pump), at most 180 and at least
-//       "plant.min_block_minutes" (against 20 while that is unanswered): an inverter may fault
-//       on a longer block, and a shorter one than its own restart wait saves nothing. A value
-//       outside that is refused as INVALID_REQUEST with metadata {"reason": "value"}.
+//       nothing outside an OUTPUT_LEASE test, and the plant feature needs it. It bounds every
+//       blocking input of the plant, the add-on heater's as well as the compressor's. The
+//       gateway blocks in whole quarter hours, so a block lasts the most whole quarter hours
+//       this allows. For a heat source with a compressor (a heat pump), at most 180, and room
+//       for at least one block of "plant.min_block_minutes" (against 20 while that is
+//       unanswered) once both are counted in whole quarter hours: this rounded down to a
+//       quarter hour is not less than that rounded up, so 20 against 20 is refused and 30
+//       against 20 taken. An inverter may fault on a longer block, and a setting that holds no
+//       block blocks nothing. A value outside that is refused as INVALID_REQUEST with metadata
+//       {"reason": "value"}.
 //   "plant.min_block_minutes"  uint, 10 to 60; a plant with a compressor. The shortest block the
 //       gateway applies: a compressor waits after it stops before it may start again (from
 //       about 3 to 20 minutes by maker), so a block shorter than that gains nothing and adds
 //       wear. Unknown: 20. Refused as INVALID_REQUEST with metadata {"reason": "value"} where
-//       above "plant.max_block_minutes". Not asked of a heat source without a compressor
+//       "plant.max_block_minutes" would then hold no block of it (counted as that key
+//       states). It governs a block that stops the compressor only (BLOCKS ON A COMPRESSOR).
+//       Not asked of a heat source without a compressor
 //       (district heating, a boiler, direct electric), where no minimum applies.
 //   "plant.max_blocks_per_day"  uint, 1 to 6; a plant with a compressor. How many separate blocks
-//       the gateway applies in a day, in the building's time. Unknown: 3.
+//       that stop the compressor the gateway applies in a day, in the building's time.
+//       Unknown: 3.
 //
-// BLOCKS ON A COMPRESSOR. Whatever the keys above say, the gateway releases the input after a
-// block for at least as long as that block lasted, and starts no block within 6 minutes of
+// BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
+// (heating.v1.HeatPumpControl.sg_ready_block). Blocking the add-on heater
+// (add_on_heater_block) leaves the compressor running, so none of what follows, nor
+// "plant.min_block_minutes" or "plant.max_blocks_per_day", applies to it: it is bounded by
+// "plant.max_block_minutes" alone. Whatever the keys above say, the gateway releases a
+// compressor block's input for at least as long as that block lasted, the release running
+// on past midnight where the block ended near it, and starts no block within 6 minutes of
 // the compressor starting, so that it is not stopped before its shortest run. Where the plant
 // does not report its compressor's state, or that report is not heard, the gateway starts no
 // block at all: it does not apply a block that a missing reading would have bounded.
@@ -114,7 +127,7 @@ option optimize_for = SPEED;
 //   "room.walls_changed"  bool; a room. Whether a wall bounding it was added, removed or
 //       moved since the house was built, so that the drawing's rooms, emitters and floor
 //       zones may not hold for it. The rooms themselves are spaces (space.v1), not facts.
-//       ROOMS; REQUIRED; STATED, INSPECTED.
+//       Often answered by an installer on site. ROOMS; OPTIONAL; STATED, INSPECTED.
 //   "room.heating"  list of string; a room. What heats it, from: "radiator_water" (radiators
 //       on a heating circuit), "radiator_electric" (electric panel heaters), "floor_water"
 //       (water floor heating), "floor_electric" (an electric floor), "air_to_air_heat_pump"
@@ -762,7 +775,8 @@ message ModelFit {
 // created, an answer removed, a key a later release of this schema marks REQUIRED: only an
 // output bound since without a pass on the device it is bound to makes it not set up. A
 // household handover does not reset it: the home stays set up for the next household, so
-// that set_up tells the owner organisation nothing of who moved in or out.
+// that set_up tells the owner organisation nothing of who moved in or out. A key a later
+// release no longer marks REQUIRED stops counting at once, for a home not yet set up.
 message HomeSetup {
   kusinta.iot.identity.v1.SpaceId home_id = 1;
   bool set_up = 2;

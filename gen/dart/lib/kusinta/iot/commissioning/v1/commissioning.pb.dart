@@ -1661,7 +1661,8 @@ class ModelFit extends $pb.GeneratedMessage {
 /// created, an answer removed, a key a later release of this schema marks REQUIRED: only an
 /// output bound since without a pass on the device it is bound to makes it not set up. A
 /// household handover does not reset it: the home stays set up for the next household, so
-/// that set_up tells the owner organisation nothing of who moved in or out.
+/// that set_up tells the owner organisation nothing of who moved in or out. A key a later
+/// release no longer marks REQUIRED stops counting at once, for a home not yet set up.
 class HomeSetup extends $pb.GeneratedMessage {
   factory HomeSetup({
     $1.SpaceId? homeId,
