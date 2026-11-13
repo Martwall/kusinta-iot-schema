@@ -656,9 +656,11 @@ export declare type ModelFit = Message<"kusinta.iot.commissioning.v1.ModelFit"> 
   band: ModelFitBand;
 
   /**
-   * Set with NOT_ENOUGH_DATA; with POOR where a gap explains it; and with FAIR where a gap
-   * holds the band there (a floor zone fitted without its return: NO_RETURNS,
-   * LEARNING_RETURNS).
+   * Set with NOT_ENOUGH_DATA; with POOR where a gap explains it; and, for a floor zone fitted
+   * without its return, with any band the gap explains or holds down: NO_RETURNS where the cap
+   * holds it at FAIR; LEARNING_RETURNS at every band while the zone learns its return;
+   * RETURNS_SHARED where it can never be alone on its circuit; NOT_PHYSICAL where its return
+   * reads no floor's return.
    *
    * @generated from field: kusinta.iot.commissioning.v1.ModelFitGap gap = 4;
    */
@@ -1548,7 +1550,9 @@ export enum ModelFitGap {
 
   /**
    * The fit came out physically impossible: usually a sensor in the wrong place or a
-   * mapping of rooms to zones that does not match the house.
+   * mapping of rooms to zones that does not match the house. For a floor zone fitted on its
+   * room alone (FAIR at best), its return reads no floor's return: the return probe is
+   * likely on the wrong pipe.
    *
    * @generated from enum value: MODEL_FIT_GAP_NOT_PHYSICAL = 5;
    */

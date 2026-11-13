@@ -497,7 +497,9 @@ class ModelFitGap extends $pb.ProtobufEnum {
       4, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN');
 
   /// The fit came out physically impossible: usually a sensor in the wrong place or a
-  /// mapping of rooms to zones that does not match the house.
+  /// mapping of rooms to zones that does not match the house. For a floor zone fitted on its
+  /// room alone (FAIR at best), its return reads no floor's return: the return probe is
+  /// likely on the wrong pipe.
   static const ModelFitGap MODEL_FIT_GAP_NOT_PHYSICAL =
       ModelFitGap._(5, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_PHYSICAL');
 
