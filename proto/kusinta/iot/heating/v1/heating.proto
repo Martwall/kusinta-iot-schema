@@ -4,6 +4,8 @@ package kusinta.iot.heating.v1;
 
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/acl.proto";
+import "kusinta/iot/access/v1/roles.proto";
+import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/device/v1/cluster_state.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
@@ -147,6 +149,20 @@ message HeatingPlant {
 
   // See the file comment.
   uint64 revision = 8;
+
+  // Every price rule the gateway runs for this plant, each once, with its mode as it stands:
+  // the latest change of each (PriceRuleChange), OFF included. A rule not listed is one the
+  // gateway does not run for this plant, and a client offers no switch for it. A rule whose mode
+  // was never set is listed OFF, with at, set_by_role and set_by unset.
+  //
+  // Read-only: set with webrtc.v1.SetPriceRuleMode, never in a put, which keeps them and ignores
+  // them, and does not bump revision. Sent to whoever is given the plant, set_by as
+  // PriceRuleChange says. An app tells a gateway that predates price rules by an empty list with
+  // price_rules_revision 0, and offers no switch.
+  repeated PriceRuleChange price_rules = 9;
+
+  // Set by the gateway and bumped by every change of price_rules; see webrtc.v1.SetPriceRuleMode.
+  uint64 price_rules_revision = 10;
 }
 
 // A heat pump's control inputs.
@@ -331,4 +347,302 @@ message HeatingRecord {
     FloorZone floor_zone = 3;
     ComfortLoad comfort_load = 4;
   }
+}
+
+// PRICE RULES. A price rule steers one lever of a heat source by the price of electricity, by
+// rules fixed in advance rather than by an optimiser's plan. Each runs per plant, judges the
+// rooms it heats by their comfort band (climate.v1.ComfortPreference, THE BAND), and is switched
+// per plant (PriceRuleMode). Every safety rule holds over each, whatever its mode: the plant's
+// block cap and the compressor's rules ("plant.max_block_minutes", commissioning.v1 BLOCKS ON A
+// COMPRESSOR); the leases and rest states (see the file comment); a running commissioning test,
+// which takes the output it drives; and the public-health floor (ComfortPreference, THE BAND).
+//
+// WHO SWITCHES THEM. Whoever may set the plant's block cap ("plant.max_block_minutes"): for a
+// plant in a home, its household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN); for a
+// plant outside homes, the property owner and the gateway's administrators who reach its space;
+// and for either, an installer under a commissioning grant covering the plant's space
+// (commissioning.v1, GRANTS). Every change is recorded (PriceRuleChange): a record of what
+// happened, never rewritten, and corrected by a newer change.
+//
+// HEAT BLOCKS. A block is a stretch of time in which a price rule holds closed an input of the
+// plant that blocks heat (HeatPumpControl.add_on_heater_block, sg_ready_block), or, in SHADOW,
+// would have. Each is recorded (HeatBlock) with why it started and how it ended. A plant's
+// blocks are released by hand (webrtc.v1.ReleaseHeatBlock): every LIVE block under way ends,
+// and the plant's blocking rules start no LIVE block until the hold the release states runs out
+// (HeatBlockRelease). Only the plant's blocks are released: a floor zone a rule holds off is
+// not a heat block, and is told by its rooms' explanations (climate.v1.ClimateExplanation).
+//
+// WHO SEES THEM. A plant's blocks, releases and changes of mode (HeatBlockStatus,
+// HeatBlockHistory), and a home's shadow summary (ShadowSummary):
+//   * of a plant in a home: its residents only, from the start of their current residency
+//     (access.v1.MembershipRelation). Never service, never the property owner or the gateway
+//     administrators, the home empty or not, and never an installer under a commissioning grant,
+//     which covers no history of a home (commissioning.v1, GRANTS). The blocks, the releases and
+//     the shadow summary are part of the home's climate history: erased by its household's Clear
+//     history and by its wipe (webrtc.v1 household.proto, CLIMATE HISTORY, WIPE). The record of
+//     changes of mode goes at the wipe;
+//   * of a plant outside homes: the property owner and the gateway's administrators who reach
+//     its space, and technicians who reach it, who may release its blocks; never a resident as
+//     such. A shared plant's blocks never tell one home's comfort to anyone: an end caused by a
+//     room in a home is told only where at least three homes share the plant, as
+//     climate.v1.ClimateExplanationKind tells a shared cause, and otherwise as
+//     HEAT_BLOCK_END_UNSTATED.
+// Blocks, releases and changes are kept for 25 months, as a plant's hours are
+// (climate.v1.PlantHistory); a shadow summary for 180 days, as a room's quarter hours are.
+
+// A price rule (PRICE RULES). A closed list that grows only by a release of this schema: a
+// client words a rule it does not know as a price rule, unnamed, and offers no switch for it.
+enum PriceRule {
+  // Not stated, or a rule this client's schema does not know. Refused in a request.
+  PRICE_RULE_UNSPECIFIED = 0;
+
+  // Blocks the add-on heater (HeatPumpControl.add_on_heater_block) in the day's dearest quarter
+  // hours, the compressor running on: each block within "plant.max_block_minutes"
+  // (commissioning.v1), and ended early where a room it heats falls below its comfort band or,
+  // where the plant reports it, its hot water runs low. A blocking rule.
+  PRICE_RULE_ADD_ON_HEATER_BLOCK = 1;
+
+  // Heats the plant's floor zones (FloorZone) ahead in cheap quarter hours, within the top of
+  // their rooms' comfort band, and holds them off in dear ones, within its bottom. Holds no input
+  // of the plant: not a blocking rule.
+  PRICE_RULE_FLOOR_PRE_HEAT = 2;
+
+  // Raises the heat source's hot water in cheap quarter hours (HeatPumpControl.sg_ready_boost),
+  // so that the tank is full before dear ones; never during a block. Not a blocking rule.
+  PRICE_RULE_HOT_WATER = 3;
+}
+
+// How a price rule runs on a plant.
+enum PriceRuleMode {
+  // Not stated, or a mode this client's schema does not know: read as OFF. Refused in a
+  // request.
+  PRICE_RULE_MODE_UNSPECIFIED = 0;
+
+  // The rule decides nothing and drives nothing. A plant's rules start OFF.
+  PRICE_RULE_MODE_OFF = 1;
+
+  // The rule decides as LIVE would and records what it decided (HeatBlock, ShadowSummary), but
+  // drives nothing, so that its saving, and any comfort it would have cost, can be judged before
+  // it goes live. Needs no input bound, and no hold applies to it.
+  PRICE_RULE_MODE_SHADOW = 2;
+
+  // The rule decides and drives. It drives only while the gateway may drive the input it steers:
+  // bound, under a current pass of its commissioning test, the plant's feature not blocked
+  // (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, and
+  // no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
+  // plant's feature status says why. A rule is put LIVE only while the input it steers is bound
+  // (webrtc.v1.SetPriceRuleMode).
+  PRICE_RULE_MODE_LIVE = 3;
+}
+
+// One change of a price rule's mode on a plant (PRICE RULES, WHO SWITCHES THEM); as
+// HeatingPlant.price_rules, the mode the latest change left the rule in.
+message PriceRuleChange {
+  PriceRule rule = 1;
+
+  // The mode it set, and the mode before it: OFF before a rule's first change.
+  PriceRuleMode mode = 2;
+  PriceRuleMode previous_mode = 3;
+
+  google.protobuf.Timestamp at = 4;
+
+  // The role its setter acted in: ROLE_RESIDENT for a household admin of the home,
+  // ROLE_TECHNICIAN for an installer under a commissioning grant, otherwise ROLE_PROPERTY_OWNER
+  // where they hold it, else ROLE_GATEWAY_ADMIN. UNSPECIFIED, with set_by unset, for a change the
+  // gateway made itself: a home's wipe taking a LIVE rule back to SHADOW (webrtc.v1
+  // household.proto, WIPE).
+  kusinta.iot.access.v1.Role set_by_role = 5;
+
+  // Who set it. For a plant in a home, given to its residents, and unset when it dates from
+  // before their current residency; to an installer, only on a change of their own. For a plant
+  // outside homes, given to the property owner and the gateway administrators. Unset to anyone
+  // else, set_by_role kept.
+  kusinta.iot.identity.v1.UserId set_by = 6;
+}
+
+// How a heat block ended (HeatBlock.end).
+enum HeatBlockEnd {
+  // Under way, or a cause this client's schema does not know: an app shows that it ended,
+  // without a cause.
+  HEAT_BLOCK_END_UNSPECIFIED = 0;
+
+  // It ran to the end its rule planned for it.
+  HEAT_BLOCK_END_PLANNED = 1;
+
+  // A room the plant heats fell below its comfort band (climate.v1.ComfortPreference, THE
+  // BAND).
+  HEAT_BLOCK_END_ROOM_BELOW_BAND = 2;
+
+  // The plant's hot water ran low, where the plant reports it.
+  HEAT_BLOCK_END_HOT_WATER_LOW = 3;
+
+  // Released by hand (webrtc.v1.ReleaseHeatBlock; HeatBlockRelease).
+  HEAT_BLOCK_END_RELEASED = 4;
+
+  // Its rule's mode changed (PriceRuleChange).
+  HEAT_BLOCK_END_RULE_SWITCHED = 5;
+
+  // The gateway stopped holding it for a cause of its own: the input could no longer be driven
+  // (PRICE_RULE_MODE_LIVE), a commissioning test took it, or the gateway restarted.
+  HEAT_BLOCK_END_INTERRUPTED = 6;
+
+  // Ended early for a cause not told to the recipient (WHO SEES THEM).
+  HEAT_BLOCK_END_UNSTATED = 7;
+}
+
+// One heat block (HEAT BLOCKS).
+message HeatBlock {
+  // Assigned by the gateway, opaque.
+  string block_id = 1;
+
+  // The rule that started it, and its mode then: LIVE held the input, SHADOW only decided to.
+  PriceRule rule = 2;
+  PriceRuleMode mode = 3;
+
+  // Why it started, as a room's explanation names the cause (climate.v1.ClimateExplanationKind;
+  // subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours. A kind the client
+  // does not know is shown as a block without a cause.
+  kusinta.iot.climate.v1.ClimateExplanationKind reason = 4;
+
+  google.protobuf.Timestamp started_at = 5;
+
+  // The end its rule planned for it, within "plant.max_block_minutes".
+  google.protobuf.Timestamp planned_end_at = 6;
+
+  // When it ended, and how. Both unset while it is under way.
+  google.protobuf.Timestamp ended_at = 7;
+  HeatBlockEnd end = 8;
+}
+
+// One release of a plant's blocks by hand (webrtc.v1.ReleaseHeatBlock), and the hold it set.
+message HeatBlockRelease {
+  google.protobuf.Timestamp at = 1;
+
+  // Until when the plant's blocking rules start no LIVE block. Unset: the release ended a hold
+  // early, and blocks may start again as the rules plan them.
+  google.protobuf.Timestamp hold_until = 2;
+
+  // The blocks under way that it ended (HeatBlock.block_id).
+  repeated string ended_block_ids = 3;
+
+  // The role its maker acted in — ROLE_RESIDENT on a plant in a home; ROLE_PROPERTY_OWNER,
+  // ROLE_GATEWAY_ADMIN or ROLE_TECHNICIAN on one outside homes — and who they are, given as
+  // PriceRuleChange.set_by is.
+  kusinta.iot.access.v1.Role set_by_role = 4;
+  kusinta.iot.identity.v1.UserId set_by = 5;
+}
+
+// A plant's blocks as they stand now: what is blocked, by which rule and why, and the hold a
+// release set. Given as WHO SEES THEM says, in reply to webrtc.v1.ListHeatBlockStatus and
+// webrtc.v1.ReleaseHeatBlock, and pushed (webrtc.v1 GatewayMessage.heat_block_status) to the
+// sessions given it whenever a block starts or ends, or a hold begins, changes or ends. Apply as
+// an upsert keyed on plant_id.
+message HeatBlockStatus {
+  string plant_id = 1;
+
+  // The plant's space and name, so that a technician who is not given the plant record knows
+  // which plant it is.
+  kusinta.iot.identity.v1.SpaceId space_id = 2;
+  string plant_name = 3;
+
+  // The blocks under way, LIVE and SHADOW, at most one per rule and mode. Empty: none.
+  repeated HeatBlock current = 4;
+
+  // The release whose hold runs now. Unset: none.
+  HeatBlockRelease hold = 5;
+
+  // The plant's rules and their modes, as HeatingPlant.price_rules, so that whoever may release
+  // a block is told whether a rule is LIVE.
+  repeated PriceRuleChange price_rules = 6;
+}
+
+// The answer to webrtc.v1.ListHeatBlockStatus.
+message HeatBlockStatuses {
+  repeated HeatBlockStatus statuses = 1;
+}
+
+// A plant's blocks, releases and changes of mode over a range, in reply to
+// webrtc.v1.GetHeatBlockHistory. Blocks in order of started_at, releases and changes in order
+// of at.
+message HeatBlockHistory {
+  string plant_id = 1;
+
+  // The earliest time the gateway still holds of this plant's records that the recipient may
+  // read: for a plant in a home, no earlier than the start of their current residency, nor than
+  // the home's last Clear history (space.v1.Space.climate_history_cleared_at). Nothing before it
+  // is returned.
+  google.protobuf.Timestamp kept_from = 2;
+
+  repeated HeatBlock blocks = 3;
+  repeated HeatBlockRelease releases = 4;
+  repeated PriceRuleChange rule_changes = 5;
+}
+
+// One day of one price rule scored against one comfort band (ShadowBandSeries): what the rule,
+// had it been live with that band, would have saved, and what it would have cost in comfort. A
+// day is the building's local date (space.v1.Space.time_zone), cut as
+// climate.v1.CLIMATE_SUMMARY_PERIOD_DAY is, and given only once the gateway has scored it, never
+// before it ends. A day on which the building's time zone was unknown is not scored.
+message ShadowDay {
+  // The local date, as an ISO 8601 calendar date (YYYY-MM-DD).
+  string date = 1;
+
+  // The saving, in millionths of a euro, the currency day-ahead prices are in
+  // (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, at
+  // the prices it decided by, with the recovery cost already taken off. Negative: it would have
+  // cost more than it saved. A client converts it as it converts prices
+  // (planning.v1.ExchangeRate).
+  sint64 net_saving_micro_eur = 2;
+
+  // The cost, in millionths of a euro, of making up afterwards for what was blocked or coasted:
+  // already taken off net_saving_micro_eur, and told so that a client may show both.
+  sint64 recovery_cost_micro_eur = 3;
+
+  // The quarter hours of the day the rule would have blocked or coasted.
+  uint32 blocked_quarters = 4;
+
+  // The quarter hours of the day in which at least one room the rule judges was, or was
+  // predicted to be, below the band's low edge (a breach), and above its high edge
+  // (overheated). A quarter hour in which a room's window was open is not counted for that room.
+  uint32 breach_quarters = 5;
+  uint32 overheat_quarters = 6;
+
+  // The quarter hours of the day that had no price, in which the rule decided nothing: all of
+  // them on a day with no price at all, when every other count is 0.
+  uint32 no_price_quarters = 7;
+}
+
+// One price rule of one plant of a home, scored day by day against one comfort band.
+message ShadowBandSeries {
+  string plant_id = 1;
+  PriceRule rule = 2;
+
+  // The band scored, as a comfort preference gives one (climate.v1.ComfortPreference, THE
+  // BAND), in centidegrees. Which bands are scored is the gateway's choice, the same for every
+  // home; the presets' among them.
+  uint32 below_target_centidegrees = 3;
+  uint32 above_target_centidegrees = 4;
+
+  // In order of date.
+  repeated ShadowDay days = 5;
+}
+
+// What a home's price rules would have saved, and cost in comfort, under each band the gateway
+// scores, so that the household can choose its comfort preference knowing what each would bring
+// (climate.v1.ComfortPreference). In reply to webrtc.v1.GetShadowSummary. The household's data,
+// given as WHO SEES THEM says of a plant in a home: to the home's residents only, never to
+// service, the property owner, the gateway's administrators, an installer under a commissioning
+// grant or another home; erased by the household's Clear history and by the home's wipe.
+message ShadowSummary {
+  kusinta.iot.identity.v1.SpaceId home_id = 1;
+
+  // The earliest date still held that the recipient may read: no earlier than the first whole
+  // day of their current residency, nor than the first whole day after the home's last Clear
+  // history. An ISO 8601 calendar date; empty where nothing is held for them.
+  string kept_from = 2;
+
+  // One per plant, rule and band scored, ordered by plant, rule, then below_target: of the home's
+  // own plants (HeatingPlant.space_id the home) only, each rule while it ran in SHADOW or LIVE.
+  // A plant outside homes is scored for no home. Empty where none is held.
+  repeated ShadowBandSeries series = 3;
 }

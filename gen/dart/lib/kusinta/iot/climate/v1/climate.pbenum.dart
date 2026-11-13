@@ -82,6 +82,48 @@ class RoomClimateCondition extends $pb.ProtobufEnum {
   const RoomClimateCondition._(super.value, super.name);
 }
 
+/// A comfort preset (ComfortPreference.preset): a named band below and above a room's target.
+/// A closed list that grows only by a release of this schema. A client that does not know a
+/// preset it is sent shows the band's numbers, which the gateway always fills
+/// (ComfortPreference), and never names it.
+class ComfortPreset extends $pb.ProtobufEnum {
+  /// In a ComfortPreference the gateway sends: none chosen, so the default band holds
+  /// (ComfortPreference, PRESETS). Refused in a request: unset the preference instead.
+  static const ComfortPreset COMFORT_PRESET_UNSPECIFIED =
+      ComfortPreset._(0, _omitEnumNames ? '' : 'COMFORT_PRESET_UNSPECIFIED');
+
+  /// 150 below the target, 50 above it.
+  static const ComfortPreset COMFORT_PRESET_ECONOMY =
+      ComfortPreset._(1, _omitEnumNames ? '' : 'COMFORT_PRESET_ECONOMY');
+
+  /// 100 below the target, 50 above it.
+  static const ComfortPreset COMFORT_PRESET_NORMAL =
+      ComfortPreset._(2, _omitEnumNames ? '' : 'COMFORT_PRESET_NORMAL');
+
+  /// 50 below the target, 50 above it.
+  static const ComfortPreset COMFORT_PRESET_COMFORT =
+      ComfortPreset._(3, _omitEnumNames ? '' : 'COMFORT_PRESET_COMFORT');
+
+  /// Below and above as the household sets them.
+  static const ComfortPreset COMFORT_PRESET_CUSTOM =
+      ComfortPreset._(4, _omitEnumNames ? '' : 'COMFORT_PRESET_CUSTOM');
+
+  static const $core.List<ComfortPreset> values = <ComfortPreset>[
+    COMFORT_PRESET_UNSPECIFIED,
+    COMFORT_PRESET_ECONOMY,
+    COMFORT_PRESET_NORMAL,
+    COMFORT_PRESET_COMFORT,
+    COMFORT_PRESET_CUSTOM,
+  ];
+
+  static final $core.List<ComfortPreset?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static ComfortPreset? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ComfortPreset._(super.value, super.name);
+}
+
 /// Which bound of a room's outer limits clamps the outputs it binds.
 class OuterLimitKind extends $pb.ProtobufEnum {
   static const OuterLimitKind OUTER_LIMIT_KIND_UNSPECIFIED =

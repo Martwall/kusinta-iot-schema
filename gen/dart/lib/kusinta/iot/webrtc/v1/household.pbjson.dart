@@ -462,6 +462,15 @@ const HouseholdExport$json = {
       '9': 0,
       '10': 'heating'
     },
+    {
+      '1': 'heat_blocks',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockHistory',
+      '9': 0,
+      '10': 'heatBlocks'
+    },
     {'1': 'next_part_token', '3': 7, '4': 1, '5': 9, '10': 'nextPartToken'},
   ],
   '8': [
@@ -479,5 +488,6 @@ final $typed_data.Uint8List householdExportDescriptor = $convert.base64Decode(
     '52MS5BcGFydG1lbnRDbGltYXRlU3VtbWFyeUgAUg5jbGltYXRlU3VtbWFyeRJaCg1jb21taXNz'
     'aW9uaW5nGAUgASgLMjIua3VzaW50YS5pb3QuY29tbWlzc2lvbmluZy52MS5Db21taXNzaW9uaW'
     '5nUHJvZmlsZUgAUg1jb21taXNzaW9uaW5nEkEKB2hlYXRpbmcYBiABKAsyJS5rdXNpbnRhLmlv'
-    'dC5oZWF0aW5nLnYxLkhlYXRpbmdMYXlvdXRIAFIHaGVhdGluZxImCg9uZXh0X3BhcnRfdG9rZW'
-    '4YByABKAlSDW5leHRQYXJ0VG9rZW5CBgoEcGFydA==');
+    'dC5oZWF0aW5nLnYxLkhlYXRpbmdMYXlvdXRIAFIHaGVhdGluZxJLCgtoZWF0X2Jsb2NrcxgIIA'
+    'EoCzIoLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdEJsb2NrSGlzdG9yeUgAUgpoZWF0Qmxv'
+    'Y2tzEiYKD25leHRfcGFydF90b2tlbhgHIAEoCVINbmV4dFBhcnRUb2tlbkIGCgRwYXJ0');

@@ -10,13 +10,13 @@ import type { RoomType, Space } from "../../space/v1/space_pb.js";
 import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
-import type { ClimateModeKind, ClimateSummaryPeriod, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
+import type { ClimateModeKind, ClimateSummaryPeriod, ComfortPreference, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ExchangeRate, ForecastCell, PriceInterval } from "../../planning/v1/planning_pb.js";
 import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
-import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant } from "../../heating/v1/heating_pb.js";
+import type { ComfortLoad, ComfortWindow, FloorZone, HeatingCircuit, HeatingPlant, PriceRule, PriceRuleMode } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
@@ -1008,6 +1008,48 @@ export declare type SetInnerRoomLimits = Message<"kusinta.iot.webrtc.v1.SetInner
  * Use `create(SetInnerRoomLimitsSchema)` to create a new message.
  */
 export declare const SetInnerRoomLimitsSchema: GenMessage<SetInnerRoomLimits>;
+
+/**
+ * Sets the comfort preference of a home or of one of its rooms (climate.v1.ComfortPreference),
+ * or clears it. Answered with ManagementAck; the rooms it changes are sent again
+ * (RoomClimateChanged): the room, or every room of the home that follows the home's.
+ *
+ * A household admin of the home only (household.proto, HOUSEHOLD ADMIN), as SetInnerRoomLimits;
+ * anyone else is refused as NOT_ENTITLED — never covered by a commissioning grant, and never the
+ * property owner's or a gateway administrator's, the home empty or not. A space that is neither
+ * an apartment nor a room in one is refused as NOT_ENTITLED with the same metadata, so the answer
+ * tells nothing of where a home is. Refused as INVALID_REQUEST with metadata {"reason":
+ * "comfort_preference"} for preset UNSPECIFIED, and for CUSTOM with below_target_centidegrees
+ * above 500 or above_target_centidegrees above 200. A band reaching below the public-health
+ * floor is not refused: its low edge stops there (climate.v1.ComfortPreference, THE BAND).
+ *
+ * Unset preference clears it: a room then follows its home's again, and a home goes back to the
+ * default. A preference equal to the one held is acked and changes nothing.
+ *
+ * Rollout note: a gateway that predates comfort preferences does not know this request. An app
+ * offers it only to a gateway that sends RoomClimate.home_comfort_preference.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetComfortPreference
+ */
+export declare type SetComfortPreference = Message<"kusinta.iot.webrtc.v1.SetComfortPreference"> & {
+  /**
+   * An apartment, or a room in one.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.ComfortPreference preference = 2;
+   */
+  preference?: ComfortPreference | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetComfortPreference.
+ * Use `create(SetComfortPreferenceSchema)` to create a new message.
+ */
+export declare const SetComfortPreferenceSchema: GenMessage<SetComfortPreference>;
 
 /**
  * Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
@@ -2004,6 +2046,227 @@ export declare type SetComfortWindows = Message<"kusinta.iot.webrtc.v1.SetComfor
 export declare const SetComfortWindowsSchema: GenMessage<SetComfortWindows>;
 
 /**
+ * Switches one price rule of a plant Off, to Shadow or Live (heating.v1 PRICE RULES), recording
+ * the change with its setter and time (heating.v1.PriceRuleChange). Answered with the
+ * HeatingRecord of the plant as stored. A mode equal to the rule's mode now is answered the same
+ * and records nothing.
+ *
+ * Whoever may set the plant's block cap (heating.v1, WHO SWITCHES THEM): for a plant in a home,
+ * its household admins; for one outside homes, the property owner and the gateway's
+ * administrators who reach its space; for either, an installer under a commissioning grant
+ * covering its space. Anyone else — a resident who is not a household admin, service, a home's
+ * plant to staff — and a plant that does not exist, are refused as NOT_ENTITLED with the same
+ * metadata. Refused, with metadata "reason":
+ *
+ *   INVALID_REQUEST
+ *   "price_rule"          rule UNSPECIFIED, or one the gateway does not run for this plant (not
+ *                         listed in HeatingPlant.price_rules).
+ *   "price_rule_mode"     mode UNSPECIFIED.
+ *
+ *   FAILED_PRECONDITION
+ *   "STALE_REVISION"      price_rules_revision is set and the plant's rules changed since.
+ *   "rule_input_unbound"  LIVE for a rule whose input the plant does not bind: metadata "field"
+ *                         names it by its proto field name, "add_on_heater_block" for
+ *                         ADD_ON_HEATER_BLOCK and "sg_ready_boost" for HOT_WATER; for
+ *                         FLOOR_PRE_HEAT, no floor zone of the plant binds an output, and
+ *                         "field" is "output". SHADOW and OFF need no input bound.
+ *
+ * Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
+ * and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE
+ * drives nothing the plant may not be driven by (heating.v1.PRICE_RULE_MODE_LIVE).
+ *
+ * Rollout note: a gateway that predates price rules sends HeatingPlant.price_rules empty, and an
+ * app offers no switch to it.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetPriceRuleMode
+ */
+export declare type SetPriceRuleMode = Message<"kusinta.iot.webrtc.v1.SetPriceRuleMode"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRule rule = 2;
+   */
+  rule: PriceRule;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRuleMode mode = 3;
+   */
+  mode: PriceRuleMode;
+
+  /**
+   * The HeatingPlant.price_rules_revision this change is made against. Unset: whatever is
+   * stored.
+   *
+   * @generated from field: optional uint64 price_rules_revision = 4;
+   */
+  priceRulesRevision?: bigint | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetPriceRuleMode.
+ * Use `create(SetPriceRuleModeSchema)` to create a new message.
+ */
+export declare const SetPriceRuleModeSchema: GenMessage<SetPriceRuleMode>;
+
+/**
+ * Releases a plant's heat blocks by hand (heating.v1 HEAT BLOCKS), or ends or changes the hold
+ * a release set. Answered with the plant's HeatBlockStatus as it now stands, and recorded
+ * (heating.v1.HeatBlockRelease) with its maker and time.
+ *
+ * With hold_off_minutes above 0: every LIVE block of the plant under way ends
+ * (heating.v1.HEAT_BLOCK_END_RELEASED), the lapse value of each input it held is written at once,
+ * as at unbinding, and the plant's blocking rules start no LIVE block until hold_off_minutes from
+ * now. A hold already running is replaced, sooner or later. It needs no block under way: a hold
+ * set ahead keeps the next from starting. It never shortens what a compressor block's release
+ * keeps released (commissioning.v1, BLOCKS ON A COMPRESSOR). SHADOW rules are not held: they
+ * drive nothing.
+ *
+ * With hold_off_minutes 0: a hold running ends at once, and blocks may start again as the rules
+ * plan them; with none running, acked as it stands and recorded nothing. So a release made by
+ * mistake is undone.
+ *
+ * Who may:
+ *   * a plant in a home — the home's own heat source: any resident of the home, household
+ *     admins included. Nobody else: not service, not the property owner or the gateway
+ *     administrators, not an installer under a commissioning grant;
+ *   * a plant outside homes — a building's shared heat source: the property owner, the gateway's
+ *     administrators and technicians who reach the plant's space. Not a resident as such: a
+ *     household on a shared plant moves its rooms' comfort instead (SetComfortPreference,
+ *     SetRoomTarget).
+ * Anyone else, and a plant that does not exist, are refused as NOT_ENTITLED with the same
+ * metadata. Refused as INVALID_REQUEST with metadata {"reason": "hold_off_minutes"} for a value
+ * that is not a whole number of quarter hours or is above 1440, and as FAILED_PRECONDITION with
+ * metadata {"reason": "no_live_block_rule"} where hold_off_minutes is above 0 and no blocking
+ * rule of the plant is LIVE (heating.v1.PriceRule): nothing would be held.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ReleaseHeatBlock
+ */
+export declare type ReleaseHeatBlock = Message<"kusinta.iot.webrtc.v1.ReleaseHeatBlock"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * How long to hold blocks off, in minutes: 0, or 15 to 1440 in whole quarter hours.
+   *
+   * @generated from field: uint32 hold_off_minutes = 2;
+   */
+  holdOffMinutes: number;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ReleaseHeatBlock.
+ * Use `create(ReleaseHeatBlockSchema)` to create a new message.
+ */
+export declare const ReleaseHeatBlockSchema: GenMessage<ReleaseHeatBlock>;
+
+/**
+ * Lists how the blocks of each plant the caller is given them for (heating.v1, WHO SEES THEM)
+ * stand now, under a space: unset root_space_id lists every one the caller reaches. Answered
+ * with a heating.v1.HeatBlockStatuses: a plant whose blocks the caller is not given is left
+ * out, never refused, so the list tells nothing of the plants left out.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.ListHeatBlockStatus
+ */
+export declare type ListHeatBlockStatus = Message<"kusinta.iot.webrtc.v1.ListHeatBlockStatus"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId root_space_id = 1;
+   */
+  rootSpaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.ListHeatBlockStatus.
+ * Use `create(ListHeatBlockStatusSchema)` to create a new message.
+ */
+export declare const ListHeatBlockStatusSchema: GenMessage<ListHeatBlockStatus>;
+
+/**
+ * Reads a plant's blocks, releases and changes of mode over a range, answered with a
+ * heating.v1.HeatBlockHistory. Given as heating.v1 WHO SEES THEM says: a home's plant to its
+ * residents only, from the start of their current residency; a plant outside homes to the
+ * property owner, the gateway's administrators and technicians who reach its space. Anyone else,
+ * and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
+ *
+ * [from_time, to_time): a block is answered where it started in it, a release or a change where
+ * it was made in it. Both are clamped to [kept_from, now]. Unset to_time: now. Unset from_time:
+ * 31 days before to_time. A range longer than 31 days is refused as INVALID_REQUEST with
+ * metadata {"reason": "span"}; an app pages back with the next range ending at this one's start.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetHeatBlockHistory
+ */
+export declare type GetHeatBlockHistory = Message<"kusinta.iot.webrtc.v1.GetHeatBlockHistory"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp from_time = 2;
+   */
+  fromTime?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp to_time = 3;
+   */
+  toTime?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetHeatBlockHistory.
+ * Use `create(GetHeatBlockHistorySchema)` to create a new message.
+ */
+export declare const GetHeatBlockHistorySchema: GenMessage<GetHeatBlockHistory>;
+
+/**
+ * Reads what a home's price rules would have saved, and cost in comfort, under each comfort band
+ * the gateway scores (heating.v1.ShadowSummary), so that the household can choose its comfort
+ * preference. The home's residents only: anyone else — service, the property owner, the
+ * gateway's administrators, an installer under a commissioning grant, a resident of another
+ * home — and a space that is not an apartment, are refused as NOT_ENTITLED with the same
+ * metadata.
+ *
+ * Dates are the building's local dates, as ISO 8601 calendar dates (YYYY-MM-DD), half-open:
+ * [from_date, to_date). Both are clamped to [ShadowSummary.kept_from, today]. Unset to_date:
+ * today, so the last day given is the last one scored. Unset from_date: 31 days before to_date.
+ * A range longer than 93 days is refused as INVALID_REQUEST with metadata {"reason": "span"},
+ * and a date that is not a calendar date with {"reason": "date"}. Unset rule: every rule.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetShadowSummary
+ */
+export declare type GetShadowSummary = Message<"kusinta.iot.webrtc.v1.GetShadowSummary"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRule rule = 2;
+   */
+  rule: PriceRule;
+
+  /**
+   * @generated from field: string from_date = 3;
+   */
+  fromDate: string;
+
+  /**
+   * @generated from field: string to_date = 4;
+   */
+  toDate: string;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetShadowSummary.
+ * Use `create(GetShadowSummarySchema)` to create a new message.
+ */
+export declare const GetShadowSummarySchema: GenMessage<GetShadowSummary>;
+
+/**
  * Asks for a nonce to link one home's account at a third-party service
  * (accountlink.v1.AccountLinkNonce). Only a household admin of the home
  * (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -2970,6 +3233,46 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: PutSpaceAddress;
     case: "putSpaceAddress";
+  } | {
+    /**
+     * A household's comfort preference; see climate.v1.ComfortPreference.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SetComfortPreference set_comfort_preference = 77;
+     */
+    value: SetComfortPreference;
+    case: "setComfortPreference";
+  } | {
+    /**
+     * Price rules and heat blocks; see heating.v1 PRICE RULES.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SetPriceRuleMode set_price_rule_mode = 78;
+     */
+    value: SetPriceRuleMode;
+    case: "setPriceRuleMode";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ReleaseHeatBlock release_heat_block = 79;
+     */
+    value: ReleaseHeatBlock;
+    case: "releaseHeatBlock";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.ListHeatBlockStatus list_heat_block_status = 80;
+     */
+    value: ListHeatBlockStatus;
+    case: "listHeatBlockStatus";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetHeatBlockHistory get_heat_block_history = 81;
+     */
+    value: GetHeatBlockHistory;
+    case: "getHeatBlockHistory";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.GetShadowSummary get_shadow_summary = 82;
+     */
+    value: GetShadowSummary;
+    case: "getShadowSummary";
   } | { case: undefined; value?: undefined };
 };
 

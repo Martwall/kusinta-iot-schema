@@ -1166,6 +1166,7 @@ enum HouseholdExport_Part {
   climateSummary,
   commissioning,
   heating,
+  heatBlocks,
   notSet
 }
 
@@ -1181,6 +1182,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
     $3.CommissioningProfile? commissioning,
     $4.HeatingLayout? heating,
     $core.String? nextPartToken,
+    $4.HeatBlockHistory? heatBlocks,
   }) {
     final result = create();
     if (homeId != null) result.homeId = homeId;
@@ -1190,6 +1192,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
     if (commissioning != null) result.commissioning = commissioning;
     if (heating != null) result.heating = heating;
     if (nextPartToken != null) result.nextPartToken = nextPartToken;
+    if (heatBlocks != null) result.heatBlocks = heatBlocks;
     return result;
   }
 
@@ -1209,6 +1212,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
     4: HouseholdExport_Part.climateSummary,
     5: HouseholdExport_Part.commissioning,
     6: HouseholdExport_Part.heating,
+    8: HouseholdExport_Part.heatBlocks,
     0: HouseholdExport_Part.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1216,7 +1220,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6])
+    ..oo(0, [2, 3, 4, 5, 6, 8])
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
         subBuilder: $0.SpaceId.create)
     ..aOM<$2.RoomClimateList>(2, _omitFieldNames ? '' : 'roomClimates',
@@ -1231,6 +1235,8 @@ class HouseholdExport extends $pb.GeneratedMessage {
     ..aOM<$4.HeatingLayout>(6, _omitFieldNames ? '' : 'heating',
         subBuilder: $4.HeatingLayout.create)
     ..aOS(7, _omitFieldNames ? '' : 'nextPartToken')
+    ..aOM<$4.HeatBlockHistory>(8, _omitFieldNames ? '' : 'heatBlocks',
+        subBuilder: $4.HeatBlockHistory.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1343,6 +1349,19 @@ class HouseholdExport extends $pb.GeneratedMessage {
   $core.bool hasNextPartToken() => $_has(6);
   @$pb.TagNumber(7)
   void clearNextPartToken() => $_clearField(7);
+
+  /// One of the home's own plants' blocks, releases and changes of mode, one
+  /// GetHeatBlockHistory answer's worth, from its kept_from on, in as many parts as it takes.
+  @$pb.TagNumber(8)
+  $4.HeatBlockHistory get heatBlocks => $_getN(7);
+  @$pb.TagNumber(8)
+  set heatBlocks($4.HeatBlockHistory value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasHeatBlocks() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearHeatBlocks() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $4.HeatBlockHistory ensureHeatBlocks() => $_ensure(7);
 }
 
 const $core.bool _omitFieldNames =

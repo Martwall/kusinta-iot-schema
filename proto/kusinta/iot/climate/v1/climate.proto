@@ -187,8 +187,8 @@ message RoomClimate {
   // and the sensors service may see are still sent, since setting a room up is service work.
   // Its climate over time is available to service only as an ApartmentClimateSummary.
   //
-  // explanations, target_held_until, planning and the comfort band are withheld in the
-  // same way.
+  // explanations, target_held_until, planning, the comfort band and the comfort preferences
+  // (comfort_preference, home_comfort_preference) are withheld in the same way.
   bool state_withheld = 15;
 
   // Why the room is being held where it is, when that differs from simply holding its
@@ -215,11 +215,15 @@ message RoomClimate {
   // Whether a plan steers the room. See RoomPlanning.
   RoomPlanning planning = 18;
 
-  // The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
-  // room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
-  // no higher than high, and within the inner limits where those are set; at the outputs the
-  // outer limits bind, a plan holds within them too (OuterRoomLimits, HELD). Absent: no band,
-  // and a plan holds the room at its target — never 0 °C.
+  // The comfort band in force, in centidegrees: the lowest and highest a plan or a price rule
+  // (heating.v1.PriceRule) may hold the room at while it heats ahead, coasts or saves on dear
+  // energy, and what a price rule judges the room by, ending a block early where the room falls
+  // below it (heating.v1.HEAT_BLOCK_END_ROOM_BELOW_BAND). Worked out from the room's comfort
+  // preference around its effective target, as ComfortPreference (THE BAND) says. Both set or
+  // neither, low no higher than high, and within the inner limits where those are set; at the
+  // outputs the outer limits bind, a plan holds within them too (OuterRoomLimits, HELD). Absent:
+  // no band — the room has no effective target — and a plan holds the room at its target —
+  // never 0 °C.
   optional sint32 comfort_band_low_centidegrees = 19;
   optional sint32 comfort_band_high_centidegrees = 20;
 
@@ -260,6 +264,23 @@ message RoomClimate {
   // coverage NONE or UNSPECIFIED; under ALL, every heating device in the room the recipient
   // sees is in it; under SOME, some are.
   repeated kusinta.iot.identity.v1.DeviceId outer_bound_device_ids = 25;
+
+  // The room's own comfort preference (ComfortPreference), set with
+  // webrtc.v1.SetComfortPreference. Unset: the room has none of its own, and follows its home's
+  // (home_comfort_preference). Sent to the home's residents only, never with state_withheld;
+  // unset to anyone else, and on a room outside homes, which has none.
+  ComfortPreference comfort_preference = 26;
+
+  // The comfort preference of the home the room is in, sent with each of its rooms so that one
+  // RoomClimate says what the room follows; a change to it sends every room of the home again
+  // (webrtc.v1.RoomClimateChanged). Sent to the home's residents only, as comfort_preference is.
+  //
+  // Always set to them by a gateway that keeps comfort preferences: the default
+  // (ComfortPreference, PRESETS) where the household has chosen none. Unset to a resident only
+  // from a gateway that predates comfort preferences: an app reads unset so, shows the band in
+  // force (comfort_band_low_centidegrees, comfort_band_high_centidegrees) alone, and offers no
+  // choice of preference, since that gateway would refuse it.
+  ComfortPreference home_comfort_preference = 27;
 }
 
 // One bound of a room's outer limits, with who set it and when. Shown to the household as the
@@ -355,6 +376,78 @@ message OuterRoomLimits {
 message InnerRoomLimits {
   optional sint32 min_centidegrees = 1;
   optional sint32 max_centidegrees = 2;
+}
+
+// A comfort preset (ComfortPreference.preset): a named band below and above a room's target.
+// A closed list that grows only by a release of this schema. A client that does not know a
+// preset it is sent shows the band's numbers, which the gateway always fills
+// (ComfortPreference), and never names it.
+enum ComfortPreset {
+  // In a ComfortPreference the gateway sends: none chosen, so the default band holds
+  // (ComfortPreference, PRESETS). Refused in a request: unset the preference instead.
+  COMFORT_PRESET_UNSPECIFIED = 0;
+
+  // 150 below the target, 50 above it.
+  COMFORT_PRESET_ECONOMY = 1;
+
+  // 100 below the target, 50 above it.
+  COMFORT_PRESET_NORMAL = 2;
+
+  // 50 below the target, 50 above it.
+  COMFORT_PRESET_COMFORT = 3;
+
+  // Below and above as the household sets them.
+  COMFORT_PRESET_CUSTOM = 4;
+}
+
+// A household's choice of how far a plan or a price rule (heating.v1.PriceRule) may move a room
+// away from its target to save: below_target_centidegrees under it and
+// above_target_centidegrees over it. Chosen for a home, and for any of its rooms
+// (webrtc.v1.SetComfortPreference): a room with a preference of its own follows it, and a room
+// without one follows its home's (RoomClimate.comfort_preference, home_comfort_preference).
+// Lowering a room below its target is the household's call: no plan or rule takes a room below
+// its target further than its household chose.
+//
+// PRESETS. ECONOMY 150 below and 50 above; NORMAL 100 and 50; COMFORT 50 and 50; CUSTOM what
+// the household sets, below 0 to 500 and above 0 to 200. Until a household chooses for its home,
+// the home's preference is the default: preset UNSPECIFIED, 0 below and 50 above, so a plan may
+// heat a room ahead but never plans it below its target. A room outside homes has no
+// preference and takes the default's band.
+//
+// THE BAND. From the room's effective target E (RoomClimate.effective_target_centidegrees),
+// the band in force (RoomClimate.comfort_band_low_centidegrees, comfort_band_high_centidegrees)
+// is:
+//   low  = E - below, raised to the FLOOR where it falls under it, and never above E;
+//   high = E + above, lowered to the inner max (InnerRoomLimits) where that is set, and never
+//          below low.
+// The FLOOR is the higher of those set of: the gateway's public-health threshold (its own
+// setting, webrtc.v1.ConfigureRoomClimate), and, while no mode sets the room back, the inner min.
+// So a custom band reaches as far below the target as the household sets, and the gateway accepts
+// it down to the public-health floor and never lower: below is taken up to 500, and the low edge
+// stops at the FLOOR whatever it says. An outer min accepted below the threshold lets a target or
+// a setback go there (OuterRoomLimits.min_accepted_threshold_centidegrees), never a plan saving on
+// price. A room whose effective target is at or below the FLOOR has no band below it: low is E.
+// At the outputs the outer limits bind, a plan holds within them too (OuterRoomLimits, HELD).
+//
+// A price rule in SHADOW (heating.v1.PRICE_RULE_MODE_SHADOW) judges by the same band, save that
+// it may score each day against other bands as well (heating.v1.ShadowSummary), so that a
+// household sees what a choice would save before it makes one: SHADOW drives nothing.
+//
+// WHO. Set by the home's household admins (webrtc.v1.SetComfortPreference), and told to its
+// residents only: never to service, never under a commissioning grant (commissioning.v1, GRANTS),
+// and never to the property owner or the gateway administrators, the home empty or not. Household
+// data, as the inner limits are: wiped at a handover (webrtc.v1 household.proto, WIPE), and
+// belonging to the room, or the home, while it is one: a room's is cleared when it leaves the
+// home, and a home's when its space stops being an apartment.
+message ComfortPreference {
+  // Which preset. UNSPECIFIED only as the default, in a preference the gateway sends.
+  ComfortPreset preset = 1;
+
+  // In centidegrees. The gateway fills both for every preset, the default included, so that a
+  // client that does not know a preset still shows its band. In a request, read on CUSTOM only
+  // and ignored on any other preset, whose values are the preset's.
+  uint32 below_target_centidegrees = 2;
+  uint32 above_target_centidegrees = 3;
 }
 
 // Which bound of a room's outer limits clamps the outputs it binds.

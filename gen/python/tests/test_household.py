@@ -299,6 +299,7 @@ def test_an_export_has_no_part_for_models():
         "climate_summary",
         "commissioning",
         "heating",
+        "heat_blocks",
     ]
 
 

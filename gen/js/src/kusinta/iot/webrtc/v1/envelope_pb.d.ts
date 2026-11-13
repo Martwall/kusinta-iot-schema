@@ -12,7 +12,7 @@ import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, PlantHistory, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
-import type { HeatingLayout, HeatingRecord } from "../../heating/v1/heating_pb.js";
+import type { HeatBlockHistory, HeatBlockStatus, HeatBlockStatuses, HeatingLayout, HeatingRecord, ShadowSummary } from "../../heating/v1/heating_pb.js";
 import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/account_link_pb.js";
 import type { CommissioningGrant, CommissioningGrants, CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
 import type { ClimateHistoryCleared, HouseholdExport, HouseholdHandover, HouseholdHandovers } from "./household_pb.js";
@@ -422,7 +422,7 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
   } | {
     /**
      * put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load,
-     * set_comfort_windows
+     * set_comfort_windows, set_price_rule_mode
      *
      * @generated from field: kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
      */
@@ -541,6 +541,38 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: SpaceAddress;
     case: "spaceAddress";
+  } | {
+    /**
+     * release_heat_block
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatBlockStatus heat_block_status = 31;
+     */
+    value: HeatBlockStatus;
+    case: "heatBlockStatus";
+  } | {
+    /**
+     * list_heat_block_status
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatBlockStatuses heat_block_statuses = 32;
+     */
+    value: HeatBlockStatuses;
+    case: "heatBlockStatuses";
+  } | {
+    /**
+     * get_heat_block_history
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatBlockHistory heat_block_history = 33;
+     */
+    value: HeatBlockHistory;
+    case: "heatBlockHistory";
+  } | {
+    /**
+     * get_shadow_summary
+     *
+     * @generated from field: kusinta.iot.heating.v1.ShadowSummary shadow_summary = 34;
+     */
+    value: ShadowSummary;
+    case: "shadowSummary";
   } | { case: undefined; value?: undefined };
 };
 
@@ -1114,6 +1146,15 @@ export declare type GatewayMessage = Message<"kusinta.iot.webrtc.v1.GatewayMessa
      */
     value: ClimateHistoryCleared;
     case: "climateHistoryCleared";
+  } | {
+    /**
+     * A plant's blocks or hold changed, to the sessions given them; see
+     * heating.v1.HeatBlockStatus.
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatBlockStatus heat_block_status = 30;
+     */
+    value: HeatBlockStatus;
+    case: "heatBlockStatus";
   } | { case: undefined; value?: undefined };
 };
 

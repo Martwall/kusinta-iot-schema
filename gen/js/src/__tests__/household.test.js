@@ -409,6 +409,7 @@ describe('household export', () => {
       'climate_summary',
       'commissioning',
       'heating',
+      'heat_blocks',
     ])
   })
 

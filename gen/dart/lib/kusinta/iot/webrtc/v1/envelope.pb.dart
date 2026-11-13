@@ -745,6 +745,10 @@ enum ManagementResult_Result {
   buildingPlanning,
   dayAheadPrices,
   spaceAddress,
+  heatBlockStatus,
+  heatBlockStatuses,
+  heatBlockHistory,
+  shadowSummary,
   notSet
 }
 
@@ -789,6 +793,10 @@ class ManagementResult extends $pb.GeneratedMessage {
     $3.BuildingPlanning? buildingPlanning,
     $3.DayAheadPrices? dayAheadPrices,
     $3.SpaceAddress? spaceAddress,
+    $8.HeatBlockStatus? heatBlockStatus,
+    $8.HeatBlockStatuses? heatBlockStatuses,
+    $8.HeatBlockHistory? heatBlockHistory,
+    $8.ShadowSummary? shadowSummary,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -827,6 +835,10 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (buildingPlanning != null) result.buildingPlanning = buildingPlanning;
     if (dayAheadPrices != null) result.dayAheadPrices = dayAheadPrices;
     if (spaceAddress != null) result.spaceAddress = spaceAddress;
+    if (heatBlockStatus != null) result.heatBlockStatus = heatBlockStatus;
+    if (heatBlockStatuses != null) result.heatBlockStatuses = heatBlockStatuses;
+    if (heatBlockHistory != null) result.heatBlockHistory = heatBlockHistory;
+    if (shadowSummary != null) result.shadowSummary = shadowSummary;
     return result;
   }
 
@@ -870,6 +882,10 @@ class ManagementResult extends $pb.GeneratedMessage {
     28: ManagementResult_Result.buildingPlanning,
     29: ManagementResult_Result.dayAheadPrices,
     30: ManagementResult_Result.spaceAddress,
+    31: ManagementResult_Result.heatBlockStatus,
+    32: ManagementResult_Result.heatBlockStatuses,
+    33: ManagementResult_Result.heatBlockHistory,
+    34: ManagementResult_Result.shadowSummary,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -906,7 +922,11 @@ class ManagementResult extends $pb.GeneratedMessage {
       27,
       28,
       29,
-      30
+      30,
+      31,
+      32,
+      33,
+      34
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -973,6 +993,14 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $3.DayAheadPrices.create)
     ..aOM<$3.SpaceAddress>(30, _omitFieldNames ? '' : 'spaceAddress',
         subBuilder: $3.SpaceAddress.create)
+    ..aOM<$8.HeatBlockStatus>(31, _omitFieldNames ? '' : 'heatBlockStatus',
+        subBuilder: $8.HeatBlockStatus.create)
+    ..aOM<$8.HeatBlockStatuses>(32, _omitFieldNames ? '' : 'heatBlockStatuses',
+        subBuilder: $8.HeatBlockStatuses.create)
+    ..aOM<$8.HeatBlockHistory>(33, _omitFieldNames ? '' : 'heatBlockHistory',
+        subBuilder: $8.HeatBlockHistory.create)
+    ..aOM<$8.ShadowSummary>(34, _omitFieldNames ? '' : 'shadowSummary',
+        subBuilder: $8.ShadowSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1166,7 +1194,7 @@ class ManagementResult extends $pb.GeneratedMessage {
   $8.HeatingLayout ensureHeatingLayout() => $_ensure(14);
 
   /// put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load,
-  /// set_comfort_windows
+  /// set_comfort_windows, set_price_rule_mode
   @$pb.TagNumber(16)
   $8.HeatingRecord get heatingRecord => $_getN(15);
   @$pb.TagNumber(16)
@@ -1340,6 +1368,51 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearSpaceAddress() => $_clearField(30);
   @$pb.TagNumber(30)
   $3.SpaceAddress ensureSpaceAddress() => $_ensure(29);
+
+  @$pb.TagNumber(31)
+  $8.HeatBlockStatus get heatBlockStatus => $_getN(30);
+  @$pb.TagNumber(31)
+  set heatBlockStatus($8.HeatBlockStatus value) => $_setField(31, value);
+  @$pb.TagNumber(31)
+  $core.bool hasHeatBlockStatus() => $_has(30);
+  @$pb.TagNumber(31)
+  void clearHeatBlockStatus() => $_clearField(31);
+  @$pb.TagNumber(31)
+  $8.HeatBlockStatus ensureHeatBlockStatus() => $_ensure(30);
+
+  /// list_heat_block_status
+  @$pb.TagNumber(32)
+  $8.HeatBlockStatuses get heatBlockStatuses => $_getN(31);
+  @$pb.TagNumber(32)
+  set heatBlockStatuses($8.HeatBlockStatuses value) => $_setField(32, value);
+  @$pb.TagNumber(32)
+  $core.bool hasHeatBlockStatuses() => $_has(31);
+  @$pb.TagNumber(32)
+  void clearHeatBlockStatuses() => $_clearField(32);
+  @$pb.TagNumber(32)
+  $8.HeatBlockStatuses ensureHeatBlockStatuses() => $_ensure(31);
+
+  @$pb.TagNumber(33)
+  $8.HeatBlockHistory get heatBlockHistory => $_getN(32);
+  @$pb.TagNumber(33)
+  set heatBlockHistory($8.HeatBlockHistory value) => $_setField(33, value);
+  @$pb.TagNumber(33)
+  $core.bool hasHeatBlockHistory() => $_has(32);
+  @$pb.TagNumber(33)
+  void clearHeatBlockHistory() => $_clearField(33);
+  @$pb.TagNumber(33)
+  $8.HeatBlockHistory ensureHeatBlockHistory() => $_ensure(32);
+
+  @$pb.TagNumber(34)
+  $8.ShadowSummary get shadowSummary => $_getN(33);
+  @$pb.TagNumber(34)
+  set shadowSummary($8.ShadowSummary value) => $_setField(34, value);
+  @$pb.TagNumber(34)
+  $core.bool hasShadowSummary() => $_has(33);
+  @$pb.TagNumber(34)
+  void clearShadowSummary() => $_clearField(34);
+  @$pb.TagNumber(34)
+  $8.ShadowSummary ensureShadowSummary() => $_ensure(33);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the
@@ -2202,6 +2275,7 @@ enum GatewayMessage_Payload {
   commissioningGrants,
   householdHandover,
   climateHistoryCleared,
+  heatBlockStatus,
   notSet
 }
 
@@ -2234,6 +2308,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     $10.CommissioningGrants? commissioningGrants,
     $11.HouseholdHandover? householdHandover,
     $11.ClimateHistoryCleared? climateHistoryCleared,
+    $8.HeatBlockStatus? heatBlockStatus,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -2269,6 +2344,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     if (householdHandover != null) result.householdHandover = householdHandover;
     if (climateHistoryCleared != null)
       result.climateHistoryCleared = climateHistoryCleared;
+    if (heatBlockStatus != null) result.heatBlockStatus = heatBlockStatus;
     return result;
   }
 
@@ -2308,6 +2384,7 @@ class GatewayMessage extends $pb.GeneratedMessage {
     27: GatewayMessage_Payload.commissioningGrants,
     28: GatewayMessage_Payload.householdHandover,
     29: GatewayMessage_Payload.climateHistoryCleared,
+    30: GatewayMessage_Payload.heatBlockStatus,
     0: GatewayMessage_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2340,7 +2417,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
       26,
       27,
       28,
-      29
+      29,
+      30
     ])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
     ..aOM<$13.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
@@ -2398,6 +2476,8 @@ class GatewayMessage extends $pb.GeneratedMessage {
     ..aOM<$11.ClimateHistoryCleared>(
         29, _omitFieldNames ? '' : 'climateHistoryCleared',
         subBuilder: $11.ClimateHistoryCleared.create)
+    ..aOM<$8.HeatBlockStatus>(30, _omitFieldNames ? '' : 'heatBlockStatus',
+        subBuilder: $8.HeatBlockStatus.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2734,6 +2814,19 @@ class GatewayMessage extends $pb.GeneratedMessage {
   void clearClimateHistoryCleared() => $_clearField(29);
   @$pb.TagNumber(29)
   $11.ClimateHistoryCleared ensureClimateHistoryCleared() => $_ensure(26);
+
+  /// A plant's blocks or hold changed, to the sessions given them; see
+  /// heating.v1.HeatBlockStatus.
+  @$pb.TagNumber(30)
+  $8.HeatBlockStatus get heatBlockStatus => $_getN(27);
+  @$pb.TagNumber(30)
+  set heatBlockStatus($8.HeatBlockStatus value) => $_setField(30, value);
+  @$pb.TagNumber(30)
+  $core.bool hasHeatBlockStatus() => $_has(27);
+  @$pb.TagNumber(30)
+  void clearHeatBlockStatus() => $_clearField(30);
+  @$pb.TagNumber(30)
+  $8.HeatBlockStatus ensureHeatBlockStatus() => $_ensure(27);
 }
 
 enum AppMessage_Payload {

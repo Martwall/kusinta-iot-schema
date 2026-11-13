@@ -2285,6 +2285,101 @@ class SetInnerRoomLimits extends $pb.GeneratedMessage {
   $4.InnerRoomLimits ensureLimits() => $_ensure(1);
 }
 
+/// Sets the comfort preference of a home or of one of its rooms (climate.v1.ComfortPreference),
+/// or clears it. Answered with ManagementAck; the rooms it changes are sent again
+/// (RoomClimateChanged): the room, or every room of the home that follows the home's.
+///
+/// A household admin of the home only (household.proto, HOUSEHOLD ADMIN), as SetInnerRoomLimits;
+/// anyone else is refused as NOT_ENTITLED — never covered by a commissioning grant, and never the
+/// property owner's or a gateway administrator's, the home empty or not. A space that is neither
+/// an apartment nor a room in one is refused as NOT_ENTITLED with the same metadata, so the answer
+/// tells nothing of where a home is. Refused as INVALID_REQUEST with metadata {"reason":
+/// "comfort_preference"} for preset UNSPECIFIED, and for CUSTOM with below_target_centidegrees
+/// above 500 or above_target_centidegrees above 200. A band reaching below the public-health
+/// floor is not refused: its low edge stops there (climate.v1.ComfortPreference, THE BAND).
+///
+/// Unset preference clears it: a room then follows its home's again, and a home goes back to the
+/// default. A preference equal to the one held is acked and changes nothing.
+///
+/// Rollout note: a gateway that predates comfort preferences does not know this request. An app
+/// offers it only to a gateway that sends RoomClimate.home_comfort_preference.
+class SetComfortPreference extends $pb.GeneratedMessage {
+  factory SetComfortPreference({
+    $0.SpaceId? spaceId,
+    $4.ComfortPreference? preference,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (preference != null) result.preference = preference;
+    return result;
+  }
+
+  SetComfortPreference._();
+
+  factory SetComfortPreference.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetComfortPreference.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetComfortPreference',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<$4.ComfortPreference>(2, _omitFieldNames ? '' : 'preference',
+        subBuilder: $4.ComfortPreference.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetComfortPreference clone() =>
+      SetComfortPreference()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetComfortPreference copyWith(void Function(SetComfortPreference) updates) =>
+      super.copyWith((message) => updates(message as SetComfortPreference))
+          as SetComfortPreference;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetComfortPreference create() => SetComfortPreference._();
+  @$core.override
+  SetComfortPreference createEmptyInstance() => create();
+  static $pb.PbList<SetComfortPreference> createRepeated() =>
+      $pb.PbList<SetComfortPreference>();
+  @$core.pragma('dart2js:noInline')
+  static SetComfortPreference getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetComfortPreference>(create);
+  static SetComfortPreference? _defaultInstance;
+
+  /// An apartment, or a room in one.
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $4.ComfortPreference get preference => $_getN(1);
+  @$pb.TagNumber(2)
+  set preference($4.ComfortPreference value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPreference() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPreference() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $4.ComfortPreference ensurePreference() => $_ensure(1);
+}
+
 /// Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
 /// Switching one on needs setback_centidegrees; a mode with nothing to set back to is
 /// refused. Switching one on is refused on a room inside an apartment, whose rooms follow
@@ -4655,6 +4750,513 @@ class SetComfortWindows extends $pb.GeneratedMessage {
   void clearWindowsRevision() => $_clearField(3);
 }
 
+/// Switches one price rule of a plant Off, to Shadow or Live (heating.v1 PRICE RULES), recording
+/// the change with its setter and time (heating.v1.PriceRuleChange). Answered with the
+/// HeatingRecord of the plant as stored. A mode equal to the rule's mode now is answered the same
+/// and records nothing.
+///
+/// Whoever may set the plant's block cap (heating.v1, WHO SWITCHES THEM): for a plant in a home,
+/// its household admins; for one outside homes, the property owner and the gateway's
+/// administrators who reach its space; for either, an installer under a commissioning grant
+/// covering its space. Anyone else — a resident who is not a household admin, service, a home's
+/// plant to staff — and a plant that does not exist, are refused as NOT_ENTITLED with the same
+/// metadata. Refused, with metadata "reason":
+///
+///   INVALID_REQUEST
+///   "price_rule"          rule UNSPECIFIED, or one the gateway does not run for this plant (not
+///                         listed in HeatingPlant.price_rules).
+///   "price_rule_mode"     mode UNSPECIFIED.
+///
+///   FAILED_PRECONDITION
+///   "STALE_REVISION"      price_rules_revision is set and the plant's rules changed since.
+///   "rule_input_unbound"  LIVE for a rule whose input the plant does not bind: metadata "field"
+///                         names it by its proto field name, "add_on_heater_block" for
+///                         ADD_ON_HEATER_BLOCK and "sg_ready_boost" for HOT_WATER; for
+///                         FLOOR_PRE_HEAT, no floor zone of the plant binds an output, and
+///                         "field" is "output". SHADOW and OFF need no input bound.
+///
+/// Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
+/// and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE
+/// drives nothing the plant may not be driven by (heating.v1.PRICE_RULE_MODE_LIVE).
+///
+/// Rollout note: a gateway that predates price rules sends HeatingPlant.price_rules empty, and an
+/// app offers no switch to it.
+class SetPriceRuleMode extends $pb.GeneratedMessage {
+  factory SetPriceRuleMode({
+    $core.String? plantId,
+    $9.PriceRule? rule,
+    $9.PriceRuleMode? mode,
+    $fixnum.Int64? priceRulesRevision,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (rule != null) result.rule = rule;
+    if (mode != null) result.mode = mode;
+    if (priceRulesRevision != null)
+      result.priceRulesRevision = priceRulesRevision;
+    return result;
+  }
+
+  SetPriceRuleMode._();
+
+  factory SetPriceRuleMode.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetPriceRuleMode.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetPriceRuleMode',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..e<$9.PriceRule>(2, _omitFieldNames ? '' : 'rule', $pb.PbFieldType.OE,
+        defaultOrMaker: $9.PriceRule.PRICE_RULE_UNSPECIFIED,
+        valueOf: $9.PriceRule.valueOf,
+        enumValues: $9.PriceRule.values)
+    ..e<$9.PriceRuleMode>(3, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $9.PriceRuleMode.PRICE_RULE_MODE_UNSPECIFIED,
+        valueOf: $9.PriceRuleMode.valueOf,
+        enumValues: $9.PriceRuleMode.values)
+    ..a<$fixnum.Int64>(
+        4, _omitFieldNames ? '' : 'priceRulesRevision', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetPriceRuleMode clone() => SetPriceRuleMode()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetPriceRuleMode copyWith(void Function(SetPriceRuleMode) updates) =>
+      super.copyWith((message) => updates(message as SetPriceRuleMode))
+          as SetPriceRuleMode;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetPriceRuleMode create() => SetPriceRuleMode._();
+  @$core.override
+  SetPriceRuleMode createEmptyInstance() => create();
+  static $pb.PbList<SetPriceRuleMode> createRepeated() =>
+      $pb.PbList<SetPriceRuleMode>();
+  @$core.pragma('dart2js:noInline')
+  static SetPriceRuleMode getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetPriceRuleMode>(create);
+  static SetPriceRuleMode? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $9.PriceRule get rule => $_getN(1);
+  @$pb.TagNumber(2)
+  set rule($9.PriceRule value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRule() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRule() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $9.PriceRuleMode get mode => $_getN(2);
+  @$pb.TagNumber(3)
+  set mode($9.PriceRuleMode value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMode() => $_clearField(3);
+
+  /// The HeatingPlant.price_rules_revision this change is made against. Unset: whatever is
+  /// stored.
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get priceRulesRevision => $_getI64(3);
+  @$pb.TagNumber(4)
+  set priceRulesRevision($fixnum.Int64 value) => $_setInt64(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPriceRulesRevision() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPriceRulesRevision() => $_clearField(4);
+}
+
+/// Releases a plant's heat blocks by hand (heating.v1 HEAT BLOCKS), or ends or changes the hold
+/// a release set. Answered with the plant's HeatBlockStatus as it now stands, and recorded
+/// (heating.v1.HeatBlockRelease) with its maker and time.
+///
+/// With hold_off_minutes above 0: every LIVE block of the plant under way ends
+/// (heating.v1.HEAT_BLOCK_END_RELEASED), the lapse value of each input it held is written at once,
+/// as at unbinding, and the plant's blocking rules start no LIVE block until hold_off_minutes from
+/// now. A hold already running is replaced, sooner or later. It needs no block under way: a hold
+/// set ahead keeps the next from starting. It never shortens what a compressor block's release
+/// keeps released (commissioning.v1, BLOCKS ON A COMPRESSOR). SHADOW rules are not held: they
+/// drive nothing.
+///
+/// With hold_off_minutes 0: a hold running ends at once, and blocks may start again as the rules
+/// plan them; with none running, acked as it stands and recorded nothing. So a release made by
+/// mistake is undone.
+///
+/// Who may:
+///   * a plant in a home — the home's own heat source: any resident of the home, household
+///     admins included. Nobody else: not service, not the property owner or the gateway
+///     administrators, not an installer under a commissioning grant;
+///   * a plant outside homes — a building's shared heat source: the property owner, the gateway's
+///     administrators and technicians who reach the plant's space. Not a resident as such: a
+///     household on a shared plant moves its rooms' comfort instead (SetComfortPreference,
+///     SetRoomTarget).
+/// Anyone else, and a plant that does not exist, are refused as NOT_ENTITLED with the same
+/// metadata. Refused as INVALID_REQUEST with metadata {"reason": "hold_off_minutes"} for a value
+/// that is not a whole number of quarter hours or is above 1440, and as FAILED_PRECONDITION with
+/// metadata {"reason": "no_live_block_rule"} where hold_off_minutes is above 0 and no blocking
+/// rule of the plant is LIVE (heating.v1.PriceRule): nothing would be held.
+class ReleaseHeatBlock extends $pb.GeneratedMessage {
+  factory ReleaseHeatBlock({
+    $core.String? plantId,
+    $core.int? holdOffMinutes,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (holdOffMinutes != null) result.holdOffMinutes = holdOffMinutes;
+    return result;
+  }
+
+  ReleaseHeatBlock._();
+
+  factory ReleaseHeatBlock.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReleaseHeatBlock.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReleaseHeatBlock',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'holdOffMinutes', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReleaseHeatBlock clone() => ReleaseHeatBlock()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReleaseHeatBlock copyWith(void Function(ReleaseHeatBlock) updates) =>
+      super.copyWith((message) => updates(message as ReleaseHeatBlock))
+          as ReleaseHeatBlock;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReleaseHeatBlock create() => ReleaseHeatBlock._();
+  @$core.override
+  ReleaseHeatBlock createEmptyInstance() => create();
+  static $pb.PbList<ReleaseHeatBlock> createRepeated() =>
+      $pb.PbList<ReleaseHeatBlock>();
+  @$core.pragma('dart2js:noInline')
+  static ReleaseHeatBlock getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReleaseHeatBlock>(create);
+  static ReleaseHeatBlock? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  /// How long to hold blocks off, in minutes: 0, or 15 to 1440 in whole quarter hours.
+  @$pb.TagNumber(2)
+  $core.int get holdOffMinutes => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set holdOffMinutes($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHoldOffMinutes() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHoldOffMinutes() => $_clearField(2);
+}
+
+/// Lists how the blocks of each plant the caller is given them for (heating.v1, WHO SEES THEM)
+/// stand now, under a space: unset root_space_id lists every one the caller reaches. Answered
+/// with a heating.v1.HeatBlockStatuses: a plant whose blocks the caller is not given is left
+/// out, never refused, so the list tells nothing of the plants left out.
+class ListHeatBlockStatus extends $pb.GeneratedMessage {
+  factory ListHeatBlockStatus({
+    $0.SpaceId? rootSpaceId,
+  }) {
+    final result = create();
+    if (rootSpaceId != null) result.rootSpaceId = rootSpaceId;
+    return result;
+  }
+
+  ListHeatBlockStatus._();
+
+  factory ListHeatBlockStatus.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListHeatBlockStatus.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListHeatBlockStatus',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'rootSpaceId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListHeatBlockStatus clone() => ListHeatBlockStatus()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListHeatBlockStatus copyWith(void Function(ListHeatBlockStatus) updates) =>
+      super.copyWith((message) => updates(message as ListHeatBlockStatus))
+          as ListHeatBlockStatus;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListHeatBlockStatus create() => ListHeatBlockStatus._();
+  @$core.override
+  ListHeatBlockStatus createEmptyInstance() => create();
+  static $pb.PbList<ListHeatBlockStatus> createRepeated() =>
+      $pb.PbList<ListHeatBlockStatus>();
+  @$core.pragma('dart2js:noInline')
+  static ListHeatBlockStatus getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListHeatBlockStatus>(create);
+  static ListHeatBlockStatus? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get rootSpaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set rootSpaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRootSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRootSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureRootSpaceId() => $_ensure(0);
+}
+
+/// Reads a plant's blocks, releases and changes of mode over a range, answered with a
+/// heating.v1.HeatBlockHistory. Given as heating.v1 WHO SEES THEM says: a home's plant to its
+/// residents only, from the start of their current residency; a plant outside homes to the
+/// property owner, the gateway's administrators and technicians who reach its space. Anyone else,
+/// and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
+///
+/// [from_time, to_time): a block is answered where it started in it, a release or a change where
+/// it was made in it. Both are clamped to [kept_from, now]. Unset to_time: now. Unset from_time:
+/// 31 days before to_time. A range longer than 31 days is refused as INVALID_REQUEST with
+/// metadata {"reason": "span"}; an app pages back with the next range ending at this one's start.
+class GetHeatBlockHistory extends $pb.GeneratedMessage {
+  factory GetHeatBlockHistory({
+    $core.String? plantId,
+    $5.Timestamp? fromTime,
+    $5.Timestamp? toTime,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (fromTime != null) result.fromTime = fromTime;
+    if (toTime != null) result.toTime = toTime;
+    return result;
+  }
+
+  GetHeatBlockHistory._();
+
+  factory GetHeatBlockHistory.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetHeatBlockHistory.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetHeatBlockHistory',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOM<$5.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $5.Timestamp.create)
+    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $5.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetHeatBlockHistory clone() => GetHeatBlockHistory()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetHeatBlockHistory copyWith(void Function(GetHeatBlockHistory) updates) =>
+      super.copyWith((message) => updates(message as GetHeatBlockHistory))
+          as GetHeatBlockHistory;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetHeatBlockHistory create() => GetHeatBlockHistory._();
+  @$core.override
+  GetHeatBlockHistory createEmptyInstance() => create();
+  static $pb.PbList<GetHeatBlockHistory> createRepeated() =>
+      $pb.PbList<GetHeatBlockHistory>();
+  @$core.pragma('dart2js:noInline')
+  static GetHeatBlockHistory getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetHeatBlockHistory>(create);
+  static GetHeatBlockHistory? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $5.Timestamp get fromTime => $_getN(1);
+  @$pb.TagNumber(2)
+  set fromTime($5.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFromTime() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFromTime() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $5.Timestamp ensureFromTime() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $5.Timestamp get toTime => $_getN(2);
+  @$pb.TagNumber(3)
+  set toTime($5.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasToTime() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearToTime() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $5.Timestamp ensureToTime() => $_ensure(2);
+}
+
+/// Reads what a home's price rules would have saved, and cost in comfort, under each comfort band
+/// the gateway scores (heating.v1.ShadowSummary), so that the household can choose its comfort
+/// preference. The home's residents only: anyone else — service, the property owner, the
+/// gateway's administrators, an installer under a commissioning grant, a resident of another
+/// home — and a space that is not an apartment, are refused as NOT_ENTITLED with the same
+/// metadata.
+///
+/// Dates are the building's local dates, as ISO 8601 calendar dates (YYYY-MM-DD), half-open:
+/// [from_date, to_date). Both are clamped to [ShadowSummary.kept_from, today]. Unset to_date:
+/// today, so the last day given is the last one scored. Unset from_date: 31 days before to_date.
+/// A range longer than 93 days is refused as INVALID_REQUEST with metadata {"reason": "span"},
+/// and a date that is not a calendar date with {"reason": "date"}. Unset rule: every rule.
+class GetShadowSummary extends $pb.GeneratedMessage {
+  factory GetShadowSummary({
+    $0.SpaceId? homeId,
+    $9.PriceRule? rule,
+    $core.String? fromDate,
+    $core.String? toDate,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (rule != null) result.rule = rule;
+    if (fromDate != null) result.fromDate = fromDate;
+    if (toDate != null) result.toDate = toDate;
+    return result;
+  }
+
+  GetShadowSummary._();
+
+  factory GetShadowSummary.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetShadowSummary.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetShadowSummary',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$9.PriceRule>(2, _omitFieldNames ? '' : 'rule', $pb.PbFieldType.OE,
+        defaultOrMaker: $9.PriceRule.PRICE_RULE_UNSPECIFIED,
+        valueOf: $9.PriceRule.valueOf,
+        enumValues: $9.PriceRule.values)
+    ..aOS(3, _omitFieldNames ? '' : 'fromDate')
+    ..aOS(4, _omitFieldNames ? '' : 'toDate')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetShadowSummary clone() => GetShadowSummary()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetShadowSummary copyWith(void Function(GetShadowSummary) updates) =>
+      super.copyWith((message) => updates(message as GetShadowSummary))
+          as GetShadowSummary;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetShadowSummary create() => GetShadowSummary._();
+  @$core.override
+  GetShadowSummary createEmptyInstance() => create();
+  static $pb.PbList<GetShadowSummary> createRepeated() =>
+      $pb.PbList<GetShadowSummary>();
+  @$core.pragma('dart2js:noInline')
+  static GetShadowSummary getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetShadowSummary>(create);
+  static GetShadowSummary? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $9.PriceRule get rule => $_getN(1);
+  @$pb.TagNumber(2)
+  set rule($9.PriceRule value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRule() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRule() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get fromDate => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set fromDate($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasFromDate() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFromDate() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get toDate => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set toDate($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasToDate() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearToDate() => $_clearField(4);
+}
+
 /// Asks for a nonce to link one home's account at a third-party service
 /// (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -5999,6 +6601,12 @@ enum ManagementRequest_Request {
   getDayAheadPrices,
   getSpaceAddress,
   putSpaceAddress,
+  setComfortPreference,
+  setPriceRuleMode,
+  releaseHeatBlock,
+  listHeatBlockStatus,
+  getHeatBlockHistory,
+  getShadowSummary,
   notSet
 }
 
@@ -6081,6 +6689,12 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetDayAheadPrices? getDayAheadPrices,
     GetSpaceAddress? getSpaceAddress,
     PutSpaceAddress? putSpaceAddress,
+    SetComfortPreference? setComfortPreference,
+    SetPriceRuleMode? setPriceRuleMode,
+    ReleaseHeatBlock? releaseHeatBlock,
+    ListHeatBlockStatus? listHeatBlockStatus,
+    GetHeatBlockHistory? getHeatBlockHistory,
+    GetShadowSummary? getShadowSummary,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -6191,6 +6805,15 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (getDayAheadPrices != null) result.getDayAheadPrices = getDayAheadPrices;
     if (getSpaceAddress != null) result.getSpaceAddress = getSpaceAddress;
     if (putSpaceAddress != null) result.putSpaceAddress = putSpaceAddress;
+    if (setComfortPreference != null)
+      result.setComfortPreference = setComfortPreference;
+    if (setPriceRuleMode != null) result.setPriceRuleMode = setPriceRuleMode;
+    if (releaseHeatBlock != null) result.releaseHeatBlock = releaseHeatBlock;
+    if (listHeatBlockStatus != null)
+      result.listHeatBlockStatus = listHeatBlockStatus;
+    if (getHeatBlockHistory != null)
+      result.getHeatBlockHistory = getHeatBlockHistory;
+    if (getShadowSummary != null) result.getShadowSummary = getShadowSummary;
     return result;
   }
 
@@ -6281,6 +6904,12 @@ class ManagementRequest extends $pb.GeneratedMessage {
     74: ManagementRequest_Request.getDayAheadPrices,
     75: ManagementRequest_Request.getSpaceAddress,
     76: ManagementRequest_Request.putSpaceAddress,
+    77: ManagementRequest_Request.setComfortPreference,
+    78: ManagementRequest_Request.setPriceRuleMode,
+    79: ManagementRequest_Request.releaseHeatBlock,
+    80: ManagementRequest_Request.listHeatBlockStatus,
+    81: ManagementRequest_Request.getHeatBlockHistory,
+    82: ManagementRequest_Request.getShadowSummary,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -6364,7 +6993,13 @@ class ManagementRequest extends $pb.GeneratedMessage {
       73,
       74,
       75,
-      76
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -6543,6 +7178,19 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: GetSpaceAddress.create)
     ..aOM<PutSpaceAddress>(76, _omitFieldNames ? '' : 'putSpaceAddress',
         subBuilder: PutSpaceAddress.create)
+    ..aOM<SetComfortPreference>(
+        77, _omitFieldNames ? '' : 'setComfortPreference',
+        subBuilder: SetComfortPreference.create)
+    ..aOM<SetPriceRuleMode>(78, _omitFieldNames ? '' : 'setPriceRuleMode',
+        subBuilder: SetPriceRuleMode.create)
+    ..aOM<ReleaseHeatBlock>(79, _omitFieldNames ? '' : 'releaseHeatBlock',
+        subBuilder: ReleaseHeatBlock.create)
+    ..aOM<ListHeatBlockStatus>(80, _omitFieldNames ? '' : 'listHeatBlockStatus',
+        subBuilder: ListHeatBlockStatus.create)
+    ..aOM<GetHeatBlockHistory>(81, _omitFieldNames ? '' : 'getHeatBlockHistory',
+        subBuilder: GetHeatBlockHistory.create)
+    ..aOM<GetShadowSummary>(82, _omitFieldNames ? '' : 'getShadowSummary',
+        subBuilder: GetShadowSummary.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -7439,6 +8087,74 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearPutSpaceAddress() => $_clearField(76);
   @$pb.TagNumber(76)
   PutSpaceAddress ensurePutSpaceAddress() => $_ensure(75);
+
+  /// A household's comfort preference; see climate.v1.ComfortPreference.
+  @$pb.TagNumber(77)
+  SetComfortPreference get setComfortPreference => $_getN(76);
+  @$pb.TagNumber(77)
+  set setComfortPreference(SetComfortPreference value) => $_setField(77, value);
+  @$pb.TagNumber(77)
+  $core.bool hasSetComfortPreference() => $_has(76);
+  @$pb.TagNumber(77)
+  void clearSetComfortPreference() => $_clearField(77);
+  @$pb.TagNumber(77)
+  SetComfortPreference ensureSetComfortPreference() => $_ensure(76);
+
+  /// Price rules and heat blocks; see heating.v1 PRICE RULES.
+  @$pb.TagNumber(78)
+  SetPriceRuleMode get setPriceRuleMode => $_getN(77);
+  @$pb.TagNumber(78)
+  set setPriceRuleMode(SetPriceRuleMode value) => $_setField(78, value);
+  @$pb.TagNumber(78)
+  $core.bool hasSetPriceRuleMode() => $_has(77);
+  @$pb.TagNumber(78)
+  void clearSetPriceRuleMode() => $_clearField(78);
+  @$pb.TagNumber(78)
+  SetPriceRuleMode ensureSetPriceRuleMode() => $_ensure(77);
+
+  @$pb.TagNumber(79)
+  ReleaseHeatBlock get releaseHeatBlock => $_getN(78);
+  @$pb.TagNumber(79)
+  set releaseHeatBlock(ReleaseHeatBlock value) => $_setField(79, value);
+  @$pb.TagNumber(79)
+  $core.bool hasReleaseHeatBlock() => $_has(78);
+  @$pb.TagNumber(79)
+  void clearReleaseHeatBlock() => $_clearField(79);
+  @$pb.TagNumber(79)
+  ReleaseHeatBlock ensureReleaseHeatBlock() => $_ensure(78);
+
+  @$pb.TagNumber(80)
+  ListHeatBlockStatus get listHeatBlockStatus => $_getN(79);
+  @$pb.TagNumber(80)
+  set listHeatBlockStatus(ListHeatBlockStatus value) => $_setField(80, value);
+  @$pb.TagNumber(80)
+  $core.bool hasListHeatBlockStatus() => $_has(79);
+  @$pb.TagNumber(80)
+  void clearListHeatBlockStatus() => $_clearField(80);
+  @$pb.TagNumber(80)
+  ListHeatBlockStatus ensureListHeatBlockStatus() => $_ensure(79);
+
+  @$pb.TagNumber(81)
+  GetHeatBlockHistory get getHeatBlockHistory => $_getN(80);
+  @$pb.TagNumber(81)
+  set getHeatBlockHistory(GetHeatBlockHistory value) => $_setField(81, value);
+  @$pb.TagNumber(81)
+  $core.bool hasGetHeatBlockHistory() => $_has(80);
+  @$pb.TagNumber(81)
+  void clearGetHeatBlockHistory() => $_clearField(81);
+  @$pb.TagNumber(81)
+  GetHeatBlockHistory ensureGetHeatBlockHistory() => $_ensure(80);
+
+  @$pb.TagNumber(82)
+  GetShadowSummary get getShadowSummary => $_getN(81);
+  @$pb.TagNumber(82)
+  set getShadowSummary(GetShadowSummary value) => $_setField(82, value);
+  @$pb.TagNumber(82)
+  $core.bool hasGetShadowSummary() => $_has(81);
+  @$pb.TagNumber(82)
+  void clearGetShadowSummary() => $_clearField(82);
+  @$pb.TagNumber(82)
+  GetShadowSummary ensureGetShadowSummary() => $_ensure(81);
 }
 
 const $core.bool _omitFieldNames =
