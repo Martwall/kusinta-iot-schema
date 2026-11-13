@@ -2289,9 +2289,12 @@ class SetInnerRoomLimits extends $pb.GeneratedMessage {
 /// or clears it. Answered with ManagementAck; the rooms it changes are sent again
 /// (RoomClimateChanged): the room, or every room of the home that follows the home's.
 ///
-/// A household admin of the home only (household.proto, HOUSEHOLD ADMIN), as SetInnerRoomLimits;
-/// anyone else is refused as NOT_ENTITLED — never covered by a commissioning grant, and never the
-/// property owner's or a gateway administrator's, the home empty or not. A space that is neither
+/// Any resident of the home, household admins included, as SetRoomTarget is, an admin-less home's
+/// residents among them (household.proto, ADMIN-LESS HOME): the household admins' inner limits
+/// still fence the band (climate.v1.ComfortPreference, THE BAND). Anyone else is refused as
+/// NOT_ENTITLED — never covered by a commissioning grant, and never the property owner's or a
+/// gateway administrator's, the home empty or not; a staff member who is a resident of the home
+/// sets it as a resident. A space that is neither
 /// an apartment nor a room in one is refused as NOT_ENTITLED with the same metadata, so the answer
 /// tells nothing of where a home is. Refused as INVALID_REQUEST with metadata {"reason":
 /// "comfort_preference"} for preset UNSPECIFIED, and for CUSTOM with below_target_centidegrees

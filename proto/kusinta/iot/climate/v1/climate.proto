@@ -412,7 +412,10 @@ enum ComfortPreset {
 // the household sets, below 0 to 500 and above 0 to 200. Until a household chooses for its home,
 // the home's preference is the default: preset UNSPECIFIED, 0 below and 50 above, so a plan may
 // heat a room ahead but never plans it below its target. A room outside homes has no
-// preference and takes the default's band.
+// preference and takes the default's band. A preference for spaces outside homes, set by those
+// who govern them — the property owner and the gateway's administrators — is left room for: it
+// would come as fields and a request of its own in a later release, never by reusing these, and
+// a client reads a room outside homes sent with no preference as taking the default.
 //
 // THE BAND. From the room's effective target E (RoomClimate.effective_target_centidegrees),
 // the band in force (RoomClimate.comfort_band_low_centidegrees, comfort_band_high_centidegrees)
@@ -433,8 +436,9 @@ enum ComfortPreset {
 // it may score each day against other bands as well (heating.v1.ShadowSummary), so that a
 // household sees what a choice would save before it makes one: SHADOW drives nothing.
 //
-// WHO. Set by the home's household admins (webrtc.v1.SetComfortPreference), and told to its
-// residents only: never to service, never under a commissioning grant (commissioning.v1, GRANTS),
+// WHO. Set by any resident of the home, household admins included
+// (webrtc.v1.SetComfortPreference): a comfort setting, as a room's target is, which the household
+// admins' inner limits still fence (THE BAND). Told to its residents only: never to service, never under a commissioning grant (commissioning.v1, GRANTS),
 // and never to the property owner or the gateway administrators, the home empty or not. Household
 // data, as the inner limits are: wiped at a handover (webrtc.v1 household.proto, WIPE), and
 // belonging to the room, or the home, while it is one: a room's is cleared when it leaves the

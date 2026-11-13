@@ -31,17 +31,17 @@ option optimize_for = SPEED;
 //   * putting the home's heating records and the household's commissioning facts (heating.v1,
 //     commissioning.v1), and opting the home in to its heating features;
 //   * setting its rooms' inner limits (SetInnerRoomLimits, climate.v1.InnerRoomLimits);
-//   * choosing the comfort preference of the home and of its rooms (SetComfortPreference,
-//     climate.v1.ComfortPreference);
 //   * switching the price rules of the home's own heat sources (SetPriceRuleMode, heating.v1
 //     PRICE RULES);
 //   * answering and ending commissioning grants on the home (commissioning.v1, GRANTS);
 //   * starting, confirming and cancelling the home's handover (HANDOVER);
 //   * clearing the home's climate history (CLIMATE HISTORY, ClearClimateHistory).
 // A resident who is not a household admin is refused each of these as NOT_ENTITLED. Every
-// resident keeps the rest of what a resident may do: room targets, modes, comfort-load
-// windows, links between the home's devices, the lock on device controls, releasing a block of
-// the home's own heat source (ReleaseHeatBlock), naming the home (SetHomeName), and leaving.
+// resident keeps the rest of what a resident may do: room targets, the comfort preference of
+// the home and of its rooms (SetComfortPreference, climate.v1.ComfortPreference), modes,
+// comfort-load windows, links between the home's devices, the lock on device controls, releasing
+// a block of the home's own heat source (ReleaseHeatBlock), naming the home (SetHomeName), and
+// leaving.
 //
 // PROMOTION. A household admin asks a resident of the home to become one with
 // RequestPromotion naming home_id and the resident's user id, and the resident accepts or
