@@ -39,6 +39,24 @@ final $typed_data.Uint8List roomClimateConditionDescriptor = $convert.base64Deco
     'RJT05fSEVBVElOR19VTlJFQUNIQUJMRRAGEiQKIFJPT01fQ0xJTUFURV9DT05ESVRJT05fTk9f'
     'U0VOU09SEAc=');
 
+@$core.Deprecated('Use comfortPresetDescriptor instead')
+const ComfortPreset$json = {
+  '1': 'ComfortPreset',
+  '2': [
+    {'1': 'COMFORT_PRESET_UNSPECIFIED', '2': 0},
+    {'1': 'COMFORT_PRESET_ECONOMY', '2': 1},
+    {'1': 'COMFORT_PRESET_NORMAL', '2': 2},
+    {'1': 'COMFORT_PRESET_COMFORT', '2': 3},
+    {'1': 'COMFORT_PRESET_CUSTOM', '2': 4},
+  ],
+};
+
+/// Descriptor for `ComfortPreset`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List comfortPresetDescriptor = $convert.base64Decode(
+    'Cg1Db21mb3J0UHJlc2V0Eh4KGkNPTUZPUlRfUFJFU0VUX1VOU1BFQ0lGSUVEEAASGgoWQ09NRk'
+    '9SVF9QUkVTRVRfRUNPTk9NWRABEhkKFUNPTUZPUlRfUFJFU0VUX05PUk1BTBACEhoKFkNPTUZP'
+    'UlRfUFJFU0VUX0NPTUZPUlQQAxIZChVDT01GT1JUX1BSRVNFVF9DVVNUT00QBA==');
+
 @$core.Deprecated('Use outerLimitKindDescriptor instead')
 const OuterLimitKind$json = {
   '1': 'OuterLimitKind',
@@ -444,6 +462,22 @@ const RoomClimate$json = {
       '6': '.kusinta.iot.identity.v1.DeviceId',
       '10': 'outerBoundDeviceIds'
     },
+    {
+      '1': 'comfort_preference',
+      '3': 26,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ComfortPreference',
+      '10': 'comfortPreference'
+    },
+    {
+      '1': 'home_comfort_preference',
+      '3': 27,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ComfortPreference',
+      '10': 'homeComfortPreference'
+    },
   ],
   '8': [
     {'1': '_target_centidegrees'},
@@ -488,10 +522,14 @@ final $typed_data.Uint8List roomClimateDescriptor = $convert.base64Decode(
     '91dGVyX2xpbWl0c19jb3ZlcmFnZRgYIAEoDjIrLmt1c2ludGEuaW90LmNsaW1hdGUudjEuT3V0'
     'ZXJMaW1pdHNDb3ZlcmFnZVITb3V0ZXJMaW1pdHNDb3ZlcmFnZRJWChZvdXRlcl9ib3VuZF9kZX'
     'ZpY2VfaWRzGBkgAygLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSE291dGVy'
-    'Qm91bmREZXZpY2VJZHNCFgoUX3RhcmdldF9jZW50aWRlZ3JlZXNCIAoeX2VmZmVjdGl2ZV90YX'
-    'JnZXRfY2VudGlkZWdyZWVzQhMKEV9taW5fY2VudGlkZWdyZWVzQhMKEV9tYXhfY2VudGlkZWdy'
-    'ZWVzQhgKFl9tZWFzdXJlZF9jZW50aWRlZ3JlZXNCIAoeX2NvbWZvcnRfYmFuZF9sb3dfY2VudG'
-    'lkZWdyZWVzQiEKH19jb21mb3J0X2JhbmRfaGlnaF9jZW50aWRlZ3JlZXM=');
+    'Qm91bmREZXZpY2VJZHMSWAoSY29tZm9ydF9wcmVmZXJlbmNlGBogASgLMikua3VzaW50YS5pb3'
+    'QuY2xpbWF0ZS52MS5Db21mb3J0UHJlZmVyZW5jZVIRY29tZm9ydFByZWZlcmVuY2USYQoXaG9t'
+    'ZV9jb21mb3J0X3ByZWZlcmVuY2UYGyABKAsyKS5rdXNpbnRhLmlvdC5jbGltYXRlLnYxLkNvbW'
+    'ZvcnRQcmVmZXJlbmNlUhVob21lQ29tZm9ydFByZWZlcmVuY2VCFgoUX3RhcmdldF9jZW50aWRl'
+    'Z3JlZXNCIAoeX2VmZmVjdGl2ZV90YXJnZXRfY2VudGlkZWdyZWVzQhMKEV9taW5fY2VudGlkZW'
+    'dyZWVzQhMKEV9tYXhfY2VudGlkZWdyZWVzQhgKFl9tZWFzdXJlZF9jZW50aWRlZ3JlZXNCIAoe'
+    'X2NvbWZvcnRfYmFuZF9sb3dfY2VudGlkZWdyZWVzQiEKH19jb21mb3J0X2JhbmRfaGlnaF9jZW'
+    '50aWRlZ3JlZXM=');
 
 @$core.Deprecated('Use outerLimitDescriptor instead')
 const OuterLimit$json = {
@@ -618,6 +656,42 @@ final $typed_data.Uint8List innerRoomLimitsDescriptor = $convert.base64Decode(
     'Cg9Jbm5lclJvb21MaW1pdHMSLgoQbWluX2NlbnRpZGVncmVlcxgBIAEoEUgAUg9taW5DZW50aW'
     'RlZ3JlZXOIAQESLgoQbWF4X2NlbnRpZGVncmVlcxgCIAEoEUgBUg9tYXhDZW50aWRlZ3JlZXOI'
     'AQFCEwoRX21pbl9jZW50aWRlZ3JlZXNCEwoRX21heF9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use comfortPreferenceDescriptor instead')
+const ComfortPreference$json = {
+  '1': 'ComfortPreference',
+  '2': [
+    {
+      '1': 'preset',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ComfortPreset',
+      '10': 'preset'
+    },
+    {
+      '1': 'below_target_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '10': 'belowTargetCentidegrees'
+    },
+    {
+      '1': 'above_target_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '10': 'aboveTargetCentidegrees'
+    },
+  ],
+};
+
+/// Descriptor for `ComfortPreference`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List comfortPreferenceDescriptor = $convert.base64Decode(
+    'ChFDb21mb3J0UHJlZmVyZW5jZRI9CgZwcmVzZXQYASABKA4yJS5rdXNpbnRhLmlvdC5jbGltYX'
+    'RlLnYxLkNvbWZvcnRQcmVzZXRSBnByZXNldBI6ChliZWxvd190YXJnZXRfY2VudGlkZWdyZWVz'
+    'GAIgASgNUhdiZWxvd1RhcmdldENlbnRpZGVncmVlcxI6ChlhYm92ZV90YXJnZXRfY2VudGlkZW'
+    'dyZWVzGAMgASgNUhdhYm92ZVRhcmdldENlbnRpZGVncmVlcw==');
 
 @$core.Deprecated('Use outerLimitClampDescriptor instead')
 const OuterLimitClamp$json = {

@@ -8,6 +8,8 @@ import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
+import type { Role } from "../../access/v1/roles_pb.js";
+import type { ClimateExplanationKind } from "../../climate/v1/climate_pb.js";
 
 /**
  * Describes the file kusinta/iot/heating/v1/heating.proto.
@@ -143,6 +145,29 @@ export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"
    * @generated from field: uint64 revision = 8;
    */
   revision: bigint;
+
+  /**
+   * Every price rule the gateway runs for this plant, each once, with its mode as it stands:
+   * the latest change of each (PriceRuleChange), OFF included. A rule not listed is one the
+   * gateway does not run for this plant, and a client offers no switch for it. A rule whose mode
+   * was never set is listed in the mode it started in — OFF, or SHADOW as the rollout note under
+   * PRICE RULES (WHO SWITCHES THEM) says — with at, set_by_role and set_by unset.
+   *
+   * Read-only: set with webrtc.v1.SetPriceRuleMode, never in a put, which keeps them and ignores
+   * them, and does not bump revision. Sent to whoever is given the plant, set_by as
+   * PriceRuleChange says. An app tells a gateway that predates price rules by an empty list with
+   * price_rules_revision 0, and offers no switch.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.PriceRuleChange price_rules = 9;
+   */
+  priceRules: PriceRuleChange[];
+
+  /**
+   * Set by the gateway and bumped by every change of price_rules; see webrtc.v1.SetPriceRuleMode.
+   *
+   * @generated from field: uint64 price_rules_revision = 10;
+   */
+  priceRulesRevision: bigint;
 };
 
 /**
@@ -613,6 +638,453 @@ export declare type HeatingRecord = Message<"kusinta.iot.heating.v1.HeatingRecor
 export declare const HeatingRecordSchema: GenMessage<HeatingRecord>;
 
 /**
+ * One change of a price rule's mode on a plant (PRICE RULES, WHO SWITCHES THEM); as
+ * HeatingPlant.price_rules, the mode the latest change left the rule in.
+ *
+ * @generated from message kusinta.iot.heating.v1.PriceRuleChange
+ */
+export declare type PriceRuleChange = Message<"kusinta.iot.heating.v1.PriceRuleChange"> & {
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRule rule = 1;
+   */
+  rule: PriceRule;
+
+  /**
+   * The mode it set, and the mode before it: before a rule's first change, the mode it started in
+   * (WHO SWITCHES THEM).
+   *
+   * @generated from field: kusinta.iot.heating.v1.PriceRuleMode mode = 2;
+   */
+  mode: PriceRuleMode;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRuleMode previous_mode = 3;
+   */
+  previousMode: PriceRuleMode;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp at = 4;
+   */
+  at?: Timestamp | undefined;
+
+  /**
+   * The role its setter acted in: ROLE_RESIDENT for a household admin of the home,
+   * ROLE_TECHNICIAN for an installer under a commissioning grant, otherwise ROLE_PROPERTY_OWNER
+   * where they hold it, else ROLE_GATEWAY_ADMIN. UNSPECIFIED, with set_by unset, for a change the
+   * gateway made itself: a home's wipe taking a LIVE rule back to SHADOW (webrtc.v1
+   * household.proto, WIPE).
+   *
+   * @generated from field: kusinta.iot.access.v1.Role set_by_role = 5;
+   */
+  setByRole: Role;
+
+  /**
+   * Who set it. For a plant in a home, given to its residents, and unset when it dates from
+   * before their current residency; to an installer, only on a change of their own. For a plant
+   * outside homes, given to the property owner and the gateway administrators. Unset to anyone
+   * else, set_by_role kept.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId set_by = 6;
+   */
+  setBy?: UserId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.PriceRuleChange.
+ * Use `create(PriceRuleChangeSchema)` to create a new message.
+ */
+export declare const PriceRuleChangeSchema: GenMessage<PriceRuleChange>;
+
+/**
+ * One heat block (HEAT BLOCKS).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatBlock
+ */
+export declare type HeatBlock = Message<"kusinta.iot.heating.v1.HeatBlock"> & {
+  /**
+   * Assigned by the gateway, opaque.
+   *
+   * @generated from field: string block_id = 1;
+   */
+  blockId: string;
+
+  /**
+   * The rule that started it, and its mode then: LIVE held the input, SHADOW only decided to.
+   *
+   * @generated from field: kusinta.iot.heating.v1.PriceRule rule = 2;
+   */
+  rule: PriceRule;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRuleMode mode = 3;
+   */
+  mode: PriceRuleMode;
+
+  /**
+   * Why it started, as a room's explanation names the cause (climate.v1.ClimateExplanationKind;
+   * subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours. A kind the client
+   * does not know is shown as a block without a cause.
+   *
+   * @generated from field: kusinta.iot.climate.v1.ClimateExplanationKind reason = 4;
+   */
+  reason: ClimateExplanationKind;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp started_at = 5;
+   */
+  startedAt?: Timestamp | undefined;
+
+  /**
+   * The end its rule planned for it, within "plant.max_block_minutes".
+   *
+   * @generated from field: google.protobuf.Timestamp planned_end_at = 6;
+   */
+  plannedEndAt?: Timestamp | undefined;
+
+  /**
+   * When it ended, and how. Both unset while it is under way.
+   *
+   * @generated from field: google.protobuf.Timestamp ended_at = 7;
+   */
+  endedAt?: Timestamp | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatBlockEnd end = 8;
+   */
+  end: HeatBlockEnd;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatBlock.
+ * Use `create(HeatBlockSchema)` to create a new message.
+ */
+export declare const HeatBlockSchema: GenMessage<HeatBlock>;
+
+/**
+ * One release of a plant's blocks by hand (webrtc.v1.ReleaseHeatBlock), and the hold it set.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatBlockRelease
+ */
+export declare type HeatBlockRelease = Message<"kusinta.iot.heating.v1.HeatBlockRelease"> & {
+  /**
+   * @generated from field: google.protobuf.Timestamp at = 1;
+   */
+  at?: Timestamp | undefined;
+
+  /**
+   * Until when the plant's blocking rules start no LIVE block. Unset: the release ended a hold
+   * early, and blocks may start again as the rules plan them.
+   *
+   * @generated from field: google.protobuf.Timestamp hold_until = 2;
+   */
+  holdUntil?: Timestamp | undefined;
+
+  /**
+   * The blocks under way that it ended (HeatBlock.block_id).
+   *
+   * @generated from field: repeated string ended_block_ids = 3;
+   */
+  endedBlockIds: string[];
+
+  /**
+   * The role its maker acted in — ROLE_RESIDENT on a plant in a home; ROLE_PROPERTY_OWNER,
+   * ROLE_GATEWAY_ADMIN or ROLE_TECHNICIAN on one outside homes — and who they are, given as
+   * PriceRuleChange.set_by is.
+   *
+   * @generated from field: kusinta.iot.access.v1.Role set_by_role = 4;
+   */
+  setByRole: Role;
+
+  /**
+   * @generated from field: kusinta.iot.identity.v1.UserId set_by = 5;
+   */
+  setBy?: UserId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatBlockRelease.
+ * Use `create(HeatBlockReleaseSchema)` to create a new message.
+ */
+export declare const HeatBlockReleaseSchema: GenMessage<HeatBlockRelease>;
+
+/**
+ * A plant's blocks as they stand now: what is blocked, by which rule and why, and the hold a
+ * release set. Given as WHO SEES THEM says, in reply to webrtc.v1.ListHeatBlockStatus and
+ * webrtc.v1.ReleaseHeatBlock, and pushed (webrtc.v1 GatewayMessage.heat_block_status) to the
+ * sessions given it whenever a block starts or ends, or a hold begins, changes or ends. Apply as
+ * an upsert keyed on plant_id.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatBlockStatus
+ */
+export declare type HeatBlockStatus = Message<"kusinta.iot.heating.v1.HeatBlockStatus"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * The plant's space and name, so that a technician who is not given the plant record knows
+   * which plant it is.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 2;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: string plant_name = 3;
+   */
+  plantName: string;
+
+  /**
+   * The blocks under way, LIVE and SHADOW, at most one per rule and mode. Empty: none.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatBlock current = 4;
+   */
+  current: HeatBlock[];
+
+  /**
+   * The release whose hold runs now. Unset: none.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatBlockRelease hold = 5;
+   */
+  hold?: HeatBlockRelease | undefined;
+
+  /**
+   * The plant's rules and their modes, as HeatingPlant.price_rules, so that whoever may release
+   * a block is told whether a rule is LIVE.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.PriceRuleChange price_rules = 6;
+   */
+  priceRules: PriceRuleChange[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatBlockStatus.
+ * Use `create(HeatBlockStatusSchema)` to create a new message.
+ */
+export declare const HeatBlockStatusSchema: GenMessage<HeatBlockStatus>;
+
+/**
+ * The answer to webrtc.v1.ListHeatBlockStatus.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatBlockStatuses
+ */
+export declare type HeatBlockStatuses = Message<"kusinta.iot.heating.v1.HeatBlockStatuses"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatBlockStatus statuses = 1;
+   */
+  statuses: HeatBlockStatus[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatBlockStatuses.
+ * Use `create(HeatBlockStatusesSchema)` to create a new message.
+ */
+export declare const HeatBlockStatusesSchema: GenMessage<HeatBlockStatuses>;
+
+/**
+ * A plant's blocks, releases and changes of mode over a range, in reply to
+ * webrtc.v1.GetHeatBlockHistory. Blocks in order of started_at, releases and changes in order
+ * of at.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatBlockHistory
+ */
+export declare type HeatBlockHistory = Message<"kusinta.iot.heating.v1.HeatBlockHistory"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * The earliest time the gateway still holds of this plant's records that the recipient may
+   * read: for a plant in a home, no earlier than the start of their current residency, nor than
+   * the home's last Clear history (space.v1.Space.climate_history_cleared_at). Nothing before it
+   * is returned.
+   *
+   * @generated from field: google.protobuf.Timestamp kept_from = 2;
+   */
+  keptFrom?: Timestamp | undefined;
+
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatBlock blocks = 3;
+   */
+  blocks: HeatBlock[];
+
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatBlockRelease releases = 4;
+   */
+  releases: HeatBlockRelease[];
+
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.PriceRuleChange rule_changes = 5;
+   */
+  ruleChanges: PriceRuleChange[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatBlockHistory.
+ * Use `create(HeatBlockHistorySchema)` to create a new message.
+ */
+export declare const HeatBlockHistorySchema: GenMessage<HeatBlockHistory>;
+
+/**
+ * One day of one price rule scored against one comfort band (ShadowBandSeries): what the rule,
+ * had it been live with that band, would have saved, and what it would have cost in comfort. A
+ * day is the building's local date (space.v1.Space.time_zone), cut as
+ * climate.v1.CLIMATE_SUMMARY_PERIOD_DAY is, and given only once the gateway has scored it, never
+ * before it ends. A day on which the building's time zone was unknown is not scored.
+ *
+ * @generated from message kusinta.iot.heating.v1.ShadowDay
+ */
+export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
+  /**
+   * The local date, as an ISO 8601 calendar date (YYYY-MM-DD).
+   *
+   * @generated from field: string date = 1;
+   */
+  date: string;
+
+  /**
+   * The saving, in millionths of a euro, the currency day-ahead prices are in
+   * (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, at
+   * the prices it decided by, with the recovery cost already taken off. Negative: it would have
+   * cost more than it saved. A client converts it as it converts prices
+   * (planning.v1.ExchangeRate).
+   *
+   * @generated from field: sint64 net_saving_micro_eur = 2;
+   */
+  netSavingMicroEur: bigint;
+
+  /**
+   * The cost, in millionths of a euro, of making up afterwards for what was blocked or coasted:
+   * already taken off net_saving_micro_eur, and told so that a client may show both.
+   *
+   * @generated from field: sint64 recovery_cost_micro_eur = 3;
+   */
+  recoveryCostMicroEur: bigint;
+
+  /**
+   * The quarter hours of the day the rule would have blocked or coasted.
+   *
+   * @generated from field: uint32 blocked_quarters = 4;
+   */
+  blockedQuarters: number;
+
+  /**
+   * The quarter hours of the day in which at least one room the rule judges was, or was
+   * predicted to be, below the band's low edge (a breach), and above its high edge
+   * (overheated). A quarter hour in which a room's window was open is not counted for that room.
+   *
+   * @generated from field: uint32 breach_quarters = 5;
+   */
+  breachQuarters: number;
+
+  /**
+   * @generated from field: uint32 overheat_quarters = 6;
+   */
+  overheatQuarters: number;
+
+  /**
+   * The quarter hours of the day that had no price, in which the rule decided nothing: all of
+   * them on a day with no price at all, when every other count is 0.
+   *
+   * @generated from field: uint32 no_price_quarters = 7;
+   */
+  noPriceQuarters: number;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.ShadowDay.
+ * Use `create(ShadowDaySchema)` to create a new message.
+ */
+export declare const ShadowDaySchema: GenMessage<ShadowDay>;
+
+/**
+ * One price rule of one plant of a home, scored day by day against one comfort band.
+ *
+ * @generated from message kusinta.iot.heating.v1.ShadowBandSeries
+ */
+export declare type ShadowBandSeries = Message<"kusinta.iot.heating.v1.ShadowBandSeries"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRule rule = 2;
+   */
+  rule: PriceRule;
+
+  /**
+   * The band scored, as a comfort preference gives one (climate.v1.ComfortPreference, THE
+   * BAND), in centidegrees. Which bands are scored is the gateway's choice, the same for every
+   * home; the presets' among them.
+   *
+   * @generated from field: uint32 below_target_centidegrees = 3;
+   */
+  belowTargetCentidegrees: number;
+
+  /**
+   * @generated from field: uint32 above_target_centidegrees = 4;
+   */
+  aboveTargetCentidegrees: number;
+
+  /**
+   * In order of date.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.ShadowDay days = 5;
+   */
+  days: ShadowDay[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.ShadowBandSeries.
+ * Use `create(ShadowBandSeriesSchema)` to create a new message.
+ */
+export declare const ShadowBandSeriesSchema: GenMessage<ShadowBandSeries>;
+
+/**
+ * What a home's price rules would have saved, and cost in comfort, under each band the gateway
+ * scores, so that the household can choose its comfort preference knowing what each would bring
+ * (climate.v1.ComfortPreference). In reply to webrtc.v1.GetShadowSummary. The household's data,
+ * given as WHO SEES THEM says of a plant in a home: to the home's residents only, never to
+ * service, the property owner, the gateway's administrators, an installer under a commissioning
+ * grant or another home; erased by the household's Clear history and by the home's wipe.
+ *
+ * @generated from message kusinta.iot.heating.v1.ShadowSummary
+ */
+export declare type ShadowSummary = Message<"kusinta.iot.heating.v1.ShadowSummary"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+   */
+  homeId?: SpaceId | undefined;
+
+  /**
+   * The earliest date still held that the recipient may read: no earlier than the first whole
+   * day of their current residency, nor than the first whole day after the home's last Clear
+   * history. An ISO 8601 calendar date; empty where nothing is held for them.
+   *
+   * @generated from field: string kept_from = 2;
+   */
+  keptFrom: string;
+
+  /**
+   * One per plant, rule and band scored, ordered by plant, rule, then below_target: of the home's
+   * own plants (HeatingPlant.space_id the home) only, each rule while it ran in SHADOW or LIVE.
+   * A plant outside homes is scored for no home. Empty where none is held.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.ShadowBandSeries series = 3;
+   */
+  series: ShadowBandSeries[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.ShadowSummary.
+ * Use `create(ShadowSummarySchema)` to create a new message.
+ */
+export declare const ShadowSummarySchema: GenMessage<ShadowSummary>;
+
+/**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
  */
 export enum HeatSourceKind {
@@ -656,4 +1128,171 @@ export enum HeatSourceKind {
  * Describes the enum kusinta.iot.heating.v1.HeatSourceKind.
  */
 export declare const HeatSourceKindSchema: GenEnum<HeatSourceKind>;
+
+/**
+ * A price rule (PRICE RULES). A closed list that grows only by a release of this schema: a
+ * client words a rule it does not know as a price rule, unnamed, and offers no switch for it.
+ *
+ * @generated from enum kusinta.iot.heating.v1.PriceRule
+ */
+export enum PriceRule {
+  /**
+   * Not stated, or a rule this client's schema does not know. Refused in a request.
+   *
+   * @generated from enum value: PRICE_RULE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Blocks the add-on heater (HeatPumpControl.add_on_heater_block) in the day's dearest quarter
+   * hours, the compressor running on: each block within "plant.max_block_minutes"
+   * (commissioning.v1), and ended early where a room it heats falls below its comfort band or,
+   * where the plant reports it, its hot water runs low. A blocking rule.
+   *
+   * @generated from enum value: PRICE_RULE_ADD_ON_HEATER_BLOCK = 1;
+   */
+  ADD_ON_HEATER_BLOCK = 1,
+
+  /**
+   * Heats the plant's floor zones (FloorZone) ahead in cheap quarter hours, within the top of
+   * their rooms' comfort band, and holds them off in dear ones, within its bottom. Holds no input
+   * of the plant: not a blocking rule.
+   *
+   * @generated from enum value: PRICE_RULE_FLOOR_PRE_HEAT = 2;
+   */
+  FLOOR_PRE_HEAT = 2,
+
+  /**
+   * Raises the heat source's hot water in cheap quarter hours (HeatPumpControl.sg_ready_boost),
+   * so that the tank is full before dear ones; never during a block. Not a blocking rule.
+   *
+   * @generated from enum value: PRICE_RULE_HOT_WATER = 3;
+   */
+  HOT_WATER = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.PriceRule.
+ */
+export declare const PriceRuleSchema: GenEnum<PriceRule>;
+
+/**
+ * How a price rule runs on a plant.
+ *
+ * @generated from enum kusinta.iot.heating.v1.PriceRuleMode
+ */
+export enum PriceRuleMode {
+  /**
+   * Not stated, or a mode this client's schema does not know: read as OFF. Refused in a
+   * request.
+   *
+   * @generated from enum value: PRICE_RULE_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The rule decides nothing and drives nothing. A plant's rules start OFF, save as the rollout
+   * note under PRICE RULES (WHO SWITCHES THEM) says.
+   *
+   * @generated from enum value: PRICE_RULE_MODE_OFF = 1;
+   */
+  OFF = 1,
+
+  /**
+   * The rule decides as LIVE would and records what it decided (HeatBlock, ShadowSummary), but
+   * drives nothing, so that its saving, and any comfort it would have cost, can be judged before
+   * it goes live. Needs no input bound, and no hold applies to it.
+   *
+   * @generated from enum value: PRICE_RULE_MODE_SHADOW = 2;
+   */
+  SHADOW = 2,
+
+  /**
+   * The rule decides and drives. It drives only while the gateway may drive the input it steers:
+   * bound, under a current pass of its commissioning test, the plant's feature not blocked
+   * (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, and
+   * no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
+   * plant's feature status says why. A rule is put LIVE only while the input it steers is bound
+   * (webrtc.v1.SetPriceRuleMode).
+   *
+   * @generated from enum value: PRICE_RULE_MODE_LIVE = 3;
+   */
+  LIVE = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.PriceRuleMode.
+ */
+export declare const PriceRuleModeSchema: GenEnum<PriceRuleMode>;
+
+/**
+ * How a heat block ended (HeatBlock.end).
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatBlockEnd
+ */
+export enum HeatBlockEnd {
+  /**
+   * Under way, or a cause this client's schema does not know: an app shows that it ended,
+   * without a cause.
+   *
+   * @generated from enum value: HEAT_BLOCK_END_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * It ran to the end its rule planned for it.
+   *
+   * @generated from enum value: HEAT_BLOCK_END_PLANNED = 1;
+   */
+  PLANNED = 1,
+
+  /**
+   * A room the plant heats fell below its comfort band (climate.v1.ComfortPreference, THE
+   * BAND).
+   *
+   * @generated from enum value: HEAT_BLOCK_END_ROOM_BELOW_BAND = 2;
+   */
+  ROOM_BELOW_BAND = 2,
+
+  /**
+   * The plant's hot water ran low, where the plant reports it.
+   *
+   * @generated from enum value: HEAT_BLOCK_END_HOT_WATER_LOW = 3;
+   */
+  HOT_WATER_LOW = 3,
+
+  /**
+   * Released by hand (webrtc.v1.ReleaseHeatBlock; HeatBlockRelease).
+   *
+   * @generated from enum value: HEAT_BLOCK_END_RELEASED = 4;
+   */
+  RELEASED = 4,
+
+  /**
+   * Its rule's mode changed (PriceRuleChange).
+   *
+   * @generated from enum value: HEAT_BLOCK_END_RULE_SWITCHED = 5;
+   */
+  RULE_SWITCHED = 5,
+
+  /**
+   * The gateway stopped holding it for a cause of its own: the input could no longer be driven
+   * (PRICE_RULE_MODE_LIVE), a commissioning test took it, or the gateway restarted.
+   *
+   * @generated from enum value: HEAT_BLOCK_END_INTERRUPTED = 6;
+   */
+  INTERRUPTED = 6,
+
+  /**
+   * Ended early for a cause not told to the recipient (WHO SEES THEM).
+   *
+   * @generated from enum value: HEAT_BLOCK_END_UNSTATED = 7;
+   */
+  UNSTATED = 7,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatBlockEnd.
+ */
+export declare const HeatBlockEndSchema: GenEnum<HeatBlockEnd>;
 

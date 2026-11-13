@@ -8,7 +8,15 @@ import {
   FloorZoneSchema,
   ContactBindingSchema,
   ComfortLoadSchema,
+  HeatBlockSchema,
+  HeatBlockReleaseSchema,
+  ShadowDaySchema,
+  PriceRule,
+  PriceRuleMode,
 } from '../kusinta/iot/heating/v1/heating_pb.js'
+import { Role } from '../kusinta/iot/access/v1/roles_pb.js'
+import { ClimateExplanationKind } from '../kusinta/iot/climate/v1/climate_pb.js'
+import { timestampFromMs } from '@bufbuild/protobuf/wkt'
 
 /**
  * A relay channel whose contact is closed while the channel is off: a changeover relay
@@ -159,5 +167,56 @@ describe('comfort load', () => {
   it('takes a whole day as minute 0 to 1440', () => {
     const decoded = onTheWire(ComfortLoadSchema, { windows: [{ weekdays: 0b1111111, startMinute: 0, endMinute: 1440 }] })
     expect(decoded.windows).toMatchObject([{ startMinute: 0, endMinute: 1440 }])
+  })
+})
+
+describe('price rules', () => {
+  it('lists none on a plant by default, so no switch is offered', () => {
+    const decoded = onTheWire(HeatingPlantSchema, {})
+    expect([decoded.priceRules, decoded.priceRulesRevision]).toEqual([[], 0n])
+  })
+
+  it('carries each rule’s mode with the role that set it and when', () => {
+    const decoded = onTheWire(HeatingPlantSchema, {
+      priceRules: [{
+        rule: PriceRule.ADD_ON_HEATER_BLOCK,
+        mode: PriceRuleMode.LIVE,
+        previousMode: PriceRuleMode.SHADOW,
+        at: timestampFromMs(Date.UTC(2026, 10, 13, 8)),
+        setByRole: Role.RESIDENT,
+      }],
+      priceRulesRevision: 3n,
+    })
+    expect(decoded.priceRules).toMatchObject([{ rule: PriceRule.ADD_ON_HEATER_BLOCK, mode: PriceRuleMode.LIVE, setByRole: Role.RESIDENT }])
+  })
+})
+
+describe('heat blocks', () => {
+  it('has no end while under way', () => {
+    const decoded = onTheWire(HeatBlockSchema, {
+      blockId: 'b1',
+      rule: PriceRule.ADD_ON_HEATER_BLOCK,
+      mode: PriceRuleMode.LIVE,
+      reason: ClimateExplanationKind.PRICE_HIGH,
+      startedAt: timestampFromMs(Date.UTC(2026, 10, 13, 17)),
+    })
+    expect([decoded.endedAt, decoded.end]).toEqual([undefined, 0])
+  })
+
+  it('records a release that ended a hold early without a hold end', () => {
+    const decoded = onTheWire(HeatBlockReleaseSchema, { at: timestampFromMs(Date.UTC(2026, 10, 13, 18)), setByRole: Role.RESIDENT })
+    expect(decoded.holdUntil).toBeUndefined()
+  })
+})
+
+describe('shadow summary', () => {
+  it('carries a day that would have cost more than it saved as a negative saving', () => {
+    const decoded = onTheWire(ShadowDaySchema, { date: '2026-11-12', netSavingMicroEur: -125000n, recoveryCostMicroEur: 300000n })
+    expect(decoded.netSavingMicroEur).toBe(-125000n)
+  })
+
+  it('counts a day with no price as all no-price quarters', () => {
+    const decoded = onTheWire(ShadowDaySchema, { date: '2026-11-12', noPriceQuarters: 96 })
+    expect([decoded.noPriceQuarters, decoded.blockedQuarters]).toEqual([96, 0])
   })
 })

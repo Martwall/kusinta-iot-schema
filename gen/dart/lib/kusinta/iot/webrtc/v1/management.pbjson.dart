@@ -777,6 +777,35 @@ final $typed_data.Uint8List setInnerRoomLimitsDescriptor = $convert.base64Decode
     '50aXR5LnYxLlNwYWNlSWRSBnJvb21JZBI/CgZsaW1pdHMYAiABKAsyJy5rdXNpbnRhLmlvdC5j'
     'bGltYXRlLnYxLklubmVyUm9vbUxpbWl0c1IGbGltaXRz');
 
+@$core.Deprecated('Use setComfortPreferenceDescriptor instead')
+const SetComfortPreference$json = {
+  '1': 'SetComfortPreference',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'preference',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ComfortPreference',
+      '10': 'preference'
+    },
+  ],
+};
+
+/// Descriptor for `SetComfortPreference`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setComfortPreferenceDescriptor = $convert.base64Decode(
+    'ChRTZXRDb21mb3J0UHJlZmVyZW5jZRI7CghzcGFjZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90Lm'
+    'lkZW50aXR5LnYxLlNwYWNlSWRSB3NwYWNlSWQSSQoKcHJlZmVyZW5jZRgCIAEoCzIpLmt1c2lu'
+    'dGEuaW90LmNsaW1hdGUudjEuQ29tZm9ydFByZWZlcmVuY2VSCnByZWZlcmVuY2U=');
+
 @$core.Deprecated('Use setClimateModeDescriptor instead')
 const SetClimateMode$json = {
   '1': 'SetClimateMode',
@@ -1550,6 +1579,146 @@ final $typed_data.Uint8List setComfortWindowsDescriptor = $convert.base64Decode(
     'FkSWQSPwoHd2luZG93cxgCIAMoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tZm9ydFdp'
     'bmRvd1IHd2luZG93cxIuChB3aW5kb3dzX3JldmlzaW9uGAMgASgESABSD3dpbmRvd3NSZXZpc2'
     'lvbogBAUITChFfd2luZG93c19yZXZpc2lvbg==');
+
+@$core.Deprecated('Use setPriceRuleModeDescriptor instead')
+const SetPriceRuleMode$json = {
+  '1': 'SetPriceRuleMode',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'rule',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRule',
+      '10': 'rule'
+    },
+    {
+      '1': 'mode',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRuleMode',
+      '10': 'mode'
+    },
+    {
+      '1': 'price_rules_revision',
+      '3': 4,
+      '4': 1,
+      '5': 4,
+      '9': 0,
+      '10': 'priceRulesRevision',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_price_rules_revision'},
+  ],
+};
+
+/// Descriptor for `SetPriceRuleMode`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setPriceRuleModeDescriptor = $convert.base64Decode(
+    'ChBTZXRQcmljZVJ1bGVNb2RlEhkKCHBsYW50X2lkGAEgASgJUgdwbGFudElkEjUKBHJ1bGUYAi'
+    'ABKA4yIS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlByaWNlUnVsZVIEcnVsZRI5CgRtb2RlGAMg'
+    'ASgOMiUua3VzaW50YS5pb3QuaGVhdGluZy52MS5QcmljZVJ1bGVNb2RlUgRtb2RlEjUKFHByaW'
+    'NlX3J1bGVzX3JldmlzaW9uGAQgASgESABSEnByaWNlUnVsZXNSZXZpc2lvbogBAUIXChVfcHJp'
+    'Y2VfcnVsZXNfcmV2aXNpb24=');
+
+@$core.Deprecated('Use releaseHeatBlockDescriptor instead')
+const ReleaseHeatBlock$json = {
+  '1': 'ReleaseHeatBlock',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {'1': 'hold_off_minutes', '3': 2, '4': 1, '5': 13, '10': 'holdOffMinutes'},
+  ],
+};
+
+/// Descriptor for `ReleaseHeatBlock`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List releaseHeatBlockDescriptor = $convert.base64Decode(
+    'ChBSZWxlYXNlSGVhdEJsb2NrEhkKCHBsYW50X2lkGAEgASgJUgdwbGFudElkEigKEGhvbGRfb2'
+    'ZmX21pbnV0ZXMYAiABKA1SDmhvbGRPZmZNaW51dGVz');
+
+@$core.Deprecated('Use listHeatBlockStatusDescriptor instead')
+const ListHeatBlockStatus$json = {
+  '1': 'ListHeatBlockStatus',
+  '2': [
+    {
+      '1': 'root_space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'rootSpaceId'
+    },
+  ],
+};
+
+/// Descriptor for `ListHeatBlockStatus`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listHeatBlockStatusDescriptor = $convert.base64Decode(
+    'ChNMaXN0SGVhdEJsb2NrU3RhdHVzEkQKDXJvb3Rfc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLm'
+    'lvdC5pZGVudGl0eS52MS5TcGFjZUlkUgtyb290U3BhY2VJZA==');
+
+@$core.Deprecated('Use getHeatBlockHistoryDescriptor instead')
+const GetHeatBlockHistory$json = {
+  '1': 'GetHeatBlockHistory',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'from_time',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'fromTime'
+    },
+    {
+      '1': 'to_time',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'toTime'
+    },
+  ],
+};
+
+/// Descriptor for `GetHeatBlockHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getHeatBlockHistoryDescriptor = $convert.base64Decode(
+    'ChNHZXRIZWF0QmxvY2tIaXN0b3J5EhkKCHBsYW50X2lkGAEgASgJUgdwbGFudElkEjcKCWZyb2'
+    '1fdGltZRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGZyb21UaW1lEjMKB3Rv'
+    'X3RpbWUYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgZ0b1RpbWU=');
+
+@$core.Deprecated('Use getShadowSummaryDescriptor instead')
+const GetShadowSummary$json = {
+  '1': 'GetShadowSummary',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {
+      '1': 'rule',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRule',
+      '10': 'rule'
+    },
+    {'1': 'from_date', '3': 3, '4': 1, '5': 9, '10': 'fromDate'},
+    {'1': 'to_date', '3': 4, '4': 1, '5': 9, '10': 'toDate'},
+  ],
+};
+
+/// Descriptor for `GetShadowSummary`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getShadowSummaryDescriptor = $convert.base64Decode(
+    'ChBHZXRTaGFkb3dTdW1tYXJ5EjkKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudG'
+    'l0eS52MS5TcGFjZUlkUgZob21lSWQSNQoEcnVsZRgCIAEoDjIhLmt1c2ludGEuaW90LmhlYXRp'
+    'bmcudjEuUHJpY2VSdWxlUgRydWxlEhsKCWZyb21fZGF0ZRgDIAEoCVIIZnJvbURhdGUSFwoHdG'
+    '9fZGF0ZRgEIAEoCVIGdG9EYXRl');
 
 @$core.Deprecated('Use requestAccountLinkNonceDescriptor instead')
 const RequestAccountLinkNonce$json = {
@@ -2606,6 +2775,60 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'putSpaceAddress'
     },
+    {
+      '1': 'set_comfort_preference',
+      '3': 77,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetComfortPreference',
+      '9': 0,
+      '10': 'setComfortPreference'
+    },
+    {
+      '1': 'set_price_rule_mode',
+      '3': 78,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetPriceRuleMode',
+      '9': 0,
+      '10': 'setPriceRuleMode'
+    },
+    {
+      '1': 'release_heat_block',
+      '3': 79,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ReleaseHeatBlock',
+      '9': 0,
+      '10': 'releaseHeatBlock'
+    },
+    {
+      '1': 'list_heat_block_status',
+      '3': 80,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListHeatBlockStatus',
+      '9': 0,
+      '10': 'listHeatBlockStatus'
+    },
+    {
+      '1': 'get_heat_block_history',
+      '3': 81,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetHeatBlockHistory',
+      '9': 0,
+      '10': 'getHeatBlockHistory'
+    },
+    {
+      '1': 'get_shadow_summary',
+      '3': 82,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetShadowSummary',
+      '9': 0,
+      '10': 'getShadowSummary'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2740,4 +2963,14 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'ljZXMSVAoRZ2V0X3NwYWNlX2FkZHJlc3MYSyABKAsyJi5rdXNpbnRhLmlvdC53ZWJydGMudjEu'
     'R2V0U3BhY2VBZGRyZXNzSABSD2dldFNwYWNlQWRkcmVzcxJUChFwdXRfc3BhY2VfYWRkcmVzcx'
     'hMIAEoCzImLmt1c2ludGEuaW90LndlYnJ0Yy52MS5QdXRTcGFjZUFkZHJlc3NIAFIPcHV0U3Bh'
-    'Y2VBZGRyZXNzQgkKB3JlcXVlc3Q=');
+    'Y2VBZGRyZXNzEmMKFnNldF9jb21mb3J0X3ByZWZlcmVuY2UYTSABKAsyKy5rdXNpbnRhLmlvdC'
+    '53ZWJydGMudjEuU2V0Q29tZm9ydFByZWZlcmVuY2VIAFIUc2V0Q29tZm9ydFByZWZlcmVuY2US'
+    'WAoTc2V0X3ByaWNlX3J1bGVfbW9kZRhOIAEoCzInLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZX'
+    'RQcmljZVJ1bGVNb2RlSABSEHNldFByaWNlUnVsZU1vZGUSVwoScmVsZWFzZV9oZWF0X2Jsb2Nr'
+    'GE8gASgLMicua3VzaW50YS5pb3Qud2VicnRjLnYxLlJlbGVhc2VIZWF0QmxvY2tIAFIQcmVsZW'
+    'FzZUhlYXRCbG9jaxJhChZsaXN0X2hlYXRfYmxvY2tfc3RhdHVzGFAgASgLMioua3VzaW50YS5p'
+    'b3Qud2VicnRjLnYxLkxpc3RIZWF0QmxvY2tTdGF0dXNIAFITbGlzdEhlYXRCbG9ja1N0YXR1cx'
+    'JhChZnZXRfaGVhdF9ibG9ja19oaXN0b3J5GFEgASgLMioua3VzaW50YS5pb3Qud2VicnRjLnYx'
+    'LkdldEhlYXRCbG9ja0hpc3RvcnlIAFITZ2V0SGVhdEJsb2NrSGlzdG9yeRJXChJnZXRfc2hhZG'
+    '93X3N1bW1hcnkYUiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0U2hhZG93U3VtbWFy'
+    'eUgAUhBnZXRTaGFkb3dTdW1tYXJ5QgkKB3JlcXVlc3Q=');

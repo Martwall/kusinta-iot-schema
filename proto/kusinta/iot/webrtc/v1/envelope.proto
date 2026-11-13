@@ -206,7 +206,7 @@ message ManagementResult {
     PromotionRequests promotion_requests = 14; // list_promotion_requests
     kusinta.iot.heating.v1.HeatingLayout heating_layout = 15; // list_heating
     // put_heating_plant, put_heating_circuit, put_floor_zone, put_comfort_load,
-    // set_comfort_windows
+    // set_comfort_windows, set_price_rule_mode
     kusinta.iot.heating.v1.HeatingRecord heating_record = 16;
     // request_account_link_nonce
     kusinta.iot.accountlink.v1.AccountLinkNonce account_link_nonce = 17;
@@ -228,6 +228,11 @@ message ManagementResult {
     BuildingPlanning building_planning = 28; // get_building_planning, put_building_planning
     DayAheadPrices day_ahead_prices = 29; // get_day_ahead_prices
     SpaceAddress space_address = 30; // get_space_address, put_space_address
+    kusinta.iot.heating.v1.HeatBlockStatus heat_block_status = 31; // release_heat_block
+    // list_heat_block_status
+    kusinta.iot.heating.v1.HeatBlockStatuses heat_block_statuses = 32;
+    kusinta.iot.heating.v1.HeatBlockHistory heat_block_history = 33; // get_heat_block_history
+    kusinta.iot.heating.v1.ShadowSummary shadow_summary = 34; // get_shadow_summary
   }
 }
 
@@ -476,6 +481,9 @@ message GatewayMessage {
     HouseholdHandover household_handover = 28;
     // A home's climate history was cleared; see ClimateHistoryCleared.
     ClimateHistoryCleared climate_history_cleared = 29;
+    // A plant's blocks or hold changed, to the sessions given them; see
+    // heating.v1.HeatBlockStatus.
+    kusinta.iot.heating.v1.HeatBlockStatus heat_block_status = 30;
   }
 }
 

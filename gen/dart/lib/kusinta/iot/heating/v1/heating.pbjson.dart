@@ -37,6 +37,63 @@ final $typed_data.Uint8List heatSourceKindDescriptor = $convert.base64Decode(
     'JAogSEVBVF9TT1VSQ0VfS0lORF9FTEVDVFJJQ19CT0lMRVIQBRIgChxIRUFUX1NPVVJDRV9LSU'
     '5EX0ZVRUxfQk9JTEVSEAY=');
 
+@$core.Deprecated('Use priceRuleDescriptor instead')
+const PriceRule$json = {
+  '1': 'PriceRule',
+  '2': [
+    {'1': 'PRICE_RULE_UNSPECIFIED', '2': 0},
+    {'1': 'PRICE_RULE_ADD_ON_HEATER_BLOCK', '2': 1},
+    {'1': 'PRICE_RULE_FLOOR_PRE_HEAT', '2': 2},
+    {'1': 'PRICE_RULE_HOT_WATER', '2': 3},
+  ],
+};
+
+/// Descriptor for `PriceRule`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List priceRuleDescriptor = $convert.base64Decode(
+    'CglQcmljZVJ1bGUSGgoWUFJJQ0VfUlVMRV9VTlNQRUNJRklFRBAAEiIKHlBSSUNFX1JVTEVfQU'
+    'REX09OX0hFQVRFUl9CTE9DSxABEh0KGVBSSUNFX1JVTEVfRkxPT1JfUFJFX0hFQVQQAhIYChRQ'
+    'UklDRV9SVUxFX0hPVF9XQVRFUhAD');
+
+@$core.Deprecated('Use priceRuleModeDescriptor instead')
+const PriceRuleMode$json = {
+  '1': 'PriceRuleMode',
+  '2': [
+    {'1': 'PRICE_RULE_MODE_UNSPECIFIED', '2': 0},
+    {'1': 'PRICE_RULE_MODE_OFF', '2': 1},
+    {'1': 'PRICE_RULE_MODE_SHADOW', '2': 2},
+    {'1': 'PRICE_RULE_MODE_LIVE', '2': 3},
+  ],
+};
+
+/// Descriptor for `PriceRuleMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List priceRuleModeDescriptor = $convert.base64Decode(
+    'Cg1QcmljZVJ1bGVNb2RlEh8KG1BSSUNFX1JVTEVfTU9ERV9VTlNQRUNJRklFRBAAEhcKE1BSSU'
+    'NFX1JVTEVfTU9ERV9PRkYQARIaChZQUklDRV9SVUxFX01PREVfU0hBRE9XEAISGAoUUFJJQ0Vf'
+    'UlVMRV9NT0RFX0xJVkUQAw==');
+
+@$core.Deprecated('Use heatBlockEndDescriptor instead')
+const HeatBlockEnd$json = {
+  '1': 'HeatBlockEnd',
+  '2': [
+    {'1': 'HEAT_BLOCK_END_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_BLOCK_END_PLANNED', '2': 1},
+    {'1': 'HEAT_BLOCK_END_ROOM_BELOW_BAND', '2': 2},
+    {'1': 'HEAT_BLOCK_END_HOT_WATER_LOW', '2': 3},
+    {'1': 'HEAT_BLOCK_END_RELEASED', '2': 4},
+    {'1': 'HEAT_BLOCK_END_RULE_SWITCHED', '2': 5},
+    {'1': 'HEAT_BLOCK_END_INTERRUPTED', '2': 6},
+    {'1': 'HEAT_BLOCK_END_UNSTATED', '2': 7},
+  ],
+};
+
+/// Descriptor for `HeatBlockEnd`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatBlockEndDescriptor = $convert.base64Decode(
+    'CgxIZWF0QmxvY2tFbmQSHgoaSEVBVF9CTE9DS19FTkRfVU5TUEVDSUZJRUQQABIaChZIRUFUX0'
+    'JMT0NLX0VORF9QTEFOTkVEEAESIgoeSEVBVF9CTE9DS19FTkRfUk9PTV9CRUxPV19CQU5EEAIS'
+    'IAocSEVBVF9CTE9DS19FTkRfSE9UX1dBVEVSX0xPVxADEhsKF0hFQVRfQkxPQ0tfRU5EX1JFTE'
+    'VBU0VEEAQSIAocSEVBVF9CTE9DS19FTkRfUlVMRV9TV0lUQ0hFRBAFEh4KGkhFQVRfQkxPQ0tf'
+    'RU5EX0lOVEVSUlVQVEVEEAYSGwoXSEVBVF9CTE9DS19FTkRfVU5TVEFURUQQBw==');
+
 @$core.Deprecated('Use deviceAttributeDescriptor instead')
 const DeviceAttribute$json = {
   '1': 'DeviceAttribute',
@@ -143,6 +200,21 @@ const HeatingPlant$json = {
       '10': 'meter'
     },
     {'1': 'revision', '3': 8, '4': 1, '5': 4, '10': 'revision'},
+    {
+      '1': 'price_rules',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.PriceRuleChange',
+      '10': 'priceRules'
+    },
+    {
+      '1': 'price_rules_revision',
+      '3': 10,
+      '4': 1,
+      '5': 4,
+      '10': 'priceRulesRevision'
+    },
   ],
   '8': [
     {'1': 'control'},
@@ -158,7 +230,10 @@ final $typed_data.Uint8List heatingPlantDescriptor = $convert.base64Decode(
     'dGEuaW90LmlkZW50aXR5LnYxLkRldmljZUlkUhByZWFkaW5nc0RldmljZUlkEkYKCWhlYXRfcH'
     'VtcBgGIAEoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdFB1bXBDb250cm9sSABSCGhl'
     'YXRQdW1wEj0KBW1ldGVyGAcgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdH'
-    'RyaWJ1dGVSBW1ldGVyEhoKCHJldmlzaW9uGAggASgEUghyZXZpc2lvbkIJCgdjb250cm9s');
+    'RyaWJ1dGVSBW1ldGVyEhoKCHJldmlzaW9uGAggASgEUghyZXZpc2lvbhJICgtwcmljZV9ydWxl'
+    'cxgJIAMoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuUHJpY2VSdWxlQ2hhbmdlUgpwcmljZV'
+    'J1bGVzEjAKFHByaWNlX3J1bGVzX3JldmlzaW9uGAogASgEUhJwcmljZVJ1bGVzUmV2aXNpb25C'
+    'CQoHY29udHJvbA==');
 
 @$core.Deprecated('Use heatPumpControlDescriptor instead')
 const HeatPumpControl$json = {
@@ -547,3 +622,436 @@ final $typed_data.Uint8List heatingRecordDescriptor = $convert.base64Decode(
     'Eua3VzaW50YS5pb3QuaGVhdGluZy52MS5GbG9vclpvbmVIAFIJZmxvb3Jab25lEkgKDGNvbWZv'
     'cnRfbG9hZBgEIAEoCzIjLmt1c2ludGEuaW90LmhlYXRpbmcudjEuQ29tZm9ydExvYWRIAFILY2'
     '9tZm9ydExvYWRCCAoGcmVjb3Jk');
+
+@$core.Deprecated('Use priceRuleChangeDescriptor instead')
+const PriceRuleChange$json = {
+  '1': 'PriceRuleChange',
+  '2': [
+    {
+      '1': 'rule',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRule',
+      '10': 'rule'
+    },
+    {
+      '1': 'mode',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRuleMode',
+      '10': 'mode'
+    },
+    {
+      '1': 'previous_mode',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRuleMode',
+      '10': 'previousMode'
+    },
+    {
+      '1': 'at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'at'
+    },
+    {
+      '1': 'set_by_role',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'setByRole'
+    },
+    {
+      '1': 'set_by',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'setBy'
+    },
+  ],
+};
+
+/// Descriptor for `PriceRuleChange`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List priceRuleChangeDescriptor = $convert.base64Decode(
+    'Cg9QcmljZVJ1bGVDaGFuZ2USNQoEcnVsZRgBIAEoDjIhLmt1c2ludGEuaW90LmhlYXRpbmcudj'
+    'EuUHJpY2VSdWxlUgRydWxlEjkKBG1vZGUYAiABKA4yJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYx'
+    'LlByaWNlUnVsZU1vZGVSBG1vZGUSSgoNcHJldmlvdXNfbW9kZRgDIAEoDjIlLmt1c2ludGEuaW'
+    '90LmhlYXRpbmcudjEuUHJpY2VSdWxlTW9kZVIMcHJldmlvdXNNb2RlEioKAmF0GAQgASgLMhou'
+    'Z29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFICYXQSOwoLc2V0X2J5X3JvbGUYBSABKA4yGy5rdX'
+    'NpbnRhLmlvdC5hY2Nlc3MudjEuUm9sZVIJc2V0QnlSb2xlEjYKBnNldF9ieRgGIAEoCzIfLmt1'
+    'c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIFc2V0Qnk=');
+
+@$core.Deprecated('Use heatBlockDescriptor instead')
+const HeatBlock$json = {
+  '1': 'HeatBlock',
+  '2': [
+    {'1': 'block_id', '3': 1, '4': 1, '5': 9, '10': 'blockId'},
+    {
+      '1': 'rule',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRule',
+      '10': 'rule'
+    },
+    {
+      '1': 'mode',
+      '3': 3,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRuleMode',
+      '10': 'mode'
+    },
+    {
+      '1': 'reason',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.climate.v1.ClimateExplanationKind',
+      '10': 'reason'
+    },
+    {
+      '1': 'started_at',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'startedAt'
+    },
+    {
+      '1': 'planned_end_at',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'plannedEndAt'
+    },
+    {
+      '1': 'ended_at',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'endedAt'
+    },
+    {
+      '1': 'end',
+      '3': 8,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatBlockEnd',
+      '10': 'end'
+    },
+  ],
+};
+
+/// Descriptor for `HeatBlock`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatBlockDescriptor = $convert.base64Decode(
+    'CglIZWF0QmxvY2sSGQoIYmxvY2tfaWQYASABKAlSB2Jsb2NrSWQSNQoEcnVsZRgCIAEoDjIhLm'
+    't1c2ludGEuaW90LmhlYXRpbmcudjEuUHJpY2VSdWxlUgRydWxlEjkKBG1vZGUYAyABKA4yJS5r'
+    'dXNpbnRhLmlvdC5oZWF0aW5nLnYxLlByaWNlUnVsZU1vZGVSBG1vZGUSRgoGcmVhc29uGAQgAS'
+    'gOMi4ua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5DbGltYXRlRXhwbGFuYXRpb25LaW5kUgZyZWFz'
+    'b24SOQoKc3RhcnRlZF9hdBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCXN0YX'
+    'J0ZWRBdBJACg5wbGFubmVkX2VuZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh'
+    'bXBSDHBsYW5uZWRFbmRBdBI1CghlbmRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW'
+    '1lc3RhbXBSB2VuZGVkQXQSNgoDZW5kGAggASgOMiQua3VzaW50YS5pb3QuaGVhdGluZy52MS5I'
+    'ZWF0QmxvY2tFbmRSA2VuZA==');
+
+@$core.Deprecated('Use heatBlockReleaseDescriptor instead')
+const HeatBlockRelease$json = {
+  '1': 'HeatBlockRelease',
+  '2': [
+    {
+      '1': 'at',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'at'
+    },
+    {
+      '1': 'hold_until',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'holdUntil'
+    },
+    {'1': 'ended_block_ids', '3': 3, '4': 3, '5': 9, '10': 'endedBlockIds'},
+    {
+      '1': 'set_by_role',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.access.v1.Role',
+      '10': 'setByRole'
+    },
+    {
+      '1': 'set_by',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'setBy'
+    },
+  ],
+};
+
+/// Descriptor for `HeatBlockRelease`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatBlockReleaseDescriptor = $convert.base64Decode(
+    'ChBIZWF0QmxvY2tSZWxlYXNlEioKAmF0GAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdG'
+    'FtcFICYXQSOQoKaG9sZF91bnRpbBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBS'
+    'CWhvbGRVbnRpbBImCg9lbmRlZF9ibG9ja19pZHMYAyADKAlSDWVuZGVkQmxvY2tJZHMSOwoLc2'
+    'V0X2J5X3JvbGUYBCABKA4yGy5rdXNpbnRhLmlvdC5hY2Nlc3MudjEuUm9sZVIJc2V0QnlSb2xl'
+    'EjYKBnNldF9ieRgFIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIFc2V0Qn'
+    'k=');
+
+@$core.Deprecated('Use heatBlockStatusDescriptor instead')
+const HeatBlockStatus$json = {
+  '1': 'HeatBlockStatus',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'space_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {'1': 'plant_name', '3': 3, '4': 1, '5': 9, '10': 'plantName'},
+    {
+      '1': 'current',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlock',
+      '10': 'current'
+    },
+    {
+      '1': 'hold',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockRelease',
+      '10': 'hold'
+    },
+    {
+      '1': 'price_rules',
+      '3': 6,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.PriceRuleChange',
+      '10': 'priceRules'
+    },
+  ],
+};
+
+/// Descriptor for `HeatBlockStatus`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatBlockStatusDescriptor = $convert.base64Decode(
+    'Cg9IZWF0QmxvY2tTdGF0dXMSGQoIcGxhbnRfaWQYASABKAlSB3BsYW50SWQSOwoIc3BhY2VfaW'
+    'QYAiABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlkEh0KCnBs'
+    'YW50X25hbWUYAyABKAlSCXBsYW50TmFtZRI7CgdjdXJyZW50GAQgAygLMiEua3VzaW50YS5pb3'
+    'QuaGVhdGluZy52MS5IZWF0QmxvY2tSB2N1cnJlbnQSPAoEaG9sZBgFIAEoCzIoLmt1c2ludGEu'
+    'aW90LmhlYXRpbmcudjEuSGVhdEJsb2NrUmVsZWFzZVIEaG9sZBJICgtwcmljZV9ydWxlcxgGIA'
+    'MoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudjEuUHJpY2VSdWxlQ2hhbmdlUgpwcmljZVJ1bGVz');
+
+@$core.Deprecated('Use heatBlockStatusesDescriptor instead')
+const HeatBlockStatuses$json = {
+  '1': 'HeatBlockStatuses',
+  '2': [
+    {
+      '1': 'statuses',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockStatus',
+      '10': 'statuses'
+    },
+  ],
+};
+
+/// Descriptor for `HeatBlockStatuses`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatBlockStatusesDescriptor = $convert.base64Decode(
+    'ChFIZWF0QmxvY2tTdGF0dXNlcxJDCghzdGF0dXNlcxgBIAMoCzInLmt1c2ludGEuaW90LmhlYX'
+    'RpbmcudjEuSGVhdEJsb2NrU3RhdHVzUghzdGF0dXNlcw==');
+
+@$core.Deprecated('Use heatBlockHistoryDescriptor instead')
+const HeatBlockHistory$json = {
+  '1': 'HeatBlockHistory',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'kept_from',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'keptFrom'
+    },
+    {
+      '1': 'blocks',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlock',
+      '10': 'blocks'
+    },
+    {
+      '1': 'releases',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockRelease',
+      '10': 'releases'
+    },
+    {
+      '1': 'rule_changes',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.PriceRuleChange',
+      '10': 'ruleChanges'
+    },
+  ],
+};
+
+/// Descriptor for `HeatBlockHistory`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatBlockHistoryDescriptor = $convert.base64Decode(
+    'ChBIZWF0QmxvY2tIaXN0b3J5EhkKCHBsYW50X2lkGAEgASgJUgdwbGFudElkEjcKCWtlcHRfZn'
+    'JvbRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCGtlcHRGcm9tEjkKBmJsb2Nr'
+    'cxgDIAMoCzIhLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdEJsb2NrUgZibG9ja3MSRAoIcm'
+    'VsZWFzZXMYBCADKAsyKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRCbG9ja1JlbGVhc2VS'
+    'CHJlbGVhc2VzEkoKDHJ1bGVfY2hhbmdlcxgFIAMoCzInLmt1c2ludGEuaW90LmhlYXRpbmcudj'
+    'EuUHJpY2VSdWxlQ2hhbmdlUgtydWxlQ2hhbmdlcw==');
+
+@$core.Deprecated('Use shadowDayDescriptor instead')
+const ShadowDay$json = {
+  '1': 'ShadowDay',
+  '2': [
+    {'1': 'date', '3': 1, '4': 1, '5': 9, '10': 'date'},
+    {
+      '1': 'net_saving_micro_eur',
+      '3': 2,
+      '4': 1,
+      '5': 18,
+      '10': 'netSavingMicroEur'
+    },
+    {
+      '1': 'recovery_cost_micro_eur',
+      '3': 3,
+      '4': 1,
+      '5': 18,
+      '10': 'recoveryCostMicroEur'
+    },
+    {'1': 'blocked_quarters', '3': 4, '4': 1, '5': 13, '10': 'blockedQuarters'},
+    {'1': 'breach_quarters', '3': 5, '4': 1, '5': 13, '10': 'breachQuarters'},
+    {
+      '1': 'overheat_quarters',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '10': 'overheatQuarters'
+    },
+    {
+      '1': 'no_price_quarters',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '10': 'noPriceQuarters'
+    },
+  ],
+};
+
+/// Descriptor for `ShadowDay`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
+    'CglTaGFkb3dEYXkSEgoEZGF0ZRgBIAEoCVIEZGF0ZRIvChRuZXRfc2F2aW5nX21pY3JvX2V1ch'
+    'gCIAEoElIRbmV0U2F2aW5nTWljcm9FdXISNQoXcmVjb3ZlcnlfY29zdF9taWNyb19ldXIYAyAB'
+    'KBJSFHJlY292ZXJ5Q29zdE1pY3JvRXVyEikKEGJsb2NrZWRfcXVhcnRlcnMYBCABKA1SD2Jsb2'
+    'NrZWRRdWFydGVycxInCg9icmVhY2hfcXVhcnRlcnMYBSABKA1SDmJyZWFjaFF1YXJ0ZXJzEisK'
+    'EW92ZXJoZWF0X3F1YXJ0ZXJzGAYgASgNUhBvdmVyaGVhdFF1YXJ0ZXJzEioKEW5vX3ByaWNlX3'
+    'F1YXJ0ZXJzGAcgASgNUg9ub1ByaWNlUXVhcnRlcnM=');
+
+@$core.Deprecated('Use shadowBandSeriesDescriptor instead')
+const ShadowBandSeries$json = {
+  '1': 'ShadowBandSeries',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'rule',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRule',
+      '10': 'rule'
+    },
+    {
+      '1': 'below_target_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '10': 'belowTargetCentidegrees'
+    },
+    {
+      '1': 'above_target_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '10': 'aboveTargetCentidegrees'
+    },
+    {
+      '1': 'days',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ShadowDay',
+      '10': 'days'
+    },
+  ],
+};
+
+/// Descriptor for `ShadowBandSeries`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List shadowBandSeriesDescriptor = $convert.base64Decode(
+    'ChBTaGFkb3dCYW5kU2VyaWVzEhkKCHBsYW50X2lkGAEgASgJUgdwbGFudElkEjUKBHJ1bGUYAi'
+    'ABKA4yIS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlByaWNlUnVsZVIEcnVsZRI6ChliZWxvd190'
+    'YXJnZXRfY2VudGlkZWdyZWVzGAMgASgNUhdiZWxvd1RhcmdldENlbnRpZGVncmVlcxI6ChlhYm'
+    '92ZV90YXJnZXRfY2VudGlkZWdyZWVzGAQgASgNUhdhYm92ZVRhcmdldENlbnRpZGVncmVlcxI1'
+    'CgRkYXlzGAUgAygLMiEua3VzaW50YS5pb3QuaGVhdGluZy52MS5TaGFkb3dEYXlSBGRheXM=');
+
+@$core.Deprecated('Use shadowSummaryDescriptor instead')
+const ShadowSummary$json = {
+  '1': 'ShadowSummary',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'homeId'
+    },
+    {'1': 'kept_from', '3': 2, '4': 1, '5': 9, '10': 'keptFrom'},
+    {
+      '1': 'series',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ShadowBandSeries',
+      '10': 'series'
+    },
+  ],
+};
+
+/// Descriptor for `ShadowSummary`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List shadowSummaryDescriptor = $convert.base64Decode(
+    'Cg1TaGFkb3dTdW1tYXJ5EjkKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
+    '52MS5TcGFjZUlkUgZob21lSWQSGwoJa2VwdF9mcm9tGAIgASgJUghrZXB0RnJvbRJACgZzZXJp'
+    'ZXMYAyADKAsyKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlNoYWRvd0JhbmRTZXJpZXNSBnNlcm'
+    'llcw==');

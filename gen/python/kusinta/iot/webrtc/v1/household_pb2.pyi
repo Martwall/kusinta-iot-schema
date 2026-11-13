@@ -149,13 +149,14 @@ class ExportHouseholdData(_message.Message):
     def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., part_token: _Optional[str] = ...) -> None: ...
 
 class HouseholdExport(_message.Message):
-    __slots__ = ("home_id", "room_climates", "room_history", "climate_summary", "commissioning", "heating", "next_part_token")
+    __slots__ = ("home_id", "room_climates", "room_history", "climate_summary", "commissioning", "heating", "heat_blocks", "next_part_token")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]
     ROOM_CLIMATES_FIELD_NUMBER: _ClassVar[int]
     ROOM_HISTORY_FIELD_NUMBER: _ClassVar[int]
     CLIMATE_SUMMARY_FIELD_NUMBER: _ClassVar[int]
     COMMISSIONING_FIELD_NUMBER: _ClassVar[int]
     HEATING_FIELD_NUMBER: _ClassVar[int]
+    HEAT_BLOCKS_FIELD_NUMBER: _ClassVar[int]
     NEXT_PART_TOKEN_FIELD_NUMBER: _ClassVar[int]
     home_id: _identity_pb2.SpaceId
     room_climates: _climate_pb2.RoomClimateList
@@ -163,5 +164,6 @@ class HouseholdExport(_message.Message):
     climate_summary: _climate_pb2.ApartmentClimateSummary
     commissioning: _commissioning_pb2.CommissioningProfile
     heating: _heating_pb2.HeatingLayout
+    heat_blocks: _heating_pb2.HeatBlockHistory
     next_part_token: str
-    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ..., climate_summary: _Optional[_Union[_climate_pb2.ApartmentClimateSummary, _Mapping]] = ..., commissioning: _Optional[_Union[_commissioning_pb2.CommissioningProfile, _Mapping]] = ..., heating: _Optional[_Union[_heating_pb2.HeatingLayout, _Mapping]] = ..., next_part_token: _Optional[str] = ...) -> None: ...
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., room_climates: _Optional[_Union[_climate_pb2.RoomClimateList, _Mapping]] = ..., room_history: _Optional[_Union[_climate_pb2.RoomHistory, _Mapping]] = ..., climate_summary: _Optional[_Union[_climate_pb2.ApartmentClimateSummary, _Mapping]] = ..., commissioning: _Optional[_Union[_commissioning_pb2.CommissioningProfile, _Mapping]] = ..., heating: _Optional[_Union[_heating_pb2.HeatingLayout, _Mapping]] = ..., heat_blocks: _Optional[_Union[_heating_pb2.HeatBlockHistory, _Mapping]] = ..., next_part_token: _Optional[str] = ...) -> None: ...

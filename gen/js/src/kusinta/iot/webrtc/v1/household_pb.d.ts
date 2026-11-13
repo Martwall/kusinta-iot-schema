@@ -8,7 +8,7 @@ import type { SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ApartmentClimateSummary, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { CommissioningProfile } from "../../commissioning/v1/commissioning_pb.js";
-import type { HeatingLayout } from "../../heating/v1/heating_pb.js";
+import type { HeatBlockHistory, HeatingLayout } from "../../heating/v1/heating_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/household.proto.
@@ -528,6 +528,15 @@ export declare type HouseholdExport = Message<"kusinta.iot.webrtc.v1.HouseholdEx
      */
     value: HeatingLayout;
     case: "heating";
+  } | {
+    /**
+     * One of the home's own plants' blocks, releases and changes of mode, one
+     * GetHeatBlockHistory answer's worth, from its kept_from on, in as many parts as it takes.
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatBlockHistory heat_blocks = 8;
+     */
+    value: HeatBlockHistory;
+    case: "heatBlocks";
   } | { case: undefined; value?: undefined };
 
   /**

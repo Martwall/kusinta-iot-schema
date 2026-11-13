@@ -15,11 +15,13 @@ import {
   RoomPlanning,
   OuterLimitKind,
   OuterLimitsCoverage,
+  ComfortPreset,
 } from '../kusinta/iot/climate/v1/climate_pb.js'
 import {
   ConfigureRoomClimateSchema,
   GetRoomHistorySchema,
   SetInnerRoomLimitsSchema,
+  SetComfortPreferenceSchema,
   RoomSensorsSchema,
   ManagementRequestSchema,
 } from '../kusinta/iot/webrtc/v1/management_pb.js'
@@ -397,5 +399,36 @@ describe('comfort limits', () => {
   it('removes an inner bound by leaving it unset', () => {
     const decoded = onTheWire(SetInnerRoomLimitsSchema, { roomId: ROOM, limits: { maxCentidegrees: 2300 } })
     expect(decoded.limits?.minCentidegrees).toBeUndefined()
+  })
+})
+
+describe('comfort preference', () => {
+  it('leaves a room without one of its own unset, so it follows its home’s', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      homeComfortPreference: { preset: ComfortPreset.NORMAL, belowTargetCentidegrees: 100, aboveTargetCentidegrees: 50 },
+    })
+    expect([decoded.comfortPreference, decoded.homeComfortPreference?.preset]).toEqual([undefined, ComfortPreset.NORMAL])
+  })
+
+  it('tells the default apart from no preference sent, by the home’s being set', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      homeComfortPreference: { preset: ComfortPreset.UNSPECIFIED, belowTargetCentidegrees: 0, aboveTargetCentidegrees: 50 },
+    })
+    expect(decoded.homeComfortPreference).toMatchObject({ belowTargetCentidegrees: 0, aboveTargetCentidegrees: 50 })
+  })
+
+  it('carries a custom band below and above the target', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      comfortPreference: { preset: ComfortPreset.CUSTOM, belowTargetCentidegrees: 200, aboveTargetCentidegrees: 50 },
+    })
+    expect(decoded.comfortPreference).toMatchObject({ preset: ComfortPreset.CUSTOM, belowTargetCentidegrees: 200 })
+  })
+
+  it('clears a preference by a request that sets none', () => {
+    const decoded = onTheWire(SetComfortPreferenceSchema, { spaceId: ROOM })
+    expect(decoded.preference).toBeUndefined()
   })
 })

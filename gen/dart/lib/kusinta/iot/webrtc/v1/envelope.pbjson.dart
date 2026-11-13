@@ -566,6 +566,42 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'spaceAddress'
     },
+    {
+      '1': 'heat_block_status',
+      '3': 31,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockStatus',
+      '9': 0,
+      '10': 'heatBlockStatus'
+    },
+    {
+      '1': 'heat_block_statuses',
+      '3': 32,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockStatuses',
+      '9': 0,
+      '10': 'heatBlockStatuses'
+    },
+    {
+      '1': 'heat_block_history',
+      '3': 33,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockHistory',
+      '9': 0,
+      '10': 'heatBlockHistory'
+    },
+    {
+      '1': 'shadow_summary',
+      '3': 34,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ShadowSummary',
+      '9': 0,
+      '10': 'shadowSummary'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -618,7 +654,13 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'BSEGJ1aWxkaW5nUGxhbm5pbmcSUQoQZGF5X2FoZWFkX3ByaWNlcxgdIAEoCzIlLmt1c2ludGEu'
     'aW90LndlYnJ0Yy52MS5EYXlBaGVhZFByaWNlc0gAUg5kYXlBaGVhZFByaWNlcxJKCg1zcGFjZV'
     '9hZGRyZXNzGB4gASgLMiMua3VzaW50YS5pb3Qud2VicnRjLnYxLlNwYWNlQWRkcmVzc0gAUgxz'
-    'cGFjZUFkZHJlc3NCCAoGcmVzdWx0');
+    'cGFjZUFkZHJlc3MSVQoRaGVhdF9ibG9ja19zdGF0dXMYHyABKAsyJy5rdXNpbnRhLmlvdC5oZW'
+    'F0aW5nLnYxLkhlYXRCbG9ja1N0YXR1c0gAUg9oZWF0QmxvY2tTdGF0dXMSWwoTaGVhdF9ibG9j'
+    'a19zdGF0dXNlcxggIAEoCzIpLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdEJsb2NrU3RhdH'
+    'VzZXNIAFIRaGVhdEJsb2NrU3RhdHVzZXMSWAoSaGVhdF9ibG9ja19oaXN0b3J5GCEgASgLMigu'
+    'a3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0QmxvY2tIaXN0b3J5SABSEGhlYXRCbG9ja0hpc3'
+    'RvcnkSTgoOc2hhZG93X3N1bW1hcnkYIiABKAsyJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlNo'
+    'YWRvd1N1bW1hcnlIAFINc2hhZG93U3VtbWFyeUIICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -1120,6 +1162,15 @@ const GatewayMessage$json = {
       '9': 0,
       '10': 'climateHistoryCleared'
     },
+    {
+      '1': 'heat_block_status',
+      '3': 30,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatBlockStatus',
+      '9': 0,
+      '10': 'heatBlockStatus'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -1173,8 +1224,10 @@ final $typed_data.Uint8List gatewayMessageDescriptor = $convert.base64Decode(
     '9sZF9oYW5kb3ZlchgcIAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5Ib3VzZWhvbGRIYW5k'
     'b3ZlckgAUhFob3VzZWhvbGRIYW5kb3ZlchJmChdjbGltYXRlX2hpc3RvcnlfY2xlYXJlZBgdIA'
     'EoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5DbGltYXRlSGlzdG9yeUNsZWFyZWRIAFIVY2xp'
-    'bWF0ZUhpc3RvcnlDbGVhcmVkQgkKB3BheWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cm'
-    'l0ZV9yZXN1bHRSDnByb3BlcnR5X2V2ZW50');
+    'bWF0ZUhpc3RvcnlDbGVhcmVkElUKEWhlYXRfYmxvY2tfc3RhdHVzGB4gASgLMicua3VzaW50YS'
+    '5pb3QuaGVhdGluZy52MS5IZWF0QmxvY2tTdGF0dXNIAFIPaGVhdEJsb2NrU3RhdHVzQgkKB3Bh'
+    'eWxvYWRKBAgPEBBKBAgHEAhSFmF0dHJpYnV0ZV93cml0ZV9yZXN1bHRSDnByb3BlcnR5X2V2ZW'
+    '50');
 
 @$core.Deprecated('Use appMessageDescriptor instead')
 const AppMessage$json = {

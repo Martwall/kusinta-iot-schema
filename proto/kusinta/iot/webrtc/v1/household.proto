@@ -31,13 +31,17 @@ option optimize_for = SPEED;
 //   * putting the home's heating records and the household's commissioning facts (heating.v1,
 //     commissioning.v1), and opting the home in to its heating features;
 //   * setting its rooms' inner limits (SetInnerRoomLimits, climate.v1.InnerRoomLimits);
+//   * switching the price rules of the home's own heat sources (SetPriceRuleMode, heating.v1
+//     PRICE RULES);
 //   * answering and ending commissioning grants on the home (commissioning.v1, GRANTS);
 //   * starting, confirming and cancelling the home's handover (HANDOVER);
 //   * clearing the home's climate history (CLIMATE HISTORY, ClearClimateHistory).
 // A resident who is not a household admin is refused each of these as NOT_ENTITLED. Every
-// resident keeps the rest of what a resident may do: room targets, modes, comfort-load
-// windows, links between the home's devices, the lock on device controls, naming the home
-// (SetHomeName), and leaving.
+// resident keeps the rest of what a resident may do: room targets, the comfort preference of
+// the home and of its rooms (SetComfortPreference, climate.v1.ComfortPreference), modes,
+// comfort-load windows, links between the home's devices, the lock on device controls, releasing
+// a block of the home's own heat source (ReleaseHeatBlock), naming the home (SetHomeName), and
+// leaving.
 //
 // PROMOTION. A household admin asks a resident of the home to become one with
 // RequestPromotion naming home_id and the resident's user id, and the resident accepts or
@@ -255,7 +259,11 @@ option optimize_for = SPEED;
 //     (climate.v1.ApartmentClimateSummary);
 //   * the home's device events (device.v1.DeviceEvent): setpoint changes, window and door
 //     contacts, presence and the like, which say as much of how the home is lived in;
-//   * the gateway's models and plans for the home, learnt from that history.
+//   * the gateway's models and plans for the home, learnt from that history;
+//   * the heat blocks and releases of the home's own plants, and its shadow summary
+//     (heating.v1.HeatBlockHistory, ShadowSummary): what its price rules did, or would have
+//     done, to how warm it was kept. The record of their changes of mode is not part of it; it
+//     goes at the wipe.
 // Climate summaries over spaces that include the home are recomputed without it once it is
 // erased. A wipe erases it (WIPE), and so may the household on its own (ClearClimateHistory).
 // A household's clear is told two ways: live, by the push to the sessions up at the time
@@ -269,12 +277,14 @@ option optimize_for = SPEED;
 // The step deletes or anonymises, together:
 //   * everything recorded per home: its climate history (CLIMATE HISTORY) and when it was last
 //     cleared (space.v1.Space.climate_history_cleared_at), its rooms' targets, inner limits,
-//     modes and comfort settings, its device events, and the household's name for it
+//     modes and comfort settings, the comfort preferences of the home and its rooms
+//     (climate.v1.ComfortPreference), its device events, and the household's name for it
 //     (space.v1.Space.home_name);
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
 //     addresses, and the record of who did what in the home, heating.v1.FloorZone
-//     .uncontrolled_by among it. What the gateway keeps of a residency is its residency id
+//     .uncontrolled_by and the record of its plants' changes of mode
+//     (heating.v1.PriceRuleChange) among it. What the gateway keeps of a residency is its residency id
 //     with when it began and ended, and nothing tying it to a person, while a kept record
 //     cites it and for at most 25 months; acts of staff on the home are kept under that id,
 //     without names;
@@ -287,6 +297,13 @@ option optimize_for = SPEED;
 //     links made between them — queued in the same step as writes of their defaults and
 //     removals of those links.
 // The rooms' outer limits (climate.v1.OuterRoomLimits) are the building's, and stay.
+//
+// A household's consent to have its heat source driven does not pass to the next household:
+// in the step, each price rule of the home's own plants that is LIVE is set to SHADOW, which
+// drives nothing, its blocks under way ending as RULE_SWITCHED, and each such change is recorded
+// as the gateway's own (heating.v1.PriceRuleChange, no setter) — the one entry of the record that
+// the wipe leaves. A rule OFF or in SHADOW stays as it is. The next household's household admins
+// put a rule LIVE again if they choose.
 // Every room of the home is renamed in the step as GatewayDeleted renames spaces ("Room 1",
 // "Room 2"), and its description cleared. The apartment's own name, which the property owner
 // gave it (space.v1.Space.name), is the building's identifier and is not touched.
@@ -315,7 +332,9 @@ option optimize_for = SPEED;
 //
 // EXPORT. Any resident of a home may export what they may read of it (ExportHouseholdData), at
 // any time and before a handover above all: its rooms with their settings and modes, each
-// room's history, its climate summaries, its commissioning and its heating records. Each part
+// room's history, its climate summaries, its commissioning, its heating records, and its own
+// plants' heat blocks — what the price rules did or, in shadow, decided — but never the
+// shadow summary, which scores the gateway's plans. Each part
 // is what the same read gives the caller — so from the start of their current residency — and
 // never the gateway's models of the home or its plans. It travels over the app's session,
 // which nothing between the gateway and the app can read, and the app turns it into files for
@@ -580,6 +599,10 @@ message HouseholdExport {
 
     // The home's heating records (ListHeating).
     kusinta.iot.heating.v1.HeatingLayout heating = 6;
+
+    // One of the home's own plants' blocks, releases and changes of mode, one
+    // GetHeatBlockHistory answer's worth, from its kept_from on, in as many parts as it takes.
+    kusinta.iot.heating.v1.HeatBlockHistory heat_blocks = 8;
   }
 
   // The token to ask for the next part with; empty on the last.

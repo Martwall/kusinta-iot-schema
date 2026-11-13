@@ -181,6 +181,8 @@ class RoomClimate extends $pb.GeneratedMessage {
     OuterLimitClamp? outerLimitClamp,
     OuterLimitsCoverage? outerLimitsCoverage,
     $core.Iterable<$1.DeviceId>? outerBoundDeviceIds,
+    ComfortPreference? comfortPreference,
+    ComfortPreference? homeComfortPreference,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -216,6 +218,9 @@ class RoomClimate extends $pb.GeneratedMessage {
       result.outerLimitsCoverage = outerLimitsCoverage;
     if (outerBoundDeviceIds != null)
       result.outerBoundDeviceIds.addAll(outerBoundDeviceIds);
+    if (comfortPreference != null) result.comfortPreference = comfortPreference;
+    if (homeComfortPreference != null)
+      result.homeComfortPreference = homeComfortPreference;
     return result;
   }
 
@@ -289,6 +294,10 @@ class RoomClimate extends $pb.GeneratedMessage {
     ..pc<$1.DeviceId>(
         25, _omitFieldNames ? '' : 'outerBoundDeviceIds', $pb.PbFieldType.PM,
         subBuilder: $1.DeviceId.create)
+    ..aOM<ComfortPreference>(26, _omitFieldNames ? '' : 'comfortPreference',
+        subBuilder: ComfortPreference.create)
+    ..aOM<ComfortPreference>(27, _omitFieldNames ? '' : 'homeComfortPreference',
+        subBuilder: ComfortPreference.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -524,8 +533,8 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// and the sensors service may see are still sent, since setting a room up is service work.
   /// Its climate over time is available to service only as an ApartmentClimateSummary.
   ///
-  /// explanations, target_held_until, planning and the comfort band are withheld in the
-  /// same way.
+  /// explanations, target_held_until, planning, the comfort band and the comfort preferences
+  /// (comfort_preference, home_comfort_preference) are withheld in the same way.
   @$pb.TagNumber(15)
   $core.bool get stateWithheld => $_getBF(14);
   @$pb.TagNumber(15)
@@ -576,11 +585,15 @@ class RoomClimate extends $pb.GeneratedMessage {
   @$pb.TagNumber(18)
   void clearPlanning() => $_clearField(18);
 
-  /// The comfort band in force, in centidegrees: the lowest and highest a plan may hold the
-  /// room at while it heats ahead, coasts or saves on dear energy. Both set or neither, low
-  /// no higher than high, and within the inner limits where those are set; at the outputs the
-  /// outer limits bind, a plan holds within them too (OuterRoomLimits, HELD). Absent: no band,
-  /// and a plan holds the room at its target — never 0 °C.
+  /// The comfort band in force, in centidegrees: the lowest and highest a plan or a price rule
+  /// (heating.v1.PriceRule) may hold the room at while it heats ahead, coasts or saves on dear
+  /// energy, and what a price rule judges the room by, ending a block early where the room falls
+  /// below it (heating.v1.HEAT_BLOCK_END_ROOM_BELOW_BAND). Worked out from the room's comfort
+  /// preference around its effective target, as ComfortPreference (THE BAND) says. Both set or
+  /// neither, low no higher than high, and within the inner limits where those are set; at the
+  /// outputs the outer limits bind, a plan holds within them too (OuterRoomLimits, HELD). Absent:
+  /// no band — the room has no effective target — and a plan holds the room at its target —
+  /// never 0 °C.
   @$pb.TagNumber(19)
   $core.int get comfortBandLowCentidegrees => $_getIZ(18);
   @$pb.TagNumber(19)
@@ -673,6 +686,41 @@ class RoomClimate extends $pb.GeneratedMessage {
   /// sees is in it; under SOME, some are.
   @$pb.TagNumber(25)
   $pb.PbList<$1.DeviceId> get outerBoundDeviceIds => $_getList(24);
+
+  /// The room's own comfort preference (ComfortPreference), set with
+  /// webrtc.v1.SetComfortPreference. Unset: the room has none of its own, and follows its home's
+  /// (home_comfort_preference). Sent to the home's residents only, never with state_withheld;
+  /// unset to anyone else, and on a room outside homes, which has none.
+  @$pb.TagNumber(26)
+  ComfortPreference get comfortPreference => $_getN(25);
+  @$pb.TagNumber(26)
+  set comfortPreference(ComfortPreference value) => $_setField(26, value);
+  @$pb.TagNumber(26)
+  $core.bool hasComfortPreference() => $_has(25);
+  @$pb.TagNumber(26)
+  void clearComfortPreference() => $_clearField(26);
+  @$pb.TagNumber(26)
+  ComfortPreference ensureComfortPreference() => $_ensure(25);
+
+  /// The comfort preference of the home the room is in, sent with each of its rooms so that one
+  /// RoomClimate says what the room follows; a change to it sends every room of the home again
+  /// (webrtc.v1.RoomClimateChanged). Sent to the home's residents only, as comfort_preference is.
+  ///
+  /// Always set to them by a gateway that keeps comfort preferences: the default
+  /// (ComfortPreference, PRESETS) where the household has chosen none. Unset to a resident only
+  /// from a gateway that predates comfort preferences: an app reads unset so, shows the band in
+  /// force (comfort_band_low_centidegrees, comfort_band_high_centidegrees) alone, and offers no
+  /// choice of preference, since that gateway would refuse it.
+  @$pb.TagNumber(27)
+  ComfortPreference get homeComfortPreference => $_getN(26);
+  @$pb.TagNumber(27)
+  set homeComfortPreference(ComfortPreference value) => $_setField(27, value);
+  @$pb.TagNumber(27)
+  $core.bool hasHomeComfortPreference() => $_has(26);
+  @$pb.TagNumber(27)
+  void clearHomeComfortPreference() => $_clearField(27);
+  @$pb.TagNumber(27)
+  ComfortPreference ensureHomeComfortPreference() => $_ensure(26);
 }
 
 /// One bound of a room's outer limits, with who set it and when. Shown to the household as the
@@ -1022,6 +1070,142 @@ class InnerRoomLimits extends $pb.GeneratedMessage {
   $core.bool hasMaxCentidegrees() => $_has(1);
   @$pb.TagNumber(2)
   void clearMaxCentidegrees() => $_clearField(2);
+}
+
+/// A household's choice of how far a plan or a price rule (heating.v1.PriceRule) may move a room
+/// away from its target to save: below_target_centidegrees under it and
+/// above_target_centidegrees over it. Chosen for a home, and for any of its rooms
+/// (webrtc.v1.SetComfortPreference): a room with a preference of its own follows it, and a room
+/// without one follows its home's (RoomClimate.comfort_preference, home_comfort_preference).
+/// Lowering a room below its target is the household's call: no plan or rule takes a room below
+/// its target further than its household chose.
+///
+/// PRESETS. ECONOMY 150 below and 50 above; NORMAL 100 and 50; COMFORT 50 and 50; CUSTOM what
+/// the household sets, below 0 to 500 and above 0 to 200. Until a household chooses for its home,
+/// the home's preference is the default: preset UNSPECIFIED, 0 below and 50 above, so a plan may
+/// heat a room ahead but never plans it below its target. A room outside homes has no
+/// preference and takes the default's band. A preference for spaces outside homes, set by those
+/// who govern them — the property owner and the gateway's administrators — is left room for: it
+/// would come as fields and a request of its own in a later release, never by reusing these, and
+/// a client reads a room outside homes sent with no preference as taking the default.
+///
+/// THE BAND. From the room's effective target E (RoomClimate.effective_target_centidegrees),
+/// the band in force (RoomClimate.comfort_band_low_centidegrees, comfort_band_high_centidegrees)
+/// is:
+///   low  = E - below, raised to the FLOOR where it falls under it, and never above E;
+///   high = E + above, lowered to the inner max (InnerRoomLimits) where that is set, and never
+///          below low.
+/// The FLOOR is the highest of those set of: the gateway's public-health threshold (its own
+/// setting, webrtc.v1.ConfigureRoomClimate); the room's outer min (OuterRoomLimits.min), at every
+/// output of the room, whether or not the outer limits bind it; and, while no mode sets the room
+/// back, the inner min. So a custom band reaches as far below the target as the household sets,
+/// and the gateway accepts it down to the public-health floor and never lower: below is taken up
+/// to 500, and the low edge stops at the FLOOR whatever it says. An outer min accepted below the
+/// threshold lets a target or a setback go there (OuterRoomLimits.min_accepted_threshold_centidegrees),
+/// but never lowers the FLOOR, which is the highest of the three: never a plan saving on price. A room whose effective target is at or below the FLOOR has no band below it: low is E.
+/// At the outputs the outer limits bind, a plan holds within them too (OuterRoomLimits, HELD).
+///
+/// A price rule in SHADOW (heating.v1.PRICE_RULE_MODE_SHADOW) judges by the same band, save that
+/// it may score each day against other bands as well (heating.v1.ShadowSummary), so that a
+/// household sees what a choice would save before it makes one: SHADOW drives nothing.
+///
+/// WHO. Set by any resident of the home, household admins included
+/// (webrtc.v1.SetComfortPreference): a comfort setting, as a room's target is, which the household
+/// admins' inner limits still fence (THE BAND). Told to its residents only: never to service, never under a commissioning grant (commissioning.v1, GRANTS),
+/// and never to the property owner or the gateway administrators, the home empty or not. Household
+/// data, as the inner limits are: wiped at a handover (webrtc.v1 household.proto, WIPE), and
+/// belonging to the room, or the home, while it is one: a room's is cleared when it leaves the
+/// home, and a home's when its space stops being an apartment.
+class ComfortPreference extends $pb.GeneratedMessage {
+  factory ComfortPreference({
+    ComfortPreset? preset,
+    $core.int? belowTargetCentidegrees,
+    $core.int? aboveTargetCentidegrees,
+  }) {
+    final result = create();
+    if (preset != null) result.preset = preset;
+    if (belowTargetCentidegrees != null)
+      result.belowTargetCentidegrees = belowTargetCentidegrees;
+    if (aboveTargetCentidegrees != null)
+      result.aboveTargetCentidegrees = aboveTargetCentidegrees;
+    return result;
+  }
+
+  ComfortPreference._();
+
+  factory ComfortPreference.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ComfortPreference.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ComfortPreference',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..e<ComfortPreset>(1, _omitFieldNames ? '' : 'preset', $pb.PbFieldType.OE,
+        defaultOrMaker: ComfortPreset.COMFORT_PRESET_UNSPECIFIED,
+        valueOf: ComfortPreset.valueOf,
+        enumValues: ComfortPreset.values)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'belowTargetCentidegrees',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'aboveTargetCentidegrees',
+        $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ComfortPreference clone() => ComfortPreference()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ComfortPreference copyWith(void Function(ComfortPreference) updates) =>
+      super.copyWith((message) => updates(message as ComfortPreference))
+          as ComfortPreference;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ComfortPreference create() => ComfortPreference._();
+  @$core.override
+  ComfortPreference createEmptyInstance() => create();
+  static $pb.PbList<ComfortPreference> createRepeated() =>
+      $pb.PbList<ComfortPreference>();
+  @$core.pragma('dart2js:noInline')
+  static ComfortPreference getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ComfortPreference>(create);
+  static ComfortPreference? _defaultInstance;
+
+  /// Which preset. UNSPECIFIED only as the default, in a preference the gateway sends.
+  @$pb.TagNumber(1)
+  ComfortPreset get preset => $_getN(0);
+  @$pb.TagNumber(1)
+  set preset(ComfortPreset value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPreset() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPreset() => $_clearField(1);
+
+  /// In centidegrees. The gateway fills both for every preset, the default included, so that a
+  /// client that does not know a preset still shows its band. In a request, read on CUSTOM only
+  /// and ignored on any other preset, whose values are the preset's.
+  @$pb.TagNumber(2)
+  $core.int get belowTargetCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set belowTargetCentidegrees($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBelowTargetCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBelowTargetCentidegrees() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get aboveTargetCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set aboveTargetCentidegrees($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAboveTargetCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAboveTargetCentidegrees() => $_clearField(3);
 }
 
 /// An outer bound clamping a room (RoomClimate.outer_limit_clamp).
