@@ -1660,7 +1660,9 @@ class ModelFit extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearBand() => $_clearField(3);
 
-  /// Set with NOT_ENOUGH_DATA, and with POOR where a gap explains it.
+  /// Set with NOT_ENOUGH_DATA; with POOR where a gap explains it; and with FAIR where a gap
+  /// holds the band there (a floor zone fitted without its return: NO_RETURNS,
+  /// LEARNING_RETURNS).
   @$pb.TagNumber(4)
   ModelFitGap get gap => $_getN(3);
   @$pb.TagNumber(4)

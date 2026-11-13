@@ -518,6 +518,13 @@ class ModelFitGap extends $pb.ProtobufEnum {
   static const ModelFitGap MODEL_FIT_GAP_SETUP_CHANGED =
       ModelFitGap._(8, _omitEnumNames ? '' : 'MODEL_FIT_GAP_SETUP_CHANGED');
 
+  /// A floor zone's return probe is bound, but the zone has not yet flowed alone on its
+  /// circuit (zones sharing its control room count as one with it) for enough quarter hours
+  /// to learn its return from. Until then it is fitted on its room alone, no better than FAIR.
+  /// Time fixes it.
+  static const ModelFitGap MODEL_FIT_GAP_LEARNING_RETURNS =
+      ModelFitGap._(9, _omitEnumNames ? '' : 'MODEL_FIT_GAP_LEARNING_RETURNS');
+
   static const $core.List<ModelFitGap> values = <ModelFitGap>[
     MODEL_FIT_GAP_UNSPECIFIED,
     MODEL_FIT_GAP_NO_EXCITATION,
@@ -528,10 +535,11 @@ class ModelFitGap extends $pb.ProtobufEnum {
     MODEL_FIT_GAP_RETURNS_SHARED,
     MODEL_FIT_GAP_TOO_FEW_NIGHTS,
     MODEL_FIT_GAP_SETUP_CHANGED,
+    MODEL_FIT_GAP_LEARNING_RETURNS,
   ];
 
   static final $core.List<ModelFitGap?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 8);
+      $pb.ProtobufEnum.$_initByValueList(values, 9);
   static ModelFitGap? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
