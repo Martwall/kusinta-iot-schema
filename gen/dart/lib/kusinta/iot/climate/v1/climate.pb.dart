@@ -1095,13 +1095,14 @@ class InnerRoomLimits extends $pb.GeneratedMessage {
 ///   low  = E - below, raised to the FLOOR where it falls under it, and never above E;
 ///   high = E + above, lowered to the inner max (InnerRoomLimits) where that is set, and never
 ///          below low.
-/// The FLOOR is the higher of those set of: the gateway's public-health threshold (its own
-/// setting, webrtc.v1.ConfigureRoomClimate), and, while no mode sets the room back, the inner min.
-/// So a custom band reaches as far below the target as the household sets, and the gateway accepts
-/// it down to the public-health floor and never lower: below is taken up to 500, and the low edge
-/// stops at the FLOOR whatever it says. An outer min accepted below the threshold lets a target or
-/// a setback go there (OuterRoomLimits.min_accepted_threshold_centidegrees), never a plan saving on
-/// price. A room whose effective target is at or below the FLOOR has no band below it: low is E.
+/// The FLOOR is the highest of those set of: the gateway's public-health threshold (its own
+/// setting, webrtc.v1.ConfigureRoomClimate); the room's outer min (OuterRoomLimits.min), at every
+/// output of the room, whether or not the outer limits bind it; and, while no mode sets the room
+/// back, the inner min. So a custom band reaches as far below the target as the household sets,
+/// and the gateway accepts it down to the public-health floor and never lower: below is taken up
+/// to 500, and the low edge stops at the FLOOR whatever it says. An outer min accepted below the
+/// threshold lets a target or a setback go there (OuterRoomLimits.min_accepted_threshold_centidegrees),
+/// but never lowers the FLOOR, which is the highest of the three: never a plan saving on price. A room whose effective target is at or below the FLOOR has no band below it: low is E.
 /// At the outputs the outer limits bind, a plan holds within them too (OuterRoomLimits, HELD).
 ///
 /// A price rule in SHADOW (heating.v1.PRICE_RULE_MODE_SHADOW) judges by the same band, save that

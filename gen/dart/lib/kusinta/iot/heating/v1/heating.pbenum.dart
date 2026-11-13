@@ -100,7 +100,8 @@ class PriceRuleMode extends $pb.ProtobufEnum {
   static const PriceRuleMode PRICE_RULE_MODE_UNSPECIFIED =
       PriceRuleMode._(0, _omitEnumNames ? '' : 'PRICE_RULE_MODE_UNSPECIFIED');
 
-  /// The rule decides nothing and drives nothing. A plant's rules start OFF.
+  /// The rule decides nothing and drives nothing. A plant's rules start OFF, save as the rollout
+  /// note under PRICE RULES (WHO SWITCHES THEM) says.
   static const PriceRuleMode PRICE_RULE_MODE_OFF =
       PriceRuleMode._(1, _omitEnumNames ? '' : 'PRICE_RULE_MODE_OFF');
 

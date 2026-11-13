@@ -153,7 +153,8 @@ message HeatingPlant {
   // Every price rule the gateway runs for this plant, each once, with its mode as it stands:
   // the latest change of each (PriceRuleChange), OFF included. A rule not listed is one the
   // gateway does not run for this plant, and a client offers no switch for it. A rule whose mode
-  // was never set is listed OFF, with at, set_by_role and set_by unset.
+  // was never set is listed in the mode it started in — OFF, or SHADOW as the rollout note under
+  // PRICE RULES (WHO SWITCHES THEM) says — with at, set_by_role and set_by unset.
   //
   // Read-only: set with webrtc.v1.SetPriceRuleMode, never in a put, which keeps them and ignores
   // them, and does not bump revision. Sent to whoever is given the plant, set_by as
@@ -357,11 +358,19 @@ message HeatingRecord {
 // COMPRESSOR); the leases and rest states (see the file comment); a running commissioning test,
 // which takes the output it drives; and the public-health floor (ComfortPreference, THE BAND).
 //
-// WHO SWITCHES THEM. Whoever may set the plant's block cap ("plant.max_block_minutes"): for a
-// plant in a home, its household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN); for a
-// plant outside homes, the property owner and the gateway's administrators who reach its space;
-// and for either, an installer under a commissioning grant covering the plant's space
-// (commissioning.v1, GRANTS). Every change is recorded (PriceRuleChange): a record of what
+// WHO SWITCHES THEM.
+//   * A plant in a home: its household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN), and
+//     an installer under a commissioning grant covering the home (commissioning.v1, GRANTS).
+//     Consent to have a home's own heat source driven LIVE is its household's.
+//   * A plant outside homes: the property owner and the gateway's administrators who reach its
+//     space, and an installer under a commissioning grant covering it.
+// Nobody else, whatever else they may set of the plant.
+//
+// A plant's rules start OFF. Rollout note: a gateway that ran a rule in shadow by a setting of its
+// own, before this contract, starts that rule SHADOW instead on each plant it ran it for, so that
+// the evidence a shadow gathers runs on across the upgrade; SHADOW drives nothing, so no consent is
+// presumed. No other rule starts anywhere but OFF, and none starts LIVE.
+// Every change is recorded (PriceRuleChange): a record of what
 // happened, never rewritten, and corrected by a newer change.
 //
 // HEAT BLOCKS. A block is a stretch of time in which a price rule holds closed an input of the
@@ -418,7 +427,8 @@ enum PriceRuleMode {
   // request.
   PRICE_RULE_MODE_UNSPECIFIED = 0;
 
-  // The rule decides nothing and drives nothing. A plant's rules start OFF.
+  // The rule decides nothing and drives nothing. A plant's rules start OFF, save as the rollout
+  // note under PRICE RULES (WHO SWITCHES THEM) says.
   PRICE_RULE_MODE_OFF = 1;
 
   // The rule decides as LIVE would and records what it decided (HeatBlock, ShadowSummary), but
@@ -440,7 +450,8 @@ enum PriceRuleMode {
 message PriceRuleChange {
   PriceRule rule = 1;
 
-  // The mode it set, and the mode before it: OFF before a rule's first change.
+  // The mode it set, and the mode before it: before a rule's first change, the mode it started in
+  // (WHO SWITCHES THEM).
   PriceRuleMode mode = 2;
   PriceRuleMode previous_mode = 3;
 

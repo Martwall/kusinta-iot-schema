@@ -150,7 +150,8 @@ export declare type HeatingPlant = Message<"kusinta.iot.heating.v1.HeatingPlant"
    * Every price rule the gateway runs for this plant, each once, with its mode as it stands:
    * the latest change of each (PriceRuleChange), OFF included. A rule not listed is one the
    * gateway does not run for this plant, and a client offers no switch for it. A rule whose mode
-   * was never set is listed OFF, with at, set_by_role and set_by unset.
+   * was never set is listed in the mode it started in — OFF, or SHADOW as the rollout note under
+   * PRICE RULES (WHO SWITCHES THEM) says — with at, set_by_role and set_by unset.
    *
    * Read-only: set with webrtc.v1.SetPriceRuleMode, never in a put, which keeps them and ignores
    * them, and does not bump revision. Sent to whoever is given the plant, set_by as
@@ -649,7 +650,8 @@ export declare type PriceRuleChange = Message<"kusinta.iot.heating.v1.PriceRuleC
   rule: PriceRule;
 
   /**
-   * The mode it set, and the mode before it: OFF before a rule's first change.
+   * The mode it set, and the mode before it: before a rule's first change, the mode it started in
+   * (WHO SWITCHES THEM).
    *
    * @generated from field: kusinta.iot.heating.v1.PriceRuleMode mode = 2;
    */
@@ -1189,7 +1191,8 @@ export enum PriceRuleMode {
   UNSPECIFIED = 0,
 
   /**
-   * The rule decides nothing and drives nothing. A plant's rules start OFF.
+   * The rule decides nothing and drives nothing. A plant's rules start OFF, save as the rollout
+   * note under PRICE RULES (WHO SWITCHES THEM) says.
    *
    * @generated from enum value: PRICE_RULE_MODE_OFF = 1;
    */

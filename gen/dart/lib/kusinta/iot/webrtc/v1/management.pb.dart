@@ -4758,10 +4758,10 @@ class SetComfortWindows extends $pb.GeneratedMessage {
 /// HeatingRecord of the plant as stored. A mode equal to the rule's mode now is answered the same
 /// and records nothing.
 ///
-/// Whoever may set the plant's block cap (heating.v1, WHO SWITCHES THEM): for a plant in a home,
-/// its household admins; for one outside homes, the property owner and the gateway's
-/// administrators who reach its space; for either, an installer under a commissioning grant
-/// covering its space. Anyone else — a resident who is not a household admin, service, a home's
+/// For a plant in a home, its household admins and an installer under a commissioning grant
+/// covering the home; for one outside homes, the property owner, the gateway's administrators who
+/// reach its space and an installer under a commissioning grant covering it (heating.v1, WHO
+/// SWITCHES THEM). Anyone else — a resident who is not a household admin, service, a home's
 /// plant to staff — and a plant that does not exist, are refused as NOT_ENTITLED with the same
 /// metadata. Refused, with metadata "reason":
 ///

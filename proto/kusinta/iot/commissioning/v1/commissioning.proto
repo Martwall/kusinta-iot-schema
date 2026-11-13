@@ -68,8 +68,8 @@ option optimize_for = SPEED;
 //       quarter hour is not less than that rounded up, so 20 against 20 is refused and 30
 //       against 20 taken. An inverter may fault on a longer block, and a setting that holds no
 //       block blocks nothing. A value outside that is refused as INVALID_REQUEST with metadata
-//       {"reason": "value"}. Whoever may answer it also switches the plant's price rules, which
-//       hold its blocking inputs within it (heating.v1, PRICE RULES).
+//       {"reason": "value"}. The plant's price rules hold its blocking inputs within it; who
+//       switches them is heating.v1 (PRICE RULES, WHO SWITCHES THEM).
 //   "plant.min_block_minutes"  uint, 10 to 60; a plant with a compressor. The shortest block the
 //       gateway applies: a compressor waits after it stops before it may start again (from
 //       about 3 to 20 minutes by maker), so a block shorter than that gains nothing and adds

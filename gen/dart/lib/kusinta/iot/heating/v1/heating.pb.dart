@@ -385,7 +385,8 @@ class HeatingPlant extends $pb.GeneratedMessage {
   /// Every price rule the gateway runs for this plant, each once, with its mode as it stands:
   /// the latest change of each (PriceRuleChange), OFF included. A rule not listed is one the
   /// gateway does not run for this plant, and a client offers no switch for it. A rule whose mode
-  /// was never set is listed OFF, with at, set_by_role and set_by unset.
+  /// was never set is listed in the mode it started in — OFF, or SHADOW as the rollout note under
+  /// PRICE RULES (WHO SWITCHES THEM) says — with at, set_by_role and set_by unset.
   ///
   /// Read-only: set with webrtc.v1.SetPriceRuleMode, never in a put, which keeps them and ignores
   /// them, and does not bump revision. Sent to whoever is given the plant, set_by as
@@ -1605,7 +1606,8 @@ class PriceRuleChange extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRule() => $_clearField(1);
 
-  /// The mode it set, and the mode before it: OFF before a rule's first change.
+  /// The mode it set, and the mode before it: before a rule's first change, the mode it started in
+  /// (WHO SWITCHES THEM).
   @$pb.TagNumber(2)
   PriceRuleMode get mode => $_getN(1);
   @$pb.TagNumber(2)
