@@ -659,7 +659,8 @@ export declare type ModelFit = Message<"kusinta.iot.commissioning.v1.ModelFit"> 
    * Set with NOT_ENOUGH_DATA; with POOR where a gap explains it; and, for a floor zone fitted
    * without its return, with any band the gap explains or holds down: NO_RETURNS where the cap
    * holds it at FAIR; LEARNING_RETURNS at every band while the zone learns its return;
-   * RETURNS_SHARED where it can never be alone on its circuit; NOT_PHYSICAL where its return
+   * RETURNS_SHARED where it can never be alone on its circuit; OTHER_ZONES_UNKNOWN where
+   * whether the other zones on its circuit flowed is not known; NOT_PHYSICAL where its return
    * reads no floor's return.
    *
    * @generated from field: kusinta.iot.commissioning.v1.ModelFitGap gap = 4;
@@ -1593,6 +1594,16 @@ export enum ModelFitGap {
    * @generated from enum value: MODEL_FIT_GAP_LEARNING_RETURNS = 9;
    */
   LEARNING_RETURNS = 9,
+
+  /**
+   * Whether the other zones on a floor zone's circuit flowed is not known, so its return
+   * cannot be told apart from theirs: usually one of them has no output bound, or lies in
+   * another home. Binding the other zones' outputs fixes it. Until then the zone is fitted on
+   * its room alone, no better than FAIR.
+   *
+   * @generated from enum value: MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN = 10;
+   */
+  OTHER_ZONES_UNKNOWN = 10,
 }
 
 /**
