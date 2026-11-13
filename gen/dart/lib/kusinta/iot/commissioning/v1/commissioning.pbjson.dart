@@ -249,6 +249,7 @@ const ModelFitGap$json = {
     {'1': 'MODEL_FIT_GAP_TOO_FEW_NIGHTS', '2': 7},
     {'1': 'MODEL_FIT_GAP_SETUP_CHANGED', '2': 8},
     {'1': 'MODEL_FIT_GAP_LEARNING_RETURNS', '2': 9},
+    {'1': 'MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN', '2': 10},
   ],
 };
 
@@ -260,7 +261,7 @@ final $typed_data.Uint8List modelFitGapDescriptor = $convert.base64Decode(
     'JJVkVOEAQSHgoaTU9ERUxfRklUX0dBUF9OT1RfUEhZU0lDQUwQBRIgChxNT0RFTF9GSVRfR0FQ'
     'X1JFVFVSTlNfU0hBUkVEEAYSIAocTU9ERUxfRklUX0dBUF9UT09fRkVXX05JR0hUUxAHEh8KG0'
     '1PREVMX0ZJVF9HQVBfU0VUVVBfQ0hBTkdFRBAIEiIKHk1PREVMX0ZJVF9HQVBfTEVBUk5JTkdf'
-    'UkVUVVJOUxAJ');
+    'UkVUVVJOUxAJEiUKIU1PREVMX0ZJVF9HQVBfT1RIRVJfWk9ORVNfVU5LTk9XThAK');
 
 @$core.Deprecated('Use setupMissingDescriptor instead')
 const SetupMissing$json = {

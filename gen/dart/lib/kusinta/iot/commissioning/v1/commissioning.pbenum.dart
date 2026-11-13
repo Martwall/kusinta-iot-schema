@@ -497,7 +497,9 @@ class ModelFitGap extends $pb.ProtobufEnum {
       4, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_GATEWAY_DRIVEN');
 
   /// The fit came out physically impossible: usually a sensor in the wrong place or a
-  /// mapping of rooms to zones that does not match the house.
+  /// mapping of rooms to zones that does not match the house. For a floor zone fitted on its
+  /// room alone (FAIR at best), its return reads no floor's return: the return probe is
+  /// likely on the wrong pipe.
   static const ModelFitGap MODEL_FIT_GAP_NOT_PHYSICAL =
       ModelFitGap._(5, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NOT_PHYSICAL');
 
@@ -525,6 +527,13 @@ class ModelFitGap extends $pb.ProtobufEnum {
   static const ModelFitGap MODEL_FIT_GAP_LEARNING_RETURNS =
       ModelFitGap._(9, _omitEnumNames ? '' : 'MODEL_FIT_GAP_LEARNING_RETURNS');
 
+  /// Whether the other zones on a floor zone's circuit flowed is not known, so its return
+  /// cannot be told apart from theirs: usually one of them has no output bound, or lies in
+  /// another home. Binding the other zones' outputs fixes it. Until then the zone is fitted on
+  /// its room alone, no better than FAIR.
+  static const ModelFitGap MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN = ModelFitGap._(
+      10, _omitEnumNames ? '' : 'MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN');
+
   static const $core.List<ModelFitGap> values = <ModelFitGap>[
     MODEL_FIT_GAP_UNSPECIFIED,
     MODEL_FIT_GAP_NO_EXCITATION,
@@ -536,10 +545,11 @@ class ModelFitGap extends $pb.ProtobufEnum {
     MODEL_FIT_GAP_TOO_FEW_NIGHTS,
     MODEL_FIT_GAP_SETUP_CHANGED,
     MODEL_FIT_GAP_LEARNING_RETURNS,
+    MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN,
   ];
 
   static final $core.List<ModelFitGap?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 9);
+      $pb.ProtobufEnum.$_initByValueList(values, 10);
   static ModelFitGap? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
