@@ -1464,7 +1464,10 @@ message ConcludeCommissioningTest {
 
 // Lists whether each home under a space is set up (commissioning.v1.HomeSetup): unset
 // root_space_id, every home the caller reaches. For the property owner and the gateway's
-// administrators; anyone else is refused as NOT_ENTITLED. Answered with a HomeSetups.
+// administrators, and for a household admin for its own homes alone: unset root_space_id,
+// the homes it administers; a root that is not one of them, or holds others, is refused as
+// NOT_ENTITLED, as anyone else is. Answered with a HomeSetups; rooms_with_questions only on the
+// caller's own homes.
 message ListHomeSetups {
   kusinta.iot.identity.v1.SpaceId root_space_id = 1;
 }
