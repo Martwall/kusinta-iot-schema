@@ -997,7 +997,7 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * blocked or coasted made up at its full electric energy, crediting a heat pump's efficiency
    * only in quarter hours its compressor is known to have had capacity to spare. It is the
    * figure to judge a rule by before relying on it. Unset where the saving is not known in
-   * money (saving_share_permille).
+   * money (saving_share_permille), or on a day kept before it was computed.
    *
    * @generated from field: optional sint64 cautious_net_saving_micro_eur = 8;
    */
