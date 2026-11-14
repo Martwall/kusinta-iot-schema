@@ -1698,11 +1698,14 @@ class HomeSetup extends $pb.GeneratedMessage {
     $1.SpaceId? homeId,
     $core.bool? setUp,
     $core.Iterable<SetupMissing>? missing,
+    $core.int? roomsWithQuestions,
   }) {
     final result = create();
     if (homeId != null) result.homeId = homeId;
     if (setUp != null) result.setUp = setUp;
     if (missing != null) result.missing.addAll(missing);
+    if (roomsWithQuestions != null)
+      result.roomsWithQuestions = roomsWithQuestions;
     return result;
   }
 
@@ -1727,6 +1730,8 @@ class HomeSetup extends $pb.GeneratedMessage {
         valueOf: SetupMissing.valueOf,
         enumValues: SetupMissing.values,
         defaultEnumValue: SetupMissing.SETUP_MISSING_UNSPECIFIED)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'roomsWithQuestions', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1775,6 +1780,19 @@ class HomeSetup extends $pb.GeneratedMessage {
   /// client that does not know a value as none.
   @$pb.TagNumber(3)
   $pb.PbList<SetupMissing> get missing => $_getList(2);
+
+  /// How many of the home's rooms still have a REQUIRED household question unanswered, while
+  /// ROOM_QUESTIONS is missing; unset once it is not. Given only to the home's own household admins, who hold the
+  /// answers, so that they can finish them; unset for everyone else, the owner organisation and
+  /// the gateway's administrators included.
+  @$pb.TagNumber(4)
+  $core.int get roomsWithQuestions => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set roomsWithQuestions($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRoomsWithQuestions() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRoomsWithQuestions() => $_clearField(4);
 }
 
 /// In reply to ListHomeSetups.

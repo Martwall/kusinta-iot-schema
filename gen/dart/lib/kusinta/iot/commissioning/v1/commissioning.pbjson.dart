@@ -991,6 +991,18 @@ const HomeSetup$json = {
       '6': '.kusinta.iot.commissioning.v1.SetupMissing',
       '10': 'missing'
     },
+    {
+      '1': 'rooms_with_questions',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'roomsWithQuestions',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_rooms_with_questions'},
   ],
 };
 
@@ -998,7 +1010,9 @@ const HomeSetup$json = {
 final $typed_data.Uint8List homeSetupDescriptor = $convert.base64Decode(
     'CglIb21lU2V0dXASOQoHaG9tZV9pZBgBIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLl'
     'NwYWNlSWRSBmhvbWVJZBIVCgZzZXRfdXAYAiABKAhSBXNldFVwEkQKB21pc3NpbmcYAyADKA4y'
-    'Ki5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlNldHVwTWlzc2luZ1IHbWlzc2luZw==');
+    'Ki5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLlNldHVwTWlzc2luZ1IHbWlzc2luZxI1Ch'
+    'Ryb29tc193aXRoX3F1ZXN0aW9ucxgEIAEoDUgAUhJyb29tc1dpdGhRdWVzdGlvbnOIAQFCFwoV'
+    'X3Jvb21zX3dpdGhfcXVlc3Rpb25z');
 
 @$core.Deprecated('Use homeSetupsDescriptor instead')
 const HomeSetups$json = {

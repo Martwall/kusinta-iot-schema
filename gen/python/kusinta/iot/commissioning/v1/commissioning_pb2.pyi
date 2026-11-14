@@ -420,14 +420,16 @@ class ModelFit(_message.Message):
     def __init__(self, room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., floor_zone_id: _Optional[str] = ..., band: _Optional[_Union[ModelFitBand, str]] = ..., gap: _Optional[_Union[ModelFitGap, str]] = ...) -> None: ...
 
 class HomeSetup(_message.Message):
-    __slots__ = ("home_id", "set_up", "missing")
+    __slots__ = ("home_id", "set_up", "missing", "rooms_with_questions")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]
     SET_UP_FIELD_NUMBER: _ClassVar[int]
     MISSING_FIELD_NUMBER: _ClassVar[int]
+    ROOMS_WITH_QUESTIONS_FIELD_NUMBER: _ClassVar[int]
     home_id: _identity_pb2.SpaceId
     set_up: bool
     missing: _containers.RepeatedScalarFieldContainer[SetupMissing]
-    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., set_up: _Optional[bool] = ..., missing: _Optional[_Iterable[_Union[SetupMissing, str]]] = ...) -> None: ...
+    rooms_with_questions: int
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., set_up: _Optional[bool] = ..., missing: _Optional[_Iterable[_Union[SetupMissing, str]]] = ..., rooms_with_questions: _Optional[int] = ...) -> None: ...
 
 class HomeSetups(_message.Message):
     __slots__ = ("homes",)
