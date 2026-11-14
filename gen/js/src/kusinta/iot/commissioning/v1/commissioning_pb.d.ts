@@ -719,7 +719,7 @@ export declare type HomeSetup = Message<"kusinta.iot.commissioning.v1.HomeSetup"
 
   /**
    * How many of the home's rooms still have a REQUIRED household question unanswered, while
-   * ROOM_QUESTIONS is missing. Given only to the home's own household admins, who hold the
+   * ROOM_QUESTIONS is missing; unset once it is not. Given only to the home's own household admins, who hold the
    * answers, so that they can finish them; unset for everyone else, the owner organisation and
    * the gateway's administrators included.
    *
