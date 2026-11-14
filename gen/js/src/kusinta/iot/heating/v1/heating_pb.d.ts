@@ -1017,8 +1017,10 @@ export declare type ShadowBandSeries = Message<"kusinta.iot.heating.v1.ShadowBan
 
   /**
    * The band scored, as a comfort preference gives one (climate.v1.ComfortPreference, THE
-   * BAND), in centidegrees. Which bands are scored is the gateway's choice, the same for every
-   * home; the presets' among them.
+   * BAND), in centidegrees. Which bands are scored is the gateway's choice: a set the same for
+   * every home, the presets' among them, and besides it the home's own chosen band where that
+   * is outside the set, from the day it is chosen. A band the home chose before and no longer
+   * holds keeps the days scored while it held it, as long as any band's days are kept.
    *
    * @generated from field: uint32 below_target_centidegrees = 3;
    */

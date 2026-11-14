@@ -2478,8 +2478,10 @@ class ShadowBandSeries extends $pb.GeneratedMessage {
   void clearRule() => $_clearField(2);
 
   /// The band scored, as a comfort preference gives one (climate.v1.ComfortPreference, THE
-  /// BAND), in centidegrees. Which bands are scored is the gateway's choice, the same for every
-  /// home; the presets' among them.
+  /// BAND), in centidegrees. Which bands are scored is the gateway's choice: a set the same for
+  /// every home, the presets' among them, and besides it the home's own chosen band where that
+  /// is outside the set, from the day it is chosen. A band the home chose before and no longer
+  /// holds keeps the days scored while it held it, as long as any band's days are kept.
   @$pb.TagNumber(3)
   $core.int get belowTargetCentidegrees => $_getIZ(2);
   @$pb.TagNumber(3)
