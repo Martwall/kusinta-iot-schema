@@ -1181,8 +1181,9 @@ export declare const HeatSourceKindSchema: GenEnum<HeatSourceKind>;
  * Whether a circuit is fed through a mixing valve, as its installer states it.
  *
  * SUPPLY. What heats a circuit's radiators or slab is the water entering it. Where a circuit is
- * UNMIXED, fed straight from its heat source, that is the heat source's own supply, less a
- * little pipe loss, and the gateway may use the heat source's reading for it. Where it is
+ * UNMIXED, fed straight from its heat source, that is the heat source's own measured supply,
+ * less a little pipe loss (not the supply it aims for, and not while it heats hot water, when its
+ * flow goes to the tank), and the gateway may use the heat source's reading for it. Where it is
  * MIXED, or not stated, the water is cooler than the heat source makes and only a supply probe
  * after the mixer says what it is: without one, a model of what the circuit heats cannot be
  * fitted on its heated quarters. A return probe is never required: without one a circuit is
