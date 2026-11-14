@@ -967,6 +967,28 @@ const ShadowDay$json = {
       '5': 13,
       '10': 'noPriceQuarters'
     },
+    {
+      '1': 'cautious_net_saving_micro_eur',
+      '3': 8,
+      '4': 1,
+      '5': 18,
+      '9': 0,
+      '10': 'cautiousNetSavingMicroEur',
+      '17': true
+    },
+    {
+      '1': 'saving_share_permille',
+      '3': 9,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'savingSharePermille',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_cautious_net_saving_micro_eur'},
+    {'1': '_saving_share_permille'},
   ],
 };
 
@@ -977,7 +999,10 @@ final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
     'KBJSFHJlY292ZXJ5Q29zdE1pY3JvRXVyEikKEGJsb2NrZWRfcXVhcnRlcnMYBCABKA1SD2Jsb2'
     'NrZWRRdWFydGVycxInCg9icmVhY2hfcXVhcnRlcnMYBSABKA1SDmJyZWFjaFF1YXJ0ZXJzEisK'
     'EW92ZXJoZWF0X3F1YXJ0ZXJzGAYgASgNUhBvdmVyaGVhdFF1YXJ0ZXJzEioKEW5vX3ByaWNlX3'
-    'F1YXJ0ZXJzGAcgASgNUg9ub1ByaWNlUXVhcnRlcnM=');
+    'F1YXJ0ZXJzGAcgASgNUg9ub1ByaWNlUXVhcnRlcnMSRQodY2F1dGlvdXNfbmV0X3NhdmluZ19t'
+    'aWNyb19ldXIYCCABKBJIAFIZY2F1dGlvdXNOZXRTYXZpbmdNaWNyb0V1cogBARI3ChVzYXZpbm'
+    'dfc2hhcmVfcGVybWlsbGUYCSABKBFIAVITc2F2aW5nU2hhcmVQZXJtaWxsZYgBAUIgCh5fY2F1'
+    'dGlvdXNfbmV0X3NhdmluZ19taWNyb19ldXJCGAoWX3NhdmluZ19zaGFyZV9wZXJtaWxsZQ==');
 
 @$core.Deprecated('Use shadowBandSeriesDescriptor instead')
 const ShadowBandSeries$json = {

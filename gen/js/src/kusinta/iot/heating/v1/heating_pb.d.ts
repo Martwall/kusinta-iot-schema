@@ -991,6 +991,28 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: uint32 no_price_quarters = 7;
    */
   noPriceQuarters: number;
+
+  /**
+   * The cautious saving, in millionths of a euro: as net_saving_micro_eur, but with what was
+   * blocked or coasted made up at its full electric energy, crediting a heat pump's efficiency
+   * only in quarter hours its compressor is known to have had capacity to spare. It is the
+   * figure to judge a rule by before relying on it. Unset where the saving is not known in
+   * money (saving_share_permille).
+   *
+   * @generated from field: optional sint64 cautious_net_saving_micro_eur = 8;
+   */
+  cautiousNetSavingMicroEur?: bigint | undefined;
+
+  /**
+   * Where the saving is not known in money, for a rule whose energy is known only relative to
+   * its own heating: the saving as thousandths of the heat cost of what it decides that day,
+   * recovery taken off; negative where it would have cost more. Where set,
+   * net_saving_micro_eur and recovery_cost_micro_eur are 0 and say nothing; a client shows the
+   * share instead. Unset where the saving is in money.
+   *
+   * @generated from field: optional sint32 saving_share_permille = 9;
+   */
+  savingSharePermille?: number | undefined;
 };
 
 /**
