@@ -2250,6 +2250,8 @@ class ShadowDay extends $pb.GeneratedMessage {
     $core.int? breachQuarters,
     $core.int? overheatQuarters,
     $core.int? noPriceQuarters,
+    $fixnum.Int64? cautiousNetSavingMicroEur,
+    $core.int? savingSharePermille,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2260,6 +2262,10 @@ class ShadowDay extends $pb.GeneratedMessage {
     if (breachQuarters != null) result.breachQuarters = breachQuarters;
     if (overheatQuarters != null) result.overheatQuarters = overheatQuarters;
     if (noPriceQuarters != null) result.noPriceQuarters = noPriceQuarters;
+    if (cautiousNetSavingMicroEur != null)
+      result.cautiousNetSavingMicroEur = cautiousNetSavingMicroEur;
+    if (savingSharePermille != null)
+      result.savingSharePermille = savingSharePermille;
     return result;
   }
 
@@ -2292,6 +2298,11 @@ class ShadowDay extends $pb.GeneratedMessage {
         6, _omitFieldNames ? '' : 'overheatQuarters', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         7, _omitFieldNames ? '' : 'noPriceQuarters', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(8, _omitFieldNames ? '' : 'cautiousNetSavingMicroEur',
+        $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(
+        9, _omitFieldNames ? '' : 'savingSharePermille', $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2389,6 +2400,34 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasNoPriceQuarters() => $_has(6);
   @$pb.TagNumber(7)
   void clearNoPriceQuarters() => $_clearField(7);
+
+  /// The cautious saving, in millionths of a euro: as net_saving_micro_eur, but with what was
+  /// blocked or coasted made up at its full electric energy, crediting a heat pump's efficiency
+  /// only in quarter hours its compressor is known to have had capacity to spare. It is the
+  /// figure to judge a rule by before relying on it. Unset where the saving is not known in
+  /// money (saving_share_permille), or on a day kept before it was computed.
+  @$pb.TagNumber(8)
+  $fixnum.Int64 get cautiousNetSavingMicroEur => $_getI64(7);
+  @$pb.TagNumber(8)
+  set cautiousNetSavingMicroEur($fixnum.Int64 value) => $_setInt64(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCautiousNetSavingMicroEur() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCautiousNetSavingMicroEur() => $_clearField(8);
+
+  /// Where the saving is not known in money, for a rule whose energy is known only relative to
+  /// its own heating: the saving as thousandths of the heat cost of what it decides that day,
+  /// recovery taken off; negative where it would have cost more. Where set,
+  /// net_saving_micro_eur and recovery_cost_micro_eur are 0 and say nothing; a client shows the
+  /// share instead. Unset where the saving is in money.
+  @$pb.TagNumber(9)
+  $core.int get savingSharePermille => $_getIZ(8);
+  @$pb.TagNumber(9)
+  set savingSharePermille($core.int value) => $_setSignedInt32(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasSavingSharePermille() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearSavingSharePermille() => $_clearField(9);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.
