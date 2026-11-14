@@ -652,7 +652,15 @@ class HeatingCircuit extends $pb.GeneratedMessage {
 
 /// A radiator circuit. Its valves belong to the rooms (climate.v1.RoomClimate).
 class RadiatorCircuit extends $pb.GeneratedMessage {
-  factory RadiatorCircuit() => create();
+  factory RadiatorCircuit({
+    CircuitMixing? mixing,
+    DeviceAttribute? supplyProbe,
+  }) {
+    final result = create();
+    if (mixing != null) result.mixing = mixing;
+    if (supplyProbe != null) result.supplyProbe = supplyProbe;
+    return result;
+  }
 
   RadiatorCircuit._();
 
@@ -668,6 +676,12 @@ class RadiatorCircuit extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
       createEmptyInstance: create)
+    ..e<CircuitMixing>(1, _omitFieldNames ? '' : 'mixing', $pb.PbFieldType.OE,
+        defaultOrMaker: CircuitMixing.CIRCUIT_MIXING_UNSPECIFIED,
+        valueOf: CircuitMixing.valueOf,
+        enumValues: CircuitMixing.values)
+    ..aOM<DeviceAttribute>(2, _omitFieldNames ? '' : 'supplyProbe',
+        subBuilder: DeviceAttribute.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -690,6 +704,29 @@ class RadiatorCircuit extends $pb.GeneratedMessage {
   static RadiatorCircuit getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<RadiatorCircuit>(create);
   static RadiatorCircuit? _defaultInstance;
+
+  /// As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED.
+  @$pb.TagNumber(1)
+  CircuitMixing get mixing => $_getN(0);
+  @$pb.TagNumber(1)
+  set mixing(CircuitMixing value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMixing() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMixing() => $_clearField(1);
+
+  /// A probe on the supply after the mixer, as FloorCircuit.supply_probe names one: needed only
+  /// where the circuit is MIXED, or its mixing is not stated, for its supply to be known.
+  @$pb.TagNumber(2)
+  DeviceAttribute get supplyProbe => $_getN(1);
+  @$pb.TagNumber(2)
+  set supplyProbe(DeviceAttribute value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSupplyProbe() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSupplyProbe() => $_clearField(2);
+  @$pb.TagNumber(2)
+  DeviceAttribute ensureSupplyProbe() => $_ensure(1);
 }
 
 /// Hydronic floor heating: its own pump, mixing and supply cap, and the floor zones on its
@@ -700,6 +737,7 @@ class FloorCircuit extends $pb.GeneratedMessage {
     $core.int? supplyCapCentidegrees,
     DeviceAttribute? supplyProbe,
     DeviceAttribute? returnProbe,
+    CircuitMixing? mixing,
   }) {
     final result = create();
     if (mixingValve != null) result.mixingValve = mixingValve;
@@ -707,6 +745,7 @@ class FloorCircuit extends $pb.GeneratedMessage {
       result.supplyCapCentidegrees = supplyCapCentidegrees;
     if (supplyProbe != null) result.supplyProbe = supplyProbe;
     if (returnProbe != null) result.returnProbe = returnProbe;
+    if (mixing != null) result.mixing = mixing;
     return result;
   }
 
@@ -731,6 +770,10 @@ class FloorCircuit extends $pb.GeneratedMessage {
         subBuilder: DeviceAttribute.create)
     ..aOM<DeviceAttribute>(4, _omitFieldNames ? '' : 'returnProbe',
         subBuilder: DeviceAttribute.create)
+    ..e<CircuitMixing>(5, _omitFieldNames ? '' : 'mixing', $pb.PbFieldType.OE,
+        defaultOrMaker: CircuitMixing.CIRCUIT_MIXING_UNSPECIFIED,
+        valueOf: CircuitMixing.valueOf,
+        enumValues: CircuitMixing.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -754,7 +797,10 @@ class FloorCircuit extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<FloorCircuit>(create);
   static FloorCircuit? _defaultInstance;
 
-  /// Whether a mixing valve feeds the circuit.
+  /// Whether a mixing valve feeds the circuit. Superseded by mixing, which can also say that it is
+  /// not stated: a client that sets mixing sets this to mixing == MIXED, and a gateway reading a
+  /// circuit whose mixing is UNSPECIFIED takes this true as MIXED and false as not stated, never as
+  /// UNMIXED, since false is also what a client that never asked sends.
   @$pb.TagNumber(1)
   $core.bool get mixingValve => $_getBF(0);
   @$pb.TagNumber(1)
@@ -800,6 +846,16 @@ class FloorCircuit extends $pb.GeneratedMessage {
   void clearReturnProbe() => $_clearField(4);
   @$pb.TagNumber(4)
   DeviceAttribute ensureReturnProbe() => $_ensure(3);
+
+  /// As stated by its installer (CircuitMixing, SUPPLY).
+  @$pb.TagNumber(5)
+  CircuitMixing get mixing => $_getN(4);
+  @$pb.TagNumber(5)
+  set mixing(CircuitMixing value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasMixing() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMixing() => $_clearField(5);
 }
 
 /// One loop or group of loops on a floor circuit's manifold, switched by one output on its

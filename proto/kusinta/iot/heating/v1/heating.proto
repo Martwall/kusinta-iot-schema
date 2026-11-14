@@ -203,14 +203,45 @@ message HeatingCircuit {
   uint64 revision = 6;
 }
 
+// Whether a circuit is fed through a mixing valve, as its installer states it.
+//
+// SUPPLY. What heats a circuit's radiators or slab is the water entering it. Where a circuit is
+// UNMIXED, fed straight from its heat source, that is the heat source's own supply, less a
+// little pipe loss, and the gateway may use the heat source's reading for it. Where it is
+// MIXED, or not stated, the water is cooler than the heat source makes and only a supply probe
+// after the mixer says what it is: without one, a model of what the circuit heats cannot be
+// fitted on its heated quarters. A return probe is never required: without one a circuit is
+// modelled on its rooms alone.
+enum CircuitMixing {
+  // Not stated. Read as MIXED for the supply: the heat source's reading is not used.
+  CIRCUIT_MIXING_UNSPECIFIED = 0;
+  // A mixing (shunt) valve blends return water into the circuit's supply.
+  CIRCUIT_MIXING_MIXED = 1;
+  // No mixing valve: the circuit takes the heat source's supply as it is.
+  CIRCUIT_MIXING_UNMIXED = 2;
+}
+
 // A radiator circuit. Its valves belong to the rooms (climate.v1.RoomClimate).
-message RadiatorCircuit {}
+message RadiatorCircuit {
+  // As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED.
+  CircuitMixing mixing = 1;
+
+  // A probe on the supply after the mixer, as FloorCircuit.supply_probe names one: needed only
+  // where the circuit is MIXED, or its mixing is not stated, for its supply to be known.
+  DeviceAttribute supply_probe = 2;
+}
 
 // Hydronic floor heating: its own pump, mixing and supply cap, and the floor zones on its
 // manifold.
 message FloorCircuit {
-  // Whether a mixing valve feeds the circuit.
+  // Whether a mixing valve feeds the circuit. Superseded by mixing, which can also say that it is
+  // not stated: a client that sets mixing sets this to mixing == MIXED, and a gateway reading a
+  // circuit whose mixing is UNSPECIFIED takes this true as MIXED and false as not stated, never as
+  // UNMIXED, since false is also what a client that never asked sends.
   bool mixing_valve = 1;
+
+  // As stated by its installer (CircuitMixing, SUPPLY).
+  CircuitMixing mixing = 5;
 
   // The supply temperature its self-acting limiter caps it at, in centidegrees. Absent: not
   // known, never 0 °C.

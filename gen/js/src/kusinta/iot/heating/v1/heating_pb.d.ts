@@ -278,6 +278,20 @@ export declare const HeatingCircuitSchema: GenMessage<HeatingCircuit>;
  * @generated from message kusinta.iot.heating.v1.RadiatorCircuit
  */
 export declare type RadiatorCircuit = Message<"kusinta.iot.heating.v1.RadiatorCircuit"> & {
+  /**
+   * As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED.
+   *
+   * @generated from field: kusinta.iot.heating.v1.CircuitMixing mixing = 1;
+   */
+  mixing: CircuitMixing;
+
+  /**
+   * A probe on the supply after the mixer, as FloorCircuit.supply_probe names one: needed only
+   * where the circuit is MIXED, or its mixing is not stated, for its supply to be known.
+   *
+   * @generated from field: kusinta.iot.heating.v1.DeviceAttribute supply_probe = 2;
+   */
+  supplyProbe?: DeviceAttribute | undefined;
 };
 
 /**
@@ -294,11 +308,21 @@ export declare const RadiatorCircuitSchema: GenMessage<RadiatorCircuit>;
  */
 export declare type FloorCircuit = Message<"kusinta.iot.heating.v1.FloorCircuit"> & {
   /**
-   * Whether a mixing valve feeds the circuit.
+   * Whether a mixing valve feeds the circuit. Superseded by mixing, which can also say that it is
+   * not stated: a client that sets mixing sets this to mixing == MIXED, and a gateway reading a
+   * circuit whose mixing is UNSPECIFIED takes this true as MIXED and false as not stated, never as
+   * UNMIXED, since false is also what a client that never asked sends.
    *
    * @generated from field: bool mixing_valve = 1;
    */
   mixingValve: boolean;
+
+  /**
+   * As stated by its installer (CircuitMixing, SUPPLY).
+   *
+   * @generated from field: kusinta.iot.heating.v1.CircuitMixing mixing = 5;
+   */
+  mixing: CircuitMixing;
 
   /**
    * The supply temperature its self-acting limiter caps it at, in centidegrees. Absent: not
@@ -1152,6 +1176,47 @@ export enum HeatSourceKind {
  * Describes the enum kusinta.iot.heating.v1.HeatSourceKind.
  */
 export declare const HeatSourceKindSchema: GenEnum<HeatSourceKind>;
+
+/**
+ * Whether a circuit is fed through a mixing valve, as its installer states it.
+ *
+ * SUPPLY. What heats a circuit's radiators or slab is the water entering it. Where a circuit is
+ * UNMIXED, fed straight from its heat source, that is the heat source's own supply, less a
+ * little pipe loss, and the gateway may use the heat source's reading for it. Where it is
+ * MIXED, or not stated, the water is cooler than the heat source makes and only a supply probe
+ * after the mixer says what it is: without one, a model of what the circuit heats cannot be
+ * fitted on its heated quarters. A return probe is never required: without one a circuit is
+ * modelled on its rooms alone.
+ *
+ * @generated from enum kusinta.iot.heating.v1.CircuitMixing
+ */
+export enum CircuitMixing {
+  /**
+   * Not stated. Read as MIXED for the supply: the heat source's reading is not used.
+   *
+   * @generated from enum value: CIRCUIT_MIXING_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A mixing (shunt) valve blends return water into the circuit's supply.
+   *
+   * @generated from enum value: CIRCUIT_MIXING_MIXED = 1;
+   */
+  MIXED = 1,
+
+  /**
+   * No mixing valve: the circuit takes the heat source's supply as it is.
+   *
+   * @generated from enum value: CIRCUIT_MIXING_UNMIXED = 2;
+   */
+  UNMIXED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.CircuitMixing.
+ */
+export declare const CircuitMixingSchema: GenEnum<CircuitMixing>;
 
 /**
  * A price rule (PRICE RULES). A closed list that grows only by a release of this schema: a

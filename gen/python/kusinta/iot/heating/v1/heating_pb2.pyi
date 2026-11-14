@@ -25,6 +25,12 @@ class HeatSourceKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     HEAT_SOURCE_KIND_ELECTRIC_BOILER: _ClassVar[HeatSourceKind]
     HEAT_SOURCE_KIND_FUEL_BOILER: _ClassVar[HeatSourceKind]
 
+class CircuitMixing(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CIRCUIT_MIXING_UNSPECIFIED: _ClassVar[CircuitMixing]
+    CIRCUIT_MIXING_MIXED: _ClassVar[CircuitMixing]
+    CIRCUIT_MIXING_UNMIXED: _ClassVar[CircuitMixing]
+
 class PriceRule(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     PRICE_RULE_UNSPECIFIED: _ClassVar[PriceRule]
@@ -56,6 +62,9 @@ HEAT_SOURCE_KIND_AIR_WATER_HEAT_PUMP: HeatSourceKind
 HEAT_SOURCE_KIND_DISTRICT_HEATING: HeatSourceKind
 HEAT_SOURCE_KIND_ELECTRIC_BOILER: HeatSourceKind
 HEAT_SOURCE_KIND_FUEL_BOILER: HeatSourceKind
+CIRCUIT_MIXING_UNSPECIFIED: CircuitMixing
+CIRCUIT_MIXING_MIXED: CircuitMixing
+CIRCUIT_MIXING_UNMIXED: CircuitMixing
 PRICE_RULE_UNSPECIFIED: PriceRule
 PRICE_RULE_ADD_ON_HEATER_BLOCK: PriceRule
 PRICE_RULE_FLOOR_PRE_HEAT: PriceRule
@@ -140,20 +149,26 @@ class HeatingCircuit(_message.Message):
     def __init__(self, circuit_id: _Optional[str] = ..., plant_id: _Optional[str] = ..., name: _Optional[str] = ..., radiator: _Optional[_Union[RadiatorCircuit, _Mapping]] = ..., floor: _Optional[_Union[FloorCircuit, _Mapping]] = ..., revision: _Optional[int] = ...) -> None: ...
 
 class RadiatorCircuit(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
+    __slots__ = ("mixing", "supply_probe")
+    MIXING_FIELD_NUMBER: _ClassVar[int]
+    SUPPLY_PROBE_FIELD_NUMBER: _ClassVar[int]
+    mixing: CircuitMixing
+    supply_probe: DeviceAttribute
+    def __init__(self, mixing: _Optional[_Union[CircuitMixing, str]] = ..., supply_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ...) -> None: ...
 
 class FloorCircuit(_message.Message):
-    __slots__ = ("mixing_valve", "supply_cap_centidegrees", "supply_probe", "return_probe")
+    __slots__ = ("mixing_valve", "mixing", "supply_cap_centidegrees", "supply_probe", "return_probe")
     MIXING_VALVE_FIELD_NUMBER: _ClassVar[int]
+    MIXING_FIELD_NUMBER: _ClassVar[int]
     SUPPLY_CAP_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     SUPPLY_PROBE_FIELD_NUMBER: _ClassVar[int]
     RETURN_PROBE_FIELD_NUMBER: _ClassVar[int]
     mixing_valve: bool
+    mixing: CircuitMixing
     supply_cap_centidegrees: int
     supply_probe: DeviceAttribute
     return_probe: DeviceAttribute
-    def __init__(self, mixing_valve: _Optional[bool] = ..., supply_cap_centidegrees: _Optional[int] = ..., supply_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ..., return_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ...) -> None: ...
+    def __init__(self, mixing_valve: _Optional[bool] = ..., mixing: _Optional[_Union[CircuitMixing, str]] = ..., supply_cap_centidegrees: _Optional[int] = ..., supply_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ..., return_probe: _Optional[_Union[DeviceAttribute, _Mapping]] = ...) -> None: ...
 
 class FloorZone(_message.Message):
     __slots__ = ("zone_id", "circuit_id", "name", "output", "rooms", "control_room_id", "revision", "uncontrolled_since", "uncontrolled_by")

@@ -37,6 +37,21 @@ final $typed_data.Uint8List heatSourceKindDescriptor = $convert.base64Decode(
     'JAogSEVBVF9TT1VSQ0VfS0lORF9FTEVDVFJJQ19CT0lMRVIQBRIgChxIRUFUX1NPVVJDRV9LSU'
     '5EX0ZVRUxfQk9JTEVSEAY=');
 
+@$core.Deprecated('Use circuitMixingDescriptor instead')
+const CircuitMixing$json = {
+  '1': 'CircuitMixing',
+  '2': [
+    {'1': 'CIRCUIT_MIXING_UNSPECIFIED', '2': 0},
+    {'1': 'CIRCUIT_MIXING_MIXED', '2': 1},
+    {'1': 'CIRCUIT_MIXING_UNMIXED', '2': 2},
+  ],
+};
+
+/// Descriptor for `CircuitMixing`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List circuitMixingDescriptor = $convert.base64Decode(
+    'Cg1DaXJjdWl0TWl4aW5nEh4KGkNJUkNVSVRfTUlYSU5HX1VOU1BFQ0lGSUVEEAASGAoUQ0lSQ1'
+    'VJVF9NSVhJTkdfTUlYRUQQARIaChZDSVJDVUlUX01JWElOR19VTk1JWEVEEAI=');
+
 @$core.Deprecated('Use priceRuleDescriptor instead')
 const PriceRule$json = {
   '1': 'PriceRule',
@@ -317,17 +332,45 @@ final $typed_data.Uint8List heatingCircuitDescriptor = $convert.base64Decode(
 @$core.Deprecated('Use radiatorCircuitDescriptor instead')
 const RadiatorCircuit$json = {
   '1': 'RadiatorCircuit',
+  '2': [
+    {
+      '1': 'mixing',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.CircuitMixing',
+      '10': 'mixing'
+    },
+    {
+      '1': 'supply_probe',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.DeviceAttribute',
+      '10': 'supplyProbe'
+    },
+  ],
 };
 
 /// Descriptor for `RadiatorCircuit`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List radiatorCircuitDescriptor =
-    $convert.base64Decode('Cg9SYWRpYXRvckNpcmN1aXQ=');
+final $typed_data.Uint8List radiatorCircuitDescriptor = $convert.base64Decode(
+    'Cg9SYWRpYXRvckNpcmN1aXQSPQoGbWl4aW5nGAEgASgOMiUua3VzaW50YS5pb3QuaGVhdGluZy'
+    '52MS5DaXJjdWl0TWl4aW5nUgZtaXhpbmcSSgoMc3VwcGx5X3Byb2JlGAIgASgLMicua3VzaW50'
+    'YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdHRyaWJ1dGVSC3N1cHBseVByb2Jl');
 
 @$core.Deprecated('Use floorCircuitDescriptor instead')
 const FloorCircuit$json = {
   '1': 'FloorCircuit',
   '2': [
     {'1': 'mixing_valve', '3': 1, '4': 1, '5': 8, '10': 'mixingValve'},
+    {
+      '1': 'mixing',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.CircuitMixing',
+      '10': 'mixing'
+    },
     {
       '1': 'supply_cap_centidegrees',
       '3': 2,
@@ -361,12 +404,13 @@ const FloorCircuit$json = {
 
 /// Descriptor for `FloorCircuit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List floorCircuitDescriptor = $convert.base64Decode(
-    'CgxGbG9vckNpcmN1aXQSIQoMbWl4aW5nX3ZhbHZlGAEgASgIUgttaXhpbmdWYWx2ZRI7ChdzdX'
-    'BwbHlfY2FwX2NlbnRpZGVncmVlcxgCIAEoEUgAUhVzdXBwbHlDYXBDZW50aWRlZ3JlZXOIAQES'
-    'SgoMc3VwcGx5X3Byb2JlGAMgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5EZXZpY2VBdH'
-    'RyaWJ1dGVSC3N1cHBseVByb2JlEkoKDHJldHVybl9wcm9iZRgEIAEoCzInLmt1c2ludGEuaW90'
-    'LmhlYXRpbmcudjEuRGV2aWNlQXR0cmlidXRlUgtyZXR1cm5Qcm9iZUIaChhfc3VwcGx5X2NhcF'
-    '9jZW50aWRlZ3JlZXM=');
+    'CgxGbG9vckNpcmN1aXQSIQoMbWl4aW5nX3ZhbHZlGAEgASgIUgttaXhpbmdWYWx2ZRI9CgZtaX'
+    'hpbmcYBSABKA4yJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNpcmN1aXRNaXhpbmdSBm1peGlu'
+    'ZxI7ChdzdXBwbHlfY2FwX2NlbnRpZGVncmVlcxgCIAEoEUgAUhVzdXBwbHlDYXBDZW50aWRlZ3'
+    'JlZXOIAQESSgoMc3VwcGx5X3Byb2JlGAMgASgLMicua3VzaW50YS5pb3QuaGVhdGluZy52MS5E'
+    'ZXZpY2VBdHRyaWJ1dGVSC3N1cHBseVByb2JlEkoKDHJldHVybl9wcm9iZRgEIAEoCzInLmt1c2'
+    'ludGEuaW90LmhlYXRpbmcudjEuRGV2aWNlQXR0cmlidXRlUgtyZXR1cm5Qcm9iZUIaChhfc3Vw'
+    'cGx5X2NhcF9jZW50aWRlZ3JlZXM=');
 
 @$core.Deprecated('Use floorZoneDescriptor instead')
 const FloorZone$json = {
