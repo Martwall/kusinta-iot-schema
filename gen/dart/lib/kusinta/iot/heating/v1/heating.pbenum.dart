@@ -53,6 +53,43 @@ class HeatSourceKind extends $pb.ProtobufEnum {
   const HeatSourceKind._(super.value, super.name);
 }
 
+/// Whether a circuit is fed through a mixing valve, as its installer states it.
+///
+/// SUPPLY. What heats a circuit's radiators or slab is the water entering it. Where a circuit is
+/// UNMIXED, fed straight from its heat source, that is the heat source's own measured supply,
+/// less a little pipe loss (not the supply it aims for, and not while it heats hot water, when its
+/// flow goes to the tank), and the gateway may use the heat source's reading for it. Where it is
+/// MIXED, or not stated, the water is cooler than the heat source makes and only a supply probe
+/// after the mixer says what it is: without one, a model of what the circuit heats cannot be
+/// fitted on its heated quarters. A return probe is never required: without one a circuit is
+/// modelled on its rooms alone.
+class CircuitMixing extends $pb.ProtobufEnum {
+  /// Not stated. Read as MIXED for the supply: the heat source's reading is not used.
+  static const CircuitMixing CIRCUIT_MIXING_UNSPECIFIED =
+      CircuitMixing._(0, _omitEnumNames ? '' : 'CIRCUIT_MIXING_UNSPECIFIED');
+
+  /// A mixing (shunt) valve blends return water into the circuit's supply.
+  static const CircuitMixing CIRCUIT_MIXING_MIXED =
+      CircuitMixing._(1, _omitEnumNames ? '' : 'CIRCUIT_MIXING_MIXED');
+
+  /// No mixing valve: the circuit takes the heat source's supply as it is.
+  static const CircuitMixing CIRCUIT_MIXING_UNMIXED =
+      CircuitMixing._(2, _omitEnumNames ? '' : 'CIRCUIT_MIXING_UNMIXED');
+
+  static const $core.List<CircuitMixing> values = <CircuitMixing>[
+    CIRCUIT_MIXING_UNSPECIFIED,
+    CIRCUIT_MIXING_MIXED,
+    CIRCUIT_MIXING_UNMIXED,
+  ];
+
+  static final $core.List<CircuitMixing?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static CircuitMixing? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const CircuitMixing._(super.value, super.name);
+}
+
 /// A price rule (PRICE RULES). A closed list that grows only by a release of this schema: a
 /// client words a rule it does not know as a price rule, unnamed, and offers no switch for it.
 class PriceRule extends $pb.ProtobufEnum {
