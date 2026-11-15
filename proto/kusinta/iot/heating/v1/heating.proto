@@ -677,6 +677,10 @@ message ShadowDay {
   // made up at full electric energy as cautious_net_saving_micro_eur is, never above the share.
   // Unset where the saving is in money, or on a day kept before it was computed.
   optional sint32 cautious_saving_share_permille = 10;
+
+  // A day of a share-scored rule whose share could not be known (its heat cost too near zero to
+  // divide by) is given for its counts alone: with saving_share_permille unset and the money
+  // fields 0, it reports breaches and overheats only, never a saving of 0.
 }
 
 // One price rule of one plant of a home, scored day by day against one comfort band.
