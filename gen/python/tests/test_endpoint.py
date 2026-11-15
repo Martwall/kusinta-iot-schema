@@ -648,8 +648,11 @@ def test_device_attention_declares_its_documented_key():
 
 
 def test_device_attention_reason_carries_the_published_attribute_name():
-    field = device_pb2.DeviceAttention.DESCRIPTOR.fields_by_name["reason"]
-    assert field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute] == "reason"
+    field = device_pb2.DeviceAttention.DESCRIPTOR.fields_by_name["attention_reason"]
+    assert (
+        field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+        == "attention_reason"
+    )
 
 
 def test_device_attention_is_read_and_report_only():
@@ -669,11 +672,11 @@ def test_device_attention_rides_beside_a_vendor_extension_on_one_endpoint():
     endpoint = device_pb2.Endpoint(
         hm_maintenance=homematic_pb2.HmMaintenanceProps(),
         attention=device_pb2.DeviceAttention(
-            reason=device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
+            attention_reason=device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
         ),
     )
 
-    assert (endpoint.HasField("hm_maintenance"), endpoint.attention.reason) == (
+    assert (endpoint.HasField("hm_maintenance"), endpoint.attention.attention_reason) == (
         True,
         device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED,
     )

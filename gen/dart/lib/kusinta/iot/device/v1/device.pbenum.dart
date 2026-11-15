@@ -149,8 +149,9 @@ class RadioQuality extends $pb.ProtobufEnum {
 }
 
 /// Why a device needs a person's attention before it works as it should (DeviceAttention). A
-/// closed list that grows only by a release of this schema: a client words a reason it does not
-/// know as the device needing attention, unnamed.
+/// closed list of device conditions that grows only by a release of this schema, in order of
+/// priority: where several hold, the lowest number is the one reported. A client words a reason
+/// it does not know as the device needing attention, unnamed.
 class AttentionReason extends $pb.ProtobufEnum {
   /// None, or one this client's schema does not know.
   static const AttentionReason ATTENTION_REASON_UNSPECIFIED = AttentionReason._(

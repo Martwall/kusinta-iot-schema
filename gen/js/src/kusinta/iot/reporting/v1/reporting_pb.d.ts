@@ -77,8 +77,8 @@ export declare type ProblemSubject = Message<"kusinta.iot.reporting.v1.ProblemSu
    */
   subject: {
     /**
-     * DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER; FLOOR_ZONE_UNCONTROLLED: the
-     * device whose output the zone binds.
+     * DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER, DEVICE_NEEDS_ATTENTION;
+     * FLOOR_ZONE_UNCONTROLLED: the device whose output the zone binds.
      *
      * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 1;
      */
@@ -125,7 +125,8 @@ export declare const ProblemSubjectSchema: GenMessage<ProblemSubject>;
  *   * opened_at is the quarter hour the gateway's evaluated status changed, never the time
  *     of a device report;
  *   * battery_percent is rounded up to a multiple of ten, as ServiceStatus.battery_percent is;
- *   * the only device faults reported are DEVICE_ERROR and DEVICE_TAMPER.
+ *   * the only device faults reported are DEVICE_ERROR, DEVICE_TAMPER and
+ *     DEVICE_NEEDS_ATTENTION.
  * A device a resident owns raises no problem at all: it is theirs, and building staff are not
  * told of it.
  *
@@ -1103,8 +1104,11 @@ export enum ProblemKind {
    * (device.v1.DeviceAttention): attention says why. A service signal, as a fault is
    * (access.v1.SERVICE_SIGNAL_FAULT): it names the device and where it is filed, and nothing
    * of the room or of the people in it, with the times a device in a home is given. A change
-   * of reason while it is open is sent as a change of the problem. Closes
-   * CLEAR_REASON_RECOVERED once the connector reports no reason, and
+   * of reason while it is open is sent as a change of the problem. Judged on the reason the
+   * connector last reported, whether the device is heard now or not: it opens, and stays open,
+   * while the device is offline or its connector is settling. Closes CLEAR_REASON_RECOVERED
+   * once the connector reports that no reason holds (a null value), never for the mere
+   * absence of a report — a connector restarting without sending it — and
    * CLEAR_REASON_DEVICE_REMOVED with the device.
    *
    * @generated from enum value: PROBLEM_KIND_DEVICE_NEEDS_ATTENTION = 12;
@@ -1169,7 +1173,7 @@ export enum ClearReason {
   /**
    * The condition ended: the device was heard, its battery recovered or was replaced, the
    * connector came back, the window closed, the floor zone was given a control room or
-   * removed.
+   * removed, the device no longer needs attention.
    *
    * @generated from enum value: CLEAR_REASON_RECOVERED = 1;
    */

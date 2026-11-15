@@ -203,8 +203,8 @@ class ProblemSubject extends $pb.GeneratedMessage {
       _ProblemSubject_SubjectByTag[$_whichOneof(0)]!;
   void clearSubject() => $_clearField($_whichOneof(0));
 
-  /// DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER; FLOOR_ZONE_UNCONTROLLED: the
-  /// device whose output the zone binds.
+  /// DEVICE_OFFLINE, BATTERY_*, DEVICE_ERROR, DEVICE_TAMPER, DEVICE_NEEDS_ATTENTION;
+  /// FLOOR_ZONE_UNCONTROLLED: the device whose output the zone binds.
   @$pb.TagNumber(1)
   $0.DeviceId get deviceId => $_getN(0);
   @$pb.TagNumber(1)
@@ -258,7 +258,8 @@ class ProblemSubject extends $pb.GeneratedMessage {
 ///   * opened_at is the quarter hour the gateway's evaluated status changed, never the time
 ///     of a device report;
 ///   * battery_percent is rounded up to a multiple of ten, as ServiceStatus.battery_percent is;
-///   * the only device faults reported are DEVICE_ERROR and DEVICE_TAMPER.
+///   * the only device faults reported are DEVICE_ERROR, DEVICE_TAMPER and
+///     DEVICE_NEEDS_ATTENTION.
 /// A device a resident owns raises no problem at all: it is theirs, and building staff are not
 /// told of it.
 ///

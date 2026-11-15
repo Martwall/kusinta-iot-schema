@@ -344,7 +344,9 @@ class ServiceStatus extends $pb.GeneratedMessage {
   /// What the device needs before it works as it should, as its connector reports it
   /// (device.v1.DeviceAttention), as a fault is given (access.v1.SERVICE_SIGNAL_FAULT): a valve
   /// not calibrated, say. UNSPECIFIED: nothing. A client words a reason it does not know as the
-  /// device needing attention, unnamed, and gives its own action for one it knows.
+  /// device needing attention, unnamed, and gives its own action for one it knows. A reason can
+  /// follow from what someone did — a valve refitted, its battery changed — and service learns
+  /// that within the quarter hour; that much attention reporting discloses.
   @$pb.TagNumber(10)
   $0.AttentionReason get attention => $_getN(9);
   @$pb.TagNumber(10)

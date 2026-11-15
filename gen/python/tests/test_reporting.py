@@ -161,6 +161,10 @@ def test_a_device_needing_attention_says_why():
     assert problem.attention == device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
 
 
+def test_a_problem_names_no_attention_reason_by_default():
+    assert reporting_pb2.Problem().attention == device_pb2.ATTENTION_REASON_UNSPECIFIED
+
+
 def test_device_needs_attention_keeps_its_wire_number():
     assert reporting_pb2.PROBLEM_KIND_DEVICE_NEEDS_ATTENTION == 12
 

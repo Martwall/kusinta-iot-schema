@@ -167,10 +167,10 @@ class HeatSourceReadings(_message.Message):
     def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., producing: _Optional[int] = ..., compressor_state: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., alarm_active: _Optional[bool] = ..., alarm_code: _Optional[int] = ..., add_on_heat_watts: _Optional[int] = ...) -> None: ...
 
 class DeviceAttention(_message.Message):
-    __slots__ = ("reason",)
-    REASON_FIELD_NUMBER: _ClassVar[int]
-    reason: int
-    def __init__(self, reason: _Optional[int] = ...) -> None: ...
+    __slots__ = ("attention_reason",)
+    ATTENTION_REASON_FIELD_NUMBER: _ClassVar[int]
+    attention_reason: int
+    def __init__(self, attention_reason: _Optional[int] = ...) -> None: ...
 
 class RadioLink(_message.Message):
     __slots__ = ("quality", "rssi_dbm", "snr_db")

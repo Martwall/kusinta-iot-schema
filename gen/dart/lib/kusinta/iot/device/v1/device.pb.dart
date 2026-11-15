@@ -52,8 +52,8 @@ enum Endpoint_VendorProperties { hmThermostat, hmMaintenance, notSet }
 /// per physical device, so a device is still one row, one claim, one placement.
 ///
 /// Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
-/// extensions — the vendor_properties cases, and radio_link (52) and heat_source (53) outside
-/// that oneof.
+/// extensions — the vendor_properties cases, and radio_link (52), heat_source (53) and
+/// attention (54) outside that oneof.
 ///
 /// endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
 /// global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -457,11 +457,11 @@ class Endpoint extends $pb.GeneratedMessage {
   /// vendor parameter has no cluster and so no ClusterState to be listed in. A name list
   /// rather than an id list because the vendor branch addresses by name. A bare list
   /// rather than a per-extension map because an endpoint carries at most one
-  /// vendor_properties case and at most a radio_link and a heat_source beside it, and the
-  /// schema keeps the attribute names of radio_link, heat_source and every vendor_properties
-  /// case disjoint — a test enforces it — so a name here never needs its extension to be
-  /// read. radio_link's and heat_source's parameters are listed here the same way as a
-  /// vendor's.
+  /// vendor_properties case and at most a radio_link, a heat_source and an attention beside it,
+  /// and the schema keeps the attribute names of radio_link, heat_source, attention and every
+  /// vendor_properties case disjoint — a test enforces it — so a name here never needs its
+  /// extension to be read. radio_link's, heat_source's and attention's parameters are listed
+  /// here the same way as a vendor's.
   ///
   /// Same reading as the Matter side: named here with no value = implemented, not yet
   /// reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -1004,8 +1004,9 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
 /// device's own reports. Technology-agnostic: the same message for any connector.
 ///
 /// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.attention" and the
-/// attribute name "reason", as uint_value. A connector sends the most pressing reason, and a
-/// null value (PropertyUpdate.null_value) once none holds.
+/// attribute name "attention_reason", as uint_value. A connector sends the most pressing reason
+/// that holds — the one lowest in AttentionReason's order, which is its order of priority — and
+/// a null value (PropertyUpdate.null_value) once none holds.
 ///
 /// Who is given it: as a fault (access.v1.SERVICE_SIGNAL_FAULT), service as well as the
 /// device's residents, as webrtc.v1.ServiceStatus.attention and a
@@ -1015,10 +1016,10 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
 /// does of a fault.
 class DeviceAttention extends $pb.GeneratedMessage {
   factory DeviceAttention({
-    $core.int? reason,
+    $core.int? attentionReason,
   }) {
     final result = create();
-    if (reason != null) result.reason = reason;
+    if (attentionReason != null) result.attentionReason = attentionReason;
     return result;
   }
 
@@ -1036,7 +1037,8 @@ class DeviceAttention extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'attentionReason', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1063,13 +1065,13 @@ class DeviceAttention extends $pb.GeneratedMessage {
   /// Why, as an AttentionReason number; 0 is not used. A number, not the name, as every
   /// enum-valued reading travels.
   @$pb.TagNumber(1)
-  $core.int get reason => $_getIZ(0);
+  $core.int get attentionReason => $_getIZ(0);
   @$pb.TagNumber(1)
-  set reason($core.int value) => $_setUnsignedInt32(0, value);
+  set attentionReason($core.int value) => $_setUnsignedInt32(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasReason() => $_has(0);
+  $core.bool hasAttentionReason() => $_has(0);
   @$pb.TagNumber(1)
-  void clearReason() => $_clearField(1);
+  void clearAttentionReason() => $_clearField(1);
 }
 
 /// A device's radio link, as its connector reports it.

@@ -617,26 +617,27 @@ const DeviceAttention$json = {
   '1': 'DeviceAttention',
   '2': [
     {
-      '1': 'reason',
+      '1': 'attention_reason',
       '3': 1,
       '4': 1,
       '5': 13,
       '8': {},
       '9': 0,
-      '10': 'reason',
+      '10': 'attentionReason',
       '17': true
     },
   ],
   '7': {},
   '8': [
-    {'1': '_reason'},
+    {'1': '_attention_reason'},
   ],
 };
 
 /// Descriptor for `DeviceAttention`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deviceAttentionDescriptor = $convert.base64Decode(
-    'Cg9EZXZpY2VBdHRlbnRpb24SKwoGcmVhc29uGAEgASgNQg6itRgGcmVhc29u0LUYBUgAUgZyZW'
-    'Fzb26IAQE6Faq1GBFrdXNpbnRhLmF0dGVudGlvbkIJCgdfcmVhc29u');
+    'Cg9EZXZpY2VBdHRlbnRpb24SSAoQYXR0ZW50aW9uX3JlYXNvbhgBIAEoDUIYorUYEGF0dGVudG'
+    'lvbl9yZWFzb27QtRgFSABSD2F0dGVudGlvblJlYXNvbogBAToVqrUYEWt1c2ludGEuYXR0ZW50'
+    'aW9uQhMKEV9hdHRlbnRpb25fcmVhc29u');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

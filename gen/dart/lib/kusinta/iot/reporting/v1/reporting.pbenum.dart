@@ -112,8 +112,11 @@ class ProblemKind extends $pb.ProtobufEnum {
   /// (device.v1.DeviceAttention): attention says why. A service signal, as a fault is
   /// (access.v1.SERVICE_SIGNAL_FAULT): it names the device and where it is filed, and nothing
   /// of the room or of the people in it, with the times a device in a home is given. A change
-  /// of reason while it is open is sent as a change of the problem. Closes
-  /// CLEAR_REASON_RECOVERED once the connector reports no reason, and
+  /// of reason while it is open is sent as a change of the problem. Judged on the reason the
+  /// connector last reported, whether the device is heard now or not: it opens, and stays open,
+  /// while the device is offline or its connector is settling. Closes CLEAR_REASON_RECOVERED
+  /// once the connector reports that no reason holds (a null value), never for the mere
+  /// absence of a report — a connector restarting without sending it — and
   /// CLEAR_REASON_DEVICE_REMOVED with the device.
   static const ProblemKind PROBLEM_KIND_DEVICE_NEEDS_ATTENTION = ProblemKind._(
       12, _omitEnumNames ? '' : 'PROBLEM_KIND_DEVICE_NEEDS_ATTENTION');
@@ -187,7 +190,7 @@ class ClearReason extends $pb.ProtobufEnum {
 
   /// The condition ended: the device was heard, its battery recovered or was replaced, the
   /// connector came back, the window closed, the floor zone was given a control room or
-  /// removed.
+  /// removed, the device no longer needs attention.
   static const ClearReason CLEAR_REASON_RECOVERED =
       ClearReason._(1, _omitEnumNames ? '' : 'CLEAR_REASON_RECOVERED');
 
