@@ -162,6 +162,7 @@ class ServiceStatus extends $pb.GeneratedMessage {
     $core.bool? batteryReplacementNeeded,
     $core.int? radioQuality,
     $core.Iterable<ServiceFault>? faults,
+    $0.AttentionReason? attention,
   }) {
     final result = create();
     if (deviceId != null) result.deviceId = deviceId;
@@ -174,6 +175,7 @@ class ServiceStatus extends $pb.GeneratedMessage {
       result.batteryReplacementNeeded = batteryReplacementNeeded;
     if (radioQuality != null) result.radioQuality = radioQuality;
     if (faults != null) result.faults.addAll(faults);
+    if (attention != null) result.attention = attention;
     return result;
   }
 
@@ -208,6 +210,11 @@ class ServiceStatus extends $pb.GeneratedMessage {
         valueOf: ServiceFault.valueOf,
         enumValues: ServiceFault.values,
         defaultEnumValue: ServiceFault.SERVICE_FAULT_UNSPECIFIED)
+    ..e<$0.AttentionReason>(
+        10, _omitFieldNames ? '' : 'attention', $pb.PbFieldType.OE,
+        defaultOrMaker: $0.AttentionReason.ATTENTION_REASON_UNSPECIFIED,
+        valueOf: $0.AttentionReason.valueOf,
+        enumValues: $0.AttentionReason.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -333,6 +340,21 @@ class ServiceStatus extends $pb.GeneratedMessage {
   /// that much fault reporting discloses.
   @$pb.TagNumber(9)
   $pb.PbList<ServiceFault> get faults => $_getList(8);
+
+  /// What the device needs before it works as it should, as its connector reports it
+  /// (device.v1.DeviceAttention), as a fault is given (access.v1.SERVICE_SIGNAL_FAULT): a valve
+  /// not calibrated, say. UNSPECIFIED: nothing. A client words a reason it does not know as the
+  /// device needing attention, unnamed, and gives its own action for one it knows. A reason can
+  /// follow from what someone did — a valve refitted, its battery changed — and service learns
+  /// that within the quarter hour; that much attention reporting discloses.
+  @$pb.TagNumber(10)
+  $0.AttentionReason get attention => $_getN(9);
+  @$pb.TagNumber(10)
+  set attention($0.AttentionReason value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasAttention() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearAttention() => $_clearField(10);
 }
 
 /// The service statuses that changed at a quarter hour, gateway → app. Apply each as an

@@ -148,5 +148,34 @@ class RadioQuality extends $pb.ProtobufEnum {
   const RadioQuality._(super.value, super.name);
 }
 
+/// Why a device needs a person's attention before it works as it should (DeviceAttention). A
+/// closed list of device conditions that grows only by a release of this schema, in order of
+/// priority: where several hold, the lowest number is the one reported. A client words a reason
+/// it does not know as the device needing attention, unnamed.
+class AttentionReason extends $pb.ProtobufEnum {
+  /// None, or one this client's schema does not know.
+  static const AttentionReason ATTENTION_REASON_UNSPECIFIED = AttentionReason._(
+      0, _omitEnumNames ? '' : 'ATTENTION_REASON_UNSPECIFIED');
+
+  /// A radiator valve whose motor calibration failed: it cannot tell how far it is open, so
+  /// what it reports of its opening is not used. Calibrating it again — refitting it on the
+  /// valve, as its maker says — clears it.
+  static const AttentionReason ATTENTION_REASON_VALVE_NOT_CALIBRATED =
+      AttentionReason._(
+          1, _omitEnumNames ? '' : 'ATTENTION_REASON_VALVE_NOT_CALIBRATED');
+
+  static const $core.List<AttentionReason> values = <AttentionReason>[
+    ATTENTION_REASON_UNSPECIFIED,
+    ATTENTION_REASON_VALVE_NOT_CALIBRATED,
+  ];
+
+  static final $core.List<AttentionReason?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static AttentionReason? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const AttentionReason._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

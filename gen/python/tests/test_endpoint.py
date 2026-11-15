@@ -187,7 +187,7 @@ VENDOR_EXTENSIONS = [
     for field in device_pb2.Endpoint.DESCRIPTOR.oneofs_by_name["vendor_properties"].fields
 ] + [
     device_pb2.Endpoint.DESCRIPTOR.fields_by_name[name].message_type
-    for name in ("radio_link", "heat_source")
+    for name in ("radio_link", "heat_source", "attention")
 ]
 
 
@@ -633,6 +633,53 @@ def test_radio_link_is_read_and_report_only():
         for f in device_pb2.RadioLink.DESCRIPTOR.fields
     }
     assert capabilities == {5}
+
+
+# --- what a device needs to work, as any connector reports it -----------------------
+
+
+def test_device_attention_declares_its_documented_key():
+    assert (
+        device_pb2.DeviceAttention.DESCRIPTOR.GetOptions().Extensions[
+            vendor_options_pb2.vendor_extension
+        ]
+        == "kusinta.attention"
+    )
+
+
+def test_device_attention_reason_carries_the_published_attribute_name():
+    field = device_pb2.DeviceAttention.DESCRIPTOR.fields_by_name["attention_reason"]
+    assert (
+        field.GetOptions().Extensions[vendor_options_pb2.vendor_attribute]
+        == "attention_reason"
+    )
+
+
+def test_device_attention_is_read_and_report_only():
+    """What a device needs is reported by its connector, never set."""
+    capabilities = {
+        f.GetOptions().Extensions[vendor_options_pb2.vendor_attribute_capabilities]
+        for f in device_pb2.DeviceAttention.DESCRIPTOR.fields
+    }
+    assert capabilities == {5}
+
+
+def test_a_valve_not_calibrated_keeps_its_wire_number():
+    assert device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED == 1
+
+
+def test_device_attention_rides_beside_a_vendor_extension_on_one_endpoint():
+    endpoint = device_pb2.Endpoint(
+        hm_maintenance=homematic_pb2.HmMaintenanceProps(),
+        attention=device_pb2.DeviceAttention(
+            attention_reason=device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
+        ),
+    )
+
+    assert (endpoint.HasField("hm_maintenance"), endpoint.attention.attention_reason) == (
+        True,
+        device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED,
+    )
 
 
 def test_radio_link_rides_beside_the_maintenance_extension_on_one_endpoint():

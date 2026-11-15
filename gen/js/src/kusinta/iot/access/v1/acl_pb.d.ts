@@ -428,7 +428,9 @@ export enum ServiceSignal {
   FIRMWARE = 4,
 
   /**
-   * Faults it reports about itself: errors and tampering. Not configuration it has yet to
+   * Faults it reports about itself: errors and tampering, and what it needs before it works as
+   * it should, as a device.v1.AttentionReason — a closed list of device conditions, never a
+   * reading or a setting — such as a valve not calibrated. Not configuration it has yet to
    * take, which would show when its residents changed a setting.
    *
    * @generated from enum value: SERVICE_SIGNAL_FAULT = 5;
