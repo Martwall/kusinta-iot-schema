@@ -126,6 +126,7 @@ class ModelFitGap(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     MODEL_FIT_GAP_SETUP_CHANGED: _ClassVar[ModelFitGap]
     MODEL_FIT_GAP_LEARNING_RETURNS: _ClassVar[ModelFitGap]
     MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN: _ClassVar[ModelFitGap]
+    MODEL_FIT_GAP_NO_SUPPLY: _ClassVar[ModelFitGap]
 
 class SetupMissing(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -217,6 +218,7 @@ MODEL_FIT_GAP_TOO_FEW_NIGHTS: ModelFitGap
 MODEL_FIT_GAP_SETUP_CHANGED: ModelFitGap
 MODEL_FIT_GAP_LEARNING_RETURNS: ModelFitGap
 MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN: ModelFitGap
+MODEL_FIT_GAP_NO_SUPPLY: ModelFitGap
 SETUP_MISSING_UNSPECIFIED: SetupMissing
 SETUP_MISSING_ROOM_QUESTIONS: SetupMissing
 SETUP_MISSING_OUTPUT_TEST: SetupMissing

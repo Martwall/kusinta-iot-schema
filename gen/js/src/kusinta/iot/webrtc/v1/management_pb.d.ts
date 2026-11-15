@@ -2073,6 +2073,9 @@ export declare const SetComfortWindowsSchema: GenMessage<SetComfortWindows>;
  *                         ADD_ON_HEATER_BLOCK and "sg_ready_boost" for HOT_WATER; for
  *                         FLOOR_PRE_HEAT, no floor zone of the plant binds an output, and
  *                         "field" is "output". SHADOW and OFF need no input bound.
+ *   "rule_not_drivable"   LIVE for a rule the gateway does not yet drive (it decides it in shadow
+ *                         only); SHADOW and OFF are taken. Checked before rule_input_unbound,
+ *                         since binding an input would not help.
  *
  * Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
  * and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE

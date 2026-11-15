@@ -775,6 +775,11 @@ enum ModelFitGap {
   // another home. Binding the other zones' outputs fixes it. Until then the zone is fitted on
   // its room alone, no better than FAIR.
   MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN = 10;
+  // A model whose circuit's supply is not known: its circuit MIXED, or a floor circuit's mixing
+  // not stated, with no supply probe after the mixer (heating.v1 CircuitMixing, SUPPLY). Bind a
+  // supply probe, or state the circuit UNMIXED where no mixing valve feeds it. A model with no
+  // heat source is NO_PLANT instead.
+  MODEL_FIT_GAP_NO_SUPPLY = 11;
 }
 
 // One room's or floor zone's model fit.

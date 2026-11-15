@@ -6,6 +6,7 @@ from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.climate.v1 import climate_pb2 as _climate_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
+from kusinta.iot.planning.v1 import planning_pb2 as _planning_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
@@ -341,7 +342,7 @@ class HeatBlockHistory(_message.Message):
     def __init__(self, plant_id: _Optional[str] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., blocks: _Optional[_Iterable[_Union[HeatBlock, _Mapping]]] = ..., releases: _Optional[_Iterable[_Union[HeatBlockRelease, _Mapping]]] = ..., rule_changes: _Optional[_Iterable[_Union[PriceRuleChange, _Mapping]]] = ...) -> None: ...
 
 class ShadowDay(_message.Message):
-    __slots__ = ("date", "net_saving_micro_eur", "recovery_cost_micro_eur", "blocked_quarters", "breach_quarters", "overheat_quarters", "no_price_quarters", "cautious_net_saving_micro_eur", "saving_share_permille")
+    __slots__ = ("date", "net_saving_micro_eur", "recovery_cost_micro_eur", "blocked_quarters", "breach_quarters", "overheat_quarters", "no_price_quarters", "cautious_net_saving_micro_eur", "saving_share_permille", "cautious_saving_share_permille")
     DATE_FIELD_NUMBER: _ClassVar[int]
     NET_SAVING_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
     RECOVERY_COST_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
@@ -351,6 +352,7 @@ class ShadowDay(_message.Message):
     NO_PRICE_QUARTERS_FIELD_NUMBER: _ClassVar[int]
     CAUTIOUS_NET_SAVING_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
     SAVING_SHARE_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    CAUTIOUS_SAVING_SHARE_PERMILLE_FIELD_NUMBER: _ClassVar[int]
     date: str
     net_saving_micro_eur: int
     recovery_cost_micro_eur: int
@@ -360,7 +362,8 @@ class ShadowDay(_message.Message):
     no_price_quarters: int
     cautious_net_saving_micro_eur: int
     saving_share_permille: int
-    def __init__(self, date: _Optional[str] = ..., net_saving_micro_eur: _Optional[int] = ..., recovery_cost_micro_eur: _Optional[int] = ..., blocked_quarters: _Optional[int] = ..., breach_quarters: _Optional[int] = ..., overheat_quarters: _Optional[int] = ..., no_price_quarters: _Optional[int] = ..., cautious_net_saving_micro_eur: _Optional[int] = ..., saving_share_permille: _Optional[int] = ...) -> None: ...
+    cautious_saving_share_permille: int
+    def __init__(self, date: _Optional[str] = ..., net_saving_micro_eur: _Optional[int] = ..., recovery_cost_micro_eur: _Optional[int] = ..., blocked_quarters: _Optional[int] = ..., breach_quarters: _Optional[int] = ..., overheat_quarters: _Optional[int] = ..., no_price_quarters: _Optional[int] = ..., cautious_net_saving_micro_eur: _Optional[int] = ..., saving_share_permille: _Optional[int] = ..., cautious_saving_share_permille: _Optional[int] = ...) -> None: ...
 
 class ShadowBandSeries(_message.Message):
     __slots__ = ("plant_id", "rule", "below_target_centidegrees", "above_target_centidegrees", "days")
@@ -377,11 +380,13 @@ class ShadowBandSeries(_message.Message):
     def __init__(self, plant_id: _Optional[str] = ..., rule: _Optional[_Union[PriceRule, str]] = ..., below_target_centidegrees: _Optional[int] = ..., above_target_centidegrees: _Optional[int] = ..., days: _Optional[_Iterable[_Union[ShadowDay, _Mapping]]] = ...) -> None: ...
 
 class ShadowSummary(_message.Message):
-    __slots__ = ("home_id", "kept_from", "series")
+    __slots__ = ("home_id", "kept_from", "series", "exchange_rates")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]
     KEPT_FROM_FIELD_NUMBER: _ClassVar[int]
     SERIES_FIELD_NUMBER: _ClassVar[int]
+    EXCHANGE_RATES_FIELD_NUMBER: _ClassVar[int]
     home_id: _identity_pb2.SpaceId
     kept_from: str
     series: _containers.RepeatedCompositeFieldContainer[ShadowBandSeries]
-    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[str] = ..., series: _Optional[_Iterable[_Union[ShadowBandSeries, _Mapping]]] = ...) -> None: ...
+    exchange_rates: _containers.RepeatedCompositeFieldContainer[_planning_pb2.ExchangeRate]
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[str] = ..., series: _Optional[_Iterable[_Union[ShadowBandSeries, _Mapping]]] = ..., exchange_rates: _Optional[_Iterable[_Union[_planning_pb2.ExchangeRate, _Mapping]]] = ...) -> None: ...

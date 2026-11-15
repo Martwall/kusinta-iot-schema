@@ -10,6 +10,7 @@ import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { Role } from "../../access/v1/roles_pb.js";
 import type { ClimateExplanationKind } from "../../climate/v1/climate_pb.js";
+import type { ExchangeRate } from "../../planning/v1/planning_pb.js";
 
 /**
  * Describes the file kusinta/iot/heating/v1/heating.proto.
@@ -279,7 +280,8 @@ export declare const HeatingCircuitSchema: GenMessage<HeatingCircuit>;
  */
 export declare type RadiatorCircuit = Message<"kusinta.iot.heating.v1.RadiatorCircuit"> & {
   /**
-   * As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED.
+   * As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED, and read so while not
+   * stated.
    *
    * @generated from field: kusinta.iot.heating.v1.CircuitMixing mixing = 1;
    */
@@ -287,7 +289,7 @@ export declare type RadiatorCircuit = Message<"kusinta.iot.heating.v1.RadiatorCi
 
   /**
    * A probe on the supply after the mixer, as FloorCircuit.supply_probe names one: needed only
-   * where the circuit is MIXED, or its mixing is not stated, for its supply to be known.
+   * where the circuit is stated MIXED, for its supply to be known.
    *
    * @generated from field: kusinta.iot.heating.v1.DeviceAttribute supply_probe = 2;
    */
@@ -1037,6 +1039,15 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: optional sint32 saving_share_permille = 9;
    */
   savingSharePermille?: number | undefined;
+
+  /**
+   * The cautious figure as a share, for a rule whose saving is given as saving_share_permille:
+   * made up at full electric energy as cautious_net_saving_micro_eur is, never above the share.
+   * Unset where the saving is in money, or on a day kept before it was computed.
+   *
+   * @generated from field: optional sint32 cautious_saving_share_permille = 10;
+   */
+  cautiousSavingSharePermille?: number | undefined;
 };
 
 /**
@@ -1124,6 +1135,16 @@ export declare type ShadowSummary = Message<"kusinta.iot.heating.v1.ShadowSummar
    * @generated from field: repeated kusinta.iot.heating.v1.ShadowBandSeries series = 3;
    */
   series: ShadowBandSeries[];
+
+  /**
+   * The reference rates a client converts the savings at, as webrtc.v1.DayAheadPrices gives
+   * them for prices: every rate the gateway holds from kept_from on, and the last one before it,
+   * oldest first. A day is converted at the rate in force on it. Empty where it holds none; a
+   * client then shows euros.
+   *
+   * @generated from field: repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 4;
+   */
+  exchangeRates: ExchangeRate[];
 };
 
 /**
@@ -1184,7 +1205,8 @@ export declare const HeatSourceKindSchema: GenEnum<HeatSourceKind>;
  * UNMIXED, fed straight from its heat source, that is the heat source's own measured supply,
  * less a little pipe loss (not the supply it aims for, and not while it heats hot water, when its
  * flow goes to the tank), and the gateway may use the heat source's reading for it. Where it is
- * MIXED, or not stated, the water is cooler than the heat source makes and only a supply probe
+ * MIXED, or a floor circuit's mixing is not stated (CIRCUIT_MIXING_UNSPECIFIED), the water is
+ * cooler than the heat source makes and only a supply probe
  * after the mixer says what it is: without one, a model of what the circuit heats cannot be
  * fitted on its heated quarters. A return probe is never required: without one a circuit is
  * modelled on its rooms alone.
@@ -1193,7 +1215,9 @@ export declare const HeatSourceKindSchema: GenEnum<HeatSourceKind>;
  */
 export enum CircuitMixing {
   /**
-   * Not stated. Read as MIXED for the supply: the heat source's reading is not used.
+   * Not stated. Read for the supply as the usual case for the circuit's kind: a floor circuit as
+   * MIXED (the heat source's reading is not used), a radiator circuit as UNMIXED (it is). An
+   * installer's answer always wins.
    *
    * @generated from enum value: CIRCUIT_MIXING_UNSPECIFIED = 0;
    */
