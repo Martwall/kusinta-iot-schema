@@ -52,8 +52,8 @@ enum Endpoint_VendorProperties { hmThermostat, hmMaintenance, notSet }
 /// per physical device, so a device is still one row, one claim, one placement.
 ///
 /// Field numbers: 1-2 identity, 3-49 standard Matter device types, 50-99 vendor
-/// extensions — the vendor_properties cases, and radio_link (52) and heat_source (53) outside
-/// that oneof.
+/// extensions — the vendor_properties cases, and radio_link (52), heat_source (53) and
+/// attention (54) outside that oneof.
 ///
 /// endpoint_id is Matter's own endpoint number, and it is scoped to ONE DEVICE — not
 /// global, and nothing coordinates numbering between devices. Endpoint 1 on one valve and
@@ -117,6 +117,7 @@ class Endpoint extends $pb.GeneratedMessage {
     $2.HmMaintenanceProps? hmMaintenance,
     RadioLink? radioLink,
     HeatSourceReadings? heatSource,
+    DeviceAttention? attention,
   }) {
     final result = create();
     if (endpointId != null) result.endpointId = endpointId;
@@ -144,6 +145,7 @@ class Endpoint extends $pb.GeneratedMessage {
     if (hmMaintenance != null) result.hmMaintenance = hmMaintenance;
     if (radioLink != null) result.radioLink = radioLink;
     if (heatSource != null) result.heatSource = heatSource;
+    if (attention != null) result.attention = attention;
     return result;
   }
 
@@ -242,6 +244,8 @@ class Endpoint extends $pb.GeneratedMessage {
         subBuilder: RadioLink.create)
     ..aOM<HeatSourceReadings>(53, _omitFieldNames ? '' : 'heatSource',
         subBuilder: HeatSourceReadings.create)
+    ..aOM<DeviceAttention>(54, _omitFieldNames ? '' : 'attention',
+        subBuilder: DeviceAttention.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -453,11 +457,11 @@ class Endpoint extends $pb.GeneratedMessage {
   /// vendor parameter has no cluster and so no ClusterState to be listed in. A name list
   /// rather than an id list because the vendor branch addresses by name. A bare list
   /// rather than a per-extension map because an endpoint carries at most one
-  /// vendor_properties case and at most a radio_link and a heat_source beside it, and the
-  /// schema keeps the attribute names of radio_link, heat_source and every vendor_properties
-  /// case disjoint — a test enforces it — so a name here never needs its extension to be
-  /// read. radio_link's and heat_source's parameters are listed here the same way as a
-  /// vendor's.
+  /// vendor_properties case and at most a radio_link, a heat_source and an attention beside it,
+  /// and the schema keeps the attribute names of radio_link, heat_source, attention and every
+  /// vendor_properties case disjoint — a test enforces it — so a name here never needs its
+  /// extension to be read. radio_link's, heat_source's and attention's parameters are listed
+  /// here the same way as a vendor's.
   ///
   /// Same reading as the Matter side: named here with no value = implemented, not yet
   /// reported. Absent from the list = this device does not have it. Empty = not stated,
@@ -533,6 +537,21 @@ class Endpoint extends $pb.GeneratedMessage {
   void clearHeatSource() => $_clearField(53);
   @$pb.TagNumber(53)
   HeatSourceReadings ensureHeatSource() => $_ensure(21);
+
+  /// What the device needs before it works as it should, on the endpoint its connector reports
+  /// it on. Outside vendor_properties for the reason radio_link is: any connector may report it,
+  /// beside whichever vendor case the endpoint carries. Selected by the vendor branch by its
+  /// (vendor_extension) key "kusinta.attention".
+  @$pb.TagNumber(54)
+  DeviceAttention get attention => $_getN(22);
+  @$pb.TagNumber(54)
+  set attention(DeviceAttention value) => $_setField(54, value);
+  @$pb.TagNumber(54)
+  $core.bool hasAttention() => $_has(22);
+  @$pb.TagNumber(54)
+  void clearAttention() => $_clearField(54);
+  @$pb.TagNumber(54)
+  DeviceAttention ensureAttention() => $_ensure(22);
 }
 
 /// Device is a DeviceDescriptor plus the endpoints it presents.
@@ -979,6 +998,80 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   $core.bool hasAddOnHeatWatts() => $_has(11);
   @$pb.TagNumber(12)
   void clearAddOnHeatWatts() => $_clearField(12);
+}
+
+/// What a device needs before it works as it should, as its connector judges it from the
+/// device's own reports. Technology-agnostic: the same message for any connector.
+///
+/// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.attention" and the
+/// attribute name "attention_reason", as uint_value. A connector sends the most pressing reason
+/// that holds — the one lowest in AttentionReason's order, which is its order of priority — and
+/// a null value (PropertyUpdate.null_value) once none holds.
+///
+/// Who is given it: as a fault (access.v1.SERVICE_SIGNAL_FAULT), service as well as the
+/// device's residents, as webrtc.v1.ServiceStatus.attention and a
+/// reporting.v1.PROBLEM_KIND_DEVICE_NEEDS_ATTENTION problem. It says what the device needs and
+/// nothing of the room or of the people in it. A reason can follow from what someone did — a
+/// valve refitted, its battery changed — and service learns that within the quarter hour, as it
+/// does of a fault.
+class DeviceAttention extends $pb.GeneratedMessage {
+  factory DeviceAttention({
+    $core.int? attentionReason,
+  }) {
+    final result = create();
+    if (attentionReason != null) result.attentionReason = attentionReason;
+    return result;
+  }
+
+  DeviceAttention._();
+
+  factory DeviceAttention.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeviceAttention.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeviceAttention',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.device.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'attentionReason', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceAttention clone() => DeviceAttention()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeviceAttention copyWith(void Function(DeviceAttention) updates) =>
+      super.copyWith((message) => updates(message as DeviceAttention))
+          as DeviceAttention;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeviceAttention create() => DeviceAttention._();
+  @$core.override
+  DeviceAttention createEmptyInstance() => create();
+  static $pb.PbList<DeviceAttention> createRepeated() =>
+      $pb.PbList<DeviceAttention>();
+  @$core.pragma('dart2js:noInline')
+  static DeviceAttention getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeviceAttention>(create);
+  static DeviceAttention? _defaultInstance;
+
+  /// Why, as an AttentionReason number; 0 is not used. A number, not the name, as every
+  /// enum-valued reading travels.
+  @$pb.TagNumber(1)
+  $core.int get attentionReason => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set attentionReason($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAttentionReason() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAttentionReason() => $_clearField(1);
 }
 
 /// A device's radio link, as its connector reports it.

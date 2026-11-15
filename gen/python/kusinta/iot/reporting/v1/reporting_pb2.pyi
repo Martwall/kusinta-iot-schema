@@ -3,6 +3,7 @@ import datetime
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.common.v1 import types_pb2 as _types_pb2
+from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
@@ -27,6 +28,7 @@ class ProblemKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     PROBLEM_KIND_WINDOW_OPEN: _ClassVar[ProblemKind]
     PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED: _ClassVar[ProblemKind]
     PROBLEM_KIND_PLANNING_INPUTS_STALE: _ClassVar[ProblemKind]
+    PROBLEM_KIND_DEVICE_NEEDS_ATTENTION: _ClassVar[ProblemKind]
 
 class ClearReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -58,6 +60,7 @@ PROBLEM_KIND_UNFILED_DEVICES: ProblemKind
 PROBLEM_KIND_WINDOW_OPEN: ProblemKind
 PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED: ProblemKind
 PROBLEM_KIND_PLANNING_INPUTS_STALE: ProblemKind
+PROBLEM_KIND_DEVICE_NEEDS_ATTENTION: ProblemKind
 CLEAR_REASON_UNSPECIFIED: ClearReason
 CLEAR_REASON_RECOVERED: ClearReason
 CLEAR_REASON_FILED: ClearReason
@@ -95,7 +98,7 @@ class ProblemSubject(_message.Message):
     def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., gateway: _Optional[bool] = ...) -> None: ...
 
 class Problem(_message.Message):
-    __slots__ = ("kind", "subject", "space_id", "opened_at", "battery_percent", "device_count", "backend_failure")
+    __slots__ = ("kind", "subject", "space_id", "opened_at", "battery_percent", "device_count", "backend_failure", "attention")
     KIND_FIELD_NUMBER: _ClassVar[int]
     SUBJECT_FIELD_NUMBER: _ClassVar[int]
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
@@ -103,6 +106,7 @@ class Problem(_message.Message):
     BATTERY_PERCENT_FIELD_NUMBER: _ClassVar[int]
     DEVICE_COUNT_FIELD_NUMBER: _ClassVar[int]
     BACKEND_FAILURE_FIELD_NUMBER: _ClassVar[int]
+    ATTENTION_FIELD_NUMBER: _ClassVar[int]
     kind: ProblemKind
     subject: ProblemSubject
     space_id: _identity_pb2.SpaceId
@@ -110,7 +114,8 @@ class Problem(_message.Message):
     battery_percent: int
     device_count: int
     backend_failure: _types_pb2.BackendFailureReason
-    def __init__(self, kind: _Optional[_Union[ProblemKind, str]] = ..., subject: _Optional[_Union[ProblemSubject, _Mapping]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., opened_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., battery_percent: _Optional[int] = ..., device_count: _Optional[int] = ..., backend_failure: _Optional[_Union[_types_pb2.BackendFailureReason, str]] = ...) -> None: ...
+    attention: _device_pb2.AttentionReason
+    def __init__(self, kind: _Optional[_Union[ProblemKind, str]] = ..., subject: _Optional[_Union[ProblemSubject, _Mapping]] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., opened_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., battery_percent: _Optional[int] = ..., device_count: _Optional[int] = ..., backend_failure: _Optional[_Union[_types_pb2.BackendFailureReason, str]] = ..., attention: _Optional[_Union[_device_pb2.AttentionReason, str]] = ...) -> None: ...
 
 class ProblemCleared(_message.Message):
     __slots__ = ("cleared_at", "reason")

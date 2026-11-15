@@ -100,6 +100,7 @@ VENDOR_EXTENSIONS = [
 ] + [
     device_pb2.RadioLink,
     device_pb2.HeatSourceReadings,
+    device_pb2.DeviceAttention,
 ]  # outside the oneof, selected by the vendor branch all the same
 
 

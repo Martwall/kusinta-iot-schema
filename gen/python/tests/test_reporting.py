@@ -14,6 +14,7 @@ from google.protobuf import timestamp_pb2
 
 from kusinta.iot.access.v1 import roles_pb2
 from kusinta.iot.common.v1 import types_pb2
+from kusinta.iot.device.v1 import device_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.reporting.v1 import reporting_pb2, reporting_service_pb2
 
@@ -144,6 +145,28 @@ def test_a_floor_zone_without_control_is_about_the_device_its_output_is_on():
     )
 
     assert (problem.subject.device_id.value, problem.space_id.value) == ("relay-zones", "apt-15")
+
+
+def test_a_device_needing_attention_says_why():
+    problem = _round_trip(
+        reporting_pb2.Problem(
+            kind=reporting_pb2.PROBLEM_KIND_DEVICE_NEEDS_ATTENTION,
+            subject=reporting_pb2.ProblemSubject(device_id=VALVE),
+            space_id=BEDROOM,
+            opened_at=QUARTER,
+            attention=device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED,
+        )
+    )
+
+    assert problem.attention == device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
+
+
+def test_a_problem_names_no_attention_reason_by_default():
+    assert reporting_pb2.Problem().attention == device_pb2.ATTENTION_REASON_UNSPECIFIED
+
+
+def test_device_needs_attention_keeps_its_wire_number():
+    assert reporting_pb2.PROBLEM_KIND_DEVICE_NEEDS_ATTENTION == 12
 
 
 def test_floor_zone_uncontrolled_keeps_its_wire_number():

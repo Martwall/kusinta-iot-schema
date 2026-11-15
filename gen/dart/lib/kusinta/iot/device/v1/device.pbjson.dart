@@ -74,6 +74,20 @@ final $typed_data.Uint8List radioQualityDescriptor = $convert.base64Decode(
     'FVQUxJVFlfR09PRBABEhYKElJBRElPX1FVQUxJVFlfRkFJUhACEhYKElJBRElPX1FVQUxJVFlf'
     'UE9PUhAD');
 
+@$core.Deprecated('Use attentionReasonDescriptor instead')
+const AttentionReason$json = {
+  '1': 'AttentionReason',
+  '2': [
+    {'1': 'ATTENTION_REASON_UNSPECIFIED', '2': 0},
+    {'1': 'ATTENTION_REASON_VALVE_NOT_CALIBRATED', '2': 1},
+  ],
+};
+
+/// Descriptor for `AttentionReason`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List attentionReasonDescriptor = $convert.base64Decode(
+    'Cg9BdHRlbnRpb25SZWFzb24SIAocQVRURU5USU9OX1JFQVNPTl9VTlNQRUNJRklFRBAAEikKJU'
+    'FUVEVOVElPTl9SRUFTT05fVkFMVkVfTk9UX0NBTElCUkFURUQQAQ==');
+
 @$core.Deprecated('Use endpointDescriptor instead')
 const Endpoint$json = {
   '1': 'Endpoint',
@@ -238,6 +252,14 @@ const Endpoint$json = {
       '10': 'heatSource'
     },
     {
+      '1': 'attention',
+      '3': 54,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.DeviceAttention',
+      '10': 'attention'
+    },
+    {
       '1': 'clusters',
       '3': 16,
       '4': 3,
@@ -315,14 +337,16 @@ final $typed_data.Uint8List endpointDescriptor = $convert.base64Decode(
     'VtYXRpYy52MS5IbU1haW50ZW5hbmNlUHJvcHNIAVINaG1NYWludGVuYW5jZRI/CgpyYWRpb19s'
     'aW5rGDQgASgLMiAua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJhZGlvTGlua1IJcmFkaW9MaW5rEk'
     'oKC2hlYXRfc291cmNlGDUgASgLMikua3VzaW50YS5pb3QuZGV2aWNlLnYxLkhlYXRTb3VyY2VS'
-    'ZWFkaW5nc1IKaGVhdFNvdXJjZRI/CghjbHVzdGVycxgQIAMoCzIjLmt1c2ludGEuaW90LmRldm'
-    'ljZS52MS5DbHVzdGVyU3RhdGVSCGNsdXN0ZXJzEjQKFnZlbmRvcl9hdHRyaWJ1dGVfbmFtZXMY'
-    'ESADKAlSFHZlbmRvckF0dHJpYnV0ZU5hbWVzEn4KG3ZlbmRvcl9hdHRyaWJ1dGVfYmVoYXZpb3'
-    'VycxgSIAMoCzI+Lmt1c2ludGEuaW90LmRldmljZS52MS5FbmRwb2ludC5WZW5kb3JBdHRyaWJ1'
-    'dGVCZWhhdmlvdXJzRW50cnlSGXZlbmRvckF0dHJpYnV0ZUJlaGF2aW91cnMadwoeVmVuZG9yQX'
-    'R0cmlidXRlQmVoYXZpb3Vyc0VudHJ5EhAKA2tleRgBIAEoCVIDa2V5Ej8KBXZhbHVlGAIgASgL'
-    'Mikua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0dHJpYnV0ZUJlaGF2aW91clIFdmFsdWU6AjgBQh'
-    'MKEW1hdHRlcl9wcm9wZXJ0aWVzQhMKEXZlbmRvcl9wcm9wZXJ0aWVz');
+    'ZWFkaW5nc1IKaGVhdFNvdXJjZRJECglhdHRlbnRpb24YNiABKAsyJi5rdXNpbnRhLmlvdC5kZX'
+    'ZpY2UudjEuRGV2aWNlQXR0ZW50aW9uUglhdHRlbnRpb24SPwoIY2x1c3RlcnMYECADKAsyIy5r'
+    'dXNpbnRhLmlvdC5kZXZpY2UudjEuQ2x1c3RlclN0YXRlUghjbHVzdGVycxI0ChZ2ZW5kb3JfYX'
+    'R0cmlidXRlX25hbWVzGBEgAygJUhR2ZW5kb3JBdHRyaWJ1dGVOYW1lcxJ+Cht2ZW5kb3JfYXR0'
+    'cmlidXRlX2JlaGF2aW91cnMYEiADKAsyPi5rdXNpbnRhLmlvdC5kZXZpY2UudjEuRW5kcG9pbn'
+    'QuVmVuZG9yQXR0cmlidXRlQmVoYXZpb3Vyc0VudHJ5Uhl2ZW5kb3JBdHRyaWJ1dGVCZWhhdmlv'
+    'dXJzGncKHlZlbmRvckF0dHJpYnV0ZUJlaGF2aW91cnNFbnRyeRIQCgNrZXkYASABKAlSA2tleR'
+    'I/CgV2YWx1ZRgCIAEoCzIpLmt1c2ludGEuaW90LmRldmljZS52MS5BdHRyaWJ1dGVCZWhhdmlv'
+    'dXJSBXZhbHVlOgI4AUITChFtYXR0ZXJfcHJvcGVydGllc0ITChF2ZW5kb3JfcHJvcGVydGllcw'
+    '==');
 
 @$core.Deprecated('Use deviceDescriptor instead')
 const Device$json = {
@@ -587,6 +611,33 @@ final $typed_data.Uint8List heatSourceReadingsDescriptor = $convert.base64Decode
     'NhbGN1bGF0ZWRfc3VwcGx5X2NlbnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb21wcmVz'
     'c29yX3N0YXRlQhEKD19kZWdyZWVfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19hbGFybV'
     '9jb2RlQhQKEl9hZGRfb25faGVhdF93YXR0cw==');
+
+@$core.Deprecated('Use deviceAttentionDescriptor instead')
+const DeviceAttention$json = {
+  '1': 'DeviceAttention',
+  '2': [
+    {
+      '1': 'attention_reason',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'attentionReason',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_attention_reason'},
+  ],
+};
+
+/// Descriptor for `DeviceAttention`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deviceAttentionDescriptor = $convert.base64Decode(
+    'Cg9EZXZpY2VBdHRlbnRpb24SSAoQYXR0ZW50aW9uX3JlYXNvbhgBIAEoDUIYorUYEGF0dGVudG'
+    'lvbl9yZWFzb27QtRgFSABSD2F0dGVudGlvblJlYXNvbogBAToVqrUYEWt1c2ludGEuYXR0ZW50'
+    'aW9uQhMKEV9hdHRlbnRpb25fcmVhc29u');
 
 @$core.Deprecated('Use radioLinkDescriptor instead')
 const RadioLink$json = {

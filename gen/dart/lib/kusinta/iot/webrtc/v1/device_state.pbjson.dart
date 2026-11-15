@@ -149,6 +149,14 @@ const ServiceStatus$json = {
       '6': '.kusinta.iot.webrtc.v1.ServiceFault',
       '10': 'faults'
     },
+    {
+      '1': 'attention',
+      '3': 10,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.device.v1.AttentionReason',
+      '10': 'attention'
+    },
   ],
   '8': [
     {'1': '_battery_percent'},
@@ -166,8 +174,9 @@ final $typed_data.Uint8List serviceStatusDescriptor = $convert.base64Decode(
     'IfCgtiYXR0ZXJ5X2xvdxgGIAEoCFIKYmF0dGVyeUxvdxI8ChpiYXR0ZXJ5X3JlcGxhY2VtZW50'
     'X25lZWRlZBgHIAEoCFIYYmF0dGVyeVJlcGxhY2VtZW50TmVlZGVkEigKDXJhZGlvX3F1YWxpdH'
     'kYCCABKA1IAVIMcmFkaW9RdWFsaXR5iAEBEjsKBmZhdWx0cxgJIAMoDjIjLmt1c2ludGEuaW90'
-    'LndlYnJ0Yy52MS5TZXJ2aWNlRmF1bHRSBmZhdWx0c0ISChBfYmF0dGVyeV9wZXJjZW50QhAKDl'
-    '9yYWRpb19xdWFsaXR5');
+    'LndlYnJ0Yy52MS5TZXJ2aWNlRmF1bHRSBmZhdWx0cxJECglhdHRlbnRpb24YCiABKA4yJi5rdX'
+    'NpbnRhLmlvdC5kZXZpY2UudjEuQXR0ZW50aW9uUmVhc29uUglhdHRlbnRpb25CEgoQX2JhdHRl'
+    'cnlfcGVyY2VudEIQCg5fcmFkaW9fcXVhbGl0eQ==');
 
 @$core.Deprecated('Use serviceStatusChangedDescriptor instead')
 const ServiceStatusChanged$json = {

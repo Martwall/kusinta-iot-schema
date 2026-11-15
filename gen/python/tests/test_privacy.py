@@ -13,7 +13,7 @@ from google.protobuf import timestamp_pb2
 
 from kusinta.iot.access.v1 import acl_pb2, roles_pb2
 from kusinta.iot.climate.v1 import climate_pb2
-from kusinta.iot.device.v1 import device_event_pb2
+from kusinta.iot.device.v1 import device_event_pb2, device_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.link.v1 import link_pb2
 from kusinta.iot.space.v1 import space_pb2
@@ -248,6 +248,18 @@ def test_a_status_lists_the_faults_a_device_reports():
         device_state_pb2.SERVICE_FAULT_ERROR,
         device_state_pb2.SERVICE_FAULT_TAMPER,
     ]
+
+
+def test_a_status_says_what_a_device_needs_to_work():
+    status = device_state_pb2.ServiceStatus(
+        attention=device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
+    )
+
+    assert _round_trip(status).attention == device_pb2.ATTENTION_REASON_VALVE_NOT_CALIBRATED
+
+
+def test_a_status_needs_nothing_by_default():
+    assert device_state_pb2.ServiceStatus().attention == device_pb2.ATTENTION_REASON_UNSPECIFIED
 
 
 def test_a_snapshot_carries_a_status_for_each_device_seen():
