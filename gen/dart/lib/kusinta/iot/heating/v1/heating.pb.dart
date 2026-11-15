@@ -2311,6 +2311,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     $fixnum.Int64? cautiousNetSavingMicroEur,
     $core.int? savingSharePermille,
     $core.int? cautiousSavingSharePermille,
+    $core.bool? countsOnly,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2327,6 +2328,7 @@ class ShadowDay extends $pb.GeneratedMessage {
       result.savingSharePermille = savingSharePermille;
     if (cautiousSavingSharePermille != null)
       result.cautiousSavingSharePermille = cautiousSavingSharePermille;
+    if (countsOnly != null) result.countsOnly = countsOnly;
     return result;
   }
 
@@ -2366,6 +2368,7 @@ class ShadowDay extends $pb.GeneratedMessage {
         9, _omitFieldNames ? '' : 'savingSharePermille', $pb.PbFieldType.OS3)
     ..a<$core.int>(10, _omitFieldNames ? '' : 'cautiousSavingSharePermille',
         $pb.PbFieldType.OS3)
+    ..aOB(11, _omitFieldNames ? '' : 'countsOnly')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2504,6 +2507,19 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasCautiousSavingSharePermille() => $_has(9);
   @$pb.TagNumber(10)
   void clearCautiousSavingSharePermille() => $_clearField(10);
+
+  /// A day given for its counts alone: a share-scored rule's day whose share could not be known
+  /// (its heat cost too near zero to divide by). Then saving_share_permille and
+  /// cautious_saving_share_permille are unset and the money fields 0, and a client shows its
+  /// breaches and overheats only, never a saving of 0.
+  @$pb.TagNumber(11)
+  $core.bool get countsOnly => $_getBF(10);
+  @$pb.TagNumber(11)
+  set countsOnly($core.bool value) => $_setBool(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasCountsOnly() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearCountsOnly() => $_clearField(11);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.

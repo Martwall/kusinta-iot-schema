@@ -85,6 +85,19 @@ option optimize_for = SPEED;
 //   "plant.max_blocks_per_day"  uint, 1 to 6; a plant with a compressor. How many separate blocks
 //       that stop the compressor the gateway applies in a day, in the building's time.
 //       Unknown: 3.
+//   "hot_water.periodic_increase"  bool; a plant with a hot-water tank. Whether the heat source
+//       raises its tank on a schedule of its own against legionella (a periodic increase).
+//       Unknown: the gateway infers such a step from the tank's readings. The gateway never
+//       moves or suppresses the step: a price rule only leaves the heat of such a step out of
+//       what it scores. HEAT_SOURCE; OPTIONAL; STATED (a household admin, from the heat
+//       source's menu), INSPECTED.
+//   "hot_water.periodic_increase_interval_days"  uint, 1 to 90; a plant with a hot-water tank.
+//       Every how many days
+//       the periodic increase runs. Asked while "hot_water.periodic_increase" is true.
+//       HEAT_SOURCE; OPTIONAL; STATED, INSPECTED.
+//   "hot_water.periodic_increase_start_minute"  uint, 0 to 1439; a plant with a hot-water
+//       tank. When it starts, in minutes after midnight in the building's time. Asked while
+//       "hot_water.periodic_increase" is true. HEAT_SOURCE; OPTIONAL; STATED, INSPECTED.
 //
 // BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
 // (heating.v1.HeatPumpControl.sg_ready_block). Blocking the add-on heater
