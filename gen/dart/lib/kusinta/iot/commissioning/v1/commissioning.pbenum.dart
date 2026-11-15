@@ -536,8 +536,10 @@ class ModelFitGap extends $pb.ProtobufEnum {
 
   /// A model whose circuit's supply is not known: its circuit MIXED, or a floor circuit's mixing
   /// not stated, with no supply probe after the mixer (heating.v1 CircuitMixing, SUPPLY). Bind a
-  /// supply probe, or state the circuit UNMIXED where no mixing valve feeds it. A model with no
-  /// heat source is NO_PLANT instead.
+  /// supply probe, or state the circuit UNMIXED where no mixing valve feeds it. Also a circuit
+  /// fed straight (UNMIXED) whose heat source's readings are not bound
+  /// (heating.v1.HeatingPlant.readings_device_id): bind them. A model with no heat source is
+  /// NO_PLANT instead.
   static const ModelFitGap MODEL_FIT_GAP_NO_SUPPLY =
       ModelFitGap._(11, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_SUPPLY');
 
