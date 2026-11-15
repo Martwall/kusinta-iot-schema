@@ -2415,7 +2415,10 @@ export declare const PutCommissioningFactSchema: GenMessage<PutCommissioningFact
 /**
  * Removes a fact by its id, naming the revision it removes; as PutCommissioningFact. A fact
  * set by a test is replaced only by running it again: refused as FAILED_PRECONDITION
- * "SET_BY_TEST". Acked.
+ * "SET_BY_TEST". A household removing its answer over a house fact brings the house fact back
+ * in force; a house fact no answer of the household's stands over is not the household's to
+ * remove: refused as FAILED_PRECONDITION "HOUSE_FACT" (commissioning.v1, HOUSE FACTS AND
+ * HOUSEHOLD DATA). Acked.
  *
  * @generated from message kusinta.iot.webrtc.v1.RemoveCommissioningFact
  */
