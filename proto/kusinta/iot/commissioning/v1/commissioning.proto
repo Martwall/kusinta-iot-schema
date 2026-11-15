@@ -215,6 +215,28 @@ option optimize_for = SPEED;
 // confirming a household's answer makes it a house fact. At a handover the house facts and
 // the tests stay, with provenance.by cleared and provenance.party kept.
 //
+// A household's answer to a key a house fact already answers stands over that fact: the
+// household's is the one in force, the one given and read, while it stands, and the house fact
+// is kept beneath it, given to no one. A key has one fact, one fact_id and one line of
+// revisions throughout: the household puts its answer by replacing the house fact, naming its
+// fact_id and revision, as any answer is changed, and its answer is the next revision of that
+// fact (a create is refused as FACT_EXISTS, as for any key that has a fact). It is never
+// refused for the house fact, and never erases it, with one exception: a household's "don't
+// know" (CommissioningFact.unknown) over a house fact that answers the key adds nothing, and
+// is refused as FAILED_PRECONDITION "HOUSE_FACT". When the household's answer goes — removed
+// by the household, or wiped at a handover — the house fact is in force again as the next
+// revision, with the value, provenance and deviates_from it was kept with (provenance.by
+// cleared, as at every handover, where one came between). An installer's answer to the key
+// while a household's answer stands replaces both: it is the house fact from then on, and none
+// is kept beneath it. An installer removing the fact while a household's answer stands removes
+// both, and the key is unanswered. A household cannot remove a house fact that no answer of
+// its own stands over: refused as FAILED_PRECONDITION "HOUSE_FACT" (webrtc.v1
+// RemoveCommissioningFact).
+//
+// A template's fact (TEMPLATES) is a house fact too, kept on its template: a home's own answer
+// to its key, the household's included, is a create of the home's fact, stands over it as
+// above, and the template's counts again once that answer goes.
+//
 // TEMPLATES. An owner organisation describes each house type of a building once, from its
 // drawings, as a HouseTemplate, and says which homes follow which. A template's fact counts
 // for a home that follows it as the home's answer with DRAWING evidence, until the home
