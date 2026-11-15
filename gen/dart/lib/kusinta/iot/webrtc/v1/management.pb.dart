@@ -5577,7 +5577,10 @@ class ListCommissioning extends $pb.GeneratedMessage {
 ///   FAILED_PRECONDITION
 ///   "STALE_REVISION"    the fact changed since the revision the request names.
 ///   "FACT_EXISTS"       a create for a space, record and key that already have a fact;
-///                       metadata "fact_id" names it. One answer per key.
+///                       metadata "fact_id" names it. One answer per key: an answer over
+///                       a house fact replaces that fact (commissioning.v1, HOUSE FACTS
+///                       AND HOUSEHOLD DATA).
+///   "HOUSE_FACT"        a household's "don't know" over a house fact that answers the key.
 ///   "SET_BY_TEST"       a key only a test sets.
 ///
 /// A space or record the caller cannot reach, and a fact_id that does not exist, are refused
@@ -5645,7 +5648,10 @@ class PutCommissioningFact extends $pb.GeneratedMessage {
 
 /// Removes a fact by its id, naming the revision it removes; as PutCommissioningFact. A fact
 /// set by a test is replaced only by running it again: refused as FAILED_PRECONDITION
-/// "SET_BY_TEST". Acked.
+/// "SET_BY_TEST". A household removing its answer over a house fact brings the house fact back
+/// in force, as the fact's next revision; an installer's removal removes both; a house fact no
+/// answer of the household's stands over is not the household's to remove: refused as
+/// FAILED_PRECONDITION "HOUSE_FACT" (commissioning.v1, HOUSE FACTS AND HOUSEHOLD DATA). Acked.
 class RemoveCommissioningFact extends $pb.GeneratedMessage {
   factory RemoveCommissioningFact({
     $core.String? factId,
