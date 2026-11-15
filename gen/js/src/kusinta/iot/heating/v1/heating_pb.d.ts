@@ -1048,6 +1048,16 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: optional sint32 cautious_saving_share_permille = 10;
    */
   cautiousSavingSharePermille?: number | undefined;
+
+  /**
+   * A day given for its counts alone: a share-scored rule's day whose share could not be known
+   * (its heat cost too near zero to divide by). Then saving_share_permille and
+   * cautious_saving_share_permille are unset and the money fields 0, and a client shows its
+   * breaches and overheats only, never a saving of 0.
+   *
+   * @generated from field: bool counts_only = 11;
+   */
+  countsOnly: boolean;
 };
 
 /**
