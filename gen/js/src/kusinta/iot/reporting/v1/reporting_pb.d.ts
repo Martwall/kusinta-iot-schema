@@ -7,6 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { BackendFailureReason, SpaceType } from "../../common/v1/types_pb.js";
+import type { AttentionReason } from "../../device/v1/device_pb.js";
 import type { Role } from "../../access/v1/roles_pb.js";
 
 /**
@@ -207,6 +208,15 @@ export declare type Problem = Message<"kusinta.iot.reporting.v1.Problem"> & {
    * @generated from field: kusinta.iot.common.v1.BackendFailureReason backend_failure = 8;
    */
   backendFailure: BackendFailureReason;
+
+  /**
+   * DEVICE_NEEDS_ATTENTION: why the device needs attention, as its connector reports it.
+   * UNSPECIFIED for every other kind; a client words a reason it does not know as the device
+   * needing attention, unnamed.
+   *
+   * @generated from field: kusinta.iot.device.v1.AttentionReason attention = 9;
+   */
+  attention: AttentionReason;
 };
 
 /**
@@ -1087,6 +1097,19 @@ export enum ProblemKind {
    * @generated from enum value: PROBLEM_KIND_PLANNING_INPUTS_STALE = 11;
    */
   PLANNING_INPUTS_STALE = 11,
+
+  /**
+   * The device needs a person before it works as it should, as its connector reports it
+   * (device.v1.DeviceAttention): attention says why. A service signal, as a fault is
+   * (access.v1.SERVICE_SIGNAL_FAULT): it names the device and where it is filed, and nothing
+   * of the room or of the people in it, with the times a device in a home is given. A change
+   * of reason while it is open is sent as a change of the problem. Closes
+   * CLEAR_REASON_RECOVERED once the connector reports no reason, and
+   * CLEAR_REASON_DEVICE_REMOVED with the device.
+   *
+   * @generated from enum value: PROBLEM_KIND_DEVICE_NEEDS_ATTENTION = 12;
+   */
+  DEVICE_NEEDS_ATTENTION = 12,
 }
 
 /**

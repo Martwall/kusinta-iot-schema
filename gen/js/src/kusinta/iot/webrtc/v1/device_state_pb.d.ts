@@ -4,7 +4,7 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
-import type { Device } from "../../device/v1/device_pb.js";
+import type { AttentionReason, Device } from "../../device/v1/device_pb.js";
 import type { EffectivePermissions } from "../../access/v1/acl_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { SessionRoles } from "./permission_push_pb.js";
@@ -152,6 +152,16 @@ export declare type ServiceStatus = Message<"kusinta.iot.webrtc.v1.ServiceStatus
    * @generated from field: repeated kusinta.iot.webrtc.v1.ServiceFault faults = 9;
    */
   faults: ServiceFault[];
+
+  /**
+   * What the device needs before it works as it should, as its connector reports it
+   * (device.v1.DeviceAttention), as a fault is given (access.v1.SERVICE_SIGNAL_FAULT): a valve
+   * not calibrated, say. UNSPECIFIED: nothing. A client words a reason it does not know as the
+   * device needing attention, unnamed, and gives its own action for one it knows.
+   *
+   * @generated from field: kusinta.iot.device.v1.AttentionReason attention = 10;
+   */
+  attention: AttentionReason;
 };
 
 /**

@@ -5,6 +5,7 @@ package kusinta.iot.reporting.v1;
 import "google/protobuf/timestamp.proto";
 import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/common/v1/types.proto";
+import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 
 option optimize_for = SPEED;
@@ -227,6 +228,15 @@ enum ProblemKind {
   // names the gateway, never a home. Its planner meanwhile shifts no load past what it
   // holds, so nothing goes cold or unsafe while it is open.
   PROBLEM_KIND_PLANNING_INPUTS_STALE = 11;
+
+  // The device needs a person before it works as it should, as its connector reports it
+  // (device.v1.DeviceAttention): attention says why. A service signal, as a fault is
+  // (access.v1.SERVICE_SIGNAL_FAULT): it names the device and where it is filed, and nothing
+  // of the room or of the people in it, with the times a device in a home is given. A change
+  // of reason while it is open is sent as a change of the problem. Closes
+  // CLEAR_REASON_RECOVERED once the connector reports no reason, and
+  // CLEAR_REASON_DEVICE_REMOVED with the device.
+  PROBLEM_KIND_DEVICE_NEEDS_ATTENTION = 12;
 }
 
 // Why a problem closed.
@@ -386,6 +396,11 @@ message Problem {
   // kind, and for a connector that stated no reason. A change of reason while the problem is
   // open is sent as a change of the problem.
   kusinta.iot.common.v1.BackendFailureReason backend_failure = 8;
+
+  // DEVICE_NEEDS_ATTENTION: why the device needs attention, as its connector reports it.
+  // UNSPECIFIED for every other kind; a client words a reason it does not know as the device
+  // needing attention, unnamed.
+  kusinta.iot.device.v1.AttentionReason attention = 9;
 }
 
 // A problem closing.

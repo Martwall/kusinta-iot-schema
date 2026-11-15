@@ -38,8 +38,9 @@ class ServiceSignal extends $pb.ProtobufEnum {
   static const ServiceSignal SERVICE_SIGNAL_FIRMWARE =
       ServiceSignal._(4, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FIRMWARE');
 
-  /// Faults it reports about itself: errors and tampering. Not configuration it has yet to
-  /// take, which would show when its residents changed a setting.
+  /// Faults it reports about itself: errors and tampering, and what it needs before it works as
+  /// it should, such as a valve not calibrated (device.v1.DeviceAttention). Not configuration it
+  /// has yet to take, which would show when its residents changed a setting.
   static const ServiceSignal SERVICE_SIGNAL_FAULT =
       ServiceSignal._(5, _omitEnumNames ? '' : 'SERVICE_SIGNAL_FAULT');
 

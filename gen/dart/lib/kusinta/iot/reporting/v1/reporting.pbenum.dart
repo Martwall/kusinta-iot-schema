@@ -108,6 +108,16 @@ class ProblemKind extends $pb.ProtobufEnum {
   static const ProblemKind PROBLEM_KIND_PLANNING_INPUTS_STALE = ProblemKind._(
       11, _omitEnumNames ? '' : 'PROBLEM_KIND_PLANNING_INPUTS_STALE');
 
+  /// The device needs a person before it works as it should, as its connector reports it
+  /// (device.v1.DeviceAttention): attention says why. A service signal, as a fault is
+  /// (access.v1.SERVICE_SIGNAL_FAULT): it names the device and where it is filed, and nothing
+  /// of the room or of the people in it, with the times a device in a home is given. A change
+  /// of reason while it is open is sent as a change of the problem. Closes
+  /// CLEAR_REASON_RECOVERED once the connector reports no reason, and
+  /// CLEAR_REASON_DEVICE_REMOVED with the device.
+  static const ProblemKind PROBLEM_KIND_DEVICE_NEEDS_ATTENTION = ProblemKind._(
+      12, _omitEnumNames ? '' : 'PROBLEM_KIND_DEVICE_NEEDS_ATTENTION');
+
   static const $core.List<ProblemKind> values = <ProblemKind>[
     PROBLEM_KIND_UNSPECIFIED,
     PROBLEM_KIND_DEVICE_OFFLINE,
@@ -121,10 +131,11 @@ class ProblemKind extends $pb.ProtobufEnum {
     PROBLEM_KIND_WINDOW_OPEN,
     PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED,
     PROBLEM_KIND_PLANNING_INPUTS_STALE,
+    PROBLEM_KIND_DEVICE_NEEDS_ATTENTION,
   ];
 
   static final $core.List<ProblemKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 11);
+      $pb.ProtobufEnum.$_initByValueList(values, 12);
   static ProblemKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

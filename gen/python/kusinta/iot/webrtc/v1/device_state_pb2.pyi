@@ -39,7 +39,7 @@ class DeviceStateSnapshot(_message.Message):
     def __init__(self, devices: _Optional[_Iterable[_Union[_device_pb2.Device, _Mapping]]] = ..., permissions: _Optional[_Union[_acl_pb2.EffectivePermissions, _Mapping]] = ..., snapshotted_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., service_statuses: _Optional[_Iterable[_Union[ServiceStatus, _Mapping]]] = ..., session_roles: _Optional[_Union[_permission_push_pb2.SessionRoles, _Mapping]] = ...) -> None: ...
 
 class ServiceStatus(_message.Message):
-    __slots__ = ("device_id", "as_of", "reachable", "unreachable_since", "battery_percent", "battery_low", "battery_replacement_needed", "radio_quality", "faults")
+    __slots__ = ("device_id", "as_of", "reachable", "unreachable_since", "battery_percent", "battery_low", "battery_replacement_needed", "radio_quality", "faults", "attention")
     DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     AS_OF_FIELD_NUMBER: _ClassVar[int]
     REACHABLE_FIELD_NUMBER: _ClassVar[int]
@@ -49,6 +49,7 @@ class ServiceStatus(_message.Message):
     BATTERY_REPLACEMENT_NEEDED_FIELD_NUMBER: _ClassVar[int]
     RADIO_QUALITY_FIELD_NUMBER: _ClassVar[int]
     FAULTS_FIELD_NUMBER: _ClassVar[int]
+    ATTENTION_FIELD_NUMBER: _ClassVar[int]
     device_id: _identity_pb2.DeviceId
     as_of: _timestamp_pb2.Timestamp
     reachable: bool
@@ -58,7 +59,8 @@ class ServiceStatus(_message.Message):
     battery_replacement_needed: bool
     radio_quality: int
     faults: _containers.RepeatedScalarFieldContainer[ServiceFault]
-    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., as_of: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., reachable: _Optional[bool] = ..., unreachable_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., battery_percent: _Optional[int] = ..., battery_low: _Optional[bool] = ..., battery_replacement_needed: _Optional[bool] = ..., radio_quality: _Optional[int] = ..., faults: _Optional[_Iterable[_Union[ServiceFault, str]]] = ...) -> None: ...
+    attention: _device_pb2.AttentionReason
+    def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., as_of: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., reachable: _Optional[bool] = ..., unreachable_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., battery_percent: _Optional[int] = ..., battery_low: _Optional[bool] = ..., battery_replacement_needed: _Optional[bool] = ..., radio_quality: _Optional[int] = ..., faults: _Optional[_Iterable[_Union[ServiceFault, str]]] = ..., attention: _Optional[_Union[_device_pb2.AttentionReason, str]] = ...) -> None: ...
 
 class ServiceStatusChanged(_message.Message):
     __slots__ = ("statuses",)

@@ -206,6 +206,16 @@ export declare type Endpoint = Message<"kusinta.iot.device.v1.Endpoint"> & {
   heatSource?: HeatSourceReadings | undefined;
 
   /**
+   * What the device needs before it works as it should, on the endpoint its connector reports
+   * it on. Outside vendor_properties for the reason radio_link is: any connector may report it,
+   * beside whichever vendor case the endpoint carries. Selected by the vendor branch by its
+   * (vendor_extension) key "kusinta.attention".
+   *
+   * @generated from field: kusinta.iot.device.v1.DeviceAttention attention = 54;
+   */
+  attention?: DeviceAttention | undefined;
+
+  /**
    * Every cluster this endpoint hosts: what it supports, and any attribute value that has
    * no typed field above. This is what makes a device the schema does not model usable
    * rather than silent — and what carries the optional clusters the Matter specification
@@ -512,6 +522,39 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
 export declare const HeatSourceReadingsSchema: GenMessage<HeatSourceReadings>;
 
 /**
+ * What a device needs before it works as it should, as its connector judges it from the
+ * device's own reports. Technology-agnostic: the same message for any connector.
+ *
+ * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.attention" and the
+ * attribute name "reason", as uint_value. A connector sends the most pressing reason, and a
+ * null value (PropertyUpdate.null_value) once none holds.
+ *
+ * Who is given it: as a fault (access.v1.SERVICE_SIGNAL_FAULT), service as well as the
+ * device's residents, as webrtc.v1.ServiceStatus.attention and a
+ * reporting.v1.PROBLEM_KIND_DEVICE_NEEDS_ATTENTION problem. It says what the device needs and
+ * nothing of the room or of the people in it. A reason can follow from what someone did — a
+ * valve refitted, its battery changed — and service learns that within the quarter hour, as it
+ * does of a fault.
+ *
+ * @generated from message kusinta.iot.device.v1.DeviceAttention
+ */
+export declare type DeviceAttention = Message<"kusinta.iot.device.v1.DeviceAttention"> & {
+  /**
+   * Why, as an AttentionReason number; 0 is not used. A number, not the name, as every
+   * enum-valued reading travels.
+   *
+   * @generated from field: optional uint32 reason = 1;
+   */
+  reason?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.device.v1.DeviceAttention.
+ * Use `create(DeviceAttentionSchema)` to create a new message.
+ */
+export declare const DeviceAttentionSchema: GenMessage<DeviceAttention>;
+
+/**
  * A device's radio link, as its connector reports it.
  *
  * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.radio" and
@@ -715,4 +758,34 @@ export enum RadioQuality {
  * Describes the enum kusinta.iot.device.v1.RadioQuality.
  */
 export declare const RadioQualitySchema: GenEnum<RadioQuality>;
+
+/**
+ * Why a device needs a person's attention before it works as it should (DeviceAttention). A
+ * closed list that grows only by a release of this schema: a client words a reason it does not
+ * know as the device needing attention, unnamed.
+ *
+ * @generated from enum kusinta.iot.device.v1.AttentionReason
+ */
+export enum AttentionReason {
+  /**
+   * None, or one this client's schema does not know.
+   *
+   * @generated from enum value: ATTENTION_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A radiator valve whose motor calibration failed: it cannot tell how far it is open, so
+   * what it reports of its opening is not used. Calibrating it again — refitting it on the
+   * valve, as its maker says — clears it.
+   *
+   * @generated from enum value: ATTENTION_REASON_VALVE_NOT_CALIBRATED = 1;
+   */
+  VALVE_NOT_CALIBRATED = 1,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.AttentionReason.
+ */
+export declare const AttentionReasonSchema: GenEnum<AttentionReason>;
 

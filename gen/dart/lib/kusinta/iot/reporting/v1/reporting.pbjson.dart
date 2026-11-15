@@ -30,6 +30,7 @@ const ProblemKind$json = {
     {'1': 'PROBLEM_KIND_WINDOW_OPEN', '2': 9},
     {'1': 'PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED', '2': 10},
     {'1': 'PROBLEM_KIND_PLANNING_INPUTS_STALE', '2': 11},
+    {'1': 'PROBLEM_KIND_DEVICE_NEEDS_ATTENTION', '2': 12},
   ],
 };
 
@@ -42,7 +43,8 @@ final $typed_data.Uint8List problemKindDescriptor = $convert.base64Decode(
     'TEVNX0tJTkRfQ09OTkVDVE9SX09GRkxJTkUQBhIgChxQUk9CTEVNX0tJTkRfQ09OTkVDVE9SX0'
     'VSUk9SEAcSIAocUFJPQkxFTV9LSU5EX1VORklMRURfREVWSUNFUxAIEhwKGFBST0JMRU1fS0lO'
     'RF9XSU5ET1dfT1BFThAJEigKJFBST0JMRU1fS0lORF9GTE9PUl9aT05FX1VOQ09OVFJPTExFRB'
-    'AKEiYKIlBST0JMRU1fS0lORF9QTEFOTklOR19JTlBVVFNfU1RBTEUQCw==');
+    'AKEiYKIlBST0JMRU1fS0lORF9QTEFOTklOR19JTlBVVFNfU1RBTEUQCxInCiNQUk9CTEVNX0tJ'
+    'TkRfREVWSUNFX05FRURTX0FUVEVOVElPThAM');
 
 @$core.Deprecated('Use clearReasonDescriptor instead')
 const ClearReason$json = {
@@ -201,6 +203,14 @@ const Problem$json = {
       '6': '.kusinta.iot.common.v1.BackendFailureReason',
       '10': 'backendFailure'
     },
+    {
+      '1': 'attention',
+      '3': 9,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.device.v1.AttentionReason',
+      '10': 'attention'
+    },
   ],
   '8': [
     {'1': '_battery_percent'},
@@ -216,7 +226,9 @@ final $typed_data.Uint8List problemDescriptor = $convert.base64Decode(
     'Z2xlLnByb3RvYnVmLlRpbWVzdGFtcFIIb3BlbmVkQXQSLAoPYmF0dGVyeV9wZXJjZW50GAYgAS'
     'gNSABSDmJhdHRlcnlQZXJjZW50iAEBEiEKDGRldmljZV9jb3VudBgHIAEoDVILZGV2aWNlQ291'
     'bnQSVAoPYmFja2VuZF9mYWlsdXJlGAggASgOMisua3VzaW50YS5pb3QuY29tbW9uLnYxLkJhY2'
-    'tlbmRGYWlsdXJlUmVhc29uUg5iYWNrZW5kRmFpbHVyZUISChBfYmF0dGVyeV9wZXJjZW50');
+    'tlbmRGYWlsdXJlUmVhc29uUg5iYWNrZW5kRmFpbHVyZRJECglhdHRlbnRpb24YCSABKA4yJi5r'
+    'dXNpbnRhLmlvdC5kZXZpY2UudjEuQXR0ZW50aW9uUmVhc29uUglhdHRlbnRpb25CEgoQX2JhdH'
+    'RlcnlfcGVyY2VudA==');
 
 @$core.Deprecated('Use problemClearedDescriptor instead')
 const ProblemCleared$json = {

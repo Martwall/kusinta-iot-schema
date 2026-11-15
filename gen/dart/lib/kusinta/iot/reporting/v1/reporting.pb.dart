@@ -16,8 +16,9 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $1;
-import '../../access/v1/roles.pbenum.dart' as $3;
+import '../../access/v1/roles.pbenum.dart' as $4;
 import '../../common/v1/types.pbenum.dart' as $2;
+import '../../device/v1/device.pbenum.dart' as $3;
 import '../../identity/v1/identity.pb.dart' as $0;
 import 'reporting.pbenum.dart';
 
@@ -279,6 +280,7 @@ class Problem extends $pb.GeneratedMessage {
     $core.int? batteryPercent,
     $core.int? deviceCount,
     $2.BackendFailureReason? backendFailure,
+    $3.AttentionReason? attention,
   }) {
     final result = create();
     if (kind != null) result.kind = kind;
@@ -288,6 +290,7 @@ class Problem extends $pb.GeneratedMessage {
     if (batteryPercent != null) result.batteryPercent = batteryPercent;
     if (deviceCount != null) result.deviceCount = deviceCount;
     if (backendFailure != null) result.backendFailure = backendFailure;
+    if (attention != null) result.attention = attention;
     return result;
   }
 
@@ -324,6 +327,11 @@ class Problem extends $pb.GeneratedMessage {
             $2.BackendFailureReason.BACKEND_FAILURE_REASON_UNSPECIFIED,
         valueOf: $2.BackendFailureReason.valueOf,
         enumValues: $2.BackendFailureReason.values)
+    ..e<$3.AttentionReason>(
+        9, _omitFieldNames ? '' : 'attention', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.AttentionReason.ATTENTION_REASON_UNSPECIFIED,
+        valueOf: $3.AttentionReason.valueOf,
+        enumValues: $3.AttentionReason.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -440,6 +448,18 @@ class Problem extends $pb.GeneratedMessage {
   $core.bool hasBackendFailure() => $_has(6);
   @$pb.TagNumber(8)
   void clearBackendFailure() => $_clearField(8);
+
+  /// DEVICE_NEEDS_ATTENTION: why the device needs attention, as its connector reports it.
+  /// UNSPECIFIED for every other kind; a client words a reason it does not know as the device
+  /// needing attention, unnamed.
+  @$pb.TagNumber(9)
+  $3.AttentionReason get attention => $_getN(7);
+  @$pb.TagNumber(9)
+  set attention($3.AttentionReason value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasAttention() => $_has(7);
+  @$pb.TagNumber(9)
+  void clearAttention() => $_clearField(9);
 }
 
 /// A problem closing.
@@ -1667,7 +1687,7 @@ class ReportServedSpacesResponse extends $pb.GeneratedMessage {
 class GatewayMember extends $pb.GeneratedMessage {
   factory GatewayMember({
     $0.UserId? userId,
-    $core.Iterable<$3.Role>? roles,
+    $core.Iterable<$4.Role>? roles,
     $1.Timestamp? administratorSince,
   }) {
     final result = create();
@@ -1694,10 +1714,10 @@ class GatewayMember extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'userId',
         subBuilder: $0.UserId.create)
-    ..pc<$3.Role>(2, _omitFieldNames ? '' : 'roles', $pb.PbFieldType.KE,
-        valueOf: $3.Role.valueOf,
-        enumValues: $3.Role.values,
-        defaultEnumValue: $3.Role.ROLE_UNSPECIFIED)
+    ..pc<$4.Role>(2, _omitFieldNames ? '' : 'roles', $pb.PbFieldType.KE,
+        valueOf: $4.Role.valueOf,
+        enumValues: $4.Role.values,
+        defaultEnumValue: $4.Role.ROLE_UNSPECIFIED)
     ..aOM<$1.Timestamp>(3, _omitFieldNames ? '' : 'administratorSince',
         subBuilder: $1.Timestamp.create)
     ..hasRequiredFields = false;
@@ -1737,7 +1757,7 @@ class GatewayMember extends $pb.GeneratedMessage {
 
   /// The member's service roles, each once; empty for a resident.
   @$pb.TagNumber(2)
-  $pb.PbList<$3.Role> get roles => $_getList(1);
+  $pb.PbList<$4.Role> get roles => $_getList(1);
 
   /// Set exactly when roles holds ROLE_GATEWAY_ADMIN: the quarter hour, rounded up, from
   /// which the member's administration of the gateway has been unbroken, as the gateway counts
