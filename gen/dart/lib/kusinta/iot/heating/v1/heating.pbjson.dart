@@ -1029,10 +1029,20 @@ const ShadowDay$json = {
       '10': 'savingSharePermille',
       '17': true
     },
+    {
+      '1': 'cautious_saving_share_permille',
+      '3': 10,
+      '4': 1,
+      '5': 17,
+      '9': 2,
+      '10': 'cautiousSavingSharePermille',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_cautious_net_saving_micro_eur'},
     {'1': '_saving_share_permille'},
+    {'1': '_cautious_saving_share_permille'},
   ],
 };
 
@@ -1045,8 +1055,10 @@ final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
     'EW92ZXJoZWF0X3F1YXJ0ZXJzGAYgASgNUhBvdmVyaGVhdFF1YXJ0ZXJzEioKEW5vX3ByaWNlX3'
     'F1YXJ0ZXJzGAcgASgNUg9ub1ByaWNlUXVhcnRlcnMSRQodY2F1dGlvdXNfbmV0X3NhdmluZ19t'
     'aWNyb19ldXIYCCABKBJIAFIZY2F1dGlvdXNOZXRTYXZpbmdNaWNyb0V1cogBARI3ChVzYXZpbm'
-    'dfc2hhcmVfcGVybWlsbGUYCSABKBFIAVITc2F2aW5nU2hhcmVQZXJtaWxsZYgBAUIgCh5fY2F1'
-    'dGlvdXNfbmV0X3NhdmluZ19taWNyb19ldXJCGAoWX3NhdmluZ19zaGFyZV9wZXJtaWxsZQ==');
+    'dfc2hhcmVfcGVybWlsbGUYCSABKBFIAVITc2F2aW5nU2hhcmVQZXJtaWxsZYgBARJICh5jYXV0'
+    'aW91c19zYXZpbmdfc2hhcmVfcGVybWlsbGUYCiABKBFIAlIbY2F1dGlvdXNTYXZpbmdTaGFyZV'
+    'Blcm1pbGxliAEBQiAKHl9jYXV0aW91c19uZXRfc2F2aW5nX21pY3JvX2V1ckIYChZfc2F2aW5n'
+    'X3NoYXJlX3Blcm1pbGxlQiEKH19jYXV0aW91c19zYXZpbmdfc2hhcmVfcGVybWlsbGU=');
 
 @$core.Deprecated('Use shadowBandSeriesDescriptor instead')
 const ShadowBandSeries$json = {
@@ -1115,6 +1127,14 @@ const ShadowSummary$json = {
       '6': '.kusinta.iot.heating.v1.ShadowBandSeries',
       '10': 'series'
     },
+    {
+      '1': 'exchange_rates',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.planning.v1.ExchangeRate',
+      '10': 'exchangeRates'
+    },
   ],
 };
 
@@ -1123,4 +1143,5 @@ final $typed_data.Uint8List shadowSummaryDescriptor = $convert.base64Decode(
     'Cg1TaGFkb3dTdW1tYXJ5EjkKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudGl0eS'
     '52MS5TcGFjZUlkUgZob21lSWQSGwoJa2VwdF9mcm9tGAIgASgJUghrZXB0RnJvbRJACgZzZXJp'
     'ZXMYAyADKAsyKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlNoYWRvd0JhbmRTZXJpZXNSBnNlcm'
-    'llcw==');
+    'llcxJMCg5leGNoYW5nZV9yYXRlcxgEIAMoCzIlLmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLkV4'
+    'Y2hhbmdlUmF0ZVINZXhjaGFuZ2VSYXRlcw==');

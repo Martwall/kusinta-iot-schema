@@ -534,6 +534,12 @@ class ModelFitGap extends $pb.ProtobufEnum {
   static const ModelFitGap MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN = ModelFitGap._(
       10, _omitEnumNames ? '' : 'MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN');
 
+  /// A model whose circuit's supply is not known: its circuit MIXED, or a floor circuit's mixing
+  /// not stated, with no supply probe after the mixer (heating.v1 CircuitMixing, SUPPLY). Bind a
+  /// supply probe, or state the circuit UNMIXED where no mixing valve feeds it.
+  static const ModelFitGap MODEL_FIT_GAP_NO_SUPPLY =
+      ModelFitGap._(11, _omitEnumNames ? '' : 'MODEL_FIT_GAP_NO_SUPPLY');
+
   static const $core.List<ModelFitGap> values = <ModelFitGap>[
     MODEL_FIT_GAP_UNSPECIFIED,
     MODEL_FIT_GAP_NO_EXCITATION,
@@ -546,10 +552,11 @@ class ModelFitGap extends $pb.ProtobufEnum {
     MODEL_FIT_GAP_SETUP_CHANGED,
     MODEL_FIT_GAP_LEARNING_RETURNS,
     MODEL_FIT_GAP_OTHER_ZONES_UNKNOWN,
+    MODEL_FIT_GAP_NO_SUPPLY,
   ];
 
   static final $core.List<ModelFitGap?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 10);
+      $pb.ProtobufEnum.$_initByValueList(values, 11);
   static ModelFitGap? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

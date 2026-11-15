@@ -17,10 +17,11 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $3;
 import '../../access/v1/acl.pb.dart' as $1;
-import '../../access/v1/roles.pbenum.dart' as $4;
-import '../../climate/v1/climate.pbenum.dart' as $5;
+import '../../access/v1/roles.pbenum.dart' as $5;
+import '../../climate/v1/climate.pbenum.dart' as $6;
 import '../../device/v1/cluster_state.pb.dart' as $2;
 import '../../identity/v1/identity.pb.dart' as $0;
+import '../../planning/v1/planning.pb.dart' as $4;
 import 'heating.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -705,7 +706,8 @@ class RadiatorCircuit extends $pb.GeneratedMessage {
       $pb.GeneratedMessage.$_defaultFor<RadiatorCircuit>(create);
   static RadiatorCircuit? _defaultInstance;
 
-  /// As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED.
+  /// As stated by its installer (CircuitMixing, SUPPLY). Usually UNMIXED, and read so while not
+  /// stated.
   @$pb.TagNumber(1)
   CircuitMixing get mixing => $_getN(0);
   @$pb.TagNumber(1)
@@ -716,7 +718,7 @@ class RadiatorCircuit extends $pb.GeneratedMessage {
   void clearMixing() => $_clearField(1);
 
   /// A probe on the supply after the mixer, as FloorCircuit.supply_probe names one: needed only
-  /// where the circuit is MIXED, or its mixing is not stated, for its supply to be known.
+  /// where the circuit is stated MIXED, for its supply to be known.
   @$pb.TagNumber(2)
   DeviceAttribute get supplyProbe => $_getN(1);
   @$pb.TagNumber(2)
@@ -1582,7 +1584,7 @@ class PriceRuleChange extends $pb.GeneratedMessage {
     PriceRuleMode? mode,
     PriceRuleMode? previousMode,
     $3.Timestamp? at,
-    $4.Role? setByRole,
+    $5.Role? setByRole,
     $0.UserId? setBy,
   }) {
     final result = create();
@@ -1624,10 +1626,10 @@ class PriceRuleChange extends $pb.GeneratedMessage {
         enumValues: PriceRuleMode.values)
     ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'at',
         subBuilder: $3.Timestamp.create)
-    ..e<$4.Role>(5, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.Role.ROLE_UNSPECIFIED,
-        valueOf: $4.Role.valueOf,
-        enumValues: $4.Role.values)
+    ..e<$5.Role>(5, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
+        defaultOrMaker: $5.Role.ROLE_UNSPECIFIED,
+        valueOf: $5.Role.valueOf,
+        enumValues: $5.Role.values)
     ..aOM<$0.UserId>(6, _omitFieldNames ? '' : 'setBy',
         subBuilder: $0.UserId.create)
     ..hasRequiredFields = false;
@@ -1699,9 +1701,9 @@ class PriceRuleChange extends $pb.GeneratedMessage {
   /// gateway made itself: a home's wipe taking a LIVE rule back to SHADOW (webrtc.v1
   /// household.proto, WIPE).
   @$pb.TagNumber(5)
-  $4.Role get setByRole => $_getN(4);
+  $5.Role get setByRole => $_getN(4);
   @$pb.TagNumber(5)
-  set setByRole($4.Role value) => $_setField(5, value);
+  set setByRole($5.Role value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasSetByRole() => $_has(4);
   @$pb.TagNumber(5)
@@ -1729,7 +1731,7 @@ class HeatBlock extends $pb.GeneratedMessage {
     $core.String? blockId,
     PriceRule? rule,
     PriceRuleMode? mode,
-    $5.ClimateExplanationKind? reason,
+    $6.ClimateExplanationKind? reason,
     $3.Timestamp? startedAt,
     $3.Timestamp? plannedEndAt,
     $3.Timestamp? endedAt,
@@ -1770,12 +1772,12 @@ class HeatBlock extends $pb.GeneratedMessage {
         defaultOrMaker: PriceRuleMode.PRICE_RULE_MODE_UNSPECIFIED,
         valueOf: PriceRuleMode.valueOf,
         enumValues: PriceRuleMode.values)
-    ..e<$5.ClimateExplanationKind>(
+    ..e<$6.ClimateExplanationKind>(
         4, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $5.ClimateExplanationKind.CLIMATE_EXPLANATION_KIND_UNSPECIFIED,
-        valueOf: $5.ClimateExplanationKind.valueOf,
-        enumValues: $5.ClimateExplanationKind.values)
+            $6.ClimateExplanationKind.CLIMATE_EXPLANATION_KIND_UNSPECIFIED,
+        valueOf: $6.ClimateExplanationKind.valueOf,
+        enumValues: $6.ClimateExplanationKind.values)
     ..aOM<$3.Timestamp>(5, _omitFieldNames ? '' : 'startedAt',
         subBuilder: $3.Timestamp.create)
     ..aOM<$3.Timestamp>(6, _omitFieldNames ? '' : 'plannedEndAt',
@@ -1840,9 +1842,9 @@ class HeatBlock extends $pb.GeneratedMessage {
   /// subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours. A kind the client
   /// does not know is shown as a block without a cause.
   @$pb.TagNumber(4)
-  $5.ClimateExplanationKind get reason => $_getN(3);
+  $6.ClimateExplanationKind get reason => $_getN(3);
   @$pb.TagNumber(4)
-  set reason($5.ClimateExplanationKind value) => $_setField(4, value);
+  set reason($6.ClimateExplanationKind value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReason() => $_has(3);
   @$pb.TagNumber(4)
@@ -1899,7 +1901,7 @@ class HeatBlockRelease extends $pb.GeneratedMessage {
     $3.Timestamp? at,
     $3.Timestamp? holdUntil,
     $core.Iterable<$core.String>? endedBlockIds,
-    $4.Role? setByRole,
+    $5.Role? setByRole,
     $0.UserId? setBy,
   }) {
     final result = create();
@@ -1930,10 +1932,10 @@ class HeatBlockRelease extends $pb.GeneratedMessage {
     ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'holdUntil',
         subBuilder: $3.Timestamp.create)
     ..pPS(3, _omitFieldNames ? '' : 'endedBlockIds')
-    ..e<$4.Role>(4, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.Role.ROLE_UNSPECIFIED,
-        valueOf: $4.Role.valueOf,
-        enumValues: $4.Role.values)
+    ..e<$5.Role>(4, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
+        defaultOrMaker: $5.Role.ROLE_UNSPECIFIED,
+        valueOf: $5.Role.valueOf,
+        enumValues: $5.Role.values)
     ..aOM<$0.UserId>(5, _omitFieldNames ? '' : 'setBy',
         subBuilder: $0.UserId.create)
     ..hasRequiredFields = false;
@@ -1991,9 +1993,9 @@ class HeatBlockRelease extends $pb.GeneratedMessage {
   /// ROLE_GATEWAY_ADMIN or ROLE_TECHNICIAN on one outside homes — and who they are, given as
   /// PriceRuleChange.set_by is.
   @$pb.TagNumber(4)
-  $4.Role get setByRole => $_getN(3);
+  $5.Role get setByRole => $_getN(3);
   @$pb.TagNumber(4)
-  set setByRole($4.Role value) => $_setField(4, value);
+  set setByRole($5.Role value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasSetByRole() => $_has(3);
   @$pb.TagNumber(4)
@@ -2308,6 +2310,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     $core.int? noPriceQuarters,
     $fixnum.Int64? cautiousNetSavingMicroEur,
     $core.int? savingSharePermille,
+    $core.int? cautiousSavingSharePermille,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2322,6 +2325,8 @@ class ShadowDay extends $pb.GeneratedMessage {
       result.cautiousNetSavingMicroEur = cautiousNetSavingMicroEur;
     if (savingSharePermille != null)
       result.savingSharePermille = savingSharePermille;
+    if (cautiousSavingSharePermille != null)
+      result.cautiousSavingSharePermille = cautiousSavingSharePermille;
     return result;
   }
 
@@ -2359,6 +2364,8 @@ class ShadowDay extends $pb.GeneratedMessage {
         defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$core.int>(
         9, _omitFieldNames ? '' : 'savingSharePermille', $pb.PbFieldType.OS3)
+    ..a<$core.int>(10, _omitFieldNames ? '' : 'cautiousSavingSharePermille',
+        $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2484,6 +2491,19 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasSavingSharePermille() => $_has(8);
   @$pb.TagNumber(9)
   void clearSavingSharePermille() => $_clearField(9);
+
+  /// The cautious figure as a share, for a rule whose saving is given as saving_share_permille:
+  /// made up at full electric energy as cautious_net_saving_micro_eur is, never above the share.
+  /// Unset where the saving is in money, or on a day kept before it was computed.
+  @$pb.TagNumber(10)
+  $core.int get cautiousSavingSharePermille => $_getIZ(9);
+  @$pb.TagNumber(10)
+  set cautiousSavingSharePermille($core.int value) =>
+      $_setSignedInt32(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasCautiousSavingSharePermille() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearCautiousSavingSharePermille() => $_clearField(10);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.
@@ -2611,11 +2631,13 @@ class ShadowSummary extends $pb.GeneratedMessage {
     $0.SpaceId? homeId,
     $core.String? keptFrom,
     $core.Iterable<ShadowBandSeries>? series,
+    $core.Iterable<$4.ExchangeRate>? exchangeRates,
   }) {
     final result = create();
     if (homeId != null) result.homeId = homeId;
     if (keptFrom != null) result.keptFrom = keptFrom;
     if (series != null) result.series.addAll(series);
+    if (exchangeRates != null) result.exchangeRates.addAll(exchangeRates);
     return result;
   }
 
@@ -2639,6 +2661,9 @@ class ShadowSummary extends $pb.GeneratedMessage {
     ..pc<ShadowBandSeries>(
         3, _omitFieldNames ? '' : 'series', $pb.PbFieldType.PM,
         subBuilder: ShadowBandSeries.create)
+    ..pc<$4.ExchangeRate>(
+        4, _omitFieldNames ? '' : 'exchangeRates', $pb.PbFieldType.PM,
+        subBuilder: $4.ExchangeRate.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2690,6 +2715,13 @@ class ShadowSummary extends $pb.GeneratedMessage {
   /// A plant outside homes is scored for no home. Empty where none is held.
   @$pb.TagNumber(3)
   $pb.PbList<ShadowBandSeries> get series => $_getList(2);
+
+  /// The reference rates a client converts the savings at, as webrtc.v1.DayAheadPrices gives
+  /// them for prices: every rate the gateway holds from kept_from on, and the last one before it,
+  /// oldest first. A day is converted at the rate in force on it. Empty where it holds none; a
+  /// client then shows euros.
+  @$pb.TagNumber(4)
+  $pb.PbList<$4.ExchangeRate> get exchangeRates => $_getList(3);
 }
 
 const $core.bool _omitFieldNames =
