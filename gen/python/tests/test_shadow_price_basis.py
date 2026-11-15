@@ -5,6 +5,8 @@ These assert the decisions the shape encodes:
   * each scored day states the basis its money figures are on, spot or the payer's price,
     and on the payer's price whether the adder was the default or the payer's own
   * a day kept before price bases reads as not stated, which a client reads as spot
+  * a payer day names the exchange rate it was converted with, so a client converts it back
+    at that rate
   * the summary carries the terms the gateway supplies itself (VAT, energy tax), dated, so a
     client can say what the figures include
   * the adder is read, set and reset to the default per home or per building plant, in
@@ -50,6 +52,14 @@ def test_a_payer_day_says_it_rests_on_the_default_adder():
         heating_pb2.SHADOW_PRICE_BASIS_PAYER,
         heating_pb2.ENERGY_PRICE_ADDER_SOURCE_DEFAULT,
     )
+
+
+def test_a_payer_day_names_the_exchange_rate_it_was_converted_with():
+    day = heating_pb2.ShadowDay(
+        date="2026-11-16", price_basis=heating_pb2.SHADOW_PRICE_BASIS_PAYER, rate_published_on="2026-11-13"
+    )
+
+    assert _round_trip(day).rate_published_on == "2026-11-13"
 
 
 def test_the_summary_dates_the_vat_and_energy_tax_it_prices_with():

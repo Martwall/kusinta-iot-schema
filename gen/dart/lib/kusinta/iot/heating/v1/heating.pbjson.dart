@@ -1096,6 +1096,13 @@ const ShadowDay$json = {
       '6': '.kusinta.iot.heating.v1.EnergyPriceAdderSource',
       '10': 'adderSource'
     },
+    {
+      '1': 'rate_published_on',
+      '3': 15,
+      '4': 1,
+      '5': 9,
+      '10': 'ratePublishedOn'
+    },
   ],
   '8': [
     {'1': '_cautious_net_saving_micro_eur'},
@@ -1120,9 +1127,10 @@ final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
     'aWdodBgMIAEoBEgDUgtzaGFyZVdlaWdodIgBARJJCgtwcmljZV9iYXNpcxgNIAEoDjIoLmt1c2'
     'ludGEuaW90LmhlYXRpbmcudjEuU2hhZG93UHJpY2VCYXNpc1IKcHJpY2VCYXNpcxJRCgxhZGRl'
     'cl9zb3VyY2UYDiABKA4yLi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkVuZXJneVByaWNlQWRkZX'
-    'JTb3VyY2VSC2FkZGVyU291cmNlQiAKHl9jYXV0aW91c19uZXRfc2F2aW5nX21pY3JvX2V1ckIY'
-    'ChZfc2F2aW5nX3NoYXJlX3Blcm1pbGxlQiEKH19jYXV0aW91c19zYXZpbmdfc2hhcmVfcGVybW'
-    'lsbGVCDwoNX3NoYXJlX3dlaWdodA==');
+    'JTb3VyY2VSC2FkZGVyU291cmNlEioKEXJhdGVfcHVibGlzaGVkX29uGA8gASgJUg9yYXRlUHVi'
+    'bGlzaGVkT25CIAoeX2NhdXRpb3VzX25ldF9zYXZpbmdfbWljcm9fZXVyQhgKFl9zYXZpbmdfc2'
+    'hhcmVfcGVybWlsbGVCIQofX2NhdXRpb3VzX3NhdmluZ19zaGFyZV9wZXJtaWxsZUIPCg1fc2hh'
+    'cmVfd2VpZ2h0');
 
 @$core.Deprecated('Use shadowBandSeriesDescriptor instead')
 const ShadowBandSeries$json = {

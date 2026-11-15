@@ -2311,7 +2311,8 @@ export declare const GetEnergyPriceAdderSchema: GenMessage<GetEnergyPriceAdder>;
  * gateway's administrators who reach its space. Anyone else — a resident who is not a household
  * admin, service, an installer under a commissioning grant, a technician — and a home or plant
  * that does not exist, are refused as NOT_ENTITLED with the same metadata, as is a home_id that is
- * not an apartment. Refused, with metadata "reason", in this order:
+ * not an apartment. A resident who is not a household admin is refused so whether they name the
+ * home or the home's own plant. Refused, with metadata "reason", in this order:
  *
  *   INVALID_REQUEST
  *   "payer"            neither named, or a home's own plant, named by one who may set the home's.

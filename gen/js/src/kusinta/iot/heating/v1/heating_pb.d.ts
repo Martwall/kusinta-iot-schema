@@ -1089,6 +1089,16 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: kusinta.iot.heating.v1.EnergyPriceAdderSource adder_source = 14;
    */
   adderSource: EnergyPriceAdderSource;
+
+  /**
+   * On PAYER, the exchange rate the day's energy tax and adder were converted with, by its
+   * planning.v1.ExchangeRate.published_on (PRICE BASIS, WHAT THE GATEWAY SUPPLIES): a client
+   * converts the day's figures at that rate, listed in ShadowSummary.exchange_rates, and never at
+   * another. Empty on SPOT, and then a client converts the day at the rate in force on it.
+   *
+   * @generated from field: string rate_published_on = 15;
+   */
+  ratePublishedOn: string;
 };
 
 /**
@@ -1179,9 +1189,10 @@ export declare type ShadowSummary = Message<"kusinta.iot.heating.v1.ShadowSummar
 
   /**
    * The reference rates a client converts the savings at, as webrtc.v1.DayAheadPrices gives
-   * them for prices: every rate the gateway holds from kept_from on, and the last one before it,
-   * oldest first. A day is converted at the rate in force on it. Empty where it holds none; a
-   * client then shows euros.
+   * them for prices: every rate the gateway holds from kept_from on, the last one before it, and
+   * any older rate a day given names (ShadowDay.rate_published_on), oldest first. A day that names
+   * a rate is converted at it; any other day at the rate in force on it. Empty where it holds
+   * none; a client then shows euros.
    *
    * @generated from field: repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 4;
    */
@@ -1237,8 +1248,7 @@ export declare type EnergyPriceTerms = Message<"kusinta.iot.heating.v1.EnergyPri
   currency: string;
 
   /**
-   * The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK. The
-   * rate that applies to the building, a reduced one where it applies.
+   * The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK.
    *
    * @generated from field: uint32 energy_tax_micro_per_kwh = 4;
    */

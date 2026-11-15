@@ -2315,6 +2315,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     $fixnum.Int64? shareWeight,
     ShadowPriceBasis? priceBasis,
     EnergyPriceAdderSource? adderSource,
+    $core.String? ratePublishedOn,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2335,6 +2336,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     if (shareWeight != null) result.shareWeight = shareWeight;
     if (priceBasis != null) result.priceBasis = priceBasis;
     if (adderSource != null) result.adderSource = adderSource;
+    if (ratePublishedOn != null) result.ratePublishedOn = ratePublishedOn;
     return result;
   }
 
@@ -2389,6 +2391,7 @@ class ShadowDay extends $pb.GeneratedMessage {
             EnergyPriceAdderSource.ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED,
         valueOf: EnergyPriceAdderSource.valueOf,
         enumValues: EnergyPriceAdderSource.values)
+    ..aOS(15, _omitFieldNames ? '' : 'ratePublishedOn')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2580,6 +2583,19 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasAdderSource() => $_has(13);
   @$pb.TagNumber(14)
   void clearAdderSource() => $_clearField(14);
+
+  /// On PAYER, the exchange rate the day's energy tax and adder were converted with, by its
+  /// planning.v1.ExchangeRate.published_on (PRICE BASIS, WHAT THE GATEWAY SUPPLIES): a client
+  /// converts the day's figures at that rate, listed in ShadowSummary.exchange_rates, and never at
+  /// another. Empty on SPOT, and then a client converts the day at the rate in force on it.
+  @$pb.TagNumber(15)
+  $core.String get ratePublishedOn => $_getSZ(14);
+  @$pb.TagNumber(15)
+  set ratePublishedOn($core.String value) => $_setString(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasRatePublishedOn() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearRatePublishedOn() => $_clearField(15);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.
@@ -2798,9 +2814,10 @@ class ShadowSummary extends $pb.GeneratedMessage {
   $pb.PbList<ShadowBandSeries> get series => $_getList(2);
 
   /// The reference rates a client converts the savings at, as webrtc.v1.DayAheadPrices gives
-  /// them for prices: every rate the gateway holds from kept_from on, and the last one before it,
-  /// oldest first. A day is converted at the rate in force on it. Empty where it holds none; a
-  /// client then shows euros.
+  /// them for prices: every rate the gateway holds from kept_from on, the last one before it, and
+  /// any older rate a day given names (ShadowDay.rate_published_on), oldest first. A day that names
+  /// a rate is converted at it; any other day at the rate in force on it. Empty where it holds
+  /// none; a client then shows euros.
   @$pb.TagNumber(4)
   $pb.PbList<$4.ExchangeRate> get exchangeRates => $_getList(3);
 
@@ -2911,8 +2928,7 @@ class EnergyPriceTerms extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearCurrency() => $_clearField(3);
 
-  /// The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK. The
-  /// rate that applies to the building, a reduced one where it applies.
+  /// The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK.
   @$pb.TagNumber(4)
   $core.int get energyTaxMicroPerKwh => $_getIZ(3);
   @$pb.TagNumber(4)
