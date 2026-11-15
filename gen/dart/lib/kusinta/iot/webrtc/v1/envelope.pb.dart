@@ -749,6 +749,7 @@ enum ManagementResult_Result {
   heatBlockStatuses,
   heatBlockHistory,
   shadowSummary,
+  energyPriceAdder,
   notSet
 }
 
@@ -797,6 +798,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $8.HeatBlockStatuses? heatBlockStatuses,
     $8.HeatBlockHistory? heatBlockHistory,
     $8.ShadowSummary? shadowSummary,
+    $8.EnergyPriceAdder? energyPriceAdder,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -839,6 +841,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (heatBlockStatuses != null) result.heatBlockStatuses = heatBlockStatuses;
     if (heatBlockHistory != null) result.heatBlockHistory = heatBlockHistory;
     if (shadowSummary != null) result.shadowSummary = shadowSummary;
+    if (energyPriceAdder != null) result.energyPriceAdder = energyPriceAdder;
     return result;
   }
 
@@ -886,6 +889,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     32: ManagementResult_Result.heatBlockStatuses,
     33: ManagementResult_Result.heatBlockHistory,
     34: ManagementResult_Result.shadowSummary,
+    35: ManagementResult_Result.energyPriceAdder,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -926,7 +930,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       31,
       32,
       33,
-      34
+      34,
+      35
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -1001,6 +1006,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $8.HeatBlockHistory.create)
     ..aOM<$8.ShadowSummary>(34, _omitFieldNames ? '' : 'shadowSummary',
         subBuilder: $8.ShadowSummary.create)
+    ..aOM<$8.EnergyPriceAdder>(35, _omitFieldNames ? '' : 'energyPriceAdder',
+        subBuilder: $8.EnergyPriceAdder.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1413,6 +1420,18 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearShadowSummary() => $_clearField(34);
   @$pb.TagNumber(34)
   $8.ShadowSummary ensureShadowSummary() => $_ensure(33);
+
+  /// get_energy_price_adder, set_energy_price_adder
+  @$pb.TagNumber(35)
+  $8.EnergyPriceAdder get energyPriceAdder => $_getN(34);
+  @$pb.TagNumber(35)
+  set energyPriceAdder($8.EnergyPriceAdder value) => $_setField(35, value);
+  @$pb.TagNumber(35)
+  $core.bool hasEnergyPriceAdder() => $_has(34);
+  @$pb.TagNumber(35)
+  void clearEnergyPriceAdder() => $_clearField(35);
+  @$pb.TagNumber(35)
+  $8.EnergyPriceAdder ensureEnergyPriceAdder() => $_ensure(34);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

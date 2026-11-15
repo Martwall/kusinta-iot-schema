@@ -5263,6 +5263,194 @@ class GetShadowSummary extends $pb.GeneratedMessage {
   void clearToDate() => $_clearField(4);
 }
 
+/// Reads a payer's energy price adder (heating.v1 ENERGY PRICE ADDER), answered with a
+/// heating.v1.EnergyPriceAdder. A home's: to its residents only. A plant outside homes': to the
+/// property owner and the gateway's administrators who reach its space. Anyone else — service on a
+/// home, an installer under a commissioning grant, a technician — a home or plant that does not
+/// exist, and a home_id that is not an apartment, are refused as NOT_ENTITLED with the same
+/// metadata. A home's own plant (heating.v1 ENERGY PRICE ADDER) is priced with its home's adder: one
+/// named by a resident of that home is refused as INVALID_REQUEST with metadata {"reason":
+/// "payer"}, and a client names the home; so is a request naming neither.
+///
+/// Rollout note: a gateway that predates the adder does not know this request or
+/// SetEnergyPriceAdder. An app offers a home's adder only to a gateway whose shadow days state a
+/// price basis (heating.v1.ShadowDay.price_basis), and a plant's only once this request is answered
+/// with an adder.
+class GetEnergyPriceAdder extends $pb.GeneratedMessage {
+  factory GetEnergyPriceAdder({
+    $9.EnergyPricePayer? payer,
+  }) {
+    final result = create();
+    if (payer != null) result.payer = payer;
+    return result;
+  }
+
+  GetEnergyPriceAdder._();
+
+  factory GetEnergyPriceAdder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetEnergyPriceAdder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetEnergyPriceAdder',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$9.EnergyPricePayer>(1, _omitFieldNames ? '' : 'payer',
+        subBuilder: $9.EnergyPricePayer.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetEnergyPriceAdder clone() => GetEnergyPriceAdder()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetEnergyPriceAdder copyWith(void Function(GetEnergyPriceAdder) updates) =>
+      super.copyWith((message) => updates(message as GetEnergyPriceAdder))
+          as GetEnergyPriceAdder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetEnergyPriceAdder create() => GetEnergyPriceAdder._();
+  @$core.override
+  GetEnergyPriceAdder createEmptyInstance() => create();
+  static $pb.PbList<GetEnergyPriceAdder> createRepeated() =>
+      $pb.PbList<GetEnergyPriceAdder>();
+  @$core.pragma('dart2js:noInline')
+  static GetEnergyPriceAdder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetEnergyPriceAdder>(create);
+  static GetEnergyPriceAdder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $9.EnergyPricePayer get payer => $_getN(0);
+  @$pb.TagNumber(1)
+  set payer($9.EnergyPricePayer value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPayer() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPayer() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $9.EnergyPricePayer ensurePayer() => $_ensure(0);
+}
+
+/// States a payer's energy price adder, or resets it to the gateway's default (heating.v1 ENERGY
+/// PRICE ADDER). Answered with the heating.v1.EnergyPriceAdder as it now stands. It prices the days
+/// scored from now on, never one already kept (heating.v1 PRICE BASIS).
+///
+/// A home's: its household admins only. A plant outside homes': the property owner and the
+/// gateway's administrators who reach its space. Anyone else — a resident who is not a household
+/// admin, service, an installer under a commissioning grant, a technician — and a home or plant
+/// that does not exist, are refused as NOT_ENTITLED with the same metadata, as is a home_id that is
+/// not an apartment. Refused, with metadata "reason", in this order:
+///
+///   INVALID_REQUEST
+///   "payer"            neither named, or a home's own plant, named by one who may set the home's.
+///
+///   FAILED_PRECONDITION
+///   "no_price_area"    micro_per_kwh set, and the building has no price area, or one whose
+///                      country the gateway holds no terms for (EnergyPriceAdder.terms unset):
+///                      nothing to state it in.
+///
+///   INVALID_REQUEST
+///   "currency"         micro_per_kwh set and currency not the adder's
+///                      (EnergyPriceAdder.terms.currency).
+///   "value"            micro_per_kwh above EnergyPriceAdder.terms.adder_max_micro_per_kwh.
+///
+/// A value equal to the one in force, and a reset where the default is in force or no adder
+/// applies, are answered as it stands and change nothing. A building's price area moved to another
+/// country takes its payers' adders back to the default, in the new currency.
+class SetEnergyPriceAdder extends $pb.GeneratedMessage {
+  factory SetEnergyPriceAdder({
+    $9.EnergyPricePayer? payer,
+    $core.int? microPerKwh,
+    $core.String? currency,
+  }) {
+    final result = create();
+    if (payer != null) result.payer = payer;
+    if (microPerKwh != null) result.microPerKwh = microPerKwh;
+    if (currency != null) result.currency = currency;
+    return result;
+  }
+
+  SetEnergyPriceAdder._();
+
+  factory SetEnergyPriceAdder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetEnergyPriceAdder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetEnergyPriceAdder',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$9.EnergyPricePayer>(1, _omitFieldNames ? '' : 'payer',
+        subBuilder: $9.EnergyPricePayer.create)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'microPerKwh', $pb.PbFieldType.OU3)
+    ..aOS(3, _omitFieldNames ? '' : 'currency')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetEnergyPriceAdder clone() => SetEnergyPriceAdder()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetEnergyPriceAdder copyWith(void Function(SetEnergyPriceAdder) updates) =>
+      super.copyWith((message) => updates(message as SetEnergyPriceAdder))
+          as SetEnergyPriceAdder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetEnergyPriceAdder create() => SetEnergyPriceAdder._();
+  @$core.override
+  SetEnergyPriceAdder createEmptyInstance() => create();
+  static $pb.PbList<SetEnergyPriceAdder> createRepeated() =>
+      $pb.PbList<SetEnergyPriceAdder>();
+  @$core.pragma('dart2js:noInline')
+  static SetEnergyPriceAdder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetEnergyPriceAdder>(create);
+  static SetEnergyPriceAdder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $9.EnergyPricePayer get payer => $_getN(0);
+  @$pb.TagNumber(1)
+  set payer($9.EnergyPricePayer value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPayer() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPayer() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $9.EnergyPricePayer ensurePayer() => $_ensure(0);
+
+  /// The adder, as heating.v1.EnergyPriceAdder.micro_per_kwh says. Unset: reset to the gateway's
+  /// default. 0 is a value: no grid fee or markup per kWh.
+  @$pb.TagNumber(2)
+  $core.int get microPerKwh => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set microPerKwh($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMicroPerKwh() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMicroPerKwh() => $_clearField(2);
+
+  /// The currency micro_per_kwh is in, as ISO 4217 names it: the adder's own
+  /// (EnergyPriceAdder.terms.currency), so that a value is never read in a currency it was not
+  /// meant in. Ignored on a reset.
+  @$pb.TagNumber(3)
+  $core.String get currency => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set currency($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCurrency() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCurrency() => $_clearField(3);
+}
+
 /// Asks for a nonce to link one home's account at a third-party service
 /// (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -6616,6 +6804,8 @@ enum ManagementRequest_Request {
   listHeatBlockStatus,
   getHeatBlockHistory,
   getShadowSummary,
+  getEnergyPriceAdder,
+  setEnergyPriceAdder,
   notSet
 }
 
@@ -6704,6 +6894,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ListHeatBlockStatus? listHeatBlockStatus,
     GetHeatBlockHistory? getHeatBlockHistory,
     GetShadowSummary? getShadowSummary,
+    GetEnergyPriceAdder? getEnergyPriceAdder,
+    SetEnergyPriceAdder? setEnergyPriceAdder,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -6823,6 +7015,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (getHeatBlockHistory != null)
       result.getHeatBlockHistory = getHeatBlockHistory;
     if (getShadowSummary != null) result.getShadowSummary = getShadowSummary;
+    if (getEnergyPriceAdder != null)
+      result.getEnergyPriceAdder = getEnergyPriceAdder;
+    if (setEnergyPriceAdder != null)
+      result.setEnergyPriceAdder = setEnergyPriceAdder;
     return result;
   }
 
@@ -6919,6 +7115,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     80: ManagementRequest_Request.listHeatBlockStatus,
     81: ManagementRequest_Request.getHeatBlockHistory,
     82: ManagementRequest_Request.getShadowSummary,
+    83: ManagementRequest_Request.getEnergyPriceAdder,
+    84: ManagementRequest_Request.setEnergyPriceAdder,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -7008,7 +7206,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
       79,
       80,
       81,
-      82
+      82,
+      83,
+      84
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -7200,6 +7400,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: GetHeatBlockHistory.create)
     ..aOM<GetShadowSummary>(82, _omitFieldNames ? '' : 'getShadowSummary',
         subBuilder: GetShadowSummary.create)
+    ..aOM<GetEnergyPriceAdder>(83, _omitFieldNames ? '' : 'getEnergyPriceAdder',
+        subBuilder: GetEnergyPriceAdder.create)
+    ..aOM<SetEnergyPriceAdder>(84, _omitFieldNames ? '' : 'setEnergyPriceAdder',
+        subBuilder: SetEnergyPriceAdder.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -8164,6 +8368,29 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearGetShadowSummary() => $_clearField(82);
   @$pb.TagNumber(82)
   GetShadowSummary ensureGetShadowSummary() => $_ensure(81);
+
+  /// A payer's energy price adder; see heating.v1 ENERGY PRICE ADDER.
+  @$pb.TagNumber(83)
+  GetEnergyPriceAdder get getEnergyPriceAdder => $_getN(82);
+  @$pb.TagNumber(83)
+  set getEnergyPriceAdder(GetEnergyPriceAdder value) => $_setField(83, value);
+  @$pb.TagNumber(83)
+  $core.bool hasGetEnergyPriceAdder() => $_has(82);
+  @$pb.TagNumber(83)
+  void clearGetEnergyPriceAdder() => $_clearField(83);
+  @$pb.TagNumber(83)
+  GetEnergyPriceAdder ensureGetEnergyPriceAdder() => $_ensure(82);
+
+  @$pb.TagNumber(84)
+  SetEnergyPriceAdder get setEnergyPriceAdder => $_getN(83);
+  @$pb.TagNumber(84)
+  set setEnergyPriceAdder(SetEnergyPriceAdder value) => $_setField(84, value);
+  @$pb.TagNumber(84)
+  $core.bool hasSetEnergyPriceAdder() => $_has(83);
+  @$pb.TagNumber(84)
+  void clearSetEnergyPriceAdder() => $_clearField(84);
+  @$pb.TagNumber(84)
+  SetEnergyPriceAdder ensureSetEnergyPriceAdder() => $_ensure(83);
 }
 
 const $core.bool _omitFieldNames =

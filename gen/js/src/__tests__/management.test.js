@@ -705,3 +705,27 @@ describe('room type on create and update', () => {
     expect(decoded.request.value.roomType).toBeUndefined()
   })
 })
+
+describe('energy price adder', () => {
+  it("reads a home's adder by the home", () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'getEnergyPriceAdder', value: { payer: { payer: { case: 'homeId', value: { value: 'home-1' } } } } },
+    })
+    expect(decoded.request.value.payer.payer.case).toBe('homeId')
+  })
+
+  it('resets an adder to the default by setting no value', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'setEnergyPriceAdder', value: { payer: { payer: { case: 'plantId', value: 'plant-1' } } } },
+    })
+    expect(decoded.request.value.microPerKwh).toBeUndefined()
+  })
+
+  it('answers a read or set with the adder as it stands', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: { case: 'energyPriceAdder', value: { microPerKwh: 450000 } },
+    })
+    expect(decoded.result).toMatchObject({ case: 'energyPriceAdder', value: { microPerKwh: 450000 } })
+  })
+})

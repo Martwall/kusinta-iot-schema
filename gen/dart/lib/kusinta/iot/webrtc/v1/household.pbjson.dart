@@ -471,6 +471,15 @@ const HouseholdExport$json = {
       '9': 0,
       '10': 'heatBlocks'
     },
+    {
+      '1': 'energy_price_adder',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPriceAdder',
+      '9': 0,
+      '10': 'energyPriceAdder'
+    },
     {'1': 'next_part_token', '3': 7, '4': 1, '5': 9, '10': 'nextPartToken'},
   ],
   '8': [
@@ -490,4 +499,6 @@ final $typed_data.Uint8List householdExportDescriptor = $convert.base64Decode(
     '5nUHJvZmlsZUgAUg1jb21taXNzaW9uaW5nEkEKB2hlYXRpbmcYBiABKAsyJS5rdXNpbnRhLmlv'
     'dC5oZWF0aW5nLnYxLkhlYXRpbmdMYXlvdXRIAFIHaGVhdGluZxJLCgtoZWF0X2Jsb2NrcxgIIA'
     'EoCzIoLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdEJsb2NrSGlzdG9yeUgAUgpoZWF0Qmxv'
-    'Y2tzEiYKD25leHRfcGFydF90b2tlbhgHIAEoCVINbmV4dFBhcnRUb2tlbkIGCgRwYXJ0');
+    'Y2tzElgKEmVuZXJneV9wcmljZV9hZGRlchgJIAEoCzIoLmt1c2ludGEuaW90LmhlYXRpbmcudj'
+    'EuRW5lcmd5UHJpY2VBZGRlckgAUhBlbmVyZ3lQcmljZUFkZGVyEiYKD25leHRfcGFydF90b2tl'
+    'bhgHIAEoCVINbmV4dFBhcnRUb2tlbkIGCgRwYXJ0');

@@ -300,6 +300,7 @@ def test_an_export_has_no_part_for_models():
         "commissioning",
         "heating",
         "heat_blocks",
+        "energy_price_adder",
     ]
 
 

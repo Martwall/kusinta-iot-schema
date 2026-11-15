@@ -109,6 +109,38 @@ final $typed_data.Uint8List heatBlockEndDescriptor = $convert.base64Decode(
     'VBU0VEEAQSIAocSEVBVF9CTE9DS19FTkRfUlVMRV9TV0lUQ0hFRBAFEh4KGkhFQVRfQkxPQ0tf'
     'RU5EX0lOVEVSUlVQVEVEEAYSGwoXSEVBVF9CTE9DS19FTkRfVU5TVEFURUQQBw==');
 
+@$core.Deprecated('Use shadowPriceBasisDescriptor instead')
+const ShadowPriceBasis$json = {
+  '1': 'ShadowPriceBasis',
+  '2': [
+    {'1': 'SHADOW_PRICE_BASIS_UNSPECIFIED', '2': 0},
+    {'1': 'SHADOW_PRICE_BASIS_SPOT', '2': 1},
+    {'1': 'SHADOW_PRICE_BASIS_PAYER', '2': 2},
+  ],
+};
+
+/// Descriptor for `ShadowPriceBasis`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List shadowPriceBasisDescriptor = $convert.base64Decode(
+    'ChBTaGFkb3dQcmljZUJhc2lzEiIKHlNIQURPV19QUklDRV9CQVNJU19VTlNQRUNJRklFRBAAEh'
+    'sKF1NIQURPV19QUklDRV9CQVNJU19TUE9UEAESHAoYU0hBRE9XX1BSSUNFX0JBU0lTX1BBWUVS'
+    'EAI=');
+
+@$core.Deprecated('Use energyPriceAdderSourceDescriptor instead')
+const EnergyPriceAdderSource$json = {
+  '1': 'EnergyPriceAdderSource',
+  '2': [
+    {'1': 'ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED', '2': 0},
+    {'1': 'ENERGY_PRICE_ADDER_SOURCE_DEFAULT', '2': 1},
+    {'1': 'ENERGY_PRICE_ADDER_SOURCE_STATED', '2': 2},
+  ],
+};
+
+/// Descriptor for `EnergyPriceAdderSource`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List energyPriceAdderSourceDescriptor = $convert.base64Decode(
+    'ChZFbmVyZ3lQcmljZUFkZGVyU291cmNlEikKJUVORVJHWV9QUklDRV9BRERFUl9TT1VSQ0VfVU'
+    '5TUEVDSUZJRUQQABIlCiFFTkVSR1lfUFJJQ0VfQURERVJfU09VUkNFX0RFRkFVTFQQARIkCiBF'
+    'TkVSR1lfUFJJQ0VfQURERVJfU09VUkNFX1NUQVRFRBAC');
+
 @$core.Deprecated('Use deviceAttributeDescriptor instead')
 const DeviceAttribute$json = {
   '1': 'DeviceAttribute',
@@ -1048,6 +1080,22 @@ const ShadowDay$json = {
       '10': 'shareWeight',
       '17': true
     },
+    {
+      '1': 'price_basis',
+      '3': 13,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.ShadowPriceBasis',
+      '10': 'priceBasis'
+    },
+    {
+      '1': 'adder_source',
+      '3': 14,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.EnergyPriceAdderSource',
+      '10': 'adderSource'
+    },
   ],
   '8': [
     {'1': '_cautious_net_saving_micro_eur'},
@@ -1069,9 +1117,12 @@ final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
     'dfc2hhcmVfcGVybWlsbGUYCSABKBFIAVITc2F2aW5nU2hhcmVQZXJtaWxsZYgBARJICh5jYXV0'
     'aW91c19zYXZpbmdfc2hhcmVfcGVybWlsbGUYCiABKBFIAlIbY2F1dGlvdXNTYXZpbmdTaGFyZV'
     'Blcm1pbGxliAEBEh8KC2NvdW50c19vbmx5GAsgASgIUgpjb3VudHNPbmx5EiYKDHNoYXJlX3dl'
-    'aWdodBgMIAEoBEgDUgtzaGFyZVdlaWdodIgBAUIgCh5fY2F1dGlvdXNfbmV0X3NhdmluZ19taW'
-    'Nyb19ldXJCGAoWX3NhdmluZ19zaGFyZV9wZXJtaWxsZUIhCh9fY2F1dGlvdXNfc2F2aW5nX3No'
-    'YXJlX3Blcm1pbGxlQg8KDV9zaGFyZV93ZWlnaHQ=');
+    'aWdodBgMIAEoBEgDUgtzaGFyZVdlaWdodIgBARJJCgtwcmljZV9iYXNpcxgNIAEoDjIoLmt1c2'
+    'ludGEuaW90LmhlYXRpbmcudjEuU2hhZG93UHJpY2VCYXNpc1IKcHJpY2VCYXNpcxJRCgxhZGRl'
+    'cl9zb3VyY2UYDiABKA4yLi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkVuZXJneVByaWNlQWRkZX'
+    'JTb3VyY2VSC2FkZGVyU291cmNlQiAKHl9jYXV0aW91c19uZXRfc2F2aW5nX21pY3JvX2V1ckIY'
+    'ChZfc2F2aW5nX3NoYXJlX3Blcm1pbGxlQiEKH19jYXV0aW91c19zYXZpbmdfc2hhcmVfcGVybW'
+    'lsbGVCDwoNX3NoYXJlX3dlaWdodA==');
 
 @$core.Deprecated('Use shadowBandSeriesDescriptor instead')
 const ShadowBandSeries$json = {
@@ -1148,6 +1199,14 @@ const ShadowSummary$json = {
       '6': '.kusinta.iot.planning.v1.ExchangeRate',
       '10': 'exchangeRates'
     },
+    {
+      '1': 'price_terms',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPriceTerms',
+      '10': 'priceTerms'
+    },
   ],
 };
 
@@ -1157,4 +1216,116 @@ final $typed_data.Uint8List shadowSummaryDescriptor = $convert.base64Decode(
     '52MS5TcGFjZUlkUgZob21lSWQSGwoJa2VwdF9mcm9tGAIgASgJUghrZXB0RnJvbRJACgZzZXJp'
     'ZXMYAyADKAsyKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlNoYWRvd0JhbmRTZXJpZXNSBnNlcm'
     'llcxJMCg5leGNoYW5nZV9yYXRlcxgEIAMoCzIlLmt1c2ludGEuaW90LnBsYW5uaW5nLnYxLkV4'
-    'Y2hhbmdlUmF0ZVINZXhjaGFuZ2VSYXRlcw==');
+    'Y2hhbmdlUmF0ZVINZXhjaGFuZ2VSYXRlcxJJCgtwcmljZV90ZXJtcxgFIAMoCzIoLmt1c2ludG'
+    'EuaW90LmhlYXRpbmcudjEuRW5lcmd5UHJpY2VUZXJtc1IKcHJpY2VUZXJtcw==');
+
+@$core.Deprecated('Use energyPriceTermsDescriptor instead')
+const EnergyPriceTerms$json = {
+  '1': 'EnergyPriceTerms',
+  '2': [
+    {'1': 'valid_from', '3': 1, '4': 1, '5': 9, '10': 'validFrom'},
+    {'1': 'vat_permille', '3': 2, '4': 1, '5': 13, '10': 'vatPermille'},
+    {'1': 'currency', '3': 3, '4': 1, '5': 9, '10': 'currency'},
+    {
+      '1': 'energy_tax_micro_per_kwh',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '10': 'energyTaxMicroPerKwh'
+    },
+    {
+      '1': 'adder_max_micro_per_kwh',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '10': 'adderMaxMicroPerKwh'
+    },
+  ],
+};
+
+/// Descriptor for `EnergyPriceTerms`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List energyPriceTermsDescriptor = $convert.base64Decode(
+    'ChBFbmVyZ3lQcmljZVRlcm1zEh0KCnZhbGlkX2Zyb20YASABKAlSCXZhbGlkRnJvbRIhCgx2YX'
+    'RfcGVybWlsbGUYAiABKA1SC3ZhdFBlcm1pbGxlEhoKCGN1cnJlbmN5GAMgASgJUghjdXJyZW5j'
+    'eRI2ChhlbmVyZ3lfdGF4X21pY3JvX3Blcl9rd2gYBCABKA1SFGVuZXJneVRheE1pY3JvUGVyS3'
+    'doEjQKF2FkZGVyX21heF9taWNyb19wZXJfa3doGAUgASgNUhNhZGRlck1heE1pY3JvUGVyS3do');
+
+@$core.Deprecated('Use energyPricePayerDescriptor instead')
+const EnergyPricePayer$json = {
+  '1': 'EnergyPricePayer',
+  '2': [
+    {
+      '1': 'home_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '9': 0,
+      '10': 'homeId'
+    },
+    {'1': 'plant_id', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'plantId'},
+  ],
+  '8': [
+    {'1': 'payer'},
+  ],
+};
+
+/// Descriptor for `EnergyPricePayer`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List energyPricePayerDescriptor = $convert.base64Decode(
+    'ChBFbmVyZ3lQcmljZVBheWVyEjsKB2hvbWVfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZGVudG'
+    'l0eS52MS5TcGFjZUlkSABSBmhvbWVJZBIbCghwbGFudF9pZBgCIAEoCUgAUgdwbGFudElkQgcK'
+    'BXBheWVy');
+
+@$core.Deprecated('Use energyPriceAdderDescriptor instead')
+const EnergyPriceAdder$json = {
+  '1': 'EnergyPriceAdder',
+  '2': [
+    {
+      '1': 'payer',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPricePayer',
+      '10': 'payer'
+    },
+    {
+      '1': 'terms',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPriceTerms',
+      '10': 'terms'
+    },
+    {'1': 'micro_per_kwh', '3': 3, '4': 1, '5': 13, '10': 'microPerKwh'},
+    {
+      '1': 'source',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.EnergyPriceAdderSource',
+      '10': 'source'
+    },
+    {
+      '1': 'default_micro_per_kwh',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'defaultMicroPerKwh',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_default_micro_per_kwh'},
+  ],
+};
+
+/// Descriptor for `EnergyPriceAdder`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List energyPriceAdderDescriptor = $convert.base64Decode(
+    'ChBFbmVyZ3lQcmljZUFkZGVyEj4KBXBheWVyGAEgASgLMigua3VzaW50YS5pb3QuaGVhdGluZy'
+    '52MS5FbmVyZ3lQcmljZVBheWVyUgVwYXllchI+CgV0ZXJtcxgCIAEoCzIoLmt1c2ludGEuaW90'
+    'LmhlYXRpbmcudjEuRW5lcmd5UHJpY2VUZXJtc1IFdGVybXMSIgoNbWljcm9fcGVyX2t3aBgDIA'
+    'EoDVILbWljcm9QZXJLd2gSRgoGc291cmNlGAQgASgOMi4ua3VzaW50YS5pb3QuaGVhdGluZy52'
+    'MS5FbmVyZ3lQcmljZUFkZGVyU291cmNlUgZzb3VyY2USNgoVZGVmYXVsdF9taWNyb19wZXJfa3'
+    'doGAUgASgNSABSEmRlZmF1bHRNaWNyb1Blckt3aIgBAUIYChZfZGVmYXVsdF9taWNyb19wZXJf'
+    'a3do');

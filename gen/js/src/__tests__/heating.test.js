@@ -11,6 +11,8 @@ import {
   HeatBlockSchema,
   HeatBlockReleaseSchema,
   ShadowDaySchema,
+  ShadowPriceBasis,
+  EnergyPriceAdderSource,
   PriceRule,
   PriceRuleMode,
 } from '../kusinta/iot/heating/v1/heating_pb.js'
@@ -218,5 +220,19 @@ describe('shadow summary', () => {
   it('counts a day with no price as all no-price quarters', () => {
     const decoded = onTheWire(ShadowDaySchema, { date: '2026-11-12', noPriceQuarters: 96 })
     expect([decoded.noPriceQuarters, decoded.blockedQuarters]).toEqual([96, 0])
+  })
+
+  it('reads a day kept before price bases as not stating one', () => {
+    const decoded = onTheWire(ShadowDaySchema, { date: '2026-11-01', netSavingMicroEur: 125000n })
+    expect(decoded.priceBasis).toBe(ShadowPriceBasis.UNSPECIFIED)
+  })
+
+  it('says a day on the payer price rests on the default adder', () => {
+    const decoded = onTheWire(ShadowDaySchema, {
+      date: '2026-11-16',
+      priceBasis: ShadowPriceBasis.PAYER,
+      adderSource: EnergyPriceAdderSource.DEFAULT,
+    })
+    expect([decoded.priceBasis, decoded.adderSource]).toEqual([ShadowPriceBasis.PAYER, EnergyPriceAdderSource.DEFAULT])
   })
 })

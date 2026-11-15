@@ -278,8 +278,9 @@ option optimize_for = SPEED;
 //   * everything recorded per home: its climate history (CLIMATE HISTORY) and when it was last
 //     cleared (space.v1.Space.climate_history_cleared_at), its rooms' targets, inner limits,
 //     modes and comfort settings, the comfort preferences of the home and its rooms
-//     (climate.v1.ComfortPreference), its device events, and the household's name for it
-//     (space.v1.Space.home_name);
+//     (climate.v1.ComfortPreference), its device events, the household's name for it
+//     (space.v1.Space.home_name), and its energy price adder, which goes back to the default
+//     (heating.v1 ENERGY PRICE ADDER);
 //   * everything about its people: memberships, invites, join requests, promotion requests,
 //     commissioning grants on the home (commissioning.v1, GRANTS), names and email
 //     addresses, and the record of who did what in the home, heating.v1.FloorZone
@@ -333,8 +334,8 @@ option optimize_for = SPEED;
 // EXPORT. Any resident of a home may export what they may read of it (ExportHouseholdData), at
 // any time and before a handover above all: its rooms with their settings and modes, each
 // room's history, its climate summaries, its commissioning, its heating records, and its own
-// plants' heat blocks — what the price rules did or, in shadow, decided — but never the
-// shadow summary, which scores the gateway's plans. Each part
+// plants' heat blocks — what the price rules did or, in shadow, decided — and its energy price
+// adder, but never the shadow summary, which scores the gateway's plans. Each part
 // is what the same read gives the caller — so from the start of their current residency — and
 // never the gateway's models of the home or its plans. It travels over the app's session,
 // which nothing between the gateway and the app can read, and the app turns it into files for
@@ -603,6 +604,9 @@ message HouseholdExport {
     // One of the home's own plants' blocks, releases and changes of mode, one
     // GetHeatBlockHistory answer's worth, from its kept_from on, in as many parts as it takes.
     kusinta.iot.heating.v1.HeatBlockHistory heat_blocks = 8;
+
+    // The home's energy price adder (GetEnergyPriceAdder), whether stated or the default.
+    kusinta.iot.heating.v1.EnergyPriceAdder energy_price_adder = 9;
   }
 
   // The token to ask for the next part with; empty on the last.

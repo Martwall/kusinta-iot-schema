@@ -602,6 +602,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'shadowSummary'
     },
+    {
+      '1': 'energy_price_adder',
+      '3': 35,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPriceAdder',
+      '9': 0,
+      '10': 'energyPriceAdder'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -660,7 +669,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'VzZXNIAFIRaGVhdEJsb2NrU3RhdHVzZXMSWAoSaGVhdF9ibG9ja19oaXN0b3J5GCEgASgLMigu'
     'a3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0QmxvY2tIaXN0b3J5SABSEGhlYXRCbG9ja0hpc3'
     'RvcnkSTgoOc2hhZG93X3N1bW1hcnkYIiABKAsyJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlNo'
-    'YWRvd1N1bW1hcnlIAFINc2hhZG93U3VtbWFyeUIICgZyZXN1bHQ=');
+    'YWRvd1N1bW1hcnlIAFINc2hhZG93U3VtbWFyeRJYChJlbmVyZ3lfcHJpY2VfYWRkZXIYIyABKA'
+    'syKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkVuZXJneVByaWNlQWRkZXJIAFIQZW5lcmd5UHJp'
+    'Y2VBZGRlckIICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

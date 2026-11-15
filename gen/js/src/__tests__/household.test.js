@@ -410,6 +410,7 @@ describe('household export', () => {
       'commissioning',
       'heating',
       'heat_blocks',
+      'energy_price_adder',
     ])
   })
 

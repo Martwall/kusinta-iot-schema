@@ -972,9 +972,9 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
 
   /**
    * The saving, in millionths of a euro, the currency day-ahead prices are in
-   * (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, at
-   * the prices it decided by, with the recovery cost already taken off. Negative: it would have
-   * cost more than it saved. A client converts it as it converts prices
+   * (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, on
+   * the day's price basis (price_basis), with the recovery cost already taken off. Negative: it
+   * would have cost more than it saved. A client converts it as it converts prices
    * (planning.v1.ExchangeRate).
    *
    * @generated from field: sint64 net_saving_micro_eur = 2;
@@ -983,7 +983,8 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
 
   /**
    * The cost, in millionths of a euro, of making up afterwards for what was blocked or coasted:
-   * already taken off net_saving_micro_eur, and told so that a client may show both.
+   * already taken off net_saving_micro_eur, and told so that a client may show both. Extra
+   * energy (PRICE BASIS).
    *
    * @generated from field: sint64 recovery_cost_micro_eur = 3;
    */
@@ -1072,6 +1073,22 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: optional uint64 share_weight = 12;
    */
   shareWeight?: bigint | undefined;
+
+  /**
+   * The basis the day's money figures and shares are on (PRICE BASIS); UNSPECIFIED is read as
+   * SPOT.
+   *
+   * @generated from field: kusinta.iot.heating.v1.ShadowPriceBasis price_basis = 13;
+   */
+  priceBasis: ShadowPriceBasis;
+
+  /**
+   * On PAYER, whether the adder the day was priced with was the gateway's default or the payer's
+   * own, so that a client can say a figure on the default is approximate. UNSPECIFIED on SPOT.
+   *
+   * @generated from field: kusinta.iot.heating.v1.EnergyPriceAdderSource adder_source = 14;
+   */
+  adderSource: EnergyPriceAdderSource;
 };
 
 /**
@@ -1169,6 +1186,17 @@ export declare type ShadowSummary = Message<"kusinta.iot.heating.v1.ShadowSummar
    * @generated from field: repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 4;
    */
   exchangeRates: ExchangeRate[];
+
+  /**
+   * The terms the gateway priced PAYER days with (PRICE BASIS, WHAT THE GATEWAY SUPPLIES), so that
+   * a client can say what the figures include: every set it priced a day from kept_from on with,
+   * and the last one before it, oldest first, whatever price area the home had then. A PAYER day
+   * was priced with the set in force on its date (EnergyPriceTerms.valid_from). Empty where none
+   * is held, and from a gateway that predates price bases.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.EnergyPriceTerms price_terms = 5;
+   */
+  priceTerms: EnergyPriceTerms[];
 };
 
 /**
@@ -1176,6 +1204,151 @@ export declare type ShadowSummary = Message<"kusinta.iot.heating.v1.ShadowSummar
  * Use `create(ShadowSummarySchema)` to create a new message.
  */
 export declare const ShadowSummarySchema: GenMessage<ShadowSummary>;
+
+/**
+ * The terms the gateway supplies itself for a price area's country, from one date on (PRICE
+ * BASIS, WHAT THE GATEWAY SUPPLIES). In force from valid_from until the next set's.
+ *
+ * @generated from message kusinta.iot.heating.v1.EnergyPriceTerms
+ */
+export declare type EnergyPriceTerms = Message<"kusinta.iot.heating.v1.EnergyPriceTerms"> & {
+  /**
+   * The building's local date from which the gateway prices with them, as an ISO 8601 calendar
+   * date (YYYY-MM-DD): the date they take effect, or where the gateway took them up only after it
+   * had scored a day from that date on, the first day it scored with them. So a day already
+   * scored is never listed under terms it was not priced with.
+   *
+   * @generated from field: string valid_from = 1;
+   */
+  validFrom: string;
+
+  /**
+   * The VAT rate, in thousandths: 250 for 25 %.
+   *
+   * @generated from field: uint32 vat_permille = 2;
+   */
+  vatPermille: number;
+
+  /**
+   * The currency the energy tax and the adder are in, as ISO 4217 names it: "SEK".
+   *
+   * @generated from field: string currency = 3;
+   */
+  currency: string;
+
+  /**
+   * The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK. The
+   * rate that applies to the building, a reduced one where it applies.
+   *
+   * @generated from field: uint32 energy_tax_micro_per_kwh = 4;
+   */
+  energyTaxMicroPerKwh: number;
+
+  /**
+   * The highest adder the gateway takes in this currency (EnergyPriceAdder.micro_per_kwh), in the
+   * same unit: a bound against a mistyped value, well above any real grid fee and markup, never a
+   * price. The lowest is 0.
+   *
+   * @generated from field: uint32 adder_max_micro_per_kwh = 5;
+   */
+  adderMaxMicroPerKwh: number;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.EnergyPriceTerms.
+ * Use `create(EnergyPriceTermsSchema)` to create a new message.
+ */
+export declare const EnergyPriceTermsSchema: GenMessage<EnergyPriceTerms>;
+
+/**
+ * Whose energy price adder (ENERGY PRICE ADDER): a home, for the home's own plants, or a plant
+ * outside homes.
+ *
+ * @generated from message kusinta.iot.heating.v1.EnergyPricePayer
+ */
+export declare type EnergyPricePayer = Message<"kusinta.iot.heating.v1.EnergyPricePayer"> & {
+  /**
+   * @generated from oneof kusinta.iot.heating.v1.EnergyPricePayer.payer
+   */
+  payer: {
+    /**
+     * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 1;
+     */
+    value: SpaceId;
+    case: "homeId";
+  } | {
+    /**
+     * @generated from field: string plant_id = 2;
+     */
+    value: string;
+    case: "plantId";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.EnergyPricePayer.
+ * Use `create(EnergyPricePayerSchema)` to create a new message.
+ */
+export declare const EnergyPricePayerSchema: GenMessage<EnergyPricePayer>;
+
+/**
+ * A payer's energy price adder as it stands (ENERGY PRICE ADDER), in reply to
+ * webrtc.v1.GetEnergyPriceAdder and SetEnergyPriceAdder. Given as WHO SEES IT says.
+ *
+ * @generated from message kusinta.iot.heating.v1.EnergyPriceAdder
+ */
+export declare type EnergyPriceAdder = Message<"kusinta.iot.heating.v1.EnergyPriceAdder"> & {
+  /**
+   * @generated from field: kusinta.iot.heating.v1.EnergyPricePayer payer = 1;
+   */
+  payer?: EnergyPricePayer | undefined;
+
+  /**
+   * The terms in force now for the price area's country: the adder is in their currency, and a
+   * set names it. Unset where the building has no price area, or one whose country the gateway
+   * holds no terms for: then no adder applies, source is UNSPECIFIED, and the figures are on
+   * SPOT.
+   *
+   * @generated from field: kusinta.iot.heating.v1.EnergyPriceTerms terms = 2;
+   */
+  terms?: EnergyPriceTerms | undefined;
+
+  /**
+   * The adder in force: the grid fee's variable part plus the supplier's markup per kWh,
+   * excluding VAT, in millionths of the terms' currency: 450000 for 0.45 SEK, 45 öre. From 0 to
+   * terms.adder_max_micro_per_kwh. Millionths, so that one shape serves every currency, on the
+   * scale of the figures it prices (millionths of a euro), and an invoice's fraction of an öre is
+   * held exactly. Excluding VAT, since the gateway adds VAT to the whole price once (PRICE
+   * BASIS): a value with VAT in it would carry it twice. An invoice to a household usually states
+   * the grid fee with VAT; a client that takes it so divides it by 1 + terms.vat_permille / 1000
+   * before setting it.
+   *
+   * @generated from field: uint32 micro_per_kwh = 3;
+   */
+  microPerKwh: number;
+
+  /**
+   * DEFAULT until the payer states one, and again once they reset it; STATED once they have.
+   * A stated value equal to the default is STATED: it is the payer's own.
+   *
+   * @generated from field: kusinta.iot.heating.v1.EnergyPriceAdderSource source = 4;
+   */
+  source: EnergyPriceAdderSource;
+
+  /**
+   * The gateway's default for the country, so that a client can show what a reset would put in
+   * force. Unset where terms is; 0 is a default of no grid fee or markup.
+   *
+   * @generated from field: optional uint32 default_micro_per_kwh = 5;
+   */
+  defaultMicroPerKwh?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.EnergyPriceAdder.
+ * Use `create(EnergyPriceAdderSchema)` to create a new message.
+ */
+export declare const EnergyPriceAdderSchema: GenMessage<EnergyPriceAdder>;
 
 /**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
@@ -1433,4 +1606,72 @@ export enum HeatBlockEnd {
  * Describes the enum kusinta.iot.heating.v1.HeatBlockEnd.
  */
 export declare const HeatBlockEndSchema: GenEnum<HeatBlockEnd>;
+
+/**
+ * What a shadow's money figures include (PRICE BASIS). A basis this client's schema does not know:
+ * a client shows the figure without saying what it includes.
+ *
+ * @generated from enum kusinta.iot.heating.v1.ShadowPriceBasis
+ */
+export enum ShadowPriceBasis {
+  /**
+   * Not stated: a day kept before price bases, or from a gateway that predates them. Read as SPOT.
+   *
+   * @generated from enum value: SHADOW_PRICE_BASIS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The raw day-ahead spot price (planning.v1.PriceInterval) on every kWh: no VAT, no energy tax,
+   * no adder.
+   *
+   * @generated from enum value: SHADOW_PRICE_BASIS_SPOT = 1;
+   */
+  SPOT = 1,
+
+  /**
+   * The payer's price, as PRICE BASIS parts it between energy moved and extra energy.
+   *
+   * @generated from enum value: SHADOW_PRICE_BASIS_PAYER = 2;
+   */
+  PAYER = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.ShadowPriceBasis.
+ */
+export declare const ShadowPriceBasisSchema: GenEnum<ShadowPriceBasis>;
+
+/**
+ * Where the adder in force comes from (ENERGY PRICE ADDER).
+ *
+ * @generated from enum kusinta.iot.heating.v1.EnergyPriceAdderSource
+ */
+export enum EnergyPriceAdderSource {
+  /**
+   * Not stated: no adder applies (a SPOT day, a payer whose building has no price area).
+   *
+   * @generated from enum value: ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The gateway's default for the price area's country. A figure priced with it is approximate.
+   *
+   * @generated from enum value: ENERGY_PRICE_ADDER_SOURCE_DEFAULT = 1;
+   */
+  DEFAULT = 1,
+
+  /**
+   * The payer's own, set with webrtc.v1.SetEnergyPriceAdder.
+   *
+   * @generated from enum value: ENERGY_PRICE_ADDER_SOURCE_STATED = 2;
+   */
+  STATED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.EnergyPriceAdderSource.
+ */
+export declare const EnergyPriceAdderSourceSchema: GenEnum<EnergyPriceAdderSource>;
 

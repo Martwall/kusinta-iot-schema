@@ -2313,6 +2313,8 @@ class ShadowDay extends $pb.GeneratedMessage {
     $core.int? cautiousSavingSharePermille,
     $core.bool? countsOnly,
     $fixnum.Int64? shareWeight,
+    ShadowPriceBasis? priceBasis,
+    EnergyPriceAdderSource? adderSource,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2331,6 +2333,8 @@ class ShadowDay extends $pb.GeneratedMessage {
       result.cautiousSavingSharePermille = cautiousSavingSharePermille;
     if (countsOnly != null) result.countsOnly = countsOnly;
     if (shareWeight != null) result.shareWeight = shareWeight;
+    if (priceBasis != null) result.priceBasis = priceBasis;
+    if (adderSource != null) result.adderSource = adderSource;
     return result;
   }
 
@@ -2374,6 +2378,17 @@ class ShadowDay extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(
         12, _omitFieldNames ? '' : 'shareWeight', $pb.PbFieldType.OU6,
         defaultOrMaker: $fixnum.Int64.ZERO)
+    ..e<ShadowPriceBasis>(
+        13, _omitFieldNames ? '' : 'priceBasis', $pb.PbFieldType.OE,
+        defaultOrMaker: ShadowPriceBasis.SHADOW_PRICE_BASIS_UNSPECIFIED,
+        valueOf: ShadowPriceBasis.valueOf,
+        enumValues: ShadowPriceBasis.values)
+    ..e<EnergyPriceAdderSource>(
+        14, _omitFieldNames ? '' : 'adderSource', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            EnergyPriceAdderSource.ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED,
+        valueOf: EnergyPriceAdderSource.valueOf,
+        enumValues: EnergyPriceAdderSource.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2406,9 +2421,9 @@ class ShadowDay extends $pb.GeneratedMessage {
   void clearDate() => $_clearField(1);
 
   /// The saving, in millionths of a euro, the currency day-ahead prices are in
-  /// (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, at
-  /// the prices it decided by, with the recovery cost already taken off. Negative: it would have
-  /// cost more than it saved. A client converts it as it converts prices
+  /// (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, on
+  /// the day's price basis (price_basis), with the recovery cost already taken off. Negative: it
+  /// would have cost more than it saved. A client converts it as it converts prices
   /// (planning.v1.ExchangeRate).
   @$pb.TagNumber(2)
   $fixnum.Int64 get netSavingMicroEur => $_getI64(1);
@@ -2420,7 +2435,8 @@ class ShadowDay extends $pb.GeneratedMessage {
   void clearNetSavingMicroEur() => $_clearField(2);
 
   /// The cost, in millionths of a euro, of making up afterwards for what was blocked or coasted:
-  /// already taken off net_saving_micro_eur, and told so that a client may show both.
+  /// already taken off net_saving_micro_eur, and told so that a client may show both. Extra
+  /// energy (PRICE BASIS).
   @$pb.TagNumber(3)
   $fixnum.Int64 get recoveryCostMicroEur => $_getI64(2);
   @$pb.TagNumber(3)
@@ -2542,6 +2558,28 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasShareWeight() => $_has(11);
   @$pb.TagNumber(12)
   void clearShareWeight() => $_clearField(12);
+
+  /// The basis the day's money figures and shares are on (PRICE BASIS); UNSPECIFIED is read as
+  /// SPOT.
+  @$pb.TagNumber(13)
+  ShadowPriceBasis get priceBasis => $_getN(12);
+  @$pb.TagNumber(13)
+  set priceBasis(ShadowPriceBasis value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasPriceBasis() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearPriceBasis() => $_clearField(13);
+
+  /// On PAYER, whether the adder the day was priced with was the gateway's default or the payer's
+  /// own, so that a client can say a figure on the default is approximate. UNSPECIFIED on SPOT.
+  @$pb.TagNumber(14)
+  EnergyPriceAdderSource get adderSource => $_getN(13);
+  @$pb.TagNumber(14)
+  set adderSource(EnergyPriceAdderSource value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasAdderSource() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearAdderSource() => $_clearField(14);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.
@@ -2670,12 +2708,14 @@ class ShadowSummary extends $pb.GeneratedMessage {
     $core.String? keptFrom,
     $core.Iterable<ShadowBandSeries>? series,
     $core.Iterable<$4.ExchangeRate>? exchangeRates,
+    $core.Iterable<EnergyPriceTerms>? priceTerms,
   }) {
     final result = create();
     if (homeId != null) result.homeId = homeId;
     if (keptFrom != null) result.keptFrom = keptFrom;
     if (series != null) result.series.addAll(series);
     if (exchangeRates != null) result.exchangeRates.addAll(exchangeRates);
+    if (priceTerms != null) result.priceTerms.addAll(priceTerms);
     return result;
   }
 
@@ -2702,6 +2742,9 @@ class ShadowSummary extends $pb.GeneratedMessage {
     ..pc<$4.ExchangeRate>(
         4, _omitFieldNames ? '' : 'exchangeRates', $pb.PbFieldType.PM,
         subBuilder: $4.ExchangeRate.create)
+    ..pc<EnergyPriceTerms>(
+        5, _omitFieldNames ? '' : 'priceTerms', $pb.PbFieldType.PM,
+        subBuilder: EnergyPriceTerms.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2760,6 +2803,359 @@ class ShadowSummary extends $pb.GeneratedMessage {
   /// client then shows euros.
   @$pb.TagNumber(4)
   $pb.PbList<$4.ExchangeRate> get exchangeRates => $_getList(3);
+
+  /// The terms the gateway priced PAYER days with (PRICE BASIS, WHAT THE GATEWAY SUPPLIES), so that
+  /// a client can say what the figures include: every set it priced a day from kept_from on with,
+  /// and the last one before it, oldest first, whatever price area the home had then. A PAYER day
+  /// was priced with the set in force on its date (EnergyPriceTerms.valid_from). Empty where none
+  /// is held, and from a gateway that predates price bases.
+  @$pb.TagNumber(5)
+  $pb.PbList<EnergyPriceTerms> get priceTerms => $_getList(4);
+}
+
+/// The terms the gateway supplies itself for a price area's country, from one date on (PRICE
+/// BASIS, WHAT THE GATEWAY SUPPLIES). In force from valid_from until the next set's.
+class EnergyPriceTerms extends $pb.GeneratedMessage {
+  factory EnergyPriceTerms({
+    $core.String? validFrom,
+    $core.int? vatPermille,
+    $core.String? currency,
+    $core.int? energyTaxMicroPerKwh,
+    $core.int? adderMaxMicroPerKwh,
+  }) {
+    final result = create();
+    if (validFrom != null) result.validFrom = validFrom;
+    if (vatPermille != null) result.vatPermille = vatPermille;
+    if (currency != null) result.currency = currency;
+    if (energyTaxMicroPerKwh != null)
+      result.energyTaxMicroPerKwh = energyTaxMicroPerKwh;
+    if (adderMaxMicroPerKwh != null)
+      result.adderMaxMicroPerKwh = adderMaxMicroPerKwh;
+    return result;
+  }
+
+  EnergyPriceTerms._();
+
+  factory EnergyPriceTerms.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EnergyPriceTerms.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EnergyPriceTerms',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'validFrom')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'vatPermille', $pb.PbFieldType.OU3)
+    ..aOS(3, _omitFieldNames ? '' : 'currency')
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'energyTaxMicroPerKwh', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'adderMaxMicroPerKwh', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EnergyPriceTerms clone() => EnergyPriceTerms()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EnergyPriceTerms copyWith(void Function(EnergyPriceTerms) updates) =>
+      super.copyWith((message) => updates(message as EnergyPriceTerms))
+          as EnergyPriceTerms;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static EnergyPriceTerms create() => EnergyPriceTerms._();
+  @$core.override
+  EnergyPriceTerms createEmptyInstance() => create();
+  static $pb.PbList<EnergyPriceTerms> createRepeated() =>
+      $pb.PbList<EnergyPriceTerms>();
+  @$core.pragma('dart2js:noInline')
+  static EnergyPriceTerms getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<EnergyPriceTerms>(create);
+  static EnergyPriceTerms? _defaultInstance;
+
+  /// The building's local date from which the gateway prices with them, as an ISO 8601 calendar
+  /// date (YYYY-MM-DD): the date they take effect, or where the gateway took them up only after it
+  /// had scored a day from that date on, the first day it scored with them. So a day already
+  /// scored is never listed under terms it was not priced with.
+  @$pb.TagNumber(1)
+  $core.String get validFrom => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set validFrom($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasValidFrom() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearValidFrom() => $_clearField(1);
+
+  /// The VAT rate, in thousandths: 250 for 25 %.
+  @$pb.TagNumber(2)
+  $core.int get vatPermille => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set vatPermille($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasVatPermille() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearVatPermille() => $_clearField(2);
+
+  /// The currency the energy tax and the adder are in, as ISO 4217 names it: "SEK".
+  @$pb.TagNumber(3)
+  $core.String get currency => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set currency($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCurrency() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCurrency() => $_clearField(3);
+
+  /// The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK. The
+  /// rate that applies to the building, a reduced one where it applies.
+  @$pb.TagNumber(4)
+  $core.int get energyTaxMicroPerKwh => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set energyTaxMicroPerKwh($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEnergyTaxMicroPerKwh() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEnergyTaxMicroPerKwh() => $_clearField(4);
+
+  /// The highest adder the gateway takes in this currency (EnergyPriceAdder.micro_per_kwh), in the
+  /// same unit: a bound against a mistyped value, well above any real grid fee and markup, never a
+  /// price. The lowest is 0.
+  @$pb.TagNumber(5)
+  $core.int get adderMaxMicroPerKwh => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set adderMaxMicroPerKwh($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasAdderMaxMicroPerKwh() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearAdderMaxMicroPerKwh() => $_clearField(5);
+}
+
+enum EnergyPricePayer_Payer { homeId, plantId, notSet }
+
+/// Whose energy price adder (ENERGY PRICE ADDER): a home, for the home's own plants, or a plant
+/// outside homes.
+class EnergyPricePayer extends $pb.GeneratedMessage {
+  factory EnergyPricePayer({
+    $0.SpaceId? homeId,
+    $core.String? plantId,
+  }) {
+    final result = create();
+    if (homeId != null) result.homeId = homeId;
+    if (plantId != null) result.plantId = plantId;
+    return result;
+  }
+
+  EnergyPricePayer._();
+
+  factory EnergyPricePayer.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EnergyPricePayer.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, EnergyPricePayer_Payer>
+      _EnergyPricePayer_PayerByTag = {
+    1: EnergyPricePayer_Payer.homeId,
+    2: EnergyPricePayer_Payer.plantId,
+    0: EnergyPricePayer_Payer.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EnergyPricePayer',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..aOS(2, _omitFieldNames ? '' : 'plantId')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EnergyPricePayer clone() => EnergyPricePayer()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EnergyPricePayer copyWith(void Function(EnergyPricePayer) updates) =>
+      super.copyWith((message) => updates(message as EnergyPricePayer))
+          as EnergyPricePayer;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static EnergyPricePayer create() => EnergyPricePayer._();
+  @$core.override
+  EnergyPricePayer createEmptyInstance() => create();
+  static $pb.PbList<EnergyPricePayer> createRepeated() =>
+      $pb.PbList<EnergyPricePayer>();
+  @$core.pragma('dart2js:noInline')
+  static EnergyPricePayer getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<EnergyPricePayer>(create);
+  static EnergyPricePayer? _defaultInstance;
+
+  EnergyPricePayer_Payer whichPayer() =>
+      _EnergyPricePayer_PayerByTag[$_whichOneof(0)]!;
+  void clearPayer() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get homeId => $_getN(0);
+  @$pb.TagNumber(1)
+  set homeId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasHomeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHomeId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureHomeId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get plantId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set plantId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPlantId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPlantId() => $_clearField(2);
+}
+
+/// A payer's energy price adder as it stands (ENERGY PRICE ADDER), in reply to
+/// webrtc.v1.GetEnergyPriceAdder and SetEnergyPriceAdder. Given as WHO SEES IT says.
+class EnergyPriceAdder extends $pb.GeneratedMessage {
+  factory EnergyPriceAdder({
+    EnergyPricePayer? payer,
+    EnergyPriceTerms? terms,
+    $core.int? microPerKwh,
+    EnergyPriceAdderSource? source,
+    $core.int? defaultMicroPerKwh,
+  }) {
+    final result = create();
+    if (payer != null) result.payer = payer;
+    if (terms != null) result.terms = terms;
+    if (microPerKwh != null) result.microPerKwh = microPerKwh;
+    if (source != null) result.source = source;
+    if (defaultMicroPerKwh != null)
+      result.defaultMicroPerKwh = defaultMicroPerKwh;
+    return result;
+  }
+
+  EnergyPriceAdder._();
+
+  factory EnergyPriceAdder.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory EnergyPriceAdder.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'EnergyPriceAdder',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOM<EnergyPricePayer>(1, _omitFieldNames ? '' : 'payer',
+        subBuilder: EnergyPricePayer.create)
+    ..aOM<EnergyPriceTerms>(2, _omitFieldNames ? '' : 'terms',
+        subBuilder: EnergyPriceTerms.create)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'microPerKwh', $pb.PbFieldType.OU3)
+    ..e<EnergyPriceAdderSource>(
+        4, _omitFieldNames ? '' : 'source', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            EnergyPriceAdderSource.ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED,
+        valueOf: EnergyPriceAdderSource.valueOf,
+        enumValues: EnergyPriceAdderSource.values)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'defaultMicroPerKwh', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EnergyPriceAdder clone() => EnergyPriceAdder()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  EnergyPriceAdder copyWith(void Function(EnergyPriceAdder) updates) =>
+      super.copyWith((message) => updates(message as EnergyPriceAdder))
+          as EnergyPriceAdder;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static EnergyPriceAdder create() => EnergyPriceAdder._();
+  @$core.override
+  EnergyPriceAdder createEmptyInstance() => create();
+  static $pb.PbList<EnergyPriceAdder> createRepeated() =>
+      $pb.PbList<EnergyPriceAdder>();
+  @$core.pragma('dart2js:noInline')
+  static EnergyPriceAdder getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<EnergyPriceAdder>(create);
+  static EnergyPriceAdder? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  EnergyPricePayer get payer => $_getN(0);
+  @$pb.TagNumber(1)
+  set payer(EnergyPricePayer value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPayer() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPayer() => $_clearField(1);
+  @$pb.TagNumber(1)
+  EnergyPricePayer ensurePayer() => $_ensure(0);
+
+  /// The terms in force now for the price area's country: the adder is in their currency, and a
+  /// set names it. Unset where the building has no price area, or one whose country the gateway
+  /// holds no terms for: then no adder applies, source is UNSPECIFIED, and the figures are on
+  /// SPOT.
+  @$pb.TagNumber(2)
+  EnergyPriceTerms get terms => $_getN(1);
+  @$pb.TagNumber(2)
+  set terms(EnergyPriceTerms value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTerms() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTerms() => $_clearField(2);
+  @$pb.TagNumber(2)
+  EnergyPriceTerms ensureTerms() => $_ensure(1);
+
+  /// The adder in force: the grid fee's variable part plus the supplier's markup per kWh,
+  /// excluding VAT, in millionths of the terms' currency: 450000 for 0.45 SEK, 45 öre. From 0 to
+  /// terms.adder_max_micro_per_kwh. Millionths, so that one shape serves every currency, on the
+  /// scale of the figures it prices (millionths of a euro), and an invoice's fraction of an öre is
+  /// held exactly. Excluding VAT, since the gateway adds VAT to the whole price once (PRICE
+  /// BASIS): a value with VAT in it would carry it twice. An invoice to a household usually states
+  /// the grid fee with VAT; a client that takes it so divides it by 1 + terms.vat_permille / 1000
+  /// before setting it.
+  @$pb.TagNumber(3)
+  $core.int get microPerKwh => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set microPerKwh($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMicroPerKwh() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMicroPerKwh() => $_clearField(3);
+
+  /// DEFAULT until the payer states one, and again once they reset it; STATED once they have.
+  /// A stated value equal to the default is STATED: it is the payer's own.
+  @$pb.TagNumber(4)
+  EnergyPriceAdderSource get source => $_getN(3);
+  @$pb.TagNumber(4)
+  set source(EnergyPriceAdderSource value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSource() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSource() => $_clearField(4);
+
+  /// The gateway's default for the country, so that a client can show what a reset would put in
+  /// force. Unset where terms is; 0 is a default of no grid fee or markup.
+  @$pb.TagNumber(5)
+  $core.int get defaultMicroPerKwh => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set defaultMicroPerKwh($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDefaultMicroPerKwh() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDefaultMicroPerKwh() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =
