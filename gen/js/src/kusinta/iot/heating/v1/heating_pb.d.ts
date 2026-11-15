@@ -1058,6 +1058,16 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: bool counts_only = 11;
    */
   countsOnly: boolean;
+
+  /**
+   * What the day's share is a share of, in a unit of the gateway's that is comparable only
+   * between days of one series (its plant, rule and band), so that a client weighs days' shares
+   * into a share over a span: the sum of share × weight over the sum of weight. Set where
+   * saving_share_permille is; never shown.
+   *
+   * @generated from field: optional uint64 share_weight = 12;
+   */
+  shareWeight?: bigint | undefined;
 };
 
 /**

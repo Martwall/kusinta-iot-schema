@@ -2312,6 +2312,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     $core.int? savingSharePermille,
     $core.int? cautiousSavingSharePermille,
     $core.bool? countsOnly,
+    $fixnum.Int64? shareWeight,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2329,6 +2330,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     if (cautiousSavingSharePermille != null)
       result.cautiousSavingSharePermille = cautiousSavingSharePermille;
     if (countsOnly != null) result.countsOnly = countsOnly;
+    if (shareWeight != null) result.shareWeight = shareWeight;
     return result;
   }
 
@@ -2369,6 +2371,9 @@ class ShadowDay extends $pb.GeneratedMessage {
     ..a<$core.int>(10, _omitFieldNames ? '' : 'cautiousSavingSharePermille',
         $pb.PbFieldType.OS3)
     ..aOB(11, _omitFieldNames ? '' : 'countsOnly')
+    ..a<$fixnum.Int64>(
+        12, _omitFieldNames ? '' : 'shareWeight', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2520,6 +2525,19 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasCountsOnly() => $_has(10);
   @$pb.TagNumber(11)
   void clearCountsOnly() => $_clearField(11);
+
+  /// What the day's share is a share of, in a unit of the gateway's that is comparable only
+  /// between days of one series (its plant, rule and band), so that a client weighs days' shares
+  /// into a share over a span: the sum of share × weight over the sum of weight. Set where
+  /// saving_share_permille is; never shown.
+  @$pb.TagNumber(12)
+  $fixnum.Int64 get shareWeight => $_getI64(11);
+  @$pb.TagNumber(12)
+  set shareWeight($fixnum.Int64 value) => $_setInt64(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasShareWeight() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearShareWeight() => $_clearField(12);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.
