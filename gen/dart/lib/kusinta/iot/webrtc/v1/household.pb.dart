@@ -1167,6 +1167,7 @@ enum HouseholdExport_Part {
   commissioning,
   heating,
   heatBlocks,
+  energyPriceAdder,
   notSet
 }
 
@@ -1183,6 +1184,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
     $4.HeatingLayout? heating,
     $core.String? nextPartToken,
     $4.HeatBlockHistory? heatBlocks,
+    $4.EnergyPriceAdder? energyPriceAdder,
   }) {
     final result = create();
     if (homeId != null) result.homeId = homeId;
@@ -1193,6 +1195,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
     if (heating != null) result.heating = heating;
     if (nextPartToken != null) result.nextPartToken = nextPartToken;
     if (heatBlocks != null) result.heatBlocks = heatBlocks;
+    if (energyPriceAdder != null) result.energyPriceAdder = energyPriceAdder;
     return result;
   }
 
@@ -1213,6 +1216,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
     5: HouseholdExport_Part.commissioning,
     6: HouseholdExport_Part.heating,
     8: HouseholdExport_Part.heatBlocks,
+    9: HouseholdExport_Part.energyPriceAdder,
     0: HouseholdExport_Part.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -1220,7 +1224,7 @@ class HouseholdExport extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 5, 6, 8])
+    ..oo(0, [2, 3, 4, 5, 6, 8, 9])
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'homeId',
         subBuilder: $0.SpaceId.create)
     ..aOM<$2.RoomClimateList>(2, _omitFieldNames ? '' : 'roomClimates',
@@ -1237,6 +1241,8 @@ class HouseholdExport extends $pb.GeneratedMessage {
     ..aOS(7, _omitFieldNames ? '' : 'nextPartToken')
     ..aOM<$4.HeatBlockHistory>(8, _omitFieldNames ? '' : 'heatBlocks',
         subBuilder: $4.HeatBlockHistory.create)
+    ..aOM<$4.EnergyPriceAdder>(9, _omitFieldNames ? '' : 'energyPriceAdder',
+        subBuilder: $4.EnergyPriceAdder.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1362,6 +1368,18 @@ class HouseholdExport extends $pb.GeneratedMessage {
   void clearHeatBlocks() => $_clearField(8);
   @$pb.TagNumber(8)
   $4.HeatBlockHistory ensureHeatBlocks() => $_ensure(7);
+
+  /// The home's energy price adder (GetEnergyPriceAdder), whether stated or the default.
+  @$pb.TagNumber(9)
+  $4.EnergyPriceAdder get energyPriceAdder => $_getN(8);
+  @$pb.TagNumber(9)
+  set energyPriceAdder($4.EnergyPriceAdder value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasEnergyPriceAdder() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearEnergyPriceAdder() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $4.EnergyPriceAdder ensureEnergyPriceAdder() => $_ensure(8);
 }
 
 const $core.bool _omitFieldNames =

@@ -8,7 +8,7 @@ import type { SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { ApartmentClimateSummary, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { CommissioningProfile } from "../../commissioning/v1/commissioning_pb.js";
-import type { HeatBlockHistory, HeatingLayout } from "../../heating/v1/heating_pb.js";
+import type { EnergyPriceAdder, HeatBlockHistory, HeatingLayout } from "../../heating/v1/heating_pb.js";
 
 /**
  * Describes the file kusinta/iot/webrtc/v1/household.proto.
@@ -537,6 +537,14 @@ export declare type HouseholdExport = Message<"kusinta.iot.webrtc.v1.HouseholdEx
      */
     value: HeatBlockHistory;
     case: "heatBlocks";
+  } | {
+    /**
+     * The home's energy price adder (GetEnergyPriceAdder), whether stated or the default.
+     *
+     * @generated from field: kusinta.iot.heating.v1.EnergyPriceAdder energy_price_adder = 9;
+     */
+    value: EnergyPriceAdder;
+    case: "energyPriceAdder";
   } | { case: undefined; value?: undefined };
 
   /**

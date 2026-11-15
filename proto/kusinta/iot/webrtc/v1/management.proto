@@ -1309,6 +1309,63 @@ message GetShadowSummary {
   string to_date = 4;
 }
 
+// Reads a payer's energy price adder (heating.v1 ENERGY PRICE ADDER), answered with a
+// heating.v1.EnergyPriceAdder. A home's: to its residents only. A plant outside homes': to the
+// property owner and the gateway's administrators who reach its space. Anyone else — service on a
+// home, an installer under a commissioning grant, a technician — a home or plant that does not
+// exist, and a home_id that is not an apartment, are refused as NOT_ENTITLED with the same
+// metadata. A home's own plant (heating.v1 ENERGY PRICE ADDER) is priced with its home's adder: one
+// named by a resident of that home is refused as INVALID_REQUEST with metadata {"reason":
+// "payer"}, and a client names the home; so is a request naming neither.
+//
+// Rollout note: a gateway that predates the adder does not know this request or
+// SetEnergyPriceAdder. An app offers a home's adder only to a gateway whose shadow days state a
+// price basis (heating.v1.ShadowDay.price_basis), and a plant's only once this request is answered
+// with an adder.
+message GetEnergyPriceAdder {
+  kusinta.iot.heating.v1.EnergyPricePayer payer = 1;
+}
+
+// States a payer's energy price adder, or resets it to the gateway's default (heating.v1 ENERGY
+// PRICE ADDER). Answered with the heating.v1.EnergyPriceAdder as it now stands. It prices the days
+// scored from now on, never one already kept (heating.v1 PRICE BASIS).
+//
+// A home's: its household admins only. A plant outside homes': the property owner and the
+// gateway's administrators who reach its space. Anyone else — a resident who is not a household
+// admin, service, an installer under a commissioning grant, a technician — and a home or plant
+// that does not exist, are refused as NOT_ENTITLED with the same metadata, as is a home_id that is
+// not an apartment. A resident who is not a household admin is refused so whether they name the
+// home or the home's own plant. Refused, with metadata "reason", in this order:
+//
+//   INVALID_REQUEST
+//   "payer"            neither named, or a home's own plant, named by one who may set the home's.
+//
+//   FAILED_PRECONDITION
+//   "no_price_area"    micro_per_kwh set, and the building has no price area, or one whose
+//                      country the gateway holds no terms for (EnergyPriceAdder.terms unset):
+//                      nothing to state it in.
+//
+//   INVALID_REQUEST
+//   "currency"         micro_per_kwh set and currency not the adder's
+//                      (EnergyPriceAdder.terms.currency).
+//   "value"            micro_per_kwh above EnergyPriceAdder.terms.adder_max_micro_per_kwh.
+//
+// A value equal to the one in force, and a reset where the default is in force or no adder
+// applies, are answered as it stands and change nothing. A building's price area moved to another
+// country takes its payers' adders back to the default, in the new currency.
+message SetEnergyPriceAdder {
+  kusinta.iot.heating.v1.EnergyPricePayer payer = 1;
+
+  // The adder, as heating.v1.EnergyPriceAdder.micro_per_kwh says. Unset: reset to the gateway's
+  // default. 0 is a value: no grid fee or markup per kWh.
+  optional uint32 micro_per_kwh = 2;
+
+  // The currency micro_per_kwh is in, as ISO 4217 names it: the adder's own
+  // (EnergyPriceAdder.terms.currency), so that a value is never read in a currency it was not
+  // meant in. Ignored on a reset.
+  string currency = 3;
+}
+
 // Asks for a nonce to link one home's account at a third-party service
 // (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 // (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -1651,5 +1708,8 @@ message ManagementRequest {
     ListHeatBlockStatus list_heat_block_status = 80;
     GetHeatBlockHistory get_heat_block_history = 81;
     GetShadowSummary get_shadow_summary = 82;
+    // A payer's energy price adder; see heating.v1 ENERGY PRICE ADDER.
+    GetEnergyPriceAdder get_energy_price_adder = 83;
+    SetEnergyPriceAdder set_energy_price_adder = 84;
   }
 }

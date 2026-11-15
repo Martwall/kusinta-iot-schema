@@ -1720,6 +1720,61 @@ final $typed_data.Uint8List getShadowSummaryDescriptor = $convert.base64Decode(
     'bmcudjEuUHJpY2VSdWxlUgRydWxlEhsKCWZyb21fZGF0ZRgDIAEoCVIIZnJvbURhdGUSFwoHdG'
     '9fZGF0ZRgEIAEoCVIGdG9EYXRl');
 
+@$core.Deprecated('Use getEnergyPriceAdderDescriptor instead')
+const GetEnergyPriceAdder$json = {
+  '1': 'GetEnergyPriceAdder',
+  '2': [
+    {
+      '1': 'payer',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPricePayer',
+      '10': 'payer'
+    },
+  ],
+};
+
+/// Descriptor for `GetEnergyPriceAdder`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getEnergyPriceAdderDescriptor = $convert.base64Decode(
+    'ChNHZXRFbmVyZ3lQcmljZUFkZGVyEj4KBXBheWVyGAEgASgLMigua3VzaW50YS5pb3QuaGVhdG'
+    'luZy52MS5FbmVyZ3lQcmljZVBheWVyUgVwYXllcg==');
+
+@$core.Deprecated('Use setEnergyPriceAdderDescriptor instead')
+const SetEnergyPriceAdder$json = {
+  '1': 'SetEnergyPriceAdder',
+  '2': [
+    {
+      '1': 'payer',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.EnergyPricePayer',
+      '10': 'payer'
+    },
+    {
+      '1': 'micro_per_kwh',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'microPerKwh',
+      '17': true
+    },
+    {'1': 'currency', '3': 3, '4': 1, '5': 9, '10': 'currency'},
+  ],
+  '8': [
+    {'1': '_micro_per_kwh'},
+  ],
+};
+
+/// Descriptor for `SetEnergyPriceAdder`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setEnergyPriceAdderDescriptor = $convert.base64Decode(
+    'ChNTZXRFbmVyZ3lQcmljZUFkZGVyEj4KBXBheWVyGAEgASgLMigua3VzaW50YS5pb3QuaGVhdG'
+    'luZy52MS5FbmVyZ3lQcmljZVBheWVyUgVwYXllchInCg1taWNyb19wZXJfa3doGAIgASgNSABS'
+    'C21pY3JvUGVyS3doiAEBEhoKCGN1cnJlbmN5GAMgASgJUghjdXJyZW5jeUIQCg5fbWljcm9fcG'
+    'VyX2t3aA==');
+
 @$core.Deprecated('Use requestAccountLinkNonceDescriptor instead')
 const RequestAccountLinkNonce$json = {
   '1': 'RequestAccountLinkNonce',
@@ -2829,6 +2884,24 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'getShadowSummary'
     },
+    {
+      '1': 'get_energy_price_adder',
+      '3': 83,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetEnergyPriceAdder',
+      '9': 0,
+      '10': 'getEnergyPriceAdder'
+    },
+    {
+      '1': 'set_energy_price_adder',
+      '3': 84,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetEnergyPriceAdder',
+      '9': 0,
+      '10': 'setEnergyPriceAdder'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -2973,4 +3046,8 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'JhChZnZXRfaGVhdF9ibG9ja19oaXN0b3J5GFEgASgLMioua3VzaW50YS5pb3Qud2VicnRjLnYx'
     'LkdldEhlYXRCbG9ja0hpc3RvcnlIAFITZ2V0SGVhdEJsb2NrSGlzdG9yeRJXChJnZXRfc2hhZG'
     '93X3N1bW1hcnkYUiABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0U2hhZG93U3VtbWFy'
-    'eUgAUhBnZXRTaGFkb3dTdW1tYXJ5QgkKB3JlcXVlc3Q=');
+    'eUgAUhBnZXRTaGFkb3dTdW1tYXJ5EmEKFmdldF9lbmVyZ3lfcHJpY2VfYWRkZXIYUyABKAsyKi'
+    '5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0RW5lcmd5UHJpY2VBZGRlckgAUhNnZXRFbmVyZ3lQ'
+    'cmljZUFkZGVyEmEKFnNldF9lbmVyZ3lfcHJpY2VfYWRkZXIYVCABKAsyKi5rdXNpbnRhLmlvdC'
+    '53ZWJydGMudjEuU2V0RW5lcmd5UHJpY2VBZGRlckgAUhNzZXRFbmVyZ3lQcmljZUFkZGVyQgkK'
+    'B3JlcXVlc3Q=');

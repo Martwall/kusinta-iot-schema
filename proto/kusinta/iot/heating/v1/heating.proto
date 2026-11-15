@@ -434,7 +434,8 @@ message HeatingRecord {
 //     climate.v1.ClimateExplanationKind tells a shared cause, and otherwise as
 //     HEAT_BLOCK_END_UNSTATED.
 // Blocks, releases and changes are kept for 25 months, as a plant's hours are
-// (climate.v1.PlantHistory); a shadow summary for 180 days, as a room's quarter hours are.
+// (climate.v1.PlantHistory); a shadow summary for 180 days, as a room's quarter hours are. A
+// plant's energy price adder is given as ENERGY PRICE ADDER (WHO SEES IT) says.
 
 // A price rule (PRICE RULES). A closed list that grows only by a release of this schema: a
 // client words a rule it does not know as a price rule, unnamed, and offers no switch for it.
@@ -626,6 +627,74 @@ message HeatBlockHistory {
   repeated PriceRuleChange rule_changes = 5;
 }
 
+// PRICE BASIS. Every money figure of a shadow (ShadowDay) is on one price basis, stated with it
+// (ShadowPriceBasis): the raw day-ahead spot price, or the price its payer pays. On the payer's
+// price, a figure parts the energy a rule decides into two:
+//   * energy moved: the same kWh used at another time, as a pre-heat or a tank filled in cheap
+//     quarter hours uses it. Priced at spot plus VAT: the energy tax and the adder are the same
+//     on every kWh, so they cancel between the time the energy left and the time it went to,
+//     and VAT, a share of the price, does not. The adder is read as flat per kWh: a grid energy
+//     fee that varies with the time of day would not cancel, and is no part of it;
+//   * extra energy: kWh used that would not have been used otherwise — what is made up after a
+//     block or a coast, a pre-heat's losses, and in the cautious figure what is made up at full
+//     electric energy. Priced at spot plus the energy tax plus the adder, all of it with VAT.
+//     Energy a rule avoids using at all is the reverse of extra energy, and saves its full
+//     price: spot plus the energy tax plus the adder, all of it with VAT.
+// recovery_cost_micro_eur is extra energy; net_saving_micro_eur is the moved and the avoided
+// energy, the recovery cost taken off. A share-scored day (ShadowDay.saving_share_permille)
+// prices the heat cost it is a share of on its basis too.
+//
+// WHAT THE GATEWAY SUPPLIES. The VAT rate, by the country of the building's price area (its
+// bidding zone, webrtc.v1 BUILDING PLANNING), and the energy tax, from a table of rates by the
+// date each takes effect, are the gateway's own: no request sets either. The adder is the
+// payer's (EnergyPriceAdder). The energy tax and the adder are in the currency of the price
+// area's country, and the gateway converts them to euros for a day at the rate in force on it as
+// it holds the rates when it scores the day: the latest published on or before it
+// (planning.v1.ExchangeRate). The day names that rate (ShadowDay.rate_published_on), and a client
+// converts the day's figures back at that rate, never at another, so that it gets the amount the
+// payer pays however late a rate reached the gateway. A day for which the gateway holds no
+// exchange rate on or before it, or lacks the country's VAT rate, energy tax or default adder,
+// is scored on SPOT. A client is given the terms only to say what the figures include ("incl.
+// 25 % VAT"; ShadowSummary.price_terms), and never reprices a figure with them.
+//
+// A day keeps the basis, the terms, the rate and the adder it was scored on. A change of the
+// adder, a correction of a mistaken one included, of the VAT rate or of the tax table applies
+// from the next day scored, and a day already kept is never scored again: it keeps its
+// price_basis and adder_source, and a day kept before price bases stays on spot. A client that
+// adds the days of a span together adds only days of one basis, or says that the total mixes
+// bases; and where any day of the span rests on the default adder
+// (ENERGY_PRICE_ADDER_SOURCE_DEFAULT), it says that the total is approximate.
+//
+// ENERGY PRICE ADDER. The part of the payer's price per kWh that the gateway cannot know: the
+// grid fee's variable part plus the supplier's markup, as one figure (EnergyPriceAdder). One
+// per home, for the home's own plants (those whose HeatingPlant.space_id, the space each serves,
+// is the home), and one per plant outside homes (every other plant), for that plant. Until its
+// payer states one, and again once they reset it, the gateway's default for the country is in
+// force (ENERGY_PRICE_ADDER_SOURCE_DEFAULT).
+//
+// WHO SETS IT (webrtc.v1.SetEnergyPriceAdder): whoever answers for the bill. For a home, its
+// household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN). For a plant outside homes,
+// the owner organisation: the property owner and the gateway's administrators who reach the
+// plant's space. Nobody else, never an installer under a commissioning grant, which covers no
+// savings (commissioning.v1, GRANTS). A household sets its home's adder even where the home is on
+// the building's shared grid connection: where it pays nothing per kWh beyond spot, as when the
+// grid or the electricity comes with the rent, it states the adder it does pay, which may be 0,
+// and the default stands until it does.
+//
+// WHO SEES IT. It is the payer's contract information.
+//   * A home's: its residents only, as its shadow summary is (PRICE RULES, WHO SEES THEM). Never
+//     service, the property owner or the gateway's administrators, the home empty or not; never
+//     an installer under a commissioning grant. Household data: part of the household's export,
+//     and erased at the home's wipe, the home's adder going back to the default (webrtc.v1
+//     household.proto, EXPORT, WIPE). Not climate history: the household's Clear history keeps it.
+//   * A plant outside homes': the property owner and the gateway's administrators who reach the
+//     plant's space; never a resident or a technician as such. Where its money figures are given
+//     to one who is not given its adder, such as a technician who reaches it (PRICE RULES, WHO
+//     SEES THEM), figures on PAYER with adder_source STATED, beside the terms, let them roughly
+//     work the adder back. That is accepted: it is the owner organisation's business data, of low
+//     sensitivity. The adder itself is never given to them.
+// Neither is part of any message the gateway sends the api-server.
+
 // One day of one price rule scored against one comfort band (ShadowBandSeries): what the rule,
 // had it been live with that band, would have saved, and what it would have cost in comfort. A
 // day is the building's local date (space.v1.Space.time_zone), cut as
@@ -636,14 +705,15 @@ message ShadowDay {
   string date = 1;
 
   // The saving, in millionths of a euro, the currency day-ahead prices are in
-  // (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, at
-  // the prices it decided by, with the recovery cost already taken off. Negative: it would have
-  // cost more than it saved. A client converts it as it converts prices
+  // (planning.v1.PriceInterval): the cost of the energy the rule would have moved or avoided, on
+  // the day's price basis (price_basis), with the recovery cost already taken off. Negative: it
+  // would have cost more than it saved. A client converts it as it converts prices
   // (planning.v1.ExchangeRate).
   sint64 net_saving_micro_eur = 2;
 
   // The cost, in millionths of a euro, of making up afterwards for what was blocked or coasted:
-  // already taken off net_saving_micro_eur, and told so that a client may show both.
+  // already taken off net_saving_micro_eur, and told so that a client may show both. Extra
+  // energy (PRICE BASIS).
   sint64 recovery_cost_micro_eur = 3;
 
   // The quarter hours of the day the rule would have blocked or coasted.
@@ -693,6 +763,20 @@ message ShadowDay {
   // shares; a span whose weights sum to 0 has no share, and a client shows its counts. Set where
   // saving_share_permille is; never shown.
   optional uint64 share_weight = 12;
+
+  // The basis the day's money figures and shares are on (PRICE BASIS); UNSPECIFIED is read as
+  // SPOT.
+  ShadowPriceBasis price_basis = 13;
+
+  // On PAYER, whether the adder the day was priced with was the gateway's default or the payer's
+  // own, so that a client can say a figure on the default is approximate. UNSPECIFIED on SPOT.
+  EnergyPriceAdderSource adder_source = 14;
+
+  // On PAYER, the exchange rate the day's energy tax and adder were converted with, by its
+  // planning.v1.ExchangeRate.published_on (PRICE BASIS, WHAT THE GATEWAY SUPPLIES): a client
+  // converts the day's figures at that rate, listed in ShadowSummary.exchange_rates, and never at
+  // another. Empty on SPOT, and then a client converts the day at the rate in force on it.
+  string rate_published_on = 15;
 }
 
 // One price rule of one plant of a home, scored day by day against one comfort band.
@@ -732,8 +816,105 @@ message ShadowSummary {
   repeated ShadowBandSeries series = 3;
 
   // The reference rates a client converts the savings at, as webrtc.v1.DayAheadPrices gives
-  // them for prices: every rate the gateway holds from kept_from on, and the last one before it,
-  // oldest first. A day is converted at the rate in force on it. Empty where it holds none; a
-  // client then shows euros.
+  // them for prices: every rate the gateway holds from kept_from on, the last one before it, and
+  // any older rate a day given names (ShadowDay.rate_published_on), oldest first. A day that names
+  // a rate is converted at it; any other day at the rate in force on it. Empty where it holds
+  // none; a client then shows euros.
   repeated kusinta.iot.planning.v1.ExchangeRate exchange_rates = 4;
+
+  // The terms the gateway priced PAYER days with (PRICE BASIS, WHAT THE GATEWAY SUPPLIES), so that
+  // a client can say what the figures include: every set it priced a day from kept_from on with,
+  // and the last one before it, oldest first, whatever price area the home had then. A PAYER day
+  // was priced with the set in force on its date (EnergyPriceTerms.valid_from). Empty where none
+  // is held, and from a gateway that predates price bases.
+  repeated EnergyPriceTerms price_terms = 5;
+}
+
+// What a shadow's money figures include (PRICE BASIS). A basis this client's schema does not know:
+// a client shows the figure without saying what it includes.
+enum ShadowPriceBasis {
+  // Not stated: a day kept before price bases, or from a gateway that predates them. Read as SPOT.
+  SHADOW_PRICE_BASIS_UNSPECIFIED = 0;
+
+  // The raw day-ahead spot price (planning.v1.PriceInterval) on every kWh: no VAT, no energy tax,
+  // no adder.
+  SHADOW_PRICE_BASIS_SPOT = 1;
+
+  // The payer's price, as PRICE BASIS parts it between energy moved and extra energy.
+  SHADOW_PRICE_BASIS_PAYER = 2;
+}
+
+// Where the adder in force comes from (ENERGY PRICE ADDER).
+enum EnergyPriceAdderSource {
+  // Not stated: no adder applies (a SPOT day, a payer whose building has no price area).
+  ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED = 0;
+
+  // The gateway's default for the price area's country. A figure priced with it is approximate.
+  ENERGY_PRICE_ADDER_SOURCE_DEFAULT = 1;
+
+  // The payer's own, set with webrtc.v1.SetEnergyPriceAdder.
+  ENERGY_PRICE_ADDER_SOURCE_STATED = 2;
+}
+
+// The terms the gateway supplies itself for a price area's country, from one date on (PRICE
+// BASIS, WHAT THE GATEWAY SUPPLIES). In force from valid_from until the next set's.
+message EnergyPriceTerms {
+  // The building's local date from which the gateway prices with them, as an ISO 8601 calendar
+  // date (YYYY-MM-DD): the date they take effect, or where the gateway took them up only after it
+  // had scored a day from that date on, the first day it scored with them. So a day already
+  // scored is never listed under terms it was not priced with.
+  string valid_from = 1;
+
+  // The VAT rate, in thousandths: 250 for 25 %.
+  uint32 vat_permille = 2;
+
+  // The currency the energy tax and the adder are in, as ISO 4217 names it: "SEK".
+  string currency = 3;
+
+  // The energy tax per kWh, excluding VAT, in millionths of currency: 360000 for 0.36 SEK.
+  uint32 energy_tax_micro_per_kwh = 4;
+
+  // The highest adder the gateway takes in this currency (EnergyPriceAdder.micro_per_kwh), in the
+  // same unit: a bound against a mistyped value, well above any real grid fee and markup, never a
+  // price. The lowest is 0.
+  uint32 adder_max_micro_per_kwh = 5;
+}
+
+// Whose energy price adder (ENERGY PRICE ADDER): a home, for the home's own plants, or a plant
+// outside homes.
+message EnergyPricePayer {
+  oneof payer {
+    kusinta.iot.identity.v1.SpaceId home_id = 1;
+    string plant_id = 2;
+  }
+}
+
+// A payer's energy price adder as it stands (ENERGY PRICE ADDER), in reply to
+// webrtc.v1.GetEnergyPriceAdder and SetEnergyPriceAdder. Given as WHO SEES IT says.
+message EnergyPriceAdder {
+  EnergyPricePayer payer = 1;
+
+  // The terms in force now for the price area's country: the adder is in their currency, and a
+  // set names it. Unset where the building has no price area, or one whose country the gateway
+  // holds no terms for: then no adder applies, source is UNSPECIFIED, and the figures are on
+  // SPOT.
+  EnergyPriceTerms terms = 2;
+
+  // The adder in force: the grid fee's variable part plus the supplier's markup per kWh,
+  // excluding VAT, in millionths of the terms' currency: 450000 for 0.45 SEK, 45 öre. From 0 to
+  // terms.adder_max_micro_per_kwh. Millionths, so that one shape serves every currency, on the
+  // scale of the figures it prices (millionths of a euro), and an invoice's fraction of an öre is
+  // held exactly. Excluding VAT, since the gateway adds VAT to the whole price once (PRICE
+  // BASIS): a value with VAT in it would carry it twice. An invoice to a household usually states
+  // the grid fee with VAT; a client that takes it so divides it by 1 + terms.vat_permille / 1000
+  // before setting it.
+  uint32 micro_per_kwh = 3;
+
+  // DEFAULT until the payer states one, and again once they reset it; STATED once they have.
+  // A stated value equal to the default is STATED: it is the payer's own.
+  EnergyPriceAdderSource source = 4;
+
+  // The gateway's default for the country, so that a client can show what a reset would put in
+  // force. Unset where terms is; 0 is a default of no grid fee or markup.
+  optional uint32 default_micro_per_kwh = 5;
 }

@@ -56,6 +56,18 @@ class HeatBlockEnd(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     HEAT_BLOCK_END_RULE_SWITCHED: _ClassVar[HeatBlockEnd]
     HEAT_BLOCK_END_INTERRUPTED: _ClassVar[HeatBlockEnd]
     HEAT_BLOCK_END_UNSTATED: _ClassVar[HeatBlockEnd]
+
+class ShadowPriceBasis(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    SHADOW_PRICE_BASIS_UNSPECIFIED: _ClassVar[ShadowPriceBasis]
+    SHADOW_PRICE_BASIS_SPOT: _ClassVar[ShadowPriceBasis]
+    SHADOW_PRICE_BASIS_PAYER: _ClassVar[ShadowPriceBasis]
+
+class EnergyPriceAdderSource(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED: _ClassVar[EnergyPriceAdderSource]
+    ENERGY_PRICE_ADDER_SOURCE_DEFAULT: _ClassVar[EnergyPriceAdderSource]
+    ENERGY_PRICE_ADDER_SOURCE_STATED: _ClassVar[EnergyPriceAdderSource]
 HEAT_SOURCE_KIND_UNSPECIFIED: HeatSourceKind
 HEAT_SOURCE_KIND_EXHAUST_AIR_HEAT_PUMP: HeatSourceKind
 HEAT_SOURCE_KIND_GROUND_SOURCE_HEAT_PUMP: HeatSourceKind
@@ -82,6 +94,12 @@ HEAT_BLOCK_END_RELEASED: HeatBlockEnd
 HEAT_BLOCK_END_RULE_SWITCHED: HeatBlockEnd
 HEAT_BLOCK_END_INTERRUPTED: HeatBlockEnd
 HEAT_BLOCK_END_UNSTATED: HeatBlockEnd
+SHADOW_PRICE_BASIS_UNSPECIFIED: ShadowPriceBasis
+SHADOW_PRICE_BASIS_SPOT: ShadowPriceBasis
+SHADOW_PRICE_BASIS_PAYER: ShadowPriceBasis
+ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED: EnergyPriceAdderSource
+ENERGY_PRICE_ADDER_SOURCE_DEFAULT: EnergyPriceAdderSource
+ENERGY_PRICE_ADDER_SOURCE_STATED: EnergyPriceAdderSource
 
 class DeviceAttribute(_message.Message):
     __slots__ = ("device_id", "attribute")
@@ -342,7 +360,7 @@ class HeatBlockHistory(_message.Message):
     def __init__(self, plant_id: _Optional[str] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., blocks: _Optional[_Iterable[_Union[HeatBlock, _Mapping]]] = ..., releases: _Optional[_Iterable[_Union[HeatBlockRelease, _Mapping]]] = ..., rule_changes: _Optional[_Iterable[_Union[PriceRuleChange, _Mapping]]] = ...) -> None: ...
 
 class ShadowDay(_message.Message):
-    __slots__ = ("date", "net_saving_micro_eur", "recovery_cost_micro_eur", "blocked_quarters", "breach_quarters", "overheat_quarters", "no_price_quarters", "cautious_net_saving_micro_eur", "saving_share_permille", "cautious_saving_share_permille", "counts_only", "share_weight")
+    __slots__ = ("date", "net_saving_micro_eur", "recovery_cost_micro_eur", "blocked_quarters", "breach_quarters", "overheat_quarters", "no_price_quarters", "cautious_net_saving_micro_eur", "saving_share_permille", "cautious_saving_share_permille", "counts_only", "share_weight", "price_basis", "adder_source", "rate_published_on")
     DATE_FIELD_NUMBER: _ClassVar[int]
     NET_SAVING_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
     RECOVERY_COST_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
@@ -355,6 +373,9 @@ class ShadowDay(_message.Message):
     CAUTIOUS_SAVING_SHARE_PERMILLE_FIELD_NUMBER: _ClassVar[int]
     COUNTS_ONLY_FIELD_NUMBER: _ClassVar[int]
     SHARE_WEIGHT_FIELD_NUMBER: _ClassVar[int]
+    PRICE_BASIS_FIELD_NUMBER: _ClassVar[int]
+    ADDER_SOURCE_FIELD_NUMBER: _ClassVar[int]
+    RATE_PUBLISHED_ON_FIELD_NUMBER: _ClassVar[int]
     date: str
     net_saving_micro_eur: int
     recovery_cost_micro_eur: int
@@ -367,7 +388,10 @@ class ShadowDay(_message.Message):
     cautious_saving_share_permille: int
     counts_only: bool
     share_weight: int
-    def __init__(self, date: _Optional[str] = ..., net_saving_micro_eur: _Optional[int] = ..., recovery_cost_micro_eur: _Optional[int] = ..., blocked_quarters: _Optional[int] = ..., breach_quarters: _Optional[int] = ..., overheat_quarters: _Optional[int] = ..., no_price_quarters: _Optional[int] = ..., cautious_net_saving_micro_eur: _Optional[int] = ..., saving_share_permille: _Optional[int] = ..., cautious_saving_share_permille: _Optional[int] = ..., counts_only: _Optional[bool] = ..., share_weight: _Optional[int] = ...) -> None: ...
+    price_basis: ShadowPriceBasis
+    adder_source: EnergyPriceAdderSource
+    rate_published_on: str
+    def __init__(self, date: _Optional[str] = ..., net_saving_micro_eur: _Optional[int] = ..., recovery_cost_micro_eur: _Optional[int] = ..., blocked_quarters: _Optional[int] = ..., breach_quarters: _Optional[int] = ..., overheat_quarters: _Optional[int] = ..., no_price_quarters: _Optional[int] = ..., cautious_net_saving_micro_eur: _Optional[int] = ..., saving_share_permille: _Optional[int] = ..., cautious_saving_share_permille: _Optional[int] = ..., counts_only: _Optional[bool] = ..., share_weight: _Optional[int] = ..., price_basis: _Optional[_Union[ShadowPriceBasis, str]] = ..., adder_source: _Optional[_Union[EnergyPriceAdderSource, str]] = ..., rate_published_on: _Optional[str] = ...) -> None: ...
 
 class ShadowBandSeries(_message.Message):
     __slots__ = ("plant_id", "rule", "below_target_centidegrees", "above_target_centidegrees", "days")
@@ -384,13 +408,51 @@ class ShadowBandSeries(_message.Message):
     def __init__(self, plant_id: _Optional[str] = ..., rule: _Optional[_Union[PriceRule, str]] = ..., below_target_centidegrees: _Optional[int] = ..., above_target_centidegrees: _Optional[int] = ..., days: _Optional[_Iterable[_Union[ShadowDay, _Mapping]]] = ...) -> None: ...
 
 class ShadowSummary(_message.Message):
-    __slots__ = ("home_id", "kept_from", "series", "exchange_rates")
+    __slots__ = ("home_id", "kept_from", "series", "exchange_rates", "price_terms")
     HOME_ID_FIELD_NUMBER: _ClassVar[int]
     KEPT_FROM_FIELD_NUMBER: _ClassVar[int]
     SERIES_FIELD_NUMBER: _ClassVar[int]
     EXCHANGE_RATES_FIELD_NUMBER: _ClassVar[int]
+    PRICE_TERMS_FIELD_NUMBER: _ClassVar[int]
     home_id: _identity_pb2.SpaceId
     kept_from: str
     series: _containers.RepeatedCompositeFieldContainer[ShadowBandSeries]
     exchange_rates: _containers.RepeatedCompositeFieldContainer[_planning_pb2.ExchangeRate]
-    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[str] = ..., series: _Optional[_Iterable[_Union[ShadowBandSeries, _Mapping]]] = ..., exchange_rates: _Optional[_Iterable[_Union[_planning_pb2.ExchangeRate, _Mapping]]] = ...) -> None: ...
+    price_terms: _containers.RepeatedCompositeFieldContainer[EnergyPriceTerms]
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., kept_from: _Optional[str] = ..., series: _Optional[_Iterable[_Union[ShadowBandSeries, _Mapping]]] = ..., exchange_rates: _Optional[_Iterable[_Union[_planning_pb2.ExchangeRate, _Mapping]]] = ..., price_terms: _Optional[_Iterable[_Union[EnergyPriceTerms, _Mapping]]] = ...) -> None: ...
+
+class EnergyPriceTerms(_message.Message):
+    __slots__ = ("valid_from", "vat_permille", "currency", "energy_tax_micro_per_kwh", "adder_max_micro_per_kwh")
+    VALID_FROM_FIELD_NUMBER: _ClassVar[int]
+    VAT_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    CURRENCY_FIELD_NUMBER: _ClassVar[int]
+    ENERGY_TAX_MICRO_PER_KWH_FIELD_NUMBER: _ClassVar[int]
+    ADDER_MAX_MICRO_PER_KWH_FIELD_NUMBER: _ClassVar[int]
+    valid_from: str
+    vat_permille: int
+    currency: str
+    energy_tax_micro_per_kwh: int
+    adder_max_micro_per_kwh: int
+    def __init__(self, valid_from: _Optional[str] = ..., vat_permille: _Optional[int] = ..., currency: _Optional[str] = ..., energy_tax_micro_per_kwh: _Optional[int] = ..., adder_max_micro_per_kwh: _Optional[int] = ...) -> None: ...
+
+class EnergyPricePayer(_message.Message):
+    __slots__ = ("home_id", "plant_id")
+    HOME_ID_FIELD_NUMBER: _ClassVar[int]
+    PLANT_ID_FIELD_NUMBER: _ClassVar[int]
+    home_id: _identity_pb2.SpaceId
+    plant_id: str
+    def __init__(self, home_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., plant_id: _Optional[str] = ...) -> None: ...
+
+class EnergyPriceAdder(_message.Message):
+    __slots__ = ("payer", "terms", "micro_per_kwh", "source", "default_micro_per_kwh")
+    PAYER_FIELD_NUMBER: _ClassVar[int]
+    TERMS_FIELD_NUMBER: _ClassVar[int]
+    MICRO_PER_KWH_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_FIELD_NUMBER: _ClassVar[int]
+    DEFAULT_MICRO_PER_KWH_FIELD_NUMBER: _ClassVar[int]
+    payer: EnergyPricePayer
+    terms: EnergyPriceTerms
+    micro_per_kwh: int
+    source: EnergyPriceAdderSource
+    default_micro_per_kwh: int
+    def __init__(self, payer: _Optional[_Union[EnergyPricePayer, _Mapping]] = ..., terms: _Optional[_Union[EnergyPriceTerms, _Mapping]] = ..., micro_per_kwh: _Optional[int] = ..., source: _Optional[_Union[EnergyPriceAdderSource, str]] = ..., default_micro_per_kwh: _Optional[int] = ...) -> None: ...

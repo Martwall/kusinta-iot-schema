@@ -233,6 +233,8 @@ message ManagementResult {
     kusinta.iot.heating.v1.HeatBlockStatuses heat_block_statuses = 32;
     kusinta.iot.heating.v1.HeatBlockHistory heat_block_history = 33; // get_heat_block_history
     kusinta.iot.heating.v1.ShadowSummary shadow_summary = 34; // get_shadow_summary
+    // get_energy_price_adder, set_energy_price_adder
+    kusinta.iot.heating.v1.EnergyPriceAdder energy_price_adder = 35;
   }
 }
 

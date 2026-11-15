@@ -231,5 +231,68 @@ class HeatBlockEnd extends $pb.ProtobufEnum {
   const HeatBlockEnd._(super.value, super.name);
 }
 
+/// What a shadow's money figures include (PRICE BASIS). A basis this client's schema does not know:
+/// a client shows the figure without saying what it includes.
+class ShadowPriceBasis extends $pb.ProtobufEnum {
+  /// Not stated: a day kept before price bases, or from a gateway that predates them. Read as SPOT.
+  static const ShadowPriceBasis SHADOW_PRICE_BASIS_UNSPECIFIED =
+      ShadowPriceBasis._(
+          0, _omitEnumNames ? '' : 'SHADOW_PRICE_BASIS_UNSPECIFIED');
+
+  /// The raw day-ahead spot price (planning.v1.PriceInterval) on every kWh: no VAT, no energy tax,
+  /// no adder.
+  static const ShadowPriceBasis SHADOW_PRICE_BASIS_SPOT =
+      ShadowPriceBasis._(1, _omitEnumNames ? '' : 'SHADOW_PRICE_BASIS_SPOT');
+
+  /// The payer's price, as PRICE BASIS parts it between energy moved and extra energy.
+  static const ShadowPriceBasis SHADOW_PRICE_BASIS_PAYER =
+      ShadowPriceBasis._(2, _omitEnumNames ? '' : 'SHADOW_PRICE_BASIS_PAYER');
+
+  static const $core.List<ShadowPriceBasis> values = <ShadowPriceBasis>[
+    SHADOW_PRICE_BASIS_UNSPECIFIED,
+    SHADOW_PRICE_BASIS_SPOT,
+    SHADOW_PRICE_BASIS_PAYER,
+  ];
+
+  static final $core.List<ShadowPriceBasis?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static ShadowPriceBasis? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ShadowPriceBasis._(super.value, super.name);
+}
+
+/// Where the adder in force comes from (ENERGY PRICE ADDER).
+class EnergyPriceAdderSource extends $pb.ProtobufEnum {
+  /// Not stated: no adder applies (a SPOT day, a payer whose building has no price area).
+  static const EnergyPriceAdderSource ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED =
+      EnergyPriceAdderSource._(
+          0, _omitEnumNames ? '' : 'ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED');
+
+  /// The gateway's default for the price area's country. A figure priced with it is approximate.
+  static const EnergyPriceAdderSource ENERGY_PRICE_ADDER_SOURCE_DEFAULT =
+      EnergyPriceAdderSource._(
+          1, _omitEnumNames ? '' : 'ENERGY_PRICE_ADDER_SOURCE_DEFAULT');
+
+  /// The payer's own, set with webrtc.v1.SetEnergyPriceAdder.
+  static const EnergyPriceAdderSource ENERGY_PRICE_ADDER_SOURCE_STATED =
+      EnergyPriceAdderSource._(
+          2, _omitEnumNames ? '' : 'ENERGY_PRICE_ADDER_SOURCE_STATED');
+
+  static const $core.List<EnergyPriceAdderSource> values =
+      <EnergyPriceAdderSource>[
+    ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED,
+    ENERGY_PRICE_ADDER_SOURCE_DEFAULT,
+    ENERGY_PRICE_ADDER_SOURCE_STATED,
+  ];
+
+  static final $core.List<EnergyPriceAdderSource?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static EnergyPriceAdderSource? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const EnergyPriceAdderSource._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');
