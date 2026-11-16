@@ -87,9 +87,8 @@ option optimize_for = SPEED;
 //       Unknown: 3.
 //   "plant.curve_adjustment_steps"  int, -10 to 10, not 0; a plant that binds
 //       curve_adjustment (heating.v1.HeatPumpControl). By how many steps the heat source moves
-//       its curve while that input is closed, as set at the heat source for the input (NIBE:
-//       the climate system's external adjustment, menu 1.9.2): positive raises the supply it
-//       aims for, negative lowers it. Unknown: the gateway drives no curve adjustment, since
+//       its curve while that input is closed, as set at the heat source for the input:
+//       positive raises the supply it aims for, negative lowers it. Unknown: the gateway drives no curve adjustment, since
 //       it would not know which way the curve moves. HEAT_SOURCE; OPTIONAL; INSPECTED (read at
 //       the heat source), STATED (a household admin, from the heat source's menu).
 //   "plant.boost_uses_add_on"  bool; a plant that binds sg_ready_boost. Whether the heat
@@ -101,10 +100,13 @@ option optimize_for = SPEED;
 //   "hot_water.block_floor_centidegrees"  uint, 3500 to 5500; a plant with a hot-water tank
 //       that binds hot_water_block. The tank's top temperature, in centidegrees, at which the
 //       gateway ends a block of its hot water (HEAT_BLOCK_END_HOT_WATER_LOW), so that a held
-//       tank still runs a shower. Unknown: 4500. A choice of how much hot water the home keeps
-//       in hand, not a fact about the equipment: for a home's own plant its household admins
-//       may answer it (HOUSEHOLD, STATED), and for a plant outside homes the owner
-//       organisation (STATED), beside an installer's answer (INSPECTED).
+//       tank still runs a shower, and below or at which it starts none: a floor at or above
+//       where the heat source stops its own charge holds no block, and counts none towards
+//       "plant.max_blocks_per_day". Unknown: 4500. A choice of how much hot water the home
+//       keeps in hand, not a fact about the equipment: for a home's own plant its household
+//       admins may answer it (HOUSEHOLD, STATED), and for a plant outside homes the owner
+//       organisation (STATED), beside an installer's answer (INSPECTED). HEAT_SOURCE; OPTIONAL;
+//       STATED, INSPECTED.
 //   "hot_water.periodic_increase"  bool; a plant with a hot-water tank. Whether the heat source
 //       raises its tank on a schedule of its own against legionella (a periodic increase).
 //       Unknown: the gateway infers such a step from the tank's readings for what it scores,

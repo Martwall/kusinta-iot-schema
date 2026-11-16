@@ -68,7 +68,7 @@ def test_a_heat_pump_is_steered_through_sg_ready_and_its_add_on_heater_block():
 
 
 def test_a_heat_pump_binds_its_hot_water_block_and_curve_adjustment_by_meaning():
-    # D56: an input is bound by what it does at the heat source, not by a vendor's
+    # An input is bound by what it does at the heat source, not by a vendor's
     # composite state, so a rule never drives an SG Ready state that means more.
     plant = heating_pb2.HeatingPlant(
         heat_pump=heating_pb2.HeatPumpControl(hot_water_block=_nc_channel(5), curve_adjustment=_nc_channel(6))
