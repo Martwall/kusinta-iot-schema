@@ -197,8 +197,7 @@ export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpCo
    * holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
    * lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
    * are positive). Among inputs that only hold heat back the order is free: each lapse alone
-   * gives back what it held. A curve_adjustment whose steps are not known is held with no other
-   * input.
+   * gives back what it held.
    *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_block = 1;
    */
@@ -1764,9 +1763,10 @@ export enum PriceRule {
    * increase, and released so that the charge it then makes lands in the cheapest quarter hours
    * after it. A blocking rule, whose input is hot_water_block; SHADOW models the blocks whether
    * or not it is bound. It starts no block where the plant does not report its tank's top, or
-   * that report is not heard. LIVE, it blocks nothing while the periodic increase is not known:
-   * "hot_water.periodic_increase" unanswered, or answered true with its interval or start
-   * unanswered, since it could not keep clear of a step it does not know the time of. Besides,
+   * that report is not heard. LIVE, it drives nothing while the periodic increase is not known:
+   * "hot_water.periodic_increase" unanswered or answered unknown, or answered true with its
+   * interval or start unanswered or unknown, since it could not keep clear of a step it does not
+   * know the time of. Besides,
    * where the plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for
    * hot water in cheap quarter hours, never during a block, and only while that input too may be
    * driven (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on

@@ -121,9 +121,10 @@ class PriceRule extends $pb.ProtobufEnum {
   /// increase, and released so that the charge it then makes lands in the cheapest quarter hours
   /// after it. A blocking rule, whose input is hot_water_block; SHADOW models the blocks whether
   /// or not it is bound. It starts no block where the plant does not report its tank's top, or
-  /// that report is not heard. LIVE, it blocks nothing while the periodic increase is not known:
-  /// "hot_water.periodic_increase" unanswered, or answered true with its interval or start
-  /// unanswered, since it could not keep clear of a step it does not know the time of. Besides,
+  /// that report is not heard. LIVE, it drives nothing while the periodic increase is not known:
+  /// "hot_water.periodic_increase" unanswered or answered unknown, or answered true with its
+  /// interval or start unanswered or unknown, since it could not keep clear of a step it does not
+  /// know the time of. Besides,
   /// where the plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for
   /// hot water in cheap quarter hours, never during a block, and only while that input too may be
   /// driven (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on

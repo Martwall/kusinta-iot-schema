@@ -485,8 +485,7 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   /// holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
   /// lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
   /// are positive). Among inputs that only hold heat back the order is free: each lapse alone
-  /// gives back what it held. A curve_adjustment whose steps are not known is held with no other
-  /// input.
+  /// gives back what it held.
   @$pb.TagNumber(1)
   ContactBinding get sgReadyBlock => $_getN(0);
   @$pb.TagNumber(1)
