@@ -1246,11 +1246,15 @@ enum RegisterDevice_Credentials { lorawan, notSet }
 ///                       the record (TIMEOUT)
 /// The gateway passes the reason on to the app unchanged (ProvisionDevice, REFUSALS).
 ///
-/// The connector answers within the gateway's deadline for this request, time spent waiting
-/// behind another registration included. One it has not started by then it drops, unwritten,
-/// and answers "registry_unavailable"; one whose session has ended before it started it drops
-/// unanswered. A write once started is never abandoned midway: it runs to its end, under the
-/// registry's own per-call deadlines.
+/// TIMING. The gateway waits at least 30 seconds for the answer to a RegisterDevice or an
+/// UnregisterDevice. The connector starts the write within 20 seconds of receiving it, time
+/// spent waiting behind another registration included, or drops it unwritten and answers
+/// "registry_unavailable"; one whose session ends before it starts is dropped unanswered. A
+/// write once started is never abandoned midway: it runs to its end under the registry's own
+/// per-call deadlines, and so may be answered after the gateway has stopped waiting, or not
+/// at all if the session ends. The gateway treats a request it stopped waiting for, or whose
+/// session ended unanswered, as an outcome not known (webrtc.v1.ProvisionDevice, REFUSALS:
+/// "connector_unavailable").
 class RegisterDevice extends $pb.GeneratedMessage {
   factory RegisterDevice({
     $core.String? requestId,
