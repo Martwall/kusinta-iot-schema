@@ -750,6 +750,7 @@ enum ManagementResult_Result {
   heatBlockHistory,
   shadowSummary,
   energyPriceAdder,
+  heatCurveViews,
   notSet
 }
 
@@ -799,6 +800,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $8.HeatBlockHistory? heatBlockHistory,
     $8.ShadowSummary? shadowSummary,
     $8.EnergyPriceAdder? energyPriceAdder,
+    $8.HeatCurveViews? heatCurveViews,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -842,6 +844,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (heatBlockHistory != null) result.heatBlockHistory = heatBlockHistory;
     if (shadowSummary != null) result.shadowSummary = shadowSummary;
     if (energyPriceAdder != null) result.energyPriceAdder = energyPriceAdder;
+    if (heatCurveViews != null) result.heatCurveViews = heatCurveViews;
     return result;
   }
 
@@ -890,6 +893,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     33: ManagementResult_Result.heatBlockHistory,
     34: ManagementResult_Result.shadowSummary,
     35: ManagementResult_Result.energyPriceAdder,
+    36: ManagementResult_Result.heatCurveViews,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -931,7 +935,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       32,
       33,
       34,
-      35
+      35,
+      36
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -1008,6 +1013,8 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $8.ShadowSummary.create)
     ..aOM<$8.EnergyPriceAdder>(35, _omitFieldNames ? '' : 'energyPriceAdder',
         subBuilder: $8.EnergyPriceAdder.create)
+    ..aOM<$8.HeatCurveViews>(36, _omitFieldNames ? '' : 'heatCurveViews',
+        subBuilder: $8.HeatCurveViews.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1432,6 +1439,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearEnergyPriceAdder() => $_clearField(35);
   @$pb.TagNumber(35)
   $8.EnergyPriceAdder ensureEnergyPriceAdder() => $_ensure(34);
+
+  @$pb.TagNumber(36)
+  $8.HeatCurveViews get heatCurveViews => $_getN(35);
+  @$pb.TagNumber(36)
+  set heatCurveViews($8.HeatCurveViews value) => $_setField(36, value);
+  @$pb.TagNumber(36)
+  $core.bool hasHeatCurveViews() => $_has(35);
+  @$pb.TagNumber(36)
+  void clearHeatCurveViews() => $_clearField(36);
+  @$pb.TagNumber(36)
+  $8.HeatCurveViews ensureHeatCurveViews() => $_ensure(35);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

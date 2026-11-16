@@ -611,6 +611,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'energyPriceAdder'
     },
+    {
+      '1': 'heat_curve_views',
+      '3': 36,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveViews',
+      '9': 0,
+      '10': 'heatCurveViews'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -671,7 +680,8 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'RvcnkSTgoOc2hhZG93X3N1bW1hcnkYIiABKAsyJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLlNo'
     'YWRvd1N1bW1hcnlIAFINc2hhZG93U3VtbWFyeRJYChJlbmVyZ3lfcHJpY2VfYWRkZXIYIyABKA'
     'syKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkVuZXJneVByaWNlQWRkZXJIAFIQZW5lcmd5UHJp'
-    'Y2VBZGRlckIICgZyZXN1bHQ=');
+    'Y2VBZGRlchJSChBoZWF0X2N1cnZlX3ZpZXdzGCQgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy'
+    '52MS5IZWF0Q3VydmVWaWV3c0gAUg5oZWF0Q3VydmVWaWV3c0IICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

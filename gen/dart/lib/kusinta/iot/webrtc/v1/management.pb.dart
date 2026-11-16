@@ -5452,6 +5452,109 @@ class SetEnergyPriceAdder extends $pb.GeneratedMessage {
   void clearCurrency() => $_clearField(3);
 }
 
+enum GetHeatCurveView_Subject { plantId, homeId, notSet }
+
+/// Reads a heat source's curve against what its zones draw (heating.v1 HEAT CURVE), answered with
+/// heating.v1.HeatCurveViews, given as heating.v1 HEAT CURVE (WHO SEES IT) says.
+///
+///   plant_id  one view, of that plant: to its household admins and an installer under a
+///             commissioning grant covering it, a home's other residents with figures withheld,
+///             for a plant in a home; to the property owner and the gateway's administrators who
+///             reach its space, and an installer under a commissioning grant covering it, for a
+///             plant outside homes.
+///   home_id   the home's residents only: a view of each of the home's own plants, as plant_id
+///             gives it to them, and of each plant outside homes whose curve one of the home's
+///             zones limits in some band, with figures withheld and only the bands it limits
+///             given a limit. A plant outside homes that it limits in no band is not listed, nor
+///             is any plant whose curve another home limits.
+///
+/// Anyone else — service, a technician as such, a resident naming a plant outside homes, an
+/// installer naming a home — a plant or home that does not exist, and a home_id that is not an
+/// apartment, are refused as NOT_ENTITLED with the same metadata. Neither set is refused as
+/// INVALID_REQUEST with metadata {"reason": "subject"}.
+class GetHeatCurveView extends $pb.GeneratedMessage {
+  factory GetHeatCurveView({
+    $core.String? plantId,
+    $0.SpaceId? homeId,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (homeId != null) result.homeId = homeId;
+    return result;
+  }
+
+  GetHeatCurveView._();
+
+  factory GetHeatCurveView.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetHeatCurveView.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, GetHeatCurveView_Subject>
+      _GetHeatCurveView_SubjectByTag = {
+    1: GetHeatCurveView_Subject.plantId,
+    2: GetHeatCurveView_Subject.homeId,
+    0: GetHeatCurveView_Subject.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetHeatCurveView',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [1, 2])
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOM<$0.SpaceId>(2, _omitFieldNames ? '' : 'homeId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetHeatCurveView clone() => GetHeatCurveView()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetHeatCurveView copyWith(void Function(GetHeatCurveView) updates) =>
+      super.copyWith((message) => updates(message as GetHeatCurveView))
+          as GetHeatCurveView;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetHeatCurveView create() => GetHeatCurveView._();
+  @$core.override
+  GetHeatCurveView createEmptyInstance() => create();
+  static $pb.PbList<GetHeatCurveView> createRepeated() =>
+      $pb.PbList<GetHeatCurveView>();
+  @$core.pragma('dart2js:noInline')
+  static GetHeatCurveView getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetHeatCurveView>(create);
+  static GetHeatCurveView? _defaultInstance;
+
+  GetHeatCurveView_Subject whichSubject() =>
+      _GetHeatCurveView_SubjectByTag[$_whichOneof(0)]!;
+  void clearSubject() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $0.SpaceId get homeId => $_getN(1);
+  @$pb.TagNumber(2)
+  set homeId($0.SpaceId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHomeId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHomeId() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.SpaceId ensureHomeId() => $_ensure(1);
+}
+
 /// Asks for a nonce to link one home's account at a third-party service
 /// (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -6813,6 +6916,7 @@ enum ManagementRequest_Request {
   getShadowSummary,
   getEnergyPriceAdder,
   setEnergyPriceAdder,
+  getHeatCurveView,
   notSet
 }
 
@@ -6903,6 +7007,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetShadowSummary? getShadowSummary,
     GetEnergyPriceAdder? getEnergyPriceAdder,
     SetEnergyPriceAdder? setEnergyPriceAdder,
+    GetHeatCurveView? getHeatCurveView,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -7026,6 +7131,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.getEnergyPriceAdder = getEnergyPriceAdder;
     if (setEnergyPriceAdder != null)
       result.setEnergyPriceAdder = setEnergyPriceAdder;
+    if (getHeatCurveView != null) result.getHeatCurveView = getHeatCurveView;
     return result;
   }
 
@@ -7124,6 +7230,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     82: ManagementRequest_Request.getShadowSummary,
     83: ManagementRequest_Request.getEnergyPriceAdder,
     84: ManagementRequest_Request.setEnergyPriceAdder,
+    85: ManagementRequest_Request.getHeatCurveView,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -7215,7 +7322,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       81,
       82,
       83,
-      84
+      84,
+      85
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -7411,6 +7519,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: GetEnergyPriceAdder.create)
     ..aOM<SetEnergyPriceAdder>(84, _omitFieldNames ? '' : 'setEnergyPriceAdder',
         subBuilder: SetEnergyPriceAdder.create)
+    ..aOM<GetHeatCurveView>(85, _omitFieldNames ? '' : 'getHeatCurveView',
+        subBuilder: GetHeatCurveView.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -8398,6 +8508,18 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearSetEnergyPriceAdder() => $_clearField(84);
   @$pb.TagNumber(84)
   SetEnergyPriceAdder ensureSetEnergyPriceAdder() => $_ensure(83);
+
+  /// A heat source's curve against its zones; see heating.v1 HEAT CURVE.
+  @$pb.TagNumber(85)
+  GetHeatCurveView get getHeatCurveView => $_getN(84);
+  @$pb.TagNumber(85)
+  set getHeatCurveView(GetHeatCurveView value) => $_setField(85, value);
+  @$pb.TagNumber(85)
+  $core.bool hasGetHeatCurveView() => $_has(84);
+  @$pb.TagNumber(85)
+  void clearGetHeatCurveView() => $_clearField(85);
+  @$pb.TagNumber(85)
+  GetHeatCurveView ensureGetHeatCurveView() => $_ensure(84);
 }
 
 const $core.bool _omitFieldNames =

@@ -11,6 +11,7 @@ import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { Role } from "../../access/v1/roles_pb.js";
 import type { ClimateExplanationKind } from "../../climate/v1/climate_pb.js";
 import type { ExchangeRate } from "../../planning/v1/planning_pb.js";
+import type { HeatSourceReadings } from "../../device/v1/device_pb.js";
 
 /**
  * Describes the file kusinta/iot/heating/v1/heating.proto.
@@ -1361,6 +1362,246 @@ export declare type EnergyPriceAdder = Message<"kusinta.iot.heating.v1.EnergyPri
 export declare const EnergyPriceAdderSchema: GenMessage<EnergyPriceAdder>;
 
 /**
+ * The zone that limits a heat curve in one outdoor band, and why (HEAT CURVE, WHAT IT SHOWS).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveLimit
+ */
+export declare type HeatCurveLimit = Message<"kusinta.iot.heating.v1.HeatCurveLimit"> & {
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveLimitReason reason = 1;
+   */
+  reason: HeatCurveLimitReason;
+
+  /**
+   * The zone's opening at the view's percentile (HeatCurveView.opening_percentile), in
+   * thousandths. Unset where the zone lies in a home the recipient is not given (home_withheld).
+   *
+   * @generated from field: optional uint32 opening_permille = 2;
+   */
+  openingPermille?: number | undefined;
+
+  /**
+   * Whether that opening is at most HeatCurveView.threshold_permille: the zone has headroom, and
+   * in the coldest band seen the curve could come down. Given whoever the limit is given to,
+   * home_withheld or not.
+   *
+   * @generated from field: bool has_headroom = 3;
+   */
+  hasHeadroom: boolean;
+
+  /**
+   * The room the zone heats: a radiator valve's room, or a floor zone's control room
+   * (FloorZone.control_room_id). Unset where home_withheld.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 4;
+   */
+  roomId?: SpaceId | undefined;
+
+  /**
+   * The floor zone (FloorZone.zone_id) where the opening is a floor zone's duty; empty for a
+   * radiator valve, and where home_withheld.
+   *
+   * @generated from field: string floor_zone_id = 5;
+   */
+  floorZoneId: string;
+
+  /**
+   * Set where the zone lies in a home the recipient is not given (HEAT CURVE, WHO SEES IT): the
+   * limit says that a home limits, and the reason, and nothing of which.
+   *
+   * @generated from field: bool home_withheld = 6;
+   */
+  homeWithheld: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveLimit.
+ * Use `create(HeatCurveLimitSchema)` to create a new message.
+ */
+export declare const HeatCurveLimitSchema: GenMessage<HeatCurveLimit>;
+
+/**
+ * One band of outdoor temperature of a heat curve view, over the view's window.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveBand
+ */
+export declare type HeatCurveBand = Message<"kusinta.iot.heating.v1.HeatCurveBand"> & {
+  /**
+   * The band, in centidegrees, half-open: [outdoor_from, outdoor_to), by the outdoor mean of
+   * each quarter hour (climate.v1.PlantHistorySample.outdoor_centidegrees). Band edges and width
+   * are the gateway's choice, the same for every plant.
+   *
+   * @generated from field: sint32 outdoor_from_centidegrees = 1;
+   */
+  outdoorFromCentidegrees: number;
+
+  /**
+   * @generated from field: sint32 outdoor_to_centidegrees = 2;
+   */
+  outdoorToCentidegrees: number;
+
+  /**
+   * The quarter hours of the window whose outdoor mean fell in the band.
+   *
+   * @generated from field: uint32 quarters = 3;
+   */
+  quarters: number;
+
+  /**
+   * The median over the band's quarter hours of the calculated supply and of the measured
+   * supply, in centidegrees, as the heat source reads them (device.v1.HeatSourceReadings), each
+   * leaving out the quarter hours in which the heat source was known to make hot water. Unset
+   * where not known, and where figures are withheld (HeatCurveView.figures_withheld).
+   *
+   * @generated from field: optional sint32 calculated_supply_centidegrees = 4;
+   */
+  calculatedSupplyCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 supply_centidegrees = 5;
+   */
+  supplyCentidegrees?: number | undefined;
+
+  /**
+   * The add-on heat's energy over the band's quarter hours, in watt-hours, and the share of them
+   * in which it drew, in thousandths (device.v1.HeatSourceReadings.add_on_heat_watts). Unset
+   * where not known, and where figures are withheld.
+   *
+   * @generated from field: optional uint32 add_on_heat_wh = 6;
+   */
+  addOnHeatWh?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 add_on_running_permille = 7;
+   */
+  addOnRunningPermille?: number | undefined;
+
+  /**
+   * The zone that limits the curve in this band. Unset where none is known: no zone with an
+   * opening read in the band, too few quarter hours in it for the gateway to judge, or, in a
+   * home's reading of a plant outside it, a band its home does not limit.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveLimit limit = 8;
+   */
+  limit?: HeatCurveLimit | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveBand.
+ * Use `create(HeatCurveBandSchema)` to create a new message.
+ */
+export declare const HeatCurveBandSchema: GenMessage<HeatCurveBand>;
+
+/**
+ * One plant's heating curve against what its zones draw (HEAT CURVE). Given as WHO SEES IT says.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveView
+ */
+export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveView"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * The plant's name, so that one who is not given the plant record knows which plant it is.
+   *
+   * @generated from field: string plant_name = 2;
+   */
+  plantName: string;
+
+  /**
+   * The quarter hours counted, [window_from, window_to): a window of the gateway's choice, such
+   * as the last 28 days, starting no earlier than the curve settings last changed
+   * (curve_settings_changed_at), so that the bands judge the curve in force.
+   *
+   * @generated from field: google.protobuf.Timestamp window_from = 3;
+   */
+  windowFrom?: Timestamp | undefined;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp window_to = 4;
+   */
+  windowTo?: Timestamp | undefined;
+
+  /**
+   * Coldest first. A band with no quarter hour is not given. Empty where none is known: a plant
+   * without outdoor readings, or nothing kept in the window.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveBand bands = 5;
+   */
+  bands: HeatCurveBand[];
+
+  /**
+   * The opening, in thousandths, at most which the most demanding zone of the coldest band leaves
+   * the curve room to come down (HEAT CURVE, WHAT IT SHOWS): 850 for 85 %. The gateway's.
+   *
+   * @generated from field: uint32 threshold_permille = 6;
+   */
+  thresholdPermille: number;
+
+  /**
+   * The percentile of a zone's openings over a band's quarter hours that a limit is judged by
+   * (HeatCurveLimit.opening_permille), such as 90. The gateway's.
+   *
+   * @generated from field: uint32 opening_percentile = 7;
+   */
+  openingPercentile: number;
+
+  /**
+   * The heat source's curve settings as last read, as its readings state them
+   * (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — heating_curve,
+   * heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and curve_point_* — each
+   * where read, every other field unset. Unset where none is read, and where figures are
+   * withheld.
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings curve_settings = 8;
+   */
+  curveSettings?: HeatSourceReadings | undefined;
+
+  /**
+   * When a curve setting was last seen to change. Unset where none was, or none is read, and
+   * where figures are withheld.
+   *
+   * @generated from field: google.protobuf.Timestamp curve_settings_changed_at = 9;
+   */
+  curveSettingsChangedAt?: Timestamp | undefined;
+
+  /**
+   * Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies
+   * and add-on figures and the curve settings are left out, so that their absence is not read as
+   * not known.
+   *
+   * @generated from field: bool figures_withheld = 10;
+   */
+  figuresWithheld: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveView.
+ * Use `create(HeatCurveViewSchema)` to create a new message.
+ */
+export declare const HeatCurveViewSchema: GenMessage<HeatCurveView>;
+
+/**
+ * The answer to webrtc.v1.GetHeatCurveView.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveViews
+ */
+export declare type HeatCurveViews = Message<"kusinta.iot.heating.v1.HeatCurveViews"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveView views = 1;
+   */
+  views: HeatCurveView[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveViews.
+ * Use `create(HeatCurveViewsSchema)` to create a new message.
+ */
+export declare const HeatCurveViewsSchema: GenMessage<HeatCurveViews>;
+
+/**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
  */
 export enum HeatSourceKind {
@@ -1684,4 +1925,40 @@ export enum EnergyPriceAdderSource {
  * Describes the enum kusinta.iot.heating.v1.EnergyPriceAdderSource.
  */
 export declare const EnergyPriceAdderSourceSchema: GenEnum<EnergyPriceAdderSource>;
+
+/**
+ * The kind of reason a zone limits a heat curve (HeatCurveLimit). A closed list that grows only
+ * by a release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveLimitReason
+ */
+export enum HeatCurveLimitReason {
+  /**
+   * Not known, as with too few zones to compare, or a reason this client's schema does not know:
+   * a client shows the limit without a reason.
+   *
+   * @generated from enum value: HEAT_CURVE_LIMIT_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Only this zone runs high while most others run low: it is short of flow rather than of
+   * supply temperature. It points to balancing the system, not to the curve.
+   *
+   * @generated from enum value: HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE = 1;
+   */
+  HYDRAULIC_BALANCE = 1,
+
+  /**
+   * Most zones run high: what is heated needs the supply the curve gives.
+   *
+   * @generated from enum value: HEAT_CURVE_LIMIT_REASON_DEMAND = 2;
+   */
+  DEMAND = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveLimitReason.
+ */
+export declare const HeatCurveLimitReasonSchema: GenEnum<HeatCurveLimitReason>;
 

@@ -7,6 +7,7 @@ import "kusinta/iot/access/v1/acl.proto";
 import "kusinta/iot/access/v1/roles.proto";
 import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/device/v1/cluster_state.proto";
+import "kusinta/iot/device/v1/device.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/planning/v1/planning.proto";
 
@@ -917,4 +918,169 @@ message EnergyPriceAdder {
   // The gateway's default for the country, so that a client can show what a reset would put in
   // force. Unset where terms is; 0 is a default of no grid fee or markup.
   optional uint32 default_micro_per_kwh = 5;
+}
+
+// HEAT CURVE. Whether a heat source's heating curve is set higher than what it heats needs. A
+// heat source works out the supply it aims for from the outdoor temperature by its curve
+// (device.v1.HeatSourceReadings.calculated_supply_centidegrees); the zones it heats show how
+// much of that supply they take, by how far they open. Where even the most demanding zone opens
+// little at the coldest outdoor temperatures seen, the curve could come down, and a lower supply
+// lets a heat pump run more efficiently and start its add-on heat less often.
+//
+// WHAT IT SHOWS (HeatCurveView). The plant's quarter hours over a window, by bands of outdoor
+// temperature: per band, the typical calculated and measured supply, the add-on heat's use,
+// and the zone that needed the most, which is what limits the curve (HeatCurveLimit). An
+// opening is a zone's: a floor zone's duty, the share of a quarter hour its output held it
+// heating, or a radiator valve's opening, in thousandths. The most demanding zone of a band is
+// the one whose opening, at a high percentile of the band's quarter hours
+// (HeatCurveView.opening_percentile), is highest: not the average, since one zone left short is
+// what a lower curve would cost. The curve could come down while the most demanding zone of the
+// coldest band seen opens at most the gateway's threshold (HeatCurveView.threshold_permille,
+// 850 for 85 %), which leaves it headroom to recover after a block or a setback. A zone's
+// quarter hours in which a price rule or a commissioning test drove it, or its room's window was
+// open, are left out of its openings. The view observes: it names no new curve, and the gateway
+// sets nothing on the heat source by it.
+//
+// WHO SEES IT, given in reply to webrtc.v1.GetHeatCurveView:
+//   * a plant in a home: its household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN),
+//     who set the heat source, and an installer under a commissioning grant covering the home
+//     (commissioning.v1, GRANTS), for whom setting a curve is commissioning. The home's other
+//     residents are given its limits alone, their own home's rooms, with every figure withheld
+//     (HeatCurveView.figures_withheld). Never service, the property owner or the gateway's
+//     administrators, the home empty or not;
+//   * a plant outside homes: the owner organisation — the property owner and the gateway's
+//     administrators who reach its space — and an installer under a commissioning grant covering
+//     it. Never a resident as such. Where the zone that limits lies in a home, they are told that
+//     a home limits the curve and the kind of reason, and whether it leaves headroom: never which
+//     home, its rooms, its zones or its openings (HeatCurveLimit.home_withheld), and a limit in
+//     one home reads the same as in another. The home that limits is told so in its own reading
+//     (GetHeatCurveView by home_id): its residents are given the plant's limits that lie in their
+//     home, with their room and its opening, and every figure of the plant withheld.
+// Never a room's temperature, setpoint, contact state or events to anyone a room's own readings
+// are not given to. A zone in a home counts only with the quarter hours still kept of it: none
+// from before its household's last Clear history or its wipe (webrtc.v1 household.proto, CLIMATE
+// HISTORY, WIPE), and for a resident, none from before their current residency
+// (access.v1.MembershipRelation). The view is worked out when read, from what the gateway keeps,
+// and is not itself kept.
+//
+// SHARING, reserved. A household may later choose to let the owner organisation know that its
+// home is the one that limits a shared plant's curve, and why. Until a release of this schema
+// says how, no reading names it to them.
+
+// The kind of reason a zone limits a heat curve (HeatCurveLimit). A closed list that grows only
+// by a release of this schema.
+enum HeatCurveLimitReason {
+  // Not known, as with too few zones to compare, or a reason this client's schema does not know:
+  // a client shows the limit without a reason.
+  HEAT_CURVE_LIMIT_REASON_UNSPECIFIED = 0;
+
+  // Only this zone runs high while most others run low: it is short of flow rather than of
+  // supply temperature. It points to balancing the system, not to the curve.
+  HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE = 1;
+
+  // Most zones run high: what is heated needs the supply the curve gives.
+  HEAT_CURVE_LIMIT_REASON_DEMAND = 2;
+}
+
+// The zone that limits a heat curve in one outdoor band, and why (HEAT CURVE, WHAT IT SHOWS).
+message HeatCurveLimit {
+  HeatCurveLimitReason reason = 1;
+
+  // The zone's opening at the view's percentile (HeatCurveView.opening_percentile), in
+  // thousandths. Unset where the zone lies in a home the recipient is not given (home_withheld).
+  optional uint32 opening_permille = 2;
+
+  // Whether that opening is at most HeatCurveView.threshold_permille: the zone has headroom, and
+  // in the coldest band seen the curve could come down. Given whoever the limit is given to,
+  // home_withheld or not.
+  bool has_headroom = 3;
+
+  // The room the zone heats: a radiator valve's room, or a floor zone's control room
+  // (FloorZone.control_room_id). Unset where home_withheld.
+  kusinta.iot.identity.v1.SpaceId room_id = 4;
+
+  // The floor zone (FloorZone.zone_id) where the opening is a floor zone's duty; empty for a
+  // radiator valve, and where home_withheld.
+  string floor_zone_id = 5;
+
+  // Set where the zone lies in a home the recipient is not given (HEAT CURVE, WHO SEES IT): the
+  // limit says that a home limits, and the reason, and nothing of which.
+  bool home_withheld = 6;
+}
+
+// One band of outdoor temperature of a heat curve view, over the view's window.
+message HeatCurveBand {
+  // The band, in centidegrees, half-open: [outdoor_from, outdoor_to), by the outdoor mean of
+  // each quarter hour (climate.v1.PlantHistorySample.outdoor_centidegrees). Band edges and width
+  // are the gateway's choice, the same for every plant.
+  sint32 outdoor_from_centidegrees = 1;
+  sint32 outdoor_to_centidegrees = 2;
+
+  // The quarter hours of the window whose outdoor mean fell in the band.
+  uint32 quarters = 3;
+
+  // The median over the band's quarter hours of the calculated supply and of the measured
+  // supply, in centidegrees, as the heat source reads them (device.v1.HeatSourceReadings), each
+  // leaving out the quarter hours in which the heat source was known to make hot water. Unset
+  // where not known, and where figures are withheld (HeatCurveView.figures_withheld).
+  optional sint32 calculated_supply_centidegrees = 4;
+  optional sint32 supply_centidegrees = 5;
+
+  // The add-on heat's energy over the band's quarter hours, in watt-hours, and the share of them
+  // in which it drew, in thousandths (device.v1.HeatSourceReadings.add_on_heat_watts). Unset
+  // where not known, and where figures are withheld.
+  optional uint32 add_on_heat_wh = 6;
+  optional uint32 add_on_running_permille = 7;
+
+  // The zone that limits the curve in this band. Unset where none is known: no zone with an
+  // opening read in the band, too few quarter hours in it for the gateway to judge, or, in a
+  // home's reading of a plant outside it, a band its home does not limit.
+  HeatCurveLimit limit = 8;
+}
+
+// One plant's heating curve against what its zones draw (HEAT CURVE). Given as WHO SEES IT says.
+message HeatCurveView {
+  string plant_id = 1;
+
+  // The plant's name, so that one who is not given the plant record knows which plant it is.
+  string plant_name = 2;
+
+  // The quarter hours counted, [window_from, window_to): a window of the gateway's choice, such
+  // as the last 28 days, starting no earlier than the curve settings last changed
+  // (curve_settings_changed_at), so that the bands judge the curve in force.
+  google.protobuf.Timestamp window_from = 3;
+  google.protobuf.Timestamp window_to = 4;
+
+  // Coldest first. A band with no quarter hour is not given. Empty where none is known: a plant
+  // without outdoor readings, or nothing kept in the window.
+  repeated HeatCurveBand bands = 5;
+
+  // The opening, in thousandths, at most which the most demanding zone of the coldest band leaves
+  // the curve room to come down (HEAT CURVE, WHAT IT SHOWS): 850 for 85 %. The gateway's.
+  uint32 threshold_permille = 6;
+
+  // The percentile of a zone's openings over a band's quarter hours that a limit is judged by
+  // (HeatCurveLimit.opening_permille), such as 90. The gateway's.
+  uint32 opening_percentile = 7;
+
+  // The heat source's curve settings as last read, as its readings state them
+  // (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — heating_curve,
+  // heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and curve_point_* — each
+  // where read, every other field unset. Unset where none is read, and where figures are
+  // withheld.
+  kusinta.iot.device.v1.HeatSourceReadings curve_settings = 8;
+
+  // When a curve setting was last seen to change. Unset where none was, or none is read, and
+  // where figures are withheld.
+  google.protobuf.Timestamp curve_settings_changed_at = 9;
+
+  // Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies
+  // and add-on figures and the curve settings are left out, so that their absence is not read as
+  // not known.
+  bool figures_withheld = 10;
+}
+
+// The answer to webrtc.v1.GetHeatCurveView.
+message HeatCurveViews {
+  repeated HeatCurveView views = 1;
 }
