@@ -362,8 +362,22 @@ message RemoveLink {
 //                       write it — another tenant or application (INVALID_COMMAND)
 //   "registry_refused"  the registry would not take the record: no profile, no permission,
 //                       a malformed value it caught first (INTERNAL)
-//   "registry_unavailable"  the registry could not be reached (UNREACHABLE)
+//   "registry_unavailable"  the registry could not be reached: nothing was written
+//                       (UNREACHABLE)
+//   "registry_outcome_unknown"  a write was started and what became of it is not known —
+//                       it failed or ran out of time on the way back: the registry may hold
+//                       the record (TIMEOUT)
 // The gateway passes the reason on to the app unchanged (ProvisionDevice, REFUSALS).
+//
+// TIMING. The gateway waits at least 30 seconds for the answer to a RegisterDevice or an
+// UnregisterDevice. The connector starts the write within 20 seconds of receiving it, time
+// spent waiting behind another registration included, or drops it unwritten and answers
+// "registry_unavailable"; one whose session ends before it starts is dropped unanswered. A
+// write once started is never abandoned midway: it runs to its end under the registry's own
+// per-call deadlines, and so may be answered after the gateway has stopped waiting, or not
+// at all if the session ends. The gateway treats a request it stopped waiting for, or whose
+// session ended unanswered, as an outcome not known (webrtc.v1.ProvisionDevice, REFUSALS:
+// "connector_unavailable").
 message RegisterDevice {
   // Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
   string request_id = 1;
@@ -380,8 +394,10 @@ message RegisterDevice {
 // hold succeeds: the record is gone either way. A device that had joined stops being able to
 // talk to the network, and the connector reports device_removed for it.
 //
-// A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL) or
-// {"reason": "registry_unavailable"} (UNREACHABLE), as for RegisterDevice.
+// A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL),
+// {"reason": "registry_unavailable"} (UNREACHABLE) or {"reason": "registry_outcome_unknown"}
+// (TIMEOUT), as for RegisterDevice: after the last the record may or may not be gone, and
+// removing it again is safe.
 message UnregisterDevice {
   // Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
   string request_id = 1;
