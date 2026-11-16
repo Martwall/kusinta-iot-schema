@@ -7,7 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
-import type { BuildingPlanning, DayAheadPrices, ManagementAck, ManagementRequest, PrivacyDisclosure, SpaceAddress, SpaceTree } from "./management_pb.js";
+import type { BuildingPlanning, DayAheadPrices, ManagementAck, ManagementRequest, PrivacyDisclosure, ProvisionedDevices, SpaceAddress, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, PlantHistory, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
@@ -17,7 +17,7 @@ import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/accoun
 import type { CommissioningGrant, CommissioningGrants, CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
 import type { ClimateHistoryCleared, HouseholdExport, HouseholdHandover, HouseholdHandovers } from "./household_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
-import type { BackendHealth, ConnectorKind, DeviceOwnershipType } from "../../common/v1/types_pb.js";
+import type { BackendHealth, ConnectorKind, DeviceOwnershipType, ProvisioningModel } from "../../common/v1/types_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceAdded, DeviceRemoved, DeviceStateSnapshot, PropertyReport, ServiceStatusChanged } from "./device_state_pb.js";
 import type { LivePermissionUpdate } from "./permission_push_pb.js";
@@ -589,6 +589,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: HeatCurveViews;
     case: "heatCurveViews";
+  } | {
+    /**
+     * list_provisioned_devices
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.ProvisionedDevices provisioned_devices = 37;
+     */
+    value: ProvisionedDevices;
+    case: "provisionedDevices";
   } | { case: undefined; value?: undefined };
 };
 
@@ -888,6 +896,15 @@ export declare type ConnectorDescriptor = Message<"kusinta.iot.webrtc.v1.Connect
    * @generated from field: bool supports_backend_reinitialize = 10;
    */
   supportsBackendReinitialize: boolean;
+
+  /**
+   * The device models the connector registers from credentials, copied from its handshake
+   * (connector.v1 ConnectorInfo.provisioning_models). The app offers these, and only these,
+   * as what a device being registered is (LorawanProvisioning.model_id).
+   *
+   * @generated from field: repeated kusinta.iot.common.v1.ProvisioningModel provisioning_models = 11;
+   */
+  provisioningModels: ProvisioningModel[];
 };
 
 /**

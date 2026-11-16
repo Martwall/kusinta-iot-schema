@@ -5,11 +5,12 @@
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, GatewayId } from "../../identity/v1/identity_pb.js";
-import type { BackendFailureReason, BackendHealth, ConnectorKind, ConnectorTransport } from "../../common/v1/types_pb.js";
+import type { BackendFailureReason, BackendHealth, ConnectorKind, ConnectorTransport, ProvisioningModel } from "../../common/v1/types_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { Device } from "../../device/v1/device_pb.js";
 import type { DeviceLink, LinkFunction, LinkState } from "../../link/v1/link_pb.js";
+import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { AttributeWriteRequest, CommandError, DeviceCommand } from "../../webrtc/v1/command_pb.js";
 import type { PairingErrorDetail, PairingWindow } from "../../common/v1/pairing_pb.js";
 import type { PropertyUpdateBatch } from "../../device/v1/property_update_pb.js";
@@ -135,6 +136,18 @@ export declare type ConnectorInfo = Message<"kusinta.iot.connector.v1.ConnectorI
    * @generated from field: repeated kusinta.iot.accountlink.v1.LinkedService consumes_credentials = 13;
    */
   consumesCredentials: LinkedService[];
+
+  /**
+   * The device models this connector registers from credentials (RegisterDevice), each
+   * with how the registry is to admit it — a profile, a device class, a codec — kept by the
+   * connector and stated nowhere else. Empty from a connector that does not declare
+   * supports_provisioning. The gateway copies the list to the app unchanged
+   * (webrtc.v1.ConnectorDescriptor.provisioning_models), and the app offers these models
+   * and no other.
+   *
+   * @generated from field: repeated kusinta.iot.common.v1.ProvisioningModel provisioning_models = 14;
+   */
+  provisioningModels: ProvisioningModel[];
 };
 
 /**
@@ -563,6 +576,104 @@ export declare type RemoveLink = Message<"kusinta.iot.connector.v1.RemoveLink"> 
  * Use `create(RemoveLinkSchema)` to create a new message.
  */
 export declare const RemoveLinkSchema: GenMessage<RemoveLink>;
+
+/**
+ * Asks the connector to register a device in its registry from the credentials a person
+ * gave the app, gateway to connector: the connector-leg half of webrtc.v1.ProvisionDevice.
+ * Sent only to a connector that declares supports_provisioning, and only once the gateway
+ * has decided the caller may (ProvisionDevice, WHO MAY). What the connector is told is the
+ * credentials alone: where the device will be filed, and who asked, are the gateway's.
+ *
+ * The connector writes the registry record — the device under its identifier, the model's
+ * profile, the root key — and answers with ConnectorCommandResult under request_id. Writing
+ * an identifier the registry already holds replaces its credentials and model: an upsert,
+ * as ProvisionDevice states; whether a re-key is allowed at all is decided by the gateway
+ * before it sends this. The device itself is announced by device_announced if and when it
+ * joins, as every device is.
+ *
+ * The root key is handled as webrtc.v1.ProvisionDevice says it is: the connector passes it
+ * to the registry and keeps it nowhere — not in a log, not on disk, not in a reply, not in
+ * memory once the write is done. Nothing the connector sends the gateway carries it.
+ *
+ * A refusal is ConnectorCommandResult with success = false and CommandError.metadata
+ * {"reason": ...}, one of:
+ *   "model_unknown"     model_id is none the connector stated (INVALID_COMMAND)
+ *   "registry_refused"  the registry would not take the record: no profile, no permission,
+ *                       a malformed value it caught first (INTERNAL)
+ *   "registry_unavailable"  the registry could not be reached (UNREACHABLE)
+ * The gateway passes the reason on to the app unchanged (ProvisionDevice, REFUSALS).
+ *
+ * @generated from message kusinta.iot.connector.v1.RegisterDevice
+ */
+export declare type RegisterDevice = Message<"kusinta.iot.connector.v1.RegisterDevice"> & {
+  /**
+   * Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * As webrtc.v1.ProvisionDevice.credentials, which the gateway copies unchanged.
+   *
+   * @generated from oneof kusinta.iot.connector.v1.RegisterDevice.credentials
+   */
+  credentials: {
+    /**
+     * @generated from field: kusinta.iot.vendor.lorawan.v1.LorawanProvisioning lorawan = 2;
+     */
+    value: LorawanProvisioning;
+    case: "lorawan";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.RegisterDevice.
+ * Use `create(RegisterDeviceSchema)` to create a new message.
+ */
+export declare const RegisterDeviceSchema: GenMessage<RegisterDevice>;
+
+/**
+ * Asks the connector to remove a device's record from its registry, gateway to connector:
+ * the connector-leg half of webrtc.v1.DeprovisionDevice. Answered with
+ * ConnectorCommandResult under request_id. Removing an identifier the registry does not
+ * hold succeeds: the record is gone either way. A device that had joined stops being able to
+ * talk to the network, and the connector reports device_removed for it.
+ *
+ * A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL) or
+ * {"reason": "registry_unavailable"} (UNREACHABLE), as for RegisterDevice.
+ *
+ * @generated from message kusinta.iot.connector.v1.UnregisterDevice
+ */
+export declare type UnregisterDevice = Message<"kusinta.iot.connector.v1.UnregisterDevice"> & {
+  /**
+   * Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
+   *
+   * @generated from field: string request_id = 1;
+   */
+  requestId: string;
+
+  /**
+   * Which record, by the technology's own identifier.
+   *
+   * @generated from oneof kusinta.iot.connector.v1.UnregisterDevice.identifier
+   */
+  identifier: {
+    /**
+     * Sixteen hex characters, as LorawanProvisioning.dev_eui.
+     *
+     * @generated from field: string lorawan_dev_eui = 2;
+     */
+    value: string;
+    case: "lorawanDevEui";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.connector.v1.UnregisterDevice.
+ * Use `create(UnregisterDeviceSchema)` to create a new message.
+ */
+export declare const UnregisterDeviceSchema: GenMessage<UnregisterDevice>;
 
 /**
  * Asks the connector what links the hub holds, for reconciliation outside a
@@ -1263,6 +1374,21 @@ export declare type SessionResponse = Message<"kusinta.iot.connector.v1.SessionR
      */
     value: CredentialsSnapshot;
     case: "credentialsSnapshot";
+  } | {
+    /**
+     * A device registered from credentials, and its record removed; see RegisterDevice and
+     * UnregisterDevice.
+     *
+     * @generated from field: kusinta.iot.connector.v1.RegisterDevice register_device = 18;
+     */
+    value: RegisterDevice;
+    case: "registerDevice";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.connector.v1.UnregisterDevice unregister_device = 19;
+     */
+    value: UnregisterDevice;
+    case: "unregisterDevice";
   } | { case: undefined; value?: undefined };
 };
 

@@ -620,6 +620,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'heatCurveViews'
     },
+    {
+      '1': 'provisioned_devices',
+      '3': 37,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ProvisionedDevices',
+      '9': 0,
+      '10': 'provisionedDevices'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -681,7 +690,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'YWRvd1N1bW1hcnlIAFINc2hhZG93U3VtbWFyeRJYChJlbmVyZ3lfcHJpY2VfYWRkZXIYIyABKA'
     'syKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkVuZXJneVByaWNlQWRkZXJIAFIQZW5lcmd5UHJp'
     'Y2VBZGRlchJSChBoZWF0X2N1cnZlX3ZpZXdzGCQgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy'
-    '52MS5IZWF0Q3VydmVWaWV3c0gAUg5oZWF0Q3VydmVWaWV3c0IICgZyZXN1bHQ=');
+    '52MS5IZWF0Q3VydmVWaWV3c0gAUg5oZWF0Q3VydmVWaWV3cxJcChNwcm92aXNpb25lZF9kZXZp'
+    'Y2VzGCUgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlByb3Zpc2lvbmVkRGV2aWNlc0gAUh'
+    'Jwcm92aXNpb25lZERldmljZXNCCAoGcmVzdWx0');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {
@@ -867,6 +878,14 @@ const ConnectorDescriptor$json = {
       '5': 8,
       '10': 'supportsBackendReinitialize'
     },
+    {
+      '1': 'provisioning_models',
+      '3': 11,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.ProvisioningModel',
+      '10': 'provisioningModels'
+    },
   ],
 };
 
@@ -882,7 +901,8 @@ final $typed_data.Uint8List connectorDescriptorDescriptor = $convert.base64Decod
     'lwdGlvbhgIIAEoCVILZGVzY3JpcHRpb24SSwoOYmFja2VuZF9oZWFsdGgYCSABKAsyJC5rdXNp'
     'bnRhLmlvdC5jb21tb24udjEuQmFja2VuZEhlYWx0aFINYmFja2VuZEhlYWx0aBJCCh1zdXBwb3'
     'J0c19iYWNrZW5kX3JlaW5pdGlhbGl6ZRgKIAEoCFIbc3VwcG9ydHNCYWNrZW5kUmVpbml0aWFs'
-    'aXpl');
+    'aXplElkKE3Byb3Zpc2lvbmluZ19tb2RlbHMYCyADKAsyKC5rdXNpbnRhLmlvdC5jb21tb24udj'
+    'EuUHJvdmlzaW9uaW5nTW9kZWxSEnByb3Zpc2lvbmluZ01vZGVscw==');
 
 @$core.Deprecated('Use connectorsAnnouncedDescriptor instead')
 const ConnectorsAnnounced$json = {

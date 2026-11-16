@@ -387,6 +387,22 @@ const ProvisionDevice$json = {
       '9': 0,
       '10': 'lorawan'
     },
+    {
+      '1': 'initial_space_id',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'initialSpaceId'
+    },
+    {
+      '1': 'ownership',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.DeviceOwnershipType',
+      '10': 'ownership'
+    },
   ],
   '8': [
     {'1': 'credentials'},
@@ -398,7 +414,142 @@ final $typed_data.Uint8List provisionDeviceDescriptor = $convert.base64Decode(
     'Cg9Qcm92aXNpb25EZXZpY2USRwoMY29ubmVjdG9yX2lkGAEgASgLMiQua3VzaW50YS5pb3QuaW'
     'RlbnRpdHkudjEuQ29ubmVjdG9ySWRSC2Nvbm5lY3RvcklkEk4KB2xvcmF3YW4YAiABKAsyMi5r'
     'dXNpbnRhLmlvdC52ZW5kb3IubG9yYXdhbi52MS5Mb3Jhd2FuUHJvdmlzaW9uaW5nSABSB2xvcm'
-    'F3YW5CDQoLY3JlZGVudGlhbHM=');
+    'F3YW4SSgoQaW5pdGlhbF9zcGFjZV9pZBgDIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYx'
+    'LlNwYWNlSWRSDmluaXRpYWxTcGFjZUlkEkgKCW93bmVyc2hpcBgEIAEoDjIqLmt1c2ludGEuaW'
+    '90LmNvbW1vbi52MS5EZXZpY2VPd25lcnNoaXBUeXBlUglvd25lcnNoaXBCDQoLY3JlZGVudGlh'
+    'bHM=');
+
+@$core.Deprecated('Use deprovisionDeviceDescriptor instead')
+const DeprovisionDevice$json = {
+  '1': 'DeprovisionDevice',
+  '2': [
+    {
+      '1': 'connector_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.ConnectorId',
+      '10': 'connectorId'
+    },
+    {
+      '1': 'lorawan_dev_eui',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'lorawanDevEui'
+    },
+  ],
+  '8': [
+    {'1': 'identifier'},
+  ],
+};
+
+/// Descriptor for `DeprovisionDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deprovisionDeviceDescriptor = $convert.base64Decode(
+    'ChFEZXByb3Zpc2lvbkRldmljZRJHCgxjb25uZWN0b3JfaWQYASABKAsyJC5rdXNpbnRhLmlvdC'
+    '5pZGVudGl0eS52MS5Db25uZWN0b3JJZFILY29ubmVjdG9ySWQSKAoPbG9yYXdhbl9kZXZfZXVp'
+    'GAIgASgJSABSDWxvcmF3YW5EZXZFdWlCDAoKaWRlbnRpZmllcg==');
+
+@$core.Deprecated('Use listProvisionedDevicesDescriptor instead')
+const ListProvisionedDevices$json = {
+  '1': 'ListProvisionedDevices',
+};
+
+/// Descriptor for `ListProvisionedDevices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listProvisionedDevicesDescriptor =
+    $convert.base64Decode('ChZMaXN0UHJvdmlzaW9uZWREZXZpY2Vz');
+
+@$core.Deprecated('Use provisionedDeviceDescriptor instead')
+const ProvisionedDevice$json = {
+  '1': 'ProvisionedDevice',
+  '2': [
+    {
+      '1': 'connector_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.ConnectorId',
+      '10': 'connectorId'
+    },
+    {
+      '1': 'device_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.DeviceId',
+      '10': 'deviceId'
+    },
+    {'1': 'model_id', '3': 3, '4': 1, '5': 9, '10': 'modelId'},
+    {
+      '1': 'initial_space_id',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'initialSpaceId'
+    },
+    {
+      '1': 'ownership',
+      '3': 5,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.common.v1.DeviceOwnershipType',
+      '10': 'ownership'
+    },
+    {
+      '1': 'provisioned_at',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'provisionedAt'
+    },
+    {
+      '1': 'lorawan_dev_eui',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'lorawanDevEui'
+    },
+  ],
+  '8': [
+    {'1': 'identifier'},
+  ],
+};
+
+/// Descriptor for `ProvisionedDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List provisionedDeviceDescriptor = $convert.base64Decode(
+    'ChFQcm92aXNpb25lZERldmljZRJHCgxjb25uZWN0b3JfaWQYASABKAsyJC5rdXNpbnRhLmlvdC'
+    '5pZGVudGl0eS52MS5Db25uZWN0b3JJZFILY29ubmVjdG9ySWQSPgoJZGV2aWNlX2lkGAIgASgL'
+    'MiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCGRldmljZUlkEhkKCG1vZGVsX2'
+    'lkGAMgASgJUgdtb2RlbElkEkoKEGluaXRpYWxfc3BhY2VfaWQYBCABKAsyIC5rdXNpbnRhLmlv'
+    'dC5pZGVudGl0eS52MS5TcGFjZUlkUg5pbml0aWFsU3BhY2VJZBJICglvd25lcnNoaXAYBSABKA'
+    '4yKi5rdXNpbnRhLmlvdC5jb21tb24udjEuRGV2aWNlT3duZXJzaGlwVHlwZVIJb3duZXJzaGlw'
+    'EkEKDnByb3Zpc2lvbmVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFINcH'
+    'JvdmlzaW9uZWRBdBIoCg9sb3Jhd2FuX2Rldl9ldWkYByABKAlIAFINbG9yYXdhbkRldkV1aUIM'
+    'CgppZGVudGlmaWVy');
+
+@$core.Deprecated('Use provisionedDevicesDescriptor instead')
+const ProvisionedDevices$json = {
+  '1': 'ProvisionedDevices',
+  '2': [
+    {
+      '1': 'devices',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ProvisionedDevice',
+      '10': 'devices'
+    },
+  ],
+};
+
+/// Descriptor for `ProvisionedDevices`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List provisionedDevicesDescriptor = $convert.base64Decode(
+    'ChJQcm92aXNpb25lZERldmljZXMSQgoHZGV2aWNlcxgBIAMoCzIoLmt1c2ludGEuaW90LndlYn'
+    'J0Yy52MS5Qcm92aXNpb25lZERldmljZVIHZGV2aWNlcw==');
 
 @$core.Deprecated('Use listSpacesDescriptor instead')
 const ListSpaces$json = {
@@ -2937,6 +3088,24 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'getHeatCurveView'
     },
+    {
+      '1': 'deprovision_device',
+      '3': 86,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.DeprovisionDevice',
+      '9': 0,
+      '10': 'deprovisionDevice'
+    },
+    {
+      '1': 'list_provisioned_devices',
+      '3': 87,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.ListProvisionedDevices',
+      '9': 0,
+      '10': 'listProvisionedDevices'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -3086,4 +3255,8 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'cmljZUFkZGVyEmEKFnNldF9lbmVyZ3lfcHJpY2VfYWRkZXIYVCABKAsyKi5rdXNpbnRhLmlvdC'
     '53ZWJydGMudjEuU2V0RW5lcmd5UHJpY2VBZGRlckgAUhNzZXRFbmVyZ3lQcmljZUFkZGVyElgK'
     'E2dldF9oZWF0X2N1cnZlX3ZpZXcYVSABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0SG'
-    'VhdEN1cnZlVmlld0gAUhBnZXRIZWF0Q3VydmVWaWV3QgkKB3JlcXVlc3Q=');
+    'VhdEN1cnZlVmlld0gAUhBnZXRIZWF0Q3VydmVWaWV3ElkKEmRlcHJvdmlzaW9uX2RldmljZRhW'
+    'IAEoCzIoLmt1c2ludGEuaW90LndlYnJ0Yy52MS5EZXByb3Zpc2lvbkRldmljZUgAUhFkZXByb3'
+    'Zpc2lvbkRldmljZRJpChhsaXN0X3Byb3Zpc2lvbmVkX2RldmljZXMYVyABKAsyLS5rdXNpbnRh'
+    'LmlvdC53ZWJydGMudjEuTGlzdFByb3Zpc2lvbmVkRGV2aWNlc0gAUhZsaXN0UHJvdmlzaW9uZW'
+    'REZXZpY2VzQgkKB3JlcXVlc3Q=');

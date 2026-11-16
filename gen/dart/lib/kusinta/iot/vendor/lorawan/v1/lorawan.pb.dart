@@ -29,11 +29,13 @@ class LorawanProvisioning extends $pb.GeneratedMessage {
     $core.String? devEui,
     $core.String? appKey,
     $core.String? joinEui,
+    $core.String? modelId,
   }) {
     final result = create();
     if (devEui != null) result.devEui = devEui;
     if (appKey != null) result.appKey = appKey;
     if (joinEui != null) result.joinEui = joinEui;
+    if (modelId != null) result.modelId = modelId;
     return result;
   }
 
@@ -54,6 +56,7 @@ class LorawanProvisioning extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'devEui')
     ..aOS(2, _omitFieldNames ? '' : 'appKey')
     ..aOS(3, _omitFieldNames ? '' : 'joinEui')
+    ..aOS(4, _omitFieldNames ? '' : 'modelId')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -102,6 +105,10 @@ class LorawanProvisioning extends $pb.GeneratedMessage {
   /// cannot generate one and have the device adopt it. A device that can be
   /// reprogrammed with a server-generated key would leave this empty and have the
   /// registry mint it instead.
+  ///
+  /// A key anyone can compute — derived from the label, or a vendor's published default — is
+  /// refused (webrtc.v1.ProvisionDevice, REFUSALS): a key of the registering party's own is
+  /// set on the device first.
   @$pb.TagNumber(2)
   $core.String get appKey => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -122,6 +129,20 @@ class LorawanProvisioning extends $pb.GeneratedMessage {
   $core.bool hasJoinEui() => $_has(2);
   @$pb.TagNumber(3)
   void clearJoinEui() => $_clearField(3);
+
+  /// Which model the device is, as one of the target connector's
+  /// ConnectorInfo.provisioning_models: what decides how the registry admits it — its
+  /// profile, its device class, the payload codec it needs. Chosen by the person
+  /// registering it, or implied by what they scanned; never a registry's own profile name,
+  /// which is the connector's business. A connector refuses a model it did not state.
+  @$pb.TagNumber(4)
+  $core.String get modelId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set modelId($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasModelId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearModelId() => $_clearField(4);
 }
 
 const $core.bool _omitFieldNames =

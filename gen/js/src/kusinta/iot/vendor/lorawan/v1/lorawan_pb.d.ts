@@ -47,6 +47,10 @@ export declare type LorawanProvisioning = Message<"kusinta.iot.vendor.lorawan.v1
    * reprogrammed with a server-generated key would leave this empty and have the
    * registry mint it instead.
    *
+   * A key anyone can compute — derived from the label, or a vendor's published default — is
+   * refused (webrtc.v1.ProvisionDevice, REFUSALS): a key of the registering party's own is
+   * set on the device first.
+   *
    * @generated from field: string app_key = 2;
    */
   appKey: string;
@@ -59,6 +63,17 @@ export declare type LorawanProvisioning = Message<"kusinta.iot.vendor.lorawan.v1
    * @generated from field: optional string join_eui = 3;
    */
   joinEui?: string | undefined;
+
+  /**
+   * Which model the device is, as one of the target connector's
+   * ConnectorInfo.provisioning_models: what decides how the registry admits it — its
+   * profile, its device class, the payload codec it needs. Chosen by the person
+   * registering it, or implied by what they scanned; never a registry's own profile name,
+   * which is the connector's business. A connector refuses a model it did not state.
+   *
+   * @generated from field: string model_id = 4;
+   */
+  modelId: string;
 };
 
 /**

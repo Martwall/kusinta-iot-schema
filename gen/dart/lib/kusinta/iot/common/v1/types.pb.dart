@@ -21,6 +21,86 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'types.pbenum.dart';
 
+/// Whether a person owns a device outright. COMPANY: no person does; it is one of the
+/// building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
+/// for a device of their own that they may take with them. Who paid for one of the
+/// building's own devices is a separate question, answered by AssetOwner.
+/// A device model a connector can register from credentials (ProvisionDevice), as the
+/// connector states it in its handshake and the gateway copies it to the app. The app offers
+/// these and nothing else, and never keeps a list of models of its own: which models a
+/// connector registers, and the registry settings each needs, are the connector's.
+class ProvisioningModel extends $pb.GeneratedMessage {
+  factory ProvisioningModel({
+    $core.String? modelId,
+    $core.String? displayName,
+  }) {
+    final result = create();
+    if (modelId != null) result.modelId = modelId;
+    if (displayName != null) result.displayName = displayName;
+    return result;
+  }
+
+  ProvisioningModel._();
+
+  factory ProvisioningModel.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProvisioningModel.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProvisioningModel',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.common.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'modelId')
+    ..aOS(2, _omitFieldNames ? '' : 'displayName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisioningModel clone() => ProvisioningModel()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisioningModel copyWith(void Function(ProvisioningModel) updates) =>
+      super.copyWith((message) => updates(message as ProvisioningModel))
+          as ProvisioningModel;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProvisioningModel create() => ProvisioningModel._();
+  @$core.override
+  ProvisioningModel createEmptyInstance() => create();
+  static $pb.PbList<ProvisioningModel> createRepeated() =>
+      $pb.PbList<ProvisioningModel>();
+  @$core.pragma('dart2js:noInline')
+  static ProvisioningModel getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProvisioningModel>(create);
+  static ProvisioningModel? _defaultInstance;
+
+  /// Stable, opaque to everyone but the connector that states it, and what
+  /// LorawanProvisioning.model_id names. Unique within one connector.
+  @$pb.TagNumber(1)
+  $core.String get modelId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set modelId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasModelId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearModelId() => $_clearField(1);
+
+  /// User-facing label, free-form, never matched on.
+  @$pb.TagNumber(2)
+  $core.String get displayName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set displayName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasDisplayName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDisplayName() => $_clearField(2);
+}
+
 enum AssetOwner_Owner { ownerOrganisation, householdHomeId, notSet }
 
 /// Who owns one of the building's own devices as an asset: who paid for it, for billing and

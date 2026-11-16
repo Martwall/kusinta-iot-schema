@@ -12,6 +12,41 @@ import type { SpaceId } from "../../identity/v1/identity_pb.js";
 export declare const file_kusinta_iot_common_v1_types: GenFile;
 
 /**
+ * Whether a person owns a device outright. COMPANY: no person does; it is one of the
+ * building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
+ * for a device of their own that they may take with them. Who paid for one of the
+ * building's own devices is a separate question, answered by AssetOwner.
+ * A device model a connector can register from credentials (ProvisionDevice), as the
+ * connector states it in its handshake and the gateway copies it to the app. The app offers
+ * these and nothing else, and never keeps a list of models of its own: which models a
+ * connector registers, and the registry settings each needs, are the connector's.
+ *
+ * @generated from message kusinta.iot.common.v1.ProvisioningModel
+ */
+export declare type ProvisioningModel = Message<"kusinta.iot.common.v1.ProvisioningModel"> & {
+  /**
+   * Stable, opaque to everyone but the connector that states it, and what
+   * LorawanProvisioning.model_id names. Unique within one connector.
+   *
+   * @generated from field: string model_id = 1;
+   */
+  modelId: string;
+
+  /**
+   * User-facing label, free-form, never matched on.
+   *
+   * @generated from field: string display_name = 2;
+   */
+  displayName: string;
+};
+
+/**
+ * Describes the message kusinta.iot.common.v1.ProvisioningModel.
+ * Use `create(ProvisioningModelSchema)` to create a new message.
+ */
+export declare const ProvisioningModelSchema: GenMessage<ProvisioningModel>;
+
+/**
  * Who owns one of the building's own devices as an asset: who paid for it, for billing and
  * for what becomes of it when a household or the gateway's owner changes. Distinct from
  * DeviceOwnershipType, which says whether a person owns a device outright; a device a person
@@ -163,11 +198,6 @@ export enum SpaceType {
 export declare const SpaceTypeSchema: GenEnum<SpaceType>;
 
 /**
- * Whether a person owns a device outright. COMPANY: no person does; it is one of the
- * building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
- * for a device of their own that they may take with them. Who paid for one of the
- * building's own devices is a separate question, answered by AssetOwner.
- *
  * @generated from enum kusinta.iot.common.v1.DeviceOwnershipType
  */
 export enum DeviceOwnershipType {
