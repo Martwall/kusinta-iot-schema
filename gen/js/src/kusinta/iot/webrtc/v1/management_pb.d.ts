@@ -510,14 +510,17 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  * NOT_ENTITLED, as is a connector_id the caller is not told of.
  *
  * WHERE IT IS FILED. As StartPairing files a device that arrives during a window, and by its
- * rules. The gateway keeps initial_space_id and ownership as a pending filing, under the
- * device id the connector derives from the identifier, and applies it when the device first
- * announces itself: filed into initial_space_id, owned as ownership says. Into a home only as
- * PlaceDeviceInSpace allows. A filing role may leave initial_space_id unset, and the device
- * then arrives unfiled, visible to the gateway's administrators; an installer must name a
- * space their grant covers. Unset ownership lets the gateway decide from the caller's role,
- * and an ownership the caller may not confer is refused (ClaimDevice, WHICH CLAIM). A pending
- * filing holds no credential, and goes with the registration (DeprovisionDevice).
+ * rules, save one: initial_space_id is required of every caller. It names where the device
+ * is — a room, or a common or technical space for the building's equipment — so that no
+ * registered device arrives unfiled, and whoever registered it knows where it went. One
+ * without it is refused as INVALID_REQUEST {"reason": "space"}; an installer names a space
+ * their grant covers. The gateway keeps initial_space_id and ownership as a pending filing,
+ * under the device id the connector derives from the identifier, and applies it when the
+ * device first announces itself: filed into initial_space_id, owned as ownership says. Into a
+ * home only as PlaceDeviceInSpace allows. Unset ownership lets the gateway decide from the
+ * caller's role, and an ownership the caller may not confer is refused (ClaimDevice, WHICH
+ * CLAIM). A pending filing holds no credential, and goes with the registration
+ * (DeprovisionDevice).
  *
  * Registering and owning remain distinct acts: ClaimDevice carries possession_proof, and
  * because the connector derives the device id and the serial from the identifier here, a
@@ -538,6 +541,8 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  * not in the pending filing, not in an answer, a refusal or a listing.
  *
  * REFUSALS, beyond NOT_ENTITLED, each a GatewayError with metadata {"reason": ...}:
+ *   INVALID_REQUEST "space"
+ *       initial_space_id is unset (WHERE IT IS FILED);
  *   INVALID_REQUEST "dev_eui", "app_key", "join_eui"
  *       that field is not the hex its technology's message states;
  *   INVALID_REQUEST "default_app_key"
@@ -589,7 +594,8 @@ export declare type ProvisionDevice = Message<"kusinta.iot.webrtc.v1.ProvisionDe
 
   /**
    * Where to file the device when it joins, and what it becomes: as StartPairing's fields of
-   * the same names, kept as a pending filing (WHERE IT IS FILED).
+   * the same names, kept as a pending filing (WHERE IT IS FILED). initial_space_id is
+   * required here, unlike there.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId initial_space_id = 3;
    */
@@ -710,7 +716,7 @@ export declare type ProvisionedDevice = Message<"kusinta.iot.webrtc.v1.Provision
   modelId: string;
 
   /**
-   * The pending filing (ProvisionDevice, WHERE IT IS FILED): unset where none was named.
+   * The pending filing (ProvisionDevice, WHERE IT IS FILED): where the device will be filed.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId initial_space_id = 4;
    */
