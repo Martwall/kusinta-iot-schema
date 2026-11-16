@@ -371,8 +371,9 @@ export declare const DeviceSchema: GenMessage<Device>;
 
 /**
  * A heat source's own readings: the temperatures its controller measures and works out, and
- * its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
- * connector reads them from the heat source or the maker's service. What
+ * its run state — what it is producing, its compressor, its degree minutes, its alarm — and
+ * its own settings (how it is set to run, its add-on's limits, its curve), as its connector
+ * reads them from the heat source or the maker's service. What
  * heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
  *
  * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
@@ -513,6 +514,162 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
    * @generated from field: optional uint32 add_on_heat_watts = 12;
    */
   addOnHeatWatts?: number | undefined;
+
+  /**
+   * Whether an external input moves its first climate system's curve now: while true, its
+   * calculated supply is off its curve (the settings below) by the adjustment set for that input. A state,
+   * sent when it changes, like the run state above.
+   *
+   * @generated from field: optional bool external_adjustment_active = 30;
+   */
+  externalAdjustmentActive?: boolean | undefined;
+
+  /**
+   * How the heat source is set to run (HeatSourceOperatingMode), as its number: automatic,
+   * manual, or its add-on heat alone. In add-on only its compressor makes no heat, so a block
+   * of the add-on stops all of it.
+   *
+   * @generated from field: optional uint32 operating_mode = 13;
+   */
+  operatingMode?: number | undefined;
+
+  /**
+   * The outdoor temperature at and above which it stops heating its first climate system
+   * while it runs automatically, judged against its averaged outdoor temperature
+   * (outdoor_filter_hours).
+   *
+   * @generated from field: optional sint32 heating_stop_outdoor_centidegrees = 14;
+   */
+  heatingStopOutdoorCentidegrees?: number | undefined;
+
+  /**
+   * The outdoor temperature at and above which its add-on heat may not run while it runs
+   * automatically, judged against its averaged outdoor temperature. Above it, blocking the
+   * add-on moves no energy.
+   *
+   * @generated from field: optional sint32 add_on_stop_outdoor_centidegrees = 15;
+   */
+  addOnStopOutdoorCentidegrees?: number | undefined;
+
+  /**
+   * Over how many hours it averages the outdoor temperature that the two stops above are
+   * judged against.
+   *
+   * @generated from field: optional uint32 outdoor_filter_hours = 16;
+   */
+  outdoorFilterHours?: number | undefined;
+
+  /**
+   * The most its internal electric add-on heat (add_on_heat_watts) may draw, in watts, as set:
+   * its cap, not the size of its steps.
+   *
+   * @generated from field: optional uint32 add_on_max_watts = 17;
+   */
+  addOnMaxWatts?: number | undefined;
+
+  /**
+   * Which curve its first climate system follows: true, the seven points set below
+   * (own_curve_supply_*); false, a numbered curve (heating_curve) with its offset. Either way
+   * min_supply_centidegrees and the bend (curve_point_*) apply on top. Absent: not known,
+   * and neither curve's fields should be read as the one in force.
+   *
+   * @generated from field: optional bool own_curve_in_force = 31;
+   */
+  ownCurveInForce?: boolean | undefined;
+
+  /**
+   * The numbered curve its first climate system is set to, by the heat source's own
+   * numbering: higher is steeper, and the shapes are the maker's, read with its product. In
+   * force while own_curve_in_force is false. A connector maps the maker's own-curve choice
+   * onto own_curve_in_force, never onto a number here.
+   *
+   * @generated from field: optional uint32 heating_curve = 18;
+   */
+  heatingCurve?: number | undefined;
+
+  /**
+   * The parallel offset of its first climate system's curve, in the heat source's own steps:
+   * positive raises the supply at every outdoor temperature. In force with heating_curve.
+   *
+   * @generated from field: optional sint32 heating_curve_offset = 19;
+   */
+  heatingCurveOffset?: number | undefined;
+
+  /**
+   * The lowest supply temperature its first climate system is held at, whatever the curve
+   * says.
+   *
+   * @generated from field: optional sint32 min_supply_centidegrees = 20;
+   */
+  minSupplyCentidegrees?: number | undefined;
+
+  /**
+   * Its first climate system's own curve, as seven points: the supply set for an outdoor
+   * temperature of +30 °C. The six fields after it are the same at +20, +10, 0, −10, −20 and
+   * −30 °C. A heat source whose own curve has other points is mapped onto these by its
+   * connector, or sends none. In force while own_curve_in_force is true.
+   *
+   * @generated from field: optional sint32 own_curve_supply_plus_30_centidegrees = 21;
+   */
+  ownCurveSupplyPlus30Centidegrees?: number | undefined;
+
+  /**
+   * Its own curve's supply at +20 °C outdoors.
+   *
+   * @generated from field: optional sint32 own_curve_supply_plus_20_centidegrees = 22;
+   */
+  ownCurveSupplyPlus20Centidegrees?: number | undefined;
+
+  /**
+   * Its own curve's supply at +10 °C outdoors.
+   *
+   * @generated from field: optional sint32 own_curve_supply_plus_10_centidegrees = 23;
+   */
+  ownCurveSupplyPlus10Centidegrees?: number | undefined;
+
+  /**
+   * Its own curve's supply at 0 °C outdoors.
+   *
+   * @generated from field: optional sint32 own_curve_supply_0_centidegrees = 24;
+   */
+  ownCurveSupply0Centidegrees?: number | undefined;
+
+  /**
+   * Its own curve's supply at −10 °C outdoors.
+   *
+   * @generated from field: optional sint32 own_curve_supply_minus_10_centidegrees = 25;
+   */
+  ownCurveSupplyMinus10Centidegrees?: number | undefined;
+
+  /**
+   * Its own curve's supply at −20 °C outdoors.
+   *
+   * @generated from field: optional sint32 own_curve_supply_minus_20_centidegrees = 26;
+   */
+  ownCurveSupplyMinus20Centidegrees?: number | undefined;
+
+  /**
+   * Its own curve's supply at −30 °C outdoors.
+   *
+   * @generated from field: optional sint32 own_curve_supply_minus_30_centidegrees = 27;
+   */
+  ownCurveSupplyMinus30Centidegrees?: number | undefined;
+
+  /**
+   * Where its first climate system's curve is bent at one outdoor temperature: that outdoor
+   * temperature. Read with curve_point_offset_centidegrees.
+   *
+   * @generated from field: optional sint32 curve_point_outdoor_centidegrees = 28;
+   */
+  curvePointOutdoorCentidegrees?: number | undefined;
+
+  /**
+   * How far the supply of its first climate system is moved at
+   * curve_point_outdoor_centidegrees: 0 for no bend.
+   *
+   * @generated from field: optional sint32 curve_point_offset_centidegrees = 29;
+   */
+  curvePointOffsetCentidegrees?: number | undefined;
 };
 
 /**
@@ -665,6 +822,53 @@ export enum HeatSourceProduction {
  * Describes the enum kusinta.iot.device.v1.HeatSourceProduction.
  */
 export declare const HeatSourceProductionSchema: GenEnum<HeatSourceProduction>;
+
+/**
+ * The value set of HeatSourceReadings.operating_mode, as the named constants for its numbers.
+ *
+ * @generated from enum kusinta.iot.device.v1.HeatSourceOperatingMode
+ */
+export enum HeatSourceOperatingMode {
+  /**
+   * Never sent; an unreported mode is an absent field.
+   *
+   * @generated from enum value: HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * It decides itself, by the outdoor temperature, when to heat and when its add-on may run.
+   *
+   * @generated from enum value: HEAT_SOURCE_OPERATING_MODE_AUTOMATIC = 1;
+   */
+  AUTOMATIC = 1,
+
+  /**
+   * Heating and its add-on are allowed or not as set by hand.
+   *
+   * @generated from enum value: HEAT_SOURCE_OPERATING_MODE_MANUAL = 2;
+   */
+  MANUAL = 2,
+
+  /**
+   * Its add-on heat alone: the compressor makes none.
+   *
+   * @generated from enum value: HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY = 3;
+   */
+  ADD_ON_ONLY = 3,
+
+  /**
+   * A mode none of the above names.
+   *
+   * @generated from enum value: HEAT_SOURCE_OPERATING_MODE_OTHER = 4;
+   */
+  OTHER = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.device.v1.HeatSourceOperatingMode.
+ */
+export declare const HeatSourceOperatingModeSchema: GenEnum<HeatSourceOperatingMode>;
 
 /**
  * The value set of HeatSourceReadings.compressor_state, as the named constants for its

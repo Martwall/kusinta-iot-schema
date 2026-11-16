@@ -727,8 +727,9 @@ class Device extends $pb.GeneratedMessage {
 }
 
 /// A heat source's own readings: the temperatures its controller measures and works out, and
-/// its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
-/// connector reads them from the heat source or the maker's service. What
+/// its run state — what it is producing, its compressor, its degree minutes, its alarm — and
+/// its own settings (how it is set to run, its add-on's limits, its curve), as its connector
+/// reads them from the heat source or the maker's service. What
 /// heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
 ///
 /// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
@@ -771,6 +772,25 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     $core.bool? alarmActive,
     $core.int? alarmCode,
     $core.int? addOnHeatWatts,
+    $core.int? operatingMode,
+    $core.int? heatingStopOutdoorCentidegrees,
+    $core.int? addOnStopOutdoorCentidegrees,
+    $core.int? outdoorFilterHours,
+    $core.int? addOnMaxWatts,
+    $core.int? heatingCurve,
+    $core.int? heatingCurveOffset,
+    $core.int? minSupplyCentidegrees,
+    $core.int? ownCurveSupplyPlus30Centidegrees,
+    $core.int? ownCurveSupplyPlus20Centidegrees,
+    $core.int? ownCurveSupplyPlus10Centidegrees,
+    $core.int? ownCurveSupply0Centidegrees,
+    $core.int? ownCurveSupplyMinus10Centidegrees,
+    $core.int? ownCurveSupplyMinus20Centidegrees,
+    $core.int? ownCurveSupplyMinus30Centidegrees,
+    $core.int? curvePointOutdoorCentidegrees,
+    $core.int? curvePointOffsetCentidegrees,
+    $core.bool? externalAdjustmentActive,
+    $core.bool? ownCurveInForce,
   }) {
     final result = create();
     if (outdoorCentidegrees != null)
@@ -791,6 +811,46 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     if (alarmActive != null) result.alarmActive = alarmActive;
     if (alarmCode != null) result.alarmCode = alarmCode;
     if (addOnHeatWatts != null) result.addOnHeatWatts = addOnHeatWatts;
+    if (operatingMode != null) result.operatingMode = operatingMode;
+    if (heatingStopOutdoorCentidegrees != null)
+      result.heatingStopOutdoorCentidegrees = heatingStopOutdoorCentidegrees;
+    if (addOnStopOutdoorCentidegrees != null)
+      result.addOnStopOutdoorCentidegrees = addOnStopOutdoorCentidegrees;
+    if (outdoorFilterHours != null)
+      result.outdoorFilterHours = outdoorFilterHours;
+    if (addOnMaxWatts != null) result.addOnMaxWatts = addOnMaxWatts;
+    if (heatingCurve != null) result.heatingCurve = heatingCurve;
+    if (heatingCurveOffset != null)
+      result.heatingCurveOffset = heatingCurveOffset;
+    if (minSupplyCentidegrees != null)
+      result.minSupplyCentidegrees = minSupplyCentidegrees;
+    if (ownCurveSupplyPlus30Centidegrees != null)
+      result.ownCurveSupplyPlus30Centidegrees =
+          ownCurveSupplyPlus30Centidegrees;
+    if (ownCurveSupplyPlus20Centidegrees != null)
+      result.ownCurveSupplyPlus20Centidegrees =
+          ownCurveSupplyPlus20Centidegrees;
+    if (ownCurveSupplyPlus10Centidegrees != null)
+      result.ownCurveSupplyPlus10Centidegrees =
+          ownCurveSupplyPlus10Centidegrees;
+    if (ownCurveSupply0Centidegrees != null)
+      result.ownCurveSupply0Centidegrees = ownCurveSupply0Centidegrees;
+    if (ownCurveSupplyMinus10Centidegrees != null)
+      result.ownCurveSupplyMinus10Centidegrees =
+          ownCurveSupplyMinus10Centidegrees;
+    if (ownCurveSupplyMinus20Centidegrees != null)
+      result.ownCurveSupplyMinus20Centidegrees =
+          ownCurveSupplyMinus20Centidegrees;
+    if (ownCurveSupplyMinus30Centidegrees != null)
+      result.ownCurveSupplyMinus30Centidegrees =
+          ownCurveSupplyMinus30Centidegrees;
+    if (curvePointOutdoorCentidegrees != null)
+      result.curvePointOutdoorCentidegrees = curvePointOutdoorCentidegrees;
+    if (curvePointOffsetCentidegrees != null)
+      result.curvePointOffsetCentidegrees = curvePointOffsetCentidegrees;
+    if (externalAdjustmentActive != null)
+      result.externalAdjustmentActive = externalAdjustmentActive;
+    if (ownCurveInForce != null) result.ownCurveInForce = ownCurveInForce;
     return result;
   }
 
@@ -829,6 +889,61 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     ..a<$core.int>(11, _omitFieldNames ? '' : 'alarmCode', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         12, _omitFieldNames ? '' : 'addOnHeatWatts', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        13, _omitFieldNames ? '' : 'operatingMode', $pb.PbFieldType.OU3)
+    ..a<$core.int>(14, _omitFieldNames ? '' : 'heatingStopOutdoorCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(15, _omitFieldNames ? '' : 'addOnStopOutdoorCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        16, _omitFieldNames ? '' : 'outdoorFilterHours', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        17, _omitFieldNames ? '' : 'addOnMaxWatts', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        18, _omitFieldNames ? '' : 'heatingCurve', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        19, _omitFieldNames ? '' : 'heatingCurveOffset', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        20, _omitFieldNames ? '' : 'minSupplyCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        21,
+        _omitFieldNames ? '' : 'ownCurveSupplyPlus30Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_plus_30_centidegrees')
+    ..a<$core.int>(
+        22,
+        _omitFieldNames ? '' : 'ownCurveSupplyPlus20Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_plus_20_centidegrees')
+    ..a<$core.int>(
+        23,
+        _omitFieldNames ? '' : 'ownCurveSupplyPlus10Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_plus_10_centidegrees')
+    ..a<$core.int>(24, _omitFieldNames ? '' : 'ownCurveSupply0Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_0_centidegrees')
+    ..a<$core.int>(
+        25,
+        _omitFieldNames ? '' : 'ownCurveSupplyMinus10Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_minus_10_centidegrees')
+    ..a<$core.int>(
+        26,
+        _omitFieldNames ? '' : 'ownCurveSupplyMinus20Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_minus_20_centidegrees')
+    ..a<$core.int>(
+        27,
+        _omitFieldNames ? '' : 'ownCurveSupplyMinus30Centidegrees',
+        $pb.PbFieldType.OS3,
+        protoName: 'own_curve_supply_minus_30_centidegrees')
+    ..a<$core.int>(28, _omitFieldNames ? '' : 'curvePointOutdoorCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(29, _omitFieldNames ? '' : 'curvePointOffsetCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..aOB(30, _omitFieldNames ? '' : 'externalAdjustmentActive')
+    ..aOB(31, _omitFieldNames ? '' : 'ownCurveInForce')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -998,6 +1113,230 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   $core.bool hasAddOnHeatWatts() => $_has(11);
   @$pb.TagNumber(12)
   void clearAddOnHeatWatts() => $_clearField(12);
+
+  /// How the heat source is set to run (HeatSourceOperatingMode), as its number: automatic,
+  /// manual, or its add-on heat alone. In add-on only its compressor makes no heat, so a block
+  /// of the add-on stops all of it.
+  @$pb.TagNumber(13)
+  $core.int get operatingMode => $_getIZ(12);
+  @$pb.TagNumber(13)
+  set operatingMode($core.int value) => $_setUnsignedInt32(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasOperatingMode() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearOperatingMode() => $_clearField(13);
+
+  /// The outdoor temperature at and above which it stops heating its first climate system
+  /// while it runs automatically, judged against its averaged outdoor temperature
+  /// (outdoor_filter_hours).
+  @$pb.TagNumber(14)
+  $core.int get heatingStopOutdoorCentidegrees => $_getIZ(13);
+  @$pb.TagNumber(14)
+  set heatingStopOutdoorCentidegrees($core.int value) =>
+      $_setSignedInt32(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasHeatingStopOutdoorCentidegrees() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearHeatingStopOutdoorCentidegrees() => $_clearField(14);
+
+  /// The outdoor temperature at and above which its add-on heat may not run while it runs
+  /// automatically, judged against its averaged outdoor temperature. Above it, blocking the
+  /// add-on moves no energy.
+  @$pb.TagNumber(15)
+  $core.int get addOnStopOutdoorCentidegrees => $_getIZ(14);
+  @$pb.TagNumber(15)
+  set addOnStopOutdoorCentidegrees($core.int value) =>
+      $_setSignedInt32(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasAddOnStopOutdoorCentidegrees() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearAddOnStopOutdoorCentidegrees() => $_clearField(15);
+
+  /// Over how many hours it averages the outdoor temperature that the two stops above are
+  /// judged against.
+  @$pb.TagNumber(16)
+  $core.int get outdoorFilterHours => $_getIZ(15);
+  @$pb.TagNumber(16)
+  set outdoorFilterHours($core.int value) => $_setUnsignedInt32(15, value);
+  @$pb.TagNumber(16)
+  $core.bool hasOutdoorFilterHours() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearOutdoorFilterHours() => $_clearField(16);
+
+  /// The most its internal electric add-on heat (add_on_heat_watts) may draw, in watts, as set:
+  /// its cap, not the size of its steps.
+  @$pb.TagNumber(17)
+  $core.int get addOnMaxWatts => $_getIZ(16);
+  @$pb.TagNumber(17)
+  set addOnMaxWatts($core.int value) => $_setUnsignedInt32(16, value);
+  @$pb.TagNumber(17)
+  $core.bool hasAddOnMaxWatts() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearAddOnMaxWatts() => $_clearField(17);
+
+  /// The numbered curve its first climate system is set to, by the heat source's own
+  /// numbering: higher is steeper, and the shapes are the maker's, read with its product. In
+  /// force while own_curve_in_force is false. A connector maps the maker's own-curve choice
+  /// onto own_curve_in_force, never onto a number here.
+  @$pb.TagNumber(18)
+  $core.int get heatingCurve => $_getIZ(17);
+  @$pb.TagNumber(18)
+  set heatingCurve($core.int value) => $_setUnsignedInt32(17, value);
+  @$pb.TagNumber(18)
+  $core.bool hasHeatingCurve() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearHeatingCurve() => $_clearField(18);
+
+  /// The parallel offset of its first climate system's curve, in the heat source's own steps:
+  /// positive raises the supply at every outdoor temperature. In force with heating_curve.
+  @$pb.TagNumber(19)
+  $core.int get heatingCurveOffset => $_getIZ(18);
+  @$pb.TagNumber(19)
+  set heatingCurveOffset($core.int value) => $_setSignedInt32(18, value);
+  @$pb.TagNumber(19)
+  $core.bool hasHeatingCurveOffset() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearHeatingCurveOffset() => $_clearField(19);
+
+  /// The lowest supply temperature its first climate system is held at, whatever the curve
+  /// says.
+  @$pb.TagNumber(20)
+  $core.int get minSupplyCentidegrees => $_getIZ(19);
+  @$pb.TagNumber(20)
+  set minSupplyCentidegrees($core.int value) => $_setSignedInt32(19, value);
+  @$pb.TagNumber(20)
+  $core.bool hasMinSupplyCentidegrees() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearMinSupplyCentidegrees() => $_clearField(20);
+
+  /// Its first climate system's own curve, as seven points: the supply set for an outdoor
+  /// temperature of +30 °C. The six fields after it are the same at +20, +10, 0, −10, −20 and
+  /// −30 °C. A heat source whose own curve has other points is mapped onto these by its
+  /// connector, or sends none. In force while own_curve_in_force is true.
+  @$pb.TagNumber(21)
+  $core.int get ownCurveSupplyPlus30Centidegrees => $_getIZ(20);
+  @$pb.TagNumber(21)
+  set ownCurveSupplyPlus30Centidegrees($core.int value) =>
+      $_setSignedInt32(20, value);
+  @$pb.TagNumber(21)
+  $core.bool hasOwnCurveSupplyPlus30Centidegrees() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearOwnCurveSupplyPlus30Centidegrees() => $_clearField(21);
+
+  /// Its own curve's supply at +20 °C outdoors.
+  @$pb.TagNumber(22)
+  $core.int get ownCurveSupplyPlus20Centidegrees => $_getIZ(21);
+  @$pb.TagNumber(22)
+  set ownCurveSupplyPlus20Centidegrees($core.int value) =>
+      $_setSignedInt32(21, value);
+  @$pb.TagNumber(22)
+  $core.bool hasOwnCurveSupplyPlus20Centidegrees() => $_has(21);
+  @$pb.TagNumber(22)
+  void clearOwnCurveSupplyPlus20Centidegrees() => $_clearField(22);
+
+  /// Its own curve's supply at +10 °C outdoors.
+  @$pb.TagNumber(23)
+  $core.int get ownCurveSupplyPlus10Centidegrees => $_getIZ(22);
+  @$pb.TagNumber(23)
+  set ownCurveSupplyPlus10Centidegrees($core.int value) =>
+      $_setSignedInt32(22, value);
+  @$pb.TagNumber(23)
+  $core.bool hasOwnCurveSupplyPlus10Centidegrees() => $_has(22);
+  @$pb.TagNumber(23)
+  void clearOwnCurveSupplyPlus10Centidegrees() => $_clearField(23);
+
+  /// Its own curve's supply at 0 °C outdoors.
+  @$pb.TagNumber(24)
+  $core.int get ownCurveSupply0Centidegrees => $_getIZ(23);
+  @$pb.TagNumber(24)
+  set ownCurveSupply0Centidegrees($core.int value) =>
+      $_setSignedInt32(23, value);
+  @$pb.TagNumber(24)
+  $core.bool hasOwnCurveSupply0Centidegrees() => $_has(23);
+  @$pb.TagNumber(24)
+  void clearOwnCurveSupply0Centidegrees() => $_clearField(24);
+
+  /// Its own curve's supply at −10 °C outdoors.
+  @$pb.TagNumber(25)
+  $core.int get ownCurveSupplyMinus10Centidegrees => $_getIZ(24);
+  @$pb.TagNumber(25)
+  set ownCurveSupplyMinus10Centidegrees($core.int value) =>
+      $_setSignedInt32(24, value);
+  @$pb.TagNumber(25)
+  $core.bool hasOwnCurveSupplyMinus10Centidegrees() => $_has(24);
+  @$pb.TagNumber(25)
+  void clearOwnCurveSupplyMinus10Centidegrees() => $_clearField(25);
+
+  /// Its own curve's supply at −20 °C outdoors.
+  @$pb.TagNumber(26)
+  $core.int get ownCurveSupplyMinus20Centidegrees => $_getIZ(25);
+  @$pb.TagNumber(26)
+  set ownCurveSupplyMinus20Centidegrees($core.int value) =>
+      $_setSignedInt32(25, value);
+  @$pb.TagNumber(26)
+  $core.bool hasOwnCurveSupplyMinus20Centidegrees() => $_has(25);
+  @$pb.TagNumber(26)
+  void clearOwnCurveSupplyMinus20Centidegrees() => $_clearField(26);
+
+  /// Its own curve's supply at −30 °C outdoors.
+  @$pb.TagNumber(27)
+  $core.int get ownCurveSupplyMinus30Centidegrees => $_getIZ(26);
+  @$pb.TagNumber(27)
+  set ownCurveSupplyMinus30Centidegrees($core.int value) =>
+      $_setSignedInt32(26, value);
+  @$pb.TagNumber(27)
+  $core.bool hasOwnCurveSupplyMinus30Centidegrees() => $_has(26);
+  @$pb.TagNumber(27)
+  void clearOwnCurveSupplyMinus30Centidegrees() => $_clearField(27);
+
+  /// Where its first climate system's curve is bent at one outdoor temperature: that outdoor
+  /// temperature. Read with curve_point_offset_centidegrees.
+  @$pb.TagNumber(28)
+  $core.int get curvePointOutdoorCentidegrees => $_getIZ(27);
+  @$pb.TagNumber(28)
+  set curvePointOutdoorCentidegrees($core.int value) =>
+      $_setSignedInt32(27, value);
+  @$pb.TagNumber(28)
+  $core.bool hasCurvePointOutdoorCentidegrees() => $_has(27);
+  @$pb.TagNumber(28)
+  void clearCurvePointOutdoorCentidegrees() => $_clearField(28);
+
+  /// How far the supply of its first climate system is moved at
+  /// curve_point_outdoor_centidegrees: 0 for no bend.
+  @$pb.TagNumber(29)
+  $core.int get curvePointOffsetCentidegrees => $_getIZ(28);
+  @$pb.TagNumber(29)
+  set curvePointOffsetCentidegrees($core.int value) =>
+      $_setSignedInt32(28, value);
+  @$pb.TagNumber(29)
+  $core.bool hasCurvePointOffsetCentidegrees() => $_has(28);
+  @$pb.TagNumber(29)
+  void clearCurvePointOffsetCentidegrees() => $_clearField(29);
+
+  /// Whether an external input moves its first climate system's curve now: while true, its
+  /// calculated supply is off its curve (the settings below) by the adjustment set for that input. A state,
+  /// sent when it changes, like the run state above.
+  @$pb.TagNumber(30)
+  $core.bool get externalAdjustmentActive => $_getBF(29);
+  @$pb.TagNumber(30)
+  set externalAdjustmentActive($core.bool value) => $_setBool(29, value);
+  @$pb.TagNumber(30)
+  $core.bool hasExternalAdjustmentActive() => $_has(29);
+  @$pb.TagNumber(30)
+  void clearExternalAdjustmentActive() => $_clearField(30);
+
+  /// Which curve its first climate system follows: true, the seven points set below
+  /// (own_curve_supply_*); false, a numbered curve (heating_curve) with its offset. Either way
+  /// min_supply_centidegrees and the bend (curve_point_*) apply on top. Absent: not known,
+  /// and neither curve's fields should be read as the one in force.
+  @$pb.TagNumber(31)
+  $core.bool get ownCurveInForce => $_getBF(30);
+  @$pb.TagNumber(31)
+  set ownCurveInForce($core.bool value) => $_setBool(30, value);
+  @$pb.TagNumber(31)
+  $core.bool hasOwnCurveInForce() => $_has(30);
+  @$pb.TagNumber(31)
+  void clearOwnCurveInForce() => $_clearField(31);
 }
 
 /// What a device needs before it works as it should, as its connector judges it from the

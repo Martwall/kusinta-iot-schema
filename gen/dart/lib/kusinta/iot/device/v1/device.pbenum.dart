@@ -72,6 +72,50 @@ class HeatSourceProduction extends $pb.ProtobufEnum {
   const HeatSourceProduction._(super.value, super.name);
 }
 
+/// The value set of HeatSourceReadings.operating_mode, as the named constants for its numbers.
+class HeatSourceOperatingMode extends $pb.ProtobufEnum {
+  /// Never sent; an unreported mode is an absent field.
+  static const HeatSourceOperatingMode HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED =
+      HeatSourceOperatingMode._(
+          0, _omitEnumNames ? '' : 'HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED');
+
+  /// It decides itself, by the outdoor temperature, when to heat and when its add-on may run.
+  static const HeatSourceOperatingMode HEAT_SOURCE_OPERATING_MODE_AUTOMATIC =
+      HeatSourceOperatingMode._(
+          1, _omitEnumNames ? '' : 'HEAT_SOURCE_OPERATING_MODE_AUTOMATIC');
+
+  /// Heating and its add-on are allowed or not as set by hand.
+  static const HeatSourceOperatingMode HEAT_SOURCE_OPERATING_MODE_MANUAL =
+      HeatSourceOperatingMode._(
+          2, _omitEnumNames ? '' : 'HEAT_SOURCE_OPERATING_MODE_MANUAL');
+
+  /// Its add-on heat alone: the compressor makes none.
+  static const HeatSourceOperatingMode HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY =
+      HeatSourceOperatingMode._(
+          3, _omitEnumNames ? '' : 'HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY');
+
+  /// A mode none of the above names.
+  static const HeatSourceOperatingMode HEAT_SOURCE_OPERATING_MODE_OTHER =
+      HeatSourceOperatingMode._(
+          4, _omitEnumNames ? '' : 'HEAT_SOURCE_OPERATING_MODE_OTHER');
+
+  static const $core.List<HeatSourceOperatingMode> values =
+      <HeatSourceOperatingMode>[
+    HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED,
+    HEAT_SOURCE_OPERATING_MODE_AUTOMATIC,
+    HEAT_SOURCE_OPERATING_MODE_MANUAL,
+    HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY,
+    HEAT_SOURCE_OPERATING_MODE_OTHER,
+  ];
+
+  static final $core.List<HeatSourceOperatingMode?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static HeatSourceOperatingMode? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatSourceOperatingMode._(super.value, super.name);
+}
+
 /// The value set of HeatSourceReadings.compressor_state, as the named constants for its
 /// numbers. Starting and stopping are kept apart from running and stopped: while a compressor
 /// starts, the heat it makes has not yet reached the supply, and readings then are not yet what

@@ -25,6 +25,14 @@ class HeatSourceProduction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     HEAT_SOURCE_PRODUCTION_COOLING: _ClassVar[HeatSourceProduction]
     HEAT_SOURCE_PRODUCTION_OTHER: _ClassVar[HeatSourceProduction]
 
+class HeatSourceOperatingMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED: _ClassVar[HeatSourceOperatingMode]
+    HEAT_SOURCE_OPERATING_MODE_AUTOMATIC: _ClassVar[HeatSourceOperatingMode]
+    HEAT_SOURCE_OPERATING_MODE_MANUAL: _ClassVar[HeatSourceOperatingMode]
+    HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY: _ClassVar[HeatSourceOperatingMode]
+    HEAT_SOURCE_OPERATING_MODE_OTHER: _ClassVar[HeatSourceOperatingMode]
+
 class CompressorState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     COMPRESSOR_STATE_UNSPECIFIED: _ClassVar[CompressorState]
@@ -52,6 +60,11 @@ HEAT_SOURCE_PRODUCTION_HOT_WATER: HeatSourceProduction
 HEAT_SOURCE_PRODUCTION_POOL: HeatSourceProduction
 HEAT_SOURCE_PRODUCTION_COOLING: HeatSourceProduction
 HEAT_SOURCE_PRODUCTION_OTHER: HeatSourceProduction
+HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED: HeatSourceOperatingMode
+HEAT_SOURCE_OPERATING_MODE_AUTOMATIC: HeatSourceOperatingMode
+HEAT_SOURCE_OPERATING_MODE_MANUAL: HeatSourceOperatingMode
+HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY: HeatSourceOperatingMode
+HEAT_SOURCE_OPERATING_MODE_OTHER: HeatSourceOperatingMode
 COMPRESSOR_STATE_UNSPECIFIED: CompressorState
 COMPRESSOR_STATE_STOPPED: CompressorState
 COMPRESSOR_STATE_STARTING: CompressorState
@@ -139,7 +152,7 @@ class Device(_message.Message):
     def __init__(self, descriptor: _Optional[_Union[_descriptor_pb2.DeviceDescriptor, _Mapping]] = ..., endpoints: _Optional[_Iterable[_Union[Endpoint, _Mapping]]] = ..., min_write_interval_seconds: _Optional[int] = ..., max_write_delay_seconds: _Optional[int] = ..., last_seen: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., last_updated: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class HeatSourceReadings(_message.Message):
-    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees", "producing", "compressor_state", "degree_minutes", "alarm_active", "alarm_code", "add_on_heat_watts")
+    __slots__ = ("outdoor_centidegrees", "supply_centidegrees", "return_centidegrees", "hot_water_top_centidegrees", "hot_water_charging_centidegrees", "calculated_supply_centidegrees", "producing", "compressor_state", "degree_minutes", "alarm_active", "alarm_code", "add_on_heat_watts", "external_adjustment_active", "operating_mode", "heating_stop_outdoor_centidegrees", "add_on_stop_outdoor_centidegrees", "outdoor_filter_hours", "add_on_max_watts", "own_curve_in_force", "heating_curve", "heating_curve_offset", "min_supply_centidegrees", "own_curve_supply_plus_30_centidegrees", "own_curve_supply_plus_20_centidegrees", "own_curve_supply_plus_10_centidegrees", "own_curve_supply_0_centidegrees", "own_curve_supply_minus_10_centidegrees", "own_curve_supply_minus_20_centidegrees", "own_curve_supply_minus_30_centidegrees", "curve_point_outdoor_centidegrees", "curve_point_offset_centidegrees")
     OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     RETURN_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
@@ -152,6 +165,25 @@ class HeatSourceReadings(_message.Message):
     ALARM_ACTIVE_FIELD_NUMBER: _ClassVar[int]
     ALARM_CODE_FIELD_NUMBER: _ClassVar[int]
     ADD_ON_HEAT_WATTS_FIELD_NUMBER: _ClassVar[int]
+    EXTERNAL_ADJUSTMENT_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    OPERATING_MODE_FIELD_NUMBER: _ClassVar[int]
+    HEATING_STOP_OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    ADD_ON_STOP_OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OUTDOOR_FILTER_HOURS_FIELD_NUMBER: _ClassVar[int]
+    ADD_ON_MAX_WATTS_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_IN_FORCE_FIELD_NUMBER: _ClassVar[int]
+    HEATING_CURVE_FIELD_NUMBER: _ClassVar[int]
+    HEATING_CURVE_OFFSET_FIELD_NUMBER: _ClassVar[int]
+    MIN_SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_PLUS_30_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_PLUS_20_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_PLUS_10_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_0_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_MINUS_10_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_MINUS_20_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OWN_CURVE_SUPPLY_MINUS_30_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    CURVE_POINT_OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    CURVE_POINT_OFFSET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     outdoor_centidegrees: int
     supply_centidegrees: int
     return_centidegrees: int
@@ -164,7 +196,26 @@ class HeatSourceReadings(_message.Message):
     alarm_active: bool
     alarm_code: int
     add_on_heat_watts: int
-    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., producing: _Optional[int] = ..., compressor_state: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., alarm_active: _Optional[bool] = ..., alarm_code: _Optional[int] = ..., add_on_heat_watts: _Optional[int] = ...) -> None: ...
+    external_adjustment_active: bool
+    operating_mode: int
+    heating_stop_outdoor_centidegrees: int
+    add_on_stop_outdoor_centidegrees: int
+    outdoor_filter_hours: int
+    add_on_max_watts: int
+    own_curve_in_force: bool
+    heating_curve: int
+    heating_curve_offset: int
+    min_supply_centidegrees: int
+    own_curve_supply_plus_30_centidegrees: int
+    own_curve_supply_plus_20_centidegrees: int
+    own_curve_supply_plus_10_centidegrees: int
+    own_curve_supply_0_centidegrees: int
+    own_curve_supply_minus_10_centidegrees: int
+    own_curve_supply_minus_20_centidegrees: int
+    own_curve_supply_minus_30_centidegrees: int
+    curve_point_outdoor_centidegrees: int
+    curve_point_offset_centidegrees: int
+    def __init__(self, outdoor_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., return_centidegrees: _Optional[int] = ..., hot_water_top_centidegrees: _Optional[int] = ..., hot_water_charging_centidegrees: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., producing: _Optional[int] = ..., compressor_state: _Optional[int] = ..., degree_minutes: _Optional[int] = ..., alarm_active: _Optional[bool] = ..., alarm_code: _Optional[int] = ..., add_on_heat_watts: _Optional[int] = ..., external_adjustment_active: _Optional[bool] = ..., operating_mode: _Optional[int] = ..., heating_stop_outdoor_centidegrees: _Optional[int] = ..., add_on_stop_outdoor_centidegrees: _Optional[int] = ..., outdoor_filter_hours: _Optional[int] = ..., add_on_max_watts: _Optional[int] = ..., own_curve_in_force: _Optional[bool] = ..., heating_curve: _Optional[int] = ..., heating_curve_offset: _Optional[int] = ..., min_supply_centidegrees: _Optional[int] = ..., own_curve_supply_plus_30_centidegrees: _Optional[int] = ..., own_curve_supply_plus_20_centidegrees: _Optional[int] = ..., own_curve_supply_plus_10_centidegrees: _Optional[int] = ..., own_curve_supply_0_centidegrees: _Optional[int] = ..., own_curve_supply_minus_10_centidegrees: _Optional[int] = ..., own_curve_supply_minus_20_centidegrees: _Optional[int] = ..., own_curve_supply_minus_30_centidegrees: _Optional[int] = ..., curve_point_outdoor_centidegrees: _Optional[int] = ..., curve_point_offset_centidegrees: _Optional[int] = ...) -> None: ...
 
 class DeviceAttention(_message.Message):
     __slots__ = ("attention_reason",)

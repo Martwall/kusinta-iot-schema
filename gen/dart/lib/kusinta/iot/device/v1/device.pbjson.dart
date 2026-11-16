@@ -37,6 +37,26 @@ final $typed_data.Uint8List heatSourceProductionDescriptor = $convert.base64Deco
     'X1BST0RVQ1RJT05fQ09PTElORxAFEiAKHEhFQVRfU09VUkNFX1BST0RVQ1RJT05fT1RIRVIQBg'
     '==');
 
+@$core.Deprecated('Use heatSourceOperatingModeDescriptor instead')
+const HeatSourceOperatingMode$json = {
+  '1': 'HeatSourceOperatingMode',
+  '2': [
+    {'1': 'HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_SOURCE_OPERATING_MODE_AUTOMATIC', '2': 1},
+    {'1': 'HEAT_SOURCE_OPERATING_MODE_MANUAL', '2': 2},
+    {'1': 'HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY', '2': 3},
+    {'1': 'HEAT_SOURCE_OPERATING_MODE_OTHER', '2': 4},
+  ],
+};
+
+/// Descriptor for `HeatSourceOperatingMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatSourceOperatingModeDescriptor = $convert.base64Decode(
+    'ChdIZWF0U291cmNlT3BlcmF0aW5nTW9kZRIqCiZIRUFUX1NPVVJDRV9PUEVSQVRJTkdfTU9ERV'
+    '9VTlNQRUNJRklFRBAAEigKJEhFQVRfU09VUkNFX09QRVJBVElOR19NT0RFX0FVVE9NQVRJQxAB'
+    'EiUKIUhFQVRfU09VUkNFX09QRVJBVElOR19NT0RFX01BTlVBTBACEioKJkhFQVRfU09VUkNFX0'
+    '9QRVJBVElOR19NT0RFX0FERF9PTl9PTkxZEAMSJAogSEVBVF9TT1VSQ0VfT1BFUkFUSU5HX01P'
+    'REVfT1RIRVIQBA==');
+
 @$core.Deprecated('Use compressorStateDescriptor instead')
 const CompressorState$json = {
   '1': 'CompressorState',
@@ -567,6 +587,196 @@ const HeatSourceReadings$json = {
       '10': 'addOnHeatWatts',
       '17': true
     },
+    {
+      '1': 'external_adjustment_active',
+      '3': 30,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 12,
+      '10': 'externalAdjustmentActive',
+      '17': true
+    },
+    {
+      '1': 'operating_mode',
+      '3': 13,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 13,
+      '10': 'operatingMode',
+      '17': true
+    },
+    {
+      '1': 'heating_stop_outdoor_centidegrees',
+      '3': 14,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 14,
+      '10': 'heatingStopOutdoorCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'add_on_stop_outdoor_centidegrees',
+      '3': 15,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 15,
+      '10': 'addOnStopOutdoorCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'outdoor_filter_hours',
+      '3': 16,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 16,
+      '10': 'outdoorFilterHours',
+      '17': true
+    },
+    {
+      '1': 'add_on_max_watts',
+      '3': 17,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 17,
+      '10': 'addOnMaxWatts',
+      '17': true
+    },
+    {
+      '1': 'own_curve_in_force',
+      '3': 31,
+      '4': 1,
+      '5': 8,
+      '8': {},
+      '9': 18,
+      '10': 'ownCurveInForce',
+      '17': true
+    },
+    {
+      '1': 'heating_curve',
+      '3': 18,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 19,
+      '10': 'heatingCurve',
+      '17': true
+    },
+    {
+      '1': 'heating_curve_offset',
+      '3': 19,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 20,
+      '10': 'heatingCurveOffset',
+      '17': true
+    },
+    {
+      '1': 'min_supply_centidegrees',
+      '3': 20,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 21,
+      '10': 'minSupplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_plus_30_centidegrees',
+      '3': 21,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 22,
+      '10': 'ownCurveSupplyPlus30Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_plus_20_centidegrees',
+      '3': 22,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 23,
+      '10': 'ownCurveSupplyPlus20Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_plus_10_centidegrees',
+      '3': 23,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 24,
+      '10': 'ownCurveSupplyPlus10Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_0_centidegrees',
+      '3': 24,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 25,
+      '10': 'ownCurveSupply0Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_minus_10_centidegrees',
+      '3': 25,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 26,
+      '10': 'ownCurveSupplyMinus10Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_minus_20_centidegrees',
+      '3': 26,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 27,
+      '10': 'ownCurveSupplyMinus20Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'own_curve_supply_minus_30_centidegrees',
+      '3': 27,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 28,
+      '10': 'ownCurveSupplyMinus30Centidegrees',
+      '17': true
+    },
+    {
+      '1': 'curve_point_outdoor_centidegrees',
+      '3': 28,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 29,
+      '10': 'curvePointOutdoorCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'curve_point_offset_centidegrees',
+      '3': 29,
+      '4': 1,
+      '5': 17,
+      '8': {},
+      '9': 30,
+      '10': 'curvePointOffsetCentidegrees',
+      '17': true
+    },
   ],
   '7': {},
   '8': [
@@ -582,6 +792,25 @@ const HeatSourceReadings$json = {
     {'1': '_alarm_active'},
     {'1': '_alarm_code'},
     {'1': '_add_on_heat_watts'},
+    {'1': '_external_adjustment_active'},
+    {'1': '_operating_mode'},
+    {'1': '_heating_stop_outdoor_centidegrees'},
+    {'1': '_add_on_stop_outdoor_centidegrees'},
+    {'1': '_outdoor_filter_hours'},
+    {'1': '_add_on_max_watts'},
+    {'1': '_own_curve_in_force'},
+    {'1': '_heating_curve'},
+    {'1': '_heating_curve_offset'},
+    {'1': '_min_supply_centidegrees'},
+    {'1': '_own_curve_supply_plus_30_centidegrees'},
+    {'1': '_own_curve_supply_plus_20_centidegrees'},
+    {'1': '_own_curve_supply_plus_10_centidegrees'},
+    {'1': '_own_curve_supply_0_centidegrees'},
+    {'1': '_own_curve_supply_minus_10_centidegrees'},
+    {'1': '_own_curve_supply_minus_20_centidegrees'},
+    {'1': '_own_curve_supply_minus_30_centidegrees'},
+    {'1': '_curve_point_outdoor_centidegrees'},
+    {'1': '_curve_point_offset_centidegrees'},
   ],
 };
 
@@ -604,13 +833,61 @@ final $typed_data.Uint8List heatSourceReadingsDescriptor = $convert.base64Decode
     'c9C1GAVICFINZGVncmVlTWludXRlc4gBARI8CgxhbGFybV9hY3RpdmUYCiABKAhCFKK1GAxhbG'
     'FybV9hY3RpdmXQtRgFSAlSC2FsYXJtQWN0aXZliAEBEjYKCmFsYXJtX2NvZGUYCyABKA1CEqK1'
     'GAphbGFybV9jb2Rl0LUYBUgKUglhbGFybUNvZGWIAQESSQoRYWRkX29uX2hlYXRfd2F0dHMYDC'
-    'ABKA1CGaK1GBFhZGRfb25faGVhdF93YXR0c9C1GAVIC1IOYWRkT25IZWF0V2F0dHOIAQE6F6q1'
-    'GBNrdXNpbnRhLmhlYXRfc291cmNlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcG'
-    'x5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdGVyX3Rv'
-    'cF9jZW50aWRlZ3JlZXNCIgogX2hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNCIQofX2'
-    'NhbGN1bGF0ZWRfc3VwcGx5X2NlbnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb21wcmVz'
-    'c29yX3N0YXRlQhEKD19kZWdyZWVfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19hbGFybV'
-    '9jb2RlQhQKEl9hZGRfb25faGVhdF93YXR0cw==');
+    'ABKA1CGaK1GBFhZGRfb25faGVhdF93YXR0c9C1GAVIC1IOYWRkT25IZWF0V2F0dHOIAQESZQoa'
+    'ZXh0ZXJuYWxfYWRqdXN0bWVudF9hY3RpdmUYHiABKAhCIqK1GBpleHRlcm5hbF9hZGp1c3RtZW'
+    '50X2FjdGl2ZdC1GAVIDFIYZXh0ZXJuYWxBZGp1c3RtZW50QWN0aXZliAEBEkIKDm9wZXJhdGlu'
+    'Z19tb2RlGA0gASgNQhaitRgOb3BlcmF0aW5nX21vZGXQtRgFSA1SDW9wZXJhdGluZ01vZGWIAQ'
+    'ESeQohaGVhdGluZ19zdG9wX291dGRvb3JfY2VudGlkZWdyZWVzGA4gASgRQimitRghaGVhdGlu'
+    'Z19zdG9wX291dGRvb3JfY2VudGlkZWdyZWVz0LUYBUgOUh5oZWF0aW5nU3RvcE91dGRvb3JDZW'
+    '50aWRlZ3JlZXOIAQESdQogYWRkX29uX3N0b3Bfb3V0ZG9vcl9jZW50aWRlZ3JlZXMYDyABKBFC'
+    'KKK1GCBhZGRfb25fc3RvcF9vdXRkb29yX2NlbnRpZGVncmVlc9C1GAVID1IcYWRkT25TdG9wT3'
+    'V0ZG9vckNlbnRpZGVncmVlc4gBARJTChRvdXRkb29yX2ZpbHRlcl9ob3VycxgQIAEoDUIcorUY'
+    'FG91dGRvb3JfZmlsdGVyX2hvdXJz0LUYBUgQUhJvdXRkb29yRmlsdGVySG91cnOIAQESRgoQYW'
+    'RkX29uX21heF93YXR0cxgRIAEoDUIYorUYEGFkZF9vbl9tYXhfd2F0dHPQtRgFSBFSDWFkZE9u'
+    'TWF4V2F0dHOIAQESTAoSb3duX2N1cnZlX2luX2ZvcmNlGB8gASgIQhqitRgSb3duX2N1cnZlX2'
+    'luX2ZvcmNl0LUYBUgSUg9vd25DdXJ2ZUluRm9yY2WIAQESPwoNaGVhdGluZ19jdXJ2ZRgSIAEo'
+    'DUIVorUYDWhlYXRpbmdfY3VydmXQtRgFSBNSDGhlYXRpbmdDdXJ2ZYgBARJTChRoZWF0aW5nX2'
+    'N1cnZlX29mZnNldBgTIAEoEUIcorUYFGhlYXRpbmdfY3VydmVfb2Zmc2V00LUYBUgUUhJoZWF0'
+    'aW5nQ3VydmVPZmZzZXSIAQESXAoXbWluX3N1cHBseV9jZW50aWRlZ3JlZXMYFCABKBFCH6K1GB'
+    'dtaW5fc3VwcGx5X2NlbnRpZGVncmVlc9C1GAVIFVIVbWluU3VwcGx5Q2VudGlkZWdyZWVziAEB'
+    'EoMBCiVvd25fY3VydmVfc3VwcGx5X3BsdXNfMzBfY2VudGlkZWdyZWVzGBUgASgRQi2itRglb3'
+    'duX2N1cnZlX3N1cHBseV9wbHVzXzMwX2NlbnRpZGVncmVlc9C1GAVIFlIgb3duQ3VydmVTdXBw'
+    'bHlQbHVzMzBDZW50aWRlZ3JlZXOIAQESgwEKJW93bl9jdXJ2ZV9zdXBwbHlfcGx1c18yMF9jZW'
+    '50aWRlZ3JlZXMYFiABKBFCLaK1GCVvd25fY3VydmVfc3VwcGx5X3BsdXNfMjBfY2VudGlkZWdy'
+    'ZWVz0LUYBUgXUiBvd25DdXJ2ZVN1cHBseVBsdXMyMENlbnRpZGVncmVlc4gBARKDAQolb3duX2'
+    'N1cnZlX3N1cHBseV9wbHVzXzEwX2NlbnRpZGVncmVlcxgXIAEoEUItorUYJW93bl9jdXJ2ZV9z'
+    'dXBwbHlfcGx1c18xMF9jZW50aWRlZ3JlZXPQtRgFSBhSIG93bkN1cnZlU3VwcGx5UGx1czEwQ2'
+    'VudGlkZWdyZWVziAEBEnIKH293bl9jdXJ2ZV9zdXBwbHlfMF9jZW50aWRlZ3JlZXMYGCABKBFC'
+    'J6K1GB9vd25fY3VydmVfc3VwcGx5XzBfY2VudGlkZWdyZWVz0LUYBUgZUhtvd25DdXJ2ZVN1cH'
+    'BseTBDZW50aWRlZ3JlZXOIAQEShgEKJm93bl9jdXJ2ZV9zdXBwbHlfbWludXNfMTBfY2VudGlk'
+    'ZWdyZWVzGBkgASgRQi6itRgmb3duX2N1cnZlX3N1cHBseV9taW51c18xMF9jZW50aWRlZ3JlZX'
+    'PQtRgFSBpSIW93bkN1cnZlU3VwcGx5TWludXMxMENlbnRpZGVncmVlc4gBARKGAQomb3duX2N1'
+    'cnZlX3N1cHBseV9taW51c18yMF9jZW50aWRlZ3JlZXMYGiABKBFCLqK1GCZvd25fY3VydmVfc3'
+    'VwcGx5X21pbnVzXzIwX2NlbnRpZGVncmVlc9C1GAVIG1Ihb3duQ3VydmVTdXBwbHlNaW51czIw'
+    'Q2VudGlkZWdyZWVziAEBEoYBCiZvd25fY3VydmVfc3VwcGx5X21pbnVzXzMwX2NlbnRpZGVncm'
+    'VlcxgbIAEoEUIuorUYJm93bl9jdXJ2ZV9zdXBwbHlfbWludXNfMzBfY2VudGlkZWdyZWVz0LUY'
+    'BUgcUiFvd25DdXJ2ZVN1cHBseU1pbnVzMzBDZW50aWRlZ3JlZXOIAQESdgogY3VydmVfcG9pbn'
+    'Rfb3V0ZG9vcl9jZW50aWRlZ3JlZXMYHCABKBFCKKK1GCBjdXJ2ZV9wb2ludF9vdXRkb29yX2Nl'
+    'bnRpZGVncmVlc9C1GAVIHVIdY3VydmVQb2ludE91dGRvb3JDZW50aWRlZ3JlZXOIAQEScwofY3'
+    'VydmVfcG9pbnRfb2Zmc2V0X2NlbnRpZGVncmVlcxgdIAEoEUInorUYH2N1cnZlX3BvaW50X29m'
+    'ZnNldF9jZW50aWRlZ3JlZXPQtRgFSB5SHGN1cnZlUG9pbnRPZmZzZXRDZW50aWRlZ3JlZXOIAQ'
+    'E6F6q1GBNrdXNpbnRhLmhlYXRfc291cmNlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRf'
+    'c3VwcGx5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdG'
+    'VyX3RvcF9jZW50aWRlZ3JlZXNCIgogX2hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNC'
+    'IQofX2NhbGN1bGF0ZWRfc3VwcGx5X2NlbnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb2'
+    '1wcmVzc29yX3N0YXRlQhEKD19kZWdyZWVfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19h'
+    'bGFybV9jb2RlQhQKEl9hZGRfb25faGVhdF93YXR0c0IdChtfZXh0ZXJuYWxfYWRqdXN0bWVudF'
+    '9hY3RpdmVCEQoPX29wZXJhdGluZ19tb2RlQiQKIl9oZWF0aW5nX3N0b3Bfb3V0ZG9vcl9jZW50'
+    'aWRlZ3JlZXNCIwohX2FkZF9vbl9zdG9wX291dGRvb3JfY2VudGlkZWdyZWVzQhcKFV9vdXRkb2'
+    '9yX2ZpbHRlcl9ob3Vyc0ITChFfYWRkX29uX21heF93YXR0c0IVChNfb3duX2N1cnZlX2luX2Zv'
+    'cmNlQhAKDl9oZWF0aW5nX2N1cnZlQhcKFV9oZWF0aW5nX2N1cnZlX29mZnNldEIaChhfbWluX3'
+    'N1cHBseV9jZW50aWRlZ3JlZXNCKAomX293bl9jdXJ2ZV9zdXBwbHlfcGx1c18zMF9jZW50aWRl'
+    'Z3JlZXNCKAomX293bl9jdXJ2ZV9zdXBwbHlfcGx1c18yMF9jZW50aWRlZ3JlZXNCKAomX293bl'
+    '9jdXJ2ZV9zdXBwbHlfcGx1c18xMF9jZW50aWRlZ3JlZXNCIgogX293bl9jdXJ2ZV9zdXBwbHlf'
+    'MF9jZW50aWRlZ3JlZXNCKQonX293bl9jdXJ2ZV9zdXBwbHlfbWludXNfMTBfY2VudGlkZWdyZW'
+    'VzQikKJ19vd25fY3VydmVfc3VwcGx5X21pbnVzXzIwX2NlbnRpZGVncmVlc0IpCidfb3duX2N1'
+    'cnZlX3N1cHBseV9taW51c18zMF9jZW50aWRlZ3JlZXNCIwohX2N1cnZlX3BvaW50X291dGRvb3'
+    'JfY2VudGlkZWdyZWVzQiIKIF9jdXJ2ZV9wb2ludF9vZmZzZXRfY2VudGlkZWdyZWVz');
 
 @$core.Deprecated('Use deviceAttentionDescriptor instead')
 const DeviceAttention$json = {
