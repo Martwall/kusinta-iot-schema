@@ -85,22 +85,52 @@ option optimize_for = SPEED;
 //   "plant.max_blocks_per_day"  uint, 1 to 6; a plant with a compressor. How many separate blocks
 //       that stop the compressor the gateway applies in a day, in the building's time.
 //       Unknown: 3.
+//   "plant.curve_adjustment_steps"  int, -10 to 10, not 0; a plant that binds
+//       curve_adjustment (heating.v1.HeatPumpControl). By how many steps the heat source moves
+//       its curve while that input is closed, as set at the heat source for the input:
+//       positive raises the supply it aims for, negative lowers it. Unknown: the gateway drives no curve adjustment, since
+//       it would not know which way the curve moves. HEAT_SOURCE; OPTIONAL; INSPECTED (read at
+//       the heat source), STATED (a household admin, from the heat source's menu).
+//   "plant.boost_uses_add_on"  bool; a plant that binds sg_ready_boost. Whether the heat
+//       source brings in its add-on or immersion heater while that input asks it to run
+//       harder (SG Ready "low price"), as an installer saw on a bench test. Makers differ, and
+//       a manual does not settle it for a given model and setting. True, or unknown: no rule
+//       boosts through it, since a boost on the add-on heater buys heat at the dearest rate.
+//       HEAT_SOURCE; OPTIONAL; INSPECTED.
+//   "hot_water.block_floor_centidegrees"  uint, 3500 to 5500; a plant with a hot-water tank
+//       that binds hot_water_block. The tank's top temperature, in centidegrees, at which the
+//       gateway ends a block of its hot water (HEAT_BLOCK_END_HOT_WATER_LOW), so that a held
+//       tank still runs a shower, and below or at which it starts none: a floor at or above
+//       where the heat source stops its own charge holds no block, and counts none towards
+//       "plant.max_blocks_per_day". Unknown: 4500. A choice of how much hot water the home
+//       keeps in hand, not a fact about the equipment: for a home's own plant its household
+//       admins may answer it (HOUSEHOLD, STATED), and for a plant outside homes the owner
+//       organisation (STATED), beside an installer's answer (INSPECTED). HEAT_SOURCE; OPTIONAL;
+//       STATED, INSPECTED.
 //   "hot_water.periodic_increase"  bool; a plant with a hot-water tank. Whether the heat source
 //       raises its tank on a schedule of its own against legionella (a periodic increase).
-//       Unknown: the gateway infers such a step from the tank's readings. The gateway never
-//       moves or suppresses the step: a price rule only leaves the heat of such a step out of
-//       what it scores. HEAT_SOURCE; OPTIONAL; STATED (a household admin, from the heat
-//       source's menu), INSPECTED.
+//       Unknown: the gateway infers such a step from the tank's readings for what it scores,
+//       and a LIVE hot-water rule blocks nothing (heating.v1 PRICE_RULE_HOT_WATER). The gateway
+//       never moves or suppresses the step: a price rule only leaves the heat of such a step out
+//       of what it scores, and a hot-water block never runs across it. HEAT_SOURCE; OPTIONAL,
+//       save FOR_FEATURE PLANT for a plant whose HOT_WATER rule is LIVE; STATED (a household
+//       admin, from the heat source's menu), INSPECTED.
 //   "hot_water.periodic_increase_interval_days"  uint, 1 to 90; a plant with a hot-water tank.
 //       Every how many days
 //       the periodic increase runs. Asked while "hot_water.periodic_increase" is true.
-//       HEAT_SOURCE; OPTIONAL; STATED, INSPECTED.
+//       HEAT_SOURCE; OPTIONAL, save FOR_FEATURE PLANT for a plant whose HOT_WATER rule is LIVE;
+//       STATED, INSPECTED.
 //   "hot_water.periodic_increase_start_minute"  uint, 0 to 1439; a plant with a hot-water
 //       tank. When it starts, in minutes after midnight in the building's time. Asked while
-//       "hot_water.periodic_increase" is true. HEAT_SOURCE; OPTIONAL; STATED, INSPECTED.
+//       "hot_water.periodic_increase" is true. HEAT_SOURCE; OPTIONAL, save FOR_FEATURE PLANT
+//       for a plant whose HOT_WATER rule is LIVE; STATED, INSPECTED.
 //
 // BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
-// (heating.v1.HeatPumpControl.sg_ready_block). Blocking the add-on heater
+// (heating.v1.HeatPumpControl.sg_ready_block), or of its hot water (hot_water_block), which
+// stops a charge under way and with it the compressor where nothing else calls for heat. The
+// two count together towards "plant.max_blocks_per_day": a stretch in which either is held, or
+// both, is one block, bounded as a whole by "plant.max_block_minutes" and
+// "plant.min_block_minutes", and a release after it holds both open. Blocking the add-on heater
 // (add_on_heater_block) leaves the compressor running, so none of what follows, nor
 // "plant.min_block_minutes" or "plant.max_blocks_per_day", applies to it: it is bounded by
 // "plant.max_block_minutes" alone. Whatever the keys above say, the gateway releases a
@@ -674,7 +704,8 @@ message CommissioningTest {
   google.protobuf.Timestamp conclude_by = 14;
 
   // What the heat source reported while an OUTPUT_LEASE test held one of its plant's inputs
-  // (heating.v1.HeatPumpControl: an SG Ready input or the add-on heat block), from the
+  // (heating.v1.HeatPumpControl: an SG Ready input, the add-on heat block, the hot-water block
+  // or the curve adjustment), from the
   // plant's bound readings (device.v1.HeatSourceReadings) that arrived between the test's
   // first write and its end, in the order they arrived. Evidence for the person judging the
   // installation, never part of the verdict: the test passes on the output's own state. Empty

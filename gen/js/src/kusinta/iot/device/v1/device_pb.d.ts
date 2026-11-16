@@ -560,8 +560,9 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   outdoorFilterHours?: number | undefined;
 
   /**
-   * The most its internal electric add-on heat (add_on_heat_watts) may draw, in watts, as set:
-   * its cap, not the size of its steps.
+   * The limit set at the heat source for its internal electric add-on heater, in watts: the
+   * most add_on_heat_watts may draw, which may be below the heater's rated power. Its cap,
+   * not the size of its steps.
    *
    * @generated from field: optional uint32 add_on_max_watts = 17;
    */

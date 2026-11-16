@@ -414,11 +414,15 @@ class HeatPumpControl extends $pb.GeneratedMessage {
     ContactBinding? sgReadyBlock,
     ContactBinding? sgReadyBoost,
     ContactBinding? addOnHeaterBlock,
+    ContactBinding? hotWaterBlock,
+    ContactBinding? curveAdjustment,
   }) {
     final result = create();
     if (sgReadyBlock != null) result.sgReadyBlock = sgReadyBlock;
     if (sgReadyBoost != null) result.sgReadyBoost = sgReadyBoost;
     if (addOnHeaterBlock != null) result.addOnHeaterBlock = addOnHeaterBlock;
+    if (hotWaterBlock != null) result.hotWaterBlock = hotWaterBlock;
+    if (curveAdjustment != null) result.curveAdjustment = curveAdjustment;
     return result;
   }
 
@@ -441,6 +445,10 @@ class HeatPumpControl extends $pb.GeneratedMessage {
     ..aOM<ContactBinding>(2, _omitFieldNames ? '' : 'sgReadyBoost',
         subBuilder: ContactBinding.create)
     ..aOM<ContactBinding>(3, _omitFieldNames ? '' : 'addOnHeaterBlock',
+        subBuilder: ContactBinding.create)
+    ..aOM<ContactBinding>(4, _omitFieldNames ? '' : 'hotWaterBlock',
+        subBuilder: ContactBinding.create)
+    ..aOM<ContactBinding>(5, _omitFieldNames ? '' : 'curveAdjustment',
         subBuilder: ContactBinding.create)
     ..hasRequiredFields = false;
 
@@ -473,8 +481,11 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   ///
   /// They lapse separately, so their leases are ordered: while both are closed, the gateway
   /// gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
-  /// through "blocked" on its way back to normal. In general, of two bound inputs, the one
-  /// whose half-state blocks heat never lapses last.
+  /// through "blocked" on its way back to normal. In general, of inputs held together, one that
+  /// holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
+  /// lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
+  /// are positive). Among inputs that only hold heat back the order is free: each lapse alone
+  /// gives back what it held.
   @$pb.TagNumber(1)
   ContactBinding get sgReadyBlock => $_getN(0);
   @$pb.TagNumber(1)
@@ -509,6 +520,40 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   void clearAddOnHeaterBlock() => $_clearField(3);
   @$pb.TagNumber(3)
   ContactBinding ensureAddOnHeaterBlock() => $_ensure(2);
+
+  /// The input that blocks the heat source's hot-water production while closed: no charge of
+  /// its tank starts, and one under way stops, while space heating runs on. Rests open: hot
+  /// water is made as the heat source decides. A blocking input (HEAT BLOCKS). Stopping a
+  /// charge under way may stop the compressor, so it is held to the rules of a block that
+  /// stops it (commissioning.v1, BLOCKS ON A COMPRESSOR).
+  @$pb.TagNumber(4)
+  ContactBinding get hotWaterBlock => $_getN(3);
+  @$pb.TagNumber(4)
+  set hotWaterBlock(ContactBinding value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasHotWaterBlock() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHotWaterBlock() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ContactBinding ensureHotWaterBlock() => $_ensure(3);
+
+  /// The input that moves the heat source's curve by its external adjustment while closed:
+  /// the supply it aims for shifts by the steps set at the heat source for that input
+  /// ("plant.curve_adjustment_steps", commissioning.v1), up or down as they are signed. Rests
+  /// open: the curve as set. Not a blocking input, so none of a block's bounds applies to it,
+  /// though negative steps hold heat back: a rule that drives it states its own longest hold
+  /// and its release. The heat source's own report of it, where it gives one, is
+  /// device.v1.HeatSourceReadings.external_adjustment_active.
+  @$pb.TagNumber(5)
+  ContactBinding get curveAdjustment => $_getN(4);
+  @$pb.TagNumber(5)
+  set curveAdjustment(ContactBinding value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCurveAdjustment() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCurveAdjustment() => $_clearField(5);
+  @$pb.TagNumber(5)
+  ContactBinding ensureCurveAdjustment() => $_ensure(4);
 }
 
 enum HeatingCircuit_Distribution { radiator, floor, notSet }
@@ -1840,8 +1885,9 @@ class HeatBlock extends $pb.GeneratedMessage {
   void clearMode() => $_clearField(3);
 
   /// Why it started, as a room's explanation names the cause (climate.v1.ClimateExplanationKind;
-  /// subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours. A kind the client
-  /// does not know is shown as a block without a cause.
+  /// subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours, a hot-water block's
+  /// too. What was blocked is told by rule (HOT_WATER for the hot water), since no explanation
+  /// subject names it. A kind the client does not know is shown as a block without a cause.
   @$pb.TagNumber(4)
   $7.ClimateExplanationKind get reason => $_getN(3);
   @$pb.TagNumber(4)
