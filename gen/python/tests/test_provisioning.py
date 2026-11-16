@@ -292,7 +292,6 @@ def test_a_listed_registration_says_what_and_where_but_holds_no_key():
                 devices=[
                     management_pb2.ProvisionedDevice(
                         connector_id=identity_pb2.ConnectorId(value="lorawan"),
-                        device_id=identity_pb2.DeviceId(value="lora:" + _FAKE_DEV_EUI),
                         model_id="relay-b",
                         initial_space_id=identity_pb2.SpaceId(value="apt-4b"),
                         ownership=types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY,
@@ -306,17 +305,24 @@ def test_a_listed_registration_says_what_and_where_but_holds_no_key():
     (device,) = decoded.provisioned_devices.devices
     assert (
         decoded.WhichOneof("result"),
-        device.device_id.value,
         device.model_id,
         device.initial_space_id.value,
         device.WhichOneof("identifier"),
     ) == (
         "provisioned_devices",
-        "lora:" + _FAKE_DEV_EUI,
         "relay-b",
         "apt-4b",
         "lorawan_dev_eui",
     )
+
+
+def test_a_listed_registration_is_keyed_by_its_identifier_not_a_device_id():
+    """The device id is the connector's to derive and is not known before the join;
+    a registration is keyed by its connector and identifier, matched at announce against
+    DeviceDescriptor.serial_number."""
+    fields = {f.name for f in management_pb2.ProvisionedDevice.DESCRIPTOR.fields}
+
+    assert "device_id" not in fields
 
 
 def test_the_provisioning_secret_never_travels_connector_to_gateway():
