@@ -17,9 +17,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $3;
 import '../../access/v1/acl.pb.dart' as $1;
-import '../../access/v1/roles.pbenum.dart' as $5;
-import '../../climate/v1/climate.pbenum.dart' as $6;
+import '../../access/v1/roles.pbenum.dart' as $6;
+import '../../climate/v1/climate.pbenum.dart' as $7;
 import '../../device/v1/cluster_state.pb.dart' as $2;
+import '../../device/v1/device.pb.dart' as $5;
 import '../../identity/v1/identity.pb.dart' as $0;
 import '../../planning/v1/planning.pb.dart' as $4;
 import 'heating.pbenum.dart';
@@ -1584,7 +1585,7 @@ class PriceRuleChange extends $pb.GeneratedMessage {
     PriceRuleMode? mode,
     PriceRuleMode? previousMode,
     $3.Timestamp? at,
-    $5.Role? setByRole,
+    $6.Role? setByRole,
     $0.UserId? setBy,
   }) {
     final result = create();
@@ -1626,10 +1627,10 @@ class PriceRuleChange extends $pb.GeneratedMessage {
         enumValues: PriceRuleMode.values)
     ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'at',
         subBuilder: $3.Timestamp.create)
-    ..e<$5.Role>(5, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
-        defaultOrMaker: $5.Role.ROLE_UNSPECIFIED,
-        valueOf: $5.Role.valueOf,
-        enumValues: $5.Role.values)
+    ..e<$6.Role>(5, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.Role.ROLE_UNSPECIFIED,
+        valueOf: $6.Role.valueOf,
+        enumValues: $6.Role.values)
     ..aOM<$0.UserId>(6, _omitFieldNames ? '' : 'setBy',
         subBuilder: $0.UserId.create)
     ..hasRequiredFields = false;
@@ -1701,9 +1702,9 @@ class PriceRuleChange extends $pb.GeneratedMessage {
   /// gateway made itself: a home's wipe taking a LIVE rule back to SHADOW (webrtc.v1
   /// household.proto, WIPE).
   @$pb.TagNumber(5)
-  $5.Role get setByRole => $_getN(4);
+  $6.Role get setByRole => $_getN(4);
   @$pb.TagNumber(5)
-  set setByRole($5.Role value) => $_setField(5, value);
+  set setByRole($6.Role value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasSetByRole() => $_has(4);
   @$pb.TagNumber(5)
@@ -1731,7 +1732,7 @@ class HeatBlock extends $pb.GeneratedMessage {
     $core.String? blockId,
     PriceRule? rule,
     PriceRuleMode? mode,
-    $6.ClimateExplanationKind? reason,
+    $7.ClimateExplanationKind? reason,
     $3.Timestamp? startedAt,
     $3.Timestamp? plannedEndAt,
     $3.Timestamp? endedAt,
@@ -1772,12 +1773,12 @@ class HeatBlock extends $pb.GeneratedMessage {
         defaultOrMaker: PriceRuleMode.PRICE_RULE_MODE_UNSPECIFIED,
         valueOf: PriceRuleMode.valueOf,
         enumValues: PriceRuleMode.values)
-    ..e<$6.ClimateExplanationKind>(
+    ..e<$7.ClimateExplanationKind>(
         4, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $6.ClimateExplanationKind.CLIMATE_EXPLANATION_KIND_UNSPECIFIED,
-        valueOf: $6.ClimateExplanationKind.valueOf,
-        enumValues: $6.ClimateExplanationKind.values)
+            $7.ClimateExplanationKind.CLIMATE_EXPLANATION_KIND_UNSPECIFIED,
+        valueOf: $7.ClimateExplanationKind.valueOf,
+        enumValues: $7.ClimateExplanationKind.values)
     ..aOM<$3.Timestamp>(5, _omitFieldNames ? '' : 'startedAt',
         subBuilder: $3.Timestamp.create)
     ..aOM<$3.Timestamp>(6, _omitFieldNames ? '' : 'plannedEndAt',
@@ -1842,9 +1843,9 @@ class HeatBlock extends $pb.GeneratedMessage {
   /// subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours. A kind the client
   /// does not know is shown as a block without a cause.
   @$pb.TagNumber(4)
-  $6.ClimateExplanationKind get reason => $_getN(3);
+  $7.ClimateExplanationKind get reason => $_getN(3);
   @$pb.TagNumber(4)
-  set reason($6.ClimateExplanationKind value) => $_setField(4, value);
+  set reason($7.ClimateExplanationKind value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasReason() => $_has(3);
   @$pb.TagNumber(4)
@@ -1901,7 +1902,7 @@ class HeatBlockRelease extends $pb.GeneratedMessage {
     $3.Timestamp? at,
     $3.Timestamp? holdUntil,
     $core.Iterable<$core.String>? endedBlockIds,
-    $5.Role? setByRole,
+    $6.Role? setByRole,
     $0.UserId? setBy,
   }) {
     final result = create();
@@ -1932,10 +1933,10 @@ class HeatBlockRelease extends $pb.GeneratedMessage {
     ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'holdUntil',
         subBuilder: $3.Timestamp.create)
     ..pPS(3, _omitFieldNames ? '' : 'endedBlockIds')
-    ..e<$5.Role>(4, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
-        defaultOrMaker: $5.Role.ROLE_UNSPECIFIED,
-        valueOf: $5.Role.valueOf,
-        enumValues: $5.Role.values)
+    ..e<$6.Role>(4, _omitFieldNames ? '' : 'setByRole', $pb.PbFieldType.OE,
+        defaultOrMaker: $6.Role.ROLE_UNSPECIFIED,
+        valueOf: $6.Role.valueOf,
+        enumValues: $6.Role.values)
     ..aOM<$0.UserId>(5, _omitFieldNames ? '' : 'setBy',
         subBuilder: $0.UserId.create)
     ..hasRequiredFields = false;
@@ -1993,9 +1994,9 @@ class HeatBlockRelease extends $pb.GeneratedMessage {
   /// ROLE_GATEWAY_ADMIN or ROLE_TECHNICIAN on one outside homes — and who they are, given as
   /// PriceRuleChange.set_by is.
   @$pb.TagNumber(4)
-  $5.Role get setByRole => $_getN(3);
+  $6.Role get setByRole => $_getN(3);
   @$pb.TagNumber(4)
-  set setByRole($5.Role value) => $_setField(4, value);
+  set setByRole($6.Role value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasSetByRole() => $_has(3);
   @$pb.TagNumber(4)
@@ -3172,6 +3173,568 @@ class EnergyPriceAdder extends $pb.GeneratedMessage {
   $core.bool hasDefaultMicroPerKwh() => $_has(4);
   @$pb.TagNumber(5)
   void clearDefaultMicroPerKwh() => $_clearField(5);
+}
+
+/// The zone that limits a heat curve in one outdoor band, and why (HEAT CURVE, WHAT IT SHOWS).
+class HeatCurveLimit extends $pb.GeneratedMessage {
+  factory HeatCurveLimit({
+    HeatCurveLimitReason? reason,
+    $core.int? openingPermille,
+    $core.bool? hasHeadroom,
+    $0.SpaceId? roomId,
+    $core.String? floorZoneId,
+    $core.bool? homeWithheld,
+  }) {
+    final result = create();
+    if (reason != null) result.reason = reason;
+    if (openingPermille != null) result.openingPermille = openingPermille;
+    if (hasHeadroom != null) result.hasHeadroom = hasHeadroom;
+    if (roomId != null) result.roomId = roomId;
+    if (floorZoneId != null) result.floorZoneId = floorZoneId;
+    if (homeWithheld != null) result.homeWithheld = homeWithheld;
+    return result;
+  }
+
+  HeatCurveLimit._();
+
+  factory HeatCurveLimit.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveLimit.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveLimit',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..e<HeatCurveLimitReason>(
+        1, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveLimitReason.HEAT_CURVE_LIMIT_REASON_UNSPECIFIED,
+        valueOf: HeatCurveLimitReason.valueOf,
+        enumValues: HeatCurveLimitReason.values)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'openingPermille', $pb.PbFieldType.OU3)
+    ..aOB(3, _omitFieldNames ? '' : 'hasHeadroom')
+    ..aOM<$0.SpaceId>(4, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $0.SpaceId.create)
+    ..aOS(5, _omitFieldNames ? '' : 'floorZoneId')
+    ..aOB(6, _omitFieldNames ? '' : 'homeWithheld')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveLimit clone() => HeatCurveLimit()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveLimit copyWith(void Function(HeatCurveLimit) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveLimit))
+          as HeatCurveLimit;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveLimit create() => HeatCurveLimit._();
+  @$core.override
+  HeatCurveLimit createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveLimit> createRepeated() =>
+      $pb.PbList<HeatCurveLimit>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveLimit getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveLimit>(create);
+  static HeatCurveLimit? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  HeatCurveLimitReason get reason => $_getN(0);
+  @$pb.TagNumber(1)
+  set reason(HeatCurveLimitReason value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasReason() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReason() => $_clearField(1);
+
+  /// The zone's opening at the view's percentile (HeatCurveView.opening_percentile), in
+  /// thousandths. Unset where the zone lies in a home the recipient is not given (home_withheld).
+  @$pb.TagNumber(2)
+  $core.int get openingPermille => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set openingPermille($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOpeningPermille() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOpeningPermille() => $_clearField(2);
+
+  /// Whether that opening is at most HeatCurveView.threshold_permille: the zone has headroom, and
+  /// in the coldest band seen the curve could come down. Given whoever the limit is given to,
+  /// home_withheld or not.
+  @$pb.TagNumber(3)
+  $core.bool get hasHeadroom => $_getBF(2);
+  @$pb.TagNumber(3)
+  set hasHeadroom($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasHasHeadroom() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearHasHeadroom() => $_clearField(3);
+
+  /// The room the zone heats: a radiator valve's room, or a floor zone's control room
+  /// (FloorZone.control_room_id). Unset where home_withheld.
+  @$pb.TagNumber(4)
+  $0.SpaceId get roomId => $_getN(3);
+  @$pb.TagNumber(4)
+  set roomId($0.SpaceId value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRoomId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRoomId() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.SpaceId ensureRoomId() => $_ensure(3);
+
+  /// The floor zone (FloorZone.zone_id) where the opening is a floor zone's duty; empty for a
+  /// radiator valve, and where home_withheld.
+  @$pb.TagNumber(5)
+  $core.String get floorZoneId => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set floorZoneId($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasFloorZoneId() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFloorZoneId() => $_clearField(5);
+
+  /// Set where the zone lies in a home the recipient is not given (HEAT CURVE, WHO SEES IT): the
+  /// limit says that a home limits, and the reason, and nothing of which.
+  @$pb.TagNumber(6)
+  $core.bool get homeWithheld => $_getBF(5);
+  @$pb.TagNumber(6)
+  set homeWithheld($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasHomeWithheld() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearHomeWithheld() => $_clearField(6);
+}
+
+/// One band of outdoor temperature of a heat curve view, over the view's window.
+class HeatCurveBand extends $pb.GeneratedMessage {
+  factory HeatCurveBand({
+    $core.int? outdoorFromCentidegrees,
+    $core.int? outdoorToCentidegrees,
+    $core.int? quarters,
+    $core.int? calculatedSupplyCentidegrees,
+    $core.int? supplyCentidegrees,
+    $core.int? addOnHeatWh,
+    $core.int? addOnRunningPermille,
+    HeatCurveLimit? limit,
+  }) {
+    final result = create();
+    if (outdoorFromCentidegrees != null)
+      result.outdoorFromCentidegrees = outdoorFromCentidegrees;
+    if (outdoorToCentidegrees != null)
+      result.outdoorToCentidegrees = outdoorToCentidegrees;
+    if (quarters != null) result.quarters = quarters;
+    if (calculatedSupplyCentidegrees != null)
+      result.calculatedSupplyCentidegrees = calculatedSupplyCentidegrees;
+    if (supplyCentidegrees != null)
+      result.supplyCentidegrees = supplyCentidegrees;
+    if (addOnHeatWh != null) result.addOnHeatWh = addOnHeatWh;
+    if (addOnRunningPermille != null)
+      result.addOnRunningPermille = addOnRunningPermille;
+    if (limit != null) result.limit = limit;
+    return result;
+  }
+
+  HeatCurveBand._();
+
+  factory HeatCurveBand.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveBand.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveBand',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'outdoorFromCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'outdoorToCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'quarters', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'calculatedSupplyCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'supplyCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'addOnHeatWh', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'addOnRunningPermille', $pb.PbFieldType.OU3)
+    ..aOM<HeatCurveLimit>(8, _omitFieldNames ? '' : 'limit',
+        subBuilder: HeatCurveLimit.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveBand clone() => HeatCurveBand()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveBand copyWith(void Function(HeatCurveBand) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveBand))
+          as HeatCurveBand;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveBand create() => HeatCurveBand._();
+  @$core.override
+  HeatCurveBand createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveBand> createRepeated() =>
+      $pb.PbList<HeatCurveBand>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveBand getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveBand>(create);
+  static HeatCurveBand? _defaultInstance;
+
+  /// The band, in centidegrees, half-open: [outdoor_from, outdoor_to), by the outdoor mean of
+  /// each quarter hour (climate.v1.PlantHistorySample.outdoor_centidegrees). Band edges and width
+  /// are the gateway's choice, the same for every plant.
+  @$pb.TagNumber(1)
+  $core.int get outdoorFromCentidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set outdoorFromCentidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOutdoorFromCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOutdoorFromCentidegrees() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get outdoorToCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set outdoorToCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutdoorToCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutdoorToCentidegrees() => $_clearField(2);
+
+  /// The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
+  /// which an external input moved the curve (WHAT IT SHOWS).
+  @$pb.TagNumber(3)
+  $core.int get quarters => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set quarters($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasQuarters() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearQuarters() => $_clearField(3);
+
+  /// The median over the band's quarter hours of the calculated supply and of the measured
+  /// supply, in centidegrees, as the heat source reads them (device.v1.HeatSourceReadings), each
+  /// leaving out the quarter hours in which the heat source made hot water (WHAT IT SHOWS). Unset
+  /// where not known, and where figures are withheld (HeatCurveView.figures_withheld).
+  @$pb.TagNumber(4)
+  $core.int get calculatedSupplyCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set calculatedSupplyCentidegrees($core.int value) =>
+      $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCalculatedSupplyCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCalculatedSupplyCentidegrees() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.int get supplyCentidegrees => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set supplyCentidegrees($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSupplyCentidegrees() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSupplyCentidegrees() => $_clearField(5);
+
+  /// The add-on heat's energy over the band's quarter hours, in watt-hours, and the share of them
+  /// in which it drew, in thousandths (device.v1.HeatSourceReadings.add_on_heat_watts). Unset
+  /// where not known, and where figures are withheld.
+  @$pb.TagNumber(6)
+  $core.int get addOnHeatWh => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set addOnHeatWh($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasAddOnHeatWh() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAddOnHeatWh() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.int get addOnRunningPermille => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set addOnRunningPermille($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasAddOnRunningPermille() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearAddOnRunningPermille() => $_clearField(7);
+
+  /// The zone that limits the curve in this band. Unset where none is known: no zone with an
+  /// opening read in the band, too few quarter hours in it for the gateway to judge; in a home's
+  /// reading of a plant outside it, a band its home does not limit; and, to the owner
+  /// organisation, a limit in a home on a plant fewer than three homes share (WHO SEES IT,
+  /// FEWER THAN THREE HOMES). A client reads each the same: no limit known.
+  @$pb.TagNumber(8)
+  HeatCurveLimit get limit => $_getN(7);
+  @$pb.TagNumber(8)
+  set limit(HeatCurveLimit value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasLimit() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearLimit() => $_clearField(8);
+  @$pb.TagNumber(8)
+  HeatCurveLimit ensureLimit() => $_ensure(7);
+}
+
+/// One plant's heating curve against what its zones draw (HEAT CURVE). Given as WHO SEES IT says.
+class HeatCurveView extends $pb.GeneratedMessage {
+  factory HeatCurveView({
+    $core.String? plantId,
+    $core.String? plantName,
+    $3.Timestamp? windowFrom,
+    $3.Timestamp? windowTo,
+    $core.Iterable<HeatCurveBand>? bands,
+    $core.int? thresholdPermille,
+    $core.int? openingPercentile,
+    $5.HeatSourceReadings? curveSettings,
+    $3.Timestamp? curveSettingsChangedAt,
+    $core.bool? figuresWithheld,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (plantName != null) result.plantName = plantName;
+    if (windowFrom != null) result.windowFrom = windowFrom;
+    if (windowTo != null) result.windowTo = windowTo;
+    if (bands != null) result.bands.addAll(bands);
+    if (thresholdPermille != null) result.thresholdPermille = thresholdPermille;
+    if (openingPercentile != null) result.openingPercentile = openingPercentile;
+    if (curveSettings != null) result.curveSettings = curveSettings;
+    if (curveSettingsChangedAt != null)
+      result.curveSettingsChangedAt = curveSettingsChangedAt;
+    if (figuresWithheld != null) result.figuresWithheld = figuresWithheld;
+    return result;
+  }
+
+  HeatCurveView._();
+
+  factory HeatCurveView.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveView.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveView',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOS(2, _omitFieldNames ? '' : 'plantName')
+    ..aOM<$3.Timestamp>(3, _omitFieldNames ? '' : 'windowFrom',
+        subBuilder: $3.Timestamp.create)
+    ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'windowTo',
+        subBuilder: $3.Timestamp.create)
+    ..pc<HeatCurveBand>(5, _omitFieldNames ? '' : 'bands', $pb.PbFieldType.PM,
+        subBuilder: HeatCurveBand.create)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'thresholdPermille', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'openingPercentile', $pb.PbFieldType.OU3)
+    ..aOM<$5.HeatSourceReadings>(8, _omitFieldNames ? '' : 'curveSettings',
+        subBuilder: $5.HeatSourceReadings.create)
+    ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'curveSettingsChangedAt',
+        subBuilder: $3.Timestamp.create)
+    ..aOB(10, _omitFieldNames ? '' : 'figuresWithheld')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveView clone() => HeatCurveView()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveView copyWith(void Function(HeatCurveView) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveView))
+          as HeatCurveView;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveView create() => HeatCurveView._();
+  @$core.override
+  HeatCurveView createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveView> createRepeated() =>
+      $pb.PbList<HeatCurveView>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveView getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveView>(create);
+  static HeatCurveView? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  /// The plant's name, so that one who is not given the plant record knows which plant it is.
+  @$pb.TagNumber(2)
+  $core.String get plantName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set plantName($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPlantName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPlantName() => $_clearField(2);
+
+  /// The quarter hours counted, [window_from, window_to): a window of the gateway's choice, such
+  /// as the last 28 days, starting no earlier than the curve settings last changed
+  /// (curve_settings_changed_at), so that the bands judge the curve in force.
+  @$pb.TagNumber(3)
+  $3.Timestamp get windowFrom => $_getN(2);
+  @$pb.TagNumber(3)
+  set windowFrom($3.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWindowFrom() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWindowFrom() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $3.Timestamp ensureWindowFrom() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $3.Timestamp get windowTo => $_getN(3);
+  @$pb.TagNumber(4)
+  set windowTo($3.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasWindowTo() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearWindowTo() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $3.Timestamp ensureWindowTo() => $_ensure(3);
+
+  /// Coldest first. A band with no quarter hour is not given. Empty where none is known: a plant
+  /// without outdoor readings, or nothing kept in the window.
+  @$pb.TagNumber(5)
+  $pb.PbList<HeatCurveBand> get bands => $_getList(4);
+
+  /// The opening, in thousandths, at most which the most demanding zone of the coldest band leaves
+  /// the curve room to come down (HEAT CURVE, WHAT IT SHOWS): 850 for 85 %. The gateway's.
+  @$pb.TagNumber(6)
+  $core.int get thresholdPermille => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set thresholdPermille($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasThresholdPermille() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearThresholdPermille() => $_clearField(6);
+
+  /// The percentile of a zone's openings over a band's quarter hours that a limit is judged by
+  /// (HeatCurveLimit.opening_permille), such as 90. The gateway's.
+  @$pb.TagNumber(7)
+  $core.int get openingPercentile => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set openingPercentile($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasOpeningPercentile() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearOpeningPercentile() => $_clearField(7);
+
+  /// The heat source's curve settings as last read, as its readings state them
+  /// (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — own_curve_in_force,
+  /// heating_curve, heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and
+  /// curve_point_* — each where read, every other field unset. Which curve is in force is read as
+  /// those readings say: without own_curve_in_force, neither the numbered curve nor the own
+  /// curve's points is read as the one in force. Never external_adjustment_active, a state and
+  /// not a setting. Unset where none is read, and where figures are withheld.
+  @$pb.TagNumber(8)
+  $5.HeatSourceReadings get curveSettings => $_getN(7);
+  @$pb.TagNumber(8)
+  set curveSettings($5.HeatSourceReadings value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCurveSettings() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCurveSettings() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $5.HeatSourceReadings ensureCurveSettings() => $_ensure(7);
+
+  /// When one of the fields curve_settings carries, own_curve_in_force included, was last seen to
+  /// change. Unset where none was, or none is read, and where figures are withheld.
+  @$pb.TagNumber(9)
+  $3.Timestamp get curveSettingsChangedAt => $_getN(8);
+  @$pb.TagNumber(9)
+  set curveSettingsChangedAt($3.Timestamp value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasCurveSettingsChangedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearCurveSettingsChangedAt() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $3.Timestamp ensureCurveSettingsChangedAt() => $_ensure(8);
+
+  /// Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies
+  /// and add-on figures and the curve settings are left out, so that their absence is not read as
+  /// not known.
+  @$pb.TagNumber(10)
+  $core.bool get figuresWithheld => $_getBF(9);
+  @$pb.TagNumber(10)
+  set figuresWithheld($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasFiguresWithheld() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearFiguresWithheld() => $_clearField(10);
+}
+
+/// The answer to webrtc.v1.GetHeatCurveView.
+class HeatCurveViews extends $pb.GeneratedMessage {
+  factory HeatCurveViews({
+    $core.Iterable<HeatCurveView>? views,
+  }) {
+    final result = create();
+    if (views != null) result.views.addAll(views);
+    return result;
+  }
+
+  HeatCurveViews._();
+
+  factory HeatCurveViews.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveViews.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveViews',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..pc<HeatCurveView>(1, _omitFieldNames ? '' : 'views', $pb.PbFieldType.PM,
+        subBuilder: HeatCurveView.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveViews clone() => HeatCurveViews()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveViews copyWith(void Function(HeatCurveViews) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveViews))
+          as HeatCurveViews;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveViews create() => HeatCurveViews._();
+  @$core.override
+  HeatCurveViews createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveViews> createRepeated() =>
+      $pb.PbList<HeatCurveViews>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveViews getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveViews>(create);
+  static HeatCurveViews? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<HeatCurveView> get views => $_getList(0);
 }
 
 const $core.bool _omitFieldNames =

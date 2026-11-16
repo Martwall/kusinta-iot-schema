@@ -1775,6 +1775,32 @@ final $typed_data.Uint8List setEnergyPriceAdderDescriptor = $convert.base64Decod
     'C21pY3JvUGVyS3doiAEBEhoKCGN1cnJlbmN5GAMgASgJUghjdXJyZW5jeUIQCg5fbWljcm9fcG'
     'VyX2t3aA==');
 
+@$core.Deprecated('Use getHeatCurveViewDescriptor instead')
+const GetHeatCurveView$json = {
+  '1': 'GetHeatCurveView',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'plantId'},
+    {
+      '1': 'home_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '9': 0,
+      '10': 'homeId'
+    },
+  ],
+  '8': [
+    {'1': 'subject'},
+  ],
+};
+
+/// Descriptor for `GetHeatCurveView`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getHeatCurveViewDescriptor = $convert.base64Decode(
+    'ChBHZXRIZWF0Q3VydmVWaWV3EhsKCHBsYW50X2lkGAEgASgJSABSB3BsYW50SWQSOwoHaG9tZV'
+    '9pZBgCIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRIAFIGaG9tZUlkQgkK'
+    'B3N1YmplY3Q=');
+
 @$core.Deprecated('Use requestAccountLinkNonceDescriptor instead')
 const RequestAccountLinkNonce$json = {
   '1': 'RequestAccountLinkNonce',
@@ -2902,6 +2928,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'setEnergyPriceAdder'
     },
+    {
+      '1': 'get_heat_curve_view',
+      '3': 85,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetHeatCurveView',
+      '9': 0,
+      '10': 'getHeatCurveView'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -3049,5 +3084,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'eUgAUhBnZXRTaGFkb3dTdW1tYXJ5EmEKFmdldF9lbmVyZ3lfcHJpY2VfYWRkZXIYUyABKAsyKi'
     '5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0RW5lcmd5UHJpY2VBZGRlckgAUhNnZXRFbmVyZ3lQ'
     'cmljZUFkZGVyEmEKFnNldF9lbmVyZ3lfcHJpY2VfYWRkZXIYVCABKAsyKi5rdXNpbnRhLmlvdC'
-    '53ZWJydGMudjEuU2V0RW5lcmd5UHJpY2VBZGRlckgAUhNzZXRFbmVyZ3lQcmljZUFkZGVyQgkK'
-    'B3JlcXVlc3Q=');
+    '53ZWJydGMudjEuU2V0RW5lcmd5UHJpY2VBZGRlckgAUhNzZXRFbmVyZ3lQcmljZUFkZGVyElgK'
+    'E2dldF9oZWF0X2N1cnZlX3ZpZXcYVSABKAsyJy5rdXNpbnRhLmlvdC53ZWJydGMudjEuR2V0SG'
+    'VhdEN1cnZlVmlld0gAUhBnZXRIZWF0Q3VydmVWaWV3QgkKB3JlcXVlc3Q=');

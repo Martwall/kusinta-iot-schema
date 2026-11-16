@@ -5,6 +5,7 @@ from kusinta.iot.access.v1 import acl_pb2 as _acl_pb2
 from kusinta.iot.access.v1 import roles_pb2 as _roles_pb2
 from kusinta.iot.climate.v1 import climate_pb2 as _climate_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
+from kusinta.iot.device.v1 import device_pb2 as _device_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
 from kusinta.iot.planning.v1 import planning_pb2 as _planning_pb2
 from google.protobuf.internal import containers as _containers
@@ -68,6 +69,12 @@ class EnergyPriceAdderSource(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED: _ClassVar[EnergyPriceAdderSource]
     ENERGY_PRICE_ADDER_SOURCE_DEFAULT: _ClassVar[EnergyPriceAdderSource]
     ENERGY_PRICE_ADDER_SOURCE_STATED: _ClassVar[EnergyPriceAdderSource]
+
+class HeatCurveLimitReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    HEAT_CURVE_LIMIT_REASON_UNSPECIFIED: _ClassVar[HeatCurveLimitReason]
+    HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE: _ClassVar[HeatCurveLimitReason]
+    HEAT_CURVE_LIMIT_REASON_DEMAND: _ClassVar[HeatCurveLimitReason]
 HEAT_SOURCE_KIND_UNSPECIFIED: HeatSourceKind
 HEAT_SOURCE_KIND_EXHAUST_AIR_HEAT_PUMP: HeatSourceKind
 HEAT_SOURCE_KIND_GROUND_SOURCE_HEAT_PUMP: HeatSourceKind
@@ -100,6 +107,9 @@ SHADOW_PRICE_BASIS_PAYER: ShadowPriceBasis
 ENERGY_PRICE_ADDER_SOURCE_UNSPECIFIED: EnergyPriceAdderSource
 ENERGY_PRICE_ADDER_SOURCE_DEFAULT: EnergyPriceAdderSource
 ENERGY_PRICE_ADDER_SOURCE_STATED: EnergyPriceAdderSource
+HEAT_CURVE_LIMIT_REASON_UNSPECIFIED: HeatCurveLimitReason
+HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE: HeatCurveLimitReason
+HEAT_CURVE_LIMIT_REASON_DEMAND: HeatCurveLimitReason
 
 class DeviceAttribute(_message.Message):
     __slots__ = ("device_id", "attribute")
@@ -456,3 +466,69 @@ class EnergyPriceAdder(_message.Message):
     source: EnergyPriceAdderSource
     default_micro_per_kwh: int
     def __init__(self, payer: _Optional[_Union[EnergyPricePayer, _Mapping]] = ..., terms: _Optional[_Union[EnergyPriceTerms, _Mapping]] = ..., micro_per_kwh: _Optional[int] = ..., source: _Optional[_Union[EnergyPriceAdderSource, str]] = ..., default_micro_per_kwh: _Optional[int] = ...) -> None: ...
+
+class HeatCurveLimit(_message.Message):
+    __slots__ = ("reason", "opening_permille", "has_headroom", "room_id", "floor_zone_id", "home_withheld")
+    REASON_FIELD_NUMBER: _ClassVar[int]
+    OPENING_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    HAS_HEADROOM_FIELD_NUMBER: _ClassVar[int]
+    ROOM_ID_FIELD_NUMBER: _ClassVar[int]
+    FLOOR_ZONE_ID_FIELD_NUMBER: _ClassVar[int]
+    HOME_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    reason: HeatCurveLimitReason
+    opening_permille: int
+    has_headroom: bool
+    room_id: _identity_pb2.SpaceId
+    floor_zone_id: str
+    home_withheld: bool
+    def __init__(self, reason: _Optional[_Union[HeatCurveLimitReason, str]] = ..., opening_permille: _Optional[int] = ..., has_headroom: _Optional[bool] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., floor_zone_id: _Optional[str] = ..., home_withheld: _Optional[bool] = ...) -> None: ...
+
+class HeatCurveBand(_message.Message):
+    __slots__ = ("outdoor_from_centidegrees", "outdoor_to_centidegrees", "quarters", "calculated_supply_centidegrees", "supply_centidegrees", "add_on_heat_wh", "add_on_running_permille", "limit")
+    OUTDOOR_FROM_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    OUTDOOR_TO_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    QUARTERS_FIELD_NUMBER: _ClassVar[int]
+    CALCULATED_SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    ADD_ON_HEAT_WH_FIELD_NUMBER: _ClassVar[int]
+    ADD_ON_RUNNING_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    outdoor_from_centidegrees: int
+    outdoor_to_centidegrees: int
+    quarters: int
+    calculated_supply_centidegrees: int
+    supply_centidegrees: int
+    add_on_heat_wh: int
+    add_on_running_permille: int
+    limit: HeatCurveLimit
+    def __init__(self, outdoor_from_centidegrees: _Optional[int] = ..., outdoor_to_centidegrees: _Optional[int] = ..., quarters: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., add_on_heat_wh: _Optional[int] = ..., add_on_running_permille: _Optional[int] = ..., limit: _Optional[_Union[HeatCurveLimit, _Mapping]] = ...) -> None: ...
+
+class HeatCurveView(_message.Message):
+    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld")
+    PLANT_ID_FIELD_NUMBER: _ClassVar[int]
+    PLANT_NAME_FIELD_NUMBER: _ClassVar[int]
+    WINDOW_FROM_FIELD_NUMBER: _ClassVar[int]
+    WINDOW_TO_FIELD_NUMBER: _ClassVar[int]
+    BANDS_FIELD_NUMBER: _ClassVar[int]
+    THRESHOLD_PERMILLE_FIELD_NUMBER: _ClassVar[int]
+    OPENING_PERCENTILE_FIELD_NUMBER: _ClassVar[int]
+    CURVE_SETTINGS_FIELD_NUMBER: _ClassVar[int]
+    CURVE_SETTINGS_CHANGED_AT_FIELD_NUMBER: _ClassVar[int]
+    FIGURES_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    plant_id: str
+    plant_name: str
+    window_from: _timestamp_pb2.Timestamp
+    window_to: _timestamp_pb2.Timestamp
+    bands: _containers.RepeatedCompositeFieldContainer[HeatCurveBand]
+    threshold_permille: int
+    opening_percentile: int
+    curve_settings: _device_pb2.HeatSourceReadings
+    curve_settings_changed_at: _timestamp_pb2.Timestamp
+    figures_withheld: bool
+    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ...) -> None: ...
+
+class HeatCurveViews(_message.Message):
+    __slots__ = ("views",)
+    VIEWS_FIELD_NUMBER: _ClassVar[int]
+    views: _containers.RepeatedCompositeFieldContainer[HeatCurveView]
+    def __init__(self, views: _Optional[_Iterable[_Union[HeatCurveView, _Mapping]]] = ...) -> None: ...

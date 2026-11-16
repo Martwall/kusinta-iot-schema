@@ -294,5 +294,39 @@ class EnergyPriceAdderSource extends $pb.ProtobufEnum {
   const EnergyPriceAdderSource._(super.value, super.name);
 }
 
+/// The kind of reason a zone limits a heat curve (HeatCurveLimit). A closed list that grows only
+/// by a release of this schema.
+class HeatCurveLimitReason extends $pb.ProtobufEnum {
+  /// Not known, as with too few zones to compare, or a reason this client's schema does not know:
+  /// a client shows the limit without a reason.
+  static const HeatCurveLimitReason HEAT_CURVE_LIMIT_REASON_UNSPECIFIED =
+      HeatCurveLimitReason._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_LIMIT_REASON_UNSPECIFIED');
+
+  /// Only this zone runs high while most others run low: it is short of flow rather than of
+  /// supply temperature. It points to balancing the system, not to the curve.
+  static const HeatCurveLimitReason HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE =
+      HeatCurveLimitReason._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE');
+
+  /// Most zones run high: what is heated needs the supply the curve gives.
+  static const HeatCurveLimitReason HEAT_CURVE_LIMIT_REASON_DEMAND =
+      HeatCurveLimitReason._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_LIMIT_REASON_DEMAND');
+
+  static const $core.List<HeatCurveLimitReason> values = <HeatCurveLimitReason>[
+    HEAT_CURVE_LIMIT_REASON_UNSPECIFIED,
+    HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE,
+    HEAT_CURVE_LIMIT_REASON_DEMAND,
+  ];
+
+  static final $core.List<HeatCurveLimitReason?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static HeatCurveLimitReason? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveLimitReason._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

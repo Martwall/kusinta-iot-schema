@@ -12,7 +12,7 @@ import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, PlantHistory, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
 import type { GatewayMembers, PromotionRequests } from "./members_pb.js";
-import type { EnergyPriceAdder, HeatBlockHistory, HeatBlockStatus, HeatBlockStatuses, HeatingLayout, HeatingRecord, ShadowSummary } from "../../heating/v1/heating_pb.js";
+import type { EnergyPriceAdder, HeatBlockHistory, HeatBlockStatus, HeatBlockStatuses, HeatCurveViews, HeatingLayout, HeatingRecord, ShadowSummary } from "../../heating/v1/heating_pb.js";
 import type { AccountLinkNonce, AccountLinks } from "../../accountlink/v1/account_link_pb.js";
 import type { CommissioningGrant, CommissioningGrants, CommissioningProfile, CommissioningRecord, CommissioningTest, HomeSetups } from "../../commissioning/v1/commissioning_pb.js";
 import type { ClimateHistoryCleared, HouseholdExport, HouseholdHandover, HouseholdHandovers } from "./household_pb.js";
@@ -581,6 +581,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: EnergyPriceAdder;
     case: "energyPriceAdder";
+  } | {
+    /**
+     * get_heat_curve_view
+     *
+     * @generated from field: kusinta.iot.heating.v1.HeatCurveViews heat_curve_views = 36;
+     */
+    value: HeatCurveViews;
+    case: "heatCurveViews";
   } | { case: undefined; value?: undefined };
 };
 

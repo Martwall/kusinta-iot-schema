@@ -2364,6 +2364,53 @@ export declare type SetEnergyPriceAdder = Message<"kusinta.iot.webrtc.v1.SetEner
 export declare const SetEnergyPriceAdderSchema: GenMessage<SetEnergyPriceAdder>;
 
 /**
+ * Reads a heat source's curve against what its zones draw (heating.v1 HEAT CURVE), answered with
+ * heating.v1.HeatCurveViews, given as heating.v1 HEAT CURVE (WHO SEES IT) says.
+ *
+ *   plant_id  one view, of that plant: to its household admins and an installer under a
+ *             commissioning grant covering it, a home's other residents with figures withheld,
+ *             for a plant in a home; to the property owner and the gateway's administrators who
+ *             reach its space, and an installer under a commissioning grant covering it, for a
+ *             plant outside homes.
+ *   home_id   the home's residents only: a view of each of the home's own plants, as plant_id
+ *             gives it to them, and of each plant outside homes whose curve one of the home's
+ *             zones limits in some band, with figures withheld and only the bands it limits
+ *             given a limit. A plant outside homes that it limits in no band is not listed, nor
+ *             is any plant whose curve another home limits.
+ *
+ * Anyone else — service, a technician as such, a resident naming a plant outside homes, an
+ * installer naming a home — a plant or home that does not exist, and a home_id that is not an
+ * apartment, are refused as NOT_ENTITLED with the same metadata. Neither set is refused as
+ * INVALID_REQUEST with metadata {"reason": "subject"}.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetHeatCurveView
+ */
+export declare type GetHeatCurveView = Message<"kusinta.iot.webrtc.v1.GetHeatCurveView"> & {
+  /**
+   * @generated from oneof kusinta.iot.webrtc.v1.GetHeatCurveView.subject
+   */
+  subject: {
+    /**
+     * @generated from field: string plant_id = 1;
+     */
+    value: string;
+    case: "plantId";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.identity.v1.SpaceId home_id = 2;
+     */
+    value: SpaceId;
+    case: "homeId";
+  } | { case: undefined; value?: undefined };
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetHeatCurveView.
+ * Use `create(GetHeatCurveViewSchema)` to create a new message.
+ */
+export declare const GetHeatCurveViewSchema: GenMessage<GetHeatCurveView>;
+
+/**
  * Asks for a nonce to link one home's account at a third-party service
  * (accountlink.v1.AccountLinkNonce). Only a household admin of the home
  * (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -3393,6 +3440,14 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: SetEnergyPriceAdder;
     case: "setEnergyPriceAdder";
+  } | {
+    /**
+     * A heat source's curve against its zones; see heating.v1 HEAT CURVE.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.GetHeatCurveView get_heat_curve_view = 85;
+     */
+    value: GetHeatCurveView;
+    case: "getHeatCurveView";
   } | { case: undefined; value?: undefined };
 };
 
