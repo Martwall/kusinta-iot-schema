@@ -346,6 +346,135 @@ message HeatSourceReadings {
     (kusinta.iot.vendor.v1.vendor_attribute) = "add_on_heat_watts",
     (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
   ];
+
+  // SETTINGS. The fields from here on are the heat source's own settings, as it states them,
+  // not measurements: what it was set to, by its menu or its maker's app. They change only
+  // when someone changes them, and a connector sends one again only when it changed. Never
+  // written through this message: nothing here is a way to set them. They are settings, not
+  // a household's readings, and tell nothing of who lives there.
+
+  // How the heat source is set to run (HeatSourceOperatingMode), as its number: automatic,
+  // manual, or its add-on heat alone. In add-on only, its compressor makes no heat, so a block
+  // of the add-on stops all of it.
+  optional uint32 operating_mode = 13 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "operating_mode",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The outdoor temperature at and above which it stops heating the building while it runs
+  // automatically, against its filtered outdoor temperature (outdoor_filter_hours).
+  optional sint32 heating_stop_outdoor_centidegrees = 14 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "heating_stop_outdoor_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The outdoor temperature at and above which its add-on heat may not run while it runs
+  // automatically, against its filtered outdoor temperature. Above it, blocking the add-on
+  // moves no energy.
+  optional sint32 add_on_stop_outdoor_centidegrees = 15 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "add_on_stop_outdoor_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Over how many hours it averages the outdoor temperature that heating_stop and
+  // add_on_stop are judged against.
+  optional uint32 outdoor_filter_hours = 16 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "outdoor_filter_hours",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The most its internal electric add-on heat (add_on_heat_watts) may draw, in watts, as set:
+  // its cap, not the size of its steps.
+  optional uint32 add_on_max_watts = 17 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "add_on_max_watts",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Which heating curve its first climate system is on, by the heat source's own numbering:
+  // vendor-specific, read with its product. On NIBE, 0 is its own curve
+  // (own_curve_supply_*); 1–15 are curves of rising slope.
+  optional uint32 heating_curve = 18 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "heating_curve",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The parallel offset of that curve, in the heat source's own steps (NIBE: −10…+10): positive
+  // raises the supply at every outdoor temperature.
+  optional sint32 heating_curve_offset = 19 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "heating_curve_offset",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // The lowest supply temperature its first climate system is held at, whatever the curve
+  // says.
+  optional sint32 min_supply_centidegrees = 20 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "min_supply_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve (heating_curve 0 on NIBE): the supply set for an outdoor temperature of
+  // +30 °C. Its other points follow, every 10 °C down to −30 °C.
+  optional sint32 own_curve_supply_plus_30_centidegrees = 21 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_plus_30_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve's supply at +20 °C outdoors.
+  optional sint32 own_curve_supply_plus_20_centidegrees = 22 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_plus_20_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve's supply at +10 °C outdoors.
+  optional sint32 own_curve_supply_plus_10_centidegrees = 23 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_plus_10_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve's supply at 0 °C outdoors.
+  optional sint32 own_curve_supply_0_centidegrees = 24 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_0_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve's supply at −10 °C outdoors.
+  optional sint32 own_curve_supply_minus_10_centidegrees = 25 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_minus_10_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve's supply at −20 °C outdoors.
+  optional sint32 own_curve_supply_minus_20_centidegrees = 26 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_minus_20_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Its own curve's supply at −30 °C outdoors.
+  optional sint32 own_curve_supply_minus_30_centidegrees = 27 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "own_curve_supply_minus_30_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Where the curve is bent at one outdoor temperature (NIBE: point offset): that outdoor
+  // temperature. Read with curve_point_offset_centidegrees.
+  optional sint32 curve_point_outdoor_centidegrees = 28 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "curve_point_outdoor_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // How far the supply is moved at curve_point_outdoor_centidegrees: 0 for no bend.
+  optional sint32 curve_point_offset_centidegrees = 29 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "curve_point_offset_centidegrees",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
+
+  // Whether an external input moves its curve now (NIBE: external adjustment on an AUX
+  // input): while true, its calculated supply is off its own curve by the adjustment set for
+  // that input. A reading, not a setting.
+  optional bool external_adjustment_active = 30 [
+    (kusinta.iot.vendor.v1.vendor_attribute) = "external_adjustment_active",
+    (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
+  ];
 }
 
 // The value set of HeatSourceReadings.producing: what a heat source is producing now. Not a
@@ -373,6 +502,24 @@ enum HeatSourceProduction {
 
   // Something none of the above names, such as a transfer between stores.
   HEAT_SOURCE_PRODUCTION_OTHER = 6;
+}
+
+// The value set of HeatSourceReadings.operating_mode, as the named constants for its numbers.
+enum HeatSourceOperatingMode {
+  // Never sent; an unreported mode is an absent field.
+  HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED = 0;
+
+  // It decides itself, by the outdoor temperature, when to heat and when its add-on may run.
+  HEAT_SOURCE_OPERATING_MODE_AUTOMATIC = 1;
+
+  // Heating and its add-on are allowed or not as set by hand.
+  HEAT_SOURCE_OPERATING_MODE_MANUAL = 2;
+
+  // Its add-on heat alone: the compressor makes none.
+  HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY = 3;
+
+  // A mode none of the above names.
+  HEAT_SOURCE_OPERATING_MODE_OTHER = 4;
 }
 
 // The value set of HeatSourceReadings.compressor_state, as the named constants for its
