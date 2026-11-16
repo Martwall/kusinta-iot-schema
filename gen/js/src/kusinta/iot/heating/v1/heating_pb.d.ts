@@ -212,6 +212,27 @@ export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpCo
    * @generated from field: kusinta.iot.heating.v1.ContactBinding add_on_heater_block = 3;
    */
   addOnHeaterBlock?: ContactBinding | undefined;
+
+  /**
+   * The input that blocks the heat source's hot-water production while closed: no charge of
+   * its tank starts, and one under way stops, while space heating runs on. Rests open: hot
+   * water is made as the heat source decides. A blocking input (HEAT BLOCKS), which leaves
+   * the compressor running (commissioning.v1, BLOCKS ON A COMPRESSOR).
+   *
+   * @generated from field: kusinta.iot.heating.v1.ContactBinding hot_water_block = 4;
+   */
+  hotWaterBlock?: ContactBinding | undefined;
+
+  /**
+   * The input that moves the heat source's curve by its external adjustment while closed:
+   * the supply it aims for shifts by the steps set at the heat source for that input
+   * ("plant.curve_adjustment_steps", commissioning.v1), up or down as they are signed. Rests
+   * open: the curve as set. Not a blocking input. The heat source's own report of it, where
+   * it gives one, is device.v1.HeatSourceReadings.external_adjustment_active.
+   *
+   * @generated from field: kusinta.iot.heating.v1.ContactBinding curve_adjustment = 5;
+   */
+  curveAdjustment?: ContactBinding | undefined;
 };
 
 /**
@@ -1730,8 +1751,14 @@ export enum PriceRule {
   FLOOR_PRE_HEAT = 2,
 
   /**
-   * Raises the heat source's hot water in cheap quarter hours (HeatPumpControl.sg_ready_boost),
-   * so that the tank is full before dear ones; never during a block. Not a blocking rule.
+   * Holds back the heat source's hot water in dear quarter hours (HeatPumpControl.hot_water_block)
+   * and lets it be made in cheap ones: each block within "plant.max_block_minutes", ended early
+   * where the tank's top falls to "hot_water.block_floor_centidegrees" (commissioning.v1) or its
+   * temperature is not heard, never across the heat source's periodic increase, and released so
+   * that the charge it then makes lands in the cheapest quarter hours after it. A blocking rule.
+   * Where the plant binds no hot_water_block it boosts instead (sg_ready_boost) in cheap quarter
+   * hours, never during a block, and only where "plant.boost_uses_add_on" is false: a boost
+   * that brings in the add-on heater buys its heat at the dearest rate.
    *
    * @generated from enum value: PRICE_RULE_HOT_WATER = 3;
    */

@@ -1116,8 +1116,8 @@ message ListHeating {
 //                           may change meanwhile.
 //
 // A refusal about one binding names it in metadata "field", by its proto field name:
-// "sg_ready_block", "sg_ready_boost", "add_on_heater_block", "meter", "output",
-// "supply_probe", "return_probe".
+// "sg_ready_block", "sg_ready_boost", "add_on_heater_block", "hot_water_block",
+// "curve_adjustment", "meter", "output", "supply_probe", "return_probe".
 //
 // A device or room the caller cannot reach, a parent it may not use (see heating.v1) and an
 // id that does not exist are all refused as NOT_ENTITLED with the same metadata, so no answer
@@ -1207,7 +1207,9 @@ message SetComfortWindows {
 //   "STALE_REVISION"      price_rules_revision is set and the plant's rules changed since.
 //   "rule_input_unbound"  LIVE for a rule whose input the plant does not bind: metadata "field"
 //                         names it by its proto field name, "add_on_heater_block" for
-//                         ADD_ON_HEATER_BLOCK and "sg_ready_boost" for HOT_WATER; for
+//                         ADD_ON_HEATER_BLOCK and "hot_water_block" for HOT_WATER (which
+//                         also takes "sg_ready_boost" where "plant.boost_uses_add_on" is
+//                         false, heating.v1 PRICE_RULE_HOT_WATER); for
 //                         FLOOR_PRE_HEAT, no floor zone of the plant binds an output, and
 //                         "field" is "output". SHADOW and OFF need no input bound.
 //   "rule_not_drivable"   LIVE for a rule the gateway does not yet drive (it decides it in shadow

@@ -397,8 +397,9 @@ message HeatSourceReadings {
     (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5
   ];
 
-  // The most its internal electric add-on heat (add_on_heat_watts) may draw, in watts, as set:
-  // its cap, not the size of its steps.
+  // The limit set at the heat source for its internal electric add-on heater, in watts: the
+  // most add_on_heat_watts may draw, which may be below the heater's rated power. Its cap,
+  // not the size of its steps.
   optional uint32 add_on_max_watts = 17 [
     (kusinta.iot.vendor.v1.vendor_attribute) = "add_on_max_watts",
     (kusinta.iot.vendor.v1.vendor_attribute_capabilities) = 5

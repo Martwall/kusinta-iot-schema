@@ -67,6 +67,26 @@ def test_a_heat_pump_is_steered_through_sg_ready_and_its_add_on_heater_block():
     ) == (1, 2, 3)
 
 
+def test_a_heat_pump_binds_its_hot_water_block_and_curve_adjustment_by_meaning():
+    # D56: an input is bound by what it does at the heat source, not by a vendor's
+    # composite state, so a rule never drives an SG Ready state that means more.
+    plant = heating_pb2.HeatingPlant(
+        heat_pump=heating_pb2.HeatPumpControl(hot_water_block=_nc_channel(5), curve_adjustment=_nc_channel(6))
+    )
+
+    control = _round_trip(plant).heat_pump
+    assert (
+        control.hot_water_block.output.attribute.endpoint_id,
+        control.curve_adjustment.output.attribute.endpoint_id,
+    ) == (5, 6)
+
+
+def test_the_bindings_by_meaning_follow_the_add_on_heater_block_in_field_number():
+    fields = heating_pb2.HeatPumpControl.DESCRIPTOR.fields_by_name
+
+    assert (fields["hot_water_block"].number, fields["curve_adjustment"].number) == (4, 5)
+
+
 def test_an_unknown_supply_cap_is_absent_rather_than_zero():
     circuit = heating_pb2.HeatingCircuit(floor=heating_pb2.FloorCircuit())
 

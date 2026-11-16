@@ -152,14 +152,18 @@ class HeatingPlant(_message.Message):
     def __init__(self, plant_id: _Optional[str] = ..., space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., name: _Optional[str] = ..., source: _Optional[_Union[HeatSourceKind, str]] = ..., readings_device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., heat_pump: _Optional[_Union[HeatPumpControl, _Mapping]] = ..., meter: _Optional[_Union[DeviceAttribute, _Mapping]] = ..., revision: _Optional[int] = ..., price_rules: _Optional[_Iterable[_Union[PriceRuleChange, _Mapping]]] = ..., price_rules_revision: _Optional[int] = ...) -> None: ...
 
 class HeatPumpControl(_message.Message):
-    __slots__ = ("sg_ready_block", "sg_ready_boost", "add_on_heater_block")
+    __slots__ = ("sg_ready_block", "sg_ready_boost", "add_on_heater_block", "hot_water_block", "curve_adjustment")
     SG_READY_BLOCK_FIELD_NUMBER: _ClassVar[int]
     SG_READY_BOOST_FIELD_NUMBER: _ClassVar[int]
     ADD_ON_HEATER_BLOCK_FIELD_NUMBER: _ClassVar[int]
+    HOT_WATER_BLOCK_FIELD_NUMBER: _ClassVar[int]
+    CURVE_ADJUSTMENT_FIELD_NUMBER: _ClassVar[int]
     sg_ready_block: ContactBinding
     sg_ready_boost: ContactBinding
     add_on_heater_block: ContactBinding
-    def __init__(self, sg_ready_block: _Optional[_Union[ContactBinding, _Mapping]] = ..., sg_ready_boost: _Optional[_Union[ContactBinding, _Mapping]] = ..., add_on_heater_block: _Optional[_Union[ContactBinding, _Mapping]] = ...) -> None: ...
+    hot_water_block: ContactBinding
+    curve_adjustment: ContactBinding
+    def __init__(self, sg_ready_block: _Optional[_Union[ContactBinding, _Mapping]] = ..., sg_ready_boost: _Optional[_Union[ContactBinding, _Mapping]] = ..., add_on_heater_block: _Optional[_Union[ContactBinding, _Mapping]] = ..., hot_water_block: _Optional[_Union[ContactBinding, _Mapping]] = ..., curve_adjustment: _Optional[_Union[ContactBinding, _Mapping]] = ...) -> None: ...
 
 class HeatingCircuit(_message.Message):
     __slots__ = ("circuit_id", "plant_id", "name", "radiator", "floor", "revision")

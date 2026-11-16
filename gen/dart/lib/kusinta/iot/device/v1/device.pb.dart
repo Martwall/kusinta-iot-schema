@@ -1163,8 +1163,9 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   @$pb.TagNumber(16)
   void clearOutdoorFilterHours() => $_clearField(16);
 
-  /// The most its internal electric add-on heat (add_on_heat_watts) may draw, in watts, as set:
-  /// its cap, not the size of its steps.
+  /// The limit set at the heat source for its internal electric add-on heater, in watts: the
+  /// most add_on_heat_watts may draw, which may be below the heater's rated power. Its cap,
+  /// not the size of its steps.
   @$pb.TagNumber(17)
   $core.int get addOnMaxWatts => $_getIZ(16);
   @$pb.TagNumber(17)

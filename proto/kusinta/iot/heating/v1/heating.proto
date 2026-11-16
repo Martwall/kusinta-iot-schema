@@ -186,6 +186,25 @@ message HeatPumpControl {
   // The input that blocks the heat pump's add-on (electric) heater while closed. Rests
   // open: the add-on heater is allowed.
   ContactBinding add_on_heater_block = 3;
+
+  // The inputs below are bound by what each does at the heat source, as its installer set
+  // the input there (NIBE: an AUX input's function, menu 5.4), never by a vendor's composite
+  // state: an SG Ready state may mean more on one model than another (on one heat pump,
+  // "low price" brings in its add-on heater), and a rule drives only what it means to.
+  // Either may be bound without the SG Ready inputs, and they without it.
+
+  // The input that blocks the heat source's hot-water production while closed: no charge of
+  // its tank starts, and one under way stops, while space heating runs on. Rests open: hot
+  // water is made as the heat source decides. A blocking input (HEAT BLOCKS), which leaves
+  // the compressor running (commissioning.v1, BLOCKS ON A COMPRESSOR).
+  ContactBinding hot_water_block = 4;
+
+  // The input that moves the heat source's curve by its external adjustment while closed:
+  // the supply it aims for shifts by the steps set at the heat source for that input
+  // ("plant.curve_adjustment_steps", commissioning.v1), up or down as they are signed. Rests
+  // open: the curve as set. Not a blocking input. The heat source's own report of it, where
+  // it gives one, is device.v1.HeatSourceReadings.external_adjustment_active.
+  ContactBinding curve_adjustment = 5;
 }
 
 // One heating circuit of a plant. Supply temperature and its cap are per circuit.
@@ -412,7 +431,7 @@ message HeatingRecord {
 // happened, never rewritten, and corrected by a newer change.
 //
 // HEAT BLOCKS. A block is a stretch of time in which a price rule holds closed an input of the
-// plant that blocks heat (HeatPumpControl.add_on_heater_block, sg_ready_block), or, in SHADOW,
+// plant that blocks heat (HeatPumpControl.add_on_heater_block, hot_water_block, sg_ready_block), or, in SHADOW,
 // would have. Each is recorded (HeatBlock) with why it started and how it ended. A plant's
 // blocks are released by hand (webrtc.v1.ReleaseHeatBlock): every LIVE block under way ends,
 // and the plant's blocking rules start no LIVE block until the hold the release states runs out
@@ -455,8 +474,14 @@ enum PriceRule {
   // of the plant: not a blocking rule.
   PRICE_RULE_FLOOR_PRE_HEAT = 2;
 
-  // Raises the heat source's hot water in cheap quarter hours (HeatPumpControl.sg_ready_boost),
-  // so that the tank is full before dear ones; never during a block. Not a blocking rule.
+  // Holds back the heat source's hot water in dear quarter hours (HeatPumpControl.hot_water_block)
+  // and lets it be made in cheap ones: each block within "plant.max_block_minutes", ended early
+  // where the tank's top falls to "hot_water.block_floor_centidegrees" (commissioning.v1) or its
+  // temperature is not heard, never across the heat source's periodic increase, and released so
+  // that the charge it then makes lands in the cheapest quarter hours after it. A blocking rule.
+  // Where the plant binds no hot_water_block it boosts instead (sg_ready_boost) in cheap quarter
+  // hours, never during a block, and only where "plant.boost_uses_add_on" is false: a boost
+  // that brings in the add-on heater buys its heat at the dearest rate.
   PRICE_RULE_HOT_WATER = 3;
 }
 

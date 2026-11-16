@@ -113,8 +113,14 @@ class PriceRule extends $pb.ProtobufEnum {
   static const PriceRule PRICE_RULE_FLOOR_PRE_HEAT =
       PriceRule._(2, _omitEnumNames ? '' : 'PRICE_RULE_FLOOR_PRE_HEAT');
 
-  /// Raises the heat source's hot water in cheap quarter hours (HeatPumpControl.sg_ready_boost),
-  /// so that the tank is full before dear ones; never during a block. Not a blocking rule.
+  /// Holds back the heat source's hot water in dear quarter hours (HeatPumpControl.hot_water_block)
+  /// and lets it be made in cheap ones: each block within "plant.max_block_minutes", ended early
+  /// where the tank's top falls to "hot_water.block_floor_centidegrees" (commissioning.v1) or its
+  /// temperature is not heard, never across the heat source's periodic increase, and released so
+  /// that the charge it then makes lands in the cheapest quarter hours after it. A blocking rule.
+  /// Where the plant binds no hot_water_block it boosts instead (sg_ready_boost) in cheap quarter
+  /// hours, never during a block, and only where "plant.boost_uses_add_on" is false: a boost
+  /// that brings in the add-on heater buys its heat at the dearest rate.
   static const PriceRule PRICE_RULE_HOT_WATER =
       PriceRule._(3, _omitEnumNames ? '' : 'PRICE_RULE_HOT_WATER');
 

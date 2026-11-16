@@ -326,6 +326,22 @@ const HeatPumpControl$json = {
       '6': '.kusinta.iot.heating.v1.ContactBinding',
       '10': 'addOnHeaterBlock'
     },
+    {
+      '1': 'hot_water_block',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ContactBinding',
+      '10': 'hotWaterBlock'
+    },
+    {
+      '1': 'curve_adjustment',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.ContactBinding',
+      '10': 'curveAdjustment'
+    },
   ],
 };
 
@@ -335,7 +351,10 @@ final $typed_data.Uint8List heatPumpControlDescriptor = $convert.base64Decode(
     '5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nUgxzZ1JlYWR5QmxvY2sSTAoOc2dfcmVhZHlfYm9v'
     'c3QYAiABKAsyJi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkNvbnRhY3RCaW5kaW5nUgxzZ1JlYW'
     'R5Qm9vc3QSVQoTYWRkX29uX2hlYXRlcl9ibG9jaxgDIAEoCzImLmt1c2ludGEuaW90LmhlYXRp'
-    'bmcudjEuQ29udGFjdEJpbmRpbmdSEGFkZE9uSGVhdGVyQmxvY2s=');
+    'bmcudjEuQ29udGFjdEJpbmRpbmdSEGFkZE9uSGVhdGVyQmxvY2sSTgoPaG90X3dhdGVyX2Jsb2'
+    'NrGAQgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5Db250YWN0QmluZGluZ1INaG90V2F0'
+    'ZXJCbG9jaxJRChBjdXJ2ZV9hZGp1c3RtZW50GAUgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy'
+    '52MS5Db250YWN0QmluZGluZ1IPY3VydmVBZGp1c3RtZW50');
 
 @$core.Deprecated('Use heatingCircuitDescriptor instead')
 const HeatingCircuit$json = {

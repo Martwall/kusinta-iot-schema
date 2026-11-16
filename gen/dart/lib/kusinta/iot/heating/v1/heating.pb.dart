@@ -414,11 +414,15 @@ class HeatPumpControl extends $pb.GeneratedMessage {
     ContactBinding? sgReadyBlock,
     ContactBinding? sgReadyBoost,
     ContactBinding? addOnHeaterBlock,
+    ContactBinding? hotWaterBlock,
+    ContactBinding? curveAdjustment,
   }) {
     final result = create();
     if (sgReadyBlock != null) result.sgReadyBlock = sgReadyBlock;
     if (sgReadyBoost != null) result.sgReadyBoost = sgReadyBoost;
     if (addOnHeaterBlock != null) result.addOnHeaterBlock = addOnHeaterBlock;
+    if (hotWaterBlock != null) result.hotWaterBlock = hotWaterBlock;
+    if (curveAdjustment != null) result.curveAdjustment = curveAdjustment;
     return result;
   }
 
@@ -441,6 +445,10 @@ class HeatPumpControl extends $pb.GeneratedMessage {
     ..aOM<ContactBinding>(2, _omitFieldNames ? '' : 'sgReadyBoost',
         subBuilder: ContactBinding.create)
     ..aOM<ContactBinding>(3, _omitFieldNames ? '' : 'addOnHeaterBlock',
+        subBuilder: ContactBinding.create)
+    ..aOM<ContactBinding>(4, _omitFieldNames ? '' : 'hotWaterBlock',
+        subBuilder: ContactBinding.create)
+    ..aOM<ContactBinding>(5, _omitFieldNames ? '' : 'curveAdjustment',
         subBuilder: ContactBinding.create)
     ..hasRequiredFields = false;
 
@@ -509,6 +517,37 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   void clearAddOnHeaterBlock() => $_clearField(3);
   @$pb.TagNumber(3)
   ContactBinding ensureAddOnHeaterBlock() => $_ensure(2);
+
+  /// The input that blocks the heat source's hot-water production while closed: no charge of
+  /// its tank starts, and one under way stops, while space heating runs on. Rests open: hot
+  /// water is made as the heat source decides. A blocking input (HEAT BLOCKS), which leaves
+  /// the compressor running (commissioning.v1, BLOCKS ON A COMPRESSOR).
+  @$pb.TagNumber(4)
+  ContactBinding get hotWaterBlock => $_getN(3);
+  @$pb.TagNumber(4)
+  set hotWaterBlock(ContactBinding value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasHotWaterBlock() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHotWaterBlock() => $_clearField(4);
+  @$pb.TagNumber(4)
+  ContactBinding ensureHotWaterBlock() => $_ensure(3);
+
+  /// The input that moves the heat source's curve by its external adjustment while closed:
+  /// the supply it aims for shifts by the steps set at the heat source for that input
+  /// ("plant.curve_adjustment_steps", commissioning.v1), up or down as they are signed. Rests
+  /// open: the curve as set. Not a blocking input. The heat source's own report of it, where
+  /// it gives one, is device.v1.HeatSourceReadings.external_adjustment_active.
+  @$pb.TagNumber(5)
+  ContactBinding get curveAdjustment => $_getN(4);
+  @$pb.TagNumber(5)
+  set curveAdjustment(ContactBinding value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCurveAdjustment() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCurveAdjustment() => $_clearField(5);
+  @$pb.TagNumber(5)
+  ContactBinding ensureCurveAdjustment() => $_ensure(4);
 }
 
 enum HeatingCircuit_Distribution { radiator, floor, notSet }
