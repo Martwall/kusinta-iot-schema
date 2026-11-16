@@ -337,3 +337,24 @@ def test_the_provisioning_secret_never_travels_connector_to_gateway():
         if field.name == "app_key"
     ]
     assert leaked == []
+
+
+def test_a_provision_replaces_a_pending_registration_only_when_it_says_so():
+    """Replacing is explicit: unset, an identifier already pending is refused
+    (registration_pending) rather than silently re-keyed or moved."""
+    assert _round_trip(management_pb2.ProvisionDevice()).replace is False
+
+
+def test_a_provision_carries_the_ask_to_replace():
+    decoded = _round_trip(
+        management_pb2.ProvisionDevice(
+            connector_id=identity_pb2.ConnectorId(value="lorawan"),
+            initial_space_id=identity_pb2.SpaceId(value="plant-room"),
+            replace=True,
+            lorawan=lorawan_pb2.LorawanProvisioning(
+                dev_eui=_FAKE_DEV_EUI, app_key=_FAKE_APP_KEY
+            ),
+        )
+    )
+
+    assert decoded.replace is True
