@@ -197,7 +197,8 @@ export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpCo
    * holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
    * lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
    * are positive). Among inputs that only hold heat back the order is free: each lapse alone
-   * gives back what it held.
+   * gives back what it held. A curve_adjustment whose steps are not known is held with no other
+   * input.
    *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_block = 1;
    */
@@ -1762,11 +1763,14 @@ export enum PriceRule {
    * or is not heard (HEAT_BLOCK_END_INTERRUPTED), never across the heat source's periodic
    * increase, and released so that the charge it then makes lands in the cheapest quarter hours
    * after it. A blocking rule, whose input is hot_water_block; SHADOW models the blocks whether
-   * or not it is bound. LIVE, it blocks nothing while "hot_water.periodic_increase" is
-   * unanswered, since it could not keep clear of a step it does not know of. Besides, where the
-   * plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for hot water
-   * in cheap quarter hours, never during a block: never otherwise, since a boost that brings in
-   * the add-on heater buys its heat at the dearest rate.
+   * or not it is bound. It starts no block where the plant does not report its tank's top, or
+   * that report is not heard. LIVE, it blocks nothing while the periodic increase is not known:
+   * "hot_water.periodic_increase" unanswered, or answered true with its interval or start
+   * unanswered, since it could not keep clear of a step it does not know the time of. Besides,
+   * where the plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for
+   * hot water in cheap quarter hours, never during a block, and only while that input too may be
+   * driven (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on
+   * heater buys its heat at the dearest rate.
    *
    * @generated from enum value: PRICE_RULE_HOT_WATER = 3;
    */
@@ -1813,7 +1817,8 @@ export enum PriceRuleMode {
    * The rule decides and drives. It drives only while the gateway may drive the input it steers:
    * bound, under a current pass of its commissioning test, the plant's feature not blocked
    * (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, the
-   * facts its rule names answered (PRICE_RULE_HOT_WATER), and no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
+   * periodic increase known for HOT_WATER (PRICE_RULE_HOT_WATER), and no hold running
+   * (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
    * plant's feature status says why. A rule is put LIVE only while the input it steers is bound
    * (webrtc.v1.SetPriceRuleMode).
    *

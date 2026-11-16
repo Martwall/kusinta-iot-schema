@@ -107,10 +107,13 @@ option optimize_for = SPEED;
 //       organisation (STATED), beside an installer's answer (INSPECTED).
 //   "hot_water.periodic_increase"  bool; a plant with a hot-water tank. Whether the heat source
 //       raises its tank on a schedule of its own against legionella (a periodic increase).
-//       Unknown: the gateway infers such a step from the tank's readings. The gateway never
-//       moves or suppresses the step: a price rule only leaves the heat of such a step out of
-//       what it scores. HEAT_SOURCE; OPTIONAL; STATED (a household admin, from the heat
-//       source's menu), INSPECTED.
+//       Unknown: the gateway infers such a step from the tank's readings for what it scores,
+//       and a LIVE hot-water rule blocks nothing (heating.v1 PRICE_RULE_HOT_WATER). The gateway
+//       never moves or suppresses the step: a price rule only leaves the heat of such a step out
+//       of what it scores, and a hot-water block never runs across it. HEAT_SOURCE; OPTIONAL,
+//       save FOR_FEATURE PLANT for a plant that binds hot_water_block, as are its interval and
+//       start while it is true; STATED (a household admin, from the heat source's menu),
+//       INSPECTED.
 //   "hot_water.periodic_increase_interval_days"  uint, 1 to 90; a plant with a hot-water tank.
 //       Every how many days
 //       the periodic increase runs. Asked while "hot_water.periodic_increase" is true.
@@ -121,8 +124,9 @@ option optimize_for = SPEED;
 //
 // BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
 // (heating.v1.HeatPumpControl.sg_ready_block), or of its hot water (hot_water_block), which
-// stops a charge under way and with it the compressor where nothing else calls for heat; the
-// two count together towards "plant.max_blocks_per_day". Blocking the add-on heater
+// stops a charge under way and with it the compressor where nothing else calls for heat. The
+// two count together towards "plant.max_blocks_per_day": a stretch in which either is held, or
+// both, is one block, and a release after it holds both open. Blocking the add-on heater
 // (add_on_heater_block) leaves the compressor running, so none of what follows, nor
 // "plant.min_block_minutes" or "plant.max_blocks_per_day", applies to it: it is bounded by
 // "plant.max_block_minutes" alone. Whatever the keys above say, the gateway releases a
