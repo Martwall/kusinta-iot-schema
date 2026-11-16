@@ -481,8 +481,11 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   ///
   /// They lapse separately, so their leases are ordered: while both are closed, the gateway
   /// gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
-  /// through "blocked" on its way back to normal. In general, of two bound inputs, the one
-  /// whose half-state blocks heat never lapses last.
+  /// through "blocked" on its way back to normal. In general, of inputs held together, one that
+  /// holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
+  /// lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
+  /// are positive). Among inputs that only hold heat back the order is free: each lapse alone
+  /// gives back what it held.
   @$pb.TagNumber(1)
   ContactBinding get sgReadyBlock => $_getN(0);
   @$pb.TagNumber(1)
@@ -520,8 +523,9 @@ class HeatPumpControl extends $pb.GeneratedMessage {
 
   /// The input that blocks the heat source's hot-water production while closed: no charge of
   /// its tank starts, and one under way stops, while space heating runs on. Rests open: hot
-  /// water is made as the heat source decides. A blocking input (HEAT BLOCKS), which leaves
-  /// the compressor running (commissioning.v1, BLOCKS ON A COMPRESSOR).
+  /// water is made as the heat source decides. A blocking input (HEAT BLOCKS). Stopping a
+  /// charge under way may stop the compressor, so it is held to the rules of a block that
+  /// stops it (commissioning.v1, BLOCKS ON A COMPRESSOR).
   @$pb.TagNumber(4)
   ContactBinding get hotWaterBlock => $_getN(3);
   @$pb.TagNumber(4)

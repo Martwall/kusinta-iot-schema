@@ -193,8 +193,11 @@ export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpCo
    *
    * They lapse separately, so their leases are ordered: while both are closed, the gateway
    * gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
-   * through "blocked" on its way back to normal. In general, of two bound inputs, the one
-   * whose half-state blocks heat never lapses last.
+   * through "blocked" on its way back to normal. In general, of inputs held together, one that
+   * holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
+   * lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
+   * are positive). Among inputs that only hold heat back the order is free: each lapse alone
+   * gives back what it held.
    *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding sg_ready_block = 1;
    */
@@ -216,8 +219,9 @@ export declare type HeatPumpControl = Message<"kusinta.iot.heating.v1.HeatPumpCo
   /**
    * The input that blocks the heat source's hot-water production while closed: no charge of
    * its tank starts, and one under way stops, while space heating runs on. Rests open: hot
-   * water is made as the heat source decides. A blocking input (HEAT BLOCKS), which leaves
-   * the compressor running (commissioning.v1, BLOCKS ON A COMPRESSOR).
+   * water is made as the heat source decides. A blocking input (HEAT BLOCKS). Stopping a
+   * charge under way may stop the compressor, so it is held to the rules of a block that
+   * stops it (commissioning.v1, BLOCKS ON A COMPRESSOR).
    *
    * @generated from field: kusinta.iot.heating.v1.ContactBinding hot_water_block = 4;
    */
@@ -1752,13 +1756,17 @@ export enum PriceRule {
 
   /**
    * Holds back the heat source's hot water in dear quarter hours (HeatPumpControl.hot_water_block)
-   * and lets it be made in cheap ones: each block within "plant.max_block_minutes", ended early
-   * where the tank's top falls to "hot_water.block_floor_centidegrees" (commissioning.v1) or its
-   * temperature is not heard, never across the heat source's periodic increase, and released so
-   * that the charge it then makes lands in the cheapest quarter hours after it. A blocking rule.
-   * Where the plant binds no hot_water_block it boosts instead (sg_ready_boost) in cheap quarter
-   * hours, never during a block, and only where "plant.boost_uses_add_on" is false: a boost
-   * that brings in the add-on heater buys its heat at the dearest rate.
+   * and lets it be made in cheap ones: each block within "plant.max_block_minutes" and the rules
+   * of a block that stops the compressor (commissioning.v1, BLOCKS ON A COMPRESSOR), ended early
+   * where the tank's top falls to "hot_water.block_floor_centidegrees" (HEAT_BLOCK_END_HOT_WATER_LOW)
+   * or is not heard (HEAT_BLOCK_END_INTERRUPTED), never across the heat source's periodic
+   * increase, and released so that the charge it then makes lands in the cheapest quarter hours
+   * after it. A blocking rule, whose input is hot_water_block; SHADOW models the blocks whether
+   * or not it is bound. LIVE, it blocks nothing while "hot_water.periodic_increase" is
+   * unanswered, since it could not keep clear of a step it does not know of. Besides, where the
+   * plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for hot water
+   * in cheap quarter hours, never during a block: never otherwise, since a boost that brings in
+   * the add-on heater buys its heat at the dearest rate.
    *
    * @generated from enum value: PRICE_RULE_HOT_WATER = 3;
    */
@@ -1804,8 +1812,8 @@ export enum PriceRuleMode {
   /**
    * The rule decides and drives. It drives only while the gateway may drive the input it steers:
    * bound, under a current pass of its commissioning test, the plant's feature not blocked
-   * (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, and
-   * no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
+   * (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, the
+   * facts its rule names answered (PRICE_RULE_HOT_WATER), and no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
    * plant's feature status says why. A rule is put LIVE only while the input it steers is bound
    * (webrtc.v1.SetPriceRuleMode).
    *
@@ -1871,7 +1879,8 @@ export enum HeatBlockEnd {
 
   /**
    * The gateway stopped holding it for a cause of its own: the input could no longer be driven
-   * (PRICE_RULE_MODE_LIVE), a commissioning test took it, or the gateway restarted.
+   * (PRICE_RULE_MODE_LIVE), a reading its rule bounds it by was not heard, a commissioning test
+   * took it, or the gateway restarted.
    *
    * @generated from enum value: HEAT_BLOCK_END_INTERRUPTED = 6;
    */

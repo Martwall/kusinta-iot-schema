@@ -90,14 +90,14 @@ option optimize_for = SPEED;
 //       its curve while that input is closed, as set at the heat source for the input (NIBE:
 //       the climate system's external adjustment, menu 1.9.2): positive raises the supply it
 //       aims for, negative lowers it. Unknown: the gateway drives no curve adjustment, since
-//       it would not know which way the curve moves. HEAT_SOURCE; FOR_FEATURE PLANT; INSPECTED
-//       (read at the heat source), STATED (a household admin, from the heat source's menu).
+//       it would not know which way the curve moves. HEAT_SOURCE; OPTIONAL; INSPECTED (read at
+//       the heat source), STATED (a household admin, from the heat source's menu).
 //   "plant.boost_uses_add_on"  bool; a plant that binds sg_ready_boost. Whether the heat
 //       source brings in its add-on or immersion heater while that input asks it to run
 //       harder (SG Ready "low price"), as an installer saw on a bench test. Makers differ, and
 //       a manual does not settle it for a given model and setting. True, or unknown: no rule
 //       boosts through it, since a boost on the add-on heater buys heat at the dearest rate.
-//       HEAT_SOURCE; FOR_FEATURE PLANT; INSPECTED.
+//       HEAT_SOURCE; OPTIONAL; INSPECTED.
 //   "hot_water.block_floor_centidegrees"  uint, 3500 to 5500; a plant with a hot-water tank
 //       that binds hot_water_block. The tank's top temperature, in centidegrees, at which the
 //       gateway ends a block of its hot water (HEAT_BLOCK_END_HOT_WATER_LOW), so that a held
@@ -120,10 +120,11 @@ option optimize_for = SPEED;
 //       "hot_water.periodic_increase" is true. HEAT_SOURCE; OPTIONAL; STATED, INSPECTED.
 //
 // BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
-// (heating.v1.HeatPumpControl.sg_ready_block). Blocking the add-on heater
-// (add_on_heater_block) or the hot water (hot_water_block) leaves the compressor running for
-// space heating, so none of what follows, nor "plant.min_block_minutes" or
-// "plant.max_blocks_per_day", applies to either: each is bounded in length by
+// (heating.v1.HeatPumpControl.sg_ready_block), or of its hot water (hot_water_block), which
+// stops a charge under way and with it the compressor where nothing else calls for heat; the
+// two count together towards "plant.max_blocks_per_day". Blocking the add-on heater
+// (add_on_heater_block) leaves the compressor running, so none of what follows, nor
+// "plant.min_block_minutes" or "plant.max_blocks_per_day", applies to it: it is bounded by
 // "plant.max_block_minutes" alone. Whatever the keys above say, the gateway releases a
 // compressor block's input for at least as long as that block lasted, the release running
 // on past midnight where the block ended near it, and starts no block within 6 minutes of
@@ -695,7 +696,8 @@ message CommissioningTest {
   google.protobuf.Timestamp conclude_by = 14;
 
   // What the heat source reported while an OUTPUT_LEASE test held one of its plant's inputs
-  // (heating.v1.HeatPumpControl: an SG Ready input or the add-on heat block), from the
+  // (heating.v1.HeatPumpControl: an SG Ready input, the add-on heat block, the hot-water block
+  // or the curve adjustment), from the
   // plant's bound readings (device.v1.HeatSourceReadings) that arrived between the test's
   // first write and its end, in the order they arrived. Evidence for the person judging the
   // installation, never part of the verdict: the test passes on the output's own state. Empty

@@ -4774,9 +4774,7 @@ class SetComfortWindows extends $pb.GeneratedMessage {
 ///   "STALE_REVISION"      price_rules_revision is set and the plant's rules changed since.
 ///   "rule_input_unbound"  LIVE for a rule whose input the plant does not bind: metadata "field"
 ///                         names it by its proto field name, "add_on_heater_block" for
-///                         ADD_ON_HEATER_BLOCK and "hot_water_block" for HOT_WATER (which
-///                         also takes "sg_ready_boost" where "plant.boost_uses_add_on" is
-///                         false, heating.v1 PRICE_RULE_HOT_WATER); for
+///                         ADD_ON_HEATER_BLOCK and "hot_water_block" for HOT_WATER; for
 ///                         FLOOR_PRE_HEAT, no floor zone of the plant binds an output, and
 ///                         "field" is "output". SHADOW and OFF need no input bound.
 ///   "rule_not_drivable"   LIVE for a rule the gateway does not yet drive (it decides it in shadow

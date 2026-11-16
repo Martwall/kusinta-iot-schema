@@ -492,7 +492,8 @@ export declare type CommissioningTest = Message<"kusinta.iot.commissioning.v1.Co
 
   /**
    * What the heat source reported while an OUTPUT_LEASE test held one of its plant's inputs
-   * (heating.v1.HeatPumpControl: an SG Ready input or the add-on heat block), from the
+   * (heating.v1.HeatPumpControl: an SG Ready input, the add-on heat block, the hot-water block
+   * or the curve adjustment), from the
    * plant's bound readings (device.v1.HeatSourceReadings) that arrived between the test's
    * first write and its end, in the order they arrived. Evidence for the person judging the
    * installation, never part of the verdict: the test passes on the output's own state. Empty

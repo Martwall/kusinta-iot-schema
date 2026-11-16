@@ -114,13 +114,17 @@ class PriceRule extends $pb.ProtobufEnum {
       PriceRule._(2, _omitEnumNames ? '' : 'PRICE_RULE_FLOOR_PRE_HEAT');
 
   /// Holds back the heat source's hot water in dear quarter hours (HeatPumpControl.hot_water_block)
-  /// and lets it be made in cheap ones: each block within "plant.max_block_minutes", ended early
-  /// where the tank's top falls to "hot_water.block_floor_centidegrees" (commissioning.v1) or its
-  /// temperature is not heard, never across the heat source's periodic increase, and released so
-  /// that the charge it then makes lands in the cheapest quarter hours after it. A blocking rule.
-  /// Where the plant binds no hot_water_block it boosts instead (sg_ready_boost) in cheap quarter
-  /// hours, never during a block, and only where "plant.boost_uses_add_on" is false: a boost
-  /// that brings in the add-on heater buys its heat at the dearest rate.
+  /// and lets it be made in cheap ones: each block within "plant.max_block_minutes" and the rules
+  /// of a block that stops the compressor (commissioning.v1, BLOCKS ON A COMPRESSOR), ended early
+  /// where the tank's top falls to "hot_water.block_floor_centidegrees" (HEAT_BLOCK_END_HOT_WATER_LOW)
+  /// or is not heard (HEAT_BLOCK_END_INTERRUPTED), never across the heat source's periodic
+  /// increase, and released so that the charge it then makes lands in the cheapest quarter hours
+  /// after it. A blocking rule, whose input is hot_water_block; SHADOW models the blocks whether
+  /// or not it is bound. LIVE, it blocks nothing while "hot_water.periodic_increase" is
+  /// unanswered, since it could not keep clear of a step it does not know of. Besides, where the
+  /// plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for hot water
+  /// in cheap quarter hours, never during a block: never otherwise, since a boost that brings in
+  /// the add-on heater buys its heat at the dearest rate.
   static const PriceRule PRICE_RULE_HOT_WATER =
       PriceRule._(3, _omitEnumNames ? '' : 'PRICE_RULE_HOT_WATER');
 
@@ -159,8 +163,8 @@ class PriceRuleMode extends $pb.ProtobufEnum {
 
   /// The rule decides and drives. It drives only while the gateway may drive the input it steers:
   /// bound, under a current pass of its commissioning test, the plant's feature not blocked
-  /// (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, and
-  /// no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
+  /// (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, the
+  /// facts its rule names answered (PRICE_RULE_HOT_WATER), and no hold running (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
   /// plant's feature status says why. A rule is put LIVE only while the input it steers is bound
   /// (webrtc.v1.SetPriceRuleMode).
   static const PriceRuleMode PRICE_RULE_MODE_LIVE =
@@ -210,7 +214,8 @@ class HeatBlockEnd extends $pb.ProtobufEnum {
       HeatBlockEnd._(5, _omitEnumNames ? '' : 'HEAT_BLOCK_END_RULE_SWITCHED');
 
   /// The gateway stopped holding it for a cause of its own: the input could no longer be driven
-  /// (PRICE_RULE_MODE_LIVE), a commissioning test took it, or the gateway restarted.
+  /// (PRICE_RULE_MODE_LIVE), a reading its rule bounds it by was not heard, a commissioning test
+  /// took it, or the gateway restarted.
   static const HeatBlockEnd HEAT_BLOCK_END_INTERRUPTED =
       HeatBlockEnd._(6, _omitEnumNames ? '' : 'HEAT_BLOCK_END_INTERRUPTED');
 
