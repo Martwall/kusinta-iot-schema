@@ -358,10 +358,13 @@ message HeatSourceReadings {
 
   // SETTINGS. The fields from here on are the heat source's own settings, as it states them:
   // what it was set to, by its own controls or its maker's app, not measurements. A connector
-  // sends one when it first reads it and again when it changes. Never written through this
-  // message. They follow the rule in this message's header like every reading here: in a
-  // home they are household data, for its residents and never for service, and a change is a
-  // moment someone acted (a curve lowered while away, say). None is a service signal.
+  // sends one when it first reads it, and again at least when it changes: it may also send it
+  // again unchanged, as on a heartbeat. Never written through this message. They follow the
+  // rule in this message's header like every reading here: in a home they are household data,
+  // for its residents and never for service, and a change of value is a moment someone acted
+  // (a curve lowered while away, say). A value sent again unchanged is no such moment, and a
+  // consumer reads a change only where the value differs from the last one it held. None is a
+  // service signal.
 
   // How the heat source is set to run (HeatSourceOperatingMode), as its number: automatic,
   // manual, or its add-on heat alone. In add-on only its compressor makes no heat, so a block
