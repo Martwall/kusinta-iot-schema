@@ -540,8 +540,10 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   /// The input that moves the heat source's curve by its external adjustment while closed:
   /// the supply it aims for shifts by the steps set at the heat source for that input
   /// ("plant.curve_adjustment_steps", commissioning.v1), up or down as they are signed. Rests
-  /// open: the curve as set. Not a blocking input. The heat source's own report of it, where
-  /// it gives one, is device.v1.HeatSourceReadings.external_adjustment_active.
+  /// open: the curve as set. Not a blocking input, so none of a block's bounds applies to it,
+  /// though negative steps hold heat back: a rule that drives it states its own longest hold
+  /// and its release. The heat source's own report of it, where it gives one, is
+  /// device.v1.HeatSourceReadings.external_adjustment_active.
   @$pb.TagNumber(5)
   ContactBinding get curveAdjustment => $_getN(4);
   @$pb.TagNumber(5)
@@ -1883,8 +1885,9 @@ class HeatBlock extends $pb.GeneratedMessage {
   void clearMode() => $_clearField(3);
 
   /// Why it started, as a room's explanation names the cause (climate.v1.ClimateExplanationKind;
-  /// subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours. A kind the client
-  /// does not know is shown as a block without a cause.
+  /// subject ADD_ON_HEATER for the add-on heater): PRICE_HIGH for dear hours, a hot-water block's
+  /// too. What was blocked is told by rule (HOT_WATER for the hot water), since no explanation
+  /// subject names it. A kind the client does not know is shown as a block without a cause.
   @$pb.TagNumber(4)
   $7.ClimateExplanationKind get reason => $_getN(3);
   @$pb.TagNumber(4)
