@@ -21,10 +21,6 @@ export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'types.pbenum.dart';
 
-/// Whether a person owns a device outright. COMPANY: no person does; it is one of the
-/// building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
-/// for a device of their own that they may take with them. Who paid for one of the
-/// building's own devices is a separate question, answered by AssetOwner.
 /// A device model a connector can register from credentials (ProvisionDevice), as the
 /// connector states it in its handshake and the gateway copies it to the app. The app offers
 /// these and nothing else, and never keeps a list of models of its own: which models a

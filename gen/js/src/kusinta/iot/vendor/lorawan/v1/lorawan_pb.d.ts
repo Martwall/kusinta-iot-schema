@@ -29,6 +29,14 @@ export declare type LorawanProvisioning = Message<"kusinta.iot.vendor.lorawan.v1
    * the device id from it and reports it as DeviceDescriptor.serial_number — so a
    * device can be claimed by its label before it has ever joined.
    *
+   * CANONICAL FORM: sixteen hex digits, upper case, no separators. A label prints it in
+   * groups and a scan or a person may type it in lower case: the gateway normalises what
+   * it is given — removing whitespace, ASCII hyphens and colons, and upper-casing — and
+   * refuses as INVALID_REQUEST {"reason": "dev_eui"} what is not sixteen hex digits after
+   * that. Wherever an identifier is compared — a registration with another, with
+   * DeviceDescriptor.serial_number, with DeprovisionDevice — it is in this form, and every
+   * identifier the gateway or a connector sends is in it.
+   *
    * @generated from field: string dev_eui = 1;
    */
   devEui: string;

@@ -1101,13 +1101,15 @@ enum ProvisionDevice_Credentials { lorawan, notSet }
 /// is — a room, or a common or technical space for the building's equipment — so that no
 /// registered device arrives unfiled, and whoever registered it knows where it went. One
 /// without it is refused as INVALID_REQUEST {"reason": "space"}; an installer names a space
-/// their grant covers. The gateway keeps initial_space_id and ownership as a pending filing,
-/// under the device id the connector derives from the identifier, and applies it when the
-/// device first announces itself: filed into initial_space_id, owned as ownership says. Into a
-/// home only as PlaceDeviceInSpace allows. Unset ownership lets the gateway decide from the
-/// caller's role, and an ownership the caller may not confer is refused (ClaimDevice, WHICH
-/// CLAIM). A pending filing holds no credential, and goes with the registration
-/// (DeprovisionDevice).
+/// their grant covers. The gateway keeps initial_space_id and ownership as a pending
+/// registration, keyed by connector_id and the identifier in its technology's canonical form
+/// (LorawanProvisioning.dev_eui), and applies it when that connector first announces a device
+/// whose DeviceDescriptor.serial_number, normalised the same way, is that identifier: filed
+/// into initial_space_id, owned as ownership says. The device id is the connector's to derive
+/// and is not known before then. Into a home only as PlaceDeviceInSpace allows. Unset
+/// ownership lets the gateway decide from the caller's role, and an ownership the caller may
+/// not confer is refused (ClaimDevice, WHICH CLAIM). A pending registration holds no
+/// credential, and goes with the registration (DeprovisionDevice).
 ///
 /// Registering and owning remain distinct acts: ClaimDevice carries possession_proof, and
 /// because the connector derives the device id and the serial from the identifier here, a
@@ -1115,17 +1117,23 @@ enum ProvisionDevice_Credentials { lorawan, notSet }
 /// joined.
 ///
 /// AN IDENTIFIER ALREADY REGISTERED. Provisioning the same identifier again is an upsert: it
-/// replaces the credentials, model and pending filing rather than being refused as a conflict,
-/// so correcting a mistyped key does not require removing the registration first. Except for a
-/// device that has joined: re-keying one is refused as FAILED_PRECONDITION
-/// {"reason": "device_known"} unless the caller reaches a space the device is filed in, or is
-/// one of the gateway's administrators. Without that, anyone who may register would silence a
-/// working device elsewhere by replacing the key it joined with.
+/// replaces the credentials, model and pending registration rather than being refused as a
+/// conflict, so correcting a mistyped key does not require removing the registration first.
+/// Two exceptions, neither of which binds the gateway's administrators:
+///   * a registration whose device has not joined, and whose pending registration names a
+///     space the caller does not reach, is not replaced: refused as FAILED_PRECONDITION
+///     {"reason": "registration_known"}. Otherwise an installer granted one space could take
+///     over a registration made into another, breaking its join and moving it to theirs;
+///   * a device that has joined is not re-keyed unless the caller reaches a space it is filed
+///     in: refused as FAILED_PRECONDITION {"reason": "device_known"}. Otherwise anyone who may
+///     register would silence a working device elsewhere by replacing the key it joined with.
+///     A re-key that is allowed takes effect only when the device next joins; until then it
+///     keeps the session it has.
 ///
 /// THE ROOT KEY. The credentials are handled as their technology's message says
 /// (LorawanProvisioning.app_key). The gateway passes them to the connector
 /// (connector.v1 RegisterDevice) and keeps them nowhere: not in a log, not in its database,
-/// not in the pending filing, not in an answer, a refusal or a listing.
+/// not in the pending registration, not in an answer, a refusal or a listing.
 ///
 /// REFUSALS, beyond NOT_ENTITLED, each a GatewayError with metadata {"reason": ...}:
 ///   INVALID_REQUEST "space"
@@ -1138,8 +1146,11 @@ enum ProvisionDevice_Credentials { lorawan, notSet }
 ///       party's own is set on the device first;
 ///   INVALID_REQUEST "model_unknown"
 ///       model_id is empty or none the connector states (ConnectorDescriptor.provisioning_models);
-///   FAILED_PRECONDITION "device_known"
+///   FAILED_PRECONDITION "registration_known", "device_known"
 ///       as AN IDENTIFIER ALREADY REGISTERED says;
+///   FAILED_PRECONDITION "identifier_taken"
+///       the registry holds the identifier somewhere this connector cannot write — another
+///       tenant or application — so it is neither registered nor replaced here;
 ///   FAILED_PRECONDITION "provisioning_unsupported"
 ///       the connector does not declare supports_provisioning;
 ///   UNAVAILABLE "connector_unavailable"
@@ -1148,7 +1159,9 @@ enum ProvisionDevice_Credentials { lorawan, notSet }
 ///       the connector could not reach its registry; nothing was written;
 ///   INTERNAL "registry_refused"
 ///       the registry would not take the record.
-/// A refusal leaves no pending filing behind, and the app does not hold the key to retry.
+/// A refusal adds nothing and changes nothing already held: no registration, credential or
+/// pending registration is written, replaced or removed by it. The app does not hold the key
+/// to retry.
 class ProvisionDevice extends $pb.GeneratedMessage {
   factory ProvisionDevice({
     $0.ConnectorId? connectorId,
@@ -1250,7 +1263,7 @@ class ProvisionDevice extends $pb.GeneratedMessage {
   $1.LorawanProvisioning ensureLorawan() => $_ensure(1);
 
   /// Where to file the device when it joins, and what it becomes: as StartPairing's fields of
-  /// the same names, kept as a pending filing (WHERE IT IS FILED). initial_space_id is
+  /// the same names, kept as a pending registration (WHERE IT IS FILED). initial_space_id is
   /// required here, unlike there.
   @$pb.TagNumber(3)
   $0.SpaceId get initialSpaceId => $_getN(2);
@@ -1280,10 +1293,10 @@ enum DeprovisionDevice_Identifier { lorawanDevEui, notSet }
 /// holding its key. The undo of ProvisionDevice: distinct from ReleaseDevice, which gives up
 /// ownership, and RemoveDeviceFromSpace, which unfiles. Answered with ManagementAck; the
 /// gateway forwards it to the connector (connector.v1 UnregisterDevice) and drops the pending
-/// filing.
+/// registration.
 ///
 /// WHO MAY. As ProvisionDevice: a filing role, and an installer under an active grant covering
-/// the space the registration's pending filing names. Anyone else is refused as NOT_ENTITLED,
+/// the space its pending registration names. Anyone else is refused as NOT_ENTITLED,
 /// as is an identifier the caller is not told of.
 ///
 /// A device in use is not removed: one that is claimed or filed anywhere is refused as
@@ -1367,7 +1380,7 @@ class DeprovisionDevice extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.ConnectorId ensureConnectorId() => $_ensure(0);
 
-  /// Sixteen hex characters, as LorawanProvisioning.dev_eui.
+  /// As LorawanProvisioning.dev_eui, in its canonical form; normalised by the gateway.
   @$pb.TagNumber(2)
   $core.String get lorawanDevEui => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -1385,7 +1398,7 @@ class DeprovisionDevice extends $pb.GeneratedMessage {
 /// registration is removed.
 ///
 /// To a filing role, every such registration. To an installer under an active grant, those
-/// whose pending filing names a space the grant covers. Anyone else is refused as
+/// whose pending registration names a space the grant covers. Anyone else is refused as
 /// NOT_ENTITLED.
 class ListProvisionedDevices extends $pb.GeneratedMessage {
   factory ListProvisionedDevices() => create();
@@ -1437,7 +1450,6 @@ enum ProvisionedDevice_Identifier { lorawanDevEui, notSet }
 class ProvisionedDevice extends $pb.GeneratedMessage {
   factory ProvisionedDevice({
     $0.ConnectorId? connectorId,
-    $0.DeviceId? deviceId,
     $core.String? modelId,
     $0.SpaceId? initialSpaceId,
     $10.DeviceOwnershipType? ownership,
@@ -1446,7 +1458,6 @@ class ProvisionedDevice extends $pb.GeneratedMessage {
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
-    if (deviceId != null) result.deviceId = deviceId;
     if (modelId != null) result.modelId = modelId;
     if (initialSpaceId != null) result.initialSpaceId = initialSpaceId;
     if (ownership != null) result.ownership = ownership;
@@ -1477,8 +1488,6 @@ class ProvisionedDevice extends $pb.GeneratedMessage {
     ..oo(0, [7])
     ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
         subBuilder: $0.ConnectorId.create)
-    ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'deviceId',
-        subBuilder: $0.DeviceId.create)
     ..aOS(3, _omitFieldNames ? '' : 'modelId')
     ..aOM<$0.SpaceId>(4, _omitFieldNames ? '' : 'initialSpaceId',
         subBuilder: $0.SpaceId.create)
@@ -1529,68 +1538,55 @@ class ProvisionedDevice extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   $0.ConnectorId ensureConnectorId() => $_ensure(0);
 
-  /// The id the device will be announced under, as the connector derives it from the
-  /// identifier.
-  @$pb.TagNumber(2)
-  $0.DeviceId get deviceId => $_getN(1);
-  @$pb.TagNumber(2)
-  set deviceId($0.DeviceId value) => $_setField(2, value);
-  @$pb.TagNumber(2)
-  $core.bool hasDeviceId() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearDeviceId() => $_clearField(2);
-  @$pb.TagNumber(2)
-  $0.DeviceId ensureDeviceId() => $_ensure(1);
-
   /// As registered (LorawanProvisioning.model_id).
   @$pb.TagNumber(3)
-  $core.String get modelId => $_getSZ(2);
+  $core.String get modelId => $_getSZ(1);
   @$pb.TagNumber(3)
-  set modelId($core.String value) => $_setString(2, value);
+  set modelId($core.String value) => $_setString(1, value);
   @$pb.TagNumber(3)
-  $core.bool hasModelId() => $_has(2);
+  $core.bool hasModelId() => $_has(1);
   @$pb.TagNumber(3)
   void clearModelId() => $_clearField(3);
 
-  /// The pending filing (ProvisionDevice, WHERE IT IS FILED): where the device will be filed.
+  /// The pending registration (ProvisionDevice, WHERE IT IS FILED): where the device will be filed.
   @$pb.TagNumber(4)
-  $0.SpaceId get initialSpaceId => $_getN(3);
+  $0.SpaceId get initialSpaceId => $_getN(2);
   @$pb.TagNumber(4)
   set initialSpaceId($0.SpaceId value) => $_setField(4, value);
   @$pb.TagNumber(4)
-  $core.bool hasInitialSpaceId() => $_has(3);
+  $core.bool hasInitialSpaceId() => $_has(2);
   @$pb.TagNumber(4)
   void clearInitialSpaceId() => $_clearField(4);
   @$pb.TagNumber(4)
-  $0.SpaceId ensureInitialSpaceId() => $_ensure(3);
+  $0.SpaceId ensureInitialSpaceId() => $_ensure(2);
 
   @$pb.TagNumber(5)
-  $10.DeviceOwnershipType get ownership => $_getN(4);
+  $10.DeviceOwnershipType get ownership => $_getN(3);
   @$pb.TagNumber(5)
   set ownership($10.DeviceOwnershipType value) => $_setField(5, value);
   @$pb.TagNumber(5)
-  $core.bool hasOwnership() => $_has(4);
+  $core.bool hasOwnership() => $_has(3);
   @$pb.TagNumber(5)
   void clearOwnership() => $_clearField(5);
 
   /// When it was last registered: a re-key moves it.
   @$pb.TagNumber(6)
-  $2.Timestamp get provisionedAt => $_getN(5);
+  $2.Timestamp get provisionedAt => $_getN(4);
   @$pb.TagNumber(6)
   set provisionedAt($2.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasProvisionedAt() => $_has(5);
+  $core.bool hasProvisionedAt() => $_has(4);
   @$pb.TagNumber(6)
   void clearProvisionedAt() => $_clearField(6);
   @$pb.TagNumber(6)
-  $2.Timestamp ensureProvisionedAt() => $_ensure(5);
+  $2.Timestamp ensureProvisionedAt() => $_ensure(4);
 
   @$pb.TagNumber(7)
-  $core.String get lorawanDevEui => $_getSZ(6);
+  $core.String get lorawanDevEui => $_getSZ(5);
   @$pb.TagNumber(7)
-  set lorawanDevEui($core.String value) => $_setString(6, value);
+  set lorawanDevEui($core.String value) => $_setString(5, value);
   @$pb.TagNumber(7)
-  $core.bool hasLorawanDevEui() => $_has(6);
+  $core.bool hasLorawanDevEui() => $_has(5);
   @$pb.TagNumber(7)
   void clearLorawanDevEui() => $_clearField(7);
 }

@@ -472,14 +472,6 @@ const ProvisionedDevice$json = {
       '6': '.kusinta.iot.identity.v1.ConnectorId',
       '10': 'connectorId'
     },
-    {
-      '1': 'device_id',
-      '3': 2,
-      '4': 1,
-      '5': 11,
-      '6': '.kusinta.iot.identity.v1.DeviceId',
-      '10': 'deviceId'
-    },
     {'1': 'model_id', '3': 3, '4': 1, '5': 9, '10': 'modelId'},
     {
       '1': 'initial_space_id',
@@ -517,19 +509,22 @@ const ProvisionedDevice$json = {
   '8': [
     {'1': 'identifier'},
   ],
+  '9': [
+    {'1': 2, '2': 3},
+  ],
+  '10': ['device_id'],
 };
 
 /// Descriptor for `ProvisionedDevice`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List provisionedDeviceDescriptor = $convert.base64Decode(
     'ChFQcm92aXNpb25lZERldmljZRJHCgxjb25uZWN0b3JfaWQYASABKAsyJC5rdXNpbnRhLmlvdC'
-    '5pZGVudGl0eS52MS5Db25uZWN0b3JJZFILY29ubmVjdG9ySWQSPgoJZGV2aWNlX2lkGAIgASgL'
-    'MiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCGRldmljZUlkEhkKCG1vZGVsX2'
-    'lkGAMgASgJUgdtb2RlbElkEkoKEGluaXRpYWxfc3BhY2VfaWQYBCABKAsyIC5rdXNpbnRhLmlv'
-    'dC5pZGVudGl0eS52MS5TcGFjZUlkUg5pbml0aWFsU3BhY2VJZBJICglvd25lcnNoaXAYBSABKA'
-    '4yKi5rdXNpbnRhLmlvdC5jb21tb24udjEuRGV2aWNlT3duZXJzaGlwVHlwZVIJb3duZXJzaGlw'
-    'EkEKDnByb3Zpc2lvbmVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFINcH'
-    'JvdmlzaW9uZWRBdBIoCg9sb3Jhd2FuX2Rldl9ldWkYByABKAlIAFINbG9yYXdhbkRldkV1aUIM'
-    'CgppZGVudGlmaWVy');
+    '5pZGVudGl0eS52MS5Db25uZWN0b3JJZFILY29ubmVjdG9ySWQSGQoIbW9kZWxfaWQYAyABKAlS'
+    'B21vZGVsSWQSSgoQaW5pdGlhbF9zcGFjZV9pZBgEIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aX'
+    'R5LnYxLlNwYWNlSWRSDmluaXRpYWxTcGFjZUlkEkgKCW93bmVyc2hpcBgFIAEoDjIqLmt1c2lu'
+    'dGEuaW90LmNvbW1vbi52MS5EZXZpY2VPd25lcnNoaXBUeXBlUglvd25lcnNoaXASQQoOcHJvdm'
+    'lzaW9uZWRfYXQYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUg1wcm92aXNpb25l'
+    'ZEF0EigKD2xvcmF3YW5fZGV2X2V1aRgHIAEoCUgAUg1sb3Jhd2FuRGV2RXVpQgwKCmlkZW50aW'
+    'ZpZXJKBAgCEANSCWRldmljZV9pZA==');
 
 @$core.Deprecated('Use provisionedDevicesDescriptor instead')
 const ProvisionedDevices$json = {

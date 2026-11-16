@@ -149,22 +149,20 @@ class ListProvisionedDevices(_message.Message):
     def __init__(self) -> None: ...
 
 class ProvisionedDevice(_message.Message):
-    __slots__ = ("connector_id", "device_id", "model_id", "initial_space_id", "ownership", "provisioned_at", "lorawan_dev_eui")
+    __slots__ = ("connector_id", "model_id", "initial_space_id", "ownership", "provisioned_at", "lorawan_dev_eui")
     CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
-    DEVICE_ID_FIELD_NUMBER: _ClassVar[int]
     MODEL_ID_FIELD_NUMBER: _ClassVar[int]
     INITIAL_SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     OWNERSHIP_FIELD_NUMBER: _ClassVar[int]
     PROVISIONED_AT_FIELD_NUMBER: _ClassVar[int]
     LORAWAN_DEV_EUI_FIELD_NUMBER: _ClassVar[int]
     connector_id: _identity_pb2.ConnectorId
-    device_id: _identity_pb2.DeviceId
     model_id: str
     initial_space_id: _identity_pb2.SpaceId
     ownership: _types_pb2.DeviceOwnershipType
     provisioned_at: _timestamp_pb2.Timestamp
     lorawan_dev_eui: str
-    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., model_id: _Optional[str] = ..., initial_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., ownership: _Optional[_Union[_types_pb2.DeviceOwnershipType, str]] = ..., provisioned_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., lorawan_dev_eui: _Optional[str] = ...) -> None: ...
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., model_id: _Optional[str] = ..., initial_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., ownership: _Optional[_Union[_types_pb2.DeviceOwnershipType, str]] = ..., provisioned_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., lorawan_dev_eui: _Optional[str] = ...) -> None: ...
 
 class ProvisionedDevices(_message.Message):
     __slots__ = ("devices",)

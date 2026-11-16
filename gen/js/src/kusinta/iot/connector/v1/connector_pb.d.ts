@@ -598,6 +598,8 @@ export declare const RemoveLinkSchema: GenMessage<RemoveLink>;
  * A refusal is ConnectorCommandResult with success = false and CommandError.metadata
  * {"reason": ...}, one of:
  *   "model_unknown"     model_id is none the connector stated (INVALID_COMMAND)
+ *   "identifier_taken"  the registry holds the identifier where this connector cannot
+ *                       write it — another tenant or application (INVALID_COMMAND)
  *   "registry_refused"  the registry would not take the record: no profile, no permission,
  *                       a malformed value it caught first (INTERNAL)
  *   "registry_unavailable"  the registry could not be reached (UNREACHABLE)
@@ -660,7 +662,7 @@ export declare type UnregisterDevice = Message<"kusinta.iot.connector.v1.Unregis
    */
   identifier: {
     /**
-     * Sixteen hex characters, as LorawanProvisioning.dev_eui.
+     * As LorawanProvisioning.dev_eui, in its canonical form.
      *
      * @generated from field: string lorawan_dev_eui = 2;
      */

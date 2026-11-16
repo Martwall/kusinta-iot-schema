@@ -45,6 +45,10 @@ class SpaceType extends $pb.ProtobufEnum {
   const SpaceType._(super.value, super.name);
 }
 
+/// Whether a person owns a device outright. COMPANY: no person does; it is one of the
+/// building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
+/// for a device of their own that they may take with them. Who paid for one of the
+/// building's own devices is a separate question, answered by AssetOwner.
 class DeviceOwnershipType extends $pb.ProtobufEnum {
   static const DeviceOwnershipType DEVICE_OWNERSHIP_TYPE_UNSPECIFIED =
       DeviceOwnershipType._(

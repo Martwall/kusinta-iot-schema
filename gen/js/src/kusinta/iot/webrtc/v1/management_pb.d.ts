@@ -514,13 +514,15 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  * is — a room, or a common or technical space for the building's equipment — so that no
  * registered device arrives unfiled, and whoever registered it knows where it went. One
  * without it is refused as INVALID_REQUEST {"reason": "space"}; an installer names a space
- * their grant covers. The gateway keeps initial_space_id and ownership as a pending filing,
- * under the device id the connector derives from the identifier, and applies it when the
- * device first announces itself: filed into initial_space_id, owned as ownership says. Into a
- * home only as PlaceDeviceInSpace allows. Unset ownership lets the gateway decide from the
- * caller's role, and an ownership the caller may not confer is refused (ClaimDevice, WHICH
- * CLAIM). A pending filing holds no credential, and goes with the registration
- * (DeprovisionDevice).
+ * their grant covers. The gateway keeps initial_space_id and ownership as a pending
+ * registration, keyed by connector_id and the identifier in its technology's canonical form
+ * (LorawanProvisioning.dev_eui), and applies it when that connector first announces a device
+ * whose DeviceDescriptor.serial_number, normalised the same way, is that identifier: filed
+ * into initial_space_id, owned as ownership says. The device id is the connector's to derive
+ * and is not known before then. Into a home only as PlaceDeviceInSpace allows. Unset
+ * ownership lets the gateway decide from the caller's role, and an ownership the caller may
+ * not confer is refused (ClaimDevice, WHICH CLAIM). A pending registration holds no
+ * credential, and goes with the registration (DeprovisionDevice).
  *
  * Registering and owning remain distinct acts: ClaimDevice carries possession_proof, and
  * because the connector derives the device id and the serial from the identifier here, a
@@ -528,17 +530,23 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  * joined.
  *
  * AN IDENTIFIER ALREADY REGISTERED. Provisioning the same identifier again is an upsert: it
- * replaces the credentials, model and pending filing rather than being refused as a conflict,
- * so correcting a mistyped key does not require removing the registration first. Except for a
- * device that has joined: re-keying one is refused as FAILED_PRECONDITION
- * {"reason": "device_known"} unless the caller reaches a space the device is filed in, or is
- * one of the gateway's administrators. Without that, anyone who may register would silence a
- * working device elsewhere by replacing the key it joined with.
+ * replaces the credentials, model and pending registration rather than being refused as a
+ * conflict, so correcting a mistyped key does not require removing the registration first.
+ * Two exceptions, neither of which binds the gateway's administrators:
+ *   * a registration whose device has not joined, and whose pending registration names a
+ *     space the caller does not reach, is not replaced: refused as FAILED_PRECONDITION
+ *     {"reason": "registration_known"}. Otherwise an installer granted one space could take
+ *     over a registration made into another, breaking its join and moving it to theirs;
+ *   * a device that has joined is not re-keyed unless the caller reaches a space it is filed
+ *     in: refused as FAILED_PRECONDITION {"reason": "device_known"}. Otherwise anyone who may
+ *     register would silence a working device elsewhere by replacing the key it joined with.
+ *     A re-key that is allowed takes effect only when the device next joins; until then it
+ *     keeps the session it has.
  *
  * THE ROOT KEY. The credentials are handled as their technology's message says
  * (LorawanProvisioning.app_key). The gateway passes them to the connector
  * (connector.v1 RegisterDevice) and keeps them nowhere: not in a log, not in its database,
- * not in the pending filing, not in an answer, a refusal or a listing.
+ * not in the pending registration, not in an answer, a refusal or a listing.
  *
  * REFUSALS, beyond NOT_ENTITLED, each a GatewayError with metadata {"reason": ...}:
  *   INVALID_REQUEST "space"
@@ -551,8 +559,11 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  *       party's own is set on the device first;
  *   INVALID_REQUEST "model_unknown"
  *       model_id is empty or none the connector states (ConnectorDescriptor.provisioning_models);
- *   FAILED_PRECONDITION "device_known"
+ *   FAILED_PRECONDITION "registration_known", "device_known"
  *       as AN IDENTIFIER ALREADY REGISTERED says;
+ *   FAILED_PRECONDITION "identifier_taken"
+ *       the registry holds the identifier somewhere this connector cannot write — another
+ *       tenant or application — so it is neither registered nor replaced here;
  *   FAILED_PRECONDITION "provisioning_unsupported"
  *       the connector does not declare supports_provisioning;
  *   UNAVAILABLE "connector_unavailable"
@@ -561,7 +572,9 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  *       the connector could not reach its registry; nothing was written;
  *   INTERNAL "registry_refused"
  *       the registry would not take the record.
- * A refusal leaves no pending filing behind, and the app does not hold the key to retry.
+ * A refusal adds nothing and changes nothing already held: no registration, credential or
+ * pending registration is written, replaced or removed by it. The app does not hold the key
+ * to retry.
  *
  * @generated from message kusinta.iot.webrtc.v1.ProvisionDevice
  */
@@ -594,7 +607,7 @@ export declare type ProvisionDevice = Message<"kusinta.iot.webrtc.v1.ProvisionDe
 
   /**
    * Where to file the device when it joins, and what it becomes: as StartPairing's fields of
-   * the same names, kept as a pending filing (WHERE IT IS FILED). initial_space_id is
+   * the same names, kept as a pending registration (WHERE IT IS FILED). initial_space_id is
    * required here, unlike there.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId initial_space_id = 3;
@@ -619,10 +632,10 @@ export declare const ProvisionDeviceSchema: GenMessage<ProvisionDevice>;
  * holding its key. The undo of ProvisionDevice: distinct from ReleaseDevice, which gives up
  * ownership, and RemoveDeviceFromSpace, which unfiles. Answered with ManagementAck; the
  * gateway forwards it to the connector (connector.v1 UnregisterDevice) and drops the pending
- * filing.
+ * registration.
  *
  * WHO MAY. As ProvisionDevice: a filing role, and an installer under an active grant covering
- * the space the registration's pending filing names. Anyone else is refused as NOT_ENTITLED,
+ * the space its pending registration names. Anyone else is refused as NOT_ENTITLED,
  * as is an identifier the caller is not told of.
  *
  * A device in use is not removed: one that is claimed or filed anywhere is refused as
@@ -651,7 +664,7 @@ export declare type DeprovisionDevice = Message<"kusinta.iot.webrtc.v1.Deprovisi
    */
   identifier: {
     /**
-     * Sixteen hex characters, as LorawanProvisioning.dev_eui.
+     * As LorawanProvisioning.dev_eui, in its canonical form; normalised by the gateway.
      *
      * @generated from field: string lorawan_dev_eui = 2;
      */
@@ -674,7 +687,7 @@ export declare const DeprovisionDeviceSchema: GenMessage<DeprovisionDevice>;
  * registration is removed.
  *
  * To a filing role, every such registration. To an installer under an active grant, those
- * whose pending filing names a space the grant covers. Anyone else is refused as
+ * whose pending registration names a space the grant covers. Anyone else is refused as
  * NOT_ENTITLED.
  *
  * @generated from message kusinta.iot.webrtc.v1.ListProvisionedDevices
@@ -701,14 +714,6 @@ export declare type ProvisionedDevice = Message<"kusinta.iot.webrtc.v1.Provision
   connectorId?: ConnectorId | undefined;
 
   /**
-   * The id the device will be announced under, as the connector derives it from the
-   * identifier.
-   *
-   * @generated from field: kusinta.iot.identity.v1.DeviceId device_id = 2;
-   */
-  deviceId?: DeviceId | undefined;
-
-  /**
    * As registered (LorawanProvisioning.model_id).
    *
    * @generated from field: string model_id = 3;
@@ -716,7 +721,7 @@ export declare type ProvisionedDevice = Message<"kusinta.iot.webrtc.v1.Provision
   modelId: string;
 
   /**
-   * The pending filing (ProvisionDevice, WHERE IT IS FILED): where the device will be filed.
+   * The pending registration (ProvisionDevice, WHERE IT IS FILED): where the device will be filed.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId initial_space_id = 4;
    */
@@ -735,7 +740,8 @@ export declare type ProvisionedDevice = Message<"kusinta.iot.webrtc.v1.Provision
   provisionedAt?: Timestamp | undefined;
 
   /**
-   * The technology's identifier, as registered.
+   * The technology's identifier, in its canonical form (LorawanProvisioning.dev_eui): with
+   * connector_id, what the registration is keyed by.
    *
    * @generated from oneof kusinta.iot.webrtc.v1.ProvisionedDevice.identifier
    */

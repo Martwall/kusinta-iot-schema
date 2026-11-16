@@ -58,6 +58,11 @@ export const DeviceOwnershipTypeSchema = /*@__PURE__*/
   enumDesc(file_kusinta_iot_common_v1_types, 1);
 
 /**
+ * Whether a person owns a device outright. COMPANY: no person does; it is one of the
+ * building's own devices. RESIDENT: a person does (device.v1.DeviceDescriptor.owner_user_id),
+ * for a device of their own that they may take with them. Who paid for one of the
+ * building's own devices is a separate question, answered by AssetOwner.
+ *
  * @generated from enum kusinta.iot.common.v1.DeviceOwnershipType
  */
 export const DeviceOwnershipType = /*@__PURE__*/
