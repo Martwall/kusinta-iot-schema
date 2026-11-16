@@ -529,19 +529,32 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  * device registered without an ownership is still claimable by whoever holds it once it has
  * joined.
  *
- * AN IDENTIFIER ALREADY REGISTERED. Provisioning the same identifier again is an upsert: it
- * replaces the credentials, model and pending registration rather than being refused as a
- * conflict, so correcting a mistyped key does not require removing the registration first.
- * Two exceptions, neither of which binds the gateway's administrators:
- *   * a registration whose device has not joined, and whose pending registration names a
- *     space the caller does not reach, is not replaced: refused as FAILED_PRECONDITION
- *     {"reason": "registration_known"}. Otherwise an installer granted one space could take
- *     over a registration made into another, breaking its join and moving it to theirs;
- *   * a device that has joined is not re-keyed unless the caller reaches a space it is filed
- *     in: refused as FAILED_PRECONDITION {"reason": "device_known"}. Otherwise anyone who may
- *     register would silence a working device elsewhere by replacing the key it joined with.
- *     A re-key that is allowed takes effect only when the device next joins; until then it
- *     keeps the session it has.
+ * AN IDENTIFIER ALREADY REGISTERED. Replacing a registration is explicit, because a code is
+ * easily scanned twice or typed wrong. Checked in this order, the gateway's administrators
+ * excepted from the reach checks:
+ *   * a caller who does not reach the space an identifier's pending registration names is
+ *     refused as FAILED_PRECONDITION {"reason": "registration_known"}, with replace or
+ *     without, before anything else is said: so that they learn nothing of whether the
+ *     identifier is pending, and an installer granted one space cannot take over a
+ *     registration made into another, breaking its join and moving it to theirs;
+ *   * without replace, a ProvisionDevice for an identifier that already has a pending
+ *     registration — registered, its device not yet joined — is refused as
+ *     FAILED_PRECONDITION {"reason": "registration_pending"}, whoever sends it. Two people
+ *     scanning the same device, or one request sent twice, never silently swap its key or
+ *     its space;
+ *   * with replace, it replaces the pending registration's credentials, model, space and
+ *     ownership: the deliberate correction of a mistyped key, without removing the
+ *     registration first;
+ *   * replace for an identifier with no pending registration, and no device that has joined
+ *     under it, is an ordinary registration;
+ *   * a device that has joined is re-keyed only deliberately, and only by one who reaches it.
+ *     A caller who does not reach a space it is filed in is refused as FAILED_PRECONDITION
+ *     {"reason": "device_known"}, with replace or without: otherwise anyone who may register
+ *     would silence a working device elsewhere by replacing the key it joined with. A caller
+ *     who reaches it, without replace, is refused as FAILED_PRECONDITION
+ *     {"reason": "device_joined"}, so a double send never re-keys a joined device; with
+ *     replace, it is re-keyed. A re-key takes effect only when the device next joins; until
+ *     then it keeps the session it has.
  *
  * THE ROOT KEY. The credentials are handled as their technology's message says
  * (LorawanProvisioning.app_key). The gateway passes them to the connector
@@ -559,8 +572,11 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  *       party's own is set on the device first;
  *   INVALID_REQUEST "model_unknown"
  *       model_id is empty or none the connector states (ConnectorDescriptor.provisioning_models);
- *   FAILED_PRECONDITION "registration_known", "device_known"
- *       as AN IDENTIFIER ALREADY REGISTERED says;
+ *   FAILED_PRECONDITION "registration_known", "registration_pending"
+ *       for an identifier pending, as AN IDENTIFIER ALREADY REGISTERED says, in that order;
+ *   FAILED_PRECONDITION "device_known", "device_joined"
+ *       for an identifier whose device has joined, likewise in that order: "device_joined"
+ *       tells one who may re-key it that replace is what does;
  *   FAILED_PRECONDITION "identifier_taken"
  *       the registry holds the identifier somewhere this connector cannot write — another
  *       tenant or application — so it is neither registered nor replaced here;
@@ -618,6 +634,17 @@ export declare type ProvisionDevice = Message<"kusinta.iot.webrtc.v1.ProvisionDe
    * @generated from field: kusinta.iot.common.v1.DeviceOwnershipType ownership = 4;
    */
   ownership: DeviceOwnershipType;
+
+  /**
+   * Replace what is registered under the identifier, if anything is: its pending
+   * registration, or the key of a device that has joined (AN IDENTIFIER ALREADY REGISTERED).
+   * Unset, an identifier already pending is refused (registration_pending) and so is one whose
+   * device has joined (device_joined), rather than replaced. Set only where the person asked
+   * to correct a registration, never by default and never to retry a send.
+   *
+   * @generated from field: bool replace = 5;
+   */
+  replace: boolean;
 };
 
 /**

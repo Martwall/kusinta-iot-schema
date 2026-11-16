@@ -125,16 +125,18 @@ class ReleaseDevice(_message.Message):
     def __init__(self, device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ...) -> None: ...
 
 class ProvisionDevice(_message.Message):
-    __slots__ = ("connector_id", "lorawan", "initial_space_id", "ownership")
+    __slots__ = ("connector_id", "lorawan", "initial_space_id", "ownership", "replace")
     CONNECTOR_ID_FIELD_NUMBER: _ClassVar[int]
     LORAWAN_FIELD_NUMBER: _ClassVar[int]
     INITIAL_SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     OWNERSHIP_FIELD_NUMBER: _ClassVar[int]
+    REPLACE_FIELD_NUMBER: _ClassVar[int]
     connector_id: _identity_pb2.ConnectorId
     lorawan: _lorawan_pb2.LorawanProvisioning
     initial_space_id: _identity_pb2.SpaceId
     ownership: _types_pb2.DeviceOwnershipType
-    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., lorawan: _Optional[_Union[_lorawan_pb2.LorawanProvisioning, _Mapping]] = ..., initial_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., ownership: _Optional[_Union[_types_pb2.DeviceOwnershipType, str]] = ...) -> None: ...
+    replace: bool
+    def __init__(self, connector_id: _Optional[_Union[_identity_pb2.ConnectorId, _Mapping]] = ..., lorawan: _Optional[_Union[_lorawan_pb2.LorawanProvisioning, _Mapping]] = ..., initial_space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., ownership: _Optional[_Union[_types_pb2.DeviceOwnershipType, str]] = ..., replace: _Optional[bool] = ...) -> None: ...
 
 class DeprovisionDevice(_message.Message):
     __slots__ = ("connector_id", "lorawan_dev_eui")

@@ -403,6 +403,7 @@ const ProvisionDevice$json = {
       '6': '.kusinta.iot.common.v1.DeviceOwnershipType',
       '10': 'ownership'
     },
+    {'1': 'replace', '3': 5, '4': 1, '5': 8, '10': 'replace'},
   ],
   '8': [
     {'1': 'credentials'},
@@ -416,8 +417,8 @@ final $typed_data.Uint8List provisionDeviceDescriptor = $convert.base64Decode(
     'dXNpbnRhLmlvdC52ZW5kb3IubG9yYXdhbi52MS5Mb3Jhd2FuUHJvdmlzaW9uaW5nSABSB2xvcm'
     'F3YW4SSgoQaW5pdGlhbF9zcGFjZV9pZBgDIAEoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYx'
     'LlNwYWNlSWRSDmluaXRpYWxTcGFjZUlkEkgKCW93bmVyc2hpcBgEIAEoDjIqLmt1c2ludGEuaW'
-    '90LmNvbW1vbi52MS5EZXZpY2VPd25lcnNoaXBUeXBlUglvd25lcnNoaXBCDQoLY3JlZGVudGlh'
-    'bHM=');
+    '90LmNvbW1vbi52MS5EZXZpY2VPd25lcnNoaXBUeXBlUglvd25lcnNoaXASGAoHcmVwbGFjZRgF'
+    'IAEoCFIHcmVwbGFjZUINCgtjcmVkZW50aWFscw==');
 
 @$core.Deprecated('Use deprovisionDeviceDescriptor instead')
 const DeprovisionDevice$json = {
