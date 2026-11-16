@@ -534,8 +534,10 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  * excepted from the reach checks:
  *   * a caller who does not reach the space an identifier's pending registration names is
  *     refused as FAILED_PRECONDITION {"reason": "registration_known"}, with replace or
- *     without, before anything else is said: so that they learn nothing of whether the
- *     identifier is pending, and an installer granted one space cannot take over a
+ *     without, before anything else is said: so that they cannot tell where it is pending,
+ *     or whether by a registration or a device that has joined — the refusal itself says
+ *     the identifier is registered somewhere, which its label already discloses to whoever
+ *     holds the device — and an installer granted one space cannot take over a
  *     registration made into another, breaking its join and moving it to theirs;
  *   * without replace, a ProvisionDevice for an identifier that already has a pending
  *     registration — registered, its device not yet joined — is refused as
@@ -583,14 +585,21 @@ export declare const ReleaseDeviceSchema: GenMessage<ReleaseDevice>;
  *   FAILED_PRECONDITION "provisioning_unsupported"
  *       the connector does not declare supports_provisioning;
  *   UNAVAILABLE "connector_unavailable"
- *       the connector is not connected; nothing was written;
+ *       the connector is not connected, or was asked and did not answer in time. Where it
+ *       was asked, what became of the registration is not known: the registry may hold it;
  *   UNAVAILABLE "registry_unavailable"
  *       the connector could not reach its registry; nothing was written;
+ *   UNAVAILABLE "registry_outcome_unknown"
+ *       the connector started writing the record and could not tell whether it landed: the
+ *       registry may hold it;
  *   INTERNAL "registry_refused"
  *       the registry would not take the record.
  * A refusal adds nothing and changes nothing already held: no registration, credential or
- * pending registration is written, replaced or removed by it. The app does not hold the key
- * to retry.
+ * pending registration is written, replaced or removed by it. The two outcomes not known are
+ * the exception — "registry_outcome_unknown", and "connector_unavailable" once the connector
+ * was asked: the registry may hold the key, so the gateway keeps the registration pending as
+ * asked, listed (ListProvisionedDevices) and removable (DeprovisionDevice), until its device
+ * joins or it is removed. The app does not hold the key to retry.
  *
  * @generated from message kusinta.iot.webrtc.v1.ProvisionDevice
  */
@@ -671,8 +680,9 @@ export declare const ProvisionDeviceSchema: GenMessage<ProvisionDevice>;
  * device someone relies on. A registration whose device has not joined is neither.
  *
  * Refused otherwise as ProvisionDevice is: "provisioning_unsupported",
- * "connector_unavailable", "registry_unavailable", "registry_refused". Removing an
- * identifier the registry does not hold succeeds.
+ * "connector_unavailable", "registry_unavailable", "registry_outcome_unknown",
+ * "registry_refused". On any of these the pending registration is kept, so the removal can be
+ * asked again. Removing an identifier the registry does not hold succeeds.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeprovisionDevice
  */

@@ -481,11 +481,11 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   ///
   /// They lapse separately, so their leases are ordered: while both are closed, the gateway
   /// gives sg_ready_block no longer a lease than sg_ready_boost, so the heat pump never passes
-  /// through "blocked" on its way back to normal. In general, of inputs held together, one that
-  /// holds heat back (a blocking input, or curve_adjustment where its steps are negative) never
-  /// lapses after one that asks for more (sg_ready_boost, or curve_adjustment where its steps
-  /// are positive). Among inputs that only hold heat back the order is free: each lapse alone
-  /// gives back what it held.
+  /// through "blocked" on its way back to normal. Likewise, while both are held, hot_water_block
+  /// is given no longer a lease than sg_ready_boost, so a boost's lapse never leaves hot water
+  /// blocked on its own. Only these pairs are ordered. add_on_heater_block is not ordered against
+  /// a boost — a boost is only used where it brings in no add-on heater — and among inputs that
+  /// only hold heat back the order is free: each lapse alone gives back what it held.
   @$pb.TagNumber(1)
   ContactBinding get sgReadyBlock => $_getN(0);
   @$pb.TagNumber(1)

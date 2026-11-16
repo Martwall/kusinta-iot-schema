@@ -1239,8 +1239,18 @@ enum RegisterDevice_Credentials { lorawan, notSet }
 ///                       write it — another tenant or application (INVALID_COMMAND)
 ///   "registry_refused"  the registry would not take the record: no profile, no permission,
 ///                       a malformed value it caught first (INTERNAL)
-///   "registry_unavailable"  the registry could not be reached (UNREACHABLE)
+///   "registry_unavailable"  the registry could not be reached: nothing was written
+///                       (UNREACHABLE)
+///   "registry_outcome_unknown"  a write was started and what became of it is not known —
+///                       it failed or ran out of time on the way back: the registry may hold
+///                       the record (TIMEOUT)
 /// The gateway passes the reason on to the app unchanged (ProvisionDevice, REFUSALS).
+///
+/// The connector answers within the gateway's deadline for this request, time spent waiting
+/// behind another registration included. One it has not started by then it drops, unwritten,
+/// and answers "registry_unavailable"; one whose session has ended before it started it drops
+/// unanswered. A write once started is never abandoned midway: it runs to its end, under the
+/// registry's own per-call deadlines.
 class RegisterDevice extends $pb.GeneratedMessage {
   factory RegisterDevice({
     $core.String? requestId,
@@ -1332,8 +1342,10 @@ enum UnregisterDevice_Identifier { lorawanDevEui, notSet }
 /// hold succeeds: the record is gone either way. A device that had joined stops being able to
 /// talk to the network, and the connector reports device_removed for it.
 ///
-/// A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL) or
-/// {"reason": "registry_unavailable"} (UNREACHABLE), as for RegisterDevice.
+/// A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL),
+/// {"reason": "registry_unavailable"} (UNREACHABLE) or {"reason": "registry_outcome_unknown"}
+/// (TIMEOUT), as for RegisterDevice: after the last the record may or may not be gone, and
+/// removing it again is safe.
 class UnregisterDevice extends $pb.GeneratedMessage {
   factory UnregisterDevice({
     $core.String? requestId,
