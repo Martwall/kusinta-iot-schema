@@ -11,6 +11,7 @@ import "kusinta/iot/device/v1/device_event.proto";
 import "kusinta/iot/device/v1/property_update.proto";
 import "kusinta/iot/identity/v1/identity.proto";
 import "kusinta/iot/link/v1/link.proto";
+import "kusinta/iot/vendor/lorawan/v1/lorawan.proto";
 import "kusinta/iot/webrtc/v1/command.proto";
 
 option optimize_for = SPEED;
@@ -79,6 +80,14 @@ message ConnectorInfo {
   // the gateway's connectors can open, or mutual TLS); claimed in a handshake alone, it
   // earns nothing.
   repeated kusinta.iot.accountlink.v1.LinkedService consumes_credentials = 13;
+
+  // The device models this connector registers from credentials (RegisterDevice), each
+  // with how the registry is to admit it — a profile, a device class, a codec — kept by the
+  // connector and stated nowhere else. Empty from a connector that does not declare
+  // supports_provisioning. The gateway copies the list to the app unchanged
+  // (webrtc.v1.ConnectorDescriptor.provisioning_models), and the app offers these models
+  // and no other.
+  repeated kusinta.iot.common.v1.ProvisioningModel provisioning_models = 14;
 }
 
 // An access token for one account link (accountlink.v1): one home's grant at a third-party
@@ -327,6 +336,59 @@ message RemoveLink {
   kusinta.iot.identity.v1.DeviceId sender = 2;
   kusinta.iot.identity.v1.DeviceId receiver = 3;
   kusinta.iot.link.v1.LinkFunction function = 4;
+}
+
+// Asks the connector to register a device in its registry from the credentials a person
+// gave the app, gateway to connector: the connector-leg half of webrtc.v1.ProvisionDevice.
+// Sent only to a connector that declares supports_provisioning, and only once the gateway
+// has decided the caller may (ProvisionDevice, WHO MAY). What the connector is told is the
+// credentials alone: where the device will be filed, and who asked, are the gateway's.
+//
+// The connector writes the registry record — the device under its identifier, the model's
+// profile, the root key — and answers with ConnectorCommandResult under request_id. Writing
+// an identifier the registry already holds replaces its credentials and model: an upsert,
+// as ProvisionDevice states; whether a re-key is allowed at all is decided by the gateway
+// before it sends this. The device itself is announced by device_announced if and when it
+// joins, as every device is.
+//
+// The root key is handled as webrtc.v1.ProvisionDevice says it is: the connector passes it
+// to the registry and keeps it nowhere — not in a log, not on disk, not in a reply, not in
+// memory once the write is done. Nothing the connector sends the gateway carries it.
+//
+// A refusal is ConnectorCommandResult with success = false and CommandError.metadata
+// {"reason": ...}, one of:
+//   "model_unknown"     model_id is none the connector stated (INVALID_COMMAND)
+//   "registry_refused"  the registry would not take the record: no profile, no permission,
+//                       a malformed value it caught first (INTERNAL)
+//   "registry_unavailable"  the registry could not be reached (UNREACHABLE)
+// The gateway passes the reason on to the app unchanged (ProvisionDevice, REFUSALS).
+message RegisterDevice {
+  // Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
+  string request_id = 1;
+
+  // As webrtc.v1.ProvisionDevice.credentials, which the gateway copies unchanged.
+  oneof credentials {
+    kusinta.iot.vendor.lorawan.v1.LorawanProvisioning lorawan = 2;
+  }
+}
+
+// Asks the connector to remove a device's record from its registry, gateway to connector:
+// the connector-leg half of webrtc.v1.DeprovisionDevice. Answered with
+// ConnectorCommandResult under request_id. Removing an identifier the registry does not
+// hold succeeds: the record is gone either way. A device that had joined stops being able to
+// talk to the network, and the connector reports device_removed for it.
+//
+// A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL) or
+// {"reason": "registry_unavailable"} (UNREACHABLE), as for RegisterDevice.
+message UnregisterDevice {
+  // Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
+  string request_id = 1;
+
+  // Which record, by the technology's own identifier.
+  oneof identifier {
+    // Sixteen hex characters, as LorawanProvisioning.dev_eui.
+    string lorawan_dev_eui = 2;
+  }
 }
 
 // Asks the connector what links the hub holds, for reconciliation outside a
@@ -611,5 +673,10 @@ message SessionResponse {
     CredentialsUpdate credentials_update = 15;
     CredentialsRevoked credentials_revoked = 16;
     CredentialsSnapshot credentials_snapshot = 17;
+
+    // A device registered from credentials, and its record removed; see RegisterDevice and
+    // UnregisterDevice.
+    RegisterDevice register_device = 18;
+    UnregisterDevice unregister_device = 19;
   }
 }

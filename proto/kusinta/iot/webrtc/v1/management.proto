@@ -353,17 +353,62 @@ message ReleaseDevice {
 // nothing to show; the device itself is announced by device_added if and when it
 // joins, the same path every other device takes — which is why this adds no
 // ManagementResult arm. A new result arm is a compile error in a consumer that
-// matches the result exhaustively; a new request arm is not.
+// matches the result exhaustively; a new request arm is not. What is registered and
+// has not joined is read with ListProvisionedDevices.
 //
-// Registering and owning stay two operations. ClaimDevice records the caller and
-// carries possession_proof, so a device that has not joined yet is still claimable
-// by whoever holds it — and because the connector derives the device id and the
-// serial from the identifier here, that claim can be made before the join.
+// WHO MAY. A filing role — the property owner, a technician, the gateway's administrators —
+// and an installer under an active commissioning grant (commissioning.v1, GRANTS) covering
+// initial_space_id. Never a resident as such, and never service. Anyone else is refused as
+// NOT_ENTITLED, as is a connector_id the caller is not told of.
 //
-// Provisioning the same identifier twice is an upsert: it replaces the credentials
-// rather than being refused as a conflict, so correcting a mistyped key does not
-// require removing the device first. Removing a record is a distinct act from
-// giving up ownership (ReleaseDevice) and is left to a later operation.
+// WHERE IT IS FILED. As StartPairing files a device that arrives during a window, and by its
+// rules. The gateway keeps initial_space_id and ownership as a pending filing, under the
+// device id the connector derives from the identifier, and applies it when the device first
+// announces itself: filed into initial_space_id, owned as ownership says. Into a home only as
+// PlaceDeviceInSpace allows. A filing role may leave initial_space_id unset, and the device
+// then arrives unfiled, visible to the gateway's administrators; an installer must name a
+// space their grant covers. Unset ownership lets the gateway decide from the caller's role,
+// and an ownership the caller may not confer is refused (ClaimDevice, WHICH CLAIM). A pending
+// filing holds no credential, and goes with the registration (DeprovisionDevice).
+//
+// Registering and owning remain distinct acts: ClaimDevice carries possession_proof, and
+// because the connector derives the device id and the serial from the identifier here, a
+// device registered without an ownership is still claimable by whoever holds it once it has
+// joined.
+//
+// AN IDENTIFIER ALREADY REGISTERED. Provisioning the same identifier again is an upsert: it
+// replaces the credentials, model and pending filing rather than being refused as a conflict,
+// so correcting a mistyped key does not require removing the registration first. Except for a
+// device that has joined: re-keying one is refused as FAILED_PRECONDITION
+// {"reason": "device_known"} unless the caller reaches a space the device is filed in, or is
+// one of the gateway's administrators. Without that, anyone who may register would silence a
+// working device elsewhere by replacing the key it joined with.
+//
+// THE ROOT KEY. The credentials are handled as their technology's message says
+// (LorawanProvisioning.app_key). The gateway passes them to the connector
+// (connector.v1 RegisterDevice) and keeps them nowhere: not in a log, not in its database,
+// not in the pending filing, not in an answer, a refusal or a listing.
+//
+// REFUSALS, beyond NOT_ENTITLED, each a GatewayError with metadata {"reason": ...}:
+//   INVALID_REQUEST "dev_eui", "app_key", "join_eui"
+//       that field is not the hex its technology's message states;
+//   INVALID_REQUEST "default_app_key"
+//       a key anyone can compute from the label or that ships as a default — the identifier
+//       written twice, all zeros, a vendor's published default. A key of the registering
+//       party's own is set on the device first;
+//   INVALID_REQUEST "model_unknown"
+//       model_id is empty or none the connector states (ConnectorDescriptor.provisioning_models);
+//   FAILED_PRECONDITION "device_known"
+//       as AN IDENTIFIER ALREADY REGISTERED says;
+//   FAILED_PRECONDITION "provisioning_unsupported"
+//       the connector does not declare supports_provisioning;
+//   UNAVAILABLE "connector_unavailable"
+//       the connector is not connected; nothing was written;
+//   UNAVAILABLE "registry_unavailable"
+//       the connector could not reach its registry; nothing was written;
+//   INTERNAL "registry_refused"
+//       the registry would not take the record.
+// A refusal leaves no pending filing behind, and the app does not hold the key to retry.
 message ProvisionDevice {
   // Required, unlike a pairing window's connector target. A registration is written
   // to one specific registry; there is no sensible "open them all and see what
@@ -378,6 +423,82 @@ message ProvisionDevice {
   oneof credentials {
     kusinta.iot.vendor.lorawan.v1.LorawanProvisioning lorawan = 2;
   }
+
+  // Where to file the device when it joins, and what it becomes: as StartPairing's fields of
+  // the same names, kept as a pending filing (WHERE IT IS FILED).
+  kusinta.iot.identity.v1.SpaceId initial_space_id = 3;
+  kusinta.iot.common.v1.DeviceOwnershipType ownership = 4;
+}
+
+// Removes a registration (ProvisionDevice) from the registry that holds it, so that a device
+// registered by mistake — a mistyped identifier, a device going elsewhere — leaves no record
+// holding its key. The undo of ProvisionDevice: distinct from ReleaseDevice, which gives up
+// ownership, and RemoveDeviceFromSpace, which unfiles. Answered with ManagementAck; the
+// gateway forwards it to the connector (connector.v1 UnregisterDevice) and drops the pending
+// filing.
+//
+// WHO MAY. As ProvisionDevice: a filing role, and an installer under an active grant covering
+// the space the registration's pending filing names. Anyone else is refused as NOT_ENTITLED,
+// as is an identifier the caller is not told of.
+//
+// A device in use is not removed: one that is claimed or filed anywhere is refused as
+// FAILED_PRECONDITION {"reason": "device_in_use"} until it is released and taken out of its
+// spaces (ReleaseDevice, RemoveDeviceFromSpace), so that removing a record never strands a
+// device someone relies on. A registration whose device has not joined is neither.
+//
+// Refused otherwise as ProvisionDevice is: "provisioning_unsupported",
+// "connector_unavailable", "registry_unavailable", "registry_refused". Removing an
+// identifier the registry does not hold succeeds.
+message DeprovisionDevice {
+  // The connector the device was registered with.
+  kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+
+  // Which registration, by its technology's identifier.
+  oneof identifier {
+    // Sixteen hex characters, as LorawanProvisioning.dev_eui.
+    string lorawan_dev_eui = 2;
+  }
+}
+
+// Lists the registrations (ProvisionDevice) whose device has not yet joined, answered with
+// ProvisionedDevices. A device that never joins — a wrong key, a device not powered, one out
+// of range — is otherwise seen nowhere, and its registration can be removed only once it is
+// found (DeprovisionDevice). A registration leaves the list when its device joins or the
+// registration is removed.
+//
+// To a filing role, every such registration. To an installer under an active grant, those
+// whose pending filing names a space the grant covers. Anyone else is refused as
+// NOT_ENTITLED.
+message ListProvisionedDevices {}
+
+// One registration whose device has not yet joined. What identifies it and what was asked of
+// it, never a credential. Who registered it is not given.
+message ProvisionedDevice {
+  kusinta.iot.identity.v1.ConnectorId connector_id = 1;
+
+  // The id the device will be announced under, as the connector derives it from the
+  // identifier.
+  kusinta.iot.identity.v1.DeviceId device_id = 2;
+
+  // As registered (LorawanProvisioning.model_id).
+  string model_id = 3;
+
+  // The pending filing (ProvisionDevice, WHERE IT IS FILED): unset where none was named.
+  kusinta.iot.identity.v1.SpaceId initial_space_id = 4;
+  kusinta.iot.common.v1.DeviceOwnershipType ownership = 5;
+
+  // When it was last registered: a re-key moves it.
+  google.protobuf.Timestamp provisioned_at = 6;
+
+  // The technology's identifier, as registered.
+  oneof identifier {
+    string lorawan_dev_eui = 7;
+  }
+}
+
+// The answer to ListProvisionedDevices.
+message ProvisionedDevices {
+  repeated ProvisionedDevice devices = 1;
 }
 
 // Asks for the spaces the caller can reach. Unset root_space_id means all of
@@ -1738,5 +1859,9 @@ message ManagementRequest {
     SetEnergyPriceAdder set_energy_price_adder = 84;
     // A heat source's curve against its zones; see heating.v1 HEAT CURVE.
     GetHeatCurveView get_heat_curve_view = 85;
+    // Removing a registration made by mistake, and seeing those not yet joined; see
+    // DeprovisionDevice and ListProvisionedDevices.
+    DeprovisionDevice deprovision_device = 86;
+    ListProvisionedDevices list_provisioned_devices = 87;
   }
 }
