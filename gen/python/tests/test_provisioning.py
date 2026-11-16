@@ -14,6 +14,7 @@ def test_provision_device_carries_lorawan_credentials_in_the_oneof():
     request = management_pb2.ManagementRequest(
         provision_device=management_pb2.ProvisionDevice(
             connector_id=identity_pb2.ConnectorId(value="lorawan"),
+            initial_space_id=identity_pb2.SpaceId(value="plant-room"),
             lorawan=lorawan_pb2.LorawanProvisioning(
                 dev_eui="0102030405060708",
                 app_key="00112233445566778899aabbccddeeff",
@@ -162,7 +163,8 @@ def _round_trip(message):
 
 
 def test_a_provision_names_where_the_device_is_filed_and_what_it_becomes():
-    """As StartPairing does: the gateway files the device when it first joins."""
+    """As StartPairing does, though the space is required here: the gateway files the
+    device when it first joins, and refuses a registration that names no space."""
     decoded = _round_trip(
         management_pb2.ProvisionDevice(
             connector_id=identity_pb2.ConnectorId(value="lorawan"),
