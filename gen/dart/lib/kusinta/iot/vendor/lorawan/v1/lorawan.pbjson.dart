@@ -29,6 +29,7 @@ const LorawanProvisioning$json = {
       '10': 'joinEui',
       '17': true
     },
+    {'1': 'model_id', '3': 4, '4': 1, '5': 9, '10': 'modelId'},
   ],
   '8': [
     {'1': '_join_eui'},
@@ -38,5 +39,5 @@ const LorawanProvisioning$json = {
 /// Descriptor for `LorawanProvisioning`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List lorawanProvisioningDescriptor = $convert.base64Decode(
     'ChNMb3Jhd2FuUHJvdmlzaW9uaW5nEhcKB2Rldl9ldWkYASABKAlSBmRldkV1aRIXCgdhcHBfa2'
-    'V5GAIgASgJUgZhcHBLZXkSHgoIam9pbl9ldWkYAyABKAlIAFIHam9pbkV1aYgBAUILCglfam9p'
-    'bl9ldWk=');
+    'V5GAIgASgJUgZhcHBLZXkSHgoIam9pbl9ldWkYAyABKAlIAFIHam9pbkV1aYgBARIZCghtb2Rl'
+    'bF9pZBgEIAEoCVIHbW9kZWxJZEILCglfam9pbl9ldWk=');

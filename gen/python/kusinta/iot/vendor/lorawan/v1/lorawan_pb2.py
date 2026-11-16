@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+kusinta/iot/vendor/lorawan/v1/lorawan.proto\x12\x1dkusinta.iot.vendor.lorawan.v1\"t\n\x13LorawanProvisioning\x12\x17\n\x07\x64\x65v_eui\x18\x01 \x01(\tR\x06\x64\x65vEui\x12\x17\n\x07\x61pp_key\x18\x02 \x01(\tR\x06\x61ppKey\x12\x1e\n\x08join_eui\x18\x03 \x01(\tH\x00R\x07joinEui\x88\x01\x01\x42\x0b\n\t_join_euiB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n+kusinta/iot/vendor/lorawan/v1/lorawan.proto\x12\x1dkusinta.iot.vendor.lorawan.v1\"\x8f\x01\n\x13LorawanProvisioning\x12\x17\n\x07\x64\x65v_eui\x18\x01 \x01(\tR\x06\x64\x65vEui\x12\x17\n\x07\x61pp_key\x18\x02 \x01(\tR\x06\x61ppKey\x12\x1e\n\x08join_eui\x18\x03 \x01(\tH\x00R\x07joinEui\x88\x01\x01\x12\x19\n\x08model_id\x18\x04 \x01(\tR\x07modelIdB\x0b\n\t_join_euiB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,6 +32,6 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'kusinta.iot.vendor.lorawan.
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
-  _globals['_LORAWANPROVISIONING']._serialized_start=78
-  _globals['_LORAWANPROVISIONING']._serialized_end=194
+  _globals['_LORAWANPROVISIONING']._serialized_start=79
+  _globals['_LORAWANPROVISIONING']._serialized_end=222
 # @@protoc_insertion_point(module_scope)

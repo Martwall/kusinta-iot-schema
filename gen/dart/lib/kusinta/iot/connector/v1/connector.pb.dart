@@ -14,16 +14,17 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $1;
-import '../../accountlink/v1/account_link.pbenum.dart' as $9;
-import '../../common/v1/pairing.pb.dart' as $6;
-import '../../common/v1/types.pb.dart' as $4;
-import '../../device/v1/device.pb.dart' as $2;
-import '../../device/v1/device_event.pb.dart' as $8;
-import '../../device/v1/property_update.pb.dart' as $7;
+import '../../../../google/protobuf/timestamp.pb.dart' as $2;
+import '../../accountlink/v1/account_link.pbenum.dart' as $10;
+import '../../common/v1/pairing.pb.dart' as $7;
+import '../../common/v1/types.pb.dart' as $1;
+import '../../device/v1/device.pb.dart' as $3;
+import '../../device/v1/device_event.pb.dart' as $9;
+import '../../device/v1/property_update.pb.dart' as $8;
 import '../../identity/v1/identity.pb.dart' as $0;
-import '../../link/v1/link.pb.dart' as $3;
-import '../../webrtc/v1/command.pb.dart' as $5;
+import '../../link/v1/link.pb.dart' as $4;
+import '../../vendor/lorawan/v1/lorawan.pb.dart' as $5;
+import '../../webrtc/v1/command.pb.dart' as $6;
 import 'connector.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
@@ -35,16 +36,17 @@ class ConnectorInfo extends $pb.GeneratedMessage {
     $0.ConnectorId? connectorId,
     $core.String? displayName,
     $core.String? version,
-    $4.ConnectorTransport? transport,
+    $1.ConnectorTransport? transport,
     $core.String? endpoint,
     $core.Iterable<$core.int>? supportedDeviceTypeIds,
     $core.bool? supportsPairing,
     $core.bool? supportsProvisioning,
     $core.bool? brokersLinks,
-    $4.ConnectorKind? kind,
+    $1.ConnectorKind? kind,
     $core.String? description,
     $core.bool? supportsBackendReinitialize,
-    $core.Iterable<$9.LinkedService>? consumesCredentials,
+    $core.Iterable<$10.LinkedService>? consumesCredentials,
+    $core.Iterable<$1.ProvisioningModel>? provisioningModels,
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
@@ -64,6 +66,8 @@ class ConnectorInfo extends $pb.GeneratedMessage {
       result.supportsBackendReinitialize = supportsBackendReinitialize;
     if (consumesCredentials != null)
       result.consumesCredentials.addAll(consumesCredentials);
+    if (provisioningModels != null)
+      result.provisioningModels.addAll(provisioningModels);
     return result;
   }
 
@@ -85,28 +89,31 @@ class ConnectorInfo extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOS(2, _omitFieldNames ? '' : 'displayName')
     ..aOS(3, _omitFieldNames ? '' : 'version')
-    ..e<$4.ConnectorTransport>(
+    ..e<$1.ConnectorTransport>(
         4, _omitFieldNames ? '' : 'transport', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
-        valueOf: $4.ConnectorTransport.valueOf,
-        enumValues: $4.ConnectorTransport.values)
+        defaultOrMaker: $1.ConnectorTransport.CONNECTOR_TRANSPORT_UNSPECIFIED,
+        valueOf: $1.ConnectorTransport.valueOf,
+        enumValues: $1.ConnectorTransport.values)
     ..aOS(5, _omitFieldNames ? '' : 'endpoint')
     ..p<$core.int>(
         6, _omitFieldNames ? '' : 'supportedDeviceTypeIds', $pb.PbFieldType.KU3)
     ..aOB(7, _omitFieldNames ? '' : 'supportsPairing')
     ..aOB(8, _omitFieldNames ? '' : 'supportsProvisioning')
     ..aOB(9, _omitFieldNames ? '' : 'brokersLinks')
-    ..e<$4.ConnectorKind>(10, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
-        valueOf: $4.ConnectorKind.valueOf,
-        enumValues: $4.ConnectorKind.values)
+    ..e<$1.ConnectorKind>(10, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: $1.ConnectorKind.CONNECTOR_KIND_UNSPECIFIED,
+        valueOf: $1.ConnectorKind.valueOf,
+        enumValues: $1.ConnectorKind.values)
     ..aOS(11, _omitFieldNames ? '' : 'description')
     ..aOB(12, _omitFieldNames ? '' : 'supportsBackendReinitialize')
-    ..pc<$9.LinkedService>(
+    ..pc<$10.LinkedService>(
         13, _omitFieldNames ? '' : 'consumesCredentials', $pb.PbFieldType.KE,
-        valueOf: $9.LinkedService.valueOf,
-        enumValues: $9.LinkedService.values,
-        defaultEnumValue: $9.LinkedService.LINKED_SERVICE_UNSPECIFIED)
+        valueOf: $10.LinkedService.valueOf,
+        enumValues: $10.LinkedService.values,
+        defaultEnumValue: $10.LinkedService.LINKED_SERVICE_UNSPECIFIED)
+    ..pc<$1.ProvisioningModel>(
+        14, _omitFieldNames ? '' : 'provisioningModels', $pb.PbFieldType.PM,
+        subBuilder: $1.ProvisioningModel.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -163,9 +170,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   void clearVersion() => $_clearField(3);
 
   @$pb.TagNumber(4)
-  $4.ConnectorTransport get transport => $_getN(3);
+  $1.ConnectorTransport get transport => $_getN(3);
   @$pb.TagNumber(4)
-  set transport($4.ConnectorTransport value) => $_setField(4, value);
+  set transport($1.ConnectorTransport value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasTransport() => $_has(3);
   @$pb.TagNumber(4)
@@ -225,9 +232,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   /// Presentation only — an icon or a phrase; see common.v1.ConnectorKind for why it
   /// never gates behaviour. Unset is CONNECTOR_KIND_UNSPECIFIED, a generic hub.
   @$pb.TagNumber(10)
-  $4.ConnectorKind get kind => $_getN(9);
+  $1.ConnectorKind get kind => $_getN(9);
   @$pb.TagNumber(10)
-  set kind($4.ConnectorKind value) => $_setField(10, value);
+  set kind($1.ConnectorKind value) => $_setField(10, value);
   @$pb.TagNumber(10)
   $core.bool hasKind() => $_has(9);
   @$pb.TagNumber(10)
@@ -272,7 +279,16 @@ class ConnectorInfo extends $pb.GeneratedMessage {
   /// the gateway's connectors can open, or mutual TLS); claimed in a handshake alone, it
   /// earns nothing.
   @$pb.TagNumber(13)
-  $pb.PbList<$9.LinkedService> get consumesCredentials => $_getList(12);
+  $pb.PbList<$10.LinkedService> get consumesCredentials => $_getList(12);
+
+  /// The device models this connector registers from credentials (RegisterDevice), each
+  /// with how the registry is to admit it — a profile, a device class, a codec — kept by the
+  /// connector and stated nowhere else. Empty from a connector that does not declare
+  /// supports_provisioning. The gateway copies the list to the app unchanged
+  /// (webrtc.v1.ConnectorDescriptor.provisioning_models), and the app offers these models
+  /// and no other.
+  @$pb.TagNumber(14)
+  $pb.PbList<$1.ProvisioningModel> get provisioningModels => $_getList(13);
 }
 
 /// An access token for one account link (accountlink.v1): one home's grant at a third-party
@@ -300,9 +316,9 @@ class ConnectorInfo extends $pb.GeneratedMessage {
 class CredentialsUpdate extends $pb.GeneratedMessage {
   factory CredentialsUpdate({
     $core.String? accountLinkId,
-    $9.LinkedService? service,
+    $10.LinkedService? service,
     $core.String? accessToken,
-    $1.Timestamp? expiresAt,
+    $2.Timestamp? expiresAt,
   }) {
     final result = create();
     if (accountLinkId != null) result.accountLinkId = accountLinkId;
@@ -327,14 +343,14 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'accountLinkId')
-    ..e<$9.LinkedService>(
+    ..e<$10.LinkedService>(
         2, _omitFieldNames ? '' : 'service', $pb.PbFieldType.OE,
-        defaultOrMaker: $9.LinkedService.LINKED_SERVICE_UNSPECIFIED,
-        valueOf: $9.LinkedService.valueOf,
-        enumValues: $9.LinkedService.values)
+        defaultOrMaker: $10.LinkedService.LINKED_SERVICE_UNSPECIFIED,
+        valueOf: $10.LinkedService.valueOf,
+        enumValues: $10.LinkedService.values)
     ..aOS(3, _omitFieldNames ? '' : 'accessToken')
-    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'expiresAt',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'expiresAt',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -377,9 +393,9 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
   void clearAccountLinkId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $9.LinkedService get service => $_getN(1);
+  $10.LinkedService get service => $_getN(1);
   @$pb.TagNumber(2)
-  set service($9.LinkedService value) => $_setField(2, value);
+  set service($10.LinkedService value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasService() => $_has(1);
   @$pb.TagNumber(2)
@@ -397,15 +413,15 @@ class CredentialsUpdate extends $pb.GeneratedMessage {
   /// Always set. When the service states no lifetime, the gateway states one of at most an
   /// hour.
   @$pb.TagNumber(4)
-  $1.Timestamp get expiresAt => $_getN(3);
+  $2.Timestamp get expiresAt => $_getN(3);
   @$pb.TagNumber(4)
-  set expiresAt($1.Timestamp value) => $_setField(4, value);
+  set expiresAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasExpiresAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearExpiresAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Timestamp ensureExpiresAt() => $_ensure(3);
+  $2.Timestamp ensureExpiresAt() => $_ensure(3);
 }
 
 /// Every live account link for the services this connector declares, sent once after each
@@ -530,8 +546,8 @@ class CredentialsRevoked extends $pb.GeneratedMessage {
 class ConnectorHandshake extends $pb.GeneratedMessage {
   factory ConnectorHandshake({
     ConnectorInfo? info,
-    $core.Iterable<$2.Device>? knownDevices,
-    $core.Iterable<$3.DeviceLink>? knownLinks,
+    $core.Iterable<$3.Device>? knownDevices,
+    $core.Iterable<$4.DeviceLink>? knownLinks,
     BackendHealthReport? backendHealth,
     $core.Iterable<$core.MapEntry<$core.String, $core.String>>?
         knownDeviceAccountLinks,
@@ -562,12 +578,12 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<ConnectorInfo>(1, _omitFieldNames ? '' : 'info',
         subBuilder: ConnectorInfo.create)
-    ..pc<$2.Device>(
+    ..pc<$3.Device>(
         2, _omitFieldNames ? '' : 'knownDevices', $pb.PbFieldType.PM,
-        subBuilder: $2.Device.create)
-    ..pc<$3.DeviceLink>(
+        subBuilder: $3.Device.create)
+    ..pc<$4.DeviceLink>(
         3, _omitFieldNames ? '' : 'knownLinks', $pb.PbFieldType.PM,
-        subBuilder: $3.DeviceLink.create)
+        subBuilder: $4.DeviceLink.create)
     ..aOM<BackendHealthReport>(4, _omitFieldNames ? '' : 'backendHealth',
         subBuilder: BackendHealthReport.create)
     ..m<$core.String, $core.String>(
@@ -611,7 +627,7 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   ConnectorInfo ensureInfo() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $pb.PbList<$2.Device> get knownDevices => $_getList(1);
+  $pb.PbList<$3.Device> get knownDevices => $_getList(1);
 
   /// Every link the hub currently holds, reported the way known_devices is.
   ///
@@ -624,7 +640,7 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
   /// Empty means "states nothing" — a connector that does not model linking is not
   /// asserting that no links exist.
   @$pb.TagNumber(3)
-  $pb.PbList<$3.DeviceLink> get knownLinks => $_getList(2);
+  $pb.PbList<$4.DeviceLink> get knownLinks => $_getList(2);
 
   /// The backend's health as the connector handshakes, so the gateway starts every session
   /// from the current state rather than from whatever it held before the stream dropped.
@@ -719,7 +735,7 @@ class ConnectorHandshake extends $pb.GeneratedMessage {
 /// the backend failing.
 class BackendHealthReport extends $pb.GeneratedMessage {
   factory BackendHealthReport({
-    $4.BackendHealth? health,
+    $1.BackendHealth? health,
     $core.String? detail,
   }) {
     final result = create();
@@ -742,8 +758,8 @@ class BackendHealthReport extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..aOM<$4.BackendHealth>(1, _omitFieldNames ? '' : 'health',
-        subBuilder: $4.BackendHealth.create)
+    ..aOM<$1.BackendHealth>(1, _omitFieldNames ? '' : 'health',
+        subBuilder: $1.BackendHealth.create)
     ..aOS(2, _omitFieldNames ? '' : 'detail')
     ..hasRequiredFields = false;
 
@@ -769,15 +785,15 @@ class BackendHealthReport extends $pb.GeneratedMessage {
   static BackendHealthReport? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $4.BackendHealth get health => $_getN(0);
+  $1.BackendHealth get health => $_getN(0);
   @$pb.TagNumber(1)
-  set health($4.BackendHealth value) => $_setField(1, value);
+  set health($1.BackendHealth value) => $_setField(1, value);
   @$pb.TagNumber(1)
   $core.bool hasHealth() => $_has(0);
   @$pb.TagNumber(1)
   void clearHealth() => $_clearField(1);
   @$pb.TagNumber(1)
-  $4.BackendHealth ensureHealth() => $_ensure(0);
+  $1.BackendHealth ensureHealth() => $_ensure(0);
 
   /// What went wrong, in the connector's words — an error message, the host it could not
   /// reach. For the gateway's logs only. The gateway never forwards it: not to the app, not
@@ -878,7 +894,7 @@ class ReinitializeBackendResult extends $pb.GeneratedMessage {
   factory ReinitializeBackendResult({
     $core.String? requestId,
     ReinitializeOutcome? outcome,
-    $4.BackendFailureReason? reason,
+    $1.BackendFailureReason? reason,
     $core.String? detail,
   }) {
     final result = create();
@@ -909,12 +925,12 @@ class ReinitializeBackendResult extends $pb.GeneratedMessage {
         defaultOrMaker: ReinitializeOutcome.REINITIALIZE_OUTCOME_UNSPECIFIED,
         valueOf: ReinitializeOutcome.valueOf,
         enumValues: ReinitializeOutcome.values)
-    ..e<$4.BackendFailureReason>(
+    ..e<$1.BackendFailureReason>(
         3, _omitFieldNames ? '' : 'reason', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $4.BackendFailureReason.BACKEND_FAILURE_REASON_UNSPECIFIED,
-        valueOf: $4.BackendFailureReason.valueOf,
-        enumValues: $4.BackendFailureReason.values)
+            $1.BackendFailureReason.BACKEND_FAILURE_REASON_UNSPECIFIED,
+        valueOf: $1.BackendFailureReason.valueOf,
+        enumValues: $1.BackendFailureReason.values)
     ..aOS(4, _omitFieldNames ? '' : 'detail')
     ..hasRequiredFields = false;
 
@@ -964,9 +980,9 @@ class ReinitializeBackendResult extends $pb.GeneratedMessage {
   /// backend that does not answer: the attempt was made, so the outcome is DONE and the
   /// health report before it says FAILING with AUTH_FAILED, UNREACHABLE or the like.
   @$pb.TagNumber(3)
-  $4.BackendFailureReason get reason => $_getN(2);
+  $1.BackendFailureReason get reason => $_getN(2);
   @$pb.TagNumber(3)
-  set reason($4.BackendFailureReason value) => $_setField(3, value);
+  set reason($1.BackendFailureReason value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasReason() => $_has(2);
   @$pb.TagNumber(3)
@@ -999,7 +1015,7 @@ class CreateLink extends $pb.GeneratedMessage {
     $core.String? linkId,
     $0.DeviceId? sender,
     $0.DeviceId? receiver,
-    $3.LinkFunction? function,
+    $4.LinkFunction? function,
   }) {
     final result = create();
     if (linkId != null) result.linkId = linkId;
@@ -1028,11 +1044,11 @@ class CreateLink extends $pb.GeneratedMessage {
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.DeviceId>(3, _omitFieldNames ? '' : 'receiver',
         subBuilder: $0.DeviceId.create)
-    ..e<$3.LinkFunction>(
+    ..e<$4.LinkFunction>(
         4, _omitFieldNames ? '' : 'function', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
-        valueOf: $3.LinkFunction.valueOf,
-        enumValues: $3.LinkFunction.values)
+        defaultOrMaker: $4.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
+        valueOf: $4.LinkFunction.valueOf,
+        enumValues: $4.LinkFunction.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1086,9 +1102,9 @@ class CreateLink extends $pb.GeneratedMessage {
   $0.DeviceId ensureReceiver() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $3.LinkFunction get function => $_getN(3);
+  $4.LinkFunction get function => $_getN(3);
   @$pb.TagNumber(4)
-  set function($3.LinkFunction value) => $_setField(4, value);
+  set function($4.LinkFunction value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasFunction() => $_has(3);
   @$pb.TagNumber(4)
@@ -1101,7 +1117,7 @@ class RemoveLink extends $pb.GeneratedMessage {
     $core.String? linkId,
     $0.DeviceId? sender,
     $0.DeviceId? receiver,
-    $3.LinkFunction? function,
+    $4.LinkFunction? function,
   }) {
     final result = create();
     if (linkId != null) result.linkId = linkId;
@@ -1130,11 +1146,11 @@ class RemoveLink extends $pb.GeneratedMessage {
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.DeviceId>(3, _omitFieldNames ? '' : 'receiver',
         subBuilder: $0.DeviceId.create)
-    ..e<$3.LinkFunction>(
+    ..e<$4.LinkFunction>(
         4, _omitFieldNames ? '' : 'function', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
-        valueOf: $3.LinkFunction.valueOf,
-        enumValues: $3.LinkFunction.values)
+        defaultOrMaker: $4.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
+        valueOf: $4.LinkFunction.valueOf,
+        enumValues: $4.LinkFunction.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1188,13 +1204,215 @@ class RemoveLink extends $pb.GeneratedMessage {
   $0.DeviceId ensureReceiver() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $3.LinkFunction get function => $_getN(3);
+  $4.LinkFunction get function => $_getN(3);
   @$pb.TagNumber(4)
-  set function($3.LinkFunction value) => $_setField(4, value);
+  set function($4.LinkFunction value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasFunction() => $_has(3);
   @$pb.TagNumber(4)
   void clearFunction() => $_clearField(4);
+}
+
+enum RegisterDevice_Credentials { lorawan, notSet }
+
+/// Asks the connector to register a device in its registry from the credentials a person
+/// gave the app, gateway to connector: the connector-leg half of webrtc.v1.ProvisionDevice.
+/// Sent only to a connector that declares supports_provisioning, and only once the gateway
+/// has decided the caller may (ProvisionDevice, WHO MAY). What the connector is told is the
+/// credentials alone: where the device will be filed, and who asked, are the gateway's.
+///
+/// The connector writes the registry record — the device under its identifier, the model's
+/// profile, the root key — and answers with ConnectorCommandResult under request_id. Writing
+/// an identifier the registry already holds replaces its credentials and model: an upsert,
+/// as ProvisionDevice states; whether a re-key is allowed at all is decided by the gateway
+/// before it sends this. The device itself is announced by device_announced if and when it
+/// joins, as every device is.
+///
+/// The root key is handled as webrtc.v1.ProvisionDevice says it is: the connector passes it
+/// to the registry and keeps it nowhere — not in a log, not on disk, not in a reply, not in
+/// memory once the write is done. Nothing the connector sends the gateway carries it.
+///
+/// A refusal is ConnectorCommandResult with success = false and CommandError.metadata
+/// {"reason": ...}, one of:
+///   "model_unknown"     model_id is none the connector stated (INVALID_COMMAND)
+///   "identifier_taken"  the registry holds the identifier where this connector cannot
+///                       write it — another tenant or application (INVALID_COMMAND)
+///   "registry_refused"  the registry would not take the record: no profile, no permission,
+///                       a malformed value it caught first (INTERNAL)
+///   "registry_unavailable"  the registry could not be reached (UNREACHABLE)
+/// The gateway passes the reason on to the app unchanged (ProvisionDevice, REFUSALS).
+class RegisterDevice extends $pb.GeneratedMessage {
+  factory RegisterDevice({
+    $core.String? requestId,
+    $5.LorawanProvisioning? lorawan,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (lorawan != null) result.lorawan = lorawan;
+    return result;
+  }
+
+  RegisterDevice._();
+
+  factory RegisterDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory RegisterDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, RegisterDevice_Credentials>
+      _RegisterDevice_CredentialsByTag = {
+    2: RegisterDevice_Credentials.lorawan,
+    0: RegisterDevice_Credentials.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RegisterDevice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2])
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOM<$5.LorawanProvisioning>(2, _omitFieldNames ? '' : 'lorawan',
+        subBuilder: $5.LorawanProvisioning.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RegisterDevice clone() => RegisterDevice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RegisterDevice copyWith(void Function(RegisterDevice) updates) =>
+      super.copyWith((message) => updates(message as RegisterDevice))
+          as RegisterDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static RegisterDevice create() => RegisterDevice._();
+  @$core.override
+  RegisterDevice createEmptyInstance() => create();
+  static $pb.PbList<RegisterDevice> createRepeated() =>
+      $pb.PbList<RegisterDevice>();
+  @$core.pragma('dart2js:noInline')
+  static RegisterDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RegisterDevice>(create);
+  static RegisterDevice? _defaultInstance;
+
+  RegisterDevice_Credentials whichCredentials() =>
+      _RegisterDevice_CredentialsByTag[$_whichOneof(0)]!;
+  void clearCredentials() => $_clearField($_whichOneof(0));
+
+  /// Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $5.LorawanProvisioning get lorawan => $_getN(1);
+  @$pb.TagNumber(2)
+  set lorawan($5.LorawanProvisioning value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLorawan() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLorawan() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $5.LorawanProvisioning ensureLorawan() => $_ensure(1);
+}
+
+enum UnregisterDevice_Identifier { lorawanDevEui, notSet }
+
+/// Asks the connector to remove a device's record from its registry, gateway to connector:
+/// the connector-leg half of webrtc.v1.DeprovisionDevice. Answered with
+/// ConnectorCommandResult under request_id. Removing an identifier the registry does not
+/// hold succeeds: the record is gone either way. A device that had joined stops being able to
+/// talk to the network, and the connector reports device_removed for it.
+///
+/// A refusal carries CommandError.metadata {"reason": "registry_refused"} (INTERNAL) or
+/// {"reason": "registry_unavailable"} (UNREACHABLE), as for RegisterDevice.
+class UnregisterDevice extends $pb.GeneratedMessage {
+  factory UnregisterDevice({
+    $core.String? requestId,
+    $core.String? lorawanDevEui,
+  }) {
+    final result = create();
+    if (requestId != null) result.requestId = requestId;
+    if (lorawanDevEui != null) result.lorawanDevEui = lorawanDevEui;
+    return result;
+  }
+
+  UnregisterDevice._();
+
+  factory UnregisterDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UnregisterDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, UnregisterDevice_Identifier>
+      _UnregisterDevice_IdentifierByTag = {
+    2: UnregisterDevice_Identifier.lorawanDevEui,
+    0: UnregisterDevice_Identifier.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UnregisterDevice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2])
+    ..aOS(1, _omitFieldNames ? '' : 'requestId')
+    ..aOS(2, _omitFieldNames ? '' : 'lorawanDevEui')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UnregisterDevice clone() => UnregisterDevice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UnregisterDevice copyWith(void Function(UnregisterDevice) updates) =>
+      super.copyWith((message) => updates(message as UnregisterDevice))
+          as UnregisterDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UnregisterDevice create() => UnregisterDevice._();
+  @$core.override
+  UnregisterDevice createEmptyInstance() => create();
+  static $pb.PbList<UnregisterDevice> createRepeated() =>
+      $pb.PbList<UnregisterDevice>();
+  @$core.pragma('dart2js:noInline')
+  static UnregisterDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UnregisterDevice>(create);
+  static UnregisterDevice? _defaultInstance;
+
+  UnregisterDevice_Identifier whichIdentifier() =>
+      _UnregisterDevice_IdentifierByTag[$_whichOneof(0)]!;
+  void clearIdentifier() => $_clearField($_whichOneof(0));
+
+  /// Assigned by the gateway, echoed in ConnectorCommandResult.request_id.
+  @$pb.TagNumber(1)
+  $core.String get requestId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set requestId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRequestId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRequestId() => $_clearField(1);
+
+  /// As LorawanProvisioning.dev_eui, in its canonical form.
+  @$pb.TagNumber(2)
+  $core.String get lorawanDevEui => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set lorawanDevEui($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLorawanDevEui() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLorawanDevEui() => $_clearField(2);
 }
 
 /// Asks the connector what links the hub holds, for reconciliation outside a
@@ -1268,7 +1486,7 @@ class LinkResult extends $pb.GeneratedMessage {
   factory LinkResult({
     $core.String? linkId,
     $core.bool? success,
-    $3.LinkState? state,
+    $4.LinkState? state,
     $core.String? detail,
   }) {
     final result = create();
@@ -1295,10 +1513,10 @@ class LinkResult extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'linkId')
     ..aOB(2, _omitFieldNames ? '' : 'success')
-    ..e<$3.LinkState>(3, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkState.LINK_STATE_UNSPECIFIED,
-        valueOf: $3.LinkState.valueOf,
-        enumValues: $3.LinkState.values)
+    ..e<$4.LinkState>(3, _omitFieldNames ? '' : 'state', $pb.PbFieldType.OE,
+        defaultOrMaker: $4.LinkState.LINK_STATE_UNSPECIFIED,
+        valueOf: $4.LinkState.valueOf,
+        enumValues: $4.LinkState.values)
     ..aOS(4, _omitFieldNames ? '' : 'detail')
     ..hasRequiredFields = false;
 
@@ -1340,9 +1558,9 @@ class LinkResult extends $pb.GeneratedMessage {
   void clearSuccess() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $3.LinkState get state => $_getN(2);
+  $4.LinkState get state => $_getN(2);
   @$pb.TagNumber(3)
-  set state($3.LinkState value) => $_setField(3, value);
+  set state($4.LinkState value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasState() => $_has(2);
   @$pb.TagNumber(3)
@@ -1362,7 +1580,7 @@ class LinkResult extends $pb.GeneratedMessage {
 /// Every link the hub holds, connector to gateway, in reply to ListLinks.
 class LinksReported extends $pb.GeneratedMessage {
   factory LinksReported({
-    $core.Iterable<$3.DeviceLink>? links,
+    $core.Iterable<$4.DeviceLink>? links,
   }) {
     final result = create();
     if (links != null) result.links.addAll(links);
@@ -1383,8 +1601,8 @@ class LinksReported extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..pc<$3.DeviceLink>(1, _omitFieldNames ? '' : 'links', $pb.PbFieldType.PM,
-        subBuilder: $3.DeviceLink.create)
+    ..pc<$4.DeviceLink>(1, _omitFieldNames ? '' : 'links', $pb.PbFieldType.PM,
+        subBuilder: $4.DeviceLink.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1409,7 +1627,7 @@ class LinksReported extends $pb.GeneratedMessage {
   static LinksReported? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$3.DeviceLink> get links => $_getList(0);
+  $pb.PbList<$4.DeviceLink> get links => $_getList(0);
 }
 
 class HandshakeAck extends $pb.GeneratedMessage {
@@ -1536,7 +1754,7 @@ class HandshakeAck extends $pb.GeneratedMessage {
 /// reported nothing yet, which is the normal state at announcement.
 class DeviceAnnouncement extends $pb.GeneratedMessage {
   factory DeviceAnnouncement({
-    $2.Device? device,
+    $3.Device? device,
     $core.String? pairingRequestId,
     $core.String? accountLinkId,
   }) {
@@ -1561,8 +1779,8 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..aOM<$2.Device>(2, _omitFieldNames ? '' : 'device',
-        subBuilder: $2.Device.create)
+    ..aOM<$3.Device>(2, _omitFieldNames ? '' : 'device',
+        subBuilder: $3.Device.create)
     ..aOS(3, _omitFieldNames ? '' : 'pairingRequestId')
     ..aOS(4, _omitFieldNames ? '' : 'accountLinkId')
     ..hasRequiredFields = false;
@@ -1589,15 +1807,15 @@ class DeviceAnnouncement extends $pb.GeneratedMessage {
   static DeviceAnnouncement? _defaultInstance;
 
   @$pb.TagNumber(2)
-  $2.Device get device => $_getN(0);
+  $3.Device get device => $_getN(0);
   @$pb.TagNumber(2)
-  set device($2.Device value) => $_setField(2, value);
+  set device($3.Device value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasDevice() => $_has(0);
   @$pb.TagNumber(2)
   void clearDevice() => $_clearField(2);
   @$pb.TagNumber(2)
-  $2.Device ensureDevice() => $_ensure(0);
+  $3.Device ensureDevice() => $_ensure(0);
 
   /// The pairing request this device arrived for, empty for a device that arrived on its own.
   ///
@@ -1965,9 +2183,9 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   factory ConnectorCommandResult({
     $core.String? requestId,
     $core.bool? success,
-    $1.Timestamp? completedAt,
-    $5.CommandError? error,
-    $1.Timestamp? settlesBy,
+    $2.Timestamp? completedAt,
+    $6.CommandError? error,
+    $2.Timestamp? settlesBy,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -1994,12 +2212,12 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOB(2, _omitFieldNames ? '' : 'success')
-    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'completedAt',
-        subBuilder: $1.Timestamp.create)
-    ..aOM<$5.CommandError>(5, _omitFieldNames ? '' : 'error',
-        subBuilder: $5.CommandError.create)
-    ..aOM<$1.Timestamp>(6, _omitFieldNames ? '' : 'settlesBy',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'completedAt',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$6.CommandError>(5, _omitFieldNames ? '' : 'error',
+        subBuilder: $6.CommandError.create)
+    ..aOM<$2.Timestamp>(6, _omitFieldNames ? '' : 'settlesBy',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2046,15 +2264,15 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   void clearSuccess() => $_clearField(2);
 
   @$pb.TagNumber(4)
-  $1.Timestamp get completedAt => $_getN(2);
+  $2.Timestamp get completedAt => $_getN(2);
   @$pb.TagNumber(4)
-  set completedAt($1.Timestamp value) => $_setField(4, value);
+  set completedAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasCompletedAt() => $_has(2);
   @$pb.TagNumber(4)
   void clearCompletedAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Timestamp ensureCompletedAt() => $_ensure(2);
+  $2.Timestamp ensureCompletedAt() => $_ensure(2);
 
   /// Why it failed, in the same closed vocabulary the app is eventually given. The gateway
   /// forwards this into webrtc.v1.CommandResult.error unchanged; it does not translate.
@@ -2073,15 +2291,15 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   /// gateway reads UNSPECIFIED. Set success = false with no code and the meaning is "it
   /// failed, reason unstated" — which is what the string codes amounted to anyway.
   @$pb.TagNumber(5)
-  $5.CommandError get error => $_getN(3);
+  $6.CommandError get error => $_getN(3);
   @$pb.TagNumber(5)
-  set error($5.CommandError value) => $_setField(5, value);
+  set error($6.CommandError value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasError() => $_has(3);
   @$pb.TagNumber(5)
   void clearError() => $_clearField(5);
   @$pb.TagNumber(5)
-  $5.CommandError ensureError() => $_ensure(3);
+  $6.CommandError ensureError() => $_ensure(3);
 
   /// When this connector's own optimistic window closes: by this time the value has either
   /// been confirmed by the device or restored, and either way the connector will have
@@ -2100,15 +2318,15 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
   /// This bounds the wait; it does not label the values that arrive. Which update was the
   /// optimistic one is device.v1.PropertyUpdate.provenance.
   @$pb.TagNumber(6)
-  $1.Timestamp get settlesBy => $_getN(4);
+  $2.Timestamp get settlesBy => $_getN(4);
   @$pb.TagNumber(6)
-  set settlesBy($1.Timestamp value) => $_setField(6, value);
+  set settlesBy($2.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasSettlesBy() => $_has(4);
   @$pb.TagNumber(6)
   void clearSettlesBy() => $_clearField(6);
   @$pb.TagNumber(6)
-  $1.Timestamp ensureSettlesBy() => $_ensure(4);
+  $2.Timestamp ensureSettlesBy() => $_ensure(4);
 }
 
 /// Tells a connector to accept new devices for a while, gateway → connector.
@@ -2119,7 +2337,7 @@ class ConnectorCommandResult extends $pb.GeneratedMessage {
 class EnterPairingMode extends $pb.GeneratedMessage {
   factory EnterPairingMode({
     $core.String? requestId,
-    $6.PairingWindow? window,
+    $7.PairingWindow? window,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -2142,8 +2360,8 @@ class EnterPairingMode extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
-    ..aOM<$6.PairingWindow>(2, _omitFieldNames ? '' : 'window',
-        subBuilder: $6.PairingWindow.create)
+    ..aOM<$7.PairingWindow>(2, _omitFieldNames ? '' : 'window',
+        subBuilder: $7.PairingWindow.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2180,15 +2398,15 @@ class EnterPairingMode extends $pb.GeneratedMessage {
   /// A connector is the last thing standing between a number on the wire and a radio that
   /// accepts anything nearby for that long.
   @$pb.TagNumber(2)
-  $6.PairingWindow get window => $_getN(1);
+  $7.PairingWindow get window => $_getN(1);
   @$pb.TagNumber(2)
-  set window($6.PairingWindow value) => $_setField(2, value);
+  set window($7.PairingWindow value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasWindow() => $_has(1);
   @$pb.TagNumber(2)
   void clearWindow() => $_clearField(2);
   @$pb.TagNumber(2)
-  $6.PairingWindow ensureWindow() => $_ensure(1);
+  $7.PairingWindow ensureWindow() => $_ensure(1);
 }
 
 /// A connector's answer to EnterPairingMode: whether the window opened, and nothing more.
@@ -2200,8 +2418,8 @@ class PairingModeResult extends $pb.GeneratedMessage {
   factory PairingModeResult({
     $core.String? requestId,
     $core.bool? accepted,
-    $6.PairingErrorDetail? error,
-    $1.Timestamp? expiresAt,
+    $7.PairingErrorDetail? error,
+    $2.Timestamp? expiresAt,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -2227,10 +2445,10 @@ class PairingModeResult extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..aOB(2, _omitFieldNames ? '' : 'accepted')
-    ..aOM<$6.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: $6.PairingErrorDetail.create)
-    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'expiresAt',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$7.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
+        subBuilder: $7.PairingErrorDetail.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'expiresAt',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2276,28 +2494,28 @@ class PairingModeResult extends $pb.GeneratedMessage {
   /// CONNECTOR_UNAVAILABLE, INTERNAL. NOT_ENTITLED and ALREADY_IN_PROGRESS are the gateway's,
   /// decided before this message is sent, and a connector must not claim them.
   @$pb.TagNumber(3)
-  $6.PairingErrorDetail get error => $_getN(2);
+  $7.PairingErrorDetail get error => $_getN(2);
   @$pb.TagNumber(3)
-  set error($6.PairingErrorDetail value) => $_setField(3, value);
+  set error($7.PairingErrorDetail value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
   @$pb.TagNumber(3)
-  $6.PairingErrorDetail ensureError() => $_ensure(2);
+  $7.PairingErrorDetail ensureError() => $_ensure(2);
 
   /// When the window closes, if it opened. Lets the gateway expire its own record against the
   /// connector's clock rather than a guess — the connector is the party that clamped it.
   @$pb.TagNumber(4)
-  $1.Timestamp get expiresAt => $_getN(3);
+  $2.Timestamp get expiresAt => $_getN(3);
   @$pb.TagNumber(4)
-  set expiresAt($1.Timestamp value) => $_setField(4, value);
+  set expiresAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasExpiresAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearExpiresAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $1.Timestamp ensureExpiresAt() => $_ensure(3);
+  $2.Timestamp ensureExpiresAt() => $_ensure(3);
 }
 
 /// What the window produced, connector → gateway, sent once when it closes.
@@ -2314,7 +2532,7 @@ class PairingModeEnded extends $pb.GeneratedMessage {
   factory PairingModeEnded({
     $core.String? requestId,
     $core.int? devicesAttributed,
-    $6.PairingErrorDetail? error,
+    $7.PairingErrorDetail? error,
   }) {
     final result = create();
     if (requestId != null) result.requestId = requestId;
@@ -2340,8 +2558,8 @@ class PairingModeEnded extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'requestId')
     ..a<$core.int>(
         2, _omitFieldNames ? '' : 'devicesAttributed', $pb.PbFieldType.OU3)
-    ..aOM<$6.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
-        subBuilder: $6.PairingErrorDetail.create)
+    ..aOM<$7.PairingErrorDetail>(3, _omitFieldNames ? '' : 'error',
+        subBuilder: $7.PairingErrorDetail.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2389,15 +2607,15 @@ class PairingModeEnded extends $pb.GeneratedMessage {
   /// and WRONG_DEVICE are reported here and should name the device in the message, since that
   /// is the only place a user learns which device is now sitting on their hub.
   @$pb.TagNumber(3)
-  $6.PairingErrorDetail get error => $_getN(2);
+  $7.PairingErrorDetail get error => $_getN(2);
   @$pb.TagNumber(3)
-  set error($6.PairingErrorDetail value) => $_setField(3, value);
+  set error($7.PairingErrorDetail value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasError() => $_has(2);
   @$pb.TagNumber(3)
   void clearError() => $_clearField(3);
   @$pb.TagNumber(3)
-  $6.PairingErrorDetail ensureError() => $_ensure(2);
+  $7.PairingErrorDetail ensureError() => $_ensure(2);
 }
 
 enum SessionRequest_Payload {
@@ -2420,14 +2638,14 @@ enum SessionRequest_Payload {
 class SessionRequest extends $pb.GeneratedMessage {
   factory SessionRequest({
     $core.String? messageId,
-    $1.Timestamp? sentAt,
+    $2.Timestamp? sentAt,
     ConnectorHandshake? handshake,
-    $7.PropertyUpdateBatch? propertyUpdate,
+    $8.PropertyUpdateBatch? propertyUpdate,
     DeviceAnnouncement? deviceAnnounced,
     DeviceRemoval? deviceRemoved,
     ConnectorCommandResult? commandResult,
     HeartBeat? heartbeat,
-    $8.DeviceEventBatch? deviceEvents,
+    $9.DeviceEventBatch? deviceEvents,
     PairingModeResult? pairingModeResult,
     PairingModeEnded? pairingModeEnded,
     LinkResult? linkResult,
@@ -2488,12 +2706,12 @@ class SessionRequest extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..oo(0, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $2.Timestamp.create)
     ..aOM<ConnectorHandshake>(3, _omitFieldNames ? '' : 'handshake',
         subBuilder: ConnectorHandshake.create)
-    ..aOM<$7.PropertyUpdateBatch>(4, _omitFieldNames ? '' : 'propertyUpdate',
-        subBuilder: $7.PropertyUpdateBatch.create)
+    ..aOM<$8.PropertyUpdateBatch>(4, _omitFieldNames ? '' : 'propertyUpdate',
+        subBuilder: $8.PropertyUpdateBatch.create)
     ..aOM<DeviceAnnouncement>(5, _omitFieldNames ? '' : 'deviceAnnounced',
         subBuilder: DeviceAnnouncement.create)
     ..aOM<DeviceRemoval>(6, _omitFieldNames ? '' : 'deviceRemoved',
@@ -2502,8 +2720,8 @@ class SessionRequest extends $pb.GeneratedMessage {
         subBuilder: ConnectorCommandResult.create)
     ..aOM<HeartBeat>(8, _omitFieldNames ? '' : 'heartbeat',
         subBuilder: HeartBeat.create)
-    ..aOM<$8.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
-        subBuilder: $8.DeviceEventBatch.create)
+    ..aOM<$9.DeviceEventBatch>(9, _omitFieldNames ? '' : 'deviceEvents',
+        subBuilder: $9.DeviceEventBatch.create)
     ..aOM<PairingModeResult>(10, _omitFieldNames ? '' : 'pairingModeResult',
         subBuilder: PairingModeResult.create)
     ..aOM<PairingModeEnded>(11, _omitFieldNames ? '' : 'pairingModeEnded',
@@ -2554,15 +2772,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $1.Timestamp get sentAt => $_getN(1);
+  $2.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($1.Timestamp value) => $_setField(2, value);
+  set sentAt($2.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $1.Timestamp ensureSentAt() => $_ensure(1);
+  $2.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
   ConnectorHandshake get handshake => $_getN(2);
@@ -2576,15 +2794,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   ConnectorHandshake ensureHandshake() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $7.PropertyUpdateBatch get propertyUpdate => $_getN(3);
+  $8.PropertyUpdateBatch get propertyUpdate => $_getN(3);
   @$pb.TagNumber(4)
-  set propertyUpdate($7.PropertyUpdateBatch value) => $_setField(4, value);
+  set propertyUpdate($8.PropertyUpdateBatch value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasPropertyUpdate() => $_has(3);
   @$pb.TagNumber(4)
   void clearPropertyUpdate() => $_clearField(4);
   @$pb.TagNumber(4)
-  $7.PropertyUpdateBatch ensurePropertyUpdate() => $_ensure(3);
+  $8.PropertyUpdateBatch ensurePropertyUpdate() => $_ensure(3);
 
   @$pb.TagNumber(5)
   DeviceAnnouncement get deviceAnnounced => $_getN(4);
@@ -2631,15 +2849,15 @@ class SessionRequest extends $pb.GeneratedMessage {
   HeartBeat ensureHeartbeat() => $_ensure(7);
 
   @$pb.TagNumber(9)
-  $8.DeviceEventBatch get deviceEvents => $_getN(8);
+  $9.DeviceEventBatch get deviceEvents => $_getN(8);
   @$pb.TagNumber(9)
-  set deviceEvents($8.DeviceEventBatch value) => $_setField(9, value);
+  set deviceEvents($9.DeviceEventBatch value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasDeviceEvents() => $_has(8);
   @$pb.TagNumber(9)
   void clearDeviceEvents() => $_clearField(9);
   @$pb.TagNumber(9)
-  $8.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
+  $9.DeviceEventBatch ensureDeviceEvents() => $_ensure(8);
 
   @$pb.TagNumber(10)
   PairingModeResult get pairingModeResult => $_getN(9);
@@ -2725,19 +2943,21 @@ enum SessionResponse_Payload {
   credentialsUpdate,
   credentialsRevoked,
   credentialsSnapshot,
+  registerDevice,
+  unregisterDevice,
   notSet
 }
 
 class SessionResponse extends $pb.GeneratedMessage {
   factory SessionResponse({
     $core.String? messageId,
-    $1.Timestamp? sentAt,
+    $2.Timestamp? sentAt,
     HandshakeAck? handshakeAck,
     SubscribeDevice? subscribe,
     UnsubscribeDevice? unsubscribe,
     GatewayError? error,
-    $5.DeviceCommand? executeCommand,
-    $5.AttributeWriteRequest? executeAttributeWrite,
+    $6.DeviceCommand? executeCommand,
+    $6.AttributeWriteRequest? executeAttributeWrite,
     EnterPairingMode? enterPairingMode,
     CreateLink? createLink,
     RemoveLink? removeLink,
@@ -2746,6 +2966,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     CredentialsUpdate? credentialsUpdate,
     CredentialsRevoked? credentialsRevoked,
     CredentialsSnapshot? credentialsSnapshot,
+    RegisterDevice? registerDevice,
+    UnregisterDevice? unregisterDevice,
   }) {
     final result = create();
     if (messageId != null) result.messageId = messageId;
@@ -2768,6 +2990,8 @@ class SessionResponse extends $pb.GeneratedMessage {
       result.credentialsRevoked = credentialsRevoked;
     if (credentialsSnapshot != null)
       result.credentialsSnapshot = credentialsSnapshot;
+    if (registerDevice != null) result.registerDevice = registerDevice;
+    if (unregisterDevice != null) result.unregisterDevice = unregisterDevice;
     return result;
   }
 
@@ -2796,6 +3020,8 @@ class SessionResponse extends $pb.GeneratedMessage {
     15: SessionResponse_Payload.credentialsUpdate,
     16: SessionResponse_Payload.credentialsRevoked,
     17: SessionResponse_Payload.credentialsSnapshot,
+    18: SessionResponse_Payload.registerDevice,
+    19: SessionResponse_Payload.unregisterDevice,
     0: SessionResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -2803,10 +3029,10 @@ class SessionResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.connector.v1'),
       createEmptyInstance: create)
-    ..oo(0, [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+    ..oo(0, [3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
     ..aOS(1, _omitFieldNames ? '' : 'messageId')
-    ..aOM<$1.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
-        subBuilder: $1.Timestamp.create)
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'sentAt',
+        subBuilder: $2.Timestamp.create)
     ..aOM<HandshakeAck>(3, _omitFieldNames ? '' : 'handshakeAck',
         subBuilder: HandshakeAck.create)
     ..aOM<SubscribeDevice>(5, _omitFieldNames ? '' : 'subscribe',
@@ -2815,11 +3041,11 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: UnsubscribeDevice.create)
     ..aOM<GatewayError>(7, _omitFieldNames ? '' : 'error',
         subBuilder: GatewayError.create)
-    ..aOM<$5.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
-        subBuilder: $5.DeviceCommand.create)
-    ..aOM<$5.AttributeWriteRequest>(
+    ..aOM<$6.DeviceCommand>(8, _omitFieldNames ? '' : 'executeCommand',
+        subBuilder: $6.DeviceCommand.create)
+    ..aOM<$6.AttributeWriteRequest>(
         9, _omitFieldNames ? '' : 'executeAttributeWrite',
-        subBuilder: $5.AttributeWriteRequest.create)
+        subBuilder: $6.AttributeWriteRequest.create)
     ..aOM<EnterPairingMode>(10, _omitFieldNames ? '' : 'enterPairingMode',
         subBuilder: EnterPairingMode.create)
     ..aOM<CreateLink>(11, _omitFieldNames ? '' : 'createLink',
@@ -2836,6 +3062,10 @@ class SessionResponse extends $pb.GeneratedMessage {
         subBuilder: CredentialsRevoked.create)
     ..aOM<CredentialsSnapshot>(17, _omitFieldNames ? '' : 'credentialsSnapshot',
         subBuilder: CredentialsSnapshot.create)
+    ..aOM<RegisterDevice>(18, _omitFieldNames ? '' : 'registerDevice',
+        subBuilder: RegisterDevice.create)
+    ..aOM<UnregisterDevice>(19, _omitFieldNames ? '' : 'unregisterDevice',
+        subBuilder: UnregisterDevice.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2873,15 +3103,15 @@ class SessionResponse extends $pb.GeneratedMessage {
   void clearMessageId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $1.Timestamp get sentAt => $_getN(1);
+  $2.Timestamp get sentAt => $_getN(1);
   @$pb.TagNumber(2)
-  set sentAt($1.Timestamp value) => $_setField(2, value);
+  set sentAt($2.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSentAt() => $_has(1);
   @$pb.TagNumber(2)
   void clearSentAt() => $_clearField(2);
   @$pb.TagNumber(2)
-  $1.Timestamp ensureSentAt() => $_ensure(1);
+  $2.Timestamp ensureSentAt() => $_ensure(1);
 
   @$pb.TagNumber(3)
   HandshakeAck get handshakeAck => $_getN(2);
@@ -2928,29 +3158,29 @@ class SessionResponse extends $pb.GeneratedMessage {
   GatewayError ensureError() => $_ensure(5);
 
   @$pb.TagNumber(8)
-  $5.DeviceCommand get executeCommand => $_getN(6);
+  $6.DeviceCommand get executeCommand => $_getN(6);
   @$pb.TagNumber(8)
-  set executeCommand($5.DeviceCommand value) => $_setField(8, value);
+  set executeCommand($6.DeviceCommand value) => $_setField(8, value);
   @$pb.TagNumber(8)
   $core.bool hasExecuteCommand() => $_has(6);
   @$pb.TagNumber(8)
   void clearExecuteCommand() => $_clearField(8);
   @$pb.TagNumber(8)
-  $5.DeviceCommand ensureExecuteCommand() => $_ensure(6);
+  $6.DeviceCommand ensureExecuteCommand() => $_ensure(6);
 
   /// The connector-leg half of PERMISSION_ACTION_WRITE. A sibling case rather than another
   /// meaning overloaded onto execute_command, which is the mistake this replaces.
   @$pb.TagNumber(9)
-  $5.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
+  $6.AttributeWriteRequest get executeAttributeWrite => $_getN(7);
   @$pb.TagNumber(9)
-  set executeAttributeWrite($5.AttributeWriteRequest value) =>
+  set executeAttributeWrite($6.AttributeWriteRequest value) =>
       $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasExecuteAttributeWrite() => $_has(7);
   @$pb.TagNumber(9)
   void clearExecuteAttributeWrite() => $_clearField(9);
   @$pb.TagNumber(9)
-  $5.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
+  $6.AttributeWriteRequest ensureExecuteAttributeWrite() => $_ensure(7);
 
   /// The connector-leg half of the pairing flow. See EnterPairingMode.
   @$pb.TagNumber(10)
@@ -3045,6 +3275,30 @@ class SessionResponse extends $pb.GeneratedMessage {
   void clearCredentialsSnapshot() => $_clearField(17);
   @$pb.TagNumber(17)
   CredentialsSnapshot ensureCredentialsSnapshot() => $_ensure(15);
+
+  /// A device registered from credentials, and its record removed; see RegisterDevice and
+  /// UnregisterDevice.
+  @$pb.TagNumber(18)
+  RegisterDevice get registerDevice => $_getN(16);
+  @$pb.TagNumber(18)
+  set registerDevice(RegisterDevice value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasRegisterDevice() => $_has(16);
+  @$pb.TagNumber(18)
+  void clearRegisterDevice() => $_clearField(18);
+  @$pb.TagNumber(18)
+  RegisterDevice ensureRegisterDevice() => $_ensure(16);
+
+  @$pb.TagNumber(19)
+  UnregisterDevice get unregisterDevice => $_getN(17);
+  @$pb.TagNumber(19)
+  set unregisterDevice(UnregisterDevice value) => $_setField(19, value);
+  @$pb.TagNumber(19)
+  $core.bool hasUnregisterDevice() => $_has(17);
+  @$pb.TagNumber(19)
+  void clearUnregisterDevice() => $_clearField(19);
+  @$pb.TagNumber(19)
+  UnregisterDevice ensureUnregisterDevice() => $_ensure(17);
 }
 
 const $core.bool _omitFieldNames =

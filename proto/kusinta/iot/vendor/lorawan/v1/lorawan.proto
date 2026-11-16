@@ -17,6 +17,14 @@ message LorawanProvisioning {
   // the label. This is also what the device is claimed by — the connector derives
   // the device id from it and reports it as DeviceDescriptor.serial_number — so a
   // device can be claimed by its label before it has ever joined.
+  //
+  // CANONICAL FORM: sixteen hex digits, upper case, no separators. A label prints it in
+  // groups and a scan or a person may type it in lower case: the gateway normalises what
+  // it is given — removing whitespace, ASCII hyphens and colons, and upper-casing — and
+  // refuses as INVALID_REQUEST {"reason": "dev_eui"} what is not sixteen hex digits after
+  // that. Wherever an identifier is compared — a registration with another, with
+  // DeviceDescriptor.serial_number, with DeprovisionDevice — it is in this form, and every
+  // identifier the gateway or a connector sends is in it.
   string dev_eui = 1;
 
   // The application root key: the secret every session key is derived from, thirty-
@@ -31,10 +39,21 @@ message LorawanProvisioning {
   // cannot generate one and have the device adopt it. A device that can be
   // reprogrammed with a server-generated key would leave this empty and have the
   // registry mint it instead.
+  //
+  // A key anyone can compute — derived from the label, or a vendor's published default — is
+  // refused (webrtc.v1.ProvisionDevice, REFUSALS): a key of the registering party's own is
+  // set on the device first.
   string app_key = 2;
 
   // The join identifier (JoinEUI/AppEUI), sixteen hex characters. Optional: many
   // deployments accept the default a device ships with, and only a network server
   // that pins it needs the value stated here.
   optional string join_eui = 3;
+
+  // Which model the device is, as one of the target connector's
+  // ConnectorInfo.provisioning_models: what decides how the registry admits it — its
+  // profile, its device class, the payload codec it needs. Chosen by the person
+  // registering it, or implied by what they scanned; never a registry's own profile name,
+  // which is the connector's business. A connector refuses a model it did not state.
+  string model_id = 4;
 }

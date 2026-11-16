@@ -751,6 +751,7 @@ enum ManagementResult_Result {
   shadowSummary,
   energyPriceAdder,
   heatCurveViews,
+  provisionedDevices,
   notSet
 }
 
@@ -801,6 +802,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $8.ShadowSummary? shadowSummary,
     $8.EnergyPriceAdder? energyPriceAdder,
     $8.HeatCurveViews? heatCurveViews,
+    $3.ProvisionedDevices? provisionedDevices,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -845,6 +847,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (shadowSummary != null) result.shadowSummary = shadowSummary;
     if (energyPriceAdder != null) result.energyPriceAdder = energyPriceAdder;
     if (heatCurveViews != null) result.heatCurveViews = heatCurveViews;
+    if (provisionedDevices != null)
+      result.provisionedDevices = provisionedDevices;
     return result;
   }
 
@@ -894,6 +898,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     34: ManagementResult_Result.shadowSummary,
     35: ManagementResult_Result.energyPriceAdder,
     36: ManagementResult_Result.heatCurveViews,
+    37: ManagementResult_Result.provisionedDevices,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -936,7 +941,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       33,
       34,
       35,
-      36
+      36,
+      37
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -1015,6 +1021,9 @@ class ManagementResult extends $pb.GeneratedMessage {
         subBuilder: $8.EnergyPriceAdder.create)
     ..aOM<$8.HeatCurveViews>(36, _omitFieldNames ? '' : 'heatCurveViews',
         subBuilder: $8.HeatCurveViews.create)
+    ..aOM<$3.ProvisionedDevices>(
+        37, _omitFieldNames ? '' : 'provisionedDevices',
+        subBuilder: $3.ProvisionedDevices.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1450,6 +1459,17 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearHeatCurveViews() => $_clearField(36);
   @$pb.TagNumber(36)
   $8.HeatCurveViews ensureHeatCurveViews() => $_ensure(35);
+
+  @$pb.TagNumber(37)
+  $3.ProvisionedDevices get provisionedDevices => $_getN(36);
+  @$pb.TagNumber(37)
+  set provisionedDevices($3.ProvisionedDevices value) => $_setField(37, value);
+  @$pb.TagNumber(37)
+  $core.bool hasProvisionedDevices() => $_has(36);
+  @$pb.TagNumber(37)
+  void clearProvisionedDevices() => $_clearField(37);
+  @$pb.TagNumber(37)
+  $3.ProvisionedDevices ensureProvisionedDevices() => $_ensure(36);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the
@@ -1900,6 +1920,7 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
     $core.String? description,
     $14.BackendHealth? backendHealth,
     $core.bool? supportsBackendReinitialize,
+    $core.Iterable<$14.ProvisioningModel>? provisioningModels,
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
@@ -1915,6 +1936,8 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
     if (backendHealth != null) result.backendHealth = backendHealth;
     if (supportsBackendReinitialize != null)
       result.supportsBackendReinitialize = supportsBackendReinitialize;
+    if (provisioningModels != null)
+      result.provisioningModels.addAll(provisioningModels);
     return result;
   }
 
@@ -1948,6 +1971,9 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
     ..aOM<$14.BackendHealth>(9, _omitFieldNames ? '' : 'backendHealth',
         subBuilder: $14.BackendHealth.create)
     ..aOB(10, _omitFieldNames ? '' : 'supportsBackendReinitialize')
+    ..pc<$14.ProvisioningModel>(
+        11, _omitFieldNames ? '' : 'provisioningModels', $pb.PbFieldType.PM,
+        subBuilder: $14.ProvisioningModel.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2075,6 +2101,12 @@ class ConnectorDescriptor extends $pb.GeneratedMessage {
   $core.bool hasSupportsBackendReinitialize() => $_has(9);
   @$pb.TagNumber(10)
   void clearSupportsBackendReinitialize() => $_clearField(10);
+
+  /// The device models the connector registers from credentials, copied from its handshake
+  /// (connector.v1 ConnectorInfo.provisioning_models). The app offers these, and only these,
+  /// as what a device being registered is (LorawanProvisioning.model_id).
+  @$pb.TagNumber(11)
+  $pb.PbList<$14.ProvisioningModel> get provisioningModels => $_getList(10);
 }
 
 /// The connectors the gateway currently holds, gateway → app: those connected now. A

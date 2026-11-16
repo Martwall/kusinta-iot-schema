@@ -87,6 +87,14 @@ BACKEND_FAILURE_REASON_BACKEND_ERROR: BackendFailureReason
 BACKEND_FAILURE_REASON_MISCONFIGURED: BackendFailureReason
 BACKEND_FAILURE_REASON_INTERNAL: BackendFailureReason
 
+class ProvisioningModel(_message.Message):
+    __slots__ = ("model_id", "display_name")
+    MODEL_ID_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    model_id: str
+    display_name: str
+    def __init__(self, model_id: _Optional[str] = ..., display_name: _Optional[str] = ...) -> None: ...
+
 class AssetOwner(_message.Message):
     __slots__ = ("owner_organisation", "household_home_id")
     OWNER_ORGANISATION_FIELD_NUMBER: _ClassVar[int]

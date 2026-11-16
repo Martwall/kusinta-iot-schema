@@ -137,6 +137,20 @@ final $typed_data.Uint8List backendFailureReasonDescriptor = $convert.base64Deco
     '9OX0JBQ0tFTkRfRVJST1IQAxIoCiRCQUNLRU5EX0ZBSUxVUkVfUkVBU09OX01JU0NPTkZJR1VS'
     'RUQQBBIjCh9CQUNLRU5EX0ZBSUxVUkVfUkVBU09OX0lOVEVSTkFMEAU=');
 
+@$core.Deprecated('Use provisioningModelDescriptor instead')
+const ProvisioningModel$json = {
+  '1': 'ProvisioningModel',
+  '2': [
+    {'1': 'model_id', '3': 1, '4': 1, '5': 9, '10': 'modelId'},
+    {'1': 'display_name', '3': 2, '4': 1, '5': 9, '10': 'displayName'},
+  ],
+};
+
+/// Descriptor for `ProvisioningModel`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List provisioningModelDescriptor = $convert.base64Decode(
+    'ChFQcm92aXNpb25pbmdNb2RlbBIZCghtb2RlbF9pZBgBIAEoCVIHbW9kZWxJZBIhCgxkaXNwbG'
+    'F5X25hbWUYAiABKAlSC2Rpc3BsYXlOYW1l');
+
 @$core.Deprecated('Use assetOwnerDescriptor instead')
 const AssetOwner$json = {
   '1': 'AssetOwner',

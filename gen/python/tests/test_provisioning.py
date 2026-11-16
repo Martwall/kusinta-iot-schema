@@ -6,6 +6,7 @@ credentials, plus the connector enumeration the app targets a provision at.
 from kusinta.iot.common.v1 import types_pb2
 from kusinta.iot.identity.v1 import identity_pb2
 from kusinta.iot.vendor.lorawan.v1 import lorawan_pb2
+from kusinta.iot.connector.v1 import connector_pb2
 from kusinta.iot.webrtc.v1 import envelope_pb2, management_pb2
 
 
@@ -13,6 +14,7 @@ def test_provision_device_carries_lorawan_credentials_in_the_oneof():
     request = management_pb2.ManagementRequest(
         provision_device=management_pb2.ProvisionDevice(
             connector_id=identity_pb2.ConnectorId(value="lorawan"),
+            initial_space_id=identity_pb2.SpaceId(value="plant-room"),
             lorawan=lorawan_pb2.LorawanProvisioning(
                 dev_eui="0102030405060708",
                 app_key="00112233445566778899aabbccddeeff",
@@ -145,3 +147,214 @@ def test_the_provisioning_secret_never_reaches_a_gateway_to_app_message():
         if field.name == "app_key"
     ]
     assert leaked == []
+
+
+# --- P5: filing on join, the connector's models, the connector-leg carrier, deprovision and
+# the registered-but-not-joined listing (beta.79). Keys here are an obviously fake pattern.
+
+_FAKE_APP_KEY = "deadbeef" * 4
+_FAKE_DEV_EUI = "f0f0f0f0f0f00001"
+
+
+def _round_trip(message):
+    decoded = type(message)()
+    decoded.ParseFromString(message.SerializeToString())
+    return decoded
+
+
+def test_a_provision_names_where_the_device_is_filed_and_what_it_becomes():
+    """As StartPairing does, though the space is required here: the gateway files the
+    device when it first joins, and refuses a registration that names no space."""
+    decoded = _round_trip(
+        management_pb2.ProvisionDevice(
+            connector_id=identity_pb2.ConnectorId(value="lorawan"),
+            initial_space_id=identity_pb2.SpaceId(value="plant-room"),
+            ownership=types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY,
+            lorawan=lorawan_pb2.LorawanProvisioning(
+                dev_eui=_FAKE_DEV_EUI, app_key=_FAKE_APP_KEY
+            ),
+        )
+    )
+
+    assert (decoded.initial_space_id.value, decoded.ownership) == (
+        "plant-room",
+        types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY,
+    )
+
+
+def test_a_lorawan_provision_names_the_model_the_connector_announced():
+    decoded = _round_trip(
+        lorawan_pb2.LorawanProvisioning(
+            dev_eui=_FAKE_DEV_EUI, app_key=_FAKE_APP_KEY, model_id="thermostat-a"
+        )
+    )
+
+    assert decoded.model_id == "thermostat-a"
+
+
+def test_the_app_is_told_which_models_a_connector_can_register():
+    decoded = _round_trip(
+        envelope_pb2.ConnectorDescriptor(
+            connector_id=identity_pb2.ConnectorId(value="lorawan"),
+            supports_provisioning=True,
+            provisioning_models=[
+                types_pb2.ProvisioningModel(
+                    model_id="thermostat-a", display_name="Thermostat A"
+                )
+            ],
+        )
+    )
+
+    assert [(m.model_id, m.display_name) for m in decoded.provisioning_models] == [
+        ("thermostat-a", "Thermostat A")
+    ]
+
+
+def test_the_connector_states_its_models_in_its_handshake():
+    decoded = _round_trip(
+        connector_pb2.ConnectorInfo(
+            provisioning_models=[types_pb2.ProvisioningModel(model_id="relay-b")]
+        )
+    )
+
+    assert [m.model_id for m in decoded.provisioning_models] == ["relay-b"]
+
+
+def test_the_gateway_hands_a_registration_to_the_connector_on_its_own_leg():
+    decoded = _round_trip(
+        connector_pb2.SessionResponse(
+            register_device=connector_pb2.RegisterDevice(
+                request_id="r-1",
+                lorawan=lorawan_pb2.LorawanProvisioning(
+                    dev_eui=_FAKE_DEV_EUI, app_key=_FAKE_APP_KEY, model_id="relay-b"
+                ),
+            )
+        )
+    )
+
+    assert (
+        decoded.WhichOneof("payload"),
+        decoded.register_device.request_id,
+        decoded.register_device.WhichOneof("credentials"),
+        decoded.register_device.lorawan.dev_eui,
+    ) == ("register_device", "r-1", "lorawan", _FAKE_DEV_EUI)
+
+
+def test_the_gateway_asks_the_connector_to_remove_a_registration():
+    decoded = _round_trip(
+        connector_pb2.SessionResponse(
+            unregister_device=connector_pb2.UnregisterDevice(
+                request_id="r-2", lorawan_dev_eui=_FAKE_DEV_EUI
+            )
+        )
+    )
+
+    assert (
+        decoded.WhichOneof("payload"),
+        decoded.unregister_device.request_id,
+        decoded.unregister_device.WhichOneof("identifier"),
+        decoded.unregister_device.lorawan_dev_eui,
+    ) == ("unregister_device", "r-2", "lorawan_dev_eui", _FAKE_DEV_EUI)
+
+
+def test_a_registration_made_by_mistake_is_removed_by_its_identifier():
+    decoded = _round_trip(
+        management_pb2.ManagementRequest(
+            deprovision_device=management_pb2.DeprovisionDevice(
+                connector_id=identity_pb2.ConnectorId(value="lorawan"),
+                lorawan_dev_eui=_FAKE_DEV_EUI,
+            )
+        )
+    )
+
+    assert (
+        decoded.WhichOneof("request"),
+        decoded.deprovision_device.connector_id.value,
+        decoded.deprovision_device.WhichOneof("identifier"),
+        decoded.deprovision_device.lorawan_dev_eui,
+    ) == ("deprovision_device", "lorawan", "lorawan_dev_eui", _FAKE_DEV_EUI)
+
+
+def test_the_registered_but_not_joined_devices_are_listed():
+    request = _round_trip(
+        management_pb2.ManagementRequest(
+            list_provisioned_devices=management_pb2.ListProvisionedDevices()
+        )
+    )
+
+    assert request.WhichOneof("request") == "list_provisioned_devices"
+
+
+def test_a_listed_registration_says_what_and_where_but_holds_no_key():
+    decoded = _round_trip(
+        envelope_pb2.ManagementResult(
+            provisioned_devices=management_pb2.ProvisionedDevices(
+                devices=[
+                    management_pb2.ProvisionedDevice(
+                        connector_id=identity_pb2.ConnectorId(value="lorawan"),
+                        model_id="relay-b",
+                        initial_space_id=identity_pb2.SpaceId(value="apt-4b"),
+                        ownership=types_pb2.DEVICE_OWNERSHIP_TYPE_COMPANY,
+                        lorawan_dev_eui=_FAKE_DEV_EUI,
+                    )
+                ]
+            )
+        )
+    )
+
+    (device,) = decoded.provisioned_devices.devices
+    assert (
+        decoded.WhichOneof("result"),
+        device.model_id,
+        device.initial_space_id.value,
+        device.WhichOneof("identifier"),
+    ) == (
+        "provisioned_devices",
+        "relay-b",
+        "apt-4b",
+        "lorawan_dev_eui",
+    )
+
+
+def test_a_listed_registration_is_keyed_by_its_identifier_not_a_device_id():
+    """The device id is the connector's to derive and is not known before the join;
+    a registration is keyed by its connector and identifier, matched at announce against
+    DeviceDescriptor.serial_number."""
+    fields = {f.name for f in management_pb2.ProvisionedDevice.DESCRIPTOR.fields}
+
+    assert "device_id" not in fields
+
+
+def test_the_provisioning_secret_never_travels_connector_to_gateway():
+    """The key goes gateway → connector only: nothing a connector sends upstream
+    (SessionRequest) can carry it back."""
+    reachable = _messages_reachable_from(connector_pb2.SessionRequest.DESCRIPTOR)
+
+    leaked = [
+        f"{descriptor.full_name}.{field.name}"
+        for descriptor in reachable.values()
+        for field in descriptor.fields
+        if field.name == "app_key"
+    ]
+    assert leaked == []
+
+
+def test_a_provision_replaces_a_pending_registration_only_when_it_says_so():
+    """Replacing is explicit: unset, an identifier already pending is refused
+    (registration_pending) rather than silently re-keyed or moved."""
+    assert _round_trip(management_pb2.ProvisionDevice()).replace is False
+
+
+def test_a_provision_carries_the_ask_to_replace():
+    decoded = _round_trip(
+        management_pb2.ProvisionDevice(
+            connector_id=identity_pb2.ConnectorId(value="lorawan"),
+            initial_space_id=identity_pb2.SpaceId(value="plant-room"),
+            replace=True,
+            lorawan=lorawan_pb2.LorawanProvisioning(
+                dev_eui=_FAKE_DEV_EUI, app_key=_FAKE_APP_KEY
+            ),
+        )
+    )
+
+    assert decoded.replace is True

@@ -236,6 +236,7 @@ message ManagementResult {
     // get_energy_price_adder, set_energy_price_adder
     kusinta.iot.heating.v1.EnergyPriceAdder energy_price_adder = 35;
     kusinta.iot.heating.v1.HeatCurveViews heat_curve_views = 36; // get_heat_curve_view
+    ProvisionedDevices provisioned_devices = 37; // list_provisioned_devices
   }
 }
 
@@ -398,6 +399,11 @@ message ConnectorDescriptor {
   // refused for any connector without it. Copied from the handshake, as the other
   // capabilities are.
   bool supports_backend_reinitialize = 10;
+
+  // The device models the connector registers from credentials, copied from its handshake
+  // (connector.v1 ConnectorInfo.provisioning_models). The app offers these, and only these,
+  // as what a device being registered is (LorawanProvisioning.model_id).
+  repeated kusinta.iot.common.v1.ProvisioningModel provisioning_models = 11;
 }
 
 // The connectors the gateway currently holds, gateway → app: those connected now. A

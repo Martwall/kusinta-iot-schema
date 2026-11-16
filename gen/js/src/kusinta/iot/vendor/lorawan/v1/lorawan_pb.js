@@ -8,7 +8,7 @@ import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
  * Describes the file kusinta/iot/vendor/lorawan/v1/lorawan.proto.
  */
 export const file_kusinta_iot_vendor_lorawan_v1_lorawan = /*@__PURE__*/
-  fileDesc("CitrdXNpbnRhL2lvdC92ZW5kb3IvbG9yYXdhbi92MS9sb3Jhd2FuLnByb3RvEh1rdXNpbnRhLmlvdC52ZW5kb3IubG9yYXdhbi52MSJbChNMb3Jhd2FuUHJvdmlzaW9uaW5nEg8KB2Rldl9ldWkYASABKAkSDwoHYXBwX2tleRgCIAEoCRIVCghqb2luX2V1aRgDIAEoCUgAiAEBQgsKCV9qb2luX2V1aUICSAFiBnByb3RvMw");
+  fileDesc("CitrdXNpbnRhL2lvdC92ZW5kb3IvbG9yYXdhbi92MS9sb3Jhd2FuLnByb3RvEh1rdXNpbnRhLmlvdC52ZW5kb3IubG9yYXdhbi52MSJtChNMb3Jhd2FuUHJvdmlzaW9uaW5nEg8KB2Rldl9ldWkYASABKAkSDwoHYXBwX2tleRgCIAEoCRIVCghqb2luX2V1aRgDIAEoCUgAiAEBEhAKCG1vZGVsX2lkGAQgASgJQgsKCV9qb2luX2V1aUICSAFiBnByb3RvMw");
 
 /**
  * Describes the message kusinta.iot.vendor.lorawan.v1.LorawanProvisioning.
