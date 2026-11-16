@@ -15,18 +15,18 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import '../../../../google/protobuf/timestamp.pb.dart' as $5;
+import '../../../../google/protobuf/timestamp.pb.dart' as $2;
 import '../../access/v1/acl.pbenum.dart' as $14;
 import '../../access/v1/roles.pbenum.dart' as $13;
 import '../../accountlink/v1/account_link.pbenum.dart' as $15;
-import '../../climate/v1/climate.pb.dart' as $4;
+import '../../climate/v1/climate.pb.dart' as $5;
 import '../../commissioning/v1/commissioning.pb.dart' as $8;
 import '../../common/v1/types.pb.dart' as $10;
 import '../../heating/v1/heating.pb.dart' as $9;
 import '../../identity/v1/identity.pb.dart' as $0;
-import '../../link/v1/link.pb.dart' as $3;
+import '../../link/v1/link.pb.dart' as $4;
 import '../../planning/v1/planning.pb.dart' as $6;
-import '../../space/v1/space.pb.dart' as $2;
+import '../../space/v1/space.pb.dart' as $3;
 import '../../vendor/lorawan/v1/lorawan.pb.dart' as $1;
 import 'household.pb.dart' as $7;
 import 'invite.pb.dart' as $11;
@@ -52,7 +52,7 @@ class CreateSpace extends $pb.GeneratedMessage {
     $core.int? floor,
     $0.SpaceId? parentSpaceId,
     $core.String? timeZone,
-    $2.RoomType? roomType,
+    $3.RoomType? roomType,
   }) {
     final result = create();
     if (spaceType != null) result.spaceType = spaceType;
@@ -90,10 +90,10 @@ class CreateSpace extends $pb.GeneratedMessage {
     ..aOM<$0.SpaceId>(5, _omitFieldNames ? '' : 'parentSpaceId',
         subBuilder: $0.SpaceId.create)
     ..aOS(6, _omitFieldNames ? '' : 'timeZone')
-    ..e<$2.RoomType>(7, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.RoomType.ROOM_TYPE_UNSPECIFIED,
-        valueOf: $2.RoomType.valueOf,
-        enumValues: $2.RoomType.values)
+    ..e<$3.RoomType>(7, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.RoomType.ROOM_TYPE_UNSPECIFIED,
+        valueOf: $3.RoomType.valueOf,
+        enumValues: $3.RoomType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -176,9 +176,9 @@ class CreateSpace extends $pb.GeneratedMessage {
 
   /// On a ROOM only (space.v1.Space.room_type); refused on any other type as INVALID_REQUEST.
   @$pb.TagNumber(7)
-  $2.RoomType get roomType => $_getN(6);
+  $3.RoomType get roomType => $_getN(6);
   @$pb.TagNumber(7)
-  set roomType($2.RoomType value) => $_setField(7, value);
+  set roomType($3.RoomType value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasRoomType() => $_has(6);
   @$pb.TagNumber(7)
@@ -233,7 +233,7 @@ class UpdateSpace extends $pb.GeneratedMessage {
     $0.SpaceId? parentSpaceId,
     $core.bool? detach,
     $core.String? timeZone,
-    $2.RoomType? roomType,
+    $3.RoomType? roomType,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -283,10 +283,10 @@ class UpdateSpace extends $pb.GeneratedMessage {
         subBuilder: $0.SpaceId.create)
     ..aOB(7, _omitFieldNames ? '' : 'detach')
     ..aOS(8, _omitFieldNames ? '' : 'timeZone')
-    ..e<$2.RoomType>(9, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
-        defaultOrMaker: $2.RoomType.ROOM_TYPE_UNSPECIFIED,
-        valueOf: $2.RoomType.valueOf,
-        enumValues: $2.RoomType.values)
+    ..e<$3.RoomType>(9, _omitFieldNames ? '' : 'roomType', $pb.PbFieldType.OE,
+        defaultOrMaker: $3.RoomType.ROOM_TYPE_UNSPECIFIED,
+        valueOf: $3.RoomType.valueOf,
+        enumValues: $3.RoomType.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -394,9 +394,9 @@ class UpdateSpace extends $pb.GeneratedMessage {
 
   /// Set: the room's type changes (UNSPECIFIED clears it). On a ROOM only.
   @$pb.TagNumber(9)
-  $2.RoomType get roomType => $_getN(8);
+  $3.RoomType get roomType => $_getN(8);
   @$pb.TagNumber(9)
-  set roomType($2.RoomType value) => $_setField(9, value);
+  set roomType($3.RoomType value) => $_setField(9, value);
   @$pb.TagNumber(9)
   $core.bool hasRoomType() => $_has(8);
   @$pb.TagNumber(9)
@@ -1088,25 +1088,110 @@ enum ProvisionDevice_Credentials { lorawan, notSet }
 /// nothing to show; the device itself is announced by device_added if and when it
 /// joins, the same path every other device takes — which is why this adds no
 /// ManagementResult arm. A new result arm is a compile error in a consumer that
-/// matches the result exhaustively; a new request arm is not.
+/// matches the result exhaustively; a new request arm is not. What is registered and
+/// has not joined is read with ListProvisionedDevices.
 ///
-/// Registering and owning stay two operations. ClaimDevice records the caller and
-/// carries possession_proof, so a device that has not joined yet is still claimable
-/// by whoever holds it — and because the connector derives the device id and the
-/// serial from the identifier here, that claim can be made before the join.
+/// WHO MAY. A filing role — the property owner, a technician, the gateway's administrators —
+/// and an installer under an active commissioning grant (commissioning.v1, GRANTS) covering
+/// initial_space_id. Never a resident as such, and never service. Anyone else is refused as
+/// NOT_ENTITLED, as is a connector_id the caller is not told of.
 ///
-/// Provisioning the same identifier twice is an upsert: it replaces the credentials
-/// rather than being refused as a conflict, so correcting a mistyped key does not
-/// require removing the device first. Removing a record is a distinct act from
-/// giving up ownership (ReleaseDevice) and is left to a later operation.
+/// WHERE IT IS FILED. As StartPairing files a device that arrives during a window, and by its
+/// rules, save one: initial_space_id is required of every caller. It names where the device
+/// is — a room, or a common or technical space for the building's equipment — so that no
+/// registered device arrives unfiled, and whoever registered it knows where it went. One
+/// without it is refused as INVALID_REQUEST {"reason": "space"}; an installer names a space
+/// their grant covers. The gateway keeps initial_space_id and ownership as a pending
+/// registration, keyed by connector_id and the identifier in its technology's canonical form
+/// (LorawanProvisioning.dev_eui), and applies it when that connector first announces a device
+/// whose DeviceDescriptor.serial_number, normalised the same way, is that identifier: filed
+/// into initial_space_id, owned as ownership says. The device id is the connector's to derive
+/// and is not known before then. Into a home only as PlaceDeviceInSpace allows. Unset
+/// ownership lets the gateway decide from the caller's role, and an ownership the caller may
+/// not confer is refused (ClaimDevice, WHICH CLAIM). A pending registration holds no
+/// credential, and goes with the registration (DeprovisionDevice).
+///
+/// Registering and owning remain distinct acts: ClaimDevice carries possession_proof, and
+/// because the connector derives the device id and the serial from the identifier here, a
+/// device registered without an ownership is still claimable by whoever holds it once it has
+/// joined.
+///
+/// AN IDENTIFIER ALREADY REGISTERED. Replacing a registration is explicit, because a code is
+/// easily scanned twice or typed wrong. Checked in this order, the gateway's administrators
+/// excepted from the reach checks:
+///   * a caller who does not reach the space an identifier's pending registration names is
+///     refused as FAILED_PRECONDITION {"reason": "registration_known"}, with replace or
+///     without, before anything else is said: so that they learn nothing of whether the
+///     identifier is pending, and an installer granted one space cannot take over a
+///     registration made into another, breaking its join and moving it to theirs;
+///   * without replace, a ProvisionDevice for an identifier that already has a pending
+///     registration — registered, its device not yet joined — is refused as
+///     FAILED_PRECONDITION {"reason": "registration_pending"}, whoever sends it. Two people
+///     scanning the same device, or one request sent twice, never silently swap its key or
+///     its space;
+///   * with replace, it replaces the pending registration's credentials, model, space and
+///     ownership: the deliberate correction of a mistyped key, without removing the
+///     registration first;
+///   * replace for an identifier with no pending registration, and no device that has joined
+///     under it, is an ordinary registration;
+///   * a device that has joined is re-keyed only deliberately, and only by one who reaches it.
+///     A caller who does not reach a space it is filed in is refused as FAILED_PRECONDITION
+///     {"reason": "device_known"}, with replace or without: otherwise anyone who may register
+///     would silence a working device elsewhere by replacing the key it joined with. A caller
+///     who reaches it, without replace, is refused as FAILED_PRECONDITION
+///     {"reason": "device_joined"}, so a double send never re-keys a joined device; with
+///     replace, it is re-keyed. A re-key takes effect only when the device next joins; until
+///     then it keeps the session it has.
+///
+/// THE ROOT KEY. The credentials are handled as their technology's message says
+/// (LorawanProvisioning.app_key). The gateway passes them to the connector
+/// (connector.v1 RegisterDevice) and keeps them nowhere: not in a log, not in its database,
+/// not in the pending registration, not in an answer, a refusal or a listing.
+///
+/// REFUSALS, beyond NOT_ENTITLED, each a GatewayError with metadata {"reason": ...}:
+///   INVALID_REQUEST "space"
+///       initial_space_id is unset (WHERE IT IS FILED);
+///   INVALID_REQUEST "dev_eui", "app_key", "join_eui"
+///       that field is not the hex its technology's message states;
+///   INVALID_REQUEST "default_app_key"
+///       a key anyone can compute from the label or that ships as a default — the identifier
+///       written twice, all zeros, a vendor's published default. A key of the registering
+///       party's own is set on the device first;
+///   INVALID_REQUEST "model_unknown"
+///       model_id is empty or none the connector states (ConnectorDescriptor.provisioning_models);
+///   FAILED_PRECONDITION "registration_known", "registration_pending"
+///       for an identifier pending, as AN IDENTIFIER ALREADY REGISTERED says, in that order;
+///   FAILED_PRECONDITION "device_known", "device_joined"
+///       for an identifier whose device has joined, likewise in that order: "device_joined"
+///       tells one who may re-key it that replace is what does;
+///   FAILED_PRECONDITION "identifier_taken"
+///       the registry holds the identifier somewhere this connector cannot write — another
+///       tenant or application — so it is neither registered nor replaced here;
+///   FAILED_PRECONDITION "provisioning_unsupported"
+///       the connector does not declare supports_provisioning;
+///   UNAVAILABLE "connector_unavailable"
+///       the connector is not connected; nothing was written;
+///   UNAVAILABLE "registry_unavailable"
+///       the connector could not reach its registry; nothing was written;
+///   INTERNAL "registry_refused"
+///       the registry would not take the record.
+/// A refusal adds nothing and changes nothing already held: no registration, credential or
+/// pending registration is written, replaced or removed by it. The app does not hold the key
+/// to retry.
 class ProvisionDevice extends $pb.GeneratedMessage {
   factory ProvisionDevice({
     $0.ConnectorId? connectorId,
     $1.LorawanProvisioning? lorawan,
+    $0.SpaceId? initialSpaceId,
+    $10.DeviceOwnershipType? ownership,
+    $core.bool? replace,
   }) {
     final result = create();
     if (connectorId != null) result.connectorId = connectorId;
     if (lorawan != null) result.lorawan = lorawan;
+    if (initialSpaceId != null) result.initialSpaceId = initialSpaceId;
+    if (ownership != null) result.ownership = ownership;
+    if (replace != null) result.replace = replace;
     return result;
   }
 
@@ -1134,6 +1219,15 @@ class ProvisionDevice extends $pb.GeneratedMessage {
         subBuilder: $0.ConnectorId.create)
     ..aOM<$1.LorawanProvisioning>(2, _omitFieldNames ? '' : 'lorawan',
         subBuilder: $1.LorawanProvisioning.create)
+    ..aOM<$0.SpaceId>(3, _omitFieldNames ? '' : 'initialSpaceId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$10.DeviceOwnershipType>(
+        4, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $10.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $10.DeviceOwnershipType.valueOf,
+        enumValues: $10.DeviceOwnershipType.values)
+    ..aOB(5, _omitFieldNames ? '' : 'replace')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1186,6 +1280,402 @@ class ProvisionDevice extends $pb.GeneratedMessage {
   void clearLorawan() => $_clearField(2);
   @$pb.TagNumber(2)
   $1.LorawanProvisioning ensureLorawan() => $_ensure(1);
+
+  /// Where to file the device when it joins, and what it becomes: as StartPairing's fields of
+  /// the same names, kept as a pending registration (WHERE IT IS FILED). initial_space_id is
+  /// required here, unlike there.
+  @$pb.TagNumber(3)
+  $0.SpaceId get initialSpaceId => $_getN(2);
+  @$pb.TagNumber(3)
+  set initialSpaceId($0.SpaceId value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasInitialSpaceId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInitialSpaceId() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.SpaceId ensureInitialSpaceId() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $10.DeviceOwnershipType get ownership => $_getN(3);
+  @$pb.TagNumber(4)
+  set ownership($10.DeviceOwnershipType value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOwnership() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOwnership() => $_clearField(4);
+
+  /// Replace what is registered under the identifier, if anything is: its pending
+  /// registration, or the key of a device that has joined (AN IDENTIFIER ALREADY REGISTERED).
+  /// Unset, an identifier already pending is refused (registration_pending) and so is one whose
+  /// device has joined (device_joined), rather than replaced. Set only where the person asked
+  /// to correct a registration, never by default and never to retry a send.
+  @$pb.TagNumber(5)
+  $core.bool get replace => $_getBF(4);
+  @$pb.TagNumber(5)
+  set replace($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasReplace() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReplace() => $_clearField(5);
+}
+
+enum DeprovisionDevice_Identifier { lorawanDevEui, notSet }
+
+/// Removes a registration (ProvisionDevice) from the registry that holds it, so that a device
+/// registered by mistake — a mistyped identifier, a device going elsewhere — leaves no record
+/// holding its key. The undo of ProvisionDevice: distinct from ReleaseDevice, which gives up
+/// ownership, and RemoveDeviceFromSpace, which unfiles. Answered with ManagementAck; the
+/// gateway forwards it to the connector (connector.v1 UnregisterDevice) and drops the pending
+/// registration.
+///
+/// WHO MAY. As ProvisionDevice: a filing role, and an installer under an active grant covering
+/// the space its pending registration names. Anyone else is refused as NOT_ENTITLED,
+/// as is an identifier the caller is not told of.
+///
+/// A device in use is not removed: one that is claimed or filed anywhere is refused as
+/// FAILED_PRECONDITION {"reason": "device_in_use"} until it is released and taken out of its
+/// spaces (ReleaseDevice, RemoveDeviceFromSpace), so that removing a record never strands a
+/// device someone relies on. A registration whose device has not joined is neither.
+///
+/// Refused otherwise as ProvisionDevice is: "provisioning_unsupported",
+/// "connector_unavailable", "registry_unavailable", "registry_refused". Removing an
+/// identifier the registry does not hold succeeds.
+class DeprovisionDevice extends $pb.GeneratedMessage {
+  factory DeprovisionDevice({
+    $0.ConnectorId? connectorId,
+    $core.String? lorawanDevEui,
+  }) {
+    final result = create();
+    if (connectorId != null) result.connectorId = connectorId;
+    if (lorawanDevEui != null) result.lorawanDevEui = lorawanDevEui;
+    return result;
+  }
+
+  DeprovisionDevice._();
+
+  factory DeprovisionDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeprovisionDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, DeprovisionDevice_Identifier>
+      _DeprovisionDevice_IdentifierByTag = {
+    2: DeprovisionDevice_Identifier.lorawanDevEui,
+    0: DeprovisionDevice_Identifier.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeprovisionDevice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [2])
+    ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
+        subBuilder: $0.ConnectorId.create)
+    ..aOS(2, _omitFieldNames ? '' : 'lorawanDevEui')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeprovisionDevice clone() => DeprovisionDevice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeprovisionDevice copyWith(void Function(DeprovisionDevice) updates) =>
+      super.copyWith((message) => updates(message as DeprovisionDevice))
+          as DeprovisionDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeprovisionDevice create() => DeprovisionDevice._();
+  @$core.override
+  DeprovisionDevice createEmptyInstance() => create();
+  static $pb.PbList<DeprovisionDevice> createRepeated() =>
+      $pb.PbList<DeprovisionDevice>();
+  @$core.pragma('dart2js:noInline')
+  static DeprovisionDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeprovisionDevice>(create);
+  static DeprovisionDevice? _defaultInstance;
+
+  DeprovisionDevice_Identifier whichIdentifier() =>
+      _DeprovisionDevice_IdentifierByTag[$_whichOneof(0)]!;
+  void clearIdentifier() => $_clearField($_whichOneof(0));
+
+  /// The connector the device was registered with.
+  @$pb.TagNumber(1)
+  $0.ConnectorId get connectorId => $_getN(0);
+  @$pb.TagNumber(1)
+  set connectorId($0.ConnectorId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectorId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectorId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.ConnectorId ensureConnectorId() => $_ensure(0);
+
+  /// As LorawanProvisioning.dev_eui, in its canonical form; normalised by the gateway.
+  @$pb.TagNumber(2)
+  $core.String get lorawanDevEui => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set lorawanDevEui($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLorawanDevEui() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLorawanDevEui() => $_clearField(2);
+}
+
+/// Lists the registrations (ProvisionDevice) whose device has not yet joined, answered with
+/// ProvisionedDevices. A device that never joins — a wrong key, a device not powered, one out
+/// of range — is otherwise seen nowhere, and its registration can be removed only once it is
+/// found (DeprovisionDevice). A registration leaves the list when its device joins or the
+/// registration is removed.
+///
+/// To a filing role, every such registration. To an installer under an active grant, those
+/// whose pending registration names a space the grant covers. Anyone else is refused as
+/// NOT_ENTITLED.
+class ListProvisionedDevices extends $pb.GeneratedMessage {
+  factory ListProvisionedDevices() => create();
+
+  ListProvisionedDevices._();
+
+  factory ListProvisionedDevices.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ListProvisionedDevices.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListProvisionedDevices',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListProvisionedDevices clone() =>
+      ListProvisionedDevices()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListProvisionedDevices copyWith(
+          void Function(ListProvisionedDevices) updates) =>
+      super.copyWith((message) => updates(message as ListProvisionedDevices))
+          as ListProvisionedDevices;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ListProvisionedDevices create() => ListProvisionedDevices._();
+  @$core.override
+  ListProvisionedDevices createEmptyInstance() => create();
+  static $pb.PbList<ListProvisionedDevices> createRepeated() =>
+      $pb.PbList<ListProvisionedDevices>();
+  @$core.pragma('dart2js:noInline')
+  static ListProvisionedDevices getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListProvisionedDevices>(create);
+  static ListProvisionedDevices? _defaultInstance;
+}
+
+enum ProvisionedDevice_Identifier { lorawanDevEui, notSet }
+
+/// One registration whose device has not yet joined. What identifies it and what was asked of
+/// it, never a credential. Who registered it is not given.
+class ProvisionedDevice extends $pb.GeneratedMessage {
+  factory ProvisionedDevice({
+    $0.ConnectorId? connectorId,
+    $core.String? modelId,
+    $0.SpaceId? initialSpaceId,
+    $10.DeviceOwnershipType? ownership,
+    $2.Timestamp? provisionedAt,
+    $core.String? lorawanDevEui,
+  }) {
+    final result = create();
+    if (connectorId != null) result.connectorId = connectorId;
+    if (modelId != null) result.modelId = modelId;
+    if (initialSpaceId != null) result.initialSpaceId = initialSpaceId;
+    if (ownership != null) result.ownership = ownership;
+    if (provisionedAt != null) result.provisionedAt = provisionedAt;
+    if (lorawanDevEui != null) result.lorawanDevEui = lorawanDevEui;
+    return result;
+  }
+
+  ProvisionedDevice._();
+
+  factory ProvisionedDevice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProvisionedDevice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static const $core.Map<$core.int, ProvisionedDevice_Identifier>
+      _ProvisionedDevice_IdentifierByTag = {
+    7: ProvisionedDevice_Identifier.lorawanDevEui,
+    0: ProvisionedDevice_Identifier.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProvisionedDevice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..oo(0, [7])
+    ..aOM<$0.ConnectorId>(1, _omitFieldNames ? '' : 'connectorId',
+        subBuilder: $0.ConnectorId.create)
+    ..aOS(3, _omitFieldNames ? '' : 'modelId')
+    ..aOM<$0.SpaceId>(4, _omitFieldNames ? '' : 'initialSpaceId',
+        subBuilder: $0.SpaceId.create)
+    ..e<$10.DeviceOwnershipType>(
+        5, _omitFieldNames ? '' : 'ownership', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $10.DeviceOwnershipType.DEVICE_OWNERSHIP_TYPE_UNSPECIFIED,
+        valueOf: $10.DeviceOwnershipType.valueOf,
+        enumValues: $10.DeviceOwnershipType.values)
+    ..aOM<$2.Timestamp>(6, _omitFieldNames ? '' : 'provisionedAt',
+        subBuilder: $2.Timestamp.create)
+    ..aOS(7, _omitFieldNames ? '' : 'lorawanDevEui')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisionedDevice clone() => ProvisionedDevice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisionedDevice copyWith(void Function(ProvisionedDevice) updates) =>
+      super.copyWith((message) => updates(message as ProvisionedDevice))
+          as ProvisionedDevice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProvisionedDevice create() => ProvisionedDevice._();
+  @$core.override
+  ProvisionedDevice createEmptyInstance() => create();
+  static $pb.PbList<ProvisionedDevice> createRepeated() =>
+      $pb.PbList<ProvisionedDevice>();
+  @$core.pragma('dart2js:noInline')
+  static ProvisionedDevice getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProvisionedDevice>(create);
+  static ProvisionedDevice? _defaultInstance;
+
+  ProvisionedDevice_Identifier whichIdentifier() =>
+      _ProvisionedDevice_IdentifierByTag[$_whichOneof(0)]!;
+  void clearIdentifier() => $_clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $0.ConnectorId get connectorId => $_getN(0);
+  @$pb.TagNumber(1)
+  set connectorId($0.ConnectorId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasConnectorId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearConnectorId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.ConnectorId ensureConnectorId() => $_ensure(0);
+
+  /// As registered (LorawanProvisioning.model_id).
+  @$pb.TagNumber(3)
+  $core.String get modelId => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set modelId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(3)
+  $core.bool hasModelId() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearModelId() => $_clearField(3);
+
+  /// The pending registration (ProvisionDevice, WHERE IT IS FILED): where the device will be filed.
+  @$pb.TagNumber(4)
+  $0.SpaceId get initialSpaceId => $_getN(2);
+  @$pb.TagNumber(4)
+  set initialSpaceId($0.SpaceId value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasInitialSpaceId() => $_has(2);
+  @$pb.TagNumber(4)
+  void clearInitialSpaceId() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.SpaceId ensureInitialSpaceId() => $_ensure(2);
+
+  @$pb.TagNumber(5)
+  $10.DeviceOwnershipType get ownership => $_getN(3);
+  @$pb.TagNumber(5)
+  set ownership($10.DeviceOwnershipType value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasOwnership() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearOwnership() => $_clearField(5);
+
+  /// When it was last registered: a re-key moves it.
+  @$pb.TagNumber(6)
+  $2.Timestamp get provisionedAt => $_getN(4);
+  @$pb.TagNumber(6)
+  set provisionedAt($2.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasProvisionedAt() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearProvisionedAt() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $2.Timestamp ensureProvisionedAt() => $_ensure(4);
+
+  @$pb.TagNumber(7)
+  $core.String get lorawanDevEui => $_getSZ(5);
+  @$pb.TagNumber(7)
+  set lorawanDevEui($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(7)
+  $core.bool hasLorawanDevEui() => $_has(5);
+  @$pb.TagNumber(7)
+  void clearLorawanDevEui() => $_clearField(7);
+}
+
+/// The answer to ListProvisionedDevices.
+class ProvisionedDevices extends $pb.GeneratedMessage {
+  factory ProvisionedDevices({
+    $core.Iterable<ProvisionedDevice>? devices,
+  }) {
+    final result = create();
+    if (devices != null) result.devices.addAll(devices);
+    return result;
+  }
+
+  ProvisionedDevices._();
+
+  factory ProvisionedDevices.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ProvisionedDevices.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ProvisionedDevices',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..pc<ProvisionedDevice>(
+        1, _omitFieldNames ? '' : 'devices', $pb.PbFieldType.PM,
+        subBuilder: ProvisionedDevice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisionedDevices clone() => ProvisionedDevices()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ProvisionedDevices copyWith(void Function(ProvisionedDevices) updates) =>
+      super.copyWith((message) => updates(message as ProvisionedDevices))
+          as ProvisionedDevices;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ProvisionedDevices create() => ProvisionedDevices._();
+  @$core.override
+  ProvisionedDevices createEmptyInstance() => create();
+  static $pb.PbList<ProvisionedDevices> createRepeated() =>
+      $pb.PbList<ProvisionedDevices>();
+  @$core.pragma('dart2js:noInline')
+  static ProvisionedDevices getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ProvisionedDevices>(create);
+  static ProvisionedDevices? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<ProvisionedDevice> get devices => $_getList(0);
 }
 
 /// Asks for the spaces the caller can reach. Unset root_space_id means all of
@@ -1262,7 +1752,7 @@ class ListSpaces extends $pb.GeneratedMessage {
 /// included where they are shown (see Space.members).
 class SpaceTree extends $pb.GeneratedMessage {
   factory SpaceTree({
-    $core.Iterable<$2.Space>? spaces,
+    $core.Iterable<$3.Space>? spaces,
   }) {
     final result = create();
     if (spaces != null) result.spaces.addAll(spaces);
@@ -1283,8 +1773,8 @@ class SpaceTree extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
-    ..pc<$2.Space>(1, _omitFieldNames ? '' : 'spaces', $pb.PbFieldType.PM,
-        subBuilder: $2.Space.create)
+    ..pc<$3.Space>(1, _omitFieldNames ? '' : 'spaces', $pb.PbFieldType.PM,
+        subBuilder: $3.Space.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1307,7 +1797,7 @@ class SpaceTree extends $pb.GeneratedMessage {
   static SpaceTree? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $pb.PbList<$2.Space> get spaces => $_getList(0);
+  $pb.PbList<$3.Space> get spaces => $_getList(0);
 }
 
 /// The answer to an operation that changes something and has nothing to return.
@@ -1381,9 +1871,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   factory CreateDeviceLink({
     $0.DeviceId? sender,
     $0.DeviceId? receiver,
-    $3.LinkFunction? function,
-    $3.LinkMode? mode,
-    $3.LinkSettings? settings,
+    $4.LinkFunction? function,
+    $4.LinkMode? mode,
+    $4.LinkSettings? settings,
   }) {
     final result = create();
     if (sender != null) result.sender = sender;
@@ -1412,17 +1902,17 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
         subBuilder: $0.DeviceId.create)
     ..aOM<$0.DeviceId>(2, _omitFieldNames ? '' : 'receiver',
         subBuilder: $0.DeviceId.create)
-    ..e<$3.LinkFunction>(
+    ..e<$4.LinkFunction>(
         3, _omitFieldNames ? '' : 'function', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
-        valueOf: $3.LinkFunction.valueOf,
-        enumValues: $3.LinkFunction.values)
-    ..e<$3.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
-        defaultOrMaker: $3.LinkMode.LINK_MODE_UNSPECIFIED,
-        valueOf: $3.LinkMode.valueOf,
-        enumValues: $3.LinkMode.values)
-    ..aOM<$3.LinkSettings>(5, _omitFieldNames ? '' : 'settings',
-        subBuilder: $3.LinkSettings.create)
+        defaultOrMaker: $4.LinkFunction.LINK_FUNCTION_UNSPECIFIED,
+        valueOf: $4.LinkFunction.valueOf,
+        enumValues: $4.LinkFunction.values)
+    ..e<$4.LinkMode>(4, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $4.LinkMode.LINK_MODE_UNSPECIFIED,
+        valueOf: $4.LinkMode.valueOf,
+        enumValues: $4.LinkMode.values)
+    ..aOM<$4.LinkSettings>(5, _omitFieldNames ? '' : 'settings',
+        subBuilder: $4.LinkSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1469,9 +1959,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   $0.DeviceId ensureReceiver() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $3.LinkFunction get function => $_getN(2);
+  $4.LinkFunction get function => $_getN(2);
   @$pb.TagNumber(3)
-  set function($3.LinkFunction value) => $_setField(3, value);
+  set function($4.LinkFunction value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFunction() => $_has(2);
   @$pb.TagNumber(3)
@@ -1481,9 +1971,9 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   /// one can be brokered: it survives a gateway outage and runs at the devices'
   /// own rate. Name one to override that.
   @$pb.TagNumber(4)
-  $3.LinkMode get mode => $_getN(3);
+  $4.LinkMode get mode => $_getN(3);
   @$pb.TagNumber(4)
-  set mode($3.LinkMode value) => $_setField(4, value);
+  set mode($4.LinkMode value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasMode() => $_has(3);
   @$pb.TagNumber(4)
@@ -1498,15 +1988,15 @@ class CreateDeviceLink extends $pb.GeneratedMessage {
   /// Unset is still allowed and still means unconfigured, since a hard link has
   /// nothing to configure and a caller may genuinely not know the target yet.
   @$pb.TagNumber(5)
-  $3.LinkSettings get settings => $_getN(4);
+  $4.LinkSettings get settings => $_getN(4);
   @$pb.TagNumber(5)
-  set settings($3.LinkSettings value) => $_setField(5, value);
+  set settings($4.LinkSettings value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasSettings() => $_has(4);
   @$pb.TagNumber(5)
   void clearSettings() => $_clearField(5);
   @$pb.TagNumber(5)
-  $3.LinkSettings ensureSettings() => $_ensure(4);
+  $4.LinkSettings ensureSettings() => $_ensure(4);
 }
 
 /// Removes a link. Note that on at least one vendor, removing a link disturbs the
@@ -1583,7 +2073,7 @@ class RemoveDeviceLink extends $pb.GeneratedMessage {
 class UpdateDeviceLink extends $pb.GeneratedMessage {
   factory UpdateDeviceLink({
     $core.String? linkId,
-    $3.LinkSettings? settings,
+    $4.LinkSettings? settings,
   }) {
     final result = create();
     if (linkId != null) result.linkId = linkId;
@@ -1606,8 +2096,8 @@ class UpdateDeviceLink extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'linkId')
-    ..aOM<$3.LinkSettings>(2, _omitFieldNames ? '' : 'settings',
-        subBuilder: $3.LinkSettings.create)
+    ..aOM<$4.LinkSettings>(2, _omitFieldNames ? '' : 'settings',
+        subBuilder: $4.LinkSettings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1650,15 +2140,15 @@ class UpdateDeviceLink extends $pb.GeneratedMessage {
   /// settings", which is the one thing that reads like an accident — and the
   /// wire cannot tell those two callers apart.
   @$pb.TagNumber(2)
-  $3.LinkSettings get settings => $_getN(1);
+  $4.LinkSettings get settings => $_getN(1);
   @$pb.TagNumber(2)
-  set settings($3.LinkSettings value) => $_setField(2, value);
+  set settings($4.LinkSettings value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasSettings() => $_has(1);
   @$pb.TagNumber(2)
   void clearSettings() => $_clearField(2);
   @$pb.TagNumber(2)
-  $3.LinkSettings ensureSettings() => $_ensure(1);
+  $4.LinkSettings ensureSettings() => $_ensure(1);
 }
 
 /// Lists links. Unset device_id lists every link among devices the caller can
@@ -2212,7 +2702,7 @@ class ConfigureRoomClimate extends $pb.GeneratedMessage {
 class SetInnerRoomLimits extends $pb.GeneratedMessage {
   factory SetInnerRoomLimits({
     $0.SpaceId? roomId,
-    $4.InnerRoomLimits? limits,
+    $5.InnerRoomLimits? limits,
   }) {
     final result = create();
     if (roomId != null) result.roomId = roomId;
@@ -2236,8 +2726,8 @@ class SetInnerRoomLimits extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
         subBuilder: $0.SpaceId.create)
-    ..aOM<$4.InnerRoomLimits>(2, _omitFieldNames ? '' : 'limits',
-        subBuilder: $4.InnerRoomLimits.create)
+    ..aOM<$5.InnerRoomLimits>(2, _omitFieldNames ? '' : 'limits',
+        subBuilder: $5.InnerRoomLimits.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2274,15 +2764,15 @@ class SetInnerRoomLimits extends $pb.GeneratedMessage {
 
   /// Replaces both bounds: a bound unset in it, or limits unset, removes them.
   @$pb.TagNumber(2)
-  $4.InnerRoomLimits get limits => $_getN(1);
+  $5.InnerRoomLimits get limits => $_getN(1);
   @$pb.TagNumber(2)
-  set limits($4.InnerRoomLimits value) => $_setField(2, value);
+  set limits($5.InnerRoomLimits value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasLimits() => $_has(1);
   @$pb.TagNumber(2)
   void clearLimits() => $_clearField(2);
   @$pb.TagNumber(2)
-  $4.InnerRoomLimits ensureLimits() => $_ensure(1);
+  $5.InnerRoomLimits ensureLimits() => $_ensure(1);
 }
 
 /// Sets the comfort preference of a home or of one of its rooms (climate.v1.ComfortPreference),
@@ -2309,7 +2799,7 @@ class SetInnerRoomLimits extends $pb.GeneratedMessage {
 class SetComfortPreference extends $pb.GeneratedMessage {
   factory SetComfortPreference({
     $0.SpaceId? spaceId,
-    $4.ComfortPreference? preference,
+    $5.ComfortPreference? preference,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -2333,8 +2823,8 @@ class SetComfortPreference extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..aOM<$4.ComfortPreference>(2, _omitFieldNames ? '' : 'preference',
-        subBuilder: $4.ComfortPreference.create)
+    ..aOM<$5.ComfortPreference>(2, _omitFieldNames ? '' : 'preference',
+        subBuilder: $5.ComfortPreference.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2372,15 +2862,15 @@ class SetComfortPreference extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $4.ComfortPreference get preference => $_getN(1);
+  $5.ComfortPreference get preference => $_getN(1);
   @$pb.TagNumber(2)
-  set preference($4.ComfortPreference value) => $_setField(2, value);
+  set preference($5.ComfortPreference value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPreference() => $_has(1);
   @$pb.TagNumber(2)
   void clearPreference() => $_clearField(2);
   @$pb.TagNumber(2)
-  $4.ComfortPreference ensurePreference() => $_ensure(1);
+  $5.ComfortPreference ensurePreference() => $_ensure(1);
 }
 
 /// Switches a mode on a space on, or off with kind UNSPECIFIED. WRITE on the space.
@@ -2400,10 +2890,10 @@ class SetComfortPreference extends $pb.GeneratedMessage {
 class SetClimateMode extends $pb.GeneratedMessage {
   factory SetClimateMode({
     $0.SpaceId? spaceId,
-    $4.ClimateModeKind? kind,
+    $5.ClimateModeKind? kind,
     $core.int? setbackCentidegrees,
-    $5.Timestamp? startsAt,
-    $5.Timestamp? endsAt,
+    $2.Timestamp? startsAt,
+    $2.Timestamp? endsAt,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -2431,17 +2921,17 @@ class SetClimateMode extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$4.ClimateModeKind>(
+    ..e<$5.ClimateModeKind>(
         2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
-        defaultOrMaker: $4.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
-        valueOf: $4.ClimateModeKind.valueOf,
-        enumValues: $4.ClimateModeKind.values)
+        defaultOrMaker: $5.ClimateModeKind.CLIMATE_MODE_KIND_UNSPECIFIED,
+        valueOf: $5.ClimateModeKind.valueOf,
+        enumValues: $5.ClimateModeKind.values)
     ..a<$core.int>(
         3, _omitFieldNames ? '' : 'setbackCentidegrees', $pb.PbFieldType.OS3)
-    ..aOM<$5.Timestamp>(4, _omitFieldNames ? '' : 'startsAt',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(5, _omitFieldNames ? '' : 'endsAt',
-        subBuilder: $5.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'startsAt',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(5, _omitFieldNames ? '' : 'endsAt',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2477,9 +2967,9 @@ class SetClimateMode extends $pb.GeneratedMessage {
   $0.SpaceId ensureSpaceId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $4.ClimateModeKind get kind => $_getN(1);
+  $5.ClimateModeKind get kind => $_getN(1);
   @$pb.TagNumber(2)
-  set kind($4.ClimateModeKind value) => $_setField(2, value);
+  set kind($5.ClimateModeKind value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasKind() => $_has(1);
   @$pb.TagNumber(2)
@@ -2496,26 +2986,26 @@ class SetClimateMode extends $pb.GeneratedMessage {
 
   /// HOLIDAY only; both required there. Refused on AWAY.
   @$pb.TagNumber(4)
-  $5.Timestamp get startsAt => $_getN(3);
+  $2.Timestamp get startsAt => $_getN(3);
   @$pb.TagNumber(4)
-  set startsAt($5.Timestamp value) => $_setField(4, value);
+  set startsAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasStartsAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearStartsAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $5.Timestamp ensureStartsAt() => $_ensure(3);
+  $2.Timestamp ensureStartsAt() => $_ensure(3);
 
   @$pb.TagNumber(5)
-  $5.Timestamp get endsAt => $_getN(4);
+  $2.Timestamp get endsAt => $_getN(4);
   @$pb.TagNumber(5)
-  set endsAt($5.Timestamp value) => $_setField(5, value);
+  set endsAt($2.Timestamp value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasEndsAt() => $_has(4);
   @$pb.TagNumber(5)
   void clearEndsAt() => $_clearField(5);
   @$pb.TagNumber(5)
-  $5.Timestamp ensureEndsAt() => $_ensure(4);
+  $2.Timestamp ensureEndsAt() => $_ensure(4);
 }
 
 /// Lists the room climates and modes a caller may see. Unset root_space_id lists every
@@ -2601,9 +3091,9 @@ class ListRoomClimates extends $pb.GeneratedMessage {
 class GetRoomHistory extends $pb.GeneratedMessage {
   factory GetRoomHistory({
     $0.SpaceId? roomId,
-    $5.Timestamp? fromTime,
-    $5.Timestamp? toTime,
-    $4.RoomHistoryResolution? resolution,
+    $2.Timestamp? fromTime,
+    $2.Timestamp? toTime,
+    $5.RoomHistoryResolution? resolution,
   }) {
     final result = create();
     if (roomId != null) result.roomId = roomId;
@@ -2629,16 +3119,16 @@ class GetRoomHistory extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'roomId',
         subBuilder: $0.SpaceId.create)
-    ..aOM<$5.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
-        subBuilder: $5.Timestamp.create)
-    ..e<$4.RoomHistoryResolution>(
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $2.Timestamp.create)
+    ..e<$5.RoomHistoryResolution>(
         4, _omitFieldNames ? '' : 'resolution', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $4.RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
-        valueOf: $4.RoomHistoryResolution.valueOf,
-        enumValues: $4.RoomHistoryResolution.values)
+            $5.RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+        valueOf: $5.RoomHistoryResolution.valueOf,
+        enumValues: $5.RoomHistoryResolution.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2674,26 +3164,26 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   $0.SpaceId ensureRoomId() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $5.Timestamp get fromTime => $_getN(1);
+  $2.Timestamp get fromTime => $_getN(1);
   @$pb.TagNumber(2)
-  set fromTime($5.Timestamp value) => $_setField(2, value);
+  set fromTime($2.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasFromTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearFromTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $5.Timestamp ensureFromTime() => $_ensure(1);
+  $2.Timestamp ensureFromTime() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $5.Timestamp get toTime => $_getN(2);
+  $2.Timestamp get toTime => $_getN(2);
   @$pb.TagNumber(3)
-  set toTime($5.Timestamp value) => $_setField(3, value);
+  set toTime($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasToTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearToTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.Timestamp ensureToTime() => $_ensure(2);
+  $2.Timestamp ensureToTime() => $_ensure(2);
 
   /// The resolution wanted. Unset, or one the gateway does not give, and the gateway chooses
   /// from the request and the resolutions alone, never from what it holds: the finest
@@ -2703,9 +3193,9 @@ class GetRoomHistory extends $pb.GeneratedMessage {
   /// is unset, the coarsest. How long each is kept is the gateway's, the same for every room and
   /// recipient, so the choice tells nothing of a room or of who may read it.
   @$pb.TagNumber(4)
-  $4.RoomHistoryResolution get resolution => $_getN(3);
+  $5.RoomHistoryResolution get resolution => $_getN(3);
   @$pb.TagNumber(4)
-  set resolution($4.RoomHistoryResolution value) => $_setField(4, value);
+  set resolution($5.RoomHistoryResolution value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasResolution() => $_has(3);
   @$pb.TagNumber(4)
@@ -2722,9 +3212,9 @@ class GetRoomHistory extends $pb.GeneratedMessage {
 class GetPlantHistory extends $pb.GeneratedMessage {
   factory GetPlantHistory({
     $core.String? plantId,
-    $5.Timestamp? fromTime,
-    $5.Timestamp? toTime,
-    $4.RoomHistoryResolution? resolution,
+    $2.Timestamp? fromTime,
+    $2.Timestamp? toTime,
+    $5.RoomHistoryResolution? resolution,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -2749,16 +3239,16 @@ class GetPlantHistory extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'plantId')
-    ..aOM<$5.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
-        subBuilder: $5.Timestamp.create)
-    ..e<$4.RoomHistoryResolution>(
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $2.Timestamp.create)
+    ..e<$5.RoomHistoryResolution>(
         4, _omitFieldNames ? '' : 'resolution', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $4.RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
-        valueOf: $4.RoomHistoryResolution.valueOf,
-        enumValues: $4.RoomHistoryResolution.values)
+            $5.RoomHistoryResolution.ROOM_HISTORY_RESOLUTION_UNSPECIFIED,
+        valueOf: $5.RoomHistoryResolution.valueOf,
+        enumValues: $5.RoomHistoryResolution.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2792,31 +3282,31 @@ class GetPlantHistory extends $pb.GeneratedMessage {
   void clearPlantId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $5.Timestamp get fromTime => $_getN(1);
+  $2.Timestamp get fromTime => $_getN(1);
   @$pb.TagNumber(2)
-  set fromTime($5.Timestamp value) => $_setField(2, value);
+  set fromTime($2.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasFromTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearFromTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $5.Timestamp ensureFromTime() => $_ensure(1);
+  $2.Timestamp ensureFromTime() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $5.Timestamp get toTime => $_getN(2);
+  $2.Timestamp get toTime => $_getN(2);
   @$pb.TagNumber(3)
-  set toTime($5.Timestamp value) => $_setField(3, value);
+  set toTime($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasToTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearToTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.Timestamp ensureToTime() => $_ensure(2);
+  $2.Timestamp ensureToTime() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $4.RoomHistoryResolution get resolution => $_getN(3);
+  $5.RoomHistoryResolution get resolution => $_getN(3);
   @$pb.TagNumber(4)
-  set resolution($4.RoomHistoryResolution value) => $_setField(4, value);
+  set resolution($5.RoomHistoryResolution value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasResolution() => $_has(3);
   @$pb.TagNumber(4)
@@ -3007,8 +3497,8 @@ class BuildingPlanning extends $pb.GeneratedMessage {
     $core.String? biddingZone,
     $6.ForecastCell? forecastCell,
     $core.bool? inputsOff,
-    $5.Timestamp? pricesThrough,
-    $5.Timestamp? forecastIssuedAt,
+    $2.Timestamp? pricesThrough,
+    $2.Timestamp? forecastIssuedAt,
     $core.bool? stale,
   }) {
     final result = create();
@@ -3042,10 +3532,10 @@ class BuildingPlanning extends $pb.GeneratedMessage {
     ..aOM<$6.ForecastCell>(3, _omitFieldNames ? '' : 'forecastCell',
         subBuilder: $6.ForecastCell.create)
     ..aOB(4, _omitFieldNames ? '' : 'inputsOff')
-    ..aOM<$5.Timestamp>(5, _omitFieldNames ? '' : 'pricesThrough',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(6, _omitFieldNames ? '' : 'forecastIssuedAt',
-        subBuilder: $5.Timestamp.create)
+    ..aOM<$2.Timestamp>(5, _omitFieldNames ? '' : 'pricesThrough',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(6, _omitFieldNames ? '' : 'forecastIssuedAt',
+        subBuilder: $2.Timestamp.create)
     ..aOB(7, _omitFieldNames ? '' : 'stale')
     ..hasRequiredFields = false;
 
@@ -3114,27 +3604,27 @@ class BuildingPlanning extends $pb.GeneratedMessage {
   /// The end of the last price interval the gateway holds for the zone without a gap from the
   /// current interval on, as the stale rule reads them. Unset where it holds no current one.
   @$pb.TagNumber(5)
-  $5.Timestamp get pricesThrough => $_getN(4);
+  $2.Timestamp get pricesThrough => $_getN(4);
   @$pb.TagNumber(5)
-  set pricesThrough($5.Timestamp value) => $_setField(5, value);
+  set pricesThrough($2.Timestamp value) => $_setField(5, value);
   @$pb.TagNumber(5)
   $core.bool hasPricesThrough() => $_has(4);
   @$pb.TagNumber(5)
   void clearPricesThrough() => $_clearField(5);
   @$pb.TagNumber(5)
-  $5.Timestamp ensurePricesThrough() => $_ensure(4);
+  $2.Timestamp ensurePricesThrough() => $_ensure(4);
 
   /// When the forecast the gateway holds for the cell was issued. Unset where it holds none.
   @$pb.TagNumber(6)
-  $5.Timestamp get forecastIssuedAt => $_getN(5);
+  $2.Timestamp get forecastIssuedAt => $_getN(5);
   @$pb.TagNumber(6)
-  set forecastIssuedAt($5.Timestamp value) => $_setField(6, value);
+  set forecastIssuedAt($2.Timestamp value) => $_setField(6, value);
   @$pb.TagNumber(6)
   $core.bool hasForecastIssuedAt() => $_has(5);
   @$pb.TagNumber(6)
   void clearForecastIssuedAt() => $_clearField(6);
   @$pb.TagNumber(6)
-  $5.Timestamp ensureForecastIssuedAt() => $_ensure(5);
+  $2.Timestamp ensureForecastIssuedAt() => $_ensure(5);
 
   /// Whether the building's inputs are stale, by the rule of reporting.v1
   /// PROBLEM_KIND_PLANNING_INPUTS_STALE. False while the inputs are off, or while the gateway
@@ -3159,8 +3649,8 @@ class BuildingPlanning extends $pb.GeneratedMessage {
 class GetDayAheadPrices extends $pb.GeneratedMessage {
   factory GetDayAheadPrices({
     $0.SpaceId? spaceId,
-    $5.Timestamp? fromTime,
-    $5.Timestamp? toTime,
+    $2.Timestamp? fromTime,
+    $2.Timestamp? toTime,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -3185,10 +3675,10 @@ class GetDayAheadPrices extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..aOM<$5.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
-        subBuilder: $5.Timestamp.create)
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3230,26 +3720,26 @@ class GetDayAheadPrices extends $pb.GeneratedMessage {
   /// answer is empty. A to_time the caller sets more than 31 days after from_time, or not
   /// after it, is refused as INVALID_REQUEST with metadata {"reason": "span"}.
   @$pb.TagNumber(2)
-  $5.Timestamp get fromTime => $_getN(1);
+  $2.Timestamp get fromTime => $_getN(1);
   @$pb.TagNumber(2)
-  set fromTime($5.Timestamp value) => $_setField(2, value);
+  set fromTime($2.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasFromTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearFromTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $5.Timestamp ensureFromTime() => $_ensure(1);
+  $2.Timestamp ensureFromTime() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $5.Timestamp get toTime => $_getN(2);
+  $2.Timestamp get toTime => $_getN(2);
   @$pb.TagNumber(3)
-  set toTime($5.Timestamp value) => $_setField(3, value);
+  set toTime($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasToTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearToTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.Timestamp ensureToTime() => $_ensure(2);
+  $2.Timestamp ensureToTime() => $_ensure(2);
 }
 
 /// The prices GetDayAheadPrices asked for.
@@ -3658,7 +4148,7 @@ class SpaceAddress extends $pb.GeneratedMessage {
 class PrivacyDisclosure extends $pb.GeneratedMessage {
   factory PrivacyDisclosure({
     $0.SpaceId? spaceId,
-    $4.ClimateSummaryPeriod? climateSummaryPeriod,
+    $5.ClimateSummaryPeriod? climateSummaryPeriod,
     $core.Iterable<ServiceParty>? serviceParties,
     $core.String? ownerOrganisationName,
     $core.bool? namesWithheld,
@@ -3696,12 +4186,12 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
         subBuilder: $0.SpaceId.create)
-    ..e<$4.ClimateSummaryPeriod>(
+    ..e<$5.ClimateSummaryPeriod>(
         4, _omitFieldNames ? '' : 'climateSummaryPeriod', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $4.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
-        valueOf: $4.ClimateSummaryPeriod.valueOf,
-        enumValues: $4.ClimateSummaryPeriod.values)
+            $5.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: $5.ClimateSummaryPeriod.valueOf,
+        enumValues: $5.ClimateSummaryPeriod.values)
     ..pc<ServiceParty>(
         5, _omitFieldNames ? '' : 'serviceParties', $pb.PbFieldType.PM,
         subBuilder: ServiceParty.create)
@@ -3756,9 +4246,9 @@ class PrivacyDisclosure extends $pb.GeneratedMessage {
   /// (ClearClimateHistory) likewise leaves service no period from before the clear, and none
   /// until the first period that starts at or after it has closed.
   @$pb.TagNumber(4)
-  $4.ClimateSummaryPeriod get climateSummaryPeriod => $_getN(1);
+  $5.ClimateSummaryPeriod get climateSummaryPeriod => $_getN(1);
   @$pb.TagNumber(4)
-  set climateSummaryPeriod($4.ClimateSummaryPeriod value) =>
+  set climateSummaryPeriod($5.ClimateSummaryPeriod value) =>
       $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasClimateSummaryPeriod() => $_has(1);
@@ -3985,9 +4475,9 @@ class GetPrivacyDisclosure extends $pb.GeneratedMessage {
 class GetApartmentClimateSummary extends $pb.GeneratedMessage {
   factory GetApartmentClimateSummary({
     $0.SpaceId? apartmentId,
-    $4.ClimateSummaryPeriod? period,
-    $5.Timestamp? fromTime,
-    $5.Timestamp? toTime,
+    $5.ClimateSummaryPeriod? period,
+    $2.Timestamp? fromTime,
+    $2.Timestamp? toTime,
   }) {
     final result = create();
     if (apartmentId != null) result.apartmentId = apartmentId;
@@ -4013,16 +4503,16 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'apartmentId',
         subBuilder: $0.SpaceId.create)
-    ..e<$4.ClimateSummaryPeriod>(
+    ..e<$5.ClimateSummaryPeriod>(
         2, _omitFieldNames ? '' : 'period', $pb.PbFieldType.OE,
         defaultOrMaker:
-            $4.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
-        valueOf: $4.ClimateSummaryPeriod.valueOf,
-        enumValues: $4.ClimateSummaryPeriod.values)
-    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'fromTime',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(4, _omitFieldNames ? '' : 'toTime',
-        subBuilder: $5.Timestamp.create)
+            $5.ClimateSummaryPeriod.CLIMATE_SUMMARY_PERIOD_UNSPECIFIED,
+        valueOf: $5.ClimateSummaryPeriod.valueOf,
+        enumValues: $5.ClimateSummaryPeriod.values)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4066,35 +4556,35 @@ class GetApartmentClimateSummary extends $pb.GeneratedMessage {
   /// any other or when it names none. Its residents may ask for any, and are given only
   /// periods that began in their current residency.
   @$pb.TagNumber(2)
-  $4.ClimateSummaryPeriod get period => $_getN(1);
+  $5.ClimateSummaryPeriod get period => $_getN(1);
   @$pb.TagNumber(2)
-  set period($4.ClimateSummaryPeriod value) => $_setField(2, value);
+  set period($5.ClimateSummaryPeriod value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasPeriod() => $_has(1);
   @$pb.TagNumber(2)
   void clearPeriod() => $_clearField(2);
 
   @$pb.TagNumber(3)
-  $5.Timestamp get fromTime => $_getN(2);
+  $2.Timestamp get fromTime => $_getN(2);
   @$pb.TagNumber(3)
-  set fromTime($5.Timestamp value) => $_setField(3, value);
+  set fromTime($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasFromTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearFromTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.Timestamp ensureFromTime() => $_ensure(2);
+  $2.Timestamp ensureFromTime() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $5.Timestamp get toTime => $_getN(3);
+  $2.Timestamp get toTime => $_getN(3);
   @$pb.TagNumber(4)
-  set toTime($5.Timestamp value) => $_setField(4, value);
+  set toTime($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasToTime() => $_has(3);
   @$pb.TagNumber(4)
   void clearToTime() => $_clearField(4);
   @$pb.TagNumber(4)
-  $5.Timestamp ensureToTime() => $_ensure(3);
+  $2.Timestamp ensureToTime() => $_ensure(3);
 }
 
 /// Asks the gateway to have a connector re-initialise its backend connection: reconnect to
@@ -5068,8 +5558,8 @@ class ListHeatBlockStatus extends $pb.GeneratedMessage {
 class GetHeatBlockHistory extends $pb.GeneratedMessage {
   factory GetHeatBlockHistory({
     $core.String? plantId,
-    $5.Timestamp? fromTime,
-    $5.Timestamp? toTime,
+    $2.Timestamp? fromTime,
+    $2.Timestamp? toTime,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -5093,10 +5583,10 @@ class GetHeatBlockHistory extends $pb.GeneratedMessage {
           _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'plantId')
-    ..aOM<$5.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
-        subBuilder: $5.Timestamp.create)
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'fromTime',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'toTime',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -5130,26 +5620,26 @@ class GetHeatBlockHistory extends $pb.GeneratedMessage {
   void clearPlantId() => $_clearField(1);
 
   @$pb.TagNumber(2)
-  $5.Timestamp get fromTime => $_getN(1);
+  $2.Timestamp get fromTime => $_getN(1);
   @$pb.TagNumber(2)
-  set fromTime($5.Timestamp value) => $_setField(2, value);
+  set fromTime($2.Timestamp value) => $_setField(2, value);
   @$pb.TagNumber(2)
   $core.bool hasFromTime() => $_has(1);
   @$pb.TagNumber(2)
   void clearFromTime() => $_clearField(2);
   @$pb.TagNumber(2)
-  $5.Timestamp ensureFromTime() => $_ensure(1);
+  $2.Timestamp ensureFromTime() => $_ensure(1);
 
   @$pb.TagNumber(3)
-  $5.Timestamp get toTime => $_getN(2);
+  $2.Timestamp get toTime => $_getN(2);
   @$pb.TagNumber(3)
-  set toTime($5.Timestamp value) => $_setField(3, value);
+  set toTime($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasToTime() => $_has(2);
   @$pb.TagNumber(3)
   void clearToTime() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.Timestamp ensureToTime() => $_ensure(2);
+  $2.Timestamp ensureToTime() => $_ensure(2);
 }
 
 /// Reads what a home's price rules would have saved, and cost in comfort, under each comfort band
@@ -6512,8 +7002,8 @@ class AnswerCommissioningGrant extends $pb.GeneratedMessage {
   factory AnswerCommissioningGrant({
     $core.String? grantId,
     $core.bool? accept,
-    $5.Timestamp? startsAt,
-    $5.Timestamp? endsAt,
+    $2.Timestamp? startsAt,
+    $2.Timestamp? endsAt,
   }) {
     final result = create();
     if (grantId != null) result.grantId = grantId;
@@ -6539,10 +7029,10 @@ class AnswerCommissioningGrant extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'grantId')
     ..aOB(2, _omitFieldNames ? '' : 'accept')
-    ..aOM<$5.Timestamp>(3, _omitFieldNames ? '' : 'startsAt',
-        subBuilder: $5.Timestamp.create)
-    ..aOM<$5.Timestamp>(4, _omitFieldNames ? '' : 'endsAt',
-        subBuilder: $5.Timestamp.create)
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'startsAt',
+        subBuilder: $2.Timestamp.create)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'endsAt',
+        subBuilder: $2.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -6589,26 +7079,26 @@ class AnswerCommissioningGrant extends $pb.GeneratedMessage {
 
   /// When it is active. Unset starts_at: now. Ignored when declining.
   @$pb.TagNumber(3)
-  $5.Timestamp get startsAt => $_getN(2);
+  $2.Timestamp get startsAt => $_getN(2);
   @$pb.TagNumber(3)
-  set startsAt($5.Timestamp value) => $_setField(3, value);
+  set startsAt($2.Timestamp value) => $_setField(3, value);
   @$pb.TagNumber(3)
   $core.bool hasStartsAt() => $_has(2);
   @$pb.TagNumber(3)
   void clearStartsAt() => $_clearField(3);
   @$pb.TagNumber(3)
-  $5.Timestamp ensureStartsAt() => $_ensure(2);
+  $2.Timestamp ensureStartsAt() => $_ensure(2);
 
   @$pb.TagNumber(4)
-  $5.Timestamp get endsAt => $_getN(3);
+  $2.Timestamp get endsAt => $_getN(3);
   @$pb.TagNumber(4)
-  set endsAt($5.Timestamp value) => $_setField(4, value);
+  set endsAt($2.Timestamp value) => $_setField(4, value);
   @$pb.TagNumber(4)
   $core.bool hasEndsAt() => $_has(3);
   @$pb.TagNumber(4)
   void clearEndsAt() => $_clearField(4);
   @$pb.TagNumber(4)
-  $5.Timestamp ensureEndsAt() => $_ensure(3);
+  $2.Timestamp ensureEndsAt() => $_ensure(3);
 }
 
 /// Ends a commissioning grant at once, requested or granted. Answered with ManagementAck. From
@@ -6917,6 +7407,8 @@ enum ManagementRequest_Request {
   getEnergyPriceAdder,
   setEnergyPriceAdder,
   getHeatCurveView,
+  deprovisionDevice,
+  listProvisionedDevices,
   notSet
 }
 
@@ -7008,6 +7500,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetEnergyPriceAdder? getEnergyPriceAdder,
     SetEnergyPriceAdder? setEnergyPriceAdder,
     GetHeatCurveView? getHeatCurveView,
+    DeprovisionDevice? deprovisionDevice,
+    ListProvisionedDevices? listProvisionedDevices,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -7132,6 +7626,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (setEnergyPriceAdder != null)
       result.setEnergyPriceAdder = setEnergyPriceAdder;
     if (getHeatCurveView != null) result.getHeatCurveView = getHeatCurveView;
+    if (deprovisionDevice != null) result.deprovisionDevice = deprovisionDevice;
+    if (listProvisionedDevices != null)
+      result.listProvisionedDevices = listProvisionedDevices;
     return result;
   }
 
@@ -7231,6 +7728,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     83: ManagementRequest_Request.getEnergyPriceAdder,
     84: ManagementRequest_Request.setEnergyPriceAdder,
     85: ManagementRequest_Request.getHeatCurveView,
+    86: ManagementRequest_Request.deprovisionDevice,
+    87: ManagementRequest_Request.listProvisionedDevices,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -7323,7 +7822,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
       82,
       83,
       84,
-      85
+      85,
+      86,
+      87
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -7521,6 +8022,11 @@ class ManagementRequest extends $pb.GeneratedMessage {
         subBuilder: SetEnergyPriceAdder.create)
     ..aOM<GetHeatCurveView>(85, _omitFieldNames ? '' : 'getHeatCurveView',
         subBuilder: GetHeatCurveView.create)
+    ..aOM<DeprovisionDevice>(86, _omitFieldNames ? '' : 'deprovisionDevice',
+        subBuilder: DeprovisionDevice.create)
+    ..aOM<ListProvisionedDevices>(
+        87, _omitFieldNames ? '' : 'listProvisionedDevices',
+        subBuilder: ListProvisionedDevices.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -8520,6 +9026,31 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearGetHeatCurveView() => $_clearField(85);
   @$pb.TagNumber(85)
   GetHeatCurveView ensureGetHeatCurveView() => $_ensure(84);
+
+  /// Removing a registration made by mistake, and seeing those not yet joined; see
+  /// DeprovisionDevice and ListProvisionedDevices.
+  @$pb.TagNumber(86)
+  DeprovisionDevice get deprovisionDevice => $_getN(85);
+  @$pb.TagNumber(86)
+  set deprovisionDevice(DeprovisionDevice value) => $_setField(86, value);
+  @$pb.TagNumber(86)
+  $core.bool hasDeprovisionDevice() => $_has(85);
+  @$pb.TagNumber(86)
+  void clearDeprovisionDevice() => $_clearField(86);
+  @$pb.TagNumber(86)
+  DeprovisionDevice ensureDeprovisionDevice() => $_ensure(85);
+
+  @$pb.TagNumber(87)
+  ListProvisionedDevices get listProvisionedDevices => $_getN(86);
+  @$pb.TagNumber(87)
+  set listProvisionedDevices(ListProvisionedDevices value) =>
+      $_setField(87, value);
+  @$pb.TagNumber(87)
+  $core.bool hasListProvisionedDevices() => $_has(86);
+  @$pb.TagNumber(87)
+  void clearListProvisionedDevices() => $_clearField(87);
+  @$pb.TagNumber(87)
+  ListProvisionedDevices ensureListProvisionedDevices() => $_ensure(86);
 }
 
 const $core.bool _omitFieldNames =

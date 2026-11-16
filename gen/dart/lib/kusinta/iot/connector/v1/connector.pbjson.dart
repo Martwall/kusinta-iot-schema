@@ -94,6 +94,14 @@ const ConnectorInfo$json = {
       '6': '.kusinta.iot.accountlink.v1.LinkedService',
       '10': 'consumesCredentials'
     },
+    {
+      '1': 'provisioning_models',
+      '3': 14,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.common.v1.ProvisioningModel',
+      '10': 'provisioningModels'
+    },
   ],
 };
 
@@ -111,7 +119,9 @@ final $typed_data.Uint8List connectorInfoDescriptor = $convert.base64Decode(
     'QSIAoLZGVzY3JpcHRpb24YCyABKAlSC2Rlc2NyaXB0aW9uEkIKHXN1cHBvcnRzX2JhY2tlbmRf'
     'cmVpbml0aWFsaXplGAwgASgIUhtzdXBwb3J0c0JhY2tlbmRSZWluaXRpYWxpemUSXAoUY29uc3'
     'VtZXNfY3JlZGVudGlhbHMYDSADKA4yKS5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5MaW5r'
-    'ZWRTZXJ2aWNlUhNjb25zdW1lc0NyZWRlbnRpYWxz');
+    'ZWRTZXJ2aWNlUhNjb25zdW1lc0NyZWRlbnRpYWxzElkKE3Byb3Zpc2lvbmluZ19tb2RlbHMYDi'
+    'ADKAsyKC5rdXNpbnRhLmlvdC5jb21tb24udjEuUHJvdmlzaW9uaW5nTW9kZWxSEnByb3Zpc2lv'
+    'bmluZ01vZGVscw==');
 
 @$core.Deprecated('Use credentialsUpdateDescriptor instead')
 const CredentialsUpdate$json = {
@@ -393,6 +403,56 @@ final $typed_data.Uint8List removeLinkDescriptor = $convert.base64Decode(
     '5rdXNpbnRhLmlvdC5pZGVudGl0eS52MS5EZXZpY2VJZFIGc2VuZGVyEj0KCHJlY2VpdmVyGAMg'
     'ASgLMiEua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuRGV2aWNlSWRSCHJlY2VpdmVyEj0KCGZ1bm'
     'N0aW9uGAQgASgOMiEua3VzaW50YS5pb3QubGluay52MS5MaW5rRnVuY3Rpb25SCGZ1bmN0aW9u');
+
+@$core.Deprecated('Use registerDeviceDescriptor instead')
+const RegisterDevice$json = {
+  '1': 'RegisterDevice',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'lorawan',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.vendor.lorawan.v1.LorawanProvisioning',
+      '9': 0,
+      '10': 'lorawan'
+    },
+  ],
+  '8': [
+    {'1': 'credentials'},
+  ],
+};
+
+/// Descriptor for `RegisterDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List registerDeviceDescriptor = $convert.base64Decode(
+    'Cg5SZWdpc3RlckRldmljZRIdCgpyZXF1ZXN0X2lkGAEgASgJUglyZXF1ZXN0SWQSTgoHbG9yYX'
+    'dhbhgCIAEoCzIyLmt1c2ludGEuaW90LnZlbmRvci5sb3Jhd2FuLnYxLkxvcmF3YW5Qcm92aXNp'
+    'b25pbmdIAFIHbG9yYXdhbkINCgtjcmVkZW50aWFscw==');
+
+@$core.Deprecated('Use unregisterDeviceDescriptor instead')
+const UnregisterDevice$json = {
+  '1': 'UnregisterDevice',
+  '2': [
+    {'1': 'request_id', '3': 1, '4': 1, '5': 9, '10': 'requestId'},
+    {
+      '1': 'lorawan_dev_eui',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'lorawanDevEui'
+    },
+  ],
+  '8': [
+    {'1': 'identifier'},
+  ],
+};
+
+/// Descriptor for `UnregisterDevice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List unregisterDeviceDescriptor = $convert.base64Decode(
+    'ChBVbnJlZ2lzdGVyRGV2aWNlEh0KCnJlcXVlc3RfaWQYASABKAlSCXJlcXVlc3RJZBIoCg9sb3'
+    'Jhd2FuX2Rldl9ldWkYAiABKAlIAFINbG9yYXdhbkRldkV1aUIMCgppZGVudGlmaWVy');
 
 @$core.Deprecated('Use listLinksDescriptor instead')
 const ListLinks$json = {
@@ -1049,6 +1109,24 @@ const SessionResponse$json = {
       '9': 0,
       '10': 'credentialsSnapshot'
     },
+    {
+      '1': 'register_device',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.RegisterDevice',
+      '9': 0,
+      '10': 'registerDevice'
+    },
+    {
+      '1': 'unregister_device',
+      '3': 19,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.connector.v1.UnregisterDevice',
+      '9': 0,
+      '10': 'unregisterDevice'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -1083,4 +1161,7 @@ final $typed_data.Uint8List sessionResponseDescriptor = $convert.base64Decode(
     'GBAgASgLMiwua3VzaW50YS5pb3QuY29ubmVjdG9yLnYxLkNyZWRlbnRpYWxzUmV2b2tlZEgAUh'
     'JjcmVkZW50aWFsc1Jldm9rZWQSYgoUY3JlZGVudGlhbHNfc25hcHNob3QYESABKAsyLS5rdXNp'
     'bnRhLmlvdC5jb25uZWN0b3IudjEuQ3JlZGVudGlhbHNTbmFwc2hvdEgAUhNjcmVkZW50aWFsc1'
-    'NuYXBzaG90QgkKB3BheWxvYWRKBAgEEAU=');
+    'NuYXBzaG90ElMKD3JlZ2lzdGVyX2RldmljZRgSIAEoCzIoLmt1c2ludGEuaW90LmNvbm5lY3Rv'
+    'ci52MS5SZWdpc3RlckRldmljZUgAUg5yZWdpc3RlckRldmljZRJZChF1bnJlZ2lzdGVyX2Rldm'
+    'ljZRgTIAEoCzIqLmt1c2ludGEuaW90LmNvbm5lY3Rvci52MS5VbnJlZ2lzdGVyRGV2aWNlSABS'
+    'EHVucmVnaXN0ZXJEZXZpY2VCCQoHcGF5bG9hZEoECAQQBQ==');

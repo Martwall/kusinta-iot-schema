@@ -15,18 +15,19 @@ import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
 import '../../../../google/protobuf/timestamp.pbjson.dart' as $1;
-import '../../access/v1/acl.pbjson.dart' as $7;
+import '../../access/v1/acl.pbjson.dart' as $8;
 import '../../common/v1/pairing.pbjson.dart' as $14;
-import '../../common/v1/types.pbjson.dart' as $8;
+import '../../common/v1/types.pbjson.dart' as $3;
 import '../../device/v1/cluster_state.pbjson.dart' as $10;
-import '../../device/v1/descriptor.pbjson.dart' as $4;
-import '../../device/v1/device.pbjson.dart' as $3;
+import '../../device/v1/descriptor.pbjson.dart' as $5;
+import '../../device/v1/device.pbjson.dart' as $4;
 import '../../device/v1/device_event.pbjson.dart' as $13;
 import '../../device/v1/properties.pbjson.dart' as $9;
 import '../../device/v1/property_update.pbjson.dart' as $11;
 import '../../identity/v1/identity.pbjson.dart' as $2;
-import '../../link/v1/link.pbjson.dart' as $6;
-import '../../vendor/homematic/v1/homematic.pbjson.dart' as $5;
+import '../../link/v1/link.pbjson.dart' as $7;
+import '../../vendor/homematic/v1/homematic.pbjson.dart' as $6;
+import '../../vendor/lorawan/v1/lorawan.pbjson.dart' as $15;
 import '../../webrtc/v1/command.pbjson.dart' as $12;
 import 'connector.pbjson.dart' as $0;
 
@@ -52,17 +53,18 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.ConnectorHandshake': $0.ConnectorHandshake$json,
   '.kusinta.iot.connector.v1.ConnectorInfo': $0.ConnectorInfo$json,
   '.kusinta.iot.identity.v1.ConnectorId': $2.ConnectorId$json,
-  '.kusinta.iot.device.v1.Device': $3.Device$json,
-  '.kusinta.iot.device.v1.DeviceDescriptor': $4.DeviceDescriptor$json,
+  '.kusinta.iot.common.v1.ProvisioningModel': $3.ProvisioningModel$json,
+  '.kusinta.iot.device.v1.Device': $4.Device$json,
+  '.kusinta.iot.device.v1.DeviceDescriptor': $5.DeviceDescriptor$json,
   '.kusinta.iot.identity.v1.DeviceId': $2.DeviceId$json,
   '.kusinta.iot.identity.v1.SpaceId': $2.SpaceId$json,
   '.kusinta.iot.identity.v1.UserId': $2.UserId$json,
   '.kusinta.iot.vendor.homematic.v1.HomematicDeviceIdentity':
-      $5.HomematicDeviceIdentity$json,
-  '.kusinta.iot.link.v1.LinkCapability': $6.LinkCapability$json,
-  '.kusinta.iot.access.v1.AttributeRef': $7.AttributeRef$json,
-  '.kusinta.iot.common.v1.AssetOwner': $8.AssetOwner$json,
-  '.kusinta.iot.device.v1.Endpoint': $3.Endpoint$json,
+      $6.HomematicDeviceIdentity$json,
+  '.kusinta.iot.link.v1.LinkCapability': $7.LinkCapability$json,
+  '.kusinta.iot.access.v1.AttributeRef': $8.AttributeRef$json,
+  '.kusinta.iot.common.v1.AssetOwner': $3.AssetOwner$json,
+  '.kusinta.iot.device.v1.Endpoint': $4.Endpoint$json,
   '.kusinta.iot.device.v1.ThermostatProperties': $9.ThermostatProperties$json,
   '.kusinta.iot.device.v1.TemperatureSensorProperties':
       $9.TemperatureSensorProperties$json,
@@ -101,19 +103,19 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.device.v1.StickyWrite': $10.StickyWrite$json,
   '.kusinta.iot.device.v1.LeasedWrite': $10.LeasedWrite$json,
   '.kusinta.iot.device.v1.Endpoint.VendorAttributeBehavioursEntry':
-      $3.Endpoint_VendorAttributeBehavioursEntry$json,
+      $4.Endpoint_VendorAttributeBehavioursEntry$json,
   '.kusinta.iot.vendor.homematic.v1.HmThermostatProps':
-      $5.HmThermostatProps$json,
+      $6.HmThermostatProps$json,
   '.kusinta.iot.vendor.homematic.v1.HmMaintenanceProps':
-      $5.HmMaintenanceProps$json,
-  '.kusinta.iot.device.v1.RadioLink': $3.RadioLink$json,
-  '.kusinta.iot.device.v1.HeatSourceReadings': $3.HeatSourceReadings$json,
-  '.kusinta.iot.device.v1.DeviceAttention': $3.DeviceAttention$json,
-  '.kusinta.iot.link.v1.DeviceLink': $6.DeviceLink$json,
-  '.kusinta.iot.link.v1.LinkSettings': $6.LinkSettings$json,
-  '.kusinta.iot.link.v1.ClimateLeadSettings': $6.ClimateLeadSettings$json,
+      $6.HmMaintenanceProps$json,
+  '.kusinta.iot.device.v1.RadioLink': $4.RadioLink$json,
+  '.kusinta.iot.device.v1.HeatSourceReadings': $4.HeatSourceReadings$json,
+  '.kusinta.iot.device.v1.DeviceAttention': $4.DeviceAttention$json,
+  '.kusinta.iot.link.v1.DeviceLink': $7.DeviceLink$json,
+  '.kusinta.iot.link.v1.LinkSettings': $7.LinkSettings$json,
+  '.kusinta.iot.link.v1.ClimateLeadSettings': $7.ClimateLeadSettings$json,
   '.kusinta.iot.connector.v1.BackendHealthReport': $0.BackendHealthReport$json,
-  '.kusinta.iot.common.v1.BackendHealth': $8.BackendHealth$json,
+  '.kusinta.iot.common.v1.BackendHealth': $3.BackendHealth$json,
   '.kusinta.iot.connector.v1.ConnectorHandshake.KnownDeviceAccountLinksEntry':
       $0.ConnectorHandshake_KnownDeviceAccountLinksEntry$json,
   '.kusinta.iot.device.v1.PropertyUpdateBatch': $11.PropertyUpdateBatch$json,
@@ -160,6 +162,10 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.connector.v1.CredentialsUpdate': $0.CredentialsUpdate$json,
   '.kusinta.iot.connector.v1.CredentialsRevoked': $0.CredentialsRevoked$json,
   '.kusinta.iot.connector.v1.CredentialsSnapshot': $0.CredentialsSnapshot$json,
+  '.kusinta.iot.connector.v1.RegisterDevice': $0.RegisterDevice$json,
+  '.kusinta.iot.vendor.lorawan.v1.LorawanProvisioning':
+      $15.LorawanProvisioning$json,
+  '.kusinta.iot.connector.v1.UnregisterDevice': $0.UnregisterDevice$json,
 };
 
 /// Descriptor for `ConnectorGatewayService`. Decode as a `google.protobuf.ServiceDescriptorProto`.
