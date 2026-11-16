@@ -1151,3 +1151,66 @@ def test_a_heat_source_reading_travels_as_a_vendor_update_with_an_int_value():
         "int_value",
         2810,
     )
+
+
+# --- the heat source's own settings (beta.77) ------------------------------------------
+
+
+def test_heat_source_settings_carry_the_published_attribute_names():
+    names = [
+        "operating_mode",
+        "heating_stop_outdoor_centidegrees",
+        "add_on_stop_outdoor_centidegrees",
+        "outdoor_filter_hours",
+        "add_on_max_watts",
+        "heating_curve",
+        "heating_curve_offset",
+        "min_supply_centidegrees",
+        "own_curve_in_force",
+        "own_curve_supply_plus_30_centidegrees",
+        "own_curve_supply_plus_20_centidegrees",
+        "own_curve_supply_plus_10_centidegrees",
+        "own_curve_supply_0_centidegrees",
+        "own_curve_supply_minus_10_centidegrees",
+        "own_curve_supply_minus_20_centidegrees",
+        "own_curve_supply_minus_30_centidegrees",
+        "curve_point_outdoor_centidegrees",
+        "curve_point_offset_centidegrees",
+        "external_adjustment_active",
+    ]
+    assert [_heat_source_attribute(name) for name in names] == names
+
+
+def test_heat_source_operating_mode_numbers_are_the_wire_contract():
+    assert (
+        device_pb2.HEAT_SOURCE_OPERATING_MODE_UNSPECIFIED,
+        device_pb2.HEAT_SOURCE_OPERATING_MODE_AUTOMATIC,
+        device_pb2.HEAT_SOURCE_OPERATING_MODE_MANUAL,
+        device_pb2.HEAT_SOURCE_OPERATING_MODE_ADD_ON_ONLY,
+        device_pb2.HEAT_SOURCE_OPERATING_MODE_OTHER,
+    ) == (0, 1, 2, 3, 4)
+
+
+def test_heat_source_operating_mode_travels_as_a_number_with_presence():
+    field = device_pb2.HeatSourceReadings.DESCRIPTOR.fields_by_name["operating_mode"]
+    assert field.type == google_descriptor_pb2.FieldDescriptorProto.TYPE_UINT32
+
+
+def test_heat_source_curve_offset_is_signed():
+    """Steps below zero lower the curve; its name skips the _centidegrees check."""
+    field = device_pb2.HeatSourceReadings.DESCRIPTOR.fields_by_name["heating_curve_offset"]
+    assert field.type == google_descriptor_pb2.FieldDescriptorProto.TYPE_SINT32
+
+
+def test_an_unreported_own_curve_is_absent_not_a_numbered_curve():
+    decoded = device_pb2.HeatSourceReadings()
+    decoded.ParseFromString(device_pb2.HeatSourceReadings().SerializeToString())
+    assert decoded.HasField("own_curve_in_force") is False
+
+
+def test_a_numbered_curve_in_force_is_a_reading_distinct_from_an_unreported_one():
+    decoded = device_pb2.HeatSourceReadings()
+    decoded.ParseFromString(
+        device_pb2.HeatSourceReadings(own_curve_in_force=False).SerializeToString()
+    )
+    assert decoded.HasField("own_curve_in_force") is True
