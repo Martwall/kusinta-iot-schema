@@ -1441,7 +1441,8 @@ export declare type HeatCurveBand = Message<"kusinta.iot.heating.v1.HeatCurveBan
   outdoorToCentidegrees: number;
 
   /**
-   * The quarter hours of the window whose outdoor mean fell in the band.
+   * The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
+   * which an external input moved the curve (WHAT IT SHOWS).
    *
    * @generated from field: uint32 quarters = 3;
    */
@@ -1450,7 +1451,7 @@ export declare type HeatCurveBand = Message<"kusinta.iot.heating.v1.HeatCurveBan
   /**
    * The median over the band's quarter hours of the calculated supply and of the measured
    * supply, in centidegrees, as the heat source reads them (device.v1.HeatSourceReadings), each
-   * leaving out the quarter hours in which the heat source was known to make hot water. Unset
+   * leaving out the quarter hours in which the heat source made hot water (WHAT IT SHOWS). Unset
    * where not known, and where figures are withheld (HeatCurveView.figures_withheld).
    *
    * @generated from field: optional sint32 calculated_supply_centidegrees = 4;
@@ -1478,8 +1479,10 @@ export declare type HeatCurveBand = Message<"kusinta.iot.heating.v1.HeatCurveBan
 
   /**
    * The zone that limits the curve in this band. Unset where none is known: no zone with an
-   * opening read in the band, too few quarter hours in it for the gateway to judge, or, in a
-   * home's reading of a plant outside it, a band its home does not limit.
+   * opening read in the band, too few quarter hours in it for the gateway to judge; in a home's
+   * reading of a plant outside it, a band its home does not limit; and, to the owner
+   * organisation, a limit in a home on a plant fewer than three homes share (WHO SEES IT,
+   * FEWER THAN THREE HOMES). A client reads each the same: no limit known.
    *
    * @generated from field: kusinta.iot.heating.v1.HeatCurveLimit limit = 8;
    */
@@ -1550,18 +1553,20 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
 
   /**
    * The heat source's curve settings as last read, as its readings state them
-   * (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — heating_curve,
-   * heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and curve_point_* — each
-   * where read, every other field unset. Unset where none is read, and where figures are
-   * withheld.
+   * (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — own_curve_in_force,
+   * heating_curve, heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and
+   * curve_point_* — each where read, every other field unset. Which curve is in force is read as
+   * those readings say: without own_curve_in_force, neither the numbered curve nor the own
+   * curve's points is read as the one in force. Never external_adjustment_active, a state and
+   * not a setting. Unset where none is read, and where figures are withheld.
    *
    * @generated from field: kusinta.iot.device.v1.HeatSourceReadings curve_settings = 8;
    */
   curveSettings?: HeatSourceReadings | undefined;
 
   /**
-   * When a curve setting was last seen to change. Unset where none was, or none is read, and
-   * where figures are withheld.
+   * When one of the fields curve_settings carries, own_curve_in_force included, was last seen to
+   * change. Unset where none was, or none is read, and where figures are withheld.
    *
    * @generated from field: google.protobuf.Timestamp curve_settings_changed_at = 9;
    */

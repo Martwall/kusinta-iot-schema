@@ -938,8 +938,13 @@ message EnergyPriceAdder {
 // coldest band seen opens at most the gateway's threshold (HeatCurveView.threshold_permille,
 // 850 for 85 %), which leaves it headroom to recover after a block or a setback. A zone's
 // quarter hours in which a price rule or a commissioning test drove it, or its room's window was
-// open, are left out of its openings. The view observes: it names no new curve, and the gateway
-// sets nothing on the heat source by it.
+// open, are left out of its openings. A quarter hour in which an external input moved the curve
+// for any part of it (device.v1.HeatSourceReadings.external_adjustment_active), as an away
+// switch does, is left out of the view altogether: its calculated supply was off the curve, and
+// its openings answer another supply. The heat source made hot water in a quarter hour where it
+// reported so (HeatSourceReadings.producing) or where the gateway detected a charge of the tank
+// itself, as it must for a heat source that reports no production. The view observes: it names
+// no new curve, and the gateway sets nothing on the heat source by it.
 //
 // WHO SEES IT, given in reply to webrtc.v1.GetHeatCurveView:
 //   * a plant in a home: its household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN),
@@ -953,7 +958,12 @@ message EnergyPriceAdder {
 //     it. Never a resident as such. Where the zone that limits lies in a home, they are told that
 //     a home limits the curve and the kind of reason, and whether it leaves headroom: never which
 //     home, its rooms, its zones or its openings (HeatCurveLimit.home_withheld), and a limit in
-//     one home reads the same as in another. The home that limits is told so in its own reading
+//     one home reads the same as in another. FEWER THAN THREE HOMES: where fewer than three homes
+//     have a zone the plant heats, a limit in a home is not given to them at all: the band's
+//     limit is unset, as where none is known, so that the withholding itself says nothing. The
+//     same threshold as a shared plant's blocks (PRICE RULES, WHO SEES THEM), and set here on its
+//     own, so that it can change without that one. A limit outside homes is given them however
+//     many homes share the plant. The home that limits is told so in its own reading
 //     (GetHeatCurveView by home_id): its residents are given the plant's limits that lie in their
 //     home, with their room and its opening, and every figure of the plant withheld.
 // Never a room's temperature, setpoint, contact state or events to anyone a room's own readings
@@ -1016,12 +1026,13 @@ message HeatCurveBand {
   sint32 outdoor_from_centidegrees = 1;
   sint32 outdoor_to_centidegrees = 2;
 
-  // The quarter hours of the window whose outdoor mean fell in the band.
+  // The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
+  // which an external input moved the curve (WHAT IT SHOWS).
   uint32 quarters = 3;
 
   // The median over the band's quarter hours of the calculated supply and of the measured
   // supply, in centidegrees, as the heat source reads them (device.v1.HeatSourceReadings), each
-  // leaving out the quarter hours in which the heat source was known to make hot water. Unset
+  // leaving out the quarter hours in which the heat source made hot water (WHAT IT SHOWS). Unset
   // where not known, and where figures are withheld (HeatCurveView.figures_withheld).
   optional sint32 calculated_supply_centidegrees = 4;
   optional sint32 supply_centidegrees = 5;
@@ -1033,8 +1044,10 @@ message HeatCurveBand {
   optional uint32 add_on_running_permille = 7;
 
   // The zone that limits the curve in this band. Unset where none is known: no zone with an
-  // opening read in the band, too few quarter hours in it for the gateway to judge, or, in a
-  // home's reading of a plant outside it, a band its home does not limit.
+  // opening read in the band, too few quarter hours in it for the gateway to judge; in a home's
+  // reading of a plant outside it, a band its home does not limit; and, to the owner
+  // organisation, a limit in a home on a plant fewer than three homes share (WHO SEES IT,
+  // FEWER THAN THREE HOMES). A client reads each the same: no limit known.
   HeatCurveLimit limit = 8;
 }
 
@@ -1064,14 +1077,16 @@ message HeatCurveView {
   uint32 opening_percentile = 7;
 
   // The heat source's curve settings as last read, as its readings state them
-  // (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — heating_curve,
-  // heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and curve_point_* — each
-  // where read, every other field unset. Unset where none is read, and where figures are
-  // withheld.
+  // (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — own_curve_in_force,
+  // heating_curve, heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and
+  // curve_point_* — each where read, every other field unset. Which curve is in force is read as
+  // those readings say: without own_curve_in_force, neither the numbered curve nor the own
+  // curve's points is read as the one in force. Never external_adjustment_active, a state and
+  // not a setting. Unset where none is read, and where figures are withheld.
   kusinta.iot.device.v1.HeatSourceReadings curve_settings = 8;
 
-  // When a curve setting was last seen to change. Unset where none was, or none is read, and
-  // where figures are withheld.
+  // When one of the fields curve_settings carries, own_curve_in_force included, was last seen to
+  // change. Unset where none was, or none is read, and where figures are withheld.
   google.protobuf.Timestamp curve_settings_changed_at = 9;
 
   // Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies

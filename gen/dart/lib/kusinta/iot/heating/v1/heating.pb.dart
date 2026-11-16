@@ -3414,7 +3414,8 @@ class HeatCurveBand extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearOutdoorToCentidegrees() => $_clearField(2);
 
-  /// The quarter hours of the window whose outdoor mean fell in the band.
+  /// The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
+  /// which an external input moved the curve (WHAT IT SHOWS).
   @$pb.TagNumber(3)
   $core.int get quarters => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -3426,7 +3427,7 @@ class HeatCurveBand extends $pb.GeneratedMessage {
 
   /// The median over the band's quarter hours of the calculated supply and of the measured
   /// supply, in centidegrees, as the heat source reads them (device.v1.HeatSourceReadings), each
-  /// leaving out the quarter hours in which the heat source was known to make hot water. Unset
+  /// leaving out the quarter hours in which the heat source made hot water (WHAT IT SHOWS). Unset
   /// where not known, and where figures are withheld (HeatCurveView.figures_withheld).
   @$pb.TagNumber(4)
   $core.int get calculatedSupplyCentidegrees => $_getIZ(3);
@@ -3469,8 +3470,10 @@ class HeatCurveBand extends $pb.GeneratedMessage {
   void clearAddOnRunningPermille() => $_clearField(7);
 
   /// The zone that limits the curve in this band. Unset where none is known: no zone with an
-  /// opening read in the band, too few quarter hours in it for the gateway to judge, or, in a
-  /// home's reading of a plant outside it, a band its home does not limit.
+  /// opening read in the band, too few quarter hours in it for the gateway to judge; in a home's
+  /// reading of a plant outside it, a band its home does not limit; and, to the owner
+  /// organisation, a limit in a home on a plant fewer than three homes share (WHO SEES IT,
+  /// FEWER THAN THREE HOMES). A client reads each the same: no limit known.
   @$pb.TagNumber(8)
   HeatCurveLimit get limit => $_getN(7);
   @$pb.TagNumber(8)
@@ -3638,10 +3641,12 @@ class HeatCurveView extends $pb.GeneratedMessage {
   void clearOpeningPercentile() => $_clearField(7);
 
   /// The heat source's curve settings as last read, as its readings state them
-  /// (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — heating_curve,
-  /// heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and curve_point_* — each
-  /// where read, every other field unset. Unset where none is read, and where figures are
-  /// withheld.
+  /// (device.v1.HeatSourceReadings, SETTINGS): only its curve's fields set — own_curve_in_force,
+  /// heating_curve, heating_curve_offset, min_supply_centidegrees, own_curve_supply_* and
+  /// curve_point_* — each where read, every other field unset. Which curve is in force is read as
+  /// those readings say: without own_curve_in_force, neither the numbered curve nor the own
+  /// curve's points is read as the one in force. Never external_adjustment_active, a state and
+  /// not a setting. Unset where none is read, and where figures are withheld.
   @$pb.TagNumber(8)
   $5.HeatSourceReadings get curveSettings => $_getN(7);
   @$pb.TagNumber(8)
@@ -3653,8 +3658,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   $5.HeatSourceReadings ensureCurveSettings() => $_ensure(7);
 
-  /// When a curve setting was last seen to change. Unset where none was, or none is read, and
-  /// where figures are withheld.
+  /// When one of the fields curve_settings carries, own_curve_in_force included, was last seen to
+  /// change. Unset where none was, or none is read, and where figures are withheld.
   @$pb.TagNumber(9)
   $3.Timestamp get curveSettingsChangedAt => $_getN(8);
   @$pb.TagNumber(9)

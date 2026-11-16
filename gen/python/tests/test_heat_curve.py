@@ -8,10 +8,13 @@ These assert the decisions the shape encodes:
   * the most demanding zone's opening limits the curve, with the kind of reason (hydraulic
     balance, demand, or not known) and whether it leaves headroom under the gateway's
     threshold
-  * a limit in a home the recipient is not given says so, naming no room, zone or opening
+  * a limit in a home the recipient is not given says so, naming no room, zone or opening;
+    on a plant fewer than three homes share, the owner organisation is given no such limit at
+    all, and the band reads as one whose limit is not known
   * a resident who is not given the figures is told so, so absent figures are not read as
     not known
-  * the curve settings are the heat source's own, as its readings carry them
+  * the curve settings are the heat source's own, as its readings carry them, with which
+    curve is in force
   * the view is read for one plant, or for a home: one answer carries the views
 """
 
@@ -114,6 +117,18 @@ def test_a_limit_in_a_withheld_home_names_no_room_and_no_opening():
     )
 
 
+def test_a_limit_withheld_below_three_homes_is_sent_as_none_known():
+    withheld = heating_pb2.HeatCurveBand(outdoor_from_centidegrees=-400, outdoor_to_centidegrees=-200, quarters=40)
+
+    assert not _round_trip(withheld).HasField("limit")
+
+
+def test_a_limit_with_no_reason_known_is_still_a_limit():
+    decoded = _round_trip(heating_pb2.HeatCurveBand(quarters=40, limit=heating_pb2.HeatCurveLimit()))
+
+    assert decoded.HasField("limit")
+
+
 def test_a_band_carries_its_limit():
     band = heating_pb2.HeatCurveBand(
         quarters=40, limit=heating_pb2.HeatCurveLimit(reason=heating_pb2.HEAT_CURVE_LIMIT_REASON_DEMAND)
@@ -156,6 +171,14 @@ def test_a_view_carries_the_curve_settings_as_the_heat_source_states_them():
 
     settings = _round_trip(view).curve_settings
     assert (settings.heating_curve, settings.heating_curve_offset, settings.min_supply_centidegrees) == (9, -1, 2000)
+
+
+def test_a_views_curve_settings_say_which_curve_is_in_force():
+    view = heating_pb2.HeatCurveView(
+        curve_settings=device_pb2.HeatSourceReadings(own_curve_in_force=False, heating_curve=9)
+    )
+
+    assert _round_trip(view).curve_settings.HasField("own_curve_in_force")
 
 
 def test_a_view_without_read_settings_has_none():
