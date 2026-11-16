@@ -371,8 +371,9 @@ export declare const DeviceSchema: GenMessage<Device>;
 
 /**
  * A heat source's own readings: the temperatures its controller measures and works out, and
- * its run state — what it is producing, its compressor, its degree minutes, its alarm — as its
- * connector reads them from the heat source or the maker's service. What
+ * its run state — what it is producing, its compressor, its degree minutes, its alarm — and
+ * its own settings (how it is set to run, its add-on's limits, its curve), as its connector
+ * reads them from the heat source or the maker's service. What
  * heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
  *
  * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
@@ -515,8 +516,17 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   addOnHeatWatts?: number | undefined;
 
   /**
+   * Whether an external input moves its first climate system's curve now: while true, its
+   * calculated supply is off its curve (the settings below) by the adjustment set for that input. A state,
+   * sent when it changes, like the run state above.
+   *
+   * @generated from field: optional bool external_adjustment_active = 30;
+   */
+  externalAdjustmentActive?: boolean | undefined;
+
+  /**
    * How the heat source is set to run (HeatSourceOperatingMode), as its number: automatic,
-   * manual, or its add-on heat alone. In add-on only, its compressor makes no heat, so a block
+   * manual, or its add-on heat alone. In add-on only its compressor makes no heat, so a block
    * of the add-on stops all of it.
    *
    * @generated from field: optional uint32 operating_mode = 13;
@@ -524,8 +534,9 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   operatingMode?: number | undefined;
 
   /**
-   * The outdoor temperature at and above which it stops heating the building while it runs
-   * automatically, against its filtered outdoor temperature (outdoor_filter_hours).
+   * The outdoor temperature at and above which it stops heating its first climate system
+   * while it runs automatically, judged against its averaged outdoor temperature
+   * (outdoor_filter_hours).
    *
    * @generated from field: optional sint32 heating_stop_outdoor_centidegrees = 14;
    */
@@ -533,16 +544,16 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
 
   /**
    * The outdoor temperature at and above which its add-on heat may not run while it runs
-   * automatically, against its filtered outdoor temperature. Above it, blocking the add-on
-   * moves no energy.
+   * automatically, judged against its averaged outdoor temperature. Above it, blocking the
+   * add-on moves no energy.
    *
    * @generated from field: optional sint32 add_on_stop_outdoor_centidegrees = 15;
    */
   addOnStopOutdoorCentidegrees?: number | undefined;
 
   /**
-   * Over how many hours it averages the outdoor temperature that heating_stop and
-   * add_on_stop are judged against.
+   * Over how many hours it averages the outdoor temperature that the two stops above are
+   * judged against.
    *
    * @generated from field: optional uint32 outdoor_filter_hours = 16;
    */
@@ -557,17 +568,28 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   addOnMaxWatts?: number | undefined;
 
   /**
-   * Which heating curve its first climate system is on, by the heat source's own numbering:
-   * vendor-specific, read with its product. On NIBE, 0 is its own curve
-   * (own_curve_supply_*); 1–15 are curves of rising slope.
+   * Which curve its first climate system follows: true, the seven points set below
+   * (own_curve_supply_*); false, a numbered curve (heating_curve) with its offset. Either way
+   * min_supply_centidegrees and the bend (curve_point_*) apply on top. Absent: not known,
+   * and neither curve's fields should be read as the one in force.
+   *
+   * @generated from field: optional bool own_curve_in_force = 31;
+   */
+  ownCurveInForce?: boolean | undefined;
+
+  /**
+   * The numbered curve its first climate system is set to, by the heat source's own
+   * numbering: higher is steeper, and the shapes are the maker's, read with its product. In
+   * force while own_curve_in_force is false. A connector maps the maker's own-curve choice
+   * onto own_curve_in_force, never onto a number here.
    *
    * @generated from field: optional uint32 heating_curve = 18;
    */
   heatingCurve?: number | undefined;
 
   /**
-   * The parallel offset of that curve, in the heat source's own steps (NIBE: −10…+10): positive
-   * raises the supply at every outdoor temperature.
+   * The parallel offset of its first climate system's curve, in the heat source's own steps:
+   * positive raises the supply at every outdoor temperature. In force with heating_curve.
    *
    * @generated from field: optional sint32 heating_curve_offset = 19;
    */
@@ -582,8 +604,10 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   minSupplyCentidegrees?: number | undefined;
 
   /**
-   * Its own curve (heating_curve 0 on NIBE): the supply set for an outdoor temperature of
-   * +30 °C. Its other points follow, every 10 °C down to −30 °C.
+   * Its first climate system's own curve, as seven points: the supply set for an outdoor
+   * temperature of +30 °C. The six fields after it are the same at +20, +10, 0, −10, −20 and
+   * −30 °C. A heat source whose own curve has other points is mapped onto these by its
+   * connector, or sends none. In force while own_curve_in_force is true.
    *
    * @generated from field: optional sint32 own_curve_supply_plus_30_centidegrees = 21;
    */
@@ -632,7 +656,7 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   ownCurveSupplyMinus30Centidegrees?: number | undefined;
 
   /**
-   * Where the curve is bent at one outdoor temperature (NIBE: point offset): that outdoor
+   * Where its first climate system's curve is bent at one outdoor temperature: that outdoor
    * temperature. Read with curve_point_offset_centidegrees.
    *
    * @generated from field: optional sint32 curve_point_outdoor_centidegrees = 28;
@@ -640,20 +664,12 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   curvePointOutdoorCentidegrees?: number | undefined;
 
   /**
-   * How far the supply is moved at curve_point_outdoor_centidegrees: 0 for no bend.
+   * How far the supply of its first climate system is moved at
+   * curve_point_outdoor_centidegrees: 0 for no bend.
    *
    * @generated from field: optional sint32 curve_point_offset_centidegrees = 29;
    */
   curvePointOffsetCentidegrees?: number | undefined;
-
-  /**
-   * Whether an external input moves its curve now (NIBE: external adjustment on an AUX
-   * input): while true, its calculated supply is off its own curve by the adjustment set for
-   * that input. A reading, not a setting.
-   *
-   * @generated from field: optional bool external_adjustment_active = 30;
-   */
-  externalAdjustmentActive?: boolean | undefined;
 };
 
 /**
