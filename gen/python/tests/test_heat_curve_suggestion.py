@@ -13,8 +13,9 @@ These assert the decisions the shape encodes:
     figure absent where not known
   * a decline is a mark on the suggestion, withdrawn by a decline with withdraw set
   * an apply is written or set by hand; it records how, what it set and what it replaced,
-    whether it was a revert, and its verification: pending, verified (by read-back or
-    measured supply), a mismatch naming each setting found otherwise, or unverifiable
+    whether it was a revert, and its verification: pending, verified (by read-back, or by the
+    calculated supply, or the measured supply where none is calculated), a mismatch naming
+    each setting found otherwise, or unverifiable
   * a curve suggestion neutralises the bend as it does the shift, and a bend left in place
     is named with the bend found
   * automatic savings is a plant's setting, on unless set off, given with the view and set
@@ -234,7 +235,18 @@ def test_the_ways_of_verifying_keep_their_numbers():
     assert (
         heating_pb2.HEAT_CURVE_VERIFIED_BY_READ_BACK,
         heating_pb2.HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY,
-    ) == (1, 2)
+        heating_pb2.HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY,
+    ) == (1, 2, 3)
+
+
+def test_an_apply_verified_by_the_calculated_supply_says_so():
+    applied = heating_pb2.HeatCurveApplied(
+        suggestion_id="s-1",
+        verification=heating_pb2.HEAT_CURVE_VERIFICATION_VERIFIED,
+        verified_by=heating_pb2.HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY,
+    )
+
+    assert _round_trip(applied).verified_by == heating_pb2.HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY
 
 
 def test_the_mismatch_kinds_keep_their_numbers():

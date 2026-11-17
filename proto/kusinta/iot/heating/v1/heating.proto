@@ -1025,8 +1025,12 @@ message EnergyPriceAdder {
 // are not given to. A zone in a home counts only with the quarter hours still kept of it: none
 // from before its household's last Clear history or its wipe (webrtc.v1 household.proto, CLIMATE
 // HISTORY, WIPE), and for a resident, none from before their current residency
-// (access.v1.MembershipRelation). The view is worked out when read, from what the gateway keeps,
-// and is not itself kept.
+// (access.v1.MembershipRelation). The bands, the optimised curve and a suggestion's settings and
+// saving are worked out from the quarter hours still kept, so that a household's Clear history or
+// wipe flows into them. What a plant's curve was set to, and by whom it was asked, is kept, as the
+// heat source's settings and not as a room's readings: a suggestion's identity and its decline,
+// the automatic savings setting, and the last apply with the settings it replaced
+// (HeatCurveView.suggestion, automatic_savings, last_applied).
 //
 // SHARING, reserved. A household may later choose to let the owner organisation know that its
 // home is the one that limits a shared plant's curve, and why. Until a release of this schema
@@ -1186,8 +1190,11 @@ message HeatCurveViews {
 // judge it, and ESTIMATED otherwise: extrapolated from the seen points with a heat loss fitted to
 // the building and the standard curves of its emitters. An estimated point is cautious: it is
 // lowered by part of what the extrapolation says, never all of it, and never below the current
-// curve at that point until its band is seen. As bands are seen their points are confirmed, and
-// may move.
+// curve at that point until its band is seen. Where the current curve is not known at a point
+// (HeatCurvePoint.current_supply_centidegrees unset, as with a numbered curve whose shape the
+// gateway does not hold), an estimated point there is not lowered at all: it stays at what the
+// seen bands support, and a client tells it by that confidence with the current supply unset. As
+// bands are seen their points are confirmed, and may move.
 //
 // SUGGESTION (HeatCurveView.suggestion). Where setting the optimised curve would save against
 // the one in force, the gateway suggests it, with the saving:
@@ -1201,8 +1208,10 @@ message HeatCurveViews {
 // was shown. The gateway gives a new one only on a material change: a point newly confirmed, a
 // point of the suggested curve moving by 1 °C or more, or a shift suggestion becoming a curve.
 // A suggestion refreshed without one keeps its identity, its settings updated, and with it any
-// decline, so that a decline is not asked again for the same suggestion. After a curve is
-// applied, each point newly confirmed that would set it otherwise is suggested in turn, and named
+// decline, so that a decline is not asked again for the same suggestion. A home's wipe, and a
+// new household's residency in it, clear every decline of a heat source in the home, so that
+// those who live there next are asked afresh. After a curve is applied, each point newly
+// confirmed that would set it otherwise is suggested in turn, and named
 // (newly_confirmed_outdoor_centidegrees): the reminder to set it. A client repeats an open
 // suggestion gently, as a reminder, until it is applied or declined; a declined one it shows
 // only where asked, and does not repeat.
@@ -1211,12 +1220,15 @@ message HeatCurveViews {
 // where the heat source takes a write of those settings (HeatCurveSuggestion.writable), or by
 // confirming that it was set by hand. The gateway then verifies it (HeatCurveApplied):
 //   * by reading the curve settings back, where the heat source reports them;
-//   * otherwise by the measured supply against the curve applied, at the outdoor temperatures
-//     seen since, leaving out the 24 hours after it;
+//   * otherwise by the supply against the curve applied, at the outdoor temperatures seen since:
+//     the calculated supply where the heat source reports one (its curve and offset, with no lag
+//     of the emitters), else the measured supply. Left out, as WHAT IT SHOWS leaves them out: the
+//     24 hours after the apply, the quarter hours in which an external input moved the curve,
+//     and those in which the heat source made hot water;
 //   * otherwise not at all: the confirmation is all there is (UNVERIFIABLE).
 // A setting found otherwise than applied is named (HeatCurveMismatch), such as a shift or a bend
-// left at other than 0. An apply is corrected by another: a newer suggestion applied, or the settings an
-// apply replaced set back (webrtc.v1.ApplyHeatCurve.revert).
+// left at other than 0. An apply is corrected by another: a newer suggestion applied, or the
+// settings an apply replaced set back (webrtc.v1.ApplyHeatCurve.revert).
 //
 // AUTOMATIC SAVINGS (HeatCurveView.automatic_savings). A plant's setting, on unless set off: while
 // on, the gateway applies a suggestion itself where the heat source takes a write of its
@@ -1270,7 +1282,8 @@ message HeatCurvePoint {
   sint32 supply_centidegrees = 2;
 
   // The supply the curve in force sets at it, in centidegrees, as worked out from the curve
-  // settings read (HeatCurveView.curve_settings). Unset where not known.
+  // settings read (HeatCurveView.curve_settings). Unset where not known: an estimated point is
+  // then not lowered (CONFIDENCE).
   optional sint32 current_supply_centidegrees = 3;
 
   HeatCurvePointConfidence confidence = 4;
@@ -1346,6 +1359,7 @@ message HeatCurveSuggestion {
 
   // Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
   // for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
+  // For a heat source in a home, the home's wipe and a new household's residency clear it.
   bool declined = 10;
 }
 
@@ -1390,8 +1404,13 @@ enum HeatCurveVerifiedBy {
   // The heat source's curve settings, read back.
   HEAT_CURVE_VERIFIED_BY_READ_BACK = 1;
 
-  // The measured supply against the curve applied, at the outdoor temperatures seen since.
+  // The measured supply against the curve applied, at the outdoor temperatures seen since, where
+  // the heat source reports no calculated supply (APPLYING).
   HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY = 2;
+
+  // The heat source's calculated supply against the curve applied, at the outdoor temperatures
+  // seen since (APPLYING).
+  HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY = 3;
 }
 
 // What was found otherwise than applied. A closed list that grows only by a release of this
@@ -1413,9 +1432,10 @@ enum HeatCurveMismatchKind {
   // The shift, read back, is not the one a shift suggestion set (found_offset).
   HEAT_CURVE_MISMATCH_KIND_SHIFT = 4;
 
-  // The measured supply is off the curve applied at an outdoor temperature seen since
-  // (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
-  // measured).
+  // The supply is off the curve applied at an outdoor temperature seen since, by the quarter
+  // hours APPLYING counts (outdoor_centidegrees, expected_supply_centidegrees,
+  // found_supply_centidegrees: the median calculated supply, or measured where none is
+  // calculated).
   HEAT_CURVE_MISMATCH_KIND_SUPPLY = 5;
 
   // The bend's offset is not 0 under an own curve (found_bend_offset_centidegrees, with
