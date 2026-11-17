@@ -1189,7 +1189,9 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   void clearHeatingCurve() => $_clearField(18);
 
   /// The parallel offset of its first climate system's curve, in the heat source's own steps:
-  /// positive raises the supply at every outdoor temperature. In force with heating_curve.
+  /// positive raises the supply at every outdoor temperature. In force with heating_curve, and
+  /// with the own curve too on a heat source that moves it by the offset: an own curve is meant
+  /// with the offset at 0.
   @$pb.TagNumber(19)
   $core.int get heatingCurveOffset => $_getIZ(18);
   @$pb.TagNumber(19)

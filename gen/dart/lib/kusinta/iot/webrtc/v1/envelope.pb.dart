@@ -1449,6 +1449,8 @@ class ManagementResult extends $pb.GeneratedMessage {
   @$pb.TagNumber(35)
   $8.EnergyPriceAdder ensureEnergyPriceAdder() => $_ensure(34);
 
+  /// get_heat_curve_view, apply_heat_curve, decline_heat_curve,
+  /// set_heat_curve_automatic_savings
   @$pb.TagNumber(36)
   $8.HeatCurveViews get heatCurveViews => $_getN(35);
   @$pb.TagNumber(36)

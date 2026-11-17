@@ -3466,7 +3466,8 @@ class HeatCurveBand extends $pb.GeneratedMessage {
   void clearOutdoorToCentidegrees() => $_clearField(2);
 
   /// The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
-  /// which an external input moved the curve (WHAT IT SHOWS).
+  /// which an external input moved the curve and those in the 24 hours after a change to the
+  /// curve settings (WHAT IT SHOWS).
   @$pb.TagNumber(3)
   $core.int get quarters => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -3550,6 +3551,10 @@ class HeatCurveView extends $pb.GeneratedMessage {
     $5.HeatSourceReadings? curveSettings,
     $3.Timestamp? curveSettingsChangedAt,
     $core.bool? figuresWithheld,
+    HeatCurveOptimised? optimised,
+    HeatCurveSuggestion? suggestion,
+    HeatCurveApplied? lastApplied,
+    HeatCurveAutomaticSavings? automaticSavings,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3563,6 +3568,10 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (curveSettingsChangedAt != null)
       result.curveSettingsChangedAt = curveSettingsChangedAt;
     if (figuresWithheld != null) result.figuresWithheld = figuresWithheld;
+    if (optimised != null) result.optimised = optimised;
+    if (suggestion != null) result.suggestion = suggestion;
+    if (lastApplied != null) result.lastApplied = lastApplied;
+    if (automaticSavings != null) result.automaticSavings = automaticSavings;
     return result;
   }
 
@@ -3597,6 +3606,18 @@ class HeatCurveView extends $pb.GeneratedMessage {
     ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'curveSettingsChangedAt',
         subBuilder: $3.Timestamp.create)
     ..aOB(10, _omitFieldNames ? '' : 'figuresWithheld')
+    ..aOM<HeatCurveOptimised>(11, _omitFieldNames ? '' : 'optimised',
+        subBuilder: HeatCurveOptimised.create)
+    ..aOM<HeatCurveSuggestion>(12, _omitFieldNames ? '' : 'suggestion',
+        subBuilder: HeatCurveSuggestion.create)
+    ..aOM<HeatCurveApplied>(13, _omitFieldNames ? '' : 'lastApplied',
+        subBuilder: HeatCurveApplied.create)
+    ..e<HeatCurveAutomaticSavings>(
+        14, _omitFieldNames ? '' : 'automaticSavings', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveAutomaticSavings.HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED,
+        valueOf: HeatCurveAutomaticSavings.valueOf,
+        enumValues: HeatCurveAutomaticSavings.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3640,8 +3661,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
   void clearPlantName() => $_clearField(2);
 
   /// The quarter hours counted, [window_from, window_to): a window of the gateway's choice, such
-  /// as the last 28 days, starting no earlier than the curve settings last changed
-  /// (curve_settings_changed_at), so that the bands judge the curve in force.
+  /// as the last 28 days. It spans changes to the curve settings, less the 24 hours after each
+  /// (WHAT IT SHOWS).
   @$pb.TagNumber(3)
   $3.Timestamp get windowFrom => $_getN(2);
   @$pb.TagNumber(3)
@@ -3723,8 +3744,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
   $3.Timestamp ensureCurveSettingsChangedAt() => $_ensure(8);
 
   /// Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies
-  /// and add-on figures and the curve settings are left out, so that their absence is not read as
-  /// not known.
+  /// and add-on figures, the curve settings, the optimised curve, the suggestion and the last
+  /// apply are left out, so that their absence is not read as not known.
   @$pb.TagNumber(10)
   $core.bool get figuresWithheld => $_getBF(9);
   @$pb.TagNumber(10)
@@ -3733,6 +3754,58 @@ class HeatCurveView extends $pb.GeneratedMessage {
   $core.bool hasFiguresWithheld() => $_has(9);
   @$pb.TagNumber(10)
   void clearFiguresWithheld() => $_clearField(10);
+
+  /// What the curve could be (OPTIMISED CURVE). Unset where the gateway cannot work one out yet,
+  /// as with no band judged, and where figures are withheld.
+  @$pb.TagNumber(11)
+  HeatCurveOptimised get optimised => $_getN(10);
+  @$pb.TagNumber(11)
+  set optimised(HeatCurveOptimised value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasOptimised() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearOptimised() => $_clearField(11);
+  @$pb.TagNumber(11)
+  HeatCurveOptimised ensureOptimised() => $_ensure(10);
+
+  /// What the gateway suggests setting (SUGGESTION). Unset where it suggests nothing: the curve
+  /// in force is as the optimised one would set it, or no change would save; and where figures
+  /// are withheld. A declined suggestion is still given, marked so (HeatCurveSuggestion.declined).
+  @$pb.TagNumber(12)
+  HeatCurveSuggestion get suggestion => $_getN(11);
+  @$pb.TagNumber(12)
+  set suggestion(HeatCurveSuggestion value) => $_setField(12, value);
+  @$pb.TagNumber(12)
+  $core.bool hasSuggestion() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearSuggestion() => $_clearField(12);
+  @$pb.TagNumber(12)
+  HeatCurveSuggestion ensureSuggestion() => $_ensure(11);
+
+  /// The last curve applied to the heat source, and whether it is verified (APPLYING). Unset
+  /// where none was, and where figures are withheld.
+  @$pb.TagNumber(13)
+  HeatCurveApplied get lastApplied => $_getN(12);
+  @$pb.TagNumber(13)
+  set lastApplied(HeatCurveApplied value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasLastApplied() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearLastApplied() => $_clearField(13);
+  @$pb.TagNumber(13)
+  HeatCurveApplied ensureLastApplied() => $_ensure(12);
+
+  /// Whether the gateway applies suggestions itself (AUTOMATIC SAVINGS). Unspecified where
+  /// figures are withheld.
+  @$pb.TagNumber(14)
+  HeatCurveAutomaticSavings get automaticSavings => $_getN(13);
+  @$pb.TagNumber(14)
+  set automaticSavings(HeatCurveAutomaticSavings value) =>
+      $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasAutomaticSavings() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearAutomaticSavings() => $_clearField(14);
 }
 
 /// The answer to webrtc.v1.GetHeatCurveView.
@@ -3786,6 +3859,743 @@ class HeatCurveViews extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<HeatCurveView> get views => $_getList(0);
+}
+
+/// One point of an optimised curve.
+class HeatCurvePoint extends $pb.GeneratedMessage {
+  factory HeatCurvePoint({
+    $core.int? outdoorCentidegrees,
+    $core.int? supplyCentidegrees,
+    $core.int? currentSupplyCentidegrees,
+    HeatCurvePointConfidence? confidence,
+  }) {
+    final result = create();
+    if (outdoorCentidegrees != null)
+      result.outdoorCentidegrees = outdoorCentidegrees;
+    if (supplyCentidegrees != null)
+      result.supplyCentidegrees = supplyCentidegrees;
+    if (currentSupplyCentidegrees != null)
+      result.currentSupplyCentidegrees = currentSupplyCentidegrees;
+    if (confidence != null) result.confidence = confidence;
+    return result;
+  }
+
+  HeatCurvePoint._();
+
+  factory HeatCurvePoint.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurvePoint.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurvePoint',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'outdoorCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'supplyCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'currentSupplyCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..e<HeatCurvePointConfidence>(
+        4, _omitFieldNames ? '' : 'confidence', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurvePointConfidence.HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED,
+        valueOf: HeatCurvePointConfidence.valueOf,
+        enumValues: HeatCurvePointConfidence.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurvePoint clone() => HeatCurvePoint()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurvePoint copyWith(void Function(HeatCurvePoint) updates) =>
+      super.copyWith((message) => updates(message as HeatCurvePoint))
+          as HeatCurvePoint;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurvePoint create() => HeatCurvePoint._();
+  @$core.override
+  HeatCurvePoint createEmptyInstance() => create();
+  static $pb.PbList<HeatCurvePoint> createRepeated() =>
+      $pb.PbList<HeatCurvePoint>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurvePoint getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurvePoint>(create);
+  static HeatCurvePoint? _defaultInstance;
+
+  /// The outdoor temperature, in centidegrees: a multiple of 500 from −3000 to +3000.
+  @$pb.TagNumber(1)
+  $core.int get outdoorCentidegrees => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set outdoorCentidegrees($core.int value) => $_setSignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasOutdoorCentidegrees() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOutdoorCentidegrees() => $_clearField(1);
+
+  /// The supply the optimised curve sets at it, in centidegrees, held between the heat source's
+  /// lowest and highest supply (OPTIMISED CURVE).
+  @$pb.TagNumber(2)
+  $core.int get supplyCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set supplyCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSupplyCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSupplyCentidegrees() => $_clearField(2);
+
+  /// The supply the curve in force sets at it, in centidegrees, as worked out from the curve
+  /// settings read (HeatCurveView.curve_settings). Unset where not known: an estimated point is
+  /// then not lowered (CONFIDENCE).
+  @$pb.TagNumber(3)
+  $core.int get currentSupplyCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set currentSupplyCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCurrentSupplyCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCurrentSupplyCentidegrees() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  HeatCurvePointConfidence get confidence => $_getN(3);
+  @$pb.TagNumber(4)
+  set confidence(HeatCurvePointConfidence value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasConfidence() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearConfidence() => $_clearField(4);
+}
+
+/// What a plant's curve could be (OPTIMISED CURVE).
+class HeatCurveOptimised extends $pb.GeneratedMessage {
+  factory HeatCurveOptimised({
+    $core.Iterable<HeatCurvePoint>? points,
+    $core.int? minSupplyCentidegrees,
+    $core.int? maxSupplyCentidegrees,
+  }) {
+    final result = create();
+    if (points != null) result.points.addAll(points);
+    if (minSupplyCentidegrees != null)
+      result.minSupplyCentidegrees = minSupplyCentidegrees;
+    if (maxSupplyCentidegrees != null)
+      result.maxSupplyCentidegrees = maxSupplyCentidegrees;
+    return result;
+  }
+
+  HeatCurveOptimised._();
+
+  factory HeatCurveOptimised.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveOptimised.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveOptimised',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..pc<HeatCurvePoint>(1, _omitFieldNames ? '' : 'points', $pb.PbFieldType.PM,
+        subBuilder: HeatCurvePoint.create)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'minSupplyCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'maxSupplyCentidegrees', $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveOptimised clone() => HeatCurveOptimised()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveOptimised copyWith(void Function(HeatCurveOptimised) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveOptimised))
+          as HeatCurveOptimised;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveOptimised create() => HeatCurveOptimised._();
+  @$core.override
+  HeatCurveOptimised createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveOptimised> createRepeated() =>
+      $pb.PbList<HeatCurveOptimised>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveOptimised getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveOptimised>(create);
+  static HeatCurveOptimised? _defaultInstance;
+
+  /// Coldest first, every 5 °C from −30 °C to +30 °C: thirteen points.
+  @$pb.TagNumber(1)
+  $pb.PbList<HeatCurvePoint> get points => $_getList(0);
+
+  /// The lowest and the highest supply the curve is held between, in centidegrees: the heat
+  /// source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
+  /// stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+  /// as radiators alone do, theirs. Unset where not known: the curve is then not held at that
+  /// end.
+  @$pb.TagNumber(2)
+  $core.int get minSupplyCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set minSupplyCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMinSupplyCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMinSupplyCentidegrees() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get maxSupplyCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set maxSupplyCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMaxSupplyCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMaxSupplyCentidegrees() => $_clearField(3);
+}
+
+/// What the gateway suggests setting on a plant's heat source (SUGGESTION).
+class HeatCurveSuggestion extends $pb.GeneratedMessage {
+  factory HeatCurveSuggestion({
+    $core.String? suggestionId,
+    HeatCurveSuggestionKind? kind,
+    $5.HeatSourceReadings? settings,
+    $core.bool? writable,
+    $core.Iterable<$core.int>? newlyConfirmedOutdoorCentidegrees,
+    $core.int? savingKwhPerYear,
+    $fixnum.Int64? savingMicroEurPerYear,
+    $core.int? savingPermille,
+    $3.Timestamp? suggestedAt,
+    $core.bool? declined,
+  }) {
+    final result = create();
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (kind != null) result.kind = kind;
+    if (settings != null) result.settings = settings;
+    if (writable != null) result.writable = writable;
+    if (newlyConfirmedOutdoorCentidegrees != null)
+      result.newlyConfirmedOutdoorCentidegrees
+          .addAll(newlyConfirmedOutdoorCentidegrees);
+    if (savingKwhPerYear != null) result.savingKwhPerYear = savingKwhPerYear;
+    if (savingMicroEurPerYear != null)
+      result.savingMicroEurPerYear = savingMicroEurPerYear;
+    if (savingPermille != null) result.savingPermille = savingPermille;
+    if (suggestedAt != null) result.suggestedAt = suggestedAt;
+    if (declined != null) result.declined = declined;
+    return result;
+  }
+
+  HeatCurveSuggestion._();
+
+  factory HeatCurveSuggestion.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveSuggestion.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveSuggestion',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'suggestionId')
+    ..e<HeatCurveSuggestionKind>(
+        2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveSuggestionKind.HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED,
+        valueOf: HeatCurveSuggestionKind.valueOf,
+        enumValues: HeatCurveSuggestionKind.values)
+    ..aOM<$5.HeatSourceReadings>(3, _omitFieldNames ? '' : 'settings',
+        subBuilder: $5.HeatSourceReadings.create)
+    ..aOB(4, _omitFieldNames ? '' : 'writable')
+    ..p<$core.int>(
+        5,
+        _omitFieldNames ? '' : 'newlyConfirmedOutdoorCentidegrees',
+        $pb.PbFieldType.KS3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'savingKwhPerYear', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(
+        7, _omitFieldNames ? '' : 'savingMicroEurPerYear', $pb.PbFieldType.OS6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'savingPermille', $pb.PbFieldType.OU3)
+    ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'suggestedAt',
+        subBuilder: $3.Timestamp.create)
+    ..aOB(10, _omitFieldNames ? '' : 'declined')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveSuggestion clone() => HeatCurveSuggestion()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveSuggestion copyWith(void Function(HeatCurveSuggestion) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveSuggestion))
+          as HeatCurveSuggestion;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveSuggestion create() => HeatCurveSuggestion._();
+  @$core.override
+  HeatCurveSuggestion createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveSuggestion> createRepeated() =>
+      $pb.PbList<HeatCurveSuggestion>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveSuggestion getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveSuggestion>(create);
+  static HeatCurveSuggestion? _defaultInstance;
+
+  /// New only on a material change (SUGGESTION); kept across a refresh that makes none. Named by
+  /// webrtc.v1.ApplyHeatCurve and DeclineHeatCurve.
+  @$pb.TagNumber(1)
+  $core.String get suggestionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set suggestionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSuggestionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSuggestionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  HeatCurveSuggestionKind get kind => $_getN(1);
+  @$pb.TagNumber(2)
+  set kind(HeatCurveSuggestionKind value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKind() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKind() => $_clearField(2);
+
+  /// The heat source's curve settings that applying it sets, in the heat source's own format
+  /// (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
+  /// own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
+  /// each taking the optimised curve's supply at its outdoor temperature, and
+  /// curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
+  /// heating_curve_offset, one step from the one in force.
+  @$pb.TagNumber(3)
+  $5.HeatSourceReadings get settings => $_getN(2);
+  @$pb.TagNumber(3)
+  set settings($5.HeatSourceReadings value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSettings() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSettings() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $5.HeatSourceReadings ensureSettings() => $_ensure(2);
+
+  /// Whether the heat source takes a write of settings, so that a client offers to write them;
+  /// otherwise it guides setting them by hand, and asks for the confirmation.
+  @$pb.TagNumber(4)
+  $core.bool get writable => $_getBF(3);
+  @$pb.TagNumber(4)
+  set writable($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasWritable() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearWritable() => $_clearField(4);
+
+  /// Where the suggestion follows an applied curve: the outdoor temperatures of the points
+  /// confirmed since, whose supply it would set otherwise (SUGGESTION), coldest first, in
+  /// centidegrees. Empty for a first suggestion.
+  @$pb.TagNumber(5)
+  $pb.PbList<$core.int> get newlyConfirmedOutdoorCentidegrees => $_getList(4);
+
+  /// The saving in absolute terms, where the gateway has a basis for it, over a year of the
+  /// outdoor temperatures it takes as typical for the building: in the heat source's electric
+  /// energy, in kilowatt-hours, where it has an estimate of that energy; and in millionths of a
+  /// euro, that energy priced as energy a rule avoids is (PRICE BASIS) at the window's mean price,
+  /// where it has a price basis too. Each unset where not known.
+  @$pb.TagNumber(6)
+  $core.int get savingKwhPerYear => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set savingKwhPerYear($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasSavingKwhPerYear() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSavingKwhPerYear() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $fixnum.Int64 get savingMicroEurPerYear => $_getI64(6);
+  @$pb.TagNumber(7)
+  set savingMicroEurPerYear($fixnum.Int64 value) => $_setInt64(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSavingMicroEurPerYear() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSavingMicroEurPerYear() => $_clearField(7);
+
+  /// The saving as thousandths of the plant's heating energy: the primary figure, which a client
+  /// shows first. Unset where not known.
+  @$pb.TagNumber(8)
+  $core.int get savingPermille => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set savingPermille($core.int value) => $_setUnsignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasSavingPermille() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearSavingPermille() => $_clearField(8);
+
+  /// When the suggestion was first made with its present settings.
+  @$pb.TagNumber(9)
+  $3.Timestamp get suggestedAt => $_getN(8);
+  @$pb.TagNumber(9)
+  set suggestedAt($3.Timestamp value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasSuggestedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearSuggestedAt() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $3.Timestamp ensureSuggestedAt() => $_ensure(8);
+
+  /// Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
+  /// for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
+  /// For a heat source in a home, the home's wipe and a new household's residency clear it.
+  @$pb.TagNumber(10)
+  $core.bool get declined => $_getBF(9);
+  @$pb.TagNumber(10)
+  set declined($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasDeclined() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearDeclined() => $_clearField(10);
+}
+
+/// One setting found otherwise than applied.
+class HeatCurveMismatch extends $pb.GeneratedMessage {
+  factory HeatCurveMismatch({
+    HeatCurveMismatchKind? kind,
+    $core.int? outdoorCentidegrees,
+    $core.int? expectedSupplyCentidegrees,
+    $core.int? foundSupplyCentidegrees,
+    $core.int? foundOffset,
+    $core.int? foundBendOffsetCentidegrees,
+  }) {
+    final result = create();
+    if (kind != null) result.kind = kind;
+    if (outdoorCentidegrees != null)
+      result.outdoorCentidegrees = outdoorCentidegrees;
+    if (expectedSupplyCentidegrees != null)
+      result.expectedSupplyCentidegrees = expectedSupplyCentidegrees;
+    if (foundSupplyCentidegrees != null)
+      result.foundSupplyCentidegrees = foundSupplyCentidegrees;
+    if (foundOffset != null) result.foundOffset = foundOffset;
+    if (foundBendOffsetCentidegrees != null)
+      result.foundBendOffsetCentidegrees = foundBendOffsetCentidegrees;
+    return result;
+  }
+
+  HeatCurveMismatch._();
+
+  factory HeatCurveMismatch.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveMismatch.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveMismatch',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..e<HeatCurveMismatchKind>(
+        1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveMismatchKind.HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED,
+        valueOf: HeatCurveMismatchKind.valueOf,
+        enumValues: HeatCurveMismatchKind.values)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'outdoorCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'expectedSupplyCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'foundSupplyCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'foundOffset', $pb.PbFieldType.OS3)
+    ..a<$core.int>(6, _omitFieldNames ? '' : 'foundBendOffsetCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveMismatch clone() => HeatCurveMismatch()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveMismatch copyWith(void Function(HeatCurveMismatch) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveMismatch))
+          as HeatCurveMismatch;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveMismatch create() => HeatCurveMismatch._();
+  @$core.override
+  HeatCurveMismatch createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveMismatch> createRepeated() =>
+      $pb.PbList<HeatCurveMismatch>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveMismatch getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveMismatch>(create);
+  static HeatCurveMismatch? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  HeatCurveMismatchKind get kind => $_getN(0);
+  @$pb.TagNumber(1)
+  set kind(HeatCurveMismatchKind value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasKind() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKind() => $_clearField(1);
+
+  /// The outdoor temperature, in centidegrees, of a point or supply found otherwise.
+  @$pb.TagNumber(2)
+  $core.int get outdoorCentidegrees => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set outdoorCentidegrees($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutdoorCentidegrees() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutdoorCentidegrees() => $_clearField(2);
+
+  /// The supply applied there, and the supply found, in centidegrees.
+  @$pb.TagNumber(3)
+  $core.int get expectedSupplyCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set expectedSupplyCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasExpectedSupplyCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearExpectedSupplyCentidegrees() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get foundSupplyCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set foundSupplyCentidegrees($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFoundSupplyCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFoundSupplyCentidegrees() => $_clearField(4);
+
+  /// The shift found, in the heat source's own steps (device.v1.HeatSourceReadings
+  /// .heating_curve_offset).
+  @$pb.TagNumber(5)
+  $core.int get foundOffset => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set foundOffset($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasFoundOffset() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFoundOffset() => $_clearField(5);
+
+  /// The bend's offset found, in centidegrees (device.v1.HeatSourceReadings
+  /// .curve_point_offset_centidegrees).
+  @$pb.TagNumber(6)
+  $core.int get foundBendOffsetCentidegrees => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set foundBendOffsetCentidegrees($core.int value) =>
+      $_setSignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasFoundBendOffsetCentidegrees() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearFoundBendOffsetCentidegrees() => $_clearField(6);
+}
+
+/// The last curve applied to a plant's heat source, and whether it is verified (APPLYING).
+class HeatCurveApplied extends $pb.GeneratedMessage {
+  factory HeatCurveApplied({
+    $core.String? suggestionId,
+    HeatCurveApplyMode? mode,
+    $3.Timestamp? appliedAt,
+    $5.HeatSourceReadings? settings,
+    $5.HeatSourceReadings? settingsBefore,
+    $core.bool? revert,
+    HeatCurveVerification? verification,
+    HeatCurveVerifiedBy? verifiedBy,
+    $3.Timestamp? verifiedAt,
+    $core.Iterable<HeatCurveMismatch>? mismatches,
+  }) {
+    final result = create();
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (mode != null) result.mode = mode;
+    if (appliedAt != null) result.appliedAt = appliedAt;
+    if (settings != null) result.settings = settings;
+    if (settingsBefore != null) result.settingsBefore = settingsBefore;
+    if (revert != null) result.revert = revert;
+    if (verification != null) result.verification = verification;
+    if (verifiedBy != null) result.verifiedBy = verifiedBy;
+    if (verifiedAt != null) result.verifiedAt = verifiedAt;
+    if (mismatches != null) result.mismatches.addAll(mismatches);
+    return result;
+  }
+
+  HeatCurveApplied._();
+
+  factory HeatCurveApplied.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveApplied.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveApplied',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'suggestionId')
+    ..e<HeatCurveApplyMode>(
+        2, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: HeatCurveApplyMode.HEAT_CURVE_APPLY_MODE_UNSPECIFIED,
+        valueOf: HeatCurveApplyMode.valueOf,
+        enumValues: HeatCurveApplyMode.values)
+    ..aOM<$3.Timestamp>(3, _omitFieldNames ? '' : 'appliedAt',
+        subBuilder: $3.Timestamp.create)
+    ..aOM<$5.HeatSourceReadings>(4, _omitFieldNames ? '' : 'settings',
+        subBuilder: $5.HeatSourceReadings.create)
+    ..aOM<$5.HeatSourceReadings>(5, _omitFieldNames ? '' : 'settingsBefore',
+        subBuilder: $5.HeatSourceReadings.create)
+    ..aOB(6, _omitFieldNames ? '' : 'revert')
+    ..e<HeatCurveVerification>(
+        7, _omitFieldNames ? '' : 'verification', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveVerification.HEAT_CURVE_VERIFICATION_UNSPECIFIED,
+        valueOf: HeatCurveVerification.valueOf,
+        enumValues: HeatCurveVerification.values)
+    ..e<HeatCurveVerifiedBy>(
+        8, _omitFieldNames ? '' : 'verifiedBy', $pb.PbFieldType.OE,
+        defaultOrMaker: HeatCurveVerifiedBy.HEAT_CURVE_VERIFIED_BY_UNSPECIFIED,
+        valueOf: HeatCurveVerifiedBy.valueOf,
+        enumValues: HeatCurveVerifiedBy.values)
+    ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'verifiedAt',
+        subBuilder: $3.Timestamp.create)
+    ..pc<HeatCurveMismatch>(
+        10, _omitFieldNames ? '' : 'mismatches', $pb.PbFieldType.PM,
+        subBuilder: HeatCurveMismatch.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveApplied clone() => HeatCurveApplied()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveApplied copyWith(void Function(HeatCurveApplied) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveApplied))
+          as HeatCurveApplied;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveApplied create() => HeatCurveApplied._();
+  @$core.override
+  HeatCurveApplied createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveApplied> createRepeated() =>
+      $pb.PbList<HeatCurveApplied>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveApplied getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveApplied>(create);
+  static HeatCurveApplied? _defaultInstance;
+
+  /// The suggestion applied. Empty for a revert.
+  @$pb.TagNumber(1)
+  $core.String get suggestionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set suggestionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSuggestionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSuggestionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  HeatCurveApplyMode get mode => $_getN(1);
+  @$pb.TagNumber(2)
+  set mode(HeatCurveApplyMode value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMode() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $3.Timestamp get appliedAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set appliedAt($3.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAppliedAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAppliedAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $3.Timestamp ensureAppliedAt() => $_ensure(2);
+
+  /// The curve settings applied, as HeatCurveSuggestion.settings states them.
+  @$pb.TagNumber(4)
+  $5.HeatSourceReadings get settings => $_getN(3);
+  @$pb.TagNumber(4)
+  set settings($5.HeatSourceReadings value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSettings() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSettings() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $5.HeatSourceReadings ensureSettings() => $_ensure(3);
+
+  /// The same fields as they were read before the apply, each where read: what a revert sets
+  /// back, and what the curve's before and after are compared by.
+  @$pb.TagNumber(5)
+  $5.HeatSourceReadings get settingsBefore => $_getN(4);
+  @$pb.TagNumber(5)
+  set settingsBefore($5.HeatSourceReadings value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSettingsBefore() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSettingsBefore() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $5.HeatSourceReadings ensureSettingsBefore() => $_ensure(4);
+
+  /// Set where this apply set back the settings an earlier one replaced
+  /// (webrtc.v1.ApplyHeatCurve.revert).
+  @$pb.TagNumber(6)
+  $core.bool get revert => $_getBF(5);
+  @$pb.TagNumber(6)
+  set revert($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasRevert() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearRevert() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  HeatCurveVerification get verification => $_getN(6);
+  @$pb.TagNumber(7)
+  set verification(HeatCurveVerification value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasVerification() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearVerification() => $_clearField(7);
+
+  /// How it was verified, where VERIFIED.
+  @$pb.TagNumber(8)
+  HeatCurveVerifiedBy get verifiedBy => $_getN(7);
+  @$pb.TagNumber(8)
+  set verifiedBy(HeatCurveVerifiedBy value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasVerifiedBy() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearVerifiedBy() => $_clearField(8);
+
+  /// When the verification last changed. Unset while PENDING.
+  @$pb.TagNumber(9)
+  $3.Timestamp get verifiedAt => $_getN(8);
+  @$pb.TagNumber(9)
+  set verifiedAt($3.Timestamp value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasVerifiedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearVerifiedAt() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $3.Timestamp ensureVerifiedAt() => $_ensure(8);
+
+  /// What was found otherwise, where MISMATCH: each setting once.
+  @$pb.TagNumber(10)
+  $pb.PbList<HeatCurveMismatch> get mismatches => $_getList(9);
 }
 
 const $core.bool _omitFieldNames =

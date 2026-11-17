@@ -157,6 +157,131 @@ final $typed_data.Uint8List heatCurveLimitReasonDescriptor = $convert.base64Deco
     'NJRklFRBAAEi0KKUhFQVRfQ1VSVkVfTElNSVRfUkVBU09OX0hZRFJBVUxJQ19CQUxBTkNFEAES'
     'IgoeSEVBVF9DVVJWRV9MSU1JVF9SRUFTT05fREVNQU5EEAI=');
 
+@$core.Deprecated('Use heatCurveAutomaticSavingsDescriptor instead')
+const HeatCurveAutomaticSavings$json = {
+  '1': 'HeatCurveAutomaticSavings',
+  '2': [
+    {'1': 'HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_AUTOMATIC_SAVINGS_ON', '2': 1},
+    {'1': 'HEAT_CURVE_AUTOMATIC_SAVINGS_OFF', '2': 2},
+  ],
+};
+
+/// Descriptor for `HeatCurveAutomaticSavings`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurveAutomaticSavingsDescriptor = $convert.base64Decode(
+    'ChlIZWF0Q3VydmVBdXRvbWF0aWNTYXZpbmdzEiwKKEhFQVRfQ1VSVkVfQVVUT01BVElDX1NBVk'
+    'lOR1NfVU5TUEVDSUZJRUQQABIjCh9IRUFUX0NVUlZFX0FVVE9NQVRJQ19TQVZJTkdTX09OEAES'
+    'JAogSEVBVF9DVVJWRV9BVVRPTUFUSUNfU0FWSU5HU19PRkYQAg==');
+
+@$core.Deprecated('Use heatCurvePointConfidenceDescriptor instead')
+const HeatCurvePointConfidence$json = {
+  '1': 'HeatCurvePointConfidence',
+  '2': [
+    {'1': 'HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_POINT_CONFIDENCE_SEEN', '2': 1},
+    {'1': 'HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED', '2': 2},
+  ],
+};
+
+/// Descriptor for `HeatCurvePointConfidence`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurvePointConfidenceDescriptor = $convert.base64Decode(
+    'ChhIZWF0Q3VydmVQb2ludENvbmZpZGVuY2USKwonSEVBVF9DVVJWRV9QT0lOVF9DT05GSURFTk'
+    'NFX1VOU1BFQ0lGSUVEEAASJAogSEVBVF9DVVJWRV9QT0lOVF9DT05GSURFTkNFX1NFRU4QARIp'
+    'CiVIRUFUX0NVUlZFX1BPSU5UX0NPTkZJREVOQ0VfRVNUSU1BVEVEEAI=');
+
+@$core.Deprecated('Use heatCurveSuggestionKindDescriptor instead')
+const HeatCurveSuggestionKind$json = {
+  '1': 'HeatCurveSuggestionKind',
+  '2': [
+    {'1': 'HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_SUGGESTION_KIND_CURVE', '2': 1},
+    {'1': 'HEAT_CURVE_SUGGESTION_KIND_SHIFT', '2': 2},
+  ],
+};
+
+/// Descriptor for `HeatCurveSuggestionKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurveSuggestionKindDescriptor = $convert.base64Decode(
+    'ChdIZWF0Q3VydmVTdWdnZXN0aW9uS2luZBIqCiZIRUFUX0NVUlZFX1NVR0dFU1RJT05fS0lORF'
+    '9VTlNQRUNJRklFRBAAEiQKIEhFQVRfQ1VSVkVfU1VHR0VTVElPTl9LSU5EX0NVUlZFEAESJAog'
+    'SEVBVF9DVVJWRV9TVUdHRVNUSU9OX0tJTkRfU0hJRlQQAg==');
+
+@$core.Deprecated('Use heatCurveApplyModeDescriptor instead')
+const HeatCurveApplyMode$json = {
+  '1': 'HeatCurveApplyMode',
+  '2': [
+    {'1': 'HEAT_CURVE_APPLY_MODE_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_APPLY_MODE_WRITTEN', '2': 1},
+    {'1': 'HEAT_CURVE_APPLY_MODE_BY_HAND', '2': 2},
+    {'1': 'HEAT_CURVE_APPLY_MODE_GATEWAY', '2': 3},
+  ],
+};
+
+/// Descriptor for `HeatCurveApplyMode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurveApplyModeDescriptor = $convert.base64Decode(
+    'ChJIZWF0Q3VydmVBcHBseU1vZGUSJQohSEVBVF9DVVJWRV9BUFBMWV9NT0RFX1VOU1BFQ0lGSU'
+    'VEEAASIQodSEVBVF9DVVJWRV9BUFBMWV9NT0RFX1dSSVRURU4QARIhCh1IRUFUX0NVUlZFX0FQ'
+    'UExZX01PREVfQllfSEFORBACEiEKHUhFQVRfQ1VSVkVfQVBQTFlfTU9ERV9HQVRFV0FZEAM=');
+
+@$core.Deprecated('Use heatCurveVerificationDescriptor instead')
+const HeatCurveVerification$json = {
+  '1': 'HeatCurveVerification',
+  '2': [
+    {'1': 'HEAT_CURVE_VERIFICATION_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_VERIFICATION_PENDING', '2': 1},
+    {'1': 'HEAT_CURVE_VERIFICATION_VERIFIED', '2': 2},
+    {'1': 'HEAT_CURVE_VERIFICATION_MISMATCH', '2': 3},
+    {'1': 'HEAT_CURVE_VERIFICATION_UNVERIFIABLE', '2': 4},
+  ],
+};
+
+/// Descriptor for `HeatCurveVerification`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurveVerificationDescriptor = $convert.base64Decode(
+    'ChVIZWF0Q3VydmVWZXJpZmljYXRpb24SJwojSEVBVF9DVVJWRV9WRVJJRklDQVRJT05fVU5TUE'
+    'VDSUZJRUQQABIjCh9IRUFUX0NVUlZFX1ZFUklGSUNBVElPTl9QRU5ESU5HEAESJAogSEVBVF9D'
+    'VVJWRV9WRVJJRklDQVRJT05fVkVSSUZJRUQQAhIkCiBIRUFUX0NVUlZFX1ZFUklGSUNBVElPTl'
+    '9NSVNNQVRDSBADEigKJEhFQVRfQ1VSVkVfVkVSSUZJQ0FUSU9OX1VOVkVSSUZJQUJMRRAE');
+
+@$core.Deprecated('Use heatCurveVerifiedByDescriptor instead')
+const HeatCurveVerifiedBy$json = {
+  '1': 'HeatCurveVerifiedBy',
+  '2': [
+    {'1': 'HEAT_CURVE_VERIFIED_BY_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_VERIFIED_BY_READ_BACK', '2': 1},
+    {'1': 'HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY', '2': 2},
+    {'1': 'HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY', '2': 3},
+  ],
+};
+
+/// Descriptor for `HeatCurveVerifiedBy`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurveVerifiedByDescriptor = $convert.base64Decode(
+    'ChNIZWF0Q3VydmVWZXJpZmllZEJ5EiYKIkhFQVRfQ1VSVkVfVkVSSUZJRURfQllfVU5TUEVDSU'
+    'ZJRUQQABIkCiBIRUFUX0NVUlZFX1ZFUklGSUVEX0JZX1JFQURfQkFDSxABEioKJkhFQVRfQ1VS'
+    'VkVfVkVSSUZJRURfQllfTUVBU1VSRURfU1VQUExZEAISLAooSEVBVF9DVVJWRV9WRVJJRklFRF'
+    '9CWV9DQUxDVUxBVEVEX1NVUFBMWRAD');
+
+@$core.Deprecated('Use heatCurveMismatchKindDescriptor instead')
+const HeatCurveMismatchKind$json = {
+  '1': 'HeatCurveMismatchKind',
+  '2': [
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO', '2': 1},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE', '2': 2},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_POINT', '2': 3},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_SHIFT', '2': 4},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_SUPPLY', '2': 5},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL', '2': 6},
+  ],
+};
+
+/// Descriptor for `HeatCurveMismatchKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List heatCurveMismatchKindDescriptor = $convert.base64Decode(
+    'ChVIZWF0Q3VydmVNaXNtYXRjaEtpbmQSKAokSEVBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX1VOU1'
+    'BFQ0lGSUVEEAASKwonSEVBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX1NISUZUX05PVF9aRVJPEAES'
+    'MwovSEVBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX09XTl9DVVJWRV9OT1RfSU5fRk9SQ0UQAhIiCh'
+    '5IRUFUX0NVUlZFX01JU01BVENIX0tJTkRfUE9JTlQQAxIiCh5IRUFUX0NVUlZFX01JU01BVENI'
+    'X0tJTkRfU0hJRlQQBBIjCh9IRUFUX0NVUlZFX01JU01BVENIX0tJTkRfU1VQUExZEAUSLQopSE'
+    'VBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX0JFTkRfTk9UX05FVVRSQUwQBg==');
+
 @$core.Deprecated('Use deviceAttributeDescriptor instead')
 const DeviceAttribute$json = {
   '1': 'DeviceAttribute',
@@ -1567,6 +1692,38 @@ const HeatCurveView$json = {
       '10': 'curveSettingsChangedAt'
     },
     {'1': 'figures_withheld', '3': 10, '4': 1, '5': 8, '10': 'figuresWithheld'},
+    {
+      '1': 'optimised',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveOptimised',
+      '10': 'optimised'
+    },
+    {
+      '1': 'suggestion',
+      '3': 12,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveSuggestion',
+      '10': 'suggestion'
+    },
+    {
+      '1': 'last_applied',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveApplied',
+      '10': 'lastApplied'
+    },
+    {
+      '1': 'automatic_savings',
+      '3': 14,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveAutomaticSavings',
+      '10': 'automaticSavings'
+    },
   ],
 };
 
@@ -1582,7 +1739,12 @@ final $typed_data.Uint8List heatCurveViewDescriptor = $convert.base64Decode(
     'ljZS52MS5IZWF0U291cmNlUmVhZGluZ3NSDWN1cnZlU2V0dGluZ3MSVQoZY3VydmVfc2V0dGlu'
     'Z3NfY2hhbmdlZF9hdBgJIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSFmN1cnZlU2'
     'V0dGluZ3NDaGFuZ2VkQXQSKQoQZmlndXJlc193aXRoaGVsZBgKIAEoCFIPZmlndXJlc1dpdGho'
-    'ZWxk');
+    'ZWxkEkgKCW9wdGltaXNlZBgLIAEoCzIqLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdEN1cn'
+    'ZlT3B0aW1pc2VkUglvcHRpbWlzZWQSSwoKc3VnZ2VzdGlvbhgMIAEoCzIrLmt1c2ludGEuaW90'
+    'LmhlYXRpbmcudjEuSGVhdEN1cnZlU3VnZ2VzdGlvblIKc3VnZ2VzdGlvbhJLCgxsYXN0X2FwcG'
+    'xpZWQYDSABKAsyKC5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRDdXJ2ZUFwcGxpZWRSC2xh'
+    'c3RBcHBsaWVkEl4KEWF1dG9tYXRpY19zYXZpbmdzGA4gASgOMjEua3VzaW50YS5pb3QuaGVhdG'
+    'luZy52MS5IZWF0Q3VydmVBdXRvbWF0aWNTYXZpbmdzUhBhdXRvbWF0aWNTYXZpbmdz');
 
 @$core.Deprecated('Use heatCurveViewsDescriptor instead')
 const HeatCurveViews$json = {
@@ -1603,3 +1765,354 @@ const HeatCurveViews$json = {
 final $typed_data.Uint8List heatCurveViewsDescriptor = $convert.base64Decode(
     'Cg5IZWF0Q3VydmVWaWV3cxI7CgV2aWV3cxgBIAMoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudj'
     'EuSGVhdEN1cnZlVmlld1IFdmlld3M=');
+
+@$core.Deprecated('Use heatCurvePointDescriptor instead')
+const HeatCurvePoint$json = {
+  '1': 'HeatCurvePoint',
+  '2': [
+    {
+      '1': 'outdoor_centidegrees',
+      '3': 1,
+      '4': 1,
+      '5': 17,
+      '10': 'outdoorCentidegrees'
+    },
+    {
+      '1': 'supply_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '10': 'supplyCentidegrees'
+    },
+    {
+      '1': 'current_supply_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'currentSupplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'confidence',
+      '3': 4,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurvePointConfidence',
+      '10': 'confidence'
+    },
+  ],
+  '8': [
+    {'1': '_current_supply_centidegrees'},
+  ],
+};
+
+/// Descriptor for `HeatCurvePoint`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurvePointDescriptor = $convert.base64Decode(
+    'Cg5IZWF0Q3VydmVQb2ludBIxChRvdXRkb29yX2NlbnRpZGVncmVlcxgBIAEoEVITb3V0ZG9vck'
+    'NlbnRpZGVncmVlcxIvChNzdXBwbHlfY2VudGlkZWdyZWVzGAIgASgRUhJzdXBwbHlDZW50aWRl'
+    'Z3JlZXMSQwobY3VycmVudF9zdXBwbHlfY2VudGlkZWdyZWVzGAMgASgRSABSGWN1cnJlbnRTdX'
+    'BwbHlDZW50aWRlZ3JlZXOIAQESUAoKY29uZmlkZW5jZRgEIAEoDjIwLmt1c2ludGEuaW90Lmhl'
+    'YXRpbmcudjEuSGVhdEN1cnZlUG9pbnRDb25maWRlbmNlUgpjb25maWRlbmNlQh4KHF9jdXJyZW'
+    '50X3N1cHBseV9jZW50aWRlZ3JlZXM=');
+
+@$core.Deprecated('Use heatCurveOptimisedDescriptor instead')
+const HeatCurveOptimised$json = {
+  '1': 'HeatCurveOptimised',
+  '2': [
+    {
+      '1': 'points',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurvePoint',
+      '10': 'points'
+    },
+    {
+      '1': 'min_supply_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'minSupplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'max_supply_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'maxSupplyCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_min_supply_centidegrees'},
+    {'1': '_max_supply_centidegrees'},
+  ],
+};
+
+/// Descriptor for `HeatCurveOptimised`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurveOptimisedDescriptor = $convert.base64Decode(
+    'ChJIZWF0Q3VydmVPcHRpbWlzZWQSPgoGcG9pbnRzGAEgAygLMiYua3VzaW50YS5pb3QuaGVhdG'
+    'luZy52MS5IZWF0Q3VydmVQb2ludFIGcG9pbnRzEjsKF21pbl9zdXBwbHlfY2VudGlkZWdyZWVz'
+    'GAIgASgRSABSFW1pblN1cHBseUNlbnRpZGVncmVlc4gBARI7ChdtYXhfc3VwcGx5X2NlbnRpZG'
+    'VncmVlcxgDIAEoEUgBUhVtYXhTdXBwbHlDZW50aWRlZ3JlZXOIAQFCGgoYX21pbl9zdXBwbHlf'
+    'Y2VudGlkZWdyZWVzQhoKGF9tYXhfc3VwcGx5X2NlbnRpZGVncmVlcw==');
+
+@$core.Deprecated('Use heatCurveSuggestionDescriptor instead')
+const HeatCurveSuggestion$json = {
+  '1': 'HeatCurveSuggestion',
+  '2': [
+    {'1': 'suggestion_id', '3': 1, '4': 1, '5': 9, '10': 'suggestionId'},
+    {
+      '1': 'kind',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveSuggestionKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'settings',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.HeatSourceReadings',
+      '10': 'settings'
+    },
+    {'1': 'writable', '3': 4, '4': 1, '5': 8, '10': 'writable'},
+    {
+      '1': 'newly_confirmed_outdoor_centidegrees',
+      '3': 5,
+      '4': 3,
+      '5': 17,
+      '10': 'newlyConfirmedOutdoorCentidegrees'
+    },
+    {
+      '1': 'saving_kwh_per_year',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'savingKwhPerYear',
+      '17': true
+    },
+    {
+      '1': 'saving_micro_eur_per_year',
+      '3': 7,
+      '4': 1,
+      '5': 18,
+      '9': 1,
+      '10': 'savingMicroEurPerYear',
+      '17': true
+    },
+    {
+      '1': 'saving_permille',
+      '3': 8,
+      '4': 1,
+      '5': 13,
+      '9': 2,
+      '10': 'savingPermille',
+      '17': true
+    },
+    {
+      '1': 'suggested_at',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'suggestedAt'
+    },
+    {'1': 'declined', '3': 10, '4': 1, '5': 8, '10': 'declined'},
+  ],
+  '8': [
+    {'1': '_saving_kwh_per_year'},
+    {'1': '_saving_micro_eur_per_year'},
+    {'1': '_saving_permille'},
+  ],
+};
+
+/// Descriptor for `HeatCurveSuggestion`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurveSuggestionDescriptor = $convert.base64Decode(
+    'ChNIZWF0Q3VydmVTdWdnZXN0aW9uEiMKDXN1Z2dlc3Rpb25faWQYASABKAlSDHN1Z2dlc3Rpb2'
+    '5JZBJDCgRraW5kGAIgASgOMi8ua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0Q3VydmVTdWdn'
+    'ZXN0aW9uS2luZFIEa2luZBJFCghzZXR0aW5ncxgDIAEoCzIpLmt1c2ludGEuaW90LmRldmljZS'
+    '52MS5IZWF0U291cmNlUmVhZGluZ3NSCHNldHRpbmdzEhoKCHdyaXRhYmxlGAQgASgIUgh3cml0'
+    'YWJsZRJPCiRuZXdseV9jb25maXJtZWRfb3V0ZG9vcl9jZW50aWRlZ3JlZXMYBSADKBFSIW5ld2'
+    'x5Q29uZmlybWVkT3V0ZG9vckNlbnRpZGVncmVlcxIyChNzYXZpbmdfa3doX3Blcl95ZWFyGAYg'
+    'ASgNSABSEHNhdmluZ0t3aFBlclllYXKIAQESPQoZc2F2aW5nX21pY3JvX2V1cl9wZXJfeWVhch'
+    'gHIAEoEkgBUhVzYXZpbmdNaWNyb0V1clBlclllYXKIAQESLAoPc2F2aW5nX3Blcm1pbGxlGAgg'
+    'ASgNSAJSDnNhdmluZ1Blcm1pbGxliAEBEj0KDHN1Z2dlc3RlZF9hdBgJIAEoCzIaLmdvb2dsZS'
+    '5wcm90b2J1Zi5UaW1lc3RhbXBSC3N1Z2dlc3RlZEF0EhoKCGRlY2xpbmVkGAogASgIUghkZWNs'
+    'aW5lZEIWChRfc2F2aW5nX2t3aF9wZXJfeWVhckIcChpfc2F2aW5nX21pY3JvX2V1cl9wZXJfeW'
+    'VhckISChBfc2F2aW5nX3Blcm1pbGxl');
+
+@$core.Deprecated('Use heatCurveMismatchDescriptor instead')
+const HeatCurveMismatch$json = {
+  '1': 'HeatCurveMismatch',
+  '2': [
+    {
+      '1': 'kind',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveMismatchKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'outdoor_centidegrees',
+      '3': 2,
+      '4': 1,
+      '5': 17,
+      '9': 0,
+      '10': 'outdoorCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'expected_supply_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 17,
+      '9': 1,
+      '10': 'expectedSupplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'found_supply_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 17,
+      '9': 2,
+      '10': 'foundSupplyCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'found_offset',
+      '3': 5,
+      '4': 1,
+      '5': 17,
+      '9': 3,
+      '10': 'foundOffset',
+      '17': true
+    },
+    {
+      '1': 'found_bend_offset_centidegrees',
+      '3': 6,
+      '4': 1,
+      '5': 17,
+      '9': 4,
+      '10': 'foundBendOffsetCentidegrees',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_outdoor_centidegrees'},
+    {'1': '_expected_supply_centidegrees'},
+    {'1': '_found_supply_centidegrees'},
+    {'1': '_found_offset'},
+    {'1': '_found_bend_offset_centidegrees'},
+  ],
+};
+
+/// Descriptor for `HeatCurveMismatch`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurveMismatchDescriptor = $convert.base64Decode(
+    'ChFIZWF0Q3VydmVNaXNtYXRjaBJBCgRraW5kGAEgASgOMi0ua3VzaW50YS5pb3QuaGVhdGluZy'
+    '52MS5IZWF0Q3VydmVNaXNtYXRjaEtpbmRSBGtpbmQSNgoUb3V0ZG9vcl9jZW50aWRlZ3JlZXMY'
+    'AiABKBFIAFITb3V0ZG9vckNlbnRpZGVncmVlc4gBARJFChxleHBlY3RlZF9zdXBwbHlfY2VudG'
+    'lkZWdyZWVzGAMgASgRSAFSGmV4cGVjdGVkU3VwcGx5Q2VudGlkZWdyZWVziAEBEj8KGWZvdW5k'
+    'X3N1cHBseV9jZW50aWRlZ3JlZXMYBCABKBFIAlIXZm91bmRTdXBwbHlDZW50aWRlZ3JlZXOIAQ'
+    'ESJgoMZm91bmRfb2Zmc2V0GAUgASgRSANSC2ZvdW5kT2Zmc2V0iAEBEkgKHmZvdW5kX2JlbmRf'
+    'b2Zmc2V0X2NlbnRpZGVncmVlcxgGIAEoEUgEUhtmb3VuZEJlbmRPZmZzZXRDZW50aWRlZ3JlZX'
+    'OIAQFCFwoVX291dGRvb3JfY2VudGlkZWdyZWVzQh8KHV9leHBlY3RlZF9zdXBwbHlfY2VudGlk'
+    'ZWdyZWVzQhwKGl9mb3VuZF9zdXBwbHlfY2VudGlkZWdyZWVzQg8KDV9mb3VuZF9vZmZzZXRCIQ'
+    'ofX2ZvdW5kX2JlbmRfb2Zmc2V0X2NlbnRpZGVncmVlcw==');
+
+@$core.Deprecated('Use heatCurveAppliedDescriptor instead')
+const HeatCurveApplied$json = {
+  '1': 'HeatCurveApplied',
+  '2': [
+    {'1': 'suggestion_id', '3': 1, '4': 1, '5': 9, '10': 'suggestionId'},
+    {
+      '1': 'mode',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveApplyMode',
+      '10': 'mode'
+    },
+    {
+      '1': 'applied_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'appliedAt'
+    },
+    {
+      '1': 'settings',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.HeatSourceReadings',
+      '10': 'settings'
+    },
+    {
+      '1': 'settings_before',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.device.v1.HeatSourceReadings',
+      '10': 'settingsBefore'
+    },
+    {'1': 'revert', '3': 6, '4': 1, '5': 8, '10': 'revert'},
+    {
+      '1': 'verification',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveVerification',
+      '10': 'verification'
+    },
+    {
+      '1': 'verified_by',
+      '3': 8,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveVerifiedBy',
+      '10': 'verifiedBy'
+    },
+    {
+      '1': 'verified_at',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'verifiedAt'
+    },
+    {
+      '1': 'mismatches',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveMismatch',
+      '10': 'mismatches'
+    },
+  ],
+};
+
+/// Descriptor for `HeatCurveApplied`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurveAppliedDescriptor = $convert.base64Decode(
+    'ChBIZWF0Q3VydmVBcHBsaWVkEiMKDXN1Z2dlc3Rpb25faWQYASABKAlSDHN1Z2dlc3Rpb25JZB'
+    'I+CgRtb2RlGAIgASgOMioua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0Q3VydmVBcHBseU1v'
+    'ZGVSBG1vZGUSOQoKYXBwbGllZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbX'
+    'BSCWFwcGxpZWRBdBJFCghzZXR0aW5ncxgEIAEoCzIpLmt1c2ludGEuaW90LmRldmljZS52MS5I'
+    'ZWF0U291cmNlUmVhZGluZ3NSCHNldHRpbmdzElIKD3NldHRpbmdzX2JlZm9yZRgFIAEoCzIpLm'
+    't1c2ludGEuaW90LmRldmljZS52MS5IZWF0U291cmNlUmVhZGluZ3NSDnNldHRpbmdzQmVmb3Jl'
+    'EhYKBnJldmVydBgGIAEoCFIGcmV2ZXJ0ElEKDHZlcmlmaWNhdGlvbhgHIAEoDjItLmt1c2ludG'
+    'EuaW90LmhlYXRpbmcudjEuSGVhdEN1cnZlVmVyaWZpY2F0aW9uUgx2ZXJpZmljYXRpb24STAoL'
+    'dmVyaWZpZWRfYnkYCCABKA4yKy5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRDdXJ2ZVZlcm'
+    'lmaWVkQnlSCnZlcmlmaWVkQnkSOwoLdmVyaWZpZWRfYXQYCSABKAsyGi5nb29nbGUucHJvdG9i'
+    'dWYuVGltZXN0YW1wUgp2ZXJpZmllZEF0EkkKCm1pc21hdGNoZXMYCiADKAsyKS5rdXNpbnRhLm'
+    'lvdC5oZWF0aW5nLnYxLkhlYXRDdXJ2ZU1pc21hdGNoUgptaXNtYXRjaGVz');

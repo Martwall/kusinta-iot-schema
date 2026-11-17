@@ -6055,6 +6055,293 @@ class GetHeatCurveView extends $pb.GeneratedMessage {
   $0.SpaceId ensureHomeId() => $_ensure(1);
 }
 
+/// Applies a plant's heat curve suggestion (heating.v1 HEAT CURVE, APPLYING), answered with
+/// heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by plant_id gives it, with the
+/// apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO APPLIES IT) names; anyone
+/// else, and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
+/// Refused as FAILED_PRECONDITION with metadata:
+///   {"reason": "suggestion_changed"}  suggestion_id is not the plant's suggestion as it stands:
+///                                     a client reads the view again and shows what changed;
+///   {"reason": "not_writable"}        mode WRITTEN where the heat source takes no write of the
+///                                     suggestion's settings (HeatCurveSuggestion.writable);
+///   {"reason": "nothing_to_revert"}   revert where no apply has settings to set back.
+/// A mode other than WRITTEN or BY_HAND is refused as INVALID_REQUEST with metadata
+/// {"reason": "mode"}. A write the heat source does not take is refused as UNAVAILABLE with
+/// metadata {"reason": "write_failed"}, and nothing is recorded as applied. Applying a declined
+/// suggestion withdraws its decline.
+class ApplyHeatCurve extends $pb.GeneratedMessage {
+  factory ApplyHeatCurve({
+    $core.String? plantId,
+    $core.String? suggestionId,
+    $9.HeatCurveApplyMode? mode,
+    $core.bool? revert,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (mode != null) result.mode = mode;
+    if (revert != null) result.revert = revert;
+    return result;
+  }
+
+  ApplyHeatCurve._();
+
+  factory ApplyHeatCurve.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ApplyHeatCurve.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ApplyHeatCurve',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOS(2, _omitFieldNames ? '' : 'suggestionId')
+    ..e<$9.HeatCurveApplyMode>(
+        3, _omitFieldNames ? '' : 'mode', $pb.PbFieldType.OE,
+        defaultOrMaker: $9.HeatCurveApplyMode.HEAT_CURVE_APPLY_MODE_UNSPECIFIED,
+        valueOf: $9.HeatCurveApplyMode.valueOf,
+        enumValues: $9.HeatCurveApplyMode.values)
+    ..aOB(4, _omitFieldNames ? '' : 'revert')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ApplyHeatCurve clone() => ApplyHeatCurve()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ApplyHeatCurve copyWith(void Function(ApplyHeatCurve) updates) =>
+      super.copyWith((message) => updates(message as ApplyHeatCurve))
+          as ApplyHeatCurve;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ApplyHeatCurve create() => ApplyHeatCurve._();
+  @$core.override
+  ApplyHeatCurve createEmptyInstance() => create();
+  static $pb.PbList<ApplyHeatCurve> createRepeated() =>
+      $pb.PbList<ApplyHeatCurve>();
+  @$core.pragma('dart2js:noInline')
+  static ApplyHeatCurve getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ApplyHeatCurve>(create);
+  static ApplyHeatCurve? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  /// The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id). Ignored
+  /// with revert.
+  @$pb.TagNumber(2)
+  $core.String get suggestionId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set suggestionId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSuggestionId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSuggestionId() => $_clearField(2);
+
+  /// WRITTEN writes it to the heat source; BY_HAND confirms it was set by hand there.
+  @$pb.TagNumber(3)
+  $9.HeatCurveApplyMode get mode => $_getN(2);
+  @$pb.TagNumber(3)
+  set mode($9.HeatCurveApplyMode value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMode() => $_clearField(3);
+
+  /// Sets back the settings the last apply replaced (HeatCurveApplied.settings_before), in mode,
+  /// as a correction: recorded as an apply of its own.
+  @$pb.TagNumber(4)
+  $core.bool get revert => $_getBF(3);
+  @$pb.TagNumber(4)
+  set revert($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRevert() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRevert() => $_clearField(4);
+}
+
+/// Declines a plant's heat curve suggestion, or withdraws a decline (heating.v1 HEAT CURVE,
+/// SUGGESTION), answered with heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused
+/// as ApplyHeatCurve is, suggestion_changed included. Declining a declined suggestion, and
+/// withdrawing a decline that is not there, change nothing and are answered as it stands.
+class DeclineHeatCurve extends $pb.GeneratedMessage {
+  factory DeclineHeatCurve({
+    $core.String? plantId,
+    $core.String? suggestionId,
+    $core.bool? withdraw,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (withdraw != null) result.withdraw = withdraw;
+    return result;
+  }
+
+  DeclineHeatCurve._();
+
+  factory DeclineHeatCurve.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeclineHeatCurve.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeclineHeatCurve',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOS(2, _omitFieldNames ? '' : 'suggestionId')
+    ..aOB(3, _omitFieldNames ? '' : 'withdraw')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeclineHeatCurve clone() => DeclineHeatCurve()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeclineHeatCurve copyWith(void Function(DeclineHeatCurve) updates) =>
+      super.copyWith((message) => updates(message as DeclineHeatCurve))
+          as DeclineHeatCurve;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeclineHeatCurve create() => DeclineHeatCurve._();
+  @$core.override
+  DeclineHeatCurve createEmptyInstance() => create();
+  static $pb.PbList<DeclineHeatCurve> createRepeated() =>
+      $pb.PbList<DeclineHeatCurve>();
+  @$core.pragma('dart2js:noInline')
+  static DeclineHeatCurve getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeclineHeatCurve>(create);
+  static DeclineHeatCurve? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  /// The suggestion declined, as the view gave it (HeatCurveSuggestion.suggestion_id).
+  @$pb.TagNumber(2)
+  $core.String get suggestionId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set suggestionId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSuggestionId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSuggestionId() => $_clearField(2);
+
+  /// false declines; true withdraws the decline, so that the suggestion is open again.
+  @$pb.TagNumber(3)
+  $core.bool get withdraw => $_getBF(2);
+  @$pb.TagNumber(3)
+  set withdraw($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWithdraw() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWithdraw() => $_clearField(3);
+}
+
+/// Sets a plant's automatic savings on or off (heating.v1 HEAT CURVE, AUTOMATIC SAVINGS),
+/// answered with heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused as
+/// ApplyHeatCurve is; automatic_savings UNSPECIFIED is refused as INVALID_REQUEST with metadata
+/// {"reason": "automatic_savings"}. Setting it to what it is changes nothing and is answered as
+/// it stands. Turning it off undoes no apply already made; ApplyHeatCurve.revert does.
+class SetHeatCurveAutomaticSavings extends $pb.GeneratedMessage {
+  factory SetHeatCurveAutomaticSavings({
+    $core.String? plantId,
+    $9.HeatCurveAutomaticSavings? automaticSavings,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (automaticSavings != null) result.automaticSavings = automaticSavings;
+    return result;
+  }
+
+  SetHeatCurveAutomaticSavings._();
+
+  factory SetHeatCurveAutomaticSavings.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetHeatCurveAutomaticSavings.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetHeatCurveAutomaticSavings',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..e<$9.HeatCurveAutomaticSavings>(
+        2, _omitFieldNames ? '' : 'automaticSavings', $pb.PbFieldType.OE,
+        defaultOrMaker: $9
+            .HeatCurveAutomaticSavings.HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED,
+        valueOf: $9.HeatCurveAutomaticSavings.valueOf,
+        enumValues: $9.HeatCurveAutomaticSavings.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetHeatCurveAutomaticSavings clone() =>
+      SetHeatCurveAutomaticSavings()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetHeatCurveAutomaticSavings copyWith(
+          void Function(SetHeatCurveAutomaticSavings) updates) =>
+      super.copyWith(
+              (message) => updates(message as SetHeatCurveAutomaticSavings))
+          as SetHeatCurveAutomaticSavings;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetHeatCurveAutomaticSavings create() =>
+      SetHeatCurveAutomaticSavings._();
+  @$core.override
+  SetHeatCurveAutomaticSavings createEmptyInstance() => create();
+  static $pb.PbList<SetHeatCurveAutomaticSavings> createRepeated() =>
+      $pb.PbList<SetHeatCurveAutomaticSavings>();
+  @$core.pragma('dart2js:noInline')
+  static SetHeatCurveAutomaticSavings getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetHeatCurveAutomaticSavings>(create);
+  static SetHeatCurveAutomaticSavings? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $9.HeatCurveAutomaticSavings get automaticSavings => $_getN(1);
+  @$pb.TagNumber(2)
+  set automaticSavings($9.HeatCurveAutomaticSavings value) =>
+      $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAutomaticSavings() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAutomaticSavings() => $_clearField(2);
+}
+
 /// Asks for a nonce to link one home's account at a third-party service
 /// (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -7419,6 +7706,9 @@ enum ManagementRequest_Request {
   getHeatCurveView,
   deprovisionDevice,
   listProvisionedDevices,
+  applyHeatCurve,
+  declineHeatCurve,
+  setHeatCurveAutomaticSavings,
   notSet
 }
 
@@ -7512,6 +7802,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     GetHeatCurveView? getHeatCurveView,
     DeprovisionDevice? deprovisionDevice,
     ListProvisionedDevices? listProvisionedDevices,
+    ApplyHeatCurve? applyHeatCurve,
+    DeclineHeatCurve? declineHeatCurve,
+    SetHeatCurveAutomaticSavings? setHeatCurveAutomaticSavings,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -7639,6 +7932,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (deprovisionDevice != null) result.deprovisionDevice = deprovisionDevice;
     if (listProvisionedDevices != null)
       result.listProvisionedDevices = listProvisionedDevices;
+    if (applyHeatCurve != null) result.applyHeatCurve = applyHeatCurve;
+    if (declineHeatCurve != null) result.declineHeatCurve = declineHeatCurve;
+    if (setHeatCurveAutomaticSavings != null)
+      result.setHeatCurveAutomaticSavings = setHeatCurveAutomaticSavings;
     return result;
   }
 
@@ -7740,6 +8037,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     85: ManagementRequest_Request.getHeatCurveView,
     86: ManagementRequest_Request.deprovisionDevice,
     87: ManagementRequest_Request.listProvisionedDevices,
+    88: ManagementRequest_Request.applyHeatCurve,
+    89: ManagementRequest_Request.declineHeatCurve,
+    90: ManagementRequest_Request.setHeatCurveAutomaticSavings,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -7834,7 +8134,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
       84,
       85,
       86,
-      87
+      87,
+      88,
+      89,
+      90
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -8037,6 +8340,13 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<ListProvisionedDevices>(
         87, _omitFieldNames ? '' : 'listProvisionedDevices',
         subBuilder: ListProvisionedDevices.create)
+    ..aOM<ApplyHeatCurve>(88, _omitFieldNames ? '' : 'applyHeatCurve',
+        subBuilder: ApplyHeatCurve.create)
+    ..aOM<DeclineHeatCurve>(89, _omitFieldNames ? '' : 'declineHeatCurve',
+        subBuilder: DeclineHeatCurve.create)
+    ..aOM<SetHeatCurveAutomaticSavings>(
+        90, _omitFieldNames ? '' : 'setHeatCurveAutomaticSavings',
+        subBuilder: SetHeatCurveAutomaticSavings.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -9061,6 +9371,42 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearListProvisionedDevices() => $_clearField(87);
   @$pb.TagNumber(87)
   ListProvisionedDevices ensureListProvisionedDevices() => $_ensure(86);
+
+  /// Applying or declining a heat curve suggestion; see heating.v1 HEAT CURVE, APPLYING.
+  @$pb.TagNumber(88)
+  ApplyHeatCurve get applyHeatCurve => $_getN(87);
+  @$pb.TagNumber(88)
+  set applyHeatCurve(ApplyHeatCurve value) => $_setField(88, value);
+  @$pb.TagNumber(88)
+  $core.bool hasApplyHeatCurve() => $_has(87);
+  @$pb.TagNumber(88)
+  void clearApplyHeatCurve() => $_clearField(88);
+  @$pb.TagNumber(88)
+  ApplyHeatCurve ensureApplyHeatCurve() => $_ensure(87);
+
+  @$pb.TagNumber(89)
+  DeclineHeatCurve get declineHeatCurve => $_getN(88);
+  @$pb.TagNumber(89)
+  set declineHeatCurve(DeclineHeatCurve value) => $_setField(89, value);
+  @$pb.TagNumber(89)
+  $core.bool hasDeclineHeatCurve() => $_has(88);
+  @$pb.TagNumber(89)
+  void clearDeclineHeatCurve() => $_clearField(89);
+  @$pb.TagNumber(89)
+  DeclineHeatCurve ensureDeclineHeatCurve() => $_ensure(88);
+
+  @$pb.TagNumber(90)
+  SetHeatCurveAutomaticSavings get setHeatCurveAutomaticSavings => $_getN(89);
+  @$pb.TagNumber(90)
+  set setHeatCurveAutomaticSavings(SetHeatCurveAutomaticSavings value) =>
+      $_setField(90, value);
+  @$pb.TagNumber(90)
+  $core.bool hasSetHeatCurveAutomaticSavings() => $_has(89);
+  @$pb.TagNumber(90)
+  void clearSetHeatCurveAutomaticSavings() => $_clearField(90);
+  @$pb.TagNumber(90)
+  SetHeatCurveAutomaticSavings ensureSetHeatCurveAutomaticSavings() =>
+      $_ensure(89);
 }
 
 const $core.bool _omitFieldNames =
