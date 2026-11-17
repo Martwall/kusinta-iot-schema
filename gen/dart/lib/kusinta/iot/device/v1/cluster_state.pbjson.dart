@@ -322,9 +322,19 @@ const AttributeBehaviour$json = {
       '6': '.kusinta.iot.device.v1.ReadLatency',
       '10': 'readLatency'
     },
+    {
+      '1': 'reports_back',
+      '3': 5,
+      '4': 1,
+      '5': 8,
+      '9': 1,
+      '10': 'reportsBack',
+      '17': true
+    },
   ],
   '8': [
     {'1': 'write'},
+    {'1': '_reports_back'},
   ],
 };
 
@@ -335,7 +345,8 @@ final $typed_data.Uint8List attributeBehaviourDescriptor = $convert.base64Decode
     'dC5kZXZpY2UudjEuTGVhc2VkV3JpdGVIAFIGbGVhc2VkEksKDnBvd2VyX29uX3ZhbHVlGAMgAS'
     'gLMiUua3VzaW50YS5pb3QuZGV2aWNlLnYxLkF0dHJpYnV0ZVZhbHVlUgxwb3dlck9uVmFsdWUS'
     'RQoMcmVhZF9sYXRlbmN5GAQgASgOMiIua3VzaW50YS5pb3QuZGV2aWNlLnYxLlJlYWRMYXRlbm'
-    'N5UgtyZWFkTGF0ZW5jeUIHCgV3cml0ZQ==');
+    'N5UgtyZWFkTGF0ZW5jeRImCgxyZXBvcnRzX2JhY2sYBSABKAhIAVILcmVwb3J0c0JhY2uIAQFC'
+    'BwoFd3JpdGVCDwoNX3JlcG9ydHNfYmFjaw==');
 
 @$core.Deprecated('Use stickyWriteDescriptor instead')
 const StickyWrite$json = {

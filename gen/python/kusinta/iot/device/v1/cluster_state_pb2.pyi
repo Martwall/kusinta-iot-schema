@@ -104,16 +104,18 @@ class ClusterState(_message.Message):
     def __init__(self, cluster_id: _Optional[int] = ..., cluster_revision: _Optional[int] = ..., feature_map: _Optional[int] = ..., attributes: _Optional[_Iterable[_Union[AttributeState, _Mapping]]] = ..., accepted_command_ids: _Optional[_Iterable[int]] = ..., attribute_ids: _Optional[_Iterable[int]] = ..., attribute_steps: _Optional[_Mapping[int, int]] = ..., attribute_behaviours: _Optional[_Mapping[int, AttributeBehaviour]] = ...) -> None: ...
 
 class AttributeBehaviour(_message.Message):
-    __slots__ = ("sticky", "leased", "power_on_value", "read_latency")
+    __slots__ = ("sticky", "leased", "power_on_value", "read_latency", "reports_back")
     STICKY_FIELD_NUMBER: _ClassVar[int]
     LEASED_FIELD_NUMBER: _ClassVar[int]
     POWER_ON_VALUE_FIELD_NUMBER: _ClassVar[int]
     READ_LATENCY_FIELD_NUMBER: _ClassVar[int]
+    REPORTS_BACK_FIELD_NUMBER: _ClassVar[int]
     sticky: StickyWrite
     leased: LeasedWrite
     power_on_value: AttributeValue
     read_latency: ReadLatency
-    def __init__(self, sticky: _Optional[_Union[StickyWrite, _Mapping]] = ..., leased: _Optional[_Union[LeasedWrite, _Mapping]] = ..., power_on_value: _Optional[_Union[AttributeValue, _Mapping]] = ..., read_latency: _Optional[_Union[ReadLatency, str]] = ...) -> None: ...
+    reports_back: bool
+    def __init__(self, sticky: _Optional[_Union[StickyWrite, _Mapping]] = ..., leased: _Optional[_Union[LeasedWrite, _Mapping]] = ..., power_on_value: _Optional[_Union[AttributeValue, _Mapping]] = ..., read_latency: _Optional[_Union[ReadLatency, str]] = ..., reports_back: _Optional[bool] = ...) -> None: ...
 
 class StickyWrite(_message.Message):
     __slots__ = ()
