@@ -344,5 +344,281 @@ class HeatCurveLimitReason extends $pb.ProtobufEnum {
   const HeatCurveLimitReason._(super.value, super.name);
 }
 
+/// A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
+/// release of this schema.
+class HeatCurveAutomaticSavings extends $pb.ProtobufEnum {
+  /// Not given, as where figures are withheld; never a setting.
+  static const HeatCurveAutomaticSavings
+      HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED = HeatCurveAutomaticSavings._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED');
+
+  /// The gateway applies what the heat source takes a write of. A plant's setting until set off.
+  static const HeatCurveAutomaticSavings HEAT_CURVE_AUTOMATIC_SAVINGS_ON =
+      HeatCurveAutomaticSavings._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_AUTOMATIC_SAVINGS_ON');
+
+  /// The gateway applies nothing unasked.
+  static const HeatCurveAutomaticSavings HEAT_CURVE_AUTOMATIC_SAVINGS_OFF =
+      HeatCurveAutomaticSavings._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_AUTOMATIC_SAVINGS_OFF');
+
+  static const $core.List<HeatCurveAutomaticSavings> values =
+      <HeatCurveAutomaticSavings>[
+    HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED,
+    HEAT_CURVE_AUTOMATIC_SAVINGS_ON,
+    HEAT_CURVE_AUTOMATIC_SAVINGS_OFF,
+  ];
+
+  static final $core.List<HeatCurveAutomaticSavings?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static HeatCurveAutomaticSavings? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveAutomaticSavings._(super.value, super.name);
+}
+
+/// How sure the gateway is of one point of an optimised curve (CONFIDENCE). A closed list that
+/// grows only by a release of this schema.
+class HeatCurvePointConfidence extends $pb.ProtobufEnum {
+  /// Not known, or a confidence this client's schema does not know: read as estimated.
+  static const HeatCurvePointConfidence
+      HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED = HeatCurvePointConfidence._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED');
+
+  /// Enough days seen in the point's band to judge it.
+  static const HeatCurvePointConfidence HEAT_CURVE_POINT_CONFIDENCE_SEEN =
+      HeatCurvePointConfidence._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_SEEN');
+
+  /// Extrapolated from the seen points, cautiously (CONFIDENCE).
+  static const HeatCurvePointConfidence HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED =
+      HeatCurvePointConfidence._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED');
+
+  static const $core.List<HeatCurvePointConfidence> values =
+      <HeatCurvePointConfidence>[
+    HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED,
+    HEAT_CURVE_POINT_CONFIDENCE_SEEN,
+    HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED,
+  ];
+
+  static final $core.List<HeatCurvePointConfidence?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static HeatCurvePointConfidence? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurvePointConfidence._(super.value, super.name);
+}
+
+/// The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release
+/// of this schema.
+class HeatCurveSuggestionKind extends $pb.ProtobufEnum {
+  /// A kind this client's schema does not know: a client shows the suggestion's settings and
+  /// saving, and offers no apply it cannot describe.
+  static const HeatCurveSuggestionKind HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED =
+      HeatCurveSuggestionKind._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED');
+
+  /// Set the own curve to the optimised one, with the shift at 0.
+  static const HeatCurveSuggestionKind HEAT_CURVE_SUGGESTION_KIND_CURVE =
+      HeatCurveSuggestionKind._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_SUGGESTION_KIND_CURVE');
+
+  /// Move the shift one step, before a curve can be suggested.
+  static const HeatCurveSuggestionKind HEAT_CURVE_SUGGESTION_KIND_SHIFT =
+      HeatCurveSuggestionKind._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_SUGGESTION_KIND_SHIFT');
+
+  static const $core.List<HeatCurveSuggestionKind> values =
+      <HeatCurveSuggestionKind>[
+    HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED,
+    HEAT_CURVE_SUGGESTION_KIND_CURVE,
+    HEAT_CURVE_SUGGESTION_KIND_SHIFT,
+  ];
+
+  static final $core.List<HeatCurveSuggestionKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static HeatCurveSuggestionKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveSuggestionKind._(super.value, super.name);
+}
+
+/// How a curve came to be applied (APPLYING). A closed list that grows only by a release of this
+/// schema.
+class HeatCurveApplyMode extends $pb.ProtobufEnum {
+  static const HeatCurveApplyMode HEAT_CURVE_APPLY_MODE_UNSPECIFIED =
+      HeatCurveApplyMode._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_APPLY_MODE_UNSPECIFIED');
+
+  /// Written to the heat source at someone's request.
+  static const HeatCurveApplyMode HEAT_CURVE_APPLY_MODE_WRITTEN =
+      HeatCurveApplyMode._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_APPLY_MODE_WRITTEN');
+
+  /// Set by hand at the heat source, and confirmed as set.
+  static const HeatCurveApplyMode HEAT_CURVE_APPLY_MODE_BY_HAND =
+      HeatCurveApplyMode._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_APPLY_MODE_BY_HAND');
+
+  /// Written by the gateway itself, unasked (APPLYING). Never requested.
+  static const HeatCurveApplyMode HEAT_CURVE_APPLY_MODE_GATEWAY =
+      HeatCurveApplyMode._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_APPLY_MODE_GATEWAY');
+
+  static const $core.List<HeatCurveApplyMode> values = <HeatCurveApplyMode>[
+    HEAT_CURVE_APPLY_MODE_UNSPECIFIED,
+    HEAT_CURVE_APPLY_MODE_WRITTEN,
+    HEAT_CURVE_APPLY_MODE_BY_HAND,
+    HEAT_CURVE_APPLY_MODE_GATEWAY,
+  ];
+
+  static final $core.List<HeatCurveApplyMode?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static HeatCurveApplyMode? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveApplyMode._(super.value, super.name);
+}
+
+/// Whether an applied curve is the one in force (APPLYING). A closed list that grows only by a
+/// release of this schema.
+class HeatCurveVerification extends $pb.ProtobufEnum {
+  /// A state this client's schema does not know: read as not yet verified.
+  static const HeatCurveVerification HEAT_CURVE_VERIFICATION_UNSPECIFIED =
+      HeatCurveVerification._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFICATION_UNSPECIFIED');
+
+  /// Not yet known: waiting for a read-back, or for enough quarter hours since the apply.
+  static const HeatCurveVerification HEAT_CURVE_VERIFICATION_PENDING =
+      HeatCurveVerification._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFICATION_PENDING');
+
+  /// Found as applied (HeatCurveApplied.verified_by says how).
+  static const HeatCurveVerification HEAT_CURVE_VERIFICATION_VERIFIED =
+      HeatCurveVerification._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFICATION_VERIFIED');
+
+  /// Found otherwise than applied (HeatCurveApplied.mismatches says how).
+  static const HeatCurveVerification HEAT_CURVE_VERIFICATION_MISMATCH =
+      HeatCurveVerification._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFICATION_MISMATCH');
+
+  /// Neither read back nor measurable: the confirmation is all there is.
+  static const HeatCurveVerification HEAT_CURVE_VERIFICATION_UNVERIFIABLE =
+      HeatCurveVerification._(
+          4, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFICATION_UNVERIFIABLE');
+
+  static const $core.List<HeatCurveVerification> values =
+      <HeatCurveVerification>[
+    HEAT_CURVE_VERIFICATION_UNSPECIFIED,
+    HEAT_CURVE_VERIFICATION_PENDING,
+    HEAT_CURVE_VERIFICATION_VERIFIED,
+    HEAT_CURVE_VERIFICATION_MISMATCH,
+    HEAT_CURVE_VERIFICATION_UNVERIFIABLE,
+  ];
+
+  static final $core.List<HeatCurveVerification?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static HeatCurveVerification? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveVerification._(super.value, super.name);
+}
+
+/// How an applied curve was verified. A closed list that grows only by a release of this schema.
+class HeatCurveVerifiedBy extends $pb.ProtobufEnum {
+  static const HeatCurveVerifiedBy HEAT_CURVE_VERIFIED_BY_UNSPECIFIED =
+      HeatCurveVerifiedBy._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFIED_BY_UNSPECIFIED');
+
+  /// The heat source's curve settings, read back.
+  static const HeatCurveVerifiedBy HEAT_CURVE_VERIFIED_BY_READ_BACK =
+      HeatCurveVerifiedBy._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFIED_BY_READ_BACK');
+
+  /// The measured supply against the curve applied, at the outdoor temperatures seen since.
+  static const HeatCurveVerifiedBy HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY =
+      HeatCurveVerifiedBy._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY');
+
+  static const $core.List<HeatCurveVerifiedBy> values = <HeatCurveVerifiedBy>[
+    HEAT_CURVE_VERIFIED_BY_UNSPECIFIED,
+    HEAT_CURVE_VERIFIED_BY_READ_BACK,
+    HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY,
+  ];
+
+  static final $core.List<HeatCurveVerifiedBy?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static HeatCurveVerifiedBy? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveVerifiedBy._(super.value, super.name);
+}
+
+/// What was found otherwise than applied. A closed list that grows only by a release of this
+/// schema.
+class HeatCurveMismatchKind extends $pb.ProtobufEnum {
+  /// A kind this client's schema does not know: a client says the curve is not as applied.
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED =
+      HeatCurveMismatchKind._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED');
+
+  /// The shift is not 0 under an own curve (HeatCurveMismatch.found_offset).
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO =
+      HeatCurveMismatchKind._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO');
+
+  /// The own curve is not the one in force.
+  static const HeatCurveMismatchKind
+      HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE = HeatCurveMismatchKind._(
+          2,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE');
+
+  /// One point of the own curve, read back, is set otherwise (outdoor_centidegrees,
+  /// expected_supply_centidegrees, found_supply_centidegrees).
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_POINT =
+      HeatCurveMismatchKind._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_POINT');
+
+  /// The shift, read back, is not the one a shift suggestion set (found_offset).
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_SHIFT =
+      HeatCurveMismatchKind._(
+          4, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_SHIFT');
+
+  /// The measured supply is off the curve applied at an outdoor temperature seen since
+  /// (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
+  /// measured).
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_SUPPLY =
+      HeatCurveMismatchKind._(
+          5, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_SUPPLY');
+
+  /// The bend's offset is not 0 under an own curve (found_bend_offset_centidegrees, with
+  /// outdoor_centidegrees its outdoor point where read).
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL =
+      HeatCurveMismatchKind._(
+          6, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL');
+
+  static const $core.List<HeatCurveMismatchKind> values =
+      <HeatCurveMismatchKind>[
+    HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED,
+    HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO,
+    HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE,
+    HEAT_CURVE_MISMATCH_KIND_POINT,
+    HEAT_CURVE_MISMATCH_KIND_SHIFT,
+    HEAT_CURVE_MISMATCH_KIND_SUPPLY,
+    HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL,
+  ];
+
+  static final $core.List<HeatCurveMismatchKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
+  static HeatCurveMismatchKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveMismatchKind._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

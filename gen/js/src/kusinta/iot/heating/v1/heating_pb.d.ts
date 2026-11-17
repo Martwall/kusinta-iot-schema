@@ -1475,7 +1475,8 @@ export declare type HeatCurveBand = Message<"kusinta.iot.heating.v1.HeatCurveBan
 
   /**
    * The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
-   * which an external input moved the curve (WHAT IT SHOWS).
+   * which an external input moved the curve and those in the 24 hours after a change to the
+   * curve settings (WHAT IT SHOWS).
    *
    * @generated from field: uint32 quarters = 3;
    */
@@ -1548,8 +1549,8 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
 
   /**
    * The quarter hours counted, [window_from, window_to): a window of the gateway's choice, such
-   * as the last 28 days, starting no earlier than the curve settings last changed
-   * (curve_settings_changed_at), so that the bands judge the curve in force.
+   * as the last 28 days. It spans changes to the curve settings, less the 24 hours after each
+   * (WHAT IT SHOWS).
    *
    * @generated from field: google.protobuf.Timestamp window_from = 3;
    */
@@ -1607,12 +1608,45 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
 
   /**
    * Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies
-   * and add-on figures and the curve settings are left out, so that their absence is not read as
-   * not known.
+   * and add-on figures, the curve settings, the optimised curve, the suggestion and the last
+   * apply are left out, so that their absence is not read as not known.
    *
    * @generated from field: bool figures_withheld = 10;
    */
   figuresWithheld: boolean;
+
+  /**
+   * What the curve could be (OPTIMISED CURVE). Unset where the gateway cannot work one out yet,
+   * as with no band judged, and where figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveOptimised optimised = 11;
+   */
+  optimised?: HeatCurveOptimised | undefined;
+
+  /**
+   * What the gateway suggests setting (SUGGESTION). Unset where it suggests nothing: the curve
+   * in force is as the optimised one would set it, or no change would save; and where figures
+   * are withheld. A declined suggestion is still given, marked so (HeatCurveSuggestion.declined).
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveSuggestion suggestion = 12;
+   */
+  suggestion?: HeatCurveSuggestion | undefined;
+
+  /**
+   * The last curve applied to the heat source, and whether it is verified (APPLYING). Unset
+   * where none was, and where figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveApplied last_applied = 13;
+   */
+  lastApplied?: HeatCurveApplied | undefined;
+
+  /**
+   * Whether the gateway applies suggestions itself (AUTOMATIC SAVINGS). Unspecified where
+   * figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveAutomaticSavings automatic_savings = 14;
+   */
+  automaticSavings: HeatCurveAutomaticSavings;
 };
 
 /**
@@ -1638,6 +1672,309 @@ export declare type HeatCurveViews = Message<"kusinta.iot.heating.v1.HeatCurveVi
  * Use `create(HeatCurveViewsSchema)` to create a new message.
  */
 export declare const HeatCurveViewsSchema: GenMessage<HeatCurveViews>;
+
+/**
+ * One point of an optimised curve.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurvePoint
+ */
+export declare type HeatCurvePoint = Message<"kusinta.iot.heating.v1.HeatCurvePoint"> & {
+  /**
+   * The outdoor temperature, in centidegrees: a multiple of 500 from −3000 to +3000.
+   *
+   * @generated from field: sint32 outdoor_centidegrees = 1;
+   */
+  outdoorCentidegrees: number;
+
+  /**
+   * The supply the optimised curve sets at it, in centidegrees, held between the heat source's
+   * lowest and highest supply (OPTIMISED CURVE).
+   *
+   * @generated from field: sint32 supply_centidegrees = 2;
+   */
+  supplyCentidegrees: number;
+
+  /**
+   * The supply the curve in force sets at it, in centidegrees, as worked out from the curve
+   * settings read (HeatCurveView.curve_settings). Unset where not known.
+   *
+   * @generated from field: optional sint32 current_supply_centidegrees = 3;
+   */
+  currentSupplyCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurvePointConfidence confidence = 4;
+   */
+  confidence: HeatCurvePointConfidence;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurvePoint.
+ * Use `create(HeatCurvePointSchema)` to create a new message.
+ */
+export declare const HeatCurvePointSchema: GenMessage<HeatCurvePoint>;
+
+/**
+ * What a plant's curve could be (OPTIMISED CURVE).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveOptimised
+ */
+export declare type HeatCurveOptimised = Message<"kusinta.iot.heating.v1.HeatCurveOptimised"> & {
+  /**
+   * Coldest first, every 5 °C from −30 °C to +30 °C: thirteen points.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatCurvePoint points = 1;
+   */
+  points: HeatCurvePoint[];
+
+  /**
+   * The lowest and the highest supply the curve is held between, in centidegrees: the heat
+   * source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
+   * stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+   * as radiators alone do, theirs. Unset where not known: the curve is then not held at that
+   * end.
+   *
+   * @generated from field: optional sint32 min_supply_centidegrees = 2;
+   */
+  minSupplyCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 max_supply_centidegrees = 3;
+   */
+  maxSupplyCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveOptimised.
+ * Use `create(HeatCurveOptimisedSchema)` to create a new message.
+ */
+export declare const HeatCurveOptimisedSchema: GenMessage<HeatCurveOptimised>;
+
+/**
+ * What the gateway suggests setting on a plant's heat source (SUGGESTION).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveSuggestion
+ */
+export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCurveSuggestion"> & {
+  /**
+   * New only on a material change (SUGGESTION); kept across a refresh that makes none. Named by
+   * webrtc.v1.ApplyHeatCurve and DeclineHeatCurve.
+   *
+   * @generated from field: string suggestion_id = 1;
+   */
+  suggestionId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveSuggestionKind kind = 2;
+   */
+  kind: HeatCurveSuggestionKind;
+
+  /**
+   * The heat source's curve settings that applying it sets, in the heat source's own format
+   * (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
+   * own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
+   * each taking the optimised curve's supply at its outdoor temperature, and
+   * curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
+   * heating_curve_offset, one step from the one in force.
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings = 3;
+   */
+  settings?: HeatSourceReadings | undefined;
+
+  /**
+   * Whether the heat source takes a write of settings, so that a client offers to write them;
+   * otherwise it guides setting them by hand, and asks for the confirmation.
+   *
+   * @generated from field: bool writable = 4;
+   */
+  writable: boolean;
+
+  /**
+   * Where the suggestion follows an applied curve: the outdoor temperatures of the points
+   * confirmed since, whose supply it would set otherwise (SUGGESTION), coldest first, in
+   * centidegrees. Empty for a first suggestion.
+   *
+   * @generated from field: repeated sint32 newly_confirmed_outdoor_centidegrees = 5;
+   */
+  newlyConfirmedOutdoorCentidegrees: number[];
+
+  /**
+   * The saving in absolute terms, where the gateway has a basis for it, over a year of the
+   * outdoor temperatures it takes as typical for the building: in the heat source's electric
+   * energy, in kilowatt-hours, where it has an estimate of that energy; and in millionths of a
+   * euro, that energy priced as energy a rule avoids is (PRICE BASIS) at the window's mean price,
+   * where it has a price basis too. Each unset where not known.
+   *
+   * @generated from field: optional uint32 saving_kwh_per_year = 6;
+   */
+  savingKwhPerYear?: number | undefined;
+
+  /**
+   * @generated from field: optional sint64 saving_micro_eur_per_year = 7;
+   */
+  savingMicroEurPerYear?: bigint | undefined;
+
+  /**
+   * The saving as thousandths of the plant's heating energy: the primary figure, which a client
+   * shows first. Unset where not known.
+   *
+   * @generated from field: optional uint32 saving_permille = 8;
+   */
+  savingPermille?: number | undefined;
+
+  /**
+   * When the suggestion was first made with its present settings.
+   *
+   * @generated from field: google.protobuf.Timestamp suggested_at = 9;
+   */
+  suggestedAt?: Timestamp | undefined;
+
+  /**
+   * Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
+   * for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
+   *
+   * @generated from field: bool declined = 10;
+   */
+  declined: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveSuggestion.
+ * Use `create(HeatCurveSuggestionSchema)` to create a new message.
+ */
+export declare const HeatCurveSuggestionSchema: GenMessage<HeatCurveSuggestion>;
+
+/**
+ * One setting found otherwise than applied.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveMismatch
+ */
+export declare type HeatCurveMismatch = Message<"kusinta.iot.heating.v1.HeatCurveMismatch"> & {
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveMismatchKind kind = 1;
+   */
+  kind: HeatCurveMismatchKind;
+
+  /**
+   * The outdoor temperature, in centidegrees, of a point or supply found otherwise.
+   *
+   * @generated from field: optional sint32 outdoor_centidegrees = 2;
+   */
+  outdoorCentidegrees?: number | undefined;
+
+  /**
+   * The supply applied there, and the supply found, in centidegrees.
+   *
+   * @generated from field: optional sint32 expected_supply_centidegrees = 3;
+   */
+  expectedSupplyCentidegrees?: number | undefined;
+
+  /**
+   * @generated from field: optional sint32 found_supply_centidegrees = 4;
+   */
+  foundSupplyCentidegrees?: number | undefined;
+
+  /**
+   * The shift found, in the heat source's own steps (device.v1.HeatSourceReadings
+   * .heating_curve_offset).
+   *
+   * @generated from field: optional sint32 found_offset = 5;
+   */
+  foundOffset?: number | undefined;
+
+  /**
+   * The bend's offset found, in centidegrees (device.v1.HeatSourceReadings
+   * .curve_point_offset_centidegrees).
+   *
+   * @generated from field: optional sint32 found_bend_offset_centidegrees = 6;
+   */
+  foundBendOffsetCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveMismatch.
+ * Use `create(HeatCurveMismatchSchema)` to create a new message.
+ */
+export declare const HeatCurveMismatchSchema: GenMessage<HeatCurveMismatch>;
+
+/**
+ * The last curve applied to a plant's heat source, and whether it is verified (APPLYING).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveApplied
+ */
+export declare type HeatCurveApplied = Message<"kusinta.iot.heating.v1.HeatCurveApplied"> & {
+  /**
+   * The suggestion applied. Empty for a revert.
+   *
+   * @generated from field: string suggestion_id = 1;
+   */
+  suggestionId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveApplyMode mode = 2;
+   */
+  mode: HeatCurveApplyMode;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp applied_at = 3;
+   */
+  appliedAt?: Timestamp | undefined;
+
+  /**
+   * The curve settings applied, as HeatCurveSuggestion.settings states them.
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings = 4;
+   */
+  settings?: HeatSourceReadings | undefined;
+
+  /**
+   * The same fields as they were read before the apply, each where read: what a revert sets
+   * back, and what the curve's before and after are compared by.
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings_before = 5;
+   */
+  settingsBefore?: HeatSourceReadings | undefined;
+
+  /**
+   * Set where this apply set back the settings an earlier one replaced
+   * (webrtc.v1.ApplyHeatCurve.revert).
+   *
+   * @generated from field: bool revert = 6;
+   */
+  revert: boolean;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveVerification verification = 7;
+   */
+  verification: HeatCurveVerification;
+
+  /**
+   * How it was verified, where VERIFIED.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveVerifiedBy verified_by = 8;
+   */
+  verifiedBy: HeatCurveVerifiedBy;
+
+  /**
+   * When the verification last changed. Unset while PENDING.
+   *
+   * @generated from field: google.protobuf.Timestamp verified_at = 9;
+   */
+  verifiedAt?: Timestamp | undefined;
+
+  /**
+   * What was found otherwise, where MISMATCH: each setting once.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveMismatch mismatches = 10;
+   */
+  mismatches: HeatCurveMismatch[];
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveApplied.
+ * Use `create(HeatCurveAppliedSchema)` to create a new message.
+ */
+export declare const HeatCurveAppliedSchema: GenMessage<HeatCurveApplied>;
 
 /**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
@@ -2015,4 +2352,291 @@ export enum HeatCurveLimitReason {
  * Describes the enum kusinta.iot.heating.v1.HeatCurveLimitReason.
  */
 export declare const HeatCurveLimitReasonSchema: GenEnum<HeatCurveLimitReason>;
+
+/**
+ * A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
+ * release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveAutomaticSavings
+ */
+export enum HeatCurveAutomaticSavings {
+  /**
+   * Not given, as where figures are withheld; never a setting.
+   *
+   * @generated from enum value: HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The gateway applies what the heat source takes a write of. A plant's setting until set off.
+   *
+   * @generated from enum value: HEAT_CURVE_AUTOMATIC_SAVINGS_ON = 1;
+   */
+  ON = 1,
+
+  /**
+   * The gateway applies nothing unasked.
+   *
+   * @generated from enum value: HEAT_CURVE_AUTOMATIC_SAVINGS_OFF = 2;
+   */
+  OFF = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveAutomaticSavings.
+ */
+export declare const HeatCurveAutomaticSavingsSchema: GenEnum<HeatCurveAutomaticSavings>;
+
+/**
+ * How sure the gateway is of one point of an optimised curve (CONFIDENCE). A closed list that
+ * grows only by a release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurvePointConfidence
+ */
+export enum HeatCurvePointConfidence {
+  /**
+   * Not known, or a confidence this client's schema does not know: read as estimated.
+   *
+   * @generated from enum value: HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Enough days seen in the point's band to judge it.
+   *
+   * @generated from enum value: HEAT_CURVE_POINT_CONFIDENCE_SEEN = 1;
+   */
+  SEEN = 1,
+
+  /**
+   * Extrapolated from the seen points, cautiously (CONFIDENCE).
+   *
+   * @generated from enum value: HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED = 2;
+   */
+  ESTIMATED = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurvePointConfidence.
+ */
+export declare const HeatCurvePointConfidenceSchema: GenEnum<HeatCurvePointConfidence>;
+
+/**
+ * The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release
+ * of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveSuggestionKind
+ */
+export enum HeatCurveSuggestionKind {
+  /**
+   * A kind this client's schema does not know: a client shows the suggestion's settings and
+   * saving, and offers no apply it cannot describe.
+   *
+   * @generated from enum value: HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Set the own curve to the optimised one, with the shift at 0.
+   *
+   * @generated from enum value: HEAT_CURVE_SUGGESTION_KIND_CURVE = 1;
+   */
+  CURVE = 1,
+
+  /**
+   * Move the shift one step, before a curve can be suggested.
+   *
+   * @generated from enum value: HEAT_CURVE_SUGGESTION_KIND_SHIFT = 2;
+   */
+  SHIFT = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveSuggestionKind.
+ */
+export declare const HeatCurveSuggestionKindSchema: GenEnum<HeatCurveSuggestionKind>;
+
+/**
+ * How a curve came to be applied (APPLYING). A closed list that grows only by a release of this
+ * schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveApplyMode
+ */
+export enum HeatCurveApplyMode {
+  /**
+   * @generated from enum value: HEAT_CURVE_APPLY_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Written to the heat source at someone's request.
+   *
+   * @generated from enum value: HEAT_CURVE_APPLY_MODE_WRITTEN = 1;
+   */
+  WRITTEN = 1,
+
+  /**
+   * Set by hand at the heat source, and confirmed as set.
+   *
+   * @generated from enum value: HEAT_CURVE_APPLY_MODE_BY_HAND = 2;
+   */
+  BY_HAND = 2,
+
+  /**
+   * Written by the gateway itself, unasked (APPLYING). Never requested.
+   *
+   * @generated from enum value: HEAT_CURVE_APPLY_MODE_GATEWAY = 3;
+   */
+  GATEWAY = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveApplyMode.
+ */
+export declare const HeatCurveApplyModeSchema: GenEnum<HeatCurveApplyMode>;
+
+/**
+ * Whether an applied curve is the one in force (APPLYING). A closed list that grows only by a
+ * release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveVerification
+ */
+export enum HeatCurveVerification {
+  /**
+   * A state this client's schema does not know: read as not yet verified.
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFICATION_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Not yet known: waiting for a read-back, or for enough quarter hours since the apply.
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFICATION_PENDING = 1;
+   */
+  PENDING = 1,
+
+  /**
+   * Found as applied (HeatCurveApplied.verified_by says how).
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFICATION_VERIFIED = 2;
+   */
+  VERIFIED = 2,
+
+  /**
+   * Found otherwise than applied (HeatCurveApplied.mismatches says how).
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFICATION_MISMATCH = 3;
+   */
+  MISMATCH = 3,
+
+  /**
+   * Neither read back nor measurable: the confirmation is all there is.
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFICATION_UNVERIFIABLE = 4;
+   */
+  UNVERIFIABLE = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveVerification.
+ */
+export declare const HeatCurveVerificationSchema: GenEnum<HeatCurveVerification>;
+
+/**
+ * How an applied curve was verified. A closed list that grows only by a release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveVerifiedBy
+ */
+export enum HeatCurveVerifiedBy {
+  /**
+   * @generated from enum value: HEAT_CURVE_VERIFIED_BY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The heat source's curve settings, read back.
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFIED_BY_READ_BACK = 1;
+   */
+  READ_BACK = 1,
+
+  /**
+   * The measured supply against the curve applied, at the outdoor temperatures seen since.
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY = 2;
+   */
+  MEASURED_SUPPLY = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveVerifiedBy.
+ */
+export declare const HeatCurveVerifiedBySchema: GenEnum<HeatCurveVerifiedBy>;
+
+/**
+ * What was found otherwise than applied. A closed list that grows only by a release of this
+ * schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveMismatchKind
+ */
+export enum HeatCurveMismatchKind {
+  /**
+   * A kind this client's schema does not know: a client says the curve is not as applied.
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The shift is not 0 under an own curve (HeatCurveMismatch.found_offset).
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO = 1;
+   */
+  SHIFT_NOT_ZERO = 1,
+
+  /**
+   * The own curve is not the one in force.
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE = 2;
+   */
+  OWN_CURVE_NOT_IN_FORCE = 2,
+
+  /**
+   * One point of the own curve, read back, is set otherwise (outdoor_centidegrees,
+   * expected_supply_centidegrees, found_supply_centidegrees).
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_POINT = 3;
+   */
+  POINT = 3,
+
+  /**
+   * The shift, read back, is not the one a shift suggestion set (found_offset).
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_SHIFT = 4;
+   */
+  SHIFT = 4,
+
+  /**
+   * The measured supply is off the curve applied at an outdoor temperature seen since
+   * (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
+   * measured).
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_SUPPLY = 5;
+   */
+  SUPPLY = 5,
+
+  /**
+   * The bend's offset is not 0 under an own curve (found_bend_offset_centidegrees, with
+   * outdoor_centidegrees its outdoor point where read).
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL = 6;
+   */
+  BEND_NOT_NEUTRAL = 6,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveMismatchKind.
+ */
+export declare const HeatCurveMismatchKindSchema: GenEnum<HeatCurveMismatchKind>;
 

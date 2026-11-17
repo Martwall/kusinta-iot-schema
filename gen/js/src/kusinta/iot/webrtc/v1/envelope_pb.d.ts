@@ -583,7 +583,8 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
     case: "energyPriceAdder";
   } | {
     /**
-     * get_heat_curve_view
+     * get_heat_curve_view, apply_heat_curve, decline_heat_curve,
+     * set_heat_curve_automatic_savings
      *
      * @generated from field: kusinta.iot.heating.v1.HeatCurveViews heat_curve_views = 36;
      */
