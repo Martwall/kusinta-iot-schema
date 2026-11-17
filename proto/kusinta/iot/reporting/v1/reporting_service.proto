@@ -16,4 +16,7 @@ service GatewayReportingService {
   rpc ReportServedSpaces(ReportServedSpacesRequest) returns (ReportServedSpacesResponse);
   rpc ReportMembers(ReportMembersRequest) returns (ReportMembersResponse);
   rpc ReportInviteRoutes(ReportInviteRoutesRequest) returns (ReportInviteRoutesResponse);
+
+  // Not a report: asks the api-server to push notices to people's devices (NOTICES).
+  rpc SendNotices(SendNoticesRequest) returns (SendNoticesResponse);
 }
