@@ -874,6 +874,24 @@ export declare type RoomHistorySample = Message<"kusinta.iot.climate.v1.RoomHist
    * @generated from field: optional uint32 floor_heating_seconds = 7;
    */
   floorHeatingSeconds?: number | undefined;
+
+  /**
+   * The mean over the bucket of the room's valves' own temperature probes, among the valves
+   * that report one, in centidegrees, each as the valve reports it, uncorrected. Set only for
+   * a bucket in which the room has no measured reading: never beside measured_centidegrees.
+   * An hour: set only where none of its quarter hours has a measured reading, and then the
+   * mean of its quarter hours' means.
+   *
+   * Never the room's temperature. A valve's probe sits at its radiator, so it reads warmer
+   * while the radiator heats and nearer the room while it does not. An app MUST NOT show it
+   * as the room's measured reading, and MUST say that it was taken at the valve.
+   *
+   * Read under the same rules as the rest of the sample (webrtc.v1.GetRoomHistory): whoever
+   * may not read measured_centidegrees is not sent this either.
+   *
+   * @generated from field: optional sint32 valve_probe_centidegrees = 8;
+   */
+  valveProbeCentidegrees?: number | undefined;
 };
 
 /**

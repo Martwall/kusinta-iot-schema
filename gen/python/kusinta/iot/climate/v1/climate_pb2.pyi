@@ -308,7 +308,7 @@ class RoomClimateList(_message.Message):
     def __init__(self, rooms: _Optional[_Iterable[_Union[RoomClimate, _Mapping]]] = ..., modes: _Optional[_Iterable[_Union[ClimateMode, _Mapping]]] = ...) -> None: ...
 
 class RoomHistorySample(_message.Message):
-    __slots__ = ("at", "measured_centidegrees", "target_centidegrees", "effective_target_centidegrees", "valve_open_permille", "valve_open_seconds", "floor_heating_seconds")
+    __slots__ = ("at", "measured_centidegrees", "target_centidegrees", "effective_target_centidegrees", "valve_open_permille", "valve_open_seconds", "floor_heating_seconds", "valve_probe_centidegrees")
     AT_FIELD_NUMBER: _ClassVar[int]
     MEASURED_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
@@ -316,6 +316,7 @@ class RoomHistorySample(_message.Message):
     VALVE_OPEN_PERMILLE_FIELD_NUMBER: _ClassVar[int]
     VALVE_OPEN_SECONDS_FIELD_NUMBER: _ClassVar[int]
     FLOOR_HEATING_SECONDS_FIELD_NUMBER: _ClassVar[int]
+    VALVE_PROBE_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     at: _timestamp_pb2.Timestamp
     measured_centidegrees: int
     target_centidegrees: int
@@ -323,7 +324,8 @@ class RoomHistorySample(_message.Message):
     valve_open_permille: int
     valve_open_seconds: int
     floor_heating_seconds: int
-    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., measured_centidegrees: _Optional[int] = ..., target_centidegrees: _Optional[int] = ..., effective_target_centidegrees: _Optional[int] = ..., valve_open_permille: _Optional[int] = ..., valve_open_seconds: _Optional[int] = ..., floor_heating_seconds: _Optional[int] = ...) -> None: ...
+    valve_probe_centidegrees: int
+    def __init__(self, at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., measured_centidegrees: _Optional[int] = ..., target_centidegrees: _Optional[int] = ..., effective_target_centidegrees: _Optional[int] = ..., valve_open_permille: _Optional[int] = ..., valve_open_seconds: _Optional[int] = ..., floor_heating_seconds: _Optional[int] = ..., valve_probe_centidegrees: _Optional[int] = ...) -> None: ...
 
 class RoomHistory(_message.Message):
     __slots__ = ("room_id", "kept_from", "samples", "resolution", "covered_from", "covered_to")
