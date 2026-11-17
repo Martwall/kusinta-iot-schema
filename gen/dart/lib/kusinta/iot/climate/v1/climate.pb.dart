@@ -1648,6 +1648,7 @@ class RoomHistorySample extends $pb.GeneratedMessage {
     $core.int? valveOpenPermille,
     $core.int? valveOpenSeconds,
     $core.int? floorHeatingSeconds,
+    $core.int? valveProbeCentidegrees,
   }) {
     final result = create();
     if (at != null) result.at = at;
@@ -1661,6 +1662,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
     if (valveOpenSeconds != null) result.valveOpenSeconds = valveOpenSeconds;
     if (floorHeatingSeconds != null)
       result.floorHeatingSeconds = floorHeatingSeconds;
+    if (valveProbeCentidegrees != null)
+      result.valveProbeCentidegrees = valveProbeCentidegrees;
     return result;
   }
 
@@ -1692,6 +1695,8 @@ class RoomHistorySample extends $pb.GeneratedMessage {
         6, _omitFieldNames ? '' : 'valveOpenSeconds', $pb.PbFieldType.OU3)
     ..a<$core.int>(
         7, _omitFieldNames ? '' : 'floorHeatingSeconds', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        8, _omitFieldNames ? '' : 'valveProbeCentidegrees', $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1797,6 +1802,27 @@ class RoomHistorySample extends $pb.GeneratedMessage {
   $core.bool hasFloorHeatingSeconds() => $_has(6);
   @$pb.TagNumber(7)
   void clearFloorHeatingSeconds() => $_clearField(7);
+
+  /// The mean over the bucket of the room's valves' own temperature probes, among the valves
+  /// that report one, in centidegrees, each as the valve reports it, uncorrected. Set only for
+  /// a bucket in which the room has no measured reading: never beside measured_centidegrees.
+  /// An hour: set only where none of its quarter hours has a measured reading, and then the
+  /// mean of its quarter hours' means.
+  ///
+  /// Never the room's temperature. A valve's probe sits at its radiator, so it reads warmer
+  /// while the radiator heats and nearer the room while it does not. An app MUST NOT show it
+  /// as the room's measured reading, and MUST say that it was taken at the valve.
+  ///
+  /// Read under the same rules as the rest of the sample (webrtc.v1.GetRoomHistory): whoever
+  /// may not read measured_centidegrees is not sent this either.
+  @$pb.TagNumber(8)
+  $core.int get valveProbeCentidegrees => $_getIZ(7);
+  @$pb.TagNumber(8)
+  set valveProbeCentidegrees($core.int value) => $_setSignedInt32(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasValveProbeCentidegrees() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearValveProbeCentidegrees() => $_clearField(8);
 }
 
 /// A room's history at one resolution, in reply to GetRoomHistory.
