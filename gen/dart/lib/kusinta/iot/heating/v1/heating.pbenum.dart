@@ -344,6 +344,46 @@ class HeatCurveLimitReason extends $pb.ProtobufEnum {
   const HeatCurveLimitReason._(super.value, super.name);
 }
 
+/// The kind of zone that limits a heat curve (HeatCurveLimit.zone_kind). A closed list that grows
+/// only by a release of this schema.
+class HeatCurveZoneKind extends $pb.ProtobufEnum {
+  /// Not known, withheld (HeatCurveLimit.home_withheld), or a kind this client's schema does not
+  /// know: a client reads floor_zone_id and floor_zone_ids_together as they stand.
+  static const HeatCurveZoneKind HEAT_CURVE_ZONE_KIND_UNSPECIFIED =
+      HeatCurveZoneKind._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_ZONE_KIND_UNSPECIFIED');
+
+  /// A radiator valve, judged by its opening.
+  static const HeatCurveZoneKind HEAT_CURVE_ZONE_KIND_RADIATOR =
+      HeatCurveZoneKind._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_ZONE_KIND_RADIATOR');
+
+  /// One floor zone, judged by its steady duty (floor_zone_id).
+  static const HeatCurveZoneKind HEAT_CURVE_ZONE_KIND_FLOOR_ZONE =
+      HeatCurveZoneKind._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_ZONE_KIND_FLOOR_ZONE');
+
+  /// Floor zones whose outputs switch together, judged as one by their steady duty
+  /// (floor_zone_ids_together).
+  static const HeatCurveZoneKind HEAT_CURVE_ZONE_KIND_FLOOR_ZONES_TOGETHER =
+      HeatCurveZoneKind._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_ZONE_KIND_FLOOR_ZONES_TOGETHER');
+
+  static const $core.List<HeatCurveZoneKind> values = <HeatCurveZoneKind>[
+    HEAT_CURVE_ZONE_KIND_UNSPECIFIED,
+    HEAT_CURVE_ZONE_KIND_RADIATOR,
+    HEAT_CURVE_ZONE_KIND_FLOOR_ZONE,
+    HEAT_CURVE_ZONE_KIND_FLOOR_ZONES_TOGETHER,
+  ];
+
+  static final $core.List<HeatCurveZoneKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static HeatCurveZoneKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveZoneKind._(super.value, super.name);
+}
+
 /// A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 /// release of this schema.
 class HeatCurveAutomaticSavings extends $pb.ProtobufEnum {

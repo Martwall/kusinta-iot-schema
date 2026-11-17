@@ -6173,8 +6173,14 @@ class ApplyHeatCurve extends $pb.GeneratedMessage {
 
 /// Declines a plant's heat curve suggestion, or withdraws a decline (heating.v1 HEAT CURVE,
 /// SUGGESTION), answered with heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused
-/// as ApplyHeatCurve is, suggestion_changed included. Declining a declined suggestion, and
-/// withdrawing a decline that is not there, change nothing and are answered as it stands.
+/// as ApplyHeatCurve is, suggestion_changed included. A room-target suggestion
+/// (heating.v1.HeatCurveRoomTargetSuggestion) is declined the same way, by its suggestion_id, by
+/// the residents of the home its room lies in alone (heating.v1 HEAT CURVE, ROOM TARGETS), and
+/// answered with the views their home's reading gives them. One naming a room-target suggestion
+/// the caller may not see is answered as one naming an id that is not the plant's
+/// (suggestion_changed), so that the refusal says nothing of whether it exists. Declining a
+/// declined suggestion, and withdrawing a decline that is not there, change nothing and are
+/// answered as it stands.
 class DeclineHeatCurve extends $pb.GeneratedMessage {
   factory DeclineHeatCurve({
     $core.String? plantId,

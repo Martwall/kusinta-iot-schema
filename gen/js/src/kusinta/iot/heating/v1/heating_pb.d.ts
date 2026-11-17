@@ -1424,15 +1424,17 @@ export declare type HeatCurveLimit = Message<"kusinta.iot.heating.v1.HeatCurveLi
 
   /**
    * The room the zone heats: a radiator valve's room, or a floor zone's control room
-   * (FloorZone.control_room_id). Unset where home_withheld.
+   * (FloorZone.control_room_id). For floor zones judged as one (FLOOR_ZONES_TOGETHER), set only
+   * where they share a control room. Unset where home_withheld.
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 4;
    */
   roomId?: SpaceId | undefined;
 
   /**
-   * The floor zone (FloorZone.zone_id) where the opening is a floor zone's duty; empty for a
-   * radiator valve, and where home_withheld.
+   * The floor zone (FloorZone.zone_id) where the opening is one floor zone's duty
+   * (HEAT_CURVE_ZONE_KIND_FLOOR_ZONE). Empty for a radiator valve, for floor zones judged as one
+   * (floor_zone_ids_together names them), and where home_withheld: zone_kind tells which.
    *
    * @generated from field: string floor_zone_id = 5;
    */
@@ -1445,6 +1447,23 @@ export declare type HeatCurveLimit = Message<"kusinta.iot.heating.v1.HeatCurveLi
    * @generated from field: bool home_withheld = 6;
    */
   homeWithheld: boolean;
+
+  /**
+   * What kind of zone limits. UNSPECIFIED where home_withheld, as floor_zone_ids_together is
+   * empty there: which homes have floor heating can say which home limits.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveZoneKind zone_kind = 7;
+   */
+  zoneKind: HeatCurveZoneKind;
+
+  /**
+   * The floor zones (FloorZone.zone_id) judged as one, where zone_kind is FLOOR_ZONES_TOGETHER:
+   * zones whose outputs switch together count once (WHAT IT SHOWS). Empty otherwise, and where
+   * home_withheld.
+   *
+   * @generated from field: repeated string floor_zone_ids_together = 8;
+   */
+  floorZoneIdsTogether: string[];
 };
 
 /**
@@ -1647,6 +1666,15 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
    * @generated from field: kusinta.iot.heating.v1.HeatCurveAutomaticSavings automatic_savings = 14;
    */
   automaticSavings: HeatCurveAutomaticSavings;
+
+  /**
+   * Where a room's own target holds the curve up, what lowering it would let the curve do (ROOM
+   * TARGETS). Given only as ROOM TARGETS, WHO SEES THEM says: empty for anyone else, figures
+   * withheld or not.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveRoomTargetSuggestion room_target_suggestions = 15;
+   */
+  roomTargetSuggestions: HeatCurveRoomTargetSuggestion[];
 };
 
 /**
@@ -1931,7 +1959,10 @@ export declare type HeatCurveApplied = Message<"kusinta.iot.heating.v1.HeatCurve
 
   /**
    * The same fields as they were read before the apply, each where read: what a revert sets
-   * back, and what the curve's before and after are compared by.
+   * back, and what the curve's before and after are compared by. Where the apply changed which
+   * curve is in force (own_curve_in_force), also the numbered curve and its offset as they were
+   * read before it (heating_curve, heating_curve_offset), each where read, so that a revert names
+   * the curve to go back to.
    *
    * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings_before = 5;
    */
@@ -1977,6 +2008,98 @@ export declare type HeatCurveApplied = Message<"kusinta.iot.heating.v1.HeatCurve
  * Use `create(HeatCurveAppliedSchema)` to create a new message.
  */
 export declare const HeatCurveAppliedSchema: GenMessage<HeatCurveApplied>;
+
+/**
+ * ROOM TARGETS (HeatCurveView.room_target_suggestions). Where the zone that limits a band does so
+ * because its own room's target is high, rather than because the house needs the supply, a lower
+ * target in that room would let the curve come down. The gateway suggests it to the household:
+ * lowering that room to suggested_target_centidegrees would let the curve come down by about
+ * curve_lowered_by_centidegrees in the bands named. It suggests one only where the room's target
+ * is above the median of the targets of the home's rooms that have one, suggesting that median,
+ * or 0.5 °C below the room's target where the median is further down; and only where that would
+ * let the curve come down by at least 1 °C in at least one band. Otherwise it suggests none for
+ * the room. It is the household's comfort: the gateway
+ * never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
+ * household acts on it by setting the room's target as it sets any target, or declines it
+ * (webrtc.v1.DeclineHeatCurve, by its suggestion_id). A suggestion_id is new only on a material
+ * change, as a curve suggestion's is (SUGGESTION), and a decline holds for it; a home's wipe and
+ * a new household's residency clear the home's declines.
+ *
+ * WHO SEES THEM: the residents of the home the room lies in, in a reading of their home's own
+ * plant or of a plant outside homes whose curve that room limits (webrtc.v1.GetHeatCurveView by
+ * home_id), and a household admin reading the home's plant by plant_id. Never the owner
+ * organisation, the gateway's administrators, service, or an installer under a commissioning
+ * grant, and never anyone of another home: a room's target is the household's own (HEAT CURVE,
+ * WHO SEES IT). The curve suggestion given to the owner organisation of a shared plant is worked
+ * out without assuming that any room target changes.
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveRoomTargetSuggestion
+ */
+export declare type HeatCurveRoomTargetSuggestion = Message<"kusinta.iot.heating.v1.HeatCurveRoomTargetSuggestion"> & {
+  /**
+   * Named by webrtc.v1.DeclineHeatCurve. New only on a material change.
+   *
+   * @generated from field: string suggestion_id = 1;
+   */
+  suggestionId: string;
+
+  /**
+   * The room, and its target as the gateway holds it, in centidegrees.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId room_id = 2;
+   */
+  roomId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: sint32 target_centidegrees = 3;
+   */
+  targetCentidegrees: number;
+
+  /**
+   * The target suggested, in centidegrees: the median of the home's room targets, at most 50
+   * below target_centidegrees (ROOM TARGETS).
+   *
+   * @generated from field: sint32 suggested_target_centidegrees = 4;
+   */
+  suggestedTargetCentidegrees: number;
+
+  /**
+   * About how far the curve could come down with the target suggested, in the bands named:
+   * rounded to whole degrees, in centidegrees (a multiple of 100, at least 100), since a finer
+   * figure hints at the zones of another home on the plant. Unset where not known.
+   *
+   * @generated from field: optional sint32 curve_lowered_by_centidegrees = 5;
+   */
+  curveLoweredByCentidegrees?: number | undefined;
+
+  /**
+   * The bands it would come down in, by their outdoor_from_centidegrees (HeatCurveBand), coldest
+   * first.
+   *
+   * @generated from field: repeated sint32 band_outdoor_from_centidegrees = 6;
+   */
+  bandOutdoorFromCentidegrees: number[];
+
+  /**
+   * When the suggestion was first made as it stands.
+   *
+   * @generated from field: google.protobuf.Timestamp suggested_at = 7;
+   */
+  suggestedAt?: Timestamp | undefined;
+
+  /**
+   * Set once declined, until the decline is withdrawn.
+   *
+   * @generated from field: bool declined = 8;
+   */
+  declined: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveRoomTargetSuggestion.
+ * Use `create(HeatCurveRoomTargetSuggestionSchema)` to create a new message.
+ */
+export declare const HeatCurveRoomTargetSuggestionSchema: GenMessage<HeatCurveRoomTargetSuggestion>;
 
 /**
  * @generated from enum kusinta.iot.heating.v1.HeatSourceKind
@@ -2354,6 +2477,49 @@ export enum HeatCurveLimitReason {
  * Describes the enum kusinta.iot.heating.v1.HeatCurveLimitReason.
  */
 export declare const HeatCurveLimitReasonSchema: GenEnum<HeatCurveLimitReason>;
+
+/**
+ * The kind of zone that limits a heat curve (HeatCurveLimit.zone_kind). A closed list that grows
+ * only by a release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveZoneKind
+ */
+export enum HeatCurveZoneKind {
+  /**
+   * Not known, withheld (HeatCurveLimit.home_withheld), or a kind this client's schema does not
+   * know: a client reads floor_zone_id and floor_zone_ids_together as they stand.
+   *
+   * @generated from enum value: HEAT_CURVE_ZONE_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A radiator valve, judged by its opening.
+   *
+   * @generated from enum value: HEAT_CURVE_ZONE_KIND_RADIATOR = 1;
+   */
+  RADIATOR = 1,
+
+  /**
+   * One floor zone, judged by its steady duty (floor_zone_id).
+   *
+   * @generated from enum value: HEAT_CURVE_ZONE_KIND_FLOOR_ZONE = 2;
+   */
+  FLOOR_ZONE = 2,
+
+  /**
+   * Floor zones whose outputs switch together, judged as one by their steady duty
+   * (floor_zone_ids_together).
+   *
+   * @generated from enum value: HEAT_CURVE_ZONE_KIND_FLOOR_ZONES_TOGETHER = 3;
+   */
+  FLOOR_ZONES_TOGETHER = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveZoneKind.
+ */
+export declare const HeatCurveZoneKindSchema: GenEnum<HeatCurveZoneKind>;
 
 /**
  * A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
