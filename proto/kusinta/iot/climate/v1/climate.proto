@@ -740,9 +740,10 @@ message RoomHistorySample {
   optional uint32 floor_heating_seconds = 7;
 
   // The mean over the bucket of the room's valves' own temperature probes, among the valves
-  // that report one, in centidegrees. Set only for a bucket in which the room has no measured
-  // reading: never beside measured_centidegrees. An hour: set only where none of its quarter
-  // hours has a measured reading, and then the mean of its quarter hours' means.
+  // that report one, in centidegrees, each as the valve reports it, uncorrected. Set only for
+  // a bucket in which the room has no measured reading: never beside measured_centidegrees.
+  // An hour: set only where none of its quarter hours has a measured reading, and then the
+  // mean of its quarter hours' means.
   //
   // Never the room's temperature. A valve's probe sits at its radiator, so it reads warmer
   // while the radiator heats and nearer the room while it does not. An app MUST NOT show it
