@@ -1449,8 +1449,8 @@ export declare type HeatCurveLimit = Message<"kusinta.iot.heating.v1.HeatCurveLi
   homeWithheld: boolean;
 
   /**
-   * What kind of zone limits. Given whoever the limit is given to, home_withheld or not: it names
-   * no zone.
+   * What kind of zone limits. UNSPECIFIED where home_withheld, as floor_zone_ids_together is
+   * empty there: which homes have floor heating can say which home limits.
    *
    * @generated from field: kusinta.iot.heating.v1.HeatCurveZoneKind zone_kind = 7;
    */
@@ -2014,7 +2014,11 @@ export declare const HeatCurveAppliedSchema: GenMessage<HeatCurveApplied>;
  * because its own room's target is high, rather than because the house needs the supply, a lower
  * target in that room would let the curve come down. The gateway suggests it to the household:
  * lowering that room to suggested_target_centidegrees would let the curve come down by about
- * curve_lowered_by_centidegrees in the bands named. It is the household's comfort: the gateway
+ * curve_lowered_by_centidegrees in the bands named. It suggests one only where the room's target
+ * is above the median of the targets of the home's rooms that have one, suggesting that median,
+ * or 0.5 °C below the room's target where the median is further down; and only where that would
+ * let the curve come down by at least 1 °C in at least one band. Otherwise it suggests none for
+ * the room. It is the household's comfort: the gateway
  * never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
  * household acts on it by setting the room's target as it sets any target, or declines it
  * (webrtc.v1.DeclineHeatCurve, by its suggestion_id). A suggestion_id is new only on a material
@@ -2052,15 +2056,17 @@ export declare type HeatCurveRoomTargetSuggestion = Message<"kusinta.iot.heating
   targetCentidegrees: number;
 
   /**
-   * The target suggested, in centidegrees: lower than target_centidegrees.
+   * The target suggested, in centidegrees: the median of the home's room targets, at most 50
+   * below target_centidegrees (ROOM TARGETS).
    *
    * @generated from field: sint32 suggested_target_centidegrees = 4;
    */
   suggestedTargetCentidegrees: number;
 
   /**
-   * About how far the curve could come down with the target suggested, in centidegrees, in the
-   * bands named. Unset where not known.
+   * About how far the curve could come down with the target suggested, in the bands named:
+   * rounded to whole degrees, in centidegrees (a multiple of 100, at least 100), since a finer
+   * figure hints at the zones of another home on the plant. Unset where not known.
    *
    * @generated from field: optional sint32 curve_lowered_by_centidegrees = 5;
    */
@@ -2480,8 +2486,8 @@ export declare const HeatCurveLimitReasonSchema: GenEnum<HeatCurveLimitReason>;
  */
 export enum HeatCurveZoneKind {
   /**
-   * Not known, or a kind this client's schema does not know: a client reads floor_zone_id and
-   * floor_zone_ids_together as they stand.
+   * Not known, withheld (HeatCurveLimit.home_withheld), or a kind this client's schema does not
+   * know: a client reads floor_zone_id and floor_zone_ids_together as they stand.
    *
    * @generated from enum value: HEAT_CURVE_ZONE_KIND_UNSPECIFIED = 0;
    */

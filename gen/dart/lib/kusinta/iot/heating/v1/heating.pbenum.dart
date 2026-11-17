@@ -347,8 +347,8 @@ class HeatCurveLimitReason extends $pb.ProtobufEnum {
 /// The kind of zone that limits a heat curve (HeatCurveLimit.zone_kind). A closed list that grows
 /// only by a release of this schema.
 class HeatCurveZoneKind extends $pb.ProtobufEnum {
-  /// Not known, or a kind this client's schema does not know: a client reads floor_zone_id and
-  /// floor_zone_ids_together as they stand.
+  /// Not known, withheld (HeatCurveLimit.home_withheld), or a kind this client's schema does not
+  /// know: a client reads floor_zone_id and floor_zone_ids_together as they stand.
   static const HeatCurveZoneKind HEAT_CURVE_ZONE_KIND_UNSPECIFIED =
       HeatCurveZoneKind._(
           0, _omitEnumNames ? '' : 'HEAT_CURVE_ZONE_KIND_UNSPECIFIED');
