@@ -296,8 +296,9 @@ export declare type ClusterState = Message<"kusinta.iot.device.v1.ClusterState">
 export declare const ClusterStateSchema: GenMessage<ClusterState>;
 
 /**
- * What a write to one attribute leaves behind, and how late its reports arrive. Stated per
- * attribute, per endpoint, by the producer that knows the device.
+ * What a write to one attribute leaves behind, how late its reports arrive, and whether it
+ * is reported at all. Stated per attribute, per endpoint, by the producer that knows the
+ * device.
  *
  * A consumer that leaves a written value in place while it is gone — a gateway steering
  * heat — needs to know what the device does on its own. Not stated is read as the worst
@@ -349,6 +350,20 @@ export declare type AttributeBehaviour = Message<"kusinta.iot.device.v1.Attribut
    * @generated from field: kusinta.iot.device.v1.ReadLatency read_latency = 4;
    */
   readLatency: ReadLatency;
+
+  /**
+   * Whether the device reports the attribute's value, so that a report can confirm a
+   * write. Unset: not stated, read as reporting it.
+   *
+   * False: the device applies a write but never reports the attribute, so nothing will
+   * ever confirm one. A producer reports the written value as VALUE_PROVENANCE_OPTIMISTIC
+   * once the write is delivered to the device (device.v1.PropertyUpdate), and MUST NOT
+   * roll it back for want of a confirmation. A consumer says that the value was sent and
+   * cannot be confirmed, and MUST NOT wait for a confirmation that will not come.
+   *
+   * @generated from field: optional bool reports_back = 5;
+   */
+  reportsBack?: boolean | undefined;
 };
 
 /**

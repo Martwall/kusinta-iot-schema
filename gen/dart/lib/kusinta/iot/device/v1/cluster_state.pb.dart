@@ -663,8 +663,9 @@ class ClusterState extends $pb.GeneratedMessage {
 
 enum AttributeBehaviour_Write { sticky, leased, notSet }
 
-/// What a write to one attribute leaves behind, and how late its reports arrive. Stated per
-/// attribute, per endpoint, by the producer that knows the device.
+/// What a write to one attribute leaves behind, how late its reports arrive, and whether it
+/// is reported at all. Stated per attribute, per endpoint, by the producer that knows the
+/// device.
 ///
 /// A consumer that leaves a written value in place while it is gone — a gateway steering
 /// heat — needs to know what the device does on its own. Not stated is read as the worst
@@ -683,12 +684,14 @@ class AttributeBehaviour extends $pb.GeneratedMessage {
     LeasedWrite? leased,
     AttributeValue? powerOnValue,
     ReadLatency? readLatency,
+    $core.bool? reportsBack,
   }) {
     final result = create();
     if (sticky != null) result.sticky = sticky;
     if (leased != null) result.leased = leased;
     if (powerOnValue != null) result.powerOnValue = powerOnValue;
     if (readLatency != null) result.readLatency = readLatency;
+    if (reportsBack != null) result.reportsBack = reportsBack;
     return result;
   }
 
@@ -724,6 +727,7 @@ class AttributeBehaviour extends $pb.GeneratedMessage {
         defaultOrMaker: ReadLatency.READ_LATENCY_UNSPECIFIED,
         valueOf: ReadLatency.valueOf,
         enumValues: ReadLatency.values)
+    ..aOB(5, _omitFieldNames ? '' : 'reportsBack')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -797,6 +801,23 @@ class AttributeBehaviour extends $pb.GeneratedMessage {
   $core.bool hasReadLatency() => $_has(3);
   @$pb.TagNumber(4)
   void clearReadLatency() => $_clearField(4);
+
+  /// Whether the device reports the attribute's value, so that a report can confirm a
+  /// write. Unset: not stated, read as reporting it.
+  ///
+  /// False: the device applies a write but never reports the attribute, so nothing will
+  /// ever confirm one. A producer reports the written value as VALUE_PROVENANCE_OPTIMISTIC
+  /// once the write is delivered to the device (device.v1.PropertyUpdate), and MUST NOT
+  /// roll it back for want of a confirmation. A consumer says that the value was sent and
+  /// cannot be confirmed, and MUST NOT wait for a confirmation that will not come.
+  @$pb.TagNumber(5)
+  $core.bool get reportsBack => $_getBF(4);
+  @$pb.TagNumber(5)
+  set reportsBack($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasReportsBack() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearReportsBack() => $_clearField(5);
 }
 
 /// The device holds a written value until something writes it again: through the writer's
