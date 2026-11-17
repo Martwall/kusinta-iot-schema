@@ -1078,8 +1078,8 @@ message HeatCurveLimit {
   // limit says that a home limits, and the reason, and nothing of which.
   bool home_withheld = 6;
 
-  // What kind of zone limits. Given whoever the limit is given to, home_withheld or not: it names
-  // no zone.
+  // What kind of zone limits. UNSPECIFIED where home_withheld, as floor_zone_ids_together is
+  // empty there: which homes have floor heating can say which home limits.
   HeatCurveZoneKind zone_kind = 7;
 
   // The floor zones (FloorZone.zone_id) judged as one, where zone_kind is FLOOR_ZONES_TOGETHER:
@@ -1091,8 +1091,8 @@ message HeatCurveLimit {
 // The kind of zone that limits a heat curve (HeatCurveLimit.zone_kind). A closed list that grows
 // only by a release of this schema.
 enum HeatCurveZoneKind {
-  // Not known, or a kind this client's schema does not know: a client reads floor_zone_id and
-  // floor_zone_ids_together as they stand.
+  // Not known, withheld (HeatCurveLimit.home_withheld), or a kind this client's schema does not
+  // know: a client reads floor_zone_id and floor_zone_ids_together as they stand.
   HEAT_CURVE_ZONE_KIND_UNSPECIFIED = 0;
 
   // A radiator valve, judged by its opening.
@@ -1536,7 +1536,11 @@ message HeatCurveApplied {
 // because its own room's target is high, rather than because the house needs the supply, a lower
 // target in that room would let the curve come down. The gateway suggests it to the household:
 // lowering that room to suggested_target_centidegrees would let the curve come down by about
-// curve_lowered_by_centidegrees in the bands named. It is the household's comfort: the gateway
+// curve_lowered_by_centidegrees in the bands named. It suggests one only where the room's target
+// is above the median of the targets of the home's rooms that have one, suggesting that median,
+// or 0.5 °C below the room's target where the median is further down; and only where that would
+// let the curve come down by at least 1 °C in at least one band. Otherwise it suggests none for
+// the room. It is the household's comfort: the gateway
 // never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
 // household acts on it by setting the room's target as it sets any target, or declines it
 // (webrtc.v1.DeclineHeatCurve, by its suggestion_id). A suggestion_id is new only on a material
@@ -1558,11 +1562,13 @@ message HeatCurveRoomTargetSuggestion {
   kusinta.iot.identity.v1.SpaceId room_id = 2;
   sint32 target_centidegrees = 3;
 
-  // The target suggested, in centidegrees: lower than target_centidegrees.
+  // The target suggested, in centidegrees: the median of the home's room targets, at most 50
+  // below target_centidegrees (ROOM TARGETS).
   sint32 suggested_target_centidegrees = 4;
 
-  // About how far the curve could come down with the target suggested, in centidegrees, in the
-  // bands named. Unset where not known.
+  // About how far the curve could come down with the target suggested, in the bands named:
+  // rounded to whole degrees, in centidegrees (a multiple of 100, at least 100), since a finer
+  // figure hints at the zones of another home on the plant. Unset where not known.
   optional sint32 curve_lowered_by_centidegrees = 5;
 
   // The bands it would come down in, by their outdoor_from_centidegrees (HeatCurveBand), coldest
