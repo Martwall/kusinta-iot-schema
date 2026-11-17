@@ -1566,6 +1566,49 @@ message GetHeatCurveView {
   }
 }
 
+// Applies a plant's heat curve suggestion (heating.v1 HEAT CURVE, APPLYING), answered with
+// heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by plant_id gives it, with the
+// apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO APPLIES IT) names; anyone
+// else, and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
+// Refused as FAILED_PRECONDITION with metadata:
+//   {"reason": "suggestion_changed"}  suggestion_id is not the plant's suggestion as it stands:
+//                                     a client reads the view again and shows what changed;
+//   {"reason": "not_writable"}        mode WRITTEN where the heat source takes no write of the
+//                                     suggestion's settings (HeatCurveSuggestion.writable);
+//   {"reason": "nothing_to_revert"}   revert where no apply has settings to set back.
+// A mode other than WRITTEN or BY_HAND is refused as INVALID_REQUEST with metadata
+// {"reason": "mode"}. A write the heat source does not take is refused as UNAVAILABLE with
+// metadata {"reason": "write_failed"}, and nothing is recorded as applied. Applying a declined
+// suggestion withdraws its decline.
+message ApplyHeatCurve {
+  string plant_id = 1;
+
+  // The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id). Ignored
+  // with revert.
+  string suggestion_id = 2;
+
+  // WRITTEN writes it to the heat source; BY_HAND confirms it was set by hand there.
+  kusinta.iot.heating.v1.HeatCurveApplyMode mode = 3;
+
+  // Sets back the settings the last apply replaced (HeatCurveApplied.settings_before), in mode,
+  // as a correction: recorded as an apply of its own.
+  bool revert = 4;
+}
+
+// Declines a plant's heat curve suggestion, or withdraws a decline (heating.v1 HEAT CURVE,
+// SUGGESTION), answered with heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused
+// as ApplyHeatCurve is, suggestion_changed included. Declining a declined suggestion, and
+// withdrawing a decline that is not there, change nothing and are answered as it stands.
+message DeclineHeatCurve {
+  string plant_id = 1;
+
+  // The suggestion declined, as the view gave it (HeatCurveSuggestion.suggestion_id).
+  string suggestion_id = 2;
+
+  // false declines; true withdraws the decline, so that the suggestion is open again.
+  bool withdraw = 3;
+}
+
 // Asks for a nonce to link one home's account at a third-party service
 // (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 // (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -1917,5 +1960,8 @@ message ManagementRequest {
     // DeprovisionDevice and ListProvisionedDevices.
     DeprovisionDevice deprovision_device = 86;
     ListProvisionedDevices list_provisioned_devices = 87;
+    // Applying or declining a heat curve suggestion; see heating.v1 HEAT CURVE, APPLYING.
+    ApplyHeatCurve apply_heat_curve = 88;
+    DeclineHeatCurve decline_heat_curve = 89;
   }
 }

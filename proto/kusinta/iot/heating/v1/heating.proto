@@ -976,21 +976,30 @@ message EnergyPriceAdder {
 // WHAT IT SHOWS (HeatCurveView). The plant's quarter hours over a window, by bands of outdoor
 // temperature: per band, the typical calculated and measured supply, the add-on heat's use,
 // and the zone that needed the most, which is what limits the curve (HeatCurveLimit). An
-// opening is a zone's: a floor zone's duty, the share of a quarter hour its output held it
-// heating, or a radiator valve's opening, in thousandths. The most demanding zone of a band is
+// opening is a zone's, in thousandths: a radiator valve's opening, never judged by the valve's
+// own probe; or a floor zone's steady duty, the share of the 24 hours up to a quarter hour in
+// which its output held it heating. A floor switched on and off recovers in long runs fully on
+// whatever its supply, so its duty within one quarter hour says little of the supply it needs,
+// and its 24-hour mean does. Zones whose outputs switch together count once, as one zone. The
+// most demanding zone of a band is
 // the one whose opening, at a high percentile of the band's quarter hours
 // (HeatCurveView.opening_percentile), is highest: not the average, since one zone left short is
 // what a lower curve would cost. The curve could come down while the most demanding zone of the
 // coldest band seen opens at most the gateway's threshold (HeatCurveView.threshold_permille,
 // 850 for 85 %), which leaves it headroom to recover after a block or a setback. A zone's
-// quarter hours in which a price rule or a commissioning test drove it, or its room's window was
-// open, are left out of its openings. A quarter hour in which an external input moved the curve
+// quarter hours in which a price rule or a commissioning test drove it, its room's window was
+// open, or its room was above its target, are left out of its openings: a zone working hard in a
+// room already warm points to its own regulation, not to the curve. A quarter hour in which an
+// external input moved the curve
 // for any part of it (device.v1.HeatSourceReadings.external_adjustment_active), as an away
 // switch does, is left out of the view altogether: its calculated supply was off the curve, and
 // its openings answer another supply. The heat source made hot water in a quarter hour where it
 // reported so (HeatSourceReadings.producing) or where the gateway detected a charge of the tank
-// itself, as it must for a heat source that reports no production. The view observes: it names
-// no new curve, and the gateway sets nothing on the heat source by it.
+// itself, as it must for a heat source that reports no production. The 24 hours after any change
+// to the curve settings (curve_settings_changed_at) are left out too, while the zones settle;
+// quarter hours before it are kept, each judged by the supply it actually got. The bands
+// observe; what the curve could be is OPTIMISED CURVE, and the gateway sets a curve on the heat
+// source only as APPLYING says.
 //
 // WHO SEES IT, given in reply to webrtc.v1.GetHeatCurveView:
 //   * a plant in a home: its household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN),
@@ -1073,7 +1082,8 @@ message HeatCurveBand {
   sint32 outdoor_to_centidegrees = 2;
 
   // The quarter hours of the window whose outdoor mean fell in the band, leaving out those in
-  // which an external input moved the curve (WHAT IT SHOWS).
+  // which an external input moved the curve and those in the 24 hours after a change to the
+  // curve settings (WHAT IT SHOWS).
   uint32 quarters = 3;
 
   // The median over the band's quarter hours of the calculated supply and of the measured
@@ -1105,8 +1115,8 @@ message HeatCurveView {
   string plant_name = 2;
 
   // The quarter hours counted, [window_from, window_to): a window of the gateway's choice, such
-  // as the last 28 days, starting no earlier than the curve settings last changed
-  // (curve_settings_changed_at), so that the bands judge the curve in force.
+  // as the last 28 days. It spans changes to the curve settings, less the 24 hours after each
+  // (WHAT IT SHOWS).
   google.protobuf.Timestamp window_from = 3;
   google.protobuf.Timestamp window_to = 4;
 
@@ -1136,12 +1146,293 @@ message HeatCurveView {
   google.protobuf.Timestamp curve_settings_changed_at = 9;
 
   // Set where the recipient is given the plant's limits alone (WHO SEES IT): the bands' supplies
-  // and add-on figures and the curve settings are left out, so that their absence is not read as
-  // not known.
+  // and add-on figures, the curve settings, the optimised curve, the suggestion and the last
+  // apply are left out, so that their absence is not read as not known.
   bool figures_withheld = 10;
+
+  // What the curve could be (OPTIMISED CURVE). Unset where the gateway cannot work one out yet,
+  // as with no band judged, and where figures are withheld.
+  HeatCurveOptimised optimised = 11;
+
+  // What the gateway suggests setting (SUGGESTION). Unset where it suggests nothing: the curve
+  // in force is as the optimised one would set it, or no change would save; and where figures
+  // are withheld. A declined suggestion is still given, marked so (HeatCurveSuggestion.declined).
+  HeatCurveSuggestion suggestion = 12;
+
+  // The last curve applied to the heat source, and whether it is verified (APPLYING). Unset
+  // where none was, and where figures are withheld.
+  HeatCurveApplied last_applied = 13;
 }
 
 // The answer to webrtc.v1.GetHeatCurveView.
 message HeatCurveViews {
   repeated HeatCurveView views = 1;
+}
+
+// OPTIMISED CURVE (HeatCurveView.optimised). What the plant's curve could be: a generic curve,
+// the supply for each outdoor temperature at 5 °C steps from −30 °C to +30 °C, by the outdoor
+// temperature the heat source itself reads. A point is the supply at which the plant's most
+// demanding zone would open no more than HeatCurveView.threshold_permille at that outdoor
+// temperature, worked out from each zone's openings and the supply it got (WHAT IT SHOWS). The
+// curve is held between the heat source's lowest and highest supply
+// (HeatCurveOptimised.min_supply_centidegrees, max_supply_centidegrees): flat at the one below
+// it and at the other above it.
+//
+// CONFIDENCE. A point is SEEN where the window holds enough days in its band for the gateway to
+// judge it, and ESTIMATED otherwise: extrapolated from the seen points with a heat loss fitted to
+// the building and the standard curves of its emitters. An estimated point is cautious: it is
+// lowered by part of what the extrapolation says, never all of it, and never below the current
+// curve at that point until its band is seen. As bands are seen their points are confirmed, and
+// may move.
+//
+// SUGGESTION (HeatCurveView.suggestion). Where setting the optimised curve would save against
+// the one in force, the gateway suggests it, with the saving:
+//   * CURVE: set the heat source's own curve to the optimised one, and its shift to 0. An own
+//     curve is meant with no shift: a shift left in place moves every point of it, and a client
+//     says so.
+//   * SHIFT: early, before enough bands are seen for a curve, where the curve is clearly higher
+//     (or lower) than needed: move the shift one step. A curve follows as bands are seen.
+// A suggestion carries an identity (suggestion_id) that changes whenever what it would set
+// changes, so that an apply or a decline acts on what was shown. After a curve is applied, each
+// point newly confirmed that would set it otherwise is suggested in turn, and named
+// (newly_confirmed_outdoor_centidegrees): the reminder to set it. A client repeats an open
+// suggestion gently, as a reminder, until it is applied or declined; a declined one it shows
+// only where asked, and does not repeat.
+//
+// APPLYING (webrtc.v1.ApplyHeatCurve). A suggestion is applied by writing it to the heat source,
+// where the heat source takes a write of those settings (HeatCurveSuggestion.writable), or by
+// confirming that it was set by hand. The gateway then verifies it (HeatCurveApplied):
+//   * by reading the curve settings back, where the heat source reports them;
+//   * otherwise by the measured supply against the curve applied, at the outdoor temperatures
+//     seen since, leaving out the 24 hours after it;
+//   * otherwise not at all: the confirmation is all there is (UNVERIFIABLE).
+// A setting found otherwise than applied is named (HeatCurveMismatch), such as a shift left at
+// other than 0. An apply is corrected by another: a newer suggestion applied, or the settings an
+// apply replaced set back (webrtc.v1.ApplyHeatCurve.revert). Where a gateway applies a
+// suggestion itself, writing what the heat source takes, it records the apply as its own
+// (HEAT_CURVE_APPLY_MODE_GATEWAY) and suggests the rest; how a payer turns that off is reserved
+// for a later release of this schema.
+//
+// WHO APPLIES IT (webrtc.v1.ApplyHeatCurve, webrtc.v1.DeclineHeatCurve): whoever is given the
+// view with its figures (HEAT CURVE, WHO SEES IT). For a plant in a home, its household admins
+// and an installer under a commissioning grant covering the home; for a plant outside homes, the
+// owner organisation and an installer under a commissioning grant covering it. The optimised
+// curve and the suggestion are worked out from every zone the plant heats, homes included, and
+// are given to the owner organisation however many homes share the plant: they name no zone, no
+// home and no reason, and no figure of any home.
+
+// How sure the gateway is of one point of an optimised curve (CONFIDENCE). A closed list that
+// grows only by a release of this schema.
+enum HeatCurvePointConfidence {
+  // Not known, or a confidence this client's schema does not know: read as estimated.
+  HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED = 0;
+
+  // Enough days seen in the point's band to judge it.
+  HEAT_CURVE_POINT_CONFIDENCE_SEEN = 1;
+
+  // Extrapolated from the seen points, cautiously (CONFIDENCE).
+  HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED = 2;
+}
+
+// One point of an optimised curve.
+message HeatCurvePoint {
+  // The outdoor temperature, in centidegrees: a multiple of 500 from −3000 to +3000.
+  sint32 outdoor_centidegrees = 1;
+
+  // The supply the optimised curve sets at it, in centidegrees, held between the heat source's
+  // lowest and highest supply (OPTIMISED CURVE).
+  sint32 supply_centidegrees = 2;
+
+  // The supply the curve in force sets at it, in centidegrees, as worked out from the curve
+  // settings read (HeatCurveView.curve_settings). Unset where not known.
+  optional sint32 current_supply_centidegrees = 3;
+
+  HeatCurvePointConfidence confidence = 4;
+}
+
+// What a plant's curve could be (OPTIMISED CURVE).
+message HeatCurveOptimised {
+  // Coldest first, every 5 °C from −30 °C to +30 °C: thirteen points.
+  repeated HeatCurvePoint points = 1;
+
+  // The lowest and the highest supply the curve is held between, in centidegrees: the heat
+  // source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
+  // stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+  // as radiators alone do, theirs. Unset where not known: the curve is then not held at that
+  // end.
+  optional sint32 min_supply_centidegrees = 2;
+  optional sint32 max_supply_centidegrees = 3;
+}
+
+// The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release
+// of this schema.
+enum HeatCurveSuggestionKind {
+  // A kind this client's schema does not know: a client shows the suggestion's settings and
+  // saving, and offers no apply it cannot describe.
+  HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED = 0;
+
+  // Set the own curve to the optimised one, with the shift at 0.
+  HEAT_CURVE_SUGGESTION_KIND_CURVE = 1;
+
+  // Move the shift one step, before a curve can be suggested.
+  HEAT_CURVE_SUGGESTION_KIND_SHIFT = 2;
+}
+
+// What the gateway suggests setting on a plant's heat source (SUGGESTION).
+message HeatCurveSuggestion {
+  // Changes whenever settings changes. Named by webrtc.v1.ApplyHeatCurve and DeclineHeatCurve.
+  string suggestion_id = 1;
+
+  HeatCurveSuggestionKind kind = 2;
+
+  // The heat source's curve settings that applying it sets, in the heat source's own format
+  // (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
+  // own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
+  // each taking the optimised curve's supply at its outdoor temperature. For a shift:
+  // heating_curve_offset, one step from the one in force.
+  kusinta.iot.device.v1.HeatSourceReadings settings = 3;
+
+  // Whether the heat source takes a write of settings, so that a client offers to write them;
+  // otherwise it guides setting them by hand, and asks for the confirmation.
+  bool writable = 4;
+
+  // Where the suggestion follows an applied curve: the outdoor temperatures of the points
+  // confirmed since, whose supply it would set otherwise (SUGGESTION), coldest first, in
+  // centidegrees. Empty for a first suggestion.
+  repeated sint32 newly_confirmed_outdoor_centidegrees = 5;
+
+  // The saving, over a year of the outdoor temperatures the gateway takes as typical for the
+  // building: in the heat source's electric energy, in kilowatt-hours; and in millionths of a
+  // euro, that energy priced as energy a rule avoids is (PRICE BASIS) at the window's mean
+  // price. Each unset where not known.
+  optional uint32 saving_kwh_per_year = 6;
+  optional sint64 saving_micro_eur_per_year = 7;
+
+  // The same saving as thousandths of the plant's heating energy. Unset where not known.
+  optional uint32 saving_permille = 8;
+
+  // When the suggestion was first made with its present settings.
+  google.protobuf.Timestamp suggested_at = 9;
+
+  // Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
+  // for this suggestion: one with other settings is open again.
+  bool declined = 10;
+}
+
+// How a curve came to be applied (APPLYING). A closed list that grows only by a release of this
+// schema.
+enum HeatCurveApplyMode {
+  HEAT_CURVE_APPLY_MODE_UNSPECIFIED = 0;
+
+  // Written to the heat source at someone's request.
+  HEAT_CURVE_APPLY_MODE_WRITTEN = 1;
+
+  // Set by hand at the heat source, and confirmed as set.
+  HEAT_CURVE_APPLY_MODE_BY_HAND = 2;
+
+  // Written by the gateway itself, unasked (APPLYING). Never requested.
+  HEAT_CURVE_APPLY_MODE_GATEWAY = 3;
+}
+
+// Whether an applied curve is the one in force (APPLYING). A closed list that grows only by a
+// release of this schema.
+enum HeatCurveVerification {
+  // A state this client's schema does not know: read as not yet verified.
+  HEAT_CURVE_VERIFICATION_UNSPECIFIED = 0;
+
+  // Not yet known: waiting for a read-back, or for enough quarter hours since the apply.
+  HEAT_CURVE_VERIFICATION_PENDING = 1;
+
+  // Found as applied (HeatCurveApplied.verified_by says how).
+  HEAT_CURVE_VERIFICATION_VERIFIED = 2;
+
+  // Found otherwise than applied (HeatCurveApplied.mismatches says how).
+  HEAT_CURVE_VERIFICATION_MISMATCH = 3;
+
+  // Neither read back nor measurable: the confirmation is all there is.
+  HEAT_CURVE_VERIFICATION_UNVERIFIABLE = 4;
+}
+
+// How an applied curve was verified. A closed list that grows only by a release of this schema.
+enum HeatCurveVerifiedBy {
+  HEAT_CURVE_VERIFIED_BY_UNSPECIFIED = 0;
+
+  // The heat source's curve settings, read back.
+  HEAT_CURVE_VERIFIED_BY_READ_BACK = 1;
+
+  // The measured supply against the curve applied, at the outdoor temperatures seen since.
+  HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY = 2;
+}
+
+// What was found otherwise than applied. A closed list that grows only by a release of this
+// schema.
+enum HeatCurveMismatchKind {
+  // A kind this client's schema does not know: a client says the curve is not as applied.
+  HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED = 0;
+
+  // The shift is not 0 under an own curve (HeatCurveMismatch.found_offset).
+  HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO = 1;
+
+  // The own curve is not the one in force.
+  HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE = 2;
+
+  // One point of the own curve, read back, is set otherwise (outdoor_centidegrees,
+  // expected_supply_centidegrees, found_supply_centidegrees).
+  HEAT_CURVE_MISMATCH_KIND_POINT = 3;
+
+  // The shift, read back, is not the one a shift suggestion set (found_offset).
+  HEAT_CURVE_MISMATCH_KIND_SHIFT = 4;
+
+  // The measured supply is off the curve applied at an outdoor temperature seen since
+  // (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
+  // measured).
+  HEAT_CURVE_MISMATCH_KIND_SUPPLY = 5;
+}
+
+// One setting found otherwise than applied.
+message HeatCurveMismatch {
+  HeatCurveMismatchKind kind = 1;
+
+  // The outdoor temperature, in centidegrees, of a point or supply found otherwise.
+  optional sint32 outdoor_centidegrees = 2;
+
+  // The supply applied there, and the supply found, in centidegrees.
+  optional sint32 expected_supply_centidegrees = 3;
+  optional sint32 found_supply_centidegrees = 4;
+
+  // The shift found, in the heat source's own steps (device.v1.HeatSourceReadings
+  // .heating_curve_offset).
+  optional sint32 found_offset = 5;
+}
+
+// The last curve applied to a plant's heat source, and whether it is verified (APPLYING).
+message HeatCurveApplied {
+  // The suggestion applied. Empty for a revert.
+  string suggestion_id = 1;
+
+  HeatCurveApplyMode mode = 2;
+
+  google.protobuf.Timestamp applied_at = 3;
+
+  // The curve settings applied, as HeatCurveSuggestion.settings states them.
+  kusinta.iot.device.v1.HeatSourceReadings settings = 4;
+
+  // The same fields as they were read before the apply, each where read: what a revert sets
+  // back, and what the curve's before and after are compared by.
+  kusinta.iot.device.v1.HeatSourceReadings settings_before = 5;
+
+  // Set where this apply set back the settings an earlier one replaced
+  // (webrtc.v1.ApplyHeatCurve.revert).
+  bool revert = 6;
+
+  HeatCurveVerification verification = 7;
+
+  // How it was verified, where VERIFIED.
+  HeatCurveVerifiedBy verified_by = 8;
+
+  // When the verification last changed. Unset while PENDING.
+  google.protobuf.Timestamp verified_at = 9;
+
+  // What was found otherwise, where MISMATCH: each setting once.
+  repeated HeatCurveMismatch mismatches = 10;
 }
