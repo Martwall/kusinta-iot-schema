@@ -114,6 +114,7 @@ class HeatCurveVerifiedBy(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     HEAT_CURVE_VERIFIED_BY_UNSPECIFIED: _ClassVar[HeatCurveVerifiedBy]
     HEAT_CURVE_VERIFIED_BY_READ_BACK: _ClassVar[HeatCurveVerifiedBy]
     HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY: _ClassVar[HeatCurveVerifiedBy]
+    HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY: _ClassVar[HeatCurveVerifiedBy]
 
 class HeatCurveMismatchKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -180,6 +181,7 @@ HEAT_CURVE_VERIFICATION_UNVERIFIABLE: HeatCurveVerification
 HEAT_CURVE_VERIFIED_BY_UNSPECIFIED: HeatCurveVerifiedBy
 HEAT_CURVE_VERIFIED_BY_READ_BACK: HeatCurveVerifiedBy
 HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY: HeatCurveVerifiedBy
+HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY: HeatCurveVerifiedBy
 HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED: HeatCurveMismatchKind
 HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO: HeatCurveMismatchKind
 HEAT_CURVE_MISMATCH_KIND_OWN_CURVE_NOT_IN_FORCE: HeatCurveMismatchKind

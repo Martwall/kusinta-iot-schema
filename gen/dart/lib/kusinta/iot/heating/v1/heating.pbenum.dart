@@ -537,19 +537,27 @@ class HeatCurveVerifiedBy extends $pb.ProtobufEnum {
       HeatCurveVerifiedBy._(
           1, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFIED_BY_READ_BACK');
 
-  /// The measured supply against the curve applied, at the outdoor temperatures seen since.
+  /// The measured supply against the curve applied, at the outdoor temperatures seen since, where
+  /// the heat source reports no calculated supply (APPLYING).
   static const HeatCurveVerifiedBy HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY =
       HeatCurveVerifiedBy._(
           2, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY');
+
+  /// The heat source's calculated supply against the curve applied, at the outdoor temperatures
+  /// seen since (APPLYING).
+  static const HeatCurveVerifiedBy HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY =
+      HeatCurveVerifiedBy._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY');
 
   static const $core.List<HeatCurveVerifiedBy> values = <HeatCurveVerifiedBy>[
     HEAT_CURVE_VERIFIED_BY_UNSPECIFIED,
     HEAT_CURVE_VERIFIED_BY_READ_BACK,
     HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY,
+    HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY,
   ];
 
   static final $core.List<HeatCurveVerifiedBy?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
   static HeatCurveVerifiedBy? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
@@ -588,9 +596,10 @@ class HeatCurveMismatchKind extends $pb.ProtobufEnum {
       HeatCurveMismatchKind._(
           4, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_SHIFT');
 
-  /// The measured supply is off the curve applied at an outdoor temperature seen since
-  /// (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
-  /// measured).
+  /// The supply is off the curve applied at an outdoor temperature seen since, by the quarter
+  /// hours APPLYING counts (outdoor_centidegrees, expected_supply_centidegrees,
+  /// found_supply_centidegrees: the median calculated supply, or measured where none is
+  /// calculated).
   static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_SUPPLY =
       HeatCurveMismatchKind._(
           5, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_SUPPLY');

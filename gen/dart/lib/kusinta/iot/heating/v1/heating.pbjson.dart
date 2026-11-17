@@ -248,6 +248,7 @@ const HeatCurveVerifiedBy$json = {
     {'1': 'HEAT_CURVE_VERIFIED_BY_UNSPECIFIED', '2': 0},
     {'1': 'HEAT_CURVE_VERIFIED_BY_READ_BACK', '2': 1},
     {'1': 'HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY', '2': 2},
+    {'1': 'HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY', '2': 3},
   ],
 };
 
@@ -255,7 +256,8 @@ const HeatCurveVerifiedBy$json = {
 final $typed_data.Uint8List heatCurveVerifiedByDescriptor = $convert.base64Decode(
     'ChNIZWF0Q3VydmVWZXJpZmllZEJ5EiYKIkhFQVRfQ1VSVkVfVkVSSUZJRURfQllfVU5TUEVDSU'
     'ZJRUQQABIkCiBIRUFUX0NVUlZFX1ZFUklGSUVEX0JZX1JFQURfQkFDSxABEioKJkhFQVRfQ1VS'
-    'VkVfVkVSSUZJRURfQllfTUVBU1VSRURfU1VQUExZEAI=');
+    'VkVfVkVSSUZJRURfQllfTUVBU1VSRURfU1VQUExZEAISLAooSEVBVF9DVVJWRV9WRVJJRklFRF'
+    '9CWV9DQUxDVUxBVEVEX1NVUFBMWRAD');
 
 @$core.Deprecated('Use heatCurveMismatchKindDescriptor instead')
 const HeatCurveMismatchKind$json = {

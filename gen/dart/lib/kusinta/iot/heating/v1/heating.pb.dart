@@ -3951,7 +3951,8 @@ class HeatCurvePoint extends $pb.GeneratedMessage {
   void clearSupplyCentidegrees() => $_clearField(2);
 
   /// The supply the curve in force sets at it, in centidegrees, as worked out from the curve
-  /// settings read (HeatCurveView.curve_settings). Unset where not known.
+  /// settings read (HeatCurveView.curve_settings). Unset where not known: an estimated point is
+  /// then not lowered (CONFIDENCE).
   @$pb.TagNumber(3)
   $core.int get currentSupplyCentidegrees => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -4252,6 +4253,7 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
 
   /// Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
   /// for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
+  /// For a heat source in a home, the home's wipe and a new household's residency clear it.
   @$pb.TagNumber(10)
   $core.bool get declined => $_getBF(9);
   @$pb.TagNumber(10)

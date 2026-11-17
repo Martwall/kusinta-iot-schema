@@ -1696,7 +1696,8 @@ export declare type HeatCurvePoint = Message<"kusinta.iot.heating.v1.HeatCurvePo
 
   /**
    * The supply the curve in force sets at it, in centidegrees, as worked out from the curve
-   * settings read (HeatCurveView.curve_settings). Unset where not known.
+   * settings read (HeatCurveView.curve_settings). Unset where not known: an estimated point is
+   * then not lowered (CONFIDENCE).
    *
    * @generated from field: optional sint32 current_supply_centidegrees = 3;
    */
@@ -1832,6 +1833,7 @@ export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCu
   /**
    * Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
    * for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
+   * For a heat source in a home, the home's wipe and a new household's residency clear it.
    *
    * @generated from field: bool declined = 10;
    */
@@ -2562,11 +2564,20 @@ export enum HeatCurveVerifiedBy {
   READ_BACK = 1,
 
   /**
-   * The measured supply against the curve applied, at the outdoor temperatures seen since.
+   * The measured supply against the curve applied, at the outdoor temperatures seen since, where
+   * the heat source reports no calculated supply (APPLYING).
    *
    * @generated from enum value: HEAT_CURVE_VERIFIED_BY_MEASURED_SUPPLY = 2;
    */
   MEASURED_SUPPLY = 2,
+
+  /**
+   * The heat source's calculated supply against the curve applied, at the outdoor temperatures
+   * seen since (APPLYING).
+   *
+   * @generated from enum value: HEAT_CURVE_VERIFIED_BY_CALCULATED_SUPPLY = 3;
+   */
+  CALCULATED_SUPPLY = 3,
 }
 
 /**
@@ -2618,9 +2629,10 @@ export enum HeatCurveMismatchKind {
   SHIFT = 4,
 
   /**
-   * The measured supply is off the curve applied at an outdoor temperature seen since
-   * (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
-   * measured).
+   * The supply is off the curve applied at an outdoor temperature seen since, by the quarter
+   * hours APPLYING counts (outdoor_centidegrees, expected_supply_centidegrees,
+   * found_supply_centidegrees: the median calculated supply, or measured where none is
+   * calculated).
    *
    * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_SUPPLY = 5;
    */
