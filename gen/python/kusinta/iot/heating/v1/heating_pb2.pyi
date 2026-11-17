@@ -76,6 +76,13 @@ class HeatCurveLimitReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE: _ClassVar[HeatCurveLimitReason]
     HEAT_CURVE_LIMIT_REASON_DEMAND: _ClassVar[HeatCurveLimitReason]
 
+class HeatCurveZoneKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    HEAT_CURVE_ZONE_KIND_UNSPECIFIED: _ClassVar[HeatCurveZoneKind]
+    HEAT_CURVE_ZONE_KIND_RADIATOR: _ClassVar[HeatCurveZoneKind]
+    HEAT_CURVE_ZONE_KIND_FLOOR_ZONE: _ClassVar[HeatCurveZoneKind]
+    HEAT_CURVE_ZONE_KIND_FLOOR_ZONES_TOGETHER: _ClassVar[HeatCurveZoneKind]
+
 class HeatCurveAutomaticSavings(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED: _ClassVar[HeatCurveAutomaticSavings]
@@ -160,6 +167,10 @@ ENERGY_PRICE_ADDER_SOURCE_STATED: EnergyPriceAdderSource
 HEAT_CURVE_LIMIT_REASON_UNSPECIFIED: HeatCurveLimitReason
 HEAT_CURVE_LIMIT_REASON_HYDRAULIC_BALANCE: HeatCurveLimitReason
 HEAT_CURVE_LIMIT_REASON_DEMAND: HeatCurveLimitReason
+HEAT_CURVE_ZONE_KIND_UNSPECIFIED: HeatCurveZoneKind
+HEAT_CURVE_ZONE_KIND_RADIATOR: HeatCurveZoneKind
+HEAT_CURVE_ZONE_KIND_FLOOR_ZONE: HeatCurveZoneKind
+HEAT_CURVE_ZONE_KIND_FLOOR_ZONES_TOGETHER: HeatCurveZoneKind
 HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED: HeatCurveAutomaticSavings
 HEAT_CURVE_AUTOMATIC_SAVINGS_ON: HeatCurveAutomaticSavings
 HEAT_CURVE_AUTOMATIC_SAVINGS_OFF: HeatCurveAutomaticSavings
@@ -551,20 +562,24 @@ class EnergyPriceAdder(_message.Message):
     def __init__(self, payer: _Optional[_Union[EnergyPricePayer, _Mapping]] = ..., terms: _Optional[_Union[EnergyPriceTerms, _Mapping]] = ..., micro_per_kwh: _Optional[int] = ..., source: _Optional[_Union[EnergyPriceAdderSource, str]] = ..., default_micro_per_kwh: _Optional[int] = ...) -> None: ...
 
 class HeatCurveLimit(_message.Message):
-    __slots__ = ("reason", "opening_permille", "has_headroom", "room_id", "floor_zone_id", "home_withheld")
+    __slots__ = ("reason", "opening_permille", "has_headroom", "room_id", "floor_zone_id", "home_withheld", "zone_kind", "floor_zone_ids_together")
     REASON_FIELD_NUMBER: _ClassVar[int]
     OPENING_PERMILLE_FIELD_NUMBER: _ClassVar[int]
     HAS_HEADROOM_FIELD_NUMBER: _ClassVar[int]
     ROOM_ID_FIELD_NUMBER: _ClassVar[int]
     FLOOR_ZONE_ID_FIELD_NUMBER: _ClassVar[int]
     HOME_WITHHELD_FIELD_NUMBER: _ClassVar[int]
+    ZONE_KIND_FIELD_NUMBER: _ClassVar[int]
+    FLOOR_ZONE_IDS_TOGETHER_FIELD_NUMBER: _ClassVar[int]
     reason: HeatCurveLimitReason
     opening_permille: int
     has_headroom: bool
     room_id: _identity_pb2.SpaceId
     floor_zone_id: str
     home_withheld: bool
-    def __init__(self, reason: _Optional[_Union[HeatCurveLimitReason, str]] = ..., opening_permille: _Optional[int] = ..., has_headroom: _Optional[bool] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., floor_zone_id: _Optional[str] = ..., home_withheld: _Optional[bool] = ...) -> None: ...
+    zone_kind: HeatCurveZoneKind
+    floor_zone_ids_together: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, reason: _Optional[_Union[HeatCurveLimitReason, str]] = ..., opening_permille: _Optional[int] = ..., has_headroom: _Optional[bool] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., floor_zone_id: _Optional[str] = ..., home_withheld: _Optional[bool] = ..., zone_kind: _Optional[_Union[HeatCurveZoneKind, str]] = ..., floor_zone_ids_together: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class HeatCurveBand(_message.Message):
     __slots__ = ("outdoor_from_centidegrees", "outdoor_to_centidegrees", "quarters", "calculated_supply_centidegrees", "supply_centidegrees", "add_on_heat_wh", "add_on_running_permille", "limit")
@@ -587,7 +602,7 @@ class HeatCurveBand(_message.Message):
     def __init__(self, outdoor_from_centidegrees: _Optional[int] = ..., outdoor_to_centidegrees: _Optional[int] = ..., quarters: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., add_on_heat_wh: _Optional[int] = ..., add_on_running_permille: _Optional[int] = ..., limit: _Optional[_Union[HeatCurveLimit, _Mapping]] = ...) -> None: ...
 
 class HeatCurveView(_message.Message):
-    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings")
+    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions")
     PLANT_ID_FIELD_NUMBER: _ClassVar[int]
     PLANT_NAME_FIELD_NUMBER: _ClassVar[int]
     WINDOW_FROM_FIELD_NUMBER: _ClassVar[int]
@@ -602,6 +617,7 @@ class HeatCurveView(_message.Message):
     SUGGESTION_FIELD_NUMBER: _ClassVar[int]
     LAST_APPLIED_FIELD_NUMBER: _ClassVar[int]
     AUTOMATIC_SAVINGS_FIELD_NUMBER: _ClassVar[int]
+    ROOM_TARGET_SUGGESTIONS_FIELD_NUMBER: _ClassVar[int]
     plant_id: str
     plant_name: str
     window_from: _timestamp_pb2.Timestamp
@@ -616,7 +632,8 @@ class HeatCurveView(_message.Message):
     suggestion: HeatCurveSuggestion
     last_applied: HeatCurveApplied
     automatic_savings: HeatCurveAutomaticSavings
-    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ...) -> None: ...
+    room_target_suggestions: _containers.RepeatedCompositeFieldContainer[HeatCurveRoomTargetSuggestion]
+    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ...) -> None: ...
 
 class HeatCurveViews(_message.Message):
     __slots__ = ("views",)
@@ -709,3 +726,23 @@ class HeatCurveApplied(_message.Message):
     verified_at: _timestamp_pb2.Timestamp
     mismatches: _containers.RepeatedCompositeFieldContainer[HeatCurveMismatch]
     def __init__(self, suggestion_id: _Optional[str] = ..., mode: _Optional[_Union[HeatCurveApplyMode, str]] = ..., applied_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., settings_before: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., revert: _Optional[bool] = ..., verification: _Optional[_Union[HeatCurveVerification, str]] = ..., verified_by: _Optional[_Union[HeatCurveVerifiedBy, str]] = ..., verified_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., mismatches: _Optional[_Iterable[_Union[HeatCurveMismatch, _Mapping]]] = ...) -> None: ...
+
+class HeatCurveRoomTargetSuggestion(_message.Message):
+    __slots__ = ("suggestion_id", "room_id", "target_centidegrees", "suggested_target_centidegrees", "curve_lowered_by_centidegrees", "band_outdoor_from_centidegrees", "suggested_at", "declined")
+    SUGGESTION_ID_FIELD_NUMBER: _ClassVar[int]
+    ROOM_ID_FIELD_NUMBER: _ClassVar[int]
+    TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    SUGGESTED_TARGET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    CURVE_LOWERED_BY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    BAND_OUTDOOR_FROM_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    SUGGESTED_AT_FIELD_NUMBER: _ClassVar[int]
+    DECLINED_FIELD_NUMBER: _ClassVar[int]
+    suggestion_id: str
+    room_id: _identity_pb2.SpaceId
+    target_centidegrees: int
+    suggested_target_centidegrees: int
+    curve_lowered_by_centidegrees: int
+    band_outdoor_from_centidegrees: _containers.RepeatedScalarFieldContainer[int]
+    suggested_at: _timestamp_pb2.Timestamp
+    declined: bool
+    def __init__(self, suggestion_id: _Optional[str] = ..., room_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., target_centidegrees: _Optional[int] = ..., suggested_target_centidegrees: _Optional[int] = ..., curve_lowered_by_centidegrees: _Optional[int] = ..., band_outdoor_from_centidegrees: _Optional[_Iterable[int]] = ..., suggested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., declined: _Optional[bool] = ...) -> None: ...

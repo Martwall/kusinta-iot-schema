@@ -2733,7 +2733,10 @@ export declare const ApplyHeatCurveSchema: GenMessage<ApplyHeatCurve>;
 /**
  * Declines a plant's heat curve suggestion, or withdraws a decline (heating.v1 HEAT CURVE,
  * SUGGESTION), answered with heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused
- * as ApplyHeatCurve is, suggestion_changed included. Declining a declined suggestion, and
+ * as ApplyHeatCurve is, suggestion_changed included. A room-target suggestion
+ * (heating.v1.HeatCurveRoomTargetSuggestion) is declined the same way, by its suggestion_id, by
+ * the residents of the home its room lies in alone (heating.v1 HEAT CURVE, ROOM TARGETS), and
+ * answered with the views their home's reading gives them. Declining a declined suggestion, and
  * withdrawing a decline that is not there, change nothing and are answered as it stands.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeclineHeatCurve

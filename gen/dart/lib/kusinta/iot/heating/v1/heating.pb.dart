@@ -3235,6 +3235,8 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
     $0.SpaceId? roomId,
     $core.String? floorZoneId,
     $core.bool? homeWithheld,
+    HeatCurveZoneKind? zoneKind,
+    $core.Iterable<$core.String>? floorZoneIdsTogether,
   }) {
     final result = create();
     if (reason != null) result.reason = reason;
@@ -3243,6 +3245,9 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
     if (roomId != null) result.roomId = roomId;
     if (floorZoneId != null) result.floorZoneId = floorZoneId;
     if (homeWithheld != null) result.homeWithheld = homeWithheld;
+    if (zoneKind != null) result.zoneKind = zoneKind;
+    if (floorZoneIdsTogether != null)
+      result.floorZoneIdsTogether.addAll(floorZoneIdsTogether);
     return result;
   }
 
@@ -3273,6 +3278,12 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
         subBuilder: $0.SpaceId.create)
     ..aOS(5, _omitFieldNames ? '' : 'floorZoneId')
     ..aOB(6, _omitFieldNames ? '' : 'homeWithheld')
+    ..e<HeatCurveZoneKind>(
+        7, _omitFieldNames ? '' : 'zoneKind', $pb.PbFieldType.OE,
+        defaultOrMaker: HeatCurveZoneKind.HEAT_CURVE_ZONE_KIND_UNSPECIFIED,
+        valueOf: HeatCurveZoneKind.valueOf,
+        enumValues: HeatCurveZoneKind.values)
+    ..pPS(8, _omitFieldNames ? '' : 'floorZoneIdsTogether')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3329,7 +3340,8 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
   void clearHasHeadroom() => $_clearField(3);
 
   /// The room the zone heats: a radiator valve's room, or a floor zone's control room
-  /// (FloorZone.control_room_id). Unset where home_withheld.
+  /// (FloorZone.control_room_id). For floor zones judged as one (FLOOR_ZONES_TOGETHER), set only
+  /// where they share a control room. Unset where home_withheld.
   @$pb.TagNumber(4)
   $0.SpaceId get roomId => $_getN(3);
   @$pb.TagNumber(4)
@@ -3341,8 +3353,9 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   $0.SpaceId ensureRoomId() => $_ensure(3);
 
-  /// The floor zone (FloorZone.zone_id) where the opening is a floor zone's duty; empty for a
-  /// radiator valve, and where home_withheld.
+  /// The floor zone (FloorZone.zone_id) where the opening is one floor zone's duty
+  /// (HEAT_CURVE_ZONE_KIND_FLOOR_ZONE). Empty for a radiator valve, for floor zones judged as one
+  /// (floor_zone_ids_together names them), and where home_withheld: zone_kind tells which.
   @$pb.TagNumber(5)
   $core.String get floorZoneId => $_getSZ(4);
   @$pb.TagNumber(5)
@@ -3362,6 +3375,23 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
   $core.bool hasHomeWithheld() => $_has(5);
   @$pb.TagNumber(6)
   void clearHomeWithheld() => $_clearField(6);
+
+  /// What kind of zone limits. Given whoever the limit is given to, home_withheld or not: it names
+  /// no zone.
+  @$pb.TagNumber(7)
+  HeatCurveZoneKind get zoneKind => $_getN(6);
+  @$pb.TagNumber(7)
+  set zoneKind(HeatCurveZoneKind value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasZoneKind() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearZoneKind() => $_clearField(7);
+
+  /// The floor zones (FloorZone.zone_id) judged as one, where zone_kind is FLOOR_ZONES_TOGETHER:
+  /// zones whose outputs switch together count once (WHAT IT SHOWS). Empty otherwise, and where
+  /// home_withheld.
+  @$pb.TagNumber(8)
+  $pb.PbList<$core.String> get floorZoneIdsTogether => $_getList(7);
 }
 
 /// One band of outdoor temperature of a heat curve view, over the view's window.
@@ -3555,6 +3585,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     HeatCurveSuggestion? suggestion,
     HeatCurveApplied? lastApplied,
     HeatCurveAutomaticSavings? automaticSavings,
+    $core.Iterable<HeatCurveRoomTargetSuggestion>? roomTargetSuggestions,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3572,6 +3603,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (suggestion != null) result.suggestion = suggestion;
     if (lastApplied != null) result.lastApplied = lastApplied;
     if (automaticSavings != null) result.automaticSavings = automaticSavings;
+    if (roomTargetSuggestions != null)
+      result.roomTargetSuggestions.addAll(roomTargetSuggestions);
     return result;
   }
 
@@ -3618,6 +3651,9 @@ class HeatCurveView extends $pb.GeneratedMessage {
             HeatCurveAutomaticSavings.HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED,
         valueOf: HeatCurveAutomaticSavings.valueOf,
         enumValues: HeatCurveAutomaticSavings.values)
+    ..pc<HeatCurveRoomTargetSuggestion>(
+        15, _omitFieldNames ? '' : 'roomTargetSuggestions', $pb.PbFieldType.PM,
+        subBuilder: HeatCurveRoomTargetSuggestion.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3806,6 +3842,13 @@ class HeatCurveView extends $pb.GeneratedMessage {
   $core.bool hasAutomaticSavings() => $_has(13);
   @$pb.TagNumber(14)
   void clearAutomaticSavings() => $_clearField(14);
+
+  /// Where a room's own target holds the curve up, what lowering it would let the curve do (ROOM
+  /// TARGETS). Given only as ROOM TARGETS, WHO SEES THEM says: empty for anyone else, figures
+  /// withheld or not.
+  @$pb.TagNumber(15)
+  $pb.PbList<HeatCurveRoomTargetSuggestion> get roomTargetSuggestions =>
+      $_getList(14);
 }
 
 /// The answer to webrtc.v1.GetHeatCurveView.
@@ -4539,7 +4582,10 @@ class HeatCurveApplied extends $pb.GeneratedMessage {
   $5.HeatSourceReadings ensureSettings() => $_ensure(3);
 
   /// The same fields as they were read before the apply, each where read: what a revert sets
-  /// back, and what the curve's before and after are compared by.
+  /// back, and what the curve's before and after are compared by. Where the apply changed which
+  /// curve is in force (own_curve_in_force), also the numbered curve and its offset as they were
+  /// read before it (heating_curve, heating_curve_offset), each where read, so that a revert names
+  /// the curve to go back to.
   @$pb.TagNumber(5)
   $5.HeatSourceReadings get settingsBefore => $_getN(4);
   @$pb.TagNumber(5)
@@ -4596,6 +4642,187 @@ class HeatCurveApplied extends $pb.GeneratedMessage {
   /// What was found otherwise, where MISMATCH: each setting once.
   @$pb.TagNumber(10)
   $pb.PbList<HeatCurveMismatch> get mismatches => $_getList(9);
+}
+
+/// ROOM TARGETS (HeatCurveView.room_target_suggestions). Where the zone that limits a band does so
+/// because its own room's target is high, rather than because the house needs the supply, a lower
+/// target in that room would let the curve come down. The gateway suggests it to the household:
+/// lowering that room to suggested_target_centidegrees would let the curve come down by about
+/// curve_lowered_by_centidegrees in the bands named. It is the household's comfort: the gateway
+/// never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
+/// household acts on it by setting the room's target as it sets any target, or declines it
+/// (webrtc.v1.DeclineHeatCurve, by its suggestion_id). A suggestion_id is new only on a material
+/// change, as a curve suggestion's is (SUGGESTION), and a decline holds for it; a home's wipe and
+/// a new household's residency clear the home's declines.
+///
+/// WHO SEES THEM: the residents of the home the room lies in, in a reading of their home's own
+/// plant or of a plant outside homes whose curve that room limits (webrtc.v1.GetHeatCurveView by
+/// home_id), and a household admin reading the home's plant by plant_id. Never the owner
+/// organisation, the gateway's administrators, service, or an installer under a commissioning
+/// grant, and never anyone of another home: a room's target is the household's own (HEAT CURVE,
+/// WHO SEES IT). The curve suggestion given to the owner organisation of a shared plant is worked
+/// out without assuming that any room target changes.
+class HeatCurveRoomTargetSuggestion extends $pb.GeneratedMessage {
+  factory HeatCurveRoomTargetSuggestion({
+    $core.String? suggestionId,
+    $0.SpaceId? roomId,
+    $core.int? targetCentidegrees,
+    $core.int? suggestedTargetCentidegrees,
+    $core.int? curveLoweredByCentidegrees,
+    $core.Iterable<$core.int>? bandOutdoorFromCentidegrees,
+    $3.Timestamp? suggestedAt,
+    $core.bool? declined,
+  }) {
+    final result = create();
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (roomId != null) result.roomId = roomId;
+    if (targetCentidegrees != null)
+      result.targetCentidegrees = targetCentidegrees;
+    if (suggestedTargetCentidegrees != null)
+      result.suggestedTargetCentidegrees = suggestedTargetCentidegrees;
+    if (curveLoweredByCentidegrees != null)
+      result.curveLoweredByCentidegrees = curveLoweredByCentidegrees;
+    if (bandOutdoorFromCentidegrees != null)
+      result.bandOutdoorFromCentidegrees.addAll(bandOutdoorFromCentidegrees);
+    if (suggestedAt != null) result.suggestedAt = suggestedAt;
+    if (declined != null) result.declined = declined;
+    return result;
+  }
+
+  HeatCurveRoomTargetSuggestion._();
+
+  factory HeatCurveRoomTargetSuggestion.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveRoomTargetSuggestion.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveRoomTargetSuggestion',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'suggestionId')
+    ..aOM<$0.SpaceId>(2, _omitFieldNames ? '' : 'roomId',
+        subBuilder: $0.SpaceId.create)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'targetCentidegrees', $pb.PbFieldType.OS3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'suggestedTargetCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'curveLoweredByCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..p<$core.int>(6, _omitFieldNames ? '' : 'bandOutdoorFromCentidegrees',
+        $pb.PbFieldType.KS3)
+    ..aOM<$3.Timestamp>(7, _omitFieldNames ? '' : 'suggestedAt',
+        subBuilder: $3.Timestamp.create)
+    ..aOB(8, _omitFieldNames ? '' : 'declined')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveRoomTargetSuggestion clone() =>
+      HeatCurveRoomTargetSuggestion()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveRoomTargetSuggestion copyWith(
+          void Function(HeatCurveRoomTargetSuggestion) updates) =>
+      super.copyWith(
+              (message) => updates(message as HeatCurveRoomTargetSuggestion))
+          as HeatCurveRoomTargetSuggestion;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveRoomTargetSuggestion create() =>
+      HeatCurveRoomTargetSuggestion._();
+  @$core.override
+  HeatCurveRoomTargetSuggestion createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveRoomTargetSuggestion> createRepeated() =>
+      $pb.PbList<HeatCurveRoomTargetSuggestion>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveRoomTargetSuggestion getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveRoomTargetSuggestion>(create);
+  static HeatCurveRoomTargetSuggestion? _defaultInstance;
+
+  /// Named by webrtc.v1.DeclineHeatCurve. New only on a material change.
+  @$pb.TagNumber(1)
+  $core.String get suggestionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set suggestionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSuggestionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSuggestionId() => $_clearField(1);
+
+  /// The room, and its target as the gateway holds it, in centidegrees.
+  @$pb.TagNumber(2)
+  $0.SpaceId get roomId => $_getN(1);
+  @$pb.TagNumber(2)
+  set roomId($0.SpaceId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRoomId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRoomId() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.SpaceId ensureRoomId() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.int get targetCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set targetCentidegrees($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTargetCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTargetCentidegrees() => $_clearField(3);
+
+  /// The target suggested, in centidegrees: lower than target_centidegrees.
+  @$pb.TagNumber(4)
+  $core.int get suggestedTargetCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set suggestedTargetCentidegrees($core.int value) =>
+      $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSuggestedTargetCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSuggestedTargetCentidegrees() => $_clearField(4);
+
+  /// About how far the curve could come down with the target suggested, in centidegrees, in the
+  /// bands named. Unset where not known.
+  @$pb.TagNumber(5)
+  $core.int get curveLoweredByCentidegrees => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set curveLoweredByCentidegrees($core.int value) => $_setSignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasCurveLoweredByCentidegrees() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearCurveLoweredByCentidegrees() => $_clearField(5);
+
+  /// The bands it would come down in, by their outdoor_from_centidegrees (HeatCurveBand), coldest
+  /// first.
+  @$pb.TagNumber(6)
+  $pb.PbList<$core.int> get bandOutdoorFromCentidegrees => $_getList(5);
+
+  /// When the suggestion was first made as it stands.
+  @$pb.TagNumber(7)
+  $3.Timestamp get suggestedAt => $_getN(6);
+  @$pb.TagNumber(7)
+  set suggestedAt($3.Timestamp value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasSuggestedAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSuggestedAt() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $3.Timestamp ensureSuggestedAt() => $_ensure(6);
+
+  /// Set once declined, until the decline is withdrawn.
+  @$pb.TagNumber(8)
+  $core.bool get declined => $_getBF(7);
+  @$pb.TagNumber(8)
+  set declined($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasDeclined() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearDeclined() => $_clearField(8);
 }
 
 const $core.bool _omitFieldNames =
