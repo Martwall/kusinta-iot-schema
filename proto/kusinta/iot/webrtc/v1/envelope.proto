@@ -235,7 +235,8 @@ message ManagementResult {
     kusinta.iot.heating.v1.ShadowSummary shadow_summary = 34; // get_shadow_summary
     // get_energy_price_adder, set_energy_price_adder
     kusinta.iot.heating.v1.EnergyPriceAdder energy_price_adder = 35;
-    // get_heat_curve_view, apply_heat_curve, decline_heat_curve
+    // get_heat_curve_view, apply_heat_curve, decline_heat_curve,
+    // set_heat_curve_automatic_savings
     kusinta.iot.heating.v1.HeatCurveViews heat_curve_views = 36;
     ProvisionedDevices provisioned_devices = 37; // list_provisioned_devices
   }

@@ -1162,6 +1162,10 @@ message HeatCurveView {
   // The last curve applied to the heat source, and whether it is verified (APPLYING). Unset
   // where none was, and where figures are withheld.
   HeatCurveApplied last_applied = 13;
+
+  // Whether the gateway applies suggestions itself (AUTOMATIC SAVINGS). Unspecified where
+  // figures are withheld.
+  HeatCurveAutomaticSavings automatic_savings = 14;
 }
 
 // The answer to webrtc.v1.GetHeatCurveView.
@@ -1187,14 +1191,18 @@ message HeatCurveViews {
 //
 // SUGGESTION (HeatCurveView.suggestion). Where setting the optimised curve would save against
 // the one in force, the gateway suggests it, with the saving:
-//   * CURVE: set the heat source's own curve to the optimised one, and its shift to 0. An own
-//     curve is meant with no shift: a shift left in place moves every point of it, and a client
-//     says so.
+//   * CURVE: set the heat source's own curve to the optimised one, its shift to 0 and its bend
+//     to none (the bend's offset to 0, its outdoor point kept). An own curve is meant with
+//     neither: a shift left in place moves every point of it, a bend the points near it, and a
+//     client says so.
 //   * SHIFT: early, before enough bands are seen for a curve, where the curve is clearly higher
 //     (or lower) than needed: move the shift one step. A curve follows as bands are seen.
-// A suggestion carries an identity (suggestion_id) that changes whenever what it would set
-// changes, so that an apply or a decline acts on what was shown. After a curve is applied, each
-// point newly confirmed that would set it otherwise is suggested in turn, and named
+// A suggestion carries an identity (suggestion_id), so that an apply or a decline acts on what
+// was shown. The gateway gives a new one only on a material change: a point newly confirmed, a
+// point of the suggested curve moving by 1 °C or more, or a shift suggestion becoming a curve.
+// A suggestion refreshed without one keeps its identity, its settings updated, and with it any
+// decline, so that a decline is not asked again for the same suggestion. After a curve is
+// applied, each point newly confirmed that would set it otherwise is suggested in turn, and named
 // (newly_confirmed_outdoor_centidegrees): the reminder to set it. A client repeats an open
 // suggestion gently, as a reminder, until it is applied or declined; a declined one it shows
 // only where asked, and does not repeat.
@@ -1206,20 +1214,38 @@ message HeatCurveViews {
 //   * otherwise by the measured supply against the curve applied, at the outdoor temperatures
 //     seen since, leaving out the 24 hours after it;
 //   * otherwise not at all: the confirmation is all there is (UNVERIFIABLE).
-// A setting found otherwise than applied is named (HeatCurveMismatch), such as a shift left at
-// other than 0. An apply is corrected by another: a newer suggestion applied, or the settings an
-// apply replaced set back (webrtc.v1.ApplyHeatCurve.revert). Where a gateway applies a
-// suggestion itself, writing what the heat source takes, it records the apply as its own
-// (HEAT_CURVE_APPLY_MODE_GATEWAY) and suggests the rest; how a payer turns that off is reserved
-// for a later release of this schema.
+// A setting found otherwise than applied is named (HeatCurveMismatch), such as a shift or a bend
+// left at other than 0. An apply is corrected by another: a newer suggestion applied, or the settings an
+// apply replaced set back (webrtc.v1.ApplyHeatCurve.revert).
 //
-// WHO APPLIES IT (webrtc.v1.ApplyHeatCurve, webrtc.v1.DeclineHeatCurve): whoever is given the
-// view with its figures (HEAT CURVE, WHO SEES IT). For a plant in a home, its household admins
+// AUTOMATIC SAVINGS (HeatCurveView.automatic_savings). A plant's setting, on unless set off: while
+// on, the gateway applies a suggestion itself where the heat source takes a write of its
+// settings, records the apply as its own (HEAT_CURVE_APPLY_MODE_GATEWAY), and suggests the rest
+// as any other; a suggestion declined it does not apply. While off it applies nothing unasked.
+// Set by webrtc.v1.SetHeatCurveAutomaticSavings, by whoever applies (WHO APPLIES IT); setting it
+// back is its correction.
+//
+// WHO APPLIES IT (webrtc.v1.ApplyHeatCurve, DeclineHeatCurve, SetHeatCurveAutomaticSavings):
+// whoever is given the view with its figures (HEAT CURVE, WHO SEES IT). For a plant in a home,
+// its household admins
 // and an installer under a commissioning grant covering the home; for a plant outside homes, the
 // owner organisation and an installer under a commissioning grant covering it. The optimised
 // curve and the suggestion are worked out from every zone the plant heats, homes included, and
 // are given to the owner organisation however many homes share the plant: they name no zone, no
 // home and no reason, and no figure of any home.
+
+// A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
+// release of this schema.
+enum HeatCurveAutomaticSavings {
+  // Not given, as where figures are withheld; never a setting.
+  HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED = 0;
+
+  // The gateway applies what the heat source takes a write of. A plant's setting until set off.
+  HEAT_CURVE_AUTOMATIC_SAVINGS_ON = 1;
+
+  // The gateway applies nothing unasked.
+  HEAT_CURVE_AUTOMATIC_SAVINGS_OFF = 2;
+}
 
 // How sure the gateway is of one point of an optimised curve (CONFIDENCE). A closed list that
 // grows only by a release of this schema.
@@ -1280,7 +1306,8 @@ enum HeatCurveSuggestionKind {
 
 // What the gateway suggests setting on a plant's heat source (SUGGESTION).
 message HeatCurveSuggestion {
-  // Changes whenever settings changes. Named by webrtc.v1.ApplyHeatCurve and DeclineHeatCurve.
+  // New only on a material change (SUGGESTION); kept across a refresh that makes none. Named by
+  // webrtc.v1.ApplyHeatCurve and DeclineHeatCurve.
   string suggestion_id = 1;
 
   HeatCurveSuggestionKind kind = 2;
@@ -1288,7 +1315,8 @@ message HeatCurveSuggestion {
   // The heat source's curve settings that applying it sets, in the heat source's own format
   // (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
   // own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
-  // each taking the optimised curve's supply at its outdoor temperature. For a shift:
+  // each taking the optimised curve's supply at its outdoor temperature, and
+  // curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
   // heating_curve_offset, one step from the one in force.
   kusinta.iot.device.v1.HeatSourceReadings settings = 3;
 
@@ -1301,21 +1329,23 @@ message HeatCurveSuggestion {
   // centidegrees. Empty for a first suggestion.
   repeated sint32 newly_confirmed_outdoor_centidegrees = 5;
 
-  // The saving, over a year of the outdoor temperatures the gateway takes as typical for the
-  // building: in the heat source's electric energy, in kilowatt-hours; and in millionths of a
-  // euro, that energy priced as energy a rule avoids is (PRICE BASIS) at the window's mean
-  // price. Each unset where not known.
+  // The saving in absolute terms, where the gateway has a basis for it, over a year of the
+  // outdoor temperatures it takes as typical for the building: in the heat source's electric
+  // energy, in kilowatt-hours, where it has an estimate of that energy; and in millionths of a
+  // euro, that energy priced as energy a rule avoids is (PRICE BASIS) at the window's mean price,
+  // where it has a price basis too. Each unset where not known.
   optional uint32 saving_kwh_per_year = 6;
   optional sint64 saving_micro_eur_per_year = 7;
 
-  // The same saving as thousandths of the plant's heating energy. Unset where not known.
+  // The saving as thousandths of the plant's heating energy: the primary figure, which a client
+  // shows first. Unset where not known.
   optional uint32 saving_permille = 8;
 
   // When the suggestion was first made with its present settings.
   google.protobuf.Timestamp suggested_at = 9;
 
   // Set once declined (webrtc.v1.DeclineHeatCurve), until the decline is withdrawn. It holds
-  // for this suggestion: one with other settings is open again.
+  // for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
   bool declined = 10;
 }
 
@@ -1387,6 +1417,10 @@ enum HeatCurveMismatchKind {
   // (outdoor_centidegrees, expected_supply_centidegrees, found_supply_centidegrees: the median
   // measured).
   HEAT_CURVE_MISMATCH_KIND_SUPPLY = 5;
+
+  // The bend's offset is not 0 under an own curve (found_bend_offset_centidegrees, with
+  // outdoor_centidegrees its outdoor point where read).
+  HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL = 6;
 }
 
 // One setting found otherwise than applied.
@@ -1403,6 +1437,10 @@ message HeatCurveMismatch {
   // The shift found, in the heat source's own steps (device.v1.HeatSourceReadings
   // .heating_curve_offset).
   optional sint32 found_offset = 5;
+
+  // The bend's offset found, in centidegrees (device.v1.HeatSourceReadings
+  // .curve_point_offset_centidegrees).
+  optional sint32 found_bend_offset_centidegrees = 6;
 }
 
 // The last curve applied to a plant's heat source, and whether it is verified (APPLYING).

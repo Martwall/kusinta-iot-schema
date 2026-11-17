@@ -1609,6 +1609,16 @@ message DeclineHeatCurve {
   bool withdraw = 3;
 }
 
+// Sets a plant's automatic savings on or off (heating.v1 HEAT CURVE, AUTOMATIC SAVINGS),
+// answered with heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused as
+// ApplyHeatCurve is; automatic_savings UNSPECIFIED is refused as INVALID_REQUEST with metadata
+// {"reason": "automatic_savings"}. Setting it to what it is changes nothing and is answered as
+// it stands. Turning it off undoes no apply already made; ApplyHeatCurve.revert does.
+message SetHeatCurveAutomaticSavings {
+  string plant_id = 1;
+  kusinta.iot.heating.v1.HeatCurveAutomaticSavings automatic_savings = 2;
+}
+
 // Asks for a nonce to link one home's account at a third-party service
 // (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 // (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -1963,5 +1973,6 @@ message ManagementRequest {
     // Applying or declining a heat curve suggestion; see heating.v1 HEAT CURVE, APPLYING.
     ApplyHeatCurve apply_heat_curve = 88;
     DeclineHeatCurve decline_heat_curve = 89;
+    SetHeatCurveAutomaticSavings set_heat_curve_automatic_savings = 90;
   }
 }

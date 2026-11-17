@@ -15,6 +15,10 @@ These assert the decisions the shape encodes:
   * an apply is written or set by hand; it records how, what it set and what it replaced,
     whether it was a revert, and its verification: pending, verified (by read-back or
     measured supply), a mismatch naming each setting found otherwise, or unverifiable
+  * a curve suggestion neutralises the bend as it does the shift, and a bend left in place
+    is named with the bend found
+  * automatic savings is a plant's setting, on unless set off, given with the view and set
+    by a management request answered with the plant's views
   * apply and decline are management requests answered with the plant's views
 """
 
@@ -128,6 +132,20 @@ def test_a_curve_suggestion_sets_the_own_curve_with_the_shift_at_zero():
     assert (decoded.settings.own_curve_in_force, decoded.settings.HasField("heating_curve_offset")) == (True, True)
 
 
+def test_a_curve_suggestion_sets_the_bend_offset_to_zero_and_keeps_its_point():
+    suggestion = heating_pb2.HeatCurveSuggestion(
+        suggestion_id="s-1",
+        kind=heating_pb2.HEAT_CURVE_SUGGESTION_KIND_CURVE,
+        settings=device_pb2.HeatSourceReadings(curve_point_offset_centidegrees=0),
+    )
+
+    decoded = _round_trip(suggestion)
+    assert (
+        decoded.settings.HasField("curve_point_offset_centidegrees"),
+        decoded.settings.HasField("curve_point_outdoor_centidegrees"),
+    ) == (True, False)
+
+
 def test_a_suggestion_says_whether_the_heat_source_takes_a_write():
     decoded = _round_trip(heating_pb2.HeatCurveSuggestion(suggestion_id="s-1", writable=True))
 
@@ -229,6 +247,18 @@ def test_the_mismatch_kinds_keep_their_numbers():
     ) == (1, 2, 3, 4, 5)
 
 
+def test_a_bend_left_in_place_is_named_with_the_bend_found():
+    mismatch = heating_pb2.HeatCurveMismatch(
+        kind=heating_pb2.HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL, found_bend_offset_centidegrees=-200
+    )
+
+    assert _round_trip(mismatch) == mismatch
+
+
+def test_a_bend_mismatch_keeps_its_number():
+    assert heating_pb2.HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL == 6
+
+
 def test_a_shift_left_in_place_is_named_with_the_shift_found():
     mismatch = heating_pb2.HeatCurveMismatch(
         kind=heating_pb2.HEAT_CURVE_MISMATCH_KIND_SHIFT_NOT_ZERO, found_offset=-2
@@ -318,6 +348,35 @@ def test_a_view_carries_its_last_apply():
     view = heating_pb2.HeatCurveView(plant_id="plant-1", last_applied=heating_pb2.HeatCurveApplied(suggestion_id="s-1"))
 
     assert _round_trip(view).last_applied.suggestion_id == "s-1"
+
+
+# Automatic savings.
+
+
+def test_an_automatic_savings_state_not_given_is_unspecified():
+    decoded = _round_trip(heating_pb2.HeatCurveView(plant_id="plant-1"))
+
+    assert decoded.automatic_savings == heating_pb2.HEAT_CURVE_AUTOMATIC_SAVINGS_UNSPECIFIED
+
+
+def test_the_automatic_savings_states_keep_their_numbers():
+    assert (heating_pb2.HEAT_CURVE_AUTOMATIC_SAVINGS_ON, heating_pb2.HEAT_CURVE_AUTOMATIC_SAVINGS_OFF) == (1, 2)
+
+
+def test_a_view_says_whether_automatic_savings_is_on():
+    view = heating_pb2.HeatCurveView(plant_id="plant-1", automatic_savings=heating_pb2.HEAT_CURVE_AUTOMATIC_SAVINGS_OFF)
+
+    assert _round_trip(view).automatic_savings == heating_pb2.HEAT_CURVE_AUTOMATIC_SAVINGS_OFF
+
+
+def test_automatic_savings_is_set_for_a_plant():
+    request = management_pb2.ManagementRequest(
+        set_heat_curve_automatic_savings=management_pb2.SetHeatCurveAutomaticSavings(
+            plant_id="plant-1", automatic_savings=heating_pb2.HEAT_CURVE_AUTOMATIC_SAVINGS_OFF
+        )
+    )
+
+    assert _round_trip(request) == request
 
 
 # The requests.
