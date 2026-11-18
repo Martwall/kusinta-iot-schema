@@ -3983,7 +3983,8 @@ class HeatCurvePoint extends $pb.GeneratedMessage {
   void clearOutdoorCentidegrees() => $_clearField(1);
 
   /// The supply the optimised curve sets at it, in centidegrees, held between the heat source's
-  /// lowest and highest supply (OPTIMISED CURVE).
+  /// lowest and highest supply and rounded up to a whole degree (OPTIMISED CURVE): a multiple of
+  /// 100.
   @$pb.TagNumber(2)
   $core.int get supplyCentidegrees => $_getIZ(1);
   @$pb.TagNumber(2)
@@ -4217,8 +4218,10 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
   /// The heat source's curve settings that applying it sets, in the heat source's own format
   /// (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
   /// own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
-  /// each taking the optimised curve's supply at its outdoor temperature, and
-  /// curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
+  /// each the optimised curve's supply at its outdoor temperature, a milder one raised where
+  /// needed so that the line between two written points is nowhere below the optimised curve
+  /// between them (OPTIMISED CURVE), and curve_point_offset_centidegrees 0, the bend's outdoor
+  /// point left as it is. For a shift:
   /// heating_curve_offset, one step from the one in force.
   @$pb.TagNumber(3)
   $5.HeatSourceReadings get settings => $_getN(2);
@@ -4316,6 +4319,7 @@ class HeatCurveMismatch extends $pb.GeneratedMessage {
     $core.int? foundSupplyCentidegrees,
     $core.int? foundOffset,
     $core.int? foundBendOffsetCentidegrees,
+    $core.int? foundCurve,
   }) {
     final result = create();
     if (kind != null) result.kind = kind;
@@ -4328,6 +4332,7 @@ class HeatCurveMismatch extends $pb.GeneratedMessage {
     if (foundOffset != null) result.foundOffset = foundOffset;
     if (foundBendOffsetCentidegrees != null)
       result.foundBendOffsetCentidegrees = foundBendOffsetCentidegrees;
+    if (foundCurve != null) result.foundCurve = foundCurve;
     return result;
   }
 
@@ -4360,6 +4365,7 @@ class HeatCurveMismatch extends $pb.GeneratedMessage {
     ..a<$core.int>(5, _omitFieldNames ? '' : 'foundOffset', $pb.PbFieldType.OS3)
     ..a<$core.int>(6, _omitFieldNames ? '' : 'foundBendOffsetCentidegrees',
         $pb.PbFieldType.OS3)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'foundCurve', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4443,6 +4449,17 @@ class HeatCurveMismatch extends $pb.GeneratedMessage {
   $core.bool hasFoundBendOffsetCentidegrees() => $_has(5);
   @$pb.TagNumber(6)
   void clearFoundBendOffsetCentidegrees() => $_clearField(6);
+
+  /// The numbered curve found, by the heat source's own numbering (device.v1.HeatSourceReadings
+  /// .heating_curve). Unset where the own curve is in force, and where none is read.
+  @$pb.TagNumber(7)
+  $core.int get foundCurve => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set foundCurve($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasFoundCurve() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFoundCurve() => $_clearField(7);
 }
 
 /// The last curve applied to a plant's heat source, and whether it is verified (APPLYING).
@@ -4651,7 +4668,7 @@ class HeatCurveApplied extends $pb.GeneratedMessage {
 /// curve_lowered_by_centidegrees in the bands named. It suggests one only where the room's target
 /// is above the median of the targets of the home's rooms that have one, suggesting that median,
 /// or 0.5 °C below the room's target where the median is further down; and only where that would
-/// let the curve come down by at least 1 °C in at least one band. Otherwise it suggests none for
+/// let the curve come down by at least 0.5 °C in at least one band. Otherwise it suggests none for
 /// the room. It is the household's comfort: the gateway
 /// never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
 /// household acts on it by setting the room's target as it sets any target, or declines it
@@ -4792,8 +4809,9 @@ class HeatCurveRoomTargetSuggestion extends $pb.GeneratedMessage {
   void clearSuggestedTargetCentidegrees() => $_clearField(4);
 
   /// About how far the curve could come down with the target suggested, in the bands named:
-  /// rounded to whole degrees, in centidegrees (a multiple of 100, at least 100), since a finer
-  /// figure hints at the zones of another home on the plant. Unset where not known.
+  /// rounded half up to whole degrees, in centidegrees (a multiple of 100, at least 100, since the
+  /// least a suggestion is made for is 0.5 °C), as a finer figure hints at the zones of another
+  /// home on the plant. Unset where not known.
   @$pb.TagNumber(5)
   $core.int get curveLoweredByCentidegrees => $_getIZ(4);
   @$pb.TagNumber(5)

@@ -1716,7 +1716,8 @@ export declare type HeatCurvePoint = Message<"kusinta.iot.heating.v1.HeatCurvePo
 
   /**
    * The supply the optimised curve sets at it, in centidegrees, held between the heat source's
-   * lowest and highest supply (OPTIMISED CURVE).
+   * lowest and highest supply and rounded up to a whole degree (OPTIMISED CURVE): a multiple of
+   * 100.
    *
    * @generated from field: sint32 supply_centidegrees = 2;
    */
@@ -1802,8 +1803,10 @@ export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCu
    * The heat source's curve settings that applying it sets, in the heat source's own format
    * (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
    * own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
-   * each taking the optimised curve's supply at its outdoor temperature, and
-   * curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
+   * each the optimised curve's supply at its outdoor temperature, a milder one raised where
+   * needed so that the line between two written points is nowhere below the optimised curve
+   * between them (OPTIMISED CURVE), and curve_point_offset_centidegrees 0, the bend's outdoor
+   * point left as it is. For a shift:
    * heating_curve_offset, one step from the one in force.
    *
    * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings = 3;
@@ -1919,6 +1922,14 @@ export declare type HeatCurveMismatch = Message<"kusinta.iot.heating.v1.HeatCurv
    * @generated from field: optional sint32 found_bend_offset_centidegrees = 6;
    */
   foundBendOffsetCentidegrees?: number | undefined;
+
+  /**
+   * The numbered curve found, by the heat source's own numbering (device.v1.HeatSourceReadings
+   * .heating_curve). Unset where the own curve is in force, and where none is read.
+   *
+   * @generated from field: optional uint32 found_curve = 7;
+   */
+  foundCurve?: number | undefined;
 };
 
 /**
@@ -2017,7 +2028,7 @@ export declare const HeatCurveAppliedSchema: GenMessage<HeatCurveApplied>;
  * curve_lowered_by_centidegrees in the bands named. It suggests one only where the room's target
  * is above the median of the targets of the home's rooms that have one, suggesting that median,
  * or 0.5 °C below the room's target where the median is further down; and only where that would
- * let the curve come down by at least 1 °C in at least one band. Otherwise it suggests none for
+ * let the curve come down by at least 0.5 °C in at least one band. Otherwise it suggests none for
  * the room. It is the household's comfort: the gateway
  * never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
  * household acts on it by setting the room's target as it sets any target, or declines it
@@ -2065,8 +2076,9 @@ export declare type HeatCurveRoomTargetSuggestion = Message<"kusinta.iot.heating
 
   /**
    * About how far the curve could come down with the target suggested, in the bands named:
-   * rounded to whole degrees, in centidegrees (a multiple of 100, at least 100), since a finer
-   * figure hints at the zones of another home on the plant. Unset where not known.
+   * rounded half up to whole degrees, in centidegrees (a multiple of 100, at least 100, since the
+   * least a suggestion is made for is 0.5 °C), as a finer figure hints at the zones of another
+   * home on the plant. Unset where not known.
    *
    * @generated from field: optional sint32 curve_lowered_by_centidegrees = 5;
    */
@@ -2811,6 +2823,15 @@ export enum HeatCurveMismatchKind {
    * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL = 6;
    */
   BEND_NOT_NEUTRAL = 6,
+
+  /**
+   * A revert to a numbered curve (webrtc.v1.ApplyHeatCurve.revert), read back, finds it not in
+   * force as set back: another numbered curve (found_curve), or the own curve still in force
+   * (found_curve unset).
+   *
+   * @generated from enum value: HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE = 7;
+   */
+  NUMBERED_CURVE = 7,
 }
 
 /**
