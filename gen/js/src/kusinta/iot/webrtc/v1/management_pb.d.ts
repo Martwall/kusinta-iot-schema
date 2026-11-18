@@ -2809,8 +2809,9 @@ export declare const SetHeatCurveAutomaticSavingsSchema: GenMessage<SetHeatCurve
  *                                         stands, as for ApplyHeatCurve;
  *   {"reason": "technician_not_granted"}  technician holds no active commissioning grant
  *                                         covering the plant's space.
- * Handing it to the technician it is handed to, and withdrawing a hand-over that is not there,
- * change nothing and are answered as it stands.
+ * Handing it to the technician it is handed to, withdrawing a hand-over that is not there, and
+ * withdrawing one whose suggestion_id is no longer the plant's suggestion (the hand-over ended
+ * with it), change nothing and are answered as it stands.
  *
  * @generated from message kusinta.iot.webrtc.v1.HandHeatCurveSuggestion
  */

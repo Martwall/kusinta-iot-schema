@@ -1308,9 +1308,12 @@ message HeatCurveViews {
 // have set, and its hand-over where it had one. As many as the gateway keeps, such as the last
 // 20. A declined suggestion still the plant's suggestion (still_current) is reopened by
 // withdrawing its decline (webrtc.v1.DeclineHeatCurve.withdraw); one superseded is not reopened,
-// its successor being the suggestion. Given as the suggestion is (WHO APPLIES IT): left out
-// where figures are withheld. A home's history is its household's: none from before the home's
-// last Clear history or its wipe (webrtc.v1 household.proto, CLIMATE HISTORY, WIPE).
+// its successor being the suggestion. Left out where figures are withheld. For a plant outside
+// homes, given as the suggestion is (WHO APPLIES IT). For a plant in a home, given to its
+// household admins alone: a commissioning grant never covers a home's history
+// (commissioning.v1, GRANTS), so an installer under one is given none. A home's history is its
+// household's: none from before the home's last Clear history or its wipe (webrtc.v1
+// household.proto, CLIMATE HISTORY, WIPE).
 
 // A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 // release of this schema.

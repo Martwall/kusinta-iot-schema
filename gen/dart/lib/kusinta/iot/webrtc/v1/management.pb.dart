@@ -6358,8 +6358,9 @@ class SetHeatCurveAutomaticSavings extends $pb.GeneratedMessage {
 ///                                         stands, as for ApplyHeatCurve;
 ///   {"reason": "technician_not_granted"}  technician holds no active commissioning grant
 ///                                         covering the plant's space.
-/// Handing it to the technician it is handed to, and withdrawing a hand-over that is not there,
-/// change nothing and are answered as it stands.
+/// Handing it to the technician it is handed to, withdrawing a hand-over that is not there, and
+/// withdrawing one whose suggestion_id is no longer the plant's suggestion (the hand-over ended
+/// with it), change nothing and are answered as it stands.
 class HandHeatCurveSuggestion extends $pb.GeneratedMessage {
   factory HandHeatCurveSuggestion({
     $core.String? plantId,

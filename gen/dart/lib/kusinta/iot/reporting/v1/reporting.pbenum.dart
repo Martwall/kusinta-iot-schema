@@ -299,7 +299,9 @@ class NoticeKind extends $pb.ProtobufEnum {
       NoticeKind._(0, _omitEnumNames ? '' : 'NOTICE_KIND_UNSPECIFIED');
 
   /// A heat curve suggestion arose or changed materially (heating.v1 HEAT CURVE, SUGGESTION).
-  /// To those who apply it: a home's household admins, or the owning organisation; and a
+  /// To those who apply it: a home's household admins; for a plant outside homes, the owning
+  /// organisation's administrators (owner_organisation), and the property owner and the
+  /// gateway's administrators who reach the plant's space, each named by user id; and a
   /// technician it is handed to (heating.v1 HEAT CURVE, HAND-OVER).
   static const NoticeKind NOTICE_KIND_HEAT_CURVE_SUGGESTION = NoticeKind._(
       1, _omitEnumNames ? '' : 'NOTICE_KIND_HEAT_CURVE_SUGGESTION');
