@@ -548,12 +548,42 @@ const HeatSourceReadings$json = {
       '17': true
     },
     {
+      '1': 'compressor_starts',
+      '3': 32,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 8,
+      '10': 'compressorStarts',
+      '17': true
+    },
+    {
+      '1': 'compressor_operating_hours',
+      '3': 33,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 9,
+      '10': 'compressorOperatingHours',
+      '17': true
+    },
+    {
+      '1': 'compressor_hot_water_operating_hours',
+      '3': 34,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 10,
+      '10': 'compressorHotWaterOperatingHours',
+      '17': true
+    },
+    {
       '1': 'degree_minutes',
       '3': 9,
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 8,
+      '9': 11,
       '10': 'degreeMinutes',
       '17': true
     },
@@ -563,7 +593,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 8,
       '8': {},
-      '9': 9,
+      '9': 12,
       '10': 'alarmActive',
       '17': true
     },
@@ -573,7 +603,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 10,
+      '9': 13,
       '10': 'alarmCode',
       '17': true
     },
@@ -583,7 +613,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 11,
+      '9': 14,
       '10': 'addOnHeatWatts',
       '17': true
     },
@@ -593,7 +623,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 8,
       '8': {},
-      '9': 12,
+      '9': 15,
       '10': 'externalAdjustmentActive',
       '17': true
     },
@@ -603,7 +633,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 13,
+      '9': 16,
       '10': 'operatingMode',
       '17': true
     },
@@ -613,7 +643,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 14,
+      '9': 17,
       '10': 'heatingStopOutdoorCentidegrees',
       '17': true
     },
@@ -623,7 +653,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 15,
+      '9': 18,
       '10': 'addOnStopOutdoorCentidegrees',
       '17': true
     },
@@ -633,7 +663,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 16,
+      '9': 19,
       '10': 'outdoorFilterHours',
       '17': true
     },
@@ -643,7 +673,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 17,
+      '9': 20,
       '10': 'addOnMaxWatts',
       '17': true
     },
@@ -653,7 +683,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 8,
       '8': {},
-      '9': 18,
+      '9': 21,
       '10': 'ownCurveInForce',
       '17': true
     },
@@ -663,7 +693,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 13,
       '8': {},
-      '9': 19,
+      '9': 22,
       '10': 'heatingCurve',
       '17': true
     },
@@ -673,7 +703,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 20,
+      '9': 23,
       '10': 'heatingCurveOffset',
       '17': true
     },
@@ -683,7 +713,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 21,
+      '9': 24,
       '10': 'minSupplyCentidegrees',
       '17': true
     },
@@ -693,7 +723,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 22,
+      '9': 25,
       '10': 'ownCurveSupplyPlus30Centidegrees',
       '17': true
     },
@@ -703,7 +733,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 23,
+      '9': 26,
       '10': 'ownCurveSupplyPlus20Centidegrees',
       '17': true
     },
@@ -713,7 +743,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 24,
+      '9': 27,
       '10': 'ownCurveSupplyPlus10Centidegrees',
       '17': true
     },
@@ -723,7 +753,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 25,
+      '9': 28,
       '10': 'ownCurveSupply0Centidegrees',
       '17': true
     },
@@ -733,7 +763,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 26,
+      '9': 29,
       '10': 'ownCurveSupplyMinus10Centidegrees',
       '17': true
     },
@@ -743,7 +773,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 27,
+      '9': 30,
       '10': 'ownCurveSupplyMinus20Centidegrees',
       '17': true
     },
@@ -753,7 +783,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 28,
+      '9': 31,
       '10': 'ownCurveSupplyMinus30Centidegrees',
       '17': true
     },
@@ -763,7 +793,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 29,
+      '9': 32,
       '10': 'curvePointOutdoorCentidegrees',
       '17': true
     },
@@ -773,7 +803,7 @@ const HeatSourceReadings$json = {
       '4': 1,
       '5': 17,
       '8': {},
-      '9': 30,
+      '9': 33,
       '10': 'curvePointOffsetCentidegrees',
       '17': true
     },
@@ -788,6 +818,9 @@ const HeatSourceReadings$json = {
     {'1': '_calculated_supply_centidegrees'},
     {'1': '_producing'},
     {'1': '_compressor_state'},
+    {'1': '_compressor_starts'},
+    {'1': '_compressor_operating_hours'},
+    {'1': '_compressor_hot_water_operating_hours'},
     {'1': '_degree_minutes'},
     {'1': '_alarm_active'},
     {'1': '_alarm_code'},
@@ -829,65 +862,73 @@ final $typed_data.Uint8List heatSourceReadingsDescriptor = $convert.base64Decode
     'Y2VudGlkZWdyZWVz0LUYBUgFUhxjYWxjdWxhdGVkU3VwcGx5Q2VudGlkZWdyZWVziAEBEjQKCX'
     'Byb2R1Y2luZxgHIAEoDUIRorUYCXByb2R1Y2luZ9C1GAVIBlIJcHJvZHVjaW5niAEBEkgKEGNv'
     'bXByZXNzb3Jfc3RhdGUYCCABKA1CGKK1GBBjb21wcmVzc29yX3N0YXRl0LUYBUgHUg9jb21wcm'
-    'Vzc29yU3RhdGWIAQESQgoOZGVncmVlX21pbnV0ZXMYCSABKBFCFqK1GA5kZWdyZWVfbWludXRl'
-    'c9C1GAVICFINZGVncmVlTWludXRlc4gBARI8CgxhbGFybV9hY3RpdmUYCiABKAhCFKK1GAxhbG'
-    'FybV9hY3RpdmXQtRgFSAlSC2FsYXJtQWN0aXZliAEBEjYKCmFsYXJtX2NvZGUYCyABKA1CEqK1'
-    'GAphbGFybV9jb2Rl0LUYBUgKUglhbGFybUNvZGWIAQESSQoRYWRkX29uX2hlYXRfd2F0dHMYDC'
-    'ABKA1CGaK1GBFhZGRfb25faGVhdF93YXR0c9C1GAVIC1IOYWRkT25IZWF0V2F0dHOIAQESZQoa'
-    'ZXh0ZXJuYWxfYWRqdXN0bWVudF9hY3RpdmUYHiABKAhCIqK1GBpleHRlcm5hbF9hZGp1c3RtZW'
-    '50X2FjdGl2ZdC1GAVIDFIYZXh0ZXJuYWxBZGp1c3RtZW50QWN0aXZliAEBEkIKDm9wZXJhdGlu'
-    'Z19tb2RlGA0gASgNQhaitRgOb3BlcmF0aW5nX21vZGXQtRgFSA1SDW9wZXJhdGluZ01vZGWIAQ'
-    'ESeQohaGVhdGluZ19zdG9wX291dGRvb3JfY2VudGlkZWdyZWVzGA4gASgRQimitRghaGVhdGlu'
-    'Z19zdG9wX291dGRvb3JfY2VudGlkZWdyZWVz0LUYBUgOUh5oZWF0aW5nU3RvcE91dGRvb3JDZW'
-    '50aWRlZ3JlZXOIAQESdQogYWRkX29uX3N0b3Bfb3V0ZG9vcl9jZW50aWRlZ3JlZXMYDyABKBFC'
-    'KKK1GCBhZGRfb25fc3RvcF9vdXRkb29yX2NlbnRpZGVncmVlc9C1GAVID1IcYWRkT25TdG9wT3'
-    'V0ZG9vckNlbnRpZGVncmVlc4gBARJTChRvdXRkb29yX2ZpbHRlcl9ob3VycxgQIAEoDUIcorUY'
-    'FG91dGRvb3JfZmlsdGVyX2hvdXJz0LUYBUgQUhJvdXRkb29yRmlsdGVySG91cnOIAQESRgoQYW'
-    'RkX29uX21heF93YXR0cxgRIAEoDUIYorUYEGFkZF9vbl9tYXhfd2F0dHPQtRgFSBFSDWFkZE9u'
-    'TWF4V2F0dHOIAQESTAoSb3duX2N1cnZlX2luX2ZvcmNlGB8gASgIQhqitRgSb3duX2N1cnZlX2'
-    'luX2ZvcmNl0LUYBUgSUg9vd25DdXJ2ZUluRm9yY2WIAQESPwoNaGVhdGluZ19jdXJ2ZRgSIAEo'
-    'DUIVorUYDWhlYXRpbmdfY3VydmXQtRgFSBNSDGhlYXRpbmdDdXJ2ZYgBARJTChRoZWF0aW5nX2'
-    'N1cnZlX29mZnNldBgTIAEoEUIcorUYFGhlYXRpbmdfY3VydmVfb2Zmc2V00LUYBUgUUhJoZWF0'
-    'aW5nQ3VydmVPZmZzZXSIAQESXAoXbWluX3N1cHBseV9jZW50aWRlZ3JlZXMYFCABKBFCH6K1GB'
-    'dtaW5fc3VwcGx5X2NlbnRpZGVncmVlc9C1GAVIFVIVbWluU3VwcGx5Q2VudGlkZWdyZWVziAEB'
-    'EoMBCiVvd25fY3VydmVfc3VwcGx5X3BsdXNfMzBfY2VudGlkZWdyZWVzGBUgASgRQi2itRglb3'
-    'duX2N1cnZlX3N1cHBseV9wbHVzXzMwX2NlbnRpZGVncmVlc9C1GAVIFlIgb3duQ3VydmVTdXBw'
-    'bHlQbHVzMzBDZW50aWRlZ3JlZXOIAQESgwEKJW93bl9jdXJ2ZV9zdXBwbHlfcGx1c18yMF9jZW'
-    '50aWRlZ3JlZXMYFiABKBFCLaK1GCVvd25fY3VydmVfc3VwcGx5X3BsdXNfMjBfY2VudGlkZWdy'
-    'ZWVz0LUYBUgXUiBvd25DdXJ2ZVN1cHBseVBsdXMyMENlbnRpZGVncmVlc4gBARKDAQolb3duX2'
-    'N1cnZlX3N1cHBseV9wbHVzXzEwX2NlbnRpZGVncmVlcxgXIAEoEUItorUYJW93bl9jdXJ2ZV9z'
-    'dXBwbHlfcGx1c18xMF9jZW50aWRlZ3JlZXPQtRgFSBhSIG93bkN1cnZlU3VwcGx5UGx1czEwQ2'
-    'VudGlkZWdyZWVziAEBEnIKH293bl9jdXJ2ZV9zdXBwbHlfMF9jZW50aWRlZ3JlZXMYGCABKBFC'
-    'J6K1GB9vd25fY3VydmVfc3VwcGx5XzBfY2VudGlkZWdyZWVz0LUYBUgZUhtvd25DdXJ2ZVN1cH'
-    'BseTBDZW50aWRlZ3JlZXOIAQEShgEKJm93bl9jdXJ2ZV9zdXBwbHlfbWludXNfMTBfY2VudGlk'
-    'ZWdyZWVzGBkgASgRQi6itRgmb3duX2N1cnZlX3N1cHBseV9taW51c18xMF9jZW50aWRlZ3JlZX'
-    'PQtRgFSBpSIW93bkN1cnZlU3VwcGx5TWludXMxMENlbnRpZGVncmVlc4gBARKGAQomb3duX2N1'
-    'cnZlX3N1cHBseV9taW51c18yMF9jZW50aWRlZ3JlZXMYGiABKBFCLqK1GCZvd25fY3VydmVfc3'
-    'VwcGx5X21pbnVzXzIwX2NlbnRpZGVncmVlc9C1GAVIG1Ihb3duQ3VydmVTdXBwbHlNaW51czIw'
-    'Q2VudGlkZWdyZWVziAEBEoYBCiZvd25fY3VydmVfc3VwcGx5X21pbnVzXzMwX2NlbnRpZGVncm'
-    'VlcxgbIAEoEUIuorUYJm93bl9jdXJ2ZV9zdXBwbHlfbWludXNfMzBfY2VudGlkZWdyZWVz0LUY'
-    'BUgcUiFvd25DdXJ2ZVN1cHBseU1pbnVzMzBDZW50aWRlZ3JlZXOIAQESdgogY3VydmVfcG9pbn'
-    'Rfb3V0ZG9vcl9jZW50aWRlZ3JlZXMYHCABKBFCKKK1GCBjdXJ2ZV9wb2ludF9vdXRkb29yX2Nl'
-    'bnRpZGVncmVlc9C1GAVIHVIdY3VydmVQb2ludE91dGRvb3JDZW50aWRlZ3JlZXOIAQEScwofY3'
-    'VydmVfcG9pbnRfb2Zmc2V0X2NlbnRpZGVncmVlcxgdIAEoEUInorUYH2N1cnZlX3BvaW50X29m'
-    'ZnNldF9jZW50aWRlZ3JlZXPQtRgFSB5SHGN1cnZlUG9pbnRPZmZzZXRDZW50aWRlZ3JlZXOIAQ'
-    'E6F6q1GBNrdXNpbnRhLmhlYXRfc291cmNlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRf'
-    'c3VwcGx5X2NlbnRpZGVncmVlc0IWChRfcmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdG'
-    'VyX3RvcF9jZW50aWRlZ3JlZXNCIgogX2hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNC'
-    'IQofX2NhbGN1bGF0ZWRfc3VwcGx5X2NlbnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb2'
-    '1wcmVzc29yX3N0YXRlQhEKD19kZWdyZWVfbWludXRlc0IPCg1fYWxhcm1fYWN0aXZlQg0KC19h'
-    'bGFybV9jb2RlQhQKEl9hZGRfb25faGVhdF93YXR0c0IdChtfZXh0ZXJuYWxfYWRqdXN0bWVudF'
-    '9hY3RpdmVCEQoPX29wZXJhdGluZ19tb2RlQiQKIl9oZWF0aW5nX3N0b3Bfb3V0ZG9vcl9jZW50'
-    'aWRlZ3JlZXNCIwohX2FkZF9vbl9zdG9wX291dGRvb3JfY2VudGlkZWdyZWVzQhcKFV9vdXRkb2'
-    '9yX2ZpbHRlcl9ob3Vyc0ITChFfYWRkX29uX21heF93YXR0c0IVChNfb3duX2N1cnZlX2luX2Zv'
-    'cmNlQhAKDl9oZWF0aW5nX2N1cnZlQhcKFV9oZWF0aW5nX2N1cnZlX29mZnNldEIaChhfbWluX3'
-    'N1cHBseV9jZW50aWRlZ3JlZXNCKAomX293bl9jdXJ2ZV9zdXBwbHlfcGx1c18zMF9jZW50aWRl'
-    'Z3JlZXNCKAomX293bl9jdXJ2ZV9zdXBwbHlfcGx1c18yMF9jZW50aWRlZ3JlZXNCKAomX293bl'
-    '9jdXJ2ZV9zdXBwbHlfcGx1c18xMF9jZW50aWRlZ3JlZXNCIgogX293bl9jdXJ2ZV9zdXBwbHlf'
-    'MF9jZW50aWRlZ3JlZXNCKQonX293bl9jdXJ2ZV9zdXBwbHlfbWludXNfMTBfY2VudGlkZWdyZW'
-    'VzQikKJ19vd25fY3VydmVfc3VwcGx5X21pbnVzXzIwX2NlbnRpZGVncmVlc0IpCidfb3duX2N1'
-    'cnZlX3N1cHBseV9taW51c18zMF9jZW50aWRlZ3JlZXNCIwohX2N1cnZlX3BvaW50X291dGRvb3'
-    'JfY2VudGlkZWdyZWVzQiIKIF9jdXJ2ZV9wb2ludF9vZmZzZXRfY2VudGlkZWdyZWVz');
+    'Vzc29yU3RhdGWIAQESSwoRY29tcHJlc3Nvcl9zdGFydHMYICABKA1CGaK1GBFjb21wcmVzc29y'
+    'X3N0YXJ0c9C1GAVICFIQY29tcHJlc3NvclN0YXJ0c4gBARJlChpjb21wcmVzc29yX29wZXJhdG'
+    'luZ19ob3VycxghIAEoDUIiorUYGmNvbXByZXNzb3Jfb3BlcmF0aW5nX2hvdXJz0LUYBUgJUhhj'
+    'b21wcmVzc29yT3BlcmF0aW5nSG91cnOIAQESgQEKJGNvbXByZXNzb3JfaG90X3dhdGVyX29wZX'
+    'JhdGluZ19ob3VycxgiIAEoDUIsorUYJGNvbXByZXNzb3JfaG90X3dhdGVyX29wZXJhdGluZ19o'
+    'b3Vyc9C1GAVIClIgY29tcHJlc3NvckhvdFdhdGVyT3BlcmF0aW5nSG91cnOIAQESQgoOZGVncm'
+    'VlX21pbnV0ZXMYCSABKBFCFqK1GA5kZWdyZWVfbWludXRlc9C1GAVIC1INZGVncmVlTWludXRl'
+    'c4gBARI8CgxhbGFybV9hY3RpdmUYCiABKAhCFKK1GAxhbGFybV9hY3RpdmXQtRgFSAxSC2FsYX'
+    'JtQWN0aXZliAEBEjYKCmFsYXJtX2NvZGUYCyABKA1CEqK1GAphbGFybV9jb2Rl0LUYBUgNUglh'
+    'bGFybUNvZGWIAQESSQoRYWRkX29uX2hlYXRfd2F0dHMYDCABKA1CGaK1GBFhZGRfb25faGVhdF'
+    '93YXR0c9C1GAVIDlIOYWRkT25IZWF0V2F0dHOIAQESZQoaZXh0ZXJuYWxfYWRqdXN0bWVudF9h'
+    'Y3RpdmUYHiABKAhCIqK1GBpleHRlcm5hbF9hZGp1c3RtZW50X2FjdGl2ZdC1GAVID1IYZXh0ZX'
+    'JuYWxBZGp1c3RtZW50QWN0aXZliAEBEkIKDm9wZXJhdGluZ19tb2RlGA0gASgNQhaitRgOb3Bl'
+    'cmF0aW5nX21vZGXQtRgFSBBSDW9wZXJhdGluZ01vZGWIAQESeQohaGVhdGluZ19zdG9wX291dG'
+    'Rvb3JfY2VudGlkZWdyZWVzGA4gASgRQimitRghaGVhdGluZ19zdG9wX291dGRvb3JfY2VudGlk'
+    'ZWdyZWVz0LUYBUgRUh5oZWF0aW5nU3RvcE91dGRvb3JDZW50aWRlZ3JlZXOIAQESdQogYWRkX2'
+    '9uX3N0b3Bfb3V0ZG9vcl9jZW50aWRlZ3JlZXMYDyABKBFCKKK1GCBhZGRfb25fc3RvcF9vdXRk'
+    'b29yX2NlbnRpZGVncmVlc9C1GAVIElIcYWRkT25TdG9wT3V0ZG9vckNlbnRpZGVncmVlc4gBAR'
+    'JTChRvdXRkb29yX2ZpbHRlcl9ob3VycxgQIAEoDUIcorUYFG91dGRvb3JfZmlsdGVyX2hvdXJz'
+    '0LUYBUgTUhJvdXRkb29yRmlsdGVySG91cnOIAQESRgoQYWRkX29uX21heF93YXR0cxgRIAEoDU'
+    'IYorUYEGFkZF9vbl9tYXhfd2F0dHPQtRgFSBRSDWFkZE9uTWF4V2F0dHOIAQESTAoSb3duX2N1'
+    'cnZlX2luX2ZvcmNlGB8gASgIQhqitRgSb3duX2N1cnZlX2luX2ZvcmNl0LUYBUgVUg9vd25DdX'
+    'J2ZUluRm9yY2WIAQESPwoNaGVhdGluZ19jdXJ2ZRgSIAEoDUIVorUYDWhlYXRpbmdfY3VydmXQ'
+    'tRgFSBZSDGhlYXRpbmdDdXJ2ZYgBARJTChRoZWF0aW5nX2N1cnZlX29mZnNldBgTIAEoEUIcor'
+    'UYFGhlYXRpbmdfY3VydmVfb2Zmc2V00LUYBUgXUhJoZWF0aW5nQ3VydmVPZmZzZXSIAQESXAoX'
+    'bWluX3N1cHBseV9jZW50aWRlZ3JlZXMYFCABKBFCH6K1GBdtaW5fc3VwcGx5X2NlbnRpZGVncm'
+    'Vlc9C1GAVIGFIVbWluU3VwcGx5Q2VudGlkZWdyZWVziAEBEoMBCiVvd25fY3VydmVfc3VwcGx5'
+    'X3BsdXNfMzBfY2VudGlkZWdyZWVzGBUgASgRQi2itRglb3duX2N1cnZlX3N1cHBseV9wbHVzXz'
+    'MwX2NlbnRpZGVncmVlc9C1GAVIGVIgb3duQ3VydmVTdXBwbHlQbHVzMzBDZW50aWRlZ3JlZXOI'
+    'AQESgwEKJW93bl9jdXJ2ZV9zdXBwbHlfcGx1c18yMF9jZW50aWRlZ3JlZXMYFiABKBFCLaK1GC'
+    'Vvd25fY3VydmVfc3VwcGx5X3BsdXNfMjBfY2VudGlkZWdyZWVz0LUYBUgaUiBvd25DdXJ2ZVN1'
+    'cHBseVBsdXMyMENlbnRpZGVncmVlc4gBARKDAQolb3duX2N1cnZlX3N1cHBseV9wbHVzXzEwX2'
+    'NlbnRpZGVncmVlcxgXIAEoEUItorUYJW93bl9jdXJ2ZV9zdXBwbHlfcGx1c18xMF9jZW50aWRl'
+    'Z3JlZXPQtRgFSBtSIG93bkN1cnZlU3VwcGx5UGx1czEwQ2VudGlkZWdyZWVziAEBEnIKH293bl'
+    '9jdXJ2ZV9zdXBwbHlfMF9jZW50aWRlZ3JlZXMYGCABKBFCJ6K1GB9vd25fY3VydmVfc3VwcGx5'
+    'XzBfY2VudGlkZWdyZWVz0LUYBUgcUhtvd25DdXJ2ZVN1cHBseTBDZW50aWRlZ3JlZXOIAQEShg'
+    'EKJm93bl9jdXJ2ZV9zdXBwbHlfbWludXNfMTBfY2VudGlkZWdyZWVzGBkgASgRQi6itRgmb3du'
+    'X2N1cnZlX3N1cHBseV9taW51c18xMF9jZW50aWRlZ3JlZXPQtRgFSB1SIW93bkN1cnZlU3VwcG'
+    'x5TWludXMxMENlbnRpZGVncmVlc4gBARKGAQomb3duX2N1cnZlX3N1cHBseV9taW51c18yMF9j'
+    'ZW50aWRlZ3JlZXMYGiABKBFCLqK1GCZvd25fY3VydmVfc3VwcGx5X21pbnVzXzIwX2NlbnRpZG'
+    'VncmVlc9C1GAVIHlIhb3duQ3VydmVTdXBwbHlNaW51czIwQ2VudGlkZWdyZWVziAEBEoYBCiZv'
+    'd25fY3VydmVfc3VwcGx5X21pbnVzXzMwX2NlbnRpZGVncmVlcxgbIAEoEUIuorUYJm93bl9jdX'
+    'J2ZV9zdXBwbHlfbWludXNfMzBfY2VudGlkZWdyZWVz0LUYBUgfUiFvd25DdXJ2ZVN1cHBseU1p'
+    'bnVzMzBDZW50aWRlZ3JlZXOIAQESdgogY3VydmVfcG9pbnRfb3V0ZG9vcl9jZW50aWRlZ3JlZX'
+    'MYHCABKBFCKKK1GCBjdXJ2ZV9wb2ludF9vdXRkb29yX2NlbnRpZGVncmVlc9C1GAVIIFIdY3Vy'
+    'dmVQb2ludE91dGRvb3JDZW50aWRlZ3JlZXOIAQEScwofY3VydmVfcG9pbnRfb2Zmc2V0X2Nlbn'
+    'RpZGVncmVlcxgdIAEoEUInorUYH2N1cnZlX3BvaW50X29mZnNldF9jZW50aWRlZ3JlZXPQtRgF'
+    'SCFSHGN1cnZlUG9pbnRPZmZzZXRDZW50aWRlZ3JlZXOIAQE6F6q1GBNrdXNpbnRhLmhlYXRfc2'
+    '91cmNlQhcKFV9vdXRkb29yX2NlbnRpZGVncmVlc0IWChRfc3VwcGx5X2NlbnRpZGVncmVlc0IW'
+    'ChRfcmV0dXJuX2NlbnRpZGVncmVlc0IdChtfaG90X3dhdGVyX3RvcF9jZW50aWRlZ3JlZXNCIg'
+    'ogX2hvdF93YXRlcl9jaGFyZ2luZ19jZW50aWRlZ3JlZXNCIQofX2NhbGN1bGF0ZWRfc3VwcGx5'
+    'X2NlbnRpZGVncmVlc0IMCgpfcHJvZHVjaW5nQhMKEV9jb21wcmVzc29yX3N0YXRlQhQKEl9jb2'
+    '1wcmVzc29yX3N0YXJ0c0IdChtfY29tcHJlc3Nvcl9vcGVyYXRpbmdfaG91cnNCJwolX2NvbXBy'
+    'ZXNzb3JfaG90X3dhdGVyX29wZXJhdGluZ19ob3Vyc0IRCg9fZGVncmVlX21pbnV0ZXNCDwoNX2'
+    'FsYXJtX2FjdGl2ZUINCgtfYWxhcm1fY29kZUIUChJfYWRkX29uX2hlYXRfd2F0dHNCHQobX2V4'
+    'dGVybmFsX2FkanVzdG1lbnRfYWN0aXZlQhEKD19vcGVyYXRpbmdfbW9kZUIkCiJfaGVhdGluZ1'
+    '9zdG9wX291dGRvb3JfY2VudGlkZWdyZWVzQiMKIV9hZGRfb25fc3RvcF9vdXRkb29yX2NlbnRp'
+    'ZGVncmVlc0IXChVfb3V0ZG9vcl9maWx0ZXJfaG91cnNCEwoRX2FkZF9vbl9tYXhfd2F0dHNCFQ'
+    'oTX293bl9jdXJ2ZV9pbl9mb3JjZUIQCg5faGVhdGluZ19jdXJ2ZUIXChVfaGVhdGluZ19jdXJ2'
+    'ZV9vZmZzZXRCGgoYX21pbl9zdXBwbHlfY2VudGlkZWdyZWVzQigKJl9vd25fY3VydmVfc3VwcG'
+    'x5X3BsdXNfMzBfY2VudGlkZWdyZWVzQigKJl9vd25fY3VydmVfc3VwcGx5X3BsdXNfMjBfY2Vu'
+    'dGlkZWdyZWVzQigKJl9vd25fY3VydmVfc3VwcGx5X3BsdXNfMTBfY2VudGlkZWdyZWVzQiIKIF'
+    '9vd25fY3VydmVfc3VwcGx5XzBfY2VudGlkZWdyZWVzQikKJ19vd25fY3VydmVfc3VwcGx5X21p'
+    'bnVzXzEwX2NlbnRpZGVncmVlc0IpCidfb3duX2N1cnZlX3N1cHBseV9taW51c18yMF9jZW50aW'
+    'RlZ3JlZXNCKQonX293bl9jdXJ2ZV9zdXBwbHlfbWludXNfMzBfY2VudGlkZWdyZWVzQiMKIV9j'
+    'dXJ2ZV9wb2ludF9vdXRkb29yX2NlbnRpZGVncmVlc0IiCiBfY3VydmVfcG9pbnRfb2Zmc2V0X2'
+    'NlbnRpZGVncmVlcw==');
 
 @$core.Deprecated('Use deviceAttentionDescriptor instead')
 const DeviceAttention$json = {
