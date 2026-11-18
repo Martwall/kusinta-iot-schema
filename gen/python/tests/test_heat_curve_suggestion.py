@@ -445,3 +445,22 @@ def test_an_apply_is_answered_with_the_plants_views():
 
     decoded = _round_trip(result)
     assert decoded.heat_curve_views.views[0].last_applied.suggestion_id == "s-1"
+
+
+# A revert to a numbered curve.
+
+
+def test_a_numbered_curve_not_as_set_back_keeps_its_number():
+    assert heating_pb2.HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE == 7
+
+
+def test_a_numbered_curve_not_as_set_back_names_the_curve_found():
+    mismatch = heating_pb2.HeatCurveMismatch(kind=heating_pb2.HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE, found_curve=7)
+
+    assert _round_trip(mismatch) == mismatch
+
+
+def test_a_numbered_curve_found_absent_is_not_known():
+    decoded = _round_trip(heating_pb2.HeatCurveMismatch(kind=heating_pb2.HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE))
+
+    assert not decoded.HasField("found_curve")

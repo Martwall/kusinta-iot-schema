@@ -1218,13 +1218,17 @@ message HeatCurveViews {
 // temperature, worked out from each zone's openings and the supply it got (WHAT IT SHOWS). The
 // curve is held between the heat source's lowest and highest supply
 // (HeatCurveOptimised.min_supply_centidegrees, max_supply_centidegrees): flat at the one below
-// it and at the other above it.
+// it and at the other above it. Each point is rounded up to a whole degree: a heat source set by
+// hand takes whole degrees, and rounding up keeps the most demanding zone within its threshold.
+// An own curve's setting takes the point as it stands (HeatCurveSuggestion.settings).
 //
 // CONFIDENCE. A point is SEEN where the window holds enough days in its band for the gateway to
 // judge it, and ESTIMATED otherwise: extrapolated from the seen points with a heat loss fitted to
-// the building and the standard curves of its emitters. An estimated point is cautious: it is
-// lowered by part of what the extrapolation says, never all of it, and never below the current
-// curve at that point until its band is seen. Where the current curve is not known at a point
+// the building and the standard curves of its emitters. The cold end is cautious. The first
+// estimated point colder than the coldest band seen may be lowered by part of the drop the
+// extrapolation gives there, never all of it, and never below the supply a warmer seen point
+// needs. Every point colder than that one stays at the current curve at that point until its
+// band is seen. Where the current curve is not known at a point
 // (HeatCurvePoint.current_supply_centidegrees unset, as with a numbered curve whose shape the
 // gateway does not hold), an estimated point there is not lowered at all: it stays at what the
 // seen bands support, and a client tells it by that confidence with the current supply unset. As
@@ -1240,7 +1244,8 @@ message HeatCurveViews {
 //     (or lower) than needed: move the shift one step. A curve follows as bands are seen.
 // A suggestion carries an identity (suggestion_id), so that an apply or a decline acts on what
 // was shown. The gateway gives a new one only on a material change: a point newly confirmed, a
-// point of the suggested curve moving by 1 °C or more, or a shift suggestion becoming a curve.
+// point of the suggested curve changing (rounded to whole degrees, any change is one of 1 °C or
+// more), or a shift suggestion becoming a curve.
 // A suggestion refreshed without one keeps its identity, its settings updated, and with it any
 // decline, so that a decline is not asked again for the same suggestion. A home's wipe, and a
 // new household's residency in it, clear every decline of a heat source in the home, so that
@@ -1312,7 +1317,8 @@ message HeatCurvePoint {
   sint32 outdoor_centidegrees = 1;
 
   // The supply the optimised curve sets at it, in centidegrees, held between the heat source's
-  // lowest and highest supply (OPTIMISED CURVE).
+  // lowest and highest supply and rounded up to a whole degree (OPTIMISED CURVE): a multiple of
+  // 100.
   sint32 supply_centidegrees = 2;
 
   // The supply the curve in force sets at it, in centidegrees, as worked out from the curve
@@ -1362,7 +1368,8 @@ message HeatCurveSuggestion {
   // The heat source's curve settings that applying it sets, in the heat source's own format
   // (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
   // own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
-  // each taking the optimised curve's supply at its outdoor temperature, and
+  // each taking the optimised curve's supply at its outdoor temperature as it stands (a whole
+  // degree, OPTIMISED CURVE), and
   // curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
   // heating_curve_offset, one step from the one in force.
   kusinta.iot.device.v1.HeatSourceReadings settings = 3;
@@ -1475,6 +1482,11 @@ enum HeatCurveMismatchKind {
   // The bend's offset is not 0 under an own curve (found_bend_offset_centidegrees, with
   // outdoor_centidegrees its outdoor point where read).
   HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL = 6;
+
+  // A revert to a numbered curve (webrtc.v1.ApplyHeatCurve.revert), read back, finds it not in
+  // force as set back: another numbered curve (found_curve), or the own curve still in force
+  // (found_curve unset).
+  HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE = 7;
 }
 
 // One setting found otherwise than applied.
@@ -1495,6 +1507,10 @@ message HeatCurveMismatch {
   // The bend's offset found, in centidegrees (device.v1.HeatSourceReadings
   // .curve_point_offset_centidegrees).
   optional sint32 found_bend_offset_centidegrees = 6;
+
+  // The numbered curve found, by the heat source's own numbering (device.v1.HeatSourceReadings
+  // .heating_curve). Unset where the own curve is in force, and where none is read.
+  optional uint32 found_curve = 7;
 }
 
 // The last curve applied to a plant's heat source, and whether it is verified (APPLYING).
@@ -1539,7 +1555,7 @@ message HeatCurveApplied {
 // curve_lowered_by_centidegrees in the bands named. It suggests one only where the room's target
 // is above the median of the targets of the home's rooms that have one, suggesting that median,
 // or 0.5 °C below the room's target where the median is further down; and only where that would
-// let the curve come down by at least 1 °C in at least one band. Otherwise it suggests none for
+// let the curve come down by at least 0.5 °C in at least one band. Otherwise it suggests none for
 // the room. It is the household's comfort: the gateway
 // never changes a room's target by it, automatic savings included (AUTOMATIC SAVINGS). A
 // household acts on it by setting the room's target as it sets any target, or declines it
@@ -1567,8 +1583,9 @@ message HeatCurveRoomTargetSuggestion {
   sint32 suggested_target_centidegrees = 4;
 
   // About how far the curve could come down with the target suggested, in the bands named:
-  // rounded to whole degrees, in centidegrees (a multiple of 100, at least 100), since a finer
-  // figure hints at the zones of another home on the plant. Unset where not known.
+  // rounded half up to whole degrees, in centidegrees (a multiple of 100, at least 100, since the
+  // least a suggestion is made for is 0.5 °C), as a finer figure hints at the zones of another
+  // home on the plant. Unset where not known.
   optional sint32 curve_lowered_by_centidegrees = 5;
 
   // The bands it would come down in, by their outdoor_from_centidegrees (HeatCurveBand), coldest
