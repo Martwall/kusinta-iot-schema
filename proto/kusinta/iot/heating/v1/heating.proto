@@ -1220,19 +1220,22 @@ message HeatCurveViews {
 // (HeatCurveOptimised.min_supply_centidegrees, max_supply_centidegrees): flat at the one below
 // it and at the other above it. Each point is rounded up to a whole degree: a heat source set by
 // hand takes whole degrees, and rounding up keeps the most demanding zone within its threshold.
-// An own curve's setting takes the point as it stands (HeatCurveSuggestion.settings).
+// An own curve of fewer points is written from them (HeatCurveSuggestion.settings): each point
+// written is the optimised curve's supply at its outdoor temperature, a milder one raised where
+// needed so that the line between two written points is nowhere below the optimised curve
+// between them.
 //
 // CONFIDENCE. A point is SEEN where the window holds enough days in its band for the gateway to
 // judge it, and ESTIMATED otherwise: extrapolated from the seen points with a heat loss fitted to
 // the building and the standard curves of its emitters. The cold end is cautious. The first
 // estimated point colder than the coldest band seen may be lowered by part of the drop the
-// extrapolation gives there, never all of it, and never below the supply a warmer seen point
-// needs. Every point colder than that one stays at the current curve at that point until its
-// band is seen. Where the current curve is not known at a point
-// (HeatCurvePoint.current_supply_centidegrees unset, as with a numbered curve whose shape the
-// gateway does not hold), an estimated point there is not lowered at all: it stays at what the
-// seen bands support, and a client tells it by that confidence with the current supply unset. As
-// bands are seen their points are confirmed, and may move.
+// extrapolation gives there, never all of it, and never below the most any seen point needs.
+// Every point colder than that one is never below the current curve at that point until its
+// band is seen, and higher where the extrapolation asks more. Where the current curve is not
+// known at a point (HeatCurvePoint.current_supply_centidegrees unset, as with a numbered curve
+// whose shape the gateway does not hold), an estimated point there is not lowered at all: it
+// stays at what the seen bands support, and a client tells it by that confidence with the
+// current supply unset. As bands are seen their points are confirmed, and may move.
 //
 // SUGGESTION (HeatCurveView.suggestion). Where setting the optimised curve would save against
 // the one in force, the gateway suggests it, with the saving:
@@ -1245,7 +1248,7 @@ message HeatCurveViews {
 // A suggestion carries an identity (suggestion_id), so that an apply or a decline acts on what
 // was shown. The gateway gives a new one only on a material change: a point newly confirmed, a
 // point of the suggested curve changing (rounded to whole degrees, any change is one of 1 °C or
-// more), or a shift suggestion becoming a curve.
+// more), the suggestion changing kind, or a shift suggestion moving to another step.
 // A suggestion refreshed without one keeps its identity, its settings updated, and with it any
 // decline, so that a decline is not asked again for the same suggestion. A home's wipe, and a
 // new household's residency in it, clear every decline of a heat source in the home, so that
@@ -1368,9 +1371,10 @@ message HeatCurveSuggestion {
   // The heat source's curve settings that applying it sets, in the heat source's own format
   // (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
   // own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
-  // each taking the optimised curve's supply at its outdoor temperature as it stands (a whole
-  // degree, OPTIMISED CURVE), and
-  // curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
+  // each the optimised curve's supply at its outdoor temperature, a milder one raised where
+  // needed so that the line between two written points is nowhere below the optimised curve
+  // between them (OPTIMISED CURVE), and curve_point_offset_centidegrees 0, the bend's outdoor
+  // point left as it is. For a shift:
   // heating_curve_offset, one step from the one in force.
   kusinta.iot.device.v1.HeatSourceReadings settings = 3;
 
