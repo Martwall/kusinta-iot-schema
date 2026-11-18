@@ -638,7 +638,7 @@ class HeatCurveBand(_message.Message):
     def __init__(self, outdoor_from_centidegrees: _Optional[int] = ..., outdoor_to_centidegrees: _Optional[int] = ..., quarters: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., add_on_heat_wh: _Optional[int] = ..., add_on_running_permille: _Optional[int] = ..., limit: _Optional[_Union[HeatCurveLimit, _Mapping]] = ...) -> None: ...
 
 class HeatCurveView(_message.Message):
-    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions", "history", "no_suggestion_reason")
+    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions", "history", "no_suggestion_reason", "compressor_wear")
     PLANT_ID_FIELD_NUMBER: _ClassVar[int]
     PLANT_NAME_FIELD_NUMBER: _ClassVar[int]
     WINDOW_FROM_FIELD_NUMBER: _ClassVar[int]
@@ -656,6 +656,7 @@ class HeatCurveView(_message.Message):
     ROOM_TARGET_SUGGESTIONS_FIELD_NUMBER: _ClassVar[int]
     HISTORY_FIELD_NUMBER: _ClassVar[int]
     NO_SUGGESTION_REASON_FIELD_NUMBER: _ClassVar[int]
+    COMPRESSOR_WEAR_FIELD_NUMBER: _ClassVar[int]
     plant_id: str
     plant_name: str
     window_from: _timestamp_pb2.Timestamp
@@ -673,7 +674,52 @@ class HeatCurveView(_message.Message):
     room_target_suggestions: _containers.RepeatedCompositeFieldContainer[HeatCurveRoomTargetSuggestion]
     history: _containers.RepeatedCompositeFieldContainer[HeatCurveHistoryEntry]
     no_suggestion_reason: HeatCurveNoSuggestionReason
-    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ..., history: _Optional[_Iterable[_Union[HeatCurveHistoryEntry, _Mapping]]] = ..., no_suggestion_reason: _Optional[_Union[HeatCurveNoSuggestionReason, str]] = ...) -> None: ...
+    compressor_wear: CompressorWear
+    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ..., history: _Optional[_Iterable[_Union[HeatCurveHistoryEntry, _Mapping]]] = ..., no_suggestion_reason: _Optional[_Union[HeatCurveNoSuggestionReason, str]] = ..., compressor_wear: _Optional[_Union[CompressorWear, _Mapping]] = ...) -> None: ...
+
+class CompressorWear(_message.Message):
+    __slots__ = ("days", "lifetime_run_length_minutes", "short_cycling")
+    DAYS_FIELD_NUMBER: _ClassVar[int]
+    LIFETIME_RUN_LENGTH_MINUTES_FIELD_NUMBER: _ClassVar[int]
+    SHORT_CYCLING_FIELD_NUMBER: _ClassVar[int]
+    days: _containers.RepeatedCompositeFieldContainer[CompressorWearDay]
+    lifetime_run_length_minutes: int
+    short_cycling: bool
+    def __init__(self, days: _Optional[_Iterable[_Union[CompressorWearDay, _Mapping]]] = ..., lifetime_run_length_minutes: _Optional[int] = ..., short_cycling: _Optional[bool] = ...) -> None: ...
+
+class CompressorWearDay(_message.Message):
+    __slots__ = ("date", "starts", "hours", "hot_water_hours", "space_heating_hours", "partial", "run_length_minutes")
+    DATE_FIELD_NUMBER: _ClassVar[int]
+    STARTS_FIELD_NUMBER: _ClassVar[int]
+    HOURS_FIELD_NUMBER: _ClassVar[int]
+    HOT_WATER_HOURS_FIELD_NUMBER: _ClassVar[int]
+    SPACE_HEATING_HOURS_FIELD_NUMBER: _ClassVar[int]
+    PARTIAL_FIELD_NUMBER: _ClassVar[int]
+    RUN_LENGTH_MINUTES_FIELD_NUMBER: _ClassVar[int]
+    date: str
+    starts: int
+    hours: int
+    hot_water_hours: int
+    space_heating_hours: int
+    partial: bool
+    run_length_minutes: int
+    def __init__(self, date: _Optional[str] = ..., starts: _Optional[int] = ..., hours: _Optional[int] = ..., hot_water_hours: _Optional[int] = ..., space_heating_hours: _Optional[int] = ..., partial: _Optional[bool] = ..., run_length_minutes: _Optional[int] = ...) -> None: ...
+
+class HeatCurveCompressorEffect(_message.Message):
+    __slots__ = ("starts_per_day_tenths_before", "starts_per_day_tenths_after", "space_heating_run_length_minutes_before", "space_heating_run_length_minutes_after", "days_compared", "matched_on_heat_source_outdoor")
+    STARTS_PER_DAY_TENTHS_BEFORE_FIELD_NUMBER: _ClassVar[int]
+    STARTS_PER_DAY_TENTHS_AFTER_FIELD_NUMBER: _ClassVar[int]
+    SPACE_HEATING_RUN_LENGTH_MINUTES_BEFORE_FIELD_NUMBER: _ClassVar[int]
+    SPACE_HEATING_RUN_LENGTH_MINUTES_AFTER_FIELD_NUMBER: _ClassVar[int]
+    DAYS_COMPARED_FIELD_NUMBER: _ClassVar[int]
+    MATCHED_ON_HEAT_SOURCE_OUTDOOR_FIELD_NUMBER: _ClassVar[int]
+    starts_per_day_tenths_before: int
+    starts_per_day_tenths_after: int
+    space_heating_run_length_minutes_before: int
+    space_heating_run_length_minutes_after: int
+    days_compared: int
+    matched_on_heat_source_outdoor: bool
+    def __init__(self, starts_per_day_tenths_before: _Optional[int] = ..., starts_per_day_tenths_after: _Optional[int] = ..., space_heating_run_length_minutes_before: _Optional[int] = ..., space_heating_run_length_minutes_after: _Optional[int] = ..., days_compared: _Optional[int] = ..., matched_on_heat_source_outdoor: _Optional[bool] = ...) -> None: ...
 
 class HeatCurveViews(_message.Message):
     __slots__ = ("views",)
@@ -740,7 +786,7 @@ class HeatCurveHandOver(_message.Message):
     def __init__(self, technician: _Optional[_Union[_identity_pb2.UserId, _Mapping]] = ..., since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., done_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class HeatCurveHistoryEntry(_message.Message):
-    __slots__ = ("suggestion_id", "kind", "outcome", "at", "settings", "hand_over", "still_current")
+    __slots__ = ("suggestion_id", "kind", "outcome", "at", "settings", "hand_over", "still_current", "compressor_effect")
     SUGGESTION_ID_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     OUTCOME_FIELD_NUMBER: _ClassVar[int]
@@ -748,6 +794,7 @@ class HeatCurveHistoryEntry(_message.Message):
     SETTINGS_FIELD_NUMBER: _ClassVar[int]
     HAND_OVER_FIELD_NUMBER: _ClassVar[int]
     STILL_CURRENT_FIELD_NUMBER: _ClassVar[int]
+    COMPRESSOR_EFFECT_FIELD_NUMBER: _ClassVar[int]
     suggestion_id: str
     kind: HeatCurveSuggestionKind
     outcome: HeatCurveHistoryOutcome
@@ -755,7 +802,8 @@ class HeatCurveHistoryEntry(_message.Message):
     settings: _device_pb2.HeatSourceReadings
     hand_over: HeatCurveHandOver
     still_current: bool
-    def __init__(self, suggestion_id: _Optional[str] = ..., kind: _Optional[_Union[HeatCurveSuggestionKind, str]] = ..., outcome: _Optional[_Union[HeatCurveHistoryOutcome, str]] = ..., at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., hand_over: _Optional[_Union[HeatCurveHandOver, _Mapping]] = ..., still_current: _Optional[bool] = ...) -> None: ...
+    compressor_effect: HeatCurveCompressorEffect
+    def __init__(self, suggestion_id: _Optional[str] = ..., kind: _Optional[_Union[HeatCurveSuggestionKind, str]] = ..., outcome: _Optional[_Union[HeatCurveHistoryOutcome, str]] = ..., at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., hand_over: _Optional[_Union[HeatCurveHandOver, _Mapping]] = ..., still_current: _Optional[bool] = ..., compressor_effect: _Optional[_Union[HeatCurveCompressorEffect, _Mapping]] = ...) -> None: ...
 
 class HeatCurveMismatch(_message.Message):
     __slots__ = ("kind", "outdoor_centidegrees", "expected_supply_centidegrees", "found_supply_centidegrees", "found_offset", "found_bend_offset_centidegrees", "found_curve")

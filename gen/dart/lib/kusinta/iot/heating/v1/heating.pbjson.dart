@@ -1834,6 +1834,14 @@ const HeatCurveView$json = {
       '6': '.kusinta.iot.heating.v1.HeatCurveNoSuggestionReason',
       '10': 'noSuggestionReason'
     },
+    {
+      '1': 'compressor_wear',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.CompressorWear',
+      '10': 'compressorWear'
+    },
   ],
 };
 
@@ -1860,7 +1868,177 @@ final $typed_data.Uint8List heatCurveViewDescriptor = $convert.base64Decode(
     'c3RvcnkYECADKAsyLS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRDdXJ2ZUhpc3RvcnlFbn'
     'RyeVIHaGlzdG9yeRJlChRub19zdWdnZXN0aW9uX3JlYXNvbhgRIAEoDjIzLmt1c2ludGEuaW90'
     'LmhlYXRpbmcudjEuSGVhdEN1cnZlTm9TdWdnZXN0aW9uUmVhc29uUhJub1N1Z2dlc3Rpb25SZW'
-    'Fzb24=');
+    'Fzb24STwoPY29tcHJlc3Nvcl93ZWFyGBIgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy52MS5D'
+    'b21wcmVzc29yV2VhclIOY29tcHJlc3NvcldlYXI=');
+
+@$core.Deprecated('Use compressorWearDescriptor instead')
+const CompressorWear$json = {
+  '1': 'CompressorWear',
+  '2': [
+    {
+      '1': 'days',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.CompressorWearDay',
+      '10': 'days'
+    },
+    {
+      '1': 'lifetime_run_length_minutes',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'lifetimeRunLengthMinutes',
+      '17': true
+    },
+    {'1': 'short_cycling', '3': 3, '4': 1, '5': 8, '10': 'shortCycling'},
+  ],
+  '8': [
+    {'1': '_lifetime_run_length_minutes'},
+  ],
+};
+
+/// Descriptor for `CompressorWear`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List compressorWearDescriptor = $convert.base64Decode(
+    'Cg5Db21wcmVzc29yV2VhchI9CgRkYXlzGAEgAygLMikua3VzaW50YS5pb3QuaGVhdGluZy52MS'
+    '5Db21wcmVzc29yV2VhckRheVIEZGF5cxJCChtsaWZldGltZV9ydW5fbGVuZ3RoX21pbnV0ZXMY'
+    'AiABKA1IAFIYbGlmZXRpbWVSdW5MZW5ndGhNaW51dGVziAEBEiMKDXNob3J0X2N5Y2xpbmcYAy'
+    'ABKAhSDHNob3J0Q3ljbGluZ0IeChxfbGlmZXRpbWVfcnVuX2xlbmd0aF9taW51dGVz');
+
+@$core.Deprecated('Use compressorWearDayDescriptor instead')
+const CompressorWearDay$json = {
+  '1': 'CompressorWearDay',
+  '2': [
+    {'1': 'date', '3': 1, '4': 1, '5': 9, '10': 'date'},
+    {
+      '1': 'starts',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'starts',
+      '17': true
+    },
+    {'1': 'hours', '3': 3, '4': 1, '5': 13, '9': 1, '10': 'hours', '17': true},
+    {
+      '1': 'hot_water_hours',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 2,
+      '10': 'hotWaterHours',
+      '17': true
+    },
+    {
+      '1': 'space_heating_hours',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'spaceHeatingHours',
+      '17': true
+    },
+    {'1': 'partial', '3': 6, '4': 1, '5': 8, '10': 'partial'},
+    {
+      '1': 'run_length_minutes',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '9': 4,
+      '10': 'runLengthMinutes',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_starts'},
+    {'1': '_hours'},
+    {'1': '_hot_water_hours'},
+    {'1': '_space_heating_hours'},
+    {'1': '_run_length_minutes'},
+  ],
+};
+
+/// Descriptor for `CompressorWearDay`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List compressorWearDayDescriptor = $convert.base64Decode(
+    'ChFDb21wcmVzc29yV2VhckRheRISCgRkYXRlGAEgASgJUgRkYXRlEhsKBnN0YXJ0cxgCIAEoDU'
+    'gAUgZzdGFydHOIAQESGQoFaG91cnMYAyABKA1IAVIFaG91cnOIAQESKwoPaG90X3dhdGVyX2hv'
+    'dXJzGAQgASgNSAJSDWhvdFdhdGVySG91cnOIAQESMwoTc3BhY2VfaGVhdGluZ19ob3VycxgFIA'
+    'EoDUgDUhFzcGFjZUhlYXRpbmdIb3Vyc4gBARIYCgdwYXJ0aWFsGAYgASgIUgdwYXJ0aWFsEjEK'
+    'EnJ1bl9sZW5ndGhfbWludXRlcxgHIAEoDUgEUhBydW5MZW5ndGhNaW51dGVziAEBQgkKB19zdG'
+    'FydHNCCAoGX2hvdXJzQhIKEF9ob3Rfd2F0ZXJfaG91cnNCFgoUX3NwYWNlX2hlYXRpbmdfaG91'
+    'cnNCFQoTX3J1bl9sZW5ndGhfbWludXRlcw==');
+
+@$core.Deprecated('Use heatCurveCompressorEffectDescriptor instead')
+const HeatCurveCompressorEffect$json = {
+  '1': 'HeatCurveCompressorEffect',
+  '2': [
+    {
+      '1': 'starts_per_day_tenths_before',
+      '3': 1,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'startsPerDayTenthsBefore',
+      '17': true
+    },
+    {
+      '1': 'starts_per_day_tenths_after',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'startsPerDayTenthsAfter',
+      '17': true
+    },
+    {
+      '1': 'space_heating_run_length_minutes_before',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 2,
+      '10': 'spaceHeatingRunLengthMinutesBefore',
+      '17': true
+    },
+    {
+      '1': 'space_heating_run_length_minutes_after',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 3,
+      '10': 'spaceHeatingRunLengthMinutesAfter',
+      '17': true
+    },
+    {'1': 'days_compared', '3': 5, '4': 1, '5': 13, '10': 'daysCompared'},
+    {
+      '1': 'matched_on_heat_source_outdoor',
+      '3': 6,
+      '4': 1,
+      '5': 8,
+      '10': 'matchedOnHeatSourceOutdoor'
+    },
+  ],
+  '8': [
+    {'1': '_starts_per_day_tenths_before'},
+    {'1': '_starts_per_day_tenths_after'},
+    {'1': '_space_heating_run_length_minutes_before'},
+    {'1': '_space_heating_run_length_minutes_after'},
+  ],
+};
+
+/// Descriptor for `HeatCurveCompressorEffect`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurveCompressorEffectDescriptor = $convert.base64Decode(
+    'ChlIZWF0Q3VydmVDb21wcmVzc29yRWZmZWN0EkMKHHN0YXJ0c19wZXJfZGF5X3RlbnRoc19iZW'
+    'ZvcmUYASABKA1IAFIYc3RhcnRzUGVyRGF5VGVudGhzQmVmb3JliAEBEkEKG3N0YXJ0c19wZXJf'
+    'ZGF5X3RlbnRoc19hZnRlchgCIAEoDUgBUhdzdGFydHNQZXJEYXlUZW50aHNBZnRlcogBARJYCi'
+    'dzcGFjZV9oZWF0aW5nX3J1bl9sZW5ndGhfbWludXRlc19iZWZvcmUYAyABKA1IAlIic3BhY2VI'
+    'ZWF0aW5nUnVuTGVuZ3RoTWludXRlc0JlZm9yZYgBARJWCiZzcGFjZV9oZWF0aW5nX3J1bl9sZW'
+    '5ndGhfbWludXRlc19hZnRlchgEIAEoDUgDUiFzcGFjZUhlYXRpbmdSdW5MZW5ndGhNaW51dGVz'
+    'QWZ0ZXKIAQESIwoNZGF5c19jb21wYXJlZBgFIAEoDVIMZGF5c0NvbXBhcmVkEkIKHm1hdGNoZW'
+    'Rfb25faGVhdF9zb3VyY2Vfb3V0ZG9vchgGIAEoCFIabWF0Y2hlZE9uSGVhdFNvdXJjZU91dGRv'
+    'b3JCHwodX3N0YXJ0c19wZXJfZGF5X3RlbnRoc19iZWZvcmVCHgocX3N0YXJ0c19wZXJfZGF5X3'
+    'RlbnRoc19hZnRlckIqCihfc3BhY2VfaGVhdGluZ19ydW5fbGVuZ3RoX21pbnV0ZXNfYmVmb3Jl'
+    'QikKJ19zcGFjZV9oZWF0aW5nX3J1bl9sZW5ndGhfbWludXRlc19hZnRlcg==');
 
 @$core.Deprecated('Use heatCurveViewsDescriptor instead')
 const HeatCurveViews$json = {
@@ -2158,6 +2336,14 @@ const HeatCurveHistoryEntry$json = {
       '10': 'handOver'
     },
     {'1': 'still_current', '3': 7, '4': 1, '5': 8, '10': 'stillCurrent'},
+    {
+      '1': 'compressor_effect',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveCompressorEffect',
+      '10': 'compressorEffect'
+    },
   ],
 };
 
@@ -2170,7 +2356,9 @@ final $typed_data.Uint8List heatCurveHistoryEntryDescriptor = $convert.base64Dec
     'Z2xlLnByb3RvYnVmLlRpbWVzdGFtcFICYXQSRQoIc2V0dGluZ3MYBSABKAsyKS5rdXNpbnRhLm'
     'lvdC5kZXZpY2UudjEuSGVhdFNvdXJjZVJlYWRpbmdzUghzZXR0aW5ncxJGCgloYW5kX292ZXIY'
     'BiABKAsyKS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRDdXJ2ZUhhbmRPdmVyUghoYW5kT3'
-    'ZlchIjCg1zdGlsbF9jdXJyZW50GAcgASgIUgxzdGlsbEN1cnJlbnQ=');
+    'ZlchIjCg1zdGlsbF9jdXJyZW50GAcgASgIUgxzdGlsbEN1cnJlbnQSXgoRY29tcHJlc3Nvcl9l'
+    'ZmZlY3QYCCABKAsyMS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRDdXJ2ZUNvbXByZXNzb3'
+    'JFZmZlY3RSEGNvbXByZXNzb3JFZmZlY3Q=');
 
 @$core.Deprecated('Use heatCurveMismatchDescriptor instead')
 const HeatCurveMismatch$json = {

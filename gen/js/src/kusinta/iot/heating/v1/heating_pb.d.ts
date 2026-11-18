@@ -1690,6 +1690,14 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
    * @generated from field: kusinta.iot.heating.v1.HeatCurveNoSuggestionReason no_suggestion_reason = 17;
    */
   noSuggestionReason: HeatCurveNoSuggestionReason;
+
+  /**
+   * How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, and for
+   * a heat source that keeps no running totals.
+   *
+   * @generated from field: kusinta.iot.heating.v1.CompressorWear compressor_wear = 18;
+   */
+  compressorWear?: CompressorWear | undefined;
 };
 
 /**
@@ -1697,6 +1705,173 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
  * Use `create(HeatCurveViewSchema)` to create a new message.
  */
 export declare const HeatCurveViewSchema: GenMessage<HeatCurveView>;
+
+/**
+ * How hard a heat source's compressor works (COMPRESSOR WEAR).
+ *
+ * @generated from message kusinta.iot.heating.v1.CompressorWear
+ */
+export declare type CompressorWear = Message<"kusinta.iot.heating.v1.CompressorWear"> & {
+  /**
+   * The last fourteen days of the building's local dates, newest first, today's included as
+   * far as it has gone (partial).
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.CompressorWearDay days = 1;
+   */
+  days: CompressorWearDay[];
+
+  /**
+   * The run length over the compressor's life as first heard: its hours × 60 / its starts,
+   * in whole minutes, as the totals stood when the gateway first heard them. Unset where no
+   * start was counted then.
+   *
+   * @generated from field: optional uint32 lifetime_run_length_minutes = 2;
+   */
+  lifetimeRunLengthMinutes?: number | undefined;
+
+  /**
+   * Whether the compressor short-cycles, judged on sums over the last three whole days, not
+   * on each day: their starts / 3 above the gateway's limit of starts per day, or, with at
+   * least six hours run over them, their hours × 60 / their starts below its limit of
+   * minutes. False where fewer than three whole days are held.
+   *
+   * @generated from field: bool short_cycling = 3;
+   */
+  shortCycling: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.CompressorWear.
+ * Use `create(CompressorWearSchema)` to create a new message.
+ */
+export declare const CompressorWearSchema: GenMessage<CompressorWear>;
+
+/**
+ * One day of a compressor's work (COMPRESSOR WEAR). Its figures are unset where the day is
+ * partial.
+ *
+ * @generated from message kusinta.iot.heating.v1.CompressorWearDay
+ */
+export declare type CompressorWearDay = Message<"kusinta.iot.heating.v1.CompressorWearDay"> & {
+  /**
+   * The local date, as an ISO 8601 calendar date (YYYY-MM-DD).
+   *
+   * @generated from field: string date = 1;
+   */
+  date: string;
+
+  /**
+   * Starts over the day.
+   *
+   * @generated from field: optional uint32 starts = 2;
+   */
+  starts?: number | undefined;
+
+  /**
+   * Hours run over the day, as the difference of whole-hour totals: off by up to an hour
+   * either way.
+   *
+   * @generated from field: optional uint32 hours = 3;
+   */
+  hours?: number | undefined;
+
+  /**
+   * The part of hours run on hot water, read as hours is, and never more than hours: the two
+   * are differences of separate whole-hour totals, so the hot water's can come out an hour
+   * above, and is then given as hours.
+   *
+   * @generated from field: optional uint32 hot_water_hours = 4;
+   */
+  hotWaterHours?: number | undefined;
+
+  /**
+   * The part of hours run on space heating: hours less hot_water_hours, never below 0.
+   *
+   * @generated from field: optional uint32 space_heating_hours = 5;
+   */
+  spaceHeatingHours?: number | undefined;
+
+  /**
+   * Whether the totals were not heard throughout the day: its figures are then unset, and it
+   * is judged on nothing.
+   *
+   * @generated from field: bool partial = 6;
+   */
+  partial: boolean;
+
+  /**
+   * hours × 60 / starts, in whole minutes, given only where hours is at least 6: below that
+   * a difference of whole-hour totals, off by up to an hour, says too little. Unset there.
+   *
+   * @generated from field: optional uint32 run_length_minutes = 7;
+   */
+  runLengthMinutes?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.CompressorWearDay.
+ * Use `create(CompressorWearDaySchema)` to create a new message.
+ */
+export declare const CompressorWearDaySchema: GenMessage<CompressorWearDay>;
+
+/**
+ * The compressor before and after an applied suggestion (COMPRESSOR WEAR).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveCompressorEffect
+ */
+export declare type HeatCurveCompressorEffect = Message<"kusinta.iot.heating.v1.HeatCurveCompressorEffect"> & {
+  /**
+   * The mean starts per day over the days compared before and after it, in tenths of a start.
+   *
+   * @generated from field: optional uint32 starts_per_day_tenths_before = 1;
+   */
+  startsPerDayTenthsBefore?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 starts_per_day_tenths_after = 2;
+   */
+  startsPerDayTenthsAfter?: number | undefined;
+
+  /**
+   * The run length on space heating over the days compared before and after it: their space
+   * heating hours (never below 0, as a day's are) × 60 / their starts, in whole minutes. The
+   * starts are of both uses, as the heat source counts its starts by no use, so where it
+   * starts often for hot water this reads short. Unset where no start was counted.
+   *
+   * @generated from field: optional uint32 space_heating_run_length_minutes_before = 3;
+   */
+  spaceHeatingRunLengthMinutesBefore?: number | undefined;
+
+  /**
+   * @generated from field: optional uint32 space_heating_run_length_minutes_after = 4;
+   */
+  spaceHeatingRunLengthMinutesAfter?: number | undefined;
+
+  /**
+   * How many days are compared on each side: each whole day of the seven after the apply
+   * paired with a whole day of the seven before it whose mean outdoor temperature is within
+   * 2 °C, each day before used once; the rest are left out.
+   *
+   * @generated from field: uint32 days_compared = 5;
+   */
+  daysCompared: number;
+
+  /**
+   * Whether the days were paired on the heat source's own outdoor reading, where no weather
+   * for the building's place was held (planning.v1.ForecastPoint.temperature_centidegrees),
+   * rather than on that weather: true where any day compared was paired on it. A sensor in
+   * the sun reads high, so a pairing on it is weaker.
+   *
+   * @generated from field: bool matched_on_heat_source_outdoor = 6;
+   */
+  matchedOnHeatSourceOutdoor: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveCompressorEffect.
+ * Use `create(HeatCurveCompressorEffectSchema)` to create a new message.
+ */
+export declare const HeatCurveCompressorEffectSchema: GenMessage<HeatCurveCompressorEffect>;
 
 /**
  * The answer to webrtc.v1.GetHeatCurveView.
@@ -1984,6 +2159,15 @@ export declare type HeatCurveHistoryEntry = Message<"kusinta.iot.heating.v1.Heat
    * @generated from field: bool still_current = 7;
    */
   stillCurrent: boolean;
+
+  /**
+   * For an applied one, the compressor before and after it (COMPRESSOR WEAR): set once seven
+   * whole days after the apply have passed, unset before, and unset where no day could be
+   * compared. Given as the view's figures are.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveCompressorEffect compressor_effect = 8;
+   */
+  compressorEffect?: HeatCurveCompressorEffect | undefined;
 };
 
 /**

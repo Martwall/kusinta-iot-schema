@@ -1212,6 +1212,83 @@ message HeatCurveView {
   // Why nothing is suggested (SUGGESTION). Unspecified where a suggestion is given, and where
   // figures are withheld.
   HeatCurveNoSuggestionReason no_suggestion_reason = 17;
+
+  // How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, and for
+  // a heat source that keeps no running totals.
+  CompressorWear compressor_wear = 18;
+}
+
+// How hard a heat source's compressor works (COMPRESSOR WEAR).
+message CompressorWear {
+  // The last fourteen days of the building's local dates, newest first, today's included as
+  // far as it has gone (partial).
+  repeated CompressorWearDay days = 1;
+
+  // The run length over the compressor's life as first heard: its hours × 60 / its starts,
+  // in whole minutes, as the totals stood when the gateway first heard them. Unset where no
+  // start was counted then.
+  optional uint32 lifetime_run_length_minutes = 2;
+
+  // Whether the compressor short-cycles, judged on sums over the last three whole days, not
+  // on each day: their starts / 3 above the gateway's limit of starts per day, or, with at
+  // least six hours run over them, their hours × 60 / their starts below its limit of
+  // minutes. False where fewer than three whole days are held.
+  bool short_cycling = 3;
+}
+
+// One day of a compressor's work (COMPRESSOR WEAR). Its figures are unset where the day is
+// partial.
+message CompressorWearDay {
+  // The local date, as an ISO 8601 calendar date (YYYY-MM-DD).
+  string date = 1;
+
+  // Starts over the day.
+  optional uint32 starts = 2;
+
+  // Hours run over the day, as the difference of whole-hour totals: off by up to an hour
+  // either way.
+  optional uint32 hours = 3;
+
+  // The part of hours run on hot water, read as hours is, and never more than hours: the two
+  // are differences of separate whole-hour totals, so the hot water's can come out an hour
+  // above, and is then given as hours.
+  optional uint32 hot_water_hours = 4;
+
+  // The part of hours run on space heating: hours less hot_water_hours, never below 0.
+  optional uint32 space_heating_hours = 5;
+
+  // Whether the totals were not heard throughout the day: its figures are then unset, and it
+  // is judged on nothing.
+  bool partial = 6;
+
+  // hours × 60 / starts, in whole minutes, given only where hours is at least 6: below that
+  // a difference of whole-hour totals, off by up to an hour, says too little. Unset there.
+  optional uint32 run_length_minutes = 7;
+}
+
+// The compressor before and after an applied suggestion (COMPRESSOR WEAR).
+message HeatCurveCompressorEffect {
+  // The mean starts per day over the days compared before and after it, in tenths of a start.
+  optional uint32 starts_per_day_tenths_before = 1;
+  optional uint32 starts_per_day_tenths_after = 2;
+
+  // The run length on space heating over the days compared before and after it: their space
+  // heating hours (never below 0, as a day's are) × 60 / their starts, in whole minutes. The
+  // starts are of both uses, as the heat source counts its starts by no use, so where it
+  // starts often for hot water this reads short. Unset where no start was counted.
+  optional uint32 space_heating_run_length_minutes_before = 3;
+  optional uint32 space_heating_run_length_minutes_after = 4;
+
+  // How many days are compared on each side: each whole day of the seven after the apply
+  // paired with a whole day of the seven before it whose mean outdoor temperature is within
+  // 2 °C, each day before used once; the rest are left out.
+  uint32 days_compared = 5;
+
+  // Whether the days were paired on the heat source's own outdoor reading, where no weather
+  // for the building's place was held (planning.v1.ForecastPoint.temperature_centidegrees),
+  // rather than on that weather: true where any day compared was paired on it. A sensor in
+  // the sun reads high, so a pairing on it is weaker.
+  bool matched_on_heat_source_outdoor = 6;
 }
 
 // The answer to webrtc.v1.GetHeatCurveView.
@@ -1326,6 +1403,24 @@ message HeatCurveViews {
 // (commissioning.v1, GRANTS), so an installer under one is given none. A home's history is its
 // household's: none from before the home's last Clear history or its wipe (webrtc.v1
 // household.proto, CLIMATE HISTORY, WIPE).
+//
+// COMPRESSOR WEAR (HeatCurveView.compressor_wear). How hard the heat source's compressor
+// works, from the running totals it keeps (device.v1.HeatSourceReadings.compressor_starts,
+// compressor_operating_hours, compressor_hot_water_operating_hours): per day of the building's
+// local dates, the starts and the hours run, and the hours on hot water and on space heating.
+// A day's figures are the differences of the totals over it; a total lower than the one before
+// is a reset of the heat source's count, never a negative figure: the day keeps what it counted
+// up to the last total before the reset and adds what it counts from the first after it. A day the totals were not heard throughout is partial, its figures not
+// guessed. The totals are in whole hours, so a day's hours are off by up to an hour either way:
+// a run length is judged on sums over several days, never on one day's. Short cycling (many
+// starts, or short runs) is judged over the last three whole days.
+// After an applied suggestion (HISTORY, APPLIED), the starts per day and the run length on
+// space heating over the seven whole days after it are set beside those over the seven before
+// (HeatCurveHistoryEntry.compressor_effect), each day after paired with a day before of a
+// similar outdoor temperature, so that a colder or milder week is not read as the curve's
+// doing. Given as the heat source's figures are (WHO SEES IT): left out where figures are
+// withheld, and for a home's plant none from before its household's start, its last Clear
+// history or its wipe (webrtc.v1 household.proto, CLIMATE HISTORY, WIPE).
 
 // A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 // release of this schema.
@@ -1543,6 +1638,11 @@ message HeatCurveHistoryEntry {
   // Set for a declined suggestion that is still the plant's suggestion: it is reopened by
   // withdrawing its decline (HISTORY).
   bool still_current = 7;
+
+  // For an applied one, the compressor before and after it (COMPRESSOR WEAR): set once seven
+  // whole days after the apply have passed, unset before, and unset where no day could be
+  // compared. Given as the view's figures are.
+  HeatCurveCompressorEffect compressor_effect = 8;
 }
 
 // How a curve came to be applied (APPLYING). A closed list that grows only by a release of this
