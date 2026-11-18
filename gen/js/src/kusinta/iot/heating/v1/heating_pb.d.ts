@@ -1803,9 +1803,10 @@ export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCu
    * The heat source's curve settings that applying it sets, in the heat source's own format
    * (device.v1.HeatSourceReadings, SETTINGS), only those fields set. For a curve:
    * own_curve_in_force true, heating_curve_offset 0 and own_curve_supply_* at the seven points,
-   * each taking the optimised curve's supply at its outdoor temperature as it stands (a whole
-   * degree, OPTIMISED CURVE), and
-   * curve_point_offset_centidegrees 0, the bend's outdoor point left as it is. For a shift:
+   * each the optimised curve's supply at its outdoor temperature, a milder one raised where
+   * needed so that the line between two written points is nowhere below the optimised curve
+   * between them (OPTIMISED CURVE), and curve_point_offset_centidegrees 0, the bend's outdoor
+   * point left as it is. For a shift:
    * heating_curve_offset, one step from the one in force.
    *
    * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings = 3;
