@@ -1682,6 +1682,14 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
    * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveHistoryEntry history = 16;
    */
   history: HeatCurveHistoryEntry[];
+
+  /**
+   * Why nothing is suggested (SUGGESTION). Unspecified where a suggestion is given, and where
+   * figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveNoSuggestionReason no_suggestion_reason = 17;
+   */
+  noSuggestionReason: HeatCurveNoSuggestionReason;
 };
 
 /**
@@ -1767,7 +1775,8 @@ export declare type HeatCurveOptimised = Message<"kusinta.iot.heating.v1.HeatCur
   /**
    * The lowest and the highest supply the curve is held between, in centidegrees: the heat
    * source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
-   * stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+   * stated at its setup where it reports none (commissioning.v1 "plant.min_supply_centidegrees",
+   * "plant.max_supply_centidegrees"). For a plant whose emitters set a narrower range,
    * as radiators alone do, theirs. Unset where not known: the curve is then not held at that
    * end.
    *
@@ -2706,6 +2715,90 @@ export enum HeatCurvePointConfidence {
  * Describes the enum kusinta.iot.heating.v1.HeatCurvePointConfidence.
  */
 export declare const HeatCurvePointConfidenceSchema: GenEnum<HeatCurvePointConfidence>;
+
+/**
+ * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion. A
+ * closed list that grows only by a release of this schema: a client that does not know a value
+ * says that nothing is suggested, without a reason.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveNoSuggestionReason
+ */
+export enum HeatCurveNoSuggestionReason {
+  /**
+   * No reason given: a suggestion is given, figures are withheld, or a reason this client's
+   * schema does not know.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Too little seen to judge the curve: no band seen yet, or, for a step of the shift, none at
+   * or below 0 °C.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN = 1;
+   */
+  TOO_LITTLE_SEEN = 1,
+
+  /**
+   * A curve would save at the points seen, but the curve in force is not known at the colder
+   * points it would set (as with a numbered curve whose shape the gateway does not hold), and
+   * no step of the shift can be suggested either.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN = 2;
+   */
+  COLD_END_UNKNOWN = 2,
+
+  /**
+   * Rooms are short of heat in some band, and the curve cannot be raised a step: the evidence
+   * is too thin, or the heat source's own curve is in force.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT = 3;
+   */
+  ROOMS_SHORT = 3,
+
+  /**
+   * The heat source's own curve is in force and within 2 °C of the optimised one at every point
+   * seen: nothing worth changing.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE = 4;
+   */
+  OWN_CURVE_CLOSE = 4,
+
+  /**
+   * The heat source's shift is not read, so no step of it can be suggested.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN = 5;
+   */
+  SHIFT_UNKNOWN = 5,
+
+  /**
+   * The curve in force is not known at any point seen, so no saving against it can be told.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN = 6;
+   */
+  CURVE_UNKNOWN = 6,
+
+  /**
+   * At some point seen the rooms need less than 2 °C below the curve in force: it is already
+   * close to what they need.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE = 7;
+   */
+  CURVE_CLOSE = 7,
+
+  /**
+   * A step of the shift is called for, but the shift is at the end of its range.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT = 8;
+   */
+  OFFSET_AT_LIMIT = 8,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveNoSuggestionReason.
+ */
+export declare const HeatCurveNoSuggestionReasonSchema: GenEnum<HeatCurveNoSuggestionReason>;
 
 /**
  * The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release

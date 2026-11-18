@@ -3587,6 +3587,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     HeatCurveAutomaticSavings? automaticSavings,
     $core.Iterable<HeatCurveRoomTargetSuggestion>? roomTargetSuggestions,
     $core.Iterable<HeatCurveHistoryEntry>? history,
+    HeatCurveNoSuggestionReason? noSuggestionReason,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3607,6 +3608,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (roomTargetSuggestions != null)
       result.roomTargetSuggestions.addAll(roomTargetSuggestions);
     if (history != null) result.history.addAll(history);
+    if (noSuggestionReason != null)
+      result.noSuggestionReason = noSuggestionReason;
     return result;
   }
 
@@ -3659,6 +3662,12 @@ class HeatCurveView extends $pb.GeneratedMessage {
     ..pc<HeatCurveHistoryEntry>(
         16, _omitFieldNames ? '' : 'history', $pb.PbFieldType.PM,
         subBuilder: HeatCurveHistoryEntry.create)
+    ..e<HeatCurveNoSuggestionReason>(
+        17, _omitFieldNames ? '' : 'noSuggestionReason', $pb.PbFieldType.OE,
+        defaultOrMaker: HeatCurveNoSuggestionReason
+            .HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED,
+        valueOf: HeatCurveNoSuggestionReason.valueOf,
+        enumValues: HeatCurveNoSuggestionReason.values)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3858,6 +3867,18 @@ class HeatCurveView extends $pb.GeneratedMessage {
   /// The plant's past suggestions, newest first (HISTORY). Empty where figures are withheld.
   @$pb.TagNumber(16)
   $pb.PbList<HeatCurveHistoryEntry> get history => $_getList(15);
+
+  /// Why nothing is suggested (SUGGESTION). Unspecified where a suggestion is given, and where
+  /// figures are withheld.
+  @$pb.TagNumber(17)
+  HeatCurveNoSuggestionReason get noSuggestionReason => $_getN(16);
+  @$pb.TagNumber(17)
+  set noSuggestionReason(HeatCurveNoSuggestionReason value) =>
+      $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasNoSuggestionReason() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearNoSuggestionReason() => $_clearField(17);
 }
 
 /// The answer to webrtc.v1.GetHeatCurveView.
@@ -4090,7 +4111,8 @@ class HeatCurveOptimised extends $pb.GeneratedMessage {
 
   /// The lowest and the highest supply the curve is held between, in centidegrees: the heat
   /// source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
-  /// stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+  /// stated at its setup where it reports none (commissioning.v1 "plant.min_supply_centidegrees",
+  /// "plant.max_supply_centidegrees"). For a plant whose emitters set a narrower range,
   /// as radiators alone do, theirs. Unset where not known: the curve is then not held at that
   /// end.
   @$pb.TagNumber(2)

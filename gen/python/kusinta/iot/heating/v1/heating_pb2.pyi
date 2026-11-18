@@ -95,6 +95,18 @@ class HeatCurvePointConfidence(int, metaclass=_enum_type_wrapper.EnumTypeWrapper
     HEAT_CURVE_POINT_CONFIDENCE_SEEN: _ClassVar[HeatCurvePointConfidence]
     HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED: _ClassVar[HeatCurvePointConfidence]
 
+class HeatCurveNoSuggestionReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE: _ClassVar[HeatCurveNoSuggestionReason]
+    HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT: _ClassVar[HeatCurveNoSuggestionReason]
+
 class HeatCurveSuggestionKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED: _ClassVar[HeatCurveSuggestionKind]
@@ -186,6 +198,15 @@ HEAT_CURVE_AUTOMATIC_SAVINGS_OFF: HeatCurveAutomaticSavings
 HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED: HeatCurvePointConfidence
 HEAT_CURVE_POINT_CONFIDENCE_SEEN: HeatCurvePointConfidence
 HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED: HeatCurvePointConfidence
+HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE: HeatCurveNoSuggestionReason
+HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT: HeatCurveNoSuggestionReason
 HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED: HeatCurveSuggestionKind
 HEAT_CURVE_SUGGESTION_KIND_CURVE: HeatCurveSuggestionKind
 HEAT_CURVE_SUGGESTION_KIND_SHIFT: HeatCurveSuggestionKind
@@ -617,7 +638,7 @@ class HeatCurveBand(_message.Message):
     def __init__(self, outdoor_from_centidegrees: _Optional[int] = ..., outdoor_to_centidegrees: _Optional[int] = ..., quarters: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., add_on_heat_wh: _Optional[int] = ..., add_on_running_permille: _Optional[int] = ..., limit: _Optional[_Union[HeatCurveLimit, _Mapping]] = ...) -> None: ...
 
 class HeatCurveView(_message.Message):
-    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions", "history")
+    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions", "history", "no_suggestion_reason")
     PLANT_ID_FIELD_NUMBER: _ClassVar[int]
     PLANT_NAME_FIELD_NUMBER: _ClassVar[int]
     WINDOW_FROM_FIELD_NUMBER: _ClassVar[int]
@@ -634,6 +655,7 @@ class HeatCurveView(_message.Message):
     AUTOMATIC_SAVINGS_FIELD_NUMBER: _ClassVar[int]
     ROOM_TARGET_SUGGESTIONS_FIELD_NUMBER: _ClassVar[int]
     HISTORY_FIELD_NUMBER: _ClassVar[int]
+    NO_SUGGESTION_REASON_FIELD_NUMBER: _ClassVar[int]
     plant_id: str
     plant_name: str
     window_from: _timestamp_pb2.Timestamp
@@ -650,7 +672,8 @@ class HeatCurveView(_message.Message):
     automatic_savings: HeatCurveAutomaticSavings
     room_target_suggestions: _containers.RepeatedCompositeFieldContainer[HeatCurveRoomTargetSuggestion]
     history: _containers.RepeatedCompositeFieldContainer[HeatCurveHistoryEntry]
-    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ..., history: _Optional[_Iterable[_Union[HeatCurveHistoryEntry, _Mapping]]] = ...) -> None: ...
+    no_suggestion_reason: HeatCurveNoSuggestionReason
+    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ..., history: _Optional[_Iterable[_Union[HeatCurveHistoryEntry, _Mapping]]] = ..., no_suggestion_reason: _Optional[_Union[HeatCurveNoSuggestionReason, str]] = ...) -> None: ...
 
 class HeatCurveViews(_message.Message):
     __slots__ = ("views",)
