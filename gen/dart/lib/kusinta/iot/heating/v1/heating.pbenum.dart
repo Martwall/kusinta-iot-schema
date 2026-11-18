@@ -450,6 +450,113 @@ class HeatCurvePointConfidence extends $pb.ProtobufEnum {
   const HeatCurvePointConfidence._(super.value, super.name);
 }
 
+/// Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
+/// Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+/// curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
+/// OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
+/// client that does not know a value says that nothing is suggested, without a reason.
+class HeatCurveNoSuggestionReason extends $pb.ProtobufEnum {
+  /// No reason given: a suggestion is given, figures are withheld, or a reason this client's
+  /// schema does not know.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED =
+      HeatCurveNoSuggestionReason._(0,
+          _omitEnumNames ? '' : 'HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED');
+
+  /// Too little seen to judge the curve: no band seen yet, or, for a step of the shift, none at
+  /// or below 0 °C.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN =
+      HeatCurveNoSuggestionReason._(
+          1,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN');
+
+  /// A curve would save at the points seen, but the curve in force is not known at the colder
+  /// points it would set (as with a numbered curve whose shape the gateway does not hold), and
+  /// no step of the shift can be suggested either.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN =
+      HeatCurveNoSuggestionReason._(
+          2,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN');
+
+  /// Rooms are short of heat in some band, and the curve cannot be raised a step: the evidence
+  /// is too thin, or the heat source's own curve is in force.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT =
+      HeatCurveNoSuggestionReason._(3,
+          _omitEnumNames ? '' : 'HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT');
+
+  /// The heat source's own curve is in force and within 2 °C of the optimised one at every point
+  /// seen: nothing worth changing.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE =
+      HeatCurveNoSuggestionReason._(
+          4,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE');
+
+  /// The heat source's shift is not read, so no step of it can be suggested.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN =
+      HeatCurveNoSuggestionReason._(
+          5,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN');
+
+  /// The curve in force is not known at any point seen, so no saving against it can be told.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN =
+      HeatCurveNoSuggestionReason._(
+          6,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN');
+
+  /// At some point seen the rooms need less than 2 °C below the curve in force: it is already
+  /// close to what they need there (a step of the shift down needs every point seen, where the
+  /// curve in force is known, 2 °C or more above the need).
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE =
+      HeatCurveNoSuggestionReason._(7,
+          _omitEnumNames ? '' : 'HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE');
+
+  /// A step of the shift is called for, but the shift is at the end of its range.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT =
+      HeatCurveNoSuggestionReason._(
+          8,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT');
+
+  static const $core.List<HeatCurveNoSuggestionReason> values =
+      <HeatCurveNoSuggestionReason>[
+    HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED,
+    HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN,
+    HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN,
+    HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT,
+    HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE,
+    HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN,
+    HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN,
+    HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE,
+    HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT,
+  ];
+
+  static final $core.List<HeatCurveNoSuggestionReason?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 8);
+  static HeatCurveNoSuggestionReason? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveNoSuggestionReason._(super.value, super.name);
+}
+
 /// The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release
 /// of this schema.
 class HeatCurveSuggestionKind extends $pb.ProtobufEnum {

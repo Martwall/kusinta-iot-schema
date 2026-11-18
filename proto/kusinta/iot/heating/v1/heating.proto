@@ -1207,6 +1207,10 @@ message HeatCurveView {
 
   // The plant's past suggestions, newest first (HISTORY). Empty where figures are withheld.
   repeated HeatCurveHistoryEntry history = 16;
+
+  // Why nothing is suggested (SUGGESTION). Unspecified where a suggestion is given, and where
+  // figures are withheld.
+  HeatCurveNoSuggestionReason no_suggestion_reason = 17;
 }
 
 // The answer to webrtc.v1.GetHeatCurveView.
@@ -1247,7 +1251,14 @@ message HeatCurveViews {
 //     neither: a shift left in place moves every point of it, a bend the points near it, and a
 //     client says so.
 //   * SHIFT: early, before enough bands are seen for a curve, where the curve is clearly higher
-//     (or lower) than needed: move the shift one step. A curve follows as bands are seen.
+//     (or lower) than needed: move the shift one step. A curve follows as bands are seen. A step
+//     down where, at every point seen at which the curve in force is known (one at least), the
+//     rooms need 2 °C or more less than it, no band's rooms are short of heat, and a band at or
+//     below 0 °C is seen; a step up where rooms are short of heat with their valves wide open.
+// Where nothing is suggested, the view says why (HeatCurveView.no_suggestion_reason), so that a
+// client says so rather than that the curve suits what has been seen: too little seen yet, the
+// curve in force not known where it matters, the curve in force already close, rooms short of
+// heat, or the shift at the end of its range or not known.
 // A suggestion carries an identity (suggestion_id), so that an apply or a decline acts on what
 // was shown. The gateway gives a new one only on a material change: a point newly confirmed, a
 // point of the suggested curve changing (rounded to whole degrees, any change is one of 1 °C or
@@ -1366,11 +1377,54 @@ message HeatCurveOptimised {
 
   // The lowest and the highest supply the curve is held between, in centidegrees: the heat
   // source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
-  // stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+  // stated at its setup where it reports none (commissioning.v1 "plant.min_supply_centidegrees",
+  // "plant.max_supply_centidegrees"). For a plant whose emitters set a narrower range,
   // as radiators alone do, theirs. Unset where not known: the curve is then not held at that
   // end.
   optional sint32 min_supply_centidegrees = 2;
   optional sint32 max_supply_centidegrees = 3;
+}
+
+// Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
+// Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+// curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
+// OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
+// client that does not know a value says that nothing is suggested, without a reason.
+enum HeatCurveNoSuggestionReason {
+  // No reason given: a suggestion is given, figures are withheld, or a reason this client's
+  // schema does not know.
+  HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED = 0;
+
+  // Too little seen to judge the curve: no band seen yet, or, for a step of the shift, none at
+  // or below 0 °C.
+  HEAT_CURVE_NO_SUGGESTION_REASON_TOO_LITTLE_SEEN = 1;
+
+  // A curve would save at the points seen, but the curve in force is not known at the colder
+  // points it would set (as with a numbered curve whose shape the gateway does not hold), and
+  // no step of the shift can be suggested either.
+  HEAT_CURVE_NO_SUGGESTION_REASON_COLD_END_UNKNOWN = 2;
+
+  // Rooms are short of heat in some band, and the curve cannot be raised a step: the evidence
+  // is too thin, or the heat source's own curve is in force.
+  HEAT_CURVE_NO_SUGGESTION_REASON_ROOMS_SHORT = 3;
+
+  // The heat source's own curve is in force and within 2 °C of the optimised one at every point
+  // seen: nothing worth changing.
+  HEAT_CURVE_NO_SUGGESTION_REASON_OWN_CURVE_CLOSE = 4;
+
+  // The heat source's shift is not read, so no step of it can be suggested.
+  HEAT_CURVE_NO_SUGGESTION_REASON_SHIFT_UNKNOWN = 5;
+
+  // The curve in force is not known at any point seen, so no saving against it can be told.
+  HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN = 6;
+
+  // At some point seen the rooms need less than 2 °C below the curve in force: it is already
+  // close to what they need there (a step of the shift down needs every point seen, where the
+  // curve in force is known, 2 °C or more above the need).
+  HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE = 7;
+
+  // A step of the shift is called for, but the shift is at the end of its range.
+  HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT = 8;
 }
 
 // The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release
