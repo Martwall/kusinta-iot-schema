@@ -794,7 +794,8 @@ enum NoticeKind {
   NOTICE_KIND_UNSPECIFIED = 0;
 
   // A heat curve suggestion arose or changed materially (heating.v1 HEAT CURVE, SUGGESTION).
-  // To those who apply it: a home's household admins, or the owning organisation.
+  // To those who apply it: a home's household admins, or the owning organisation; and a
+  // technician it is handed to (heating.v1 HEAT CURVE, HAND-OVER).
   NOTICE_KIND_HEAT_CURVE_SUGGESTION = 1;
 
   // A reminder of an open heat curve suggestion, such as points newly confirmed. To the same.
@@ -803,6 +804,10 @@ enum NoticeKind {
   // A room-target suggestion arose (heating.v1 HEAT CURVE, ROOM TARGETS). To the residents of
   // the home the room lies in, and never to anyone else.
   NOTICE_KIND_ROOM_TARGET_SUGGESTION = 3;
+
+  // A heat curve suggestion was handed to the technician named (heating.v1 HEAT CURVE,
+  // HAND-OVER). To that technician alone.
+  NOTICE_KIND_HEAT_CURVE_HANDED_OVER = 4;
 }
 
 // One notice to push (NOTICES).

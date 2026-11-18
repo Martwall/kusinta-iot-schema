@@ -1625,6 +1625,31 @@ message SetHeatCurveAutomaticSavings {
   kusinta.iot.heating.v1.HeatCurveAutomaticSavings automatic_savings = 2;
 }
 
+// Hands a plant's open heat curve suggestion to a technician, or withdraws the hand-over
+// (heating.v1 HEAT CURVE, HAND-OVER), answered with heating.v1.HeatCurveViews as ApplyHeatCurve
+// is. Only the owner organisation of a plant outside homes: the property owner and the gateway's
+// administrators who reach its space. Anyone else, a plant in a home, and a plant that does not
+// exist, are refused as NOT_ENTITLED with the same metadata. Refused as FAILED_PRECONDITION with
+// metadata:
+//   {"reason": "suggestion_changed"}      suggestion_id is not the plant's suggestion as it
+//                                         stands, as for ApplyHeatCurve;
+//   {"reason": "technician_not_granted"}  technician holds no active commissioning grant
+//                                         covering the plant's space.
+// Handing it to the technician it is handed to, and withdrawing a hand-over that is not there,
+// change nothing and are answered as it stands.
+message HandHeatCurveSuggestion {
+  string plant_id = 1;
+
+  // The suggestion handed, as the view gave it (heating.v1.HeatCurveSuggestion.suggestion_id).
+  string suggestion_id = 2;
+
+  // The technician it is handed to. Ignored with withdraw.
+  kusinta.iot.identity.v1.UserId technician = 3;
+
+  // Withdraws the hand-over: the suggestion is handed to no one.
+  bool withdraw = 4;
+}
+
 // Asks for a nonce to link one home's account at a third-party service
 // (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 // (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -1980,5 +2005,7 @@ message ManagementRequest {
     ApplyHeatCurve apply_heat_curve = 88;
     DeclineHeatCurve decline_heat_curve = 89;
     SetHeatCurveAutomaticSavings set_heat_curve_automatic_savings = 90;
+    // Handing a heat curve suggestion to a technician; see heating.v1 HEAT CURVE, HAND-OVER.
+    HandHeatCurveSuggestion hand_heat_curve_suggestion = 91;
   }
 }
