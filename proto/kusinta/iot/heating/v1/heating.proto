@@ -1339,7 +1339,8 @@ message HeatCurveOptimised {
 
   // The lowest and the highest supply the curve is held between, in centidegrees: the heat
   // source's, as it reports them (device.v1.HeatSourceReadings.min_supply_centidegrees), or as
-  // stated at its setup where it reports none. For a plant whose emitters set a narrower range,
+  // stated at its setup where it reports none (commissioning.v1 "plant.min_supply_centidegrees",
+  // "plant.max_supply_centidegrees"). For a plant whose emitters set a narrower range,
   // as radiators alone do, theirs. Unset where not known: the curve is then not held at that
   // end.
   optional sint32 min_supply_centidegrees = 2;
