@@ -60,4 +60,10 @@ class GatewayReportingServiceApi {
           'ReportInviteRoutes',
           request,
           $0.ReportInviteRoutesResponse());
+
+  /// Not a report: asks the api-server to push notices to people's devices (NOTICES).
+  $async.Future<$0.SendNoticesResponse> sendNotices(
+          $pb.ClientContext? ctx, $0.SendNoticesRequest request) =>
+      _client.invoke<$0.SendNoticesResponse>(ctx, 'GatewayReportingService',
+          'SendNotices', request, $0.SendNoticesResponse());
 }

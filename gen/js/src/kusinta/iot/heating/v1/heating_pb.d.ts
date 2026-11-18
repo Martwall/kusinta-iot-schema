@@ -1675,6 +1675,13 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
    * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveRoomTargetSuggestion room_target_suggestions = 15;
    */
   roomTargetSuggestions: HeatCurveRoomTargetSuggestion[];
+
+  /**
+   * The plant's past suggestions, newest first (HISTORY). Empty where figures are withheld.
+   *
+   * @generated from field: repeated kusinta.iot.heating.v1.HeatCurveHistoryEntry history = 16;
+   */
+  history: HeatCurveHistoryEntry[];
 };
 
 /**
@@ -1869,6 +1876,14 @@ export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCu
    * @generated from field: bool declined = 10;
    */
   declined: boolean;
+
+  /**
+   * To whom the suggestion is handed, where it is (HAND-OVER). Unset where it is not, and to
+   * anyone the hand-over is not given to.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveHandOver hand_over = 11;
+   */
+  handOver?: HeatCurveHandOver | undefined;
 };
 
 /**
@@ -1876,6 +1891,97 @@ export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCu
  * Use `create(HeatCurveSuggestionSchema)` to create a new message.
  */
 export declare const HeatCurveSuggestionSchema: GenMessage<HeatCurveSuggestion>;
+
+/**
+ * A suggestion handed to a technician (HAND-OVER).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveHandOver
+ */
+export declare type HeatCurveHandOver = Message<"kusinta.iot.heating.v1.HeatCurveHandOver"> & {
+  /**
+   * The technician, by the sub of their token.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId technician = 1;
+   */
+  technician?: UserId | undefined;
+
+  /**
+   * When it was handed to them.
+   *
+   * @generated from field: google.protobuf.Timestamp since = 2;
+   */
+  since?: Timestamp | undefined;
+
+  /**
+   * When the suggestion was applied while handed to them, by anyone. Unset while it is not.
+   *
+   * @generated from field: google.protobuf.Timestamp done_at = 3;
+   */
+  doneAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveHandOver.
+ * Use `create(HeatCurveHandOverSchema)` to create a new message.
+ */
+export declare const HeatCurveHandOverSchema: GenMessage<HeatCurveHandOver>;
+
+/**
+ * One past suggestion of a plant (HISTORY).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveHistoryEntry
+ */
+export declare type HeatCurveHistoryEntry = Message<"kusinta.iot.heating.v1.HeatCurveHistoryEntry"> & {
+  /**
+   * @generated from field: string suggestion_id = 1;
+   */
+  suggestionId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveSuggestionKind kind = 2;
+   */
+  kind: HeatCurveSuggestionKind;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveHistoryOutcome outcome = 3;
+   */
+  outcome: HeatCurveHistoryOutcome;
+
+  /**
+   * When it was applied, set back, declined or superseded.
+   *
+   * @generated from field: google.protobuf.Timestamp at = 4;
+   */
+  at?: Timestamp | undefined;
+
+  /**
+   * What it set, or would have set (HeatCurveSuggestion.settings).
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings = 5;
+   */
+  settings?: HeatSourceReadings | undefined;
+
+  /**
+   * Its hand-over, where it had one, given as HeatCurveSuggestion.hand_over is.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveHandOver hand_over = 6;
+   */
+  handOver?: HeatCurveHandOver | undefined;
+
+  /**
+   * Set for a declined suggestion that is still the plant's suggestion: it is reopened by
+   * withdrawing its decline (HISTORY).
+   *
+   * @generated from field: bool still_current = 7;
+   */
+  stillCurrent: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveHistoryEntry.
+ * Use `create(HeatCurveHistoryEntrySchema)` to create a new message.
+ */
+export declare const HeatCurveHistoryEntrySchema: GenMessage<HeatCurveHistoryEntry>;
 
 /**
  * One setting found otherwise than applied.
@@ -2635,6 +2741,54 @@ export enum HeatCurveSuggestionKind {
  * Describes the enum kusinta.iot.heating.v1.HeatCurveSuggestionKind.
  */
 export declare const HeatCurveSuggestionKindSchema: GenEnum<HeatCurveSuggestionKind>;
+
+/**
+ * What became of a past suggestion (HISTORY). A closed list that grows only by a release of this
+ * schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveHistoryOutcome
+ */
+export enum HeatCurveHistoryOutcome {
+  /**
+   * An outcome this client's schema does not know: a client shows the entry without one.
+   *
+   * @generated from enum value: HEAT_CURVE_HISTORY_OUTCOME_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * Applied (APPLYING), by a write, by hand or by the gateway itself.
+   *
+   * @generated from enum value: HEAT_CURVE_HISTORY_OUTCOME_APPLIED = 1;
+   */
+  APPLIED = 1,
+
+  /**
+   * Applied, and later set back (webrtc.v1.ApplyHeatCurve.revert).
+   *
+   * @generated from enum value: HEAT_CURVE_HISTORY_OUTCOME_REVERTED = 2;
+   */
+  REVERTED = 2,
+
+  /**
+   * Declined (webrtc.v1.DeclineHeatCurve), and not reopened.
+   *
+   * @generated from enum value: HEAT_CURVE_HISTORY_OUTCOME_DECLINED = 3;
+   */
+  DECLINED = 3,
+
+  /**
+   * Replaced by a new suggestion on a material change (SUGGESTION) before anything was done.
+   *
+   * @generated from enum value: HEAT_CURVE_HISTORY_OUTCOME_SUPERSEDED = 4;
+   */
+  SUPERSEDED = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveHistoryOutcome.
+ */
+export declare const HeatCurveHistoryOutcomeSchema: GenEnum<HeatCurveHistoryOutcome>;
 
 /**
  * How a curve came to be applied (APPLYING). A closed list that grows only by a release of this

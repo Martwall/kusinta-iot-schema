@@ -88,6 +88,25 @@ final $typed_data.Uint8List ackStatusDescriptor = $convert.base64Decode(
     'BQTElFRBABEhgKFEFDS19TVEFUVVNfRFVQTElDQVRFEAISFwoTQUNLX1NUQVRVU19SRUpFQ1RF'
     'RBADEhMKD0FDS19TVEFUVVNfSEVMRBAE');
 
+@$core.Deprecated('Use noticeKindDescriptor instead')
+const NoticeKind$json = {
+  '1': 'NoticeKind',
+  '2': [
+    {'1': 'NOTICE_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'NOTICE_KIND_HEAT_CURVE_SUGGESTION', '2': 1},
+    {'1': 'NOTICE_KIND_HEAT_CURVE_REMINDER', '2': 2},
+    {'1': 'NOTICE_KIND_ROOM_TARGET_SUGGESTION', '2': 3},
+    {'1': 'NOTICE_KIND_HEAT_CURVE_HANDED_OVER', '2': 4},
+  ],
+};
+
+/// Descriptor for `NoticeKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List noticeKindDescriptor = $convert.base64Decode(
+    'CgpOb3RpY2VLaW5kEhsKF05PVElDRV9LSU5EX1VOU1BFQ0lGSUVEEAASJQohTk9USUNFX0tJTk'
+    'RfSEVBVF9DVVJWRV9TVUdHRVNUSU9OEAESIwofTk9USUNFX0tJTkRfSEVBVF9DVVJWRV9SRU1J'
+    'TkRFUhACEiYKIk5PVElDRV9LSU5EX1JPT01fVEFSR0VUX1NVR0dFU1RJT04QAxImCiJOT1RJQ0'
+    'VfS0lORF9IRUFUX0NVUlZFX0hBTkRFRF9PVkVSEAQ=');
+
 @$core.Deprecated('Use snapshotPartDescriptor instead')
 const SnapshotPart$json = {
   '1': 'SnapshotPart',
@@ -767,3 +786,74 @@ final $typed_data.Uint8List reportInviteRoutesResponseDescriptor =
     $convert.base64Decode(
         'ChpSZXBvcnRJbnZpdGVSb3V0ZXNSZXNwb25zZRIfCgthcHBsaWVkX3NlcRgBIAEoBFIKYXBwbG'
         'llZFNlcRInCg9yZXN5bmNfcmVxdWlyZWQYAiABKAhSDnJlc3luY1JlcXVpcmVk');
+
+@$core.Deprecated('Use noticeDescriptor instead')
+const Notice$json = {
+  '1': 'Notice',
+  '2': [
+    {'1': 'notice_id', '3': 1, '4': 1, '5': 9, '10': 'noticeId'},
+    {
+      '1': 'kind',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.reporting.v1.NoticeKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'recipients',
+      '3': 3,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'recipients'
+    },
+    {
+      '1': 'owner_organisation',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '10': 'ownerOrganisation'
+    },
+  ],
+};
+
+/// Descriptor for `Notice`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List noticeDescriptor = $convert.base64Decode(
+    'CgZOb3RpY2USGwoJbm90aWNlX2lkGAEgASgJUghub3RpY2VJZBI4CgRraW5kGAIgASgOMiQua3'
+    'VzaW50YS5pb3QucmVwb3J0aW5nLnYxLk5vdGljZUtpbmRSBGtpbmQSPwoKcmVjaXBpZW50cxgD'
+    'IAMoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIKcmVjaXBpZW50cxItChJvd2'
+    '5lcl9vcmdhbmlzYXRpb24YBCABKAhSEW93bmVyT3JnYW5pc2F0aW9u');
+
+@$core.Deprecated('Use sendNoticesRequestDescriptor instead')
+const SendNoticesRequest$json = {
+  '1': 'SendNoticesRequest',
+  '2': [
+    {
+      '1': 'notices',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.reporting.v1.Notice',
+      '10': 'notices'
+    },
+  ],
+};
+
+/// Descriptor for `SendNoticesRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sendNoticesRequestDescriptor = $convert.base64Decode(
+    'ChJTZW5kTm90aWNlc1JlcXVlc3QSOgoHbm90aWNlcxgBIAMoCzIgLmt1c2ludGEuaW90LnJlcG'
+    '9ydGluZy52MS5Ob3RpY2VSB25vdGljZXM=');
+
+@$core.Deprecated('Use sendNoticesResponseDescriptor instead')
+const SendNoticesResponse$json = {
+  '1': 'SendNoticesResponse',
+  '2': [
+    {'1': 'taken_notice_ids', '3': 1, '4': 3, '5': 9, '10': 'takenNoticeIds'},
+  ],
+};
+
+/// Descriptor for `SendNoticesResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sendNoticesResponseDescriptor = $convert.base64Decode(
+    'ChNTZW5kTm90aWNlc1Jlc3BvbnNlEigKEHRha2VuX25vdGljZV9pZHMYASADKAlSDnRha2VuTm'
+    '90aWNlSWRz');

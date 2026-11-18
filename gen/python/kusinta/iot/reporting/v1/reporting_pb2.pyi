@@ -48,6 +48,14 @@ class AckStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ACK_STATUS_DUPLICATE: _ClassVar[AckStatus]
     ACK_STATUS_REJECTED: _ClassVar[AckStatus]
     ACK_STATUS_HELD: _ClassVar[AckStatus]
+
+class NoticeKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    NOTICE_KIND_UNSPECIFIED: _ClassVar[NoticeKind]
+    NOTICE_KIND_HEAT_CURVE_SUGGESTION: _ClassVar[NoticeKind]
+    NOTICE_KIND_HEAT_CURVE_REMINDER: _ClassVar[NoticeKind]
+    NOTICE_KIND_ROOM_TARGET_SUGGESTION: _ClassVar[NoticeKind]
+    NOTICE_KIND_HEAT_CURVE_HANDED_OVER: _ClassVar[NoticeKind]
 PROBLEM_KIND_UNSPECIFIED: ProblemKind
 PROBLEM_KIND_DEVICE_OFFLINE: ProblemKind
 PROBLEM_KIND_BATTERY_LOW: ProblemKind
@@ -74,6 +82,11 @@ ACK_STATUS_APPLIED: AckStatus
 ACK_STATUS_DUPLICATE: AckStatus
 ACK_STATUS_REJECTED: AckStatus
 ACK_STATUS_HELD: AckStatus
+NOTICE_KIND_UNSPECIFIED: NoticeKind
+NOTICE_KIND_HEAT_CURVE_SUGGESTION: NoticeKind
+NOTICE_KIND_HEAT_CURVE_REMINDER: NoticeKind
+NOTICE_KIND_ROOM_TARGET_SUGGESTION: NoticeKind
+NOTICE_KIND_HEAT_CURVE_HANDED_OVER: NoticeKind
 
 class SnapshotPart(_message.Message):
     __slots__ = ("snapshot_id", "part", "last")
@@ -308,3 +321,27 @@ class ReportInviteRoutesResponse(_message.Message):
     applied_seq: int
     resync_required: bool
     def __init__(self, applied_seq: _Optional[int] = ..., resync_required: _Optional[bool] = ...) -> None: ...
+
+class Notice(_message.Message):
+    __slots__ = ("notice_id", "kind", "recipients", "owner_organisation")
+    NOTICE_ID_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    RECIPIENTS_FIELD_NUMBER: _ClassVar[int]
+    OWNER_ORGANISATION_FIELD_NUMBER: _ClassVar[int]
+    notice_id: str
+    kind: NoticeKind
+    recipients: _containers.RepeatedCompositeFieldContainer[_identity_pb2.UserId]
+    owner_organisation: bool
+    def __init__(self, notice_id: _Optional[str] = ..., kind: _Optional[_Union[NoticeKind, str]] = ..., recipients: _Optional[_Iterable[_Union[_identity_pb2.UserId, _Mapping]]] = ..., owner_organisation: _Optional[bool] = ...) -> None: ...
+
+class SendNoticesRequest(_message.Message):
+    __slots__ = ("notices",)
+    NOTICES_FIELD_NUMBER: _ClassVar[int]
+    notices: _containers.RepeatedCompositeFieldContainer[Notice]
+    def __init__(self, notices: _Optional[_Iterable[_Union[Notice, _Mapping]]] = ...) -> None: ...
+
+class SendNoticesResponse(_message.Message):
+    __slots__ = ("taken_notice_ids",)
+    TAKEN_NOTICE_IDS_FIELD_NUMBER: _ClassVar[int]
+    taken_notice_ids: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, taken_notice_ids: _Optional[_Iterable[str]] = ...) -> None: ...

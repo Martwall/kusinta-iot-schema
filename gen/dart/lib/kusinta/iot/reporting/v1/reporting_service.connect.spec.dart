@@ -48,4 +48,12 @@ abstract final class GatewayReportingService {
     kusintaiotreportingv1reporting.ReportInviteRoutesRequest.new,
     kusintaiotreportingv1reporting.ReportInviteRoutesResponse.new,
   );
+
+  /// Not a report: asks the api-server to push notices to people's devices (NOTICES).
+  static const sendNotices = connect.Spec(
+    '/$name/SendNotices',
+    connect.StreamType.unary,
+    kusintaiotreportingv1reporting.SendNoticesRequest.new,
+    kusintaiotreportingv1reporting.SendNoticesResponse.new,
+  );
 }

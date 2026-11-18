@@ -968,6 +968,81 @@ export declare type ReportInviteRoutesResponse = Message<"kusinta.iot.reporting.
 export declare const ReportInviteRoutesResponseSchema: GenMessage<ReportInviteRoutesResponse>;
 
 /**
+ * One notice to push (NOTICES).
+ *
+ * @generated from message kusinta.iot.reporting.v1.Notice
+ */
+export declare type Notice = Message<"kusinta.iot.reporting.v1.Notice"> & {
+  /**
+   * Minted by the gateway; what the api-server sends it once by.
+   *
+   * @generated from field: string notice_id = 1;
+   */
+  noticeId: string;
+
+  /**
+   * @generated from field: kusinta.iot.reporting.v1.NoticeKind kind = 2;
+   */
+  kind: NoticeKind;
+
+  /**
+   * The members to send it to, by the sub of their token, each once.
+   *
+   * @generated from field: repeated kusinta.iot.identity.v1.UserId recipients = 3;
+   */
+  recipients: UserId[];
+
+  /**
+   * Also send it to the administrators of the gateway's owning organisation, whom the gateway
+   * does not name.
+   *
+   * @generated from field: bool owner_organisation = 4;
+   */
+  ownerOrganisation: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.Notice.
+ * Use `create(NoticeSchema)` to create a new message.
+ */
+export declare const NoticeSchema: GenMessage<Notice>;
+
+/**
+ * @generated from message kusinta.iot.reporting.v1.SendNoticesRequest
+ */
+export declare type SendNoticesRequest = Message<"kusinta.iot.reporting.v1.SendNoticesRequest"> & {
+  /**
+   * @generated from field: repeated kusinta.iot.reporting.v1.Notice notices = 1;
+   */
+  notices: Notice[];
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.SendNoticesRequest.
+ * Use `create(SendNoticesRequestSchema)` to create a new message.
+ */
+export declare const SendNoticesRequestSchema: GenMessage<SendNoticesRequest>;
+
+/**
+ * @generated from message kusinta.iot.reporting.v1.SendNoticesResponse
+ */
+export declare type SendNoticesResponse = Message<"kusinta.iot.reporting.v1.SendNoticesResponse"> & {
+  /**
+   * The notices taken, by id, whether sent now or before, or to no one: the gateway stops
+   * sending these. A notice not named is sent again. Never who a notice went to.
+   *
+   * @generated from field: repeated string taken_notice_ids = 1;
+   */
+  takenNoticeIds: string[];
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.SendNoticesResponse.
+ * Use `create(SendNoticesResponseSchema)` to create a new message.
+ */
+export declare const SendNoticesResponseSchema: GenMessage<SendNoticesResponse>;
+
+/**
  * What kind of problem is open. The device kinds, FLOOR_ZONE_UNCONTROLLED aside, mirror what
  * service staff are given of a device (webrtc.v1.ServiceStatus: reachability, the battery
  * flags, the ServiceFault values); a device signal added there is added here too.
@@ -1287,4 +1362,54 @@ export enum AckStatus {
  * Describes the enum kusinta.iot.reporting.v1.AckStatus.
  */
 export declare const AckStatusSchema: GenEnum<AckStatus>;
+
+/**
+ * What a notice is about. A closed list that grows only by a release of this schema; a kind the
+ * api-server does not know is not sent.
+ *
+ * @generated from enum kusinta.iot.reporting.v1.NoticeKind
+ */
+export enum NoticeKind {
+  /**
+   * @generated from enum value: NOTICE_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A heat curve suggestion arose or changed materially (heating.v1 HEAT CURVE, SUGGESTION).
+   * To those who apply it: a home's household admins, or the owning organisation; and a
+   * technician it is handed to (heating.v1 HEAT CURVE, HAND-OVER).
+   *
+   * @generated from enum value: NOTICE_KIND_HEAT_CURVE_SUGGESTION = 1;
+   */
+  HEAT_CURVE_SUGGESTION = 1,
+
+  /**
+   * A reminder of an open heat curve suggestion, such as points newly confirmed. To the same.
+   *
+   * @generated from enum value: NOTICE_KIND_HEAT_CURVE_REMINDER = 2;
+   */
+  HEAT_CURVE_REMINDER = 2,
+
+  /**
+   * A room-target suggestion arose (heating.v1 HEAT CURVE, ROOM TARGETS). To the residents of
+   * the home the room lies in, and never to anyone else.
+   *
+   * @generated from enum value: NOTICE_KIND_ROOM_TARGET_SUGGESTION = 3;
+   */
+  ROOM_TARGET_SUGGESTION = 3,
+
+  /**
+   * A heat curve suggestion was handed to the technician named (heating.v1 HEAT CURVE,
+   * HAND-OVER). To that technician alone.
+   *
+   * @generated from enum value: NOTICE_KIND_HEAT_CURVE_HANDED_OVER = 4;
+   */
+  HEAT_CURVE_HANDED_OVER = 4,
+}
+
+/**
+ * Describes the enum kusinta.iot.reporting.v1.NoticeKind.
+ */
+export declare const NoticeKindSchema: GenEnum<NoticeKind>;
 

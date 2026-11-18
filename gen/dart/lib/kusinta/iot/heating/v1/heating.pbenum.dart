@@ -484,6 +484,51 @@ class HeatCurveSuggestionKind extends $pb.ProtobufEnum {
   const HeatCurveSuggestionKind._(super.value, super.name);
 }
 
+/// What became of a past suggestion (HISTORY). A closed list that grows only by a release of this
+/// schema.
+class HeatCurveHistoryOutcome extends $pb.ProtobufEnum {
+  /// An outcome this client's schema does not know: a client shows the entry without one.
+  static const HeatCurveHistoryOutcome HEAT_CURVE_HISTORY_OUTCOME_UNSPECIFIED =
+      HeatCurveHistoryOutcome._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_HISTORY_OUTCOME_UNSPECIFIED');
+
+  /// Applied (APPLYING), by a write, by hand or by the gateway itself.
+  static const HeatCurveHistoryOutcome HEAT_CURVE_HISTORY_OUTCOME_APPLIED =
+      HeatCurveHistoryOutcome._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_HISTORY_OUTCOME_APPLIED');
+
+  /// Applied, and later set back (webrtc.v1.ApplyHeatCurve.revert).
+  static const HeatCurveHistoryOutcome HEAT_CURVE_HISTORY_OUTCOME_REVERTED =
+      HeatCurveHistoryOutcome._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_HISTORY_OUTCOME_REVERTED');
+
+  /// Declined (webrtc.v1.DeclineHeatCurve), and not reopened.
+  static const HeatCurveHistoryOutcome HEAT_CURVE_HISTORY_OUTCOME_DECLINED =
+      HeatCurveHistoryOutcome._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_HISTORY_OUTCOME_DECLINED');
+
+  /// Replaced by a new suggestion on a material change (SUGGESTION) before anything was done.
+  static const HeatCurveHistoryOutcome HEAT_CURVE_HISTORY_OUTCOME_SUPERSEDED =
+      HeatCurveHistoryOutcome._(
+          4, _omitEnumNames ? '' : 'HEAT_CURVE_HISTORY_OUTCOME_SUPERSEDED');
+
+  static const $core.List<HeatCurveHistoryOutcome> values =
+      <HeatCurveHistoryOutcome>[
+    HEAT_CURVE_HISTORY_OUTCOME_UNSPECIFIED,
+    HEAT_CURVE_HISTORY_OUTCOME_APPLIED,
+    HEAT_CURVE_HISTORY_OUTCOME_REVERTED,
+    HEAT_CURVE_HISTORY_OUTCOME_DECLINED,
+    HEAT_CURVE_HISTORY_OUTCOME_SUPERSEDED,
+  ];
+
+  static final $core.List<HeatCurveHistoryOutcome?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static HeatCurveHistoryOutcome? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveHistoryOutcome._(super.value, super.name);
+}
+
 /// How a curve came to be applied (APPLYING). A closed list that grows only by a release of this
 /// schema.
 class HeatCurveApplyMode extends $pb.ProtobufEnum {

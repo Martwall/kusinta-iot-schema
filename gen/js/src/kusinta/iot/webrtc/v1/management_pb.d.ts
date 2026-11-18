@@ -2799,6 +2799,56 @@ export declare type SetHeatCurveAutomaticSavings = Message<"kusinta.iot.webrtc.v
 export declare const SetHeatCurveAutomaticSavingsSchema: GenMessage<SetHeatCurveAutomaticSavings>;
 
 /**
+ * Hands a plant's open heat curve suggestion to a technician, or withdraws the hand-over
+ * (heating.v1 HEAT CURVE, HAND-OVER), answered with heating.v1.HeatCurveViews as ApplyHeatCurve
+ * is. Only the owner organisation of a plant outside homes: the property owner and the gateway's
+ * administrators who reach its space. Anyone else, a plant in a home, and a plant that does not
+ * exist, are refused as NOT_ENTITLED with the same metadata. Refused as FAILED_PRECONDITION with
+ * metadata:
+ *   {"reason": "suggestion_changed"}      suggestion_id is not the plant's suggestion as it
+ *                                         stands, as for ApplyHeatCurve;
+ *   {"reason": "technician_not_granted"}  technician holds no active commissioning grant
+ *                                         covering the plant's space.
+ * Handing it to the technician it is handed to, and withdrawing a hand-over that is not there,
+ * change nothing and are answered as it stands.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.HandHeatCurveSuggestion
+ */
+export declare type HandHeatCurveSuggestion = Message<"kusinta.iot.webrtc.v1.HandHeatCurveSuggestion"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * The suggestion handed, as the view gave it (heating.v1.HeatCurveSuggestion.suggestion_id).
+   *
+   * @generated from field: string suggestion_id = 2;
+   */
+  suggestionId: string;
+
+  /**
+   * The technician it is handed to. Ignored with withdraw.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId technician = 3;
+   */
+  technician?: UserId | undefined;
+
+  /**
+   * Withdraws the hand-over: the suggestion is handed to no one.
+   *
+   * @generated from field: bool withdraw = 4;
+   */
+  withdraw: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.HandHeatCurveSuggestion.
+ * Use `create(HandHeatCurveSuggestionSchema)` to create a new message.
+ */
+export declare const HandHeatCurveSuggestionSchema: GenMessage<HandHeatCurveSuggestion>;
+
+/**
  * Asks for a nonce to link one home's account at a third-party service
  * (accountlink.v1.AccountLinkNonce). Only a household admin of the home
  * (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -3871,6 +3921,14 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: SetHeatCurveAutomaticSavings;
     case: "setHeatCurveAutomaticSavings";
+  } | {
+    /**
+     * Handing a heat curve suggestion to a technician; see heating.v1 HEAT CURVE, HAND-OVER.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.HandHeatCurveSuggestion hand_heat_curve_suggestion = 91;
+     */
+    value: HandHeatCurveSuggestion;
+    case: "handHeatCurveSuggestion";
   } | { case: undefined; value?: undefined };
 };
 
