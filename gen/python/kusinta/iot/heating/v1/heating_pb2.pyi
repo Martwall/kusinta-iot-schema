@@ -132,6 +132,7 @@ class HeatCurveMismatchKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     HEAT_CURVE_MISMATCH_KIND_SHIFT: _ClassVar[HeatCurveMismatchKind]
     HEAT_CURVE_MISMATCH_KIND_SUPPLY: _ClassVar[HeatCurveMismatchKind]
     HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL: _ClassVar[HeatCurveMismatchKind]
+    HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE: _ClassVar[HeatCurveMismatchKind]
 HEAT_SOURCE_KIND_UNSPECIFIED: HeatSourceKind
 HEAT_SOURCE_KIND_EXHAUST_AIR_HEAT_PUMP: HeatSourceKind
 HEAT_SOURCE_KIND_GROUND_SOURCE_HEAT_PUMP: HeatSourceKind
@@ -200,6 +201,7 @@ HEAT_CURVE_MISMATCH_KIND_POINT: HeatCurveMismatchKind
 HEAT_CURVE_MISMATCH_KIND_SHIFT: HeatCurveMismatchKind
 HEAT_CURVE_MISMATCH_KIND_SUPPLY: HeatCurveMismatchKind
 HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL: HeatCurveMismatchKind
+HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE: HeatCurveMismatchKind
 
 class DeviceAttribute(_message.Message):
     __slots__ = ("device_id", "attribute")
@@ -688,20 +690,22 @@ class HeatCurveSuggestion(_message.Message):
     def __init__(self, suggestion_id: _Optional[str] = ..., kind: _Optional[_Union[HeatCurveSuggestionKind, str]] = ..., settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., writable: _Optional[bool] = ..., newly_confirmed_outdoor_centidegrees: _Optional[_Iterable[int]] = ..., saving_kwh_per_year: _Optional[int] = ..., saving_micro_eur_per_year: _Optional[int] = ..., saving_permille: _Optional[int] = ..., suggested_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., declined: _Optional[bool] = ...) -> None: ...
 
 class HeatCurveMismatch(_message.Message):
-    __slots__ = ("kind", "outdoor_centidegrees", "expected_supply_centidegrees", "found_supply_centidegrees", "found_offset", "found_bend_offset_centidegrees")
+    __slots__ = ("kind", "outdoor_centidegrees", "expected_supply_centidegrees", "found_supply_centidegrees", "found_offset", "found_bend_offset_centidegrees", "found_curve")
     KIND_FIELD_NUMBER: _ClassVar[int]
     OUTDOOR_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     EXPECTED_SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     FOUND_SUPPLY_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
     FOUND_OFFSET_FIELD_NUMBER: _ClassVar[int]
     FOUND_BEND_OFFSET_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    FOUND_CURVE_FIELD_NUMBER: _ClassVar[int]
     kind: HeatCurveMismatchKind
     outdoor_centidegrees: int
     expected_supply_centidegrees: int
     found_supply_centidegrees: int
     found_offset: int
     found_bend_offset_centidegrees: int
-    def __init__(self, kind: _Optional[_Union[HeatCurveMismatchKind, str]] = ..., outdoor_centidegrees: _Optional[int] = ..., expected_supply_centidegrees: _Optional[int] = ..., found_supply_centidegrees: _Optional[int] = ..., found_offset: _Optional[int] = ..., found_bend_offset_centidegrees: _Optional[int] = ...) -> None: ...
+    found_curve: int
+    def __init__(self, kind: _Optional[_Union[HeatCurveMismatchKind, str]] = ..., outdoor_centidegrees: _Optional[int] = ..., expected_supply_centidegrees: _Optional[int] = ..., found_supply_centidegrees: _Optional[int] = ..., found_offset: _Optional[int] = ..., found_bend_offset_centidegrees: _Optional[int] = ..., found_curve: _Optional[int] = ...) -> None: ...
 
 class HeatCurveApplied(_message.Message):
     __slots__ = ("suggestion_id", "mode", "applied_at", "settings", "settings_before", "revert", "verification", "verified_by", "verified_at", "mismatches")
