@@ -1388,6 +1388,13 @@ message SetComfortWindows {
 //   "rule_not_drivable"   LIVE for a rule the gateway does not yet drive (it decides it in shadow
 //                         only); SHADOW and OFF are taken. Checked before rule_input_unbound,
 //                         since binding an input would not help.
+//   "rule_input_untested" LIVE for a rule whose bound input holds no current pass of
+//                         OUTPUT_LEASE (commissioning.v1.TEST_KIND_OUTPUT_LEASE) on the output it
+//                         is bound to now, since the gateway would drive nothing: metadata "field"
+//                         as for rule_input_unbound. Checked after rule_not_drivable and
+//                         rule_input_unbound. SHADOW and OFF need no pass. A rule already LIVE
+//                         whose pass stops being current stays LIVE and drives nothing until a
+//                         new pass is held.
 //
 // Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
 // and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE

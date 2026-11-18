@@ -791,6 +791,9 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     $core.int? curvePointOffsetCentidegrees,
     $core.bool? externalAdjustmentActive,
     $core.bool? ownCurveInForce,
+    $core.int? compressorStarts,
+    $core.int? compressorOperatingHours,
+    $core.int? compressorHotWaterOperatingHours,
   }) {
     final result = create();
     if (outdoorCentidegrees != null)
@@ -851,6 +854,12 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     if (externalAdjustmentActive != null)
       result.externalAdjustmentActive = externalAdjustmentActive;
     if (ownCurveInForce != null) result.ownCurveInForce = ownCurveInForce;
+    if (compressorStarts != null) result.compressorStarts = compressorStarts;
+    if (compressorOperatingHours != null)
+      result.compressorOperatingHours = compressorOperatingHours;
+    if (compressorHotWaterOperatingHours != null)
+      result.compressorHotWaterOperatingHours =
+          compressorHotWaterOperatingHours;
     return result;
   }
 
@@ -944,6 +953,14 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
         $pb.PbFieldType.OS3)
     ..aOB(30, _omitFieldNames ? '' : 'externalAdjustmentActive')
     ..aOB(31, _omitFieldNames ? '' : 'ownCurveInForce')
+    ..a<$core.int>(
+        32, _omitFieldNames ? '' : 'compressorStarts', $pb.PbFieldType.OU3)
+    ..a<$core.int>(33, _omitFieldNames ? '' : 'compressorOperatingHours',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        34,
+        _omitFieldNames ? '' : 'compressorHotWaterOperatingHours',
+        $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1340,6 +1357,45 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   $core.bool hasOwnCurveInForce() => $_has(30);
   @$pb.TagNumber(31)
   void clearOwnCurveInForce() => $_clearField(31);
+
+  /// How many times its compressor has started, in all: a running total kept by the heat
+  /// source, of its first compressor where it has several. A total lower than the one before
+  /// means the heat source's count was reset (as at service, or when its control board is
+  /// replaced), never a negative count of starts. Absent for a heat source that keeps none.
+  @$pb.TagNumber(32)
+  $core.int get compressorStarts => $_getIZ(31);
+  @$pb.TagNumber(32)
+  set compressorStarts($core.int value) => $_setUnsignedInt32(31, value);
+  @$pb.TagNumber(32)
+  $core.bool hasCompressorStarts() => $_has(31);
+  @$pb.TagNumber(32)
+  void clearCompressorStarts() => $_clearField(32);
+
+  /// How long its compressor has run, in all, in whole hours: a running total kept by the
+  /// heat source, read as compressor_starts is (a lower total is a reset). Absent for a heat
+  /// source that keeps none.
+  @$pb.TagNumber(33)
+  $core.int get compressorOperatingHours => $_getIZ(32);
+  @$pb.TagNumber(33)
+  set compressorOperatingHours($core.int value) =>
+      $_setUnsignedInt32(32, value);
+  @$pb.TagNumber(33)
+  $core.bool hasCompressorOperatingHours() => $_has(32);
+  @$pb.TagNumber(33)
+  void clearCompressorOperatingHours() => $_clearField(33);
+
+  /// The part of compressor_operating_hours spent making hot water, in whole hours: a running
+  /// total kept by the heat source, read as compressor_starts is (a lower total is a reset).
+  /// Absent for a heat source that keeps none.
+  @$pb.TagNumber(34)
+  $core.int get compressorHotWaterOperatingHours => $_getIZ(33);
+  @$pb.TagNumber(34)
+  set compressorHotWaterOperatingHours($core.int value) =>
+      $_setUnsignedInt32(33, value);
+  @$pb.TagNumber(34)
+  $core.bool hasCompressorHotWaterOperatingHours() => $_has(33);
+  @$pb.TagNumber(34)
+  void clearCompressorHotWaterOperatingHours() => $_clearField(34);
 }
 
 /// What a device needs before it works as it should, as its connector judges it from the

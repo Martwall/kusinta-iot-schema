@@ -524,7 +524,8 @@ enum PriceRuleMode {
   // periodic increase known for HOT_WATER (PRICE_RULE_HOT_WATER), and no hold running
   // (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
   // plant's feature status says why. A rule is put LIVE only while the input it steers is bound
-  // (webrtc.v1.SetPriceRuleMode).
+  // and holds a current pass of its commissioning test (webrtc.v1.SetPriceRuleMode); one whose
+  // pass stops being current later stays LIVE and drives nothing until a new pass is held.
   PRICE_RULE_MODE_LIVE = 3;
 }
 

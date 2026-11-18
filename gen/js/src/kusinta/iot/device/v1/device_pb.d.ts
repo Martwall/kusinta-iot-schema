@@ -476,6 +476,34 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
   compressorState?: number | undefined;
 
   /**
+   * How many times its compressor has started, in all: a running total kept by the heat
+   * source, of its first compressor where it has several. A total lower than the one before
+   * means the heat source's count was reset (as at service, or when its control board is
+   * replaced), never a negative count of starts. Absent for a heat source that keeps none.
+   *
+   * @generated from field: optional uint32 compressor_starts = 32;
+   */
+  compressorStarts?: number | undefined;
+
+  /**
+   * How long its compressor has run, in all, in whole hours: a running total kept by the
+   * heat source, read as compressor_starts is (a lower total is a reset). Absent for a heat
+   * source that keeps none.
+   *
+   * @generated from field: optional uint32 compressor_operating_hours = 33;
+   */
+  compressorOperatingHours?: number | undefined;
+
+  /**
+   * The part of compressor_operating_hours spent making hot water, in whole hours: a running
+   * total kept by the heat source, read as compressor_starts is (a lower total is a reset).
+   * Absent for a heat source that keeps none.
+   *
+   * @generated from field: optional uint32 compressor_hot_water_operating_hours = 34;
+   */
+  compressorHotWaterOperatingHours?: number | undefined;
+
+  /**
    * Its degree minutes, in whole degree-minutes (°C × minutes), rounded to the nearest: the
    * running sum over time of how far the supply has been from calculated_supply_centidegrees,
    * negative while it has run below it. What a heat source that keeps one starts its
