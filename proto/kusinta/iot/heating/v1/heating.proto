@@ -1385,9 +1385,11 @@ message HeatCurveOptimised {
   optional sint32 max_supply_centidegrees = 3;
 }
 
-// Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion. A
-// closed list that grows only by a release of this schema: a client that does not know a value
-// says that nothing is suggested, without a reason.
+// Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
+// Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+// curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
+// OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
+// client that does not know a value says that nothing is suggested, without a reason.
 enum HeatCurveNoSuggestionReason {
   // No reason given: a suggestion is given, figures are withheld, or a reason this client's
   // schema does not know.
@@ -1417,7 +1419,8 @@ enum HeatCurveNoSuggestionReason {
   HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN = 6;
 
   // At some point seen the rooms need less than 2 °C below the curve in force: it is already
-  // close to what they need.
+  // close to what they need there (a step of the shift down needs every point seen, where the
+  // curve in force is known, 2 °C or more above the need).
   HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE = 7;
 
   // A step of the shift is called for, but the shift is at the end of its range.

@@ -452,9 +452,11 @@ export const HeatCurveNoSuggestionReasonSchema = /*@__PURE__*/
   enumDesc(file_kusinta_iot_heating_v1_heating, 11);
 
 /**
- * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion. A
- * closed list that grows only by a release of this schema: a client that does not know a value
- * says that nothing is suggested, without a reason.
+ * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
+ * Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+ * curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
+ * OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
+ * client that does not know a value says that nothing is suggested, without a reason.
  *
  * @generated from enum kusinta.iot.heating.v1.HeatCurveNoSuggestionReason
  */

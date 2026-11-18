@@ -2717,9 +2717,11 @@ export enum HeatCurvePointConfidence {
 export declare const HeatCurvePointConfidenceSchema: GenEnum<HeatCurvePointConfidence>;
 
 /**
- * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion. A
- * closed list that grows only by a release of this schema: a client that does not know a value
- * says that nothing is suggested, without a reason.
+ * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
+ * Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+ * curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
+ * OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
+ * client that does not know a value says that nothing is suggested, without a reason.
  *
  * @generated from enum kusinta.iot.heating.v1.HeatCurveNoSuggestionReason
  */
@@ -2781,7 +2783,8 @@ export enum HeatCurveNoSuggestionReason {
 
   /**
    * At some point seen the rooms need less than 2 °C below the curve in force: it is already
-   * close to what they need.
+   * close to what they need there (a step of the shift down needs every point seen, where the
+   * curve in force is known, 2 °C or more above the need).
    *
    * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE = 7;
    */

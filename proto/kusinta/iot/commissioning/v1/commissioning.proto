@@ -112,7 +112,8 @@ option optimize_for = SPEED;
 //       heat source: what the optimised curve is held below (heating.v1 HEAT CURVE,
 //       HeatCurveOptimised.max_supply_centidegrees). Unknown: the curve is not held at the top.
 //       Refused as INVALID_REQUEST with metadata {"reason": "value"} at or below
-//       "plant.min_supply_centidegrees" where that is answered. A setting of the heat source,
+//       "plant.min_supply_centidegrees" where that is answered. At or below a minimum the heat
+//       source reports, it is taken as unanswered, and asked again. A setting of the heat source,
 //       answered as "plant.max_block_minutes" is: for a home's own plant its household admins
 //       (HOUSEHOLD, STATED, from the heat source's menu), for a plant outside homes the owner
 //       organisation (STATED), beside an installer's answer (INSPECTED, MEASURED). HEAT_SOURCE;
@@ -120,7 +121,8 @@ option optimize_for = SPEED;
 //   "plant.min_supply_centidegrees"  uint, 1000 to 5000, in whole degrees; a plant. The lowest
 //       supply temperature its climate system is held at, for a heat source whose readings do
 //       not state it (device.v1.HeatSourceReadings.min_supply_centidegrees): where they do,
-//       the reading is read over this answer, being the heat source's actual setting. Refused
+//       the reading is read over this answer, being the heat source's actual setting. Unknown
+//       and not reported: the curve is not held at the bottom. Refused
 //       as INVALID_REQUEST with metadata {"reason": "value"} at or above
 //       "plant.max_supply_centidegrees" where that is answered. Answered as
 //       "plant.max_supply_centidegrees" is. HEAT_SOURCE; OPTIONAL.
