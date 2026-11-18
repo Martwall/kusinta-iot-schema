@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import type { GenFile, GenService } from "@bufbuild/protobuf/codegenv2";
-import type { ReportInviteRoutesRequestSchema, ReportInviteRoutesResponseSchema, ReportMembersRequestSchema, ReportMembersResponseSchema, ReportProblemsRequestSchema, ReportProblemsResponseSchema, ReportServedSpacesRequestSchema, ReportServedSpacesResponseSchema, ReportServiceReachRequestSchema, ReportServiceReachResponseSchema } from "./reporting_pb.js";
+import type { ReportInviteRoutesRequestSchema, ReportInviteRoutesResponseSchema, ReportMembersRequestSchema, ReportMembersResponseSchema, ReportProblemsRequestSchema, ReportProblemsResponseSchema, ReportServedSpacesRequestSchema, ReportServedSpacesResponseSchema, ReportServiceReachRequestSchema, ReportServiceReachResponseSchema, SendNoticesRequestSchema, SendNoticesResponseSchema } from "./reporting_pb.js";
 
 /**
  * Describes the file kusinta/iot/reporting/v1/reporting_service.proto.
@@ -58,6 +58,16 @@ export declare const GatewayReportingService: GenService<{
     methodKind: "unary";
     input: typeof ReportInviteRoutesRequestSchema;
     output: typeof ReportInviteRoutesResponseSchema;
+  },
+  /**
+   * Not a report: asks the api-server to push notices to people's devices (NOTICES).
+   *
+   * @generated from rpc kusinta.iot.reporting.v1.GatewayReportingService.SendNotices
+   */
+  sendNotices: {
+    methodKind: "unary";
+    input: typeof SendNoticesRequestSchema;
+    output: typeof SendNoticesResponseSchema;
   },
 }>;
 

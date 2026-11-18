@@ -761,3 +761,78 @@ message ReportInviteRoutesResponse {
   // As ReportServiceReachResponse.resync_required.
   bool resync_required = 2;
 }
+
+// NOTICES (GatewayReportingService.SendNotices). Not a report: no stream, no seq, no snapshot.
+// The gateway asks the api-server to push a notice to the devices of the people it names, and
+// the api-server sends each one at most once.
+//
+// WHO. Only the gateway knows who lives where, so it names the recipients: by user id, each a
+// member it reported (ReportMembersRequest), or the administrators of the gateway's owning
+// organisation (owner_organisation). The api-server sends to a named user only while they are
+// a member of the gateway as last reported, or an administrator of its owning organisation,
+// and drops anyone else unsaid. It applies each recipient's own choice not to be sent notices
+// of a kind, which it keeps; the gateway never learns it.
+//
+// WHAT. A notice names its kind and nothing else: no plant, home, room, space, device or
+// figure, here or in what is pushed. The push says, in the recipient's language, only that
+// there is something of its kind to look at, and carries the gateway's id and the kind, so a
+// client opens the gateway and shows what its own session is given there. A lock screen is
+// seen by whoever is near it.
+//
+// ONCE. notice_id is minted by the gateway (a UUIDv4) and kept with the notice until the
+// api-server takes it; a call that gets no answer is sent again with the same ids. The api-
+// server sends a notice it has already taken from the gateway, by its id, never again, for at
+// least seven days. A gateway sends a notice only on its own occasions: when what it is about
+// first arises or changes materially, and as an occasional reminder. The api-server may also
+// hold back notices of a kind it has sent a recipient recently; the gateway is not told.
+//
+// The api-server keeps no record of whom a notice was sent to, and logs counts only.
+
+// What a notice is about. A closed list that grows only by a release of this schema; a kind the
+// api-server does not know is not sent.
+enum NoticeKind {
+  NOTICE_KIND_UNSPECIFIED = 0;
+
+  // A heat curve suggestion arose or changed materially (heating.v1 HEAT CURVE, SUGGESTION).
+  // To those who apply it: a home's household admins; for a plant outside homes, the owning
+  // organisation's administrators (owner_organisation), and the property owner and the
+  // gateway's administrators who reach the plant's space, each named by user id; and a
+  // technician it is handed to (heating.v1 HEAT CURVE, HAND-OVER).
+  NOTICE_KIND_HEAT_CURVE_SUGGESTION = 1;
+
+  // A reminder of an open heat curve suggestion, such as points newly confirmed. To the same.
+  NOTICE_KIND_HEAT_CURVE_REMINDER = 2;
+
+  // A room-target suggestion arose (heating.v1 HEAT CURVE, ROOM TARGETS). To the residents of
+  // the home the room lies in, and never to anyone else.
+  NOTICE_KIND_ROOM_TARGET_SUGGESTION = 3;
+
+  // A heat curve suggestion was handed to the technician named (heating.v1 HEAT CURVE,
+  // HAND-OVER). To that technician alone.
+  NOTICE_KIND_HEAT_CURVE_HANDED_OVER = 4;
+}
+
+// One notice to push (NOTICES).
+message Notice {
+  // Minted by the gateway; what the api-server sends it once by.
+  string notice_id = 1;
+
+  NoticeKind kind = 2;
+
+  // The members to send it to, by the sub of their token, each once.
+  repeated kusinta.iot.identity.v1.UserId recipients = 3;
+
+  // Also send it to the administrators of the gateway's owning organisation, whom the gateway
+  // does not name.
+  bool owner_organisation = 4;
+}
+
+message SendNoticesRequest {
+  repeated Notice notices = 1;
+}
+
+message SendNoticesResponse {
+  // The notices taken, by id, whether sent now or before, or to no one: the gateway stops
+  // sending these. A notice not named is sent again. Never who a notice went to.
+  repeated string taken_notice_ids = 1;
+}

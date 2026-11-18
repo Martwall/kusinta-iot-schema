@@ -2011,6 +2011,31 @@ final $typed_data.Uint8List setHeatCurveAutomaticSavingsDescriptor =
         'lkEl4KEWF1dG9tYXRpY19zYXZpbmdzGAIgASgOMjEua3VzaW50YS5pb3QuaGVhdGluZy52MS5I'
         'ZWF0Q3VydmVBdXRvbWF0aWNTYXZpbmdzUhBhdXRvbWF0aWNTYXZpbmdz');
 
+@$core.Deprecated('Use handHeatCurveSuggestionDescriptor instead')
+const HandHeatCurveSuggestion$json = {
+  '1': 'HandHeatCurveSuggestion',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {'1': 'suggestion_id', '3': 2, '4': 1, '5': 9, '10': 'suggestionId'},
+    {
+      '1': 'technician',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'technician'
+    },
+    {'1': 'withdraw', '3': 4, '4': 1, '5': 8, '10': 'withdraw'},
+  ],
+};
+
+/// Descriptor for `HandHeatCurveSuggestion`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List handHeatCurveSuggestionDescriptor = $convert.base64Decode(
+    'ChdIYW5kSGVhdEN1cnZlU3VnZ2VzdGlvbhIZCghwbGFudF9pZBgBIAEoCVIHcGxhbnRJZBIjCg'
+    '1zdWdnZXN0aW9uX2lkGAIgASgJUgxzdWdnZXN0aW9uSWQSPwoKdGVjaG5pY2lhbhgDIAEoCzIf'
+    'Lmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIKdGVjaG5pY2lhbhIaCgh3aXRoZHJhdx'
+    'gEIAEoCFIId2l0aGRyYXc=');
+
 @$core.Deprecated('Use requestAccountLinkNonceDescriptor instead')
 const RequestAccountLinkNonce$json = {
   '1': 'RequestAccountLinkNonce',
@@ -3192,6 +3217,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'setHeatCurveAutomaticSavings'
     },
+    {
+      '1': 'hand_heat_curve_suggestion',
+      '3': 91,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.HandHeatCurveSuggestion',
+      '9': 0,
+      '10': 'handHeatCurveSuggestion'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -3350,4 +3384,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'ZlGFkgASgLMicua3VzaW50YS5pb3Qud2VicnRjLnYxLkRlY2xpbmVIZWF0Q3VydmVIAFIQZGVj'
     'bGluZUhlYXRDdXJ2ZRJ9CiBzZXRfaGVhdF9jdXJ2ZV9hdXRvbWF0aWNfc2F2aW5ncxhaIAEoCz'
     'IzLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZXRIZWF0Q3VydmVBdXRvbWF0aWNTYXZpbmdzSABS'
-    'HHNldEhlYXRDdXJ2ZUF1dG9tYXRpY1NhdmluZ3NCCQoHcmVxdWVzdA==');
+    'HHNldEhlYXRDdXJ2ZUF1dG9tYXRpY1NhdmluZ3MSbQoaaGFuZF9oZWF0X2N1cnZlX3N1Z2dlc3'
+    'Rpb24YWyABKAsyLi5rdXNpbnRhLmlvdC53ZWJydGMudjEuSGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rp'
+    'b25IAFIXaGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rpb25CCQoHcmVxdWVzdA==');

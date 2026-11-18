@@ -292,5 +292,49 @@ class AckStatus extends $pb.ProtobufEnum {
   const AckStatus._(super.value, super.name);
 }
 
+/// What a notice is about. A closed list that grows only by a release of this schema; a kind the
+/// api-server does not know is not sent.
+class NoticeKind extends $pb.ProtobufEnum {
+  static const NoticeKind NOTICE_KIND_UNSPECIFIED =
+      NoticeKind._(0, _omitEnumNames ? '' : 'NOTICE_KIND_UNSPECIFIED');
+
+  /// A heat curve suggestion arose or changed materially (heating.v1 HEAT CURVE, SUGGESTION).
+  /// To those who apply it: a home's household admins; for a plant outside homes, the owning
+  /// organisation's administrators (owner_organisation), and the property owner and the
+  /// gateway's administrators who reach the plant's space, each named by user id; and a
+  /// technician it is handed to (heating.v1 HEAT CURVE, HAND-OVER).
+  static const NoticeKind NOTICE_KIND_HEAT_CURVE_SUGGESTION = NoticeKind._(
+      1, _omitEnumNames ? '' : 'NOTICE_KIND_HEAT_CURVE_SUGGESTION');
+
+  /// A reminder of an open heat curve suggestion, such as points newly confirmed. To the same.
+  static const NoticeKind NOTICE_KIND_HEAT_CURVE_REMINDER =
+      NoticeKind._(2, _omitEnumNames ? '' : 'NOTICE_KIND_HEAT_CURVE_REMINDER');
+
+  /// A room-target suggestion arose (heating.v1 HEAT CURVE, ROOM TARGETS). To the residents of
+  /// the home the room lies in, and never to anyone else.
+  static const NoticeKind NOTICE_KIND_ROOM_TARGET_SUGGESTION = NoticeKind._(
+      3, _omitEnumNames ? '' : 'NOTICE_KIND_ROOM_TARGET_SUGGESTION');
+
+  /// A heat curve suggestion was handed to the technician named (heating.v1 HEAT CURVE,
+  /// HAND-OVER). To that technician alone.
+  static const NoticeKind NOTICE_KIND_HEAT_CURVE_HANDED_OVER = NoticeKind._(
+      4, _omitEnumNames ? '' : 'NOTICE_KIND_HEAT_CURVE_HANDED_OVER');
+
+  static const $core.List<NoticeKind> values = <NoticeKind>[
+    NOTICE_KIND_UNSPECIFIED,
+    NOTICE_KIND_HEAT_CURVE_SUGGESTION,
+    NOTICE_KIND_HEAT_CURVE_REMINDER,
+    NOTICE_KIND_ROOM_TARGET_SUGGESTION,
+    NOTICE_KIND_HEAT_CURVE_HANDED_OVER,
+  ];
+
+  static final $core.List<NoticeKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
+  static NoticeKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const NoticeKind._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

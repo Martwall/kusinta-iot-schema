@@ -6348,6 +6348,120 @@ class SetHeatCurveAutomaticSavings extends $pb.GeneratedMessage {
   void clearAutomaticSavings() => $_clearField(2);
 }
 
+/// Hands a plant's open heat curve suggestion to a technician, or withdraws the hand-over
+/// (heating.v1 HEAT CURVE, HAND-OVER), answered with heating.v1.HeatCurveViews as ApplyHeatCurve
+/// is. Only the owner organisation of a plant outside homes: the property owner and the gateway's
+/// administrators who reach its space. Anyone else, a plant in a home, and a plant that does not
+/// exist, are refused as NOT_ENTITLED with the same metadata. Refused as FAILED_PRECONDITION with
+/// metadata:
+///   {"reason": "suggestion_changed"}      suggestion_id is not the plant's suggestion as it
+///                                         stands, as for ApplyHeatCurve;
+///   {"reason": "technician_not_granted"}  technician holds no active commissioning grant
+///                                         covering the plant's space.
+/// Handing it to the technician it is handed to, withdrawing a hand-over that is not there, and
+/// withdrawing one whose suggestion_id is no longer the plant's suggestion (the hand-over ended
+/// with it), change nothing and are answered as it stands.
+class HandHeatCurveSuggestion extends $pb.GeneratedMessage {
+  factory HandHeatCurveSuggestion({
+    $core.String? plantId,
+    $core.String? suggestionId,
+    $0.UserId? technician,
+    $core.bool? withdraw,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (technician != null) result.technician = technician;
+    if (withdraw != null) result.withdraw = withdraw;
+    return result;
+  }
+
+  HandHeatCurveSuggestion._();
+
+  factory HandHeatCurveSuggestion.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HandHeatCurveSuggestion.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HandHeatCurveSuggestion',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..aOS(2, _omitFieldNames ? '' : 'suggestionId')
+    ..aOM<$0.UserId>(3, _omitFieldNames ? '' : 'technician',
+        subBuilder: $0.UserId.create)
+    ..aOB(4, _omitFieldNames ? '' : 'withdraw')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HandHeatCurveSuggestion clone() =>
+      HandHeatCurveSuggestion()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HandHeatCurveSuggestion copyWith(
+          void Function(HandHeatCurveSuggestion) updates) =>
+      super.copyWith((message) => updates(message as HandHeatCurveSuggestion))
+          as HandHeatCurveSuggestion;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HandHeatCurveSuggestion create() => HandHeatCurveSuggestion._();
+  @$core.override
+  HandHeatCurveSuggestion createEmptyInstance() => create();
+  static $pb.PbList<HandHeatCurveSuggestion> createRepeated() =>
+      $pb.PbList<HandHeatCurveSuggestion>();
+  @$core.pragma('dart2js:noInline')
+  static HandHeatCurveSuggestion getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HandHeatCurveSuggestion>(create);
+  static HandHeatCurveSuggestion? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  /// The suggestion handed, as the view gave it (heating.v1.HeatCurveSuggestion.suggestion_id).
+  @$pb.TagNumber(2)
+  $core.String get suggestionId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set suggestionId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSuggestionId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSuggestionId() => $_clearField(2);
+
+  /// The technician it is handed to. Ignored with withdraw.
+  @$pb.TagNumber(3)
+  $0.UserId get technician => $_getN(2);
+  @$pb.TagNumber(3)
+  set technician($0.UserId value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTechnician() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTechnician() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $0.UserId ensureTechnician() => $_ensure(2);
+
+  /// Withdraws the hand-over: the suggestion is handed to no one.
+  @$pb.TagNumber(4)
+  $core.bool get withdraw => $_getBF(3);
+  @$pb.TagNumber(4)
+  set withdraw($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasWithdraw() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearWithdraw() => $_clearField(4);
+}
+
 /// Asks for a nonce to link one home's account at a third-party service
 /// (accountlink.v1.AccountLinkNonce). Only a household admin of the home
 /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) is issued one; anyone else is refused as
@@ -7715,6 +7829,7 @@ enum ManagementRequest_Request {
   applyHeatCurve,
   declineHeatCurve,
   setHeatCurveAutomaticSavings,
+  handHeatCurveSuggestion,
   notSet
 }
 
@@ -7811,6 +7926,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ApplyHeatCurve? applyHeatCurve,
     DeclineHeatCurve? declineHeatCurve,
     SetHeatCurveAutomaticSavings? setHeatCurveAutomaticSavings,
+    HandHeatCurveSuggestion? handHeatCurveSuggestion,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -7942,6 +8058,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     if (declineHeatCurve != null) result.declineHeatCurve = declineHeatCurve;
     if (setHeatCurveAutomaticSavings != null)
       result.setHeatCurveAutomaticSavings = setHeatCurveAutomaticSavings;
+    if (handHeatCurveSuggestion != null)
+      result.handHeatCurveSuggestion = handHeatCurveSuggestion;
     return result;
   }
 
@@ -8046,6 +8164,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     88: ManagementRequest_Request.applyHeatCurve,
     89: ManagementRequest_Request.declineHeatCurve,
     90: ManagementRequest_Request.setHeatCurveAutomaticSavings,
+    91: ManagementRequest_Request.handHeatCurveSuggestion,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -8143,7 +8262,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       87,
       88,
       89,
-      90
+      90,
+      91
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -8353,6 +8473,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<SetHeatCurveAutomaticSavings>(
         90, _omitFieldNames ? '' : 'setHeatCurveAutomaticSavings',
         subBuilder: SetHeatCurveAutomaticSavings.create)
+    ..aOM<HandHeatCurveSuggestion>(
+        91, _omitFieldNames ? '' : 'handHeatCurveSuggestion',
+        subBuilder: HandHeatCurveSuggestion.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -9413,6 +9536,19 @@ class ManagementRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(90)
   SetHeatCurveAutomaticSavings ensureSetHeatCurveAutomaticSavings() =>
       $_ensure(89);
+
+  /// Handing a heat curve suggestion to a technician; see heating.v1 HEAT CURVE, HAND-OVER.
+  @$pb.TagNumber(91)
+  HandHeatCurveSuggestion get handHeatCurveSuggestion => $_getN(90);
+  @$pb.TagNumber(91)
+  set handHeatCurveSuggestion(HandHeatCurveSuggestion value) =>
+      $_setField(91, value);
+  @$pb.TagNumber(91)
+  $core.bool hasHandHeatCurveSuggestion() => $_has(90);
+  @$pb.TagNumber(91)
+  void clearHandHeatCurveSuggestion() => $_clearField(91);
+  @$pb.TagNumber(91)
+  HandHeatCurveSuggestion ensureHandHeatCurveSuggestion() => $_ensure(90);
 }
 
 const $core.bool _omitFieldNames =

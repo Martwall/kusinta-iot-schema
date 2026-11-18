@@ -1204,6 +1204,9 @@ message HeatCurveView {
   // TARGETS). Given only as ROOM TARGETS, WHO SEES THEM says: empty for anyone else, figures
   // withheld or not.
   repeated HeatCurveRoomTargetSuggestion room_target_suggestions = 15;
+
+  // The plant's past suggestions, newest first (HISTORY). Empty where figures are withheld.
+  repeated HeatCurveHistoryEntry history = 16;
 }
 
 // The answer to webrtc.v1.GetHeatCurveView.
@@ -1287,6 +1290,30 @@ message HeatCurveViews {
 // curve and the suggestion are worked out from every zone the plant heats, homes included, and
 // are given to the owner organisation however many homes share the plant: they name no zone, no
 // home and no reason, and no figure of any home.
+//
+// HAND-OVER (HeatCurveSuggestion.hand_over, webrtc.v1.HandHeatCurveSuggestion). For a plant
+// outside homes, the owner organisation may hand the open suggestion to one technician who holds
+// an active commissioning grant covering the plant's space (commissioning.v1, GRANTS), so that
+// the technician sets it. The technician is then sent the plant's notices of it and its
+// reminders (reporting.v1 NOTICES), and applies it as anyone under such a grant may (WHO APPLIES
+// IT). An installer is never sent a notice of a suggestion not handed to them. One technician at
+// a time: handing it to another replaces the first. A hand-over is withdrawn by the same request,
+// as its correction, and ends with its suggestion: applied (done_at set, and kept in the history),
+// declined, or superseded by a new suggestion_id. It ends too when the technician's grant ends,
+// as if withdrawn. The hand-over is given to the owner organisation and to the technician it
+// names; to anyone else the suggestion is given without it.
+//
+// HISTORY (HeatCurveView.history). The plant's past suggestions, newest first: each applied,
+// reverted, declined or superseded, with its kind, when that became of it, what it set or would
+// have set, and its hand-over where it had one. As many as the gateway keeps, such as the last
+// 20. A declined suggestion still the plant's suggestion (still_current) is reopened by
+// withdrawing its decline (webrtc.v1.DeclineHeatCurve.withdraw); one superseded is not reopened,
+// its successor being the suggestion. Left out where figures are withheld. For a plant outside
+// homes, given as the suggestion is (WHO APPLIES IT). For a plant in a home, given to its
+// household admins alone: a commissioning grant never covers a home's history
+// (commissioning.v1, GRANTS), so an installer under one is given none. A home's history is its
+// household's: none from before the home's last Clear history or its wipe (webrtc.v1
+// household.proto, CLIMATE HISTORY, WIPE).
 
 // A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 // release of this schema.
@@ -1406,6 +1433,61 @@ message HeatCurveSuggestion {
   // for this suggestion_id: a new one, given on a material change (SUGGESTION), is open again.
   // For a heat source in a home, the home's wipe and a new household's residency clear it.
   bool declined = 10;
+
+  // To whom the suggestion is handed, where it is (HAND-OVER). Unset where it is not, and to
+  // anyone the hand-over is not given to.
+  HeatCurveHandOver hand_over = 11;
+}
+
+// A suggestion handed to a technician (HAND-OVER).
+message HeatCurveHandOver {
+  // The technician, by the sub of their token.
+  kusinta.iot.identity.v1.UserId technician = 1;
+
+  // When it was handed to them.
+  google.protobuf.Timestamp since = 2;
+
+  // When the suggestion was applied while handed to them, by anyone. Unset while it is not.
+  google.protobuf.Timestamp done_at = 3;
+}
+
+// What became of a past suggestion (HISTORY). A closed list that grows only by a release of this
+// schema.
+enum HeatCurveHistoryOutcome {
+  // An outcome this client's schema does not know: a client shows the entry without one.
+  HEAT_CURVE_HISTORY_OUTCOME_UNSPECIFIED = 0;
+
+  // Applied (APPLYING), by a write, by hand or by the gateway itself.
+  HEAT_CURVE_HISTORY_OUTCOME_APPLIED = 1;
+
+  // Applied, and later set back (webrtc.v1.ApplyHeatCurve.revert).
+  HEAT_CURVE_HISTORY_OUTCOME_REVERTED = 2;
+
+  // Declined (webrtc.v1.DeclineHeatCurve), and not reopened.
+  HEAT_CURVE_HISTORY_OUTCOME_DECLINED = 3;
+
+  // Replaced by a new suggestion on a material change (SUGGESTION) before anything was done.
+  HEAT_CURVE_HISTORY_OUTCOME_SUPERSEDED = 4;
+}
+
+// One past suggestion of a plant (HISTORY).
+message HeatCurveHistoryEntry {
+  string suggestion_id = 1;
+  HeatCurveSuggestionKind kind = 2;
+  HeatCurveHistoryOutcome outcome = 3;
+
+  // When it was applied, set back, declined or superseded.
+  google.protobuf.Timestamp at = 4;
+
+  // What it set, or would have set (HeatCurveSuggestion.settings).
+  kusinta.iot.device.v1.HeatSourceReadings settings = 5;
+
+  // Its hand-over, where it had one, given as HeatCurveSuggestion.hand_over is.
+  HeatCurveHandOver hand_over = 6;
+
+  // Set for a declined suggestion that is still the plant's suggestion: it is reopened by
+  // withdrawing its decline (HISTORY).
+  bool still_current = 7;
 }
 
 // How a curve came to be applied (APPLYING). A closed list that grows only by a release of this

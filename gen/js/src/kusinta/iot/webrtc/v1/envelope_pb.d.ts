@@ -584,7 +584,7 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
   } | {
     /**
      * get_heat_curve_view, apply_heat_curve, decline_heat_curve,
-     * set_heat_curve_automatic_savings
+     * set_heat_curve_automatic_savings, hand_heat_curve_suggestion
      *
      * @generated from field: kusinta.iot.heating.v1.HeatCurveViews heat_curve_views = 36;
      */

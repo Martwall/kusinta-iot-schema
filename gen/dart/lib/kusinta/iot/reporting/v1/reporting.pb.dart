@@ -2179,6 +2179,205 @@ class ReportInviteRoutesResponse extends $pb.GeneratedMessage {
   void clearResyncRequired() => $_clearField(2);
 }
 
+/// One notice to push (NOTICES).
+class Notice extends $pb.GeneratedMessage {
+  factory Notice({
+    $core.String? noticeId,
+    NoticeKind? kind,
+    $core.Iterable<$0.UserId>? recipients,
+    $core.bool? ownerOrganisation,
+  }) {
+    final result = create();
+    if (noticeId != null) result.noticeId = noticeId;
+    if (kind != null) result.kind = kind;
+    if (recipients != null) result.recipients.addAll(recipients);
+    if (ownerOrganisation != null) result.ownerOrganisation = ownerOrganisation;
+    return result;
+  }
+
+  Notice._();
+
+  factory Notice.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory Notice.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Notice',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'noticeId')
+    ..e<NoticeKind>(2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: NoticeKind.NOTICE_KIND_UNSPECIFIED,
+        valueOf: NoticeKind.valueOf,
+        enumValues: NoticeKind.values)
+    ..pc<$0.UserId>(3, _omitFieldNames ? '' : 'recipients', $pb.PbFieldType.PM,
+        subBuilder: $0.UserId.create)
+    ..aOB(4, _omitFieldNames ? '' : 'ownerOrganisation')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Notice clone() => Notice()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Notice copyWith(void Function(Notice) updates) =>
+      super.copyWith((message) => updates(message as Notice)) as Notice;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static Notice create() => Notice._();
+  @$core.override
+  Notice createEmptyInstance() => create();
+  static $pb.PbList<Notice> createRepeated() => $pb.PbList<Notice>();
+  @$core.pragma('dart2js:noInline')
+  static Notice getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Notice>(create);
+  static Notice? _defaultInstance;
+
+  /// Minted by the gateway; what the api-server sends it once by.
+  @$pb.TagNumber(1)
+  $core.String get noticeId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set noticeId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasNoticeId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearNoticeId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  NoticeKind get kind => $_getN(1);
+  @$pb.TagNumber(2)
+  set kind(NoticeKind value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKind() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKind() => $_clearField(2);
+
+  /// The members to send it to, by the sub of their token, each once.
+  @$pb.TagNumber(3)
+  $pb.PbList<$0.UserId> get recipients => $_getList(2);
+
+  /// Also send it to the administrators of the gateway's owning organisation, whom the gateway
+  /// does not name.
+  @$pb.TagNumber(4)
+  $core.bool get ownerOrganisation => $_getBF(3);
+  @$pb.TagNumber(4)
+  set ownerOrganisation($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasOwnerOrganisation() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOwnerOrganisation() => $_clearField(4);
+}
+
+class SendNoticesRequest extends $pb.GeneratedMessage {
+  factory SendNoticesRequest({
+    $core.Iterable<Notice>? notices,
+  }) {
+    final result = create();
+    if (notices != null) result.notices.addAll(notices);
+    return result;
+  }
+
+  SendNoticesRequest._();
+
+  factory SendNoticesRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SendNoticesRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SendNoticesRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..pc<Notice>(1, _omitFieldNames ? '' : 'notices', $pb.PbFieldType.PM,
+        subBuilder: Notice.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SendNoticesRequest clone() => SendNoticesRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SendNoticesRequest copyWith(void Function(SendNoticesRequest) updates) =>
+      super.copyWith((message) => updates(message as SendNoticesRequest))
+          as SendNoticesRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SendNoticesRequest create() => SendNoticesRequest._();
+  @$core.override
+  SendNoticesRequest createEmptyInstance() => create();
+  static $pb.PbList<SendNoticesRequest> createRepeated() =>
+      $pb.PbList<SendNoticesRequest>();
+  @$core.pragma('dart2js:noInline')
+  static SendNoticesRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SendNoticesRequest>(create);
+  static SendNoticesRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Notice> get notices => $_getList(0);
+}
+
+class SendNoticesResponse extends $pb.GeneratedMessage {
+  factory SendNoticesResponse({
+    $core.Iterable<$core.String>? takenNoticeIds,
+  }) {
+    final result = create();
+    if (takenNoticeIds != null) result.takenNoticeIds.addAll(takenNoticeIds);
+    return result;
+  }
+
+  SendNoticesResponse._();
+
+  factory SendNoticesResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SendNoticesResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SendNoticesResponse',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'takenNoticeIds')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SendNoticesResponse clone() => SendNoticesResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SendNoticesResponse copyWith(void Function(SendNoticesResponse) updates) =>
+      super.copyWith((message) => updates(message as SendNoticesResponse))
+          as SendNoticesResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SendNoticesResponse create() => SendNoticesResponse._();
+  @$core.override
+  SendNoticesResponse createEmptyInstance() => create();
+  static $pb.PbList<SendNoticesResponse> createRepeated() =>
+      $pb.PbList<SendNoticesResponse>();
+  @$core.pragma('dart2js:noInline')
+  static SendNoticesResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SendNoticesResponse>(create);
+  static SendNoticesResponse? _defaultInstance;
+
+  /// The notices taken, by id, whether sent now or before, or to no one: the gateway stops
+  /// sending these. A notice not named is sent again. Never who a notice went to.
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get takenNoticeIds => $_getList(0);
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

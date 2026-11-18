@@ -96,4 +96,22 @@ extension type GatewayReportingServiceClient (connect.Transport _transport) {
       onTrailer: onTrailer,
     );
   }
+
+  /// Not a report: asks the api-server to push notices to people's devices (NOTICES).
+  Future<kusintaiotreportingv1reporting.SendNoticesResponse> sendNotices(
+    kusintaiotreportingv1reporting.SendNoticesRequest input, {
+    connect.Headers? headers,
+    connect.AbortSignal? signal,
+    Function(connect.Headers)? onHeader,
+    Function(connect.Headers)? onTrailer,
+  }) {
+    return connect.Client(_transport).unary(
+      specs.GatewayReportingService.sendNotices,
+      input,
+      signal: signal,
+      headers: headers,
+      onHeader: onHeader,
+      onTrailer: onTrailer,
+    );
+  }
 }

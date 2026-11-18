@@ -3586,6 +3586,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     HeatCurveApplied? lastApplied,
     HeatCurveAutomaticSavings? automaticSavings,
     $core.Iterable<HeatCurveRoomTargetSuggestion>? roomTargetSuggestions,
+    $core.Iterable<HeatCurveHistoryEntry>? history,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3605,6 +3606,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (automaticSavings != null) result.automaticSavings = automaticSavings;
     if (roomTargetSuggestions != null)
       result.roomTargetSuggestions.addAll(roomTargetSuggestions);
+    if (history != null) result.history.addAll(history);
     return result;
   }
 
@@ -3654,6 +3656,9 @@ class HeatCurveView extends $pb.GeneratedMessage {
     ..pc<HeatCurveRoomTargetSuggestion>(
         15, _omitFieldNames ? '' : 'roomTargetSuggestions', $pb.PbFieldType.PM,
         subBuilder: HeatCurveRoomTargetSuggestion.create)
+    ..pc<HeatCurveHistoryEntry>(
+        16, _omitFieldNames ? '' : 'history', $pb.PbFieldType.PM,
+        subBuilder: HeatCurveHistoryEntry.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3849,6 +3854,10 @@ class HeatCurveView extends $pb.GeneratedMessage {
   @$pb.TagNumber(15)
   $pb.PbList<HeatCurveRoomTargetSuggestion> get roomTargetSuggestions =>
       $_getList(14);
+
+  /// The plant's past suggestions, newest first (HISTORY). Empty where figures are withheld.
+  @$pb.TagNumber(16)
+  $pb.PbList<HeatCurveHistoryEntry> get history => $_getList(15);
 }
 
 /// The answer to webrtc.v1.GetHeatCurveView.
@@ -4116,6 +4125,7 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
     $core.int? savingPermille,
     $3.Timestamp? suggestedAt,
     $core.bool? declined,
+    HeatCurveHandOver? handOver,
   }) {
     final result = create();
     if (suggestionId != null) result.suggestionId = suggestionId;
@@ -4131,6 +4141,7 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
     if (savingPermille != null) result.savingPermille = savingPermille;
     if (suggestedAt != null) result.suggestedAt = suggestedAt;
     if (declined != null) result.declined = declined;
+    if (handOver != null) result.handOver = handOver;
     return result;
   }
 
@@ -4172,6 +4183,8 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
     ..aOM<$3.Timestamp>(9, _omitFieldNames ? '' : 'suggestedAt',
         subBuilder: $3.Timestamp.create)
     ..aOB(10, _omitFieldNames ? '' : 'declined')
+    ..aOM<HeatCurveHandOver>(11, _omitFieldNames ? '' : 'handOver',
+        subBuilder: HeatCurveHandOver.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4308,6 +4321,269 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
   $core.bool hasDeclined() => $_has(9);
   @$pb.TagNumber(10)
   void clearDeclined() => $_clearField(10);
+
+  /// To whom the suggestion is handed, where it is (HAND-OVER). Unset where it is not, and to
+  /// anyone the hand-over is not given to.
+  @$pb.TagNumber(11)
+  HeatCurveHandOver get handOver => $_getN(10);
+  @$pb.TagNumber(11)
+  set handOver(HeatCurveHandOver value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasHandOver() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearHandOver() => $_clearField(11);
+  @$pb.TagNumber(11)
+  HeatCurveHandOver ensureHandOver() => $_ensure(10);
+}
+
+/// A suggestion handed to a technician (HAND-OVER).
+class HeatCurveHandOver extends $pb.GeneratedMessage {
+  factory HeatCurveHandOver({
+    $0.UserId? technician,
+    $3.Timestamp? since,
+    $3.Timestamp? doneAt,
+  }) {
+    final result = create();
+    if (technician != null) result.technician = technician;
+    if (since != null) result.since = since;
+    if (doneAt != null) result.doneAt = doneAt;
+    return result;
+  }
+
+  HeatCurveHandOver._();
+
+  factory HeatCurveHandOver.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveHandOver.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveHandOver',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'technician',
+        subBuilder: $0.UserId.create)
+    ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'since',
+        subBuilder: $3.Timestamp.create)
+    ..aOM<$3.Timestamp>(3, _omitFieldNames ? '' : 'doneAt',
+        subBuilder: $3.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveHandOver clone() => HeatCurveHandOver()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveHandOver copyWith(void Function(HeatCurveHandOver) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveHandOver))
+          as HeatCurveHandOver;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveHandOver create() => HeatCurveHandOver._();
+  @$core.override
+  HeatCurveHandOver createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveHandOver> createRepeated() =>
+      $pb.PbList<HeatCurveHandOver>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveHandOver getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveHandOver>(create);
+  static HeatCurveHandOver? _defaultInstance;
+
+  /// The technician, by the sub of their token.
+  @$pb.TagNumber(1)
+  $0.UserId get technician => $_getN(0);
+  @$pb.TagNumber(1)
+  set technician($0.UserId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasTechnician() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTechnician() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.UserId ensureTechnician() => $_ensure(0);
+
+  /// When it was handed to them.
+  @$pb.TagNumber(2)
+  $3.Timestamp get since => $_getN(1);
+  @$pb.TagNumber(2)
+  set since($3.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSince() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSince() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Timestamp ensureSince() => $_ensure(1);
+
+  /// When the suggestion was applied while handed to them, by anyone. Unset while it is not.
+  @$pb.TagNumber(3)
+  $3.Timestamp get doneAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set doneAt($3.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasDoneAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDoneAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $3.Timestamp ensureDoneAt() => $_ensure(2);
+}
+
+/// One past suggestion of a plant (HISTORY).
+class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
+  factory HeatCurveHistoryEntry({
+    $core.String? suggestionId,
+    HeatCurveSuggestionKind? kind,
+    HeatCurveHistoryOutcome? outcome,
+    $3.Timestamp? at,
+    $5.HeatSourceReadings? settings,
+    HeatCurveHandOver? handOver,
+    $core.bool? stillCurrent,
+  }) {
+    final result = create();
+    if (suggestionId != null) result.suggestionId = suggestionId;
+    if (kind != null) result.kind = kind;
+    if (outcome != null) result.outcome = outcome;
+    if (at != null) result.at = at;
+    if (settings != null) result.settings = settings;
+    if (handOver != null) result.handOver = handOver;
+    if (stillCurrent != null) result.stillCurrent = stillCurrent;
+    return result;
+  }
+
+  HeatCurveHistoryEntry._();
+
+  factory HeatCurveHistoryEntry.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveHistoryEntry.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveHistoryEntry',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'suggestionId')
+    ..e<HeatCurveSuggestionKind>(
+        2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveSuggestionKind.HEAT_CURVE_SUGGESTION_KIND_UNSPECIFIED,
+        valueOf: HeatCurveSuggestionKind.valueOf,
+        enumValues: HeatCurveSuggestionKind.values)
+    ..e<HeatCurveHistoryOutcome>(
+        3, _omitFieldNames ? '' : 'outcome', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            HeatCurveHistoryOutcome.HEAT_CURVE_HISTORY_OUTCOME_UNSPECIFIED,
+        valueOf: HeatCurveHistoryOutcome.valueOf,
+        enumValues: HeatCurveHistoryOutcome.values)
+    ..aOM<$3.Timestamp>(4, _omitFieldNames ? '' : 'at',
+        subBuilder: $3.Timestamp.create)
+    ..aOM<$5.HeatSourceReadings>(5, _omitFieldNames ? '' : 'settings',
+        subBuilder: $5.HeatSourceReadings.create)
+    ..aOM<HeatCurveHandOver>(6, _omitFieldNames ? '' : 'handOver',
+        subBuilder: HeatCurveHandOver.create)
+    ..aOB(7, _omitFieldNames ? '' : 'stillCurrent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveHistoryEntry clone() =>
+      HeatCurveHistoryEntry()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveHistoryEntry copyWith(
+          void Function(HeatCurveHistoryEntry) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveHistoryEntry))
+          as HeatCurveHistoryEntry;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveHistoryEntry create() => HeatCurveHistoryEntry._();
+  @$core.override
+  HeatCurveHistoryEntry createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveHistoryEntry> createRepeated() =>
+      $pb.PbList<HeatCurveHistoryEntry>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveHistoryEntry getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveHistoryEntry>(create);
+  static HeatCurveHistoryEntry? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get suggestionId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set suggestionId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSuggestionId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSuggestionId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  HeatCurveSuggestionKind get kind => $_getN(1);
+  @$pb.TagNumber(2)
+  set kind(HeatCurveSuggestionKind value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKind() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKind() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  HeatCurveHistoryOutcome get outcome => $_getN(2);
+  @$pb.TagNumber(3)
+  set outcome(HeatCurveHistoryOutcome value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOutcome() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOutcome() => $_clearField(3);
+
+  /// When it was applied, set back, declined or superseded.
+  @$pb.TagNumber(4)
+  $3.Timestamp get at => $_getN(3);
+  @$pb.TagNumber(4)
+  set at($3.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $3.Timestamp ensureAt() => $_ensure(3);
+
+  /// What it set, or would have set (HeatCurveSuggestion.settings).
+  @$pb.TagNumber(5)
+  $5.HeatSourceReadings get settings => $_getN(4);
+  @$pb.TagNumber(5)
+  set settings($5.HeatSourceReadings value) => $_setField(5, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSettings() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSettings() => $_clearField(5);
+  @$pb.TagNumber(5)
+  $5.HeatSourceReadings ensureSettings() => $_ensure(4);
+
+  /// Its hand-over, where it had one, given as HeatCurveSuggestion.hand_over is.
+  @$pb.TagNumber(6)
+  HeatCurveHandOver get handOver => $_getN(5);
+  @$pb.TagNumber(6)
+  set handOver(HeatCurveHandOver value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasHandOver() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearHandOver() => $_clearField(6);
+  @$pb.TagNumber(6)
+  HeatCurveHandOver ensureHandOver() => $_ensure(5);
+
+  /// Set for a declined suggestion that is still the plant's suggestion: it is reopened by
+  /// withdrawing its decline (HISTORY).
+  @$pb.TagNumber(7)
+  $core.bool get stillCurrent => $_getBF(6);
+  @$pb.TagNumber(7)
+  set stillCurrent($core.bool value) => $_setBool(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasStillCurrent() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearStillCurrent() => $_clearField(7);
 }
 
 /// One setting found otherwise than applied.
