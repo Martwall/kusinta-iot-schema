@@ -650,6 +650,13 @@ class HeatCurveMismatchKind extends $pb.ProtobufEnum {
       HeatCurveMismatchKind._(
           6, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL');
 
+  /// A revert to a numbered curve (webrtc.v1.ApplyHeatCurve.revert), read back, finds it not in
+  /// force as set back: another numbered curve (found_curve), or the own curve still in force
+  /// (found_curve unset).
+  static const HeatCurveMismatchKind HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE =
+      HeatCurveMismatchKind._(
+          7, _omitEnumNames ? '' : 'HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE');
+
   static const $core.List<HeatCurveMismatchKind> values =
       <HeatCurveMismatchKind>[
     HEAT_CURVE_MISMATCH_KIND_UNSPECIFIED,
@@ -659,10 +666,11 @@ class HeatCurveMismatchKind extends $pb.ProtobufEnum {
     HEAT_CURVE_MISMATCH_KIND_SHIFT,
     HEAT_CURVE_MISMATCH_KIND_SUPPLY,
     HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL,
+    HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE,
   ];
 
   static final $core.List<HeatCurveMismatchKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static HeatCurveMismatchKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

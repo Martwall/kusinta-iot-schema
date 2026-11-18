@@ -288,6 +288,7 @@ const HeatCurveMismatchKind$json = {
     {'1': 'HEAT_CURVE_MISMATCH_KIND_SHIFT', '2': 4},
     {'1': 'HEAT_CURVE_MISMATCH_KIND_SUPPLY', '2': 5},
     {'1': 'HEAT_CURVE_MISMATCH_KIND_BEND_NOT_NEUTRAL', '2': 6},
+    {'1': 'HEAT_CURVE_MISMATCH_KIND_NUMBERED_CURVE', '2': 7},
   ],
 };
 
@@ -298,7 +299,8 @@ final $typed_data.Uint8List heatCurveMismatchKindDescriptor = $convert.base64Dec
     'MwovSEVBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX09XTl9DVVJWRV9OT1RfSU5fRk9SQ0UQAhIiCh'
     '5IRUFUX0NVUlZFX01JU01BVENIX0tJTkRfUE9JTlQQAxIiCh5IRUFUX0NVUlZFX01JU01BVENI'
     'X0tJTkRfU0hJRlQQBBIjCh9IRUFUX0NVUlZFX01JU01BVENIX0tJTkRfU1VQUExZEAUSLQopSE'
-    'VBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX0JFTkRfTk9UX05FVVRSQUwQBg==');
+    'VBVF9DVVJWRV9NSVNNQVRDSF9LSU5EX0JFTkRfTk9UX05FVVRSQUwQBhIrCidIRUFUX0NVUlZF'
+    'X01JU01BVENIX0tJTkRfTlVNQkVSRURfQ1VSVkUQBw==');
 
 @$core.Deprecated('Use deviceAttributeDescriptor instead')
 const DeviceAttribute$json = {
@@ -2052,6 +2054,15 @@ const HeatCurveMismatch$json = {
       '10': 'foundBendOffsetCentidegrees',
       '17': true
     },
+    {
+      '1': 'found_curve',
+      '3': 7,
+      '4': 1,
+      '5': 13,
+      '9': 5,
+      '10': 'foundCurve',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_outdoor_centidegrees'},
@@ -2059,6 +2070,7 @@ const HeatCurveMismatch$json = {
     {'1': '_found_supply_centidegrees'},
     {'1': '_found_offset'},
     {'1': '_found_bend_offset_centidegrees'},
+    {'1': '_found_curve'},
   ],
 };
 
@@ -2071,9 +2083,10 @@ final $typed_data.Uint8List heatCurveMismatchDescriptor = $convert.base64Decode(
     'X3N1cHBseV9jZW50aWRlZ3JlZXMYBCABKBFIAlIXZm91bmRTdXBwbHlDZW50aWRlZ3JlZXOIAQ'
     'ESJgoMZm91bmRfb2Zmc2V0GAUgASgRSANSC2ZvdW5kT2Zmc2V0iAEBEkgKHmZvdW5kX2JlbmRf'
     'b2Zmc2V0X2NlbnRpZGVncmVlcxgGIAEoEUgEUhtmb3VuZEJlbmRPZmZzZXRDZW50aWRlZ3JlZX'
-    'OIAQFCFwoVX291dGRvb3JfY2VudGlkZWdyZWVzQh8KHV9leHBlY3RlZF9zdXBwbHlfY2VudGlk'
-    'ZWdyZWVzQhwKGl9mb3VuZF9zdXBwbHlfY2VudGlkZWdyZWVzQg8KDV9mb3VuZF9vZmZzZXRCIQ'
-    'ofX2ZvdW5kX2JlbmRfb2Zmc2V0X2NlbnRpZGVncmVlcw==');
+    'OIAQESJAoLZm91bmRfY3VydmUYByABKA1IBVIKZm91bmRDdXJ2ZYgBAUIXChVfb3V0ZG9vcl9j'
+    'ZW50aWRlZ3JlZXNCHwodX2V4cGVjdGVkX3N1cHBseV9jZW50aWRlZ3JlZXNCHAoaX2ZvdW5kX3'
+    'N1cHBseV9jZW50aWRlZ3JlZXNCDwoNX2ZvdW5kX29mZnNldEIhCh9fZm91bmRfYmVuZF9vZmZz'
+    'ZXRfY2VudGlkZWdyZWVzQg4KDF9mb3VuZF9jdXJ2ZQ==');
 
 @$core.Deprecated('Use heatCurveAppliedDescriptor instead')
 const HeatCurveApplied$json = {
