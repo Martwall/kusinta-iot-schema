@@ -3588,6 +3588,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     $core.Iterable<HeatCurveRoomTargetSuggestion>? roomTargetSuggestions,
     $core.Iterable<HeatCurveHistoryEntry>? history,
     HeatCurveNoSuggestionReason? noSuggestionReason,
+    CompressorWear? compressorWear,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3610,6 +3611,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (history != null) result.history.addAll(history);
     if (noSuggestionReason != null)
       result.noSuggestionReason = noSuggestionReason;
+    if (compressorWear != null) result.compressorWear = compressorWear;
     return result;
   }
 
@@ -3668,6 +3670,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
             .HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED,
         valueOf: HeatCurveNoSuggestionReason.valueOf,
         enumValues: HeatCurveNoSuggestionReason.values)
+    ..aOM<CompressorWear>(18, _omitFieldNames ? '' : 'compressorWear',
+        subBuilder: CompressorWear.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3879,6 +3883,399 @@ class HeatCurveView extends $pb.GeneratedMessage {
   $core.bool hasNoSuggestionReason() => $_has(16);
   @$pb.TagNumber(17)
   void clearNoSuggestionReason() => $_clearField(17);
+
+  /// How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, and for
+  /// a heat source that keeps no running totals.
+  @$pb.TagNumber(18)
+  CompressorWear get compressorWear => $_getN(17);
+  @$pb.TagNumber(18)
+  set compressorWear(CompressorWear value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasCompressorWear() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearCompressorWear() => $_clearField(18);
+  @$pb.TagNumber(18)
+  CompressorWear ensureCompressorWear() => $_ensure(17);
+}
+
+/// How hard a heat source's compressor works (COMPRESSOR WEAR).
+class CompressorWear extends $pb.GeneratedMessage {
+  factory CompressorWear({
+    $core.Iterable<CompressorWearDay>? days,
+    $core.int? lifetimeRunLengthMinutes,
+    $core.bool? shortCycling,
+  }) {
+    final result = create();
+    if (days != null) result.days.addAll(days);
+    if (lifetimeRunLengthMinutes != null)
+      result.lifetimeRunLengthMinutes = lifetimeRunLengthMinutes;
+    if (shortCycling != null) result.shortCycling = shortCycling;
+    return result;
+  }
+
+  CompressorWear._();
+
+  factory CompressorWear.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CompressorWear.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CompressorWear',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..pc<CompressorWearDay>(
+        1, _omitFieldNames ? '' : 'days', $pb.PbFieldType.PM,
+        subBuilder: CompressorWearDay.create)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'lifetimeRunLengthMinutes',
+        $pb.PbFieldType.OU3)
+    ..aOB(3, _omitFieldNames ? '' : 'shortCycling')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CompressorWear clone() => CompressorWear()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CompressorWear copyWith(void Function(CompressorWear) updates) =>
+      super.copyWith((message) => updates(message as CompressorWear))
+          as CompressorWear;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CompressorWear create() => CompressorWear._();
+  @$core.override
+  CompressorWear createEmptyInstance() => create();
+  static $pb.PbList<CompressorWear> createRepeated() =>
+      $pb.PbList<CompressorWear>();
+  @$core.pragma('dart2js:noInline')
+  static CompressorWear getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CompressorWear>(create);
+  static CompressorWear? _defaultInstance;
+
+  /// The last fourteen days of the building's local dates, newest first, today's included as
+  /// far as it has gone (partial).
+  @$pb.TagNumber(1)
+  $pb.PbList<CompressorWearDay> get days => $_getList(0);
+
+  /// The run length over the compressor's life as first heard: its hours × 60 / its starts,
+  /// in whole minutes, as the totals stood when the gateway first heard them. Unset where no
+  /// start was counted then.
+  @$pb.TagNumber(2)
+  $core.int get lifetimeRunLengthMinutes => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set lifetimeRunLengthMinutes($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasLifetimeRunLengthMinutes() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLifetimeRunLengthMinutes() => $_clearField(2);
+
+  /// Whether the compressor short-cycles: over the last three whole days, more starts per day
+  /// than the gateway's limit, or, with at least six hours run over them, runs shorter on
+  /// average (their hours × 60 / their starts) than its limit. False where fewer than three
+  /// whole days are held.
+  @$pb.TagNumber(3)
+  $core.bool get shortCycling => $_getBF(2);
+  @$pb.TagNumber(3)
+  set shortCycling($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasShortCycling() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearShortCycling() => $_clearField(3);
+}
+
+/// One day of a compressor's work (COMPRESSOR WEAR). Its figures are unset where the day is
+/// partial.
+class CompressorWearDay extends $pb.GeneratedMessage {
+  factory CompressorWearDay({
+    $core.String? date,
+    $core.int? starts,
+    $core.int? hours,
+    $core.int? hotWaterHours,
+    $core.int? spaceHeatingHours,
+    $core.bool? partial,
+    $core.int? runLengthMinutes,
+  }) {
+    final result = create();
+    if (date != null) result.date = date;
+    if (starts != null) result.starts = starts;
+    if (hours != null) result.hours = hours;
+    if (hotWaterHours != null) result.hotWaterHours = hotWaterHours;
+    if (spaceHeatingHours != null) result.spaceHeatingHours = spaceHeatingHours;
+    if (partial != null) result.partial = partial;
+    if (runLengthMinutes != null) result.runLengthMinutes = runLengthMinutes;
+    return result;
+  }
+
+  CompressorWearDay._();
+
+  factory CompressorWearDay.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CompressorWearDay.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CompressorWearDay',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'date')
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'starts', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'hours', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'hotWaterHours', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'spaceHeatingHours', $pb.PbFieldType.OU3)
+    ..aOB(6, _omitFieldNames ? '' : 'partial')
+    ..a<$core.int>(
+        7, _omitFieldNames ? '' : 'runLengthMinutes', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CompressorWearDay clone() => CompressorWearDay()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CompressorWearDay copyWith(void Function(CompressorWearDay) updates) =>
+      super.copyWith((message) => updates(message as CompressorWearDay))
+          as CompressorWearDay;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CompressorWearDay create() => CompressorWearDay._();
+  @$core.override
+  CompressorWearDay createEmptyInstance() => create();
+  static $pb.PbList<CompressorWearDay> createRepeated() =>
+      $pb.PbList<CompressorWearDay>();
+  @$core.pragma('dart2js:noInline')
+  static CompressorWearDay getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CompressorWearDay>(create);
+  static CompressorWearDay? _defaultInstance;
+
+  /// The local date, as an ISO 8601 calendar date (YYYY-MM-DD).
+  @$pb.TagNumber(1)
+  $core.String get date => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set date($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasDate() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearDate() => $_clearField(1);
+
+  /// Starts over the day.
+  @$pb.TagNumber(2)
+  $core.int get starts => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set starts($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStarts() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStarts() => $_clearField(2);
+
+  /// Hours run over the day, as the difference of whole-hour totals: off by up to an hour
+  /// either way.
+  @$pb.TagNumber(3)
+  $core.int get hours => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set hours($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasHours() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearHours() => $_clearField(3);
+
+  /// The part of hours run on hot water, read as hours is.
+  @$pb.TagNumber(4)
+  $core.int get hotWaterHours => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set hotWaterHours($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasHotWaterHours() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHotWaterHours() => $_clearField(4);
+
+  /// The part of hours run on space heating: hours less hot_water_hours.
+  @$pb.TagNumber(5)
+  $core.int get spaceHeatingHours => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set spaceHeatingHours($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSpaceHeatingHours() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSpaceHeatingHours() => $_clearField(5);
+
+  /// Whether the totals were not heard throughout the day: its figures are then unset, and it
+  /// is judged on nothing.
+  @$pb.TagNumber(6)
+  $core.bool get partial => $_getBF(5);
+  @$pb.TagNumber(6)
+  set partial($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasPartial() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearPartial() => $_clearField(6);
+
+  /// hours × 60 / starts, in whole minutes, given only where hours is at least 6: below that
+  /// a difference of whole-hour totals, off by up to an hour, says too little. Unset there.
+  @$pb.TagNumber(7)
+  $core.int get runLengthMinutes => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set runLengthMinutes($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasRunLengthMinutes() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearRunLengthMinutes() => $_clearField(7);
+}
+
+/// The compressor before and after an applied suggestion (COMPRESSOR WEAR).
+class HeatCurveCompressorEffect extends $pb.GeneratedMessage {
+  factory HeatCurveCompressorEffect({
+    $core.int? startsPerDayTenthsBefore,
+    $core.int? startsPerDayTenthsAfter,
+    $core.int? spaceHeatingRunLengthMinutesBefore,
+    $core.int? spaceHeatingRunLengthMinutesAfter,
+    $core.int? daysCompared,
+    $core.bool? matchedOnHeatSourceOutdoor,
+  }) {
+    final result = create();
+    if (startsPerDayTenthsBefore != null)
+      result.startsPerDayTenthsBefore = startsPerDayTenthsBefore;
+    if (startsPerDayTenthsAfter != null)
+      result.startsPerDayTenthsAfter = startsPerDayTenthsAfter;
+    if (spaceHeatingRunLengthMinutesBefore != null)
+      result.spaceHeatingRunLengthMinutesBefore =
+          spaceHeatingRunLengthMinutesBefore;
+    if (spaceHeatingRunLengthMinutesAfter != null)
+      result.spaceHeatingRunLengthMinutesAfter =
+          spaceHeatingRunLengthMinutesAfter;
+    if (daysCompared != null) result.daysCompared = daysCompared;
+    if (matchedOnHeatSourceOutdoor != null)
+      result.matchedOnHeatSourceOutdoor = matchedOnHeatSourceOutdoor;
+    return result;
+  }
+
+  HeatCurveCompressorEffect._();
+
+  factory HeatCurveCompressorEffect.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveCompressorEffect.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveCompressorEffect',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(1, _omitFieldNames ? '' : 'startsPerDayTenthsBefore',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, _omitFieldNames ? '' : 'startsPerDayTenthsAfter',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        3,
+        _omitFieldNames ? '' : 'spaceHeatingRunLengthMinutesBefore',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        4,
+        _omitFieldNames ? '' : 'spaceHeatingRunLengthMinutesAfter',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'daysCompared', $pb.PbFieldType.OU3)
+    ..aOB(6, _omitFieldNames ? '' : 'matchedOnHeatSourceOutdoor')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveCompressorEffect clone() =>
+      HeatCurveCompressorEffect()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveCompressorEffect copyWith(
+          void Function(HeatCurveCompressorEffect) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveCompressorEffect))
+          as HeatCurveCompressorEffect;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveCompressorEffect create() => HeatCurveCompressorEffect._();
+  @$core.override
+  HeatCurveCompressorEffect createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveCompressorEffect> createRepeated() =>
+      $pb.PbList<HeatCurveCompressorEffect>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveCompressorEffect getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveCompressorEffect>(create);
+  static HeatCurveCompressorEffect? _defaultInstance;
+
+  /// The mean starts per day over the days compared before and after it, in tenths of a start.
+  @$pb.TagNumber(1)
+  $core.int get startsPerDayTenthsBefore => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set startsPerDayTenthsBefore($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasStartsPerDayTenthsBefore() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStartsPerDayTenthsBefore() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get startsPerDayTenthsAfter => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set startsPerDayTenthsAfter($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasStartsPerDayTenthsAfter() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearStartsPerDayTenthsAfter() => $_clearField(2);
+
+  /// The run length on space heating over the days compared before and after it: their space
+  /// heating hours × 60 / their starts, in whole minutes. Unset where no start was counted.
+  @$pb.TagNumber(3)
+  $core.int get spaceHeatingRunLengthMinutesBefore => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set spaceHeatingRunLengthMinutesBefore($core.int value) =>
+      $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSpaceHeatingRunLengthMinutesBefore() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSpaceHeatingRunLengthMinutesBefore() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get spaceHeatingRunLengthMinutesAfter => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set spaceHeatingRunLengthMinutesAfter($core.int value) =>
+      $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSpaceHeatingRunLengthMinutesAfter() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSpaceHeatingRunLengthMinutesAfter() => $_clearField(4);
+
+  /// How many days are compared on each side: each whole day of the seven after the apply
+  /// paired with a whole day of the seven before it whose mean outdoor temperature is within
+  /// 2 °C, each day before used once; the rest are left out.
+  @$pb.TagNumber(5)
+  $core.int get daysCompared => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set daysCompared($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDaysCompared() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDaysCompared() => $_clearField(5);
+
+  /// Whether the days were paired on the heat source's own outdoor reading, where no weather
+  /// for the building's place was held (planning.v1.ForecastPoint.temperature_centidegrees),
+  /// rather than on that weather. A sensor in the sun reads high, so a pairing on it is weaker.
+  @$pb.TagNumber(6)
+  $core.bool get matchedOnHeatSourceOutdoor => $_getBF(5);
+  @$pb.TagNumber(6)
+  set matchedOnHeatSourceOutdoor($core.bool value) => $_setBool(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasMatchedOnHeatSourceOutdoor() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMatchedOnHeatSourceOutdoor() => $_clearField(6);
 }
 
 /// The answer to webrtc.v1.GetHeatCurveView.
@@ -4462,6 +4859,7 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
     $5.HeatSourceReadings? settings,
     HeatCurveHandOver? handOver,
     $core.bool? stillCurrent,
+    HeatCurveCompressorEffect? compressorEffect,
   }) {
     final result = create();
     if (suggestionId != null) result.suggestionId = suggestionId;
@@ -4471,6 +4869,7 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
     if (settings != null) result.settings = settings;
     if (handOver != null) result.handOver = handOver;
     if (stillCurrent != null) result.stillCurrent = stillCurrent;
+    if (compressorEffect != null) result.compressorEffect = compressorEffect;
     return result;
   }
 
@@ -4508,6 +4907,9 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
     ..aOM<HeatCurveHandOver>(6, _omitFieldNames ? '' : 'handOver',
         subBuilder: HeatCurveHandOver.create)
     ..aOB(7, _omitFieldNames ? '' : 'stillCurrent')
+    ..aOM<HeatCurveCompressorEffect>(
+        8, _omitFieldNames ? '' : 'compressorEffect',
+        subBuilder: HeatCurveCompressorEffect.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4606,6 +5008,20 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
   $core.bool hasStillCurrent() => $_has(6);
   @$pb.TagNumber(7)
   void clearStillCurrent() => $_clearField(7);
+
+  /// For an applied one, the compressor before and after it (COMPRESSOR WEAR): set once seven
+  /// whole days after the apply have passed, unset before, and unset where no day could be
+  /// compared. Given as the view's figures are.
+  @$pb.TagNumber(8)
+  HeatCurveCompressorEffect get compressorEffect => $_getN(7);
+  @$pb.TagNumber(8)
+  set compressorEffect(HeatCurveCompressorEffect value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCompressorEffect() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCompressorEffect() => $_clearField(8);
+  @$pb.TagNumber(8)
+  HeatCurveCompressorEffect ensureCompressorEffect() => $_ensure(7);
 }
 
 /// One setting found otherwise than applied.
