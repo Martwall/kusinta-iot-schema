@@ -1730,10 +1730,10 @@ export declare type CompressorWear = Message<"kusinta.iot.heating.v1.CompressorW
   lifetimeRunLengthMinutes?: number | undefined;
 
   /**
-   * Whether the compressor short-cycles: over the last three whole days, more starts per day
-   * than the gateway's limit, or, with at least six hours run over them, runs shorter on
-   * average (their hours × 60 / their starts) than its limit. False where fewer than three
-   * whole days are held.
+   * Whether the compressor short-cycles, judged on sums over the last three whole days, not
+   * on each day: their starts / 3 above the gateway's limit of starts per day, or, with at
+   * least six hours run over them, their hours × 60 / their starts below its limit of
+   * minutes. False where fewer than three whole days are held.
    *
    * @generated from field: bool short_cycling = 3;
    */
@@ -1776,14 +1776,16 @@ export declare type CompressorWearDay = Message<"kusinta.iot.heating.v1.Compress
   hours?: number | undefined;
 
   /**
-   * The part of hours run on hot water, read as hours is.
+   * The part of hours run on hot water, read as hours is, and never more than hours: the two
+   * are differences of separate whole-hour totals, so the hot water's can come out an hour
+   * above, and is then given as hours.
    *
    * @generated from field: optional uint32 hot_water_hours = 4;
    */
   hotWaterHours?: number | undefined;
 
   /**
-   * The part of hours run on space heating: hours less hot_water_hours.
+   * The part of hours run on space heating: hours less hot_water_hours, never below 0.
    *
    * @generated from field: optional uint32 space_heating_hours = 5;
    */
@@ -1832,7 +1834,9 @@ export declare type HeatCurveCompressorEffect = Message<"kusinta.iot.heating.v1.
 
   /**
    * The run length on space heating over the days compared before and after it: their space
-   * heating hours × 60 / their starts, in whole minutes. Unset where no start was counted.
+   * heating hours (never below 0, as a day's are) × 60 / their starts, in whole minutes. The
+   * starts are of both uses, as the heat source counts its starts by no use, so where it
+   * starts often for hot water this reads short. Unset where no start was counted.
    *
    * @generated from field: optional uint32 space_heating_run_length_minutes_before = 3;
    */
@@ -1855,7 +1859,8 @@ export declare type HeatCurveCompressorEffect = Message<"kusinta.iot.heating.v1.
   /**
    * Whether the days were paired on the heat source's own outdoor reading, where no weather
    * for the building's place was held (planning.v1.ForecastPoint.temperature_centidegrees),
-   * rather than on that weather. A sensor in the sun reads high, so a pairing on it is weaker.
+   * rather than on that weather: true where any day compared was paired on it. A sensor in
+   * the sun reads high, so a pairing on it is weaker.
    *
    * @generated from field: bool matched_on_heat_source_outdoor = 6;
    */

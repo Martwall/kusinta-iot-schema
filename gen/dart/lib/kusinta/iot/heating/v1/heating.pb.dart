@@ -3973,10 +3973,10 @@ class CompressorWear extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearLifetimeRunLengthMinutes() => $_clearField(2);
 
-  /// Whether the compressor short-cycles: over the last three whole days, more starts per day
-  /// than the gateway's limit, or, with at least six hours run over them, runs shorter on
-  /// average (their hours × 60 / their starts) than its limit. False where fewer than three
-  /// whole days are held.
+  /// Whether the compressor short-cycles, judged on sums over the last three whole days, not
+  /// on each day: their starts / 3 above the gateway's limit of starts per day, or, with at
+  /// least six hours run over them, their hours × 60 / their starts below its limit of
+  /// minutes. False where fewer than three whole days are held.
   @$pb.TagNumber(3)
   $core.bool get shortCycling => $_getBF(2);
   @$pb.TagNumber(3)
@@ -4088,7 +4088,9 @@ class CompressorWearDay extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearHours() => $_clearField(3);
 
-  /// The part of hours run on hot water, read as hours is.
+  /// The part of hours run on hot water, read as hours is, and never more than hours: the two
+  /// are differences of separate whole-hour totals, so the hot water's can come out an hour
+  /// above, and is then given as hours.
   @$pb.TagNumber(4)
   $core.int get hotWaterHours => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -4098,7 +4100,7 @@ class CompressorWearDay extends $pb.GeneratedMessage {
   @$pb.TagNumber(4)
   void clearHotWaterHours() => $_clearField(4);
 
-  /// The part of hours run on space heating: hours less hot_water_hours.
+  /// The part of hours run on space heating: hours less hot_water_hours, never below 0.
   @$pb.TagNumber(5)
   $core.int get spaceHeatingHours => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -4232,7 +4234,9 @@ class HeatCurveCompressorEffect extends $pb.GeneratedMessage {
   void clearStartsPerDayTenthsAfter() => $_clearField(2);
 
   /// The run length on space heating over the days compared before and after it: their space
-  /// heating hours × 60 / their starts, in whole minutes. Unset where no start was counted.
+  /// heating hours (never below 0, as a day's are) × 60 / their starts, in whole minutes. The
+  /// starts are of both uses, as the heat source counts its starts by no use, so where it
+  /// starts often for hot water this reads short. Unset where no start was counted.
   @$pb.TagNumber(3)
   $core.int get spaceHeatingRunLengthMinutesBefore => $_getIZ(2);
   @$pb.TagNumber(3)
@@ -4267,7 +4271,8 @@ class HeatCurveCompressorEffect extends $pb.GeneratedMessage {
 
   /// Whether the days were paired on the heat source's own outdoor reading, where no weather
   /// for the building's place was held (planning.v1.ForecastPoint.temperature_centidegrees),
-  /// rather than on that weather. A sensor in the sun reads high, so a pairing on it is weaker.
+  /// rather than on that weather: true where any day compared was paired on it. A sensor in
+  /// the sun reads high, so a pairing on it is weaker.
   @$pb.TagNumber(6)
   $core.bool get matchedOnHeatSourceOutdoor => $_getBF(5);
   @$pb.TagNumber(6)
