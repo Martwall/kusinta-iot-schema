@@ -798,6 +798,14 @@ const PriceRuleReadiness$json = {
       '5': 9,
       '10': 'comfortCostSeenOn'
     },
+    {
+      '1': 'own_band_room_ids',
+      '3': 12,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'ownBandRoomIds'
+    },
   ],
 };
 
@@ -812,7 +820,9 @@ final $typed_data.Uint8List priceRuleReadinessDescriptor = $convert.base64Decode
     'Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCnJlYWR5U2luY2USTgoNd2lkZXJfY29tZm9ydB'
     'gJIAEoCzIpLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ29tZm9ydFByZWZlcmVuY2VSDHdpZGVy'
     'Q29tZm9ydBIwChRwZWFrX2NoYXJnZV9pbmNsdWRlZBgKIAEoCFIScGVha0NoYXJnZUluY2x1ZG'
-    'VkEi8KFGNvbWZvcnRfY29zdF9zZWVuX29uGAsgASgJUhFjb21mb3J0Q29zdFNlZW5Pbg==');
+    'VkEi8KFGNvbWZvcnRfY29zdF9zZWVuX29uGAsgASgJUhFjb21mb3J0Q29zdFNlZW5PbhJLChFv'
+    'd25fYmFuZF9yb29tX2lkcxgMIAMoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSW'
+    'RSDm93bkJhbmRSb29tSWRz');
 
 @$core.Deprecated('Use readinessGateDescriptor instead')
 const ReadinessGate$json = {

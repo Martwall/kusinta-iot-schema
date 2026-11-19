@@ -505,6 +505,19 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
    * @generated from field: string comfort_cost_seen_on = 11;
    */
   comfortCostSeenOn: string;
+
+  /**
+   * Set together with wider_comfort: the rooms the plant heats in the home that hold a comfort
+   * preference of their own (climate.v1.ComfortPreference), which the home's preference does not
+   * change. wider_comfort was judged with every room the rule judges on its band, so it holds
+   * only if these rooms are widened too, or follow the home's preference again. A client offers
+   * the home's change and names these rooms, so that the household can choose to change them for
+   * the saving. Empty where wider_comfort is unset, or where no such room has a preference of its
+   * own. Given as the readiness is (READINESS, WHO SEES IT).
+   *
+   * @generated from field: repeated kusinta.iot.identity.v1.SpaceId own_band_room_ids = 12;
+   */
+  ownBandRoomIds: SpaceId[];
 };
 
 /**
