@@ -3884,8 +3884,9 @@ class HeatCurveView extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   void clearNoSuggestionReason() => $_clearField(17);
 
-  /// How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, and for
-  /// a heat source that keeps no running totals.
+  /// How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, for a
+  /// home's plant to anyone but its household admins (as history), and for a heat source that
+  /// keeps no running totals.
   @$pb.TagNumber(18)
   CompressorWear get compressorWear => $_getN(17);
   @$pb.TagNumber(18)
@@ -5016,7 +5017,7 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
 
   /// For an applied one, the compressor before and after it (COMPRESSOR WEAR): set once seven
   /// whole days after the apply have passed, unset before, and unset where no day could be
-  /// compared. Given as the view's figures are.
+  /// compared. Given as the entry is (HISTORY).
   @$pb.TagNumber(8)
   HeatCurveCompressorEffect get compressorEffect => $_getN(7);
   @$pb.TagNumber(8)

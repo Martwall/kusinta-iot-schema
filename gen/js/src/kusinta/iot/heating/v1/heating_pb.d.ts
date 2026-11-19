@@ -1692,8 +1692,9 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
   noSuggestionReason: HeatCurveNoSuggestionReason;
 
   /**
-   * How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, and for
-   * a heat source that keeps no running totals.
+   * How hard the compressor works (COMPRESSOR WEAR). Unset where figures are withheld, for a
+   * home's plant to anyone but its household admins (as history), and for a heat source that
+   * keeps no running totals.
    *
    * @generated from field: kusinta.iot.heating.v1.CompressorWear compressor_wear = 18;
    */
@@ -2163,7 +2164,7 @@ export declare type HeatCurveHistoryEntry = Message<"kusinta.iot.heating.v1.Heat
   /**
    * For an applied one, the compressor before and after it (COMPRESSOR WEAR): set once seven
    * whole days after the apply have passed, unset before, and unset where no day could be
-   * compared. Given as the view's figures are.
+   * compared. Given as the entry is (HISTORY).
    *
    * @generated from field: kusinta.iot.heating.v1.HeatCurveCompressorEffect compressor_effect = 8;
    */
