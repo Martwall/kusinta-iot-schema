@@ -468,8 +468,9 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
   windowDays: number;
 
   /**
-   * When every gate was first met in the current stretch in SHADOW; unset while the rule is not
-   * ready.
+   * Since when every gate has been met without a break; unset while the rule is not ready. In the
+   * rolling window a rule can be ready, not ready and ready again within one stretch in SHADOW:
+   * this is the start of the latest unbroken run.
    *
    * @generated from field: google.protobuf.Timestamp ready_since = 8;
    */
@@ -498,7 +499,7 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
   /**
    * For a rule LIVE: the latest day scored since it was put LIVE on which a room it judges fell
    * below its comfort band during one of its blocks or soon after (heating.v1.ShadowDay
-   * breach_quarters), as an ISO 8601 calendar date (YYYY-MM-DD), so that a client can say so and
+   * breach_quarters), as an ISO 8601 local calendar date (YYYY-MM-DD), so that a client can say so and
    * offer SHADOW again. Empty where there is none, and for a rule in SHADOW.
    *
    * @generated from field: string comfort_cost_seen_on = 11;
@@ -1510,7 +1511,9 @@ export enum ReadinessGateKind {
   PRICED_DAYS = 2,
 
   /**
-   * The rooms judged on the latest day counted. Met when have reaches need.
+   * The rooms judged on the latest day counted. Met when have reaches need, a least number of
+   * rooms, never the rooms heated: a room left out (rooms_left_out) does not by itself keep a
+   * rule from being ready.
    *
    * @generated from enum value: READINESS_GATE_KIND_ROOMS_JUDGED = 3;
    */

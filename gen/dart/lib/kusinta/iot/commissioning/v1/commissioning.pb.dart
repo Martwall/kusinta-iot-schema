@@ -1227,8 +1227,9 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearWindowDays() => $_clearField(7);
 
-  /// When every gate was first met in the current stretch in SHADOW; unset while the rule is not
-  /// ready.
+  /// Since when every gate has been met without a break; unset while the rule is not ready. In the
+  /// rolling window a rule can be ready, not ready and ready again within one stretch in SHADOW:
+  /// this is the start of the latest unbroken run.
   @$pb.TagNumber(8)
   $0.Timestamp get readySince => $_getN(7);
   @$pb.TagNumber(8)
@@ -1270,7 +1271,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
 
   /// For a rule LIVE: the latest day scored since it was put LIVE on which a room it judges fell
   /// below its comfort band during one of its blocks or soon after (heating.v1.ShadowDay
-  /// breach_quarters), as an ISO 8601 calendar date (YYYY-MM-DD), so that a client can say so and
+  /// breach_quarters), as an ISO 8601 local calendar date (YYYY-MM-DD), so that a client can say so and
   /// offer SHADOW again. Empty where there is none, and for a rule in SHADOW.
   @$pb.TagNumber(11)
   $core.String get comfortCostSeenOn => $_getSZ(10);

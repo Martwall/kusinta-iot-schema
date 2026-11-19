@@ -331,7 +331,9 @@ class ReadinessGateKind extends $pb.ProtobufEnum {
       ReadinessGateKind._(
           2, _omitEnumNames ? '' : 'READINESS_GATE_KIND_PRICED_DAYS');
 
-  /// The rooms judged on the latest day counted. Met when have reaches need.
+  /// The rooms judged on the latest day counted. Met when have reaches need, a least number of
+  /// rooms, never the rooms heated: a room left out (rooms_left_out) does not by itself keep a
+  /// rule from being ready.
   static const ReadinessGateKind READINESS_GATE_KIND_ROOMS_JUDGED =
       ReadinessGateKind._(
           3, _omitEnumNames ? '' : 'READINESS_GATE_KIND_ROOMS_JUDGED');
