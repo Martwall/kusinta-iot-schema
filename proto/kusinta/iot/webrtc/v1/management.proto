@@ -1734,6 +1734,9 @@ message ListCommissioning {
 //                       AND HOUSEHOLD DATA).
 //   "HOUSE_FACT"        a household's "don't know" over a house fact that answers the key.
 //   "SET_BY_TEST"       a key only a test sets.
+//   "REPORTED"          a key whose value the heat source reports, while the reading
+//                       stands (commissioning.v1, PERIODIC INCREASE); metadata "key"
+//                       names it.
 //
 // A space or record the caller cannot reach, and a fact_id that does not exist, are refused
 // as NOT_ENTITLED with the same metadata.
