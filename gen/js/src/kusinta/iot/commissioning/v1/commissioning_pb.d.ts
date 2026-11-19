@@ -7,7 +7,8 @@ import type { Message } from "@bufbuild/protobuf";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
 import type { AttributeValue } from "../../device/v1/cluster_state_pb.js";
-import type { DeviceAttribute } from "../../heating/v1/heating_pb.js";
+import type { DeviceAttribute, PriceRule } from "../../heating/v1/heating_pb.js";
+import type { ComfortPreference } from "../../climate/v1/climate_pb.js";
 
 /**
  * Describes the file kusinta/iot/commissioning/v1/commissioning.proto.
@@ -394,6 +395,16 @@ export declare type FeatureStatus = Message<"kusinta.iot.commissioning.v1.Featur
    * @generated from field: repeated kusinta.iot.commissioning.v1.FeatureBlock blocks = 4;
    */
   blocks: FeatureBlock[];
+
+  /**
+   * On FEATURE_PLANT, one per price rule of the home's own plants (heating.v1.HeatingPlant.space_id
+   * the home) in SHADOW or LIVE, ordered by plant, then rule: how far each has shown it is ready
+   * for LIVE (READINESS). Given to the home's residents only; empty to anyone else
+   * (CommissioningProfile.price_rule_readiness_withheld), and on every other feature.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.PriceRuleReadiness price_rule_readiness = 5;
+   */
+  priceRuleReadiness: PriceRuleReadiness[];
 };
 
 /**
@@ -401,6 +412,144 @@ export declare type FeatureStatus = Message<"kusinta.iot.commissioning.v1.Featur
  * Use `create(FeatureStatusSchema)` to create a new message.
  */
 export declare const FeatureStatusSchema: GenMessage<FeatureStatus>;
+
+/**
+ * One price rule of one plant of a home, and how far it has shown it is ready for LIVE
+ * (READINESS).
+ *
+ * @generated from message kusinta.iot.commissioning.v1.PriceRuleReadiness
+ */
+export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.PriceRuleReadiness"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.PriceRule rule = 2;
+   */
+  rule: PriceRule;
+
+  /**
+   * In SHADOW: every gate is met. Always false for a rule LIVE.
+   *
+   * @generated from field: bool ready = 3;
+   */
+  ready: boolean;
+
+  /**
+   * In SHADOW: one per gate the rule is judged by, in the order of ReadinessGateKind. Empty for a
+   * rule LIVE.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.ReadinessGate gates = 4;
+   */
+  gates: ReadinessGate[];
+
+  /**
+   * The rooms the plant heats in the home that the gateway could not judge on the latest day
+   * counted (READINESS, THE EVIDENCE), so that a client can say they were left out.
+   *
+   * @generated from field: uint32 rooms_left_out = 5;
+   */
+  roomsLeftOut: number;
+
+  /**
+   * The days of the window that did not count, for a day-ahead price missing in any quarter hour.
+   *
+   * @generated from field: uint32 days_without_prices = 6;
+   */
+  daysWithoutPrices: number;
+
+  /**
+   * The most days the window holds.
+   *
+   * @generated from field: uint32 window_days = 7;
+   */
+  windowDays: number;
+
+  /**
+   * When every gate was first met in the current stretch in SHADOW; unset while the rule is not
+   * ready.
+   *
+   * @generated from field: google.protobuf.Timestamp ready_since = 8;
+   */
+  readySince?: Timestamp | undefined;
+
+  /**
+   * Where the rule is not ready in the household's band only because its saving gate
+   * (READINESS_GATE_KIND_SAVING_AFTER_COSTS) is not met, and a wider band the gateway scores
+   * (heating.v1.ShadowBandSeries) would meet it and every other gate: the narrowest such band, as
+   * the home's comfort preference that gives it, so that a client can offer it as it stands
+   * (webrtc.v1.SetComfortPreference). Unset otherwise.
+   *
+   * @generated from field: kusinta.iot.climate.v1.ComfortPreference wider_comfort = 9;
+   */
+  widerComfort?: ComfortPreference | undefined;
+
+  /**
+   * Whether the saving gate takes the grid's power peak charge into account. False: the saving is
+   * that of the energy moved and avoided, its recovery taken off, and a client says that a peak
+   * charge is not included.
+   *
+   * @generated from field: bool peak_charge_included = 10;
+   */
+  peakChargeIncluded: boolean;
+
+  /**
+   * For a rule LIVE: the latest day scored since it was put LIVE on which a room it judges fell
+   * below its comfort band during one of its blocks or soon after (heating.v1.ShadowDay
+   * breach_quarters), as an ISO 8601 calendar date (YYYY-MM-DD), so that a client can say so and
+   * offer SHADOW again. Empty where there is none, and for a rule in SHADOW.
+   *
+   * @generated from field: string comfort_cost_seen_on = 11;
+   */
+  comfortCostSeenOn: string;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.PriceRuleReadiness.
+ * Use `create(PriceRuleReadinessSchema)` to create a new message.
+ */
+export declare const PriceRuleReadinessSchema: GenMessage<PriceRuleReadiness>;
+
+/**
+ * One gate of a price rule's readiness (READINESS, THE GATES).
+ *
+ * @generated from message kusinta.iot.commissioning.v1.ReadinessGate
+ */
+export declare type ReadinessGate = Message<"kusinta.iot.commissioning.v1.ReadinessGate"> & {
+  /**
+   * @generated from field: kusinta.iot.commissioning.v1.ReadinessGateKind kind = 1;
+   */
+  kind: ReadinessGateKind;
+
+  /**
+   * The gateway's verdict, which a client shows as given and never works out again from have and
+   * need.
+   *
+   * @generated from field: bool met = 2;
+   */
+  met: boolean;
+
+  /**
+   * What was found, and the threshold, in the unit the kind names: whether have must reach need
+   * or stay within it is the kind's.
+   *
+   * @generated from field: uint32 have = 3;
+   */
+  have: number;
+
+  /**
+   * @generated from field: uint32 need = 4;
+   */
+  need: number;
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.ReadinessGate.
+ * Use `create(ReadinessGateSchema)` to create a new message.
+ */
+export declare const ReadinessGateSchema: GenMessage<ReadinessGate>;
 
 /**
  * @generated from message kusinta.iot.commissioning.v1.CommissioningTest
@@ -618,6 +767,14 @@ export declare type CommissioningProfile = Message<"kusinta.iot.commissioning.v1
    * @generated from field: repeated kusinta.iot.commissioning.v1.ModelFit model_fits = 8;
    */
   modelFits: ModelFit[];
+
+  /**
+   * Set when FeatureStatus.price_rule_readiness is left out for this caller (READINESS, WHO SEES
+   * IT), so that none listed is not read as no rule in SHADOW or LIVE.
+   *
+   * @generated from field: bool price_rule_readiness_withheld = 9;
+   */
+  priceRuleReadinessWithheld: boolean;
 };
 
 /**
@@ -1325,6 +1482,73 @@ export enum BlockReason {
  * Describes the enum kusinta.iot.commissioning.v1.BlockReason.
  */
 export declare const BlockReasonSchema: GenEnum<BlockReason>;
+
+/**
+ * What a readiness gate judges (READINESS, THE GATES). A kind this client's schema does not know
+ * is shown as a gate, unnamed, met or not.
+ *
+ * @generated from enum kusinta.iot.commissioning.v1.ReadinessGateKind
+ */
+export enum ReadinessGateKind {
+  /**
+   * @generated from enum value: READINESS_GATE_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The blocks the rule decided over the days counted. Met when have reaches need.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_MODELLED_BLOCKS = 1;
+   */
+  MODELLED_BLOCKS = 1,
+
+  /**
+   * The days counted. Met when have reaches need.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_PRICED_DAYS = 2;
+   */
+  PRICED_DAYS = 2,
+
+  /**
+   * The rooms judged on the latest day counted. Met when have reaches need.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_ROOMS_JUDGED = 3;
+   */
+  ROOMS_JUDGED = 3,
+
+  /**
+   * The days counted on which a room judged fell below its comfort band during a block or soon
+   * after, or, for a rule that heats ahead, rose above it (heating.v1.ShadowDay breach_quarters,
+   * overheat_quarters). Met when have is within need.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_NO_COMFORT_COST = 4;
+   */
+  NO_COMFORT_COST = 4,
+
+  /**
+   * Whether the rule saved over the days counted, after the cost of what it moved and of making it
+   * up afterwards (heating.v1.ShadowDay, the cautious saving). Met when the saving is above zero;
+   * have and need are 0, since the figure is the shadow summary's. Compressor starts are not
+   * priced into it: they are judged by READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_SAVING_AFTER_COSTS = 5;
+   */
+  SAVING_AFTER_COSTS = 5,
+
+  /**
+   * The compressor starts the rule's blocks would add, on the day counted with the most: at most
+   * one for each block that stops the compressor. 0 for a rule whose blocks never stop it, such as
+   * PRICE_RULE_ADD_ON_HEATER_BLOCK. Met when have is within need.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS = 6;
+   */
+  EXTRA_COMPRESSOR_STARTS = 6,
+}
+
+/**
+ * Describes the enum kusinta.iot.commissioning.v1.ReadinessGateKind.
+ */
+export declare const ReadinessGateKindSchema: GenEnum<ReadinessGateKind>;
 
 /**
  * @generated from enum kusinta.iot.commissioning.v1.TestKind

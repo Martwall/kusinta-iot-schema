@@ -16,8 +16,9 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../../../../google/protobuf/timestamp.pb.dart' as $0;
+import '../../climate/v1/climate.pb.dart' as $3;
 import '../../device/v1/cluster_state.pb.dart' as $2;
-import '../../heating/v1/heating.pb.dart' as $3;
+import '../../heating/v1/heating.pb.dart' as $4;
 import '../../identity/v1/identity.pb.dart' as $1;
 import 'commissioning.pbenum.dart';
 
@@ -978,12 +979,15 @@ class FeatureStatus extends $pb.GeneratedMessage {
     FeatureState? state,
     $core.Iterable<Need>? needs,
     $core.Iterable<FeatureBlock>? blocks,
+    $core.Iterable<PriceRuleReadiness>? priceRuleReadiness,
   }) {
     final result = create();
     if (feature != null) result.feature = feature;
     if (state != null) result.state = state;
     if (needs != null) result.needs.addAll(needs);
     if (blocks != null) result.blocks.addAll(blocks);
+    if (priceRuleReadiness != null)
+      result.priceRuleReadiness.addAll(priceRuleReadiness);
     return result;
   }
 
@@ -1013,6 +1017,9 @@ class FeatureStatus extends $pb.GeneratedMessage {
         subBuilder: Need.create)
     ..pc<FeatureBlock>(4, _omitFieldNames ? '' : 'blocks', $pb.PbFieldType.PM,
         subBuilder: FeatureBlock.create)
+    ..pc<PriceRuleReadiness>(
+        5, _omitFieldNames ? '' : 'priceRuleReadiness', $pb.PbFieldType.PM,
+        subBuilder: PriceRuleReadiness.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1059,6 +1066,321 @@ class FeatureStatus extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $pb.PbList<FeatureBlock> get blocks => $_getList(3);
+
+  /// On FEATURE_PLANT, one per price rule of the home's own plants (heating.v1.HeatingPlant.space_id
+  /// the home) in SHADOW or LIVE, ordered by plant, then rule: how far each has shown it is ready
+  /// for LIVE (READINESS). Given to the home's residents only; empty to anyone else
+  /// (CommissioningProfile.price_rule_readiness_withheld), and on every other feature.
+  @$pb.TagNumber(5)
+  $pb.PbList<PriceRuleReadiness> get priceRuleReadiness => $_getList(4);
+}
+
+/// One price rule of one plant of a home, and how far it has shown it is ready for LIVE
+/// (READINESS).
+class PriceRuleReadiness extends $pb.GeneratedMessage {
+  factory PriceRuleReadiness({
+    $core.String? plantId,
+    $4.PriceRule? rule,
+    $core.bool? ready,
+    $core.Iterable<ReadinessGate>? gates,
+    $core.int? roomsLeftOut,
+    $core.int? daysWithoutPrices,
+    $core.int? windowDays,
+    $0.Timestamp? readySince,
+    $3.ComfortPreference? widerComfort,
+    $core.bool? peakChargeIncluded,
+    $core.String? comfortCostSeenOn,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (rule != null) result.rule = rule;
+    if (ready != null) result.ready = ready;
+    if (gates != null) result.gates.addAll(gates);
+    if (roomsLeftOut != null) result.roomsLeftOut = roomsLeftOut;
+    if (daysWithoutPrices != null) result.daysWithoutPrices = daysWithoutPrices;
+    if (windowDays != null) result.windowDays = windowDays;
+    if (readySince != null) result.readySince = readySince;
+    if (widerComfort != null) result.widerComfort = widerComfort;
+    if (peakChargeIncluded != null)
+      result.peakChargeIncluded = peakChargeIncluded;
+    if (comfortCostSeenOn != null) result.comfortCostSeenOn = comfortCostSeenOn;
+    return result;
+  }
+
+  PriceRuleReadiness._();
+
+  factory PriceRuleReadiness.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory PriceRuleReadiness.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PriceRuleReadiness',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..e<$4.PriceRule>(2, _omitFieldNames ? '' : 'rule', $pb.PbFieldType.OE,
+        defaultOrMaker: $4.PriceRule.PRICE_RULE_UNSPECIFIED,
+        valueOf: $4.PriceRule.valueOf,
+        enumValues: $4.PriceRule.values)
+    ..aOB(3, _omitFieldNames ? '' : 'ready')
+    ..pc<ReadinessGate>(4, _omitFieldNames ? '' : 'gates', $pb.PbFieldType.PM,
+        subBuilder: ReadinessGate.create)
+    ..a<$core.int>(
+        5, _omitFieldNames ? '' : 'roomsLeftOut', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        6, _omitFieldNames ? '' : 'daysWithoutPrices', $pb.PbFieldType.OU3)
+    ..a<$core.int>(7, _omitFieldNames ? '' : 'windowDays', $pb.PbFieldType.OU3)
+    ..aOM<$0.Timestamp>(8, _omitFieldNames ? '' : 'readySince',
+        subBuilder: $0.Timestamp.create)
+    ..aOM<$3.ComfortPreference>(9, _omitFieldNames ? '' : 'widerComfort',
+        subBuilder: $3.ComfortPreference.create)
+    ..aOB(10, _omitFieldNames ? '' : 'peakChargeIncluded')
+    ..aOS(11, _omitFieldNames ? '' : 'comfortCostSeenOn')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PriceRuleReadiness clone() => PriceRuleReadiness()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PriceRuleReadiness copyWith(void Function(PriceRuleReadiness) updates) =>
+      super.copyWith((message) => updates(message as PriceRuleReadiness))
+          as PriceRuleReadiness;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static PriceRuleReadiness create() => PriceRuleReadiness._();
+  @$core.override
+  PriceRuleReadiness createEmptyInstance() => create();
+  static $pb.PbList<PriceRuleReadiness> createRepeated() =>
+      $pb.PbList<PriceRuleReadiness>();
+  @$core.pragma('dart2js:noInline')
+  static PriceRuleReadiness getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PriceRuleReadiness>(create);
+  static PriceRuleReadiness? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $4.PriceRule get rule => $_getN(1);
+  @$pb.TagNumber(2)
+  set rule($4.PriceRule value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRule() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRule() => $_clearField(2);
+
+  /// In SHADOW: every gate is met. Always false for a rule LIVE.
+  @$pb.TagNumber(3)
+  $core.bool get ready => $_getBF(2);
+  @$pb.TagNumber(3)
+  set ready($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasReady() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReady() => $_clearField(3);
+
+  /// In SHADOW: one per gate the rule is judged by, in the order of ReadinessGateKind. Empty for a
+  /// rule LIVE.
+  @$pb.TagNumber(4)
+  $pb.PbList<ReadinessGate> get gates => $_getList(3);
+
+  /// The rooms the plant heats in the home that the gateway could not judge on the latest day
+  /// counted (READINESS, THE EVIDENCE), so that a client can say they were left out.
+  @$pb.TagNumber(5)
+  $core.int get roomsLeftOut => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set roomsLeftOut($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRoomsLeftOut() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRoomsLeftOut() => $_clearField(5);
+
+  /// The days of the window that did not count, for a day-ahead price missing in any quarter hour.
+  @$pb.TagNumber(6)
+  $core.int get daysWithoutPrices => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set daysWithoutPrices($core.int value) => $_setUnsignedInt32(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasDaysWithoutPrices() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearDaysWithoutPrices() => $_clearField(6);
+
+  /// The most days the window holds.
+  @$pb.TagNumber(7)
+  $core.int get windowDays => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set windowDays($core.int value) => $_setUnsignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasWindowDays() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearWindowDays() => $_clearField(7);
+
+  /// When every gate was first met in the current stretch in SHADOW; unset while the rule is not
+  /// ready.
+  @$pb.TagNumber(8)
+  $0.Timestamp get readySince => $_getN(7);
+  @$pb.TagNumber(8)
+  set readySince($0.Timestamp value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasReadySince() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearReadySince() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $0.Timestamp ensureReadySince() => $_ensure(7);
+
+  /// Where the rule is not ready in the household's band only because its saving gate
+  /// (READINESS_GATE_KIND_SAVING_AFTER_COSTS) is not met, and a wider band the gateway scores
+  /// (heating.v1.ShadowBandSeries) would meet it and every other gate: the narrowest such band, as
+  /// the home's comfort preference that gives it, so that a client can offer it as it stands
+  /// (webrtc.v1.SetComfortPreference). Unset otherwise.
+  @$pb.TagNumber(9)
+  $3.ComfortPreference get widerComfort => $_getN(8);
+  @$pb.TagNumber(9)
+  set widerComfort($3.ComfortPreference value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasWiderComfort() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearWiderComfort() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $3.ComfortPreference ensureWiderComfort() => $_ensure(8);
+
+  /// Whether the saving gate takes the grid's power peak charge into account. False: the saving is
+  /// that of the energy moved and avoided, its recovery taken off, and a client says that a peak
+  /// charge is not included.
+  @$pb.TagNumber(10)
+  $core.bool get peakChargeIncluded => $_getBF(9);
+  @$pb.TagNumber(10)
+  set peakChargeIncluded($core.bool value) => $_setBool(9, value);
+  @$pb.TagNumber(10)
+  $core.bool hasPeakChargeIncluded() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearPeakChargeIncluded() => $_clearField(10);
+
+  /// For a rule LIVE: the latest day scored since it was put LIVE on which a room it judges fell
+  /// below its comfort band during one of its blocks or soon after (heating.v1.ShadowDay
+  /// breach_quarters), as an ISO 8601 calendar date (YYYY-MM-DD), so that a client can say so and
+  /// offer SHADOW again. Empty where there is none, and for a rule in SHADOW.
+  @$pb.TagNumber(11)
+  $core.String get comfortCostSeenOn => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set comfortCostSeenOn($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasComfortCostSeenOn() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearComfortCostSeenOn() => $_clearField(11);
+}
+
+/// One gate of a price rule's readiness (READINESS, THE GATES).
+class ReadinessGate extends $pb.GeneratedMessage {
+  factory ReadinessGate({
+    ReadinessGateKind? kind,
+    $core.bool? met,
+    $core.int? have,
+    $core.int? need,
+  }) {
+    final result = create();
+    if (kind != null) result.kind = kind;
+    if (met != null) result.met = met;
+    if (have != null) result.have = have;
+    if (need != null) result.need = need;
+    return result;
+  }
+
+  ReadinessGate._();
+
+  factory ReadinessGate.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReadinessGate.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReadinessGate',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..e<ReadinessGateKind>(1, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: ReadinessGateKind.READINESS_GATE_KIND_UNSPECIFIED,
+        valueOf: ReadinessGateKind.valueOf,
+        enumValues: ReadinessGateKind.values)
+    ..aOB(2, _omitFieldNames ? '' : 'met')
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'have', $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'need', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReadinessGate clone() => ReadinessGate()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReadinessGate copyWith(void Function(ReadinessGate) updates) =>
+      super.copyWith((message) => updates(message as ReadinessGate))
+          as ReadinessGate;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReadinessGate create() => ReadinessGate._();
+  @$core.override
+  ReadinessGate createEmptyInstance() => create();
+  static $pb.PbList<ReadinessGate> createRepeated() =>
+      $pb.PbList<ReadinessGate>();
+  @$core.pragma('dart2js:noInline')
+  static ReadinessGate getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReadinessGate>(create);
+  static ReadinessGate? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ReadinessGateKind get kind => $_getN(0);
+  @$pb.TagNumber(1)
+  set kind(ReadinessGateKind value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasKind() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKind() => $_clearField(1);
+
+  /// The gateway's verdict, which a client shows as given and never works out again from have and
+  /// need.
+  @$pb.TagNumber(2)
+  $core.bool get met => $_getBF(1);
+  @$pb.TagNumber(2)
+  set met($core.bool value) => $_setBool(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMet() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMet() => $_clearField(2);
+
+  /// What was found, and the threshold, in the unit the kind names: whether have must reach need
+  /// or stay within it is the kind's.
+  @$pb.TagNumber(3)
+  $core.int get have => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set have($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasHave() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearHave() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get need => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set need($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasNeed() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNeed() => $_clearField(4);
 }
 
 class CommissioningTest extends $pb.GeneratedMessage {
@@ -1076,7 +1398,7 @@ class CommissioningTest extends $pb.GeneratedMessage {
     BindingRef? binding,
     $0.Timestamp? concludeBy,
     $core.Iterable<TestEvidence>? evidence,
-    $3.DeviceAttribute? output,
+    $4.DeviceAttribute? output,
   }) {
     final result = create();
     if (testId != null) result.testId = testId;
@@ -1141,8 +1463,8 @@ class CommissioningTest extends $pb.GeneratedMessage {
     ..pc<TestEvidence>(
         15, _omitFieldNames ? '' : 'evidence', $pb.PbFieldType.PM,
         subBuilder: TestEvidence.create)
-    ..aOM<$3.DeviceAttribute>(16, _omitFieldNames ? '' : 'output',
-        subBuilder: $3.DeviceAttribute.create)
+    ..aOM<$4.DeviceAttribute>(16, _omitFieldNames ? '' : 'output',
+        subBuilder: $4.DeviceAttribute.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1328,15 +1650,15 @@ class CommissioningTest extends $pb.GeneratedMessage {
   /// here. A floor zone moved to another channel of the same device keeps its device_id and
   /// needs a pass again. Unset for the other kinds.
   @$pb.TagNumber(16)
-  $3.DeviceAttribute get output => $_getN(13);
+  $4.DeviceAttribute get output => $_getN(13);
   @$pb.TagNumber(16)
-  set output($3.DeviceAttribute value) => $_setField(16, value);
+  set output($4.DeviceAttribute value) => $_setField(16, value);
   @$pb.TagNumber(16)
   $core.bool hasOutput() => $_has(13);
   @$pb.TagNumber(16)
   void clearOutput() => $_clearField(16);
   @$pb.TagNumber(16)
-  $3.DeviceAttribute ensureOutput() => $_ensure(13);
+  $4.DeviceAttribute ensureOutput() => $_ensure(13);
 }
 
 /// One reading a heat source reported during a test (CommissioningTest.evidence).
@@ -1440,6 +1762,7 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     HouseTemplate? template,
     $core.bool? needsWithheld,
     $core.Iterable<ModelFit>? modelFits,
+    $core.bool? priceRuleReadinessWithheld,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -1449,6 +1772,8 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     if (template != null) result.template = template;
     if (needsWithheld != null) result.needsWithheld = needsWithheld;
     if (modelFits != null) result.modelFits.addAll(modelFits);
+    if (priceRuleReadinessWithheld != null)
+      result.priceRuleReadinessWithheld = priceRuleReadinessWithheld;
     return result;
   }
 
@@ -1482,6 +1807,7 @@ class CommissioningProfile extends $pb.GeneratedMessage {
     ..aOB(7, _omitFieldNames ? '' : 'needsWithheld')
     ..pc<ModelFit>(8, _omitFieldNames ? '' : 'modelFits', $pb.PbFieldType.PM,
         subBuilder: ModelFit.create)
+    ..aOB(9, _omitFieldNames ? '' : 'priceRuleReadinessWithheld')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1556,6 +1882,17 @@ class CommissioningProfile extends $pb.GeneratedMessage {
   /// not a home, and for a home none of whose rooms or zones is modelled yet.
   @$pb.TagNumber(8)
   $pb.PbList<ModelFit> get modelFits => $_getList(6);
+
+  /// Set when FeatureStatus.price_rule_readiness is left out for this caller (READINESS, WHO SEES
+  /// IT), so that none listed is not read as no rule in SHADOW or LIVE.
+  @$pb.TagNumber(9)
+  $core.bool get priceRuleReadinessWithheld => $_getBF(7);
+  @$pb.TagNumber(9)
+  set priceRuleReadinessWithheld($core.bool value) => $_setBool(7, value);
+  @$pb.TagNumber(9)
+  $core.bool hasPriceRuleReadinessWithheld() => $_has(7);
+  @$pb.TagNumber(9)
+  void clearPriceRuleReadinessWithheld() => $_clearField(9);
 }
 
 enum ModelFit_Subject { roomId, floorZoneId, notSet }

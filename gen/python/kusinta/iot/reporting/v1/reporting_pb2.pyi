@@ -56,6 +56,8 @@ class NoticeKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     NOTICE_KIND_HEAT_CURVE_REMINDER: _ClassVar[NoticeKind]
     NOTICE_KIND_ROOM_TARGET_SUGGESTION: _ClassVar[NoticeKind]
     NOTICE_KIND_HEAT_CURVE_HANDED_OVER: _ClassVar[NoticeKind]
+    NOTICE_KIND_PRICE_RULE_READY: _ClassVar[NoticeKind]
+    NOTICE_KIND_PRICE_RULE_COMFORT_COST: _ClassVar[NoticeKind]
 PROBLEM_KIND_UNSPECIFIED: ProblemKind
 PROBLEM_KIND_DEVICE_OFFLINE: ProblemKind
 PROBLEM_KIND_BATTERY_LOW: ProblemKind
@@ -87,6 +89,8 @@ NOTICE_KIND_HEAT_CURVE_SUGGESTION: NoticeKind
 NOTICE_KIND_HEAT_CURVE_REMINDER: NoticeKind
 NOTICE_KIND_ROOM_TARGET_SUGGESTION: NoticeKind
 NOTICE_KIND_HEAT_CURVE_HANDED_OVER: NoticeKind
+NOTICE_KIND_PRICE_RULE_READY: NoticeKind
+NOTICE_KIND_PRICE_RULE_COMFORT_COST: NoticeKind
 
 class SnapshotPart(_message.Message):
     __slots__ = ("snapshot_id", "part", "last")

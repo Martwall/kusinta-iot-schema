@@ -320,16 +320,30 @@ class NoticeKind extends $pb.ProtobufEnum {
   static const NoticeKind NOTICE_KIND_HEAT_CURVE_HANDED_OVER = NoticeKind._(
       4, _omitEnumNames ? '' : 'NOTICE_KIND_HEAT_CURVE_HANDED_OVER');
 
+  /// A price rule in SHADOW on a home's own plant became ready for LIVE (commissioning.v1
+  /// READINESS): once for each stretch the rule is in SHADOW. To the home's household admins, and
+  /// never to anyone else.
+  static const NoticeKind NOTICE_KIND_PRICE_RULE_READY =
+      NoticeKind._(5, _omitEnumNames ? '' : 'NOTICE_KIND_PRICE_RULE_READY');
+
+  /// A price rule LIVE on a home's own plant was seen to cost comfort
+  /// (commissioning.v1.PriceRuleReadiness.comfort_cost_seen_on): once for each stretch the rule is
+  /// LIVE. To the home's household admins, and never to anyone else.
+  static const NoticeKind NOTICE_KIND_PRICE_RULE_COMFORT_COST = NoticeKind._(
+      6, _omitEnumNames ? '' : 'NOTICE_KIND_PRICE_RULE_COMFORT_COST');
+
   static const $core.List<NoticeKind> values = <NoticeKind>[
     NOTICE_KIND_UNSPECIFIED,
     NOTICE_KIND_HEAT_CURVE_SUGGESTION,
     NOTICE_KIND_HEAT_CURVE_REMINDER,
     NOTICE_KIND_ROOM_TARGET_SUGGESTION,
     NOTICE_KIND_HEAT_CURVE_HANDED_OVER,
+    NOTICE_KIND_PRICE_RULE_READY,
+    NOTICE_KIND_PRICE_RULE_COMFORT_COST,
   ];
 
   static final $core.List<NoticeKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 4);
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
   static NoticeKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

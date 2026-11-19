@@ -1,6 +1,7 @@
 import datetime
 
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from kusinta.iot.climate.v1 import climate_pb2 as _climate_pb2
 from kusinta.iot.device.v1 import cluster_state_pb2 as _cluster_state_pb2
 from kusinta.iot.heating.v1 import heating_pb2 as _heating_pb2
 from kusinta.iot.identity.v1 import identity_pb2 as _identity_pb2
@@ -78,6 +79,16 @@ class BlockReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     BLOCK_REASON_CONTROL_ROOM_GONE: _ClassVar[BlockReason]
     BLOCK_REASON_LEASE_TOO_LONG: _ClassVar[BlockReason]
     BLOCK_REASON_DEVICE_ACROSS_HOME: _ClassVar[BlockReason]
+
+class ReadinessGateKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    READINESS_GATE_KIND_UNSPECIFIED: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_MODELLED_BLOCKS: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_PRICED_DAYS: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_ROOMS_JUDGED: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_NO_COMFORT_COST: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_SAVING_AFTER_COSTS: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS: _ClassVar[ReadinessGateKind]
 
 class TestKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -185,6 +196,13 @@ BLOCK_REASON_DEVICE_GONE: BlockReason
 BLOCK_REASON_CONTROL_ROOM_GONE: BlockReason
 BLOCK_REASON_LEASE_TOO_LONG: BlockReason
 BLOCK_REASON_DEVICE_ACROSS_HOME: BlockReason
+READINESS_GATE_KIND_UNSPECIFIED: ReadinessGateKind
+READINESS_GATE_KIND_MODELLED_BLOCKS: ReadinessGateKind
+READINESS_GATE_KIND_PRICED_DAYS: ReadinessGateKind
+READINESS_GATE_KIND_ROOMS_JUDGED: ReadinessGateKind
+READINESS_GATE_KIND_NO_COMFORT_COST: ReadinessGateKind
+READINESS_GATE_KIND_SAVING_AFTER_COSTS: ReadinessGateKind
+READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS: ReadinessGateKind
 TEST_KIND_UNSPECIFIED: TestKind
 TEST_KIND_OUTPUT_LEASE: TestKind
 TEST_KIND_ZONE_EFFECT: TestKind
@@ -338,16 +356,56 @@ class FeatureBlock(_message.Message):
     def __init__(self, reason: _Optional[_Union[BlockReason, str]] = ..., device_id: _Optional[_Union[_identity_pb2.DeviceId, _Mapping]] = ..., binding: _Optional[_Union[BindingRef, _Mapping]] = ...) -> None: ...
 
 class FeatureStatus(_message.Message):
-    __slots__ = ("feature", "state", "needs", "blocks")
+    __slots__ = ("feature", "state", "needs", "blocks", "price_rule_readiness")
     FEATURE_FIELD_NUMBER: _ClassVar[int]
     STATE_FIELD_NUMBER: _ClassVar[int]
     NEEDS_FIELD_NUMBER: _ClassVar[int]
     BLOCKS_FIELD_NUMBER: _ClassVar[int]
+    PRICE_RULE_READINESS_FIELD_NUMBER: _ClassVar[int]
     feature: Feature
     state: FeatureState
     needs: _containers.RepeatedCompositeFieldContainer[Need]
     blocks: _containers.RepeatedCompositeFieldContainer[FeatureBlock]
-    def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ...) -> None: ...
+    price_rule_readiness: _containers.RepeatedCompositeFieldContainer[PriceRuleReadiness]
+    def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ..., price_rule_readiness: _Optional[_Iterable[_Union[PriceRuleReadiness, _Mapping]]] = ...) -> None: ...
+
+class PriceRuleReadiness(_message.Message):
+    __slots__ = ("plant_id", "rule", "ready", "gates", "rooms_left_out", "days_without_prices", "window_days", "ready_since", "wider_comfort", "peak_charge_included", "comfort_cost_seen_on")
+    PLANT_ID_FIELD_NUMBER: _ClassVar[int]
+    RULE_FIELD_NUMBER: _ClassVar[int]
+    READY_FIELD_NUMBER: _ClassVar[int]
+    GATES_FIELD_NUMBER: _ClassVar[int]
+    ROOMS_LEFT_OUT_FIELD_NUMBER: _ClassVar[int]
+    DAYS_WITHOUT_PRICES_FIELD_NUMBER: _ClassVar[int]
+    WINDOW_DAYS_FIELD_NUMBER: _ClassVar[int]
+    READY_SINCE_FIELD_NUMBER: _ClassVar[int]
+    WIDER_COMFORT_FIELD_NUMBER: _ClassVar[int]
+    PEAK_CHARGE_INCLUDED_FIELD_NUMBER: _ClassVar[int]
+    COMFORT_COST_SEEN_ON_FIELD_NUMBER: _ClassVar[int]
+    plant_id: str
+    rule: _heating_pb2.PriceRule
+    ready: bool
+    gates: _containers.RepeatedCompositeFieldContainer[ReadinessGate]
+    rooms_left_out: int
+    days_without_prices: int
+    window_days: int
+    ready_since: _timestamp_pb2.Timestamp
+    wider_comfort: _climate_pb2.ComfortPreference
+    peak_charge_included: bool
+    comfort_cost_seen_on: str
+    def __init__(self, plant_id: _Optional[str] = ..., rule: _Optional[_Union[_heating_pb2.PriceRule, str]] = ..., ready: _Optional[bool] = ..., gates: _Optional[_Iterable[_Union[ReadinessGate, _Mapping]]] = ..., rooms_left_out: _Optional[int] = ..., days_without_prices: _Optional[int] = ..., window_days: _Optional[int] = ..., ready_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., wider_comfort: _Optional[_Union[_climate_pb2.ComfortPreference, _Mapping]] = ..., peak_charge_included: _Optional[bool] = ..., comfort_cost_seen_on: _Optional[str] = ...) -> None: ...
+
+class ReadinessGate(_message.Message):
+    __slots__ = ("kind", "met", "have", "need")
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    MET_FIELD_NUMBER: _ClassVar[int]
+    HAVE_FIELD_NUMBER: _ClassVar[int]
+    NEED_FIELD_NUMBER: _ClassVar[int]
+    kind: ReadinessGateKind
+    met: bool
+    have: int
+    need: int
+    def __init__(self, kind: _Optional[_Union[ReadinessGateKind, str]] = ..., met: _Optional[bool] = ..., have: _Optional[int] = ..., need: _Optional[int] = ...) -> None: ...
 
 class CommissioningTest(_message.Message):
     __slots__ = ("test_id", "kind", "binding", "device_id", "state", "failure", "started_at", "ends_at", "finished_at", "provenance", "superseded", "conclude_by", "evidence", "output")
@@ -392,7 +450,7 @@ class TestEvidence(_message.Message):
     def __init__(self, reading: _Optional[str] = ..., value: _Optional[int] = ..., observed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CommissioningProfile(_message.Message):
-    __slots__ = ("space_id", "facts", "tests", "features", "template", "needs_withheld", "model_fits")
+    __slots__ = ("space_id", "facts", "tests", "features", "template", "needs_withheld", "model_fits", "price_rule_readiness_withheld")
     SPACE_ID_FIELD_NUMBER: _ClassVar[int]
     FACTS_FIELD_NUMBER: _ClassVar[int]
     TESTS_FIELD_NUMBER: _ClassVar[int]
@@ -400,6 +458,7 @@ class CommissioningProfile(_message.Message):
     TEMPLATE_FIELD_NUMBER: _ClassVar[int]
     NEEDS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     MODEL_FITS_FIELD_NUMBER: _ClassVar[int]
+    PRICE_RULE_READINESS_WITHHELD_FIELD_NUMBER: _ClassVar[int]
     space_id: _identity_pb2.SpaceId
     facts: _containers.RepeatedCompositeFieldContainer[CommissioningFact]
     tests: _containers.RepeatedCompositeFieldContainer[CommissioningTest]
@@ -407,7 +466,8 @@ class CommissioningProfile(_message.Message):
     template: HouseTemplate
     needs_withheld: bool
     model_fits: _containers.RepeatedCompositeFieldContainer[ModelFit]
-    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ..., model_fits: _Optional[_Iterable[_Union[ModelFit, _Mapping]]] = ...) -> None: ...
+    price_rule_readiness_withheld: bool
+    def __init__(self, space_id: _Optional[_Union[_identity_pb2.SpaceId, _Mapping]] = ..., facts: _Optional[_Iterable[_Union[CommissioningFact, _Mapping]]] = ..., tests: _Optional[_Iterable[_Union[CommissioningTest, _Mapping]]] = ..., features: _Optional[_Iterable[_Union[FeatureStatus, _Mapping]]] = ..., template: _Optional[_Union[HouseTemplate, _Mapping]] = ..., needs_withheld: _Optional[bool] = ..., model_fits: _Optional[_Iterable[_Union[ModelFit, _Mapping]]] = ..., price_rule_readiness_withheld: _Optional[bool] = ...) -> None: ...
 
 class ModelFit(_message.Message):
     __slots__ = ("room_id", "floor_zone_id", "band", "gap")

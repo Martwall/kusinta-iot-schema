@@ -3,6 +3,7 @@ syntax = "proto3";
 package kusinta.iot.commissioning.v1;
 
 import "google/protobuf/timestamp.proto";
+import "kusinta/iot/climate/v1/climate.proto";
 import "kusinta/iot/device/v1/cluster_state.proto";
 import "kusinta/iot/heating/v1/heating.proto";
 import "kusinta/iot/identity/v1/identity.proto";
@@ -341,6 +342,8 @@ option optimize_for = SPEED;
 // and the blocks, not the needs (CommissioningProfile.needs_withheld): the to-dos belong
 // to whoever can answer them. "Don't know" from the household lists the fact as a need
 // for the installer.
+// A price rule's readiness (READINESS) is the exception: it is given to the home's residents
+// only, never under a commissioning grant (CommissioningProfile.price_rule_readiness_withheld).
 //
 // TESTS. The gateway runs every test itself, on one heating record or one binding of it
 // (BindingRef). While a
@@ -661,6 +664,128 @@ message FeatureStatus {
   FeatureState state = 2;
   repeated Need needs = 3;
   repeated FeatureBlock blocks = 4;
+
+  // On FEATURE_PLANT, one per price rule of the home's own plants (heating.v1.HeatingPlant.space_id
+  // the home) in SHADOW or LIVE, ordered by plant, then rule: how far each has shown it is ready
+  // for LIVE (READINESS). Given to the home's residents only; empty to anyone else
+  // (CommissioningProfile.price_rule_readiness_withheld), and on every other feature.
+  repeated PriceRuleReadiness price_rule_readiness = 5;
+}
+
+// READINESS. Whether a price rule a home's plant runs in SHADOW (heating.v1 PRICE RULES) has
+// shown, from what its shadow recorded, enough to be put LIVE. It is advice: LIVE stays the
+// choice of whoever switches the rule (heating.v1, WHO SWITCHES THEM), and
+// webrtc.v1.SetPriceRuleMode refuses LIVE only as it says, never for a gate not met.
+//
+// THE EVIDENCE. The rule's days as its shadow scored them (heating.v1.ShadowDay) in the
+// household's own band, which judges each room by its own comfort band and so follows the
+// home's comfort setting (climate.v1.ComfortPreference), over a window: the latest days scored
+// within the rule's current stretch in SHADOW, at most PriceRuleReadiness.window_days of them. The
+// stretch starts at the rule's latest change to SHADOW (heating.v1.PriceRuleChange), or, where
+// it started SHADOW and was never changed, at its start. A day of the window counts only where
+// every quarter hour of it had a day-ahead price (ShadowDay.no_price_quarters 0). Only rooms
+// the gateway can judge, those whose temperature it has heard recently enough, are judged; the
+// rooms it heats but cannot judge are counted (rooms_left_out). It is worked out from the days
+// still kept: a household's Clear history or the home's wipe (webrtc.v1 household.proto) starts
+// it over.
+//
+// THE GATES. A rule is ready when every gate it is given is met (ReadinessGate). The
+// thresholds are the gateway's, given with each gate (ReadinessGate.need), and a client never
+// assumes one.
+//
+// WHO SEES IT. As the shadow summary it is worked out from (heating.v1 PRICE RULES, WHO SEES
+// THEM): the home's residents only, never service, the property owner, the gateway's
+// administrators or an installer under a commissioning grant.
+
+// One price rule of one plant of a home, and how far it has shown it is ready for LIVE
+// (READINESS).
+message PriceRuleReadiness {
+  string plant_id = 1;
+  kusinta.iot.heating.v1.PriceRule rule = 2;
+
+  // In SHADOW: every gate is met. Always false for a rule LIVE.
+  bool ready = 3;
+
+  // In SHADOW: one per gate the rule is judged by, in the order of ReadinessGateKind. Empty for a
+  // rule LIVE.
+  repeated ReadinessGate gates = 4;
+
+  // The rooms the plant heats in the home that the gateway could not judge on the latest day
+  // counted (READINESS, THE EVIDENCE), so that a client can say they were left out.
+  uint32 rooms_left_out = 5;
+
+  // The days of the window that did not count, for a day-ahead price missing in any quarter hour.
+  uint32 days_without_prices = 6;
+
+  // The most days the window holds.
+  uint32 window_days = 7;
+
+  // When every gate was first met in the current stretch in SHADOW; unset while the rule is not
+  // ready.
+  google.protobuf.Timestamp ready_since = 8;
+
+  // Where the rule is not ready in the household's band only because its saving gate
+  // (READINESS_GATE_KIND_SAVING_AFTER_COSTS) is not met, and a wider band the gateway scores
+  // (heating.v1.ShadowBandSeries) would meet it and every other gate: the narrowest such band, as
+  // the home's comfort preference that gives it, so that a client can offer it as it stands
+  // (webrtc.v1.SetComfortPreference). Unset otherwise.
+  kusinta.iot.climate.v1.ComfortPreference wider_comfort = 9;
+
+  // Whether the saving gate takes the grid's power peak charge into account. False: the saving is
+  // that of the energy moved and avoided, its recovery taken off, and a client says that a peak
+  // charge is not included.
+  bool peak_charge_included = 10;
+
+  // For a rule LIVE: the latest day scored since it was put LIVE on which a room it judges fell
+  // below its comfort band during one of its blocks or soon after (heating.v1.ShadowDay
+  // breach_quarters), as an ISO 8601 calendar date (YYYY-MM-DD), so that a client can say so and
+  // offer SHADOW again. Empty where there is none, and for a rule in SHADOW.
+  string comfort_cost_seen_on = 11;
+}
+
+// What a readiness gate judges (READINESS, THE GATES). A kind this client's schema does not know
+// is shown as a gate, unnamed, met or not.
+enum ReadinessGateKind {
+  READINESS_GATE_KIND_UNSPECIFIED = 0;
+
+  // The blocks the rule decided over the days counted. Met when have reaches need.
+  READINESS_GATE_KIND_MODELLED_BLOCKS = 1;
+
+  // The days counted. Met when have reaches need.
+  READINESS_GATE_KIND_PRICED_DAYS = 2;
+
+  // The rooms judged on the latest day counted. Met when have reaches need.
+  READINESS_GATE_KIND_ROOMS_JUDGED = 3;
+
+  // The days counted on which a room judged fell below its comfort band during a block or soon
+  // after, or, for a rule that heats ahead, rose above it (heating.v1.ShadowDay breach_quarters,
+  // overheat_quarters). Met when have is within need.
+  READINESS_GATE_KIND_NO_COMFORT_COST = 4;
+
+  // Whether the rule saved over the days counted, after the cost of what it moved and of making it
+  // up afterwards (heating.v1.ShadowDay, the cautious saving). Met when the saving is above zero;
+  // have and need are 0, since the figure is the shadow summary's. Compressor starts are not
+  // priced into it: they are judged by READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS.
+  READINESS_GATE_KIND_SAVING_AFTER_COSTS = 5;
+
+  // The compressor starts the rule's blocks would add, on the day counted with the most: at most
+  // one for each block that stops the compressor. 0 for a rule whose blocks never stop it, such as
+  // PRICE_RULE_ADD_ON_HEATER_BLOCK. Met when have is within need.
+  READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS = 6;
+}
+
+// One gate of a price rule's readiness (READINESS, THE GATES).
+message ReadinessGate {
+  ReadinessGateKind kind = 1;
+
+  // The gateway's verdict, which a client shows as given and never works out again from have and
+  // need.
+  bool met = 2;
+
+  // What was found, and the threshold, in the unit the kind names: whether have must reach need
+  // or stay within it is the kind's.
+  uint32 have = 3;
+  uint32 need = 4;
 }
 
 enum TestKind {
@@ -813,6 +938,10 @@ message CommissioningProfile {
   // it (see ModelFit): one per room or zone the gateway models. Empty for a space that is
   // not a home, and for a home none of whose rooms or zones is modelled yet.
   repeated ModelFit model_fits = 8;
+
+  // Set when FeatureStatus.price_rule_readiness is left out for this caller (READINESS, WHO SEES
+  // IT), so that none listed is not read as no rule in SHADOW or LIVE.
+  bool price_rule_readiness_withheld = 9;
 
   reserved 5;
   reserved "template_id";
