@@ -1408,6 +1408,24 @@ export enum NoticeKind {
    * @generated from enum value: NOTICE_KIND_HEAT_CURVE_HANDED_OVER = 4;
    */
   HEAT_CURVE_HANDED_OVER = 4,
+
+  /**
+   * A price rule in SHADOW on a home's own plant became ready for LIVE (commissioning.v1
+   * READINESS): once for each stretch the rule is in SHADOW. To the home's household admins, and
+   * never to anyone else.
+   *
+   * @generated from enum value: NOTICE_KIND_PRICE_RULE_READY = 5;
+   */
+  PRICE_RULE_READY = 5,
+
+  /**
+   * A price rule LIVE on a home's own plant was seen to cost comfort
+   * (commissioning.v1.PriceRuleReadiness.comfort_cost_seen_on): once for each stretch the rule is
+   * LIVE. To the home's household admins, and never to anyone else.
+   *
+   * @generated from enum value: NOTICE_KIND_PRICE_RULE_COMFORT_COST = 6;
+   */
+  PRICE_RULE_COMFORT_COST = 6,
 }
 
 /**

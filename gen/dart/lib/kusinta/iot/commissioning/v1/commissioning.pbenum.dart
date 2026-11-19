@@ -314,6 +314,70 @@ class BlockReason extends $pb.ProtobufEnum {
   const BlockReason._(super.value, super.name);
 }
 
+/// What a readiness gate judges (READINESS, THE GATES). A kind this client's schema does not know
+/// is shown as a gate, unnamed, met or not.
+class ReadinessGateKind extends $pb.ProtobufEnum {
+  static const ReadinessGateKind READINESS_GATE_KIND_UNSPECIFIED =
+      ReadinessGateKind._(
+          0, _omitEnumNames ? '' : 'READINESS_GATE_KIND_UNSPECIFIED');
+
+  /// The blocks the rule decided over the days counted. Met when have reaches need.
+  static const ReadinessGateKind READINESS_GATE_KIND_MODELLED_BLOCKS =
+      ReadinessGateKind._(
+          1, _omitEnumNames ? '' : 'READINESS_GATE_KIND_MODELLED_BLOCKS');
+
+  /// The days counted. Met when have reaches need.
+  static const ReadinessGateKind READINESS_GATE_KIND_PRICED_DAYS =
+      ReadinessGateKind._(
+          2, _omitEnumNames ? '' : 'READINESS_GATE_KIND_PRICED_DAYS');
+
+  /// The rooms judged on the latest day counted. Met when have reaches need, a least number of
+  /// rooms, never the rooms heated: a room left out (rooms_left_out) does not by itself keep a
+  /// rule from being ready.
+  static const ReadinessGateKind READINESS_GATE_KIND_ROOMS_JUDGED =
+      ReadinessGateKind._(
+          3, _omitEnumNames ? '' : 'READINESS_GATE_KIND_ROOMS_JUDGED');
+
+  /// The days counted on which a room judged fell below its comfort band during a block or soon
+  /// after, or, for a rule that heats ahead, rose above it (heating.v1.ShadowDay breach_quarters,
+  /// overheat_quarters). Met when have is within need.
+  static const ReadinessGateKind READINESS_GATE_KIND_NO_COMFORT_COST =
+      ReadinessGateKind._(
+          4, _omitEnumNames ? '' : 'READINESS_GATE_KIND_NO_COMFORT_COST');
+
+  /// Whether the rule saved over the days counted, after the cost of what it moved and of making it
+  /// up afterwards (heating.v1.ShadowDay, the cautious saving). Met when the saving is above zero;
+  /// have and need are 0, since the figure is the shadow summary's. Compressor starts are not
+  /// priced into it: they are judged by READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS.
+  static const ReadinessGateKind READINESS_GATE_KIND_SAVING_AFTER_COSTS =
+      ReadinessGateKind._(
+          5, _omitEnumNames ? '' : 'READINESS_GATE_KIND_SAVING_AFTER_COSTS');
+
+  /// The compressor starts the rule's blocks would add, on the day counted with the most: at most
+  /// one for each block that stops the compressor. 0 for a rule whose blocks never stop it, such as
+  /// PRICE_RULE_ADD_ON_HEATER_BLOCK. Met when have is within need.
+  static const ReadinessGateKind READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS =
+      ReadinessGateKind._(6,
+          _omitEnumNames ? '' : 'READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS');
+
+  static const $core.List<ReadinessGateKind> values = <ReadinessGateKind>[
+    READINESS_GATE_KIND_UNSPECIFIED,
+    READINESS_GATE_KIND_MODELLED_BLOCKS,
+    READINESS_GATE_KIND_PRICED_DAYS,
+    READINESS_GATE_KIND_ROOMS_JUDGED,
+    READINESS_GATE_KIND_NO_COMFORT_COST,
+    READINESS_GATE_KIND_SAVING_AFTER_COSTS,
+    READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS,
+  ];
+
+  static final $core.List<ReadinessGateKind?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 6);
+  static ReadinessGateKind? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const ReadinessGateKind._(super.value, super.name);
+}
+
 class TestKind extends $pb.ProtobufEnum {
   static const TestKind TEST_KIND_UNSPECIFIED =
       TestKind._(0, _omitEnumNames ? '' : 'TEST_KIND_UNSPECIFIED');

@@ -171,7 +171,7 @@ class PriceRuleMode extends $pb.ProtobufEnum {
 
   /// The rule decides as LIVE would and records what it decided (HeatBlock, ShadowSummary), but
   /// drives nothing, so that its saving, and any comfort it would have cost, can be judged before
-  /// it goes live. Needs no input bound, and no hold applies to it.
+  /// it goes live (commissioning.v1 READINESS). Needs no input bound, and no hold applies to it.
   static const PriceRuleMode PRICE_RULE_MODE_SHADOW =
       PriceRuleMode._(2, _omitEnumNames ? '' : 'PRICE_RULE_MODE_SHADOW');
 

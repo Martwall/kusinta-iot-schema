@@ -158,6 +158,29 @@ final $typed_data.Uint8List blockReasonDescriptor = $convert.base64Decode(
     'S19SRUFTT05fTEVBU0VfVE9PX0xPTkcQBhIjCh9CTE9DS19SRUFTT05fREVWSUNFX0FDUk9TU1'
     '9IT01FEAc=');
 
+@$core.Deprecated('Use readinessGateKindDescriptor instead')
+const ReadinessGateKind$json = {
+  '1': 'ReadinessGateKind',
+  '2': [
+    {'1': 'READINESS_GATE_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'READINESS_GATE_KIND_MODELLED_BLOCKS', '2': 1},
+    {'1': 'READINESS_GATE_KIND_PRICED_DAYS', '2': 2},
+    {'1': 'READINESS_GATE_KIND_ROOMS_JUDGED', '2': 3},
+    {'1': 'READINESS_GATE_KIND_NO_COMFORT_COST', '2': 4},
+    {'1': 'READINESS_GATE_KIND_SAVING_AFTER_COSTS', '2': 5},
+    {'1': 'READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS', '2': 6},
+  ],
+};
+
+/// Descriptor for `ReadinessGateKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List readinessGateKindDescriptor = $convert.base64Decode(
+    'ChFSZWFkaW5lc3NHYXRlS2luZBIjCh9SRUFESU5FU1NfR0FURV9LSU5EX1VOU1BFQ0lGSUVEEA'
+    'ASJwojUkVBRElORVNTX0dBVEVfS0lORF9NT0RFTExFRF9CTE9DS1MQARIjCh9SRUFESU5FU1Nf'
+    'R0FURV9LSU5EX1BSSUNFRF9EQVlTEAISJAogUkVBRElORVNTX0dBVEVfS0lORF9ST09NU19KVU'
+    'RHRUQQAxInCiNSRUFESU5FU1NfR0FURV9LSU5EX05PX0NPTUZPUlRfQ09TVBAEEioKJlJFQURJ'
+    'TkVTU19HQVRFX0tJTkRfU0FWSU5HX0FGVEVSX0NPU1RTEAUSLworUkVBRElORVNTX0dBVEVfS0'
+    'lORF9FWFRSQV9DT01QUkVTU09SX1NUQVJUUxAG');
+
 @$core.Deprecated('Use testKindDescriptor instead')
 const TestKind$json = {
   '1': 'TestKind',
@@ -693,6 +716,14 @@ const FeatureStatus$json = {
       '6': '.kusinta.iot.commissioning.v1.FeatureBlock',
       '10': 'blocks'
     },
+    {
+      '1': 'price_rule_readiness',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.PriceRuleReadiness',
+      '10': 'priceRuleReadiness'
+    },
   ],
 };
 
@@ -702,7 +733,110 @@ final $typed_data.Uint8List featureStatusDescriptor = $convert.base64Decode(
     '9uaW5nLnYxLkZlYXR1cmVSB2ZlYXR1cmUSQAoFc3RhdGUYAiABKA4yKi5rdXNpbnRhLmlvdC5j'
     'b21taXNzaW9uaW5nLnYxLkZlYXR1cmVTdGF0ZVIFc3RhdGUSOAoFbmVlZHMYAyADKAsyIi5rdX'
     'NpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYxLk5lZWRSBW5lZWRzEkIKBmJsb2NrcxgEIAMoCzIq'
-    'Lmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuRmVhdHVyZUJsb2NrUgZibG9ja3M=');
+    'Lmt1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuRmVhdHVyZUJsb2NrUgZibG9ja3MSYgoUcH'
+    'JpY2VfcnVsZV9yZWFkaW5lc3MYBSADKAsyMC5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW5nLnYx'
+    'LlByaWNlUnVsZVJlYWRpbmVzc1IScHJpY2VSdWxlUmVhZGluZXNz');
+
+@$core.Deprecated('Use priceRuleReadinessDescriptor instead')
+const PriceRuleReadiness$json = {
+  '1': 'PriceRuleReadiness',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'rule',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.PriceRule',
+      '10': 'rule'
+    },
+    {'1': 'ready', '3': 3, '4': 1, '5': 8, '10': 'ready'},
+    {
+      '1': 'gates',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.ReadinessGate',
+      '10': 'gates'
+    },
+    {'1': 'rooms_left_out', '3': 5, '4': 1, '5': 13, '10': 'roomsLeftOut'},
+    {
+      '1': 'days_without_prices',
+      '3': 6,
+      '4': 1,
+      '5': 13,
+      '10': 'daysWithoutPrices'
+    },
+    {'1': 'window_days', '3': 7, '4': 1, '5': 13, '10': 'windowDays'},
+    {
+      '1': 'ready_since',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'readySince'
+    },
+    {
+      '1': 'wider_comfort',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.ComfortPreference',
+      '10': 'widerComfort'
+    },
+    {
+      '1': 'peak_charge_included',
+      '3': 10,
+      '4': 1,
+      '5': 8,
+      '10': 'peakChargeIncluded'
+    },
+    {
+      '1': 'comfort_cost_seen_on',
+      '3': 11,
+      '4': 1,
+      '5': 9,
+      '10': 'comfortCostSeenOn'
+    },
+  ],
+};
+
+/// Descriptor for `PriceRuleReadiness`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List priceRuleReadinessDescriptor = $convert.base64Decode(
+    'ChJQcmljZVJ1bGVSZWFkaW5lc3MSGQoIcGxhbnRfaWQYASABKAlSB3BsYW50SWQSNQoEcnVsZR'
+    'gCIAEoDjIhLmt1c2ludGEuaW90LmhlYXRpbmcudjEuUHJpY2VSdWxlUgRydWxlEhQKBXJlYWR5'
+    'GAMgASgIUgVyZWFkeRJBCgVnYXRlcxgEIAMoCzIrLmt1c2ludGEuaW90LmNvbW1pc3Npb25pbm'
+    'cudjEuUmVhZGluZXNzR2F0ZVIFZ2F0ZXMSJAoOcm9vbXNfbGVmdF9vdXQYBSABKA1SDHJvb21z'
+    'TGVmdE91dBIuChNkYXlzX3dpdGhvdXRfcHJpY2VzGAYgASgNUhFkYXlzV2l0aG91dFByaWNlcx'
+    'IfCgt3aW5kb3dfZGF5cxgHIAEoDVIKd2luZG93RGF5cxI7CgtyZWFkeV9zaW5jZRgIIAEoCzIa'
+    'Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCnJlYWR5U2luY2USTgoNd2lkZXJfY29tZm9ydB'
+    'gJIAEoCzIpLmt1c2ludGEuaW90LmNsaW1hdGUudjEuQ29tZm9ydFByZWZlcmVuY2VSDHdpZGVy'
+    'Q29tZm9ydBIwChRwZWFrX2NoYXJnZV9pbmNsdWRlZBgKIAEoCFIScGVha0NoYXJnZUluY2x1ZG'
+    'VkEi8KFGNvbWZvcnRfY29zdF9zZWVuX29uGAsgASgJUhFjb21mb3J0Q29zdFNlZW5Pbg==');
+
+@$core.Deprecated('Use readinessGateDescriptor instead')
+const ReadinessGate$json = {
+  '1': 'ReadinessGate',
+  '2': [
+    {
+      '1': 'kind',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.commissioning.v1.ReadinessGateKind',
+      '10': 'kind'
+    },
+    {'1': 'met', '3': 2, '4': 1, '5': 8, '10': 'met'},
+    {'1': 'have', '3': 3, '4': 1, '5': 13, '10': 'have'},
+    {'1': 'need', '3': 4, '4': 1, '5': 13, '10': 'need'},
+  ],
+};
+
+/// Descriptor for `ReadinessGate`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List readinessGateDescriptor = $convert.base64Decode(
+    'Cg1SZWFkaW5lc3NHYXRlEkMKBGtpbmQYASABKA4yLy5rdXNpbnRhLmlvdC5jb21taXNzaW9uaW'
+    '5nLnYxLlJlYWRpbmVzc0dhdGVLaW5kUgRraW5kEhAKA21ldBgCIAEoCFIDbWV0EhIKBGhhdmUY'
+    'AyABKA1SBGhhdmUSEgoEbmVlZBgEIAEoDVIEbmVlZA==');
 
 @$core.Deprecated('Use commissioningTestDescriptor instead')
 const CommissioningTest$json = {
@@ -908,6 +1042,13 @@ const CommissioningProfile$json = {
       '6': '.kusinta.iot.commissioning.v1.ModelFit',
       '10': 'modelFits'
     },
+    {
+      '1': 'price_rule_readiness_withheld',
+      '3': 9,
+      '4': 1,
+      '5': 8,
+      '10': 'priceRuleReadinessWithheld'
+    },
   ],
   '9': [
     {'1': 5, '2': 6},
@@ -925,8 +1066,9 @@ final $typed_data.Uint8List commissioningProfileDescriptor = $convert.base64Deco
     'F0dXJlU3RhdHVzUghmZWF0dXJlcxJHCgh0ZW1wbGF0ZRgGIAEoCzIrLmt1c2ludGEuaW90LmNv'
     'bW1pc3Npb25pbmcudjEuSG91c2VUZW1wbGF0ZVIIdGVtcGxhdGUSJQoObmVlZHNfd2l0aGhlbG'
     'QYByABKAhSDW5lZWRzV2l0aGhlbGQSRQoKbW9kZWxfZml0cxgIIAMoCzImLmt1c2ludGEuaW90'
-    'LmNvbW1pc3Npb25pbmcudjEuTW9kZWxGaXRSCW1vZGVsRml0c0oECAUQBlILdGVtcGxhdGVfaW'
-    'Q=');
+    'LmNvbW1pc3Npb25pbmcudjEuTW9kZWxGaXRSCW1vZGVsRml0cxJBCh1wcmljZV9ydWxlX3JlYW'
+    'RpbmVzc193aXRoaGVsZBgJIAEoCFIacHJpY2VSdWxlUmVhZGluZXNzV2l0aGhlbGRKBAgFEAZS'
+    'C3RlbXBsYXRlX2lk');
 
 @$core.Deprecated('Use modelFitDescriptor instead')
 const ModelFit$json = {
