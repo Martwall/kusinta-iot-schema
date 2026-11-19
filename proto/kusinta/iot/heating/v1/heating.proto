@@ -1425,18 +1425,19 @@ message HeatCurveViews {
 // A day's figures are the differences of the totals over it; a total lower than the one before
 // is a reset of the heat source's count, never a negative figure: the day keeps what it counted
 // up to the last total before the reset and adds what it counts from the first after it. A day
-// the totals were not heard throughout is partial, its figures not guessed. The totals are in whole hours, so a day's hours are off by up to an hour either way:
-// a run length is judged on sums over several days, never on one day's. Short cycling (many
-// starts, or short runs) is judged over the last three whole days.
+// the totals were not heard throughout is partial, its figures not guessed. The totals are in
+// whole hours, so a day's hours are off by up to an hour either way: a run length is judged on
+// sums over several days, never on one day's. Short cycling (many starts, or short runs) is
+// judged over the last three whole days.
 // After an applied suggestion (HISTORY, APPLIED), the starts per day and the run length on
 // space heating over the seven whole days after it are set beside those over the seven before
 // (HeatCurveHistoryEntry.compressor_effect), each day after paired with a day before of a
 // similar outdoor temperature, so that a colder or milder week is not read as the curve's
 // doing. Given as HISTORY is: left out where figures are withheld; for a plant outside homes,
-// to those given its figures; for a plant in a home, to its household admins alone, so an
-// installer under a commissioning grant is given none; and for a home's plant none from before
-// its household's start, its last Clear history or its wipe (webrtc.v1 household.proto, CLIMATE
-// HISTORY, WIPE).
+// as the suggestion is (WHO APPLIES IT); for a plant in a home, to its household admins alone,
+// so an installer under a commissioning grant is given none; and for a home's plant none from
+// before its household's start, its last Clear history or its wipe (webrtc.v1 household.proto,
+// CLIMATE HISTORY, WIPE).
 
 // A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 // release of this schema.
