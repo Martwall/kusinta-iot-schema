@@ -127,22 +127,36 @@ option optimize_for = SPEED;
 //       "plant.max_supply_centidegrees" where that is answered. Answered as
 //       "plant.max_supply_centidegrees" is. HEAT_SOURCE; OPTIONAL.
 //   "hot_water.periodic_increase"  bool; a plant with a hot-water tank. Whether the heat source
-//       raises its tank on a schedule of its own against legionella (a periodic increase).
-//       Unknown: the gateway infers such a step from the tank's readings for what it scores,
-//       and a LIVE hot-water rule blocks nothing (heating.v1 PRICE_RULE_HOT_WATER). The gateway
+//       raises its tank on a schedule of its own against legionella (a periodic increase), for
+//       a heat source whose readings do not state it
+//       (device.v1.HeatSourceReadings.periodic_increase_enabled): where they do, the reading is
+//       read over this answer, being the heat source's actual setting, as for
+//       "plant.min_supply_centidegrees". Unknown and not reported: the gateway infers such a step
+//       from the tank's readings for what it scores, and a LIVE rule that needs it known blocks
+//       nothing (heating.v1 PRICE_RULE_HOT_WATER, PRICE_RULE_ADD_ON_HEATER_BLOCK). The gateway
 //       never moves or suppresses the step: a price rule only leaves the heat of such a step out
-//       of what it scores, and a hot-water block never runs across it. HEAT_SOURCE; OPTIONAL,
-//       save FOR_FEATURE PLANT for a plant whose HOT_WATER rule is LIVE; STATED (a household
+//       of what it scores, and no block runs across it. HEAT_SOURCE; OPTIONAL, save FOR_FEATURE
+//       PLANT for a plant whose HOT_WATER rule is LIVE, or whose ADD_ON_HEATER_BLOCK rule is
+//       LIVE and which has a hot-water tank (PERIODIC INCREASE, below); STATED (a household
 //       admin, from the heat source's menu), INSPECTED.
 //   "hot_water.periodic_increase_interval_days"  uint, 1 to 90; a plant with a hot-water tank.
-//       Every how many days
-//       the periodic increase runs. Asked while "hot_water.periodic_increase" is true.
-//       HEAT_SOURCE; OPTIONAL, save FOR_FEATURE PLANT for a plant whose HOT_WATER rule is LIVE;
-//       STATED, INSPECTED.
+//       Every how many days the periodic increase runs, for a heat source whose readings do not
+//       state it (device.v1.HeatSourceReadings.periodic_increase_interval_days): where they do,
+//       the reading is read over this answer. Asked while "hot_water.periodic_increase" is true,
+//       reported or answered. HEAT_SOURCE; OPTIONAL, save FOR_FEATURE PLANT as
+//       "hot_water.periodic_increase" is; STATED, INSPECTED.
 //   "hot_water.periodic_increase_start_minute"  uint, 0 to 1439; a plant with a hot-water
 //       tank. When it starts, in minutes after midnight in the building's time. Asked while
-//       "hot_water.periodic_increase" is true. HEAT_SOURCE; OPTIONAL, save FOR_FEATURE PLANT
-//       for a plant whose HOT_WATER rule is LIVE; STATED, INSPECTED.
+//       "hot_water.periodic_increase" is true, reported or answered. HEAT_SOURCE; OPTIONAL, save
+//       FOR_FEATURE PLANT as "hot_water.periodic_increase" is; STATED, INSPECTED.
+//
+// PERIODIC INCREASE. The three keys above are FOR_FEATURE PLANT, rather than OPTIONAL, for a
+// plant while a rule that needs its periodic increase known is LIVE on it (heating.v1
+// PRICE_RULE_MODE_LIVE): a need of the plant feature (FeatureStatus.needs) while not known, so
+// that the feature status says why the rule drives nothing. A key the heat source reports is
+// known by its reading and is never a need, nor is a key not asked: the interval and the start
+// once "hot_water.periodic_increase" is false. A stored fact is sent with the necessity and
+// feature that hold for its plant as it is sent.
 //
 // BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
 // (heating.v1.HeatPumpControl.sg_ready_block), or of its hot water (hot_water_block), which

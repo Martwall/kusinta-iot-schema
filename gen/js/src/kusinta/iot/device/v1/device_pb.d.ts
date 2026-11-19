@@ -372,9 +372,9 @@ export declare const DeviceSchema: GenMessage<Device>;
 /**
  * A heat source's own readings: the temperatures its controller measures and works out, and
  * its run state — what it is producing, its compressor, its degree minutes, its alarm — and
- * its own settings (how it is set to run, its add-on's limits, its curve), as its connector
- * reads them from the heat source or the maker's service. What
- * heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
+ * its own settings (how it is set to run, its add-on's limits, its curve, its hot water's
+ * periodic increase), as its connector reads them from the heat source or the maker's service.
+ * What heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
  *
  * Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
  * these attribute names, the value case following the field type as everywhere on the vendor
@@ -701,6 +701,34 @@ export declare type HeatSourceReadings = Message<"kusinta.iot.device.v1.HeatSour
    * @generated from field: optional sint32 curve_point_offset_centidegrees = 29;
    */
   curvePointOffsetCentidegrees?: number | undefined;
+
+  /**
+   * Whether it raises its hot-water tank on a schedule of its own against legionella (a
+   * periodic increase), as set at the heat source. Where reported, read over the answer to
+   * commissioning.v1 "hot_water.periodic_increase", being the heat source's actual setting.
+   * Absent for a heat source without a tank, or whose connector cannot read it.
+   *
+   * @generated from field: optional bool periodic_increase_enabled = 35;
+   */
+  periodicIncreaseEnabled?: boolean | undefined;
+
+  /**
+   * Every how many days its periodic increase runs, 1 to 90, as set at the heat source; sent
+   * whether or not periodic_increase_enabled is true. Where reported, read over the answer to
+   * commissioning.v1 "hot_water.periodic_increase_interval_days". A connector sends none for a
+   * value outside that range.
+   *
+   * @generated from field: optional uint32 periodic_increase_interval_days = 36;
+   */
+  periodicIncreaseIntervalDays?: number | undefined;
+
+  /**
+   * The tank temperature its periodic increase heats to before it stops, as set at the heat
+   * source: what a step is seen by in the tank's readings. No commissioning fact stands for it.
+   *
+   * @generated from field: optional sint32 periodic_increase_stop_centidegrees = 37;
+   */
+  periodicIncreaseStopCentidegrees?: number | undefined;
 };
 
 /**
