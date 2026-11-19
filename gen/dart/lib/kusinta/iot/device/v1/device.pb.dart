@@ -728,9 +728,9 @@ class Device extends $pb.GeneratedMessage {
 
 /// A heat source's own readings: the temperatures its controller measures and works out, and
 /// its run state — what it is producing, its compressor, its degree minutes, its alarm — and
-/// its own settings (how it is set to run, its add-on's limits, its curve), as its connector
-/// reads them from the heat source or the maker's service. What
-/// heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
+/// its own settings (how it is set to run, its add-on's limits, its curve, its hot water's
+/// periodic increase), as its connector reads them from the heat source or the maker's service.
+/// What heating.v1.HeatingPlant.readings_device_id reads a plant's heat source by.
 ///
 /// Travels as vendor-branch PropertyUpdates with vendor_extension "kusinta.heat_source" and
 /// these attribute names, the value case following the field type as everywhere on the vendor
@@ -794,6 +794,9 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     $core.int? compressorStarts,
     $core.int? compressorOperatingHours,
     $core.int? compressorHotWaterOperatingHours,
+    $core.bool? periodicIncreaseEnabled,
+    $core.int? periodicIncreaseIntervalDays,
+    $core.int? periodicIncreaseStopCentidegrees,
   }) {
     final result = create();
     if (outdoorCentidegrees != null)
@@ -860,6 +863,13 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
     if (compressorHotWaterOperatingHours != null)
       result.compressorHotWaterOperatingHours =
           compressorHotWaterOperatingHours;
+    if (periodicIncreaseEnabled != null)
+      result.periodicIncreaseEnabled = periodicIncreaseEnabled;
+    if (periodicIncreaseIntervalDays != null)
+      result.periodicIncreaseIntervalDays = periodicIncreaseIntervalDays;
+    if (periodicIncreaseStopCentidegrees != null)
+      result.periodicIncreaseStopCentidegrees =
+          periodicIncreaseStopCentidegrees;
     return result;
   }
 
@@ -961,6 +971,13 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
         34,
         _omitFieldNames ? '' : 'compressorHotWaterOperatingHours',
         $pb.PbFieldType.OU3)
+    ..aOB(35, _omitFieldNames ? '' : 'periodicIncreaseEnabled')
+    ..a<$core.int>(36, _omitFieldNames ? '' : 'periodicIncreaseIntervalDays',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        37,
+        _omitFieldNames ? '' : 'periodicIncreaseStopCentidegrees',
+        $pb.PbFieldType.OS3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1396,6 +1413,45 @@ class HeatSourceReadings extends $pb.GeneratedMessage {
   $core.bool hasCompressorHotWaterOperatingHours() => $_has(33);
   @$pb.TagNumber(34)
   void clearCompressorHotWaterOperatingHours() => $_clearField(34);
+
+  /// Whether it raises its hot-water tank on a schedule of its own against legionella (a
+  /// periodic increase), as set at the heat source. Where reported, read over the answer to
+  /// commissioning.v1 "hot_water.periodic_increase", being the heat source's actual setting.
+  /// Absent for a heat source without a tank, or whose connector cannot read it.
+  @$pb.TagNumber(35)
+  $core.bool get periodicIncreaseEnabled => $_getBF(34);
+  @$pb.TagNumber(35)
+  set periodicIncreaseEnabled($core.bool value) => $_setBool(34, value);
+  @$pb.TagNumber(35)
+  $core.bool hasPeriodicIncreaseEnabled() => $_has(34);
+  @$pb.TagNumber(35)
+  void clearPeriodicIncreaseEnabled() => $_clearField(35);
+
+  /// Every how many days its periodic increase runs, 1 to 90, as set at the heat source; sent
+  /// whether or not periodic_increase_enabled is true. Where reported, read over the answer to
+  /// commissioning.v1 "hot_water.periodic_increase_interval_days". A connector sends none for a
+  /// value outside that range.
+  @$pb.TagNumber(36)
+  $core.int get periodicIncreaseIntervalDays => $_getIZ(35);
+  @$pb.TagNumber(36)
+  set periodicIncreaseIntervalDays($core.int value) =>
+      $_setUnsignedInt32(35, value);
+  @$pb.TagNumber(36)
+  $core.bool hasPeriodicIncreaseIntervalDays() => $_has(35);
+  @$pb.TagNumber(36)
+  void clearPeriodicIncreaseIntervalDays() => $_clearField(36);
+
+  /// The tank temperature its periodic increase heats to before it stops, as set at the heat
+  /// source: what a step is seen by in the tank's readings. No commissioning fact stands for it.
+  @$pb.TagNumber(37)
+  $core.int get periodicIncreaseStopCentidegrees => $_getIZ(36);
+  @$pb.TagNumber(37)
+  set periodicIncreaseStopCentidegrees($core.int value) =>
+      $_setSignedInt32(36, value);
+  @$pb.TagNumber(37)
+  $core.bool hasPeriodicIncreaseStopCentidegrees() => $_has(36);
+  @$pb.TagNumber(37)
+  void clearPeriodicIncreaseStopCentidegrees() => $_clearField(37);
 }
 
 /// What a device needs before it works as it should, as its connector judges it from the

@@ -5287,6 +5287,19 @@ class SetComfortWindows extends $pb.GeneratedMessage {
 ///                         rule_input_unbound. SHADOW and OFF need no pass. A rule already LIVE
 ///                         whose pass stops being current stays LIVE and drives nothing until a
 ///                         new pass is held.
+///   "rule_periodic_increase_unknown"
+///                         LIVE for HOT_WATER, or for ADD_ON_HEATER_BLOCK on a plant with a
+///                         hot-water tank, while the heat source's periodic increase is not known
+///                         (heating.v1 PRICE_RULE_HOT_WATER), since the rule would drive nothing:
+///                         metadata "key" names the first commissioning.v1 key neither reported
+///                         nor answered with a value, of "hot_water.periodic_increase",
+///                         "hot_water.periodic_increase_interval_days" and
+///                         "hot_water.periodic_increase_start_minute" in that order. Checked after
+///                         rule_input_untested. "hot_water.periodic_increase" false, reported or
+///                         answered, is an answer and lets LIVE through. SHADOW and OFF need it
+///                         not. A rule already LIVE whose periodic increase stops being known
+///                         stays LIVE and drives nothing until it is known again, the plant's
+///                         feature status naming the keys as needs.
 ///
 /// Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
 /// and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE

@@ -2520,7 +2520,14 @@ export enum PriceRule {
    * Blocks the add-on heater (HeatPumpControl.add_on_heater_block) in the day's dearest quarter
    * hours, the compressor running on: each block within "plant.max_block_minutes"
    * (commissioning.v1), and ended early where a room it heats falls below its comfort band or,
-   * where the plant reports it, its hot water runs low. A blocking rule.
+   * where the plant reports it, its hot water runs low. A blocking rule. On a plant with a
+   * hot-water tank — one that binds hot_water_block, or whose heat source reports its tank
+   * (device.v1.HeatSourceReadings: a hot-water temperature, or its periodic increase) — it keeps
+   * clear of the heat source's periodic increase as PRICE_RULE_HOT_WATER does, since the add-on
+   * heater may be what lifts the tank to the step's temperature: no block starts in a quarter
+   * hour of a scheduled step, and one that would run into it is planned to end at its start
+   * (HEAT_BLOCK_END_PLANNED). On such a plant, LIVE, it drives nothing while the periodic
+   * increase is not known, as PRICE_RULE_HOT_WATER says.
    *
    * @generated from enum value: PRICE_RULE_ADD_ON_HEATER_BLOCK = 1;
    */
@@ -2544,10 +2551,13 @@ export enum PriceRule {
    * increase, and released so that the charge it then makes lands in the cheapest quarter hours
    * after it. A blocking rule, whose input is hot_water_block; SHADOW models the blocks whether
    * or not it is bound. It starts no block where the plant does not report its tank's top, or
-   * that report is not heard. LIVE, it drives nothing while the periodic increase is not known:
-   * "hot_water.periodic_increase" unanswered or answered unknown, or answered true with its
-   * interval or start unanswered or unknown, since it could not keep clear of a step it does not
-   * know the time of. Besides,
+   * that report is not heard. LIVE, it drives nothing while the periodic increase is not known,
+   * since it could not keep clear of a step it does not know the time of. The periodic increase
+   * is known where "hot_water.periodic_increase" is false, or true with its interval and its
+   * start known: each read from the heat source where its readings report it
+   * (device.v1.HeatSourceReadings, periodic_increase_*), the reading standing over an answer, and
+   * otherwise answered with a value (commissioning.v1). False, whether reported or answered, is
+   * an answer: no periodic increase to keep clear of. Besides,
    * where the plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for
    * hot water in cheap quarter hours, never during a block, and only while that input too may be
    * driven (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on
@@ -2598,11 +2608,14 @@ export enum PriceRuleMode {
    * The rule decides and drives. It drives only while the gateway may drive the input it steers:
    * bound, under a current pass of its commissioning test, the plant's feature not blocked
    * (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, the
-   * periodic increase known for HOT_WATER (PRICE_RULE_HOT_WATER), and no hold running
+   * periodic increase known for HOT_WATER and for ADD_ON_HEATER_BLOCK on a plant with a
+   * hot-water tank (PRICE_RULE_HOT_WATER, PRICE_RULE_ADD_ON_HEATER_BLOCK), and no hold running
    * (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
    * plant's feature status says why. A rule is put LIVE only while the input it steers is bound
-   * and holds a current pass of its commissioning test (webrtc.v1.SetPriceRuleMode); one whose
-   * pass stops being current later stays LIVE and drives nothing until a new pass is held.
+   * and holds a current pass of its commissioning test, and, where it needs the periodic increase
+   * known, while it is (webrtc.v1.SetPriceRuleMode); one whose pass stops being current, or whose
+   * periodic increase stops being known, later stays LIVE and drives nothing until both hold
+   * again.
    *
    * @generated from enum value: PRICE_RULE_MODE_LIVE = 3;
    */
