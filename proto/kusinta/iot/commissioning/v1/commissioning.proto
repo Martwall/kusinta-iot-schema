@@ -138,13 +138,15 @@ option optimize_for = SPEED;
 //       of what it scores, and no block runs across it. HEAT_SOURCE; OPTIONAL, save FOR_FEATURE
 //       PLANT for a plant whose HOT_WATER rule is LIVE, or whose ADD_ON_HEATER_BLOCK rule is
 //       LIVE and which has a hot-water tank (PERIODIC INCREASE, below); STATED (a household
-//       admin, from the heat source's menu), INSPECTED.
+//       admin, from the heat source's menu), INSPECTED, DERIVED (the gateway alone, from the
+//       reading: PERIODIC INCREASE).
 //   "hot_water.periodic_increase_interval_days"  uint, 1 to 90; a plant with a hot-water tank.
 //       Every how many days the periodic increase runs, for a heat source whose readings do not
 //       state it (device.v1.HeatSourceReadings.periodic_increase_interval_days): where they do,
 //       the reading is read over this answer. Asked while "hot_water.periodic_increase" is true,
 //       reported or answered. HEAT_SOURCE; OPTIONAL, save FOR_FEATURE PLANT as
-//       "hot_water.periodic_increase" is; STATED, INSPECTED.
+//       "hot_water.periodic_increase" is; STATED, INSPECTED, DERIVED as
+//       "hot_water.periodic_increase" is.
 //   "hot_water.periodic_increase_start_minute"  uint, 0 to 1439; a plant with a hot-water
 //       tank. When it starts, in minutes after midnight in the building's time. Asked while
 //       "hot_water.periodic_increase" is true, reported or answered. HEAT_SOURCE; OPTIONAL, save
@@ -157,6 +159,18 @@ option optimize_for = SPEED;
 // known by its reading and is never a need, nor is a key not asked: the interval and the start
 // once "hot_water.periodic_increase" is false. A stored fact is sent with the necessity and
 // feature that hold for its plant as it is sent.
+//
+// Where the heat source reports "hot_water.periodic_increase" or its interval, the fact sent for
+// that key is the reading: the value the gateway acts on, so that no answer is shown that has no
+// effect. It is sent with provenance AUTOMATIC and DERIVED, and with an id and a revision of its
+// own, the revision bumped whenever the reading changes. While the reading stands, a put of that
+// key is refused as ANSWERER with metadata {"reason": "reported"}: the heat source's own menu is
+// where it is changed, and the reading follows. An answer stored before the reading is kept and
+// is sent again, with its own provenance, once the heat source stops reporting the key (a link
+// to it ended, say); while the heat source is linked but out of touch, its last reading stands.
+// The interval is asked while the effective "hot_water.periodic_increase" is true, reported or
+// answered. No reading states the start, so "hot_water.periodic_increase_start_minute" is always
+// an answer, asked while the periodic increase is on by either.
 //
 // BLOCKS ON A COMPRESSOR. A block that stops the compressor is one of the heat pump itself
 // (heating.v1.HeatPumpControl.sg_ready_block), or of its hot water (hot_water_block), which
