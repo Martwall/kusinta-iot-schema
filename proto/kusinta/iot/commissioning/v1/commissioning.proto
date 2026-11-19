@@ -164,8 +164,9 @@ option optimize_for = SPEED;
 // that key is the reading: the value the gateway acts on, so that no answer is shown that has no
 // effect. It is sent with provenance AUTOMATIC and DERIVED, and with an id and a revision of its
 // own, the revision bumped whenever the reading changes. While the reading stands, a put of that
-// key is refused as ANSWERER with metadata {"reason": "reported"}: the heat source's own menu is
-// where it is changed, and the reading follows. An answer stored before the reading is kept and
+// key is refused as FAILED_PRECONDITION with metadata {"reason": "REPORTED"}
+// (webrtc.v1.PutCommissioningFact): the heat source's own menu is where it is changed, and the
+// reading follows. An answer stored before the reading is kept and
 // is sent again, with its own provenance, once the heat source stops reporting the key (a link
 // to it ended, say); while the heat source is linked but out of touch, its last reading stands.
 // The interval is asked while the effective "hot_water.periodic_increase" is true, reported or
