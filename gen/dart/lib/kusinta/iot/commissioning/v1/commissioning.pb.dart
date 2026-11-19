@@ -1090,6 +1090,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     $3.ComfortPreference? widerComfort,
     $core.bool? peakChargeIncluded,
     $core.String? comfortCostSeenOn,
+    $core.Iterable<$1.SpaceId>? ownBandRoomIds,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -1104,6 +1105,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     if (peakChargeIncluded != null)
       result.peakChargeIncluded = peakChargeIncluded;
     if (comfortCostSeenOn != null) result.comfortCostSeenOn = comfortCostSeenOn;
+    if (ownBandRoomIds != null) result.ownBandRoomIds.addAll(ownBandRoomIds);
     return result;
   }
 
@@ -1140,6 +1142,9 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
         subBuilder: $3.ComfortPreference.create)
     ..aOB(10, _omitFieldNames ? '' : 'peakChargeIncluded')
     ..aOS(11, _omitFieldNames ? '' : 'comfortCostSeenOn')
+    ..pc<$1.SpaceId>(
+        12, _omitFieldNames ? '' : 'ownBandRoomIds', $pb.PbFieldType.PM,
+        subBuilder: $1.SpaceId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1281,6 +1286,16 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   $core.bool hasComfortCostSeenOn() => $_has(10);
   @$pb.TagNumber(11)
   void clearComfortCostSeenOn() => $_clearField(11);
+
+  /// Set together with wider_comfort: the rooms the plant heats in the home that hold a comfort
+  /// preference of their own (climate.v1.ComfortPreference), which the home's preference does not
+  /// change. wider_comfort was judged with every room the rule judges on its band, so it holds
+  /// only if these rooms are widened too, or follow the home's preference again. A client offers
+  /// the home's change and names these rooms, so that the household can choose to change them for
+  /// the saving. Empty where wider_comfort is unset, or where no such room has a preference of its
+  /// own. Given as the readiness is (READINESS, WHO SEES IT).
+  @$pb.TagNumber(12)
+  $pb.PbList<$1.SpaceId> get ownBandRoomIds => $_getList(11);
 }
 
 /// One gate of a price rule's readiness (READINESS, THE GATES).
