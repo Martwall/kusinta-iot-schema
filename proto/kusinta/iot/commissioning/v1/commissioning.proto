@@ -70,9 +70,13 @@ option optimize_for = SPEED;
 //       water: every zone of the circuit closed for two hours or more, and either water moving
 //       through its minimum-flow path ("floor.min_flow_path" true) with the supply steady and
 //       well above the rooms', or both readings settled near the rooms' after the water has
-//       stood. Never from a quarter hour with a zone open; too few such quarter hours, and it
-//       has none. An estimate within 20 either way is taken as 0: probes that close agree as
-//       far as their readings tell.
+//       stood. Never from a quarter hour with a zone open; too few such quarter hours, or all
+//       on one local date of the building, and it has none. An estimate within 20 either way is
+//       taken as 0: probes that close agree as far as their readings tell. An estimate beyond
+//       the key's range is no offset to apply, and never taken as 0: the probes disagree by
+//       more than an offset corrects, and a probe is to be refitted or replaced. Until this key
+//       is answered or a later estimate falls within the range, the circuit's temperature drop
+//       is not given, and the key is needed of an installer.
 //   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it. It bounds every
