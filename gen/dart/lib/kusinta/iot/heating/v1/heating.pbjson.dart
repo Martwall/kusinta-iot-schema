@@ -60,6 +60,7 @@ const PriceRule$json = {
     {'1': 'PRICE_RULE_ADD_ON_HEATER_BLOCK', '2': 1},
     {'1': 'PRICE_RULE_FLOOR_PRE_HEAT', '2': 2},
     {'1': 'PRICE_RULE_HOT_WATER', '2': 3},
+    {'1': 'PRICE_RULE_FLOOR_TIME_SHARE', '2': 4},
   ],
 };
 
@@ -67,7 +68,7 @@ const PriceRule$json = {
 final $typed_data.Uint8List priceRuleDescriptor = $convert.base64Decode(
     'CglQcmljZVJ1bGUSGgoWUFJJQ0VfUlVMRV9VTlNQRUNJRklFRBAAEiIKHlBSSUNFX1JVTEVfQU'
     'REX09OX0hFQVRFUl9CTE9DSxABEh0KGVBSSUNFX1JVTEVfRkxPT1JfUFJFX0hFQVQQAhIYChRQ'
-    'UklDRV9SVUxFX0hPVF9XQVRFUhAD');
+    'UklDRV9SVUxFX0hPVF9XQVRFUhADEh8KG1BSSUNFX1JVTEVfRkxPT1JfVElNRV9TSEFSRRAE');
 
 @$core.Deprecated('Use priceRuleModeDescriptor instead')
 const PriceRuleMode$json = {
@@ -1373,6 +1374,30 @@ const ShadowDay$json = {
       '5': 9,
       '10': 'ratePublishedOn'
     },
+    {
+      '1': 'floor_control',
+      '3': 16,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorControlCounts',
+      '10': 'floorControl'
+    },
+    {
+      '1': 'floor_control_as_run',
+      '3': 17,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorControlCounts',
+      '10': 'floorControlAsRun'
+    },
+    {
+      '1': 'floor_control_measured',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorControlCounts',
+      '10': 'floorControlMeasured'
+    },
   ],
   '8': [
     {'1': '_cautious_net_saving_micro_eur'},
@@ -1398,9 +1423,53 @@ final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
     'ludGEuaW90LmhlYXRpbmcudjEuU2hhZG93UHJpY2VCYXNpc1IKcHJpY2VCYXNpcxJRCgxhZGRl'
     'cl9zb3VyY2UYDiABKA4yLi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkVuZXJneVByaWNlQWRkZX'
     'JTb3VyY2VSC2FkZGVyU291cmNlEioKEXJhdGVfcHVibGlzaGVkX29uGA8gASgJUg9yYXRlUHVi'
-    'bGlzaGVkT25CIAoeX2NhdXRpb3VzX25ldF9zYXZpbmdfbWljcm9fZXVyQhgKFl9zYXZpbmdfc2'
-    'hhcmVfcGVybWlsbGVCIQofX2NhdXRpb3VzX3NhdmluZ19zaGFyZV9wZXJtaWxsZUIPCg1fc2hh'
-    'cmVfd2VpZ2h0');
+    'bGlzaGVkT24STwoNZmxvb3JfY29udHJvbBgQIAEoCzIqLmt1c2ludGEuaW90LmhlYXRpbmcudj'
+    'EuRmxvb3JDb250cm9sQ291bnRzUgxmbG9vckNvbnRyb2wSWwoUZmxvb3JfY29udHJvbF9hc19y'
+    'dW4YESABKAsyKi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkZsb29yQ29udHJvbENvdW50c1IRZm'
+    'xvb3JDb250cm9sQXNSdW4SYAoWZmxvb3JfY29udHJvbF9tZWFzdXJlZBgSIAEoCzIqLmt1c2lu'
+    'dGEuaW90LmhlYXRpbmcudjEuRmxvb3JDb250cm9sQ291bnRzUhRmbG9vckNvbnRyb2xNZWFzdX'
+    'JlZEIgCh5fY2F1dGlvdXNfbmV0X3NhdmluZ19taWNyb19ldXJCGAoWX3NhdmluZ19zaGFyZV9w'
+    'ZXJtaWxsZUIhCh9fY2F1dGlvdXNfc2F2aW5nX3NoYXJlX3Blcm1pbGxlQg8KDV9zaGFyZV93ZW'
+    'lnaHQ=');
+
+@$core.Deprecated('Use floorControlCountsDescriptor instead')
+const FloorControlCounts$json = {
+  '1': 'FloorControlCounts',
+  '2': [
+    {'1': 'room_quarters', '3': 1, '4': 1, '5': 13, '10': 'roomQuarters'},
+    {
+      '1': 'near_target_room_quarters',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '10': 'nearTargetRoomQuarters'
+    },
+    {
+      '1': 'above_target_room_quarters',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '10': 'aboveTargetRoomQuarters'
+    },
+    {
+      '1': 'near_target_tolerance_centidegrees',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '10': 'nearTargetToleranceCentidegrees'
+    },
+    {'1': 'zone_starts', '3': 5, '4': 1, '5': 13, '10': 'zoneStarts'},
+  ],
+};
+
+/// Descriptor for `FloorControlCounts`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List floorControlCountsDescriptor = $convert.base64Decode(
+    'ChJGbG9vckNvbnRyb2xDb3VudHMSIwoNcm9vbV9xdWFydGVycxgBIAEoDVIMcm9vbVF1YXJ0ZX'
+    'JzEjkKGW5lYXJfdGFyZ2V0X3Jvb21fcXVhcnRlcnMYAiABKA1SFm5lYXJUYXJnZXRSb29tUXVh'
+    'cnRlcnMSOwoaYWJvdmVfdGFyZ2V0X3Jvb21fcXVhcnRlcnMYAyABKA1SF2Fib3ZlVGFyZ2V0Um'
+    '9vbVF1YXJ0ZXJzEksKIm5lYXJfdGFyZ2V0X3RvbGVyYW5jZV9jZW50aWRlZ3JlZXMYBCABKA1S'
+    'H25lYXJUYXJnZXRUb2xlcmFuY2VDZW50aWRlZ3JlZXMSHwoLem9uZV9zdGFydHMYBSABKA1SCn'
+    'pvbmVTdGFydHM=');
 
 @$core.Deprecated('Use shadowBandSeriesDescriptor instead')
 const ShadowBandSeries$json = {

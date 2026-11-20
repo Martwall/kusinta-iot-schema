@@ -1383,8 +1383,8 @@ message SetComfortWindows {
 //   "rule_input_unbound"  LIVE for a rule whose input the plant does not bind: metadata "field"
 //                         names it by its proto field name, "add_on_heater_block" for
 //                         ADD_ON_HEATER_BLOCK and "hot_water_block" for HOT_WATER; for
-//                         FLOOR_PRE_HEAT, no floor zone of the plant binds an output, and
-//                         "field" is "output". SHADOW and OFF need no input bound.
+//                         FLOOR_PRE_HEAT and FLOOR_TIME_SHARE, no floor zone of the plant
+//                         binds an output, and "field" is "output". SHADOW and OFF need no input bound.
 //   "rule_not_drivable"   LIVE for a rule the gateway does not yet drive (it decides it in shadow
 //                         only); SHADOW and OFF are taken. Checked before rule_input_unbound,
 //                         since binding an input would not help.

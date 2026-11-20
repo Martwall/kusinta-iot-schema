@@ -2370,6 +2370,9 @@ class ShadowDay extends $pb.GeneratedMessage {
     ShadowPriceBasis? priceBasis,
     EnergyPriceAdderSource? adderSource,
     $core.String? ratePublishedOn,
+    FloorControlCounts? floorControl,
+    FloorControlCounts? floorControlAsRun,
+    FloorControlCounts? floorControlMeasured,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2391,6 +2394,10 @@ class ShadowDay extends $pb.GeneratedMessage {
     if (priceBasis != null) result.priceBasis = priceBasis;
     if (adderSource != null) result.adderSource = adderSource;
     if (ratePublishedOn != null) result.ratePublishedOn = ratePublishedOn;
+    if (floorControl != null) result.floorControl = floorControl;
+    if (floorControlAsRun != null) result.floorControlAsRun = floorControlAsRun;
+    if (floorControlMeasured != null)
+      result.floorControlMeasured = floorControlMeasured;
     return result;
   }
 
@@ -2446,6 +2453,12 @@ class ShadowDay extends $pb.GeneratedMessage {
         valueOf: EnergyPriceAdderSource.valueOf,
         enumValues: EnergyPriceAdderSource.values)
     ..aOS(15, _omitFieldNames ? '' : 'ratePublishedOn')
+    ..aOM<FloorControlCounts>(16, _omitFieldNames ? '' : 'floorControl',
+        subBuilder: FloorControlCounts.create)
+    ..aOM<FloorControlCounts>(17, _omitFieldNames ? '' : 'floorControlAsRun',
+        subBuilder: FloorControlCounts.create)
+    ..aOM<FloorControlCounts>(18, _omitFieldNames ? '' : 'floorControlMeasured',
+        subBuilder: FloorControlCounts.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2587,7 +2600,8 @@ class ShadowDay extends $pb.GeneratedMessage {
   void clearCautiousSavingSharePermille() => $_clearField(10);
 
   /// A day given for its counts alone: a share-scored rule's day whose share could not be known
-  /// (its heat cost too near zero to divide by). Then saving_share_permille and
+  /// (its heat cost too near zero to divide by), and every day of a rule that saves nothing by
+  /// price (PRICE_RULE_FLOOR_TIME_SHARE). Then saving_share_permille and
   /// cautious_saving_share_permille are unset and the money fields 0, and a client shows its
   /// breaches and overheats only, never a saving of 0.
   @$pb.TagNumber(11)
@@ -2650,6 +2664,178 @@ class ShadowDay extends $pb.GeneratedMessage {
   $core.bool hasRatePublishedOn() => $_has(14);
   @$pb.TagNumber(15)
   void clearRatePublishedOn() => $_clearField(15);
+
+  /// For a rule that steers floor zones by their rooms' error (PRICE_RULE_FLOOR_TIME_SHARE): how
+  /// the rooms it judges would have been held under it (floor_control), and under the control
+  /// that ran that day (floor_control_as_run), both as one model of the rooms predicts them from
+  /// the day's weather and the zones' switching: the rule's switching for the one, the switching
+  /// that ran for the other. Counted alike, so that neither side carries what a model leaves out
+  /// (a draught, the sun, a door left open) and the other not: they are what the rule is judged
+  /// by (commissioning.v1 READINESS). Both unset for every other rule, and on a day kept before
+  /// they were computed.
+  @$pb.TagNumber(16)
+  FloorControlCounts get floorControl => $_getN(15);
+  @$pb.TagNumber(16)
+  set floorControl(FloorControlCounts value) => $_setField(16, value);
+  @$pb.TagNumber(16)
+  $core.bool hasFloorControl() => $_has(15);
+  @$pb.TagNumber(16)
+  void clearFloorControl() => $_clearField(16);
+  @$pb.TagNumber(16)
+  FloorControlCounts ensureFloorControl() => $_ensure(15);
+
+  @$pb.TagNumber(17)
+  FloorControlCounts get floorControlAsRun => $_getN(16);
+  @$pb.TagNumber(17)
+  set floorControlAsRun(FloorControlCounts value) => $_setField(17, value);
+  @$pb.TagNumber(17)
+  $core.bool hasFloorControlAsRun() => $_has(16);
+  @$pb.TagNumber(17)
+  void clearFloorControlAsRun() => $_clearField(17);
+  @$pb.TagNumber(17)
+  FloorControlCounts ensureFloorControlAsRun() => $_ensure(16);
+
+  /// For the same rule: how the rooms were held that day as their own readings measured them,
+  /// under the control that ran. Shown beside the two above, never compared with them nor judged
+  /// by: a measurement holds what a prediction cannot. Unset where the rooms' readings did not
+  /// cover the day, for every other rule, and on a day kept before it was computed.
+  @$pb.TagNumber(18)
+  FloorControlCounts get floorControlMeasured => $_getN(17);
+  @$pb.TagNumber(18)
+  set floorControlMeasured(FloorControlCounts value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasFloorControlMeasured() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearFloorControlMeasured() => $_clearField(18);
+  @$pb.TagNumber(18)
+  FloorControlCounts ensureFloorControlMeasured() => $_ensure(17);
+}
+
+/// How a plant's floor zones held the rooms one rule judges over one day (ShadowDay.floor_control,
+/// floor_control_as_run, floor_control_measured): predicted by the model for the first two, read
+/// from the rooms' own sensors for the third. Only counts of one kind are compared: predicted with
+/// predicted. A quarter hour in which a room's window was open is not counted for that room, nor
+/// one in which its temperature was not heard.
+class FloorControlCounts extends $pb.GeneratedMessage {
+  factory FloorControlCounts({
+    $core.int? roomQuarters,
+    $core.int? nearTargetRoomQuarters,
+    $core.int? aboveTargetRoomQuarters,
+    $core.int? nearTargetToleranceCentidegrees,
+    $core.int? zoneStarts,
+  }) {
+    final result = create();
+    if (roomQuarters != null) result.roomQuarters = roomQuarters;
+    if (nearTargetRoomQuarters != null)
+      result.nearTargetRoomQuarters = nearTargetRoomQuarters;
+    if (aboveTargetRoomQuarters != null)
+      result.aboveTargetRoomQuarters = aboveTargetRoomQuarters;
+    if (nearTargetToleranceCentidegrees != null)
+      result.nearTargetToleranceCentidegrees = nearTargetToleranceCentidegrees;
+    if (zoneStarts != null) result.zoneStarts = zoneStarts;
+    return result;
+  }
+
+  FloorControlCounts._();
+
+  factory FloorControlCounts.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory FloorControlCounts.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'FloorControlCounts',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..a<$core.int>(
+        1, _omitFieldNames ? '' : 'roomQuarters', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'nearTargetRoomQuarters', $pb.PbFieldType.OU3)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'aboveTargetRoomQuarters',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(4, _omitFieldNames ? '' : 'nearTargetToleranceCentidegrees',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'zoneStarts', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FloorControlCounts clone() => FloorControlCounts()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  FloorControlCounts copyWith(void Function(FloorControlCounts) updates) =>
+      super.copyWith((message) => updates(message as FloorControlCounts))
+          as FloorControlCounts;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static FloorControlCounts create() => FloorControlCounts._();
+  @$core.override
+  FloorControlCounts createEmptyInstance() => create();
+  static $pb.PbList<FloorControlCounts> createRepeated() =>
+      $pb.PbList<FloorControlCounts>();
+  @$core.pragma('dart2js:noInline')
+  static FloorControlCounts getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<FloorControlCounts>(create);
+  static FloorControlCounts? _defaultInstance;
+
+  /// The quarter hours counted, per room: each room judged counts once in each quarter hour, so a
+  /// whole day of two rooms counts 192. The other counts are of the same room quarter hours.
+  @$pb.TagNumber(1)
+  $core.int get roomQuarters => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set roomQuarters($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRoomQuarters() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRoomQuarters() => $_clearField(1);
+
+  /// Of room_quarters, those in which the room was predicted, or measured, to be within the
+  /// tolerance of its target (near_target_tolerance_centidegrees) either side, and those in which
+  /// it was above its target by more than the tolerance.
+  @$pb.TagNumber(2)
+  $core.int get nearTargetRoomQuarters => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set nearTargetRoomQuarters($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasNearTargetRoomQuarters() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNearTargetRoomQuarters() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get aboveTargetRoomQuarters => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set aboveTargetRoomQuarters($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAboveTargetRoomQuarters() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAboveTargetRoomQuarters() => $_clearField(3);
+
+  /// The tolerance, in centidegrees: the gateway's, stated so that a client can say what near
+  /// means, and never assumed.
+  @$pb.TagNumber(4)
+  $core.int get nearTargetToleranceCentidegrees => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set nearTargetToleranceCentidegrees($core.int value) =>
+      $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasNearTargetToleranceCentidegrees() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearNearTargetToleranceCentidegrees() => $_clearField(4);
+
+  /// How many times the plant's floor zones were, or would have been, switched on: zones switched
+  /// as one, sharing a control room, count once together.
+  @$pb.TagNumber(5)
+  $core.int get zoneStarts => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set zoneStarts($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasZoneStarts() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearZoneStarts() => $_clearField(5);
 }
 
 /// One price rule of one plant of a home, scored day by day against one comfort band.

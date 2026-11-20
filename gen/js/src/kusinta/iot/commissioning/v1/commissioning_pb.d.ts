@@ -1559,6 +1559,27 @@ export enum ReadinessGateKind {
    * @generated from enum value: READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS = 6;
    */
   EXTRA_COMPRESSOR_STARTS = 6,
+
+  /**
+   * For a rule that steers floor zones by their rooms' error (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE):
+   * the room quarter hours near target over the days counted, under the rule (have) and under the
+   * control that ran (need), both as the same model predicts them (heating.v1.ShadowDay
+   * floor_control, floor_control_as_run; FloorControlCounts near_target_room_quarters), never a
+   * prediction against the rooms' readings. Met when have reaches need.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_NEAR_TARGET = 7;
+   */
+  NEAR_TARGET = 7,
+
+  /**
+   * For the same rule: the room quarter hours above target by more than the tolerance over the
+   * days counted, under the rule (have) and under the control that ran (need), both as the same
+   * model predicts them, as for READINESS_GATE_KIND_NEAR_TARGET (FloorControlCounts
+   * above_target_room_quarters). Met when have is below need, or both are 0.
+   *
+   * @generated from enum value: READINESS_GATE_KIND_ABOVE_TARGET = 8;
+   */
+  ABOVE_TARGET = 8,
 }
 
 /**
