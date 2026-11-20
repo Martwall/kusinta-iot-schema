@@ -3593,6 +3593,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     HeatCurveUpdateMode? updateMode,
     HeatingSeason? season,
     $3.Timestamp? nextProposalAt,
+    HeatCurveOutdoorReading? outdoorReading,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3620,6 +3621,7 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (updateMode != null) result.updateMode = updateMode;
     if (season != null) result.season = season;
     if (nextProposalAt != null) result.nextProposalAt = nextProposalAt;
+    if (outdoorReading != null) result.outdoorReading = outdoorReading;
     return result;
   }
 
@@ -3691,6 +3693,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
         subBuilder: HeatingSeason.create)
     ..aOM<$3.Timestamp>(22, _omitFieldNames ? '' : 'nextProposalAt',
         subBuilder: $3.Timestamp.create)
+    ..aOM<HeatCurveOutdoorReading>(23, _omitFieldNames ? '' : 'outdoorReading',
+        subBuilder: HeatCurveOutdoorReading.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3967,6 +3971,19 @@ class HeatCurveView extends $pb.GeneratedMessage {
   void clearNextProposalAt() => $_clearField(22);
   @$pb.TagNumber(22)
   $3.Timestamp ensureNextProposalAt() => $_ensure(21);
+
+  /// The heat source's outdoor reading set against the weather (OUTDOOR READING). Unset where it
+  /// is not judged, and where figures are withheld.
+  @$pb.TagNumber(23)
+  HeatCurveOutdoorReading get outdoorReading => $_getN(22);
+  @$pb.TagNumber(23)
+  set outdoorReading(HeatCurveOutdoorReading value) => $_setField(23, value);
+  @$pb.TagNumber(23)
+  $core.bool hasOutdoorReading() => $_has(22);
+  @$pb.TagNumber(23)
+  void clearOutdoorReading() => $_clearField(23);
+  @$pb.TagNumber(23)
+  HeatCurveOutdoorReading ensureOutdoorReading() => $_ensure(22);
 }
 
 /// How hard a heat source's compressor works (COMPRESSOR WEAR).
@@ -4405,6 +4422,107 @@ class HeatCurveViews extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $pb.PbList<HeatCurveView> get views => $_getList(0);
+}
+
+/// A heat source's outdoor reading set against the weather (OUTDOOR READING).
+class HeatCurveOutdoorReading extends $pb.GeneratedMessage {
+  factory HeatCurveOutdoorReading({
+    $core.bool? lifted,
+    $core.Iterable<$core.String>? liftedDates,
+    $core.int? largestLiftCentidegrees,
+    $core.int? quartersLeftOut,
+  }) {
+    final result = create();
+    if (lifted != null) result.lifted = lifted;
+    if (liftedDates != null) result.liftedDates.addAll(liftedDates);
+    if (largestLiftCentidegrees != null)
+      result.largestLiftCentidegrees = largestLiftCentidegrees;
+    if (quartersLeftOut != null) result.quartersLeftOut = quartersLeftOut;
+    return result;
+  }
+
+  HeatCurveOutdoorReading._();
+
+  factory HeatCurveOutdoorReading.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurveOutdoorReading.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurveOutdoorReading',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'lifted')
+    ..pPS(2, _omitFieldNames ? '' : 'liftedDates')
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'largestLiftCentidegrees',
+        $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'quartersLeftOut', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveOutdoorReading clone() =>
+      HeatCurveOutdoorReading()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurveOutdoorReading copyWith(
+          void Function(HeatCurveOutdoorReading) updates) =>
+      super.copyWith((message) => updates(message as HeatCurveOutdoorReading))
+          as HeatCurveOutdoorReading;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveOutdoorReading create() => HeatCurveOutdoorReading._();
+  @$core.override
+  HeatCurveOutdoorReading createEmptyInstance() => create();
+  static $pb.PbList<HeatCurveOutdoorReading> createRepeated() =>
+      $pb.PbList<HeatCurveOutdoorReading>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurveOutdoorReading getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurveOutdoorReading>(create);
+  static HeatCurveOutdoorReading? _defaultInstance;
+
+  /// Whether the reading is judged lifted: on at least the gateway's number of lifted dates
+  /// among the building's last fourteen local dates.
+  @$pb.TagNumber(1)
+  $core.bool get lifted => $_getBF(0);
+  @$pb.TagNumber(1)
+  set lifted($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLifted() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLifted() => $_clearField(1);
+
+  /// The lifted dates among the building's last fourteen local dates, newest first, each as an
+  /// ISO 8601 calendar date (YYYY-MM-DD).
+  @$pb.TagNumber(2)
+  $pb.PbList<$core.String> get liftedDates => $_getList(1);
+
+  /// The largest lift of a quarter hour on those dates, in centidegrees. Unset where no date is
+  /// lifted.
+  @$pb.TagNumber(3)
+  $core.int get largestLiftCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set largestLiftCentidegrees($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLargestLiftCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLargestLiftCentidegrees() => $_clearField(3);
+
+  /// How many of the window's quarter hours (HeatCurveView.window_from, window_to) were left out
+  /// of the bands as lifted.
+  @$pb.TagNumber(4)
+  $core.int get quartersLeftOut => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set quartersLeftOut($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasQuartersLeftOut() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearQuartersLeftOut() => $_clearField(4);
 }
 
 /// A plant's heating season as it stands (HEATING SEASON).

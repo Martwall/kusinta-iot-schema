@@ -1732,6 +1732,14 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
    * @generated from field: google.protobuf.Timestamp next_proposal_at = 22;
    */
   nextProposalAt?: Timestamp | undefined;
+
+  /**
+   * The heat source's outdoor reading set against the weather (OUTDOOR READING). Unset where it
+   * is not judged, and where figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveOutdoorReading outdoor_reading = 23;
+   */
+  outdoorReading?: HeatCurveOutdoorReading | undefined;
 };
 
 /**
@@ -1924,6 +1932,51 @@ export declare type HeatCurveViews = Message<"kusinta.iot.heating.v1.HeatCurveVi
  * Use `create(HeatCurveViewsSchema)` to create a new message.
  */
 export declare const HeatCurveViewsSchema: GenMessage<HeatCurveViews>;
+
+/**
+ * A heat source's outdoor reading set against the weather (OUTDOOR READING).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurveOutdoorReading
+ */
+export declare type HeatCurveOutdoorReading = Message<"kusinta.iot.heating.v1.HeatCurveOutdoorReading"> & {
+  /**
+   * Whether the reading is judged lifted: on at least the gateway's number of lifted dates
+   * among the building's last fourteen local dates.
+   *
+   * @generated from field: bool lifted = 1;
+   */
+  lifted: boolean;
+
+  /**
+   * The lifted dates among the building's last fourteen local dates, newest first, each as an
+   * ISO 8601 calendar date (YYYY-MM-DD).
+   *
+   * @generated from field: repeated string lifted_dates = 2;
+   */
+  liftedDates: string[];
+
+  /**
+   * The largest lift of a quarter hour on those dates, in centidegrees. Unset where no date is
+   * lifted.
+   *
+   * @generated from field: optional uint32 largest_lift_centidegrees = 3;
+   */
+  largestLiftCentidegrees?: number | undefined;
+
+  /**
+   * How many of the window's quarter hours (HeatCurveView.window_from, window_to) were left out
+   * of the bands as lifted.
+   *
+   * @generated from field: uint32 quarters_left_out = 4;
+   */
+  quartersLeftOut: number;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurveOutdoorReading.
+ * Use `create(HeatCurveOutdoorReadingSchema)` to create a new message.
+ */
+export declare const HeatCurveOutdoorReadingSchema: GenMessage<HeatCurveOutdoorReading>;
 
 /**
  * A plant's heating season as it stands (HEATING SEASON).

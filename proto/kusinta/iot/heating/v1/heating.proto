@@ -1011,7 +1011,9 @@ message EnergyPriceAdder {
 // reported so (HeatSourceReadings.producing) or where the gateway detected a charge of the tank
 // itself, as it must for a heat source that reports no production. The 24 hours after any change
 // to the curve settings (curve_settings_changed_at) are left out too, while the zones settle;
-// quarter hours before it are kept, each judged by the supply it actually got. The bands
+// quarter hours before it are kept, each judged by the supply it actually got. A quarter hour in
+// which the heat source's outdoor reading was lifted above the weather (OUTDOOR READING) is left
+// out of the bands too: it would file the supply of a colder hour under a milder band. The bands
 // observe; what the curve could be is OPTIMISED CURVE, and the gateway sets a curve on the heat
 // source only as APPLYING says.
 //
@@ -1247,6 +1249,10 @@ message HeatCurveView {
   // earliest, the interval after the last lowering suggestion or apply of the preview
   // (UPDATES). Unset otherwise.
   google.protobuf.Timestamp next_proposal_at = 22;
+
+  // The heat source's outdoor reading set against the weather (OUTDOOR READING). Unset where it
+  // is not judged, and where figures are withheld.
+  HeatCurveOutdoorReading outdoor_reading = 23;
 }
 
 // How hard a heat source's compressor works (COMPRESSOR WEAR).
@@ -1535,6 +1541,32 @@ message HeatCurveViews {
 // answered at once with a step back (HeatCurveSuggestion.step_back). Applied, the step back
 // restarts the interval lower curves wait (UPDATES), as a revert of the step down would, so
 // that the step down is not suggested again at once.
+//
+// OUTDOOR READING (HeatCurveView.outdoor_reading). Whether the heat source's own outdoor
+// reading rises above the weather, as an outdoor sensor does in direct sun, or in air that
+// sun-warmed surfaces around it warm: its curve then reads a milder day than it is, lowers the
+// supply, and the rooms cool. Each quarter hour's reading is set against the weather for the
+// building's place at that time, as the gateway holds it (planning.v1, the forecast as told
+// nearest to then). Their difference, less the reading's usual offset from the weather at night
+// (the median over the nights of the last days held, such as seven, from midnight to six in the
+// building's local time), is the quarter hour's lift. A quarter hour is lifted from when its
+// lift reaches the gateway's margin (such as 4 °C) until it falls below a lower one (such as
+// 2 °C); a weather front raises the weather with the reading, and so lifts nothing. A local date
+// is lifted on at least the gateway's number of lifted quarter hours in it (such as four), and
+// the reading is judged lifted on at least its number of lifted dates (such as two) among the
+// building's last fourteen local dates, today's included. Every lifted quarter hour is left out
+// of the bands (WHAT IT SHOWS) and of the blocks of each day judged since (LIVING CURVE; a day
+// judged before is not judged again), whether or not the reading is judged lifted.
+// It is advice to whoever is given the figures, never a condition: nothing waits on it and
+// nothing is refused for it. A client says what it costs (on sunny days the curve reads a
+// milder day than it is, so the supply drops and the rooms cool), and what may be done, by
+// effort: see that the sensor is out of direct sun; keep it clear of surfaces and air pockets
+// the sun warms, as a corner, eaves, a dark wall or a shed; or move it to a north-facing wall in
+// open air, away from windows and vents. Not judged where no weather is held for the building's
+// place, where the building's time zone is not known, or where the heat source gives no outdoor
+// reading. Given with the figures (WHO SEES IT): left out where they are withheld. A home's
+// plant counts no quarter hour from before its household's start, its last Clear history or its
+// wipe, as its bands do.
 
 // A plant's update mode (UPDATES). A closed list that grows only by a release of this schema.
 enum HeatCurveUpdateMode {
@@ -1563,6 +1595,25 @@ enum HeatingSeasonBasis {
 
   // The plant was first heard during the season: it counts from then.
   HEATING_SEASON_BASIS_JOINED = 3;
+}
+
+// A heat source's outdoor reading set against the weather (OUTDOOR READING).
+message HeatCurveOutdoorReading {
+  // Whether the reading is judged lifted: on at least the gateway's number of lifted dates
+  // among the building's last fourteen local dates.
+  bool lifted = 1;
+
+  // The lifted dates among the building's last fourteen local dates, newest first, each as an
+  // ISO 8601 calendar date (YYYY-MM-DD).
+  repeated string lifted_dates = 2;
+
+  // The largest lift of a quarter hour on those dates, in centidegrees. Unset where no date is
+  // lifted.
+  optional uint32 largest_lift_centidegrees = 3;
+
+  // How many of the window's quarter hours (HeatCurveView.window_from, window_to) were left out
+  // of the bands as lifted.
+  uint32 quarters_left_out = 4;
 }
 
 // A plant's heating season as it stands (HEATING SEASON).
