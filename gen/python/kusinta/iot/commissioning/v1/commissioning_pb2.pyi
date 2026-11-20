@@ -89,6 +89,8 @@ class ReadinessGateKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     READINESS_GATE_KIND_NO_COMFORT_COST: _ClassVar[ReadinessGateKind]
     READINESS_GATE_KIND_SAVING_AFTER_COSTS: _ClassVar[ReadinessGateKind]
     READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_NEAR_TARGET: _ClassVar[ReadinessGateKind]
+    READINESS_GATE_KIND_ABOVE_TARGET: _ClassVar[ReadinessGateKind]
 
 class TestKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -203,6 +205,8 @@ READINESS_GATE_KIND_ROOMS_JUDGED: ReadinessGateKind
 READINESS_GATE_KIND_NO_COMFORT_COST: ReadinessGateKind
 READINESS_GATE_KIND_SAVING_AFTER_COSTS: ReadinessGateKind
 READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS: ReadinessGateKind
+READINESS_GATE_KIND_NEAR_TARGET: ReadinessGateKind
+READINESS_GATE_KIND_ABOVE_TARGET: ReadinessGateKind
 TEST_KIND_UNSPECIFIED: TestKind
 TEST_KIND_OUTPUT_LEASE: TestKind
 TEST_KIND_ZONE_EFFECT: TestKind

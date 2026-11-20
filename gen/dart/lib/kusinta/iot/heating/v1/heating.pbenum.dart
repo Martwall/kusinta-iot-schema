@@ -142,15 +142,30 @@ class PriceRule extends $pb.ProtobufEnum {
   static const PriceRule PRICE_RULE_HOT_WATER =
       PriceRule._(3, _omitEnumNames ? '' : 'PRICE_RULE_HOT_WATER');
 
+  /// Holds each of the plant's floor zones (FloorZone) on for a share of a fixed cycle, the share
+  /// set from its control room's error against its target, instead of on until the room reaches
+  /// its target and off until it falls back. Not steered by price, and saves nothing by price: its
+  /// shadow days are counts only (ShadowDay.counts_only), judged by how near their targets the
+  /// rooms were held and how often the zones started (ShadowDay.floor_control,
+  /// floor_control_as_run). Zones whose control room is one hold one share. The cycle, the share
+  /// and how it follows the error are the gateway's. Where a zone's control room is not heard it
+  /// runs a cautious fixed share (climate.v1.CLIMATE_EXPLANATION_KIND_NO_READING), and where no
+  /// share is yet known for it, it is left at rest. A window open in the control room holds the
+  /// zone off, and a price rule that drives the zone (PRICE_RULE_FLOOR_PRE_HEAT, LIVE) decides it
+  /// over the share while it does. Holds no input of the plant: not a blocking rule.
+  static const PriceRule PRICE_RULE_FLOOR_TIME_SHARE =
+      PriceRule._(4, _omitEnumNames ? '' : 'PRICE_RULE_FLOOR_TIME_SHARE');
+
   static const $core.List<PriceRule> values = <PriceRule>[
     PRICE_RULE_UNSPECIFIED,
     PRICE_RULE_ADD_ON_HEATER_BLOCK,
     PRICE_RULE_FLOOR_PRE_HEAT,
     PRICE_RULE_HOT_WATER,
+    PRICE_RULE_FLOOR_TIME_SHARE,
   ];
 
   static final $core.List<PriceRule?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 3);
+      $pb.ProtobufEnum.$_initByValueList(values, 4);
   static PriceRule? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

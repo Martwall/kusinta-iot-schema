@@ -418,7 +418,10 @@ message HeatingRecord {
 }
 
 // PRICE RULES. A price rule steers one lever of a heat source by the price of electricity, by
-// rules fixed in advance rather than by an optimiser's plan. Each runs per plant, judges the
+// rules fixed in advance rather than by an optimiser's plan. One, PRICE_RULE_FLOOR_TIME_SHARE,
+// is not steered by price at all: it is a price rule in how it is run, switched, recorded and
+// judged, and in who sees it, so that a change in how floor zones are held is shadowed and put
+// LIVE as the others are. Each runs per plant, judges the
 // rooms it heats by their comfort band (climate.v1.ComfortPreference, THE BAND), and is switched
 // per plant (PriceRuleMode). Every safety rule holds over each, whatever its mode: the plant's
 // block cap and the compressor's rules ("plant.max_block_minutes", commissioning.v1 BLOCKS ON A
@@ -511,6 +514,19 @@ enum PriceRule {
   // driven (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on
   // heater buys its heat at the dearest rate.
   PRICE_RULE_HOT_WATER = 3;
+
+  // Holds each of the plant's floor zones (FloorZone) on for a share of a fixed cycle, the share
+  // set from its control room's error against its target, instead of on until the room reaches
+  // its target and off until it falls back. Not steered by price, and saves nothing by price: its
+  // shadow days are counts only (ShadowDay.counts_only), judged by how near their targets the
+  // rooms were held and how often the zones started (ShadowDay.floor_control,
+  // floor_control_as_run). Zones whose control room is one hold one share. The cycle, the share
+  // and how it follows the error are the gateway's. Where a zone's control room is not heard it
+  // runs a cautious fixed share (climate.v1.CLIMATE_EXPLANATION_KIND_NO_READING), and where no
+  // share is yet known for it, it is left at rest. A window open in the control room holds the
+  // zone off, and a price rule that drives the zone (PRICE_RULE_FLOOR_PRE_HEAT, LIVE) decides it
+  // over the share while it does. Holds no input of the plant: not a blocking rule.
+  PRICE_RULE_FLOOR_TIME_SHARE = 4;
 }
 
 // How a price rule runs on a plant.
@@ -810,7 +826,8 @@ message ShadowDay {
   optional sint32 cautious_saving_share_permille = 10;
 
   // A day given for its counts alone: a share-scored rule's day whose share could not be known
-  // (its heat cost too near zero to divide by). Then saving_share_permille and
+  // (its heat cost too near zero to divide by), and every day of a rule that saves nothing by
+  // price (PRICE_RULE_FLOOR_TIME_SHARE). Then saving_share_permille and
   // cautious_saving_share_permille are unset and the money fields 0, and a client shows its
   // breaches and overheats only, never a saving of 0.
   bool counts_only = 11;
@@ -838,6 +855,37 @@ message ShadowDay {
   // converts the day's figures at that rate, listed in ShadowSummary.exchange_rates, and never at
   // another. Empty on SPOT, and then a client converts the day at the rate in force on it.
   string rate_published_on = 15;
+
+  // For a rule that steers floor zones by their rooms' error (PRICE_RULE_FLOOR_TIME_SHARE): how
+  // the rooms it judges would have been held under it, as predicted (floor_control), and how they
+  // were held under the control that ran that day (floor_control_as_run), counted alike, so that
+  // a client sets the two side by side. Both unset for every other rule, and on a day kept before
+  // they were computed.
+  FloorControlCounts floor_control = 16;
+  FloorControlCounts floor_control_as_run = 17;
+}
+
+// How a plant's floor zones held the rooms one rule judges over one day (ShadowDay.floor_control,
+// floor_control_as_run). A quarter hour in which a room's window was open is not counted for that
+// room, nor one in which its temperature was not heard.
+message FloorControlCounts {
+  // The quarter hours counted, per room: each room judged counts once in each quarter hour, so a
+  // whole day of two rooms counts 192. The other counts are of the same room quarter hours.
+  uint32 room_quarters = 1;
+
+  // Of room_quarters, those in which the room was, or was predicted to be, within the tolerance of
+  // its target (near_target_tolerance_centidegrees) either side, and those in which it was above
+  // its target by more than the tolerance.
+  uint32 near_target_room_quarters = 2;
+  uint32 above_target_room_quarters = 3;
+
+  // The tolerance, in centidegrees: the gateway's, stated so that a client can say what near
+  // means, and never assumed.
+  uint32 near_target_tolerance_centidegrees = 4;
+
+  // How many times the plant's floor zones were, or would have been, switched on: zones switched
+  // as one, sharing a control room, count once together.
+  uint32 zone_starts = 5;
 }
 
 // One price rule of one plant of a home, scored day by day against one comfort band.

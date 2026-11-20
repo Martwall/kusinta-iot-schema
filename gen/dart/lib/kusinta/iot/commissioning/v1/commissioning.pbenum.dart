@@ -360,6 +360,22 @@ class ReadinessGateKind extends $pb.ProtobufEnum {
       ReadinessGateKind._(6,
           _omitEnumNames ? '' : 'READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS');
 
+  /// For a rule that steers floor zones by their rooms' error (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE):
+  /// the room quarter hours near target over the days counted, under the rule as predicted (have)
+  /// and under the control that ran (need) (heating.v1.FloorControlCounts
+  /// near_target_room_quarters). Met when have reaches need.
+  static const ReadinessGateKind READINESS_GATE_KIND_NEAR_TARGET =
+      ReadinessGateKind._(
+          7, _omitEnumNames ? '' : 'READINESS_GATE_KIND_NEAR_TARGET');
+
+  /// For the same rule: the room quarter hours above target by more than the tolerance over the
+  /// days counted, under the rule as predicted (have) and under the control that ran (need)
+  /// (heating.v1.FloorControlCounts above_target_room_quarters). Met when have is below need, or
+  /// both are 0.
+  static const ReadinessGateKind READINESS_GATE_KIND_ABOVE_TARGET =
+      ReadinessGateKind._(
+          8, _omitEnumNames ? '' : 'READINESS_GATE_KIND_ABOVE_TARGET');
+
   static const $core.List<ReadinessGateKind> values = <ReadinessGateKind>[
     READINESS_GATE_KIND_UNSPECIFIED,
     READINESS_GATE_KIND_MODELLED_BLOCKS,
@@ -368,10 +384,12 @@ class ReadinessGateKind extends $pb.ProtobufEnum {
     READINESS_GATE_KIND_NO_COMFORT_COST,
     READINESS_GATE_KIND_SAVING_AFTER_COSTS,
     READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS,
+    READINESS_GATE_KIND_NEAR_TARGET,
+    READINESS_GATE_KIND_ABOVE_TARGET,
   ];
 
   static final $core.List<ReadinessGateKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 8);
   static ReadinessGateKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

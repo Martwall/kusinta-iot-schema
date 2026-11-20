@@ -39,6 +39,7 @@ class PriceRule(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     PRICE_RULE_ADD_ON_HEATER_BLOCK: _ClassVar[PriceRule]
     PRICE_RULE_FLOOR_PRE_HEAT: _ClassVar[PriceRule]
     PRICE_RULE_HOT_WATER: _ClassVar[PriceRule]
+    PRICE_RULE_FLOOR_TIME_SHARE: _ClassVar[PriceRule]
 
 class PriceRuleMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -184,6 +185,7 @@ PRICE_RULE_UNSPECIFIED: PriceRule
 PRICE_RULE_ADD_ON_HEATER_BLOCK: PriceRule
 PRICE_RULE_FLOOR_PRE_HEAT: PriceRule
 PRICE_RULE_HOT_WATER: PriceRule
+PRICE_RULE_FLOOR_TIME_SHARE: PriceRule
 PRICE_RULE_MODE_UNSPECIFIED: PriceRuleMode
 PRICE_RULE_MODE_OFF: PriceRuleMode
 PRICE_RULE_MODE_SHADOW: PriceRuleMode
@@ -528,7 +530,7 @@ class HeatBlockHistory(_message.Message):
     def __init__(self, plant_id: _Optional[str] = ..., kept_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., blocks: _Optional[_Iterable[_Union[HeatBlock, _Mapping]]] = ..., releases: _Optional[_Iterable[_Union[HeatBlockRelease, _Mapping]]] = ..., rule_changes: _Optional[_Iterable[_Union[PriceRuleChange, _Mapping]]] = ...) -> None: ...
 
 class ShadowDay(_message.Message):
-    __slots__ = ("date", "net_saving_micro_eur", "recovery_cost_micro_eur", "blocked_quarters", "breach_quarters", "overheat_quarters", "no_price_quarters", "cautious_net_saving_micro_eur", "saving_share_permille", "cautious_saving_share_permille", "counts_only", "share_weight", "price_basis", "adder_source", "rate_published_on")
+    __slots__ = ("date", "net_saving_micro_eur", "recovery_cost_micro_eur", "blocked_quarters", "breach_quarters", "overheat_quarters", "no_price_quarters", "cautious_net_saving_micro_eur", "saving_share_permille", "cautious_saving_share_permille", "counts_only", "share_weight", "price_basis", "adder_source", "rate_published_on", "floor_control", "floor_control_as_run")
     DATE_FIELD_NUMBER: _ClassVar[int]
     NET_SAVING_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
     RECOVERY_COST_MICRO_EUR_FIELD_NUMBER: _ClassVar[int]
@@ -544,6 +546,8 @@ class ShadowDay(_message.Message):
     PRICE_BASIS_FIELD_NUMBER: _ClassVar[int]
     ADDER_SOURCE_FIELD_NUMBER: _ClassVar[int]
     RATE_PUBLISHED_ON_FIELD_NUMBER: _ClassVar[int]
+    FLOOR_CONTROL_FIELD_NUMBER: _ClassVar[int]
+    FLOOR_CONTROL_AS_RUN_FIELD_NUMBER: _ClassVar[int]
     date: str
     net_saving_micro_eur: int
     recovery_cost_micro_eur: int
@@ -559,7 +563,23 @@ class ShadowDay(_message.Message):
     price_basis: ShadowPriceBasis
     adder_source: EnergyPriceAdderSource
     rate_published_on: str
-    def __init__(self, date: _Optional[str] = ..., net_saving_micro_eur: _Optional[int] = ..., recovery_cost_micro_eur: _Optional[int] = ..., blocked_quarters: _Optional[int] = ..., breach_quarters: _Optional[int] = ..., overheat_quarters: _Optional[int] = ..., no_price_quarters: _Optional[int] = ..., cautious_net_saving_micro_eur: _Optional[int] = ..., saving_share_permille: _Optional[int] = ..., cautious_saving_share_permille: _Optional[int] = ..., counts_only: _Optional[bool] = ..., share_weight: _Optional[int] = ..., price_basis: _Optional[_Union[ShadowPriceBasis, str]] = ..., adder_source: _Optional[_Union[EnergyPriceAdderSource, str]] = ..., rate_published_on: _Optional[str] = ...) -> None: ...
+    floor_control: FloorControlCounts
+    floor_control_as_run: FloorControlCounts
+    def __init__(self, date: _Optional[str] = ..., net_saving_micro_eur: _Optional[int] = ..., recovery_cost_micro_eur: _Optional[int] = ..., blocked_quarters: _Optional[int] = ..., breach_quarters: _Optional[int] = ..., overheat_quarters: _Optional[int] = ..., no_price_quarters: _Optional[int] = ..., cautious_net_saving_micro_eur: _Optional[int] = ..., saving_share_permille: _Optional[int] = ..., cautious_saving_share_permille: _Optional[int] = ..., counts_only: _Optional[bool] = ..., share_weight: _Optional[int] = ..., price_basis: _Optional[_Union[ShadowPriceBasis, str]] = ..., adder_source: _Optional[_Union[EnergyPriceAdderSource, str]] = ..., rate_published_on: _Optional[str] = ..., floor_control: _Optional[_Union[FloorControlCounts, _Mapping]] = ..., floor_control_as_run: _Optional[_Union[FloorControlCounts, _Mapping]] = ...) -> None: ...
+
+class FloorControlCounts(_message.Message):
+    __slots__ = ("room_quarters", "near_target_room_quarters", "above_target_room_quarters", "near_target_tolerance_centidegrees", "zone_starts")
+    ROOM_QUARTERS_FIELD_NUMBER: _ClassVar[int]
+    NEAR_TARGET_ROOM_QUARTERS_FIELD_NUMBER: _ClassVar[int]
+    ABOVE_TARGET_ROOM_QUARTERS_FIELD_NUMBER: _ClassVar[int]
+    NEAR_TARGET_TOLERANCE_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    ZONE_STARTS_FIELD_NUMBER: _ClassVar[int]
+    room_quarters: int
+    near_target_room_quarters: int
+    above_target_room_quarters: int
+    near_target_tolerance_centidegrees: int
+    zone_starts: int
+    def __init__(self, room_quarters: _Optional[int] = ..., near_target_room_quarters: _Optional[int] = ..., above_target_room_quarters: _Optional[int] = ..., near_target_tolerance_centidegrees: _Optional[int] = ..., zone_starts: _Optional[int] = ...) -> None: ...
 
 class ShadowBandSeries(_message.Message):
     __slots__ = ("plant_id", "rule", "below_target_centidegrees", "above_target_centidegrees", "days")

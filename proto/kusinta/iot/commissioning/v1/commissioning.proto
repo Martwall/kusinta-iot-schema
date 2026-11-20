@@ -683,7 +683,9 @@ message FeatureStatus {
 // within the rule's current stretch in SHADOW, at most PriceRuleReadiness.window_days of them. The
 // stretch starts at the rule's latest change to SHADOW (heating.v1.PriceRuleChange), or, where
 // it started SHADOW and was never changed, at its start. A day of the window counts only where
-// every quarter hour of it had a day-ahead price (ShadowDay.no_price_quarters 0). Only rooms
+// every quarter hour of it had a day-ahead price (ShadowDay.no_price_quarters 0), save for a rule
+// not steered by price (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE), whose every day scored counts.
+// Only rooms
 // the gateway can judge, those whose temperature it has heard recently enough, are judged; the
 // rooms it heats but cannot judge are counted (rooms_left_out). It is worked out from the days
 // still kept: a household's Clear history or the home's wipe (webrtc.v1 household.proto) starts
@@ -784,6 +786,18 @@ enum ReadinessGateKind {
   // one for each block that stops the compressor. 0 for a rule whose blocks never stop it, such as
   // PRICE_RULE_ADD_ON_HEATER_BLOCK. Met when have is within need.
   READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS = 6;
+
+  // For a rule that steers floor zones by their rooms' error (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE):
+  // the room quarter hours near target over the days counted, under the rule as predicted (have)
+  // and under the control that ran (need) (heating.v1.FloorControlCounts
+  // near_target_room_quarters). Met when have reaches need.
+  READINESS_GATE_KIND_NEAR_TARGET = 7;
+
+  // For the same rule: the room quarter hours above target by more than the tolerance over the
+  // days counted, under the rule as predicted (have) and under the control that ran (need)
+  // (heating.v1.FloorControlCounts above_target_room_quarters). Met when have is below need, or
+  // both are 0.
+  READINESS_GATE_KIND_ABOVE_TARGET = 8;
 }
 
 // One gate of a price rule's readiness (READINESS, THE GATES).
