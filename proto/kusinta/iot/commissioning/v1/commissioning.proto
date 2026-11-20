@@ -116,7 +116,29 @@ option optimize_for = SPEED;
 //       harder (SG Ready "low price"), as an installer saw on a bench test. Makers differ, and
 //       a manual does not settle it for a given model and setting. True, or unknown: no rule
 //       boosts through it, since a boost on the add-on heater buys heat at the dearest rate.
-//       HEAT_SOURCE; OPTIONAL; INSPECTED.
+//       False is not enough on its own: a boost needs "plant.boost_compressor_only" true as
+//       well. HEAT_SOURCE; OPTIONAL; INSPECTED.
+//   "plant.boost_compressor_only"  bool; a plant that binds sg_ready_boost. Whether the heat
+//       source answers that input on its compressor alone: no add-on or immersion heater for
+//       its space heating or its hot water, and no hot-water mode of its own that brings one
+//       in, as an installer saw on a bench test. A heat source may bring in no add-on heater
+//       ("plant.boost_uses_add_on" false) and still raise its hot water by its immersion
+//       heater, so this is asked as well. The gateway drives sg_ready_boost away from rest
+//       only while this is true and "plant.boost_uses_add_on" is false: false or unknown, and
+//       no rule boosts through it (heating.v1 PRICE_RULE_HOT_WATER). A commissioning test of
+//       the input is not held to it. HEAT_SOURCE; OPTIONAL; INSPECTED.
+//   "plant.own_price_function"  bool; a plant steered through its heat pump's inputs
+//       (heating.v1.HeatPumpControl), the plants the price rules run on. Whether the heat
+//       source's own price function is on: the heat source moving its own heating or hot water
+//       by an electricity price it gets itself, as an installer read it at the heat source.
+//       True, or unknown: no rule of the plant steered by price (every heating.v1.PriceRule but
+//       PRICE_RULE_FLOOR_TIME_SHARE, which is not) is put LIVE (webrtc.v1 SetPriceRuleMode,
+//       "rule_own_price_function"), and one LIVE already drives nothing, since the heat
+//       source's own shifting and the rule's would fight or stack. SHADOW is not held to it:
+//       it scores the rule against what the heat source did, its own shifting included. A need
+//       of the plant feature (FeatureStatus.needs) until it is answered false, an answer of
+//       true included, so that the feature status says why no such rule is driven.
+//       HEAT_SOURCE; FOR_FEATURE PLANT; INSPECTED.
 //   "hot_water.block_floor_centidegrees"  uint, 3500 to 5500; a plant with a hot-water tank
 //       that binds hot_water_block. The tank's top temperature, in centidegrees, at which the
 //       gateway ends a block of its hot water (HEAT_BLOCK_END_HOT_WATER_LOW), so that a held
