@@ -666,7 +666,7 @@ class HeatCurveBand(_message.Message):
     def __init__(self, outdoor_from_centidegrees: _Optional[int] = ..., outdoor_to_centidegrees: _Optional[int] = ..., quarters: _Optional[int] = ..., calculated_supply_centidegrees: _Optional[int] = ..., supply_centidegrees: _Optional[int] = ..., add_on_heat_wh: _Optional[int] = ..., add_on_running_permille: _Optional[int] = ..., limit: _Optional[_Union[HeatCurveLimit, _Mapping]] = ...) -> None: ...
 
 class HeatCurveView(_message.Message):
-    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions", "history", "no_suggestion_reason", "compressor_wear", "preview", "update_mode", "season", "next_proposal_at")
+    __slots__ = ("plant_id", "plant_name", "window_from", "window_to", "bands", "threshold_permille", "opening_percentile", "curve_settings", "curve_settings_changed_at", "figures_withheld", "optimised", "suggestion", "last_applied", "automatic_savings", "room_target_suggestions", "history", "no_suggestion_reason", "compressor_wear", "preview", "update_mode", "season", "next_proposal_at", "outdoor_reading")
     PLANT_ID_FIELD_NUMBER: _ClassVar[int]
     PLANT_NAME_FIELD_NUMBER: _ClassVar[int]
     WINDOW_FROM_FIELD_NUMBER: _ClassVar[int]
@@ -689,6 +689,7 @@ class HeatCurveView(_message.Message):
     UPDATE_MODE_FIELD_NUMBER: _ClassVar[int]
     SEASON_FIELD_NUMBER: _ClassVar[int]
     NEXT_PROPOSAL_AT_FIELD_NUMBER: _ClassVar[int]
+    OUTDOOR_READING_FIELD_NUMBER: _ClassVar[int]
     plant_id: str
     plant_name: str
     window_from: _timestamp_pb2.Timestamp
@@ -711,7 +712,8 @@ class HeatCurveView(_message.Message):
     update_mode: HeatCurveUpdateMode
     season: HeatingSeason
     next_proposal_at: _timestamp_pb2.Timestamp
-    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ..., history: _Optional[_Iterable[_Union[HeatCurveHistoryEntry, _Mapping]]] = ..., no_suggestion_reason: _Optional[_Union[HeatCurveNoSuggestionReason, str]] = ..., compressor_wear: _Optional[_Union[CompressorWear, _Mapping]] = ..., preview: _Optional[_Union[HeatCurvePreview, _Mapping]] = ..., update_mode: _Optional[_Union[HeatCurveUpdateMode, str]] = ..., season: _Optional[_Union[HeatingSeason, _Mapping]] = ..., next_proposal_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    outdoor_reading: HeatCurveOutdoorReading
+    def __init__(self, plant_id: _Optional[str] = ..., plant_name: _Optional[str] = ..., window_from: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., window_to: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., bands: _Optional[_Iterable[_Union[HeatCurveBand, _Mapping]]] = ..., threshold_permille: _Optional[int] = ..., opening_percentile: _Optional[int] = ..., curve_settings: _Optional[_Union[_device_pb2.HeatSourceReadings, _Mapping]] = ..., curve_settings_changed_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., figures_withheld: _Optional[bool] = ..., optimised: _Optional[_Union[HeatCurveOptimised, _Mapping]] = ..., suggestion: _Optional[_Union[HeatCurveSuggestion, _Mapping]] = ..., last_applied: _Optional[_Union[HeatCurveApplied, _Mapping]] = ..., automatic_savings: _Optional[_Union[HeatCurveAutomaticSavings, str]] = ..., room_target_suggestions: _Optional[_Iterable[_Union[HeatCurveRoomTargetSuggestion, _Mapping]]] = ..., history: _Optional[_Iterable[_Union[HeatCurveHistoryEntry, _Mapping]]] = ..., no_suggestion_reason: _Optional[_Union[HeatCurveNoSuggestionReason, str]] = ..., compressor_wear: _Optional[_Union[CompressorWear, _Mapping]] = ..., preview: _Optional[_Union[HeatCurvePreview, _Mapping]] = ..., update_mode: _Optional[_Union[HeatCurveUpdateMode, str]] = ..., season: _Optional[_Union[HeatingSeason, _Mapping]] = ..., next_proposal_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., outdoor_reading: _Optional[_Union[HeatCurveOutdoorReading, _Mapping]] = ...) -> None: ...
 
 class CompressorWear(_message.Message):
     __slots__ = ("days", "lifetime_run_length_minutes", "short_cycling")
@@ -762,6 +764,18 @@ class HeatCurveViews(_message.Message):
     VIEWS_FIELD_NUMBER: _ClassVar[int]
     views: _containers.RepeatedCompositeFieldContainer[HeatCurveView]
     def __init__(self, views: _Optional[_Iterable[_Union[HeatCurveView, _Mapping]]] = ...) -> None: ...
+
+class HeatCurveOutdoorReading(_message.Message):
+    __slots__ = ("lifted", "lifted_dates", "largest_lift_centidegrees", "quarters_left_out")
+    LIFTED_FIELD_NUMBER: _ClassVar[int]
+    LIFTED_DATES_FIELD_NUMBER: _ClassVar[int]
+    LARGEST_LIFT_CENTIDEGREES_FIELD_NUMBER: _ClassVar[int]
+    QUARTERS_LEFT_OUT_FIELD_NUMBER: _ClassVar[int]
+    lifted: bool
+    lifted_dates: _containers.RepeatedScalarFieldContainer[str]
+    largest_lift_centidegrees: int
+    quarters_left_out: int
+    def __init__(self, lifted: _Optional[bool] = ..., lifted_dates: _Optional[_Iterable[str]] = ..., largest_lift_centidegrees: _Optional[int] = ..., quarters_left_out: _Optional[int] = ...) -> None: ...
 
 class HeatingSeason(_message.Message):
     __slots__ = ("in_season", "since", "basis")

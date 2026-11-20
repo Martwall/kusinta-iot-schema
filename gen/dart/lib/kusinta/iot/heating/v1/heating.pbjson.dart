@@ -1916,6 +1916,14 @@ const HeatCurveView$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'nextProposalAt'
     },
+    {
+      '1': 'outdoor_reading',
+      '3': 23,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.HeatCurveOutdoorReading',
+      '10': 'outdoorReading'
+    },
   ],
 };
 
@@ -1948,7 +1956,9 @@ final $typed_data.Uint8List heatCurveViewDescriptor = $convert.base64Decode(
     'ZRgUIAEoDjIrLmt1c2ludGEuaW90LmhlYXRpbmcudjEuSGVhdEN1cnZlVXBkYXRlTW9kZVIKdX'
     'BkYXRlTW9kZRI9CgZzZWFzb24YFSABKAsyJS5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkhlYXRp'
     'bmdTZWFzb25SBnNlYXNvbhJEChBuZXh0X3Byb3Bvc2FsX2F0GBYgASgLMhouZ29vZ2xlLnByb3'
-    'RvYnVmLlRpbWVzdGFtcFIObmV4dFByb3Bvc2FsQXQ=');
+    'RvYnVmLlRpbWVzdGFtcFIObmV4dFByb3Bvc2FsQXQSWAoPb3V0ZG9vcl9yZWFkaW5nGBcgASgL'
+    'Mi8ua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0Q3VydmVPdXRkb29yUmVhZGluZ1IOb3V0ZG'
+    '9vclJlYWRpbmc=');
 
 @$core.Deprecated('Use compressorWearDescriptor instead')
 const CompressorWear$json = {
@@ -2138,6 +2148,42 @@ const HeatCurveViews$json = {
 final $typed_data.Uint8List heatCurveViewsDescriptor = $convert.base64Decode(
     'Cg5IZWF0Q3VydmVWaWV3cxI7CgV2aWV3cxgBIAMoCzIlLmt1c2ludGEuaW90LmhlYXRpbmcudj'
     'EuSGVhdEN1cnZlVmlld1IFdmlld3M=');
+
+@$core.Deprecated('Use heatCurveOutdoorReadingDescriptor instead')
+const HeatCurveOutdoorReading$json = {
+  '1': 'HeatCurveOutdoorReading',
+  '2': [
+    {'1': 'lifted', '3': 1, '4': 1, '5': 8, '10': 'lifted'},
+    {'1': 'lifted_dates', '3': 2, '4': 3, '5': 9, '10': 'liftedDates'},
+    {
+      '1': 'largest_lift_centidegrees',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'largestLiftCentidegrees',
+      '17': true
+    },
+    {
+      '1': 'quarters_left_out',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '10': 'quartersLeftOut'
+    },
+  ],
+  '8': [
+    {'1': '_largest_lift_centidegrees'},
+  ],
+};
+
+/// Descriptor for `HeatCurveOutdoorReading`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List heatCurveOutdoorReadingDescriptor = $convert.base64Decode(
+    'ChdIZWF0Q3VydmVPdXRkb29yUmVhZGluZxIWCgZsaWZ0ZWQYASABKAhSBmxpZnRlZBIhCgxsaW'
+    'Z0ZWRfZGF0ZXMYAiADKAlSC2xpZnRlZERhdGVzEj8KGWxhcmdlc3RfbGlmdF9jZW50aWRlZ3Jl'
+    'ZXMYAyABKA1IAFIXbGFyZ2VzdExpZnRDZW50aWRlZ3JlZXOIAQESKgoRcXVhcnRlcnNfbGVmdF'
+    '9vdXQYBCABKA1SD3F1YXJ0ZXJzTGVmdE91dEIcChpfbGFyZ2VzdF9saWZ0X2NlbnRpZGVncmVl'
+    'cw==');
 
 @$core.Deprecated('Use heatingSeasonDescriptor instead')
 const HeatingSeason$json = {
