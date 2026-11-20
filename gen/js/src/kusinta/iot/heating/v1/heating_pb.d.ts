@@ -371,7 +371,9 @@ export declare type FloorCircuit = Message<"kusinta.iot.heating.v1.FloorCircuit"
    * Probes on the supply (after mixing) and the return. Each names the Matter Temperature
    * Measurement cluster's MeasuredValue (cluster 0x0402, attribute 0x0000, in centidegrees) on
    * the probe's endpoint; a put naming any other attribute, or a vendor parameter, is refused as
-   * INVALID_REQUEST, so that every reading of a probe is a temperature in one unit.
+   * INVALID_REQUEST, so that every reading of a probe is a temperature in one unit. How far the
+   * return probe reads from the supply probe in the same water is a commissioning fact of the
+   * circuit (commissioning.v1 "floor.return_probe_offset_centidegrees").
    *
    * @generated from field: kusinta.iot.heating.v1.DeviceAttribute supply_probe = 3;
    */
