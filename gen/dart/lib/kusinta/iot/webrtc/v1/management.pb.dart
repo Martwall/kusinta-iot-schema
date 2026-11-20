@@ -5300,6 +5300,18 @@ class SetComfortWindows extends $pb.GeneratedMessage {
 ///                         not. A rule already LIVE whose periodic increase stops being known
 ///                         stays LIVE and drives nothing until it is known again, the plant's
 ///                         feature status naming the keys as needs.
+///   "rule_own_price_function"
+///                         LIVE for a rule steered by price (any but FLOOR_TIME_SHARE) while the
+///                         heat source's own price function is not answered off
+///                         ("plant.own_price_function" false, commissioning.v1), since it and
+///                         the rule would fight or stack: metadata "key" names
+///                         "plant.own_price_function", and "state" is "on" where it is answered
+///                         true and "unknown" where it is not answered with a value, so that a
+///                         client can ask for it to be turned off at the heat source, or for an
+///                         installer to state it. Checked after rule_periodic_increase_unknown.
+///                         SHADOW and OFF need it not. A rule already LIVE whose answer stops being
+///                         false stays LIVE and drives nothing until it is false again, the plant's
+///                         feature status naming the key as a need.
 ///
 /// Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
 /// and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE
