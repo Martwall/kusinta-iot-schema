@@ -6075,13 +6075,14 @@ class GetHeatCurveView extends $pb.GeneratedMessage {
   $0.SpaceId ensureHomeId() => $_ensure(1);
 }
 
-/// Applies a plant's heat curve suggestion (heating.v1 HEAT CURVE, APPLYING), answered with
-/// heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by plant_id gives it, with the
-/// apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO APPLIES IT) names; anyone
-/// else, and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
-/// Refused as FAILED_PRECONDITION with metadata:
-///   {"reason": "suggestion_changed"}  suggestion_id is not the plant's suggestion as it stands:
-///                                     a client reads the view again and shows what changed;
+/// Applies a plant's heat curve suggestion, or its preview (heating.v1 HEAT CURVE, APPLYING,
+/// PREVIEW), answered with heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by
+/// plant_id gives it, with the apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO
+/// APPLIES IT) names; anyone else, and a plant that does not exist, are refused as NOT_ENTITLED
+/// with the same metadata. Refused as FAILED_PRECONDITION with metadata:
+///   {"reason": "suggestion_changed"}  suggestion_id is neither the plant's suggestion nor its
+///                                     preview as it stands: a client reads the view again and
+///                                     shows what changed;
 ///   {"reason": "not_writable"}        mode WRITTEN where the heat source takes no write of the
 ///                                     suggestion's settings (HeatCurveSuggestion.writable);
 ///   {"reason": "nothing_to_revert"}   revert where no apply has settings to set back.
@@ -6158,8 +6159,8 @@ class ApplyHeatCurve extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearPlantId() => $_clearField(1);
 
-  /// The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id). Ignored
-  /// with revert.
+  /// The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id), or the
+  /// preview (HeatCurvePreview.preview_id). Ignored with revert.
   @$pb.TagNumber(2)
   $core.String get suggestionId => $_getSZ(1);
   @$pb.TagNumber(2)
@@ -6366,6 +6367,89 @@ class SetHeatCurveAutomaticSavings extends $pb.GeneratedMessage {
   $core.bool hasAutomaticSavings() => $_has(1);
   @$pb.TagNumber(2)
   void clearAutomaticSavings() => $_clearField(2);
+}
+
+/// Sets a plant's update mode (heating.v1 HEAT CURVE, UPDATES), answered with
+/// heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused as ApplyHeatCurve is;
+/// update_mode UNSPECIFIED is refused as INVALID_REQUEST with metadata {"reason": "update_mode"},
+/// and ONCE_PER_SEASON where the plant's heating season cannot be told (HEATING SEASON) as
+/// FAILED_PRECONDITION with metadata {"reason": "season_unknown"}. Setting it to what it is
+/// changes nothing and is answered as it stands; setting it back is its correction. A change of
+/// mode undoes no apply already made, and drops no suggestion already open.
+class SetHeatCurveUpdateMode extends $pb.GeneratedMessage {
+  factory SetHeatCurveUpdateMode({
+    $core.String? plantId,
+    $9.HeatCurveUpdateMode? updateMode,
+  }) {
+    final result = create();
+    if (plantId != null) result.plantId = plantId;
+    if (updateMode != null) result.updateMode = updateMode;
+    return result;
+  }
+
+  SetHeatCurveUpdateMode._();
+
+  factory SetHeatCurveUpdateMode.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetHeatCurveUpdateMode.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetHeatCurveUpdateMode',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'plantId')
+    ..e<$9.HeatCurveUpdateMode>(
+        2, _omitFieldNames ? '' : 'updateMode', $pb.PbFieldType.OE,
+        defaultOrMaker:
+            $9.HeatCurveUpdateMode.HEAT_CURVE_UPDATE_MODE_UNSPECIFIED,
+        valueOf: $9.HeatCurveUpdateMode.valueOf,
+        enumValues: $9.HeatCurveUpdateMode.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetHeatCurveUpdateMode clone() =>
+      SetHeatCurveUpdateMode()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetHeatCurveUpdateMode copyWith(
+          void Function(SetHeatCurveUpdateMode) updates) =>
+      super.copyWith((message) => updates(message as SetHeatCurveUpdateMode))
+          as SetHeatCurveUpdateMode;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetHeatCurveUpdateMode create() => SetHeatCurveUpdateMode._();
+  @$core.override
+  SetHeatCurveUpdateMode createEmptyInstance() => create();
+  static $pb.PbList<SetHeatCurveUpdateMode> createRepeated() =>
+      $pb.PbList<SetHeatCurveUpdateMode>();
+  @$core.pragma('dart2js:noInline')
+  static SetHeatCurveUpdateMode getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetHeatCurveUpdateMode>(create);
+  static SetHeatCurveUpdateMode? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plantId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plantId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlantId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlantId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $9.HeatCurveUpdateMode get updateMode => $_getN(1);
+  @$pb.TagNumber(2)
+  set updateMode($9.HeatCurveUpdateMode value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUpdateMode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUpdateMode() => $_clearField(2);
 }
 
 /// Hands a plant's open heat curve suggestion to a technician, or withdraws the hand-over
@@ -7853,6 +7937,7 @@ enum ManagementRequest_Request {
   declineHeatCurve,
   setHeatCurveAutomaticSavings,
   handHeatCurveSuggestion,
+  setHeatCurveUpdateMode,
   notSet
 }
 
@@ -7950,6 +8035,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     DeclineHeatCurve? declineHeatCurve,
     SetHeatCurveAutomaticSavings? setHeatCurveAutomaticSavings,
     HandHeatCurveSuggestion? handHeatCurveSuggestion,
+    SetHeatCurveUpdateMode? setHeatCurveUpdateMode,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -8083,6 +8169,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.setHeatCurveAutomaticSavings = setHeatCurveAutomaticSavings;
     if (handHeatCurveSuggestion != null)
       result.handHeatCurveSuggestion = handHeatCurveSuggestion;
+    if (setHeatCurveUpdateMode != null)
+      result.setHeatCurveUpdateMode = setHeatCurveUpdateMode;
     return result;
   }
 
@@ -8188,6 +8276,7 @@ class ManagementRequest extends $pb.GeneratedMessage {
     89: ManagementRequest_Request.declineHeatCurve,
     90: ManagementRequest_Request.setHeatCurveAutomaticSavings,
     91: ManagementRequest_Request.handHeatCurveSuggestion,
+    92: ManagementRequest_Request.setHeatCurveUpdateMode,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -8286,7 +8375,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
       88,
       89,
       90,
-      91
+      91,
+      92
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -8499,6 +8589,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<HandHeatCurveSuggestion>(
         91, _omitFieldNames ? '' : 'handHeatCurveSuggestion',
         subBuilder: HandHeatCurveSuggestion.create)
+    ..aOM<SetHeatCurveUpdateMode>(
+        92, _omitFieldNames ? '' : 'setHeatCurveUpdateMode',
+        subBuilder: SetHeatCurveUpdateMode.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -9572,6 +9665,19 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearHandHeatCurveSuggestion() => $_clearField(91);
   @$pb.TagNumber(91)
   HandHeatCurveSuggestion ensureHandHeatCurveSuggestion() => $_ensure(90);
+
+  /// When a lower heat curve is suggested; see heating.v1 HEAT CURVE, UPDATES.
+  @$pb.TagNumber(92)
+  SetHeatCurveUpdateMode get setHeatCurveUpdateMode => $_getN(91);
+  @$pb.TagNumber(92)
+  set setHeatCurveUpdateMode(SetHeatCurveUpdateMode value) =>
+      $_setField(92, value);
+  @$pb.TagNumber(92)
+  $core.bool hasSetHeatCurveUpdateMode() => $_has(91);
+  @$pb.TagNumber(92)
+  void clearSetHeatCurveUpdateMode() => $_clearField(92);
+  @$pb.TagNumber(92)
+  SetHeatCurveUpdateMode ensureSetHeatCurveUpdateMode() => $_ensure(91);
 }
 
 const $core.bool _omitFieldNames =

@@ -1586,13 +1586,14 @@ message GetHeatCurveView {
   }
 }
 
-// Applies a plant's heat curve suggestion (heating.v1 HEAT CURVE, APPLYING), answered with
-// heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by plant_id gives it, with the
-// apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO APPLIES IT) names; anyone
-// else, and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
-// Refused as FAILED_PRECONDITION with metadata:
-//   {"reason": "suggestion_changed"}  suggestion_id is not the plant's suggestion as it stands:
-//                                     a client reads the view again and shows what changed;
+// Applies a plant's heat curve suggestion, or its preview (heating.v1 HEAT CURVE, APPLYING,
+// PREVIEW), answered with heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by
+// plant_id gives it, with the apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO
+// APPLIES IT) names; anyone else, and a plant that does not exist, are refused as NOT_ENTITLED
+// with the same metadata. Refused as FAILED_PRECONDITION with metadata:
+//   {"reason": "suggestion_changed"}  suggestion_id is neither the plant's suggestion nor its
+//                                     preview as it stands: a client reads the view again and
+//                                     shows what changed;
 //   {"reason": "not_writable"}        mode WRITTEN where the heat source takes no write of the
 //                                     suggestion's settings (HeatCurveSuggestion.writable);
 //   {"reason": "nothing_to_revert"}   revert where no apply has settings to set back.
@@ -1603,8 +1604,8 @@ message GetHeatCurveView {
 message ApplyHeatCurve {
   string plant_id = 1;
 
-  // The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id). Ignored
-  // with revert.
+  // The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id), or the
+  // preview (HeatCurvePreview.preview_id). Ignored with revert.
   string suggestion_id = 2;
 
   // WRITTEN writes it to the heat source; BY_HAND confirms it was set by hand there.
@@ -1643,6 +1644,18 @@ message DeclineHeatCurve {
 message SetHeatCurveAutomaticSavings {
   string plant_id = 1;
   kusinta.iot.heating.v1.HeatCurveAutomaticSavings automatic_savings = 2;
+}
+
+// Sets a plant's update mode (heating.v1 HEAT CURVE, UPDATES), answered with
+// heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused as ApplyHeatCurve is;
+// update_mode UNSPECIFIED is refused as INVALID_REQUEST with metadata {"reason": "update_mode"},
+// and ONCE_PER_SEASON where the plant's heating season cannot be told (HEATING SEASON) as
+// FAILED_PRECONDITION with metadata {"reason": "season_unknown"}. Setting it to what it is
+// changes nothing and is answered as it stands; setting it back is its correction. A change of
+// mode undoes no apply already made, and drops no suggestion already open.
+message SetHeatCurveUpdateMode {
+  string plant_id = 1;
+  kusinta.iot.heating.v1.HeatCurveUpdateMode update_mode = 2;
 }
 
 // Hands a plant's open heat curve suggestion to a technician, or withdraws the hand-over
@@ -2031,5 +2044,7 @@ message ManagementRequest {
     SetHeatCurveAutomaticSavings set_heat_curve_automatic_savings = 90;
     // Handing a heat curve suggestion to a technician; see heating.v1 HEAT CURVE, HAND-OVER.
     HandHeatCurveSuggestion hand_heat_curve_suggestion = 91;
+    // When a lower heat curve is suggested; see heating.v1 HEAT CURVE, UPDATES.
+    SetHeatCurveUpdateMode set_heat_curve_update_mode = 92;
   }
 }
