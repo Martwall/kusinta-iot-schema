@@ -1498,9 +1498,11 @@ message HeatCurveViews {
 //   * ONGOING: a suggestion that lowers the curve is made, and noticed, no sooner than the
 //     gateway's interval (such as two weeks) after the last lowering suggestion made (its
 //     suggestion_id minted) or the last apply of the preview, whichever is later: a new curve
-//     in force restarts it, a raise or a step back does not. Changes found meanwhile are
-//     grouped into the next; one found within the interval waits (NoSuggestionReason
-//     UPDATE_HELD), and HeatCurveView.next_proposal_at is when the interval ends;
+//     in force restarts it, and so does that lowering set back, by a revert of its apply or by
+//     an applied step back (STEP DOWN), the rooms having said no to it; making a raise or a
+//     step back does not. Changes found meanwhile are grouped into the next; one found within
+//     the interval waits (NoSuggestionReason UPDATE_HELD), and HeatCurveView.next_proposal_at
+//     is when the interval ends;
 //   * ONCE_PER_SEASON: a suggestion that lowers the curve waits for the end of the heating
 //     season under way, or out of season for the next one's (HEATING SEASON; NoSuggestionReason
 //     WAITING_FOR_SEASON_END), and is then made from the firm bands, to apply before the next
@@ -1530,7 +1532,9 @@ message HeatCurveViews {
 // what the rooms need shrinks toward the cold beyond noise (its least-squares trend over the
 // outdoor temperatures seen), as a step down would cut it first where it is thinnest. For 14
 // days after a step down is applied, a room below its comfort band at its current target is
-// answered at once with a step back (HeatCurveSuggestion.step_back).
+// answered at once with a step back (HeatCurveSuggestion.step_back). Applied, the step back
+// restarts the interval lower curves wait (UPDATES), as a revert of the step down would, so
+// that the step down is not suggested again at once.
 
 // A plant's update mode (UPDATES). A closed list that grows only by a release of this schema.
 enum HeatCurveUpdateMode {
