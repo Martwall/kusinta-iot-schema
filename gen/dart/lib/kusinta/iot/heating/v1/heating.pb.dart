@@ -3589,6 +3589,10 @@ class HeatCurveView extends $pb.GeneratedMessage {
     $core.Iterable<HeatCurveHistoryEntry>? history,
     HeatCurveNoSuggestionReason? noSuggestionReason,
     CompressorWear? compressorWear,
+    HeatCurvePreview? preview,
+    HeatCurveUpdateMode? updateMode,
+    HeatingSeason? season,
+    $3.Timestamp? nextProposalAt,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -3612,6 +3616,10 @@ class HeatCurveView extends $pb.GeneratedMessage {
     if (noSuggestionReason != null)
       result.noSuggestionReason = noSuggestionReason;
     if (compressorWear != null) result.compressorWear = compressorWear;
+    if (preview != null) result.preview = preview;
+    if (updateMode != null) result.updateMode = updateMode;
+    if (season != null) result.season = season;
+    if (nextProposalAt != null) result.nextProposalAt = nextProposalAt;
     return result;
   }
 
@@ -3672,6 +3680,17 @@ class HeatCurveView extends $pb.GeneratedMessage {
         enumValues: HeatCurveNoSuggestionReason.values)
     ..aOM<CompressorWear>(18, _omitFieldNames ? '' : 'compressorWear',
         subBuilder: CompressorWear.create)
+    ..aOM<HeatCurvePreview>(19, _omitFieldNames ? '' : 'preview',
+        subBuilder: HeatCurvePreview.create)
+    ..e<HeatCurveUpdateMode>(
+        20, _omitFieldNames ? '' : 'updateMode', $pb.PbFieldType.OE,
+        defaultOrMaker: HeatCurveUpdateMode.HEAT_CURVE_UPDATE_MODE_UNSPECIFIED,
+        valueOf: HeatCurveUpdateMode.valueOf,
+        enumValues: HeatCurveUpdateMode.values)
+    ..aOM<HeatingSeason>(21, _omitFieldNames ? '' : 'season',
+        subBuilder: HeatingSeason.create)
+    ..aOM<$3.Timestamp>(22, _omitFieldNames ? '' : 'nextProposalAt',
+        subBuilder: $3.Timestamp.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -3897,6 +3916,57 @@ class HeatCurveView extends $pb.GeneratedMessage {
   void clearCompressorWear() => $_clearField(18);
   @$pb.TagNumber(18)
   CompressorWear ensureCompressorWear() => $_ensure(17);
+
+  /// Today's estimate, appliable by hand (PREVIEW). Unset where no optimised curve is worked out,
+  /// where the curve in force is already as it would set it, while rooms are short of heat in
+  /// some band, where the heat source has no own curve to set, and where figures are withheld.
+  @$pb.TagNumber(19)
+  HeatCurvePreview get preview => $_getN(18);
+  @$pb.TagNumber(19)
+  set preview(HeatCurvePreview value) => $_setField(19, value);
+  @$pb.TagNumber(19)
+  $core.bool hasPreview() => $_has(18);
+  @$pb.TagNumber(19)
+  void clearPreview() => $_clearField(19);
+  @$pb.TagNumber(19)
+  HeatCurvePreview ensurePreview() => $_ensure(18);
+
+  /// The plant's update mode (UPDATES). Unspecified where figures are withheld.
+  @$pb.TagNumber(20)
+  HeatCurveUpdateMode get updateMode => $_getN(19);
+  @$pb.TagNumber(20)
+  set updateMode(HeatCurveUpdateMode value) => $_setField(20, value);
+  @$pb.TagNumber(20)
+  $core.bool hasUpdateMode() => $_has(19);
+  @$pb.TagNumber(20)
+  void clearUpdateMode() => $_clearField(20);
+
+  /// The plant's heating season as it stands (HEATING SEASON). Unset where it cannot be told,
+  /// and where figures are withheld.
+  @$pb.TagNumber(21)
+  HeatingSeason get season => $_getN(20);
+  @$pb.TagNumber(21)
+  set season(HeatingSeason value) => $_setField(21, value);
+  @$pb.TagNumber(21)
+  $core.bool hasSeason() => $_has(20);
+  @$pb.TagNumber(21)
+  void clearSeason() => $_clearField(21);
+  @$pb.TagNumber(21)
+  HeatingSeason ensureSeason() => $_ensure(20);
+
+  /// With no_suggestion_reason UPDATE_HELD: when the lower curve found is suggested at the
+  /// earliest, the interval after the last lowering suggestion or apply of the preview
+  /// (UPDATES). Unset otherwise.
+  @$pb.TagNumber(22)
+  $3.Timestamp get nextProposalAt => $_getN(21);
+  @$pb.TagNumber(22)
+  set nextProposalAt($3.Timestamp value) => $_setField(22, value);
+  @$pb.TagNumber(22)
+  $core.bool hasNextProposalAt() => $_has(21);
+  @$pb.TagNumber(22)
+  void clearNextProposalAt() => $_clearField(22);
+  @$pb.TagNumber(22)
+  $3.Timestamp ensureNextProposalAt() => $_ensure(21);
 }
 
 /// How hard a heat source's compressor works (COMPRESSOR WEAR).
@@ -4337,6 +4407,205 @@ class HeatCurveViews extends $pb.GeneratedMessage {
   $pb.PbList<HeatCurveView> get views => $_getList(0);
 }
 
+/// A plant's heating season as it stands (HEATING SEASON).
+class HeatingSeason extends $pb.GeneratedMessage {
+  factory HeatingSeason({
+    $core.bool? inSeason,
+    $3.Timestamp? since,
+    HeatingSeasonBasis? basis,
+  }) {
+    final result = create();
+    if (inSeason != null) result.inSeason = inSeason;
+    if (since != null) result.since = since;
+    if (basis != null) result.basis = basis;
+    return result;
+  }
+
+  HeatingSeason._();
+
+  factory HeatingSeason.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatingSeason.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatingSeason',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOB(1, _omitFieldNames ? '' : 'inSeason')
+    ..aOM<$3.Timestamp>(2, _omitFieldNames ? '' : 'since',
+        subBuilder: $3.Timestamp.create)
+    ..e<HeatingSeasonBasis>(
+        3, _omitFieldNames ? '' : 'basis', $pb.PbFieldType.OE,
+        defaultOrMaker: HeatingSeasonBasis.HEATING_SEASON_BASIS_UNSPECIFIED,
+        valueOf: HeatingSeasonBasis.valueOf,
+        enumValues: HeatingSeasonBasis.values)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatingSeason clone() => HeatingSeason()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatingSeason copyWith(void Function(HeatingSeason) updates) =>
+      super.copyWith((message) => updates(message as HeatingSeason))
+          as HeatingSeason;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatingSeason create() => HeatingSeason._();
+  @$core.override
+  HeatingSeason createEmptyInstance() => create();
+  static $pb.PbList<HeatingSeason> createRepeated() =>
+      $pb.PbList<HeatingSeason>();
+  @$core.pragma('dart2js:noInline')
+  static HeatingSeason getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatingSeason>(create);
+  static HeatingSeason? _defaultInstance;
+
+  /// Whether the plant is in its heating season now.
+  @$pb.TagNumber(1)
+  $core.bool get inSeason => $_getBF(0);
+  @$pb.TagNumber(1)
+  set inSeason($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasInSeason() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInSeason() => $_clearField(1);
+
+  /// When the season now under way began, or, out of season, when the last one ended. Unset out
+  /// of season where no season has ended since the plant was first heard.
+  @$pb.TagNumber(2)
+  $3.Timestamp get since => $_getN(1);
+  @$pb.TagNumber(2)
+  set since($3.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSince() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSince() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $3.Timestamp ensureSince() => $_ensure(1);
+
+  /// How the season was told: how its start was, in season; how its end was, out of it.
+  @$pb.TagNumber(3)
+  HeatingSeasonBasis get basis => $_getN(2);
+  @$pb.TagNumber(3)
+  set basis(HeatingSeasonBasis value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBasis() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBasis() => $_clearField(3);
+}
+
+/// Today's estimate as the settings that would set it (PREVIEW).
+class HeatCurvePreview extends $pb.GeneratedMessage {
+  factory HeatCurvePreview({
+    $core.String? previewId,
+    $5.HeatSourceReadings? settings,
+    $core.bool? writable,
+    $core.int? savingPermille,
+  }) {
+    final result = create();
+    if (previewId != null) result.previewId = previewId;
+    if (settings != null) result.settings = settings;
+    if (writable != null) result.writable = writable;
+    if (savingPermille != null) result.savingPermille = savingPermille;
+    return result;
+  }
+
+  HeatCurvePreview._();
+
+  factory HeatCurvePreview.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory HeatCurvePreview.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'HeatCurvePreview',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.heating.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'previewId')
+    ..aOM<$5.HeatSourceReadings>(2, _omitFieldNames ? '' : 'settings',
+        subBuilder: $5.HeatSourceReadings.create)
+    ..aOB(3, _omitFieldNames ? '' : 'writable')
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'savingPermille', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurvePreview clone() => HeatCurvePreview()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  HeatCurvePreview copyWith(void Function(HeatCurvePreview) updates) =>
+      super.copyWith((message) => updates(message as HeatCurvePreview))
+          as HeatCurvePreview;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static HeatCurvePreview create() => HeatCurvePreview._();
+  @$core.override
+  HeatCurvePreview createEmptyInstance() => create();
+  static $pb.PbList<HeatCurvePreview> createRepeated() =>
+      $pb.PbList<HeatCurvePreview>();
+  @$core.pragma('dart2js:noInline')
+  static HeatCurvePreview getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<HeatCurvePreview>(create);
+  static HeatCurvePreview? _defaultInstance;
+
+  /// The preview's identity, named by webrtc.v1.ApplyHeatCurve to apply it. New whenever its
+  /// settings change, so that an apply acts on what was shown; never a suggestion_id (PREVIEW).
+  @$pb.TagNumber(1)
+  $core.String get previewId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set previewId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPreviewId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPreviewId() => $_clearField(1);
+
+  /// The heat source's curve settings that applying it sets, as HeatCurveSuggestion.settings
+  /// gives a curve's: its own curve at the optimised curve's points, its shift and its bend's
+  /// offset 0.
+  @$pb.TagNumber(2)
+  $5.HeatSourceReadings get settings => $_getN(1);
+  @$pb.TagNumber(2)
+  set settings($5.HeatSourceReadings value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSettings() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSettings() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $5.HeatSourceReadings ensureSettings() => $_ensure(1);
+
+  /// Whether the heat source takes a write of settings, as HeatCurveSuggestion.writable.
+  @$pb.TagNumber(3)
+  $core.bool get writable => $_getBF(2);
+  @$pb.TagNumber(3)
+  set writable($core.bool value) => $_setBool(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasWritable() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWritable() => $_clearField(3);
+
+  /// The saving against the curve in force, as HeatCurveSuggestion.saving_permille. Unset where
+  /// not known, and where the preview raises the curve.
+  @$pb.TagNumber(4)
+  $core.int get savingPermille => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set savingPermille($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSavingPermille() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSavingPermille() => $_clearField(4);
+}
+
 /// One point of an optimised curve.
 class HeatCurvePoint extends $pb.GeneratedMessage {
   factory HeatCurvePoint({
@@ -4344,6 +4613,7 @@ class HeatCurvePoint extends $pb.GeneratedMessage {
     $core.int? supplyCentidegrees,
     $core.int? currentSupplyCentidegrees,
     HeatCurvePointConfidence? confidence,
+    $core.int? daysJudged,
   }) {
     final result = create();
     if (outdoorCentidegrees != null)
@@ -4353,6 +4623,7 @@ class HeatCurvePoint extends $pb.GeneratedMessage {
     if (currentSupplyCentidegrees != null)
       result.currentSupplyCentidegrees = currentSupplyCentidegrees;
     if (confidence != null) result.confidence = confidence;
+    if (daysJudged != null) result.daysJudged = daysJudged;
     return result;
   }
 
@@ -4382,6 +4653,7 @@ class HeatCurvePoint extends $pb.GeneratedMessage {
             HeatCurvePointConfidence.HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED,
         valueOf: HeatCurvePointConfidence.valueOf,
         enumValues: HeatCurvePointConfidence.values)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'daysJudged', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4447,6 +4719,18 @@ class HeatCurvePoint extends $pb.GeneratedMessage {
   $core.bool hasConfidence() => $_has(3);
   @$pb.TagNumber(4)
   void clearConfidence() => $_clearField(4);
+
+  /// The local days its bands have been judged on since their evidence was last counted afresh
+  /// (LIVING CURVE): what a client shows beside a point not yet firm, such as "estimating, 6 days
+  /// so far". 0 where none.
+  @$pb.TagNumber(5)
+  $core.int get daysJudged => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set daysJudged($core.int value) => $_setUnsignedInt32(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasDaysJudged() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearDaysJudged() => $_clearField(5);
 }
 
 /// What a plant's curve could be (OPTIMISED CURVE).
@@ -4551,6 +4835,8 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
     $3.Timestamp? suggestedAt,
     $core.bool? declined,
     HeatCurveHandOver? handOver,
+    $core.bool? stepBack,
+    $core.bool? seasonEnd,
   }) {
     final result = create();
     if (suggestionId != null) result.suggestionId = suggestionId;
@@ -4567,6 +4853,8 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
     if (suggestedAt != null) result.suggestedAt = suggestedAt;
     if (declined != null) result.declined = declined;
     if (handOver != null) result.handOver = handOver;
+    if (stepBack != null) result.stepBack = stepBack;
+    if (seasonEnd != null) result.seasonEnd = seasonEnd;
     return result;
   }
 
@@ -4610,6 +4898,8 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
     ..aOB(10, _omitFieldNames ? '' : 'declined')
     ..aOM<HeatCurveHandOver>(11, _omitFieldNames ? '' : 'handOver',
         subBuilder: HeatCurveHandOver.create)
+    ..aOB(12, _omitFieldNames ? '' : 'stepBack')
+    ..aOB(13, _omitFieldNames ? '' : 'seasonEnd')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -4759,6 +5049,29 @@ class HeatCurveSuggestion extends $pb.GeneratedMessage {
   void clearHandOver() => $_clearField(11);
   @$pb.TagNumber(11)
   HeatCurveHandOver ensureHandOver() => $_ensure(10);
+
+  /// Set on a step of the shift up that sets back a step down applied within the last 14 days,
+  /// a room having fallen below its comfort band at its current target since (STEP DOWN): made
+  /// at once, outside the grouping (UPDATES), and told as such.
+  @$pb.TagNumber(12)
+  $core.bool get stepBack => $_getBF(11);
+  @$pb.TagNumber(12)
+  set stepBack($core.bool value) => $_setBool(11, value);
+  @$pb.TagNumber(12)
+  $core.bool hasStepBack() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearStepBack() => $_clearField(12);
+
+  /// Set on a suggestion made at the end of a heating season from the firm bands, to apply
+  /// before the next season (UPDATES, ONCE_PER_SEASON).
+  @$pb.TagNumber(13)
+  $core.bool get seasonEnd => $_getBF(12);
+  @$pb.TagNumber(13)
+  set seasonEnd($core.bool value) => $_setBool(12, value);
+  @$pb.TagNumber(13)
+  $core.bool hasSeasonEnd() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearSeasonEnd() => $_clearField(13);
 }
 
 /// A suggestion handed to a technician (HAND-OVER).
@@ -4866,6 +5179,7 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
     HeatCurveHandOver? handOver,
     $core.bool? stillCurrent,
     HeatCurveCompressorEffect? compressorEffect,
+    $core.bool? fromPreview,
   }) {
     final result = create();
     if (suggestionId != null) result.suggestionId = suggestionId;
@@ -4876,6 +5190,7 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
     if (handOver != null) result.handOver = handOver;
     if (stillCurrent != null) result.stillCurrent = stillCurrent;
     if (compressorEffect != null) result.compressorEffect = compressorEffect;
+    if (fromPreview != null) result.fromPreview = fromPreview;
     return result;
   }
 
@@ -4916,6 +5231,7 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
     ..aOM<HeatCurveCompressorEffect>(
         8, _omitFieldNames ? '' : 'compressorEffect',
         subBuilder: HeatCurveCompressorEffect.create)
+    ..aOB(9, _omitFieldNames ? '' : 'fromPreview')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -5028,6 +5344,17 @@ class HeatCurveHistoryEntry extends $pb.GeneratedMessage {
   void clearCompressorEffect() => $_clearField(8);
   @$pb.TagNumber(8)
   HeatCurveCompressorEffect ensureCompressorEffect() => $_ensure(7);
+
+  /// Set where the preview was applied (PREVIEW), not a suggestion: suggestion_id is then the
+  /// preview's preview_id, and kind CURVE.
+  @$pb.TagNumber(9)
+  $core.bool get fromPreview => $_getBF(8);
+  @$pb.TagNumber(9)
+  set fromPreview($core.bool value) => $_setBool(8, value);
+  @$pb.TagNumber(9)
+  $core.bool hasFromPreview() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearFromPreview() => $_clearField(9);
 }
 
 /// One setting found otherwise than applied.

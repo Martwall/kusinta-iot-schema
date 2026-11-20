@@ -16,7 +16,7 @@ import type { ExchangeRate, ForecastCell, PriceInterval } from "../../planning/v
 import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
 import type { ServiceSignal } from "../../access/v1/acl_pb.js";
-import type { ComfortLoad, ComfortWindow, EnergyPricePayer, FloorZone, HeatCurveApplyMode, HeatCurveAutomaticSavings, HeatingCircuit, HeatingPlant, PriceRule, PriceRuleMode } from "../../heating/v1/heating_pb.js";
+import type { ComfortLoad, ComfortWindow, EnergyPricePayer, FloorZone, HeatCurveApplyMode, HeatCurveAutomaticSavings, HeatCurveUpdateMode, HeatingCircuit, HeatingPlant, PriceRule, PriceRuleMode } from "../../heating/v1/heating_pb.js";
 import type { LinkedService } from "../../accountlink/v1/account_link_pb.js";
 import type { ApproveJoinRequest, CreateInvite, DenyJoinRequest, ListSpaceInvites, MarkInviteEmailSent, ResendInvite, RevokeInvite } from "./invite_pb.js";
 import type { AnswerPromotion, ListGatewayMembers, ListPromotionRequests, RemoveFromGateway, RequestPromotion, SetAccessUntil, SetMemberRole, SetOwnerOrganisation } from "./members_pb.js";
@@ -2697,15 +2697,17 @@ export declare type GetHeatCurveView = Message<"kusinta.iot.webrtc.v1.GetHeatCur
 export declare const GetHeatCurveViewSchema: GenMessage<GetHeatCurveView>;
 
 /**
- * Applies a plant's heat curve suggestion (heating.v1 HEAT CURVE, APPLYING), answered with
- * heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by plant_id gives it, with the
- * apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO APPLIES IT) names; anyone
- * else, and a plant that does not exist, are refused as NOT_ENTITLED with the same metadata.
- * Refused as FAILED_PRECONDITION with metadata:
- *   {"reason": "suggestion_changed"}  suggestion_id is not the plant's suggestion as it stands:
- *                                     a client reads the view again and shows what changed;
+ * Applies a plant's heat curve suggestion, or its preview (heating.v1 HEAT CURVE, APPLYING,
+ * PREVIEW), answered with heating.v1.HeatCurveViews: the plant's view, as GetHeatCurveView by
+ * plant_id gives it, with the apply as its last_applied. Only those heating.v1 HEAT CURVE (WHO
+ * APPLIES IT) names; anyone else, and a plant that does not exist, are refused as NOT_ENTITLED
+ * with the same metadata. Refused as FAILED_PRECONDITION with metadata:
+ *   {"reason": "suggestion_changed"}  suggestion_id is neither the plant's suggestion nor its
+ *                                     preview as it stands: a client reads the view again and
+ *                                     shows what changed;
  *   {"reason": "not_writable"}        mode WRITTEN where the heat source takes no write of the
- *                                     suggestion's settings (HeatCurveSuggestion.writable);
+ *                                     suggestion's or the preview's settings
+ *                                     (HeatCurveSuggestion.writable, HeatCurvePreview.writable);
  *   {"reason": "nothing_to_revert"}   revert where no apply has settings to set back.
  * A mode other than WRITTEN or BY_HAND is refused as INVALID_REQUEST with metadata
  * {"reason": "mode"}. A write the heat source does not take is refused as UNAVAILABLE with
@@ -2721,8 +2723,8 @@ export declare type ApplyHeatCurve = Message<"kusinta.iot.webrtc.v1.ApplyHeatCur
   plantId: string;
 
   /**
-   * The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id). Ignored
-   * with revert.
+   * The suggestion applied, as the view gave it (HeatCurveSuggestion.suggestion_id), or the
+   * preview (HeatCurvePreview.preview_id). Ignored with revert.
    *
    * @generated from field: string suggestion_id = 2;
    */
@@ -2758,9 +2760,10 @@ export declare const ApplyHeatCurveSchema: GenMessage<ApplyHeatCurve>;
  * the residents of the home its room lies in alone (heating.v1 HEAT CURVE, ROOM TARGETS), and
  * answered with the views their home's reading gives them. One naming a room-target suggestion
  * the caller may not see is answered as one naming an id that is not the plant's
- * (suggestion_changed), so that the refusal says nothing of whether it exists. Declining a
- * declined suggestion, and withdrawing a decline that is not there, change nothing and are
- * answered as it stands.
+ * (suggestion_changed), so that the refusal says nothing of whether it exists. A preview is
+ * never declined: one naming a preview_id (heating.v1.HeatCurvePreview) is answered as
+ * suggestion_changed too. Declining a declined suggestion, and withdrawing a decline that is not
+ * there, change nothing and are answered as it stands.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeclineHeatCurve
  */
@@ -2817,6 +2820,35 @@ export declare type SetHeatCurveAutomaticSavings = Message<"kusinta.iot.webrtc.v
  * Use `create(SetHeatCurveAutomaticSavingsSchema)` to create a new message.
  */
 export declare const SetHeatCurveAutomaticSavingsSchema: GenMessage<SetHeatCurveAutomaticSavings>;
+
+/**
+ * Sets a plant's update mode (heating.v1 HEAT CURVE, UPDATES), answered with
+ * heating.v1.HeatCurveViews as ApplyHeatCurve is. Entitled and refused as ApplyHeatCurve is;
+ * update_mode UNSPECIFIED is refused as INVALID_REQUEST with metadata {"reason": "update_mode"},
+ * and ONCE_PER_SEASON where the plant's heating season cannot be told (HEATING SEASON) as
+ * FAILED_PRECONDITION with metadata {"reason": "season_unknown"}. Setting it to what it is
+ * changes nothing and is answered as it stands; setting it back is its correction. A change of
+ * mode undoes no apply already made, and drops no suggestion already open.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetHeatCurveUpdateMode
+ */
+export declare type SetHeatCurveUpdateMode = Message<"kusinta.iot.webrtc.v1.SetHeatCurveUpdateMode"> & {
+  /**
+   * @generated from field: string plant_id = 1;
+   */
+  plantId: string;
+
+  /**
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveUpdateMode update_mode = 2;
+   */
+  updateMode: HeatCurveUpdateMode;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetHeatCurveUpdateMode.
+ * Use `create(SetHeatCurveUpdateModeSchema)` to create a new message.
+ */
+export declare const SetHeatCurveUpdateModeSchema: GenMessage<SetHeatCurveUpdateMode>;
 
 /**
  * Hands a plant's open heat curve suggestion to a technician, or withdraws the hand-over
@@ -3953,6 +3985,14 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: HandHeatCurveSuggestion;
     case: "handHeatCurveSuggestion";
+  } | {
+    /**
+     * When a lower heat curve is suggested; see heating.v1 HEAT CURVE, UPDATES.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.SetHeatCurveUpdateMode set_heat_curve_update_mode = 92;
+     */
+    value: SetHeatCurveUpdateMode;
+    case: "setHeatCurveUpdateMode";
   } | { case: undefined; value?: undefined };
 };
 

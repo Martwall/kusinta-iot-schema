@@ -1699,6 +1699,39 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
    * @generated from field: kusinta.iot.heating.v1.CompressorWear compressor_wear = 18;
    */
   compressorWear?: CompressorWear | undefined;
+
+  /**
+   * Today's estimate, appliable by hand (PREVIEW). Unset where no optimised curve is worked out,
+   * where the curve in force is already as it would set it, while rooms are short of heat in
+   * some band, where the heat source has no own curve to set, and where figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurvePreview preview = 19;
+   */
+  preview?: HeatCurvePreview | undefined;
+
+  /**
+   * The plant's update mode (UPDATES). Unspecified where figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatCurveUpdateMode update_mode = 20;
+   */
+  updateMode: HeatCurveUpdateMode;
+
+  /**
+   * The plant's heating season as it stands (HEATING SEASON). Unset where it cannot be told,
+   * and where figures are withheld.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatingSeason season = 21;
+   */
+  season?: HeatingSeason | undefined;
+
+  /**
+   * With no_suggestion_reason UPDATE_HELD: when the lower curve found is suggested at the
+   * earliest, the interval after the last lowering suggestion or apply of the preview
+   * (UPDATES). Unset otherwise.
+   *
+   * @generated from field: google.protobuf.Timestamp next_proposal_at = 22;
+   */
+  nextProposalAt?: Timestamp | undefined;
 };
 
 /**
@@ -1893,6 +1926,86 @@ export declare type HeatCurveViews = Message<"kusinta.iot.heating.v1.HeatCurveVi
 export declare const HeatCurveViewsSchema: GenMessage<HeatCurveViews>;
 
 /**
+ * A plant's heating season as it stands (HEATING SEASON).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatingSeason
+ */
+export declare type HeatingSeason = Message<"kusinta.iot.heating.v1.HeatingSeason"> & {
+  /**
+   * Whether the plant is in its heating season now.
+   *
+   * @generated from field: bool in_season = 1;
+   */
+  inSeason: boolean;
+
+  /**
+   * When the season now under way began, or, out of season, when the last one ended. Unset out
+   * of season where no season has ended since the plant was first heard.
+   *
+   * @generated from field: google.protobuf.Timestamp since = 2;
+   */
+  since?: Timestamp | undefined;
+
+  /**
+   * How the season was told: how its start was, in season; how its end was, out of it.
+   *
+   * @generated from field: kusinta.iot.heating.v1.HeatingSeasonBasis basis = 3;
+   */
+  basis: HeatingSeasonBasis;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatingSeason.
+ * Use `create(HeatingSeasonSchema)` to create a new message.
+ */
+export declare const HeatingSeasonSchema: GenMessage<HeatingSeason>;
+
+/**
+ * Today's estimate as the settings that would set it (PREVIEW).
+ *
+ * @generated from message kusinta.iot.heating.v1.HeatCurvePreview
+ */
+export declare type HeatCurvePreview = Message<"kusinta.iot.heating.v1.HeatCurvePreview"> & {
+  /**
+   * The preview's identity, named by webrtc.v1.ApplyHeatCurve to apply it. New whenever its
+   * settings change, so that an apply acts on what was shown; never a suggestion_id (PREVIEW).
+   *
+   * @generated from field: string preview_id = 1;
+   */
+  previewId: string;
+
+  /**
+   * The heat source's curve settings that applying it sets, as HeatCurveSuggestion.settings
+   * gives a curve's: its own curve at the optimised curve's points, its shift and its bend's
+   * offset 0.
+   *
+   * @generated from field: kusinta.iot.device.v1.HeatSourceReadings settings = 2;
+   */
+  settings?: HeatSourceReadings | undefined;
+
+  /**
+   * Whether the heat source takes a write of settings, as HeatCurveSuggestion.writable.
+   *
+   * @generated from field: bool writable = 3;
+   */
+  writable: boolean;
+
+  /**
+   * The saving against the curve in force, as HeatCurveSuggestion.saving_permille. Unset where
+   * not known, and where the preview raises the curve.
+   *
+   * @generated from field: optional uint32 saving_permille = 4;
+   */
+  savingPermille?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.heating.v1.HeatCurvePreview.
+ * Use `create(HeatCurvePreviewSchema)` to create a new message.
+ */
+export declare const HeatCurvePreviewSchema: GenMessage<HeatCurvePreview>;
+
+/**
  * One point of an optimised curve.
  *
  * @generated from message kusinta.iot.heating.v1.HeatCurvePoint
@@ -1927,6 +2040,15 @@ export declare type HeatCurvePoint = Message<"kusinta.iot.heating.v1.HeatCurvePo
    * @generated from field: kusinta.iot.heating.v1.HeatCurvePointConfidence confidence = 4;
    */
   confidence: HeatCurvePointConfidence;
+
+  /**
+   * The local days its bands have been judged on since their evidence was last counted afresh
+   * (LIVING CURVE): what a client shows beside a point not yet firm, such as "estimating, 6 days
+   * so far". 0 where none.
+   *
+   * @generated from field: uint32 days_judged = 5;
+   */
+  daysJudged: number;
 };
 
 /**
@@ -2069,6 +2191,23 @@ export declare type HeatCurveSuggestion = Message<"kusinta.iot.heating.v1.HeatCu
    * @generated from field: kusinta.iot.heating.v1.HeatCurveHandOver hand_over = 11;
    */
   handOver?: HeatCurveHandOver | undefined;
+
+  /**
+   * Set on a step of the shift up that sets back a step down applied within the last 14 days,
+   * a room having fallen below its comfort band at its current target since (STEP DOWN): made
+   * at once, outside the grouping (UPDATES), and told as such.
+   *
+   * @generated from field: bool step_back = 12;
+   */
+  stepBack: boolean;
+
+  /**
+   * Set on a suggestion made at the end of a heating season from the firm bands, to apply
+   * before the next season (UPDATES, ONCE_PER_SEASON).
+   *
+   * @generated from field: bool season_end = 13;
+   */
+  seasonEnd: boolean;
 };
 
 /**
@@ -2169,6 +2308,14 @@ export declare type HeatCurveHistoryEntry = Message<"kusinta.iot.heating.v1.Heat
    * @generated from field: kusinta.iot.heating.v1.HeatCurveCompressorEffect compressor_effect = 8;
    */
   compressorEffect?: HeatCurveCompressorEffect | undefined;
+
+  /**
+   * Set where the preview was applied (PREVIEW), not a suggestion: suggestion_id is then the
+   * preview's preview_id, and kind CURVE.
+   *
+   * @generated from field: bool from_preview = 9;
+   */
+  fromPreview: boolean;
 };
 
 /**
@@ -2848,6 +2995,81 @@ export enum HeatCurveZoneKind {
 export declare const HeatCurveZoneKindSchema: GenEnum<HeatCurveZoneKind>;
 
 /**
+ * A plant's update mode (UPDATES). A closed list that grows only by a release of this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatCurveUpdateMode
+ */
+export enum HeatCurveUpdateMode {
+  /**
+   * Not given, as where figures are withheld; never a setting.
+   *
+   * @generated from enum value: HEAT_CURVE_UPDATE_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * A lower curve is suggested as the firm bands move it, grouped. A plant's setting until set
+   * otherwise.
+   *
+   * @generated from enum value: HEAT_CURVE_UPDATE_MODE_ONGOING = 1;
+   */
+  ONGOING = 1,
+
+  /**
+   * A lower curve is suggested once, at the end of each heating season.
+   *
+   * @generated from enum value: HEAT_CURVE_UPDATE_MODE_ONCE_PER_SEASON = 2;
+   */
+  ONCE_PER_SEASON = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatCurveUpdateMode.
+ */
+export declare const HeatCurveUpdateModeSchema: GenEnum<HeatCurveUpdateMode>;
+
+/**
+ * How a heating season was told (HEATING SEASON). A closed list that grows only by a release of
+ * this schema.
+ *
+ * @generated from enum kusinta.iot.heating.v1.HeatingSeasonBasis
+ */
+export enum HeatingSeasonBasis {
+  /**
+   * A basis this client's schema does not know: a client shows the season without it.
+   *
+   * @generated from enum value: HEATING_SEASON_BASIS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * By the days the heat source ran on space heating, from its running totals.
+   *
+   * @generated from enum value: HEATING_SEASON_BASIS_SPACE_HEATING = 1;
+   */
+  SPACE_HEATING = 1,
+
+  /**
+   * By the heat source's own averaged outdoor temperature against its stop heating limit.
+   *
+   * @generated from enum value: HEATING_SEASON_BASIS_OUTDOOR_BELOW_STOP = 2;
+   */
+  OUTDOOR_BELOW_STOP = 2,
+
+  /**
+   * The plant was first heard during the season: it counts from then.
+   *
+   * @generated from enum value: HEATING_SEASON_BASIS_JOINED = 3;
+   */
+  JOINED = 3,
+}
+
+/**
+ * Describes the enum kusinta.iot.heating.v1.HeatingSeasonBasis.
+ */
+export declare const HeatingSeasonBasisSchema: GenEnum<HeatingSeasonBasis>;
+
+/**
  * A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
  * release of this schema.
  *
@@ -2896,7 +3118,8 @@ export enum HeatCurvePointConfidence {
   UNSPECIFIED = 0,
 
   /**
-   * Enough days seen in the point's band to judge it.
+   * Enough days seen in the point's band to judge it, not yet firm: an estimate that may still
+   * move (LIVING CURVE).
    *
    * @generated from enum value: HEAT_CURVE_POINT_CONFIDENCE_SEEN = 1;
    */
@@ -2908,6 +3131,14 @@ export enum HeatCurvePointConfidence {
    * @generated from enum value: HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED = 2;
    */
   ESTIMATED = 2,
+
+  /**
+   * Its bands are firm (LIVING CURVE): the curve a suggestion sets follows it. A client that
+   * does not know it reads it as estimated.
+   *
+   * @generated from enum value: HEAT_CURVE_POINT_CONFIDENCE_FIRM = 3;
+   */
+  FIRM = 3,
 }
 
 /**
@@ -2918,9 +3149,12 @@ export declare const HeatCurvePointConfidenceSchema: GenEnum<HeatCurvePointConfi
 /**
  * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
  * Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
- * curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
- * OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
- * client that does not know a value says that nothing is suggested, without a reason.
+ * curve; else ROOMS_SHORT; else WAITING_FOR_SEASON_END or UPDATE_HELD where a lower curve is
+ * found and waits (UPDATES), never while rooms are short; else NOTHING_FIRM_YET,
+ * TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE,
+ * OFFSET_AT_LIMIT. A closed list that grows only by
+ * a release of this schema: a client that does not know a value says that nothing is suggested,
+ * without a reason.
  *
  * @generated from enum kusinta.iot.heating.v1.HeatCurveNoSuggestionReason
  */
@@ -2995,6 +3229,34 @@ export enum HeatCurveNoSuggestionReason {
    * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT = 8;
    */
   OFFSET_AT_LIMIT = 8,
+
+  /**
+   * A curve would save on what is seen, but no band of it is firm yet (LIVING CURVE), no step of
+   * the shift is called for, and no band's rooms are short of heat: the preview shows the
+   * estimate meanwhile, and each point how far it has got.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_NOTHING_FIRM_YET = 9;
+   */
+  NOTHING_FIRM_YET = 9,
+
+  /**
+   * The plant's update mode is once per season (UPDATES) and its season can be told: a lower
+   * curve found is suggested at the end of the season under way, or out of season at the next
+   * one's. Never while rooms are short of heat. The preview stands meanwhile.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_WAITING_FOR_SEASON_END = 10;
+   */
+  WAITING_FOR_SEASON_END = 10,
+
+  /**
+   * A lower curve is found, but the gateway's interval since the last lowering suggestion or
+   * apply of the preview has not passed (UPDATES): it is suggested no sooner than
+   * HeatCurveView.next_proposal_at. Never while rooms are short of heat. The preview stands
+   * meanwhile.
+   *
+   * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_UPDATE_HELD = 11;
+   */
+  UPDATE_HELD = 11,
 }
 
 /**

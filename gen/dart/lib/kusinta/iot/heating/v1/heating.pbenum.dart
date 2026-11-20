@@ -398,6 +398,76 @@ class HeatCurveZoneKind extends $pb.ProtobufEnum {
   const HeatCurveZoneKind._(super.value, super.name);
 }
 
+/// A plant's update mode (UPDATES). A closed list that grows only by a release of this schema.
+class HeatCurveUpdateMode extends $pb.ProtobufEnum {
+  /// Not given, as where figures are withheld; never a setting.
+  static const HeatCurveUpdateMode HEAT_CURVE_UPDATE_MODE_UNSPECIFIED =
+      HeatCurveUpdateMode._(
+          0, _omitEnumNames ? '' : 'HEAT_CURVE_UPDATE_MODE_UNSPECIFIED');
+
+  /// A lower curve is suggested as the firm bands move it, grouped. A plant's setting until set
+  /// otherwise.
+  static const HeatCurveUpdateMode HEAT_CURVE_UPDATE_MODE_ONGOING =
+      HeatCurveUpdateMode._(
+          1, _omitEnumNames ? '' : 'HEAT_CURVE_UPDATE_MODE_ONGOING');
+
+  /// A lower curve is suggested once, at the end of each heating season.
+  static const HeatCurveUpdateMode HEAT_CURVE_UPDATE_MODE_ONCE_PER_SEASON =
+      HeatCurveUpdateMode._(
+          2, _omitEnumNames ? '' : 'HEAT_CURVE_UPDATE_MODE_ONCE_PER_SEASON');
+
+  static const $core.List<HeatCurveUpdateMode> values = <HeatCurveUpdateMode>[
+    HEAT_CURVE_UPDATE_MODE_UNSPECIFIED,
+    HEAT_CURVE_UPDATE_MODE_ONGOING,
+    HEAT_CURVE_UPDATE_MODE_ONCE_PER_SEASON,
+  ];
+
+  static final $core.List<HeatCurveUpdateMode?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 2);
+  static HeatCurveUpdateMode? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatCurveUpdateMode._(super.value, super.name);
+}
+
+/// How a heating season was told (HEATING SEASON). A closed list that grows only by a release of
+/// this schema.
+class HeatingSeasonBasis extends $pb.ProtobufEnum {
+  /// A basis this client's schema does not know: a client shows the season without it.
+  static const HeatingSeasonBasis HEATING_SEASON_BASIS_UNSPECIFIED =
+      HeatingSeasonBasis._(
+          0, _omitEnumNames ? '' : 'HEATING_SEASON_BASIS_UNSPECIFIED');
+
+  /// By the days the heat source ran on space heating, from its running totals.
+  static const HeatingSeasonBasis HEATING_SEASON_BASIS_SPACE_HEATING =
+      HeatingSeasonBasis._(
+          1, _omitEnumNames ? '' : 'HEATING_SEASON_BASIS_SPACE_HEATING');
+
+  /// By the heat source's own averaged outdoor temperature against its stop heating limit.
+  static const HeatingSeasonBasis HEATING_SEASON_BASIS_OUTDOOR_BELOW_STOP =
+      HeatingSeasonBasis._(
+          2, _omitEnumNames ? '' : 'HEATING_SEASON_BASIS_OUTDOOR_BELOW_STOP');
+
+  /// The plant was first heard during the season: it counts from then.
+  static const HeatingSeasonBasis HEATING_SEASON_BASIS_JOINED =
+      HeatingSeasonBasis._(
+          3, _omitEnumNames ? '' : 'HEATING_SEASON_BASIS_JOINED');
+
+  static const $core.List<HeatingSeasonBasis> values = <HeatingSeasonBasis>[
+    HEATING_SEASON_BASIS_UNSPECIFIED,
+    HEATING_SEASON_BASIS_SPACE_HEATING,
+    HEATING_SEASON_BASIS_OUTDOOR_BELOW_STOP,
+    HEATING_SEASON_BASIS_JOINED,
+  ];
+
+  static final $core.List<HeatingSeasonBasis?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
+  static HeatingSeasonBasis? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const HeatingSeasonBasis._(super.value, super.name);
+}
+
 /// A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 /// release of this schema.
 class HeatCurveAutomaticSavings extends $pb.ProtobufEnum {
@@ -439,7 +509,8 @@ class HeatCurvePointConfidence extends $pb.ProtobufEnum {
       HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED = HeatCurvePointConfidence._(
           0, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED');
 
-  /// Enough days seen in the point's band to judge it.
+  /// Enough days seen in the point's band to judge it, not yet firm: an estimate that may still
+  /// move (LIVING CURVE).
   static const HeatCurvePointConfidence HEAT_CURVE_POINT_CONFIDENCE_SEEN =
       HeatCurvePointConfidence._(
           1, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_SEEN');
@@ -449,15 +520,22 @@ class HeatCurvePointConfidence extends $pb.ProtobufEnum {
       HeatCurvePointConfidence._(
           2, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED');
 
+  /// Its bands are firm (LIVING CURVE): the curve a suggestion sets follows it. A client that
+  /// does not know it reads it as estimated.
+  static const HeatCurvePointConfidence HEAT_CURVE_POINT_CONFIDENCE_FIRM =
+      HeatCurvePointConfidence._(
+          3, _omitEnumNames ? '' : 'HEAT_CURVE_POINT_CONFIDENCE_FIRM');
+
   static const $core.List<HeatCurvePointConfidence> values =
       <HeatCurvePointConfidence>[
     HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED,
     HEAT_CURVE_POINT_CONFIDENCE_SEEN,
     HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED,
+    HEAT_CURVE_POINT_CONFIDENCE_FIRM,
   ];
 
   static final $core.List<HeatCurvePointConfidence?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 2);
+      $pb.ProtobufEnum.$_initByValueList(values, 3);
   static HeatCurvePointConfidence? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
@@ -466,9 +544,12 @@ class HeatCurvePointConfidence extends $pb.ProtobufEnum {
 
 /// Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
 /// Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
-/// curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
-/// OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
-/// client that does not know a value says that nothing is suggested, without a reason.
+/// curve; else ROOMS_SHORT; else WAITING_FOR_SEASON_END or UPDATE_HELD where a lower curve is
+/// found and waits (UPDATES), never while rooms are short; else NOTHING_FIRM_YET,
+/// TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE,
+/// OFFSET_AT_LIMIT. A closed list that grows only by
+/// a release of this schema: a client that does not know a value says that nothing is suggested,
+/// without a reason.
 class HeatCurveNoSuggestionReason extends $pb.ProtobufEnum {
   /// No reason given: a suggestion is given, figures are withheld, or a reason this client's
   /// schema does not know.
@@ -550,6 +631,37 @@ class HeatCurveNoSuggestionReason extends $pb.ProtobufEnum {
               ? ''
               : 'HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT');
 
+  /// A curve would save on what is seen, but no band of it is firm yet (LIVING CURVE), no step of
+  /// the shift is called for, and no band's rooms are short of heat: the preview shows the
+  /// estimate meanwhile, and each point how far it has got.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_NOTHING_FIRM_YET =
+      HeatCurveNoSuggestionReason._(
+          9,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_NOTHING_FIRM_YET');
+
+  /// The plant's update mode is once per season (UPDATES) and its season can be told: a lower
+  /// curve found is suggested at the end of the season under way, or out of season at the next
+  /// one's. Never while rooms are short of heat. The preview stands meanwhile.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_WAITING_FOR_SEASON_END =
+      HeatCurveNoSuggestionReason._(
+          10,
+          _omitEnumNames
+              ? ''
+              : 'HEAT_CURVE_NO_SUGGESTION_REASON_WAITING_FOR_SEASON_END');
+
+  /// A lower curve is found, but the gateway's interval since the last lowering suggestion or
+  /// apply of the preview has not passed (UPDATES): it is suggested no sooner than
+  /// HeatCurveView.next_proposal_at. Never while rooms are short of heat. The preview stands
+  /// meanwhile.
+  static const HeatCurveNoSuggestionReason
+      HEAT_CURVE_NO_SUGGESTION_REASON_UPDATE_HELD =
+      HeatCurveNoSuggestionReason._(11,
+          _omitEnumNames ? '' : 'HEAT_CURVE_NO_SUGGESTION_REASON_UPDATE_HELD');
+
   static const $core.List<HeatCurveNoSuggestionReason> values =
       <HeatCurveNoSuggestionReason>[
     HEAT_CURVE_NO_SUGGESTION_REASON_UNSPECIFIED,
@@ -561,10 +673,13 @@ class HeatCurveNoSuggestionReason extends $pb.ProtobufEnum {
     HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_UNKNOWN,
     HEAT_CURVE_NO_SUGGESTION_REASON_CURVE_CLOSE,
     HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT,
+    HEAT_CURVE_NO_SUGGESTION_REASON_NOTHING_FIRM_YET,
+    HEAT_CURVE_NO_SUGGESTION_REASON_WAITING_FOR_SEASON_END,
+    HEAT_CURVE_NO_SUGGESTION_REASON_UPDATE_HELD,
   ];
 
   static final $core.List<HeatCurveNoSuggestionReason?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 8);
+      $pb.ProtobufEnum.$_initByValueList(values, 11);
   static HeatCurveNoSuggestionReason? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

@@ -1230,6 +1230,23 @@ message HeatCurveView {
   // home's plant to anyone but its household admins (as history), and for a heat source that
   // keeps no running totals.
   CompressorWear compressor_wear = 18;
+
+  // Today's estimate, appliable by hand (PREVIEW). Unset where no optimised curve is worked out,
+  // where the curve in force is already as it would set it, while rooms are short of heat in
+  // some band, where the heat source has no own curve to set, and where figures are withheld.
+  HeatCurvePreview preview = 19;
+
+  // The plant's update mode (UPDATES). Unspecified where figures are withheld.
+  HeatCurveUpdateMode update_mode = 20;
+
+  // The plant's heating season as it stands (HEATING SEASON). Unset where it cannot be told,
+  // and where figures are withheld.
+  HeatingSeason season = 21;
+
+  // With no_suggestion_reason UPDATE_HELD: when the lower curve found is suggested at the
+  // earliest, the interval after the last lowering suggestion or apply of the preview
+  // (UPDATES). Unset otherwise.
+  google.protobuf.Timestamp next_proposal_at = 22;
 }
 
 // How hard a heat source's compressor works (COMPRESSOR WEAR).
@@ -1334,11 +1351,14 @@ message HeatCurveViews {
 // known at a point (HeatCurvePoint.current_supply_centidegrees unset, as with a numbered curve
 // whose shape the gateway does not hold), an estimated point there is not lowered at all: it
 // stays at what the seen bands support, and a client tells it by that confidence with the
-// current supply unset. As bands are seen their points are confirmed, and may move.
+// current supply unset. As bands are seen their points are confirmed, and may move. A point
+// whose bands are firm (LIVING CURVE) is FIRM: the curve a suggestion sets follows it, and an
+// estimate no longer moves it until its bands go back to estimating.
 //
-// SUGGESTION (HeatCurveView.suggestion). Where setting the optimised curve would save against
-// the one in force, the gateway suggests it, with the saving:
-//   * CURVE: set the heat source's own curve to the optimised one, its shift to 0 and its bend
+// SUGGESTION (HeatCurveView.suggestion). Where setting the curve its firm bands support (LIVING
+// CURVE) would save against the one in force, or a firm band needs more than it, the gateway
+// suggests it, with the saving:
+//   * CURVE: set the heat source's own curve to the living one, its shift to 0 and its bend
 //     to none (the bend's offset to 0, its outdoor point kept). An own curve is meant with
 //     neither: a shift left in place moves every point of it, a bend the points near it, and a
 //     client says so.
@@ -1352,9 +1372,10 @@ message HeatCurveViews {
 // curve in force not known where it matters, the curve in force already close, rooms short of
 // heat, or the shift at the end of its range or not known.
 // A suggestion carries an identity (suggestion_id), so that an apply or a decline acts on what
-// was shown. The gateway gives a new one only on a material change: a point newly confirmed, a
-// point of the suggested curve changing (rounded to whole degrees, any change is one of 1 °C or
-// more), the suggestion changing kind, or a shift suggestion moving to another step.
+// was shown. The gateway gives a new one only on a material change, and no sooner than UPDATES
+// allows: a point of the suggested curve changing (rounded to whole degrees, any change is one
+// of 1 °C or more), the suggestion changing kind, or a shift suggestion moving to another step.
+// A point becoming firm without moving is no material change.
 // A suggestion refreshed without one keeps its identity, its settings updated, and with it any
 // decline, so that a decline is not asked again for the same suggestion. A home's wipe, and a
 // new household's residency in it, clear every decline of a heat source in the home, so that
@@ -1381,11 +1402,13 @@ message HeatCurveViews {
 // AUTOMATIC SAVINGS (HeatCurveView.automatic_savings). A plant's setting, on unless set off: while
 // on, the gateway applies a suggestion itself where the heat source takes a write of its
 // settings, records the apply as its own (HEAT_CURVE_APPLY_MODE_GATEWAY), and suggests the rest
-// as any other; a suggestion declined it does not apply. While off it applies nothing unasked.
+// as any other; a suggestion declined it does not apply, and it applies a suggestion only when
+// UPDATES would propose it. While off it applies nothing unasked.
 // Set by webrtc.v1.SetHeatCurveAutomaticSavings, by whoever applies (WHO APPLIES IT); setting it
 // back is its correction.
 //
-// WHO APPLIES IT (webrtc.v1.ApplyHeatCurve, DeclineHeatCurve, SetHeatCurveAutomaticSavings):
+// WHO APPLIES IT (webrtc.v1.ApplyHeatCurve, DeclineHeatCurve, SetHeatCurveAutomaticSavings,
+// SetHeatCurveUpdateMode):
 // whoever is given the view with its figures (HEAT CURVE, WHO SEES IT). For a plant in a home,
 // its household admins
 // and an installer under a commissioning grant covering the home; for a plant outside homes, the
@@ -1438,6 +1461,137 @@ message HeatCurveViews {
 // so an installer under a commissioning grant is given none; and for a home's plant none from
 // before its household's start, its last Clear history or its wipe (webrtc.v1 household.proto,
 // CLIMATE HISTORY, WIPE).
+//
+// LIVING CURVE. The curve a suggestion sets moves only where the evidence is firm. The gateway
+// judges each band of outdoor temperature (WHAT IT SHOWS) in blocks: runs of the band's quarter
+// hours in a row, such as two hours, each with the supply its most demanding zone needed. A band
+// is firm where all of these hold, by the gateway's thresholds: enough judged blocks over enough
+// local days (such as 10 blocks over 3 days); the spread of their needed supply narrow (such as
+// 95 % of it within ±1 °C, less than the smallest change suggested); and its estimate steady
+// across two estimates made apart (such as two weeks apart, within 0.5 °C). Only firm bands
+// move the curve: a point between firm bands lies on the line joining them, never below what a
+// band still estimating there needs; a colder point whose bands are not yet firm keeps the
+// curve in force; a milder one follows the warm end (OPTIMISED CURVE). A firm band whose new
+// estimate falls outside its range goes back to estimating, its evidence counted afresh from
+// then, as after a change to the building or its emitters. Each point says how far it has got
+// (HeatCurvePoint.confidence, days_judged). The evidence is kept a day at a time, as long as the
+// plant's hours are, and only as the band's figure, never which zone needed it; a household's
+// Clear history or wipe erases it for every plant that heated its home, and the plant's bands
+// are judged afresh from what is left.
+//
+// PREVIEW (HeatCurveView.preview). Today's estimate, the optimised curve with its points marked
+// firm or estimating, as the own curve's settings that would set it. It is given whether or not
+// anything is suggested, follows the estimate as it moves, and is never noticed (reporting.v1
+// NOTICES) nor declined. It may be applied at any time, by hand (webrtc.v1.ApplyHeatCurve naming
+// its preview_id), as the user's own choice; it is applied, verified and corrected as a
+// suggestion is (APPLYING), and kept in the history marked so
+// (HeatCurveHistoryEntry.from_preview). A preview_id is never a suggestion_id: the two are
+// minted apart, so that an apply names one or the other. No preview is given while rooms are
+// short of heat in some band, so that no lower curve is offered beside cold rooms (a step up,
+// or ROOMS_SHORT, says what holds), nor where the heat source has no own curve to set (no own
+// curve's points are read in its curve settings, as with a numbered curve alone): its settings
+// are an own curve's.
+//
+// UPDATES (HeatCurveView.update_mode, webrtc.v1.SetHeatCurveUpdateMode). A plant's setting of
+// when a lower curve is suggested, ONGOING unless set otherwise; setting it back is its
+// correction:
+//   * ONGOING: a suggestion that lowers the curve is made, and noticed, no sooner than the
+//     gateway's interval (such as two weeks) after the last lowering suggestion made (its
+//     suggestion_id minted) or the last apply of the preview, whichever is later: a new curve
+//     in force restarts it, a raise or a step back does not. Changes found meanwhile are
+//     grouped into the next; one found within the interval waits (NoSuggestionReason
+//     UPDATE_HELD), and HeatCurveView.next_proposal_at is when the interval ends;
+//   * ONCE_PER_SEASON: a suggestion that lowers the curve waits for the end of the heating
+//     season under way, or out of season for the next one's (HEATING SEASON; NoSuggestionReason
+//     WAITING_FOR_SEASON_END), and is then made from the firm bands, to apply before the next
+//     season (HeatCurveSuggestion.season_end). It stands until applied, declined or replaced at
+//     a later season's end. Open over the summer, it is reminded once more at the next season's
+//     start: its first day with space heating, or, where the season is told by outdoor
+//     temperature (HEATING_SEASON_BASIS_OUTDOOR_BELOW_STOP), the day it starts. While the
+//     season cannot be told, as where what told it is no longer read, a plant set so is
+//     suggested to as ONGOING, and its update_mode is still given as ONCE_PER_SEASON.
+// Where no lower curve is found, nothing waits, in either mode: the view gives whatever reason
+// holds. No lower curve is found, or held, while rooms are short of heat in some band
+// (ROOMS_SHORT, or a step up). A suggestion that raises the curve for comfort, a firm band
+// needing more than the curve in force, a step up where rooms are short of heat, or a step back
+// (STEP DOWN), is made at once in either mode. The preview stands throughout, as PREVIEW gives
+// it.
+//
+// HEATING SEASON (HeatCurveView.season). A plant's heating season starts on the first of three
+// days in five on which the heat source ran on space heating (COMPRESSOR WEAR,
+// space_heating_hours); where it keeps no running totals, when its own outdoor temperature,
+// averaged over its filtering time (device.v1.HeatSourceReadings.outdoor_filter_hours), drops
+// below its stop heating limit (heating_stop_outdoor_centidegrees). It ends after 14 days in a
+// row without. A plant first heard during a season counts it from then, and its evidence from
+// then. Where neither is known the season cannot be told: the view gives none, and
+// ONCE_PER_SEASON cannot be set.
+//
+// STEP DOWN. A step down of the shift is held where the margin between the curve in force and
+// what the rooms need shrinks toward the cold beyond noise (its least-squares trend over the
+// outdoor temperatures seen), as a step down would cut it first where it is thinnest. For 14
+// days after a step down is applied, a room below its comfort band at its current target is
+// answered at once with a step back (HeatCurveSuggestion.step_back).
+
+// A plant's update mode (UPDATES). A closed list that grows only by a release of this schema.
+enum HeatCurveUpdateMode {
+  // Not given, as where figures are withheld; never a setting.
+  HEAT_CURVE_UPDATE_MODE_UNSPECIFIED = 0;
+
+  // A lower curve is suggested as the firm bands move it, grouped. A plant's setting until set
+  // otherwise.
+  HEAT_CURVE_UPDATE_MODE_ONGOING = 1;
+
+  // A lower curve is suggested once, at the end of each heating season.
+  HEAT_CURVE_UPDATE_MODE_ONCE_PER_SEASON = 2;
+}
+
+// How a heating season was told (HEATING SEASON). A closed list that grows only by a release of
+// this schema.
+enum HeatingSeasonBasis {
+  // A basis this client's schema does not know: a client shows the season without it.
+  HEATING_SEASON_BASIS_UNSPECIFIED = 0;
+
+  // By the days the heat source ran on space heating, from its running totals.
+  HEATING_SEASON_BASIS_SPACE_HEATING = 1;
+
+  // By the heat source's own averaged outdoor temperature against its stop heating limit.
+  HEATING_SEASON_BASIS_OUTDOOR_BELOW_STOP = 2;
+
+  // The plant was first heard during the season: it counts from then.
+  HEATING_SEASON_BASIS_JOINED = 3;
+}
+
+// A plant's heating season as it stands (HEATING SEASON).
+message HeatingSeason {
+  // Whether the plant is in its heating season now.
+  bool in_season = 1;
+
+  // When the season now under way began, or, out of season, when the last one ended. Unset out
+  // of season where no season has ended since the plant was first heard.
+  google.protobuf.Timestamp since = 2;
+
+  // How the season was told: how its start was, in season; how its end was, out of it.
+  HeatingSeasonBasis basis = 3;
+}
+
+// Today's estimate as the settings that would set it (PREVIEW).
+message HeatCurvePreview {
+  // The preview's identity, named by webrtc.v1.ApplyHeatCurve to apply it. New whenever its
+  // settings change, so that an apply acts on what was shown; never a suggestion_id (PREVIEW).
+  string preview_id = 1;
+
+  // The heat source's curve settings that applying it sets, as HeatCurveSuggestion.settings
+  // gives a curve's: its own curve at the optimised curve's points, its shift and its bend's
+  // offset 0.
+  kusinta.iot.device.v1.HeatSourceReadings settings = 2;
+
+  // Whether the heat source takes a write of settings, as HeatCurveSuggestion.writable.
+  bool writable = 3;
+
+  // The saving against the curve in force, as HeatCurveSuggestion.saving_permille. Unset where
+  // not known, and where the preview raises the curve.
+  optional uint32 saving_permille = 4;
+}
 
 // A plant's automatic savings setting (AUTOMATIC SAVINGS). A closed list that grows only by a
 // release of this schema.
@@ -1458,11 +1612,16 @@ enum HeatCurvePointConfidence {
   // Not known, or a confidence this client's schema does not know: read as estimated.
   HEAT_CURVE_POINT_CONFIDENCE_UNSPECIFIED = 0;
 
-  // Enough days seen in the point's band to judge it.
+  // Enough days seen in the point's band to judge it, not yet firm: an estimate that may still
+  // move (LIVING CURVE).
   HEAT_CURVE_POINT_CONFIDENCE_SEEN = 1;
 
   // Extrapolated from the seen points, cautiously (CONFIDENCE).
   HEAT_CURVE_POINT_CONFIDENCE_ESTIMATED = 2;
+
+  // Its bands are firm (LIVING CURVE): the curve a suggestion sets follows it. A client that
+  // does not know it reads it as estimated.
+  HEAT_CURVE_POINT_CONFIDENCE_FIRM = 3;
 }
 
 // One point of an optimised curve.
@@ -1481,6 +1640,11 @@ message HeatCurvePoint {
   optional sint32 current_supply_centidegrees = 3;
 
   HeatCurvePointConfidence confidence = 4;
+
+  // The local days its bands have been judged on since their evidence was last counted afresh
+  // (LIVING CURVE): what a client shows beside a point not yet firm, such as "estimating, 6 days
+  // so far". 0 where none.
+  uint32 days_judged = 5;
 }
 
 // What a plant's curve could be (OPTIMISED CURVE).
@@ -1500,9 +1664,12 @@ message HeatCurveOptimised {
 
 // Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
 // Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
-// curve; else ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or
-// OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by a release of this schema: a
-// client that does not know a value says that nothing is suggested, without a reason.
+// curve; else ROOMS_SHORT; else WAITING_FOR_SEASON_END or UPDATE_HELD where a lower curve is
+// found and waits (UPDATES), never while rooms are short; else NOTHING_FIRM_YET,
+// TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE,
+// OFFSET_AT_LIMIT. A closed list that grows only by
+// a release of this schema: a client that does not know a value says that nothing is suggested,
+// without a reason.
 enum HeatCurveNoSuggestionReason {
   // No reason given: a suggestion is given, figures are withheld, or a reason this client's
   // schema does not know.
@@ -1538,6 +1705,22 @@ enum HeatCurveNoSuggestionReason {
 
   // A step of the shift is called for, but the shift is at the end of its range.
   HEAT_CURVE_NO_SUGGESTION_REASON_OFFSET_AT_LIMIT = 8;
+
+  // A curve would save on what is seen, but no band of it is firm yet (LIVING CURVE), no step of
+  // the shift is called for, and no band's rooms are short of heat: the preview shows the
+  // estimate meanwhile, and each point how far it has got.
+  HEAT_CURVE_NO_SUGGESTION_REASON_NOTHING_FIRM_YET = 9;
+
+  // The plant's update mode is once per season (UPDATES) and its season can be told: a lower
+  // curve found is suggested at the end of the season under way, or out of season at the next
+  // one's. Never while rooms are short of heat. The preview stands meanwhile.
+  HEAT_CURVE_NO_SUGGESTION_REASON_WAITING_FOR_SEASON_END = 10;
+
+  // A lower curve is found, but the gateway's interval since the last lowering suggestion or
+  // apply of the preview has not passed (UPDATES): it is suggested no sooner than
+  // HeatCurveView.next_proposal_at. Never while rooms are short of heat. The preview stands
+  // meanwhile.
+  HEAT_CURVE_NO_SUGGESTION_REASON_UPDATE_HELD = 11;
 }
 
 // The kind of change a suggestion makes (SUGGESTION). A closed list that grows only by a release
@@ -1604,6 +1787,15 @@ message HeatCurveSuggestion {
   // To whom the suggestion is handed, where it is (HAND-OVER). Unset where it is not, and to
   // anyone the hand-over is not given to.
   HeatCurveHandOver hand_over = 11;
+
+  // Set on a step of the shift up that sets back a step down applied within the last 14 days,
+  // a room having fallen below its comfort band at its current target since (STEP DOWN): made
+  // at once, outside the grouping (UPDATES), and told as such.
+  bool step_back = 12;
+
+  // Set on a suggestion made at the end of a heating season from the firm bands, to apply
+  // before the next season (UPDATES, ONCE_PER_SEASON).
+  bool season_end = 13;
 }
 
 // A suggestion handed to a technician (HAND-OVER).
@@ -1660,6 +1852,10 @@ message HeatCurveHistoryEntry {
   // whole days after the apply have passed, unset before, and unset where no day could be
   // compared. Given as the entry is (HISTORY).
   HeatCurveCompressorEffect compressor_effect = 8;
+
+  // Set where the preview was applied (PREVIEW), not a suggestion: suggestion_id is then the
+  // preview's preview_id, and kind CURVE.
+  bool from_preview = 9;
 }
 
 // How a curve came to be applied (APPLYING). A closed list that grows only by a release of this

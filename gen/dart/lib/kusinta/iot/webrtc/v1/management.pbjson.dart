@@ -2011,6 +2011,28 @@ final $typed_data.Uint8List setHeatCurveAutomaticSavingsDescriptor =
         'lkEl4KEWF1dG9tYXRpY19zYXZpbmdzGAIgASgOMjEua3VzaW50YS5pb3QuaGVhdGluZy52MS5I'
         'ZWF0Q3VydmVBdXRvbWF0aWNTYXZpbmdzUhBhdXRvbWF0aWNTYXZpbmdz');
 
+@$core.Deprecated('Use setHeatCurveUpdateModeDescriptor instead')
+const SetHeatCurveUpdateMode$json = {
+  '1': 'SetHeatCurveUpdateMode',
+  '2': [
+    {'1': 'plant_id', '3': 1, '4': 1, '5': 9, '10': 'plantId'},
+    {
+      '1': 'update_mode',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.heating.v1.HeatCurveUpdateMode',
+      '10': 'updateMode'
+    },
+  ],
+};
+
+/// Descriptor for `SetHeatCurveUpdateMode`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setHeatCurveUpdateModeDescriptor = $convert.base64Decode(
+    'ChZTZXRIZWF0Q3VydmVVcGRhdGVNb2RlEhkKCHBsYW50X2lkGAEgASgJUgdwbGFudElkEkwKC3'
+    'VwZGF0ZV9tb2RlGAIgASgOMisua3VzaW50YS5pb3QuaGVhdGluZy52MS5IZWF0Q3VydmVVcGRh'
+    'dGVNb2RlUgp1cGRhdGVNb2Rl');
+
 @$core.Deprecated('Use handHeatCurveSuggestionDescriptor instead')
 const HandHeatCurveSuggestion$json = {
   '1': 'HandHeatCurveSuggestion',
@@ -3226,6 +3248,15 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'handHeatCurveSuggestion'
     },
+    {
+      '1': 'set_heat_curve_update_mode',
+      '3': 92,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetHeatCurveUpdateMode',
+      '9': 0,
+      '10': 'setHeatCurveUpdateMode'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -3386,4 +3417,6 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'IzLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZXRIZWF0Q3VydmVBdXRvbWF0aWNTYXZpbmdzSABS'
     'HHNldEhlYXRDdXJ2ZUF1dG9tYXRpY1NhdmluZ3MSbQoaaGFuZF9oZWF0X2N1cnZlX3N1Z2dlc3'
     'Rpb24YWyABKAsyLi5rdXNpbnRhLmlvdC53ZWJydGMudjEuSGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rp'
-    'b25IAFIXaGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rpb25CCQoHcmVxdWVzdA==');
+    'b25IAFIXaGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rpb24Sawoac2V0X2hlYXRfY3VydmVfdXBkYXRlX2'
+    '1vZGUYXCABKAsyLS5rdXNpbnRhLmlvdC53ZWJydGMudjEuU2V0SGVhdEN1cnZlVXBkYXRlTW9k'
+    'ZUgAUhZzZXRIZWF0Q3VydmVVcGRhdGVNb2RlQgkKB3JlcXVlc3Q=');
