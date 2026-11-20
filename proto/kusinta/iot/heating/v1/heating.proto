@@ -1555,8 +1555,8 @@ message HeatCurveViews {
 // is lifted on at least the gateway's number of lifted quarter hours in it (such as four), and
 // the reading is judged lifted on at least its number of lifted dates (such as two) among the
 // building's last fourteen local dates, today's included. Every lifted quarter hour is left out
-// of the bands (WHAT IT SHOWS) and of their blocks (LIVING CURVE), whether or not the reading is
-// judged lifted.
+// of the bands (WHAT IT SHOWS) and of the blocks of each day judged since (LIVING CURVE; a day
+// judged before is not judged again), whether or not the reading is judged lifted.
 // It is advice to whoever is given the figures, never a condition: nothing waits on it and
 // nothing is refused for it. A client says what it costs (on sunny days the curve reads a
 // milder day than it is, so the supply drops and the rooms cool), and what may be done, by
