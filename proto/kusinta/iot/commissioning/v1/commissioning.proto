@@ -58,6 +58,21 @@ option optimize_for = SPEED;
 //       on low flow. The test closes this circuit's zones only, so the heat source's pump
 //       keeps whatever flow its other circuits have: the warning matters most where this
 //       circuit is the heat source's only one.
+//   "floor.return_probe_offset_centidegrees"  int, -200 to 200; a floor circuit. How much its
+//       return probe (heating.v1 FloorCircuit.return_probe) reads above its supply probe in the
+//       same water, in centidegrees, negative where it reads below: both probes in one water
+//       bath, or both fastened to one pipe, read after 30 minutes. FLOOR_HEATING; OPTIONAL;
+//       MEASURED. Applied only where the gateway sets the return against the supply (the
+//       circuit's temperature drop, and any figure built on it), as the return less this.
+//       Readings are kept as reported and the circuit's models are fitted on them as they are,
+//       so a new answer rewrites no history. Unknown: the gateway's own estimate where it has
+//       one, else 0. It estimates only from quarter hours in which both pipes carry the same
+//       water: every zone of the circuit closed for two hours or more, and either water moving
+//       through its minimum-flow path ("floor.min_flow_path" true) with the supply steady and
+//       well above the rooms', or both readings settled near the rooms' after the water has
+//       stood. Never from a quarter hour with a zone open; too few such quarter hours, and it
+//       has none. An estimate within 20 either way is taken as 0: probes that close agree as
+//       far as their readings tell.
 //   "plant.max_block_minutes"  uint, 1 to 240; a plant. The longest the gateway holds an input that
 //       blocks heat (heating.v1.HeatPumpControl) in one go. Unknown: the gateway blocks
 //       nothing outside an OUTPUT_LEASE test, and the plant feature needs it. It bounds every
