@@ -517,10 +517,11 @@ export const HeatCurveNoSuggestionReasonSchema = /*@__PURE__*/
 
 /**
  * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
- * Where several hold, the first of these: WAITING_FOR_SEASON_END or UPDATE_HELD where a
- * suggestion is found and waits (UPDATES); else COLD_END_UNKNOWN where the cold end alone
- * stopped a curve; else NOTHING_FIRM_YET, ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN,
- * CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by
+ * Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+ * curve; else ROOMS_SHORT; else WAITING_FOR_SEASON_END or UPDATE_HELD where a lower curve is
+ * found and waits (UPDATES), never while rooms are short; else NOTHING_FIRM_YET,
+ * TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE,
+ * OFFSET_AT_LIMIT. A closed list that grows only by
  * a release of this schema: a client that does not know a value says that nothing is suggested,
  * without a reason.
  *

@@ -3918,7 +3918,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
   CompressorWear ensureCompressorWear() => $_ensure(17);
 
   /// Today's estimate, appliable by hand (PREVIEW). Unset where no optimised curve is worked out,
-  /// where the curve in force is already as it would set it, and where figures are withheld.
+  /// where the curve in force is already as it would set it, while rooms are short of heat in
+  /// some band, where the heat source has no own curve to set, and where figures are withheld.
   @$pb.TagNumber(19)
   HeatCurvePreview get preview => $_getN(18);
   @$pb.TagNumber(19)
@@ -3954,7 +3955,8 @@ class HeatCurveView extends $pb.GeneratedMessage {
   HeatingSeason ensureSeason() => $_ensure(20);
 
   /// With no_suggestion_reason UPDATE_HELD: when the lower curve found is suggested at the
-  /// earliest (UPDATES). Unset otherwise.
+  /// earliest, the interval after the last lowering suggestion or apply of the preview
+  /// (UPDATES). Unset otherwise.
   @$pb.TagNumber(22)
   $3.Timestamp get nextProposalAt => $_getN(21);
   @$pb.TagNumber(22)
@@ -4558,7 +4560,7 @@ class HeatCurvePreview extends $pb.GeneratedMessage {
   static HeatCurvePreview? _defaultInstance;
 
   /// The preview's identity, named by webrtc.v1.ApplyHeatCurve to apply it. New whenever its
-  /// settings change, so that an apply acts on what was shown.
+  /// settings change, so that an apply acts on what was shown; never a suggestion_id (PREVIEW).
   @$pb.TagNumber(1)
   $core.String get previewId => $_getSZ(0);
   @$pb.TagNumber(1)

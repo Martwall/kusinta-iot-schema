@@ -2706,7 +2706,8 @@ export declare const GetHeatCurveViewSchema: GenMessage<GetHeatCurveView>;
  *                                     preview as it stands: a client reads the view again and
  *                                     shows what changed;
  *   {"reason": "not_writable"}        mode WRITTEN where the heat source takes no write of the
- *                                     suggestion's settings (HeatCurveSuggestion.writable);
+ *                                     suggestion's or the preview's settings
+ *                                     (HeatCurveSuggestion.writable, HeatCurvePreview.writable);
  *   {"reason": "nothing_to_revert"}   revert where no apply has settings to set back.
  * A mode other than WRITTEN or BY_HAND is refused as INVALID_REQUEST with metadata
  * {"reason": "mode"}. A write the heat source does not take is refused as UNAVAILABLE with
@@ -2759,9 +2760,10 @@ export declare const ApplyHeatCurveSchema: GenMessage<ApplyHeatCurve>;
  * the residents of the home its room lies in alone (heating.v1 HEAT CURVE, ROOM TARGETS), and
  * answered with the views their home's reading gives them. One naming a room-target suggestion
  * the caller may not see is answered as one naming an id that is not the plant's
- * (suggestion_changed), so that the refusal says nothing of whether it exists. Declining a
- * declined suggestion, and withdrawing a decline that is not there, change nothing and are
- * answered as it stands.
+ * (suggestion_changed), so that the refusal says nothing of whether it exists. A preview is
+ * never declined: one naming a preview_id (heating.v1.HeatCurvePreview) is answered as
+ * suggestion_changed too. Declining a declined suggestion, and withdrawing a decline that is not
+ * there, change nothing and are answered as it stands.
  *
  * @generated from message kusinta.iot.webrtc.v1.DeclineHeatCurve
  */

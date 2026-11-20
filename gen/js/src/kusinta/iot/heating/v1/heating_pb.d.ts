@@ -1702,7 +1702,8 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
 
   /**
    * Today's estimate, appliable by hand (PREVIEW). Unset where no optimised curve is worked out,
-   * where the curve in force is already as it would set it, and where figures are withheld.
+   * where the curve in force is already as it would set it, while rooms are short of heat in
+   * some band, where the heat source has no own curve to set, and where figures are withheld.
    *
    * @generated from field: kusinta.iot.heating.v1.HeatCurvePreview preview = 19;
    */
@@ -1725,7 +1726,8 @@ export declare type HeatCurveView = Message<"kusinta.iot.heating.v1.HeatCurveVie
 
   /**
    * With no_suggestion_reason UPDATE_HELD: when the lower curve found is suggested at the
-   * earliest (UPDATES). Unset otherwise.
+   * earliest, the interval after the last lowering suggestion or apply of the preview
+   * (UPDATES). Unset otherwise.
    *
    * @generated from field: google.protobuf.Timestamp next_proposal_at = 22;
    */
@@ -1966,7 +1968,7 @@ export declare const HeatingSeasonSchema: GenMessage<HeatingSeason>;
 export declare type HeatCurvePreview = Message<"kusinta.iot.heating.v1.HeatCurvePreview"> & {
   /**
    * The preview's identity, named by webrtc.v1.ApplyHeatCurve to apply it. New whenever its
-   * settings change, so that an apply acts on what was shown.
+   * settings change, so that an apply acts on what was shown; never a suggestion_id (PREVIEW).
    *
    * @generated from field: string preview_id = 1;
    */
@@ -3146,10 +3148,11 @@ export declare const HeatCurvePointConfidenceSchema: GenEnum<HeatCurvePointConfi
 
 /**
  * Why nothing is suggested for a plant (SUGGESTION): one reason, what stopped a suggestion.
- * Where several hold, the first of these: WAITING_FOR_SEASON_END or UPDATE_HELD where a
- * suggestion is found and waits (UPDATES); else COLD_END_UNKNOWN where the cold end alone
- * stopped a curve; else NOTHING_FIRM_YET, ROOMS_SHORT, TOO_LITTLE_SEEN, SHIFT_UNKNOWN,
- * CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE, OFFSET_AT_LIMIT. A closed list that grows only by
+ * Where several hold, the first of these: COLD_END_UNKNOWN where the cold end alone stopped a
+ * curve; else ROOMS_SHORT; else WAITING_FOR_SEASON_END or UPDATE_HELD where a lower curve is
+ * found and waits (UPDATES), never while rooms are short; else NOTHING_FIRM_YET,
+ * TOO_LITTLE_SEEN, SHIFT_UNKNOWN, CURVE_UNKNOWN, CURVE_CLOSE or OWN_CURVE_CLOSE,
+ * OFFSET_AT_LIMIT. A closed list that grows only by
  * a release of this schema: a client that does not know a value says that nothing is suggested,
  * without a reason.
  *
@@ -3228,26 +3231,28 @@ export enum HeatCurveNoSuggestionReason {
   OFFSET_AT_LIMIT = 8,
 
   /**
-   * A curve would save on what is seen, but no band of it is firm yet (LIVING CURVE), and no
-   * step of the shift is called for: the preview shows the estimate meanwhile, and each point
-   * how far it has got.
+   * A curve would save on what is seen, but no band of it is firm yet (LIVING CURVE), no step of
+   * the shift is called for, and no band's rooms are short of heat: the preview shows the
+   * estimate meanwhile, and each point how far it has got.
    *
    * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_NOTHING_FIRM_YET = 9;
    */
   NOTHING_FIRM_YET = 9,
 
   /**
-   * The plant's update mode is once per season (UPDATES) and its heating season is under way:
-   * a lower curve found is suggested at the season's end. The preview stands meanwhile.
+   * The plant's update mode is once per season (UPDATES) and its season can be told: a lower
+   * curve found is suggested at the end of the season under way, or out of season at the next
+   * one's. Never while rooms are short of heat. The preview stands meanwhile.
    *
    * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_WAITING_FOR_SEASON_END = 10;
    */
   WAITING_FOR_SEASON_END = 10,
 
   /**
-   * A lower curve is found, but the last suggestion was made less than the gateway's interval
-   * ago (UPDATES): it is suggested no sooner than HeatCurveView.next_proposal_at. The preview
-   * stands meanwhile.
+   * A lower curve is found, but the gateway's interval since the last lowering suggestion or
+   * apply of the preview has not passed (UPDATES): it is suggested no sooner than
+   * HeatCurveView.next_proposal_at. Never while rooms are short of heat. The preview stands
+   * meanwhile.
    *
    * @generated from enum value: HEAT_CURVE_NO_SUGGESTION_REASON_UPDATE_HELD = 11;
    */
