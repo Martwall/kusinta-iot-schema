@@ -4,7 +4,8 @@ These assert the decisions the shape encodes:
 
   * the rule is a price rule in how it is run, with a number of its own
   * a shadow day of any other rule carries no floor control counts
-  * a day's counts set the rule as predicted beside the control that ran, counted alike
+  * a day's counts set the rule beside the control that ran, both predicted by one model
+  * the rooms' measured counts are kept apart, shown and never compared with the predicted
   * the counts give the room quarter hours near and above target, the tolerance that near
     means, and the zones' starts
   * readiness judges the rule by time near target and time above it
@@ -51,6 +52,28 @@ def test_a_day_sets_the_rule_beside_the_control_that_ran():
         decoded.floor_control.near_target_room_quarters,
         decoded.floor_control_as_run.near_target_room_quarters,
     ) == (150, 120)
+
+
+def test_a_day_without_room_readings_has_no_measured_counts():
+    decoded = _round_trip(
+        heating_pb2.ShadowDay(floor_control=heating_pb2.FloorControlCounts(room_quarters=96))
+    )
+
+    assert not decoded.HasField("floor_control_measured")
+
+
+def test_a_day_sets_the_measured_counts_apart_from_the_predicted_ones():
+    day = heating_pb2.ShadowDay(
+        floor_control_as_run=heating_pb2.FloorControlCounts(above_target_room_quarters=12),
+        floor_control_measured=heating_pb2.FloorControlCounts(above_target_room_quarters=20),
+    )
+
+    decoded = _round_trip(day)
+
+    assert (
+        decoded.floor_control_as_run.above_target_room_quarters,
+        decoded.floor_control_measured.above_target_room_quarters,
+    ) == (12, 20)
 
 
 def test_the_counts_are_of_room_quarter_hours():

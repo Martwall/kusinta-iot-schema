@@ -150,7 +150,9 @@ class PriceRule extends $pb.ProtobufEnum {
   /// floor_control_as_run). Zones whose control room is one hold one share. The cycle, the share
   /// and how it follows the error are the gateway's. Where a zone's control room is not heard it
   /// runs a cautious fixed share (climate.v1.CLIMATE_EXPLANATION_KIND_NO_READING), and where no
-  /// share is yet known for it, it is left at rest. A window open in the control room holds the
+  /// share is yet known for it, its output is left at its rest value as bound (ContactBinding):
+  /// the contact closed and the zone heating, capped only by its circuit's supply limiter, as when
+  /// the gateway is gone — never held off. A window open in the control room holds the
   /// zone off, and a price rule that drives the zone (PRICE_RULE_FLOOR_PRE_HEAT, LIVE) decides it
   /// over the share while it does. Holds no input of the plant: not a blocking rule.
   static const PriceRule PRICE_RULE_FLOOR_TIME_SHARE =

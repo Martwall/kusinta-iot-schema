@@ -2372,6 +2372,7 @@ class ShadowDay extends $pb.GeneratedMessage {
     $core.String? ratePublishedOn,
     FloorControlCounts? floorControl,
     FloorControlCounts? floorControlAsRun,
+    FloorControlCounts? floorControlMeasured,
   }) {
     final result = create();
     if (date != null) result.date = date;
@@ -2395,6 +2396,8 @@ class ShadowDay extends $pb.GeneratedMessage {
     if (ratePublishedOn != null) result.ratePublishedOn = ratePublishedOn;
     if (floorControl != null) result.floorControl = floorControl;
     if (floorControlAsRun != null) result.floorControlAsRun = floorControlAsRun;
+    if (floorControlMeasured != null)
+      result.floorControlMeasured = floorControlMeasured;
     return result;
   }
 
@@ -2453,6 +2456,8 @@ class ShadowDay extends $pb.GeneratedMessage {
     ..aOM<FloorControlCounts>(16, _omitFieldNames ? '' : 'floorControl',
         subBuilder: FloorControlCounts.create)
     ..aOM<FloorControlCounts>(17, _omitFieldNames ? '' : 'floorControlAsRun',
+        subBuilder: FloorControlCounts.create)
+    ..aOM<FloorControlCounts>(18, _omitFieldNames ? '' : 'floorControlMeasured',
         subBuilder: FloorControlCounts.create)
     ..hasRequiredFields = false;
 
@@ -2661,9 +2666,12 @@ class ShadowDay extends $pb.GeneratedMessage {
   void clearRatePublishedOn() => $_clearField(15);
 
   /// For a rule that steers floor zones by their rooms' error (PRICE_RULE_FLOOR_TIME_SHARE): how
-  /// the rooms it judges would have been held under it, as predicted (floor_control), and how they
-  /// were held under the control that ran that day (floor_control_as_run), counted alike, so that
-  /// a client sets the two side by side. Both unset for every other rule, and on a day kept before
+  /// the rooms it judges would have been held under it (floor_control), and under the control
+  /// that ran that day (floor_control_as_run), both as one model of the rooms predicts them from
+  /// the day's weather and the zones' switching: the rule's switching for the one, the switching
+  /// that ran for the other. Counted alike, so that neither side carries what a model leaves out
+  /// (a draught, the sun, a door left open) and the other not: they are what the rule is judged
+  /// by (commissioning.v1 READINESS). Both unset for every other rule, and on a day kept before
   /// they were computed.
   @$pb.TagNumber(16)
   FloorControlCounts get floorControl => $_getN(15);
@@ -2686,11 +2694,28 @@ class ShadowDay extends $pb.GeneratedMessage {
   void clearFloorControlAsRun() => $_clearField(17);
   @$pb.TagNumber(17)
   FloorControlCounts ensureFloorControlAsRun() => $_ensure(16);
+
+  /// For the same rule: how the rooms were held that day as their own readings measured them,
+  /// under the control that ran. Shown beside the two above, never compared with them nor judged
+  /// by: a measurement holds what a prediction cannot. Unset where the rooms' readings did not
+  /// cover the day, for every other rule, and on a day kept before it was computed.
+  @$pb.TagNumber(18)
+  FloorControlCounts get floorControlMeasured => $_getN(17);
+  @$pb.TagNumber(18)
+  set floorControlMeasured(FloorControlCounts value) => $_setField(18, value);
+  @$pb.TagNumber(18)
+  $core.bool hasFloorControlMeasured() => $_has(17);
+  @$pb.TagNumber(18)
+  void clearFloorControlMeasured() => $_clearField(18);
+  @$pb.TagNumber(18)
+  FloorControlCounts ensureFloorControlMeasured() => $_ensure(17);
 }
 
 /// How a plant's floor zones held the rooms one rule judges over one day (ShadowDay.floor_control,
-/// floor_control_as_run). A quarter hour in which a room's window was open is not counted for that
-/// room, nor one in which its temperature was not heard.
+/// floor_control_as_run, floor_control_measured): predicted by the model for the first two, read
+/// from the rooms' own sensors for the third. Only counts of one kind are compared: predicted with
+/// predicted. A quarter hour in which a room's window was open is not counted for that room, nor
+/// one in which its temperature was not heard.
 class FloorControlCounts extends $pb.GeneratedMessage {
   factory FloorControlCounts({
     $core.int? roomQuarters,
@@ -2768,9 +2793,9 @@ class FloorControlCounts extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearRoomQuarters() => $_clearField(1);
 
-  /// Of room_quarters, those in which the room was, or was predicted to be, within the tolerance of
-  /// its target (near_target_tolerance_centidegrees) either side, and those in which it was above
-  /// its target by more than the tolerance.
+  /// Of room_quarters, those in which the room was predicted, or measured, to be within the
+  /// tolerance of its target (near_target_tolerance_centidegrees) either side, and those in which
+  /// it was above its target by more than the tolerance.
   @$pb.TagNumber(2)
   $core.int get nearTargetRoomQuarters => $_getIZ(1);
   @$pb.TagNumber(2)

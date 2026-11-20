@@ -1390,6 +1390,14 @@ const ShadowDay$json = {
       '6': '.kusinta.iot.heating.v1.FloorControlCounts',
       '10': 'floorControlAsRun'
     },
+    {
+      '1': 'floor_control_measured',
+      '3': 18,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.heating.v1.FloorControlCounts',
+      '10': 'floorControlMeasured'
+    },
   ],
   '8': [
     {'1': '_cautious_net_saving_micro_eur'},
@@ -1418,9 +1426,11 @@ final $typed_data.Uint8List shadowDayDescriptor = $convert.base64Decode(
     'bGlzaGVkT24STwoNZmxvb3JfY29udHJvbBgQIAEoCzIqLmt1c2ludGEuaW90LmhlYXRpbmcudj'
     'EuRmxvb3JDb250cm9sQ291bnRzUgxmbG9vckNvbnRyb2wSWwoUZmxvb3JfY29udHJvbF9hc19y'
     'dW4YESABKAsyKi5rdXNpbnRhLmlvdC5oZWF0aW5nLnYxLkZsb29yQ29udHJvbENvdW50c1IRZm'
-    'xvb3JDb250cm9sQXNSdW5CIAoeX2NhdXRpb3VzX25ldF9zYXZpbmdfbWljcm9fZXVyQhgKFl9z'
-    'YXZpbmdfc2hhcmVfcGVybWlsbGVCIQofX2NhdXRpb3VzX3NhdmluZ19zaGFyZV9wZXJtaWxsZU'
-    'IPCg1fc2hhcmVfd2VpZ2h0');
+    'xvb3JDb250cm9sQXNSdW4SYAoWZmxvb3JfY29udHJvbF9tZWFzdXJlZBgSIAEoCzIqLmt1c2lu'
+    'dGEuaW90LmhlYXRpbmcudjEuRmxvb3JDb250cm9sQ291bnRzUhRmbG9vckNvbnRyb2xNZWFzdX'
+    'JlZEIgCh5fY2F1dGlvdXNfbmV0X3NhdmluZ19taWNyb19ldXJCGAoWX3NhdmluZ19zaGFyZV9w'
+    'ZXJtaWxsZUIhCh9fY2F1dGlvdXNfc2F2aW5nX3NoYXJlX3Blcm1pbGxlQg8KDV9zaGFyZV93ZW'
+    'lnaHQ=');
 
 @$core.Deprecated('Use floorControlCountsDescriptor instead')
 const FloorControlCounts$json = {

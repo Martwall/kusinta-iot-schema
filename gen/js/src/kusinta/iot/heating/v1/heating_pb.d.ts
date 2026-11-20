@@ -1139,9 +1139,12 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
 
   /**
    * For a rule that steers floor zones by their rooms' error (PRICE_RULE_FLOOR_TIME_SHARE): how
-   * the rooms it judges would have been held under it, as predicted (floor_control), and how they
-   * were held under the control that ran that day (floor_control_as_run), counted alike, so that
-   * a client sets the two side by side. Both unset for every other rule, and on a day kept before
+   * the rooms it judges would have been held under it (floor_control), and under the control
+   * that ran that day (floor_control_as_run), both as one model of the rooms predicts them from
+   * the day's weather and the zones' switching: the rule's switching for the one, the switching
+   * that ran for the other. Counted alike, so that neither side carries what a model leaves out
+   * (a draught, the sun, a door left open) and the other not: they are what the rule is judged
+   * by (commissioning.v1 READINESS). Both unset for every other rule, and on a day kept before
    * they were computed.
    *
    * @generated from field: kusinta.iot.heating.v1.FloorControlCounts floor_control = 16;
@@ -1152,6 +1155,16 @@ export declare type ShadowDay = Message<"kusinta.iot.heating.v1.ShadowDay"> & {
    * @generated from field: kusinta.iot.heating.v1.FloorControlCounts floor_control_as_run = 17;
    */
   floorControlAsRun?: FloorControlCounts | undefined;
+
+  /**
+   * For the same rule: how the rooms were held that day as their own readings measured them,
+   * under the control that ran. Shown beside the two above, never compared with them nor judged
+   * by: a measurement holds what a prediction cannot. Unset where the rooms' readings did not
+   * cover the day, for every other rule, and on a day kept before it was computed.
+   *
+   * @generated from field: kusinta.iot.heating.v1.FloorControlCounts floor_control_measured = 18;
+   */
+  floorControlMeasured?: FloorControlCounts | undefined;
 };
 
 /**
@@ -1162,8 +1175,10 @@ export declare const ShadowDaySchema: GenMessage<ShadowDay>;
 
 /**
  * How a plant's floor zones held the rooms one rule judges over one day (ShadowDay.floor_control,
- * floor_control_as_run). A quarter hour in which a room's window was open is not counted for that
- * room, nor one in which its temperature was not heard.
+ * floor_control_as_run, floor_control_measured): predicted by the model for the first two, read
+ * from the rooms' own sensors for the third. Only counts of one kind are compared: predicted with
+ * predicted. A quarter hour in which a room's window was open is not counted for that room, nor
+ * one in which its temperature was not heard.
  *
  * @generated from message kusinta.iot.heating.v1.FloorControlCounts
  */
@@ -1177,9 +1192,9 @@ export declare type FloorControlCounts = Message<"kusinta.iot.heating.v1.FloorCo
   roomQuarters: number;
 
   /**
-   * Of room_quarters, those in which the room was, or was predicted to be, within the tolerance of
-   * its target (near_target_tolerance_centidegrees) either side, and those in which it was above
-   * its target by more than the tolerance.
+   * Of room_quarters, those in which the room was predicted, or measured, to be within the
+   * tolerance of its target (near_target_tolerance_centidegrees) either side, and those in which
+   * it was above its target by more than the tolerance.
    *
    * @generated from field: uint32 near_target_room_quarters = 2;
    */
@@ -2849,7 +2864,9 @@ export enum PriceRule {
    * floor_control_as_run). Zones whose control room is one hold one share. The cycle, the share
    * and how it follows the error are the gateway's. Where a zone's control room is not heard it
    * runs a cautious fixed share (climate.v1.CLIMATE_EXPLANATION_KIND_NO_READING), and where no
-   * share is yet known for it, it is left at rest. A window open in the control room holds the
+   * share is yet known for it, its output is left at its rest value as bound (ContactBinding):
+   * the contact closed and the zone heating, capped only by its circuit's supply limiter, as when
+   * the gateway is gone — never held off. A window open in the control room holds the
    * zone off, and a price rule that drives the zone (PRICE_RULE_FLOOR_PRE_HEAT, LIVE) decides it
    * over the share while it does. Holds no input of the plant: not a blocking rule.
    *

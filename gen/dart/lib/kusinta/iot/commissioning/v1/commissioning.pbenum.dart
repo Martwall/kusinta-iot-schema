@@ -361,17 +361,18 @@ class ReadinessGateKind extends $pb.ProtobufEnum {
           _omitEnumNames ? '' : 'READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS');
 
   /// For a rule that steers floor zones by their rooms' error (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE):
-  /// the room quarter hours near target over the days counted, under the rule as predicted (have)
-  /// and under the control that ran (need) (heating.v1.FloorControlCounts
-  /// near_target_room_quarters). Met when have reaches need.
+  /// the room quarter hours near target over the days counted, under the rule (have) and under the
+  /// control that ran (need), both as the same model predicts them (heating.v1.ShadowDay
+  /// floor_control, floor_control_as_run; FloorControlCounts near_target_room_quarters), never a
+  /// prediction against the rooms' readings. Met when have reaches need.
   static const ReadinessGateKind READINESS_GATE_KIND_NEAR_TARGET =
       ReadinessGateKind._(
           7, _omitEnumNames ? '' : 'READINESS_GATE_KIND_NEAR_TARGET');
 
   /// For the same rule: the room quarter hours above target by more than the tolerance over the
-  /// days counted, under the rule as predicted (have) and under the control that ran (need)
-  /// (heating.v1.FloorControlCounts above_target_room_quarters). Met when have is below need, or
-  /// both are 0.
+  /// days counted, under the rule (have) and under the control that ran (need), both as the same
+  /// model predicts them, as for READINESS_GATE_KIND_NEAR_TARGET (FloorControlCounts
+  /// above_target_room_quarters). Met when have is below need, or both are 0.
   static const ReadinessGateKind READINESS_GATE_KIND_ABOVE_TARGET =
       ReadinessGateKind._(
           8, _omitEnumNames ? '' : 'READINESS_GATE_KIND_ABOVE_TARGET');
