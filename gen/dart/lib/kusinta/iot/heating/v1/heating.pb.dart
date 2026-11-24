@@ -488,7 +488,8 @@ class HeatPumpControl extends $pb.GeneratedMessage {
   /// positive. So hot_water_block, like sg_ready_block, is given no longer a lease than a boost
   /// or a positive curve_adjustment held with it, and a negative curve_adjustment no longer a
   /// lease than a boost. The one exception is add_on_heater_block against sg_ready_boost, which
-  /// are not ordered: a boost is only used where it brings in no add-on heater. Against a
+  /// are not ordered: a boost is only used where the heat source boosts on its compressor alone
+  /// ("plant.boost_compressor_only", commissioning.v1), so it brings in no add-on heater. Against a
   /// positive curve_adjustment add_on_heater_block is ordered as the rule says. Among inputs that
   /// only hold heat back the order is free: each lapse alone gives back what it held.
   @$pb.TagNumber(1)

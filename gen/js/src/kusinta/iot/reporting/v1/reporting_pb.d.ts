@@ -1426,6 +1426,17 @@ export enum NoticeKind {
    * @generated from enum value: NOTICE_KIND_PRICE_RULE_COMFORT_COST = 6;
    */
   PRICE_RULE_COMFORT_COST = 6,
+
+  /**
+   * As NOTICE_KIND_PRICE_RULE_READY, told instead of it where, as the rule became ready, the heat
+   * source's own price function held it from LIVE (commissioning.v1 READINESS, LIVE HOLDS,
+   * "rule_own_price_function"): ready once that function is turned off at the heat source, or
+   * answered off. One of the two is told for each stretch the rule is in SHADOW, as it stood when
+   * told. To the home's household admins, and never to anyone else.
+   *
+   * @generated from enum value: NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF = 7;
+   */
+  PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF = 7,
 }
 
 /**

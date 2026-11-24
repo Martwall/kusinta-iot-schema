@@ -1091,6 +1091,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     $core.bool? peakChargeIncluded,
     $core.String? comfortCostSeenOn,
     $core.Iterable<$1.SpaceId>? ownBandRoomIds,
+    $core.Iterable<LiveHold>? liveHolds,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -1106,6 +1107,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
       result.peakChargeIncluded = peakChargeIncluded;
     if (comfortCostSeenOn != null) result.comfortCostSeenOn = comfortCostSeenOn;
     if (ownBandRoomIds != null) result.ownBandRoomIds.addAll(ownBandRoomIds);
+    if (liveHolds != null) result.liveHolds.addAll(liveHolds);
     return result;
   }
 
@@ -1145,6 +1147,8 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     ..pc<$1.SpaceId>(
         12, _omitFieldNames ? '' : 'ownBandRoomIds', $pb.PbFieldType.PM,
         subBuilder: $1.SpaceId.create)
+    ..pc<LiveHold>(13, _omitFieldNames ? '' : 'liveHolds', $pb.PbFieldType.PM,
+        subBuilder: LiveHold.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1296,6 +1300,82 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   /// own. Given as the readiness is (READINESS, WHO SEES IT).
   @$pb.TagNumber(12)
   $pb.PbList<$1.SpaceId> get ownBandRoomIds => $_getList(11);
+
+  /// What holds the rule from driving besides its evidence (READINESS, LIVE HOLDS): in SHADOW, each
+  /// precondition webrtc.v1.SetPriceRuleMode refuses LIVE for now; LIVE, each it drives nothing for
+  /// meanwhile. ready is not changed by them. Empty where none holds.
+  @$pb.TagNumber(13)
+  $pb.PbList<LiveHold> get liveHolds => $_getList(12);
+}
+
+/// One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as
+/// webrtc.v1.SetPriceRuleMode names its refusal, so that a client words both alike.
+class LiveHold extends $pb.GeneratedMessage {
+  factory LiveHold({
+    $core.String? reason,
+    $core.Iterable<$core.MapEntry<$core.String, $core.String>>? metadata,
+  }) {
+    final result = create();
+    if (reason != null) result.reason = reason;
+    if (metadata != null) result.metadata.addEntries(metadata);
+    return result;
+  }
+
+  LiveHold._();
+
+  factory LiveHold.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory LiveHold.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'LiveHold',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.commissioning.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'reason')
+    ..m<$core.String, $core.String>(2, _omitFieldNames ? '' : 'metadata',
+        entryClassName: 'LiveHold.MetadataEntry',
+        keyFieldType: $pb.PbFieldType.OS,
+        valueFieldType: $pb.PbFieldType.OS,
+        packageName: const $pb.PackageName('kusinta.iot.commissioning.v1'))
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LiveHold clone() => LiveHold()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  LiveHold copyWith(void Function(LiveHold) updates) =>
+      super.copyWith((message) => updates(message as LiveHold)) as LiveHold;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static LiveHold create() => LiveHold._();
+  @$core.override
+  LiveHold createEmptyInstance() => create();
+  static $pb.PbList<LiveHold> createRepeated() => $pb.PbList<LiveHold>();
+  @$core.pragma('dart2js:noInline')
+  static LiveHold getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LiveHold>(create);
+  static LiveHold? _defaultInstance;
+
+  /// The refusal's reason: "rule_own_price_function". A reason this client does not know is shown
+  /// as a step before LIVE, unnamed.
+  @$pb.TagNumber(1)
+  $core.String get reason => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set reason($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasReason() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearReason() => $_clearField(1);
+
+  /// The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown").
+  @$pb.TagNumber(2)
+  $pb.PbMap<$core.String, $core.String> get metadata => $_getMap(1);
 }
 
 /// One gate of a price rule's readiness (READINESS, THE GATES).

@@ -809,6 +809,14 @@ const PriceRuleReadiness$json = {
       '6': '.kusinta.iot.identity.v1.SpaceId',
       '10': 'ownBandRoomIds'
     },
+    {
+      '1': 'live_holds',
+      '3': 13,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.LiveHold',
+      '10': 'liveHolds'
+    },
   ],
 };
 
@@ -825,7 +833,42 @@ final $typed_data.Uint8List priceRuleReadinessDescriptor = $convert.base64Decode
     'Q29tZm9ydBIwChRwZWFrX2NoYXJnZV9pbmNsdWRlZBgKIAEoCFIScGVha0NoYXJnZUluY2x1ZG'
     'VkEi8KFGNvbWZvcnRfY29zdF9zZWVuX29uGAsgASgJUhFjb21mb3J0Q29zdFNlZW5PbhJLChFv'
     'd25fYmFuZF9yb29tX2lkcxgMIAMoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSW'
-    'RSDm93bkJhbmRSb29tSWRz');
+    'RSDm93bkJhbmRSb29tSWRzEkUKCmxpdmVfaG9sZHMYDSADKAsyJi5rdXNpbnRhLmlvdC5jb21t'
+    'aXNzaW9uaW5nLnYxLkxpdmVIb2xkUglsaXZlSG9sZHM=');
+
+@$core.Deprecated('Use liveHoldDescriptor instead')
+const LiveHold$json = {
+  '1': 'LiveHold',
+  '2': [
+    {'1': 'reason', '3': 1, '4': 1, '5': 9, '10': 'reason'},
+    {
+      '1': 'metadata',
+      '3': 2,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.commissioning.v1.LiveHold.MetadataEntry',
+      '10': 'metadata'
+    },
+  ],
+  '3': [LiveHold_MetadataEntry$json],
+};
+
+@$core.Deprecated('Use liveHoldDescriptor instead')
+const LiveHold_MetadataEntry$json = {
+  '1': 'MetadataEntry',
+  '2': [
+    {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
+    {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
+  ],
+  '7': {'7': true},
+};
+
+/// Descriptor for `LiveHold`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List liveHoldDescriptor = $convert.base64Decode(
+    'CghMaXZlSG9sZBIWCgZyZWFzb24YASABKAlSBnJlYXNvbhJQCghtZXRhZGF0YRgCIAMoCzI0Lm'
+    't1c2ludGEuaW90LmNvbW1pc3Npb25pbmcudjEuTGl2ZUhvbGQuTWV0YWRhdGFFbnRyeVIIbWV0'
+    'YWRhdGEaOwoNTWV0YWRhdGFFbnRyeRIQCgNrZXkYASABKAlSA2tleRIUCgV2YWx1ZRgCIAEoCV'
+    'IFdmFsdWU6AjgB');
 
 @$core.Deprecated('Use readinessGateDescriptor instead')
 const ReadinessGate$json = {

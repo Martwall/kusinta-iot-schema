@@ -135,10 +135,11 @@ class PriceRule extends $pb.ProtobufEnum {
   /// (device.v1.HeatSourceReadings, periodic_increase_*), the reading standing over an answer, and
   /// otherwise answered with a value (commissioning.v1). False, whether reported or answered, is
   /// an answer: no periodic increase to keep clear of. Besides,
-  /// where the plant binds sg_ready_boost and "plant.boost_uses_add_on" is false, it may ask for
-  /// hot water in cheap quarter hours, never during a block, and only while that input too may be
-  /// driven (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on
-  /// heater buys its heat at the dearest rate.
+  /// where the plant binds sg_ready_boost, "plant.boost_compressor_only" is true and
+  /// "plant.boost_uses_add_on" is false (commissioning.v1), it may ask for hot water in cheap
+  /// quarter hours, never during a block, and only while that input too may be driven
+  /// (PRICE_RULE_MODE_LIVE): never otherwise, since a boost that brings in the add-on or
+  /// immersion heater buys its heat at the dearest rate.
   static const PriceRule PRICE_RULE_HOT_WATER =
       PriceRule._(3, _omitEnumNames ? '' : 'PRICE_RULE_HOT_WATER');
 
@@ -196,13 +197,17 @@ class PriceRuleMode extends $pb.ProtobufEnum {
   /// bound, under a current pass of its commissioning test, the plant's feature not blocked
   /// (commissioning.v1 FEATURE_PLANT), "plant.max_block_minutes" answered for a blocking rule, the
   /// periodic increase known for HOT_WATER and for ADD_ON_HEATER_BLOCK on a plant with a
-  /// hot-water tank (PRICE_RULE_HOT_WATER, PRICE_RULE_ADD_ON_HEATER_BLOCK), and no hold running
-  /// (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the
-  /// plant's feature status says why. A rule is put LIVE only while the input it steers is bound
-  /// and holds a current pass of its commissioning test, and, where it needs the periodic increase
-  /// known, while it is (webrtc.v1.SetPriceRuleMode); one whose pass stops being current, or whose
-  /// periodic increase stops being known, later stays LIVE and drives nothing until both hold
-  /// again.
+  /// hot-water tank (PRICE_RULE_HOT_WATER, PRICE_RULE_ADD_ON_HEATER_BLOCK), the heat source's own
+  /// price function answered off for a rule steered by price ("plant.own_price_function" false,
+  /// commissioning.v1; every rule but PRICE_RULE_FLOOR_TIME_SHARE), and no hold running
+  /// (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the plant's feature
+  /// status says why, or, for the heat source's own price function answered on, the rule's
+  /// readiness (commissioning.v1 PriceRuleReadiness.live_holds). A rule is put LIVE only while the input it steers is bound and holds a
+  /// current pass of its commissioning test, where it needs the periodic increase known, while it
+  /// is, and, steered by price, while the heat source's own price function is answered off
+  /// (webrtc.v1.SetPriceRuleMode); one whose pass stops being current, whose periodic increase
+  /// stops being known, or whose heat source's own price function stops being answered off, later
+  /// stays LIVE and drives nothing until all hold again.
   static const PriceRuleMode PRICE_RULE_MODE_LIVE =
       PriceRuleMode._(3, _omitEnumNames ? '' : 'PRICE_RULE_MODE_LIVE');
 

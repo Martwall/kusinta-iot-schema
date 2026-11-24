@@ -518,6 +518,15 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
    * @generated from field: repeated kusinta.iot.identity.v1.SpaceId own_band_room_ids = 12;
    */
   ownBandRoomIds: SpaceId[];
+
+  /**
+   * What holds the rule from driving besides its evidence (READINESS, LIVE HOLDS): in SHADOW, each
+   * precondition webrtc.v1.SetPriceRuleMode refuses LIVE for now; LIVE, each it drives nothing for
+   * meanwhile. ready is not changed by them. Empty where none holds.
+   *
+   * @generated from field: repeated kusinta.iot.commissioning.v1.LiveHold live_holds = 13;
+   */
+  liveHolds: LiveHold[];
 };
 
 /**
@@ -525,6 +534,35 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
  * Use `create(PriceRuleReadinessSchema)` to create a new message.
  */
 export declare const PriceRuleReadinessSchema: GenMessage<PriceRuleReadiness>;
+
+/**
+ * One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as
+ * webrtc.v1.SetPriceRuleMode names its refusal, so that a client words both alike.
+ *
+ * @generated from message kusinta.iot.commissioning.v1.LiveHold
+ */
+export declare type LiveHold = Message<"kusinta.iot.commissioning.v1.LiveHold"> & {
+  /**
+   * The refusal's reason: "rule_own_price_function". A reason this client does not know is shown
+   * as a step before LIVE, unnamed.
+   *
+   * @generated from field: string reason = 1;
+   */
+  reason: string;
+
+  /**
+   * The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown").
+   *
+   * @generated from field: map<string, string> metadata = 2;
+   */
+  metadata: { [key: string]: string };
+};
+
+/**
+ * Describes the message kusinta.iot.commissioning.v1.LiveHold.
+ * Use `create(LiveHoldSchema)` to create a new message.
+ */
+export declare const LiveHoldSchema: GenMessage<LiveHold>;
 
 /**
  * One gate of a price rule's readiness (READINESS, THE GATES).

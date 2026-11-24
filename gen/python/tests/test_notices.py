@@ -39,6 +39,10 @@ def test_the_notice_kinds_keep_their_numbers():
     ) == (1, 2, 3)
 
 
+def test_the_ready_notice_held_by_the_heat_sources_own_price_function_keeps_its_number():
+    assert reporting_pb2.NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF == 7
+
+
 def test_a_notice_names_its_recipients_by_user_id():
     notice = reporting_pb2.Notice(
         notice_id="n-1",
