@@ -529,15 +529,20 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
   liveHolds: LiveHold[];
 
   /**
-   * In SHADOW, while the rule is not ready: the first day on which every gate could be met if
-   * each day from now on scores clean, as an ISO 8601 local calendar date (YYYY-MM-DD), so that a
-   * client can say when it may be ready rather than only that it is not. The gateway works it
-   * out, from each gate: a gate judged over the window is met once its last failing day has left
-   * the window; a gate that counts days or blocks needs that many more clean ones. A client
-   * never works it out from have and need. Unset where waiting alone cannot make the rule ready
-   * (a gate the coming days would not change, such as a saving not met on the evidence, or
-   * wider_comfort the only way), where the rule is ready or LIVE, and where a live hold names
-   * "rule_not_drivable".
+   * In SHADOW, while the rule is not ready: the first day on which this readiness can read ready
+   * if each day from now on scores clean, as an ISO 8601 calendar date (YYYY-MM-DD) in the
+   * building's time zone (identity.v1.Space.time_zone), so that a client can say when it may be
+   * ready rather than only that it is not. A day is scored after it ends, so this is the day after
+   * the last day the rule needs has been scored. A day scores clean where every quarter hour has a
+   * day-ahead price, no room the rule judges falls below its comfort band, and, where the rule is
+   * judged by READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS, its starts stay within that gate's
+   * need. The gateway works it out, from each gate not met: a gate judged over the window is met
+   * once its last failing day has left the window; READINESS_GATE_KIND_PRICED_DAYS needs that
+   * many more clean days. A client never works it out from have and need. Unset where waiting
+   * alone cannot make the rule ready: where a gate not met is one the coming days would not change
+   * by being clean (READINESS_GATE_KIND_MODELLED_BLOCKS, since a clean day may decide no block;
+   * READINESS_GATE_KIND_ROOMS_JUDGED; READINESS_GATE_KIND_SAVING_AFTER_COSTS), where the rule is
+   * ready or LIVE, and where a live hold names "rule_not_drivable".
    *
    * @generated from field: string earliest_ready_on = 14;
    */
@@ -558,15 +563,18 @@ export declare const PriceRuleReadinessSchema: GenMessage<PriceRuleReadiness>;
  */
 export declare type LiveHold = Message<"kusinta.iot.commissioning.v1.LiveHold"> & {
   /**
-   * The refusal's reason: "rule_own_price_function". A reason this client does not know is shown
-   * as a step before LIVE, unnamed.
+   * The refusal's reason: "rule_own_price_function" or "rule_not_drivable". A reason this client
+   * does not know is shown as a step before LIVE, unnamed; a client older than
+   * "rule_not_drivable" so shows a rule the gateway cannot drive yet as held by a step, although
+   * no step would help.
    *
    * @generated from field: string reason = 1;
    */
   reason: string;
 
   /**
-   * The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown").
+   * The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown");
+   * none for "rule_not_drivable".
    *
    * @generated from field: map<string, string> metadata = 2;
    */
