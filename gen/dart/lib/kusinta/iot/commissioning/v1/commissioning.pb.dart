@@ -1092,6 +1092,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     $core.String? comfortCostSeenOn,
     $core.Iterable<$1.SpaceId>? ownBandRoomIds,
     $core.Iterable<LiveHold>? liveHolds,
+    $core.String? earliestReadyOn,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -1108,6 +1109,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     if (comfortCostSeenOn != null) result.comfortCostSeenOn = comfortCostSeenOn;
     if (ownBandRoomIds != null) result.ownBandRoomIds.addAll(ownBandRoomIds);
     if (liveHolds != null) result.liveHolds.addAll(liveHolds);
+    if (earliestReadyOn != null) result.earliestReadyOn = earliestReadyOn;
     return result;
   }
 
@@ -1149,6 +1151,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
         subBuilder: $1.SpaceId.create)
     ..pc<LiveHold>(13, _omitFieldNames ? '' : 'liveHolds', $pb.PbFieldType.PM,
         subBuilder: LiveHold.create)
+    ..aOS(14, _omitFieldNames ? '' : 'earliestReadyOn')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1306,6 +1309,30 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   /// meanwhile. ready is not changed by them. Empty where none holds.
   @$pb.TagNumber(13)
   $pb.PbList<LiveHold> get liveHolds => $_getList(12);
+
+  /// In SHADOW, while the rule is not ready: the first day on which this readiness can read ready
+  /// if each day from now on scores clean, as an ISO 8601 calendar date (YYYY-MM-DD) in the
+  /// building's time zone (identity.v1.Space.time_zone), so that a client can say when it may be
+  /// ready rather than only that it is not. A day is scored after it ends, so this is the day after
+  /// the last day the rule needs has been scored. A day scores clean where every quarter hour has a
+  /// day-ahead price, every room the rule judges stays within its comfort band as
+  /// READINESS_GATE_KIND_NO_COMFORT_COST judges it, and, where the rule is
+  /// judged by READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS, its starts stay within that gate's
+  /// need. The gateway works it out, from each gate not met: a gate judged over the window is met
+  /// once its last failing day has left the window; READINESS_GATE_KIND_PRICED_DAYS needs that
+  /// many more clean days. A client never works it out from have and need. Unset where waiting
+  /// alone cannot make the rule ready: where a gate not met is one the coming days would not change
+  /// by being clean (READINESS_GATE_KIND_MODELLED_BLOCKS, since a clean day may decide no block;
+  /// READINESS_GATE_KIND_ROOMS_JUDGED; READINESS_GATE_KIND_SAVING_AFTER_COSTS), where the rule is
+  /// ready or LIVE, and where a live hold names "rule_not_drivable".
+  @$pb.TagNumber(14)
+  $core.String get earliestReadyOn => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set earliestReadyOn($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasEarliestReadyOn() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearEarliestReadyOn() => $_clearField(14);
 }
 
 /// One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as
@@ -1362,8 +1389,10 @@ class LiveHold extends $pb.GeneratedMessage {
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<LiveHold>(create);
   static LiveHold? _defaultInstance;
 
-  /// The refusal's reason: "rule_own_price_function". A reason this client does not know is shown
-  /// as a step before LIVE, unnamed.
+  /// The refusal's reason: "rule_own_price_function" or "rule_not_drivable". A reason this client
+  /// does not know is shown as a step before LIVE, unnamed; a client older than
+  /// "rule_not_drivable" so shows a rule the gateway cannot drive yet as held by a step, although
+  /// no step would help.
   @$pb.TagNumber(1)
   $core.String get reason => $_getSZ(0);
   @$pb.TagNumber(1)
@@ -1373,7 +1402,8 @@ class LiveHold extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearReason() => $_clearField(1);
 
-  /// The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown").
+  /// The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown");
+  /// none for "rule_not_drivable".
   @$pb.TagNumber(2)
   $pb.PbMap<$core.String, $core.String> get metadata => $_getMap(1);
 }

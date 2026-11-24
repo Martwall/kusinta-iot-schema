@@ -817,6 +817,13 @@ const PriceRuleReadiness$json = {
       '6': '.kusinta.iot.commissioning.v1.LiveHold',
       '10': 'liveHolds'
     },
+    {
+      '1': 'earliest_ready_on',
+      '3': 14,
+      '4': 1,
+      '5': 9,
+      '10': 'earliestReadyOn'
+    },
   ],
 };
 
@@ -834,7 +841,8 @@ final $typed_data.Uint8List priceRuleReadinessDescriptor = $convert.base64Decode
     'VkEi8KFGNvbWZvcnRfY29zdF9zZWVuX29uGAsgASgJUhFjb21mb3J0Q29zdFNlZW5PbhJLChFv'
     'd25fYmFuZF9yb29tX2lkcxgMIAMoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSW'
     'RSDm93bkJhbmRSb29tSWRzEkUKCmxpdmVfaG9sZHMYDSADKAsyJi5rdXNpbnRhLmlvdC5jb21t'
-    'aXNzaW9uaW5nLnYxLkxpdmVIb2xkUglsaXZlSG9sZHM=');
+    'aXNzaW9uaW5nLnYxLkxpdmVIb2xkUglsaXZlSG9sZHMSKgoRZWFybGllc3RfcmVhZHlfb24YDi'
+    'ABKAlSD2VhcmxpZXN0UmVhZHlPbg==');
 
 @$core.Deprecated('Use liveHoldDescriptor instead')
 const LiveHold$json = {
