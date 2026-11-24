@@ -825,7 +825,8 @@ message PriceRuleReadiness {
   // building's time zone (identity.v1.Space.time_zone), so that a client can say when it may be
   // ready rather than only that it is not. A day is scored after it ends, so this is the day after
   // the last day the rule needs has been scored. A day scores clean where every quarter hour has a
-  // day-ahead price, no room the rule judges falls below its comfort band, and, where the rule is
+  // day-ahead price, every room the rule judges stays within its comfort band as
+  // READINESS_GATE_KIND_NO_COMFORT_COST judges it, and, where the rule is
   // judged by READINESS_GATE_KIND_EXTRA_COMPRESSOR_STARTS, its starts stay within that gate's
   // need. The gateway works it out, from each gate not met: a gate judged over the window is met
   // once its last failing day has left the window; READINESS_GATE_KIND_PRICED_DAYS needs that
