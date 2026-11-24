@@ -332,6 +332,18 @@ class NoticeKind extends $pb.ProtobufEnum {
   static const NoticeKind NOTICE_KIND_PRICE_RULE_COMFORT_COST = NoticeKind._(
       6, _omitEnumNames ? '' : 'NOTICE_KIND_PRICE_RULE_COMFORT_COST');
 
+  /// As NOTICE_KIND_PRICE_RULE_READY, told instead of it where, as the rule became ready, the heat
+  /// source's own price function held it from LIVE (commissioning.v1 READINESS, LIVE HOLDS,
+  /// "rule_own_price_function"): ready once that function is turned off at the heat source, or
+  /// answered off. One of the two is told for each stretch the rule is in SHADOW, as it stood when
+  /// told. To the home's household admins, and never to anyone else.
+  static const NoticeKind
+      NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF = NoticeKind._(
+          7,
+          _omitEnumNames
+              ? ''
+              : 'NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF');
+
   static const $core.List<NoticeKind> values = <NoticeKind>[
     NOTICE_KIND_UNSPECIFIED,
     NOTICE_KIND_HEAT_CURVE_SUGGESTION,
@@ -340,10 +352,11 @@ class NoticeKind extends $pb.ProtobufEnum {
     NOTICE_KIND_HEAT_CURVE_HANDED_OVER,
     NOTICE_KIND_PRICE_RULE_READY,
     NOTICE_KIND_PRICE_RULE_COMFORT_COST,
+    NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF,
   ];
 
   static final $core.List<NoticeKind?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 6);
+      $pb.ProtobufEnum.$_initByValueList(values, 7);
   static NoticeKind? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

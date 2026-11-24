@@ -130,15 +130,22 @@ option optimize_for = SPEED;
 //   "plant.own_price_function"  bool; a plant steered through its heat pump's inputs
 //       (heating.v1.HeatPumpControl), the plants the price rules run on. Whether the heat
 //       source's own price function is on: the heat source moving its own heating or hot water
-//       by an electricity price it gets itself, as an installer read it at the heat source.
-//       True, or unknown: no rule of the plant steered by price (every heating.v1.PriceRule but
+//       by an electricity price it gets itself, as read at the heat source. True, or unknown:
+//       no rule of the plant steered by price (every heating.v1.PriceRule but
 //       PRICE_RULE_FLOOR_TIME_SHARE, which is not) is put LIVE (webrtc.v1 SetPriceRuleMode,
 //       "rule_own_price_function"), and one LIVE already drives nothing, since the heat
 //       source's own shifting and the rule's would fight or stack. SHADOW is not held to it:
-//       it scores the rule against what the heat source did, its own shifting included. A need
-//       of the plant feature (FeatureStatus.needs) until it is answered false, an answer of
-//       true included, so that the feature status says why no such rule is driven.
-//       HEAT_SOURCE; FOR_FEATURE PLANT; INSPECTED.
+//       it scores the rule against what the heat source did, its own shifting included, and a
+//       rule's readiness is judged on that evidence alone, its step named beside it
+//       (PriceRuleReadiness.live_holds). A need of the plant feature (FeatureStatus.needs)
+//       while it is unknown. True is an answer, kept on by choice, and no need: the plant
+//       feature may work, and the refusal and each such rule's readiness name the step, turning
+//       the heat source's own price function off. A setting of the heat source, answered as
+//       "plant.curve_adjustment_steps" is: a household admin may state it, from the heat
+//       source's menu, and an installer's answer replaces a household's, as for every key a
+//       household answers (HOUSE FACTS AND HOUSEHOLD DATA). HEAT_SOURCE; FOR_FEATURE PLANT;
+//       INSPECTED (read at the heat source), STATED (a household admin, from the heat source's
+//       menu).
 //   "hot_water.block_floor_centidegrees"  uint, 3500 to 5500; a plant with a hot-water tank
 //       that binds hot_water_block. The tank's top temperature, in centidegrees, at which the
 //       gateway ends a block of its hot water (HEAT_BLOCK_END_HOT_WATER_LOW), so that a held
@@ -736,6 +743,16 @@ message FeatureStatus {
 // thresholds are the gateway's, given with each gate (ReadinessGate.need), and a client never
 // assumes one.
 //
+// LIVE HOLDS. Ready is judged on the evidence alone, so a rule can be ready while a precondition
+// of LIVE that is not evidence holds it back: one webrtc.v1.SetPriceRuleMode refuses LIVE for. The
+// gateway names such a precondition beside the gates (PriceRuleReadiness.live_holds), so that a
+// client says the rule is ready once the step is taken, rather than ready, and the household is
+// told so (reporting.v1 NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF). For a rule LIVE
+// it names why the rule drives nothing meanwhile. Named now: "rule_own_price_function", for a rule
+// steered by price while "plant.own_price_function" is not answered false. A precondition a
+// client works out from what it is given already (an input unbound, or without a current pass of
+// its commissioning test) is not named here.
+//
 // WHO SEES IT. As the shadow summary it is worked out from (heating.v1 PRICE RULES, WHO SEES
 // THEM): the home's residents only, never service, the property owner, the gateway's
 // administrators or an installer under a commissioning grant.
@@ -794,6 +811,22 @@ message PriceRuleReadiness {
   // the saving. Empty where wider_comfort is unset, or where no such room has a preference of its
   // own. Given as the readiness is (READINESS, WHO SEES IT).
   repeated kusinta.iot.identity.v1.SpaceId own_band_room_ids = 12;
+
+  // What holds the rule from driving besides its evidence (READINESS, LIVE HOLDS): in SHADOW, each
+  // precondition webrtc.v1.SetPriceRuleMode refuses LIVE for now; LIVE, each it drives nothing for
+  // meanwhile. ready is not changed by them. Empty where none holds.
+  repeated LiveHold live_holds = 13;
+}
+
+// One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as
+// webrtc.v1.SetPriceRuleMode names its refusal, so that a client words both alike.
+message LiveHold {
+  // The refusal's reason: "rule_own_price_function". A reason this client does not know is shown
+  // as a step before LIVE, unnamed.
+  string reason = 1;
+
+  // The refusal's metadata: for "rule_own_price_function", "key" and "state" ("on" or "unknown").
+  map<string, string> metadata = 2;
 }
 
 // What a readiness gate judges (READINESS, THE GATES). A kind this client's schema does not know

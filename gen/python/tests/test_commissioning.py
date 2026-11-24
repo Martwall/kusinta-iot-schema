@@ -211,3 +211,22 @@ def test_a_block_names_a_bound_device_across_a_homes_boundary():
     block = c.FeatureBlock(reason=c.BLOCK_REASON_DEVICE_ACROSS_HOME, binding=c.BindingRef(record_id="circuit-1", field="return_probe"))
 
     assert _round_trip(block).reason == c.BLOCK_REASON_DEVICE_ACROSS_HOME
+
+
+def test_a_ready_rule_names_what_holds_it_from_live_as_the_refusal_does():
+    readiness = c.PriceRuleReadiness(
+        plant_id="plant-1",
+        ready=True,
+        live_holds=[
+            c.LiveHold(
+                reason="rule_own_price_function",
+                metadata={"key": "plant.own_price_function", "state": "on"},
+            )
+        ],
+    )
+
+    assert _round_trip(readiness) == readiness
+
+
+def test_a_rule_with_nothing_holding_it_names_no_hold():
+    assert list(_round_trip(c.PriceRuleReadiness(plant_id="plant-1", ready=True)).live_holds) == []

@@ -2369,11 +2369,14 @@ export declare const SetComfortWindowsSchema: GenMessage<SetComfortWindows>;
  *                         the rule would fight or stack: metadata "key" names
  *                         "plant.own_price_function", and "state" is "on" where it is answered
  *                         true and "unknown" where it is not answered with a value, so that a
- *                         client can ask for it to be turned off at the heat source, or for an
- *                         installer to state it. Checked after rule_periodic_increase_unknown.
- *                         SHADOW and OFF need it not. A rule already LIVE whose answer stops being
- *                         false stays LIVE and drives nothing until it is false again, the plant's
- *                         feature status naming the key as a need.
+ *                         client names the step: turning it off at the heat source, or answering
+ *                         it. Checked after rule_periodic_increase_unknown. SHADOW and OFF need it
+ *                         not, and a rule's readiness is not changed by it: the rule's readiness
+ *                         names it beside its gates, with the same reason and metadata
+ *                         (commissioning.v1 PriceRuleReadiness.live_holds). A rule already LIVE
+ *                         whose answer stops being false stays LIVE and drives nothing until it is
+ *                         false again, its readiness naming the hold, and the plant's feature
+ *                         status naming the key as a need while it is unknown.
  *
  * Switching a rule from LIVE ends its blocks under way (heating.v1.HEAT_BLOCK_END_RULE_SWITCHED)
  * and writes the lapse value of each input it held, at once, as at unbinding. Switching to LIVE

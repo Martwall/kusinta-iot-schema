@@ -2922,7 +2922,8 @@ export enum PriceRuleMode {
    * price function answered off for a rule steered by price ("plant.own_price_function" false,
    * commissioning.v1; every rule but PRICE_RULE_FLOOR_TIME_SHARE), and no hold running
    * (HeatBlockRelease). Meanwhile it drives nothing and stays LIVE, and the plant's feature
-   * status says why. A rule is put LIVE only while the input it steers is bound and holds a
+   * status says why, or, for the heat source's own price function answered on, the rule's
+   * readiness (commissioning.v1 PriceRuleReadiness.live_holds). A rule is put LIVE only while the input it steers is bound and holds a
    * current pass of its commissioning test, where it needs the periodic increase known, while it
    * is, and, steered by price, while the heat source's own price function is answered off
    * (webrtc.v1.SetPriceRuleMode); one whose pass stops being current, whose periodic increase
