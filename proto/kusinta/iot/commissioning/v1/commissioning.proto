@@ -749,7 +749,10 @@ message FeatureStatus {
 // client says the rule is ready once the step is taken, rather than ready, and the household is
 // told so (reporting.v1 NOTICE_KIND_PRICE_RULE_READY_ONCE_OWN_PRICE_FUNCTION_OFF). For a rule LIVE
 // it names why the rule drives nothing meanwhile. Named now: "rule_own_price_function", for a rule
-// steered by price while "plant.own_price_function" is not answered false. A precondition a
+// steered by price while "plant.own_price_function" is not answered false; and
+// "rule_not_drivable", for a rule the gateway decides in SHADOW only and does not yet drive
+// (webrtc.v1.SetPriceRuleMode refuses LIVE for it whatever its evidence), so that a client says
+// it cannot run live yet and offers no LIVE. A precondition a
 // client works out from what it is given already (an input unbound, or without a current pass of
 // its commissioning test) is not named here.
 //
@@ -816,6 +819,17 @@ message PriceRuleReadiness {
   // precondition webrtc.v1.SetPriceRuleMode refuses LIVE for now; LIVE, each it drives nothing for
   // meanwhile. ready is not changed by them. Empty where none holds.
   repeated LiveHold live_holds = 13;
+
+  // In SHADOW, while the rule is not ready: the first day on which every gate could be met if
+  // each day from now on scores clean, as an ISO 8601 local calendar date (YYYY-MM-DD), so that a
+  // client can say when it may be ready rather than only that it is not. The gateway works it
+  // out, from each gate: a gate judged over the window is met once its last failing day has left
+  // the window; a gate that counts days or blocks needs that many more clean ones. A client
+  // never works it out from have and need. Unset where waiting alone cannot make the rule ready
+  // (a gate the coming days would not change, such as a saving not met on the evidence, or
+  // wider_comfort the only way), where the rule is ready or LIVE, and where a live hold names
+  // "rule_not_drivable".
+  string earliest_ready_on = 14;
 }
 
 // One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as

@@ -230,3 +230,21 @@ def test_a_ready_rule_names_what_holds_it_from_live_as_the_refusal_does():
 
 def test_a_rule_with_nothing_holding_it_names_no_hold():
     assert list(_round_trip(c.PriceRuleReadiness(plant_id="plant-1", ready=True)).live_holds) == []
+
+
+def test_a_rule_not_yet_ready_says_the_first_day_it_could_be():
+    readiness = c.PriceRuleReadiness(plant_id="plant-1", ready=False, earliest_ready_on="2026-12-02")
+
+    assert _round_trip(readiness).earliest_ready_on == "2026-12-02"
+
+
+def test_a_rule_the_gateway_cannot_drive_names_it_as_a_live_hold_and_no_earliest_day():
+    readiness = c.PriceRuleReadiness(
+        plant_id="plant-1",
+        ready=False,
+        live_holds=[c.LiveHold(reason="rule_not_drivable")],
+    )
+
+    held = _round_trip(readiness)
+    assert [hold.reason for hold in held.live_holds] == ["rule_not_drivable"]
+    assert held.earliest_ready_on == ""

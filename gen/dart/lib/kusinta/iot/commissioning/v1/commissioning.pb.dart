@@ -1092,6 +1092,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     $core.String? comfortCostSeenOn,
     $core.Iterable<$1.SpaceId>? ownBandRoomIds,
     $core.Iterable<LiveHold>? liveHolds,
+    $core.String? earliestReadyOn,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -1108,6 +1109,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     if (comfortCostSeenOn != null) result.comfortCostSeenOn = comfortCostSeenOn;
     if (ownBandRoomIds != null) result.ownBandRoomIds.addAll(ownBandRoomIds);
     if (liveHolds != null) result.liveHolds.addAll(liveHolds);
+    if (earliestReadyOn != null) result.earliestReadyOn = earliestReadyOn;
     return result;
   }
 
@@ -1149,6 +1151,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
         subBuilder: $1.SpaceId.create)
     ..pc<LiveHold>(13, _omitFieldNames ? '' : 'liveHolds', $pb.PbFieldType.PM,
         subBuilder: LiveHold.create)
+    ..aOS(14, _omitFieldNames ? '' : 'earliestReadyOn')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1306,6 +1309,24 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   /// meanwhile. ready is not changed by them. Empty where none holds.
   @$pb.TagNumber(13)
   $pb.PbList<LiveHold> get liveHolds => $_getList(12);
+
+  /// In SHADOW, while the rule is not ready: the first day on which every gate could be met if
+  /// each day from now on scores clean, as an ISO 8601 local calendar date (YYYY-MM-DD), so that a
+  /// client can say when it may be ready rather than only that it is not. The gateway works it
+  /// out, from each gate: a gate judged over the window is met once its last failing day has left
+  /// the window; a gate that counts days or blocks needs that many more clean ones. A client
+  /// never works it out from have and need. Unset where waiting alone cannot make the rule ready
+  /// (a gate the coming days would not change, such as a saving not met on the evidence, or
+  /// wider_comfort the only way), where the rule is ready or LIVE, and where a live hold names
+  /// "rule_not_drivable".
+  @$pb.TagNumber(14)
+  $core.String get earliestReadyOn => $_getSZ(13);
+  @$pb.TagNumber(14)
+  set earliestReadyOn($core.String value) => $_setString(13, value);
+  @$pb.TagNumber(14)
+  $core.bool hasEarliestReadyOn() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearEarliestReadyOn() => $_clearField(14);
 }
 
 /// One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as

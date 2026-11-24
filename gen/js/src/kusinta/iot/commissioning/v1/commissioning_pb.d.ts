@@ -527,6 +527,21 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
    * @generated from field: repeated kusinta.iot.commissioning.v1.LiveHold live_holds = 13;
    */
   liveHolds: LiveHold[];
+
+  /**
+   * In SHADOW, while the rule is not ready: the first day on which every gate could be met if
+   * each day from now on scores clean, as an ISO 8601 local calendar date (YYYY-MM-DD), so that a
+   * client can say when it may be ready rather than only that it is not. The gateway works it
+   * out, from each gate: a gate judged over the window is met once its last failing day has left
+   * the window; a gate that counts days or blocks needs that many more clean ones. A client
+   * never works it out from have and need. Unset where waiting alone cannot make the rule ready
+   * (a gate the coming days would not change, such as a saving not met on the evidence, or
+   * wider_comfort the only way), where the rule is ready or LIVE, and where a live hold names
+   * "rule_not_drivable".
+   *
+   * @generated from field: string earliest_ready_on = 14;
+   */
+  earliestReadyOn: string;
 };
 
 /**
