@@ -146,6 +146,7 @@ const BlockReason$json = {
     {'1': 'BLOCK_REASON_CONTROL_ROOM_GONE', '2': 5},
     {'1': 'BLOCK_REASON_LEASE_TOO_LONG', '2': 6},
     {'1': 'BLOCK_REASON_DEVICE_ACROSS_HOME', '2': 7},
+    {'1': 'BLOCK_REASON_ZONE_HAS_NO_ROOMS', '2': 8},
   ],
 };
 
@@ -156,7 +157,7 @@ final $typed_data.Uint8List blockReasonDescriptor = $convert.base64Decode(
     'CiFCTE9DS19SRUFTT05fUE9XRVJfT05fTk9UX0FUX1JFU1QQAxIcChhCTE9DS19SRUFTT05fRE'
     'VWSUNFX0dPTkUQBBIiCh5CTE9DS19SRUFTT05fQ09OVFJPTF9ST09NX0dPTkUQBRIfChtCTE9D'
     'S19SRUFTT05fTEVBU0VfVE9PX0xPTkcQBhIjCh9CTE9DS19SRUFTT05fREVWSUNFX0FDUk9TU1'
-    '9IT01FEAc=');
+    '9IT01FEAcSIgoeQkxPQ0tfUkVBU09OX1pPTkVfSEFTX05PX1JPT01TEAg=');
 
 @$core.Deprecated('Use readinessGateKindDescriptor instead')
 const ReadinessGateKind$json = {

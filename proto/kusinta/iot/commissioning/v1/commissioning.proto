@@ -681,7 +681,8 @@ enum BlockReason {
   // (TEST_FAILURE_POWER_ON_NOT_AT_REST), and blocks as TEST_FAILED.
   BLOCK_REASON_POWER_ON_NOT_AT_REST = 3;
   BLOCK_REASON_DEVICE_GONE = 4;
-  // A floor zone whose control room is deleted or outside its plant's space.
+  // A floor zone that serves rooms, but whose control room is deleted or outside its plant's
+  // space. A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
   BLOCK_REASON_CONTROL_ROOM_GONE = 5;
   // The output's shortest lease (device.v1.LeasedWrite.min_lease_seconds) is longer than
   // the longest it may be held: "plant.max_block_minutes" for a blocking input, or the
@@ -693,6 +694,10 @@ enum BlockReason {
   // records (webrtc.v1 management.proto, START-UP), so this is sent only by one that holds such
   // a binding yet. Its output is held at rest and nothing reads it for the record meanwhile.
   BLOCK_REASON_DEVICE_ACROSS_HOME = 7;
+  // A floor zone that serves no room, so there is nothing to control it by. Sent before this
+  // value existed as CONTROL_ROOM_GONE; a client that does not know it treats it as any block
+  // reason it does not know.
+  BLOCK_REASON_ZONE_HAS_NO_ROOMS = 8;
 }
 
 message FeatureBlock {

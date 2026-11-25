@@ -277,7 +277,8 @@ class BlockReason extends $pb.ProtobufEnum {
   static const BlockReason BLOCK_REASON_DEVICE_GONE =
       BlockReason._(4, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_GONE');
 
-  /// A floor zone whose control room is deleted or outside its plant's space.
+  /// A floor zone that serves rooms, but whose control room is deleted or outside its plant's
+  /// space. A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
   static const BlockReason BLOCK_REASON_CONTROL_ROOM_GONE =
       BlockReason._(5, _omitEnumNames ? '' : 'BLOCK_REASON_CONTROL_ROOM_GONE');
 
@@ -295,6 +296,12 @@ class BlockReason extends $pb.ProtobufEnum {
   static const BlockReason BLOCK_REASON_DEVICE_ACROSS_HOME =
       BlockReason._(7, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_ACROSS_HOME');
 
+  /// A floor zone that serves no room, so there is nothing to control it by. Sent before this
+  /// value existed as CONTROL_ROOM_GONE; a client that does not know it treats it as any block
+  /// reason it does not know.
+  static const BlockReason BLOCK_REASON_ZONE_HAS_NO_ROOMS =
+      BlockReason._(8, _omitEnumNames ? '' : 'BLOCK_REASON_ZONE_HAS_NO_ROOMS');
+
   static const $core.List<BlockReason> values = <BlockReason>[
     BLOCK_REASON_UNSPECIFIED,
     BLOCK_REASON_TEST_FAILED,
@@ -304,10 +311,11 @@ class BlockReason extends $pb.ProtobufEnum {
     BLOCK_REASON_CONTROL_ROOM_GONE,
     BLOCK_REASON_LEASE_TOO_LONG,
     BLOCK_REASON_DEVICE_ACROSS_HOME,
+    BLOCK_REASON_ZONE_HAS_NO_ROOMS,
   ];
 
   static final $core.List<BlockReason?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 7);
+      $pb.ProtobufEnum.$_initByValueList(values, 8);
   static BlockReason? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
