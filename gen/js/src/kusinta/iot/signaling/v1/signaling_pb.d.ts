@@ -879,14 +879,17 @@ export declare const TransferOutcomeAppliedSchema: GenMessage<TransferOutcomeApp
  * Sent to every gateway that lists the person, or has listed them since its records began
  * (reporting.v1 members, service reach, or the owning organisation's administrators): a
  * gateway they left may still hold records of what happened that name them. The api-server
- * keeps, per person, the ids of the gateways that have listed them for this. It never sends an
- * erasure to a gateway that has never listed the person, which would hand it an id it did not
- * know.
+ * keeps, per person, the ids of the gateways that have listed them for this, and deletes that
+ * list once every gateway on it has acknowledged, so the erasure leaves no record of where the
+ * person was. It never sends an erasure to a gateway that has never listed the person, which would
+ * hand it an id it did not know.
  *
  * The api-server keeps an erasure until the gateway acknowledges it (ErasePersonApplied),
  * through the gateway's offline spells, and sends it on every stream right after
  * GatewayStreamOpened. Applying is idempotent by erasure_id: one already applied is acknowledged
- * again with the counts it had, and nothing is done twice.
+ * again with the counts it had, and nothing is done twice. The gateway keeps an applied erasure
+ * by its erasure_id and counts alone, never with the person's id, so what it keeps is no list of
+ * erased people.
  *
  * What the gateway does takes effect whatever the person is and wherever they live:
  *   * Every role, membership and residency the person holds ends. Each residency ends as at a
