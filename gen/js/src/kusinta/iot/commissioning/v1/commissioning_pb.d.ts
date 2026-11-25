@@ -447,7 +447,9 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
 
   /**
    * The rooms the plant heats in the home that the gateway could not judge on the latest day
-   * counted (READINESS, THE EVIDENCE), so that a client can say they were left out.
+   * counted for want of a temperature heard recently enough (READINESS, THE EVIDENCE), so that a
+   * client can say they were left out. A room it hears but has no fitted model for is counted in
+   * rooms_without_model instead, never here.
    *
    * @generated from field: uint32 rooms_left_out = 5;
    */
@@ -552,6 +554,17 @@ export declare type PriceRuleReadiness = Message<"kusinta.iot.commissioning.v1.P
    * @generated from field: string earliest_ready_on = 14;
    */
   earliestReadyOn: string;
+
+  /**
+   * The rooms the plant heats in the home whose temperature the gateway hears but which it could
+   * not judge on the latest day counted, because a model the rule is judged through has no fit
+   * for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a control
+   * room none of whose floor zones has a fitted model. So that a client can say they are not
+   * judged yet, rather than that they went unheard. 0 for a rule judged without such a model.
+   *
+   * @generated from field: uint32 rooms_without_model = 15;
+   */
+  roomsWithoutModel: number;
 };
 
 /**

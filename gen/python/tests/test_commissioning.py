@@ -248,3 +248,10 @@ def test_a_rule_the_gateway_cannot_drive_names_it_as_a_live_hold_and_no_earliest
     held = _round_trip(readiness)
     assert [hold.reason for hold in held.live_holds] == ["rule_not_drivable"]
     assert held.earliest_ready_on == ""
+
+
+def test_rooms_without_a_model_are_counted_apart_from_rooms_left_out():
+    readiness = c.PriceRuleReadiness(plant_id="plant-1", rooms_left_out=0, rooms_without_model=2)
+
+    counted = _round_trip(readiness)
+    assert (counted.rooms_left_out, counted.rooms_without_model) == (0, 2)

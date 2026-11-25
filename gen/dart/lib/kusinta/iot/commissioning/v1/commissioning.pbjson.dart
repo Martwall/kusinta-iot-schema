@@ -824,6 +824,13 @@ const PriceRuleReadiness$json = {
       '5': 9,
       '10': 'earliestReadyOn'
     },
+    {
+      '1': 'rooms_without_model',
+      '3': 15,
+      '4': 1,
+      '5': 13,
+      '10': 'roomsWithoutModel'
+    },
   ],
 };
 
@@ -842,7 +849,8 @@ final $typed_data.Uint8List priceRuleReadinessDescriptor = $convert.base64Decode
     'd25fYmFuZF9yb29tX2lkcxgMIAMoCzIgLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSW'
     'RSDm93bkJhbmRSb29tSWRzEkUKCmxpdmVfaG9sZHMYDSADKAsyJi5rdXNpbnRhLmlvdC5jb21t'
     'aXNzaW9uaW5nLnYxLkxpdmVIb2xkUglsaXZlSG9sZHMSKgoRZWFybGllc3RfcmVhZHlfb24YDi'
-    'ABKAlSD2VhcmxpZXN0UmVhZHlPbg==');
+    'ABKAlSD2VhcmxpZXN0UmVhZHlPbhIuChNyb29tc193aXRob3V0X21vZGVsGA8gASgNUhFyb29t'
+    'c1dpdGhvdXRNb2RlbA==');
 
 @$core.Deprecated('Use liveHoldDescriptor instead')
 const LiveHold$json = {

@@ -734,8 +734,10 @@ message FeatureStatus {
 // every quarter hour of it had a day-ahead price (ShadowDay.no_price_quarters 0), save for a rule
 // not steered by price (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE), whose every day scored counts.
 // Only rooms
-// the gateway can judge, those whose temperature it has heard recently enough, are judged; the
-// rooms it heats but cannot judge are counted (rooms_left_out). It is worked out from the days
+// the gateway can judge are judged: those whose temperature it has heard recently enough and, for
+// a rule judged through a floor model (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE), whose zones have
+// a fitted model. The rooms it heats but cannot judge are counted by why: rooms_left_out for no
+// recent temperature, rooms_without_model for no fitted model yet. It is worked out from the days
 // still kept: a household's Clear history or the home's wipe (webrtc.v1 household.proto) starts
 // it over.
 //
@@ -774,7 +776,9 @@ message PriceRuleReadiness {
   repeated ReadinessGate gates = 4;
 
   // The rooms the plant heats in the home that the gateway could not judge on the latest day
-  // counted (READINESS, THE EVIDENCE), so that a client can say they were left out.
+  // counted for want of a temperature heard recently enough (READINESS, THE EVIDENCE), so that a
+  // client can say they were left out. A room it hears but has no fitted model for is counted in
+  // rooms_without_model instead, never here.
   uint32 rooms_left_out = 5;
 
   // The days of the window that did not count, for a day-ahead price missing in any quarter hour.
@@ -840,6 +844,13 @@ message PriceRuleReadiness {
   // promise: a gate met now may stop being met as the days that meet it leave the window, so a
   // client says "at the earliest", and shows the day this readiness gives each time.
   string earliest_ready_on = 14;
+
+  // The rooms the plant heats in the home whose temperature the gateway hears but which it could
+  // not judge on the latest day counted, because a model the rule is judged through has no fit
+  // for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a control
+  // room none of whose floor zones has a fitted model. So that a client can say they are not
+  // judged yet, rather than that they went unheard. 0 for a rule judged without such a model.
+  uint32 rooms_without_model = 15;
 }
 
 // One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as
