@@ -86,9 +86,12 @@ class ListGatewayMembers extends $pb.GeneratedMessage {
 /// under their user id, named, and tie the residency to them.
 ///
 /// Taking away a role not held changes nothing and is acknowledged. A caller may take a role
-/// away from themselves: the vouched administrators always remain, so the gateway cannot be
-/// left without an administrator. Naming ROLE_GATEWAY_ADMIN for a vouched administrator is
-/// refused as "vouched_admin"; ROLE_PROPERTY_OWNER is taken away from them as from anyone.
+/// away from themselves. The vouched administrators remain while the owning organisation has
+/// any; while its set is empty (signaling.v1.VouchedAdministrators), taking away the last
+/// ROLE_GATEWAY_ADMIN the gateway holds leaves it without an administrator, and its homes run
+/// on as they are until the organisation's administrators are vouched again. Naming
+/// ROLE_GATEWAY_ADMIN for a vouched administrator is refused as "vouched_admin";
+/// ROLE_PROPERTY_OWNER is taken away from them as from anyone.
 ///
 /// Taking either role away also ends the pending invites the user created while holding one,
 /// unless they keep the other; invites they created as a resident of a home follow their
