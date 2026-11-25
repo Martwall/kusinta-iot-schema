@@ -422,7 +422,8 @@ change, versioned so a lost, repeated or late set is harmless, and kept across r
 grants nothing alone — administration still needs the token — but it lists every one of them in
 Members (`MemberDetail.vouched_admin`; `registering_admin` repeats it for older readers), gives
 the disclosure the organisation's name, and ends the administration of open sessions of anyone it
-drops, at once.
+drops, at once. The set may be empty, when the organisation's last administrator is erased; the
+gateway then keeps everything but the vouched administrators until a new one is added.
 
 **Transfers.** An administrator of the owning organisation offers the gateway to another, whose
 administrator accepts. The gateway then gets a `TransferOutcome`: the new set, and for each

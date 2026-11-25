@@ -1725,8 +1725,12 @@ class VouchedAdministrators extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearVersion() => $_clearField(1);
 
-  /// Each administrator of the owning organisation, once. Never empty, since an organisation
-  /// always has one. The set carries no one's name or email address.
+  /// Each administrator of the owning organisation, once. The set carries no one's name or email
+  /// address. It may be empty: an organisation is left with no administrator when its last one
+  /// is erased, and stays so until a new one is added after a check of their identity outside
+  /// this protocol. The gateway applies an empty set as any other — every vouched administrator
+  /// is dropped, as above — and keeps everything else as it is: its spaces, its members, the
+  /// roles it holds itself and its rules, and organisation_name.
   @$pb.TagNumber(2)
   $pb.PbList<$0.UserId> get administrators => $_getList(1);
 

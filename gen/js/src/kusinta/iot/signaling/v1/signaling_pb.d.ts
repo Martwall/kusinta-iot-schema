@@ -707,8 +707,12 @@ export declare type VouchedAdministrators = Message<"kusinta.iot.signaling.v1.Vo
   version: bigint;
 
   /**
-   * Each administrator of the owning organisation, once. Never empty, since an organisation
-   * always has one. The set carries no one's name or email address.
+   * Each administrator of the owning organisation, once. The set carries no one's name or email
+   * address. It may be empty: an organisation is left with no administrator when its last one
+   * is erased, and stays so until a new one is added after a check of their identity outside
+   * this protocol. The gateway applies an empty set as any other — every vouched administrator
+   * is dropped, as above — and keeps everything else as it is: its spaces, its members, the
+   * roles it holds itself and its rules, and organisation_name.
    *
    * @generated from field: repeated kusinta.iot.identity.v1.UserId administrators = 2;
    */
