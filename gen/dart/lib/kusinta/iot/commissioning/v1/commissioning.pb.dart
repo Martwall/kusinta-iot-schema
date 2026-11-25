@@ -1093,6 +1093,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     $core.Iterable<$1.SpaceId>? ownBandRoomIds,
     $core.Iterable<LiveHold>? liveHolds,
     $core.String? earliestReadyOn,
+    $core.int? roomsWithoutModel,
   }) {
     final result = create();
     if (plantId != null) result.plantId = plantId;
@@ -1110,6 +1111,7 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     if (ownBandRoomIds != null) result.ownBandRoomIds.addAll(ownBandRoomIds);
     if (liveHolds != null) result.liveHolds.addAll(liveHolds);
     if (earliestReadyOn != null) result.earliestReadyOn = earliestReadyOn;
+    if (roomsWithoutModel != null) result.roomsWithoutModel = roomsWithoutModel;
     return result;
   }
 
@@ -1152,6 +1154,8 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
     ..pc<LiveHold>(13, _omitFieldNames ? '' : 'liveHolds', $pb.PbFieldType.PM,
         subBuilder: LiveHold.create)
     ..aOS(14, _omitFieldNames ? '' : 'earliestReadyOn')
+    ..a<$core.int>(
+        15, _omitFieldNames ? '' : 'roomsWithoutModel', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1209,7 +1213,9 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   $pb.PbList<ReadinessGate> get gates => $_getList(3);
 
   /// The rooms the plant heats in the home that the gateway could not judge on the latest day
-  /// counted (READINESS, THE EVIDENCE), so that a client can say they were left out.
+  /// counted for want of a temperature heard recently enough (READINESS, THE EVIDENCE), so that a
+  /// client can say they were left out. A room it hears but has no fitted model for is counted in
+  /// rooms_without_model instead, never here.
   @$pb.TagNumber(5)
   $core.int get roomsLeftOut => $_getIZ(4);
   @$pb.TagNumber(5)
@@ -1337,6 +1343,22 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   $core.bool hasEarliestReadyOn() => $_has(13);
   @$pb.TagNumber(14)
   void clearEarliestReadyOn() => $_clearField(14);
+
+  /// The rooms the plant heats in the home whose temperature the gateway hears but which it could
+  /// not judge on the latest day counted, because the model the rule is judged through cannot be
+  /// run for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a
+  /// control room whose zones the gateway drives but none of which has a fitted model, or whose
+  /// slab is not yet tracked to the day's start (after a gap in its readings). So that a client can
+  /// say they are not judged yet, rather than that they went unheard. 0 for a rule judged without
+  /// such a model.
+  @$pb.TagNumber(15)
+  $core.int get roomsWithoutModel => $_getIZ(14);
+  @$pb.TagNumber(15)
+  set roomsWithoutModel($core.int value) => $_setUnsignedInt32(14, value);
+  @$pb.TagNumber(15)
+  $core.bool hasRoomsWithoutModel() => $_has(14);
+  @$pb.TagNumber(15)
+  void clearRoomsWithoutModel() => $_clearField(15);
 }
 
 /// One precondition of LIVE that holds a price rule from driving (READINESS, LIVE HOLDS), named as

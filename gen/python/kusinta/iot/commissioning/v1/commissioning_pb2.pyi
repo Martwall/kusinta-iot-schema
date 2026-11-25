@@ -374,7 +374,7 @@ class FeatureStatus(_message.Message):
     def __init__(self, feature: _Optional[_Union[Feature, str]] = ..., state: _Optional[_Union[FeatureState, str]] = ..., needs: _Optional[_Iterable[_Union[Need, _Mapping]]] = ..., blocks: _Optional[_Iterable[_Union[FeatureBlock, _Mapping]]] = ..., price_rule_readiness: _Optional[_Iterable[_Union[PriceRuleReadiness, _Mapping]]] = ...) -> None: ...
 
 class PriceRuleReadiness(_message.Message):
-    __slots__ = ("plant_id", "rule", "ready", "gates", "rooms_left_out", "days_without_prices", "window_days", "ready_since", "wider_comfort", "peak_charge_included", "comfort_cost_seen_on", "own_band_room_ids", "live_holds", "earliest_ready_on")
+    __slots__ = ("plant_id", "rule", "ready", "gates", "rooms_left_out", "days_without_prices", "window_days", "ready_since", "wider_comfort", "peak_charge_included", "comfort_cost_seen_on", "own_band_room_ids", "live_holds", "earliest_ready_on", "rooms_without_model")
     PLANT_ID_FIELD_NUMBER: _ClassVar[int]
     RULE_FIELD_NUMBER: _ClassVar[int]
     READY_FIELD_NUMBER: _ClassVar[int]
@@ -389,6 +389,7 @@ class PriceRuleReadiness(_message.Message):
     OWN_BAND_ROOM_IDS_FIELD_NUMBER: _ClassVar[int]
     LIVE_HOLDS_FIELD_NUMBER: _ClassVar[int]
     EARLIEST_READY_ON_FIELD_NUMBER: _ClassVar[int]
+    ROOMS_WITHOUT_MODEL_FIELD_NUMBER: _ClassVar[int]
     plant_id: str
     rule: _heating_pb2.PriceRule
     ready: bool
@@ -403,7 +404,8 @@ class PriceRuleReadiness(_message.Message):
     own_band_room_ids: _containers.RepeatedCompositeFieldContainer[_identity_pb2.SpaceId]
     live_holds: _containers.RepeatedCompositeFieldContainer[LiveHold]
     earliest_ready_on: str
-    def __init__(self, plant_id: _Optional[str] = ..., rule: _Optional[_Union[_heating_pb2.PriceRule, str]] = ..., ready: _Optional[bool] = ..., gates: _Optional[_Iterable[_Union[ReadinessGate, _Mapping]]] = ..., rooms_left_out: _Optional[int] = ..., days_without_prices: _Optional[int] = ..., window_days: _Optional[int] = ..., ready_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., wider_comfort: _Optional[_Union[_climate_pb2.ComfortPreference, _Mapping]] = ..., peak_charge_included: _Optional[bool] = ..., comfort_cost_seen_on: _Optional[str] = ..., own_band_room_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., live_holds: _Optional[_Iterable[_Union[LiveHold, _Mapping]]] = ..., earliest_ready_on: _Optional[str] = ...) -> None: ...
+    rooms_without_model: int
+    def __init__(self, plant_id: _Optional[str] = ..., rule: _Optional[_Union[_heating_pb2.PriceRule, str]] = ..., ready: _Optional[bool] = ..., gates: _Optional[_Iterable[_Union[ReadinessGate, _Mapping]]] = ..., rooms_left_out: _Optional[int] = ..., days_without_prices: _Optional[int] = ..., window_days: _Optional[int] = ..., ready_since: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., wider_comfort: _Optional[_Union[_climate_pb2.ComfortPreference, _Mapping]] = ..., peak_charge_included: _Optional[bool] = ..., comfort_cost_seen_on: _Optional[str] = ..., own_band_room_ids: _Optional[_Iterable[_Union[_identity_pb2.SpaceId, _Mapping]]] = ..., live_holds: _Optional[_Iterable[_Union[LiveHold, _Mapping]]] = ..., earliest_ready_on: _Optional[str] = ..., rooms_without_model: _Optional[int] = ...) -> None: ...
 
 class LiveHold(_message.Message):
     __slots__ = ("reason", "metadata")
