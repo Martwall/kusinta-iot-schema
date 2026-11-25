@@ -1045,9 +1045,12 @@ export declare const SendNoticesResponseSchema: GenMessage<SendNoticesResponse>;
 /**
  * SOFTWARE. Which software a gateway runs, so that whoever administers or services it can see it
  * without reaching the gateway. The gateway reports it when its reporting starts and whenever it
- * changes; each report replaces the one before, so a report lost or repeated does no harm and the
- * newest one, by reported_at, wins. The api-server shows it only to those who administer or
- * service the gateway, never to a resident.
+ * changes; each report replaces the one before, so a report lost or repeated does no harm. The
+ * api-server keeps the one it received last, by its own clock: a gateway's clock may be wrong
+ * after a power cut (no real-time clock), so reported_at is kept for display only and never
+ * orders reports. A value longer than its limit is cut to it, never refused, so a report is
+ * always taken. The api-server shows it only to those who administer or service the gateway,
+ * never to a resident.
  *
  * @generated from message kusinta.iot.reporting.v1.ReportSoftwareRequest
  */
@@ -1069,14 +1072,16 @@ export declare type ReportSoftwareRequest = Message<"kusinta.iot.reporting.v1.Re
   build: string;
 
   /**
-   * The version of this schema the gateway was built against, e.g. "0.2.0-beta.106".
+   * The version of this schema the gateway was built against, e.g. "0.2.0-beta.106"; at most 64
+   * characters; empty where not known.
    *
    * @generated from field: string schema_version = 3;
    */
   schemaVersion: string;
 
   /**
-   * When the gateway took these values, so that an older report arriving late is ignored.
+   * When the gateway took these values, by its own clock: shown beside them, never used to order
+   * reports (SOFTWARE).
    *
    * @generated from field: google.protobuf.Timestamp reported_at = 4;
    */

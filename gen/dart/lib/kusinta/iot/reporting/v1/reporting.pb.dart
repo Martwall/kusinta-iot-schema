@@ -2380,9 +2380,12 @@ class SendNoticesResponse extends $pb.GeneratedMessage {
 
 /// SOFTWARE. Which software a gateway runs, so that whoever administers or services it can see it
 /// without reaching the gateway. The gateway reports it when its reporting starts and whenever it
-/// changes; each report replaces the one before, so a report lost or repeated does no harm and the
-/// newest one, by reported_at, wins. The api-server shows it only to those who administer or
-/// service the gateway, never to a resident.
+/// changes; each report replaces the one before, so a report lost or repeated does no harm. The
+/// api-server keeps the one it received last, by its own clock: a gateway's clock may be wrong
+/// after a power cut (no real-time clock), so reported_at is kept for display only and never
+/// orders reports. A value longer than its limit is cut to it, never refused, so a report is
+/// always taken. The api-server shows it only to those who administer or service the gateway,
+/// never to a resident.
 class ReportSoftwareRequest extends $pb.GeneratedMessage {
   factory ReportSoftwareRequest({
     $core.String? release,
@@ -2464,7 +2467,8 @@ class ReportSoftwareRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearBuild() => $_clearField(2);
 
-  /// The version of this schema the gateway was built against, e.g. "0.2.0-beta.106".
+  /// The version of this schema the gateway was built against, e.g. "0.2.0-beta.106"; at most 64
+  /// characters; empty where not known.
   @$pb.TagNumber(3)
   $core.String get schemaVersion => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -2474,7 +2478,8 @@ class ReportSoftwareRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearSchemaVersion() => $_clearField(3);
 
-  /// When the gateway took these values, so that an older report arriving late is ignored.
+  /// When the gateway took these values, by its own clock: shown beside them, never used to order
+  /// reports (SOFTWARE).
   @$pb.TagNumber(4)
   $1.Timestamp get reportedAt => $_getN(3);
   @$pb.TagNumber(4)
