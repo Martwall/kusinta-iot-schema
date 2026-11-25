@@ -97,6 +97,24 @@ extension type GatewayReportingServiceClient (connect.Transport _transport) {
     );
   }
 
+  /// The software the gateway runs (SOFTWARE).
+  Future<kusintaiotreportingv1reporting.ReportSoftwareResponse> reportSoftware(
+    kusintaiotreportingv1reporting.ReportSoftwareRequest input, {
+    connect.Headers? headers,
+    connect.AbortSignal? signal,
+    Function(connect.Headers)? onHeader,
+    Function(connect.Headers)? onTrailer,
+  }) {
+    return connect.Client(_transport).unary(
+      specs.GatewayReportingService.reportSoftware,
+      input,
+      signal: signal,
+      headers: headers,
+      onHeader: onHeader,
+      onTrailer: onTrailer,
+    );
+  }
+
   /// Not a report: asks the api-server to push notices to people's devices (NOTICES).
   Future<kusintaiotreportingv1reporting.SendNoticesResponse> sendNotices(
     kusintaiotreportingv1reporting.SendNoticesRequest input, {

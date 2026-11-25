@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from kusinta.iot.reporting.v1 import reporting_pb2 as kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0kusinta/iot/reporting/v1/reporting_service.proto\x12\x18kusinta.iot.reporting.v1\x1a(kusinta/iot/reporting/v1/reporting.proto2\xef\x05\n\x17GatewayReportingService\x12s\n\x0eReportProblems\x12/.kusinta.iot.reporting.v1.ReportProblemsRequest\x1a\x30.kusinta.iot.reporting.v1.ReportProblemsResponse\x12\x7f\n\x12ReportServiceReach\x12\x33.kusinta.iot.reporting.v1.ReportServiceReachRequest\x1a\x34.kusinta.iot.reporting.v1.ReportServiceReachResponse\x12\x7f\n\x12ReportServedSpaces\x12\x33.kusinta.iot.reporting.v1.ReportServedSpacesRequest\x1a\x34.kusinta.iot.reporting.v1.ReportServedSpacesResponse\x12p\n\rReportMembers\x12..kusinta.iot.reporting.v1.ReportMembersRequest\x1a/.kusinta.iot.reporting.v1.ReportMembersResponse\x12\x7f\n\x12ReportInviteRoutes\x12\x33.kusinta.iot.reporting.v1.ReportInviteRoutesRequest\x1a\x34.kusinta.iot.reporting.v1.ReportInviteRoutesResponse\x12j\n\x0bSendNotices\x12,.kusinta.iot.reporting.v1.SendNoticesRequest\x1a-.kusinta.iot.reporting.v1.SendNoticesResponseB\x02H\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n0kusinta/iot/reporting/v1/reporting_service.proto\x12\x18kusinta.iot.reporting.v1\x1a(kusinta/iot/reporting/v1/reporting.proto2\xe4\x06\n\x17GatewayReportingService\x12s\n\x0eReportProblems\x12/.kusinta.iot.reporting.v1.ReportProblemsRequest\x1a\x30.kusinta.iot.reporting.v1.ReportProblemsResponse\x12\x7f\n\x12ReportServiceReach\x12\x33.kusinta.iot.reporting.v1.ReportServiceReachRequest\x1a\x34.kusinta.iot.reporting.v1.ReportServiceReachResponse\x12\x7f\n\x12ReportServedSpaces\x12\x33.kusinta.iot.reporting.v1.ReportServedSpacesRequest\x1a\x34.kusinta.iot.reporting.v1.ReportServedSpacesResponse\x12p\n\rReportMembers\x12..kusinta.iot.reporting.v1.ReportMembersRequest\x1a/.kusinta.iot.reporting.v1.ReportMembersResponse\x12\x7f\n\x12ReportInviteRoutes\x12\x33.kusinta.iot.reporting.v1.ReportInviteRoutesRequest\x1a\x34.kusinta.iot.reporting.v1.ReportInviteRoutesResponse\x12s\n\x0eReportSoftware\x12/.kusinta.iot.reporting.v1.ReportSoftwareRequest\x1a\x30.kusinta.iot.reporting.v1.ReportSoftwareResponse\x12j\n\x0bSendNotices\x12,.kusinta.iot.reporting.v1.SendNoticesRequest\x1a-.kusinta.iot.reporting.v1.SendNoticesResponseB\x02H\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,5 +34,5 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'H\001'
   _globals['_GATEWAYREPORTINGSERVICE']._serialized_start=121
-  _globals['_GATEWAYREPORTINGSERVICE']._serialized_end=872
+  _globals['_GATEWAYREPORTINGSERVICE']._serialized_end=989
 # @@protoc_insertion_point(module_scope)

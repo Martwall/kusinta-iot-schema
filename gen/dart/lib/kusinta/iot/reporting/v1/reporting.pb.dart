@@ -2378,6 +2378,163 @@ class SendNoticesResponse extends $pb.GeneratedMessage {
   $pb.PbList<$core.String> get takenNoticeIds => $_getList(0);
 }
 
+/// SOFTWARE. Which software a gateway runs, so that whoever administers or services it can see it
+/// without reaching the gateway. The gateway reports it when its reporting starts and whenever it
+/// changes; each report replaces the one before, so a report lost or repeated does no harm. The
+/// api-server keeps the one it received last, by its own clock: a gateway's clock may be wrong
+/// after a power cut (no real-time clock), so reported_at is kept for display only and never
+/// orders reports. A value longer than its limit is cut to it, never refused, so a report is
+/// always taken. The api-server shows it only to those who administer or service the gateway,
+/// never to a resident.
+class ReportSoftwareRequest extends $pb.GeneratedMessage {
+  factory ReportSoftwareRequest({
+    $core.String? release,
+    $core.String? build,
+    $core.String? schemaVersion,
+    $1.Timestamp? reportedAt,
+  }) {
+    final result = create();
+    if (release != null) result.release = release;
+    if (build != null) result.build = build;
+    if (schemaVersion != null) result.schemaVersion = schemaVersion;
+    if (reportedAt != null) result.reportedAt = reportedAt;
+    return result;
+  }
+
+  ReportSoftwareRequest._();
+
+  factory ReportSoftwareRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportSoftwareRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportSoftwareRequest',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'release')
+    ..aOS(2, _omitFieldNames ? '' : 'build')
+    ..aOS(3, _omitFieldNames ? '' : 'schemaVersion')
+    ..aOM<$1.Timestamp>(4, _omitFieldNames ? '' : 'reportedAt',
+        subBuilder: $1.Timestamp.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportSoftwareRequest clone() =>
+      ReportSoftwareRequest()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportSoftwareRequest copyWith(
+          void Function(ReportSoftwareRequest) updates) =>
+      super.copyWith((message) => updates(message as ReportSoftwareRequest))
+          as ReportSoftwareRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportSoftwareRequest create() => ReportSoftwareRequest._();
+  @$core.override
+  ReportSoftwareRequest createEmptyInstance() => create();
+  static $pb.PbList<ReportSoftwareRequest> createRepeated() =>
+      $pb.PbList<ReportSoftwareRequest>();
+  @$core.pragma('dart2js:noInline')
+  static ReportSoftwareRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportSoftwareRequest>(create);
+  static ReportSoftwareRequest? _defaultInstance;
+
+  /// The gateway's release as its installer knows it, e.g. a package version and revision. Free
+  /// text, at most 64 characters; empty where not known.
+  @$pb.TagNumber(1)
+  $core.String get release => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set release($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasRelease() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearRelease() => $_clearField(1);
+
+  /// The source revision it was built from, e.g. a commit hash; at most 64 characters; empty where
+  /// not known.
+  @$pb.TagNumber(2)
+  $core.String get build => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set build($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBuild() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBuild() => $_clearField(2);
+
+  /// The version of this schema the gateway was built against, e.g. "0.2.0-beta.106"; at most 64
+  /// characters; empty where not known.
+  @$pb.TagNumber(3)
+  $core.String get schemaVersion => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set schemaVersion($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSchemaVersion() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSchemaVersion() => $_clearField(3);
+
+  /// When the gateway took these values, by its own clock: shown beside them, never used to order
+  /// reports (SOFTWARE).
+  @$pb.TagNumber(4)
+  $1.Timestamp get reportedAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set reportedAt($1.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasReportedAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearReportedAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $1.Timestamp ensureReportedAt() => $_ensure(3);
+}
+
+class ReportSoftwareResponse extends $pb.GeneratedMessage {
+  factory ReportSoftwareResponse() => create();
+
+  ReportSoftwareResponse._();
+
+  factory ReportSoftwareResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReportSoftwareResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReportSoftwareResponse',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.reporting.v1'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportSoftwareResponse clone() =>
+      ReportSoftwareResponse()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReportSoftwareResponse copyWith(
+          void Function(ReportSoftwareResponse) updates) =>
+      super.copyWith((message) => updates(message as ReportSoftwareResponse))
+          as ReportSoftwareResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReportSoftwareResponse create() => ReportSoftwareResponse._();
+  @$core.override
+  ReportSoftwareResponse createEmptyInstance() => create();
+  static $pb.PbList<ReportSoftwareResponse> createRepeated() =>
+      $pb.PbList<ReportSoftwareResponse>();
+  @$core.pragma('dart2js:noInline')
+  static ReportSoftwareResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReportSoftwareResponse>(create);
+  static ReportSoftwareResponse? _defaultInstance;
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

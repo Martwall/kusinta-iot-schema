@@ -43,6 +43,11 @@ class GatewayReportingServiceStub(object):
                 request_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest.SerializeToString,
                 response_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse.FromString,
                 _registered_method=True)
+        self.ReportSoftware = channel.unary_unary(
+                '/kusinta.iot.reporting.v1.GatewayReportingService/ReportSoftware',
+                request_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest.SerializeToString,
+                response_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse.FromString,
+                _registered_method=True)
         self.SendNotices = channel.unary_unary(
                 '/kusinta.iot.reporting.v1.GatewayReportingService/SendNotices',
                 request_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.SendNoticesRequest.SerializeToString,
@@ -87,6 +92,13 @@ class GatewayReportingServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ReportSoftware(self, request, context):
+        """The software the gateway runs (SOFTWARE).
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def SendNotices(self, request, context):
         """Not a report: asks the api-server to push notices to people's devices (NOTICES).
         """
@@ -121,6 +133,11 @@ def add_GatewayReportingServiceServicer_to_server(servicer, server):
                     servicer.ReportInviteRoutes,
                     request_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest.FromString,
                     response_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse.SerializeToString,
+            ),
+            'ReportSoftware': grpc.unary_unary_rpc_method_handler(
+                    servicer.ReportSoftware,
+                    request_deserializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest.FromString,
+                    response_serializer=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse.SerializeToString,
             ),
             'SendNotices': grpc.unary_unary_rpc_method_handler(
                     servicer.SendNotices,
@@ -267,6 +284,33 @@ class GatewayReportingService(object):
             '/kusinta.iot.reporting.v1.GatewayReportingService/ReportInviteRoutes',
             kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest.SerializeToString,
             kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ReportSoftware(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/kusinta.iot.reporting.v1.GatewayReportingService/ReportSoftware',
+            kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest.SerializeToString,
+            kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse.FromString,
             options,
             channel_credentials,
             insecure,

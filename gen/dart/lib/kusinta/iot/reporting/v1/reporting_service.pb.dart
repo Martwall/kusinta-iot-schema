@@ -61,6 +61,12 @@ class GatewayReportingServiceApi {
           request,
           $0.ReportInviteRoutesResponse());
 
+  /// The software the gateway runs (SOFTWARE).
+  $async.Future<$0.ReportSoftwareResponse> reportSoftware(
+          $pb.ClientContext? ctx, $0.ReportSoftwareRequest request) =>
+      _client.invoke<$0.ReportSoftwareResponse>(ctx, 'GatewayReportingService',
+          'ReportSoftware', request, $0.ReportSoftwareResponse());
+
   /// Not a report: asks the api-server to push notices to people's devices (NOTICES).
   $async.Future<$0.SendNoticesResponse> sendNotices(
           $pb.ClientContext? ctx, $0.SendNoticesRequest request) =>

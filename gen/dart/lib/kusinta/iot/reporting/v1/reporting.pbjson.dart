@@ -863,3 +863,37 @@ const SendNoticesResponse$json = {
 final $typed_data.Uint8List sendNoticesResponseDescriptor = $convert.base64Decode(
     'ChNTZW5kTm90aWNlc1Jlc3BvbnNlEigKEHRha2VuX25vdGljZV9pZHMYASADKAlSDnRha2VuTm'
     '90aWNlSWRz');
+
+@$core.Deprecated('Use reportSoftwareRequestDescriptor instead')
+const ReportSoftwareRequest$json = {
+  '1': 'ReportSoftwareRequest',
+  '2': [
+    {'1': 'release', '3': 1, '4': 1, '5': 9, '10': 'release'},
+    {'1': 'build', '3': 2, '4': 1, '5': 9, '10': 'build'},
+    {'1': 'schema_version', '3': 3, '4': 1, '5': 9, '10': 'schemaVersion'},
+    {
+      '1': 'reported_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'reportedAt'
+    },
+  ],
+};
+
+/// Descriptor for `ReportSoftwareRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportSoftwareRequestDescriptor = $convert.base64Decode(
+    'ChVSZXBvcnRTb2Z0d2FyZVJlcXVlc3QSGAoHcmVsZWFzZRgBIAEoCVIHcmVsZWFzZRIUCgVidW'
+    'lsZBgCIAEoCVIFYnVpbGQSJQoOc2NoZW1hX3ZlcnNpb24YAyABKAlSDXNjaGVtYVZlcnNpb24S'
+    'OwoLcmVwb3J0ZWRfYXQYBCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgpyZXBvcn'
+    'RlZEF0');
+
+@$core.Deprecated('Use reportSoftwareResponseDescriptor instead')
+const ReportSoftwareResponse$json = {
+  '1': 'ReportSoftwareResponse',
+};
+
+/// Descriptor for `ReportSoftwareResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List reportSoftwareResponseDescriptor =
+    $convert.base64Decode('ChZSZXBvcnRTb2Z0d2FyZVJlc3BvbnNl');
