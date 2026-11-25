@@ -71,6 +71,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.accountlink.v1.AccountLinkResult': $2.AccountLinkResult$json,
   '.kusinta.iot.accountlink.v1.RefreshToken': $2.RefreshToken$json,
   '.kusinta.iot.accountlink.v1.RevokeToken': $2.RevokeToken$json,
+  '.kusinta.iot.signaling.v1.ErasePersonApplied': $0.ErasePersonApplied$json,
   '.kusinta.iot.signaling.v1.GatewayConnectResponse':
       $0.GatewayConnectResponse$json,
   '.kusinta.iot.signaling.v1.SdpOffer': $0.SdpOffer$json,
@@ -90,6 +91,7 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
   '.kusinta.iot.accountlink.v1.TokenRevoked': $2.TokenRevoked$json,
   '.kusinta.iot.accountlink.v1.AccountLinkCancelled':
       $2.AccountLinkCancelled$json,
+  '.kusinta.iot.signaling.v1.ErasePerson': $0.ErasePerson$json,
   '.kusinta.iot.signaling.v1.UserConnectRequest': $0.UserConnectRequest$json,
   '.kusinta.iot.signaling.v1.UserHandshake': $0.UserHandshake$json,
   '.kusinta.iot.identity.v1.GatewayId': $1.GatewayId$json,

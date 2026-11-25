@@ -258,6 +258,15 @@ const GatewayConnectRequest$json = {
       '9': 0,
       '10': 'revokeToken'
     },
+    {
+      '1': 'erase_person_applied',
+      '3': 13,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.ErasePersonApplied',
+      '9': 0,
+      '10': 'erasePersonApplied'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -283,8 +292,9 @@ final $typed_data.Uint8List gatewayConnectRequestDescriptor = $convert.base64Dec
     'b3QuYWNjb3VudGxpbmsudjEuQWNjb3VudExpbmtSZXN1bHRIAFIRYWNjb3VudExpbmtSZXN1bH'
     'QSTwoNcmVmcmVzaF90b2tlbhgLIAEoCzIoLmt1c2ludGEuaW90LmFjY291bnRsaW5rLnYxLlJl'
     'ZnJlc2hUb2tlbkgAUgxyZWZyZXNoVG9rZW4STAoMcmV2b2tlX3Rva2VuGAwgASgLMicua3VzaW'
-    '50YS5pb3QuYWNjb3VudGxpbmsudjEuUmV2b2tlVG9rZW5IAFILcmV2b2tlVG9rZW5CCQoHcGF5'
-    'bG9hZA==');
+    '50YS5pb3QuYWNjb3VudGxpbmsudjEuUmV2b2tlVG9rZW5IAFILcmV2b2tlVG9rZW4SYAoUZXJh'
+    'c2VfcGVyc29uX2FwcGxpZWQYDSABKAsyLC5rdXNpbnRhLmlvdC5zaWduYWxpbmcudjEuRXJhc2'
+    'VQZXJzb25BcHBsaWVkSABSEmVyYXNlUGVyc29uQXBwbGllZEIJCgdwYXlsb2Fk');
 
 @$core.Deprecated('Use gatewayConnectResponseDescriptor instead')
 const GatewayConnectResponse$json = {
@@ -398,6 +408,15 @@ const GatewayConnectResponse$json = {
       '9': 0,
       '10': 'accountLinkCancelled'
     },
+    {
+      '1': 'erase_person',
+      '3': 14,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.signaling.v1.ErasePerson',
+      '9': 0,
+      '10': 'erasePerson'
+    },
   ],
   '8': [
     {'1': 'payload'},
@@ -425,7 +444,8 @@ final $typed_data.Uint8List gatewayConnectResponseDescriptor = $convert.base64De
     'dm9rZWQYDCABKAsyKC5rdXNpbnRhLmlvdC5hY2NvdW50bGluay52MS5Ub2tlblJldm9rZWRIAF'
     'IMdG9rZW5SZXZva2VkEmgKFmFjY291bnRfbGlua19jYW5jZWxsZWQYDSABKAsyMC5rdXNpbnRh'
     'LmlvdC5hY2NvdW50bGluay52MS5BY2NvdW50TGlua0NhbmNlbGxlZEgAUhRhY2NvdW50TGlua0'
-    'NhbmNlbGxlZEIJCgdwYXlsb2Fk');
+    'NhbmNlbGxlZBJKCgxlcmFzZV9wZXJzb24YDiABKAsyJS5rdXNpbnRhLmlvdC5zaWduYWxpbmcu'
+    'djEuRXJhc2VQZXJzb25IAFILZXJhc2VQZXJzb25CCQoHcGF5bG9hZA==');
 
 @$core.Deprecated('Use redeemInviteDescriptor instead')
 const RedeemInvite$json = {
@@ -694,6 +714,43 @@ final $typed_data.Uint8List transferOutcomeAppliedDescriptor =
     $convert.base64Decode(
         'ChZUcmFuc2Zlck91dGNvbWVBcHBsaWVkEh8KC3RyYW5zZmVyX2lkGAEgASgJUgp0cmFuc2Zlck'
         'lk');
+
+@$core.Deprecated('Use erasePersonDescriptor instead')
+const ErasePerson$json = {
+  '1': 'ErasePerson',
+  '2': [
+    {'1': 'erasure_id', '3': 1, '4': 1, '5': 9, '10': 'erasureId'},
+    {
+      '1': 'user_id',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.UserId',
+      '10': 'userId'
+    },
+  ],
+};
+
+/// Descriptor for `ErasePerson`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List erasePersonDescriptor = $convert.base64Decode(
+    'CgtFcmFzZVBlcnNvbhIdCgplcmFzdXJlX2lkGAEgASgJUgllcmFzdXJlSWQSOAoHdXNlcl9pZB'
+    'gCIAEoCzIfLmt1c2ludGEuaW90LmlkZW50aXR5LnYxLlVzZXJJZFIGdXNlcklk');
+
+@$core.Deprecated('Use erasePersonAppliedDescriptor instead')
+const ErasePersonApplied$json = {
+  '1': 'ErasePersonApplied',
+  '2': [
+    {'1': 'erasure_id', '3': 1, '4': 1, '5': 9, '10': 'erasureId'},
+    {'1': 'records_unnamed', '3': 2, '4': 1, '5': 13, '10': 'recordsUnnamed'},
+    {'1': 'records_deleted', '3': 3, '4': 1, '5': 13, '10': 'recordsDeleted'},
+  ],
+};
+
+/// Descriptor for `ErasePersonApplied`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List erasePersonAppliedDescriptor = $convert.base64Decode(
+    'ChJFcmFzZVBlcnNvbkFwcGxpZWQSHQoKZXJhc3VyZV9pZBgBIAEoCVIJZXJhc3VyZUlkEicKD3'
+    'JlY29yZHNfdW5uYW1lZBgCIAEoDVIOcmVjb3Jkc1VubmFtZWQSJwoPcmVjb3Jkc19kZWxldGVk'
+    'GAMgASgNUg5yZWNvcmRzRGVsZXRlZA==');
 
 @$core.Deprecated('Use userConnectRequestDescriptor instead')
 const UserConnectRequest$json = {
