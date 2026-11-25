@@ -833,8 +833,12 @@ message PriceRuleReadiness {
   // many more clean days. A client never works it out from have and need. Unset where waiting
   // alone cannot make the rule ready: where a gate not met is one the coming days would not change
   // by being clean (READINESS_GATE_KIND_MODELLED_BLOCKS, since a clean day may decide no block;
-  // READINESS_GATE_KIND_ROOMS_JUDGED; READINESS_GATE_KIND_SAVING_AFTER_COSTS), where the rule is
-  // ready or LIVE, and where a live hold names "rule_not_drivable".
+  // READINESS_GATE_KIND_ROOMS_JUDGED; READINESS_GATE_KIND_SAVING_AFTER_COSTS;
+  // READINESS_GATE_KIND_NEAR_TARGET and READINESS_GATE_KIND_ABOVE_TARGET, since a clean day says
+  // nothing of how near its target the rule keeps a room), where the rule is ready or LIVE, and
+  // where a live hold names "rule_not_drivable". It is a day the rule could read ready on, never a
+  // promise: a gate met now may stop being met as the days that meet it leave the window, so a
+  // client says "at the earliest", and shows the day this readiness gives each time.
   string earliest_ready_on = 14;
 }
 
