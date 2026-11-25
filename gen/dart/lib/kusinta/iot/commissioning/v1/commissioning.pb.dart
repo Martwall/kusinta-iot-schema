@@ -1345,10 +1345,12 @@ class PriceRuleReadiness extends $pb.GeneratedMessage {
   void clearEarliestReadyOn() => $_clearField(14);
 
   /// The rooms the plant heats in the home whose temperature the gateway hears but which it could
-  /// not judge on the latest day counted, because a model the rule is judged through has no fit
-  /// for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a control
-  /// room none of whose floor zones has a fitted model. So that a client can say they are not
-  /// judged yet, rather than that they went unheard. 0 for a rule judged without such a model.
+  /// not judge on the latest day counted, because the model the rule is judged through cannot be
+  /// run for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a
+  /// control room whose zones the gateway drives but none of which has a fitted model, or whose
+  /// slab is not yet tracked to the day's start (after a gap in its readings). So that a client can
+  /// say they are not judged yet, rather than that they went unheard. 0 for a rule judged without
+  /// such a model.
   @$pb.TagNumber(15)
   $core.int get roomsWithoutModel => $_getIZ(14);
   @$pb.TagNumber(15)

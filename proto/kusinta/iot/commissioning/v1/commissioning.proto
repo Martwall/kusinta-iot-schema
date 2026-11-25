@@ -735,9 +735,11 @@ message FeatureStatus {
 // not steered by price (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE), whose every day scored counts.
 // Only rooms
 // the gateway can judge are judged: those whose temperature it has heard recently enough and, for
-// a rule judged through a floor model (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE), whose zones have
-// a fitted model. The rooms it heats but cannot judge are counted by why: rooms_left_out for no
-// recent temperature, rooms_without_model for no fitted model yet. It is worked out from the days
+// a rule judged through a floor model (heating.v1.PRICE_RULE_FLOOR_TIME_SHARE), for which that
+// model can be run. The rooms it heats but cannot judge are counted by why: rooms_left_out for no
+// recent temperature, rooms_without_model for a model that cannot be run for them yet. A room
+// whose zones the gateway does not drive is not the rule's to steer, and is counted in neither.
+// It is worked out from the days
 // still kept: a household's Clear history or the home's wipe (webrtc.v1 household.proto) starts
 // it over.
 //
@@ -846,10 +848,12 @@ message PriceRuleReadiness {
   string earliest_ready_on = 14;
 
   // The rooms the plant heats in the home whose temperature the gateway hears but which it could
-  // not judge on the latest day counted, because a model the rule is judged through has no fit
-  // for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a control
-  // room none of whose floor zones has a fitted model. So that a client can say they are not
-  // judged yet, rather than that they went unheard. 0 for a rule judged without such a model.
+  // not judge on the latest day counted, because the model the rule is judged through cannot be
+  // run for them yet (READINESS, THE EVIDENCE): for heating.v1.PRICE_RULE_FLOOR_TIME_SHARE, a
+  // control room whose zones the gateway drives but none of which has a fitted model, or whose
+  // slab is not yet tracked to the day's start (after a gap in its readings). So that a client can
+  // say they are not judged yet, rather than that they went unheard. 0 for a rule judged without
+  // such a model.
   uint32 rooms_without_model = 15;
 }
 
