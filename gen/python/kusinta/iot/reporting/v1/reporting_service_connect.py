@@ -33,6 +33,9 @@ class GatewayReportingService(Protocol):
     async def report_invite_routes(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
+    async def report_software(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+
     async def send_notices(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.SendNoticesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.SendNoticesResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
 
@@ -91,6 +94,16 @@ class GatewayReportingServiceASGIApplication(ConnectASGIApplication[GatewayRepor
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
                     function=svc.report_invite_routes,
+                ),
+                "/kusinta.iot.reporting.v1.GatewayReportingService/ReportSoftware": Endpoint.unary(
+                    method=MethodInfo(
+                        name="ReportSoftware",
+                        service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                        input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest,
+                        output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=svc.report_software,
                 ),
                 "/kusinta.iot.reporting.v1.GatewayReportingService/SendNotices": Endpoint.unary(
                     method=MethodInfo(
@@ -216,6 +229,26 @@ class GatewayReportingServiceClient(ConnectClient):
             timeout_ms=timeout_ms,
         )
 
+    async def report_software(
+        self,
+        request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse:
+        return await self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="ReportSoftware",
+                service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest,
+                output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
     async def send_notices(
         self,
         request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.SendNoticesRequest,
@@ -250,6 +283,8 @@ class GatewayReportingServiceSync(Protocol):
     def report_members(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportMembersResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
     def report_invite_routes(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse:
+        raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
+    def report_software(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
     def send_notices(self, request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.SendNoticesRequest, ctx: RequestContext) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.SendNoticesResponse:
         raise ConnectError(Code.UNIMPLEMENTED, "Not implemented")
@@ -308,6 +343,16 @@ class GatewayReportingServiceWSGIApplication(ConnectWSGIApplication):
                         idempotency_level=IdempotencyLevel.UNKNOWN,
                     ),
                     function=service.report_invite_routes,
+                ),
+                "/kusinta.iot.reporting.v1.GatewayReportingService/ReportSoftware": EndpointSync.unary(
+                    method=MethodInfo(
+                        name="ReportSoftware",
+                        service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                        input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest,
+                        output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse,
+                        idempotency_level=IdempotencyLevel.UNKNOWN,
+                    ),
+                    function=service.report_software,
                 ),
                 "/kusinta.iot.reporting.v1.GatewayReportingService/SendNotices": EndpointSync.unary(
                     method=MethodInfo(
@@ -427,6 +472,26 @@ class GatewayReportingServiceClientSync(ConnectClientSync):
                 service_name="kusinta.iot.reporting.v1.GatewayReportingService",
                 input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesRequest,
                 output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportInviteRoutesResponse,
+                idempotency_level=IdempotencyLevel.UNKNOWN,
+            ),
+            headers=headers,
+            timeout_ms=timeout_ms,
+        )
+
+    def report_software(
+        self,
+        request: kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest,
+        *,
+        headers: Headers | Mapping[str, str] | None = None,
+        timeout_ms: int | None = None,
+    ) -> kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse:
+        return self.execute_unary(
+            request=request,
+            method=MethodInfo(
+                name="ReportSoftware",
+                service_name="kusinta.iot.reporting.v1.GatewayReportingService",
+                input=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareRequest,
+                output=kusinta_dot_iot_dot_reporting_dot_v1_dot_reporting__pb2.ReportSoftwareResponse,
                 idempotency_level=IdempotencyLevel.UNKNOWN,
             ),
             headers=headers,

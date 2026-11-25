@@ -1043,6 +1043,65 @@ export declare type SendNoticesResponse = Message<"kusinta.iot.reporting.v1.Send
 export declare const SendNoticesResponseSchema: GenMessage<SendNoticesResponse>;
 
 /**
+ * SOFTWARE. Which software a gateway runs, so that whoever administers or services it can see it
+ * without reaching the gateway. The gateway reports it when its reporting starts and whenever it
+ * changes; each report replaces the one before, so a report lost or repeated does no harm and the
+ * newest one, by reported_at, wins. The api-server shows it only to those who administer or
+ * service the gateway, never to a resident.
+ *
+ * @generated from message kusinta.iot.reporting.v1.ReportSoftwareRequest
+ */
+export declare type ReportSoftwareRequest = Message<"kusinta.iot.reporting.v1.ReportSoftwareRequest"> & {
+  /**
+   * The gateway's release as its installer knows it, e.g. a package version and revision. Free
+   * text, at most 64 characters; empty where not known.
+   *
+   * @generated from field: string release = 1;
+   */
+  release: string;
+
+  /**
+   * The source revision it was built from, e.g. a commit hash; at most 64 characters; empty where
+   * not known.
+   *
+   * @generated from field: string build = 2;
+   */
+  build: string;
+
+  /**
+   * The version of this schema the gateway was built against, e.g. "0.2.0-beta.106".
+   *
+   * @generated from field: string schema_version = 3;
+   */
+  schemaVersion: string;
+
+  /**
+   * When the gateway took these values, so that an older report arriving late is ignored.
+   *
+   * @generated from field: google.protobuf.Timestamp reported_at = 4;
+   */
+  reportedAt?: Timestamp | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.ReportSoftwareRequest.
+ * Use `create(ReportSoftwareRequestSchema)` to create a new message.
+ */
+export declare const ReportSoftwareRequestSchema: GenMessage<ReportSoftwareRequest>;
+
+/**
+ * @generated from message kusinta.iot.reporting.v1.ReportSoftwareResponse
+ */
+export declare type ReportSoftwareResponse = Message<"kusinta.iot.reporting.v1.ReportSoftwareResponse"> & {
+};
+
+/**
+ * Describes the message kusinta.iot.reporting.v1.ReportSoftwareResponse.
+ * Use `create(ReportSoftwareResponseSchema)` to create a new message.
+ */
+export declare const ReportSoftwareResponseSchema: GenMessage<ReportSoftwareResponse>;
+
+/**
  * What kind of problem is open. The device kinds, FLOOR_ZONE_UNCONTROLLED aside, mirror what
  * service staff are given of a device (webrtc.v1.ServiceStatus: reachability, the battery
  * flags, the ServiceFault values); a device signal added there is added here too.

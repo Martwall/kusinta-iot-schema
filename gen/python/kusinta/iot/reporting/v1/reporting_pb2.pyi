@@ -351,3 +351,19 @@ class SendNoticesResponse(_message.Message):
     TAKEN_NOTICE_IDS_FIELD_NUMBER: _ClassVar[int]
     taken_notice_ids: _containers.RepeatedScalarFieldContainer[str]
     def __init__(self, taken_notice_ids: _Optional[_Iterable[str]] = ...) -> None: ...
+
+class ReportSoftwareRequest(_message.Message):
+    __slots__ = ("release", "build", "schema_version", "reported_at")
+    RELEASE_FIELD_NUMBER: _ClassVar[int]
+    BUILD_FIELD_NUMBER: _ClassVar[int]
+    SCHEMA_VERSION_FIELD_NUMBER: _ClassVar[int]
+    REPORTED_AT_FIELD_NUMBER: _ClassVar[int]
+    release: str
+    build: str
+    schema_version: str
+    reported_at: _timestamp_pb2.Timestamp
+    def __init__(self, release: _Optional[str] = ..., build: _Optional[str] = ..., schema_version: _Optional[str] = ..., reported_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class ReportSoftwareResponse(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...

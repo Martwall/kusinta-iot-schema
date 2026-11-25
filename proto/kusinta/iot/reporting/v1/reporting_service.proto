@@ -17,6 +17,9 @@ service GatewayReportingService {
   rpc ReportMembers(ReportMembersRequest) returns (ReportMembersResponse);
   rpc ReportInviteRoutes(ReportInviteRoutesRequest) returns (ReportInviteRoutesResponse);
 
+  // The software the gateway runs (SOFTWARE).
+  rpc ReportSoftware(ReportSoftwareRequest) returns (ReportSoftwareResponse);
+
   // Not a report: asks the api-server to push notices to people's devices (NOTICES).
   rpc SendNotices(SendNoticesRequest) returns (SendNoticesResponse);
 }

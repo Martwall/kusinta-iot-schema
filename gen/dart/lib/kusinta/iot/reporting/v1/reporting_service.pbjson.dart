@@ -48,6 +48,11 @@ const $core.Map<$core.String, $core.dynamic> GatewayReportingServiceBase$json =
       '3': '.kusinta.iot.reporting.v1.ReportInviteRoutesResponse'
     },
     {
+      '1': 'ReportSoftware',
+      '2': '.kusinta.iot.reporting.v1.ReportSoftwareRequest',
+      '3': '.kusinta.iot.reporting.v1.ReportSoftwareResponse'
+    },
+    {
       '1': 'SendNotices',
       '2': '.kusinta.iot.reporting.v1.SendNoticesRequest',
       '3': '.kusinta.iot.reporting.v1.SendNoticesResponse'
@@ -93,6 +98,10 @@ const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>>
       $0.ReportInviteRoutesRequest$json,
   '.kusinta.iot.reporting.v1.ReportInviteRoutesResponse':
       $0.ReportInviteRoutesResponse$json,
+  '.kusinta.iot.reporting.v1.ReportSoftwareRequest':
+      $0.ReportSoftwareRequest$json,
+  '.kusinta.iot.reporting.v1.ReportSoftwareResponse':
+      $0.ReportSoftwareResponse$json,
   '.kusinta.iot.reporting.v1.SendNoticesRequest': $0.SendNoticesRequest$json,
   '.kusinta.iot.reporting.v1.Notice': $0.Notice$json,
   '.kusinta.iot.reporting.v1.SendNoticesResponse': $0.SendNoticesResponse$json,
@@ -111,6 +120,8 @@ final $typed_data.Uint8List gatewayReportingServiceDescriptor = $convert.base64D
     'LlJlcG9ydE1lbWJlcnNSZXF1ZXN0Gi8ua3VzaW50YS5pb3QucmVwb3J0aW5nLnYxLlJlcG9ydE'
     '1lbWJlcnNSZXNwb25zZRJ/ChJSZXBvcnRJbnZpdGVSb3V0ZXMSMy5rdXNpbnRhLmlvdC5yZXBv'
     'cnRpbmcudjEuUmVwb3J0SW52aXRlUm91dGVzUmVxdWVzdBo0Lmt1c2ludGEuaW90LnJlcG9ydG'
-    'luZy52MS5SZXBvcnRJbnZpdGVSb3V0ZXNSZXNwb25zZRJqCgtTZW5kTm90aWNlcxIsLmt1c2lu'
-    'dGEuaW90LnJlcG9ydGluZy52MS5TZW5kTm90aWNlc1JlcXVlc3QaLS5rdXNpbnRhLmlvdC5yZX'
-    'BvcnRpbmcudjEuU2VuZE5vdGljZXNSZXNwb25zZQ==');
+    'luZy52MS5SZXBvcnRJbnZpdGVSb3V0ZXNSZXNwb25zZRJzCg5SZXBvcnRTb2Z0d2FyZRIvLmt1'
+    'c2ludGEuaW90LnJlcG9ydGluZy52MS5SZXBvcnRTb2Z0d2FyZVJlcXVlc3QaMC5rdXNpbnRhLm'
+    'lvdC5yZXBvcnRpbmcudjEuUmVwb3J0U29mdHdhcmVSZXNwb25zZRJqCgtTZW5kTm90aWNlcxIs'
+    'Lmt1c2ludGEuaW90LnJlcG9ydGluZy52MS5TZW5kTm90aWNlc1JlcXVlc3QaLS5rdXNpbnRhLm'
+    'lvdC5yZXBvcnRpbmcudjEuU2VuZE5vdGljZXNSZXNwb25zZQ==');

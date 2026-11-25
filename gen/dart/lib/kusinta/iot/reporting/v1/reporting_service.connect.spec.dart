@@ -49,6 +49,14 @@ abstract final class GatewayReportingService {
     kusintaiotreportingv1reporting.ReportInviteRoutesResponse.new,
   );
 
+  /// The software the gateway runs (SOFTWARE).
+  static const reportSoftware = connect.Spec(
+    '/$name/ReportSoftware',
+    connect.StreamType.unary,
+    kusintaiotreportingv1reporting.ReportSoftwareRequest.new,
+    kusintaiotreportingv1reporting.ReportSoftwareResponse.new,
+  );
+
   /// Not a report: asks the api-server to push notices to people's devices (NOTICES).
   static const sendNotices = connect.Spec(
     '/$name/SendNotices',
