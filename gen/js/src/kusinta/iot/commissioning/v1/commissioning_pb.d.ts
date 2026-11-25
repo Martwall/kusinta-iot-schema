@@ -1546,7 +1546,8 @@ export enum BlockReason {
   DEVICE_GONE = 4,
 
   /**
-   * A floor zone whose control room is deleted or outside its plant's space.
+   * A floor zone that serves rooms, but whose control room is deleted or outside its plant's
+   * space. A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
    *
    * @generated from enum value: BLOCK_REASON_CONTROL_ROOM_GONE = 5;
    */
@@ -1571,6 +1572,15 @@ export enum BlockReason {
    * @generated from enum value: BLOCK_REASON_DEVICE_ACROSS_HOME = 7;
    */
   DEVICE_ACROSS_HOME = 7,
+
+  /**
+   * A floor zone that serves no room, so there is nothing to control it by. Sent before this
+   * value existed as CONTROL_ROOM_GONE; a client that does not know it treats it as any block
+   * reason it does not know.
+   *
+   * @generated from enum value: BLOCK_REASON_ZONE_HAS_NO_ROOMS = 8;
+   */
+  ZONE_HAS_NO_ROOMS = 8,
 }
 
 /**
