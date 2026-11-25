@@ -257,6 +257,12 @@ export declare type GatewayConnectRequest = Message<"kusinta.iot.signaling.v1.Ga
      */
     value: RevokeToken;
     case: "revokeToken";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.ErasePersonApplied erase_person_applied = 13;
+     */
+    value: ErasePersonApplied;
+    case: "erasePersonApplied";
   } | { case: undefined; value?: undefined };
 };
 
@@ -276,7 +282,8 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
    * On redeem_invite, the user redeeming: the sub of the token the api-server
    * verified, and never a value the user supplied. Unset on what concerns the
    * gateway itself (stream_opened, vouched_administrators, transfer_outcome,
-   * gateway_deleted) and on the accountlink.v1 arms, which are from no user.
+   * gateway_deleted, erase_person, whose person is in its payload) and on the
+   * accountlink.v1 arms, which are from no user.
    *
    * @generated from field: kusinta.iot.identity.v1.UserId from_user_id = 1;
    */
@@ -361,6 +368,12 @@ export declare type GatewayConnectResponse = Message<"kusinta.iot.signaling.v1.G
      */
     value: AccountLinkCancelled;
     case: "accountLinkCancelled";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.signaling.v1.ErasePerson erase_person = 14;
+     */
+    value: ErasePerson;
+    case: "erasePerson";
   } | { case: undefined; value?: undefined };
 };
 
@@ -860,6 +873,103 @@ export declare type TransferOutcomeApplied = Message<"kusinta.iot.signaling.v1.T
  * Use `create(TransferOutcomeAppliedSchema)` to create a new message.
  */
 export declare const TransferOutcomeAppliedSchema: GenMessage<TransferOutcomeApplied>;
+
+/**
+ * ERASURE. A person's account is gone and the gateway is to erase them, api-server → gateway.
+ * Sent to every gateway that lists the person, or has listed them since its records began
+ * (reporting.v1 members, service reach, or the owning organisation's administrators): a
+ * gateway they left may still hold records of what happened that name them. The api-server
+ * keeps, per person, the ids of the gateways that have listed them for this, and deletes that
+ * list once every gateway on it has acknowledged, so the erasure leaves no record of where the
+ * person was. It never sends an erasure to a gateway that has never listed the person, which would
+ * hand it an id it did not know.
+ *
+ * The api-server keeps an erasure until the gateway acknowledges it (ErasePersonApplied),
+ * through the gateway's offline spells, and sends it on every stream right after
+ * GatewayStreamOpened. Applying is idempotent by erasure_id: one already applied is acknowledged
+ * again with the counts it had, and nothing is done twice. The gateway keeps an applied erasure
+ * by its erasure_id and counts alone, never with the person's id, so what it keeps is no list of
+ * erased people.
+ *
+ * What the gateway does takes effect whatever the person is and wherever they live:
+ *   * Every role, membership and residency the person holds ends. Each residency ends as at a
+ *     move-out: the household keeps its home and its data. Where they were a home's last
+ *     resident, the home is vacated as at any last move-out. Where they were its last household
+ *     admin and others live there, it is left without one until another is made.
+ *   * The pending invites they made are withdrawn.
+ *   * Devices they own as their own are released and stay where they are filed.
+ *   * Where they are a vouched administrator, they are erased all the same; the next
+ *     VouchedAdministrators the gateway is sent no longer names them.
+ *   * Records of what happened that name them (who changed a setting, claimed a problem,
+ *     appointed someone, answered a question, consented to a rule) keep the event but no longer
+ *     name anyone.
+ *   * Everything else it holds about them (their name, their own preferences, their sessions,
+ *     keys and tokens) is deleted.
+ * Its records change in one step, all of it or none. Whatever it holds about them outside its
+ * records (open sessions, memory, files) follows before it acknowledges, so an acknowledgement
+ * means all of it is done; after a crash between the two, the erasure sent again is found
+ * applied, the rest is redone, and it is acknowledged. It writes no log line naming the person.
+ * It never refuses: a person the gateway does not know is acknowledged with zero counts.
+ *
+ * @generated from message kusinta.iot.signaling.v1.ErasePerson
+ */
+export declare type ErasePerson = Message<"kusinta.iot.signaling.v1.ErasePerson"> & {
+  /**
+   * Minted by the api-server, opaque, unique among erasures.
+   *
+   * @generated from field: string erasure_id = 1;
+   */
+  erasureId: string;
+
+  /**
+   * The person to erase.
+   *
+   * @generated from field: kusinta.iot.identity.v1.UserId user_id = 2;
+   */
+  userId?: UserId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.ErasePerson.
+ * Use `create(ErasePersonSchema)` to create a new message.
+ */
+export declare const ErasePersonSchema: GenMessage<ErasePerson>;
+
+/**
+ * The gateway's acknowledgement of an ErasePerson, gateway → api-server: applied now or before,
+ * all of it done (ERASURE). The api-server sends that erasure no more. The counts say how much
+ * was done, never what; both zero means the gateway held nothing about the person.
+ *
+ * @generated from message kusinta.iot.signaling.v1.ErasePersonApplied
+ */
+export declare type ErasePersonApplied = Message<"kusinta.iot.signaling.v1.ErasePersonApplied"> & {
+  /**
+   * As ErasePerson.erasure_id.
+   *
+   * @generated from field: string erasure_id = 1;
+   */
+  erasureId: string;
+
+  /**
+   * Records that kept their event but no longer name the person.
+   *
+   * @generated from field: uint32 records_unnamed = 2;
+   */
+  recordsUnnamed: number;
+
+  /**
+   * Records deleted, roles, memberships and residencies included.
+   *
+   * @generated from field: uint32 records_deleted = 3;
+   */
+  recordsDeleted: number;
+};
+
+/**
+ * Describes the message kusinta.iot.signaling.v1.ErasePersonApplied.
+ * Use `create(ErasePersonAppliedSchema)` to create a new message.
+ */
+export declare const ErasePersonAppliedSchema: GenMessage<ErasePersonApplied>;
 
 /**
  * Messages sent by the app (GatewaySignalingService.UserConnect stream).

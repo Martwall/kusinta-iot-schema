@@ -448,6 +448,7 @@ enum GatewayConnectRequest_Payload {
   accountLinkResult,
   refreshToken,
   revokeToken,
+  erasePersonApplied,
   notSet
 }
 
@@ -468,6 +469,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     $1.AccountLinkResult? accountLinkResult,
     $1.RefreshToken? refreshToken,
     $1.RevokeToken? revokeToken,
+    ErasePersonApplied? erasePersonApplied,
   }) {
     final result = create();
     if (targetUserId != null) result.targetUserId = targetUserId;
@@ -485,6 +487,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     if (accountLinkResult != null) result.accountLinkResult = accountLinkResult;
     if (refreshToken != null) result.refreshToken = refreshToken;
     if (revokeToken != null) result.revokeToken = revokeToken;
+    if (erasePersonApplied != null)
+      result.erasePersonApplied = erasePersonApplied;
     return result;
   }
 
@@ -509,6 +513,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
     10: GatewayConnectRequest_Payload.accountLinkResult,
     11: GatewayConnectRequest_Payload.refreshToken,
     12: GatewayConnectRequest_Payload.revokeToken,
+    13: GatewayConnectRequest_Payload.erasePersonApplied,
     0: GatewayConnectRequest_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -516,7 +521,7 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 4, 6, 7, 8, 9, 10, 11, 12])
+    ..oo(0, [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'targetUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpAnswer>(2, _omitFieldNames ? '' : 'answer',
@@ -542,6 +547,8 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
         subBuilder: $1.RefreshToken.create)
     ..aOM<$1.RevokeToken>(12, _omitFieldNames ? '' : 'revokeToken',
         subBuilder: $1.RevokeToken.create)
+    ..aOM<ErasePersonApplied>(13, _omitFieldNames ? '' : 'erasePersonApplied',
+        subBuilder: ErasePersonApplied.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -709,6 +716,17 @@ class GatewayConnectRequest extends $pb.GeneratedMessage {
   void clearRevokeToken() => $_clearField(12);
   @$pb.TagNumber(12)
   $1.RevokeToken ensureRevokeToken() => $_ensure(11);
+
+  @$pb.TagNumber(13)
+  ErasePersonApplied get erasePersonApplied => $_getN(12);
+  @$pb.TagNumber(13)
+  set erasePersonApplied(ErasePersonApplied value) => $_setField(13, value);
+  @$pb.TagNumber(13)
+  $core.bool hasErasePersonApplied() => $_has(12);
+  @$pb.TagNumber(13)
+  void clearErasePersonApplied() => $_clearField(13);
+  @$pb.TagNumber(13)
+  ErasePersonApplied ensureErasePersonApplied() => $_ensure(12);
 }
 
 enum GatewayConnectResponse_Payload {
@@ -723,6 +741,7 @@ enum GatewayConnectResponse_Payload {
   tokenRefreshed,
   tokenRevoked,
   accountLinkCancelled,
+  erasePerson,
   notSet
 }
 
@@ -742,6 +761,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     $1.TokenRefreshed? tokenRefreshed,
     $1.TokenRevoked? tokenRevoked,
     $1.AccountLinkCancelled? accountLinkCancelled,
+    ErasePerson? erasePerson,
   }) {
     final result = create();
     if (fromUserId != null) result.fromUserId = fromUserId;
@@ -759,6 +779,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     if (tokenRevoked != null) result.tokenRevoked = tokenRevoked;
     if (accountLinkCancelled != null)
       result.accountLinkCancelled = accountLinkCancelled;
+    if (erasePerson != null) result.erasePerson = erasePerson;
     return result;
   }
 
@@ -784,6 +805,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     11: GatewayConnectResponse_Payload.tokenRefreshed,
     12: GatewayConnectResponse_Payload.tokenRevoked,
     13: GatewayConnectResponse_Payload.accountLinkCancelled,
+    14: GatewayConnectResponse_Payload.erasePerson,
     0: GatewayConnectResponse_Payload.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -791,7 +813,7 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
       package: const $pb.PackageName(
           _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
       createEmptyInstance: create)
-    ..oo(0, [2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+    ..oo(0, [2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
     ..aOM<$0.UserId>(1, _omitFieldNames ? '' : 'fromUserId',
         subBuilder: $0.UserId.create)
     ..aOM<SdpOffer>(2, _omitFieldNames ? '' : 'offer',
@@ -819,6 +841,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
     ..aOM<$1.AccountLinkCancelled>(
         13, _omitFieldNames ? '' : 'accountLinkCancelled',
         subBuilder: $1.AccountLinkCancelled.create)
+    ..aOM<ErasePerson>(14, _omitFieldNames ? '' : 'erasePerson',
+        subBuilder: ErasePerson.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -851,7 +875,8 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   /// On redeem_invite, the user redeeming: the sub of the token the api-server
   /// verified, and never a value the user supplied. Unset on what concerns the
   /// gateway itself (stream_opened, vouched_administrators, transfer_outcome,
-  /// gateway_deleted) and on the accountlink.v1 arms, which are from no user.
+  /// gateway_deleted, erase_person, whose person is in its payload) and on the
+  /// accountlink.v1 arms, which are from no user.
   @$pb.TagNumber(1)
   $0.UserId get fromUserId => $_getN(0);
   @$pb.TagNumber(1)
@@ -998,6 +1023,17 @@ class GatewayConnectResponse extends $pb.GeneratedMessage {
   void clearAccountLinkCancelled() => $_clearField(13);
   @$pb.TagNumber(13)
   $1.AccountLinkCancelled ensureAccountLinkCancelled() => $_ensure(12);
+
+  @$pb.TagNumber(14)
+  ErasePerson get erasePerson => $_getN(13);
+  @$pb.TagNumber(14)
+  set erasePerson(ErasePerson value) => $_setField(14, value);
+  @$pb.TagNumber(14)
+  $core.bool hasErasePerson() => $_has(13);
+  @$pb.TagNumber(14)
+  void clearErasePerson() => $_clearField(14);
+  @$pb.TagNumber(14)
+  ErasePerson ensureErasePerson() => $_ensure(13);
 }
 
 enum RedeemInvite_Secret { token, code, notSet }
@@ -2052,6 +2088,203 @@ class TransferOutcomeApplied extends $pb.GeneratedMessage {
   $core.bool hasTransferId() => $_has(0);
   @$pb.TagNumber(1)
   void clearTransferId() => $_clearField(1);
+}
+
+/// ERASURE. A person's account is gone and the gateway is to erase them, api-server → gateway.
+/// Sent to every gateway that lists the person, or has listed them since its records began
+/// (reporting.v1 members, service reach, or the owning organisation's administrators): a
+/// gateway they left may still hold records of what happened that name them. The api-server
+/// keeps, per person, the ids of the gateways that have listed them for this, and deletes that
+/// list once every gateway on it has acknowledged, so the erasure leaves no record of where the
+/// person was. It never sends an erasure to a gateway that has never listed the person, which would
+/// hand it an id it did not know.
+///
+/// The api-server keeps an erasure until the gateway acknowledges it (ErasePersonApplied),
+/// through the gateway's offline spells, and sends it on every stream right after
+/// GatewayStreamOpened. Applying is idempotent by erasure_id: one already applied is acknowledged
+/// again with the counts it had, and nothing is done twice. The gateway keeps an applied erasure
+/// by its erasure_id and counts alone, never with the person's id, so what it keeps is no list of
+/// erased people.
+///
+/// What the gateway does takes effect whatever the person is and wherever they live:
+///   * Every role, membership and residency the person holds ends. Each residency ends as at a
+///     move-out: the household keeps its home and its data. Where they were a home's last
+///     resident, the home is vacated as at any last move-out. Where they were its last household
+///     admin and others live there, it is left without one until another is made.
+///   * The pending invites they made are withdrawn.
+///   * Devices they own as their own are released and stay where they are filed.
+///   * Where they are a vouched administrator, they are erased all the same; the next
+///     VouchedAdministrators the gateway is sent no longer names them.
+///   * Records of what happened that name them (who changed a setting, claimed a problem,
+///     appointed someone, answered a question, consented to a rule) keep the event but no longer
+///     name anyone.
+///   * Everything else it holds about them (their name, their own preferences, their sessions,
+///     keys and tokens) is deleted.
+/// Its records change in one step, all of it or none. Whatever it holds about them outside its
+/// records (open sessions, memory, files) follows before it acknowledges, so an acknowledgement
+/// means all of it is done; after a crash between the two, the erasure sent again is found
+/// applied, the rest is redone, and it is acknowledged. It writes no log line naming the person.
+/// It never refuses: a person the gateway does not know is acknowledged with zero counts.
+class ErasePerson extends $pb.GeneratedMessage {
+  factory ErasePerson({
+    $core.String? erasureId,
+    $0.UserId? userId,
+  }) {
+    final result = create();
+    if (erasureId != null) result.erasureId = erasureId;
+    if (userId != null) result.userId = userId;
+    return result;
+  }
+
+  ErasePerson._();
+
+  factory ErasePerson.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ErasePerson.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ErasePerson',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'erasureId')
+    ..aOM<$0.UserId>(2, _omitFieldNames ? '' : 'userId',
+        subBuilder: $0.UserId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ErasePerson clone() => ErasePerson()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ErasePerson copyWith(void Function(ErasePerson) updates) =>
+      super.copyWith((message) => updates(message as ErasePerson))
+          as ErasePerson;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ErasePerson create() => ErasePerson._();
+  @$core.override
+  ErasePerson createEmptyInstance() => create();
+  static $pb.PbList<ErasePerson> createRepeated() => $pb.PbList<ErasePerson>();
+  @$core.pragma('dart2js:noInline')
+  static ErasePerson getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ErasePerson>(create);
+  static ErasePerson? _defaultInstance;
+
+  /// Minted by the api-server, opaque, unique among erasures.
+  @$pb.TagNumber(1)
+  $core.String get erasureId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set erasureId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasErasureId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearErasureId() => $_clearField(1);
+
+  /// The person to erase.
+  @$pb.TagNumber(2)
+  $0.UserId get userId => $_getN(1);
+  @$pb.TagNumber(2)
+  set userId($0.UserId value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasUserId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearUserId() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $0.UserId ensureUserId() => $_ensure(1);
+}
+
+/// The gateway's acknowledgement of an ErasePerson, gateway → api-server: applied now or before,
+/// all of it done (ERASURE). The api-server sends that erasure no more. The counts say how much
+/// was done, never what; both zero means the gateway held nothing about the person.
+class ErasePersonApplied extends $pb.GeneratedMessage {
+  factory ErasePersonApplied({
+    $core.String? erasureId,
+    $core.int? recordsUnnamed,
+    $core.int? recordsDeleted,
+  }) {
+    final result = create();
+    if (erasureId != null) result.erasureId = erasureId;
+    if (recordsUnnamed != null) result.recordsUnnamed = recordsUnnamed;
+    if (recordsDeleted != null) result.recordsDeleted = recordsDeleted;
+    return result;
+  }
+
+  ErasePersonApplied._();
+
+  factory ErasePersonApplied.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ErasePersonApplied.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ErasePersonApplied',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.signaling.v1'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'erasureId')
+    ..a<$core.int>(
+        2, _omitFieldNames ? '' : 'recordsUnnamed', $pb.PbFieldType.OU3)
+    ..a<$core.int>(
+        3, _omitFieldNames ? '' : 'recordsDeleted', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ErasePersonApplied clone() => ErasePersonApplied()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ErasePersonApplied copyWith(void Function(ErasePersonApplied) updates) =>
+      super.copyWith((message) => updates(message as ErasePersonApplied))
+          as ErasePersonApplied;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ErasePersonApplied create() => ErasePersonApplied._();
+  @$core.override
+  ErasePersonApplied createEmptyInstance() => create();
+  static $pb.PbList<ErasePersonApplied> createRepeated() =>
+      $pb.PbList<ErasePersonApplied>();
+  @$core.pragma('dart2js:noInline')
+  static ErasePersonApplied getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ErasePersonApplied>(create);
+  static ErasePersonApplied? _defaultInstance;
+
+  /// As ErasePerson.erasure_id.
+  @$pb.TagNumber(1)
+  $core.String get erasureId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set erasureId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasErasureId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearErasureId() => $_clearField(1);
+
+  /// Records that kept their event but no longer name the person.
+  @$pb.TagNumber(2)
+  $core.int get recordsUnnamed => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set recordsUnnamed($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRecordsUnnamed() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRecordsUnnamed() => $_clearField(2);
+
+  /// Records deleted, roles, memberships and residencies included.
+  @$pb.TagNumber(3)
+  $core.int get recordsDeleted => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set recordsDeleted($core.int value) => $_setUnsignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasRecordsDeleted() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRecordsDeleted() => $_clearField(3);
 }
 
 enum UserConnectRequest_Payload { handshake, offer, iceCandidate, notSet }
