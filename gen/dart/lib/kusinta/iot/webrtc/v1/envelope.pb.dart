@@ -752,6 +752,7 @@ enum ManagementResult_Result {
   energyPriceAdder,
   heatCurveViews,
   provisionedDevices,
+  buildingRoomLimits,
   notSet
 }
 
@@ -803,6 +804,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     $8.EnergyPriceAdder? energyPriceAdder,
     $8.HeatCurveViews? heatCurveViews,
     $3.ProvisionedDevices? provisionedDevices,
+    $3.BuildingRoomLimits? buildingRoomLimits,
   }) {
     final result = create();
     if (inReplyTo != null) result.inReplyTo = inReplyTo;
@@ -849,6 +851,8 @@ class ManagementResult extends $pb.GeneratedMessage {
     if (heatCurveViews != null) result.heatCurveViews = heatCurveViews;
     if (provisionedDevices != null)
       result.provisionedDevices = provisionedDevices;
+    if (buildingRoomLimits != null)
+      result.buildingRoomLimits = buildingRoomLimits;
     return result;
   }
 
@@ -899,6 +903,7 @@ class ManagementResult extends $pb.GeneratedMessage {
     35: ManagementResult_Result.energyPriceAdder,
     36: ManagementResult_Result.heatCurveViews,
     37: ManagementResult_Result.provisionedDevices,
+    38: ManagementResult_Result.buildingRoomLimits,
     0: ManagementResult_Result.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -942,7 +947,8 @@ class ManagementResult extends $pb.GeneratedMessage {
       34,
       35,
       36,
-      37
+      37,
+      38
     ])
     ..aOS(1, _omitFieldNames ? '' : 'inReplyTo')
     ..aOM<GatewayError>(2, _omitFieldNames ? '' : 'error',
@@ -1024,6 +1030,9 @@ class ManagementResult extends $pb.GeneratedMessage {
     ..aOM<$3.ProvisionedDevices>(
         37, _omitFieldNames ? '' : 'provisionedDevices',
         subBuilder: $3.ProvisionedDevices.create)
+    ..aOM<$3.BuildingRoomLimits>(
+        38, _omitFieldNames ? '' : 'buildingRoomLimits',
+        subBuilder: $3.BuildingRoomLimits.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1472,6 +1481,18 @@ class ManagementResult extends $pb.GeneratedMessage {
   void clearProvisionedDevices() => $_clearField(37);
   @$pb.TagNumber(37)
   $3.ProvisionedDevices ensureProvisionedDevices() => $_ensure(36);
+
+  /// get_building_room_limits, set_building_room_limits
+  @$pb.TagNumber(38)
+  $3.BuildingRoomLimits get buildingRoomLimits => $_getN(37);
+  @$pb.TagNumber(38)
+  set buildingRoomLimits($3.BuildingRoomLimits value) => $_setField(38, value);
+  @$pb.TagNumber(38)
+  $core.bool hasBuildingRoomLimits() => $_has(37);
+  @$pb.TagNumber(38)
+  void clearBuildingRoomLimits() => $_clearField(38);
+  @$pb.TagNumber(38)
+  $3.BuildingRoomLimits ensureBuildingRoomLimits() => $_ensure(37);
 }
 
 /// Asks the gateway to put a connector into pairing mode, so a device joined during the

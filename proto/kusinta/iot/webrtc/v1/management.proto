@@ -750,7 +750,11 @@ message RoomLimitValue {
 // "step_centidegrees": that coarsest step, as a decimal string}. It is judged only over valves
 // the caller sees, so it tells them nothing of a device hidden from them; a valve filed later,
 // or hidden from whoever set the limits, whose grid leaves no step between them is held at the
-// minimum. Limits the request leaves as they are are not judged again. Nothing in the answer to the outer limits depends
+// minimum. Limits the request leaves as they are are not judged again. In a home, limits_order
+// is judged on the room's own limits as they will be stored, and limits_no_setpoint on them as
+// read within the building's home bounds, which is what its valves are held at; a bound set
+// outside the home bounds is accepted as it is, and read within them (climate.v1
+// .OuterRoomLimits, HOME BOUNDS). Nothing in the answer to the outer limits depends
 // on the home's state — its targets, inner limits, modes, or who lives there — so setting them
 // tells the caller nothing of it; what they clamp is told to the household alone
 // (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided by whether the
@@ -976,6 +980,123 @@ message BuildingPlanning {
   // PROBLEM_KIND_PLANNING_INPUTS_STALE. False while the inputs are off, or while the gateway
   // has not yet asked for them since they were put.
   bool stale = 7;
+}
+
+// BUILDING ROOM LIMITS. Two settings per building — a top-level space — each a minimum and a
+// maximum, each optional (climate.v1.BuildingLimits):
+//   * HOMES, for the rooms of every home in it, a home's rooms being those under an apartment:
+//     hard outer bounds, set as policy without seeing any reading. Every room in a home has its
+//     own outer limits read within them, at once and for as long as they stand
+//     (climate.v1.OuterRoomLimits, HOME BOUNDS), and whoever sets a room's own limits, or the
+//     household's (SetInnerRoomLimits), sets them inside the bounds as before. The household is
+//     told them on each of its rooms (climate.v1.RoomClimate.home_bounds);
+//   * COMMON_AREAS, for every other room in the building: not a bound, but the rooms' own outer
+//     limits, given to them by DEFAULT and APPLY below and by nothing else. A room's limits may be
+//     changed room by room afterwards (ConfigureRoomClimate), as before.
+// Each acts on rooms of its kind in two ways:
+//   * DEFAULT. A room created in the building (CreateSpace, SPACE_TYPE_ROOM) takes its kind's
+//     setting as its own outer min and max: each bound the setting has, with the setting's stamp
+//     (climate.v1.OuterLimit) and, for min, its acceptance of the threshold. A room that changes
+//     kind later — moved into or out of a home, or its space becoming or ceasing to be an
+//     apartment — takes nothing: its own limits stay, and in a home are read within the home
+//     bounds;
+//   * APPLY. A setting applied (SetBuildingRoomLimits.apply_to_rooms) is written, as it then
+//     stands, into every room of its kind in the building, empty homes included, each bound the
+//     setting has replacing the room's own, with the acceptance of the threshold for min: each
+//     bound it changes stamped with the caller's role and the time, one at the value it has
+//     keeping its stamp. A bound the setting lacks leaves the rooms' as it is. Where a room's
+//     own bound would then stand out of order with those written — its max below the min
+//     written or its min above the max written, its away_min above its min or its max, or its
+//     move_in_target outside [min, max] — it is moved to the bound it passes, stamped likewise,
+//     so that every room takes the setting and none is refused.
+// Changing or clearing a setting rewrites no room: the rooms keep the limits they have. In a
+// home, a room's own limits that the home bounds hold back come back into force as they stand
+// when the bounds loosen or are cleared (climate.v1.OuterRoomLimits, HOME BOUNDS). A room whose
+// climate a change moves is sent again (RoomClimateChanged) to each recipient as what they are
+// sent of it changes. To a recipient sent the room with state_withheld, a room is sent again only
+// where what they are sent of it changed (outer_limits as read, home_bounds), never for what only
+// the household is shown: a change of the home bounds sends every home room of the building
+// again to them, since its home_bounds changed, whatever it did to each home.
+//
+// PRIVACY. Staff write into homes and read nothing of them back. Nothing in an answer depends on
+// any home's state — its targets, its limits, its devices, who lives there or whether anyone
+// does. A setting is judged on its own values alone, never against the valves of the rooms it
+// reaches (ConfigureRoomClimate, "limits_no_setpoint"): a valve whose grid leaves no step
+// between the bounds is held at the minimum, as one filed later is. Applying is answered with a
+// count of the rooms written, and nothing per room or per home. What the home bounds clamp is
+// told to the household alone (climate.v1.RoomClimate.outer_limit_clamp).
+//
+// WHO. Given to and set by the property owner and the gateway's administrators
+// (access.v1.ROLE_PROPERTY_OWNER, access.v1.ROLE_GATEWAY_ADMIN) who reach the building. No
+// commissioning grant covers them, and anyone else is refused as NOT_ENTITLED. Each bound is
+// stamped with the role its setter acted in: ROLE_PROPERTY_OWNER where they hold it, else
+// ROLE_GATEWAY_ADMIN. Neither setting is household data: a household's handover keeps them, and
+// deleting the building removes them. A resident is told the home bounds on their rooms, and
+// nothing of the common areas' setting beyond the limits of the rooms they are sent.
+
+// Which of a building's two room-limit settings (BUILDING ROOM LIMITS).
+enum BuildingRoomKind {
+  BUILDING_ROOM_KIND_UNSPECIFIED = 0;
+
+  // The rooms of every home in the building: those under an apartment.
+  BUILDING_ROOM_KIND_HOMES = 1;
+
+  // Every other room in the building.
+  BUILDING_ROOM_KIND_COMMON_AREAS = 2;
+}
+
+// Reads a building's room-limit settings. Answered as BuildingRoomLimits.
+message GetBuildingRoomLimits {
+  // The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+}
+
+// Sets, changes or clears one of a building's room-limit settings, and applies it to every room
+// of its kind where asked (BUILDING ROOM LIMITS). Answered as BuildingRoomLimits, as it now
+// stands.
+//
+// Each bound it changes is stamped with the caller's role and the time
+// (climate.v1.BuildingLimits); one set to the value it has keeps its stamp. Refused, changing
+// nothing and applying nothing:
+//   * kind UNSPECIFIED, as INVALID_REQUEST with metadata {"reason": "kind"};
+//   * min above max, as INVALID_REQUEST with metadata {"reason": "limits_order"};
+//   * a min changed to below the gateway's public-health threshold without
+//     accept_below_threshold, as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
+//     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses one.
+// Nothing else is judged, the rooms it reaches least of all (BUILDING ROOM LIMITS, PRIVACY).
+message SetBuildingRoomLimits {
+  // The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  BuildingRoomKind kind = 2;
+
+  // Replaces both bounds of the setting, see RoomLimits: a bound unset in it, or limits unset,
+  // removes it, and with neither bound the setting is cleared, which rewrites no room.
+  RoomLimits limits = 3;
+
+  // The caller accepts a min below the public-health threshold, recorded with the setting
+  // (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a request that
+  // sets no such min.
+  bool accept_below_threshold = 4;
+
+  // Also write the setting, as it then stands, into every room of its kind in the building, in
+  // the same step (BUILDING ROOM LIMITS, APPLY). Sent with the limits the setting already has, it
+  // applies them again and changes nothing of the setting.
+  bool apply_to_rooms = 5;
+}
+
+// A building's room-limit settings.
+message BuildingRoomLimits {
+  kusinta.iot.identity.v1.SpaceId space_id = 1;
+
+  // Each unset where the building has none.
+  kusinta.iot.climate.v1.BuildingLimits homes = 2;
+  kusinta.iot.climate.v1.BuildingLimits common_areas = 3;
+
+  // Set only in the answer to a request with apply_to_rooms: how many rooms the setting was
+  // written to — every room of its kind in the building, or none where the setting has no bound.
+  // Nothing per room or per home.
+  optional uint32 rooms_applied = 4;
 }
 
 // Reads the day-ahead prices for the bidding zone of the building a space is in, so that a
@@ -2063,5 +2184,8 @@ message ManagementRequest {
     HandHeatCurveSuggestion hand_heat_curve_suggestion = 91;
     // When a lower heat curve is suggested; see heating.v1 HEAT CURVE, UPDATES.
     SetHeatCurveUpdateMode set_heat_curve_update_mode = 92;
+    // Building-wide room limits; see BUILDING ROOM LIMITS.
+    GetBuildingRoomLimits get_building_room_limits = 93;
+    SetBuildingRoomLimits set_building_room_limits = 94;
   }
 }

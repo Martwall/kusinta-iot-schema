@@ -629,6 +629,15 @@ const ManagementResult$json = {
       '9': 0,
       '10': 'provisionedDevices'
     },
+    {
+      '1': 'building_room_limits',
+      '3': 38,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.BuildingRoomLimits',
+      '9': 0,
+      '10': 'buildingRoomLimits'
+    },
   ],
   '8': [
     {'1': 'result'},
@@ -692,7 +701,9 @@ final $typed_data.Uint8List managementResultDescriptor = $convert.base64Decode(
     'Y2VBZGRlchJSChBoZWF0X2N1cnZlX3ZpZXdzGCQgASgLMiYua3VzaW50YS5pb3QuaGVhdGluZy'
     '52MS5IZWF0Q3VydmVWaWV3c0gAUg5oZWF0Q3VydmVWaWV3cxJcChNwcm92aXNpb25lZF9kZXZp'
     'Y2VzGCUgASgLMikua3VzaW50YS5pb3Qud2VicnRjLnYxLlByb3Zpc2lvbmVkRGV2aWNlc0gAUh'
-    'Jwcm92aXNpb25lZERldmljZXNCCAoGcmVzdWx0');
+    'Jwcm92aXNpb25lZERldmljZXMSXQoUYnVpbGRpbmdfcm9vbV9saW1pdHMYJiABKAsyKS5rdXNp'
+    'bnRhLmlvdC53ZWJydGMudjEuQnVpbGRpbmdSb29tTGltaXRzSABSEmJ1aWxkaW5nUm9vbUxpbW'
+    'l0c0IICgZyZXN1bHQ=');
 
 @$core.Deprecated('Use startPairingDescriptor instead')
 const StartPairing$json = {

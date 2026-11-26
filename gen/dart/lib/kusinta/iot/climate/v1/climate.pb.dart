@@ -183,6 +183,7 @@ class RoomClimate extends $pb.GeneratedMessage {
     $core.Iterable<$1.DeviceId>? outerBoundDeviceIds,
     ComfortPreference? comfortPreference,
     ComfortPreference? homeComfortPreference,
+    BuildingLimits? homeBounds,
   }) {
     final result = create();
     if (spaceId != null) result.spaceId = spaceId;
@@ -221,6 +222,7 @@ class RoomClimate extends $pb.GeneratedMessage {
     if (comfortPreference != null) result.comfortPreference = comfortPreference;
     if (homeComfortPreference != null)
       result.homeComfortPreference = homeComfortPreference;
+    if (homeBounds != null) result.homeBounds = homeBounds;
     return result;
   }
 
@@ -298,6 +300,8 @@ class RoomClimate extends $pb.GeneratedMessage {
         subBuilder: ComfortPreference.create)
     ..aOM<ComfortPreference>(27, _omitFieldNames ? '' : 'homeComfortPreference',
         subBuilder: ComfortPreference.create)
+    ..aOM<BuildingLimits>(28, _omitFieldNames ? '' : 'homeBounds',
+        subBuilder: BuildingLimits.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -616,7 +620,9 @@ class RoomClimate extends $pb.GeneratedMessage {
 
   /// The room's outer limits, each bound with who set it and when (OuterRoomLimits). Sent to
   /// whoever is sent the room, service included and with state_withheld too: they are the
-  /// building's, and setting them is service work.
+  /// building's, and setting them is service work. In a home, as read within the building's home
+  /// bounds (OuterRoomLimits, HOME BOUNDS): what is in force, and what the outputs they bind are
+  /// held at.
   ///
   /// Always set by a gateway that keeps outer limits: an empty OuterRoomLimits where the room
   /// has none. Unset only from a gateway that predates them, which keeps min and max alone: an
@@ -721,6 +727,27 @@ class RoomClimate extends $pb.GeneratedMessage {
   void clearHomeComfortPreference() => $_clearField(27);
   @$pb.TagNumber(27)
   ComfortPreference ensureHomeComfortPreference() => $_ensure(26);
+
+  /// The building's bounds on the rooms of every home in it (BuildingLimits; OuterRoomLimits,
+  /// HOME BOUNDS), so that the household is told the bound its room's outer limits are read
+  /// within, and the role that set it and when, never a name. Set on a room in a home while the
+  /// building has them, and sent to whoever is sent the room, service included and with
+  /// state_withheld too: they are the building's policy, the same for every home, and tell
+  /// nothing of this one. Unset: the building has none, or the room is outside homes, where the
+  /// outer limits are the room's own.
+  ///
+  /// outer_limits is already sent as read within them, so an app that predates this field shows
+  /// the limits in force, stamped with the role that set the home bound where that is what holds.
+  @$pb.TagNumber(28)
+  BuildingLimits get homeBounds => $_getN(27);
+  @$pb.TagNumber(28)
+  set homeBounds(BuildingLimits value) => $_setField(28, value);
+  @$pb.TagNumber(28)
+  $core.bool hasHomeBounds() => $_has(27);
+  @$pb.TagNumber(28)
+  void clearHomeBounds() => $_clearField(28);
+  @$pb.TagNumber(28)
+  BuildingLimits ensureHomeBounds() => $_ensure(27);
 }
 
 /// One bound of a room's outer limits, with who set it and when. Shown to the household as the
@@ -794,7 +821,8 @@ class OuterLimit extends $pb.GeneratedMessage {
   /// they hold it, else ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN. In a home, a bound an
   /// installer set under a commissioning grant has it unset to anyone but the home's residents:
   /// staff are shown its value and set_at alone, so the stamp tells them nothing of when the
-  /// household let an installer in. An app shows an unset role as not stated.
+  /// household let an installer in. An app shows an unset role as not stated. A room's bound read
+  /// as the building's home bound carries that bound's stamp (OuterRoomLimits, HOME BOUNDS).
   @$pb.TagNumber(2)
   $2.Role get setByRole => $_getN(1);
   @$pb.TagNumber(2)
@@ -859,6 +887,35 @@ class OuterLimit extends $pb.GeneratedMessage {
 /// is written back to it. Into a device the outer limits do not bind that holds room limits
 /// written before, it writes the device's defaults back, queued and retried as the wipe's device
 /// writes are (webrtc.v1 household.proto, WIPE).
+///
+/// HOME BOUNDS. In a home — a room under an apartment — the building's bounds on every home's
+/// rooms (RoomClimate.home_bounds; webrtc.v1 management.proto, BUILDING ROOM LIMITS) fence the
+/// room's own outer limits. The room keeps its own as they were set, and everything that reads
+/// them reads them held within the home bounds: HELD, the AWAY FLOOR, DEVICE LIMITS, the vacancy
+/// setback and MOVE-IN (webrtc.v1 household.proto), the comfort band's FLOOR
+/// (ComfortPreference, THE BAND), and the outer_limits a recipient is sent:
+///   * min and max are each read clamped into [home min, home max], and one unset is read as the
+///     home bound on its side where that is set;
+///   * away_min and move_in_target are each read clamped into [home min, home max]; one unset
+///     stays unset, so the AWAY FLOOR is away_min as read or, where unset, min as read.
+/// Clamping keeps the order the room's own limits have, so its limits as read are in order too.
+/// A bound read as a home bound carries that bound's stamp (OuterLimit), and min, read so, the
+/// home bounds' acceptance of the threshold (BuildingLimits.min_accepted_threshold_centidegrees)
+/// in place of its own. The home bounds bind what the outer limits bind and nothing more (WHAT
+/// THEY BIND): a household's own devices stay outside them.
+///
+/// The household's inner limits (InnerRoomLimits) are read within the outer limits as read, as
+/// they are when the outer limits change: stored as set, never rewritten, and held within them at
+/// the outputs the outer limits bind, the outer bound winning where the two disagree (HELD,
+/// steps 2 and 3). So no output the home bounds bind is held from an inner max above the home max
+/// or an inner min below the home min; an output they do not bind stops at step 2, as before.
+///
+/// Nothing of the room is rewritten when the home bounds move. Tightened, a room's own bounds
+/// outside them stay as they were set, and are held within them; loosened or cleared, the room's
+/// own come back into force as they stand, and a room with none has none again. A room's own
+/// bound set outside the home bounds is accepted as it is (webrtc.v1.ConfigureRoomClimate) and
+/// read within them. Outside homes there are no home bounds: a room's outer limits there are its
+/// own, set room by room or from the building's setting for common areas.
 ///
 /// They stay with the home: a household handover wipes the inner limits, never these
 /// (webrtc.v1 household.proto, WIPE).
@@ -991,6 +1048,106 @@ class OuterRoomLimits extends $pb.GeneratedMessage {
   $core.bool hasMinAcceptedThresholdCentidegrees() => $_has(4);
   @$pb.TagNumber(5)
   void clearMinAcceptedThresholdCentidegrees() => $_clearField(5);
+}
+
+/// One of a building's two room-limit settings, a minimum and a maximum, each optional (webrtc.v1
+/// management.proto, BUILDING ROOM LIMITS): for the rooms of its homes, the hard outer bounds
+/// their own outer limits are read within (OuterRoomLimits, HOME BOUNDS); for its common areas,
+/// the outer limits a room outside homes is given when created, or when the setting is applied.
+class BuildingLimits extends $pb.GeneratedMessage {
+  factory BuildingLimits({
+    OuterLimit? min,
+    OuterLimit? max,
+    $core.int? minAcceptedThresholdCentidegrees,
+  }) {
+    final result = create();
+    if (min != null) result.min = min;
+    if (max != null) result.max = max;
+    if (minAcceptedThresholdCentidegrees != null)
+      result.minAcceptedThresholdCentidegrees =
+          minAcceptedThresholdCentidegrees;
+    return result;
+  }
+
+  BuildingLimits._();
+
+  factory BuildingLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BuildingLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildingLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.climate.v1'),
+      createEmptyInstance: create)
+    ..aOM<OuterLimit>(1, _omitFieldNames ? '' : 'min',
+        subBuilder: OuterLimit.create)
+    ..aOM<OuterLimit>(2, _omitFieldNames ? '' : 'max',
+        subBuilder: OuterLimit.create)
+    ..a<$core.int>(3, _omitFieldNames ? '' : 'minAcceptedThresholdCentidegrees',
+        $pb.PbFieldType.OS3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildingLimits clone() => BuildingLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildingLimits copyWith(void Function(BuildingLimits) updates) =>
+      super.copyWith((message) => updates(message as BuildingLimits))
+          as BuildingLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BuildingLimits create() => BuildingLimits._();
+  @$core.override
+  BuildingLimits createEmptyInstance() => create();
+  static $pb.PbList<BuildingLimits> createRepeated() =>
+      $pb.PbList<BuildingLimits>();
+  @$core.pragma('dart2js:noInline')
+  static BuildingLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BuildingLimits>(create);
+  static BuildingLimits? _defaultInstance;
+
+  /// Each with the role that set it and when (OuterLimit): ROLE_PROPERTY_OWNER where its setter
+  /// holds it, else ROLE_GATEWAY_ADMIN. Never a name.
+  @$pb.TagNumber(1)
+  OuterLimit get min => $_getN(0);
+  @$pb.TagNumber(1)
+  set min(OuterLimit value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMin() => $_clearField(1);
+  @$pb.TagNumber(1)
+  OuterLimit ensureMin() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  OuterLimit get max => $_getN(1);
+  @$pb.TagNumber(2)
+  set max(OuterLimit value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMax() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMax() => $_clearField(2);
+  @$pb.TagNumber(2)
+  OuterLimit ensureMax() => $_ensure(1);
+
+  /// As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting's min: set while
+  /// min was set below the gateway's public-health threshold, the threshold in force then, which
+  /// min's setter explicitly accepted going below.
+  @$pb.TagNumber(3)
+  $core.int get minAcceptedThresholdCentidegrees => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set minAcceptedThresholdCentidegrees($core.int value) =>
+      $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMinAcceptedThresholdCentidegrees() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMinAcceptedThresholdCentidegrees() => $_clearField(3);
 }
 
 /// A room's inner limits: the household's own minimum and maximum, set by the home's household

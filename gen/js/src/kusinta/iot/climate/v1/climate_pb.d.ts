@@ -303,7 +303,9 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
   /**
    * The room's outer limits, each bound with who set it and when (OuterRoomLimits). Sent to
    * whoever is sent the room, service included and with state_withheld too: they are the
-   * building's, and setting them is service work.
+   * building's, and setting them is service work. In a home, as read within the building's home
+   * bounds (OuterRoomLimits, HOME BOUNDS): what is in force, and what the outputs they bind are
+   * held at.
    *
    * Always set by a gateway that keeps outer limits: an empty OuterRoomLimits where the room
    * has none. Unset only from a gateway that predates them, which keeps min and max alone: an
@@ -382,6 +384,22 @@ export declare type RoomClimate = Message<"kusinta.iot.climate.v1.RoomClimate"> 
    * @generated from field: kusinta.iot.climate.v1.ComfortPreference home_comfort_preference = 27;
    */
   homeComfortPreference?: ComfortPreference | undefined;
+
+  /**
+   * The building's bounds on the rooms of every home in it (BuildingLimits; OuterRoomLimits,
+   * HOME BOUNDS), so that the household is told the bound its room's outer limits are read
+   * within, and the role that set it and when, never a name. Set on a room in a home while the
+   * building has them, and sent to whoever is sent the room, service included and with
+   * state_withheld too: they are the building's policy, the same for every home, and tell
+   * nothing of this one. Unset: the building has none, or the room is outside homes, where the
+   * outer limits are the room's own.
+   *
+   * outer_limits is already sent as read within them, so an app that predates this field shows
+   * the limits in force, stamped with the role that set the home bound where that is what holds.
+   *
+   * @generated from field: kusinta.iot.climate.v1.BuildingLimits home_bounds = 28;
+   */
+  homeBounds?: BuildingLimits | undefined;
 };
 
 /**
@@ -407,7 +425,8 @@ export declare type OuterLimit = Message<"kusinta.iot.climate.v1.OuterLimit"> & 
    * they hold it, else ROLE_GATEWAY_ADMIN, else ROLE_TECHNICIAN. In a home, a bound an
    * installer set under a commissioning grant has it unset to anyone but the home's residents:
    * staff are shown its value and set_at alone, so the stamp tells them nothing of when the
-   * household let an installer in. An app shows an unset role as not stated.
+   * household let an installer in. An app shows an unset role as not stated. A room's bound read
+   * as the building's home bound carries that bound's stamp (OuterRoomLimits, HOME BOUNDS).
    *
    * @generated from field: kusinta.iot.access.v1.Role set_by_role = 2;
    */
@@ -471,6 +490,35 @@ export declare const OuterLimitSchema: GenMessage<OuterLimit>;
  * written before, it writes the device's defaults back, queued and retried as the wipe's device
  * writes are (webrtc.v1 household.proto, WIPE).
  *
+ * HOME BOUNDS. In a home — a room under an apartment — the building's bounds on every home's
+ * rooms (RoomClimate.home_bounds; webrtc.v1 management.proto, BUILDING ROOM LIMITS) fence the
+ * room's own outer limits. The room keeps its own as they were set, and everything that reads
+ * them reads them held within the home bounds: HELD, the AWAY FLOOR, DEVICE LIMITS, the vacancy
+ * setback and MOVE-IN (webrtc.v1 household.proto), the comfort band's FLOOR
+ * (ComfortPreference, THE BAND), and the outer_limits a recipient is sent:
+ *   * min and max are each read clamped into [home min, home max], and one unset is read as the
+ *     home bound on its side where that is set;
+ *   * away_min and move_in_target are each read clamped into [home min, home max]; one unset
+ *     stays unset, so the AWAY FLOOR is away_min as read or, where unset, min as read.
+ * Clamping keeps the order the room's own limits have, so its limits as read are in order too.
+ * A bound read as a home bound carries that bound's stamp (OuterLimit), and min, read so, the
+ * home bounds' acceptance of the threshold (BuildingLimits.min_accepted_threshold_centidegrees)
+ * in place of its own. The home bounds bind what the outer limits bind and nothing more (WHAT
+ * THEY BIND): a household's own devices stay outside them.
+ *
+ * The household's inner limits (InnerRoomLimits) are read within the outer limits as read, as
+ * they are when the outer limits change: stored as set, never rewritten, and held within them at
+ * the outputs the outer limits bind, the outer bound winning where the two disagree (HELD,
+ * steps 2 and 3). So no output the home bounds bind is held from an inner max above the home max
+ * or an inner min below the home min; an output they do not bind stops at step 2, as before.
+ *
+ * Nothing of the room is rewritten when the home bounds move. Tightened, a room's own bounds
+ * outside them stay as they were set, and are held within them; loosened or cleared, the room's
+ * own come back into force as they stand, and a room with none has none again. A room's own
+ * bound set outside the home bounds is accepted as it is (webrtc.v1.ConfigureRoomClimate) and
+ * read within them. Outside homes there are no home bounds: a room's outer limits there are its
+ * own, set room by room or from the building's setting for common areas.
+ *
  * They stay with the home: a household handover wipes the inner limits, never these
  * (webrtc.v1 household.proto, WIPE).
  *
@@ -522,6 +570,44 @@ export declare type OuterRoomLimits = Message<"kusinta.iot.climate.v1.OuterRoomL
  * Use `create(OuterRoomLimitsSchema)` to create a new message.
  */
 export declare const OuterRoomLimitsSchema: GenMessage<OuterRoomLimits>;
+
+/**
+ * One of a building's two room-limit settings, a minimum and a maximum, each optional (webrtc.v1
+ * management.proto, BUILDING ROOM LIMITS): for the rooms of its homes, the hard outer bounds
+ * their own outer limits are read within (OuterRoomLimits, HOME BOUNDS); for its common areas,
+ * the outer limits a room outside homes is given when created, or when the setting is applied.
+ *
+ * @generated from message kusinta.iot.climate.v1.BuildingLimits
+ */
+export declare type BuildingLimits = Message<"kusinta.iot.climate.v1.BuildingLimits"> & {
+  /**
+   * Each with the role that set it and when (OuterLimit): ROLE_PROPERTY_OWNER where its setter
+   * holds it, else ROLE_GATEWAY_ADMIN. Never a name.
+   *
+   * @generated from field: kusinta.iot.climate.v1.OuterLimit min = 1;
+   */
+  min?: OuterLimit | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.OuterLimit max = 2;
+   */
+  max?: OuterLimit | undefined;
+
+  /**
+   * As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting's min: set while
+   * min was set below the gateway's public-health threshold, the threshold in force then, which
+   * min's setter explicitly accepted going below.
+   *
+   * @generated from field: optional sint32 min_accepted_threshold_centidegrees = 3;
+   */
+  minAcceptedThresholdCentidegrees?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.climate.v1.BuildingLimits.
+ * Use `create(BuildingLimitsSchema)` to create a new message.
+ */
+export declare const BuildingLimitsSchema: GenMessage<BuildingLimits>;
 
 /**
  * A room's inner limits: the household's own minimum and maximum, set by the home's household

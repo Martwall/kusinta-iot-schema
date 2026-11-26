@@ -7,7 +7,7 @@ import type { Message } from "@bufbuild/protobuf";
 import type { ConnectorId, DeviceId, SpaceId } from "../../identity/v1/identity_pb.js";
 import type { AttributeRef } from "../../access/v1/acl_pb.js";
 import type { Space } from "../../space/v1/space_pb.js";
-import type { BuildingPlanning, DayAheadPrices, ManagementAck, ManagementRequest, PrivacyDisclosure, ProvisionedDevices, SpaceAddress, SpaceTree } from "./management_pb.js";
+import type { BuildingPlanning, BuildingRoomLimits, DayAheadPrices, ManagementAck, ManagementRequest, PrivacyDisclosure, ProvisionedDevices, SpaceAddress, SpaceTree } from "./management_pb.js";
 import type { DeviceLink, DeviceLinkList } from "../../link/v1/link_pb.js";
 import type { ApartmentClimateSummary, ClimateMode, PlantHistory, RoomClimate, RoomClimateList, RoomHistory } from "../../climate/v1/climate_pb.js";
 import type { IssuedInvite, SpaceInvites } from "./invite_pb.js";
@@ -598,6 +598,14 @@ export declare type ManagementResult = Message<"kusinta.iot.webrtc.v1.Management
      */
     value: ProvisionedDevices;
     case: "provisionedDevices";
+  } | {
+    /**
+     * get_building_room_limits, set_building_room_limits
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.BuildingRoomLimits building_room_limits = 38;
+     */
+    value: BuildingRoomLimits;
+    case: "buildingRoomLimits";
   } | { case: undefined; value?: undefined };
 };
 
