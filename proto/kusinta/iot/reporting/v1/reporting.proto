@@ -205,20 +205,20 @@ enum ProblemKind {
   PROBLEM_KIND_WINDOW_OPEN = 9;
 
   // A floor zone bound to one of the device's outputs (heating.v1.FloorZone.output) is
-  // uncontrolled — it has no room, or no control room — and so heats without control: an
+  // uncontrolled — it has no room, no control room, or a control room holding no room
+  // temperature sensor — and so heats without control: an
   // uncontrolled zone is not driven, and a floor zone rests closed (heating.v1, UNCONTROLLED
   // ZONES). Opened by the gateway only once the zone has been uncontrolled for about an hour,
   // so that a zone left so for a step of commissioning raises nothing. One problem per device,
   // however many zones on its outputs are uncontrolled. Closes CLEAR_REASON_RECOVERED once
-  // each of them has a control room again or has been removed, and
+  // each of them is controlled again or has been removed, and
   // CLEAR_REASON_DEVICE_REMOVED with the device.
   //
   // A service signal: it names the device and where the device is filed (Problem.space_id),
-  // as any device problem does, and nothing else — not the zone's rooms, not which of the two
-  // it lacks, not who left it so, and no time finer than Problem allows for a device in a
-  // home. Not part of
-  // webrtc.v1.ServiceStatus; residents are told of it as
-  // access.v1.SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED.
+  // as any device problem does, and nothing else — not the zone's rooms, not which of these
+  // it lacks, not which room or sensor, not who left it so, and no time finer than Problem
+  // allows for a device in a home. Not part of webrtc.v1.ServiceStatus; residents are told of
+  // it as access.v1.SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED.
   PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED = 10;
 
   // The gateway's planning inputs (planning.v1) are stale, for a building whose inputs are on

@@ -1547,12 +1547,10 @@ export enum BlockReason {
 
   /**
    * A floor zone that serves rooms, but whose control room is unset, deleted, outside its
-   * plant's space, or on the other side of a home's boundary from its rooms, or measures with
-   * no temperature sensor (climate.v1 RoomClimate.sensor_ids empty), so that the zone rests,
-   * heating, rather than being driven. A sensor filed there but not heard does not block: the
-   * zone rests meanwhile as for any lost reading. A control room that is not one of the
-   * zone's rooms is not gone for that (heating.v1 FloorZone.control_room_id). A zone that
-   * serves no room is ZONE_HAS_NO_ROOMS instead.
+   * plant's space, or on the other side of a home's boundary from its rooms. A control room
+   * that is not one of the zone's rooms is not gone for that (heating.v1
+   * FloorZone.control_room_id). A zone that serves no room is ZONE_HAS_NO_ROOMS instead, and
+   * one whose control room is there but holds no sensor is CONTROL_ROOM_NO_SENSOR.
    *
    * @generated from enum value: BLOCK_REASON_CONTROL_ROOM_GONE = 5;
    */
@@ -1586,6 +1584,19 @@ export enum BlockReason {
    * @generated from enum value: BLOCK_REASON_ZONE_HAS_NO_ROOMS = 8;
    */
   ZONE_HAS_NO_ROOMS = 8,
+
+  /**
+   * A floor zone whose control room is there, on its side of a home's boundary and within its
+   * plant's space, but measures with no room temperature sensor (climate.v1
+   * RoomClimate.sensor_ids empty): the zone is uncontrolled, not driven, and rests, heating on
+   * normally-closed wiring (heating.v1, UNCONTROLLED ZONES). A sensor filed there but
+   * not heard does not block: the zone rests meanwhile as for any lost reading. Judged after
+   * ZONE_HAS_NO_ROOMS and CONTROL_ROOM_GONE, which take its place. A client that does not know
+   * it treats it as any block reason it does not know.
+   *
+   * @generated from enum value: BLOCK_REASON_CONTROL_ROOM_NO_SENSOR = 9;
+   */
+  CONTROL_ROOM_NO_SENSOR = 9,
 }
 
 /**
