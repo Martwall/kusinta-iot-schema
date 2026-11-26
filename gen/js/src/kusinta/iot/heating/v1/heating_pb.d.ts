@@ -448,11 +448,12 @@ export declare type FloorZone = Message<"kusinta.iot.heating.v1.FloorZone"> & {
    * whether or not they heat it. A put names one, which may hold no room temperature sensor
    * yet (climate.v1 RoomClimate.sensor_ids empty): it is accepted, and the zone is uncontrolled
    * (see the file comment, UNCONTROLLED ZONES) until a sensor is filed there or the control
-   * room changes. Not driven, it rests, heating on normally-closed wiring; it is warned of as
-   * any uncontrolled zone is (uncontrolled_since), and its feature is blocked as
-   * commissioning.v1.BLOCK_REASON_CONTROL_ROOM_NO_SENSOR so that setup names the cause. Unset only once a
-   * deletion cleared it, and always while rooms is empty. A zone without one is uncontrolled
-   * (see the file comment, UNCONTROLLED ZONES).
+   * room changes. It is warned of as any uncontrolled zone is (uncontrolled_since), and its
+   * feature is blocked as commissioning.v1.BLOCK_REASON_CONTROL_ROOM_NO_SENSOR so that setup
+   * names the cause; it is driven as any zone without a reading, resting or holding a cautious
+   * estimate of its duty. Unset only once a deletion cleared it, and always while
+   * rooms is empty. A zone without one is uncontrolled (see the file comment, UNCONTROLLED
+   * ZONES).
    *
    * @generated from field: kusinta.iot.identity.v1.SpaceId control_room_id = 6;
    */

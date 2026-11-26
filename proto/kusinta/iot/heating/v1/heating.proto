@@ -73,15 +73,21 @@ option optimize_for = SPEED;
 // home's boundary goes as management.proto says. A floor zone is uncontrolled while it has
 // no room, or no control room: none named, or the one named gone, no longer within its plant's
 // space, or on the other side of a home's boundary from its rooms; or while its control room
-// holds no room temperature sensor (climate.v1 RoomClimate.sensor_ids empty). A sensor filed
-// there but not heard is a lost reading, not this: the zone stays controlled, and rests until
-// it is heard. A zone whose control room is not one of its rooms is not uncontrolled for that.
-// An uncontrolled zone is not driven until it has rooms and a control room holding a sensor
-// again: a put naming them (a put names both, and is refused without them), or a sensor filed
-// in its control room. Not driven, its output is at rest, and a
-// floor zone rests closed — on normally-closed wiring, the output off — so it heats without
-// control, capped only by its circuit's supply limiter (FloorZone.uncontrolled_since;
-// reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED).
+// holds no room temperature sensor (climate.v1 RoomClimate.sensor_ids empty). A zone whose
+// control room is not one of its rooms is not uncontrolled for that. Every uncontrolled zone is
+// warned of alike (FloorZone.uncontrolled_since; reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED;
+// access.v1.SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED) until it has rooms and a control room
+// holding a sensor again: a put naming them (a put names both, and is refused without them), or
+// a sensor filed in its control room.
+//
+// One with no room, or no control room, is not driven: its output is at rest, and a floor zone
+// rests closed — on normally-closed wiring, the output off — so it heats without control,
+// capped only by its circuit's supply limiter. One whose control room holds no sensor is driven
+// as any zone whose control room has no reading: it rests, or, where the gateway can estimate
+// the zone's duty (from its fitted model, or the duty it last held steady), it may hold that
+// estimate, erring warm, which no reading corrects.
+// A sensor filed in the control room but not heard is such a lost reading too, and leaves the
+// zone controlled: it is not warned of as uncontrolled.
 //
 // No record reaches across a home's boundary: a change that would leave one so is refused or
 // undone as webrtc.v1 management.proto (HEATING ACROSS A HOME) says. A binding across it, or a
@@ -332,11 +338,12 @@ message FloorZone {
   // whether or not they heat it. A put names one, which may hold no room temperature sensor
   // yet (climate.v1 RoomClimate.sensor_ids empty): it is accepted, and the zone is uncontrolled
   // (see the file comment, UNCONTROLLED ZONES) until a sensor is filed there or the control
-  // room changes. Not driven, it rests, heating on normally-closed wiring; it is warned of as
-  // any uncontrolled zone is (uncontrolled_since), and its feature is blocked as
-  // commissioning.v1.BLOCK_REASON_CONTROL_ROOM_NO_SENSOR so that setup names the cause. Unset only once a
-  // deletion cleared it, and always while rooms is empty. A zone without one is uncontrolled
-  // (see the file comment, UNCONTROLLED ZONES).
+  // room changes. It is warned of as any uncontrolled zone is (uncontrolled_since), and its
+  // feature is blocked as commissioning.v1.BLOCK_REASON_CONTROL_ROOM_NO_SENSOR so that setup
+  // names the cause; it is driven as any zone without a reading, resting or holding a cautious
+  // estimate of its duty. Unset only once a deletion cleared it, and always while
+  // rooms is empty. A zone without one is uncontrolled (see the file comment, UNCONTROLLED
+  // ZONES).
   kusinta.iot.identity.v1.SpaceId control_room_id = 6;
 
   // See the file comment.
