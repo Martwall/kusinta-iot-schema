@@ -84,8 +84,7 @@ class ProblemKind extends $pb.ProtobufEnum {
   /// A floor zone bound to one of the device's outputs (heating.v1.FloorZone.output) is
   /// uncontrolled — it has no room, no control room, or a control room holding no room
   /// temperature sensor — and so heats without control by a room: it rests closed, or, with no
-  /// sensor, may hold a cautious share of a duty learnt before (heating.v1, UNCONTROLLED
-  /// ZONES). Opened by the gateway only once the zone has been uncontrolled for about an hour,
+  /// sensor, may hold a cautious estimate of its duty (heating.v1, UNCONTROLLED ZONES). Opened by the gateway only once the zone has been uncontrolled for about an hour,
   /// so that a zone left so for a step of commissioning raises nothing. One problem per device,
   /// however many zones on its outputs are uncontrolled. Closes CLEAR_REASON_RECOVERED once
   /// each of them is controlled again or has been removed, and
