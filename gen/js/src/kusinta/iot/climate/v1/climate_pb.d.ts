@@ -504,9 +504,9 @@ export declare const OuterLimitSchema: GenMessage<OuterLimit>;
  * with one addition: an away_min is never read above the min as read, so a room with no own min
  * and an own away_min above the home min reads its AWAY FLOOR at that min, never above the
  * everyday floor.
- * A bound read as a home bound carries that bound's stamp (OuterLimit), and min, read so, the
- * home bounds' acceptance of the threshold (BuildingLimits.min_accepted_threshold_centidegrees)
- * in place of its own. The home bounds bind what the outer limits bind and nothing more (WHAT
+ * A bound read as a home bound carries that bound's stamp (OuterLimit), and min, read as the
+ * home min or down to the home max, the home bounds' acceptance of the threshold
+ * (BuildingLimits.min_accepted_threshold_centidegrees) in place of its own. The home bounds bind what the outer limits bind and nothing more (WHAT
  * THEY BIND): a household's own devices stay outside them.
  *
  * The household's inner limits (InnerRoomLimits) are read within the outer limits as read, as
@@ -600,7 +600,7 @@ export declare type BuildingLimits = Message<"kusinta.iot.climate.v1.BuildingLim
    * As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting: set while its min,
    * or its max, was set below the gateway's public-health threshold, the threshold in force then,
    * which the setter explicitly accepted going below. A room's min that applying the setting
-   * moves down carries it.
+   * moves down, or that the home bounds read down to their max, carries it.
    *
    * @generated from field: optional sint32 min_accepted_threshold_centidegrees = 3;
    */
