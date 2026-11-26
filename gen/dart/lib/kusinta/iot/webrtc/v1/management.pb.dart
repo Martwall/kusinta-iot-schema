@@ -3729,9 +3729,10 @@ class GetBuildingRoomLimits extends $pb.GeneratedMessage {
 /// nothing and applying nothing:
 ///   * kind UNSPECIFIED, as INVALID_REQUEST with metadata {"reason": "kind"};
 ///   * min above max, as INVALID_REQUEST with metadata {"reason": "limits_order"};
-///   * a min changed to below the gateway's public-health threshold without
+///   * a min, or a max, changed to below the gateway's public-health threshold without
 ///     accept_below_threshold, as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
-///     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses one.
+///     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses a min. A max is
+///     judged too because applying it takes the rooms' mins down with it (APPLY).
 /// Nothing else is judged, the rooms it reaches least of all (BUILDING ROOM LIMITS, PRIVACY).
 class SetBuildingRoomLimits extends $pb.GeneratedMessage {
   factory SetBuildingRoomLimits({
@@ -3834,9 +3835,9 @@ class SetBuildingRoomLimits extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   RoomLimits ensureLimits() => $_ensure(2);
 
-  /// The caller accepts a min below the public-health threshold, recorded with the setting
-  /// (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a request that
-  /// sets no such min.
+  /// The caller accepts a min, or a max, below the public-health threshold, recorded with the
+  /// setting (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a
+  /// request that sets no such bound.
   @$pb.TagNumber(4)
   $core.bool get acceptBelowThreshold => $_getBF(3);
   @$pb.TagNumber(4)

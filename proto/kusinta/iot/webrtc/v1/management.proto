@@ -1008,11 +1008,10 @@ message BuildingPlanning {
 //     own bound would then stand out of order with those written — its max below the min
 //     written or its min above the max written, its away_min above its min or its max, or its
 //     move_in_target outside [min, max] — it is moved to the bound it passes, stamped likewise,
-//     so that every room takes the setting and none is refused. A bound so moved needs no
-//     acceptance of the threshold of its own: a max written below the public-health threshold
-//     moves a room's own min down with it, under the acceptance the setting's min carries, or
-//     none where the setting has no min, since only a min the request names is judged against
-//     the threshold.
+//     so that every room takes the setting and none is refused. A setting whose max is below
+//     the public-health threshold needs accept_below_threshold as a min there would (refused
+//     otherwise as "below_threshold"), so no room's min is taken below the threshold without
+//     that acceptance; a min it moves down carries the setting's acceptance.
 // Changing or clearing a setting rewrites no room: the rooms keep the limits they have. In a
 // home, a room's own limits that the home bounds hold back come back into force as they stand
 // when the bounds loosen or are cleared (climate.v1.OuterRoomLimits, HOME BOUNDS). A room whose
@@ -1064,9 +1063,10 @@ message GetBuildingRoomLimits {
 // nothing and applying nothing:
 //   * kind UNSPECIFIED, as INVALID_REQUEST with metadata {"reason": "kind"};
 //   * min above max, as INVALID_REQUEST with metadata {"reason": "limits_order"};
-//   * a min changed to below the gateway's public-health threshold without
+//   * a min, or a max, changed to below the gateway's public-health threshold without
 //     accept_below_threshold, as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
-//     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses one.
+//     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses a min. A max is
+//     judged too because applying it takes the rooms' mins down with it (APPLY).
 // Nothing else is judged, the rooms it reaches least of all (BUILDING ROOM LIMITS, PRIVACY).
 message SetBuildingRoomLimits {
   // The building: a top-level space. Any other space is refused as INVALID_REQUEST.
@@ -1078,9 +1078,9 @@ message SetBuildingRoomLimits {
   // removes it, and with neither bound the setting is cleared, which rewrites no room.
   RoomLimits limits = 3;
 
-  // The caller accepts a min below the public-health threshold, recorded with the setting
-  // (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a request that
-  // sets no such min.
+  // The caller accepts a min, or a max, below the public-health threshold, recorded with the
+  // setting (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a
+  // request that sets no such bound.
   bool accept_below_threshold = 4;
 
   // Also write the setting, as it then stands, into every room of its kind in the building, in

@@ -597,9 +597,10 @@ export declare type BuildingLimits = Message<"kusinta.iot.climate.v1.BuildingLim
   max?: OuterLimit | undefined;
 
   /**
-   * As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting's min: set while
-   * min was set below the gateway's public-health threshold, the threshold in force then, which
-   * min's setter explicitly accepted going below.
+   * As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting: set while its min,
+   * or its max, was set below the gateway's public-health threshold, the threshold in force then,
+   * which the setter explicitly accepted going below. A room's min that applying the setting
+   * moves down carries it.
    *
    * @generated from field: optional sint32 min_accepted_threshold_centidegrees = 3;
    */

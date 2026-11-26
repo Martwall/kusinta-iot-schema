@@ -1139,9 +1139,10 @@ class BuildingLimits extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   OuterLimit ensureMax() => $_ensure(1);
 
-  /// As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting's min: set while
-  /// min was set below the gateway's public-health threshold, the threshold in force then, which
-  /// min's setter explicitly accepted going below.
+  /// As OuterRoomLimits.min_accepted_threshold_centidegrees, for this setting: set while its min,
+  /// or its max, was set below the gateway's public-health threshold, the threshold in force then,
+  /// which the setter explicitly accepted going below. A room's min that applying the setting
+  /// moves down carries it.
   @$pb.TagNumber(3)
   $core.int get minAcceptedThresholdCentidegrees => $_getIZ(2);
   @$pb.TagNumber(3)
