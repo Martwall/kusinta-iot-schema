@@ -1011,8 +1011,12 @@ message BuildingPlanning {
 //     so that every room takes the setting and none is refused.
 // Changing or clearing a setting rewrites no room: the rooms keep the limits they have. In a
 // home, a room's own limits that the home bounds hold back come back into force as they stand
-// when the bounds loosen or are cleared (climate.v1.OuterRoomLimits, HOME BOUNDS). Every room
-// whose climate a change moves is sent again (RoomClimateChanged), and only those.
+// when the bounds loosen or are cleared (climate.v1.OuterRoomLimits, HOME BOUNDS). A room whose
+// climate a change moves is sent again (RoomClimateChanged) to each recipient as what they are
+// sent of it changes. To a recipient sent the room with state_withheld, a room is sent again only
+// where what they are sent of it changed (outer_limits as read, home_bounds), never for what only
+// the household is shown: a change of the home bounds sends every home room of the building
+// again to them, since its home_bounds changed, whatever it did to each home.
 //
 // PRIVACY. Staff write into homes and read nothing of them back. Nothing in an answer depends on
 // any home's state — its targets, its limits, its devices, who lives there or whether anyone

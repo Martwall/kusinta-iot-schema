@@ -373,6 +373,12 @@ message OuterLimit {
 // in place of its own. The home bounds bind what the outer limits bind and nothing more (WHAT
 // THEY BIND): a household's own devices stay outside them.
 //
+// The household's inner limits (InnerRoomLimits) are read within the outer limits as read, as
+// they are when the outer limits change: stored as set, never rewritten, and held within them at
+// the outputs the outer limits bind, the outer bound winning where the two disagree (HELD,
+// steps 2 and 3). So no output the home bounds bind is held from an inner max above the home max
+// or an inner min below the home min; an output they do not bind stops at step 2, as before.
+//
 // Nothing of the room is rewritten when the home bounds move. Tightened, a room's own bounds
 // outside them stay as they were set, and are held within them; loosened or cleared, the room's
 // own come back into force as they stand, and a room with none has none again. A room's own
