@@ -278,9 +278,12 @@ class BlockReason extends $pb.ProtobufEnum {
       BlockReason._(4, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_GONE');
 
   /// A floor zone that serves rooms, but whose control room is unset, deleted, outside its
-  /// plant's space, or on the other side of a home's boundary from its rooms. A control room
-  /// that is not one of the zone's rooms is not gone for that (heating.v1
-  /// FloorZone.control_room_id). A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
+  /// plant's space, or on the other side of a home's boundary from its rooms, or measures with
+  /// no temperature sensor (climate.v1 RoomClimate.sensor_ids empty), so that the zone rests,
+  /// heating, rather than being driven. A sensor filed there but not heard does not block: the
+  /// zone rests meanwhile as for any lost reading. A control room that is not one of the
+  /// zone's rooms is not gone for that (heating.v1 FloorZone.control_room_id). A zone that
+  /// serves no room is ZONE_HAS_NO_ROOMS instead.
   static const BlockReason BLOCK_REASON_CONTROL_ROOM_GONE =
       BlockReason._(5, _omitEnumNames ? '' : 'BLOCK_REASON_CONTROL_ROOM_GONE');
 

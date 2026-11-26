@@ -327,9 +327,12 @@ message FloorZone {
   // too. A home's zone is never steered by a room outside it, nor a zone outside homes by a
   // room in one. Zones sharing a control room count as one wherever this schema says so,
   // whether or not they heat it. A put names one, which may have no room temperature sensor
-  // yet: such a zone is controlled, and left at rest until its control room has a reading.
-  // Unset only once a deletion cleared it, and always while rooms is empty. A zone without one
-  // is uncontrolled (see the file comment, UNCONTROLLED ZONES).
+  // yet (climate.v1 RoomClimate.sensor_ids empty): such a zone is not driven until its control
+  // room has a reading, and meanwhile rests (heating, on normally-closed wiring) as a zone
+  // whose control room's sensor is lost does, and its feature is blocked as
+  // commissioning.v1.BLOCK_REASON_CONTROL_ROOM_GONE so that setup shows it. Unset only once a
+  // deletion cleared it, and always while rooms is empty. A zone without one is uncontrolled
+  // (see the file comment, UNCONTROLLED ZONES).
   kusinta.iot.identity.v1.SpaceId control_room_id = 6;
 
   // See the file comment.
