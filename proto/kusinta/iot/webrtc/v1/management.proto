@@ -1008,7 +1008,11 @@ message BuildingPlanning {
 //     own bound would then stand out of order with those written — its max below the min
 //     written or its min above the max written, its away_min above its min or its max, or its
 //     move_in_target outside [min, max] — it is moved to the bound it passes, stamped likewise,
-//     so that every room takes the setting and none is refused.
+//     so that every room takes the setting and none is refused. A bound so moved needs no
+//     acceptance of the threshold of its own: a max written below the public-health threshold
+//     moves a room's own min down with it, under the acceptance the setting's min carries, or
+//     none where the setting has no min, since only a min the request names is judged against
+//     the threshold.
 // Changing or clearing a setting rewrites no room: the rooms keep the limits they have. In a
 // home, a room's own limits that the home bounds hold back come back into force as they stand
 // when the bounds loosen or are cleared (climate.v1.OuterRoomLimits, HOME BOUNDS). A room whose

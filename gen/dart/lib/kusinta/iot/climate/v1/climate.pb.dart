@@ -898,7 +898,10 @@ class OuterLimit extends $pb.GeneratedMessage {
 ///     home bound on its side where that is set;
 ///   * away_min and move_in_target are each read clamped into [home min, home max]; one unset
 ///     stays unset, so the AWAY FLOOR is away_min as read or, where unset, min as read.
-/// Clamping keeps the order the room's own limits have, so its limits as read are in order too.
+/// Clamping keeps the order the room's own limits have, so its limits as read are in order too,
+/// with one addition: an away_min is never read above the min as read, so a room with no own min
+/// and an own away_min above the home min reads its AWAY FLOOR at that min, never above the
+/// everyday floor.
 /// A bound read as a home bound carries that bound's stamp (OuterLimit), and min, read so, the
 /// home bounds' acceptance of the threshold (BuildingLimits.min_accepted_threshold_centidegrees)
 /// in place of its own. The home bounds bind what the outer limits bind and nothing more (WHAT
