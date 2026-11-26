@@ -79,9 +79,10 @@ class ServiceSignal extends $pb.ProtobufEnum {
       ServiceSignal._(9, _omitEnumNames ? '' : 'SERVICE_SIGNAL_RESIDENTS');
 
   /// That a floor zone on one of the home's devices has been uncontrolled for about an hour —
-  /// without a room, or without a control room — and so heats without control: the device and
-  /// the quarter hour it was reported, until the zone is given a control room or removed. Never
-  /// which rooms it had or lacks, nor who left it so
+  /// without a room, without a control room, or with a control room that holds no room
+  /// temperature sensor — and so heats without control: the device and the quarter hour it was
+  /// reported, until the zone is controlled again or removed. Never which of these it is, which
+  /// rooms it had or lacks, which room or sensor, nor who left it so
   /// (reporting.v1.PROBLEM_KIND_FLOOR_ZONE_UNCONTROLLED).
   static const ServiceSignal SERVICE_SIGNAL_FLOOR_ZONE_UNCONTROLLED =
       ServiceSignal._(

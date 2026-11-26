@@ -80,6 +80,7 @@ class BlockReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     BLOCK_REASON_LEASE_TOO_LONG: _ClassVar[BlockReason]
     BLOCK_REASON_DEVICE_ACROSS_HOME: _ClassVar[BlockReason]
     BLOCK_REASON_ZONE_HAS_NO_ROOMS: _ClassVar[BlockReason]
+    BLOCK_REASON_CONTROL_ROOM_NO_SENSOR: _ClassVar[BlockReason]
 
 class ReadinessGateKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -200,6 +201,7 @@ BLOCK_REASON_CONTROL_ROOM_GONE: BlockReason
 BLOCK_REASON_LEASE_TOO_LONG: BlockReason
 BLOCK_REASON_DEVICE_ACROSS_HOME: BlockReason
 BLOCK_REASON_ZONE_HAS_NO_ROOMS: BlockReason
+BLOCK_REASON_CONTROL_ROOM_NO_SENSOR: BlockReason
 READINESS_GATE_KIND_UNSPECIFIED: ReadinessGateKind
 READINESS_GATE_KIND_MODELLED_BLOCKS: ReadinessGateKind
 READINESS_GATE_KIND_PRICED_DAYS: ReadinessGateKind

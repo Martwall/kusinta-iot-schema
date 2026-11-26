@@ -929,6 +929,7 @@ class FloorZone extends $pb.GeneratedMessage {
     $fixnum.Int64? revision,
     $3.Timestamp? uncontrolledSince,
     $0.UserId? uncontrolledBy,
+    $core.Iterable<$0.SpaceId>? controlRoomChoices,
   }) {
     final result = create();
     if (zoneId != null) result.zoneId = zoneId;
@@ -940,6 +941,8 @@ class FloorZone extends $pb.GeneratedMessage {
     if (revision != null) result.revision = revision;
     if (uncontrolledSince != null) result.uncontrolledSince = uncontrolledSince;
     if (uncontrolledBy != null) result.uncontrolledBy = uncontrolledBy;
+    if (controlRoomChoices != null)
+      result.controlRoomChoices.addAll(controlRoomChoices);
     return result;
   }
 
@@ -973,6 +976,9 @@ class FloorZone extends $pb.GeneratedMessage {
         subBuilder: $3.Timestamp.create)
     ..aOM<$0.UserId>(9, _omitFieldNames ? '' : 'uncontrolledBy',
         subBuilder: $0.UserId.create)
+    ..pc<$0.SpaceId>(
+        10, _omitFieldNames ? '' : 'controlRoomChoices', $pb.PbFieldType.PM,
+        subBuilder: $0.SpaceId.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1038,13 +1044,25 @@ class FloorZone extends $pb.GeneratedMessage {
   /// The rooms the zone heats, each a room within its plant's space, listed once, with a
   /// share above 0 and shares summing to 1000. A zone may heat several rooms and a room may
   /// be heated by several zones. A put names at least one; empty only for a zone whose rooms
-  /// were all deleted, which is uncontrolled (see the file comment, UNCONTROLLED ZONES).
+  /// were all deleted, which is uncontrolled (see the file comment, UNCONTROLLED ZONES). Only
+  /// the rooms listed here take a share: a control room that is not one of them takes none.
   @$pb.TagNumber(5)
   $pb.PbList<FloorZoneRoom> get rooms => $_getList(4);
 
-  /// One of rooms. Only its error, its sensor and its open window steer the zone. A put names
-  /// one; unset only once a deletion cleared it, and always while rooms is empty. A zone
-  /// without one is uncontrolled (see the file comment, UNCONTROLLED ZONES).
+  /// The room whose error, sensor and open window alone steer the zone: one of rooms, or a
+  /// room the zone does not heat, such as the room an open kitchen's floor loop opens onto.
+  /// Either way a room within its plant's space and on the same side of a home's boundary as
+  /// rooms: in the home they lie in, or, for a zone whose rooms lie outside homes, outside homes
+  /// too. A home's zone is never steered by a room outside it, nor a zone outside homes by a
+  /// room in one. Zones sharing a control room count as one wherever this schema says so,
+  /// whether or not they heat it. A put names one, which may hold no room temperature sensor
+  /// yet (climate.v1 RoomClimate.sensor_ids empty): it is accepted, and the zone is uncontrolled
+  /// (see the file comment, UNCONTROLLED ZONES) until a sensor is filed there or the control
+  /// room changes. Not driven, it rests, heating on normally-closed wiring; it is warned of as
+  /// any uncontrolled zone is (uncontrolled_since), and its feature is blocked as
+  /// commissioning.v1.BLOCK_REASON_CONTROL_ROOM_NO_SENSOR so that setup names the cause. Unset only once a
+  /// deletion cleared it, and always while rooms is empty. A zone without one is uncontrolled
+  /// (see the file comment, UNCONTROLLED ZONES).
   @$pb.TagNumber(6)
   $0.SpaceId get controlRoomId => $_getN(5);
   @$pb.TagNumber(6)
@@ -1066,11 +1084,13 @@ class FloorZone extends $pb.GeneratedMessage {
   @$pb.TagNumber(7)
   void clearRevision() => $_clearField(7);
 
-  /// While the zone is uncontrolled — no room, or no control room (see the file comment,
-  /// UNCONTROLLED ZONES): since when it has been so, and the user whose change left it so — the
-  /// deletion of its control room or its last room; uncontrolled_by is unset where no user's
-  /// change did. Both unset while the zone is controlled. Read-only: set by the gateway, ignored
-  /// in a put. A put that names a control room among its rooms ends it.
+  /// While the zone is uncontrolled — no room, no control room, or a control room holding no
+  /// sensor (see the file comment, UNCONTROLLED ZONES): since when it has been so, and the user
+  /// whose change left it so — the deletion of its control room or its last room, or a put
+  /// naming a control room with no sensor; uncontrolled_by is unset where no user's change did,
+  /// as when a sensor leaves the room. Both unset while the zone is controlled. Read-only: set
+  /// by the gateway, ignored in a put. A put naming rooms and a control room that holds a
+  /// sensor ends it, and so does a sensor filed in its control room.
   ///
   /// uncontrolled_by is erased at the home's wipe with the record of who did what in the home
   /// (webrtc.v1 household.proto, WIPE); uncontrolled_since stays with the zone, which describes
@@ -1085,8 +1105,9 @@ class FloorZone extends $pb.GeneratedMessage {
   /// gateway administrators who reach it are sent uncontrolled_since, never uncontrolled_by (see
   /// the file comment).
   /// For a zone outside homes, sent to whoever is given the zone. That rooms is empty, or
-  /// control_room_id unset, is what says the zone is uncontrolled; these say only since when
-  /// and by whom, where the recipient is given them.
+  /// control_room_id unset, says the zone is uncontrolled; a control room with no sensor is
+  /// told by uncontrolled_since alone, where the recipient is given it. These say only since
+  /// when and by whom, never which of those it is.
   @$pb.TagNumber(8)
   $3.Timestamp get uncontrolledSince => $_getN(7);
   @$pb.TagNumber(8)
@@ -1108,6 +1129,20 @@ class FloorZone extends $pb.GeneratedMessage {
   void clearUncontrolledBy() => $_clearField(9);
   @$pb.TagNumber(9)
   $0.UserId ensureUncontrolledBy() => $_ensure(8);
+
+  /// The rooms a client offers as the zone's control room: every room within its plant's space,
+  /// on the zone's side of a home's boundary as control_room_id says, that measures with a
+  /// temperature sensor the recipient is given (climate.v1 RoomClimate.sensor_ids), in the
+  /// order of their space ids, its rooms or not. Read-only: set by the gateway, ignored in a
+  /// put. Sent only to whoever may change the zone's control room: for a home's zone, the
+  /// home's household admins and an installer under a commissioning grant on the home, and,
+  /// while the home is empty, the property owner and the gateway administrators who reach it
+  /// (webrtc.v1 PutFloorZone); for a zone outside homes, whoever may change it. Empty for every
+  /// other recipient, and for a zone with no room. It says only which rooms hold a sensor the
+  /// recipient is given, never a reading. A put may still name a room missing from it (see
+  /// control_room_id); one on the other side of the boundary is refused.
+  @$pb.TagNumber(10)
+  $pb.PbList<$0.SpaceId> get controlRoomChoices => $_getList(9);
 }
 
 class FloorZoneRoom extends $pb.GeneratedMessage {
@@ -3528,8 +3563,8 @@ class HeatCurveLimit extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearHasHeadroom() => $_clearField(3);
 
-  /// The room the zone heats: a radiator valve's room, or a floor zone's control room
-  /// (FloorZone.control_room_id). For floor zones judged as one (FLOOR_ZONES_TOGETHER), set only
+  /// The room whose target the zone is held to: a radiator valve's room, or a floor zone's
+  /// control room (FloorZone.control_room_id), which may be a room the zone does not heat. For floor zones judged as one (FLOOR_ZONES_TOGETHER), set only
   /// where they share a control room. Unset where home_withheld.
   @$pb.TagNumber(4)
   $0.SpaceId get roomId => $_getN(3);

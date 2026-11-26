@@ -163,6 +163,14 @@ describe('feature status', () => {
     expect(decoded.blocks).toMatchObject([{ reason: BlockReason.DEVICE_ACROSS_HOME }])
   })
 
+  it('says a floor zone rests because its control room holds no sensor', () => {
+    const decoded = onTheWire(FeatureStatusSchema, {
+      state: FeatureState.BLOCKED_FOR_SAFETY,
+      blocks: [{ reason: BlockReason.CONTROL_ROOM_NO_SENSOR, binding: { recordId: 'zone-2', field: '' } }],
+    })
+    expect(decoded.blocks).toMatchObject([{ reason: BlockReason.CONTROL_ROOM_NO_SENSOR }])
+  })
+
   it('says when its to-dos are withheld rather than none', () => {
     const decoded = onTheWire(CommissioningProfileSchema, { needsWithheld: true })
     expect(decoded.needsWithheld).toBe(true)

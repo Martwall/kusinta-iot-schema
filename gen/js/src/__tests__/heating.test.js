@@ -102,6 +102,26 @@ describe('floor zone', () => {
       controlRoomId: { value: 'room-bath' },
     })
   })
+
+  it('may be steered by a room it does not heat, which takes no share', () => {
+    const decoded = onTheWire(FloorZoneSchema, {
+      rooms: [{ roomId: { value: 'room-kitchen' }, areaSharePermille: 1000 }],
+      controlRoomId: { value: 'room-living' },
+    })
+    expect([decoded.rooms.map((room) => room.roomId?.value), decoded.controlRoomId?.value]).toEqual([
+      ['room-kitchen'],
+      'room-living',
+    ])
+  })
+
+  it('carries the rooms offered as its control room', () => {
+    const decoded = onTheWire(FloorZoneSchema, {
+      rooms: [{ roomId: { value: 'room-kitchen' }, areaSharePermille: 1000 }],
+      controlRoomId: { value: 'room-living' },
+      controlRoomChoices: [{ value: 'room-kitchen' }, { value: 'room-living' }],
+    })
+    expect(decoded.controlRoomChoices.map((room) => room.value)).toEqual(['room-kitchen', 'room-living'])
+  })
 })
 
 describe('uncontrolled floor zone', () => {

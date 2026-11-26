@@ -277,8 +277,11 @@ class BlockReason extends $pb.ProtobufEnum {
   static const BlockReason BLOCK_REASON_DEVICE_GONE =
       BlockReason._(4, _omitEnumNames ? '' : 'BLOCK_REASON_DEVICE_GONE');
 
-  /// A floor zone that serves rooms, but whose control room is deleted or outside its plant's
-  /// space. A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
+  /// A floor zone that serves rooms, but whose control room is unset, deleted, outside its
+  /// plant's space, or on the other side of a home's boundary from its rooms. A control room
+  /// that is not one of the zone's rooms is not gone for that (heating.v1
+  /// FloorZone.control_room_id). A zone that serves no room is ZONE_HAS_NO_ROOMS instead, and
+  /// one whose control room is there but holds no sensor is CONTROL_ROOM_NO_SENSOR.
   static const BlockReason BLOCK_REASON_CONTROL_ROOM_GONE =
       BlockReason._(5, _omitEnumNames ? '' : 'BLOCK_REASON_CONTROL_ROOM_GONE');
 
@@ -302,6 +305,16 @@ class BlockReason extends $pb.ProtobufEnum {
   static const BlockReason BLOCK_REASON_ZONE_HAS_NO_ROOMS =
       BlockReason._(8, _omitEnumNames ? '' : 'BLOCK_REASON_ZONE_HAS_NO_ROOMS');
 
+  /// A floor zone whose control room is there, on its side of a home's boundary and within its
+  /// plant's space, but measures with no room temperature sensor (climate.v1
+  /// RoomClimate.sensor_ids empty): the zone is uncontrolled, not driven, and rests, heating on
+  /// normally-closed wiring (heating.v1, UNCONTROLLED ZONES). A sensor filed there but
+  /// not heard does not block: the zone rests meanwhile as for any lost reading. Judged after
+  /// ZONE_HAS_NO_ROOMS and CONTROL_ROOM_GONE, which take its place. A client that does not know
+  /// it treats it as any block reason it does not know.
+  static const BlockReason BLOCK_REASON_CONTROL_ROOM_NO_SENSOR = BlockReason._(
+      9, _omitEnumNames ? '' : 'BLOCK_REASON_CONTROL_ROOM_NO_SENSOR');
+
   static const $core.List<BlockReason> values = <BlockReason>[
     BLOCK_REASON_UNSPECIFIED,
     BLOCK_REASON_TEST_FAILED,
@@ -312,10 +325,11 @@ class BlockReason extends $pb.ProtobufEnum {
     BLOCK_REASON_LEASE_TOO_LONG,
     BLOCK_REASON_DEVICE_ACROSS_HOME,
     BLOCK_REASON_ZONE_HAS_NO_ROOMS,
+    BLOCK_REASON_CONTROL_ROOM_NO_SENSOR,
   ];
 
   static final $core.List<BlockReason?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 8);
+      $pb.ProtobufEnum.$_initByValueList(values, 9);
   static BlockReason? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 
