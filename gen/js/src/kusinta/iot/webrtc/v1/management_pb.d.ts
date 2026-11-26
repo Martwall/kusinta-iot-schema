@@ -2252,12 +2252,16 @@ export declare const ListHeatingSchema: GenMessage<ListHeating>;
  * stored. The puts of heating records refuse, with metadata "reason":
  *
  *   INVALID_REQUEST
- *   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset or not one of its rooms.
+ *   "ZONE_CONTROL_ROOM"     a floor zone whose control room is unset, not a room, or on the
+ *                           other side of a home's boundary from its rooms: outside the home
+ *                           they lie in, or in a home while they lie outside homes. It need
+ *                           not be one of its rooms (heating.v1 FloorZone.control_room_id).
  *   "ZONE_ROOMS_ACROSS_HOMES" a floor zone with rooms in two homes, or in a home and outside
  *                           homes.
  *   "ZONE_AREA_SHARES"      a floor zone with a room listed twice, a share of 0, or shares
  *                           that do not sum to 1000.
- *   "ROOM_OUTSIDE_PLANT"    a zone room outside its plant's space; metadata "room_id" names it.
+ *   "ROOM_OUTSIDE_PLANT"    a zone room, or its control room, outside its plant's space;
+ *                           metadata "room_id" names it.
  *   "ZONE_NOT_ON_FLOOR"     a floor zone on a circuit that is not a floor circuit.
  *   "SG_READY_HALF_BOUND"   one SG Ready input bound without the other.
  *   "CONTROL_EMPTY"         a plant control that binds no input.
@@ -2268,7 +2272,8 @@ export declare const ListHeatingSchema: GenMessage<ListHeating>;
  *   "STALE_REVISION"        the record changed since the revision the request names.
  *   "CHILDREN_INVALID"      a plant or circuit put that would leave a record under it
  *                           invalid: a circuit with zones no longer a floor circuit, or a
- *                           space or plant change leaving a zone's room outside its plant.
+ *                           space or plant change leaving a zone's room or control room
+ *                           outside its plant.
  *   "OUTPUT_BOUND_TWICE"    an output already bound in another role or record.
  *   "OUTPUT_NOT_LEASED"     an output whose write its producer does not state as leased.
  *   "REST_STATE"            an output whose lapse value, read through closed_value, does not
@@ -2330,8 +2335,8 @@ export declare const PutHeatingCircuitSchema: GenMessage<PutHeatingCircuit>;
  * While a home is empty (household.proto, EMPTY HOME), the property owner and the gateway
  * administrators who reach it may change which of its rooms a stored floor zone of the home
  * heats, and so bring a zone left uncontrolled back under control (heating.v1, UNCONTROLLED
- * ZONES). From them, only a stored zone's rooms and control_room_id may change, its rooms
- * staying in that home. Any other change from them — its output, its circuit, its name — a new
+ * ZONES). From them, only a stored zone's rooms and control_room_id may change, its rooms and
+ * control room staying in that home. Any other change from them — its output, its circuit, its name — a new
  * zone, and removing one (RemoveHeatingRecord) are refused as NOT_ENTITLED, the same answer as
  * for a zone out of reach. A caller not given the home's zones is refused NOT_ENTITLED first.
  * For one given the zone, a put naming a revision the zone has moved on from is refused as

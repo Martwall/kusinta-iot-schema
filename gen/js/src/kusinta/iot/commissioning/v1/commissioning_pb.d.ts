@@ -1546,8 +1546,10 @@ export enum BlockReason {
   DEVICE_GONE = 4,
 
   /**
-   * A floor zone that serves rooms, but whose control room is deleted or outside its plant's
-   * space. A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
+   * A floor zone that serves rooms, but whose control room is unset, deleted, outside its
+   * plant's space, or on the other side of a home's boundary from its rooms. A control room
+   * that is not one of the zone's rooms is not gone for that (heating.v1
+   * FloorZone.control_room_id). A zone that serves no room is ZONE_HAS_NO_ROOMS instead.
    *
    * @generated from enum value: BLOCK_REASON_CONTROL_ROOM_GONE = 5;
    */

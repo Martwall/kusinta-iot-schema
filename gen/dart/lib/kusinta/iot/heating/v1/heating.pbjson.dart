@@ -763,6 +763,14 @@ const FloorZone$json = {
       '6': '.kusinta.iot.identity.v1.UserId',
       '10': 'uncontrolledBy'
     },
+    {
+      '1': 'control_room_choices',
+      '3': 10,
+      '4': 3,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'controlRoomChoices'
+    },
   ],
 };
 
@@ -776,7 +784,8 @@ final $typed_data.Uint8List floorZoneDescriptor = $convert.base64Decode(
     'JvbFJvb21JZBIaCghyZXZpc2lvbhgHIAEoBFIIcmV2aXNpb24SSQoSdW5jb250cm9sbGVkX3Np'
     'bmNlGAggASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIRdW5jb250cm9sbGVkU2luY2'
     'USSAoPdW5jb250cm9sbGVkX2J5GAkgASgLMh8ua3VzaW50YS5pb3QuaWRlbnRpdHkudjEuVXNl'
-    'cklkUg51bmNvbnRyb2xsZWRCeQ==');
+    'cklkUg51bmNvbnRyb2xsZWRCeRJSChRjb250cm9sX3Jvb21fY2hvaWNlcxgKIAMoCzIgLmt1c2'
+    'ludGEuaW90LmlkZW50aXR5LnYxLlNwYWNlSWRSEmNvbnRyb2xSb29tQ2hvaWNlcw==');
 
 @$core.Deprecated('Use floorZoneRoomDescriptor instead')
 const FloorZoneRoom$json = {
