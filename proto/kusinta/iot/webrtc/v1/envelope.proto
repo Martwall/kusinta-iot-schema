@@ -239,6 +239,8 @@ message ManagementResult {
     // set_heat_curve_automatic_savings, hand_heat_curve_suggestion
     kusinta.iot.heating.v1.HeatCurveViews heat_curve_views = 36;
     ProvisionedDevices provisioned_devices = 37; // list_provisioned_devices
+    // get_building_room_limits, set_building_room_limits
+    BuildingRoomLimits building_room_limits = 38;
   }
 }
 

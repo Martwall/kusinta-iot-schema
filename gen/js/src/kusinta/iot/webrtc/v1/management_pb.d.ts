@@ -2,7 +2,7 @@
 // @generated from file kusinta/iot/webrtc/v1/management.proto (package kusinta.iot.webrtc.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
 import type { AssetOwner, DeviceOwnershipType, SpaceType } from "../../common/v1/types_pb.js";
 import type { ConnectorId, DeviceId, SpaceId, UserId } from "../../identity/v1/identity_pb.js";
@@ -11,7 +11,7 @@ import type { MembershipRelation, Role } from "../../access/v1/roles_pb.js";
 import type { LorawanProvisioning } from "../../vendor/lorawan/v1/lorawan_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import type { LinkFunction, LinkMode, LinkSettings } from "../../link/v1/link_pb.js";
-import type { ClimateModeKind, ClimateSummaryPeriod, ComfortPreference, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
+import type { BuildingLimits, ClimateModeKind, ClimateSummaryPeriod, ComfortPreference, InnerRoomLimits, RoomHistoryResolution } from "../../climate/v1/climate_pb.js";
 import type { ExchangeRate, ForecastCell, PriceInterval } from "../../planning/v1/planning_pb.js";
 import type { CancelHouseholdHandover, ClearClimateHistory, ConfirmHouseholdHandover, DemoteHouseholdAdmin, ExportHouseholdData, ListHouseholdHandovers, SetHomeName, StaffAppointment, StartHouseholdHandover } from "./household_pb.js";
 import type { BindingRef, CommissioningFact, CommissioningGrantRecord, HouseTemplate, TestKind, TestState } from "../../commissioning/v1/commissioning_pb.js";
@@ -1180,7 +1180,11 @@ export declare const RoomLimitValueSchema: GenMessage<RoomLimitValue>;
  * "step_centidegrees": that coarsest step, as a decimal string}. It is judged only over valves
  * the caller sees, so it tells them nothing of a device hidden from them; a valve filed later,
  * or hidden from whoever set the limits, whose grid leaves no step between them is held at the
- * minimum. Limits the request leaves as they are are not judged again. Nothing in the answer to the outer limits depends
+ * minimum. Limits the request leaves as they are are not judged again. In a home, limits_order
+ * is judged on the room's own limits as they will be stored, and limits_no_setpoint on them as
+ * read within the building's home bounds, which is what its valves are held at; a bound set
+ * outside the home bounds is accepted as it is, and read within them (climate.v1
+ * .OuterRoomLimits, HOME BOUNDS). Nothing in the answer to the outer limits depends
  * on the home's state — its targets, inner limits, modes, or who lives there — so setting them
  * tells the caller nothing of it; what they clamp is told to the household alone
  * (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided by whether the
@@ -1619,6 +1623,128 @@ export declare type BuildingPlanning = Message<"kusinta.iot.webrtc.v1.BuildingPl
  * Use `create(BuildingPlanningSchema)` to create a new message.
  */
 export declare const BuildingPlanningSchema: GenMessage<BuildingPlanning>;
+
+/**
+ * Reads a building's room-limit settings. Answered as BuildingRoomLimits.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.GetBuildingRoomLimits
+ */
+export declare type GetBuildingRoomLimits = Message<"kusinta.iot.webrtc.v1.GetBuildingRoomLimits"> & {
+  /**
+   * The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.GetBuildingRoomLimits.
+ * Use `create(GetBuildingRoomLimitsSchema)` to create a new message.
+ */
+export declare const GetBuildingRoomLimitsSchema: GenMessage<GetBuildingRoomLimits>;
+
+/**
+ * Sets, changes or clears one of a building's room-limit settings, and applies it to every room
+ * of its kind where asked (BUILDING ROOM LIMITS). Answered as BuildingRoomLimits, as it now
+ * stands.
+ *
+ * Each bound it changes is stamped with the caller's role and the time
+ * (climate.v1.BuildingLimits); one set to the value it has keeps its stamp. Refused, changing
+ * nothing and applying nothing:
+ *   * kind UNSPECIFIED, as INVALID_REQUEST with metadata {"reason": "kind"};
+ *   * min above max, as INVALID_REQUEST with metadata {"reason": "limits_order"};
+ *   * a min changed to below the gateway's public-health threshold without
+ *     accept_below_threshold, as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
+ *     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses one.
+ * Nothing else is judged, the rooms it reaches least of all (BUILDING ROOM LIMITS, PRIVACY).
+ *
+ * @generated from message kusinta.iot.webrtc.v1.SetBuildingRoomLimits
+ */
+export declare type SetBuildingRoomLimits = Message<"kusinta.iot.webrtc.v1.SetBuildingRoomLimits"> & {
+  /**
+   * The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+   *
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.webrtc.v1.BuildingRoomKind kind = 2;
+   */
+  kind: BuildingRoomKind;
+
+  /**
+   * Replaces both bounds of the setting, see RoomLimits: a bound unset in it, or limits unset,
+   * removes it, and with neither bound the setting is cleared, which rewrites no room.
+   *
+   * @generated from field: kusinta.iot.webrtc.v1.RoomLimits limits = 3;
+   */
+  limits?: RoomLimits | undefined;
+
+  /**
+   * The caller accepts a min below the public-health threshold, recorded with the setting
+   * (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a request that
+   * sets no such min.
+   *
+   * @generated from field: bool accept_below_threshold = 4;
+   */
+  acceptBelowThreshold: boolean;
+
+  /**
+   * Also write the setting, as it then stands, into every room of its kind in the building, in
+   * the same step (BUILDING ROOM LIMITS, APPLY). Sent with the limits the setting already has, it
+   * applies them again and changes nothing of the setting.
+   *
+   * @generated from field: bool apply_to_rooms = 5;
+   */
+  applyToRooms: boolean;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.SetBuildingRoomLimits.
+ * Use `create(SetBuildingRoomLimitsSchema)` to create a new message.
+ */
+export declare const SetBuildingRoomLimitsSchema: GenMessage<SetBuildingRoomLimits>;
+
+/**
+ * A building's room-limit settings.
+ *
+ * @generated from message kusinta.iot.webrtc.v1.BuildingRoomLimits
+ */
+export declare type BuildingRoomLimits = Message<"kusinta.iot.webrtc.v1.BuildingRoomLimits"> & {
+  /**
+   * @generated from field: kusinta.iot.identity.v1.SpaceId space_id = 1;
+   */
+  spaceId?: SpaceId | undefined;
+
+  /**
+   * Each unset where the building has none.
+   *
+   * @generated from field: kusinta.iot.climate.v1.BuildingLimits homes = 2;
+   */
+  homes?: BuildingLimits | undefined;
+
+  /**
+   * @generated from field: kusinta.iot.climate.v1.BuildingLimits common_areas = 3;
+   */
+  commonAreas?: BuildingLimits | undefined;
+
+  /**
+   * Set only in the answer to a request with apply_to_rooms: how many rooms the setting was
+   * written to — every room of its kind in the building, or none where the setting has no bound.
+   * Nothing per room or per home.
+   *
+   * @generated from field: optional uint32 rooms_applied = 4;
+   */
+  roomsApplied?: number | undefined;
+};
+
+/**
+ * Describes the message kusinta.iot.webrtc.v1.BuildingRoomLimits.
+ * Use `create(BuildingRoomLimitsSchema)` to create a new message.
+ */
+export declare const BuildingRoomLimitsSchema: GenMessage<BuildingRoomLimits>;
 
 /**
  * Reads the day-ahead prices for the bidding zone of the building a space is in, so that a
@@ -4008,6 +4134,20 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
      */
     value: SetHeatCurveUpdateMode;
     case: "setHeatCurveUpdateMode";
+  } | {
+    /**
+     * Building-wide room limits; see BUILDING ROOM LIMITS.
+     *
+     * @generated from field: kusinta.iot.webrtc.v1.GetBuildingRoomLimits get_building_room_limits = 93;
+     */
+    value: GetBuildingRoomLimits;
+    case: "getBuildingRoomLimits";
+  } | {
+    /**
+     * @generated from field: kusinta.iot.webrtc.v1.SetBuildingRoomLimits set_building_room_limits = 94;
+     */
+    value: SetBuildingRoomLimits;
+    case: "setBuildingRoomLimits";
   } | { case: undefined; value?: undefined };
 };
 
@@ -4016,4 +4156,35 @@ export declare type ManagementRequest = Message<"kusinta.iot.webrtc.v1.Managemen
  * Use `create(ManagementRequestSchema)` to create a new message.
  */
 export declare const ManagementRequestSchema: GenMessage<ManagementRequest>;
+
+/**
+ * Which of a building's two room-limit settings (BUILDING ROOM LIMITS).
+ *
+ * @generated from enum kusinta.iot.webrtc.v1.BuildingRoomKind
+ */
+export enum BuildingRoomKind {
+  /**
+   * @generated from enum value: BUILDING_ROOM_KIND_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * The rooms of every home in the building: those under an apartment.
+   *
+   * @generated from enum value: BUILDING_ROOM_KIND_HOMES = 1;
+   */
+  HOMES = 1,
+
+  /**
+   * Every other room in the building.
+   *
+   * @generated from enum value: BUILDING_ROOM_KIND_COMMON_AREAS = 2;
+   */
+  COMMON_AREAS = 2,
+}
+
+/**
+ * Describes the enum kusinta.iot.webrtc.v1.BuildingRoomKind.
+ */
+export declare const BuildingRoomKindSchema: GenEnum<BuildingRoomKind>;
 

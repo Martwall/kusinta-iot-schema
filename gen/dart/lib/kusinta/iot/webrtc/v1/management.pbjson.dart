@@ -14,6 +14,22 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use buildingRoomKindDescriptor instead')
+const BuildingRoomKind$json = {
+  '1': 'BuildingRoomKind',
+  '2': [
+    {'1': 'BUILDING_ROOM_KIND_UNSPECIFIED', '2': 0},
+    {'1': 'BUILDING_ROOM_KIND_HOMES', '2': 1},
+    {'1': 'BUILDING_ROOM_KIND_COMMON_AREAS', '2': 2},
+  ],
+};
+
+/// Descriptor for `BuildingRoomKind`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List buildingRoomKindDescriptor = $convert.base64Decode(
+    'ChBCdWlsZGluZ1Jvb21LaW5kEiIKHkJVSUxESU5HX1JPT01fS0lORF9VTlNQRUNJRklFRBAAEh'
+    'wKGEJVSUxESU5HX1JPT01fS0lORF9IT01FUxABEiMKH0JVSUxESU5HX1JPT01fS0lORF9DT01N'
+    'T05fQVJFQVMQAg==');
+
 @$core.Deprecated('Use createSpaceDescriptor instead')
 const CreateSpace$json = {
   '1': 'CreateSpace',
@@ -1224,6 +1240,126 @@ final $typed_data.Uint8List buildingPlanningDescriptor = $convert.base64Decode(
     'QQoOcHJpY2VzX3Rocm91Z2gYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUg1wcm'
     'ljZXNUaHJvdWdoEkgKEmZvcmVjYXN0X2lzc3VlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1'
     'Zi5UaW1lc3RhbXBSEGZvcmVjYXN0SXNzdWVkQXQSFAoFc3RhbGUYByABKAhSBXN0YWxl');
+
+@$core.Deprecated('Use getBuildingRoomLimitsDescriptor instead')
+const GetBuildingRoomLimits$json = {
+  '1': 'GetBuildingRoomLimits',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+  ],
+};
+
+/// Descriptor for `GetBuildingRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getBuildingRoomLimitsDescriptor = $convert.base64Decode(
+    'ChVHZXRCdWlsZGluZ1Jvb21MaW1pdHMSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC'
+    '5pZGVudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlk');
+
+@$core.Deprecated('Use setBuildingRoomLimitsDescriptor instead')
+const SetBuildingRoomLimits$json = {
+  '1': 'SetBuildingRoomLimits',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'kind',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.kusinta.iot.webrtc.v1.BuildingRoomKind',
+      '10': 'kind'
+    },
+    {
+      '1': 'limits',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.RoomLimits',
+      '10': 'limits'
+    },
+    {
+      '1': 'accept_below_threshold',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '10': 'acceptBelowThreshold'
+    },
+    {'1': 'apply_to_rooms', '3': 5, '4': 1, '5': 8, '10': 'applyToRooms'},
+  ],
+};
+
+/// Descriptor for `SetBuildingRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setBuildingRoomLimitsDescriptor = $convert.base64Decode(
+    'ChVTZXRCdWlsZGluZ1Jvb21MaW1pdHMSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC'
+    '5pZGVudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlkEjsKBGtpbmQYAiABKA4yJy5rdXNpbnRhLmlv'
+    'dC53ZWJydGMudjEuQnVpbGRpbmdSb29tS2luZFIEa2luZBI5CgZsaW1pdHMYAyABKAsyIS5rdX'
+    'NpbnRhLmlvdC53ZWJydGMudjEuUm9vbUxpbWl0c1IGbGltaXRzEjQKFmFjY2VwdF9iZWxvd190'
+    'aHJlc2hvbGQYBCABKAhSFGFjY2VwdEJlbG93VGhyZXNob2xkEiQKDmFwcGx5X3RvX3Jvb21zGA'
+    'UgASgIUgxhcHBseVRvUm9vbXM=');
+
+@$core.Deprecated('Use buildingRoomLimitsDescriptor instead')
+const BuildingRoomLimits$json = {
+  '1': 'BuildingRoomLimits',
+  '2': [
+    {
+      '1': 'space_id',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.identity.v1.SpaceId',
+      '10': 'spaceId'
+    },
+    {
+      '1': 'homes',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.BuildingLimits',
+      '10': 'homes'
+    },
+    {
+      '1': 'common_areas',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.climate.v1.BuildingLimits',
+      '10': 'commonAreas'
+    },
+    {
+      '1': 'rooms_applied',
+      '3': 4,
+      '4': 1,
+      '5': 13,
+      '9': 0,
+      '10': 'roomsApplied',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_rooms_applied'},
+  ],
+};
+
+/// Descriptor for `BuildingRoomLimits`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List buildingRoomLimitsDescriptor = $convert.base64Decode(
+    'ChJCdWlsZGluZ1Jvb21MaW1pdHMSOwoIc3BhY2VfaWQYASABKAsyIC5rdXNpbnRhLmlvdC5pZG'
+    'VudGl0eS52MS5TcGFjZUlkUgdzcGFjZUlkEjwKBWhvbWVzGAIgASgLMiYua3VzaW50YS5pb3Qu'
+    'Y2xpbWF0ZS52MS5CdWlsZGluZ0xpbWl0c1IFaG9tZXMSSQoMY29tbW9uX2FyZWFzGAMgASgLMi'
+    'Yua3VzaW50YS5pb3QuY2xpbWF0ZS52MS5CdWlsZGluZ0xpbWl0c1ILY29tbW9uQXJlYXMSKAoN'
+    'cm9vbXNfYXBwbGllZBgEIAEoDUgAUgxyb29tc0FwcGxpZWSIAQFCEAoOX3Jvb21zX2FwcGxpZW'
+    'Q=');
 
 @$core.Deprecated('Use getDayAheadPricesDescriptor instead')
 const GetDayAheadPrices$json = {
@@ -3257,6 +3393,24 @@ const ManagementRequest$json = {
       '9': 0,
       '10': 'setHeatCurveUpdateMode'
     },
+    {
+      '1': 'get_building_room_limits',
+      '3': 93,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.GetBuildingRoomLimits',
+      '9': 0,
+      '10': 'getBuildingRoomLimits'
+    },
+    {
+      '1': 'set_building_room_limits',
+      '3': 94,
+      '4': 1,
+      '5': 11,
+      '6': '.kusinta.iot.webrtc.v1.SetBuildingRoomLimits',
+      '9': 0,
+      '10': 'setBuildingRoomLimits'
+    },
   ],
   '8': [
     {'1': 'request'},
@@ -3419,4 +3573,8 @@ final $typed_data.Uint8List managementRequestDescriptor = $convert.base64Decode(
     'Rpb24YWyABKAsyLi5rdXNpbnRhLmlvdC53ZWJydGMudjEuSGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rp'
     'b25IAFIXaGFuZEhlYXRDdXJ2ZVN1Z2dlc3Rpb24Sawoac2V0X2hlYXRfY3VydmVfdXBkYXRlX2'
     '1vZGUYXCABKAsyLS5rdXNpbnRhLmlvdC53ZWJydGMudjEuU2V0SGVhdEN1cnZlVXBkYXRlTW9k'
-    'ZUgAUhZzZXRIZWF0Q3VydmVVcGRhdGVNb2RlQgkKB3JlcXVlc3Q=');
+    'ZUgAUhZzZXRIZWF0Q3VydmVVcGRhdGVNb2RlEmcKGGdldF9idWlsZGluZ19yb29tX2xpbWl0cx'
+    'hdIAEoCzIsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5HZXRCdWlsZGluZ1Jvb21MaW1pdHNIAFIV'
+    'Z2V0QnVpbGRpbmdSb29tTGltaXRzEmcKGHNldF9idWlsZGluZ19yb29tX2xpbWl0cxheIAEoCz'
+    'IsLmt1c2ludGEuaW90LndlYnJ0Yy52MS5TZXRCdWlsZGluZ1Jvb21MaW1pdHNIAFIVc2V0QnVp'
+    'bGRpbmdSb29tTGltaXRzQgkKB3JlcXVlc3Q=');

@@ -15,8 +15,12 @@ import {
   ListSpacesSchema,
   SpaceTreeSchema,
   ManagementAckSchema,
+  SetBuildingRoomLimitsSchema,
+  BuildingRoomLimitsSchema,
+  BuildingRoomKind,
 } from '../kusinta/iot/webrtc/v1/management_pb.js'
 import { LinkedService, AccountLinkStatus } from '../kusinta/iot/accountlink/v1/account_link_pb.js'
+import { Role } from '../kusinta/iot/access/v1/roles_pb.js'
 import {
   AppMessageSchema,
   GatewayMessageSchema,
@@ -636,6 +640,69 @@ describe('building planning', () => {
       case: 'dayAheadPrices',
       value: { exchangeRates: [{ currency: 'SEK', publishedOn: '2026-11-10', perEurE4: 113725 }] },
     })
+  })
+})
+
+describe('building room limits', () => {
+  it('reads both of a building’s room-limit settings', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: { case: 'getBuildingRoomLimits', value: { spaceId: { value: 'space-building' } } },
+    })
+    expect(decoded.request).toMatchObject({ case: 'getBuildingRoomLimits', value: { spaceId: { value: 'space-building' } } })
+  })
+
+  it('sets the homes setting as a floor alone', () => {
+    const decoded = onTheWire(ManagementRequestSchema, {
+      request: {
+        case: 'setBuildingRoomLimits',
+        value: { spaceId: { value: 'space-building' }, kind: BuildingRoomKind.HOMES, limits: { minCentidegrees: 1600 } },
+      },
+    })
+    expect(decoded.request).toMatchObject({
+      case: 'setBuildingRoomLimits',
+      value: { kind: BuildingRoomKind.HOMES, limits: { minCentidegrees: 1600 } },
+    })
+  })
+
+  it('leaves an unset bound of a setting absent rather than 0 °C', () => {
+    const decoded = onTheWire(SetBuildingRoomLimitsSchema, {
+      kind: BuildingRoomKind.COMMON_AREAS,
+      limits: { maxCentidegrees: 2100 },
+    })
+    expect(decoded.limits?.minCentidegrees).toBeUndefined()
+  })
+
+  it('clears a setting by a request that sets no limits', () => {
+    const decoded = onTheWire(SetBuildingRoomLimitsSchema, { kind: BuildingRoomKind.HOMES })
+    expect(decoded.limits).toBeUndefined()
+  })
+
+  it('applies to the rooms only when asked', () => {
+    const decoded = onTheWire(SetBuildingRoomLimitsSchema, { kind: BuildingRoomKind.HOMES, limits: { minCentidegrees: 1600 } })
+    expect(decoded.applyToRooms).toBe(false)
+  })
+
+  it('answers an apply with a count of rooms and nothing per room', () => {
+    const decoded = onTheWire(ManagementResultSchema, {
+      inReplyTo: 'm-1',
+      result: {
+        case: 'buildingRoomLimits',
+        value: {
+          spaceId: { value: 'space-building' },
+          homes: { min: { centidegrees: 1600, setByRole: Role.PROPERTY_OWNER } },
+          roomsApplied: 12,
+        },
+      },
+    })
+    expect(decoded.result).toMatchObject({
+      case: 'buildingRoomLimits',
+      value: { homes: { min: { centidegrees: 1600, setByRole: Role.PROPERTY_OWNER } }, roomsApplied: 12 },
+    })
+  })
+
+  it('tells a read apart from an apply that wrote no room', () => {
+    const decoded = onTheWire(BuildingRoomLimitsSchema, { spaceId: { value: 'space-building' } })
+    expect(decoded.roomsApplied).toBeUndefined()
   })
 })
 

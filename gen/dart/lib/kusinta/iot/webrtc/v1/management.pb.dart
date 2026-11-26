@@ -30,9 +30,12 @@ import '../../space/v1/space.pb.dart' as $3;
 import '../../vendor/lorawan/v1/lorawan.pb.dart' as $1;
 import 'household.pb.dart' as $7;
 import 'invite.pb.dart' as $11;
+import 'management.pbenum.dart';
 import 'members.pb.dart' as $12;
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'management.pbenum.dart';
 
 /// Creates a space. A space with no parent_space_id is top level, which is a
 /// stronger request than it looks: there is no parent whose reach could authorize
@@ -2541,7 +2544,11 @@ class RoomLimitValue extends $pb.GeneratedMessage {
 /// "step_centidegrees": that coarsest step, as a decimal string}. It is judged only over valves
 /// the caller sees, so it tells them nothing of a device hidden from them; a valve filed later,
 /// or hidden from whoever set the limits, whose grid leaves no step between them is held at the
-/// minimum. Limits the request leaves as they are are not judged again. Nothing in the answer to the outer limits depends
+/// minimum. Limits the request leaves as they are are not judged again. In a home, limits_order
+/// is judged on the room's own limits as they will be stored, and limits_no_setpoint on them as
+/// read within the building's home bounds, which is what its valves are held at; a bound set
+/// outside the home bounds is accepted as it is, and read within them (climate.v1
+/// .OuterRoomLimits, HOME BOUNDS). Nothing in the answer to the outer limits depends
 /// on the home's state — its targets, inner limits, modes, or who lives there — so setting them
 /// tells the caller nothing of it; what they clamp is told to the household alone
 /// (RoomClimate.outer_limit_clamp). Only the lock in the same request is decided by whether the
@@ -3647,6 +3654,317 @@ class BuildingPlanning extends $pb.GeneratedMessage {
   $core.bool hasStale() => $_has(6);
   @$pb.TagNumber(7)
   void clearStale() => $_clearField(7);
+}
+
+/// Reads a building's room-limit settings. Answered as BuildingRoomLimits.
+class GetBuildingRoomLimits extends $pb.GeneratedMessage {
+  factory GetBuildingRoomLimits({
+    $0.SpaceId? spaceId,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    return result;
+  }
+
+  GetBuildingRoomLimits._();
+
+  factory GetBuildingRoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory GetBuildingRoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBuildingRoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBuildingRoomLimits clone() =>
+      GetBuildingRoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBuildingRoomLimits copyWith(
+          void Function(GetBuildingRoomLimits) updates) =>
+      super.copyWith((message) => updates(message as GetBuildingRoomLimits))
+          as GetBuildingRoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static GetBuildingRoomLimits create() => GetBuildingRoomLimits._();
+  @$core.override
+  GetBuildingRoomLimits createEmptyInstance() => create();
+  static $pb.PbList<GetBuildingRoomLimits> createRepeated() =>
+      $pb.PbList<GetBuildingRoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static GetBuildingRoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBuildingRoomLimits>(create);
+  static GetBuildingRoomLimits? _defaultInstance;
+
+  /// The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+}
+
+/// Sets, changes or clears one of a building's room-limit settings, and applies it to every room
+/// of its kind where asked (BUILDING ROOM LIMITS). Answered as BuildingRoomLimits, as it now
+/// stands.
+///
+/// Each bound it changes is stamped with the caller's role and the time
+/// (climate.v1.BuildingLimits); one set to the value it has keeps its stamp. Refused, changing
+/// nothing and applying nothing:
+///   * kind UNSPECIFIED, as INVALID_REQUEST with metadata {"reason": "kind"};
+///   * min above max, as INVALID_REQUEST with metadata {"reason": "limits_order"};
+///   * a min changed to below the gateway's public-health threshold without
+///     accept_below_threshold, as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
+///     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses one.
+/// Nothing else is judged, the rooms it reaches least of all (BUILDING ROOM LIMITS, PRIVACY).
+class SetBuildingRoomLimits extends $pb.GeneratedMessage {
+  factory SetBuildingRoomLimits({
+    $0.SpaceId? spaceId,
+    BuildingRoomKind? kind,
+    RoomLimits? limits,
+    $core.bool? acceptBelowThreshold,
+    $core.bool? applyToRooms,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (kind != null) result.kind = kind;
+    if (limits != null) result.limits = limits;
+    if (acceptBelowThreshold != null)
+      result.acceptBelowThreshold = acceptBelowThreshold;
+    if (applyToRooms != null) result.applyToRooms = applyToRooms;
+    return result;
+  }
+
+  SetBuildingRoomLimits._();
+
+  factory SetBuildingRoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory SetBuildingRoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetBuildingRoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..e<BuildingRoomKind>(2, _omitFieldNames ? '' : 'kind', $pb.PbFieldType.OE,
+        defaultOrMaker: BuildingRoomKind.BUILDING_ROOM_KIND_UNSPECIFIED,
+        valueOf: BuildingRoomKind.valueOf,
+        enumValues: BuildingRoomKind.values)
+    ..aOM<RoomLimits>(3, _omitFieldNames ? '' : 'limits',
+        subBuilder: RoomLimits.create)
+    ..aOB(4, _omitFieldNames ? '' : 'acceptBelowThreshold')
+    ..aOB(5, _omitFieldNames ? '' : 'applyToRooms')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetBuildingRoomLimits clone() =>
+      SetBuildingRoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetBuildingRoomLimits copyWith(
+          void Function(SetBuildingRoomLimits) updates) =>
+      super.copyWith((message) => updates(message as SetBuildingRoomLimits))
+          as SetBuildingRoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static SetBuildingRoomLimits create() => SetBuildingRoomLimits._();
+  @$core.override
+  SetBuildingRoomLimits createEmptyInstance() => create();
+  static $pb.PbList<SetBuildingRoomLimits> createRepeated() =>
+      $pb.PbList<SetBuildingRoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static SetBuildingRoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetBuildingRoomLimits>(create);
+  static SetBuildingRoomLimits? _defaultInstance;
+
+  /// The building: a top-level space. Any other space is refused as INVALID_REQUEST.
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  BuildingRoomKind get kind => $_getN(1);
+  @$pb.TagNumber(2)
+  set kind(BuildingRoomKind value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasKind() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearKind() => $_clearField(2);
+
+  /// Replaces both bounds of the setting, see RoomLimits: a bound unset in it, or limits unset,
+  /// removes it, and with neither bound the setting is cleared, which rewrites no room.
+  @$pb.TagNumber(3)
+  RoomLimits get limits => $_getN(2);
+  @$pb.TagNumber(3)
+  set limits(RoomLimits value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLimits() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLimits() => $_clearField(3);
+  @$pb.TagNumber(3)
+  RoomLimits ensureLimits() => $_ensure(2);
+
+  /// The caller accepts a min below the public-health threshold, recorded with the setting
+  /// (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a request that
+  /// sets no such min.
+  @$pb.TagNumber(4)
+  $core.bool get acceptBelowThreshold => $_getBF(3);
+  @$pb.TagNumber(4)
+  set acceptBelowThreshold($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAcceptBelowThreshold() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAcceptBelowThreshold() => $_clearField(4);
+
+  /// Also write the setting, as it then stands, into every room of its kind in the building, in
+  /// the same step (BUILDING ROOM LIMITS, APPLY). Sent with the limits the setting already has, it
+  /// applies them again and changes nothing of the setting.
+  @$pb.TagNumber(5)
+  $core.bool get applyToRooms => $_getBF(4);
+  @$pb.TagNumber(5)
+  set applyToRooms($core.bool value) => $_setBool(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasApplyToRooms() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearApplyToRooms() => $_clearField(5);
+}
+
+/// A building's room-limit settings.
+class BuildingRoomLimits extends $pb.GeneratedMessage {
+  factory BuildingRoomLimits({
+    $0.SpaceId? spaceId,
+    $5.BuildingLimits? homes,
+    $5.BuildingLimits? commonAreas,
+    $core.int? roomsApplied,
+  }) {
+    final result = create();
+    if (spaceId != null) result.spaceId = spaceId;
+    if (homes != null) result.homes = homes;
+    if (commonAreas != null) result.commonAreas = commonAreas;
+    if (roomsApplied != null) result.roomsApplied = roomsApplied;
+    return result;
+  }
+
+  BuildingRoomLimits._();
+
+  factory BuildingRoomLimits.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory BuildingRoomLimits.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BuildingRoomLimits',
+      package: const $pb.PackageName(
+          _omitMessageNames ? '' : 'kusinta.iot.webrtc.v1'),
+      createEmptyInstance: create)
+    ..aOM<$0.SpaceId>(1, _omitFieldNames ? '' : 'spaceId',
+        subBuilder: $0.SpaceId.create)
+    ..aOM<$5.BuildingLimits>(2, _omitFieldNames ? '' : 'homes',
+        subBuilder: $5.BuildingLimits.create)
+    ..aOM<$5.BuildingLimits>(3, _omitFieldNames ? '' : 'commonAreas',
+        subBuilder: $5.BuildingLimits.create)
+    ..a<$core.int>(
+        4, _omitFieldNames ? '' : 'roomsApplied', $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildingRoomLimits clone() => BuildingRoomLimits()..mergeFromMessage(this);
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BuildingRoomLimits copyWith(void Function(BuildingRoomLimits) updates) =>
+      super.copyWith((message) => updates(message as BuildingRoomLimits))
+          as BuildingRoomLimits;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static BuildingRoomLimits create() => BuildingRoomLimits._();
+  @$core.override
+  BuildingRoomLimits createEmptyInstance() => create();
+  static $pb.PbList<BuildingRoomLimits> createRepeated() =>
+      $pb.PbList<BuildingRoomLimits>();
+  @$core.pragma('dart2js:noInline')
+  static BuildingRoomLimits getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BuildingRoomLimits>(create);
+  static BuildingRoomLimits? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.SpaceId get spaceId => $_getN(0);
+  @$pb.TagNumber(1)
+  set spaceId($0.SpaceId value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSpaceId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSpaceId() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.SpaceId ensureSpaceId() => $_ensure(0);
+
+  /// Each unset where the building has none.
+  @$pb.TagNumber(2)
+  $5.BuildingLimits get homes => $_getN(1);
+  @$pb.TagNumber(2)
+  set homes($5.BuildingLimits value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasHomes() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearHomes() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $5.BuildingLimits ensureHomes() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $5.BuildingLimits get commonAreas => $_getN(2);
+  @$pb.TagNumber(3)
+  set commonAreas($5.BuildingLimits value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasCommonAreas() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCommonAreas() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $5.BuildingLimits ensureCommonAreas() => $_ensure(2);
+
+  /// Set only in the answer to a request with apply_to_rooms: how many rooms the setting was
+  /// written to — every room of its kind in the building, or none where the setting has no bound.
+  /// Nothing per room or per home.
+  @$pb.TagNumber(4)
+  $core.int get roomsApplied => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set roomsApplied($core.int value) => $_setUnsignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRoomsApplied() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRoomsApplied() => $_clearField(4);
 }
 
 /// Reads the day-ahead prices for the bidding zone of the building a space is in, so that a
@@ -7955,6 +8273,8 @@ enum ManagementRequest_Request {
   setHeatCurveAutomaticSavings,
   handHeatCurveSuggestion,
   setHeatCurveUpdateMode,
+  getBuildingRoomLimits,
+  setBuildingRoomLimits,
   notSet
 }
 
@@ -8053,6 +8373,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     SetHeatCurveAutomaticSavings? setHeatCurveAutomaticSavings,
     HandHeatCurveSuggestion? handHeatCurveSuggestion,
     SetHeatCurveUpdateMode? setHeatCurveUpdateMode,
+    GetBuildingRoomLimits? getBuildingRoomLimits,
+    SetBuildingRoomLimits? setBuildingRoomLimits,
   }) {
     final result = create();
     if (createSpace != null) result.createSpace = createSpace;
@@ -8188,6 +8510,10 @@ class ManagementRequest extends $pb.GeneratedMessage {
       result.handHeatCurveSuggestion = handHeatCurveSuggestion;
     if (setHeatCurveUpdateMode != null)
       result.setHeatCurveUpdateMode = setHeatCurveUpdateMode;
+    if (getBuildingRoomLimits != null)
+      result.getBuildingRoomLimits = getBuildingRoomLimits;
+    if (setBuildingRoomLimits != null)
+      result.setBuildingRoomLimits = setBuildingRoomLimits;
     return result;
   }
 
@@ -8294,6 +8620,8 @@ class ManagementRequest extends $pb.GeneratedMessage {
     90: ManagementRequest_Request.setHeatCurveAutomaticSavings,
     91: ManagementRequest_Request.handHeatCurveSuggestion,
     92: ManagementRequest_Request.setHeatCurveUpdateMode,
+    93: ManagementRequest_Request.getBuildingRoomLimits,
+    94: ManagementRequest_Request.setBuildingRoomLimits,
     0: ManagementRequest_Request.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
@@ -8393,7 +8721,9 @@ class ManagementRequest extends $pb.GeneratedMessage {
       89,
       90,
       91,
-      92
+      92,
+      93,
+      94
     ])
     ..aOM<CreateSpace>(1, _omitFieldNames ? '' : 'createSpace',
         subBuilder: CreateSpace.create)
@@ -8609,6 +8939,12 @@ class ManagementRequest extends $pb.GeneratedMessage {
     ..aOM<SetHeatCurveUpdateMode>(
         92, _omitFieldNames ? '' : 'setHeatCurveUpdateMode',
         subBuilder: SetHeatCurveUpdateMode.create)
+    ..aOM<GetBuildingRoomLimits>(
+        93, _omitFieldNames ? '' : 'getBuildingRoomLimits',
+        subBuilder: GetBuildingRoomLimits.create)
+    ..aOM<SetBuildingRoomLimits>(
+        94, _omitFieldNames ? '' : 'setBuildingRoomLimits',
+        subBuilder: SetBuildingRoomLimits.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -9695,6 +10031,31 @@ class ManagementRequest extends $pb.GeneratedMessage {
   void clearSetHeatCurveUpdateMode() => $_clearField(92);
   @$pb.TagNumber(92)
   SetHeatCurveUpdateMode ensureSetHeatCurveUpdateMode() => $_ensure(91);
+
+  /// Building-wide room limits; see BUILDING ROOM LIMITS.
+  @$pb.TagNumber(93)
+  GetBuildingRoomLimits get getBuildingRoomLimits => $_getN(92);
+  @$pb.TagNumber(93)
+  set getBuildingRoomLimits(GetBuildingRoomLimits value) =>
+      $_setField(93, value);
+  @$pb.TagNumber(93)
+  $core.bool hasGetBuildingRoomLimits() => $_has(92);
+  @$pb.TagNumber(93)
+  void clearGetBuildingRoomLimits() => $_clearField(93);
+  @$pb.TagNumber(93)
+  GetBuildingRoomLimits ensureGetBuildingRoomLimits() => $_ensure(92);
+
+  @$pb.TagNumber(94)
+  SetBuildingRoomLimits get setBuildingRoomLimits => $_getN(93);
+  @$pb.TagNumber(94)
+  set setBuildingRoomLimits(SetBuildingRoomLimits value) =>
+      $_setField(94, value);
+  @$pb.TagNumber(94)
+  $core.bool hasSetBuildingRoomLimits() => $_has(93);
+  @$pb.TagNumber(94)
+  void clearSetBuildingRoomLimits() => $_clearField(94);
+  @$pb.TagNumber(94)
+  SetBuildingRoomLimits ensureSetBuildingRoomLimits() => $_ensure(93);
 }
 
 const $core.bool _omitFieldNames =

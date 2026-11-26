@@ -280,6 +280,20 @@ describe('room history', () => {
 })
 
 describe('comfort limits', () => {
+  it('tells a home room the building’s bounds and the role that set them', () => {
+    const decoded = onTheWire(RoomClimateSchema, {
+      spaceId: ROOM,
+      homeBounds: { max: { centidegrees: 2300, setByRole: Role.PROPERTY_OWNER, setAt: timestampFromMs(1_790_000_000_000) } },
+    })
+    const max = decoded.homeBounds?.max
+    expect([max?.centidegrees, max?.setByRole, Number(max?.setAt?.seconds)]).toEqual([2300, Role.PROPERTY_OWNER, 1_790_000_000])
+  })
+
+  it('leaves the home bounds absent on a room the building bounds nothing of', () => {
+    const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimits: {} })
+    expect(decoded.homeBounds).toBeUndefined()
+  })
+
   it('leaves an outer bound nobody set absent rather than 0 °C', () => {
     const decoded = onTheWire(RoomClimateSchema, { spaceId: ROOM, outerLimits: { min: { centidegrees: 1800 } } })
     expect(decoded.outerLimits?.max).toBeUndefined()
