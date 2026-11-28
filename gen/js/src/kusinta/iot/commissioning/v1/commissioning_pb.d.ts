@@ -1720,8 +1720,10 @@ export enum TestKind {
 
   /**
    * On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and
-   * sees its control room's temperature and the circuit's return probe answer. Judged by
-   * the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
+   * sees the temperature of the room it is judged by, and the circuit's return probe,
+   * answer. That room is the zone's control room where the control room is one of the
+   * zone's rooms; otherwise the zone's room with the largest area share that holds a
+   * sensor, and the control room only where none does. Judged by the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
    *
    * @generated from enum value: TEST_KIND_ZONE_EFFECT = 2;
    */
@@ -1820,7 +1822,7 @@ export enum TestFailure {
   DEVICE_UNREACHABLE = 5,
 
   /**
-   * ZONE_EFFECT: the control room and the return did not answer the zone.
+   * ZONE_EFFECT: the room it is judged by and the return did not answer the zone.
    *
    * @generated from enum value: TEST_FAILURE_NO_EFFECT = 6;
    */
