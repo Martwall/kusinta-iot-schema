@@ -1654,9 +1654,10 @@ export declare const GetBuildingRoomLimitsSchema: GenMessage<GetBuildingRoomLimi
  * nothing and applying nothing:
  *   * kind UNSPECIFIED, as INVALID_REQUEST with metadata {"reason": "kind"};
  *   * min above max, as INVALID_REQUEST with metadata {"reason": "limits_order"};
- *   * a min changed to below the gateway's public-health threshold without
+ *   * a min, or a max, changed to below the gateway's public-health threshold without
  *     accept_below_threshold, as FAILED_PRECONDITION with metadata {"reason": "below_threshold",
- *     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses one.
+ *     "threshold_centidegrees": the threshold}, as ConfigureRoomClimate refuses a min. A max is
+ *     judged too because applying it takes the rooms' mins down with it (APPLY).
  * Nothing else is judged, the rooms it reaches least of all (BUILDING ROOM LIMITS, PRIVACY).
  *
  * @generated from message kusinta.iot.webrtc.v1.SetBuildingRoomLimits
@@ -1683,9 +1684,9 @@ export declare type SetBuildingRoomLimits = Message<"kusinta.iot.webrtc.v1.SetBu
   limits?: RoomLimits | undefined;
 
   /**
-   * The caller accepts a min below the public-health threshold, recorded with the setting
-   * (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a request that
-   * sets no such min.
+   * The caller accepts a min, or a max, below the public-health threshold, recorded with the
+   * setting (climate.v1.BuildingLimits.min_accepted_threshold_centidegrees). Ignored on a
+   * request that sets no such bound.
    *
    * @generated from field: bool accept_below_threshold = 4;
    */

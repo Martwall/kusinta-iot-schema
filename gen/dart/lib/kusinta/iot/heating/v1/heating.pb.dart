@@ -1097,11 +1097,15 @@ class FloorZone extends $pb.GeneratedMessage {
   /// (webrtc.v1 household.proto, WIPE); uncontrolled_since stays with the zone, which describes
   /// the house.
   ///
-  /// For a home's zone — one left uncontrolled stays whose it was — sent only to the home's
-  /// household admins (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) and an installer under a
-  /// commissioning grant on the home, and unset for the home's other residents; never sent to
-  /// service. Unset, too, when it dates from before the recipient's current residency in the
-  /// home, or from a home they did not live in at the time (see access.v1.MembershipRelation).
+  /// For a home's zone — one left uncontrolled stays whose it was — uncontrolled_since is sent
+  /// to every resident of the home, so that each of them is told the zone heats without control
+  /// until it is resolved, and to an installer under a commissioning grant on the home. To a
+  /// resident it is never earlier than the start of their current residency in the home: one
+  /// dating from before is sent as that start, so it tells nothing of an earlier household.
+  /// uncontrolled_by is sent only to the home's household admins
+  /// (access.v1.MEMBERSHIP_RELATION_HOUSEHOLD_ADMIN) and that installer, and unset when it dates
+  /// from before the recipient's current residency in the home, or from a home they did not
+  /// live in at the time (see access.v1.MembershipRelation). Neither is ever sent to service.
   /// While the home is empty (webrtc.v1 household.proto, EMPTY HOME), the property owner and the
   /// gateway administrators who reach it are sent uncontrolled_since, never uncontrolled_by (see
   /// the file comment).
