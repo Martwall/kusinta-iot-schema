@@ -436,8 +436,10 @@ class TestKind extends $pb.ProtobufEnum {
       TestKind._(1, _omitEnumNames ? '' : 'TEST_KIND_OUTPUT_LEASE');
 
   /// On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and
-  /// sees its control room's temperature and the circuit's return probe answer. Judged by
-  /// the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
+  /// sees the temperature of the room it is judged by, and the circuit's return probe,
+  /// answer. That room is the zone's control room where the control room is one of the
+  /// zone's rooms; otherwise the zone's room with the largest area share that holds a
+  /// sensor, and the control room only where none does. Judged by the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
   static const TestKind TEST_KIND_ZONE_EFFECT =
       TestKind._(2, _omitEnumNames ? '' : 'TEST_KIND_ZONE_EFFECT');
 
@@ -512,7 +514,7 @@ class TestFailure extends $pb.ProtobufEnum {
   static const TestFailure TEST_FAILURE_DEVICE_UNREACHABLE =
       TestFailure._(5, _omitEnumNames ? '' : 'TEST_FAILURE_DEVICE_UNREACHABLE');
 
-  /// ZONE_EFFECT: the control room and the return did not answer the zone.
+  /// ZONE_EFFECT: the room it is judged by and the return did not answer the zone.
   static const TestFailure TEST_FAILURE_NO_EFFECT =
       TestFailure._(6, _omitEnumNames ? '' : 'TEST_FAILURE_NO_EFFECT');
 

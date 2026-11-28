@@ -442,9 +442,9 @@ option optimize_for = SPEED;
 //     webrtc.v1.ConfigureRoomClimate);
 //   * running commissioning tests there, and concluding PUMP_ALL_ZONES_OFF;
 //   * while a test the installer started under it runs, the readings that test is judged by:
-//     the state of the output it drives and, for ZONE_EFFECT, its control room's temperature
-//     and the circuit's return probe, from the test's start to its end and none from before
-//     or after;
+//     the state of the output it drives and, for ZONE_EFFECT, the temperature of the room
+//     the test is judged by (TEST_KIND_ZONE_EFFECT) and the circuit's return probe, from the
+//     test's start to its end and none from before or after;
 //   * the photos a household shares for commissioning, those it shares and only while the
 //     grant is active.
 // It NEVER covers a home's history (room history, climate summaries), savings or comfort
@@ -962,8 +962,10 @@ enum TestKind {
   TEST_KIND_OUTPUT_LEASE = 1;
 
   // On one floor zone with a current OUTPUT_LEASE pass. The gateway switches the zone and
-  // sees its control room's temperature and the circuit's return probe answer. Judged by
-  // the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
+  // sees the temperature of the room it is judged by, and the circuit's return probe,
+  // answer. That room is the zone's control room where the control room is one of the
+  // zone's rooms; otherwise the zone's room with the largest area share that holds a
+  // sensor, and the control room only where none does. Judged by the gateway. Takes hours; the zone is kept within its rooms' comfort while it runs.
   TEST_KIND_ZONE_EFFECT = 2;
 
   // On one floor circuit whose every zone holds a current OUTPUT_LEASE pass. The gateway
@@ -992,7 +994,7 @@ enum TestFailure {
   TEST_FAILURE_DID_NOT_RETURN_TO_REST = 4;
   // The device answered nothing within the test.
   TEST_FAILURE_DEVICE_UNREACHABLE = 5;
-  // ZONE_EFFECT: the control room and the return did not answer the zone.
+  // ZONE_EFFECT: the room it is judged by and the return did not answer the zone.
   TEST_FAILURE_NO_EFFECT = 6;
   // PUMP_ALL_ZONES_OFF: the installer's verdict.
   TEST_FAILURE_OBSERVED = 7;
